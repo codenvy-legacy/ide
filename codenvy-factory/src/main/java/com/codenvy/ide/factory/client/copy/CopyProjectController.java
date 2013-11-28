@@ -17,12 +17,14 @@
  */
 package com.codenvy.ide.factory.client.copy;
 
-import com.codenvy.ide.client.util.logging.Log;
 import com.codenvy.ide.factory.client.FactoryExtension;
+import com.codenvy.ide.factory.shared.CopySpec10;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Window;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
@@ -33,7 +35,9 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.workspaceinfo.WorkspaceInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
@@ -44,8 +48,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * Perform getting all projects that guest user have and try to copy them into permanent workspace.
  */
 public class CopyProjectController implements CopyProjectHandler, EditorFileOpenedHandler, EditorFileClosedHandler {
 
@@ -59,7 +62,7 @@ public class CopyProjectController implements CopyProjectHandler, EditorFileOpen
 
     /** {@inheritDoc} */
     @Override
-    public void onCopyProject(CopyProjectEvent event) {
+    public void onCopyProject(final CopyProjectEvent event) {
         if (isUnsavedFilesExist()) {
             Dialogs.getInstance().showInfo(FactoryExtension.LOCALIZATION_CONSTANTS.saveAllChangesBeforeCopying());
             return;
@@ -67,68 +70,95 @@ public class CopyProjectController implements CopyProjectHandler, EditorFileOpen
 
         try {
             VirtualFileSystem.getInstance()
-                 .getChildren(VirtualFileSystem.getInstance().getInfo().getRoot(),
-                              ItemType.PROJECT,
-                              new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>())) {
-                                  @Override
-                                  protected void onSuccess(List<Item> result) {
-                                      List<String> projectIds = new ArrayList<String>();
-                                      for (Item project : result) {
-                                          projectIds.add(project.getId() + ':' + project.getName());
-                                      }
-                                      if (!projectIds.isEmpty()) {
-                                          Item firstItem = result.get(0);
-                                          String projectsDownloadUrl = firstItem.getLinkByRelation(Link.REL_EXPORT).getHref();
-                                          projectsDownloadUrl = projectsDownloadUrl.substring(0, projectsDownloadUrl.length() - firstItem.getId().length());
-                                          doCopy(projectsDownloadUrl, projectIds);
-                                      }
-                                  }
+                             .getChildren(VirtualFileSystem.getInstance().getInfo().getRoot(),
+                                          ItemType.PROJECT,
+                                          new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>())) {
+                                              @Override
+                                              protected void onSuccess(List<Item> projects) {
+                                                  List<String> projectsToCopy = new ArrayList<String>();
+                                                  for (Item project : projects) {
+                                                      projectsToCopy.add(project.getId() + ':' + project.getName());
+                                                  }
 
-                                  @Override
-                                  protected void onFailure(Throwable exception) {
-                                      Window.alert(exception.getMessage());
-                                  }
-                              });
+                                                  if (!projects.isEmpty()) {
+                                                      getExportLink(projects.get(0), projectsToCopy, event.isCreateAction());
+                                                  }
+                                              }
+
+                                              @Override
+                                              protected void onFailure(Throwable e) {
+                                                  IDE.fireEvent(new ExceptionThrownEvent(e));
+                                              }
+                                          });
         } catch (RequestException e) {
-            Window.alert(e.getMessage());
+            IDE.fireEvent(new ExceptionThrownEvent(e));
         }
     }
 
-    private void doCopy(String projectsDownloadUrl, List<String> projectIdList) {
+    private void getExportLink(final Item item, final List<String> projectsToCopy, final boolean createAction) {
+        if (item.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(item.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(item))) {
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      String exportLink = result.getItem().getLinkByRelation(Link.REL_EXPORT).getHref();
+                                                      exportLink = exportLink.split(result.getItem().getId())[0];
+                                                      doCopy(exportLink, projectsToCopy, createAction);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            String exportLink = item.getLinkByRelation(Link.REL_EXPORT).getHref();
+            exportLink = exportLink.split(item.getId())[0];
+            doCopy(exportLink, projectsToCopy, createAction);
+        }
+    }
+
+    private void doCopy(String baseDownloadUrl, List<String> projectsToCopy, boolean createAction) {
         try {
-            List<WorkspaceInfo> workspaces = IDE.user.getWorkspaces();
-            String url;
-            if (workspaces.size() > 1) {
-                UrlBuilder builder = new UrlBuilder();
-                url = builder.setProtocol(Window.Location.getProtocol()).setHost(Window.Location.getHost())
-                             .setPath("/site/private/select-tenant").buildString();
+            StringBuilder url = new StringBuilder();
+
+            UrlBuilder builder = new UrlBuilder();
+            url.append(builder.setProtocol(Window.Location.getProtocol())
+                              .setHost(Window.Location.getHost())
+                              .setPath(createAction ? "/site/create-account" : "/site/private/select-tenant")
+                              .buildString());
+
+            url.append('?');
+
+            for (String projectToCopy : projectsToCopy) {
+                url.append(CopySpec10.PROJECT_ID);
+                url.append('=');
+                url.append(projectToCopy);
+                url.append('&');
             }
-            else {
-                url = workspaces.get(0).getUrl();
-            }
-            String projectIds = "";
-            for (String projectId : projectIdList) {
-                projectIds += projectId + ";";
-            }
-            url += "?" + CopySpec10.DOWNLOAD_URL + "=" + projectsDownloadUrl + "&" + CopySpec10.PROJECT_ID + "=" + projectIds;
-            Window.Location.replace(url);
+
+            url.append(CopySpec10.DOWNLOAD_URL);
+            url.append('=');
+            url.append(URL.encode(baseDownloadUrl));
+
+            Window.Location.replace(url.toString());
         } catch (Throwable e) {
-            Window.alert(e.getMessage());
-            Log.error(getClass(), e);
+            IDE.fireEvent(new ExceptionThrownEvent(e));
         }
     }
 
-    /**
-     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent)
-     */
+    /** {@inheritDoc} */
     @Override
     public void onEditorFileClosed(EditorFileClosedEvent event) {
         openedFiles = event.getOpenedFiles();
     }
 
-    /**
-     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent)
-     */
+    /** {@inheritDoc} */
     @Override
     public void onEditorFileOpened(EditorFileOpenedEvent event) {
         openedFiles = event.getOpenedFiles();

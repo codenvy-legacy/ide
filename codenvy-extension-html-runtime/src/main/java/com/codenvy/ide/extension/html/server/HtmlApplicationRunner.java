@@ -54,11 +54,14 @@ public class HtmlApplicationRunner implements ApplicationRunner {
     private final int                            applicationLifetime;
     private final long                           applicationLifetimeMillis;
 
+    private final String                         applicationURL;
+
     private final Map<String, RunnedApplication> applications;
     private final ScheduledExecutorService       applicationTerminator;
 
     public HtmlApplicationRunner(InitParams initParams) {
-        this(parseApplicationLifeTime(readValueParam(initParams, "html-application-lifetime")));
+        this(parseApplicationLifeTime(readValueParam(initParams, "html-application-lifetime")),
+             readValueParam(initParams, "html-application-url"));
     }
 
     private static int parseApplicationLifeTime(String str) {
@@ -71,7 +74,7 @@ public class HtmlApplicationRunner implements ApplicationRunner {
         return DEFAULT_APPLICATION_LIFETIME;
     }
 
-    protected HtmlApplicationRunner(int applicationLifetime) {
+    protected HtmlApplicationRunner(int applicationLifetime, String applicationURL) {
         if (applicationLifetime < 1) {
             throw new IllegalArgumentException("Invalid application lifetime: " + 1);
         }
@@ -79,6 +82,8 @@ public class HtmlApplicationRunner implements ApplicationRunner {
         this.applicationLifetimeMillis = applicationLifetime * 60 * 1000;
 
         this.applications = new ConcurrentHashMap<String, RunnedApplication>();
+        this.applicationURL = applicationURL;
+
         this.applicationTerminator = Executors.newSingleThreadScheduledExecutor();
         this.applicationTerminator.scheduleAtFixedRate(new TerminateApplicationTask(), 1, 1, TimeUnit.MINUTES);
     }
@@ -101,7 +106,7 @@ public class HtmlApplicationRunner implements ApplicationRunner {
         applications.put(name, new RunnedApplication(name, expired, project.getName(), wsMountPath + project.getPath()));
         LOG.info("EVENT#run-started# PROJECT#" + project.getName() + "# TYPE#HTML#");
 
-        return new ApplicationInstanceImpl(name, applicationLifetime);
+        return new ApplicationInstanceImpl(name, applicationLifetime, applicationURL);
     }
 
     /** @see com.codenvy.ide.extension.html.server.ApplicationRunner#stopApplication(java.lang.String) */

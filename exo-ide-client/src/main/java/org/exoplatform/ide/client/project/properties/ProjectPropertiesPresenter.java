@@ -118,7 +118,7 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
             VirtualFileSystem.getInstance()
                              .getItemById(projectId,
                                           new AsyncRequestCallback<ItemWrapper>(
-                                                  new ItemUnmarshaller(new ItemWrapper(new FileModel()))) {
+                                                  new ItemUnmarshaller(new ItemWrapper())) {
                                               @Override
                                               protected void onSuccess(ItemWrapper result) {
                                                   if (!(result.getItem() instanceof ProjectModel)) {
@@ -126,7 +126,7 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
                                                                                       + " is not a project.");
                                                       return;
                                                   }
-
+                                                  currentProject.setLinks(result.getItem().getLinks());
                                                   currentProject.getProperties().clear();
                                                   currentProject.getProperties().addAll(result.getItem().getProperties());
 

@@ -31,24 +31,15 @@ import org.exoplatform.ide.extension.samples.client.control.SupportControl;
 import org.exoplatform.ide.extension.samples.client.control.WelcomeControl;
 import org.exoplatform.ide.extension.samples.client.getstarted.GetStartedControl;
 import org.exoplatform.ide.extension.samples.client.getstarted.GetStartedPresenter;
-import org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter;
-import org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleStep;
-import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
-import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesControl;
-import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesPresenter;
-import org.exoplatform.ide.extension.samples.client.github.ssh.GenerateGitHubSshKeyPresenter;
-import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubControl;
-import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter;
 import org.exoplatform.ide.extension.samples.client.inviting.InviteClientService;
 import org.exoplatform.ide.extension.samples.client.inviting.github.InviteGitHubDevelopersPresenter;
 import org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersPresenter;
 import org.exoplatform.ide.extension.samples.client.inviting.manage.ManageInviteControl;
 import org.exoplatform.ide.extension.samples.client.inviting.manage.ManageInvitePresenter;
-import org.exoplatform.ide.extension.samples.client.oauth.GithubLoginPresenter;
 import org.exoplatform.ide.extension.samples.client.startpage.OpenStartPageEvent;
 import org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter;
 import org.exoplatform.ide.git.client.GitAutoBeanFactory;
-import org.exoplatform.ide.git.client.github.GitHubClientServiceImpl;
+import org.exoplatform.ide.git.client.github.collaborators.GitHubClientServiceImpl;
 
 /**
  * Samples extension for IDE.
@@ -58,14 +49,9 @@ import org.exoplatform.ide.git.client.github.GitHubClientServiceImpl;
  */
 public class SamplesExtension extends Extension implements InitializeServicesHandler {
 
-    /** The generator of an {@link AutoBean}. */
-    public static final GitAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(GitAutoBeanFactory.class);
+    public static final SamplesLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(SamplesLocalizationConstant.class);
 
-    public static final SamplesLocalizationConstant LOCALIZATION_CONSTANT = GWT
-            .create(SamplesLocalizationConstant.class);
-
-    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
-     * .client.framework.application.event.InitializeServicesEvent) */
+    /** {@inheritDoc} */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
         new GitHubClientServiceImpl(event.getLoader());
@@ -76,12 +62,11 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
         new InviteClientService(Utils.getRestContext(), Utils.getWorkspaceName());
     }
 
-    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
+    /** {@inheritDoc} */
     @Override
     public void initialize() {
         SamplesClientBundle.INSTANCE.css().ensureInjected();
-        IDE.getInstance().addControl(new ShowSamplesControl());
-        IDE.getInstance().addControl(new ImportFromGithubControl());
+
         IDE.getInstance().addControl(new WelcomeControl());
         IDE.getInstance().addControl(new ManageInviteControl());
         IDE.getInstance().addControl(new DocumentationControl());
@@ -92,21 +77,8 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
         new StartPagePresenter();
-        new GithubLoginPresenter();
-
         new ManageInvitePresenter();
-        new GenerateGitHubSshKeyPresenter();
-
         new GetStartedPresenter();
-
-        // Import from GitHub
-        ImportSampleStep<ProjectData> firstStep = new ShowSamplesPresenter();
-        ImportSampleStep<ProjectData> secondStep = new DeploySamplesPresenter();
-        firstStep.setNextStep(secondStep);
-        secondStep.setPreviousStep(firstStep);
-
-        new ImportFromGithubPresenter();
-
         new InviteGoogleDevelopersPresenter();
         new InviteGitHubDevelopersPresenter();
     }

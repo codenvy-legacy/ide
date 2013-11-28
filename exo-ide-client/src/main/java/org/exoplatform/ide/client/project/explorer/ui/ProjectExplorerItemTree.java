@@ -17,6 +17,7 @@
  */
 package org.exoplatform.ide.client.project.explorer.ui;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
@@ -54,8 +55,27 @@ public class ProjectExplorerItemTree extends org.exoplatform.gwtframework.ui.cli
     public ProjectExplorerItemTree()
     {
         sinkEvents(Event.ONCONTEXTMENU);
-        tree.addOpenHandler(this);        
+        tree.addOpenHandler(this);
+        
+        /*
+         * Remove browser's selection in project explorer tree after mouse clicking. 
+         */
+        setStypeProperty(tree.getElement().getStyle(), "-webkit-user-select", "none");
+        setStypeProperty(tree.getElement().getStyle(), "-moz-user-select", "none");
+        setStypeProperty(tree.getElement().getStyle(), "-ms-user-select", "none");
     }
+    
+    /*
+     * Helps to set style property with name in non camelCase format.
+     * 
+     * Use
+     *      setStypeProperty(widget.getElement().getStyle(), "property-name", "property-value")
+     * instead
+     *      widget.getElement().getStyle().setProperty("property-name", "property-value")
+     */
+    private native void setStypeProperty(JavaScriptObject style, String property, String value) /*-{
+        style[property] = value;
+    }-*/;
 
     public void setTreeGridId(String id) {
         this.id = id;

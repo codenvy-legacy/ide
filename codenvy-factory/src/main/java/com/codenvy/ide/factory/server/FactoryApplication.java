@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.factory.server;
 
+import org.exoplatform.ide.git.server.rest.GitExceptionMapper;
 import org.exoplatform.ide.vfs.server.RequestContextResolver;
 
 import javax.ws.rs.core.Application;
@@ -38,5 +39,12 @@ public class FactoryApplication extends Application {
         classes.add(CopyProjectService.class);
         classes.add(RequestContextResolver.class);
         return classes;
+    }
+
+    @Override
+    public Set<Object> getSingletons() {
+        Set<Object> singletons = new HashSet<>(1);
+        singletons.add(new GitExceptionMapper());
+        return singletons;
     }
 }

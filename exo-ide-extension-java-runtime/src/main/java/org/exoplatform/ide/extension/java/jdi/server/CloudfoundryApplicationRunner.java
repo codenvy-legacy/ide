@@ -200,13 +200,13 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             final CloudFoundryApplication cfApp = createApplication(cloudfoundry, target, name, path, type, null, params);
             final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
 
-            applications.put(name, new Application(name, target, expired, params.get("projectName"), 0));
+            String wsName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString();
+            String userId = ConversationState.getCurrent().getIdentity().getUserId();
+
+            applications.put(name, new Application(name, target, expired, params.get("projectName"),wsName, userId, 0));
             LOG.debug("Start application {} at CF server {}", name, target);
-            LOG.info("EVENT#run-started# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
-                     + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + params.get("projectName")
-                     + "# TYPE#War#");
-            LOG.info("EVENT#project-deployed# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
-                     + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + params.get("projectName")
+            LOG.info("EVENT#run-started# WS#" + wsName + "# USER#" + userId + "# PROJECT#" + params.get("projectName") + "# TYPE#War#");
+            LOG.info("EVENT#project-deployed# WS#" + wsName + "# USER#" + userId + "# PROJECT#" + params.get("projectName")
                      + "# TYPE#War# PAAS#LOCAL#");
             return new ApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime);
         } catch (Exception e) {
@@ -240,13 +240,13 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                 throw new ApplicationRunnerException("Unable run application in debug mode. ");
             }
 
-            applications.put(name, new Application(name, target, expired, params.get("projectName"), 1));
+            String wsName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString();
+            String userId = ConversationState.getCurrent().getIdentity().getUserId();
+
+            applications.put(name, new Application(name, target, expired, params.get("projectName"), wsName, userId, 1));
             LOG.debug("Start application {} under debug at CF server {}", name, target);
-            LOG.info("EVENT#debug-started# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
-                     + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + params.get("projectName")
-                     + "# TYPE#War#");
-            LOG.info("EVENT#project-deployed# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
-                     + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + params.get("projectName")
+            LOG.info("EVENT#debug-started# WS#" + wsName + "# USER#" + userId + "# PROJECT#" + params.get("projectName") + "# TYPE#War#");
+            LOG.info("EVENT#project-deployed# WS#" + wsName + "# USER#" + userId + "# PROJECT#" + params.get("projectName")
                      + "# TYPE#War# PAAS#LOCAL#");
             return new ApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime,
                                                instances[0].getDebugHost(), instances[0].getDebugPort());
@@ -346,18 +346,12 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             cloudfoundry.deleteApplication(target, name, null, null, "cloudfoundry", true);
             publishWebSocketMessage(null, "runner:application-stopped:" + name);
             LOG.debug("Stop application {}.", name);
-            if (ConversationState.getCurrent() != null) {
-                if (app.type == 0) {
-                    LOG.info("EVENT#run-finished# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
-                             + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + app.projectName
-                             + "# TYPE#War#");
-                } else if (app.type == 1) {
-                    LOG.info("EVENT#debug-finished# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
-                             + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + app.projectName
-                             + "# TYPE#War#");
-                }
-            } else {
-                LOG.info("EVENT#run-finished# PROJECT#" + app.projectName + "# TYPE#War#");
+            if (app.type == 0) {
+                LOG.info("EVENT#run-finished# WS#" + app.wsName + "# USER#" + app.userId + "# PROJECT#" + app.projectName
+                         + "# TYPE#War#");
+            } else if (app.type == 1) {
+                LOG.info("EVENT#debug-finished# WS#" + app.wsName + "# USER#" + app.userId + "# PROJECT#" + app.projectName
+                         + "# TYPE#War#");
             }
             applications.remove(name);
         } catch (Exception e) {
@@ -646,15 +640,19 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
         final String server;
         final String projectName;
         long         expirationTime;
+        final String wsName;
+        final String userId;
         // 0 - normal run, 1- debug mode
         final int    type;
 
-        Application(String name, String server, long expirationTime, String projectName, int type) {
+        Application(String name, String server, long expirationTime, String projectName, String wsName, String userId, int type) {
             this.name = name;
             this.server = server;
             this.expirationTime = expirationTime;
             this.projectName = projectName;
             this.type = type;
+            this.wsName = wsName;
+            this.userId = userId;
         }
 
         boolean isExpired() {

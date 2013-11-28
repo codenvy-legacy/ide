@@ -941,9 +941,11 @@ public class MountPoint {
 
 
     void unzip(VirtualFile parent, InputStream zipped, boolean overwrite) throws IOException, VirtualFileSystemException {
+        final long start = System.currentTimeMillis();
         if (!parent.isFolder()) {
             throw new InvalidArgumentException(String.format("Unable import zip content. Item '%s' is not a folder. ", parent.getPath()));
         }
+        int numFiles = 0;
         final ZipContent zipContent = ZipContent.newInstance(zipped);
         final FileLockFactory.FileLock lock =
                 fileLockFactory.getLock(parent.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
@@ -1021,8 +1023,7 @@ public class MountPoint {
                         }
 
                         try {
-                            if (!file.getIoFile().createNewFile()) // atomic
-                            {
+                            if (!file.getIoFile().createNewFile()) { // atomic
                                 if (!overwrite) {
                                     throw new ItemAlreadyExistException(String.format("File '%s' already exists. ", file.getPath()));
                                 }
@@ -1034,9 +1035,19 @@ public class MountPoint {
                         }
 
                         doUpdateContent(file, mediaType, noCloseZip);
+                        ++numFiles;
                     }
                     zip.closeEntry();
                 }
+
+                if (searcherProvider != null) {
+                    try {
+                        searcherProvider.getSearcher(this, true).add(parent);
+                    } catch (IOException e) {
+                        LOG.error(e.getMessage(), e);
+                    }
+                }
+
             } catch (JsonException e) {
                 throw new VirtualFileSystemException(e.getMessage(), e);
             } finally {
@@ -1044,6 +1055,8 @@ public class MountPoint {
             }
         } finally {
             lock.release();
+            final long end = System.currentTimeMillis();
+            LOG.debug("Imported zip {} files in {}ms", numFiles, (end - start));
         }
     }
 

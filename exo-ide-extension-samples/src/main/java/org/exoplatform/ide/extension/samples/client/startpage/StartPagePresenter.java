@@ -29,9 +29,9 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubEvent;
 import org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersEvent;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryEvent;
+import org.exoplatform.ide.git.client.github.gitimport.ImportFromGithubEvent;
 
 /**
  * Presenter for welcome view.
@@ -108,9 +108,7 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
         display.getInvitationsLink().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                if (IDE.isRoUser() || IDE.currentWorkspace.isTemporary()) {
-                    return;
-                } else {
+                if (!(IDE.isRoUser() || IDE.currentWorkspace.isTemporary())) {
                     IDE.fireEvent(new InviteGoogleDevelopersEvent());
                 }
             }
@@ -131,7 +129,6 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
             display = d;
             bindDisplay();
             IDE.fireEvent(new WelcomePageOpenedEvent());
-            return;
         } else {
             IDE.fireEvent(new ExceptionThrownEvent("Start Page View must be null"));
         }

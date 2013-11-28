@@ -522,23 +522,49 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
     private void writeBuildInfo(BuildStatus buildStatus) {
         project.getProperties().add(new PropertyImpl(LAST_SUCCESS_BUILD, buildStatus.getTime()));
         project.getProperties().add(new PropertyImpl(ARTIFACT_DOWNLOAD_URL, buildStatus.getDownloadUrl()));
+        
+        if (project.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(project.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(project))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      project.setLinks(result.getItem().getLinks());
+                                                      updateProjectProperties();
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            updateProjectProperties();
+        }
+    }
+    
+    private void updateProjectProperties() {
         try {
             VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>() {
 
                 @Override
                 protected void onSuccess(ItemWrapper result) {
-                    //Nothing todo
+                    // Nothing todo
                 }
 
                 @Override
                 protected void onFailure(Throwable ignore) {
-                    //Ignore this exception
+                    // Ignore this exception
                 }
             });
         } catch (RequestException e) {
             e.printStackTrace();
         }
-
     }
 
     private void startWatchingProjectChanges() {

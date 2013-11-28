@@ -211,15 +211,35 @@ public class RenameFilePresenter extends ItemsOperationPresenter
 
     protected void rename() {
         FileModel file = (FileModel)selectedItems.get(0);
-        String newName = display.getItemNameField().getValue();
-        newName = (file.getName().equals(newName)) ? null : newName;
+        final String newName = (file.getName().equals(display.getItemNameField().getValue())) ? null : display.getItemNameField().getValue();
 
-        String newMimeType = display.getMimeType().getValue();
-        newMimeType = (file.getMimeType().equals(newMimeType)) ? null : newMimeType;
+        final String newMimeType = (file.getMimeType().equals(display.getMimeType().getValue())) ? null : display.getMimeType().getValue();
         if (newMimeType != null && newMimeType.length() > 0) {
             file.setMimeType(newMimeType);
         }
-        moveItem(file, newName, newMimeType);
+
+        if (file.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(file.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(file))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      performRename((FileModel)result.getItem(), newName, newMimeType);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            performRename(file, newName, newMimeType);
+        }
     }
 
     private void completeMove() {
@@ -236,7 +256,7 @@ public class RenameFilePresenter extends ItemsOperationPresenter
      * @param newName
      *         - the new name of file
      */
-    private void moveItem(final FileModel file, final String newName, String newMimeType) {
+    private void performRename(final FileModel file, final String newName, String newMimeType) {
         try {
             VirtualFileSystem.getInstance().rename(file, newMimeType, newName, lockTokens.get(file.getId()),
                                                    new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper())) {

@@ -54,9 +54,11 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
@@ -482,28 +484,33 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
             if (sourceDirectory.getSourceDirectoryName().equals(sourceFolderName)) {
                 for (final Package _package : sourceDirectory.getPackages()) {
                     if (_package.getPackageName().equals(packageName)) {
-                        FileModel newFile = new FileModel(fileName + ".java", MimeType.APPLICATION_JAVA, fileContent, _package);
-                        try {
-                            vfs.createFile(_package, new AsyncRequestCallback<FileModel>(new FileUnmarshaller(newFile)) {
-                                @Override
-                                protected void onSuccess(FileModel result) {
-                                    createdClass = result;
-                                    IDE.getInstance().closeView(display.asView().getId());
-                                    //IDE.addHandler(EditorActiveFileChangedEvent.TYPE, CreateJavaClassPresenter.this);
-                                    IDE.addHandler(TreeRefreshedEvent.TYPE, CreateJavaClassPresenter.this);
-                                    IDE.fireEvent(new RefreshBrowserEvent(_package.getProject(), result));
-//                           result.setProject(project);
-//                           fileOpenedHandler = IDE.addHandler(EditorActiveFileChangedEvent.TYPE, CreateJavaClassPresenter.this);
-//                           IDE.fireEvent(new OpenFileEvent(result));
-                                }
+                        final FileModel newFile = new FileModel(fileName + ".java", MimeType.APPLICATION_JAVA, fileContent, _package);
 
-                                @Override
-                                protected void onFailure(Throwable exception) {
-                                    IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                }
-                            });
-                        } catch (RequestException e) {
-                            IDE.fireEvent(new ExceptionThrownEvent(e));
+                        if (_package.getLinks().isEmpty()) {
+                            try {
+                                VirtualFileSystem.getInstance()
+                                                 .getItemById(_package.getId(),
+                                                              new AsyncRequestCallback<ItemWrapper>(
+                                                                                                    new ItemUnmarshaller(
+                                                                                                                         new ItemWrapper(
+                                                                                                                                         _package))) {
+
+                                                                  @Override
+                                                                  protected void onSuccess(ItemWrapper result) {
+                                                                      _package.setLinks(result.getItem().getLinks());
+                                                                      createJavaFile(_package, newFile);
+                                                                  }
+
+                                                                  @Override
+                                                                  protected void onFailure(Throwable exception) {
+                                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                                  }
+                                                              });
+                            } catch (RequestException e) {
+                                IDE.fireEvent(new ExceptionThrownEvent(e));
+                            }
+                        } else {
+                            createJavaFile(_package, newFile);
                         }
 
                         return;
@@ -512,11 +519,6 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
             }
         }
 
-      
-    
-      
-      
-      
       /*
 
       if (!DEFAULT_PACKAGE.equals(packageName))
@@ -573,6 +575,27 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
       */
+    }
+    
+    private void createJavaFile(final Package _package, FileModel newFile) {
+        try {
+            vfs.createFile(_package, new AsyncRequestCallback<FileModel>(new FileUnmarshaller(newFile)) {
+                @Override
+                protected void onSuccess(FileModel result) {
+                    createdClass = result;
+                    IDE.getInstance().closeView(display.asView().getId());
+                    IDE.addHandler(TreeRefreshedEvent.TYPE, CreateJavaClassPresenter.this);
+                    IDE.fireEvent(new RefreshBrowserEvent(_package.getProject(), result));
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    IDE.fireEvent(new ExceptionThrownEvent(exception));
+                }
+            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
     }
 
     private String getPackage() {

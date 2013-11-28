@@ -51,6 +51,21 @@ public interface FactoryLocalizationConstants extends Messages {
     @Key("messages.saveAllChangesBeforeCopying")
     String saveAllChangesBeforeCopying();
 
+    @Key("messages.fileToOpenNotFound")
+    String fileToOpenIsNotFound(String fileToOpen);
+
+    @Key("messages.cloningProcess")
+    String cloningProcess();
+
+    @Key("messages.cloneSuccessful")
+    String cloneSuccessful(String vcsUrl);
+    
+    @Key("messages.sharing.facebookSubtitle")
+    String facebookSubtitle();
+
+    @Key("messages.sharing.twitterMessage")
+    String twitterMessage(String projectName, String factoryURL);
+
     /*
      * Controls
      */

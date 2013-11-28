@@ -724,4 +724,28 @@ public interface GitLocalizationConstant extends Messages {
     
     @Key("projectNameStartWith_Message")
     String projectNameStartWith_Message();
+
+    @Key("import.github.error.label")
+    String importFromGitHubErrorLabel(String account);
+
+    @Key("user.not.found")
+    String userNotFound();
+
+    @Key("import.github.title")
+    String importFromGithubTitle();
+
+    @Key("authorize.need.title")
+    String authorizeTitle();
+
+    @Key("authorize.need.body")
+    String authorizeBody(String vendorName);
+
+    @Key("authorize.need.body.ssh")
+    String authorizeSSHBody(String vendorName);
+
+    @Key("authorize.need.body.collaborators")
+    String authorizeCollaboratorsBody(String vendorName);
+
+    @Key("authorize.not.supported")
+    String authorizeNotSupported();
 }

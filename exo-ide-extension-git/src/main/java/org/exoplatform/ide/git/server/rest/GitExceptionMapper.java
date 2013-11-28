@@ -17,7 +17,10 @@
  */
 package org.exoplatform.ide.git.server.rest;
 
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.git.server.GitException;
+import org.exoplatform.ide.git.server.NotAuthorizedException;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -35,9 +38,20 @@ public class GitExceptionMapper implements ExceptionMapper<GitException> {
     /** @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable) */
     @Override
     public Response toResponse(GitException e) {
+        if (e instanceof NotAuthorizedException) {
+            return Response.status(HTTPStatus.UNAUTHORIZED)
+                           .header(HTTPHeader.JAXRS_BODY_PROVIDED, "Authentication-required")
+                           .entity("You need to authorize to perform this operation")
+                           .type(MediaType.TEXT_PLAIN)
+                           .build();
+        }
+
         // Insert error message in <pre> tags even content-type is text/plain.
         // Message will be included in HTML page by client.
-        return Response.status(500).header("JAXRS-Body-Provided", "Error-Message")
-                       .entity("<pre>" + e.getMessage() + "</pre>").type(MediaType.TEXT_PLAIN).build();
+        return Response.status(HTTPStatus.INTERNAL_ERROR)
+                       .header(HTTPHeader.JAXRS_BODY_PROVIDED, "Error-Message")
+                       .entity(e.getLocalizedMessage())
+                       .type(MediaType.TEXT_PLAIN)
+                       .build();
     }
 }

@@ -49,10 +49,7 @@ import org.exoplatform.ide.extension.ssh.server.SshKeyStoreException;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
-import org.exoplatform.ide.git.shared.InitRequest;
-import org.exoplatform.ide.git.shared.Remote;
-import org.exoplatform.ide.git.shared.RemoteAddRequest;
-import org.exoplatform.ide.git.shared.RemoteListRequest;
+import org.exoplatform.ide.git.shared.*;
 import org.exoplatform.ide.security.paas.Credential;
 import org.exoplatform.ide.security.paas.CredentialStore;
 import org.exoplatform.ide.security.paas.CredentialStoreException;
@@ -113,6 +110,7 @@ public class Express {
     }
 
     private final CredentialStore                     credentialStore;
+    private final GitConnectionFactory factory;
     private final SshKeyStore                         sshKeyStore;
     private final OpenShiftConnectionFactory          openShiftConnectionFactory;
     // Provide cache for openshift-express connections.
@@ -121,10 +119,11 @@ public class Express {
     private final Cache<String, IOpenShiftConnection> connections;
     private final Lock                                lock;
 
-    public Express(CredentialStore credentialStore, SshKeyStore sshKeyStore) {
+    public Express(CredentialStore credentialStore, SshKeyStore sshKeyStore, GitConnectionFactory factory) {
         this.credentialStore = credentialStore;
         this.sshKeyStore = sshKeyStore;
         this.openShiftConnectionFactory = new OpenShiftConnectionFactory();
+        this.factory = factory;
         this.connections = new SLRUCache<String, IOpenShiftConnection>(20, 10) {
             @Override
             protected void evict(String key, IOpenShiftConnection value) {
@@ -256,8 +255,14 @@ public class Express {
         String gitUrl = application.getGitUrl();
         if (workDir != null) {
             GitConnection git = null;
+            GitUser gituser = null;
             try {
-                git = GitConnectionFactory.getInstance().getConnection(workDir, null);
+                ConversationState conversationState = ConversationState.getCurrent();
+                if (conversationState != null) {
+                    gituser = new GitUser(conversationState.getIdentity().getUserId());
+                }
+
+                git = factory.getConnection(workDir, gituser);
                 git.init(new InitRequest());
                 git.remoteAdd(new RemoteAddRequest("express", gitUrl));
             } catch (GitException gite) {
@@ -686,7 +691,7 @@ public class Express {
             GitConnection git = null;
             List<Remote> remotes;
             try {
-                git = GitConnectionFactory.getInstance().getConnection(workDir, null);
+                git = factory.getConnection(workDir, null);
                 remotes = git.remoteList(new RemoteListRequest(null, true));
             } catch (GitException ge) {
                 throw new RuntimeException(ge.getMessage(), ge);

@@ -18,6 +18,7 @@
 package org.exoplatform.ide.client.framework.ui.impl;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
@@ -25,6 +26,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -68,6 +70,12 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /** View's default width */
     protected int defaultWidth = 300;
+    
+    /** Popup border height */
+    protected int deltaHeight = 29;
+
+    /** Popup border width */
+    protected int deltaWidth = 12;
 
     /** Is this view has close button ( can be closed ) */
     private boolean canBeClosed = true;
@@ -86,11 +94,11 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
     /** Type of this view. */
     private String type;
 
-    private Border viewBorder;
+    protected Border viewBorder;
 
     /** User defined content which will be displayed in this view. */
     private Widget viewWidget;
-
+    
     /**
      * Creates a new instance of this View implementation with specified parameters.
      *
@@ -173,6 +181,7 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
         getElement().setAttribute("is-active", "false");
         getElement().getStyle().setOverflow(Overflow.HIDDEN);
         getElement().getStyle().setPosition(Position.RELATIVE);
+        
         if (canResize)
             getElement().getStyle().setHeight(100, Unit.PCT);
         else
@@ -185,7 +194,7 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
         setWidgetTopHeight(viewBorder, 0, Unit.PX, 100, Unit.PCT);
         sinkEvents(Event.ONMOUSEDOWN);
     }
-
+    
     /**
      * Set's this view activate.
      *
@@ -526,4 +535,77 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
         getElement().getStyle().setHeight(value, unit);
         onResize();
     }
+    
+    public void setPopupWidth(int width) {
+        try {
+            getElement().getStyle().setWidth(width, Unit.PX);
+            
+            com.google.gwt.dom.client.Element windowElement = Document.get().getElementById(getId() + "-window");
+            if (windowElement != null) {
+                windowElement.getStyle().setWidth(width + deltaWidth, Unit.PX);
+
+                if (windowElement.getFirstChildElement() != null && windowElement.getFirstChildElement().getFirstChildElement() != null) {
+                    com.google.gwt.dom.client.Element windowTableElement = windowElement.getFirstChildElement().getFirstChildElement();            
+                    windowTableElement.getStyle().setWidth(width + deltaWidth, Unit.PX);                    
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void setPopupHeight(int height) {
+        try {
+            getElement().getStyle().setHeight(height, Unit.PX);
+            
+            com.google.gwt.dom.client.Element windowElement = Document.get().getElementById(getId() + "-window");
+            if (windowElement != null) {
+                windowElement.getStyle().setHeight(height + deltaHeight, Unit.PX);
+                
+                if (windowElement.getFirstChildElement() != null && windowElement.getFirstChildElement().getFirstChildElement() != null) {
+                    com.google.gwt.dom.client.Element windowTableElement = windowElement.getFirstChildElement().getFirstChildElement();            
+                    windowTableElement.getStyle().setHeight(height + deltaHeight, Unit.PX);
+                }                
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void centerPopup() {
+        try {
+            com.google.gwt.dom.client.Element windowElement = Document.get().getElementById(getId() + "-window");
+            if (windowElement != null) {
+                int left = (Window.getClientWidth() - windowElement.getOffsetWidth()) / 2;
+                int top = (Window.getClientHeight() - windowElement.getOffsetHeight()) / 2;
+                windowElement.getStyle().setLeft(left, Unit.PX);
+                windowElement.getStyle().setTop(top, Unit.PX);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void shiftHorizontal(int pixels) {
+        com.google.gwt.dom.client.Element windowElement = Document.get().getElementById(getId() + "-window");
+        if (windowElement != null) {
+            String left = windowElement.getStyle().getLeft();
+            if (left.endsWith("px")) {
+                int l = Integer.parseInt(left.substring(0, left.length() - 2));
+                windowElement.getStyle().setLeft(l + pixels, Unit.PX);
+            }            
+        }        
+    }
+    
+    public void shiftVertical(int pixels) {
+        com.google.gwt.dom.client.Element windowElement = Document.get().getElementById(getId() + "-window");
+        if (windowElement != null) {
+            String top = windowElement.getStyle().getTop();
+            if (top.endsWith("px")) {
+                int t = Integer.parseInt(top.substring(0, top.length() - 2));
+                windowElement.getStyle().setTop(t + pixels, Unit.PX);
+            }            
+        }        
+    }
+        
 }

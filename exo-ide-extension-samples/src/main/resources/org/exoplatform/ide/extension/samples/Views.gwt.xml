@@ -19,53 +19,9 @@
 -->
 <module>
     <inherits name='com.google.gwt.user.User'/>
-    <replace-with class="org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesView">
-        <when-type-is class="org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesPresenter.Display"/>
-    </replace-with>
-    <replace-with class="org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesView">
-        <when-type-is class="org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display"/>
-    </replace-with>
 
     <replace-with class="org.exoplatform.ide.extension.samples.client.startpage.StartPageView">
         <when-type-is class="org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter.Display"/>
-    </replace-with>
-
-    <replace-with class="org.exoplatform.ide.extension.samples.client.wizard.source.WizardSourceStepView">
-        <when-type-is
-                class="org.exoplatform.ide.extension.samples.client.wizard.source.WizardSourceStepPresenter.Display"/>
-    </replace-with>
-
-    <replace-with class="org.exoplatform.ide.extension.samples.client.wizard.location.WizardLocationStepView">
-        <when-type-is
-                class="org.exoplatform.ide.extension.samples.client.wizard.location.WizardLocationStepPresenter.Display"/>
-    </replace-with>
-
-    <replace-with class="org.exoplatform.ide.extension.samples.client.wizard.definition.WizardDefinitionStepView">
-        <when-type-is
-                class="org.exoplatform.ide.extension.samples.client.wizard.definition.WizardDefinitionStepPresenter.Display"/>
-    </replace-with>
-
-    <replace-with class="org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepView">
-        <when-type-is
-                class="org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepPresenter.Display"/>
-    </replace-with>
-
-    <replace-with class="org.exoplatform.ide.extension.samples.client.wizard.finish.WizardFinishStepView">
-        <when-type-is
-                class="org.exoplatform.ide.extension.samples.client.wizard.finish.WizardFinishStepPresenter.Display"/>
-    </replace-with>
-
-    <replace-with class="org.exoplatform.ide.extension.samples.client.paas.login.LoginView">
-        <when-type-is class="org.exoplatform.ide.extension.samples.client.paas.login.LoginPresenter.Display"/>
-    </replace-with>
-
-    <replace-with class="org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubView">
-        <when-type-is
-                class="org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display"/>
-    </replace-with>
-
-    <replace-with class="org.exoplatform.ide.extension.samples.client.oauth.GithubLoginView">
-        <when-type-is class="org.exoplatform.ide.extension.samples.client.oauth.GithubLoginPresenter.Display"/>
     </replace-with>
 
     <replace-with class="org.exoplatform.ide.extension.samples.client.inviting.github.InviteGitHubDevelopersView">
@@ -85,9 +41,4 @@
     <replace-with class="org.exoplatform.ide.extension.samples.client.getstarted.GetStartedView">
         <when-type-is class="org.exoplatform.ide.extension.samples.client.getstarted.GetStartedPresenter.Display" />
     </replace-with>
-    
-    <replace-with class="org.exoplatform.ide.extension.samples.client.github.ssh.GenerateGitHubSshKeyView">
-        <when-type-is class="org.exoplatform.ide.extension.samples.client.github.ssh.GenerateGitHubSshKeyPresenter.Display" />
-    </replace-with>
-
 </module>

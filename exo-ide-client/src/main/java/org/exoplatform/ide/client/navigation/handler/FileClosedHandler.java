@@ -29,6 +29,9 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceived
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -51,29 +54,57 @@ public class FileClosedHandler implements EditorFileClosedHandler, ApplicationSe
     /** @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client
      * .framework.editor.event.EditorFileClosedEvent) */
     public void onEditorFileClosed(final EditorFileClosedEvent event) {
-        String lockToken = lockTokens.get(event.getFile().getId());
+        final String lockToken = lockTokens.get(event.getFile().getId());
         if (!event.getFile().isPersisted()) {
             return;
         }
 
         if (lockToken != null) {
-            try {
-                VirtualFileSystem.getInstance().unlock(event.getFile(), lockToken, new AsyncRequestCallback<Object>() {
+            if (event.getFile().getLinks().isEmpty()) {
+                try {
+                    VirtualFileSystem.getInstance()
+                                     .getItemById(event.getFile().getId(),
+                                                  new AsyncRequestCallback<ItemWrapper>(
+                                                                                        new ItemUnmarshaller(
+                                                                                                             new ItemWrapper(
+                                                                                                                             event.getFile()))) {
 
-                    @Override
-                    protected void onSuccess(Object result) {
-                        IDE.fireEvent(new ItemUnlockedEvent(event.getFile()));
-                    }
+                                                      @Override
+                                                      protected void onSuccess(ItemWrapper result) {
+                                                          event.getFile().setLinks(result.getItem().getLinks());
+                                                          unlockFile(event.getFile(), lockToken);
+                                                      }
 
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        IDE.fireEvent(new ExceptionThrownEvent(exception, UNLOCK_FAILURE_MSG));
-                    }
-                });
-            } catch (RequestException e) {
-                IDE.fireEvent(new ExceptionThrownEvent(e, UNLOCK_FAILURE_MSG));
+                                                      @Override
+                                                      protected void onFailure(Throwable exception) {
+                                                          IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                      }
+                                                  });
+                } catch (RequestException e) {
+                    IDE.fireEvent(new ExceptionThrownEvent(e));
+                }
+            } else {
+                unlockFile(event.getFile(), lockToken);
             }
+        }
+    }
+    
+    private void unlockFile(final FileModel file, String lockToken) {
+        try {
+            VirtualFileSystem.getInstance().unlock(file, lockToken, new AsyncRequestCallback<Object>() {
 
+                @Override
+                protected void onSuccess(Object result) {
+                    IDE.fireEvent(new ItemUnlockedEvent(file));
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    IDE.fireEvent(new ExceptionThrownEvent(exception, UNLOCK_FAILURE_MSG));
+                }
+            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e, UNLOCK_FAILURE_MSG));
         }
     }
 

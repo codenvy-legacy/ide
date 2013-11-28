@@ -63,28 +63,6 @@ public class AsyncRequest {
         return $wnd.proxyServiceContext;
     }-*/;
 
-//   private static String getCheckedURL(String url)
-//   {
-//      String proxyServiceContext = getProxyServiceContext();
-//      if (proxyServiceContext == null || "".equals(proxyServiceContext))
-//      {
-//         return url;
-//      }
-//
-//      if (!(url.startsWith("http://") || url.startsWith("https://")))
-//      {
-//         return url;
-//      }
-//
-//      String currentHost = Location.getProtocol() + "//" + Location.getHost();
-//      if (url.startsWith(currentHost))
-//      {
-//         return url;
-//      }
-//
-//      return proxyServiceContext + "?url=" + URL.encodeQueryString(url);
-//   }
-
     public static final AsyncRequest build(Method method, String url) {
         return build(method, url, false);
     }
@@ -108,7 +86,6 @@ public class AsyncRequest {
                 url += "?async=true";
             }
         }
-//      String checkedURL = getCheckedURL(url);
         return new AsyncRequest(new RequestBuilder(method, url), async);
     }
 

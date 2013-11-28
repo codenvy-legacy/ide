@@ -42,6 +42,8 @@ import org.exoplatform.ide.vfs.client.event.SearchResultReceivedEvent;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -54,7 +56,7 @@ import java.util.List;
  * @version $Id: $
  */
 public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandler, ViewClosedHandler,
-                                             ItemsSelectedHandler {
+                                 ItemsSelectedHandler {
 
     public interface Display extends IsView {
 
@@ -73,7 +75,7 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
     }
 
     private static final String SEARCH_ERROR_MESSAGE = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
-                                                                                     .searchFileSearchError();
+                                                                                                     .searchFileSearchError();
 
     private Display display;
 
@@ -140,26 +142,33 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
         final FolderModel folder = new FolderModel();
         folder.setId(path);
         folder.setPath(path);
+        if (item instanceof ProjectModel)
+        {
+            folder.setProject((ProjectModel)item);
+        } else
+        {
+            folder.setProject(((ItemContext)item).getProject());
+        }
         try {
             VirtualFileSystem.getInstance().search(
-                    query,
-                    -1,
-                    0,
-                    new AsyncRequestCallback<List<Item>>(
-                            new ChildrenUnmarshaller(new ArrayList<Item>())) {
+                                                   query,
+                                                   -1,
+                                                   0,
+                                                   new AsyncRequestCallback<List<Item>>(
+                                                                                        new ChildrenUnmarshaller(new ArrayList<Item>())) {
 
-                        @Override
-                        protected void onSuccess(List<Item> result) {
-                            folder.getChildren().setItems(result);
-                            IDE.fireEvent(new SearchResultReceivedEvent(folder));
-                            IDE.getInstance().closeView(display.asView().getId());
-                        }
+                                                       @Override
+                                                       protected void onSuccess(List<Item> result) {
+                                                           folder.getChildren().setItems(result);
+                                                           IDE.fireEvent(new SearchResultReceivedEvent(folder));
+                                                           IDE.getInstance().closeView(display.asView().getId());
+                                                       }
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            IDE.fireEvent(new ExceptionThrownEvent(exception, SEARCH_ERROR_MESSAGE));
-                        }
-                    });
+                                                       @Override
+                                                       protected void onFailure(Throwable exception) {
+                                                           IDE.fireEvent(new ExceptionThrownEvent(exception, SEARCH_ERROR_MESSAGE));
+                                                       }
+                                                   });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e, SEARCH_ERROR_MESSAGE));
         }

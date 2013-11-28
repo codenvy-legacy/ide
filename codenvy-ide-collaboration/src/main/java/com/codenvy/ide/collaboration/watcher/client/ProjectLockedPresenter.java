@@ -35,10 +35,19 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @version $Id:
  */
 public class ProjectLockedPresenter implements ResourceLockedView.ActionDelegate, ProjectUsersListener {
+    
     private final ResourceLockedView                  view;
+    
     private final ProjectModel                        project;
+    
     private final FileOperationNotification.Operation operation;
 
+    /**
+     * Creates instance of this {@link ProjectLockedPresenter}
+     * 
+     * @param project
+     * @param operation
+     */
     public ProjectLockedPresenter(ProjectModel project, FileOperationNotification.Operation operation) {
         this.project = project;
         this.operation = operation;
@@ -49,34 +58,45 @@ public class ProjectLockedPresenter implements ResourceLockedView.ActionDelegate
         builder.appendHtmlConstant("Can't delete project <b>").appendEscaped(
                 project.getName()).appendHtmlConstant("</b>").toSafeHtml();
         view.setMessageText(builder.toSafeHtml());
-        view.setUserList(new SafeHtmlBuilder().appendEscaped("This project opened by other user(s).").toSafeHtml());
+        view.setUserList(new SafeHtmlBuilder().appendEscaped("This project is opened by other user(s).").toSafeHtml());
         ChatExtension.get().getProjectUserListeners().add(this);
     }
 
+    /**
+     * @see com.codenvy.ide.collaboration.ResourceLockedView.ActionDelegate#onClose()
+     */
     @Override
     public void onClose() {
         IDE.getInstance().closeView(view.getId());
         ChatExtension.get().getProjectUserListeners().remove(this);
     }
 
+    /**
+     * @see com.codenvy.ide.collaboration.ResourceLockedView.ActionDelegate#onNotify()
+     */
     @Override
     public void onNotify() {
         DtoClientImpls.ProjectOperationNotificationImpl notification = DtoClientImpls.ProjectOperationNotificationImpl.make();
         notification.setProjectId(project.getId()).setClientId(BootstrapSession.getBootstrapSession().getActiveClientId());
         String username = BootstrapSession.getBootstrapSession().getUsername();
-        notification.setMessage(username + " wont to delete " + project.getName() + " and ask you to close this project.");
+        notification.setMessage(username + " wants to delete " + project.getName() + " and asks you to close this project.");
         VfsWatcherExtension.get().collaborationApi.PROJECT_NOTIFICATION.send(notification);
     }
 
+    /**
+     * @see com.codenvy.ide.collaboration.chat.client.ProjectUsersListener#onUserOpenProject()
+     */
     @Override
     public void onUserOpenProject() {
     }
 
+    /**
+     * @see com.codenvy.ide.collaboration.chat.client.ProjectUsersListener#onUserCloseProject()
+     */
     @Override
     public void onUserCloseProject() {
         if (ChatExtension.get().getCurrentProjectParticipants().size() <= 1) {
-
-            Dialogs.getInstance().showInfo("All users close project, now you may perform operation.");
+            Dialogs.getInstance().showInfo("All users have just closed the project, now you may perform the operation.");
             onClose();
         }
     }

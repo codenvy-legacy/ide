@@ -18,6 +18,7 @@
 package org.exoplatform.ide.extension.ssh.server;
 
 import org.apache.commons.fileupload.FileItem;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 import org.exoplatform.ide.extension.ssh.shared.PublicKey;
@@ -25,6 +26,7 @@ import org.exoplatform.ide.extension.ssh.shared.PublicKey;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -52,9 +54,8 @@ import java.util.Set;
 @Path("{ws-name}/ssh-keys")
 public class KeyService {
     private final SshKeyStore keyStore;
-    
-    @PathParam("ws-name")
-    private String wsName; 
+
+    private long MAX_UPLOAD_SIZE = 16384L;
 
     public KeyService(SshKeyStore keyStore) {
         this.keyStore = keyStore;
@@ -82,30 +83,43 @@ public class KeyService {
     @Path("add")
     @Consumes({MediaType.MULTIPART_FORM_DATA})
     @RolesAllowed({"developer"})
-    public Response addPrivateKey(@Context SecurityContext security, @QueryParam("host") String host,
+    public Response addPrivateKey(@HeaderParam(HTTPHeader.CONTENT_LENGTH) Long length,
+                                  @QueryParam("host") String host,
                                   Iterator<FileItem> iterator) {
-        /*
-         * XXX : Temporary turn-off don't work on demo site if (!security.isSecure()) { throw new
-         * WebApplicationException(Response.status(400)
-         * .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build()); }
-         */
+        if (length > MAX_UPLOAD_SIZE) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+                                                      .entity("File is to large to proceed.")
+                                                      .header(HTTPHeader.CONTENT_TYPE, MediaType.TEXT_HTML)
+                                                      .build());
+        }
+
         byte[] key = null;
         while (iterator.hasNext() && key == null) {
             FileItem fileItem = iterator.next();
             if (!fileItem.isFormField()) {
+                if (fileItem.getSize() > MAX_UPLOAD_SIZE) {
+                    throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+                                                              .entity("File is to large to proceed.")
+                                                              .header(HTTPHeader.CONTENT_TYPE, MediaType.TEXT_HTML)
+                                                              .build());
+                }
                 key = fileItem.get();
             }
         }
-        // Return error response in <pre> HTML tag.
+
         if (key == null) {
-            throw new WebApplicationException(Response.ok("<pre>Can't find input file.</pre>", MediaType.TEXT_HTML)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+                                                      .entity("Can't find input file.")
+                                                      .header(HTTPHeader.CONTENT_TYPE, MediaType.TEXT_HTML)
                                                       .build());
         }
 
         try {
             keyStore.addPrivateKey(host, key);
         } catch (SshKeyStoreException e) {
-            throw new WebApplicationException(Response.ok("<pre>" + e.getMessage() + "</pre>", MediaType.TEXT_HTML)
+            throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                                                      .entity(e.getLocalizedMessage())
+                                                      .header(HTTPHeader.CONTENT_TYPE, MediaType.TEXT_HTML)
                                                       .build());
         }
         return Response.ok("", MediaType.TEXT_HTML).build();
@@ -120,13 +134,7 @@ public class KeyService {
     @GET
     @RolesAllowed({"developer"})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getPublicKey(@Context SecurityContext security, @QueryParam("host") String host) {
-
-        /*
-         * XXX : Temporary turn-off don't work on demo site if (!security.isSecure()) { throw new
-         * WebApplicationException(Response.status(400)
-         * .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build()); }
-         */
+    public Response getPublicKey(@QueryParam("host") String host) {
         SshKey publicKey;
         try {
             publicKey = keyStore.getPublicKey(host);
@@ -138,7 +146,7 @@ public class KeyService {
         }
         if (publicKey == null) {
             throw new WebApplicationException(Response.status(404) //
-                                                      .entity("Public key for host " + host + " not found. ") //
+                                                      .entity("Public key for host " + host + " not found.") //
                                                       .type(MediaType.TEXT_PLAIN) //
                                                       .build());
         }
@@ -165,7 +173,7 @@ public class KeyService {
     @Path("all")
     @RolesAllowed({"developer"})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getKeys(@Context UriInfo uriInfo) {
+    public Response getKeys(@Context UriInfo uriInfo, @PathParam("ws-name") String wsName) {
         try {
             Set<String> all = keyStore.getAll();
             if (all.size() > 0) {

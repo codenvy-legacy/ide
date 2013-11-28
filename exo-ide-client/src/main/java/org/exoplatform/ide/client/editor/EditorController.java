@@ -21,17 +21,58 @@ import com.google.collide.client.CollabEditor;
 import com.google.collide.client.CollabEditorExtension;
 import com.google.collide.client.collaboration.CollaborationPropertiesUtil;
 import com.google.collide.shared.document.Document;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersHandler;
 import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuEvent;
-import org.exoplatform.ide.client.framework.editor.event.*;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorCollapseFoldEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorCollapseFoldHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorCopyTextEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorCopyTextHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorCutTextEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorCutTextHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorDeleteCurrentLineEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorDeleteCurrentLineHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorDeleteTextEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorDeleteTextHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorExpandFoldEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorExpandFoldHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFoldSelectionEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFoldSelectionHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorPasteTextEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorPasteTextHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorRedoTypingEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorRedoTypingHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorSelectAllEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorSelectAllHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorUndoTypingEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorUndoTypingHandler;
+import org.exoplatform.ide.client.framework.event.CursorPosition;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.framework.event.SaveFileAsEvent;
@@ -60,7 +101,10 @@ import org.exoplatform.ide.editor.client.api.event.EditorContextMenuEvent;
 import org.exoplatform.ide.editor.client.api.event.EditorContextMenuHandler;
 import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedEvent;
 import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedHandler;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -344,19 +388,45 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
      * @see org.exoplatform.ide.client.framework.editor.event.EditorOpenFileHandler#onEditorOpenFile(org.exoplatform.ide.client
      *      .framework.editor.event.EditorOpenFileEvent)
      */
-    public void onEditorOpenFile(EditorOpenFileEvent event) {
-        FileModel file = event.getFile();
+    public void onEditorOpenFile(final EditorOpenFileEvent event) {
+        final FileModel file = event.getFile();
         if (file == null) {
             return;
         }
 
+        if (file.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(file.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(file))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      file.setLinks(result.getItem().getLinks());
+                                                      openFile(file, event.getCursorPosition());
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            openFile(file, event.getCursorPosition());
+        }
+    }
+    
+    private void openFile(FileModel file, CursorPosition cursorPosition) {
         if (openedFiles.get(file.getId()) != null) {
             FileModel openedFile = openedFiles.get(file.getId());
             EditorView view = editorViewList.get(openedFile.getId());
             view.setViewVisible();
-            if (event.getCursorPosition() != null) {
-                view.getEditor().setCursorPosition(event.getCursorPosition().getRow(),
-                                                   event.getCursorPosition().getColumn());
+            if (cursorPosition != null) {
+                view.getEditor().setCursorPosition(cursorPosition.getRow(),
+                                                   cursorPosition.getColumn());
             }
             return;
         }
@@ -372,9 +442,9 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
             waitForEditorInitialized = true;
             activeFile = file;
             IDE.getInstance().openView(editorView);
-            if (event.getCursorPosition() != null) {
-                editorView.getEditor().setCursorPosition(event.getCursorPosition().getRow(),
-                                                         event.getCursorPosition().getColumn());
+            if (cursorPosition != null) {
+                editorView.getEditor().setCursorPosition(cursorPosition.getRow(),
+                                                         cursorPosition.getColumn());
             }
 
             IDE.fireEvent(new EditorFileOpenedEvent(file, editorView.getEditor(), openedFiles));

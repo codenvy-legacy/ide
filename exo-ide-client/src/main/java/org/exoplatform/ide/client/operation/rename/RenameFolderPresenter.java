@@ -58,17 +58,12 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemType;
-import org.exoplatform.ide.vfs.shared.Link;
-import org.exoplatform.ide.vfs.shared.Property;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Presenter for renaming folders and files form.
@@ -194,21 +189,11 @@ public class RenameFolderPresenter extends ItemsOperationPresenter implements
     }
 
     private void completeMove(FolderModel folder, String sourceId) {
-        if (openedProject != null)
-        {
-            if (openedProject.getId().equals(folder.getId())) {
-                IDE.fireEvent(new RefreshBrowserEvent(openedProject, openedProject));
-            } else {
-                IDE.fireEvent(new RefreshBrowserEvent(folder.getParent(), folder));
-            }
-        }
-        else
-        {
-//            if (folder instanceof ProjectModel) {
-//                IDE.fireEvent(new OpenProjectEvent((ProjectModel)folder));
-//            } else {
-//                IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)renamedItem).getParent(), renamedItem));
-//            }            
+        if (openedProject != null && openedProject.getId().equals(sourceId)) {
+            openedProject.setId(folder.getId());
+            IDE.fireEvent(new RefreshBrowserEvent(openedProject, openedProject));
+        } else if (folder.getParent() != null) {
+            IDE.fireEvent(new RefreshBrowserEvent(folder.getParent(), folder));
         }
 
         closeView();
@@ -218,21 +203,41 @@ public class RenameFolderPresenter extends ItemsOperationPresenter implements
      * Rename folder
      */
     private void renameFolder() {
-        final FolderModel source = (FolderModel)selectedItems.get(0);
+        FolderModel source = (FolderModel)selectedItems.get(0);
         final String originalFolderId = source.getId();
-        String newName = getDestination();
-        
+        final String newName = getDestination();
+
+        if (source.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(source.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(source))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      performRename((FolderModel)result.getItem(), originalFolderId, newName);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            performRename(source, originalFolderId, newName);
+        }
+    }
+    
+    private void performRename(final FolderModel source, final String originalFolderId, String newName) {
         try {
             VirtualFileSystem.getInstance().rename(source, null, newName, lockTokens.get(source.getId()),
                    new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper())) {
                        @Override
                        protected void onSuccess(ItemWrapper result) {
                            FolderModel destination = (FolderModel)result.getItem();
-                           
-//                           ItemContext ic = (ItemContext)result.getItem();
-//                           ic.setParent(((ItemContext)item).getParent());
-//                           ic.setProject(((ItemContext)item).getProject());
-                           //itemMoved((Folder)result.getItem(), item.getPath());
                            
                            source.setId(destination.getId());
                            source.setName(destination.getName());
@@ -247,11 +252,6 @@ public class RenameFolderPresenter extends ItemsOperationPresenter implements
                            source.getLinks().clear();
                            source.getLinks().putAll(destination.getLinks());
                            
-                           //String oldItemPath = item.getPath();
-                           //updateOpenedFiles((Folder)result.getItem(), oldItemPath);
-                           //updateOpenedFiles(source, destination);
-                           //completeMove((FolderModel)result.getItem());
-                           
                            completeMove(source, originalFolderId);
                        }
 
@@ -261,8 +261,6 @@ public class RenameFolderPresenter extends ItemsOperationPresenter implements
                        }
                    });
         } catch (RequestException e) {
-            IDE.fireEvent(new ExceptionThrownEvent(e));
-        } catch (Exception e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
     }

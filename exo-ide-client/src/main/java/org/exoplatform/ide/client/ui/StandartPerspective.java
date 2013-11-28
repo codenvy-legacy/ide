@@ -138,8 +138,8 @@ public class StandartPerspective extends FlowPanel implements Perspective {
                 return;
             }
         }
+        
         if (view.getType().equals(ViewType.POPUP)) {
-
             popupWindowsPanel.addView(view);
             viewTargets.put(view.getId(), popupWindowsPanel);
             fireViewOpenedEvent(view);

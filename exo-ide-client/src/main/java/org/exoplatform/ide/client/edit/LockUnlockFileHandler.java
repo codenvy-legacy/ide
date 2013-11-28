@@ -67,35 +67,7 @@ public class LockUnlockFileHandler implements LockFileHandler, EditorActiveFileC
         IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
         IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
     }
-
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client
-     * .framework.editor.event.EditorFileClosedEvent) */
-    public void onEditorFileClosed(final EditorFileClosedEvent event) {
-        String lockToken = lockTokens.get(event.getFile().getId());
-        if (!event.getFile().isPersisted()) {
-            return;
-        }
-
-        if (lockToken != null) {
-            try {
-                VirtualFileSystem.getInstance().unlock(event.getFile(), lockToken, new AsyncRequestCallback<Object>() {
-
-                    @Override
-                    protected void onSuccess(Object result) {
-                        IDE.fireEvent(new ItemUnlockedEvent(event.getFile()));
-                    }
-
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        IDE.fireEvent(new ExceptionThrownEvent(exception, SERVICE_NOT_DEPLOYED));
-                    }
-                });
-            } catch (RequestException e) {
-                IDE.fireEvent(new ExceptionThrownEvent(e));
-            }
-        }
-    }
-
+    
     /** @see org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org
      * .exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent) */
     public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event) {
@@ -107,38 +79,64 @@ public class LockUnlockFileHandler implements LockFileHandler, EditorActiveFileC
     }
 
     /** @see org.exoplatform.ide.client.edit.event.LockFileHandler#onLockFile(org.exoplatform.ide.client.edit.event.LockFileEvent) */
-    public void onLockFile(LockFileEvent event) {
-        if (event.isLockFile()) {
+    public void onLockFile(final LockFileEvent event) {
+        if (activeFile.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(activeFile.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(activeFile))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      activeFile.setLinks(result.getItem().getLinks());
+                                                      setLockState(event.isLockFile(), activeFile);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            setLockState(event.isLockFile(), activeFile);
+        }
+    }
+    
+    private void setLockState(boolean isLockFile, final FileModel file) {
+        if (isLockFile) {
             try {
                 AutoBean<LockToken> autoBean = IDE.AUTO_BEAN_FACTORY.lockToken();
                 AutoBeanUnmarshaller<LockToken> unmarshaller = new AutoBeanUnmarshaller<LockToken>(autoBean);
-                VirtualFileSystem.getInstance().lock(activeFile, new AsyncRequestCallback<LockToken>(unmarshaller) {
+                VirtualFileSystem.getInstance().lock(file, new AsyncRequestCallback<LockToken>(unmarshaller) {
 
                     @Override
                     protected void onSuccess(LockToken result) {
-                        IDE.fireEvent(new ItemLockedEvent(activeFile, result));
-                        updateLockFileState(activeFile);
+                        IDE.fireEvent(new ItemLockedEvent(file, result));
+                        updateLockFileState(file);
                     }
 
                     @Override
                     protected void onFailure(Throwable exception) {
                         Dialogs.getInstance().showError(
-                                IDE.IDE_LOCALIZATION_MESSAGES.lockUnlockFileCantLockFile(activeFile.getName()));
+                                                        IDE.IDE_LOCALIZATION_MESSAGES.lockUnlockFileCantLockFile(activeFile.getName()));
                     }
                 });
             } catch (RequestException e) {
                 IDE.fireEvent(new ExceptionThrownEvent(e));
             }
         } else {
-            String lockToken = lockTokens.get(activeFile.getId());
+            String lockToken = lockTokens.get(file.getId());
             if (lockToken != null) {
                 try {
-                    VirtualFileSystem.getInstance().unlock(activeFile, lockToken, new AsyncRequestCallback<Object>() {
+                    VirtualFileSystem.getInstance().unlock(file, lockToken, new AsyncRequestCallback<Object>() {
 
                         @Override
                         protected void onSuccess(Object result) {
-                            IDE.fireEvent(new ItemUnlockedEvent(activeFile));
-                            updateLockFileState(activeFile);
+                            IDE.fireEvent(new ItemUnlockedEvent(file));
+                            updateLockFileState(file);
                         }
 
                         @Override

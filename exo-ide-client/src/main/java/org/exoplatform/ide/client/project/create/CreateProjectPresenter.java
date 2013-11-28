@@ -17,10 +17,23 @@
  */
 package org.exoplatform.ide.client.project.create;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.regexp.shared.RegExp;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.ToggleButton;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -50,6 +63,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
@@ -60,24 +74,10 @@ import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.regexp.shared.MatchResult;
-import com.google.gwt.regexp.shared.RegExp;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.ToggleButton;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -693,8 +693,35 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
      * @param project
      *         {@link ProjectModel}
      */
-    private void writeUseJRebelProperty(ProjectModel project) {
+    private void writeUseJRebelProperty(final ProjectModel project) {
         project.getProperties().add(new PropertyImpl(JREBEL, display.getUseJRebelPlugin().getValue().toString()));
+        
+        if (project.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(project.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(project))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      project.setLinks(result.getItem().getLinks());
+                                                      updateProjectProperties(project);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            updateProjectProperties(project);
+        }
+    }
+    
+    private void updateProjectProperties(ProjectModel project) {
         try {
             VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>() {
 
@@ -836,36 +863,61 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
      *         project's name
      */
     private void validateProjectNameForExistenceAndGoNext(final String projectName) {
-        try {
-            Folder parent = VirtualFileSystem.getInstance().getInfo().getRoot();
-            if (createModule) {
-                parent = getParentProject();
+        final Folder parent = (createModule) ? getParentProject() : VirtualFileSystem.getInstance().getInfo().getRoot();
+
+        if (parent.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(parent.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(parent))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      parent.setLinks(result.getItem().getLinks());
+                                                      checkProjectExistance(parent, projectName);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
             }
+        } else {
+            checkProjectExistance(parent, projectName);
+        }
+    }
+    
+    private void checkProjectExistance(Folder parent, final String projectName) {
+        try {
+            VirtualFileSystem.getInstance()
+                             .getChildren(parent, ItemType.PROJECT,
+                                          new AsyncRequestCallback<List<Item>>(
+                                                                               new ChildrenUnmarshaller(new ArrayList<Item>())) {
+                                              @Override
+                                              protected void onSuccess(List<Item> result) {
+                                                  for (Item item : result) {
+                                                      if (projectName.equals(item.getName())) {
+                                                          display.getErrorLabel()
+                                                                 .setValue(
+                                                                           org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT
+                                                                                                                           .createProjectFromTemplateProjectExists(
+                                                                                                                           projectName));
+                                                          return;
+                                                      }
+                                                  }
+                                                  display.getErrorLabel().setValue("");
+                                                  goNext();
+                                              }
 
-            VirtualFileSystem.getInstance().getChildren(parent, ItemType.PROJECT,
-                                                        new AsyncRequestCallback<List<Item>>(
-                                                                new ChildrenUnmarshaller(new ArrayList<Item>())) {
-                                                            @Override
-                                                            protected void onSuccess(List<Item> result) {
-                                                                for (Item item : result) {
-                                                                    if (projectName.equals(item.getName())) {
-                                                                        display.getErrorLabel().setValue(
-                                                                                org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT
-                                                                                                              .createProjectFromTemplateProjectExists(
-                                                                                                                      projectName));
-                                                                        return;
-                                                                    }
-                                                                }
-                                                                display.getErrorLabel().setValue("");
-                                                                goNext();
-                                                            }
-
-                                                            @Override
-                                                            protected void onFailure(Throwable exception) {
-                                                                IDE.fireEvent(new ExceptionThrownEvent(exception,
-                                                                                                       "Searching of projects failed."));
-                                                            }
-                                                        });
+                                              @Override
+                                              protected void onFailure(Throwable exception) {
+                                                  IDE.fireEvent(new ExceptionThrownEvent(exception,
+                                                                                         "Searching of projects failed."));
+                                              }
+                                          });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e, "Searching of projects failed."));
         }

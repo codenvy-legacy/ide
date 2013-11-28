@@ -1,0 +1,918 @@
+<!--
+
+    CODENVY CONFIDENTIAL
+    __________________
+
+    [2012] - [2013] Codenvy, S.A.
+    All Rights Reserved.
+
+    NOTICE:  All information contained herein is, and remains
+    the property of Codenvy S.A. and its suppliers,
+    if any.  The intellectual and technical concepts contained
+    herein are proprietary to Codenvy S.A.
+    and its suppliers and may be covered by U.S. and Foreign Patents,
+    patents in process, and are protected by trade secret or copyright law.
+    Dissemination of this information or reproduction of this material
+    is strictly forbidden unless prior written permission is obtained
+    from Codenvy S.A..
+
+-->
+
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder
+	xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+	>
+	
+	<ui:with field='resource' type='com.codenvy.ide.factory.client.FactoryClientBundle'/>
+	
+    <ui:style type='com.codenvy.ide.factory.client.factory.CreateFactoryView.Style'>
+	
+		/**********************************************************************************************************
+		 *
+		 *   WIZARD
+		 *
+		 **********************************************************************************************************/
+		 	
+		.wizard-container {
+			position: relative;
+			width: 100%;
+			height:100%;
+			overflow: hidden;
+		}
+		
+		.wizard-content {
+			position: absolute;
+			left:0px;
+			top: 0px;
+			width:100%;
+			height:100%;
+			
+			padding-left: 10px;
+			padding-right: 10px;
+			
+			box-sizing: border-box;
+			-moz-box-sizing: border-box;			
+			
+			overflow: hidden;
+		}
+		
+		.wizard-footer {
+			position: absolute;
+			left:0px;
+			right: 0px;
+			bottom: 0px;
+			height: 50px;
+			background-color: #EEEEEE;
+			overflow: hidden;		
+		}
+		
+		/**********************************************************************************************************
+		 *
+		 *   BLOCKS
+		 *
+		 **********************************************************************************************************/
+		
+		.block {
+			position: relative;
+			width: 100%;
+			overflow: hidden;
+		}
+		
+		.blockHeader {
+			position: absolute;
+			top: 0px;
+			height: 20px;
+			line-height:20px;
+			left:0px;
+			right:0px;
+			
+            font-family: Verdana, Bitstream Vera Sans, sans-serif;
+            font-size: 14px;
+            font-weight: bold;			
+
+			margin-bottom: 0px;
+            overflow:hidden;
+            white-space:nowrap;            
+		}
+		
+		.blockHeaderCollapsed {
+			padding-left: 20px;
+			background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAPElEQVR42mNgGAU0BeHh4f+pbiBVDYUZSDVDkQ2kiqHoBlJsKDYDKTIUl4FkG0oXFw7eWB68OWW0RCMIAMWdYsVP2fFfAAAAAElFTkSuQmCC);
+			background-repeat: no-repeat;
+			cursor: pointer;		
+		}
+		
+		.blockHeaderExpanded {
+			padding-left: 20px;
+			background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAK0lEQVR42mNgGAWjYJCB8PDw/6RiqhpKVZdS1ftUDVOqRhRVY380DwxhAAAEVGLFMjM0mgAAAABJRU5ErkJggg==);
+			background-repeat: no-repeat;
+			cursor: pointer;
+		}
+		
+		.blockHeader hr {
+			border-width: 0;
+			background-color:#AAAAAA;
+			height:1px;
+			display:inline-block;
+			width:100%;
+			position:relative;
+			top:4px;
+			margin-left:5px;
+		}
+		
+		.block-content {
+			position: absolute;
+			left:0px;
+			top:30px;
+			right:0px;
+			bottom:5px;
+			overflow:hidden;
+		}	
+		
+
+		/**********************************************************************************************************
+		 *
+		 *   STEP HEADER
+		 *
+		 **********************************************************************************************************/
+		
+		.step-header {
+			position: relative;
+			top:26px;
+			width:250px;
+			margin-left: -125px;
+			height:2px;
+			background: #EEEEEE;
+			left: 50%;
+			text-align: center;
+		}
+		
+		.step-header-step-left,
+		.step-header-step-right {
+			position: absolute;
+			display: inline-block;			
+			width: 12px;
+			height: 12px;
+			background: #e0e0e0;
+			margin-top: -5px;
+			
+			font-family: Verdana, Arial, sans-serif;
+			font-size: 12px;
+			font-weight: bold;
+			color: white;
+			
+			-webkit-border-radius: 6px;
+			-moz-border-radius: 6px;
+			border-radius: 6px;
+			line-height: 12px;			
+		}
+		
+		.step-header-step-left {
+			left: -14px;
+		}
+
+		.step-header-step-right {
+			right: -14px;
+		}
+
+		.step-header-step-selected {
+			background-color: #45AFDD;
+		}
+		
+		.step-header-step-left span,
+		.step-header-step-right span {
+			position: absolute;
+			left: -32px;
+			top: 20px;
+			width: 80px;
+			height: 16px;
+
+			color: #999;
+
+			font-family: Verdana, Arial, sans-serif;
+			font-size: 12px;
+			font-weight: normal;
+			line-height: 16px;
+			
+			text-align: center;
+		}
+		
+		.step-header-step-selected span {
+			color: #555;
+			font-weight: bold;
+		}
+		
+		/**********************************************************************************************************
+		 *
+		 *   LABEL
+		 *
+		 **********************************************************************************************************/
+		
+		.label {
+			width:120px;
+			height: 22px;
+			line-height:22px;
+			font-family: Arial Unicode MS, Arial, sans-serif;
+			font-size: 13px;
+			color: #444;
+			text-align: left;
+		}
+		
+		/**********************************************************************************************************
+		 *
+		 *   TEXT FIELD
+		 *
+		 **********************************************************************************************************/
+		
+		.textField {
+			width: 210px;
+			height: 22px;
+	
+			box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+			-webkit-appearance: textfield;
+			
+			background-color: white;
+			border-width: 1px;
+			border-color: #CCCCCC;
+			border-style: solid;
+			
+			padding: 0;
+			margin: 0;
+			
+			font-family: Arial Unicode MS, Arial, sans-serif;
+			font-size: 13px;
+			color: #444;
+			
+			border-radius: 2px;
+		}
+		
+		/**********************************************************************************************************
+		 *
+		 *   TEXT AREA
+		 *
+		 **********************************************************************************************************/
+		
+		.textarea {
+			box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+			-webkit-appearance: textfield;
+			
+			background-color: white;
+			border-width: 1px;
+			border-color: #CCCCCC;
+			border-style: solid;
+			
+			padding: 0;
+			margin: 0;
+			
+			font-family: Arial Unicode MS, Arial, sans-serif;
+			font-size: 13px;
+			color: #444;
+			
+			border-radius: 2px;			
+		}
+
+		/**********************************************************************************************************
+		 *
+		 *   RADIO BUTTON
+		 *
+		 **********************************************************************************************************/
+
+		.radio {
+			position: relative;			
+			width:100px;
+			height:20px;
+			line-height:20px;
+		}
+		
+		.radio input {
+			position: absolute;
+			left: 3px;
+			top: 3px;
+			display: inline-block;
+			margin:0;
+			padding:0;
+			cursor: pointer;
+		}
+		
+		.radio label {
+			position: absolute;
+			left: 20px;
+			top:0px;
+			height: 20px;
+			margin: 0;
+			padding: 0;
+			display: inline-block;
+			line-height:20px;			
+			font-family: Arial Unicode MS, Arial, sans-serif;
+			font-size: 13px;
+			color: #444;
+			cursor: pointer;			
+		}
+		
+		/**********************************************************************************************************
+		 *
+		 *   CHECK BOX
+		 *
+		 **********************************************************************************************************/
+		
+		.check {
+			height:20px;
+			line-height:20px;
+		}
+		
+		.check input {
+			position: absolute;
+			left: 3px;
+			top: 3px;
+			display: inline-block;
+			margin:0;
+			padding:0;
+			cursor: pointer;		
+		}
+		
+		.check label {
+			position: absolute;
+			left: 20px;
+			top:0px;
+			height: 20px;
+			margin: 0;
+			padding: 0;
+			display: inline-block;
+			line-height:20px;			
+			font-family: Arial Unicode MS, Arial, sans-serif;
+			font-size: 13px;
+			color: #444;
+			cursor: pointer;			
+		}
+		
+		/**********************************************************************************************************
+		 *
+		 *   FILE SELECT FIELD
+		 *
+		 **********************************************************************************************************/
+		
+		.file-select {
+			background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAA0UlEQVR42p1RQQqDMBDMI3PwkENOHoOIpyB+yoreLIi1b2nqG1JmIZKoaWwPE5bMzLI7y9Z1tQ5d19mmaWyWZQTU+PM1PhgeY4ytqspyzk8BDppTc1mWJMrz3E7TtJGo8QcOmoMZY4FUSkXHK4qCNPsVWF3XRMyPOWpengtpoA3MCAZEzOgADbR/m6WUoVlrTQRGS42N0wXm9tYSgVBSgY338fup/OBQu1M5HMyvt9kaXEFgdsAK2AsCIQSdph/6aAOWStlPe4/L5rMGP5n9Bqg/kijBX/ZKSfoAAAAASUVORK5CYII=);
+			background-position: 3px 3px;								
+			background-repeat: no-repeat;
+			padding-left:21px;
+			cursor: pointer;
+			background-color: #EEE;
+		}
+		
+		.file-select:HOVER {
+			background-color: #CCCCCC;
+			background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAyklEQVR42p1SQQqDMBDMI3PIwUNOOUoIniTkU1bszYJYe/BPKbOwJWpSbQ8DS2Zm2Z2NWNc1Mvq+jyGEqJQioMZbqkkhuGiaJkopswBXNDvnSGSMidM0fUjUeAMHzcGMsUDWdV0cz1pLmv0KwntPxPyci+bltZAG2o0ZwYAoGRnQQPu3WWu9NbdtSwRGOxsbp9uYu1tHBEI5C2x8jN9PlQaHmk/FyH4SbnAFBzOAFbAXBFVV0WmG+1BsIM5STtPe47I51+Anc9oA9RtxmI+OA6stagAAAABJRU5ErkJggg==);
+		}
+		
+		/**********************************************************************************************************
+		 *
+		 *   FILE UPLOAD FIELD
+		 *
+		 **********************************************************************************************************/
+
+		.fileUpload {
+			box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+			-webkit-appearance: textfield;			
+			border-color: #CCCCCC;
+			position: relative;
+			display: inline-block;
+			width: 210px;
+			height: 22px;
+			overflow: hidden;
+			vertical-align: middle;
+			
+			background-color: #EEE;
+			border-width: 1px;
+			border-style: solid;
+			border-radius: 2px;
+		}
+				
+		.fileUpload span {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 22px;
+			font-family: Arial Unicode MS, Arial, sans-serif;
+			font-size: 13px;
+			line-height: 22px;
+			color: #444;
+			text-align: center;
+			cursor: pointer;
+		}
+
+		.fileUpload input {
+			position: absolute;
+			top: 0;
+			left: 0;
+			margin: 0;
+			font-size: 70px;
+			opacity: 0;
+			filter: alpha(opacity = 0);
+			cursor: pointer!important;
+		}
+		
+		.fileUpload:hover {
+			background-color: #CCCCCC;
+		}	
+		
+		.fileUploadSelected {
+			width: 185px;
+			height: 24px;
+			background-color: transparent;
+			border-color: transparent;
+			
+			margin-left: -1px;
+			margin-top: -1px;			
+		}
+
+		.fileUploadSelected span {
+			text-align: left;
+			
+			box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+			-webkit-appearance: textfield;
+			
+			background-color: #eee;
+			border-width: 1px;
+			border-color: #ccc;
+			border-style: solid;
+			border-radius: 2px;
+			height: 22px;
+			margin: 0;
+		}		
+		
+		.fileUploadSelected input {
+		}
+		
+		.fileUploadSelected:hover {
+			background-color: transparent;
+			border-color: transparent;
+		}
+		
+		.fileUploadSelected:hover span {
+			background-color: #CCCCCC;
+		}
+				
+		.resetUploadButton {
+			position: relative;
+			width: 18px;
+			height: 18px;
+			overflow: hidden;
+			background-color: transparent;
+			background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAeElEQVR42mNgoDWYMWPG/66uLhQMEiPJkEePHoE1gmhkDBPDqfHly5coGs6cOYPTIJAcshhIL9wgdC+QiuEG7d279//y5cvJwiC9tIklkOmkegmkh/YGIccQIf6oQYPFIFLwunXrMA26desWSYZMmDDhP0gP1XMGABD0V9RPZm1DAAAAAElFTkSuQmCC);
+			cursor: pointer;
+			display:none;
+			opacity: 0.7;
+		}
+		
+		.resetUploadButton:hover {
+			background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAd0lEQVR42mNgoDUoKir6n5KSgoJBYiQZsmfPHrBGEI2MYWI4NR4+fBhFw7Jly3AaBJJDFgPphRuE7gVSMdyg6dOn/29sbCQLg/TSJpZAppPqJZAe2huEHEOE+KMGDRaDSMEdHR2YBm3ZsoUkQ7Kysv6D9FA9ZwAAklb90dMYaJgAAAAASUVORK5CYII=);
+		}
+
+		/**********************************************************************************************************
+		 *
+		 *   INFO BUTTON ( the field with question )
+		 *
+		 **********************************************************************************************************/
+		
+		.info {
+			margin-left:2px;
+			margin-top:2px;
+			width: 18px;
+			height: 18px;
+			background: #AAAAAA;
+			color: white;
+			border-radius: 9px;
+			text-align: center;
+			line-height:18px;
+			font-family: Arial Unicode MS, Arial, sans-serif;
+			font-size: 13px;
+			font-weight: bold;
+			cursor: pointer;
+			opacity: 0.6;
+		}
+		
+		.info:HOVER {
+			opacity: 1;
+		}
+		
+		/**********************************************************************************************************
+		 *
+		 *   BOTTOM BUTTONS
+		 *
+		 **********************************************************************************************************/
+		
+		.button-right,
+		.button-center,
+		.button-left {
+			position:absolute;
+			width: 90px;
+			height: 22px;
+			top: 14px;
+		}
+
+		.button-right {
+			 right: 20px;
+		}
+		
+		.button-center {
+			right: 125px;
+		}
+		
+		.button-left {
+			right: 125px;
+		}
+		
+		/**********************************************************************************************************
+		 *
+		 *   SPINNETS
+		 *
+		 **********************************************************************************************************/
+		
+        .snippetPanel {
+			border-radius: 4px;
+			
+			/* height: 100%; */
+			
+			top: 0px;
+			bottom: 10px;
+			
+			overflow: hidden;			
+			width: 242px;
+			position: absolute;
+		}		
+		
+		.snippetPanelLeft {
+			left: 0px;
+		}
+		
+		.snippetPanelCenter {
+			left: 50%;
+			margin-left: -121px;
+		}
+
+		.snippetPanelRight {
+			right: 0px;	
+		}
+		
+        .snippetImage {
+            float: left;
+            width: 32px;
+            height: 32px;
+            margin-right: 10px;
+            margin-bottom: 5px;
+            margin-left:0px;
+        }
+        
+        .snippetAreaLabel {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .snippetAreaPanel {
+        	position:absolute;
+        	left:0px;
+        	right:0px;
+        	top:40px;
+        	bottom:0px;
+        	overflow:hidden;
+        	padding-bottom: 1px;
+        	
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+		
+        .snippetArea {
+            font-size: 12px;
+            resize: none;
+            overflow: hidden;
+            color: #666;
+            padding: 5px;
+            border: 1px solid #aaa !important;
+            border-radius: 4px;
+            outline: none;
+            width: 100%;
+            height: 100%;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            box-shadow: 0px 0px 5px rgba(200, 200, 200, 0.6);
+        }
+        
+        .snippetArea:HOVER {
+			background: #F0F0F0;
+			overflow: auto;
+		}
+		
+        .shareButton {
+            float: left;
+            width: 50px;
+            height: 50px;
+            margin: 0px 10px 0px 10px;
+            cursor: pointer;
+        }
+        
+		/**********************************************************************************************************
+		 *
+		 *   TOOLTIPS
+		 *
+		 **********************************************************************************************************/
+
+		.tooltip {
+			outline:none;
+			margin-left: 2px;
+			margin-top: 2px;
+			width: 18px;
+			height: 18px;
+			background: #aaa;
+			color: white;
+			border-radius: 9px;
+			text-align: center;
+			line-height: 18px;
+			font-family: Arial Unicode MS, Arial, sans-serif;
+			font-size: 13px;
+			font-weight: bold;
+			cursor: pointer;
+			
+			opacity: 0.6;
+		}
+		
+		.tooltip:hover {
+			opacity: 1;
+		}
+		
+		.tooltip span {
+			display: none;
+		}
+		
+		.tooltip span:hover {
+			display: none;
+		}
+		
+		.tooltip:hover span {
+			display: inline;
+			position: fixed;
+			
+    		color:#333;
+    		border:1px solid #CCC;
+    		background:#fff;			
+			
+			border-radius:4px;
+    		-moz-border-radius: 4px;
+    		-webkit-border-radius: 4px;
+        
+    		-moz-box-shadow: 5px 5px 8px #ccc;
+    		-webkit-box-shadow: 5px 5px 8px #ccc;
+    		box-shadow: 5px 5px 8px #ccc;
+    		
+    		white-space: nowrap;
+    		
+			font-family: Arial Unicode MS, Arial, sans-serif;
+			font-size: 13px;
+			font-weight: normal;
+			text-align: left;    		
+    		
+			padding:10px 20px;
+    		line-height:16px;
+    		
+    		z-index: 1147483647;    		
+		}
+		
+		.tooltip:hover span {
+			margin-left:20px;
+			margin-top: -9px;
+		}
+		
+		.tooltip span div {
+			position: absolute;
+			width: 12px;
+			height:22px;			
+			top:50%;
+			margin-top: -11px;
+			border:0;
+		}
+				
+		.tooltip span div {
+			background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAWCAYAAAD0OH0aAAAAU0lEQVR42p2Txw0AMAjE2H82dkqUT5RCNW9bohwijVLV0YJXteCScMKp8MKhYMGu4MGmEMGfkMGXUIG3UIW50G4JDY3Wig6HooHCh+KNHgi96ClNMVcA6aEHcjUAAAAASUVORK5CYII=);			
+			left:-12px;	
+		}
+
+	</ui:style>
+
+	<g:HTMLPanel styleName="{style.wizard-container}">
+		
+		<div class="{style.wizard-content}" ui:field="wizard1" style="">
+			
+			<div class="{style.block}" style="height:75px;">
+				<div class="{style.step-header}">
+					<div class="{style.step-header-step-left} {style.step-header-step-selected}"><span>CREATE</span></div>
+					<div class="{style.step-header-step-right}"><span>PUBLISH</span></div>
+				</div>
+			</div>
+			
+			<div class="{style.block}" style="height: 160px;">
+				<div class="{style.blockHeader}">Customize<hr noshade="noshade"></hr></div>					
+				<div class="{style.block-content}">
+					<div style="position: absolute; left:0px; top:0px; right: 350px; bottom: 0px; overflow:hidden;">
+						<div class="{style.check}" style="position: absolute; left:0px; right:0px; top:0px;">
+							<input type="checkbox" name="show_counter" ui:field="checkShowCounter" checked = "checked"></input>
+							<label for="checkShowCounter">Show number of projects created from your factory</label>
+						</div>
+						<div class="{style.label}" style="position: absolute; left:0px; right:0px; top:20px;">Configure your style:</div>
+						<div class="{style.radio}" style="position: absolute; left:30px; top:43px;">
+							<input type="radio" name="orientation" value="Vertical" ui:field="radioVertical" tabindex="0" checked=""></input>
+							<label for="radioVertical">Vertical</label>
+						</div>
+						<div class="{style.radio}" style="position: absolute; left:140px; top:43px;">
+							<input type="radio" name="orientation" value="Horizontal" ui:field="radioHorizontal" tabindex="0" checked=""></input>
+							<label for="radioHorizontal">Horizontal</label>
+						</div>
+						<div class="{style.radio}" style="position: absolute; left:30px; top:65px;">
+							<input type="radio" name="style" value="Dark" ui:field="radioDark" tabindex="0" checked=""></input>
+							<label for="radioDark">Dark</label>
+						</div>
+						<div class="{style.radio}" style="position: absolute; left:140px; top:65px;">
+							<input type="radio" name="style" value="White" ui:field="radioWhite" tabindex="0" checked=""></input>
+							<label for="radioWhite">White</label>
+						</div>
+					</div>
+ 
+					<div style="position: absolute; right:10px; top:0px; width: 300px; bottom: 0px; overflow: hidden;
+						text-align: center; line-height: 100px; 
+						background: #fafafa; border-style: dotted; border-width: 1px; border-color: #ebebeb;">
+							<iframe ui:field="previewFrame1" style="width:100%; height:100%; 
+								position: absolute; left: 0px; top: 0px; border: none; background: #fafafa;"></iframe>
+					</div>
+
+				</div>				
+			</div>
+			
+			<div class="{style.block}" style="height: 10px;"></div>
+			
+			<iframe ui:field="createFactoryIFrame" name="createFactoryIFrame" style="display:none; position:fixed; left:10px; top:10px; width:300px; height:100px; opacity:0.5; background:#FFEEAA; z-index:999999;"></iframe>
+			
+			<div class="{style.block}" style="height: 250px;">
+				<div class="{style.blockHeader} {style.blockHeaderExpanded}" ui:field="advancedOptionsControl" >Advanced Options<hr noshade="noshade"></hr></div>
+				<div class="{style.block-content}" ui:field="advancedOptions" style="top:40px;">
+										
+					<form ui:field="createFactoryForm">
+					
+					<div class="{style.label}" style="position: absolute; left:0px; top:0px;">Logo (100 x 100):</div>
+					<label ui:field="uploadFilePanel" class="{style.fileUpload}" style="position: absolute; left:120px; top:0px;">
+						<span ui:field="selectedFileNameSpan">Upload image (JPG, GIF or PNG)</span>
+						<input type="file" name="image" ui:field="uploadFileField" accept=".gif,.jpg,.jpeg,.png,image/gif,image/jpeg,image/png"></input>
+					</label>
+					
+					<div class="{style.resetUploadButton}" ui:field="resetUploadButton" style="position: absolute; left:308px; top:2px;"></div>
+					
+					<input type="hidden" name="factoryUrl" ui:field="factoryUrlContent"></input>
+					
+					</form>
+					
+					<div class="{style.tooltip}" style="position: absolute; left: 335px; top: 0px;">
+						?
+						<span style="margin-top: -18px;"><div></div>Create and embed a custom Factory<br/>button with your own logo</span>	
+					</div>
+					
+					<div class="{style.label}" style="position: absolute; left:0px; top:30px;">Description:</div>
+					<textarea ui:field="descriptionField" class="{style.textarea}" rows="4" cols="50" 
+						style="position: absolute; left:120px; top:30px; height: 52px; right:22px;"></textarea>
+					<div class="{style.tooltip}" style="position: absolute; right:0px; top: 30px;">
+						?
+						<span style="margin-top: -18px;"><div></div>Specify a description of your Factory<br/>to all users</span>	
+					</div>
+					
+					<div class="{style.label}" style="position: absolute; left:0px; top:90px;">Contact email:</div>					
+					<input ui:field="emailField" type="text" class="{style.textField}" style="position: absolute; left:120px; top:90px;"></input>
+					<div class="{style.tooltip}" style="position: absolute; left:335px; top:90px;">
+						?
+						<span style="margin-top: -18px;"><div></div>Include your email informations<br/>and let users able to contact you</span>	
+					</div>
+					
+					<div class="{style.label}" style="position: absolute; left:0px; top:120px;">Author:</div>
+					<input ui:field="authorField" type="text" class="{style.textField}" style="position: absolute; left:120px; top:120px;"></input>
+					<div class="{style.tooltip}" style="position: absolute; left:335px; top:120px;">
+						?
+						<span style="margin-top: -26px;"><div></div>Include your author informations<br/>and let everyone know that<br/>you originated this Factory</span>	
+					</div>
+					
+					<div class="{style.label}" style="position: absolute; left:0px; top:150px;">Open after launch:</div>
+					<input type="text" value="" readonly="readonly" ui:field="openAfterLaunchField"
+						class="{style.textField} {style.file-select}" 
+						style="position: absolute; left:120px; top:150px;"></input>
+					<div class="{style.tooltip}" style="position: absolute; left:335px; top:150px;">
+						?
+						<span style="margin-top: -18px;"><div></div>Define the file to open once<br/>the project will be factory-created</span>	
+					</div>
+					
+					
+					<div class="{style.label}" style="position: absolute; left:408px; top:90px;">Organisation ID:</div>					
+					<input ui:field="companyIdField" type="text" class="{style.textField}" style="position: absolute; left:528px; top:90px;"></input>
+					<div class="{style.tooltip}" style="position: absolute; right:0px; top:90px;">
+						?
+						<span style="margin-top: -26px;"><div></div>Specify the Organisation ID<br/>that we provide you to include this factory<br/>in reports we generate for you</span>	
+					</div>
+					
+					<div class="{style.label}" style="position: absolute; left:408px; top:120px;">Affiliate ID:</div>
+					<input ui:field="affiliateIdField" type="text" class="{style.textField}" style="position: absolute; left:528px; top:120px;"></input>
+					<div class="{style.tooltip}" style="position: absolute; right:0px; top:120px;">
+						?
+						<span style="margin-top: -26px;"><div></div>Use your AffiliateID and earn up to 10%<br/>on Codenvy sales from traffic that is sent to Codenvy<br/>from embedded IDEs that you include on your site</span>
+					</div>
+				</div>
+			</div>
+			
+			
+		</div>
+		
+		<div class="{style.wizard-content}" ui:field="wizard2" style="left:100%;">
+			
+			<div class="{style.block}" style="height:75px;">
+				<div class="{style.step-header}">
+					<div class="{style.step-header-step-left}"><span>CREATE</span></div>
+					<div class="{style.step-header-step-right} {style.step-header-step-selected}"><span>PUBLISH</span></div>
+				</div>
+			</div>
+				
+			<div class="{style.block}" style="height: 160px;">
+				<div class="{style.blockHeader}"><hr noshade="noshade"></hr></div>
+				<div class="{style.block-content}">
+					<div style="position: absolute; overflow: hidden; 
+						width: 300px;
+						left: 50%; right:0px; top:0px; bottom: 0px;
+						margin-left: -150px; 
+						text-align: center; line-height: 100px; 
+						background-color:#fafafa; 
+						border-style: dotted; border-width: 1px; border-color: #ebebeb;">
+							<iframe ui:field="previewFrame2" style="width:100%; height:100%; 
+								position: absolute; left: 0px; top: 0px; border: none; background: #fafafa;"></iframe>
+						</div>
+				</div>
+			</div>
+				
+			<div class="{style.block}" style="height: 190px;">
+				<div class="{style.blockHeader}">Embed<hr noshade="noshade"></hr></div>
+				<div class="{style.block-content}">
+				
+                    <g:FlowPanel addStyleNames="{style.snippetPanel} {style.snippetPanelLeft}">
+                        <g:Image resource="{resource.world}" styleName="{style.snippetImage}"></g:Image>
+                        <g:Label addStyleNames="{style.snippetAreaLabel}" text="on Websites"></g:Label>
+                        <g:FlowPanel styleName="{style.snippetAreaPanel}">
+                        	<f:TextAreaInput ui:field="snippetWebsites" addStyleNames="{style.snippetArea}"></f:TextAreaInput>
+                        </g:FlowPanel>
+	                </g:FlowPanel>
+
+                    <g:FlowPanel addStyleNames="{style.snippetPanel} {style.snippetPanelCenter}">
+                        <g:Image resource="{resource.gitHub}" styleName="{style.snippetImage}"></g:Image>
+                        <g:Label addStyleNames="{style.snippetAreaLabel}" text="on GitHub Pages"></g:Label>
+                        <g:FlowPanel styleName="{style.snippetAreaPanel}">
+                        	<f:TextAreaInput ui:field="snippetGitHub" addStyleNames="{style.snippetArea}"></f:TextAreaInput>
+                        </g:FlowPanel>
+                    </g:FlowPanel>
+
+                    <g:FlowPanel addStyleNames="{style.snippetPanel} {style.snippetPanelRight}">
+                        <g:Image resource="{resource.link}" styleName="{style.snippetImage}"></g:Image>
+                        <g:Label addStyleNames="{style.snippetAreaLabel}" text="Directly"></g:Label>
+                        <g:FlowPanel styleName="{style.snippetAreaPanel}">
+                        	<f:TextAreaInput ui:field="snippetDirectSharing" addStyleNames="{style.snippetArea}"></f:TextAreaInput>
+                        </g:FlowPanel>
+                    </g:FlowPanel>
+				
+				</div>
+			</div>
+			
+			<div class="{style.block}" style="height: 130px;">
+				<div class="{style.blockHeader}">Share<hr noshade="noshade"></hr></div>
+				<div class="{style.block-content}">
+	                <div style="width:280px; height: 50px; margin-left:auto; margin-right:auto; position: relative">
+	                    <g:Image ui:field="shareFacebookButton" resource="{resource.facebook}" styleName="{style.shareButton}"></g:Image>
+	                    <g:Image ui:field="shareGooglePlusButton" resource="{resource.gplus}" styleName="{style.shareButton}"></g:Image>
+	                    <g:Image ui:field="shareTwitterButton" resource="{resource.twitter}" styleName="{style.shareButton}"></g:Image>
+	                    <g:Image ui:field="shareEmailButton" resource="{resource.mail}" styleName="{style.shareButton}"></g:Image>
+	                </div>						
+				</div>
+			</div>				
+
+		</div>
+		
+		<div class="{style.wizard-footer}">
+            <f:ImageButton ui:field="buttonCancel" addStyleNames="{style.button-center}" text="Cancel" imageName="cancel"></f:ImageButton>
+            <f:ImageButton ui:field="buttonBack" addStyleNames="{style.button-center}" text="Back" imageName="back" visible="false"></f:ImageButton>
+            <f:ImageButton ui:field="buttonCreate" addStyleNames="{style.button-right}" text="Create" imageName="next"></f:ImageButton>
+            <f:ImageButton ui:field="buttonFinish" addStyleNames="{style.button-right}" text="Finish" imageName="ok" visible="false"></f:ImageButton>
+		</div>		
+
+	</g:HTMLPanel>
+
+</ui:UiBinder>

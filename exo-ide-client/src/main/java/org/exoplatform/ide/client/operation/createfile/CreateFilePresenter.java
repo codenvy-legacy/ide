@@ -40,9 +40,11 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Project;
@@ -199,10 +201,34 @@ public class CreateFilePresenter implements CreateNewFileHandler, ItemsSelectedH
         }
 
         String content = FileTemplates.getTemplateFor(mimeType);
-        FileModel newFile = new FileModel(fileName, mimeType, content, parent);
+        final FileModel newFile = new FileModel(fileName, mimeType, content, parent);
         newFile.setId(fileName);
         newFile.setProject(project);
+        
+        if (parent.getLinks().isEmpty()){
+            try {
+                VirtualFileSystem.getInstance().getItemById(parent.getId(), new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(parent))) {
 
+                    @Override
+                    protected void onSuccess(ItemWrapper result) {
+                        newFile.getParent().setLinks(result.getItem().getLinks());
+                        createNewFile(newFile);
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        IDE.fireEvent(new ExceptionThrownEvent(exception));
+                    }
+                });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            createNewFile(newFile);
+        }
+    }
+
+    private void createNewFile(FileModel newFile){
         try {
             VirtualFileSystem.getInstance().createFile(newFile.getParent(),
                                                        new AsyncRequestCallback<FileModel>(new FileUnmarshaller(newFile)) {
@@ -222,7 +248,8 @@ public class CreateFilePresenter implements CreateNewFileHandler, ItemsSelectedH
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
     }
-
+    
+    
     /** @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client
      * .framework.editor.event.EditorFileOpenedEvent) */
     @Override

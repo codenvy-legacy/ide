@@ -30,6 +30,7 @@ import org.eclipse.jdt.client.create.CreateJavaClassControl;
 import org.eclipse.jdt.client.create.CreateJavaClassPresenter;
 import org.eclipse.jdt.client.create.CreatePackageControl;
 import org.eclipse.jdt.client.create.CreatePackagePresenter;
+import org.eclipse.jdt.client.disable.DisableSyntaxErrorHighlightingControl;
 import org.eclipse.jdt.client.internal.codeassist.impl.AssistOptions;
 import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterControl;
@@ -198,7 +199,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
     public void initialize() {
         IDE.getInstance().addControl(new CreateJavaClassControl());
         new PackageExplorerPresenter();
-
+        DisableSyntaxErrorHighlightingControl disableSyntaxErrorHighlightingControl = new DisableSyntaxErrorHighlightingControl();
         CodeAssistantClientBundle.INSTANCE.css().ensureInjected();
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
         IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
@@ -207,13 +208,14 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
         IDE.addHandler(ApplicationClosedEvent.TYPE, this);
         IDE.addHandler(VfsChangedEvent.TYPE, this);
 //      new CodeAssistantPresenter(this);
-        new JavaCodeController(Utils.getRestContext(), Utils.getWorkspaceName(), this);
+        new JavaCodeController(Utils.getRestContext(), Utils.getWorkspaceName(), disableSyntaxErrorHighlightingControl, this);
         new OutlinePresenter();
         new TypeInfoUpdater();
         new JavaClasspathResolver(this);
         new OrganizeImportsPresenter(IDE.eventBus());
         new RefactoringRenamePresenter();
         IDE.getInstance().addControl(new CleanProjectControl());
+        IDE.getInstance().addControl(disableSyntaxErrorHighlightingControl);
         IDE.getInstance().addControl(new OrganizeImportsControl());
         IDE.getInstance().addControl(new CreatePackageControl());
         IDE.getInstance().addControl(new QuickFixControl());
@@ -343,7 +345,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
         if (contentAssistHistory == null) {
             Preferences preferences = GWT.create(Preferences.class);
             contentAssistHistory =
-                    ContentAssistHistory.load(preferences, Preferences.CODEASSIST_LRU_HISTORY + userInfo.getName());
+                    ContentAssistHistory.load(preferences, Preferences.CODEASSIST_LRU_HISTORY + userInfo.getUserId());
 
             if (contentAssistHistory == null)
                 contentAssistHistory = new ContentAssistHistory();
@@ -395,7 +397,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
         Preferences preferences = GWT.create(Preferences.class);
         if (contentAssistHistory != null) {
             ContentAssistHistory.store(contentAssistHistory, preferences,
-                                       Preferences.CODEASSIST_LRU_HISTORY + userInfo.getName());
+                                       Preferences.CODEASSIST_LRU_HISTORY + userInfo.getUserId());
             QualifiedTypeNameHistory.getDefault().save();
         }
     }

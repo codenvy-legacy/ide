@@ -19,7 +19,6 @@ package com.codenvy.ide.factory.client.greeting;
 
 import com.codenvy.ide.factory.client.FactoryClientBundle;
 import com.codenvy.ide.factory.client.copy.CopyProjectEvent;
-import com.codenvy.ide.factory.client.copy.CopySpec10;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.Style;
@@ -30,7 +29,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -39,7 +37,6 @@ import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.command.ui.AddToolbarItemsEvent;
 import org.exoplatform.gwtframework.ui.client.command.ui.UniButton;
 import org.exoplatform.gwtframework.ui.client.command.ui.UniButton.Size;
@@ -54,15 +51,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemType;
-import org.exoplatform.ide.vfs.shared.Link;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
@@ -132,7 +121,7 @@ public class GreetingUserPresenter implements
         createAccountButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                createAccount();
+                IDE.fireEvent(new CopyProjectEvent(true));
             }
         });
 
@@ -146,40 +135,6 @@ public class GreetingUserPresenter implements
         });
     }
 
-    private void createAccount() {
-        try {
-            VirtualFileSystem.getInstance()
-            .getChildren(VirtualFileSystem.getInstance().getInfo().getRoot(),
-                         ItemType.PROJECT,
-                         new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>())) {
-                @Override
-                protected void onSuccess(List<Item> result) {
-                    List<String> projectIds = new ArrayList<String>();
-                    for (Item project : result) {
-                        projectIds.add(project.getId() + ':' + project.getName());
-                    }
-                    if (!projectIds.isEmpty()) {
-                        Item firstItem = result.get(0);
-                        String projectsDownloadUrl = firstItem.getLinkByRelation(Link.REL_DOWNLOAD_ZIP).getHref();
-                        projectsDownloadUrl = projectsDownloadUrl.substring(0, projectsDownloadUrl.length() - firstItem.getId().length());
-                        StringBuilder projectIDS = new StringBuilder();
-                        for (String projectId : projectIds) {
-                            projectIDS.append(projectId).append(';');
-                        }
-                        goToURL("/site/create-account?" + CopySpec10.DOWNLOAD_URL + "=" + projectsDownloadUrl + "&" + CopySpec10.PROJECT_ID + "=" + projectIDS.toString());
-                    }
-                }
-                
-                @Override
-                protected void onFailure(Throwable exception) {
-                    Window.alert(exception.getMessage());
-                }
-            });
-        } catch (RequestException e) {
-            Window.alert(e.getMessage());
-        }
-    }
-    
     private native void loginToIDE() /*-{
             if ($wnd.location.search !== "") {
                 $wnd.location.search += "&login";
@@ -214,7 +169,7 @@ public class GreetingUserPresenter implements
         boolean workspaceTemporary = initialConfiguration.getCurrentWorkspace() == null ? false 
             : initialConfiguration.getCurrentWorkspace().isTemporary();
         
-        if (IDE.user.isTemporary() || "__anonim".equals(IDE.user.getName())) {
+        if (IDE.user.isTemporary() || "__anonim".equals(IDE.user.getUserId())) {
             if (workspaceTemporary) {
                 key = "anonymous-workspace-temporary";
                 addButtonsForNoneAuthenticatedUser();

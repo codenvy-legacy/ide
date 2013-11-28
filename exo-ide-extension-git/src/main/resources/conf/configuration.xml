@@ -23,34 +23,128 @@
                xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
+    <!--
+    ***************************************************************************************
+    ************************* Git Vendors Configuration ***********************************
+    ***************************************************************************************
+    -->
+
     <component>
-        <type>org.exoplatform.ide.git.server.rest.GitHubServiceApplication</type>
+        <type>org.exoplatform.ide.git.server.provider.rest.ProviderApplication</type>
     </component>
 
     <component>
-        <type>org.exoplatform.ide.git.server.jgit.OAuthCredentialsProvider</type>
-    </component>
-
-    <component>
-        <type>org.exoplatform.ide.git.server.github.GitHub</type>
+        <type>org.exoplatform.ide.git.server.provider.github.GitHub</type>
         <init-params>
             <value-param>
-                <name>github-user</name>
-                <value>eXoIDE</value>
+                <name>vendorName</name>
+                <value>github</value>
             </value-param>
+            <value-param>
+                <name>vendorBaseHost</name>
+                <value>github.com</value>
+            </value-param>
+            <value-param>
+                <name>vendorUrlPattern</name>
+                <value>.*github\.com.*</value>
+            </value-param>
+            <value-param>
+                <name>vendorSupportOAuth2</name>
+                <value>true</value>
+            </value-param>
+            <values-param>
+                <name>vendorOAuthScopes</name>
+                <value>repo</value>
+                <value>user</value>
+            </values-param>
         </init-params>
     </component>
-    
+
     <component>
-      <type>org.exoplatform.ide.git.server.jgit.ssh.IdeSshSessionFactory</type>
+        <type>org.exoplatform.ide.git.server.provider.bitbucket.BitBucket</type>
+        <init-params>
+            <value-param>
+                <name>vendorName</name>
+                <value>bitbucket</value>
+            </value-param>
+            <value-param>
+                <name>vendorBaseHost</name>
+                <value>bitbucket.org</value>
+            </value-param>
+            <value-param>
+                <name>vendorUrlPattern</name>
+                <value>.*bitbucket\.org.*</value>
+            </value-param>
+            <values-param>
+                <name>vendorOAuthScopes</name>
+            </values-param>
+        </init-params>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.git.server.provider.wso2.WSO2</type>
+        <init-params>
+            <value-param>
+                <name>vendorName</name>
+                <value>wso2</value>
+            </value-param>
+            <value-param>
+                <name>vendorBaseHost</name>
+                <value>git.cloudpreview.wso2.com</value>
+            </value-param>
+            <value-param>
+                <name>vendorUrlPattern</name>
+                <value>.*git\.cloudpreview\.wso2\.com.*</value>
+            </value-param>
+            <value-param>
+                <name>vendorSupportOAuth2</name>
+                <value>true</value>
+            </value-param>
+            <values-param>
+                <name>vendorOAuthScopes</name>
+            </values-param>
+        </init-params>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.git.server.provider.GitVendorServiceProvider</type>
+    </component>
+
+    <!--
+    ***************************************************************************************
+    ************************** Native Git Configuration ***********************************
+    ***************************************************************************************
+    -->
+
+    <component>
+        <type>org.exoplatform.ide.git.server.nativegit.CredentialsLoader</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.git.server.nativegit.OAuthCredentialsProvider</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.git.server.nativegit.SshKeysManager</type>
     </component>
     
-     <component>
+    <component>
+        <key>org.exoplatform.ide.git.server.GitConnectionFactory</key>
+        <type>org.exoplatform.ide.git.server.nativegit.NativeGitConnectionFactory</type>
+    </component>
+
+    <!--
+    ***************************************************************************************
+    *************************** Git REST Configuration ************************************
+    ***************************************************************************************
+    -->
+
+    <component>
         <type>org.exoplatform.ide.git.server.rest.GitApplication</type>
     </component>
-    
+
     <component>
-       <type>org.exoplatform.ide.git.server.GitIgnoreConfigChecker</type>
+        <type>org.exoplatform.ide.git.server.GitIgnoreConfigChecker</type>
     </component>
-    
+
 </configuration>

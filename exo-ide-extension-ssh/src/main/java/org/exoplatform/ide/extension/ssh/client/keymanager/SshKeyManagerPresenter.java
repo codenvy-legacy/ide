@@ -28,6 +28,7 @@ import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -113,7 +114,8 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
 
             @Override
             public void onSuccess(JavaScriptObject result) {
-                getLoader().hide();
+                Loader loader =  getLoader();
+                if (loader != null) loader.hide();
                 try {
                     display.getKeyItemGrid().setValue(SshKeysUnmarshaller.unmarshal(result));
                 } catch (UnmarshallerException e) {
@@ -123,7 +125,8 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
 
             @Override
             public void onFailure(Throwable exception) {
-                getLoader().hide();
+                Loader loader =  getLoader();
+                if (loader != null) loader.hide();
                 IDE.fireEvent(new ExceptionThrownEvent(exception));
             }
         });

@@ -2,58 +2,61 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.exoplatform.ide</groupId>
         <artifactId>exo-ide-parent</artifactId>
-        <version>2.8.3-SNAPSHOT</version>
+        <groupId>org.exoplatform.ide</groupId>
+        <version>2.9.1-SNAPSHOT</version>
     </parent>
     <artifactId>exo-ide-packaging-shell-war</artifactId>
     <packaging>war</packaging>
     <name>Codenvy IDE :: Packaging :: Shell</name>
-
     <dependencies>
         <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <scope>provided</scope>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-framework-client</artifactId>
+            <version>${project.version}</version>
         </dependency>
-        
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>12.0.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava-gwt</artifactId>
-            <version>12.0.1</version>
-            <scope>provided</scope>
-        </dependency>
-       
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-shell</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-editor</artifactId>
-            <scope>provided</scope>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs-fs</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-framework-client</artifactId>
+            <artifactId>exo-ide-editor</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava-gwt</artifactId>
+            <version>${guava.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
     <build>
+        <sourceDirectory>target/share</sourceDirectory>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -77,18 +80,21 @@
                     <execution>
                         <id>unwar-shell</id>
                         <phase>process-resources</phase>
-                        <configuration>
-                            <tasks>
-                                <unwar src="${project.build.directory}/dependency/exo-ide-shell-${project.version}.jar" dest="${project.build.directory}/share" />
-                            </tasks>
-                        </configuration>
                         <goals>
                             <goal>run</goal>
                         </goals>
+                        <configuration>
+                            <tasks>
+                                <unwar dest="${project.build.directory}/share" src="${project.build.directory}/dependency/exo-ide-shell-${project.version}.jar" />
+                            </tasks>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>move-compile-resources</id>
                         <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                         <configuration>
                             <tasks>
                                 <move todir="${project.build.directory}/${project.artifactId}-${project.version}">
@@ -96,9 +102,6 @@
                                 </move>
                             </tasks>
                         </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -117,6 +120,7 @@
                                 <artifactItem>
                                     <groupId>org.exoplatform.ide</groupId>
                                     <artifactId>exo-ide-shell</artifactId>
+                                    <version>${project.version}</version>
                                     <type>jar</type>
                                 </artifactItem>
                             </artifactItems>
@@ -128,12 +132,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
-                <configuration>
-                    <module>org.exoplatform.ide.shell.Shell</module>
-                    <runTarget>org.exoplatform.ide.shell.Shell/Shell.html</runTarget>
-                    <logLevel>INFO</logLevel>
-                    <skipTests>${gwt.test.skip}</skipTests>
-                </configuration>
                 <executions>
                     <execution>
                         <phase>compile</phase>
@@ -142,6 +140,14 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <module>org.exoplatform.ide.shell.Shell</module>
+                    <runTarget>org.exoplatform.ide.shell.Shell/Shell.html</runTarget>
+                    <logLevel>INFO</logLevel>
+                    <skipTests>${gwt.test.skip}</skipTests>
+                    <style>${gwt.compiler.additional.options}</style>
+                    <extraJvmArgs>${gwt.xmx}</extraJvmArgs>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -149,8 +155,7 @@
                 <configuration>
                     <webXml>src/main/resources/WEB-INF/web.xml</webXml>
                     <warSourceExcludes>.gwt-tmp/**,**/shell/**,**/application/**</warSourceExcludes>
-                    <packagingExcludes>
-                        **/classes/org/**,
+                    <packagingExcludes>**/classes/org/**,
                         **/Commons.css,
                         **/hosted.html,
                         **/IDEShell.html,
@@ -195,8 +200,7 @@
                         **/lib/tools.jar,
                         **/lib/guice-2.0.jar,
                         **/lib/antlr-2.*,
-                        **/lib/xstream-1.0.2.jar
-                    </packagingExcludes>
+                        **/lib/xstream-1.0.2.jar</packagingExcludes>
                     <webResources>
                         <resource>
                             <directory>src/main/resources</directory>
@@ -209,19 +213,7 @@
                     </webResources>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
-                    <excludes>
-                        <exclude>**/IDEGadget.java</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
         </plugins>
-        <sourceDirectory>target/share</sourceDirectory>
         <!-- outputDirectory>target/war/classes</outputDirectory -->
     </build>
 </project>

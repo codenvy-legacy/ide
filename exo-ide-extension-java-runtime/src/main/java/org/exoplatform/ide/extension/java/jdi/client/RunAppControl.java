@@ -39,13 +39,15 @@ import org.exoplatform.ide.vfs.shared.Item;
 
 @RolesAllowed("developer")
 public class RunAppControl extends SimpleControl implements IDEControl,
-                                                ProjectOpenedHandler,
-                                                AppStartedHandler, AppStoppedHandler, ItemsSelectedHandler {
-    public static final String  ID     = DebuggerExtension.LOCALIZATION_CONSTANT.runAppControlId();
+                                                            ProjectOpenedHandler,
+                                                            AppStartedHandler, AppStoppedHandler, ItemsSelectedHandler {
+    public static final String  ID                = DebuggerExtension.LOCALIZATION_CONSTANT.runAppControlId();
 
-    private static final String TITLE  = "Run Application";
+    private static final String TITLE             = "Run Application";
 
-    private static final String PROMPT = "Run Application";
+    private static final String PROMPT            = "Run Application";
+
+    private ProjectModel        currentProject    = null;
 
     public RunAppControl() {
         super(ID);
@@ -86,7 +88,8 @@ public class RunAppControl extends SimpleControl implements IDEControl,
     @Override
     public void onProjectOpened(ProjectOpenedEvent event)
     {
-        String projectType = event.getProject().getProjectType();
+        currentProject = event.getProject();
+        String projectType = currentProject.getProjectType();
         boolean isJavaProject = ProjectResolver.SPRING.equals(projectType)
                                 || ProjectResolver.SERVLET_JSP.equals(projectType)
                                 || ProjectResolver.APP_ENGINE_JAVA.equals(projectType)
@@ -98,13 +101,14 @@ public class RunAppControl extends SimpleControl implements IDEControl,
     }
 
     /** @param projectType */
-    private void updateStatus(String projectType) {
-        boolean isJavaProject = ProjectResolver.SPRING.equals(projectType)
-                                || ProjectResolver.SERVLET_JSP.equals(projectType)
-                                || ProjectResolver.APP_ENGINE_JAVA.equals(projectType)
-                                || ProjectType.JAVA.value().equals(projectType)
-                                || ProjectType.JSP.value().equals(projectType)
-                                || ProjectType.WAR.value().equals(projectType);
+    private void updateStatus() {
+        String projectType = (currentProject != null) ? currentProject.getProjectType() : null;
+        boolean isJavaProject = projectType != null && (ProjectResolver.SPRING.equals(projectType)
+                                                        || ProjectResolver.SERVLET_JSP.equals(projectType)
+                                                        || ProjectResolver.APP_ENGINE_JAVA.equals(projectType)
+                                                        || ProjectType.JAVA.value().equals(projectType)
+                                                        || ProjectType.JSP.value().equals(projectType)
+                                                        || ProjectType.WAR.value().equals(projectType));
         setVisible(isJavaProject);
         setShowInContextMenu(isJavaProject);
     }
@@ -127,9 +131,9 @@ public class RunAppControl extends SimpleControl implements IDEControl,
             setVisible(true);
             Item selectedItem = event.getSelectedItems().get(0);
 
-            ProjectModel project = selectedItem instanceof ProjectModel ? (ProjectModel)selectedItem
-                : ((ItemContext)selectedItem).getProject();
-            updateStatus(project.getProjectType());
+            currentProject = selectedItem instanceof ProjectModel ? (ProjectModel)selectedItem
+                                                                  : ((ItemContext)selectedItem).getProject();
+            updateStatus();
         }
     }
 

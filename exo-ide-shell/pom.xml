@@ -1,87 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
     <!-- POM file generated with GWT webAppCreator -->
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.exoplatform.ide</groupId>
         <artifactId>exo-ide-parent</artifactId>
-        <version>2.8.3-SNAPSHOT</version>
+        <groupId>org.exoplatform.ide</groupId>
+        <version>2.9.1-SNAPSHOT</version>
     </parent>
     <artifactId>exo-ide-shell</artifactId>
     <packaging>jar</packaging>
     <name>Codenvy IDE :: Shell</name>
-
-    <properties>
-        <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
-        <crash.version>1.0.0-beta21</crash.version>
-    </properties>
-
     <dependencies>
         <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-servlet</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-core</artifactId>
+            <version>${everrest.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.core</groupId>
             <artifactId>exo.core.component.security.core</artifactId>
+            <version>${org.exoplatform.core.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>javax.servlet</groupId>
                     <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>${javax.inject.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>jsr250-api</artifactId>
+            <version>${javax.annotation.version}</version>
         </dependency>
         <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
         </dependency>
-
-
         <!-- eXo GWT Framework dependencies -->
         <dependency>
             <groupId>org.exoplatform.gwt</groupId>
             <artifactId>codenvy-gwtframework-commons</artifactId>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.gwt</groupId>
             <artifactId>codenvy-gwtframework-ui</artifactId>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs</artifactId>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.everrest</groupId>
-            <artifactId>everrest-core</artifactId>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-servlet</artifactId>
+            <version>${gwt.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${org.slf4j.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${org.slf4j.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
-
     <build>
+        <!-- DO NOT REMOVE NEED FOR GWT BUILD-->
         <resources>
             <resource>
                 <directory>src/main/java</directory>
@@ -90,226 +102,5 @@
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <!-- TODO: dont work with everRest -->
-                    <excludes>
-                        <exclude>**/CLIResourseFactoryTest.java</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
     </build>
-    <profiles>
-        <profile>
-            <id>shell</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.exoplatform.ide</groupId>
-                    <artifactId>exo-ide-server</artifactId>
-                    <scope>runtime</scope>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>xstream</groupId>
-                            <artifactId>xstream</artifactId>
-                        </exclusion>
-                    </exclusions>
-                </dependency>
-                <dependency>
-                    <groupId>org.crsh</groupId>
-                    <artifactId>crsh.jcr</artifactId>
-                    <version>${crash.version}</version>
-                    <exclusions>
-                        <exclusion>
-                            <artifactId>crsh.shell.packaging</artifactId>
-                            <groupId>org.crsh</groupId>
-                        </exclusion>
-                    </exclusions>
-                </dependency>
-                <dependency>
-                    <groupId>javax.jcr</groupId>
-                    <artifactId>jcr</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                    <version>${org.slf4j.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.exoplatform.kernel</groupId>
-                    <artifactId>exo.kernel.commons</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.exoplatform.kernel</groupId>
-                    <artifactId>exo.kernel.container</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.exoplatform.jcr</groupId>
-                    <artifactId>exo.jcr.component.ext</artifactId>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>pull-parser</groupId>
-                            <artifactId>pull-parser</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>xstream</groupId>
-                            <artifactId>xstream</artifactId>
-                        </exclusion>
-                    </exclusions>
-                    <scope>runtime</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.exoplatform.jcr</groupId>
-                    <artifactId>exo.jcr.framework.web</artifactId>
-                    <scope>runtime</scope>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>xstream</groupId>
-                            <artifactId>xstream</artifactId>
-                        </exclusion>
-                    </exclusions>
-                </dependency>
-                <dependency>
-                    <groupId>org.exoplatform</groupId>
-                    <artifactId>exo-jcr-services</artifactId>
-                    <scope>runtime</scope>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>xstream</groupId>
-                            <artifactId>xstream</artifactId>
-                        </exclusion>
-                    </exclusions>
-                </dependency>
-                <dependency>
-                    <groupId>org.hsqldb</groupId>
-                    <artifactId>hsqldb</artifactId>
-                    <scope>runtime</scope>
-                </dependency>
-                <dependency>
-                    <groupId>com.google.gwt</groupId>
-                    <artifactId>gwt-servlet</artifactId>
-                    <scope>runtime</scope>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>xstream</groupId>
-                            <artifactId>xstream</artifactId>
-                        </exclusion>
-                    </exclusions>
-                </dependency>
-                <dependency>
-                    <groupId>org.everrest</groupId>
-                    <artifactId>everrest-integration-exo</artifactId>
-                    <exclusions>
-                        <exclusion>
-                            <artifactId>xstream</artifactId>
-                            <groupId>xstream</groupId>
-                        </exclusion>
-                    </exclusions>
-                </dependency>
-                <dependency>
-                    <groupId>org.everrest</groupId>
-                    <artifactId>everrest-test</artifactId>
-                    <scope>test</scope>
-                </dependency>
-
-                <!--DELETE -->
-                <dependency>
-                    <groupId>org.json</groupId>
-                    <artifactId>json</artifactId>
-                    <version>1.5</version>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.exoplatform.ide</groupId>
-                    <artifactId>exo-ide-extension-git</artifactId>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.exoplatform.ide</groupId>
-                    <artifactId>exo-ide-extension-googleappengine</artifactId>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>com.google.appengine</groupId>
-                            <artifactId>appengine-java-sdk</artifactId>
-                        </exclusion>
-                    </exclusions>
-                </dependency>
-
-                <!--  <dependency>
-                    <groupId>com.google.appengine</groupId>
-                    <artifactId>appengine-java-sdk</artifactId>
-                    <type>zip</type>
-                 </dependency> -->
-
-                <dependency>
-                    <groupId>com.google.appengine</groupId>
-                    <artifactId>appengine-tools-sdk</artifactId>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.exoplatform.ide</groupId>
-                    <artifactId>exo-ide-vfs-jcr</artifactId>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>xstream</groupId>
-                            <artifactId>xstream</artifactId>
-                        </exclusion>
-                    </exclusions>
-                    <scope>runtime</scope>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.exoplatform.core</groupId>
-                    <artifactId>exo.core.component.security.core</artifactId>
-                    <version>${org.exoplatform.core.version}</version>
-                </dependency>
-
-            </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>copy-prod-resources</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>target/war/</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>src/main/webapp/shell/</directory>
-                                            <filtering>true</filtering>
-                                        </resource>
-                                    </resources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>gwt-maven-plugin</artifactId>
-                        <configuration>
-                            <runTarget>Shell/Shell.html</runTarget>
-                            <hostedWebapp>${basedir}/target/war</hostedWebapp>
-                            <logLevel>INFO</logLevel>
-                            <skipTests>${gwt.test.skip}</skipTests>
-                            <port>${gwt.port}</port>
-                            <bindAddress>0.0.0.0</bindAddress>
-                            <extraJvmArgs>-Dorg.exoplatform.ide.server.fs-root-path=target/git</extraJvmArgs>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

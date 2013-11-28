@@ -25,15 +25,18 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.*;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.java.jdi.client.events.*;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 @RolesAllowed("developer")
 public class ShowLogsControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
                                                               AppStartedHandler, AppStoppedHandler {
-    private static final String ID = "Run/Java Logs";
+    private static final String ID                = "Run/Java Logs";
 
-    private static final String TITLE = DebuggerExtension.LOCALIZATION_CONSTANT.showLogsControlTitle();
+    private static final String TITLE             = DebuggerExtension.LOCALIZATION_CONSTANT.showLogsControlTitle();
 
-    private static final String PROMPT = DebuggerExtension.LOCALIZATION_CONSTANT.showLogsControlPrompt();
+    private static final String PROMPT            = DebuggerExtension.LOCALIZATION_CONSTANT.showLogsControlPrompt();
+
+    private ProjectModel        currentProject    = null;
 
     public ShowLogsControl() {
         super(ID);
@@ -44,31 +47,35 @@ public class ShowLogsControl extends SimpleControl implements IDEControl, Projec
         setGroupName(GroupNames.RUNDEBUG);
     }
 
-    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
-     * .project.ProjectClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     *      .project.ProjectClosedEvent)
+     */
     @Override
     public void onProjectClosed(ProjectClosedEvent event) {
         setEnabled(false);
         setVisible(false);
     }
 
-    /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
-     * .project.ProjectOpenedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+     *      .project.ProjectOpenedEvent)
+     */
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
-        String projectType = event.getProject().getProjectType();
-        updateState(projectType);
+        currentProject = event.getProject();
+        updateState();
     }
 
     /** @param projectType */
-    private void updateState(String projectType) {
-        boolean isJavaProject =
-                ProjectResolver.SPRING.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
-                || ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
-                || ProjectType.WAR.value().equals(projectType)
-                || ProjectType.JSP.value().equals(projectType);
+    private void updateState() {
+        String projectType = (currentProject != null) ? currentProject.getProjectType() : null;
+        boolean isJavaProject = projectType != null &&
+                                (ProjectResolver.SPRING.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
+                                 || ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
+                                 || ProjectType.WAR.value().equals(projectType)
+                                 || ProjectType.JSP.value().equals(projectType));
         setVisible(isJavaProject);
-        setEnabled(false);
         setShowInContextMenu(isJavaProject);
     }
 
@@ -93,4 +100,5 @@ public class ShowLogsControl extends SimpleControl implements IDEControl, Projec
     public void onAppStopped(AppStoppedEvent appStopedEvent) {
         setEnabled(false);
     }
+
 }

@@ -43,7 +43,6 @@ import org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.jenkins.client.marshal.StringContentUnmarshaller;
 import org.exoplatform.ide.extension.samples.client.inviting.InviteClientService;
 
@@ -57,7 +56,7 @@ import java.util.List;
  * @version $
  */
 public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHandler, ViewClosedHandler,
-                                            GoogleContactSelectionChangedHandler, JsPopUpOAuthWindow.JsPopUpOAuthWindowCallback {
+                                            GoogleContactSelectionChangedHandler, JsPopUpOAuthWindow.Callback {
 
     public interface Display extends IsView {
 
@@ -185,14 +184,13 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
             @Override
             public void booleanValueReceived(Boolean aBoolean) {
                 if (aBoolean != null && aBoolean) {
-                    String authUrl = Utils.getAuthorizationContext()
-                                     + "/ide/oauth/authenticate?oauth_provider=google&mode=federated_login"
-                                     + "&scope=https://www.google.com/m8/feeds"
-                                     + "&userId=" + IDE.user.getName()
-                                     + "&redirect_after_login=/ide/" + Utils.getWorkspaceName();
-                    JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500,
-                                                                           InviteGoogleDevelopersPresenter.this);
-                    authWindow.loginWithOAuth();
+                    new JsPopUpOAuthWindow().withOauthProvider("google")
+                                            .withScope("https://www.google.com/m8/feeds")
+                                            .withAuthMode("federated_login")
+                                            .withWindowWidth(980)
+                                            .withWindowHeight(500)
+                                            .withCallback(InviteGoogleDevelopersPresenter.this)
+                                            .login();
                 } else {
                     loadContactsFailed();
                 }
