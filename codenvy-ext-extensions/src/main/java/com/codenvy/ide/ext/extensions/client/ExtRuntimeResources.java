@@ -60,9 +60,6 @@ public interface ExtRuntimeResources extends ClientBundle {
     @Source("stopApp.png")
     ImageResource stopApp();
 
-    @Source("buildBundle.png")
-    ImageResource buildBundle();
-
     @Source("codenvyExtensionTemplate.png")
     ImageResource codenvyExtensionTemplate();
 
