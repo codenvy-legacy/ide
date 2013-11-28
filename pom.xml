@@ -4,7 +4,7 @@
     <parent>
         <artifactId>maven-parent-pom</artifactId>
         <groupId>com.codenvy</groupId>
-        <version>2.0.1</version>
+        <version>3.0.1</version>
     </parent>
     <groupId>org.exoplatform.ide</groupId>
     <artifactId>exo-ide-parent</artifactId>
@@ -106,7 +106,7 @@
         <everrest.version>1.1.5</everrest.version>
         <fest-assert.version>1.4</fest-assert.version>
         <gdata.version>1.47.1</gdata.version>
-        <gin.version>1.5.0</gin.version>
+        <gin.version>1.5.1</gin.version>
         <google.api-client.version>1.9.0-beta</google.api-client.version>
         <groovy.version>1.8.1</groovy.version>
         <gson.version>2.1</gson.version>
@@ -117,7 +117,7 @@
         <gwt-test-utils.version>0.38</gwt-test-utils.version>
         <gwt.compiler.additional.options>OBF</gwt.compiler.additional.options>
         <gwt.test.skip>true</gwt.test.skip>
-        <gwt.version>2.5.0</gwt.version>
+        <gwt.version>2.5.1</gwt.version>
         <gwt.xmx>-Xmx2048m</gwt.xmx>
         <hamcrest.version>1.2.1</hamcrest.version>
         <jackson.version>1.9.4</jackson.version>
@@ -133,6 +133,8 @@
         <junit.version>4.10</junit.version>
         <lucene.version>2.9.4</lucene.version>
         <maven-invoker.version>2.1.1</maven-invoker.version>
+        <maven.releases.repo.url>https://maven.codenvycorp.com/content/repositories/codenvy-private-releases/</maven.releases.repo.url>
+        <maven.snapshots.repo.url>https://maven.codenvycorp.com/content/repositories/codenvy-private-snapshots/</maven.snapshots.repo.url>
         <mockito.version>1.9.5</mockito.version>
         <mockitong.version>0.3</mockitong.version>
         <openid4java.version>0.9.6</openid4java.version>
