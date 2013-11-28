@@ -173,7 +173,6 @@ public class SDKRunner extends Runner {
 
     private Path buildWar(Path appDirPath) throws RunnerException {
         final String[] command = new String[]{Utils.getMavenExecCommand(), "package"};
-        Path path = null;
 
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(command).directory(appDirPath.toFile());
@@ -184,13 +183,10 @@ public class SDKRunner extends Runner {
             if (process.exitValue() != 0) {
                 throw new RunnerException(consumer.getOutput().toString());
             }
-            path = Utils.findFile("*.war", appDirPath.resolve("target"));
-        } catch (IOException e) {
+            return Utils.findFile("*.war", appDirPath.resolve("target"));
+        } catch (IOException | InterruptedException e) {
             throw new RunnerException(e);
-        } catch (InterruptedException e) {
-            Thread.interrupted();
         }
-        return path;
     }
 
     private void configureBuilderService(Path webappsPath, RunnerConfiguration runnerCfg)
