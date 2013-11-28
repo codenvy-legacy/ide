@@ -12,14 +12,19 @@
     <name>Codenvy IDE :: Extension :: Git</name>
     <dependencies>
         <dependency>
+            <groupId>com.codenvy.factory</groupId>
+            <artifactId>codenvy-factory-services</artifactId>
+            <version>${codenvy.factory.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-core</artifactId>
             <version>${codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.codenvy.factory</groupId>
-            <artifactId>codenvy-factory-services</artifactId>
-            <version>${codenvy.factory.version}</version>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>${jsch.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
@@ -27,9 +32,29 @@
             <version>${commons-codec.version}</version>
         </dependency>
         <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>${javax.inject.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>${jna.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-core</artifactId>
             <version>${everrest.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.core</groupId>
+            <artifactId>exo.core.component.security.core</artifactId>
+            <version>${org.exoplatform.core.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -62,11 +87,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.exoplatform.core</groupId>
-            <artifactId>exo.core.component.security.core</artifactId>
-            <version>${org.exoplatform.core.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.exoplatform.kernel</groupId>
             <artifactId>exo.kernel.commons</artifactId>
             <version>${org.exoplatform.kernel.version}</version>
@@ -77,24 +97,9 @@
             <version>${org.exoplatform.kernel.version}</version>
         </dependency>
         <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>${javax.inject.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna</artifactId>
-            <version>${jna.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-            <version>${jsch.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>${javax.ws.rs.version}</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${org.slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>picocontainer</groupId>
@@ -107,10 +112,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- CLIENT SIDE -->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${org.slf4j.version}</version>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.gwt</groupId>
@@ -142,23 +149,16 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- CLIENT SIDE -->
         <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
-            <scope>provided</scope>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${ch.qos.logback.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${ch.qos.logback.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

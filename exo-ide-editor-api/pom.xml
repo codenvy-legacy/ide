@@ -31,6 +31,12 @@
     <name>Codenvy IDE :: Editor :: API</name>
     <dependencies>
         <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.exoplatform.gwt</groupId>
             <artifactId>codenvy-gwtframework-ui</artifactId>
             <version>${project.version}</version>
@@ -40,12 +46,6 @@
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs</artifactId>
             <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

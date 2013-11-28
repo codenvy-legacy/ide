@@ -27,12 +27,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.exoplatform.kernel</groupId>
-            <artifactId>exo.kernel.container</artifactId>
-            <version>${org.exoplatform.kernel.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-catalina</artifactId>
             <version>${tomcat.version}</version>
@@ -42,6 +36,12 @@
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-coyote</artifactId>
             <version>${tomcat.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.kernel</groupId>
+            <artifactId>exo.kernel.container</artifactId>
+            <version>${org.exoplatform.kernel.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

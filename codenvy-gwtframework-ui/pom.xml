@@ -31,6 +31,12 @@
     <name>Codenvy GWT Framework :: UI</name>
     <dependencies>
         <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-elemental</artifactId>
+            <!-- TODO check it-->
+            <version>collide</version>
+        </dependency>
+        <dependency>
             <groupId>org.exoplatform.gwt</groupId>
             <artifactId>codenvy-gwtframework-commons</artifactId>
             <version>${project.version}</version>
@@ -39,12 +45,6 @@
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-commons</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-elemental</artifactId>
-            <!-- TODO check it-->
-            <version>collide</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>

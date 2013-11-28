@@ -17,6 +17,11 @@
             <version>${codenvy.commons.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-elemental</artifactId>
+            <version>collide</version>
+        </dependency>
+        <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-websockets</artifactId>
             <version>${everrest.version}</version>
@@ -40,11 +45,6 @@
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-framework-client</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-elemental</artifactId>
-            <version>collide</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -83,15 +83,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
-            <version>${easymock.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>${easymock.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -189,16 +189,6 @@
             </properties>
             <dependencies>
                 <dependency>
-                    <groupId>org.exoplatform.ide</groupId>
-                    <artifactId>exo-ide-commons</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.exoplatform.ide</groupId>
-                    <artifactId>exo-ide-vfs</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-                <dependency>
                     <groupId>com.google.code.gson</groupId>
                     <artifactId>gson</artifactId>
                     <version>${gson.version}</version>
@@ -207,6 +197,16 @@
                     <groupId>com.google.guava</groupId>
                     <artifactId>guava</artifactId>
                     <version>${guava.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.exoplatform.ide</groupId>
+                    <artifactId>exo-ide-commons</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.exoplatform.ide</groupId>
+                    <artifactId>exo-ide-vfs</artifactId>
+                    <version>${project.version}</version>
                 </dependency>
             </dependencies>
         </profile>
