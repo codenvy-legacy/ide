@@ -38,7 +38,7 @@ public class SaveAllAction extends Action {
 
     @Inject
     public SaveAllAction(EditorAgent editorAgent, Resources resources) {
-        super("Save All", "Save all changes for project", resources.file());
+        super("Save All", "Save all changes for project", resources.saveAll());
         this.editorAgent = editorAgent;
         this.resources = resources;
     }

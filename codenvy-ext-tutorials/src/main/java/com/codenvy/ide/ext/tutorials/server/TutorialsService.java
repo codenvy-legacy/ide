@@ -226,6 +226,27 @@ public class TutorialsService {
         createProject(vfsId, BASE_URL + "/editor-api-tutorial.zip", name, properties);
     }
 
+    /**
+     * Create 'GIN tutorial' project.
+     *
+     * @param vfsId
+     *         identifier of virtual file system
+     * @param name
+     *         name of the newly created project
+     * @param properties
+     *         properties to set to project
+     * @throws VirtualFileSystemException
+     *         if any error occurred in VFS
+     * @throws IOException
+     *         if any error occurred while input-output operations
+     */
+    @Path("gin")
+    @POST
+    public void createGinTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name, List<Property> properties)
+            throws VirtualFileSystemException, IOException {
+        createProject(vfsId, BASE_URL + "/gin-tutorial.zip", name, properties);
+    }
+
     private void createProject(@NotNull String vfsId, @NotNull String tutorialPath, @NotNull String name,
                                @NotNull List<Property> properties) throws VirtualFileSystemException, IOException {
         InputStream tutorialStream = new FileInputStream(new java.io.File(tutorialPath));

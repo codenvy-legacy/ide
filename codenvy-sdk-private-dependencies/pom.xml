@@ -33,36 +33,23 @@
     <dependencies>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-vfs-fs</artifactId>
-            <scope>runtime</scope>
-            <version>${project.version}</version>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-vfs</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-websocket</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>ch.qos.logback</groupId>
-                    <artifactId>logback-classic</artifactId>
-                </exclusion>
-            </exclusions>
             <version>${org.exoplatform.ide.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-logreader</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-client</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <!-- Extensions -->
@@ -83,12 +70,22 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-maven</artifactId>
+            <artifactId>codenvy-ext-ssh</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-ssh</artifactId>
+            <artifactId>codenvy-ext-builder</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-ant</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-maven</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

@@ -47,30 +47,6 @@
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-websocket</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>httpclient</artifactId>
-                    <groupId>org.apache.httpcomponents</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>servlet-api</artifactId>
-                    <groupId>javax.servlet</groupId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.exoplatform.ide</groupId>
-                    <artifactId>exo-ide-server</artifactId>
-                </exclusion>
-            </exclusions>
-            <version>${org.exoplatform.ide.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-security</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-codeassistant-storage</artifactId>
             <type>war</type>
             <version>${org.exoplatform.ide.version}</version>
@@ -81,7 +57,7 @@
             <type>war</type>
             <version>${com.codenvy.organization.version}</version>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-site-war</artifactId>
             <type>war</type>
@@ -93,11 +69,18 @@
             <type>war</type>
             <version>${org.exoplatform.ide.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>ide-codeassistant-lucene-index</artifactId>
             <type>zip</type>
             <version>${codenvy.ide-codeassistant-index.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-sdk-private-dependencies</artifactId>
+            <type>zip</type>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- Tutorials -->
@@ -145,10 +128,17 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
+            <artifactId>gin-tutorial</artifactId>
+            <type>zip</type>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-core</artifactId>
             <type>jar</type>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-maven</artifactId>
@@ -164,7 +154,7 @@
             <artifactId>codenvy-ext-git</artifactId>
             <version>${project.version}</version>
         </dependency>
-	<dependency>
+        <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-github</artifactId>
             <version>${project.version}</version>
@@ -177,22 +167,12 @@
 
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-extensions-runtime</artifactId>
-            <type>jar</type>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-sdk-private-dependencies</artifactId>
-            <type>zip</type>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-vfs-fs</artifactId>
             <scope>runtime</scope>
             <version>${project.version}</version>
         </dependency>
+
+        <!-- Logging libs -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>log4j-over-slf4j</artifactId>
@@ -240,8 +220,6 @@
             <artifactId>jsch</artifactId>
             <version>${jsch.version}</version>
         </dependency>
-
-        
     </dependencies>
 
     <build>
@@ -408,6 +386,15 @@
                                     <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
                                     <destFileName>editor-api-tutorial.zip</destFileName>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>gin-tutorial</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>gin-tutorial.zip</destFileName>
+                                </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
@@ -473,7 +460,6 @@
                                 </copy>
                                 <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x" includes="**/*.sh"/>
 
-
                                 <unwar src="${project.build.directory}/packager-conf/war/codenvy-application-war-${project.version}.war"
                                        dest="${project.build.directory}/packager-conf/war/ide">
                                 </unwar>
@@ -503,7 +489,7 @@
                                 <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"
                                        dest="${project.build.directory}/tomcat-ide"/>
                                 <unzip src="${project.build.directory}/repo.zip" dest="${project.build.directory}/tomcat-ide"/>
-                                <chmod dir="${project.build.directory}/tomcat-ide" perm="+x" includes="install.sh" />
+                                <chmod dir="${project.build.directory}/tomcat-ide" perm="+x" includes="install.sh"/>
                             </target>
                         </configuration>
                         <goals>

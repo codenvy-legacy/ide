@@ -142,4 +142,18 @@ public interface TutorialsClientService {
      */
     void createEditorTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
                                      @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+
+    /**
+     * Create 'GIN tutorial' project.
+     *
+     * @param projectName
+     *         name of the project to create
+     * @param properties
+     *         properties to set to a newly created project
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
+    void createGinTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
+                                  @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 }

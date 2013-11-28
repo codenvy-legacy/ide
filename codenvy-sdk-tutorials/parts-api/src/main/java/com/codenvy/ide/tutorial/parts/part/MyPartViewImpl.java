@@ -19,7 +19,6 @@ package com.codenvy.ide.tutorial.parts.part;
 
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -37,13 +36,11 @@ public class MyPartViewImpl extends BaseView<MyPartView.ActionDelegate> implemen
     interface MyPartViewImplUiBinder extends UiBinder<Widget, MyPartViewImpl> {
     }
 
-    private static MyPartViewImplUiBinder ourUiBinder = GWT.create(MyPartViewImplUiBinder.class);
-
     @UiField
     Button button;
 
     @Inject
-    public MyPartViewImpl(PartStackUIResources resources) {
+    public MyPartViewImpl(MyPartViewImplUiBinder ourUiBinder, PartStackUIResources resources) {
         super(resources);
         container.add(ourUiBinder.createAndBindUi(this));
     }

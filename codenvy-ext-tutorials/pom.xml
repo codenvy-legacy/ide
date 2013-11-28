@@ -55,7 +55,7 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-extensions-runtime</artifactId>
+            <artifactId>codenvy-ext-extensions</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -64,11 +64,6 @@
             <groupId>javax.ws.rs</groupId>
             <artifactId>jsr311-api</artifactId>
             <version>${javax.ws.rs.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>

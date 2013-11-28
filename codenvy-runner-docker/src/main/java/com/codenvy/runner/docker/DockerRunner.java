@@ -70,7 +70,7 @@ public class DockerRunner extends Runner {
         return new RunnerConfigurationFactory() {
             @Override
             public RunnerConfiguration createRunnerConfiguration(RunRequest request) throws RunnerException {
-                return new DockerRunnerConfiguration(request.getMemorySize(), 0, request);
+                return new DockerRunnerConfiguration(request.getMemorySize(), 0, 0, request);
             }
         };
     }
@@ -168,8 +168,8 @@ public class DockerRunner extends Runner {
     }
 
     public static class DockerRunnerConfiguration extends RunnerConfiguration {
-        public DockerRunnerConfiguration(int memory, int debugPort, RunRequest request) {
-            super(memory, debugPort, request);
+        public DockerRunnerConfiguration(int memory, int port, int debugPort, RunRequest request) {
+            super(memory, port, debugPort, request);
         }
 
         public String getDockerfileName() {

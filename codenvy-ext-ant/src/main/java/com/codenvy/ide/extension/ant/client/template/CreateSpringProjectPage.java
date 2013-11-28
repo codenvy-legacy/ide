@@ -67,7 +67,7 @@ public class CreateSpringProjectPage extends AbstractTemplatePage {
         JsonArray<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
                                                      new Property(PROPERTY_MIXIN_NATURES, com.codenvy.ide.extension.ant.client
                                                              .AntExtension.ANT_SPRING_APPLICATION_PROJECT_TYPE),
-                                                     new Property(PROPERTY_SOURCE_FOLDERS, createArray("src/main/java")));
+                                                     new Property(PROPERTY_SOURCE_FOLDERS, createArray("src")));
         final String projectName = wizardContext.getData(PROJECT_NAME);
         try {
             service.createSpringProject(projectName, properties, new AsyncRequestCallback<Void>() {
