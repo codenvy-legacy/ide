@@ -29,18 +29,18 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_MAIN_MENU;
  * Entry point for an extension that adds support for running Codenvy-extensions in Codenvy.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ExtRuntimeExtension.java Jul 2, 2013 4:14:56 PM azatsarynnyy $
+ * @version $Id: RunnerExtension.java Jul 2, 2013 4:14:56 PM azatsarynnyy $
  */
 @Singleton
-@Extension(title = "Codenvy extensions support.", version = "3.0.0")
-public class ExtRuntimeExtension {
+@Extension(title = "Codenvy runner support.", version = "3.0.0")
+public class RunnerExtension {
 
     @Inject
-    public ExtRuntimeExtension(ExtRuntimeLocalizationConstant localizationConstants,
-                               ActionManager actionManager,
-                               com.codenvy.ide.extension.runner.client.actions.LaunchAction launchAction,
-                               com.codenvy.ide.extension.runner.client.actions.GetLogsAction getLogsAction,
-                               com.codenvy.ide.extension.runner.client.actions.StopAction stopAction) {
+    public RunnerExtension(ExtRuntimeLocalizationConstant localizationConstants,
+                           ActionManager actionManager,
+                           com.codenvy.ide.extension.runner.client.actions.LaunchAction launchAction,
+                           com.codenvy.ide.extension.runner.client.actions.GetLogsAction getLogsAction,
+                           com.codenvy.ide.extension.runner.client.actions.StopAction stopAction) {
         // register actions
         DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
 

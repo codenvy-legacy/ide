@@ -29,6 +29,7 @@
 
     <artifactId>codenvy-sdk-api-war</artifactId>
     <packaging>war</packaging>
+    <name>Codenvy SDK :: Packaging :: API</name>
 
     <dependencies>
         <dependency>
