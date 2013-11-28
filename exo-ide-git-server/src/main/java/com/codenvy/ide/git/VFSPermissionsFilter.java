@@ -19,6 +19,7 @@ package com.codenvy.ide.git;
 
 import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
+import com.codenvy.organization.model.Role;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -32,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * If user doesn't have permissions to repository, filter will deny request with 403.
@@ -86,14 +88,22 @@ public class VFSPermissionsFilter implements Filter {
                 //get password - it is after first ':'
                 password = userAndPasswordDecoded.substring(betweenUserAndPassword + 1);
             }
+
+            Set<Role> userMembershipRoles = null;
+            try {
+                userMembershipRoles = userManager.getUserMembershipRoles(user, projectDirectory.getParentFile().getName());
+            } catch (OrganizationServiceException e) {
+                //ignore, let userMembershipRoles be null
+            }
                 /*
                     Check if user authenticated and hasn't permissions to project, then
                     send response code 403
                 */
             try {
+
                 if (!user.isEmpty() &&
-                    !(userManager.authenticateUser(user, password) && vfsPermissionsChecker.isAccessAllowed(user, userManager
-                            .getUserMembershipRoles(user, projectDirectory.getParentFile().getName()), projectDirectory))) {
+                    !(userManager.authenticateUser(user, password) &&
+                      vfsPermissionsChecker.isAccessAllowed(user, userMembershipRoles, projectDirectory))) {
                     ((HttpServletResponse)response).sendError(HttpServletResponse.SC_FORBIDDEN);
 
                  /*
@@ -101,12 +111,11 @@ public class VFSPermissionsFilter implements Filter {
                     any user, if it is not READ or ALL send response code 401 and header with BASIC type
                     of authentication
                  */
-                } else if (user.isEmpty() && !vfsPermissionsChecker.isAccessAllowed(user, null, projectDirectory)) {
+                } else if (user.isEmpty() && !vfsPermissionsChecker.isAccessAllowed(user, userMembershipRoles, projectDirectory)) {
                     ((HttpServletResponse)response).addHeader("Cache-Control", "private");
                     ((HttpServletResponse)response).addHeader("WWW-Authenticate", "Basic");
                     ((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 }
-                return;
             } catch (OrganizationServiceException e) {
                 throw new ServletException(e.getMessage(), e);
             }

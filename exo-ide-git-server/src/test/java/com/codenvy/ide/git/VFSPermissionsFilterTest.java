@@ -100,7 +100,7 @@ public class VFSPermissionsFilterTest {
     @Test
     public void testProjectWithoutPermissionsAndEmptyUser() throws IOException, ServletException {
         //given
-        when(vfsPermissionsChecker.isAccessAllowed("", null, projectDirectory)).thenReturn(true);
+        when(vfsPermissionsChecker.isAccessAllowed("", new HashSet<Role>(), projectDirectory)).thenReturn(true);
         //when
         filter.doFilter(request, response, filterChain);
         //then should be neither 401 no 403
