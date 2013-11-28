@@ -1,7 +1,6 @@
 <module>
     <inherits name="com.google.gwt.user.User"/>
     <inherits name="com.codenvy.ide.Api"/>
+    <inherits name="com.google.gwt.inject.Inject"/>
     <source path=""/>
-    <!-- For GWT Designer -->
-    <source path="perspective"/>
 </module>
