@@ -276,7 +276,7 @@ public class SDKRunner extends Runner {
         final CustomPortService portService;
         int pid = -1;
         TomcatLogger logger;
-        private Process process;
+        Process process;
 
         TomcatProcess(int httpPort, List<File> logFiles, int debugPort, File startUpScriptFile, File workDir,
                       CustomPortService portService) {
