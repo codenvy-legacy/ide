@@ -85,7 +85,7 @@ public class SDKRunner extends Runner {
         return new RunnerConfigurationFactory() {
             @Override
             public RunnerConfiguration createRunnerConfiguration(RunRequest request) throws RunnerException {
-                return new RunnerConfiguration(request.getMemorySize(), portService.acquire(), 0, request);
+                return new RunnerConfiguration(request.getMemorySize(), CustomPortService.getInstance().acquire(), 0, request);
             }
         };
     }
@@ -123,9 +123,7 @@ public class SDKRunner extends Runner {
         logFiles.add(new File(logsDir, "stdout.log"));
         logFiles.add(new File(logsDir, "stderr.log"));
 
-        final TomcatProcess process =
-                new TomcatProcess(runnerCfg.getPort(), logFiles, runnerCfg.getDebugPort(), startUpScriptFile,
-                                  appDir, portService);
+        final TomcatProcess process = new TomcatProcess(runnerCfg.getPort(), logFiles, runnerCfg.getDebugPort(), startUpScriptFile, appDir);
         registerDisposer(process, new Disposer() {
             @Override
             public void dispose() {
@@ -133,9 +131,9 @@ public class SDKRunner extends Runner {
                     ProcessUtil.kill(process.pid);
                 }
 
-                portService.release(process.httpPort);
+                CustomPortService.getInstance().release(process.httpPort);
                 if (process.debugPort > 0) {
-                    portService.release(process.debugPort);
+                    CustomPortService.getInstance().release(process.debugPort);
                 }
                 IoUtil.deleteRecursive(process.workDir);
                 LOG.debug("stop tomcat at port {}, application {}", process.httpPort, process.workDir);
@@ -273,19 +271,16 @@ public class SDKRunner extends Runner {
         final ExecutorService   pidTaskExecutor;
         final File              startUpScriptFile;
         final File              workDir;
-        final CustomPortService portService;
         int pid = -1;
         TomcatLogger logger;
         private Process process;
 
-        TomcatProcess(int httpPort, List<File> logFiles, int debugPort, File startUpScriptFile, File workDir,
-                      CustomPortService portService) {
+        TomcatProcess(int httpPort, List<File> logFiles, int debugPort, File startUpScriptFile, File workDir) {
             this.httpPort = httpPort;
             this.logFiles = logFiles;
             this.debugPort = debugPort;
             this.startUpScriptFile = startUpScriptFile;
             this.workDir = workDir;
-            this.portService = portService;
             pidTaskExecutor = Executors.newCachedThreadPool(new NamedThreadFactory("TomcatServer-", true));
         }
 
@@ -297,8 +292,7 @@ public class SDKRunner extends Runner {
 
             try {
                 process = Runtime.getRuntime()
-                                 .exec(new CommandLine(startUpScriptFile.getAbsolutePath()).toShellCommand(), null,
-                                       workDir);
+                                 .exec(new CommandLine(startUpScriptFile.getAbsolutePath()).toShellCommand(), null, workDir);
 
                 pid = pidTaskExecutor.submit(new Callable<Integer>() {
                     @Override
@@ -338,9 +332,9 @@ public class SDKRunner extends Runner {
             }
             ProcessUtil.kill(pid);
 
-            portService.release(httpPort);
+            CustomPortService.getInstance().release(httpPort);
             if (debugPort > 0) {
-                portService.release(debugPort);
+                CustomPortService.getInstance().release(debugPort);
             }
             IoUtil.deleteRecursive(workDir);
             LOG.debug("stop tomcat at port {}, application {}", httpPort, workDir);
@@ -393,7 +387,7 @@ public class SDKRunner extends Runner {
             @Override
             public void getLogs(Appendable output) throws IOException {
                 for (File logFile : logFiles) {
-                    output.append("====> " + logFile.getName() + " <====\n");
+                    output.append("====> ").append(logFile.getName()).append(" <====\n");
                     CharStreams.copy(new InputStreamReader(new FileInputStream(logFile)), output);
                     output.append("\n\n");
                 }

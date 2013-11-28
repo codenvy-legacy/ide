@@ -25,7 +25,6 @@ import com.codenvy.api.builder.internal.Builder;
 import com.codenvy.api.builder.internal.BuilderException;
 import com.codenvy.api.builder.internal.BuilderTaskType;
 import com.codenvy.api.builder.internal.DependencyCollector;
-import com.codenvy.api.core.config.Configuration;
 import com.codenvy.api.core.rest.FileAdapter;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.api.core.util.CustomPortService;
@@ -66,11 +65,6 @@ import java.util.zip.ZipOutputStream;
 public class AntBuilder extends Builder {
     private static final Logger LOG = LoggerFactory.getLogger(AntBuilder.class);
 
-    /** It sets min number of port which may be used to connect to AntBuildListener. Default value is 49152. */
-    public static final String ANT_LISTENER_MIN_PORT = "builder.ant_listener_min_port";
-    /** It sets max number of port which may be used to connect to AntBuildListener. Default value is 65535. */
-    public static final String ANT_LISTENER_MAX_PORT = "builder.ant_listener_max_port";
-
     private static final String DEPENDENCIES_JSON_FILE = "dependencies.json";
     private static final String DEPENDENCIES_ZIP_FILE  = "dependencies.zip";
     private static final String BUILD_LISTENER_CLASS;
@@ -104,12 +98,10 @@ public class AntBuilder extends Builder {
     }
 
     private final Map<Long, AntMessageServer> antMessageServers;
-    private final CustomPortService           portService;
 
     public AntBuilder() {
         super();
         antMessageServers = new ConcurrentHashMap<>();
-        portService = new CustomPortService();
     }
 
     @Override
@@ -231,8 +223,6 @@ public class AntBuilder extends Builder {
     @Override
     public void start() {
         super.start();
-        final Configuration myConfiguration = getConfiguration();
-        portService.setRange(myConfiguration.getInt(ANT_LISTENER_MIN_PORT, 49152), myConfiguration.getInt(ANT_LISTENER_MAX_PORT, 65535));
         addBuildListener(new AntMessageServerStarter());
     }
 
@@ -242,12 +232,12 @@ public class AntBuilder extends Builder {
         // If nobody asked about build results AntMessageServer may be still in the Map.
         final AntMessageServer server = antMessageServers.remove(task.getId());
         if (server != null) {
-            portService.release(server.port);
+            CustomPortService.getInstance().release(server.port);
         }
     }
 
     private int getPort() {
-        final int port = portService.acquire();
+        final int port = CustomPortService.getInstance().acquire();
         if (port < 0) {
             throw new IllegalStateException("Cannot start build process, there are no free ports. ");
         }
@@ -389,7 +379,7 @@ public class AntBuilder extends Builder {
             final AntMessageServer server = antMessageServers.get(task.getId());
             if (server != null) {
                 server.stop = true; // force stop if server is not stopped yet
-                portService.release(server.port);
+                CustomPortService.getInstance().release(server.port);
             }
         }
     }
