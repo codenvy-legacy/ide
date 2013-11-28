@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- *
- * [2012] - [2013] Codenvy, S.A.
+ * 
+ * [2012] - [2013] Codenvy, S.A. 
  * All Rights Reserved.
- *
+ * 
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -15,18 +15,18 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.vfs.impl.fs;
+package com.codenvy.ide.tutorial.gin.part;
 
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemRuntimeException;
+import com.codenvy.ide.api.mvp.View;
 
 /**
- * Thrown if timeout is reached while try to get lock.
+ * The view of {@link TutorialHowToPresenter}.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-@SuppressWarnings("serial")
-public final class PathLockTimeoutException extends VirtualFileSystemRuntimeException {
-    public PathLockTimeoutException(String message) {
-        super(message);
+public interface TutorialHowToView extends View<TutorialHowToView.ActionDelegate> {
+    /** Required for delegating functions in view. */
+    public interface ActionDelegate {
+
     }
 }

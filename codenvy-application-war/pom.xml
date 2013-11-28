@@ -124,6 +124,7 @@
             </exclusions>
             <version>${org.exoplatform.ide.version}</version>
         </dependency>
+
         <!-- Extensions -->
         <dependency>
             <groupId>com.codenvy.ide</groupId>

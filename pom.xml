@@ -96,7 +96,7 @@
         <jsch.version>0.1.44-1</jsch.version>
         <servlet-api.version>3.0.1</servlet-api.version>
         <org.apache.lucene.version>2.9.4</org.apache.lucene.version>
-        <gin.version>2.1.1</gin.version>
+        <gin.version>2.1.2</gin.version>
         <guava.version>12.0.1</guava.version>
         <gson.version>2.1</gson.version>
         <antlr.version>3.3</antlr.version>
@@ -156,6 +156,7 @@
         <module>codenvy-sdk-tutorials/editor-api</module>
         <module>codenvy-application-war</module>
         <module>codenvy-ide-site-war</module>
+        <module>codenvy-sdk-tutorials/gin</module>
         <module>codenvy-sdk-private-dependencies</module>
         <module>codenvy-packaging-standalone-tomcat</module>
     </modules>

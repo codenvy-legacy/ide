@@ -47,8 +47,11 @@ import java.util.concurrent.*;
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
 public class SDKRunner extends Runner {
-    private static final Logger LOG        = LoggerFactory.getLogger(SDKRunner.class);
-    private static final String SERVER_XML =
+    private static final Logger LOG                       = LoggerFactory.getLogger(SDKRunner.class);
+    /** String in JSON format to register builder service. */
+    private static final String BUILDER_REGISTRATION_JSON =
+            "[{\"builderServiceLocation\":{\"url\":\"http://localhost:${PORT}/api/internal/builder\"}}]";
+    private static final String SERVER_XML                =
             "<?xml version='1.0' encoding='utf-8'?>\n" +
             "<Server port=\"-1\">\n" +
             "  <Listener className=\"org.apache.catalina.core.AprLifecycleListener\" SSLEngine=\"on\" />\n" +
@@ -82,8 +85,7 @@ public class SDKRunner extends Runner {
         return new RunnerConfigurationFactory() {
             @Override
             public RunnerConfiguration createRunnerConfiguration(RunRequest request) throws RunnerException {
-                return new RunnerConfiguration(request.getMemorySize(), portService.acquire(), 0,
-                                                                request);
+                return new RunnerConfiguration(request.getMemorySize(), CustomPortService.getInstance().acquire(), 0, request);
             }
         };
     }
@@ -99,8 +101,11 @@ public class SDKRunner extends Runner {
             ZipUtils.unzip(Utils.getTomcatBinaryDistribution().openStream(), tomcatPath.toFile());
 
             final Path webappsPath = tomcatPath.resolve("webapps");
-            final File warFile = build(toDeploy.getFile()).toFile();
+            final File warFile = buildCodenvyWebApp(toDeploy.getFile()).toFile();
             ZipUtils.unzip(warFile, webappsPath.resolve("ide").toFile());
+
+            configureBuilderService(webappsPath, runnerCfg);
+            setEnvVariables(tomcatPath, runnerCfg);
             generateServerXml(tomcatPath.toFile(), runnerCfg);
         } catch (IOException e) {
             throw new RunnerException(e);
@@ -118,9 +123,7 @@ public class SDKRunner extends Runner {
         logFiles.add(new File(logsDir, "stdout.log"));
         logFiles.add(new File(logsDir, "stderr.log"));
 
-        final TomcatProcess process =
-                new TomcatProcess(runnerCfg.getPort(), logFiles, runnerCfg.getDebugPort(), startUpScriptFile,
-                                  appDir, portService);
+        final TomcatProcess process = new TomcatProcess(runnerCfg.getPort(), logFiles, runnerCfg.getDebugPort(), startUpScriptFile, appDir);
         registerDisposer(process, new Disposer() {
             @Override
             public void dispose() {
@@ -128,9 +131,9 @@ public class SDKRunner extends Runner {
                     ProcessUtil.kill(process.pid);
                 }
 
-                portService.release(process.httpPort);
+                CustomPortService.getInstance().release(process.httpPort);
                 if (process.debugPort > 0) {
-                    portService.release(process.debugPort);
+                    CustomPortService.getInstance().release(process.debugPort);
                 }
                 IoUtil.deleteRecursive(process.workDir);
                 LOG.debug("stop tomcat at port {}, application {}", process.httpPort, process.workDir);
@@ -139,7 +142,7 @@ public class SDKRunner extends Runner {
         return process;
     }
 
-    private Path build(File jarFile) throws RunnerException {
+    private Path buildCodenvyWebApp(File jarFile) throws RunnerException {
         Path warPath;
         try {
             // prepare Codenvy Platform sources
@@ -168,7 +171,6 @@ public class SDKRunner extends Runner {
 
     private Path buildWar(Path appDirPath) throws RunnerException {
         final String[] command = new String[]{Utils.getMavenExecCommand(), "package"};
-        Path path = null;
 
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(command).directory(appDirPath.toFile());
@@ -179,13 +181,32 @@ public class SDKRunner extends Runner {
             if (process.exitValue() != 0) {
                 throw new RunnerException(consumer.getOutput().toString());
             }
-            path = Utils.findFile("*.war", appDirPath.resolve("target"));
+            return Utils.findFile("*.war", appDirPath.resolve("target"));
+        } catch (IOException | InterruptedException e) {
+            throw new RunnerException(e);
+        }
+    }
+
+    private void configureBuilderService(Path webappsPath, RunnerConfiguration runnerCfg)
+            throws RunnerException, IOException {
+        final Path apiAppPath = webappsPath.resolve("api");
+        ZipUtils.unzip(webappsPath.resolve("api.war").toFile(), apiAppPath.toFile());
+
+        String cfg = BUILDER_REGISTRATION_JSON.replace("${PORT}", Integer.toString(runnerCfg.getPort()));
+        final Path builderRegistrationJsonPath =
+                apiAppPath.resolve("WEB-INF/classes/conf/builder_service_registrations.json");
+        try {
+            Files.write(builderRegistrationJsonPath, cfg.getBytes());
         } catch (IOException e) {
             throw new RunnerException(e);
-        } catch (InterruptedException e) {
-            Thread.interrupted();
         }
-        return path;
+    }
+
+    private void setEnvVariables(Path tomcatPath, RunnerConfiguration runnerCfg) throws IOException {
+        final Path setenvShPath = tomcatPath.resolve("bin/setenv.sh");
+        final byte[] bytes = Files.readAllBytes(setenvShPath);
+        final String setenvShContent = new String(bytes);
+        Files.write(setenvShPath, setenvShContent.replace("${PORT}", Integer.toString(runnerCfg.getPort())).getBytes());
     }
 
     private void generateServerXml(File tomcatDir, RunnerConfiguration runnerConfiguration)
@@ -199,8 +220,7 @@ public class SDKRunner extends Runner {
         }
     }
 
-    private File genStartUpScriptUnix(File appDir, RunnerConfiguration runnerConfiguration)
-            throws RunnerException {
+    private File genStartUpScriptUnix(File appDir, RunnerConfiguration runnerConfiguration) throws RunnerException {
         final String startupScript = "#!/bin/sh\n" +
                                      exportEnvVariablesUnix(runnerConfiguration) +
                                      "cd tomcat\n" +
@@ -251,19 +271,16 @@ public class SDKRunner extends Runner {
         final ExecutorService   pidTaskExecutor;
         final File              startUpScriptFile;
         final File              workDir;
-        final CustomPortService portService;
         int pid = -1;
         TomcatLogger logger;
         private Process process;
 
-        TomcatProcess(int httpPort, List<File> logFiles, int debugPort, File startUpScriptFile, File workDir,
-                      CustomPortService portService) {
+        TomcatProcess(int httpPort, List<File> logFiles, int debugPort, File startUpScriptFile, File workDir) {
             this.httpPort = httpPort;
             this.logFiles = logFiles;
             this.debugPort = debugPort;
             this.startUpScriptFile = startUpScriptFile;
             this.workDir = workDir;
-            this.portService = portService;
             pidTaskExecutor = Executors.newCachedThreadPool(new NamedThreadFactory("TomcatServer-", true));
         }
 
@@ -275,8 +292,7 @@ public class SDKRunner extends Runner {
 
             try {
                 process = Runtime.getRuntime()
-                                 .exec(new CommandLine(startUpScriptFile.getAbsolutePath()).toShellCommand(), null,
-                                       workDir);
+                                 .exec(new CommandLine(startUpScriptFile.getAbsolutePath()).toShellCommand(), null, workDir);
 
                 pid = pidTaskExecutor.submit(new Callable<Integer>() {
                     @Override
@@ -316,9 +332,9 @@ public class SDKRunner extends Runner {
             }
             ProcessUtil.kill(pid);
 
-            portService.release(httpPort);
+            CustomPortService.getInstance().release(httpPort);
             if (debugPort > 0) {
-                portService.release(debugPort);
+                CustomPortService.getInstance().release(debugPort);
             }
             IoUtil.deleteRecursive(workDir);
             LOG.debug("stop tomcat at port {}, application {}", httpPort, workDir);
@@ -371,7 +387,7 @@ public class SDKRunner extends Runner {
             @Override
             public void getLogs(Appendable output) throws IOException {
                 for (File logFile : logFiles) {
-                    output.append("====> " + logFile.getName() + " <====\n");
+                    output.append("====> ").append(logFile.getName()).append(" <====\n");
                     CharStreams.copy(new InputStreamReader(new FileInputStream(logFile)), output);
                     output.append("\n\n");
                 }
