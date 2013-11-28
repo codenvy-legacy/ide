@@ -84,26 +84,6 @@ On *nix:
       ./catalina.sh stop
 
 
-====================================================
-Building Tomcat bundle with your own Codenvy plugin
-====================================================
-
-1. In order to build Tomcat bundle that contains Codenvy with your extension, go to 'Project' -> 'Build Tomcat bundle'.
-
-2. Once build is complete the following message will be displayed in 'Console' view:
-      You can get your Tomcat bundle here: /<path_to_your_codenvy_sdk>/codenvy-platform-sdk-<version>/temp/codenvy-sdk-tomcat-bundle.zip
-
-3. Take this zip and unpack it to the desired location for a Tomcat bundle:
-      unzip codenvy-sdk-tomcat-bundle.zip
-
-4. You need to change permissions for all sh-scripts in the 'bin' directory to executable:
-      chmod +x bin/*.sh
-
-5. You can start/stop Tomcat bundle by executing an appropriate command:
-      ./catalina.sh start
-      ./catalina.sh stop
-
-
 ===============================
 Codenvy Platform SDK Resources
 ===============================
