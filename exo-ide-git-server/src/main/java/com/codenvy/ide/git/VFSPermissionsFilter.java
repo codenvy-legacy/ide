@@ -1,4 +1,4 @@
-package com.codenvy.ide.git;/*
+/*
  * CODENVY CONFIDENTIAL
  * __________________
  *
@@ -15,17 +15,12 @@ package com.codenvy.ide.git;/*
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
+package com.codenvy.ide.git;
 
 import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
-import com.codenvy.organization.model.Role;
 
 import org.apache.commons.codec.binary.Base64;
-import org.exoplatform.ide.vfs.impl.fs.AccessControlList;
-import org.exoplatform.ide.vfs.impl.fs.AccessControlListSerializer;
-import org.exoplatform.ide.vfs.shared.Principal;
-import org.exoplatform.ide.vfs.shared.PrincipalImpl;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -35,12 +30,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * If user doesn't have permissions to repository, filter will deny request with 403.
@@ -52,12 +43,14 @@ import java.util.Set;
  */
 public class VFSPermissionsFilter implements Filter {
 
-    private UserManager userManager;
+    private UserManager           userManager;
+    private VFSPermissionsChecker vfsPermissionsChecker;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         try {
             userManager = new UserManager();
+            vfsPermissionsChecker = new VFSPermissionsChecker();
         } catch (OrganizationServiceException e) {
             throw new ServletException(e.getMessage(), e);
         }
@@ -94,16 +87,22 @@ public class VFSPermissionsFilter implements Filter {
                     Check if user authenticated and hasn't permissions to project, then
                     send response code 403
                 */
-                if (!user.isEmpty() && !(isUserAuthenticated(user, password) && accessAllowed(user, projectDirectory))) {
-                    ((HttpServletResponse)response).sendError(HttpServletResponse.SC_FORBIDDEN);
-                    return;
+                try {
+                    if (!user.isEmpty() &&
+                        !(userManager.authenticateUser(user, password) && vfsPermissionsChecker.isAccessAllowed(user, userManager
+                                .getUserMembershipRoles(user, projectDirectory.getParentFile().getName()), projectDirectory))) {
+                        ((HttpServletResponse)response).sendError(HttpServletResponse.SC_FORBIDDEN);
+                        return;
+                    }
+                } catch (OrganizationServiceException e) {
+                    throw new ServletException(e.getMessage(), e);
                 }
                 /*
                     if user wasn't required check project permissions to
                     any user, if it is not READ or ALL send response code 401 and header with BASIC type
                     of authentication
                  */
-            } else if (!accessAllowed("", projectDirectory)) {
+            } else if (!vfsPermissionsChecker.isAccessAllowed("", null, projectDirectory)) {
                 ((HttpServletResponse)response).addHeader("Cache-Control", "private");
                 ((HttpServletResponse)response).addHeader("WWW-Authenticate", "Basic");
                 ((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -113,89 +112,7 @@ public class VFSPermissionsFilter implements Filter {
         chain.doFilter(req, response);
     }
 
-    /**
-     * Check user permissions to project using project acls.
-     * If user has READ or ALL permissions he has access.
-     * Permission check chain: any user , specific user, user groups.
-     *
-     * @param name
-     *         username
-     * @param projectDirectory
-     *         directory where project is situated
-     * @return <code>true</code> if user has READ or ALL permissions, <code>false</code> if he doesn't
-     * @throws IOException
-     *         when it's not possible to get ACL
-     * @throws ServletException
-     *         when it's not possible to get user membership roles
-     */
-    private boolean accessAllowed(String name, File projectDirectory) throws IOException, ServletException {
-        String projectName = projectDirectory.getName();
-        //go to parent project acl file that under ../projectDirectory/.vfs/acl/projectName_acl
-        File projectAcl = new File(projectDirectory.getParentFile(), ".vfs"
-                .concat(File.separator)
-                .concat("acl")
-                .concat(File.separator)
-                .concat(projectName.concat("_acl")));
-        if (!projectAcl.exists()) {
-            return true;
-        }
-        AccessControlList acl = new AccessControlListSerializer().read(new DataInputStream(new FileInputStream(projectAcl)));
-        Set<VirtualFileSystemInfo.BasicPermissions> resultPermissions = new HashSet<>();
-        PrincipalImpl principal = new PrincipalImpl(VirtualFileSystemInfo.ANY_PRINCIPAL, Principal.Type.USER);
-        //get permissions to any principal
-        if (acl.getPermissions(principal) != null) {
-            resultPermissions = acl.getPermissions(principal);
-        }
-        if (!name.isEmpty()) {
-            //get permissions to specific user
-            principal.setName(name);
-            if (acl.getPermissions(principal) != null) {
-                resultPermissions.addAll(acl.getPermissions(principal));
-            }
-            //get permissions to userGroup
-            principal.setType(Principal.Type.GROUP);
-            Set<Role> userMembershipRoles;
-            try {
-                userMembershipRoles = userManager.getUserMembershipRoles(name, projectDirectory.getParentFile().getName());
-            } catch (OrganizationServiceException e) {
-                throw new ServletException(e.getMessage(), e);
-            }
-            for (Role role : userMembershipRoles) {
-                principal.setName("workspace/".concat(role.getName()));
-                if (acl.getPermissions(principal) != null) {
-                    resultPermissions.addAll(acl.getPermissions(principal));
-                }
-            }
-        }
-        return resultPermissions.contains(VirtualFileSystemInfo.BasicPermissions.READ) ||
-               resultPermissions.contains(VirtualFileSystemInfo.BasicPermissions.ALL);
-    }
-
-    /**
-     * Check user exists in organization.
-     * First of all organization header will be parsed to username and password,
-     * then UserManager will check parsed credentials.
-     *
-     * @param user
-     *         request sender
-     * @param password
-     *         request sender password
-     * @return <code>true</code> if user exists, <code>false</code> if doesn't
-     * @throws ServletException
-     */
-    private boolean isUserAuthenticated(String user, String password) throws ServletException {
-        try {
-            return !user.isEmpty() && userManager.authenticateUser(user, password);
-        } catch (OrganizationServiceException e) {
-            throw new ServletException(e.getMessage(), e);
-        }
-    }
-
     @Override
     public void destroy() {
-    }
-
-    public void setUserManager(UserManager userManager) {
-        this.userManager = userManager;
     }
 }
