@@ -185,21 +185,8 @@ public class FactoryService {
             } else if (factoryUrl.getVcsbranch() != null && !factoryUrl.getVcsbranch().trim().isEmpty()) {
                 //Try to checkout to specified branch. For first we need to list all cloned local branches to
                 //find if specified branch already exist, if its true, we check if this this branch is active
-                List<Branch> branches = gitConnection.branchList(new BranchListRequest(null));
-
-                Branch chkBranch = null;
-
-                for (Branch branch : branches) {
-                    if (branch.getDisplayName().equals(factoryUrl.getVcsbranch())) {
-                        chkBranch = branch;
-                        break;
-                    }
-                }
-
-                if (chkBranch == null) {
+                if (!branchCheckouted(gitConnection, factoryUrl)) {
                     publishWebsocketMessage(String.format(BRANCH_NOT_FOUND, factoryUrl.getVcsbranch()));
-                } else {
-                    publishWebsocketMessage(String.format(SWITCHING_TO_BRANCH, factoryUrl.getVcsbranch()));
                 }
             }
         } catch (GitException e) {
@@ -218,6 +205,29 @@ public class FactoryService {
         }
 
         return convertToProject(factoryUrl, vfsId, projectId);
+    }
+
+    /**
+     * Returns true if checkout was successful, otherwise false;
+     */
+    private boolean branchCheckouted(GitConnection gitConnection, SimpleFactoryUrl factoryUrl) throws GitException {
+        List<Branch> branches = gitConnection.branchList(new BranchListRequest(BranchListRequest.LIST_ALL));
+
+        for (Branch branch : branches) {
+            String branchName = branch.getDisplayName();
+            if (branchName.contains("origin")) {
+                String[] temp = branch.getDisplayName().split("/");
+                branchName = temp[temp.length - 1];
+            }
+
+            if (branchName.equals(factoryUrl.getVcsbranch())) {
+                gitConnection.branchCheckout(new BranchCheckoutRequest(branch.getDisplayName(), branch.getName(), branch.isRemote()));
+                publishWebsocketMessage(String.format(SWITCHING_TO_BRANCH, factoryUrl.getVcsbranch()));
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -304,7 +314,7 @@ public class FactoryService {
      *         {@link ProjectModel} instance
      */
     private void prepareAndroidProject(SimpleFactoryUrl factoryUrl, VirtualFileSystem vfs, Item item) {
-        final String path = item.getPath() + "/src/com/google/cloud/backend/core/Consts.java";
+        final String path = item.getPath() + "/src/com/google/cloud/android/Consts.java";
 
         try {
             final File constJava = (File)vfs.getItemByPath(path, null, false, PropertyFilter.NONE_FILTER);
