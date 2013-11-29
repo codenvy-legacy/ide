@@ -17,88 +17,73 @@
     from Codenvy S.A..
 
 -->
+
+<%!
+	public String staticResourceUrl(HttpServletRequest request, String name) {
+	   return request.getContextPath() + "/" + request.getAttribute("ws") + "/_app/" + name;
+	}
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
     <title>IDE</title>
-
-     <%!
-      public String genIdeStaticResourceUrl(HttpServletRequest request, String name) {
-        return request.getContextPath() + "/" + request.getAttribute("ws") + "/_app/" + name;
-      }
-     %>
-
-    <script type="text/javascript" language="javascript">
-	var ide_base_path = '<%=request.getContextPath() + "/" + request.getAttribute("ws") + "/_app/"%>';
+    
+    <script type="text/javascript">
+		var ide_base_path = '<%=request.getContextPath() + "/" + request.getAttribute("ws") + "/_app/"%>';
 
         var appConfig = {
             "context": "/ide/rest/",
             "websocketContext": "/ide/websocket/"
         };
+        
+        // URL to refresh SSO before creation a Factory.
+        // var ssoInitURL = "/sso-init-url";
+        
+        // URL to html with Google like button
+        var google_like_url = ide_base_path + "google-like.html";
 
+        // URL to html with Facebook like button
+		var facebook_like_url = ide_base_path + "facebook-like.html";
+        
         var hiddenFiles = ".*";
         var ws = "<%= request.getAttribute("ws")%>";
         var project = <%= request.getAttribute("project") != null ? "\"" + request.getAttribute("project")  + "\"" : null%>;
         var path = <%= request.getAttribute("path") != null ? "\"" + request.getAttribute("path")  + "\"" : null%>;
         var startUpParams = <%= request.getAttribute("startUpParams") != null ? "\"?" + request.getAttribute("startUpParams")  + "\"" : null%>;
         var authorizationContext = "/site/rest";
+        
         var authorizationErrorPageURL = "/ide/ide/error_oauth.html";
+        
+        // URL to checking security
         var securityCheckURL = "/ide/j_security_check";
-        var isTargetWindow = false;
-        var uuid;
-        var buildMenu = function () {
-        };
-
-        window.onload = function () {
-            buildMenu();
-            uuid = generate();
-            sendSessionStatus("ide", uuid, "start");
-        }
-
-        window.onbeforeunload = function () {
-            sendSessionStatus("ide", uuid, "stop");
-        }
-
-        window.onfocus = function () {
-            if (isTargetWindow == true) {
-                isTargetWindow = false;
-                uuid = generate();
-                sendSessionStatus("ide", uuid, "start");
-            }
-            return false;
-        }
-
-        window.onblur = function () {
-            if (isTargetWindow == false) {
-                isTargetWindow = true;
-                sendSessionStatus("ide", uuid, "stop");
-            }
-            return false;
-        }
     </script>
 
     <link rel="shortcut icon" href="/images/favicon.ico"/>
 
-    <script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "greeting.js")%>'></script>
+    <script type="text/javascript" language="javascript" src='<%= staticResourceUrl(request, "greeting.js")%>'></script>
 
-    <link type="text/css" rel="stylesheet" href='<%= genIdeStaticResourceUrl(request, "top-menu.css")%>' media="all"/>
-    <link href='<%= genIdeStaticResourceUrl(request, "css/ide01.css")%>' media="screen" rel="stylesheet" type="text/css"/>
+    <link type="text/css" rel="stylesheet" href='<%= staticResourceUrl(request, "top-menu.css")%>' media="all"/>
+    
+    <link href='<%= staticResourceUrl(request, "css/ide01.css")%>' media="screen" rel="stylesheet" type="text/css"/>
+    
 </head>
 
 <body>
 
-<script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "browserNotSupported.js")%>'></script>
+<script type="text/javascript" language="javascript" src='<%= staticResourceUrl(request, "browserNotSupported.js")%>'></script>
 
 <div id="ide-preloader" style="position: absolute; left:0px; right: 0px; top:0px; bottom: 0px; background-color: #FFFFFF; z-index: 900100;">
-	<div style="position:absolute; width:230px; height:90px; background-image: url('<%= genIdeStaticResourceUrl(request, "loader-background-element.png")%>'); left:50%; top:50%; margin-left:-115px; margin-top:-45px; text-align: center;">
-		<img src='<%= genIdeStaticResourceUrl(request, "ajax-loader-new.gif")%>' style="margin-top: 20px; margin-bottom: 10px;" />
+	<div style="position:absolute; width:230px; height:90px; background-image: url('<%= staticResourceUrl(request, "loader-background-element.png")%>'); left:50%; top:50%; margin-left:-115px; margin-top:-45px; text-align: center;">
+		<img src='<%= staticResourceUrl(request, "ajax-loader-new.gif")%>' style="margin-top: 20px; margin-bottom: 10px;" />
 		<br>
 		<span style="font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 11px; text-align: center; color: #222222;">Loading IDE...</span>
 	</div>
 </div>
 
-<script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "_app.nocache.js")%>'></script>
+<script type="text/javascript" language="javascript" src='<%= staticResourceUrl(request, "_app.nocache.js")%>'></script>
 
 <div id="ide-menu-additions" align="right" class="ideMenuAdditions">
     <table cellspacing="0" cellpadding="0" border="0"
@@ -108,9 +93,9 @@
     </table>
 </div>
 
-<script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "session.js")%>'></script>
-<script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "cloud_menu.js")%>'></script>
+<script type="text/javascript" language="javascript" src='<%= staticResourceUrl(request, "session.js")%>'></script>
 
+<script type="text/javascript" language="javascript" src='<%= staticResourceUrl(request, "cloud_menu.js")%>'></script>
 
 <script type="text/javascript">
     var uvOptions = {};

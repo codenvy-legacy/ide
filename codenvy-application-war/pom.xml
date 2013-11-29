@@ -399,7 +399,7 @@
                         <configuration>
                             <packagingExcludes>**/classes/org/**,**/classes/gadget/**,
                                 **/classes/default/**,**/classes/ide/**,
-                                **/applicationInitializer.js,**/init_preload_gadget.js,
+                                **/init_preload_gadget.js,
                                 **/IDEShell.html,**/IDEGadget.html,**/ShowCase.html,**/preload.html,
                                 **/preloadIDE.js,
                                 **/lib/exo-ide-client*,
