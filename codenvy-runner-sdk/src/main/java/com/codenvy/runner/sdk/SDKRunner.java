@@ -17,6 +17,7 @@
  */
 package com.codenvy.runner.sdk;
 
+import com.codenvy.api.core.rest.FileAdapter;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.api.core.util.LineConsumer;
@@ -85,7 +86,8 @@ public class SDKRunner extends Runner {
         return new RunnerConfigurationFactory() {
             @Override
             public RunnerConfiguration createRunnerConfiguration(RunRequest request) throws RunnerException {
-                return new RunnerConfiguration(request.getMemorySize(), CustomPortService.getInstance().acquire(), 0, request);
+                return new RunnerConfiguration(request.getMemorySize(), CustomPortService.getInstance().acquire(), 0,
+                                               request);
             }
         };
     }
@@ -119,11 +121,12 @@ public class SDKRunner extends Runner {
         if (!logsDir.mkdir()) {
             throw new RunnerException("Unable create logs directory");
         }
-        final List<File> logFiles = new ArrayList<>(2);
-        logFiles.add(new File(logsDir, "stdout.log"));
-        logFiles.add(new File(logsDir, "stderr.log"));
+        final List<FileAdapter> logFiles = new ArrayList<>(2);
+        logFiles.add(new FileAdapter(new java.io.File(logsDir, "stdout.log"), "logs/stdout.log", "text/plain"));
+        logFiles.add(new FileAdapter(new java.io.File(logsDir, "stderr.log"), "logs/stderr.log", "text/plain"));
 
-        final TomcatProcess process = new TomcatProcess(runnerCfg.getPort(), logFiles, runnerCfg.getDebugPort(), startUpScriptFile, appDir);
+        final TomcatProcess process =
+                new TomcatProcess(runnerCfg.getPort(), logFiles, runnerCfg.getDebugPort(), startUpScriptFile, appDir);
         registerDisposer(process, new Disposer() {
             @Override
             public void dispose() {
@@ -266,16 +269,16 @@ public class SDKRunner extends Runner {
 
     private static class TomcatProcess extends ApplicationProcess {
         final int               httpPort;
-        final List<File>        logFiles;
+        final List<FileAdapter> logFiles;
         final int               debugPort;
         final ExecutorService   pidTaskExecutor;
         final File              startUpScriptFile;
         final File              workDir;
         int pid = -1;
         TomcatLogger logger;
-        Process process;
+        Process      process;
 
-        TomcatProcess(int httpPort, List<File> logFiles, int debugPort, File startUpScriptFile, File workDir) {
+        TomcatProcess(int httpPort, List<FileAdapter> logFiles, int debugPort, File startUpScriptFile, File workDir) {
             this.httpPort = httpPort;
             this.logFiles = logFiles;
             this.debugPort = debugPort;
@@ -292,7 +295,8 @@ public class SDKRunner extends Runner {
 
             try {
                 process = Runtime.getRuntime()
-                                 .exec(new CommandLine(startUpScriptFile.getAbsolutePath()).toShellCommand(), null, workDir);
+                                 .exec(new CommandLine(startUpScriptFile.getAbsolutePath()).toShellCommand(), null,
+                                       workDir);
 
                 pid = pidTaskExecutor.submit(new Callable<Integer>() {
                     @Override
@@ -378,18 +382,20 @@ public class SDKRunner extends Runner {
 
         private static class TomcatLogger implements ApplicationLogger {
 
-            final List<File> logFiles;
+            final List<FileAdapter> logFiles;
 
-            TomcatLogger(List<File> logFiles) {
+            TomcatLogger(List<FileAdapter> logFiles) {
                 this.logFiles = logFiles;
             }
 
             @Override
             public void getLogs(Appendable output) throws IOException {
-                for (File logFile : logFiles) {
-                    output.append("\n====> ").append(logFile.getName()).append(" <====\n\n");
-                    CharStreams.copy(new InputStreamReader(new FileInputStream(logFile)), output);
-                    output.append("\n");
+                for (FileAdapter logFile : logFiles) {
+                    if (logFile.getIoFile().getTotalSpace() > 0) {
+                        output.append("\n====> ").append(logFile.getName()).append(" <====\n\n");
+                        CharStreams.copy(new InputStreamReader(new FileInputStream(logFile.getIoFile())), output);
+                        output.append("\n");
+                    }
                 }
             }
 

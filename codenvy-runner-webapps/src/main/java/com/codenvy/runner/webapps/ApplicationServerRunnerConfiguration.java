@@ -21,7 +21,7 @@ import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.dto.RunRequest;
 
 /**
- * //
+ * Configuration for running app by deploying it to application server.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */

@@ -38,21 +38,22 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
 /**
- * ... Apache Tomcat servlet container
+ * {@code ApplicationServer} implementation to deploy application to Apache Tomcat servlet container.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
 public class TomcatServer implements ApplicationServer {
-    public static final  String TOMCAT_HOME_PARAMETER = "runner.tomcat.tomcat_home";
-    public static final  String MEM_SIZE_PARAMETER    = "runner.tomcat.memory";
-    public static final  int    DEFAULT_MEM_SIZE      = 256;
-    private static final Logger LOG                   = LoggerFactory.getLogger(TomcatServer.class);
-    private static final String SERVER_XML            =
+    public static final  String TOMCAT_HOME_PARAMETER       = "runner.tomcat.tomcat_home";
+    public static final  String MEM_SIZE_PARAMETER          = "runner.tomcat.memory";
+    public static final  int    DEFAULT_MEM_SIZE            = 256;
+    private static final Logger LOG                         = LoggerFactory.getLogger(TomcatServer.class);
+    private static final String SERVER_XML                  =
             "<?xml version='1.0' encoding='utf-8'?>\n" +
             "<Server port=\"-1\">\n" +
             "  <Listener className=\"org.apache.catalina.core.AprLifecycleListener\" SSLEngine=\"on\" />\n" +
@@ -70,6 +71,8 @@ public class TomcatServer implements ApplicationServer {
             "    </Engine>\n" +
             "  </Service>\n" +
             "</Server>\n";
+    private static final String TOMCAT_HOME_SYSTEM_PROPERTY = "codenvy.runner.tomcat.home";
+    /** Validator for deployment sources. */
     protected final DeploymentSourcesValidator appValidator;
     protected final ExecutorService            pidTaskExecutor;
     private         java.io.File               tomcatHome;
@@ -81,8 +84,10 @@ public class TomcatServer implements ApplicationServer {
         defaultMemSize = DEFAULT_MEM_SIZE;
 
         Configuration configuration = new Configuration();
-        // TODO read path from system property
-        configuration.setFile(TomcatServer.TOMCAT_HOME_PARAMETER, new java.io.File("/home/artem/__tomcat__"));
+        final String tomcatHomeDir = System.getProperty(TOMCAT_HOME_SYSTEM_PROPERTY);
+        if (tomcatHomeDir != null && Files.exists(Paths.get(tomcatHomeDir))) {
+            configuration.setFile(TomcatServer.TOMCAT_HOME_PARAMETER, new java.io.File(tomcatHomeDir));
+        }
         setConfiguration(configuration);
     }
 
@@ -98,7 +103,8 @@ public class TomcatServer implements ApplicationServer {
                                      StopCallback stopCallback) throws RunnerException {
         final java.io.File myTomcatHome = getTomcatHome();
         if (myTomcatHome == null) {
-            throw new RunnerException("Tomcat home directory is not set");
+            throw new RunnerException("System property " + TOMCAT_HOME_SYSTEM_PROPERTY +
+                                      " is not set or Tomcat home directory does not exist.");
         }
         validate(toDeploy);
         try {
@@ -196,7 +202,7 @@ public class TomcatServer implements ApplicationServer {
         logFiles.add(new FileAdapter(new java.io.File(logsDir, "stderr.log"), "logs/stderr.log", "text/plain"));
 
         return new TomcatProcess(runnerConfiguration.getPort(), logFiles, runnerConfiguration.getDebugPort(),
-                                 startUpScriptFile, appDir, stopCallback);
+                                 startUpScriptFile, appDir, stopCallback, pidTaskExecutor);
     }
 
     private java.io.File genStartUpScriptUnix(java.io.File appDir,
@@ -252,8 +258,7 @@ public class TomcatServer implements ApplicationServer {
         return "./bin/catalina.sh run > ../logs/stdout.log 2> ../logs/stderr.log &\n";
     }
 
-    // windows. TODO: implement
-
+    // TODO: implement
     protected ApplicationProcess startWindows(java.io.File appDir,
                                               ApplicationServerRunnerConfiguration runnerConfiguration) {
         throw new UnsupportedOperationException();
@@ -272,14 +277,14 @@ public class TomcatServer implements ApplicationServer {
         Process      process;
 
         TomcatProcess(int httpPort, List<FileAdapter> logFiles, int debugPort, File startUpScriptFile, File workDir,
-                      StopCallback stopCallback) {
+                      StopCallback stopCallback, ExecutorService pidTaskExecutor) {
             this.httpPort = httpPort;
             this.logFiles = logFiles;
             this.debugPort = debugPort;
             this.startUpScriptFile = startUpScriptFile;
             this.workDir = workDir;
             this.stopCallback = stopCallback;
-            pidTaskExecutor = Executors.newCachedThreadPool(new NamedThreadFactory("TomcatServer-", true));
+            this.pidTaskExecutor = pidTaskExecutor;
         }
 
         @Override
@@ -388,9 +393,11 @@ public class TomcatServer implements ApplicationServer {
             @Override
             public void getLogs(Appendable output) throws IOException {
                 for (FileAdapter logFile : logFiles) {
-                    output.append("\n====> ").append(logFile.getName()).append(" <====\n\n");
-                    CharStreams.copy(new InputStreamReader(new FileInputStream(logFile.getIoFile())), output);
-                    output.append("\n");
+                    if (logFile.getIoFile().getTotalSpace() > 0) {
+                        output.append("\n====> ").append(logFile.getName()).append(" <====\n\n");
+                        CharStreams.copy(new InputStreamReader(new FileInputStream(logFile.getIoFile())), output);
+                        output.append("\n");
+                    }
                 }
             }
 
