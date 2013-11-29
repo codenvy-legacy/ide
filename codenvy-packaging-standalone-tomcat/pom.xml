@@ -92,12 +92,6 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>dto-tutorial</artifactId>
-            <type>zip</type>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
             <artifactId>new-project-wizard-tutorial</artifactId>
             <type>zip</type>
             <version>${project.version}</version>
@@ -322,15 +316,6 @@
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
                                     <destFileName>action-api-tutorial.zip</destFileName>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.codenvy.ide</groupId>
-                                    <artifactId>dto-tutorial</artifactId>
-                                    <type>zip</type>
-                                    <version>${project.version}</version>
-                                    <overWrite>false</overWrite>
-                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
-                                    <destFileName>dto-tutorial.zip</destFileName>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>com.codenvy.ide</groupId>

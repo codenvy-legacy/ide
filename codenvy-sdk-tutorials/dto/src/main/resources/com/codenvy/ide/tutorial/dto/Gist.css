@@ -1,9 +1,0 @@
-@CHARSET "UTF-8";
-
-.textFont {
-    cursor: default;
-    font-family: mainFontFamily;
-    font-size: fontSize;
-    font-style: normal;
-    font-weight: normal;
-}
