@@ -52,6 +52,8 @@ public class SDKRunner extends Runner {
     /** String in JSON format to register builder service. */
     private static final String BUILDER_REGISTRATION_JSON =
             "[{\"builderServiceLocation\":{\"url\":\"http://localhost:${PORT}/api/internal/builder\"}}]";
+    private static final String RUNNER_REGISTRATION_JSON =
+            "[{\"runnerServiceLocation\":{\"url\":\"http://localhost:${PORT}/api/internal/runner\"}}]";
     private static final String SERVER_XML                =
             "<?xml version='1.0' encoding='utf-8'?>\n" +
             "<Server port=\"-1\">\n" +
@@ -106,7 +108,7 @@ public class SDKRunner extends Runner {
             final File warFile = buildCodenvyWebApp(toDeploy.getFile()).toFile();
             ZipUtils.unzip(warFile, webappsPath.resolve("ide").toFile());
 
-            configureBuilderService(webappsPath, runnerCfg);
+            configureApiServices(webappsPath, runnerCfg);
             setEnvVariables(tomcatPath, runnerCfg);
             generateServerXml(tomcatPath.toFile(), runnerCfg);
         } catch (IOException e) {
@@ -190,16 +192,21 @@ public class SDKRunner extends Runner {
         }
     }
 
-    private void configureBuilderService(Path webappsPath, RunnerConfiguration runnerCfg)
+    private void configureApiServices(Path webappsPath, RunnerConfiguration runnerCfg)
             throws RunnerException, IOException {
         final Path apiAppPath = webappsPath.resolve("api");
         ZipUtils.unzip(webappsPath.resolve("api.war").toFile(), apiAppPath.toFile());
 
-        String cfg = BUILDER_REGISTRATION_JSON.replace("${PORT}", Integer.toString(runnerCfg.getPort()));
+        final String builderServiceCfg = BUILDER_REGISTRATION_JSON.replace("${PORT}", Integer.toString(runnerCfg.getPort()));
         final Path builderRegistrationJsonPath =
                 apiAppPath.resolve("WEB-INF/classes/conf/builder_service_registrations.json");
+
+        final String runnerServiceCfg = RUNNER_REGISTRATION_JSON.replace("${PORT}", Integer.toString(runnerCfg.getPort()));
+        final Path runnerRegistrationJsonPath =
+                apiAppPath.resolve("WEB-INF/classes/conf/runner_service_registrations.json");
         try {
-            Files.write(builderRegistrationJsonPath, cfg.getBytes());
+            Files.write(builderRegistrationJsonPath, builderServiceCfg.getBytes());
+            Files.write(runnerRegistrationJsonPath, runnerServiceCfg.getBytes());
         } catch (IOException e) {
             throw new RunnerException(e);
         }
