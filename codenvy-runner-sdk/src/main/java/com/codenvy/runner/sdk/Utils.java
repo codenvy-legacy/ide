@@ -184,7 +184,7 @@ class Utils {
         String filePath = finder.getFirstMatchedFile().toString();
         filePath = filePath.substring(filePath.indexOf(resourcesDir) + resourcesDir.length() + 1,
                                       filePath.length() - fileExtension.length());
-        return filePath.replaceAll("/", ".");
+        return filePath.replace(File.separatorChar, '.');
     }
 
     /**
