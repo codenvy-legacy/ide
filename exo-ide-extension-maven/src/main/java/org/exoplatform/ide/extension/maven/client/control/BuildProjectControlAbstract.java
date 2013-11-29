@@ -80,7 +80,8 @@ public abstract class BuildProjectControlAbstract extends SimpleControl implemen
                || ProjectType.JSP.value().equals(projectType) || ProjectType.WAR.value().equals(projectType)
                || ProjectType.JAR.value().equals(projectType)
                || ProjectType.MultiModule.value().equals(projectType)
-               || ProjectType.ANDROID.value().equals(projectType);
+               || ProjectType.ANDROID.value().equals(projectType)
+               || ProjectType.GOOGLE_MBS_CLIENT_ANDROID.value().equals(projectType);
     }
 
 }
