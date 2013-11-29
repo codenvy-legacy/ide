@@ -47,13 +47,13 @@ public class RunnerExtension {
         // register actions
         DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
 
-        actionManager.registerAction(localizationConstants.launchExtensionActionId(), runAction);
+        actionManager.registerAction(localizationConstants.runAppActionId(), runAction);
         runMenuActionGroup.add(runAction);
 
-        actionManager.registerAction(localizationConstants.getExtensionLogsActionId(), getLogsAction);
+        actionManager.registerAction(localizationConstants.getAppLogsActionId(), getLogsAction);
         runMenuActionGroup.add(getLogsAction);
 
-        actionManager.registerAction(localizationConstants.stopExtensionActionId(), stopAction);
+        actionManager.registerAction(localizationConstants.stopAppActionId(), stopAction);
         runMenuActionGroup.add(stopAction);
     }
 }

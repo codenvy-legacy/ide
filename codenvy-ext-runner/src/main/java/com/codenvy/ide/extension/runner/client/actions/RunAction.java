@@ -46,8 +46,8 @@ public class RunAction extends Action {
                      RunnerResources resources,
                      ResourceProvider resourceProvider,
                      RunnerLocalizationConstant localizationConstants) {
-        super(localizationConstants.launchExtensionActionText(),
-              localizationConstants.launchExtensionActionDescription(), resources.launchApp());
+        super(localizationConstants.runAppActionText(),
+              localizationConstants.runAppActionDescription(), resources.launchApp());
         this.controller = controller;
         this.resourceProvider = resourceProvider;
     }

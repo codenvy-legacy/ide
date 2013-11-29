@@ -151,7 +151,7 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
         }
 
         isLaunchingInProgress = true;
-        notification = new Notification(constant.applicationStarting(currentProject.getName()), PROGRESS, this);
+        notification = new Notification(constant.extensionLaunching(currentProject.getName()), PROGRESS, this);
         notificationManager.showNotification(notification);
 
         try {
@@ -168,13 +168,13 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
                                protected void onFailure(Throwable exception) {
                                    isLaunchingInProgress = false;
                                    applicationProcessDescriptor = null;
-                                   onFail(constant.startApplicationFailed(currentProject.getName()), exception);
+                                   onFail(constant.launchExtensionFailed(currentProject.getName()), exception);
                                }
                            });
         } catch (RequestException e) {
             isLaunchingInProgress = false;
             applicationProcessDescriptor = null;
-            onFail(constant.startApplicationFailed(currentProject.getName()), e);
+            onFail(constant.launchExtensionFailed(currentProject.getName()), e);
         }
     }
 
@@ -182,7 +182,7 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
     public void getLogs() {
         final Link viewLogsLink = getAppLink(applicationProcessDescriptor, LinkRel.VIEW_LOGS);
         if (viewLogsLink == null) {
-            onFail(constant.getApplicationLogsFailed(), null);
+            onFail(constant.getExtensionLogsFailed(), null);
         }
 
         try {
@@ -194,11 +194,11 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    onFail(constant.getApplicationLogsFailed(), exception);
+                    onFail(constant.getExtensionLogsFailed(), exception);
                 }
             });
         } catch (RequestException e) {
-            onFail(constant.getApplicationLogsFailed(), e);
+            onFail(constant.getExtensionLogsFailed(), e);
         }
     }
 
@@ -206,7 +206,7 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
     public void stop() {
         final Link stopLink = getAppLink(applicationProcessDescriptor, LinkRel.STOP);
         if (stopLink == null) {
-            onFail(constant.stopApplicationFailed(currentProject.getName()), null);
+            onFail(constant.stopExtensionFailed(currentProject.getName()), null);
         }
 
         try {
@@ -214,16 +214,16 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
                 @Override
                 protected void onSuccess(String result) {
                     applicationProcessDescriptor = null;
-                    console.print(constant.applicationStopped(currentProject.getName()));
+                    console.print(constant.extensionStopped(currentProject.getName()));
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    onFail(constant.stopApplicationFailed(currentProject.getName()), exception);
+                    onFail(constant.stopExtensionFailed(currentProject.getName()), exception);
                 }
             });
         } catch (RequestException e) {
-            onFail(constant.stopApplicationFailed(currentProject.getName()), e);
+            onFail(constant.stopExtensionFailed(currentProject.getName()), e);
         }
     }
 
@@ -233,8 +233,8 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
         final String uri = new UrlBuilder().setProtocol(Window.Location.getProtocol())
                                            .setHost(Window.Location.getHost())
                                            .setPort(appDescriptor.getPort()).buildString();
-        console.print(constant.applicationStartedOnUrls(currentProject.getName(),
-                                                        "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>"));
+        console.print(constant.extensionLaunchedOnUrls(currentProject.getName(),
+                                                       "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>"));
         notification.setStatus(FINISHED);
     }
 
@@ -274,7 +274,7 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
                                     } else if (status == ApplicationStatus.CANCELLED) {
                                         isLaunchingInProgress = false;
                                         applicationProcessDescriptor = null;
-                                        onFail(constant.startApplicationFailed(currentProject.getName()), null);
+                                        onFail(constant.launchExtensionFailed(currentProject.getName()), null);
                                     }
                                 }
 
@@ -287,17 +287,17 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
                                         ((ServerException)exception).getHTTPStatus() == 500) {
                                         ServiceError e = dtoFactory
                                                 .createDtoFromJson(exception.getMessage(), ServiceError.class);
-                                        onFail(constant.startApplicationFailed(currentProject.getName()) + ": " +
+                                        onFail(constant.launchExtensionFailed(currentProject.getName()) + ": " +
                                                e.getMessage(), null);
                                     } else {
-                                        onFail(constant.startApplicationFailed(currentProject.getName()), exception);
+                                        onFail(constant.launchExtensionFailed(currentProject.getName()), exception);
                                     }
                                 }
                             });
                 } catch (RequestException e) {
                     isLaunchingInProgress = false;
                     applicationProcessDescriptor = null;
-                    onFail(constant.startApplicationFailed(currentProject.getName()), e);
+                    onFail(constant.launchExtensionFailed(currentProject.getName()), e);
                 }
             }
         }.run();

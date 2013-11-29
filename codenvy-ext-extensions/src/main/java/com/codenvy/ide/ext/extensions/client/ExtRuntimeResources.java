@@ -51,14 +51,14 @@ public interface ExtRuntimeResources extends ClientBundle {
     @Source({"ExtensionRuntime.css", "com/codenvy/ide/api/ui/style.css"})
     ExtensionRuntimeCSS extensionRuntimeCss();
 
-    @Source("launchApp.png")
-    ImageResource launchApp();
+    @Source("launchExtension.png")
+    ImageResource launchExtension();
 
-    @Source("getAppLogs.png")
-    ImageResource getAppLogs();
+    @Source("getExtensionLogs.png")
+    ImageResource getExtensionLogs();
 
-    @Source("stopApp.png")
-    ImageResource stopApp();
+    @Source("stopExtension.png")
+    ImageResource stopExtension();
 
     @Source("codenvyExtensionTemplate.png")
     ImageResource codenvyExtensionTemplate();

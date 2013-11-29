@@ -57,21 +57,21 @@ public interface ExtRuntimeLocalizationConstant extends Messages {
 
     /* Messages */
 
-    @Key("appStarting")
-    String applicationStarting(String name);
+    @Key("extensionLaunching")
+    String extensionLaunching(String name);
 
-    @Key("appStarted.uris")
-    String applicationStartedOnUrls(String name, String uris);
+    @Key("extensionLaunched.uris")
+    String extensionLaunchedOnUrls(String name, String uris);
 
-    @Key("startAppFailed")
-    String startApplicationFailed(String name);
+    @Key("launchExtensionFailed")
+    String launchExtensionFailed(String name);
 
-    @Key("getAppLogsFailed")
-    String getApplicationLogsFailed();
+    @Key("getExtensionLogsFailed")
+    String getExtensionLogsFailed();
 
-    @Key("appStopped")
-    String applicationStopped(String name);
+    @Key("extensionStopped")
+    String extensionStopped(String name);
 
-    @Key("stopAppFailed")
-    String stopApplicationFailed(String name);
+    @Key("stopExtensionFailed")
+    String stopExtensionFailed(String name);
 }

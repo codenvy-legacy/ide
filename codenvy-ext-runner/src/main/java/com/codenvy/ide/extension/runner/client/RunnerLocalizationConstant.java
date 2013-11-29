@@ -29,31 +29,31 @@ import com.google.gwt.i18n.client.Messages;
 public interface RunnerLocalizationConstant extends Messages {
     /* Actions */
     @Key("control.runApp.id")
-    String launchExtensionActionId();
+    String runAppActionId();
 
     @Key("control.runApp.text")
-    String launchExtensionActionText();
+    String runAppActionText();
 
     @Key("control.runApp.description")
-    String launchExtensionActionDescription();
+    String runAppActionDescription();
 
     @Key("control.getAppLogs.id")
-    String getExtensionLogsActionId();
+    String getAppLogsActionId();
 
     @Key("control.getAppLogs.text")
-    String getExtensionLogsActionText();
+    String getAppLogsActionText();
 
     @Key("control.getAppLogs.description")
-    String getExtensionLogsActionDescription();
+    String getAppLogsActionDescription();
 
     @Key("control.stopApp.id")
-    String stopExtensionActionId();
+    String stopAppActionId();
 
     @Key("control.stopApp.text")
-    String stopExtensionActionText();
+    String stopAppActionText();
 
     @Key("control.stopApp.description")
-    String stopExtensionActionDescription();
+    String stopAppActionDescription();
 
     /* Messages */
     @Key("appStarting")
