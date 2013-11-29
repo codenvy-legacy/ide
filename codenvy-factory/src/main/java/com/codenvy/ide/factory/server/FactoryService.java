@@ -213,8 +213,9 @@ public class FactoryService {
     private boolean branchCheckouted(GitConnection gitConnection, SimpleFactoryUrl factoryUrl) throws GitException {
         List<Branch> branches = gitConnection.branchList(new BranchListRequest(BranchListRequest.LIST_ALL));
 
+        String branchName;
         for (Branch branch : branches) {
-            String branchName = branch.getDisplayName();
+            branchName = branch.getDisplayName();
             if (branchName.contains("origin")) {
                 String[] temp = branch.getDisplayName().split("/");
                 branchName = temp[temp.length - 1];
