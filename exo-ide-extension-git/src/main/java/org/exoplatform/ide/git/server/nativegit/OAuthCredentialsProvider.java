@@ -49,7 +49,7 @@ public class OAuthCredentialsProvider implements CredentialsProvider {
 
         GitVendorService gitVendorService = gitVendorServiceProvider.getGitServiceByUrlMatch(url);
 
-        if (gitVendorService.isOAuth2()) {
+        if (gitVendorService != null && gitVendorService.isOAuth2()) {
             try {
                 Token token =
                         tokenProvider.getToken(gitVendorService.getVendorName(), ConversationState.getCurrent().getIdentity().getUserId());
