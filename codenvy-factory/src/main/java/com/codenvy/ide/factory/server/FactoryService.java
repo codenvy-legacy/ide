@@ -315,7 +315,7 @@ public class FactoryService {
      *         {@link ProjectModel} instance
      */
     private void prepareAndroidProject(SimpleFactoryUrl factoryUrl, VirtualFileSystem vfs, Item item) {
-        final String path = item.getPath() + "/src/com/google/cloud/android/Consts.java";
+        final String path = item.getPath() + "/src/com/google/cloud/backend/android/Consts.java";
 
         try {
             final File constJava = (File)vfs.getItemByPath(path, null, false, PropertyFilter.NONE_FILTER);
