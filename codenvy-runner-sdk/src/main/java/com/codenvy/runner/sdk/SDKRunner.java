@@ -387,7 +387,7 @@ public class SDKRunner extends Runner {
             @Override
             public void getLogs(Appendable output) throws IOException {
                 for (File logFile : logFiles) {
-                    output.append("\n====> ").append(logFile.getName()).append(" <====\n");
+                    output.append("\n====> ").append(logFile.getName()).append(" <====\n\n");
                     CharStreams.copy(new InputStreamReader(new FileInputStream(logFile)), output);
                     output.append("\n");
                 }

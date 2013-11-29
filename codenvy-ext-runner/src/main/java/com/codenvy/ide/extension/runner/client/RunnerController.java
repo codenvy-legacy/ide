@@ -48,8 +48,7 @@ import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
- * This class controls operations with a custom extension. Such as launching, stopping, getting logs, packaging into a
- * bundle.
+ * This class controls launching application.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: RunnerController.java Jul 3, 2013 3:07:52 PM azatsarynnyy $
@@ -137,7 +136,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         return applicationProcessDescriptor != null && !isLaunchingInProgress;
     }
 
-    /** Launch Codenvy extension. */
+    /** Run application. */
     public void run() {
         currentProject = resourceProvider.getActiveProject();
         if (currentProject == null) {
@@ -155,22 +154,22 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         notificationManager.showNotification(notification);
 
         try {
-            service.launch(currentProject.getName(),
-                           new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                               @Override
-                               protected void onSuccess(String result) {
-                                   applicationProcessDescriptor =
-                                           dtoFactory.createDtoFromJson(result, ApplicationProcessDescriptor.class);
-                                   startCheckingStatus(applicationProcessDescriptor);
-                               }
+            service.run(currentProject.getName(),
+                        new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                            @Override
+                            protected void onSuccess(String result) {
+                                applicationProcessDescriptor =
+                                        dtoFactory.createDtoFromJson(result, ApplicationProcessDescriptor.class);
+                                startCheckingStatus(applicationProcessDescriptor);
+                            }
 
-                               @Override
-                               protected void onFailure(Throwable exception) {
-                                   isLaunchingInProgress = false;
-                                   applicationProcessDescriptor = null;
-                                   onFail(constant.startApplicationFailed(currentProject.getName()), exception);
-                               }
-                           });
+                            @Override
+                            protected void onFailure(Throwable exception) {
+                                isLaunchingInProgress = false;
+                                applicationProcessDescriptor = null;
+                                onFail(constant.startApplicationFailed(currentProject.getName()), exception);
+                            }
+                        });
         } catch (RequestException e) {
             isLaunchingInProgress = false;
             applicationProcessDescriptor = null;

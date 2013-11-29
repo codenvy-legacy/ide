@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.concurrent.*;
 
 /**
- * //
+ * ... Apache Tomcat servlet container
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
@@ -81,6 +81,7 @@ public class TomcatServer implements ApplicationServer {
         defaultMemSize = DEFAULT_MEM_SIZE;
 
         Configuration configuration = new Configuration();
+        // TODO read path from system property
         configuration.setFile(TomcatServer.TOMCAT_HOME_PARAMETER, new java.io.File("/home/artem/__tomcat__"));
         setConfiguration(configuration);
     }
@@ -387,9 +388,9 @@ public class TomcatServer implements ApplicationServer {
             @Override
             public void getLogs(Appendable output) throws IOException {
                 for (FileAdapter logFile : logFiles) {
-                    output.append("====> " + logFile.getName() + " <====\n");
+                    output.append("\n====> ").append(logFile.getName()).append(" <====\n\n");
                     CharStreams.copy(new InputStreamReader(new FileInputStream(logFile.getIoFile())), output);
-                    output.append("\n\n");
+                    output.append("\n");
                 }
             }
 

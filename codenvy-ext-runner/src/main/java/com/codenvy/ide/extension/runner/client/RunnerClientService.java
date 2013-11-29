@@ -18,14 +18,11 @@
 package com.codenvy.ide.extension.runner.client;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.websocket.WebSocketException;
 import com.google.gwt.http.client.RequestException;
 
 /**
- * Client service for runner.
+ * Client service for Runner.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: RunnerClientService.java Jul 3, 2013 12:48:08 PM azatsarynnyy $
@@ -33,30 +30,32 @@ import com.google.gwt.http.client.RequestException;
 public interface RunnerClientService {
 
     /**
-     * Run a specified WAR, that contains Codenvy Platform with (or without) any extension.
-     * <p/>
-     * Hot update ability is supported.
+     * Run an app on the application server.
      *
-     * @param warUrl
-     *         URL to Codenvy Platform WAR
-     * @param enableHotUpdate
-     *         whether to enable the ability hot update or not
-     * @param vfsId
-     *         identifier of the virtual file system (makes sense only when hot update is enabled)
-     * @param projectId
-     *         identifier of the extension project (makes sense only when hot update is enabled)
+     * @param projectName
+     *         name of the project to run
      * @param callback
      *         callback
-     * @throws WebSocketException
+     * @throws RequestException
      */
-    public void launch(String projectName, AsyncRequestCallback<String> callback) throws RequestException;
+    public void run(String projectName, AsyncRequestCallback<String> callback) throws RequestException;
 
+    /**
+     * Get status of app.
+     *
+     * @param link
+     *         link to get application's status
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
     public void getStatus(Link link, AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
-     * Get logs of launched Codenvy application.
+     * Retrieve logs from application server where app is launched.
      *
      * @param link
+     *         link to retrieve logs
      * @param callback
      *         callback
      * @throws RequestException
@@ -64,9 +63,10 @@ public interface RunnerClientService {
     public void getLogs(Link link, AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
-     * Stop Codenvy application.
+     * Stop application server where app is launched.
      *
      * @param link
+     *         link to stop an app
      * @param callback
      *         callback
      * @throws RequestException

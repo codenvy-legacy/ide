@@ -18,9 +18,6 @@
 package com.codenvy.ide.extension.runner.client;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.ui.loader.Loader;
@@ -29,11 +26,6 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-
-import static com.codenvy.ide.resources.marshal.JSONSerializer.PROPERTY_SERIALIZER;
-import static com.codenvy.ide.rest.HTTPHeader.CONTENT_TYPE;
-import static com.google.gwt.http.client.RequestBuilder.POST;
 
 /**
  * Implementation of {@link RunnerClientService} service.
@@ -43,10 +35,8 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
  */
 @Singleton
 public class RunnerClientServiceImpl implements RunnerClientService {
-    /** Run method's path. */
-    private static final String RUN        = "/run";
     /** Loader to be displayed. */
-    private Loader           loader;
+    private Loader loader;
 
     /**
      * Create service.
@@ -61,7 +51,7 @@ public class RunnerClientServiceImpl implements RunnerClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void launch(String projectName, AsyncRequestCallback<String> callback) throws RequestException {
+    public void run(String projectName, AsyncRequestCallback<String> callback) throws RequestException {
         final String requestUrl = "/api/" + Utils.getWorkspaceName() + "/runner/run";
 
         String params = "project=" + projectName;

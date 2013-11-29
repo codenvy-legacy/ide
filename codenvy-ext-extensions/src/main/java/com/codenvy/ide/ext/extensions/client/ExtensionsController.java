@@ -48,8 +48,7 @@ import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
- * This class controls operations with a custom extension. Such as launching, stopping, getting logs, packaging into a
- * bundle.
+ * This class controls launching extensions.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ExtensionsController.java Jul 3, 2013 3:07:52 PM azatsarynnyy $

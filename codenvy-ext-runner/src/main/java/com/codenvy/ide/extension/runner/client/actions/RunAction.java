@@ -30,7 +30,7 @@ import com.google.inject.Singleton;
 import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE;
 
 /**
- * Action to run Codenvy application with custom extension.
+ * Action to run app on application server.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: RunAction.java Jul 3, 2013 1:58:47 PM azatsarynnyy $
