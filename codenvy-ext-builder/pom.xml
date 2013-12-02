@@ -180,9 +180,6 @@
                         <artifactId>codenvy-api-core</artifactId>
                         <version>${com.codenvy.platform-api.version}</version>
                     </dependency>
-                    <!--
-                    Other dependencies if DTOs from current project need them.
-                    -->
                 </dependencies>
             </plugin>
         </plugins>

@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     John Kaplan, johnkaplantech@gmail.com - 108071 [code templates] template for body of newly created class
+ *     John Kaplan, johnkaplantech@gmail.com - 108071 [code templates] projecttemplate for body of newly created class
  *******************************************************************************/
 package com.codenvy.ide.ext.java.client.internal.corext.codemanipulation;
 
@@ -179,17 +179,17 @@ public class StubUtility {
     //
     // public static String getCatchBodyContent(ICompilationUnit cu, String exceptionType, String variableName, String
     // enclosingType, String enclosingMethod, String lineDelimiter) throws CoreException {
-    // Template template= getCodeTemplate(CodeTemplateContextType.CATCHBLOCK_ID, cu.getJavaProject());
-    // if (template == null) {
+    // Template projecttemplate= getCodeTemplate(CodeTemplateContextType.CATCHBLOCK_ID, cu.getJavaProject());
+    // if (projecttemplate == null) {
     // return null;
     // }
     //
-    // CodeTemplateContext context= new CodeTemplateContext(template.getContextTypeId(), cu.getJavaProject(), lineDelimiter);
+    // CodeTemplateContext context= new CodeTemplateContext(projecttemplate.getContextTypeId(), cu.getJavaProject(), lineDelimiter);
     // context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, enclosingType);
     // context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, enclosingMethod);
     // context.setVariable(CodeTemplateContextType.EXCEPTION_TYPE, exceptionType);
     // context.setVariable(CodeTemplateContextType.EXCEPTION_VAR, variableName);
-    // return evaluateTemplate(context, template);
+    // return evaluateTemplate(context, projecttemplate);
     // }
     //
     // /*
@@ -205,13 +205,13 @@ public class StubUtility {
     //
     // public static String getCompilationUnitContent(ICompilationUnit cu, String packDecl, String fileComment, String typeComment,
     // String typeContent, String lineDelimiter) throws CoreException {
-    // Template template= getCodeTemplate(CodeTemplateContextType.NEWTYPE_ID, cu.getJavaProject());
-    // if (template == null) {
+    // Template projecttemplate= getCodeTemplate(CodeTemplateContextType.NEWTYPE_ID, cu.getJavaProject());
+    // if (projecttemplate == null) {
     // return null;
     // }
     //
     // IJavaProject project= cu.getJavaProject();
-    // CodeTemplateContext context= new CodeTemplateContext(template.getContextTypeId(), project, lineDelimiter);
+    // CodeTemplateContext context= new CodeTemplateContext(projecttemplate.getContextTypeId(), project, lineDelimiter);
     // context.setCompilationUnitVariables(cu);
     // context.setVariable(CodeTemplateContextType.PACKAGE_DECLARATION, packDecl);
     //      context.setVariable(CodeTemplateContextType.TYPE_COMMENT, typeComment != null ? typeComment : ""); //$NON-NLS-1$
@@ -221,7 +221,7 @@ public class StubUtility {
     //
     // String[] fullLine= { CodeTemplateContextType.PACKAGE_DECLARATION, CodeTemplateContextType.FILE_COMMENT,
     // CodeTemplateContextType.TYPE_COMMENT };
-    // return evaluateTemplate(context, template, fullLine);
+    // return evaluateTemplate(context, projecttemplate, fullLine);
     // }
     //
     //
@@ -230,16 +230,16 @@ public class StubUtility {
     // * @see org.eclipse.jdt.ui.CodeGeneration#getFileComment(ICompilationUnit, String)
     // */
     // public static String getFileComment(ICompilationUnit cu, String lineDelimiter) throws CoreException {
-    // Template template= getCodeTemplate(CodeTemplateContextType.FILECOMMENT_ID, cu.getJavaProject());
-    // if (template == null) {
+    // Template projecttemplate= getCodeTemplate(CodeTemplateContextType.FILECOMMENT_ID, cu.getJavaProject());
+    // if (projecttemplate == null) {
     // return null;
     // }
     //
     // IJavaProject project= cu.getJavaProject();
-    // CodeTemplateContext context= new CodeTemplateContext(template.getContextTypeId(), project, lineDelimiter);
+    // CodeTemplateContext context= new CodeTemplateContext(projecttemplate.getContextTypeId(), project, lineDelimiter);
     // context.setCompilationUnitVariables(cu);
     // context.setVariable(CodeTemplateContextType.TYPENAME, JavaCore.removeJavaLikeExtension(cu.getElementName()));
-    // return evaluateTemplate(context, template);
+    // return evaluateTemplate(context, projecttemplate);
     // }
     //
    /*
@@ -351,33 +351,33 @@ public class StubUtility {
     // /**
     // * Don't use this method directly, use CodeGeneration.
     // *
-    // * @param templateID the template id of the type body to get. Valid id's are
+    // * @param templateID the projecttemplate id of the type body to get. Valid id's are
     // * {@link CodeTemplateContextType#CLASSBODY_ID},
     // * {@link CodeTemplateContextType#INTERFACEBODY_ID},
     // * {@link CodeTemplateContextType#ENUMBODY_ID},
     // * {@link CodeTemplateContextType#ANNOTATIONBODY_ID},
-    // * @param cu the compilation unit to which the template is added
+    // * @param cu the compilation unit to which the projecttemplate is added
     // * @param typeName the type name
     // * @param lineDelim the line delimiter to use
-    // * @return return the type body template or <code>null</code>
-    // * @throws CoreException thrown if the template could not be evaluated
+    // * @return return the type body projecttemplate or <code>null</code>
+    // * @throws CoreException thrown if the projecttemplate could not be evaluated
     // * @see org.eclipse.jdt.ui.CodeGeneration#getTypeBody(String, ICompilationUnit, String, String)
     // */
     // public static String getTypeBody(String templateID, ICompilationUnit cu, String typeName, String lineDelim) throws
     // CoreException {
     // if (!VALID_TYPE_BODY_TEMPLATES.contains(templateID)) {
-    //         throw new IllegalArgumentException("Invalid code template ID: " + templateID); //$NON-NLS-1$
+    //         throw new IllegalArgumentException("Invalid code projecttemplate ID: " + templateID); //$NON-NLS-1$
     // }
     //
-    // Template template= getCodeTemplate(templateID, cu.getJavaProject());
-    // if (template == null) {
+    // Template projecttemplate= getCodeTemplate(templateID, cu.getJavaProject());
+    // if (projecttemplate == null) {
     // return null;
     // }
-    // CodeTemplateContext context= new CodeTemplateContext(template.getContextTypeId(), cu.getJavaProject(), lineDelim);
+    // CodeTemplateContext context= new CodeTemplateContext(projecttemplate.getContextTypeId(), cu.getJavaProject(), lineDelim);
     // context.setCompilationUnitVariables(cu);
     // context.setVariable(CodeTemplateContextType.TYPENAME, typeName);
     //
-    // return evaluateTemplate(context, template);
+    // return evaluateTemplate(context, projecttemplate);
     // }
     //
    /*
@@ -702,11 +702,11 @@ public class StubUtility {
     // else
     // templateName= CodeTemplateContextType.OVERRIDECOMMENT_ID;
     // }
-    // Template template= getCodeTemplate(templateName, cu.getJavaProject());
-    // if (template == null) {
+    // Template projecttemplate= getCodeTemplate(templateName, cu.getJavaProject());
+    // if (projecttemplate == null) {
     // return null;
     // }
-    // CodeTemplateContext context= new CodeTemplateContext(template.getContextTypeId(), cu.getJavaProject(), lineDelimiter);
+    // CodeTemplateContext context= new CodeTemplateContext(projecttemplate.getContextTypeId(), cu.getJavaProject(), lineDelimiter);
     // context.setCompilationUnitVariables(cu);
     // context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
     // context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, decl.getName().getIdentifier());
@@ -724,7 +724,7 @@ public class StubUtility {
     //
     // TemplateBuffer buffer;
     // try {
-    // buffer= context.evaluate(template);
+    // buffer= context.evaluate(projecttemplate);
     // } catch (BadLocationException e) {
     // throw new CoreException(Status.CANCEL_STATUS);
     // } catch (TemplateException e) {
@@ -1728,7 +1728,7 @@ public class StubUtility {
      * Only to be used by tests
      *
      * @param templateId
-     *         the template id
+     *         the projecttemplate id
      * @param pattern
      *         the new pattern
      * @param project

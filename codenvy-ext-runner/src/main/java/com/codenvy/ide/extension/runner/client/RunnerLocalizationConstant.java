@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
+ * 
+ *  [2012] - [2013] Codenvy, S.A. 
+ *  All Rights Reserved.
+ * 
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -21,65 +21,56 @@ import com.google.gwt.i18n.client.Messages;
 
 /**
  * Localization constants. Interface to represent the constants contained in resource bundle:
- * 'BuilderLocalizationConstant.properties'.
+ * 'RunnerLocalizationConstant.properties'.
  *
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: BuilderLocalizationConstant.java Feb 21, 2012 3:06:29 PM azatsarynnyy $
+ * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @version $Id: RunnerLocalizationConstant.java Jul 3, 2013 12:40:17 PM azatsarynnyy $
  */
 public interface RunnerLocalizationConstant extends Messages {
+    /* Actions */
+    @Key("control.runApp.id")
+    String runAppActionId();
 
+    @Key("control.runApp.text")
+    String runAppActionText();
 
-    @Key("runner.starting")
-    String starting(String project);
+    @Key("control.runApp.description")
+    String runAppActionDescription();
 
-    @Key("runner.started")
-    String started(String project);
+    @Key("control.getAppLogs.id")
+    String getAppLogsActionId();
 
-    @DefaultMessage("Run/Run")
-    @Key("control.runAppControlId")
-    String runAppControlId();
+    @Key("control.getAppLogs.text")
+    String getAppLogsActionText();
 
-    @DefaultMessage("Show Logs...")
-    @Key("control.show.logs.title")
-    String showLogsControlTitle();
+    @Key("control.getAppLogs.description")
+    String getAppLogsActionDescription();
 
-    @DefaultMessage("Show Application Logs...")
-    @Key("control.show.logs.prompt")
-    String showLogsControlPrompt();
+    @Key("control.stopApp.id")
+    String stopAppActionId();
 
-    @DefaultMessage("Run/Stop")
-    @Key("control.stopAppControlId")
-    String stopAppControlId();
+    @Key("control.stopApp.text")
+    String stopAppActionText();
 
-    @DefaultMessage("Run/Show Logs...")
-    @Key("control.showlogsid")
-    String showLogsControlId();
+    @Key("control.stopApp.description")
+    String stopAppActionDescription();
 
+    /* Messages */
+    @Key("appStarting")
+    String applicationStarting(String name);
 
-    @DefaultMessage("Application <b>{0}</b> started.")
-    @Key("appStarted")
-    String applicationStarted(String name);
+    @Key("appStarted.uris")
+    String applicationStartedOnUrls(String name, String uris);
 
-    @DefaultMessage("Application <b>{0}</b> stopped.")
-    @Key("appStoped")
-    String applicationStoped(String name);
-
-    @DefaultMessage("Updated application <b>{0}</b> on {1}.")
-    @Key("appUpdated")
-    String applicationUpdated(String name, String uris);
-
-    @DefaultMessage("Update application <b>{0}</b> failed.")
-    @Key("updateAppFailed")
-    String updateApplicationFailed(String name);
-
-    @DefaultMessage("Start application failed.")
     @Key("startAppFailed")
-    String startApplicationFailed();
+    String startApplicationFailed(String name);
 
-    @DefaultMessage("Stop application failed.")
-    @Key("stop.application.failed")
-    String stopApplicationFailed();
+    @Key("getAppLogsFailed")
+    String getApplicationLogsFailed();
 
+    @Key("appStopped")
+    String applicationStopped(String name);
 
-
+    @Key("stopAppFailed")
+    String stopApplicationFailed(String name);
 }

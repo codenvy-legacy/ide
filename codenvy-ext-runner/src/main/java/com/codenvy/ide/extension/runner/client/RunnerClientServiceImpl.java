@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
+ * 
+ *  [2012] - [2013] Codenvy, S.A. 
+ *  All Rights Reserved.
+ * 
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -20,119 +20,61 @@ package com.codenvy.ide.extension.runner.client;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.HTTPHeader;
-import com.codenvy.ide.rest.MimeType;
-import com.codenvy.ide.ui.loader.EmptyLoader;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.Utils;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 
 /**
  * Implementation of {@link RunnerClientService} service.
  *
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: BuilderClientServiceImpl.java Feb 21, 2012 12:44:05 PM azatsarynnyy $
+ * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @version $Id: RunnerClientServiceImpl.java Jul 3, 2013 12:50:30 PM azatsarynnyy $
  */
 @Singleton
 public class RunnerClientServiceImpl implements RunnerClientService {
-    /** Base url. */
-    private static final String BASE_URL = Utils.getWorkspaceName() + "/builder";
-    /** Build project method's path. */
-    private static final String BUILD    = BASE_URL + "/build";
-    /** Build project method's path. */
-    private static final String DEPLOY   = BASE_URL + "/deploy";
-    /** Cancel building project method's path. */
-    private static final String CANCEL   = BASE_URL + "/cancel";
-    /** Get status of build method's path. */
-    private static final String STATUS   = BASE_URL + "/status";
-    /** Get result of build method's path. */
-    private static final String RESULT   = BASE_URL + "/result";
-    /** Get build log method's path. */
-    private static final String LOG      = BASE_URL + "/log";
-    /** REST-service context. */
-    private String restServiceContext;
     /** Loader to be displayed. */
     private Loader loader;
 
     /**
      * Create service.
      *
-     * @param restContext
-     *         REST-service context
      * @param loader
      *         loader to show on server request
      */
     @Inject
-    public RunnerClientServiceImpl(@Named("restContext") String restContext, Loader loader) {
+    protected RunnerClientServiceImpl(Loader loader) {
         this.loader = loader;
-        this.restServiceContext = "/api/";
     }
 
     /** {@inheritDoc} */
     @Override
-    public void build(String projectName,AsyncRequestCallback<String> callback)
-            throws RequestException {
-        final String requesrUrl = restServiceContext + BUILD;
+    public void run(String projectName, AsyncRequestCallback<String> callback) throws RequestException {
+        final String requestUrl = "/api/" + Utils.getWorkspaceName() + "/runner/run";
 
         String params = "project=" + projectName;
-        callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-        AsyncRequest.build(RequestBuilder.POST, requesrUrl + "?" + params)
-                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
-    }
-
-//    /** {@inheritDoc} */
-//    @Override
-//    public void buildAndPublish(String projectId, String vfsId, String projectName, String projectType,
-//                                AsyncRequestCallback<String> callback) throws RequestException {
-//        final String requesrUrl = restServiceContext + DEPLOY;
-//
-//        String params = "vfsid=" + vfsId + "&projectid=" + projectId + "&name=" + projectName + "&type=" + projectType;
-//        callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-//        AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params)
-//                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
-//    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void cancel(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
-        final String requestUrl = restServiceContext + CANCEL + "/" + buildid;
-
-        AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(loader)
-                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+        AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void status(Link link, AsyncRequestCallback<String> callback) throws RequestException {
-        callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-        AsyncRequest.build(RequestBuilder.GET, link.getHref()).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
-                    .send(callback);
+    public void getStatus(Link link, AsyncRequestCallback<String> callback) throws RequestException {
+        AsyncRequest.build(RequestBuilder.GET, link.getHref()).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void log(Link link, AsyncRequestCallback<String> callback) throws RequestException {
-        AsyncRequest.build(RequestBuilder.GET, link.getHref()).loader(loader)
-                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+    public void getLogs(Link link, AsyncRequestCallback<String> callback) throws RequestException {
+        loader.setMessage("Retrieving logs...");
+        AsyncRequest.build(RequestBuilder.GET, link.getHref()).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void result(String buildid, AsyncRequestCallback<String> callback) throws RequestException {
-        final String requestUrl = restServiceContext + RESULT + "/" + buildid;
-        callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-        AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
-                    .send(callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException {
-        final String requestUrl = restServiceContext + "/ide/builder/check_download_url?url=" + url;
-        AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(new EmptyLoader()).send(callback);
+    public void stop(Link link, AsyncRequestCallback<String> callback) throws RequestException {
+        loader.setMessage("Stopping an application...");
+        AsyncRequest.build(RequestBuilder.POST, link.getHref()).loader(loader).send(callback);
     }
 }

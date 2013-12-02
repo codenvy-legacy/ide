@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
+ * 
+ *  [2012] - [2013] Codenvy, S.A. 
+ *  All Rights Reserved.
+ * 
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -23,7 +23,12 @@ import com.codenvy.ide.extension.runner.client.RunnerClientServiceImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * GIN module for Runner extension.
+ *
+ * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @version $Id: RunnerGinModule.java Jul 2, 2013 4:44:09 PM azatsarynnyy $
+ */
 @ExtensionGinModule
 public class RunnerGinModule extends AbstractGinModule {
     /** {@inheritDoc} */

@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
+ * 
+ *  [2012] - [2013] Codenvy, S.A. 
+ *  All Rights Reserved.
+ * 
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -22,91 +22,54 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 
 /**
- * Client service for Maven builder.
+ * Client service for Runner.
  *
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: BuilderClientService.java Feb 17, 2012 12:36:01 PM azatsarynnyy $
+ * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @version $Id: RunnerClientService.java Jul 3, 2013 12:48:08 PM azatsarynnyy $
  */
 public interface RunnerClientService {
+
     /**
-     * Start new build.
+     * Run an app on the application server.
      *
-     * @param projectId
-     *         identifier of the project we want to send for build
-     * @param vfsId
-     *         identifier of the virtual file system
+     * @param projectName
+     *         name of the project to run
      * @param callback
      *         callback
      * @throws RequestException
      */
-    public void build(String projectName, AsyncRequestCallback<String> callback)
-            throws RequestException;
-
-//    /**
-//     * Start new build and publish.
-//     *
-//     * @param projectId
-//     *         identifier of project we want to send for build
-//     * @param vfsId
-//     *         identifier of virtual file system
-//     * @param callback
-//     *         callback
-//     * @throws RequestException
-//     */
-//    public void buildAndPublish(String projectId, String vfsId, String projectName, String projectType,
-//                                AsyncRequestCallback<String> callback) throws RequestException;
+    public void run(String projectName, AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
-     * Cancel previously launched build.
+     * Get status of app.
      *
-     * @param buildid
-     *         ID of build
+     * @param link
+     *         link to get application's status
      * @param callback
      *         callback
      * @throws RequestException
      */
-    public void cancel(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+    public void getStatus(Link link, AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
-     * Check current status of previously launched build.
+     * Retrieve logs from application server where app is launched.
      *
-     *         identifier of build
+     * @param link
+     *         link to retrieve logs
      * @param callback
      *         callback
      * @throws RequestException
      */
-    public void status(Link link, AsyncRequestCallback<String> callback) throws RequestException;
+    public void getLogs(Link link, AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
-     * Get build log.
+     * Stop application server where app is launched.
      *
-     * @param buildid
-     *         identifier of build
+     * @param link
+     *         link to stop an app
      * @param callback
      *         callback
      * @throws RequestException
      */
-    public void log(Link link, AsyncRequestCallback<String> callback) throws RequestException;
-
-    /**
-     * Get build result.
-     *
-     * @param buildid
-     *         ID of build
-     * @param callback
-     *         callback
-     * @throws RequestException
-     */
-    public void result(String buildid, AsyncRequestCallback<String> callback) throws RequestException;
-
-    /**
-     * Check is URL for download artifact is valid.
-     *
-     * @param url
-     *         URL for checking
-     * @param callback
-     *         callback
-     * @throws RequestException
-     */
-    public void checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException;
+    public void stop(Link link, AsyncRequestCallback<String> callback) throws RequestException;
 }

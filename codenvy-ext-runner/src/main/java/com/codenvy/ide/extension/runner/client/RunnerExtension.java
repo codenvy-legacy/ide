@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
+ * 
+ *  [2012] - [2013] Codenvy, S.A. 
+ *  All Rights Reserved.
+ * 
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -20,56 +20,40 @@ package com.codenvy.ide.extension.runner.client;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.extension.runner.client.actions.LogsAction;
+import com.codenvy.ide.extension.runner.client.actions.GetLogsAction;
 import com.codenvy.ide.extension.runner.client.actions.RunAction;
 import com.codenvy.ide.extension.runner.client.actions.StopAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
-import static com.codenvy.ide.json.JsonCollections.createArray;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_MAIN_MENU;
 
 /**
- * Maven builder extension entry point.
+ * Runner extension entry point.
  *
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: BuilderExtension.java Feb 21, 2012 1:53:48 PM azatsarynnyy $
+ * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @version $Id: RunnerExtension.java Jul 2, 2013 4:14:56 PM azatsarynnyy $
  */
 @Singleton
-@Extension(title = "Run App Support.")
+@Extension(title = "Running project support.", version = "3.0.0")
 public class RunnerExtension {
-    public static final String PROJECT_BUILD_GROUP_MAIN_MENU = "ProjectRunGroup";
-    /** Channel for the messages containing status of the Maven build job. */
-    public static final String RUNNER_RUN_STATUS             = "runner:runStatus:";
 
-
-    /**
-     * Create extension.
-     *
-     */
     @Inject
-    public RunnerExtension(
-            RunnerLocalizationConstant localizationConstants,
-            ActionManager actionManager,
-            RunAction runAction,
-            LogsAction logsAction,
-            StopAction stopAction) {
+    public RunnerExtension(RunnerLocalizationConstant localizationConstants,
+                           ActionManager actionManager,
+                           RunAction runAction,
+                           GetLogsAction getLogsAction,
+                           StopAction stopAction) {
         // register actions
-        actionManager.registerAction(localizationConstants.runAppControlId(), runAction);
-        actionManager.registerAction(localizationConstants.stopAppControlId(), stopAction);
-        actionManager.registerAction(localizationConstants.showLogsControlId(), logsAction);
+        DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
 
+        actionManager.registerAction(localizationConstants.runAppActionId(), runAction);
+        runMenuActionGroup.add(runAction);
 
-        // compose action group
-        DefaultActionGroup buildGroup = new DefaultActionGroup(PROJECT_BUILD_GROUP_MAIN_MENU, false, actionManager);
-        buildGroup.add(runAction);
-        buildGroup.add(stopAction);
-        buildGroup.add(logsAction);
+        actionManager.registerAction(localizationConstants.getAppLogsActionId(), getLogsAction);
+        runMenuActionGroup.add(getLogsAction);
 
-        // add action group to 'Project' menu
-        DefaultActionGroup projectMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_PROJECT);
-        projectMenuActionGroup.addSeparator();
-        projectMenuActionGroup.add(buildGroup);
-
+        actionManager.registerAction(localizationConstants.stopAppActionId(), stopAction);
+        runMenuActionGroup.add(stopAction);
     }
 }

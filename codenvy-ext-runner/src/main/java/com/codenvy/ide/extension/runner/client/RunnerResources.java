@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
+ * 
+ *  [2012] - [2013] Codenvy, S.A. 
+ *  All Rights Reserved.
+ * 
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -23,12 +23,17 @@ import com.google.gwt.resources.client.ImageResource;
 /**
  * Client resources.
  *
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Apr 3, 2012 3:03:35 PM anya $
+ * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @version $Id: RunnerResources.java Jul 3, 2013 12:37:19 PM azatsarynnyy $
  */
 public interface RunnerResources extends ClientBundle {
-    @Source("build.png")
-    ImageResource runApp();
 
+    @Source("runApp.png")
+    ImageResource launchApp();
 
+    @Source("getAppLogs.png")
+    ImageResource getAppLogs();
+
+    @Source("stopApp.png")
+    ImageResource stopApp();
 }
