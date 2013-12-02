@@ -23,7 +23,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.codenvy.ide</groupId>
     <artifactId>codenvy-ide-client</artifactId>
-    <version>3.0.0-M4-SNAPSHOT</version>
+    <version>3.0.0-M4</version>
     <packaging>war</packaging>
     <name>Codenvy :: Client</name>
 
@@ -32,7 +32,7 @@
         <generated.sources.directory>${project.build.directory}/generated-sources/gen</generated.sources.directory>
 
         <!-- Codenvy -->
-        <com.codenvy.platform-api.version>0.4.0-SNAPSHOT</com.codenvy.platform-api.version>
+        <com.codenvy.platform-api.version>0.4.0</com.codenvy.platform-api.version>
 
         <!-- eXo -->
         <org.exoplatform.ide.version>2.8.1</org.exoplatform.ide.version>
