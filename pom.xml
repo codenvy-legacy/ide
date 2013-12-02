@@ -27,13 +27,13 @@
     </parent>
     <groupId>com.codenvy.ide</groupId>
     <artifactId>codenvy-ide-parent</artifactId>
-    <version>3.0.0-M4-SNAPSHOT</version>
+    <version>3.0.0-M4</version>
     <packaging>pom</packaging>
     <name>Codenvy :: Parent</name>
     <scm>
         <connection>scm:git:git@github.com:codenvy/ide2.git</connection>
         <developerConnection>scm:git:git@github.com:codenvy/ide2.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>3.0.0-M4</tag>
     </scm>
 
     <!--
@@ -133,8 +133,7 @@
         <module>codenvy-ext-demo</module>
         <module>codenvy-ext-css</module>
         <module>codenvy-ext-java</module>
-        <!--module>codenvy-ext-java-runtime</module
-        module>codenvy-ext-cloudfoundry</module>
+        <!--module>codenvy-ext-java-runtime</module module>codenvy-ext-cloudfoundry</module>
         <module>codenvy-ext-cloudbees</module>
         <module>codenvy-ext-appfog</module>
         <module>codenvy-ext-openshift</module>
