@@ -32,7 +32,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -69,8 +68,8 @@ public class KeyService {
     @Consumes({MediaType.MULTIPART_FORM_DATA})
     @RolesAllowed({"developer"})
     public Response addPrivateKey(@HeaderParam(HTTPHeader.CONTENT_LENGTH) Long length,
-                              @QueryParam("host") String host,
-                              Iterator<FileItem> iterator) throws SshKeyStoreException {
+                                  @QueryParam("host") String host,
+                                  Iterator<FileItem> iterator) throws SshKeyStoreException {
         if (length > MAX_UPLOAD_SIZE) {
             throw new SshKeyStoreException("File is to large to proceed.");
         }
@@ -89,7 +88,9 @@ public class KeyService {
         if (key == null) {
             throw new SshKeyStoreException("Can't find input file.");
         }
-
+        if (new String(key).toLowerCase().contains("proc-type: 4,encrypted")) {
+            throw new SshKeyStoreException("SSH key with passphrase not supported");
+        }
         keyStore.addPrivateKey(host, key);
 
         //method usually return 204, but on client-side submit complete handler wont work with it, so we create response with 200, to work
