@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -84,6 +85,11 @@ public class TomcatServer implements ApplicationServer {
         final String tomcatHomeDir = System.getProperty(TOMCAT_HOME_SYSTEM_PROPERTY);
         if (tomcatHomeDir != null) {
             configuration.setFile(TomcatServer.TOMCAT_HOME_PARAMETER, new java.io.File(tomcatHomeDir));
+        } else {
+            final Path tomcatDirPath = Paths.get("../tomcat");
+            if (Files.exists(tomcatDirPath)) {
+                configuration.setFile(TomcatServer.TOMCAT_HOME_PARAMETER, tomcatDirPath.toFile());
+            }
         }
         setConfiguration(configuration);
     }

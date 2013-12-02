@@ -299,8 +299,7 @@ public class SDKRunner extends Runner {
     // Windows
 
     // TODO: implement
-    protected ApplicationProcess startWindows(java.io.File appDir,
-                                              SDKRunnerConfiguration runnerConfiguration) {
+    protected ApplicationProcess startWindows(java.io.File appDir, SDKRunnerConfiguration runnerConfiguration) {
         throw new UnsupportedOperationException();
     }
 

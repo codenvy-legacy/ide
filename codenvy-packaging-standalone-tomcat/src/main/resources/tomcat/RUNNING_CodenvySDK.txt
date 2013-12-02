@@ -57,14 +57,14 @@ Installing
 4.2. Unpack the archive where you would like to store the binaries.
      A directory called "codenvy-platform-sdk-[version]" will be created.
 
-5. Codenvy Platform SDK requires some libraries in order to launch Codenvy-extensions that you develop.
+5. Codenvy Platform SDK requires some libraries in order to launch Codenvy extensions that you develop.
    You should to copy these libraries to your local Maven repository.
 
 5.1. Execute the following command:
 
 On *nix:
-      install.sh path
-      , where path is a path to your local Maven repository.
+      install.sh path_to_repo
+      , where path_to_repo is a path to your local Maven repository.
 
 
 ===================
