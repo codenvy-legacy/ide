@@ -18,7 +18,6 @@
 package com.codenvy.runner.webapps;
 
 import com.codenvy.api.core.config.Configuration;
-import com.codenvy.api.core.rest.FileAdapter;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.api.core.util.ProcessUtil;
 import com.codenvy.api.core.util.SystemInfo;
@@ -162,9 +161,9 @@ public class TomcatServer implements ApplicationServer {
         if (!logsDir.mkdir()) {
             throw new RunnerException("Unable create logs directory");
         }
-        final List<FileAdapter> logFiles = new ArrayList<>(2);
-        logFiles.add(new FileAdapter(new java.io.File(logsDir, "stdout.log"), "logs/stdout.log", "text/plain"));
-        logFiles.add(new FileAdapter(new java.io.File(logsDir, "stderr.log"), "logs/stderr.log", "text/plain"));
+        final List<File> logFiles = new ArrayList<>(2);
+        logFiles.add(new java.io.File(logsDir, "stdout.log"));
+        logFiles.add(new java.io.File(logsDir, "stderr.log"));
 
         return new TomcatProcess(runnerConfiguration.getPort(), logFiles, runnerConfiguration.getDebugPort(),
                                  startUpScriptFile, appDir, stopCallback, pidTaskExecutor);
@@ -269,18 +268,18 @@ public class TomcatServer implements ApplicationServer {
     }
 
     private static class TomcatProcess extends ApplicationProcess {
-        final int               httpPort;
-        final List<FileAdapter> logFiles;
-        final int               debugPort;
-        final ExecutorService   pidTaskExecutor;
-        final File              startUpScriptFile;
-        final File              workDir;
-        final StopCallback      stopCallback;
+        final int             httpPort;
+        final List<File>      logFiles;
+        final int             debugPort;
+        final ExecutorService pidTaskExecutor;
+        final File            startUpScriptFile;
+        final File            workDir;
+        final StopCallback    stopCallback;
         int pid = -1;
         TomcatLogger logger;
         Process      process;
 
-        TomcatProcess(int httpPort, List<FileAdapter> logFiles, int debugPort, File startUpScriptFile, File workDir,
+        TomcatProcess(int httpPort, List<File> logFiles, int debugPort, File startUpScriptFile, File workDir,
                       StopCallback stopCallback, ExecutorService pidTaskExecutor) {
             this.httpPort = httpPort;
             this.logFiles = logFiles;
@@ -380,17 +379,17 @@ public class TomcatServer implements ApplicationServer {
 
         private static class TomcatLogger implements ApplicationLogger {
 
-            final List<FileAdapter> logFiles;
+            final List<File> logFiles;
 
-            TomcatLogger(List<FileAdapter> logFiles) {
+            TomcatLogger(List<File> logFiles) {
                 this.logFiles = logFiles;
             }
 
             @Override
             public void getLogs(Appendable output) throws IOException {
-                for (FileAdapter logFile : logFiles) {
+                for (File logFile : logFiles) {
                     output.append(String.format("%n====> %1$s <====%n%n", logFile.getName()));
-                    CharStreams.copy(new InputStreamReader(new FileInputStream(logFile.getIoFile())), output);
+                    CharStreams.copy(new InputStreamReader(new FileInputStream(logFile)), output);
                     output.append(System.lineSeparator());
                 }
             }
