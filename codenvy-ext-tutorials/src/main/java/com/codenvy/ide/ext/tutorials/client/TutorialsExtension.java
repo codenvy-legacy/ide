@@ -46,7 +46,6 @@ public class TutorialsExtension {
     public static final String TUTORIAL_PROJECT_TYPE           = "CodenvyTutorial";
     /** Default name of the file that contains tutorial description. */
     public static final String DEFAULT_README_FILE_NAME        = "guide.html";
-    public static final String DTO_TUTORIAL_ID                 = "DTOTutorial";
     public static final String ACTION_TUTORIAL_ID              = "ActionTutorial";
     public static final String NOTIFICATION_TUTORIAL_ID        = "NotificationTutorial";
     public static final String WIZARD_TUTORIAL_ID              = "WizardTutorial";
@@ -58,7 +57,6 @@ public class TutorialsExtension {
 
     @Inject
     public TutorialsExtension(TemplateAgent templateAgent,
-                              Provider<CreateDTOTutorialPage> createDTOTutorialPage,
                               Provider<CreateActionTutorialPage> createActionTutorialPage,
                               Provider<CreateNotificationTutorialPage> createNotificationTutorialPage,
                               Provider<CreateWizardTutorialPage> createWizardTutorialPageProvider,
@@ -88,12 +86,6 @@ public class TutorialsExtension {
                                   JsonCollections.<String>createArray(TUTORIAL_PROJECT_TYPE));
 
         // register templates
-        templateAgent.register(DTO_TUTORIAL_ID,
-                               "DTO tutorial.",
-                               resources.codenvyTutorialTemplate(),
-                               PRIMARY_NATURE,
-                               JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createDTOTutorialPage));
         templateAgent.register(NOTIFICATION_TUTORIAL_ID,
                                "Notification API tutorial.",
                                resources.codenvyTutorialTemplate(),
@@ -139,7 +131,7 @@ public class TutorialsExtension {
                                JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
                                JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createEditorTutorialPageProvider));
         templateAgent.register(GIN_TUTORIAL_ID,
-                               "Tutorial project that illustrates examples of using GIN (GWT Injection).",
+                               "GIN (GWT Injection) tutorial.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
                                JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),

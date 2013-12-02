@@ -49,28 +49,6 @@ public class TutorialsService {
     private VirtualFileSystemRegistry vfsRegistry;
 
     /**
-     * Create 'DTO tutorial' project.
-     *
-     * @param vfsId
-     *         identifier of virtual file system
-     * @param name
-     *         name of the newly created project
-     * @param properties
-     *         properties to set to project
-     * @throws VirtualFileSystemException
-     *         if any error occurred in VFS
-     * @throws IOException
-     *         if any error occurred while input-output operations
-     */
-    @Path("dto")
-    @POST
-    public void createDTOTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
-                                         List<Property> properties)
-            throws VirtualFileSystemException, IOException {
-        createProject(vfsId, BASE_URL + "/dto-tutorial.zip", name, properties);
-    }
-
-    /**
      * Create 'Notification tutorial' project.
      *
      * @param vfsId

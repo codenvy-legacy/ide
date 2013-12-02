@@ -28,13 +28,13 @@ import com.google.inject.Singleton;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
 
 /**
- * Maven builder extension entry point.
+ * Builder extension entry point.
  *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuilderExtension.java Feb 21, 2012 1:53:48 PM azatsarynnyy $
  */
 @Singleton
-@Extension(title = "Maven Support.", version = "3.0.0")
+@Extension(title = "Building project support.", version = "3.0.0")
 public class BuilderExtension {
     public static final String PROJECT_BUILD_GROUP_MAIN_MENU   = "ProjectBuildGroup";
     /** Channel for the messages containing status of the Maven build job. */

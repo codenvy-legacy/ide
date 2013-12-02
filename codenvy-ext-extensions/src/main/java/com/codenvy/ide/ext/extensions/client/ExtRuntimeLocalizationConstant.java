@@ -29,7 +29,7 @@ import com.google.gwt.i18n.client.Messages;
 public interface ExtRuntimeLocalizationConstant extends Messages {
     /* Actions */
     @Key("control.launchExtension.id")
-    String launchExtensionActionlId();
+    String launchExtensionActionId();
 
     @Key("control.launchExtension.text")
     String launchExtensionActionText();
@@ -55,43 +55,23 @@ public interface ExtRuntimeLocalizationConstant extends Messages {
     @Key("control.stopExtension.description")
     String stopExtensionActionDescription();
 
-    @Key("control.buildBundle.id")
-    String buildBundleActionId();
-
-    @Key("control.buildBundle.text")
-    String buildBundleActionText();
-
-    @Key("control.buildBundle.description")
-    String buildBundleActionDescription();
-
     /* Messages */
-    @Key("appBuilding")
-    String applicationBuilding(String name);
 
-    @Key("appBuilt")
-    String applicationBuilt(String name);
+    @Key("extensionLaunching")
+    String extensionLaunching(String name);
 
-    @Key("getBundle")
-    String getBundle(String path);
+    @Key("extensionLaunched.uris")
+    String extensionLaunchedOnUrls(String name, String uris);
 
-    @Key("buildAppFailed")
-    String buildApplicationFailed(String name);
+    @Key("launchExtensionFailed")
+    String launchExtensionFailed(String name);
 
-    @Key("appStarting")
-    String applicationStarting(String name);
+    @Key("getExtensionLogsFailed")
+    String getExtensionLogsFailed();
 
-    @Key("appStarted.uris")
-    String applicationStartedOnUrls(String name, String uris);
+    @Key("extensionStopped")
+    String extensionStopped(String name);
 
-    @Key("startAppFailed")
-    String startApplicationFailed(String name);
-
-    @Key("getAppLogsFailed")
-    String getApplicationLogsFailed();
-
-    @Key("appStopped")
-    String applicationStopped(String name);
-
-    @Key("stopAppFailed")
-    String stopApplicationFailed(String name);
+    @Key("stopExtensionFailed")
+    String stopExtensionFailed(String name);
 }

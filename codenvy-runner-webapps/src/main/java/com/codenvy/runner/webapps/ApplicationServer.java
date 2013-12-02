@@ -23,20 +23,59 @@ import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.api.runner.internal.DeploymentSources;
 
 /**
- * //
+ * Application server to deploy an app.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
 public interface ApplicationServer {
+
+    /** Application server name. */
     String getName();
 
+    /**
+     * Deploy {@code DeploymentSources} to application server.
+     *
+     * @param appDir
+     *         root directory where for application server
+     * @param toDeploy
+     *         {@code DeploymentSources} to deploy
+     * @param runnerConfiguration
+     *         configuration of application server to run application
+     * @param stopCallback
+     *         an implementation should invoke stopped() method on provided <code>stopCallback</code> when this application
+     *         server stopped
+     * @return {@code ApplicationProcess} that represents a deployed app
+     * @throws RunnerException
+     *         if an error occurs when try to deploy {@code DeploymentSources} to application server
+     */
     ApplicationProcess deploy(java.io.File appDir, DeploymentSources toDeploy,
                               ApplicationServerRunnerConfiguration runnerConfiguration, StopCallback stopCallback)
             throws RunnerException;
 
+    /**
+     * Returns the default configuration of application server.
+     *
+     * @return default {@code Configuration} of this application server
+     */
     Configuration getDefaultConfiguration();
 
+    /**
+     * Returns the application server configuration.
+     *
+     * @return {@code Configuration} of this application server
+     */
     Configuration getConfiguration();
 
+    /**
+     * Set the application server configuration.
+     *
+     * @param configuration
+     *         application server {@code Configuration} to set
+     */
     void setConfiguration(Configuration configuration);
+
+    /** Will be notified when {@code ApplicationServer} stopped. */
+    public interface StopCallback {
+        void stopped();
+    }
 }

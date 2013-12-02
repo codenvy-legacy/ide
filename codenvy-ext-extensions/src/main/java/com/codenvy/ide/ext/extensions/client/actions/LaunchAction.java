@@ -45,7 +45,7 @@ public class LaunchAction extends Action {
     public LaunchAction(ExtensionsController controller, ExtRuntimeResources resources,
                         ResourceProvider resourceProvider, ExtRuntimeLocalizationConstant localizationConstants) {
         super(localizationConstants.launchExtensionActionText(),
-              localizationConstants.launchExtensionActionDescription(), resources.launchApp());
+              localizationConstants.launchExtensionActionDescription(), resources.launchExtension());
         this.controller = controller;
         this.resourceProvider = resourceProvider;
     }

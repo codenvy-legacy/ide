@@ -45,7 +45,7 @@ public class StopAction extends Action {
     public StopAction(ExtensionsController controller, ExtRuntimeResources resources,
                       ResourceProvider resourceProvider, ExtRuntimeLocalizationConstant localizationConstants) {
         super(localizationConstants.stopExtensionActionText(), localizationConstants.stopExtensionActionDescription(),
-              resources.stopApp());
+              resources.stopExtension());
         this.controller = controller;
         this.resourceProvider = resourceProvider;
     }

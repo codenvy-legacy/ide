@@ -17,19 +17,20 @@
  */
 package com.codenvy.builder.ant;
 
+import com.codenvy.api.builder.dto.Dependency;
 import com.codenvy.api.builder.internal.BuildListener;
 import com.codenvy.api.builder.internal.BuildResult;
 import com.codenvy.api.builder.internal.BuildTask;
-import com.codenvy.api.builder.internal.BuildTaskConfiguration;
 import com.codenvy.api.builder.internal.Builder;
+import com.codenvy.api.builder.internal.BuilderConfiguration;
 import com.codenvy.api.builder.internal.BuilderException;
 import com.codenvy.api.builder.internal.BuilderTaskType;
 import com.codenvy.api.builder.internal.DependencyCollector;
-import com.codenvy.api.core.rest.FileAdapter;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.builder.tools.ant.AntBuildListener;
 import com.codenvy.builder.tools.ant.AntMessage;
+import com.codenvy.dto.server.DtoFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,7 +116,7 @@ public class AntBuilder extends Builder {
     }
 
     @Override
-    protected CommandLine createCommandLine(BuildTaskConfiguration config) {
+    protected CommandLine createCommandLine(BuilderConfiguration config) {
         final CommandLine commandLine = new CommandLine(antExecCommand());
         commandLine.add(config.getTargets());
         switch (config.getTaskType()) {
@@ -163,9 +164,8 @@ public class AntBuilder extends Builder {
                 }
             }
 
-            final BuildTaskConfiguration config = task.getConfiguration();
-            final java.io.File srcDir = task.getSources().getDirectory().getIoFile();
-            final Path srcPath = srcDir.toPath();
+            final BuilderConfiguration config = task.getConfiguration();
+            final java.io.File workDir = config.getWorkDir();
             if (config.getTaskType() == BuilderTaskType.DEFAULT) {
                 // Need successful status to continue.
                 if (!antSuccessful) {
@@ -176,7 +176,7 @@ public class AntBuilder extends Builder {
                     if (event.isPack()) {
                         final java.io.File file = event.getPack();
                         if (file.exists()) {
-                            result.getResultUnits().add(new FileAdapter(file, srcPath.relativize(file.toPath()).toString()));
+                            result.getResults().add(file);
                         }
                     }
                 }
@@ -198,17 +198,17 @@ public class AntBuilder extends Builder {
                 }
                 if (config.getTaskType() == BuilderTaskType.LIST_DEPS) {
                     try {
-                        final java.io.File file = new java.io.File(srcDir, DEPENDENCIES_JSON_FILE);
-                        writeDependenciesJson(classpath, srcDir, file);
-                        result.getResultUnits().add(new FileAdapter(file, srcPath.relativize(file.toPath()).toString()));
+                        final java.io.File file = new java.io.File(workDir, DEPENDENCIES_JSON_FILE);
+                        writeDependenciesJson(classpath, workDir, file);
+                        result.getResults().add(file);
                     } catch (IOException e) {
                         throw new BuilderException(e);
                     }
                 } else {
                     try {
-                        final java.io.File file = new java.io.File(srcDir, DEPENDENCIES_ZIP_FILE);
+                        final java.io.File file = new java.io.File(workDir, DEPENDENCIES_ZIP_FILE);
                         writeDependenciesZip(classpath, file);
-                        result.getResultUnits().add(new FileAdapter(file, srcPath.relativize(file.toPath()).toString()));
+                        result.getResults().add(file);
                     } catch (IOException e) {
                         throw new BuilderException(e);
                     }
@@ -314,20 +314,22 @@ public class AntBuilder extends Builder {
         };
     }
 
-    private void writeDependenciesJson(Set<java.io.File> classpath, java.io.File srcDir, java.io.File jsonFile) throws IOException {
-        final Path srcPath = srcDir.toPath();
+    private void writeDependenciesJson(Set<java.io.File> classpath, java.io.File workDir, java.io.File jsonFile) throws IOException {
+        final Path workDirPath = workDir.toPath();
         final DependencyCollector collector = new DependencyCollector();
         final UniqueNameChecker uniqueNameChecker = new UniqueNameChecker();
         for (java.io.File file : classpath) {
             final Path path = file.toPath();
-            if (path.startsWith(srcPath)) {
+            if (path.startsWith(workDirPath)) {
                 // If library included in project show relative path to it.
-                collector.addDependency(new DependencyCollector.Dependency(srcPath.relativize(path).toString()));
+                collector.addDependency(
+                        DtoFactory.getInstance().createDto(Dependency.class).withFullName(workDirPath.relativize(path).toString()));
             } else {
                 // otherwise show just name of library.
                 // Typically it may means that dependency is obtained with some dependency manager,
                 // e.g. with builder over builder-ant-task.
-                collector.addDependency(new DependencyCollector.Dependency(uniqueNameChecker.maybeAddIndex(file.getName())));
+                collector.addDependency(
+                        DtoFactory.getInstance().createDto(Dependency.class).withFullName(uniqueNameChecker.maybeAddIndex(file.getName())));
             }
         }
         collector.writeJson(jsonFile);

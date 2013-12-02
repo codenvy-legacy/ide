@@ -18,40 +18,17 @@
 package com.codenvy.ide.extension.runner.client;
 
 import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
  * Client resources.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: RunnerResources.java Jul 3, 2013 12:37:19 PM azatsarynnyy $
  */
 public interface RunnerResources extends ClientBundle {
-    public interface ExtensionRuntimeCSS extends CssResource {
-        String login();
 
-        String loginFont();
-
-        String loginErrorFont();
-
-        String project();
-
-        String labelH();
-
-        String link();
-
-        String textinput();
-
-        String appInfo();
-
-        String event();
-    }
-
-    @Source({"ExtensionRuntime.css", "com/codenvy/ide/api/ui/style.css"})
-    ExtensionRuntimeCSS extensionRuntimeCss();
-
-    @Source("launchApp.png")
+    @Source("runApp.png")
     ImageResource launchApp();
 
     @Source("getAppLogs.png")
@@ -59,13 +36,4 @@ public interface RunnerResources extends ClientBundle {
 
     @Source("stopApp.png")
     ImageResource stopApp();
-
-    @Source("buildBundle.png")
-    ImageResource buildBundle();
-
-    @Source("codenvyExtensionTemplate.png")
-    ImageResource codenvyExtensionTemplate();
-
-    @Source("codenvyExtensionProject.png")
-    ImageResource codenvyExtensionProject();
 }

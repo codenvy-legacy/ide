@@ -40,7 +40,7 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
  */
 @Singleton
 public class CreateMavenProjectClientServiceImpl implements CreateMavenProjectClientService {
-    private static final String BASE_URL              = '/' + Utils.getWorkspaceName() + "/builder/create";
+    private static final String BASE_URL              = '/' + Utils.getWorkspaceName() + "/maven/create";
     private static final String CREATE_WAR_PROJECT    = BASE_URL + "/project/war";
     private static final String CREATE_JAVA_PROJECT   = BASE_URL + "/project/java";
     private static final String CREATE_SPRING_PROJECT = BASE_URL + "/project/spring";

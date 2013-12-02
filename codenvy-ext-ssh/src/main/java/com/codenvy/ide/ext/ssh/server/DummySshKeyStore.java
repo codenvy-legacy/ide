@@ -79,6 +79,10 @@ public class DummySshKeyStore implements SshKeyStore, Startable {
     }
 
     private void saveSshKeysToStorage() throws SshKeyStoreException {
+        if (fullSshKeysStorageLocation == null) {
+            return;
+        }
+        
         File sshKeysStorage = new File(fullSshKeysStorageLocation);
         if (!sshKeysStorage.exists()) {
             sshKeysStorage.getParentFile().mkdirs();
