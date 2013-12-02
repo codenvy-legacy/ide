@@ -90,7 +90,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      *         {@link DtoFactory}
      */
     @Inject
-    protected RunnerController(ResourceProvider resourceProvider, EventBus eventBus, WorkspaceAgent workspaceAgent,
+    public RunnerController(ResourceProvider resourceProvider, EventBus eventBus, WorkspaceAgent workspaceAgent,
                                final ConsolePart console, RunnerClientService service,
                                RunnerLocalizationConstant constant, NotificationManager notificationManager,
                                DtoFactory dtoFactory) {
