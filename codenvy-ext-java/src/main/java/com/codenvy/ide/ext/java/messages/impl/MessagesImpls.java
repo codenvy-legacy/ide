@@ -27,7 +27,111 @@ public class MessagesImpls {
 
   private  MessagesImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "f2b4f3965f6987850619132ce963260f76e91ddb";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "7ee453990e80e46566606c4c1cbec6ee5ae027d0";
+
+
+  public static class CAProposalsComputedMessageImpl extends com.google.gwt.webworker.client.messages.MessageImpl implements com.codenvy.ide.ext.java.messages.CAProposalsComputedMessage {
+    protected CAProposalsComputedMessageImpl() {}
+
+    @Override
+    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.java.messages.WorkerProposal> proposals() /*-{
+      return this["proposals"];
+    }-*/;
+
+    public final native CAProposalsComputedMessageImpl setProposals(com.codenvy.ide.json.js.JsoArray<com.codenvy.ide.ext.java.messages.WorkerProposal> proposals) /*-{
+      this["proposals"] = proposals;
+      return this;
+    }-*/;
+
+    public final native boolean hasProposals() /*-{
+      return this.hasOwnProperty("proposals");
+    }-*/;
+
+    @Override
+    public final native java.lang.String id() /*-{
+      return this["id"];
+    }-*/;
+
+    public final native CAProposalsComputedMessageImpl setId(java.lang.String id) /*-{
+      this["id"] = id;
+      return this;
+    }-*/;
+
+    public final native boolean hasId() /*-{
+      return this.hasOwnProperty("id");
+    }-*/;
+
+    public static native CAProposalsComputedMessageImpl make() /*-{
+      return {
+        _type: 5
+      };
+    }-*/;  }
+
+
+  public static class ComputeCAProposalsMessageImpl extends com.google.gwt.webworker.client.messages.MessageImpl implements com.codenvy.ide.ext.java.messages.ComputeCAProposalsMessage {
+    protected ComputeCAProposalsMessageImpl() {}
+
+    @Override
+    public final native java.lang.String docContent() /*-{
+      return this["docContent"];
+    }-*/;
+
+    public final native ComputeCAProposalsMessageImpl setDocContent(java.lang.String docContent) /*-{
+      this["docContent"] = docContent;
+      return this;
+    }-*/;
+
+    public final native boolean hasDocContent() /*-{
+      return this.hasOwnProperty("docContent");
+    }-*/;
+
+    @Override
+    public final native int offset() /*-{
+      return this["offset"];
+    }-*/;
+
+    public final native ComputeCAProposalsMessageImpl setOffset(int offset) /*-{
+      this["offset"] = offset;
+      return this;
+    }-*/;
+
+    public final native boolean hasOffset() /*-{
+      return this.hasOwnProperty("offset");
+    }-*/;
+
+    @Override
+    public final native java.lang.String fileName() /*-{
+      return this["fileName"];
+    }-*/;
+
+    public final native ComputeCAProposalsMessageImpl setFileName(java.lang.String fileName) /*-{
+      this["fileName"] = fileName;
+      return this;
+    }-*/;
+
+    public final native boolean hasFileName() /*-{
+      return this.hasOwnProperty("fileName");
+    }-*/;
+
+    @Override
+    public final native java.lang.String id() /*-{
+      return this["id"];
+    }-*/;
+
+    public final native ComputeCAProposalsMessageImpl setId(java.lang.String id) /*-{
+      this["id"] = id;
+      return this;
+    }-*/;
+
+    public final native boolean hasId() /*-{
+      return this.hasOwnProperty("id");
+    }-*/;
+
+    public static native ComputeCAProposalsMessageImpl make() /*-{
+      return {
+        _type: 4
+      };
+    }-*/;  }
 
 
   public static class ConfigMessageImpl extends com.google.gwt.webworker.client.messages.MessageImpl implements com.codenvy.ide.ext.java.messages.ConfigMessage {
@@ -59,6 +163,20 @@ public class MessagesImpls {
 
     public final native boolean hasVfsId() /*-{
       return this.hasOwnProperty("vfsId");
+    }-*/;
+
+    @Override
+    public final native java.lang.String javaDocContext() /*-{
+      return this["javaDocContext"];
+    }-*/;
+
+    public final native ConfigMessageImpl setJavaDocContext(java.lang.String javaDocContext) /*-{
+      this["javaDocContext"] = javaDocContext;
+      return this;
+    }-*/;
+
+    public final native boolean hasJavaDocContext() /*-{
+      return this.hasOwnProperty("javaDocContext");
     }-*/;
 
     @Override
@@ -345,6 +463,56 @@ public class MessagesImpls {
       return {
         _type: 3
       };
+    }-*/;  }
+
+
+  public static class WorkerProposalImpl extends com.google.gwt.webworker.client.messages.MessageImpl implements com.codenvy.ide.ext.java.messages.WorkerProposal {
+    protected WorkerProposalImpl() {}
+
+    @Override
+    public final native java.lang.String image() /*-{
+      return this[0];
+    }-*/;
+
+    public final native WorkerProposalImpl setImage(java.lang.String image) /*-{
+      this[0] = image;
+      return this;
+    }-*/;
+
+    public final native boolean hasImage() /*-{
+      return this.hasOwnProperty(0);
+    }-*/;
+
+    @Override
+    public final native java.lang.String displayText() /*-{
+      return this[1];
+    }-*/;
+
+    public final native WorkerProposalImpl setDisplayText(java.lang.String displayText) /*-{
+      this[1] = displayText;
+      return this;
+    }-*/;
+
+    public final native boolean hasDisplayText() /*-{
+      return this.hasOwnProperty(1);
+    }-*/;
+
+    @Override
+    public final native boolean autoInsertable() /*-{
+      return this[2];
+    }-*/;
+
+    public final native WorkerProposalImpl setAutoInsertable(boolean autoInsertable) /*-{
+      this[2] = autoInsertable;
+      return this;
+    }-*/;
+
+    public final native boolean hasAutoInsertable() /*-{
+      return this.hasOwnProperty(2);
+    }-*/;
+
+    public static native WorkerProposalImpl make() /*-{
+      return [];
     }-*/;  }
 
 }

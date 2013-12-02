@@ -36,8 +36,6 @@ public class Preferences {
 
     public static final String QUALIFIED_TYPE_NAMEHISTORY = "Qualified_Type_Name_History_";
 
-    private boolean supported = false;
-
     private JsonStringMap<String> storage = JsonCollections.createStringMap();
 
     /**
@@ -52,8 +50,7 @@ public class Preferences {
      * @param string
      */
     public void setValue(String key, String string) {
-        if (supported)
-            storage.put(key, string);
+         storage.put(key, string);
     }
 
     /**
@@ -61,9 +58,7 @@ public class Preferences {
      * @return
      */
     public String getString(String key) {
-        if (supported)
-            return storage.get(key);
-        return "";
+        return storage.get(key);
     }
 
 }

@@ -10,10 +10,20 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.refactoring;
 
+import com.codenvy.ide.ext.java.worker.WorkerDocument;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.runtime.CoreException;
-import com.codenvy.ide.text.*;
-import com.codenvy.ide.text.edits.*;
+import com.codenvy.ide.text.BadLocationException;
+import com.codenvy.ide.text.Document;
+import com.codenvy.ide.text.Region;
+import com.codenvy.ide.text.RegionImpl;
+import com.codenvy.ide.text.edits.MalformedTreeException;
+import com.codenvy.ide.text.edits.MultiTextEdit;
+import com.codenvy.ide.text.edits.TextEdit;
+import com.codenvy.ide.text.edits.TextEditCopier;
+import com.codenvy.ide.text.edits.TextEditGroup;
+import com.codenvy.ide.text.edits.TextEditProcessor;
+import com.codenvy.ide.text.edits.UndoEdit;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -510,7 +520,7 @@ public abstract class TextChange extends TextEditBasedChange {
 
     private PreviewAndRegion getPreviewDocument(TextEditBasedChangeGroup[] changes)
             throws CoreException {
-        Document document = new DocumentImpl(getCurrentDocument().get());
+        Document document = new WorkerDocument(getCurrentDocument().get());
         boolean trackChanges = getKeepPreviewEdits();
         setKeepPreviewEdits(true);
         TextEditProcessor processor =

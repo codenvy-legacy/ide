@@ -21,7 +21,7 @@ import elemental.html.DivElement;
 import elemental.html.Element;
 import elemental.html.SpanElement;
 
-import com.codenvy.ide.ext.java.client.JavaClientBundle;
+import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.client.JavaCss;
 import com.codenvy.ide.ext.java.jdt.core.dom.Modifier;
 import com.codenvy.ide.texteditor.api.outline.CodeBlock;
@@ -41,7 +41,7 @@ public class JavaNodeRenderer implements NodeRenderer<CodeBlock> {
     /**
      *
      */
-    public JavaNodeRenderer(JavaClientBundle resources) {
+    public JavaNodeRenderer(JavaResources resources) {
         css = resources.css();
 
     }

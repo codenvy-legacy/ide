@@ -40,12 +40,12 @@ import com.codenvy.ide.ext.java.jdt.core.formatter.IndentManipulation;
 import com.codenvy.ide.ext.java.jdt.internal.corext.codemanipulation.CodeGenerationSettings;
 import com.codenvy.ide.ext.java.jdt.internal.corext.codemanipulation.StubUtility2;
 import com.codenvy.ide.ext.java.jdt.internal.corext.util.CodeFormatterUtil;
+import com.codenvy.ide.ext.java.worker.WorkerDocument;
 import com.codenvy.ide.ext.java.worker.WorkerMessageHandler;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.TextUtilities;
 import com.codenvy.ide.text.edits.MalformedTreeException;
@@ -235,7 +235,7 @@ public class AnonymousTypeCompletionProposal extends JavaTypeCompletionProposal 
                                                               settings, dummyTypeBinding.isInterface());
                 rewriter.insertFirst(stub, null);
             }
-            Document document = new DocumentImpl(workingCopyContents.toString());
+            Document document = new WorkerDocument(workingCopyContents.toString());
             try {
                 rewrite.rewriteAST(document, WorkerMessageHandler.get().getOptions()).apply(document);
 

@@ -166,20 +166,20 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor {
     public void computeCompletionProposals(TextEditorPartView view, int offset, CodeAssistCallback callback) {
         if (view.getSelection().hasSelection()) {
             // Doesn't make much sense to autocomplete CSS when something is selected.
-            callback.proposalCoputtaded(null);
+            callback.proposalComputed(null);
             return;
         }
 
         completionQuery = updateOrCreateQuery(completionQuery, view.getSelection().getCursorPosition(),
                                               view.getDocument());
         if (completionQuery == null) {
-            callback.proposalCoputtaded(null);
+            callback.proposalComputed(null);
             return;
         }
 
         String triggeringString = completionQuery.getTriggeringString();
         if (triggeringString == null) {
-            callback.proposalCoputtaded(null);
+            callback.proposalComputed(null);
             return;
         }
         InvocationContext context = new InvocationContext(triggeringString, offset, resources, view);
@@ -188,24 +188,24 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor {
                 JsonArray<CssCompletionProposal> autocompletions = CssTrie.findAndFilterAutocompletions(cssTrie,
                                                                                                         triggeringString, completionQuery
                         .getCompletedProperties());
-                callback.proposalCoputtaded(jsToArray(autocompletions, context));
+                callback.proposalComputed(jsToArray(autocompletions, context));
                 return;
 
             case VALUE:
                 JsoArray<CssCompletionProposal> jsoArray = CssPartialParser.getInstance().getAutocompletions(
                         completionQuery.getProperty(), completionQuery.getValuesBefore(), triggeringString,
                         completionQuery.getValuesAfter());
-                callback.proposalCoputtaded(jsToArray(jsoArray, context));
+                callback.proposalComputed(jsToArray(jsoArray, context));
                 return;
 
             case CLASS:
                 // TODO: Implement css-class autocompletions (pseudoclasses
                 //               and HTML elements).
-                callback.proposalCoputtaded(null);
+                callback.proposalComputed(null);
                 return;
 
             default:
-                callback.proposalCoputtaded(null);
+                callback.proposalComputed(null);
         }
     }
 

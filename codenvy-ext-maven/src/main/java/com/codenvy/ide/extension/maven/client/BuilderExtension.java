@@ -22,7 +22,7 @@ import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
-import com.codenvy.ide.ext.java.client.JavaClientBundle;
+import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.extension.maven.client.actions.BuildAction;
 import com.codenvy.ide.extension.maven.client.actions.BuildAndPublishAction;
 import com.codenvy.ide.extension.maven.client.build.BuildProjectPresenter;
@@ -101,20 +101,20 @@ public class BuilderExtension {
                                JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createWarProjectPage));
         templateAgent.register(JAR_PROJECT_ID,
                                "Java project",
-                               JavaClientBundle.INSTANCE.javaProject(),
+                               JavaResources.INSTANCE.javaProject(),
                                PRIMARY_NATURE,
                                createArray(JAVA_APPLICATION_PROJECT_TYPE),
                                JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createJavaProjectPage));
         templateAgent.register(SPRING_PROJECT_ID,
                                "Spring project",
-                               JavaClientBundle.INSTANCE.javaProject(),
+                               JavaResources.INSTANCE.javaProject(),
                                PRIMARY_NATURE,
                                createArray(SPRING_APPLICATION_PROJECT_TYPE),
                                JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createSpringProjectPage));
 
         projectTypeAgent.register(SPRING_APPLICATION_PROJECT_TYPE,
                                   "Spring application",
-                                  JavaClientBundle.INSTANCE.newJavaProject(),
+                                  JavaResources.INSTANCE.newJavaProject(),
                                   PRIMARY_NATURE,
                                   createArray(SPRING_APPLICATION_PROJECT_TYPE));
     }

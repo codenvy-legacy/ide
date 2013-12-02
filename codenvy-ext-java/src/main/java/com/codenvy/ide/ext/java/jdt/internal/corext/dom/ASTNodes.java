@@ -22,9 +22,9 @@ import com.codenvy.ide.ext.java.jdt.internal.corext.codemanipulation.ASTResolvin
 import com.codenvy.ide.ext.java.jdt.internal.corext.util.CodeFormatterUtil;
 import com.codenvy.ide.ext.java.jdt.internal.ui.MembersOrderPreferenceCache;
 
+import com.codenvy.ide.ext.java.worker.WorkerDocument;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.edits.TextEdit;
 
 import com.codenvy.ide.runtime.Assert;
@@ -72,7 +72,7 @@ public class ASTNodes {
         String unformatted = asString(node);
         TextEdit edit = CodeFormatterUtil.format2(node, unformatted, indent, lineDelim, options);
         if (edit != null) {
-            Document document = new DocumentImpl(unformatted);
+            Document document = new WorkerDocument(unformatted);
             try {
                 edit.apply(document, TextEdit.NONE);
             } catch (BadLocationException e) {

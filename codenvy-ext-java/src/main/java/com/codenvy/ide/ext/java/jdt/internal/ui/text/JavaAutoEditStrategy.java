@@ -38,11 +38,11 @@ import com.codenvy.ide.ext.java.jdt.core.dom.NodeFinder;
 import com.codenvy.ide.ext.java.jdt.core.dom.Statement;
 import com.codenvy.ide.ext.java.jdt.core.dom.WhileStatement;
 import com.codenvy.ide.ext.java.jdt.internal.corext.util.CodeFormatterUtil;
+import com.codenvy.ide.ext.java.worker.WorkerDocument;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentCommand;
-import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.RegionImpl;
 import com.codenvy.ide.text.TextUtilities;
@@ -859,7 +859,7 @@ public class JavaAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
             String prefix = document.get(refLine.getOffset(), newOffset - refLine.getOffset());
 
             // handle the indentation computation inside a temporary document
-            Document temp = new DocumentImpl(prefix + newText);
+            Document temp = new WorkerDocument(prefix + newText);
 //            DocumentRewriteSession session= temp.startRewriteSession(DocumentRewriteSessionType.STRICTLY_SEQUENTIAL);
             scanner = new JavaHeuristicScanner(temp);
             indenter = new JavaIndenter(temp, scanner, fProject);
@@ -1131,7 +1131,7 @@ public class JavaAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
          * Search for scope closers in the pasted text and find their opening peers
     	 * in the document.
     	 */
-        Document pasted = new DocumentImpl(command.text);
+        Document pasted = new WorkerDocument(command.text);
         installJavaStuff(pasted);
         int firstPeer = command.offset;
 

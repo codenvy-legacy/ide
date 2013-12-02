@@ -24,5 +24,5 @@ import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 * @version $Id:
 */
 public interface CodeAssistCallback {
-   void proposalCoputtaded(CompletionProposal[] proposals);
+   void proposalComputed(CompletionProposal[] proposals);
 }

@@ -93,16 +93,16 @@ public class JavaExtension {
                          ProjectTypeAgent projectTypeAgent) {
 
         this();
-        FileType javaFile = new FileType(JavaClientBundle.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
+        FileType javaFile = new FileType(JavaResources.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
         editorRegistry.register(javaFile, javaEditorProvider);
         resourceProvider.registerFileType(javaFile);
         resourceProvider.registerModelProvider(JavaProject.PRIMARY_NATURE, new JavaProjectModelProvider(eventBus));
-        JavaClientBundle.INSTANCE.css().ensureInjected();
+        JavaResources.INSTANCE.css().ensureInjected();
 
-        projectTypeAgent.register(JavaProject.PRIMARY_NATURE, "Java application", JavaClientBundle.INSTANCE.newJavaProject(),
+        projectTypeAgent.register(JavaProject.PRIMARY_NATURE, "Java application", JavaResources.INSTANCE.newJavaProject(),
                                   JavaProject.PRIMARY_NATURE, JsonCollections.<String>createArray(JAVA_APPLICATION_PROJECT_TYPE));
         projectTypeAgent.register(JAVA_WEB_APPLICATION_PROJECT_TYPE, "Java web application",
-                                  JavaClientBundle.INSTANCE.newJavaProject(),
+                                  JavaResources.INSTANCE.newJavaProject(),
                                   JavaProject.PRIMARY_NATURE,
                                   JsonCollections.<String>createArray(JAVA_WEB_APPLICATION_PROJECT_TYPE));
 

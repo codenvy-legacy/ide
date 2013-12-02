@@ -18,6 +18,7 @@ import com.codenvy.ide.ext.java.jdt.core.formatter.CodeFormatter;
 import com.codenvy.ide.ext.java.jdt.core.formatter.DefaultCodeFormatterConstants;
 import com.codenvy.ide.ext.java.jdt.core.formatter.IndentManipulation;
 
+import com.codenvy.ide.ext.java.worker.WorkerDocument;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.*;
 import com.codenvy.ide.text.edits.*;
@@ -408,7 +409,7 @@ import java.util.Map;
     }
 
     private static Document createDocument(String string, Position[] positions) throws IllegalArgumentException {
-        Document doc = new DocumentImpl(string);
+        Document doc = new WorkerDocument(string);
         try {
             if (positions != null) {
                 final String POS_CATEGORY = "myCategory"; //$NON-NLS-1$

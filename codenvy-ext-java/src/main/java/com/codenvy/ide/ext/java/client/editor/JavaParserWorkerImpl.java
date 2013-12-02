@@ -22,9 +22,11 @@ import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.DefaultProblem;
+import com.codenvy.ide.ext.java.messages.CAProposalsComputedMessage;
 import com.codenvy.ide.ext.java.messages.Problem;
 import com.codenvy.ide.ext.java.messages.ProblemsMessage;
 import com.codenvy.ide.ext.java.messages.RoutingTypes;
+import com.codenvy.ide.ext.java.messages.WorkerProposal;
 import com.codenvy.ide.ext.java.messages.impl.MessagesImpls;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
@@ -48,10 +50,10 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHandler, MessageFilter.MessageRecipient<ProblemsMessage> {
 
-    private final MessageFilter    messageFilter;
-    private       Worker           worker;
-    private       ResourceProvider resourceProvider;
-    private JsonStringMap<JavaParserCallback> callbacks;
+    private final MessageFilter                 messageFilter;
+    private       Worker                        worker;
+    private       ResourceProvider              resourceProvider;
+    private       JsonStringMap<WorkerCallback<?>> callbacks;
 
     @Inject
     public JavaParserWorkerImpl(ResourceProvider resourceProvider, EventBus eventBus) {
@@ -60,12 +62,27 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         messageFilter = new MessageFilter();
         callbacks = JsonCollections.createStringMap();
         messageFilter.registerMessageRecipient(RoutingTypes.PROBLEMS, this);
+        messageFilter.registerMessageRecipient(RoutingTypes.CA_PROPOSALS_COMPUTED, new MessageFilter.MessageRecipient<CAProposalsComputedMessage>() {
+            @Override
+            public void onMessageReceived(CAProposalsComputedMessage message) {
+                handleCAComputed(message);
+            }
+        });
 
+    }
+    @SuppressWarnings("unchecked")
+    private void handleCAComputed(CAProposalsComputedMessage message) {
+        if(!callbacks.containsKey(message.id())){
+            return;
+        }
+
+        WorkerCallback<WorkerProposal> callback = (WorkerCallback<WorkerProposal>)callbacks.remove(message.id());
+        callback.onResult(message.proposals());
     }
 
     /** {@inheritDoc} */
     @Override
-    public void parse(String content, String fileName, String packageName, JavaParserCallback callback) {
+    public void parse(String content, String fileName, String packageName, WorkerCallback<IProblem> callback) {
         if (worker == null) {
             return;
         }
@@ -75,6 +92,20 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         callbacks.put(uuid, callback);
         parseMessage.setSource(content).setFileName(fileName).setId(uuid).setPackageName(packageName);
         worker.postMessage(parseMessage.serialize());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void computeCAProposals(String content, int offset, String fileName, WorkerCallback<WorkerProposal> callback) {
+        if (worker == null) {
+            return;
+        }
+
+        MessagesImpls.ComputeCAProposalsMessageImpl computeMessage = MessagesImpls.ComputeCAProposalsMessageImpl.make();
+        String uuid = UUID.uuid();
+        callbacks.put(uuid, callback);
+        computeMessage.setDocContent(content).setOffset(offset).setFileName(fileName).setId(uuid);
+        worker.postMessage(computeMessage.serialize());
     }
 
     /**
@@ -99,7 +130,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         worker.setOnError(new ErrorHandler() {
             @Override
             public void onError(ErrorEvent event) {
-                Log.error(JavaParserWorkerImpl.class, event.getMessage());
+                Log.error(JavaParserWorkerImpl.class, event.getMessage(),event.getFilename(), event.getLineNumber());
             }
         });
 
@@ -109,6 +140,8 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         config.setVfsId(resourceProvider.getVfsId());
         config.setWsName("/" + Utils.getWorkspaceName());
         config.setProjectName(event.getProject().getName());
+        config.setJavaDocContext(//TODO configure doc context
+                                  "rest/ide/code-assistant/java/class-doc?fqn=");
         worker.postMessage(config.serialize());
     }
 
@@ -137,6 +170,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
 
     /** {@inheritDoc} */
     @Override
+    @SuppressWarnings("unchecked")
     public void onMessageReceived(ProblemsMessage message) {
         if(!callbacks.containsKey(message.id())){
             return;
@@ -151,8 +185,9 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
                iProblems.add(new DefaultProblem(p.originatingFileName().toCharArray(), p.message(), p.id(), arg, p.severity(), p.startPosition(),
                                            p.endPosition(), p.line(), p.column()));
             }
-        JavaParserCallback callback = callbacks.remove(message.id());
-        callback.onProblems(iProblems);
+
+        WorkerCallback<IProblem> callback = (WorkerCallback<IProblem>)callbacks.remove(message.id());
+        callback.onResult(iProblems);
     }
 
 }

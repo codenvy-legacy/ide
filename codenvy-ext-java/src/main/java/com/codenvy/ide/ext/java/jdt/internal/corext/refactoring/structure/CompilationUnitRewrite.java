@@ -20,11 +20,10 @@ import com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.RefactoringCoreM
 import com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.code.CompilationUnitChange;
 import com.codenvy.ide.ext.java.jdt.refactoring.CategorizedTextEditGroup;
 import com.codenvy.ide.ext.java.jdt.refactoring.GroupCategorySet;
-
+import com.codenvy.ide.ext.java.worker.WorkerDocument;
 import com.codenvy.ide.ext.java.worker.WorkerMessageHandler;
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.edits.MultiTextEdit;
 import com.codenvy.ide.text.edits.TextEdit;
 import com.codenvy.ide.text.edits.TextEditGroup;
@@ -87,7 +86,7 @@ public class CompilationUnitRewrite {
     }
 
     public void rememberContent() {
-        fRememberContent = new DocumentImpl();
+        fRememberContent = new WorkerDocument();
     }
 
     /**

@@ -14,9 +14,6 @@ import com.codenvy.ide.ext.java.jdt.core.CompletionProposal;
 import com.codenvy.ide.ext.java.jdt.core.IJavaElement;
 
 import com.codenvy.ide.runtime.Assert;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.ui.Frame;
-import com.google.gwt.user.client.ui.Widget;
 
 
 /** Proposal info that computes the javadoc lazily when it is queried. */
@@ -30,7 +27,7 @@ public abstract class MemberProposalInfo extends ProposalInfo {
 
     private boolean isResolved = false;
 
-    private Frame frame;
+//    private Frame frame;
 
     protected final String vfsId;
 
@@ -50,22 +47,22 @@ public abstract class MemberProposalInfo extends ProposalInfo {
         this.fProposal = proposal;
     }
 
-    /** @see com.codenvy.ide.ext.java.jdt.codeassistant.ProposalInfo#getInfo() */
-    @Override
-    public Widget getInfo() {
-        if (isResolved)
-            return frame;
-
-        String url = getURL();
-        isResolved = true;
-        if (url != null) {
-            frame = new Frame(url);
-            frame.setSize("100%", "100%");
-            frame.removeStyleName("gwt-Frame");
-            frame.getElement().getStyle().setBorderWidth(0, Unit.PX);
-        }
-        return frame;
-    }
+//    /** @see com.codenvy.ide.ext.java.jdt.codeassistant.ProposalInfo#getInfo() */
+//    @Override
+//    public Widget getInfo() {
+//        if (isResolved)
+//            return frame;
+//
+//        String url = getURL();
+//        isResolved = true;
+//        if (url != null) {
+//            frame = new Frame(url);
+//            frame.setSize("100%", "100%");
+//            frame.removeStyleName("gwt-Frame");
+//            frame.getElement().getStyle().setBorderWidth(0, Unit.PX);
+//        }
+//        return frame;
+//    }
 
     @Override
     public IJavaElement getJavaElement() {

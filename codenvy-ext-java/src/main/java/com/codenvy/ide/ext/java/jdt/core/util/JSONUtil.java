@@ -18,7 +18,6 @@
 package com.codenvy.ide.ext.java.jdt.core.util;
 
 import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
 /**
@@ -30,7 +29,7 @@ public class JSONUtil {
      * @param json
      * @return
      */
-    public static long[] parseJsonAsLongArray(String json) {
+    public static long[] parseJsonAsLongArray(JSONValue json) {
         JSONValue value = parse(json);
         if (value.isArray() == null)
             throw new IllegalArgumentException("'json' parameter must represent a JSON array");
@@ -41,8 +40,7 @@ public class JSONUtil {
      * @param json
      * @return
      */
-    private static JSONValue parse(String json) {
-        JSONValue value = JSONParser.parseLenient(json);
+    private static JSONValue parse(JSONValue value) {
         if (value.isObject() != null) {
             value = value.isObject().get("rsc").isArray();
         }
@@ -61,8 +59,8 @@ public class JSONUtil {
         return result;
     }
 
-    public static byte[] parseArrayToByteArray(String json) {
-        JSONValue value = parse(json);
+    public static byte[] parseArrayToByteArray(JSONValue value) {
+        value = parse(value);
         if (value.isArray() == null)
             throw new IllegalArgumentException("'json' parameter must represent a JSON array");
         return jsonArrayToByteArray(value.isArray());
@@ -76,7 +74,7 @@ public class JSONUtil {
         return result;
     }
 
-    public static char[] parseArrayToCharArray(String json) {
+    public static char[] parseArrayToCharArray(JSONValue json) {
         JSONValue value = parse(json);
         if (value.isArray() == null)
             throw new IllegalArgumentException("'json' parameter must represent a JSON array");

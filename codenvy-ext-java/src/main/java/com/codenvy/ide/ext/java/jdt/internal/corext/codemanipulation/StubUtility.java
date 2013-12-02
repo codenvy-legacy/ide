@@ -29,20 +29,25 @@ import com.codenvy.ide.ext.java.jdt.templates.api.Template;
 import com.codenvy.ide.ext.java.jdt.templates.api.TemplateBuffer;
 import com.codenvy.ide.ext.java.jdt.templates.api.TemplateException;
 import com.codenvy.ide.ext.java.jdt.templates.api.TemplateVariable;
-
+import com.codenvy.ide.ext.java.worker.WorkerDocument;
 import com.codenvy.ide.ext.java.worker.WorkerMessageHandler;
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.runtime.IStatus;
 import com.codenvy.ide.runtime.Status;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.edits.DeleteEdit;
 import com.codenvy.ide.text.edits.MalformedTreeException;
 import com.codenvy.ide.text.edits.MultiTextEdit;
 
-import java.util.*;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 public class StubUtility {
 
@@ -274,7 +279,7 @@ public class StubUtility {
             return str;
         }
 
-        Document document = new DocumentImpl(str);
+        Document document = new WorkerDocument(str);
         int[] tagOffsets = position.getOffsets();
         for (int i = tagOffsets.length - 1; i >= 0; i--) { // from last to first
             try {
@@ -444,7 +449,7 @@ public class StubUtility {
             return str;
         }
 
-        Document document = new DocumentImpl(str);
+        Document document = new WorkerDocument(str);
         String[] exceptionNames = new String[excTypeSig.length];
         for (int i = 0; i < excTypeSig.length; i++) {
             exceptionNames[i] = Signature.toString(excTypeSig[i]);
@@ -465,7 +470,7 @@ public class StubUtility {
     // remove lines for empty variables
     private static String fixEmptyVariables(TemplateBuffer buffer, String[] variables) throws MalformedTreeException,
                                                                                               BadLocationException {
-        Document doc = new DocumentImpl(buffer.getString());
+        Document doc = new WorkerDocument(buffer.getString());
         int nLines = doc.getNumberOfLines();
         MultiTextEdit edit = new MultiTextEdit();
         HashSet<Integer> removedLines = new HashSet<Integer>();
@@ -547,7 +552,7 @@ public class StubUtility {
             return str;
         }
 
-        Document textBuffer = new DocumentImpl(str);
+        Document textBuffer = new WorkerDocument(str);
         List<TypeParameter> typeParams = decl.typeParameters();
         //TODO
         //shouldGenerateMethodTypeParameterTags(cu.getJavaProject()) ? decl.typeParameters() : Collections.emptyList();

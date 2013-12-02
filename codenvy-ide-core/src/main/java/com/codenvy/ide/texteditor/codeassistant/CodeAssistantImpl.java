@@ -195,7 +195,7 @@ public class CodeAssistantImpl implements CodeAssistant {
                     computeCompletionProposals(textEditor, offset, new CodeAssistCallback() {
 
                         @Override
-                        public void proposalCoputtaded(CompletionProposal[] proposals) {
+                        public void proposalComputed(CompletionProposal[] proposals) {
                             if (!box.isShowing()) {
                                 if (proposals != null && proposals.length == 1 && proposals[0].isAutoInsertable()) {
                                     applyProposal(proposals[0]);

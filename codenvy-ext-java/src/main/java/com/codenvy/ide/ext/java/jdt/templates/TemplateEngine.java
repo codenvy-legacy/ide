@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.templates;
 
-import com.codenvy.ide.ext.java.client.JavaClientBundle;
 import com.codenvy.ide.ext.java.jdt.Images;
 import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
 import com.codenvy.ide.ext.java.jdt.templates.api.GlobalTemplateVariables;
@@ -23,7 +22,6 @@ import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Position;
 import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.RegionImpl;
-import com.google.gwt.user.client.ui.Image;
 
 import java.util.ArrayList;
 import java.util.HashMap;

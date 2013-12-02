@@ -27,6 +27,7 @@ import com.codenvy.ide.ext.java.jdt.internal.corext.codemanipulation.StubUtility
 import com.codenvy.ide.ext.java.jdt.internal.corext.codemanipulation.StubUtility2;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.Bindings;
 
+import com.codenvy.ide.ext.java.worker.WorkerDocument;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.text.*;
@@ -95,7 +96,7 @@ public class OverrideCompletionProposal extends JavaTypeCompletionProposal {
     @Override
     protected boolean updateReplacementString(Document document, char trigger, int offset, ImportRewrite importRewrite)
             throws CoreException, BadLocationException {
-        Document recoveredDocument = new DocumentImpl();
+        Document recoveredDocument = new WorkerDocument();
         CompilationUnit unit = getRecoveredAST(document, offset, recoveredDocument);
         ImportRewriteContext context;
         if (importRewrite != null) {

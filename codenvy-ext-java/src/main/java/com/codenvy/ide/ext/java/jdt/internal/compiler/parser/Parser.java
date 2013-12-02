@@ -36,7 +36,6 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.util.Messages;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.util.Util;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
 import java.util.ArrayList;
@@ -250,51 +249,52 @@ try {
 
 
 //        ParserResources resources = GWT.create(ParserResources.class);
+        RSC rsc = RSC.get();
 
-        lhs = JSONUtil.parseArrayToCharArray(RSC.parser1());// readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-        char[] chars = JSONUtil.parseArrayToCharArray(RSC.parser2()); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+        lhs = JSONUtil.parseArrayToCharArray(new JSONObject(rsc.parser1()));// readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+        char[] chars = JSONUtil.parseArrayToCharArray(new JSONObject(rsc.parser2())); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
         check_table = new short[chars.length];
         for (int c = chars.length; c-- > 0; ) {
             check_table[c] = (short)(chars[c] - 32768);
         }
-        asb = JSONUtil.parseArrayToCharArray(RSC.parser3()); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-        asr = JSONUtil.parseArrayToCharArray(RSC.parser4());// readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-        nasb = JSONUtil.parseArrayToCharArray(RSC.parser5()); // readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-        nasr = JSONUtil.parseArrayToCharArray(RSC.parser6());//readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-        terminal_index = JSONUtil.parseArrayToCharArray(RSC.parser7()); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+        asb = JSONUtil.parseArrayToCharArray(new JSONObject(rsc.parser3())); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+        asr = JSONUtil.parseArrayToCharArray(new JSONObject(rsc.parser4()));// readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+        nasb = JSONUtil.parseArrayToCharArray(new JSONObject(rsc.parser5())); // readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+        nasr = JSONUtil.parseArrayToCharArray(new JSONObject(rsc.parser6()));//readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+        terminal_index = JSONUtil.parseArrayToCharArray(new JSONObject(rsc.parser7())); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
         non_terminal_index =
-                JSONUtil.parseArrayToCharArray(RSC.parser8()); // readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-        term_action = JSONUtil.parseArrayToCharArray(RSC.parser9());//readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+                JSONUtil.parseArrayToCharArray(new JSONObject(rsc.parser8())); // readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+        term_action = JSONUtil.parseArrayToCharArray(new JSONObject(rsc.parser9()));//readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
 
-        scope_prefix = JSONUtil.parseArrayToCharArray(RSC.parser10()); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-        scope_suffix = JSONUtil.parseArrayToCharArray(RSC.parser11()); // readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-        scope_lhs = JSONUtil.parseArrayToCharArray(RSC.parser12());//readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+        scope_prefix = JSONUtil.parseArrayToCharArray(new JSONObject(rsc.parser10())); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+        scope_suffix = JSONUtil.parseArrayToCharArray(new JSONObject(rsc.parser11())); // readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+        scope_lhs = JSONUtil.parseArrayToCharArray(new JSONObject(rsc.parser12()));//readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
         scope_state_set =
-                JSONUtil.parseArrayToCharArray(RSC.parser13()); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-        scope_rhs = JSONUtil.parseArrayToCharArray(RSC.parser14());//readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-        scope_state = JSONUtil.parseArrayToCharArray(RSC.parser15()); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-        in_symb = JSONUtil.parseArrayToCharArray(RSC.parser16()); // readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+                JSONUtil.parseArrayToCharArray(new JSONObject(rsc.parser13())); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+        scope_rhs = JSONUtil.parseArrayToCharArray(new JSONObject(rsc.parser14()));//readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+        scope_state = JSONUtil.parseArrayToCharArray(new JSONObject(rsc.parser15())); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+        in_symb = JSONUtil.parseArrayToCharArray(new JSONObject(rsc.parser16())); // readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
 
-        rhs = JSONUtil.parseArrayToByteArray(RSC.parser17()); //readByteTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+        rhs = JSONUtil.parseArrayToByteArray(new JSONObject(rsc.parser17())); //readByteTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
         term_check =
-                JSONUtil.parseArrayToByteArray(RSC.parser18()); // readByteTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-        scope_la = JSONUtil.parseArrayToByteArray(RSC.parser19()); //readByteTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+                JSONUtil.parseArrayToByteArray(new JSONObject(rsc.parser18())); // readByteTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+        scope_la = JSONUtil.parseArrayToByteArray(new JSONObject(rsc.parser19())); //readByteTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
 
-        name = readNameTable(JSONUtil.parseArrayToCharArray(RSC.parser20())); //$NON-NLS-1$
+        name = readNameTable(JSONUtil.parseArrayToCharArray(new JSONObject(rsc.parser20()))); //$NON-NLS-1$
 
         rules_compliance =
-                JSONUtil.parseJsonAsLongArray(RSC.parser21()); //readLongTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-        readableName = parseJsonArray(RSC.readableNames()); // readReadableNameTable(READABLE_NAMES_FILE_NAME);
+                JSONUtil.parseJsonAsLongArray(new JSONObject(rsc.parser21())); //readLongTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+        readableName = parseJsonArray(new JSONObject(rsc.readableNames())); // readReadableNameTable(READABLE_NAMES_FILE_NAME);
 
         reverse_index = computeReverseTable(terminal_index, non_terminal_index, name);
 
         recovery_templates_index =
-                JSONUtil.parseArrayToCharArray(RSC.parser22()); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+                JSONUtil.parseArrayToCharArray(new JSONObject(rsc.parser22())); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
         recovery_templates =
-                JSONUtil.parseArrayToCharArray(RSC.parser23()); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+                JSONUtil.parseArrayToCharArray(new JSONObject(rsc.parser23())); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
 
         statements_recovery_filter =
-                JSONUtil.parseArrayToCharArray(RSC.parser24()); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+                JSONUtil.parseArrayToCharArray(new JSONObject(rsc.parser24())); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
 
         base_action = lhs;
 }
@@ -303,8 +303,7 @@ catch (Exception e){
 }
     }
 
-    private static String[] parseJsonArray(String json) {
-        JSONValue value = JSONParser.parseLenient(json);
+    private static String[] parseJsonArray(JSONValue value) {
         if (value.isObject() != null) {
             value = value.isObject().get("rsc").isArray();
         }
@@ -318,7 +317,6 @@ catch (Exception e){
 
         return result;
     }
-
 
     public static int nasi(int state) {
         return nasb[original_state(state)];

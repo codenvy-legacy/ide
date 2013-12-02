@@ -22,10 +22,8 @@ import com.codenvy.ide.ext.java.jdt.codeassistant.api.IProblemLocation;
 import com.codenvy.ide.ext.java.jdt.codeassistant.api.JavaCompletionProposal;
 import com.codenvy.ide.ext.java.jdt.core.JavaCore;
 import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
-import com.codenvy.ide.ext.java.jdt.internal.text.correction.AdvancedQuickAssistProcessor;
 import com.codenvy.ide.ext.java.jdt.internal.text.correction.CorrectionMessages;
 import com.codenvy.ide.ext.java.jdt.internal.text.correction.ProblemLocation;
-import com.codenvy.ide.ext.java.jdt.internal.text.correction.QuickAssistProcessorImpl;
 import com.codenvy.ide.ext.java.jdt.internal.text.correction.QuickFixProcessorImpl;
 import com.codenvy.ide.ext.java.jdt.quickassist.api.InvocationContext;
 import com.codenvy.ide.ext.java.jdt.quickassist.api.QuickAssistProcessor;
@@ -67,7 +65,7 @@ public class JavaCorrectionProcessor implements com.codenvy.ide.texteditor.api.q
         if (fixProcessor == null) {
             fixProcessor = new QuickFixProcessorImpl();
             assistProcessors =
-                    new QuickAssistProcessor[]{new QuickAssistProcessorImpl(), new AdvancedQuickAssistProcessor()};
+                    new QuickAssistProcessor[]{/*new QuickAssistProcessorImpl(), new AdvancedQuickAssistProcessor()*/};
         }
 //        astProvider.addAstListener(new AstListener() {
 //

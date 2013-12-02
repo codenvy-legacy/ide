@@ -18,17 +18,16 @@
 package com.codenvy.ide.ext.java.client.editor;
 
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.ext.java.client.JavaClientBundle;
-import com.codenvy.ide.ext.java.jdt.JavaPartitions;
+import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.client.editor.outline.JavaNodeRenderer;
 import com.codenvy.ide.ext.java.client.editor.outline.OutlineModelUpdater;
+import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
+import com.codenvy.ide.ext.java.jdt.JavaPartitions;
 import com.codenvy.ide.ext.java.jdt.internal.ui.text.BracketInserter;
 import com.codenvy.ide.ext.java.jdt.internal.ui.text.JavaAutoEditStrategy;
 import com.codenvy.ide.ext.java.jdt.internal.ui.text.JavaDocAutoIndentStrategy;
 import com.codenvy.ide.ext.java.jdt.internal.ui.text.JavaStringAutoIndentStrategy;
 import com.codenvy.ide.ext.java.jdt.internal.ui.text.SmartSemicolonAutoEditStrategy;
-import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.text.Document;
@@ -60,19 +59,21 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
     private JavaReconcilerStrategy  reconcilerStrategy;
     private OutlineModel            outlineModel;
     private String                  documentPartitioning;
-    private JavaParserWorker worker;
+    private JavaParserWorker        worker;
+    private JavaResources javaResources;
     private JavaProject project;
 
 
-    public JavaEditorConfiguration(UserActivityManager manager, JavaClientBundle resources, TextEditorPartPresenter javaEditor,
-                                   String documentPartitioning, ResourceProvider resourceProvider, JavaParserWorker worker) {
+    public JavaEditorConfiguration(UserActivityManager manager, JavaResources resources, TextEditorPartPresenter javaEditor,
+                                   String documentPartitioning, JavaParserWorker worker, JavaResources javaResources) {
         super();
         this.manager = manager;
         this.javaEditor = javaEditor;
         this.documentPartitioning = documentPartitioning;
         this.worker = worker;
+        this.javaResources = javaResources;
         outlineModel = new OutlineModel(new JavaNodeRenderer(resources));
-        reconcilerStrategy = new JavaReconcilerStrategy(javaEditor, resourceProvider, worker);
+        reconcilerStrategy = new JavaReconcilerStrategy(javaEditor, worker);
     }
 
     /** {@inheritDoc} */
@@ -94,9 +95,7 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
 
     private JavaCodeAssistProcessor getOrCreateCodeAssistProcessor() {
         if (codeAssistProcessor == null) {
-            codeAssistProcessor = new JavaCodeAssistProcessor(
-                    //TODO configure doc context
-                    "rest/ide/code-assistant/java/class-doc?fqn=", worker);
+            codeAssistProcessor = new JavaCodeAssistProcessor(javaEditor, worker, javaResources);
         }
         return codeAssistProcessor;
     }

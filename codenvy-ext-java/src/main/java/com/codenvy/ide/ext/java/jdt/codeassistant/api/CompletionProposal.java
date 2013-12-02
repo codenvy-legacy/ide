@@ -20,7 +20,6 @@ package com.codenvy.ide.ext.java.jdt.codeassistant.api;
 import com.codenvy.ide.ext.java.jdt.Images;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
-import com.google.gwt.user.client.ui.Widget;
 
 
 /**
@@ -57,13 +56,13 @@ public interface CompletionProposal {
      */
     Region getSelection(Document document);
 
-    /**
-     * Returns optional additional information about the proposal. The additional information will be presented to assist the user
-     * in deciding if the selected proposal is the desired choice.
-     *
-     * @return the additional information or <code>null</code>
-     */
-    Widget getAdditionalProposalInfo();
+//    /**
+//     * Returns optional additional information about the proposal. The additional information will be presented to assist the user
+//     * in deciding if the selected proposal is the desired choice.
+//     *
+//     * @return the additional information or <code>null</code>
+//     */
+//    Widget getAdditionalProposalInfo();
 
     /**
      * Returns the string to be displayed in the list of completion proposals.

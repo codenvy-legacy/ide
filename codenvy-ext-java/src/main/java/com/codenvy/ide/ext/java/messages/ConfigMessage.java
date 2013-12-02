@@ -36,4 +36,6 @@ public interface ConfigMessage extends Message{
     String wsName();
 
     String projectName();
+
+    String javaDocContext();
 }

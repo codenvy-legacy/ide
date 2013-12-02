@@ -25,12 +25,8 @@ import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.BadPositionCategoryException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentEvent;
-import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.RegionImpl;
-import com.google.gwt.dom.client.Style.Overflow;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.Widget;
 
 
 /** A template proposal. */
@@ -376,34 +372,34 @@ public class TemplateProposal implements JavaCompletionProposal {
         return new RegionImpl(fSelectedRegion.getOffset(), fSelectedRegion.getLength());
     }
 
-    /*
-     * @see ICompletionProposal#getAdditionalProposalInfo()
-     */
-    public Widget getAdditionalProposalInfo() {
-        try {
-            fContext.setReadOnly(true);
-            TemplateBuffer templateBuffer;
-            try {
-                templateBuffer = fContext.evaluate(fTemplate);
-            } catch (TemplateException e) {
-                return null;
-            }
-
-            Document document = new DocumentImpl(templateBuffer.getString());
-            // TODO
-            // IndentUtil.indentLines(document, new LineRange(0, document.getNumberOfLines()), null, null);
-            Widget w = new SimplePanel();
-            w.setSize("100%", "100%");
-            w.getElement().getStyle().setOverflow(Overflow.AUTO);
-            w.getElement().setInnerHTML("<pre>" + document.get() + "</pre>");
-            return w;
-
-        } catch (BadLocationException e) {
-            //         handleException(JavaPlugin.getActiveWorkbenchShell(), new CoreException(new Status(IStatus.ERROR,
-            // JavaPlugin.getPluginId(), IStatus.OK, "", e))); //$NON-NLS-1$
-            return null;
-        }
-    }
+//    /*
+//     * @see ICompletionProposal#getAdditionalProposalInfo()
+//     */
+//    public Widget getAdditionalProposalInfo() {
+//        try {
+//            fContext.setReadOnly(true);
+//            TemplateBuffer templateBuffer;
+//            try {
+//                templateBuffer = fContext.evaluate(fTemplate);
+//            } catch (TemplateException e) {
+//                return null;
+//            }
+//
+//            Document document = new WorkerDocument(templateBuffer.getString());
+//            // TODO
+//            // IndentUtil.indentLines(document, new LineRange(0, document.getNumberOfLines()), null, null);
+//            Widget w = new SimplePanel();
+//            w.setSize("100%", "100%");
+//            w.getElement().getStyle().setOverflow(Overflow.AUTO);
+//            w.getElement().setInnerHTML("<pre>" + document.get() + "</pre>");
+//            return w;
+//
+//        } catch (BadLocationException e) {
+//            //         handleException(JavaPlugin.getActiveWorkbenchShell(), new CoreException(new Status(IStatus.ERROR,
+//            // JavaPlugin.getPluginId(), IStatus.OK, "", e))); //$NON-NLS-1$
+//            return null;
+//        }
+//    }
 
     /*
      * @see ICompletionProposal#getDisplayString()

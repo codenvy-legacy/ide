@@ -17,8 +17,6 @@ import com.codenvy.ide.ext.java.jdt.templates.JavaContextType;
 import com.codenvy.ide.ext.java.jdt.templates.JavaDocContextType;
 import com.codenvy.ide.ext.java.jdt.templates.TemplateEngine;
 import com.codenvy.ide.ext.java.jdt.templates.api.TemplateContextType;
-
-import com.codenvy.ide.ext.java.worker.WorkerMessageHandler;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.TextUtilities;
@@ -35,8 +33,7 @@ public class TemplateCompletionProposalComputer extends AbstractTemplateCompleti
 
     private final TemplateEngine fJavadocTemplateEngine;
 
-    public TemplateCompletionProposalComputer() {
-        ContextTypeRegistry templateContextRegistry = WorkerMessageHandler.get().getTemplateContextRegistry();
+    public TemplateCompletionProposalComputer(ContextTypeRegistry templateContextRegistry) {
         fJavaTemplateEngine = createTemplateEngine(templateContextRegistry, JavaContextType.ID_ALL);
         fJavaMembersTemplateEngine = createTemplateEngine(templateContextRegistry, JavaContextType.ID_MEMBERS);
         fJavaStatementsTemplateEngine = createTemplateEngine(templateContextRegistry, JavaContextType.ID_STATEMENTS);

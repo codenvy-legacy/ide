@@ -9,6 +9,7 @@
     <inherits name="com.codenvy.ide.json.JSON"/>
     <inherits name="com.codenvy.ide.runtime.Runtime"/>
     <inherits name="com.codenvy.ide.Text"/>
+    <inherits name="com.codenvy.ide.TextImpl"/>
 
     <entry-point class='com.codenvy.ide.ext.java.worker.JavaParserWorker'/>
     <add-linker name="dedicatedworker" />

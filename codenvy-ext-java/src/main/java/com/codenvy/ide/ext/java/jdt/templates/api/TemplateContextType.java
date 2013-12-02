@@ -10,13 +10,22 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.templates.api;
 
+import com.codenvy.ide.ext.java.worker.WorkerDocument;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.DocumentImpl;
-import com.codenvy.ide.text.edits.*;
+import com.codenvy.ide.text.edits.MalformedTreeException;
+import com.codenvy.ide.text.edits.MultiTextEdit;
+import com.codenvy.ide.text.edits.RangeMarker;
+import com.codenvy.ide.text.edits.ReplaceEdit;
+import com.codenvy.ide.text.edits.TextEdit;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -241,7 +250,7 @@ public class TemplateContextType {
 
         }
 
-        Document document = new DocumentImpl(buffer.getString());
+        Document document = new WorkerDocument(buffer.getString());
         MultiTextEdit edit = new MultiTextEdit(0, document.getLength());
         edit.addChildren((TextEdit[])positions.toArray(new TextEdit[positions.size()]));
         edit.addChildren((TextEdit[])edits.toArray(new TextEdit[edits.size()]));

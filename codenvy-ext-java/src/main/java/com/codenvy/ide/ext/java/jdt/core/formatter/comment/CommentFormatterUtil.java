@@ -12,10 +12,10 @@ package com.codenvy.ide.ext.java.jdt.core.formatter.comment;
 
 import com.codenvy.ide.ext.java.jdt.core.ToolFactory;
 
+import com.codenvy.ide.ext.java.worker.WorkerDocument;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.*;
 import com.codenvy.ide.text.edits.TextEdit;
-import com.codenvy.ide.util.loging.Log;
 
 import java.util.Map;
 
@@ -77,7 +77,7 @@ public class CommentFormatterUtil {
      * @throws IllegalArgumentException
      */
     private static Document createDocument(String content, Position[] positions) throws IllegalArgumentException {
-        Document doc = new DocumentImpl(content);
+        Document doc = new WorkerDocument(content);
         try {
             if (positions != null) {
                 final String POS_CATEGORY = "myCategory"; //$NON-NLS-1$
@@ -116,6 +116,8 @@ public class CommentFormatterUtil {
      *         the throwable
      */
     public static void log(Throwable t) {
-        Log.error(CommentFormatterUtil.class, "Exception occured while formatting comments", t);
+//        Log.error(CommentFormatterUtil.class, "Exception occured while formatting comments", t);
+        //TODO log error
+        throw new RuntimeException(t);
     }
 }

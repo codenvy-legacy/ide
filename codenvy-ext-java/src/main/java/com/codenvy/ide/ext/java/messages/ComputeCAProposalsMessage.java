@@ -15,14 +15,23 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.jdt;
+package com.codenvy.ide.ext.java.messages;
+
+import com.codenvy.ide.dto.shared.RoutingType;
+import com.google.gwt.webworker.client.messages.Message;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public enum Images {
-    VARIABLE, JSP_TAG_ITEM, publicMethod, protectedMethod, privateMethod, defaultMethod, enumItem, annotationItem, interfaceItem,
-    classItem, publicField, protectedField, privateField, defaultField, packageItem, classDefaultItem, correction_change, local_var,
-    delete_obj, field_public, correction_cast, add_obj, remove_correction, template, javadoc, exceptionProp, correction_delete_import, imp_obj
+@RoutingType(type = RoutingTypes.CA_COMPUTE_PROPOSALS)
+public interface ComputeCAProposalsMessage extends Message {
+   int offset();
+
+   String docContent();
+
+    String fileName();
+
+    String id();
+
 }

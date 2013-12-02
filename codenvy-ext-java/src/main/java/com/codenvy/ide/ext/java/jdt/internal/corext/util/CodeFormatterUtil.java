@@ -18,11 +18,10 @@ import com.codenvy.ide.ext.java.jdt.core.dom.Expression;
 import com.codenvy.ide.ext.java.jdt.core.dom.Statement;
 import com.codenvy.ide.ext.java.jdt.core.formatter.CodeFormatter;
 import com.codenvy.ide.ext.java.jdt.core.formatter.DefaultCodeFormatterConstants;
-
+import com.codenvy.ide.ext.java.worker.WorkerDocument;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.edits.TextEdit;
 
@@ -174,7 +173,7 @@ public class CodeFormatterUtil {
         if (edit == null) {
             return source;
         } else {
-            Document document = new DocumentImpl(source);
+            Document document = new WorkerDocument(source);
             try {
                 edit.apply(document, TextEdit.NONE);
             } catch (BadLocationException e) {

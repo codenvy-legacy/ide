@@ -27,7 +27,6 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ReferenceBinding;
 import com.codenvy.ide.ext.java.jdt.internal.corext.util.CodeFormatterUtil;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.Document;
-import com.codenvy.ide.util.loging.Log;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -202,7 +201,8 @@ public class CompletionProposalCollector extends CompletionRequestor {
             // all signature processing method may throw IAEs
             // https://bugs.eclipse.org/bugs/show_bug.cgi?id=84657
             // don't abort, but log and show all the valid proposals
-            Log.error(getClass(), e);
+            //TODO log error
+//            Log.error(getClass(), e);
         }
 
         if (DEBUG)

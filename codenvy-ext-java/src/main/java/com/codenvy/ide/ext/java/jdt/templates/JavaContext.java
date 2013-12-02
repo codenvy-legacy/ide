@@ -18,7 +18,6 @@ import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ImportRewrite.ImportRewrite
 import com.codenvy.ide.ext.java.jdt.internal.corext.codemanipulation.ContextSensitiveImportRewriteContext;
 import com.codenvy.ide.ext.java.jdt.internal.corext.codemanipulation.StubUtility;
 import com.codenvy.ide.ext.java.jdt.templates.CompilationUnitCompletion.Variable;
-
 import com.codenvy.ide.ext.java.jdt.templates.api.Template;
 import com.codenvy.ide.ext.java.jdt.templates.api.TemplateBuffer;
 import com.codenvy.ide.ext.java.jdt.templates.api.TemplateContextType;
@@ -26,15 +25,21 @@ import com.codenvy.ide.ext.java.jdt.templates.api.TemplateException;
 import com.codenvy.ide.ext.java.jdt.templates.api.TemplateTranslator;
 import com.codenvy.ide.ext.java.jdt.templates.api.TemplateVariable;
 import com.codenvy.ide.ext.java.jdt.templates.api.TemplateVariableType;
+import com.codenvy.ide.ext.java.worker.WorkerDocument;
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.runtime.IStatus;
 import com.codenvy.ide.runtime.Status;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.Position;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /** A context for Java source. */
 public class JavaContext extends CompilationUnitContext {
@@ -691,7 +696,7 @@ public class JavaContext extends CompilationUnitContext {
                                                "Template file incomplete or has errors.", null));
 
         // TODO
-        Document document = new DocumentImpl();
+        Document document = new WorkerDocument();
         // if (compilationUnit != null && compilationUnit.exists())
         // document.set(compilationUnit.getSource());
 

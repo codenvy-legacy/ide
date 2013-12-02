@@ -22,9 +22,10 @@ package com.codenvy.ide.ext.java.messages;
  * @version $Id:
  */
 public class RoutingTypes {
-    public static final int CONFIG = 1;
-    public static final int PARSE = 2;
-    public static final int PROBLEMS = 3;
-    public static final int CODE_ASSIST = 4;
+    public static final int CONFIG                = 1;
+    public static final int PARSE                 = 2;
+    public static final int PROBLEMS              = 3;
+    public static final int CA_COMPUTE_PROPOSALS  = 4;
+    public static final int CA_PROPOSALS_COMPUTED = 5;
 
 }

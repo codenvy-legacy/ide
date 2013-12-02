@@ -19,6 +19,7 @@ package com.codenvy.ide.ext.java.worker;
 
 import com.codenvy.ide.ext.java.jdt.CUVariables;
 import com.codenvy.ide.ext.java.jdt.codeassistant.ContentAssistHistory;
+import com.codenvy.ide.ext.java.jdt.codeassistant.TemplateCompletionProposalComputer;
 import com.codenvy.ide.ext.java.jdt.core.JavaCore;
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
 import com.codenvy.ide.ext.java.jdt.core.dom.AST;
@@ -51,6 +52,8 @@ import com.codenvy.ide.ext.java.messages.Problem;
 import com.codenvy.ide.ext.java.messages.RoutingTypes;
 import com.codenvy.ide.ext.java.messages.impl.MessagesImpls;
 import com.codenvy.ide.json.js.JsoArray;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.webworker.client.MessageEvent;
 import com.google.gwt.webworker.client.MessageHandler;
 import com.google.gwt.webworker.client.messages.MessageFilter;
@@ -64,17 +67,19 @@ import java.util.HashMap;
  */
 public class WorkerMessageHandler implements MessageHandler, MessageFilter.MessageRecipient<ParseMessage> {
 
-    private static WorkerMessageHandler  instance;
-    private        INameEnvironment nameEnvironment;
+    private static WorkerMessageHandler instance;
+    private        INameEnvironment     nameEnvironment;
     private HashMap<String, String> options = new HashMap<String, String>();
-    private MessageFilter        messageFilter;
-    private JavaParserWorker     worker;
-    private ContentAssistHistory contentAssistHistory;
-    private ContextTypeRegistry  fCodeTemplateContextTypeRegistry;
-    private TemplateStore        templateStore;
-    private String               projectName;
-    private CUVariables cuVar;
+    private MessageFilter                      messageFilter;
+    private JavaParserWorker                   worker;
+    private ContentAssistHistory               contentAssistHistory;
+    private ContextTypeRegistry                fCodeTemplateContextTypeRegistry;
+    private TemplateStore                      templateStore;
+    private String                             projectName;
+    private CUVariables                        cuVar;
+    private TemplateCompletionProposalComputer templateCompletionProposalComputer;
 
+    private WorkerCodeAssist workerCodeAssist;
 
     public WorkerMessageHandler(JavaParserWorker worker) {
         this.worker = worker;
@@ -87,10 +92,15 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
                 nameEnvironment =
                         new WorkerNameEnvironment(config.projectId(), config.restContext(), config.vfsId(), config.wsName());
                 projectName = config.projectName();
+                workerCodeAssist =
+                        new WorkerCodeAssist(WorkerMessageHandler.this.worker, messageFilter, nameEnvironment,
+                                             templateCompletionProposalComputer, config.projectId(),
+                                             config.javaDocContext());
             }
         };
         messageFilter.registerMessageRecipient(RoutingTypes.CONFIG, configMessageRecipient);
         messageFilter.registerMessageRecipient(RoutingTypes.PARSE, this);
+        templateCompletionProposalComputer = new TemplateCompletionProposalComputer(getTemplateContextRegistry());
     }
 
     public static WorkerMessageHandler get() {
@@ -126,32 +136,45 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
     }
 
     @Override
-    public void onMessageReceived(ParseMessage message) {
-        cuVar = new CUVariables(message.fileName(), message.packageName(), projectName);
-
-        ASTParser parser = ASTParser.newParser(AST.JLS3);
-        parser.setSource(message.source());
-        parser.setKind(ASTParser.K_COMPILATION_UNIT);
-        parser.setUnitName(message.fileName().substring(0, message.fileName().lastIndexOf('.')));
-        parser.setResolveBindings(true);
-        parser.setNameEnvironment(nameEnvironment);
-        ASTNode ast = parser.createAST();
-        CompilationUnit unit = (CompilationUnit)ast;
-        IProblem[] problems = unit.getProblems();
-        MessagesImpls.ProblemsMessageImpl problemsMessage = MessagesImpls.ProblemsMessageImpl.make();
-        JsoArray<Problem> problemsArray = JsoArray.create();
-        for (IProblem p : problems) {
-            problemsArray.add(convertProblem(p));
-        }
-        IProblem[] tasks = (IProblem[])unit.getProperty("tasks");
-        if (tasks != null) {
-            for (IProblem p : tasks) {
-                problemsArray.add(convertProblem(p));
+    public void onMessageReceived(final ParseMessage message) {
+        GWT.runAsync(new RunAsyncCallback() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                throw new RuntimeException(throwable);
+                //TODO log error
             }
-        }
-        problemsMessage.setProblems(problemsArray);
-        problemsMessage.setId(message.id());
-        worker.sendMessage(problemsMessage.serialize());
+
+            @Override
+            public void onSuccess() {
+                cuVar = new CUVariables(message.fileName(), message.packageName(), projectName);
+
+                ASTParser parser = ASTParser.newParser(AST.JLS3);
+                parser.setSource(message.source());
+                parser.setKind(ASTParser.K_COMPILATION_UNIT);
+                parser.setUnitName(message.fileName().substring(0, message.fileName().lastIndexOf('.')));
+                parser.setResolveBindings(true);
+                parser.setNameEnvironment(nameEnvironment);
+                ASTNode ast = parser.createAST();
+                CompilationUnit unit = (CompilationUnit)ast;
+                workerCodeAssist.setUnit(unit);
+                IProblem[] problems = unit.getProblems();
+                MessagesImpls.ProblemsMessageImpl problemsMessage = MessagesImpls.ProblemsMessageImpl.make();
+                JsoArray<Problem> problemsArray = JsoArray.create();
+                for (IProblem p : problems) {
+                    problemsArray.add(convertProblem(p));
+                }
+                IProblem[] tasks = (IProblem[])unit.getProperty("tasks");
+                if (tasks != null) {
+                    for (IProblem p : tasks) {
+                        problemsArray.add(convertProblem(p));
+                    }
+                }
+                problemsMessage.setProblems(problemsArray);
+                problemsMessage.setId(message.id());
+                worker.sendMessage(problemsMessage.serialize());
+            }
+        });
+
     }
 
     private MessagesImpls.ProblemImpl convertProblem(IProblem p) {

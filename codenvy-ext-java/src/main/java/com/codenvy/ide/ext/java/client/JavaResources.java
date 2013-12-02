@@ -25,8 +25,8 @@ import com.google.gwt.resources.client.ImageResource;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-public interface JavaClientBundle extends ClientBundle {
-    JavaClientBundle INSTANCE = GWT.create(JavaClientBundle.class);
+public interface JavaResources extends ClientBundle {
+    JavaResources INSTANCE = GWT.create(JavaResources.class);
 
 
     @Source("java.css")

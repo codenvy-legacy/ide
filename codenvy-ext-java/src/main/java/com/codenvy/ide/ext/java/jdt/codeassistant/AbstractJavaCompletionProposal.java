@@ -27,8 +27,6 @@ import com.codenvy.ide.text.Position;
 import com.codenvy.ide.text.PositionUpdater;
 import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.RegionImpl;
-import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.user.client.ui.Widget;
 
 
 /** @since 3.2 */
@@ -65,7 +63,8 @@ public abstract class AbstractJavaCompletionProposal implements JavaCompletionPr
 
             } catch (BadPositionCategoryException e) {
                 // should not happen
-                Log.error(getClass(), e);
+//                Log.error(getClass(), e);
+                //TODO log error
             }
         }
 
@@ -84,7 +83,8 @@ public abstract class AbstractJavaCompletionProposal implements JavaCompletionPr
 
             } catch (BadPositionCategoryException e) {
                 // should not happen
-                Log.error(getClass(), e);
+//                Log.error(getClass(), e);
+                //TODO log error
             }
             return fPosition.getOffset();
         }
@@ -481,15 +481,15 @@ public abstract class AbstractJavaCompletionProposal implements JavaCompletionPr
         return ""; //$NON-NLS-1$
     }
 
-    /*
-     * @see ICompletionProposal#getAdditionalProposalInfo()
-     */
-    public Widget getAdditionalProposalInfo() {
-        if (getProposalInfo() != null) {
-            return getProposalInfo().getInfo();
-        }
-        return null;
-    }
+//    /*
+//     * @see ICompletionProposal#getAdditionalProposalInfo()
+//     */
+//    public Widget getAdditionalProposalInfo() {
+//        if (getProposalInfo() != null) {
+//            return getProposalInfo().getInfo();
+//        }
+//        return null;
+//    }
 
     /*
      * @see ICompletionProposalExtension#getContextInformationPosition()

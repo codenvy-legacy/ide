@@ -21,14 +21,13 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.core.editor.ResourceDocumentProvider;
-import com.codenvy.ide.ext.java.client.JavaClientBundle;
+import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.client.JavaCss;
 import com.codenvy.ide.ext.java.jdt.JavaPartitions;
 import com.codenvy.ide.ext.java.jdt.core.IProblemRequestor;
 import com.codenvy.ide.ext.java.jdt.core.compiler.CategorizedProblem;
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
 import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
-import com.codenvy.ide.ext.java.client.editor.JavaCorrectionProcessor;
 import com.codenvy.ide.ext.java.jdt.internal.ui.text.FastJavaPartitionScanner;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
@@ -133,12 +132,12 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
         //         else
         //            return IAnnotationAccessExtension.DEFAULT_LAYER + 1;
         //      }
-        private static ImageResource fgQuickFixImage      = JavaClientBundle.INSTANCE.markWarning();
-        private static ImageResource fgQuickFixErrorImage = JavaClientBundle.INSTANCE.markError();
-        private static ImageResource fgTaskImage          = JavaClientBundle.INSTANCE.taskmrk();
-        private static ImageResource fgInfoImage          = JavaClientBundle.INSTANCE.imp_obj();
-        private static ImageResource fgWarningImage       = JavaClientBundle.INSTANCE.markWarning();
-        private static ImageResource fgErrorImage         = JavaClientBundle.INSTANCE.markError();
+        private static ImageResource fgQuickFixImage      = JavaResources.INSTANCE.markWarning();
+        private static ImageResource fgQuickFixErrorImage = JavaResources.INSTANCE.markError();
+        private static ImageResource fgTaskImage          = JavaResources.INSTANCE.taskmrk();
+        private static ImageResource fgInfoImage          = JavaResources.INSTANCE.imp_obj();
+        private static ImageResource fgWarningImage       = JavaResources.INSTANCE.markWarning();
+        private static ImageResource fgErrorImage         = JavaResources.INSTANCE.markError();
         private CompilationUnit      fCompilationUnit;
         private List<JavaAnnotation> fOverlaids;
         private IProblem             fProblem;

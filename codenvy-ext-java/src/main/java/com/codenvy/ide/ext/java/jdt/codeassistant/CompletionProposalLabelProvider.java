@@ -658,7 +658,7 @@ public class CompletionProposalLabelProvider {
                         break;
                     case Signature.TYPE_VARIABLE_SIGNATURE:
                         // TODO
-                        descriptor = Images.CLASS_ITEM;
+                        descriptor = Images.classItem;
                         break;
                     default:
                         descriptor = null;
