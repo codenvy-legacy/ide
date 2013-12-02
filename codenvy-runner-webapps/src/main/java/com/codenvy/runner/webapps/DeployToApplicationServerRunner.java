@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * //
+ * Runner implementation to run Java web applications by deploying it to application server.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
@@ -73,7 +73,7 @@ public class DeployToApplicationServerRunner extends Runner {
             public RunnerConfiguration createRunnerConfiguration(RunRequest request) throws RunnerException {
                 return new ApplicationServerRunnerConfiguration(DEFAULT_SERVER_NAME,
                                                                 CustomPortService.getInstance().acquire(),
-                                                                request.getMemorySize(), 0, false,
+                                                                request.getMemorySize(), -1, false,
                                                                 DEBUG_TRANSPORT_PROTOCOL, request);
             }
         };
@@ -85,46 +85,41 @@ public class DeployToApplicationServerRunner extends Runner {
         // It always should be ApplicationServerRunnerConfiguration.
         final ApplicationServerRunnerConfiguration webAppsRunnerCfg =
                 (ApplicationServerRunnerConfiguration)configuration;
-        final java.io.File appDir;
-        try {
-            appDir = Files.createTempDirectory(getDeployDirectory().toPath(), ("app_" + getName() + '_')).toFile();
-        } catch (IOException e) {
-            throw new RunnerException(e);
-        }
         final ApplicationServer server = applicationServers.get(webAppsRunnerCfg.getServer());
         if (server == null) {
             throw new RunnerException(String.format("Server %s not found", webAppsRunnerCfg.getServer()));
         }
 
-        final StopCallback stopCallback = new StopCallback() {
-            @Override
-            public void stopped() {
-                CustomPortService.getInstance().release(webAppsRunnerCfg.getPort());
-                final int debugPort = webAppsRunnerCfg.getDebugPort();
-                if (debugPort > 0) {
-                    CustomPortService.getInstance().release(debugPort);
-                }
-                IoUtil.deleteRecursive(appDir);
-                LOG.debug("stop {} at port {}, application {}",
-                          new Object[]{webAppsRunnerCfg.getServer(), webAppsRunnerCfg.getPort(), appDir});
-            }
-        };
+        final java.io.File appDir;
+        try {
+            appDir =
+                    Files.createTempDirectory(getDeployDirectory().toPath(), (server.getName() + "_" + getName() + '_'))
+                         .toFile();
+        } catch (IOException e) {
+            throw new RunnerException(e);
+        }
 
-        final ApplicationProcess process = server.deploy(appDir, toDeploy, webAppsRunnerCfg, stopCallback);
+        final ApplicationProcess process =
+                server.deploy(appDir, toDeploy, webAppsRunnerCfg, new ApplicationServer.StopCallback() {
+                    @Override
+                    public void stopped() {
+                        CustomPortService.getInstance().release(webAppsRunnerCfg.getPort());
+                        final int debugPort = webAppsRunnerCfg.getDebugPort();
+                        if (debugPort > 0) {
+                            CustomPortService.getInstance().release(debugPort);
+                        }
+                    }
+                });
 
         registerDisposer(process, new Disposer() {
             @Override
             public void dispose() {
-                CustomPortService.getInstance().release(webAppsRunnerCfg.getPort());
-                final int debugPort = webAppsRunnerCfg.getDebugPort();
-                if (debugPort > 0) {
-                    CustomPortService.getInstance().release(debugPort);
+                if (!IoUtil.deleteRecursive(appDir)) {
+                    LOG.error("Unable to remove app: {}", appDir);
                 }
-                IoUtil.deleteRecursive(appDir);
-                LOG.debug("stop {} at port {}, application {}",
-                          new Object[]{webAppsRunnerCfg.getServer(), webAppsRunnerCfg.getPort(), appDir});
             }
         });
+
         return process;
     }
 }

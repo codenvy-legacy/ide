@@ -20,37 +20,40 @@ package com.codenvy.ide.extension.runner.client;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.extension.runner.client.actions.GetLogsAction;
+import com.codenvy.ide.extension.runner.client.actions.RunAction;
+import com.codenvy.ide.extension.runner.client.actions.StopAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_MAIN_MENU;
 
 /**
- * Entry point for an extension that adds support for running Codenvy-extensions in Codenvy.
+ * Runner extension entry point.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: RunnerExtension.java Jul 2, 2013 4:14:56 PM azatsarynnyy $
  */
 @Singleton
-@Extension(title = "Codenvy runner support.", version = "3.0.0")
+@Extension(title = "Running project support.", version = "3.0.0")
 public class RunnerExtension {
 
     @Inject
-    public RunnerExtension(ExtRuntimeLocalizationConstant localizationConstants,
+    public RunnerExtension(RunnerLocalizationConstant localizationConstants,
                            ActionManager actionManager,
-                           com.codenvy.ide.extension.runner.client.actions.LaunchAction launchAction,
-                           com.codenvy.ide.extension.runner.client.actions.GetLogsAction getLogsAction,
-                           com.codenvy.ide.extension.runner.client.actions.StopAction stopAction) {
+                           RunAction runAction,
+                           GetLogsAction getLogsAction,
+                           StopAction stopAction) {
         // register actions
         DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
 
-        actionManager.registerAction(localizationConstants.launchExtensionActionlId(), launchAction);
-        runMenuActionGroup.add(launchAction);
+        actionManager.registerAction(localizationConstants.runAppActionId(), runAction);
+        runMenuActionGroup.add(runAction);
 
-        actionManager.registerAction(localizationConstants.getExtensionLogsActionId(), getLogsAction);
+        actionManager.registerAction(localizationConstants.getAppLogsActionId(), getLogsAction);
         runMenuActionGroup.add(getLogsAction);
 
-        actionManager.registerAction(localizationConstants.stopExtensionActionId(), stopAction);
+        actionManager.registerAction(localizationConstants.stopAppActionId(), stopAction);
         runMenuActionGroup.add(stopAction);
     }
 }

@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.runner.webapps;
+package com.codenvy.runner.sdk;
 
 import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.dto.RunRequest;
@@ -25,21 +25,15 @@ import com.codenvy.api.runner.internal.dto.RunRequest;
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
-public class ApplicationServerRunnerConfiguration extends RunnerConfiguration {
-    private final String  server;
+public class SDKRunnerConfiguration extends RunnerConfiguration {
     private final boolean suspend;
     private final String  transport;
 
-    public ApplicationServerRunnerConfiguration(String server, int httpPort, int memory, int debugPort, boolean suspend,
-                                                String transport, RunRequest runRequest) {
+    public SDKRunnerConfiguration(int httpPort, int memory, int debugPort, boolean suspend,
+                                  String transport, RunRequest runRequest) {
         super(memory, httpPort, debugPort, runRequest);
-        this.server = server;
         this.suspend = suspend;
         this.transport = transport;
-    }
-
-    public String getServer() {
-        return server;
     }
 
     public boolean isDebugSuspend() {
@@ -53,8 +47,7 @@ public class ApplicationServerRunnerConfiguration extends RunnerConfiguration {
     @Override
     public String toString() {
         return "RunnerConfiguration{" +
-               "server=" + server +
-               ", memory=" + getMemory() +
+               "memory=" + getMemory() +
                ", port=" + getPort() +
                ", debugPort=" + getDebugPort() +
                ", debugSuspend=" + suspend +

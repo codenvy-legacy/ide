@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.zip.ZipFile;
 
 /**
- * Validator checks that {@code DeploymentSources} is a valid Java web-application.
+ * Validator checks that {@code DeploymentSources} is a valid Java web application.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */

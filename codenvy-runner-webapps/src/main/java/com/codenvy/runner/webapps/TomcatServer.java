@@ -43,16 +43,16 @@ import java.util.List;
 import java.util.concurrent.*;
 
 /**
- * //
+ * {@code ApplicationServer} implementation to deploy application to Apache Tomcat servlet container.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
 public class TomcatServer implements ApplicationServer {
-    public static final  String TOMCAT_HOME_PARAMETER = "runner.tomcat.tomcat_home";
-    public static final  String MEM_SIZE_PARAMETER    = "runner.tomcat.memory";
-    public static final  int    DEFAULT_MEM_SIZE      = 256;
-    private static final Logger LOG                   = LoggerFactory.getLogger(TomcatServer.class);
-    private static final String SERVER_XML            =
+    public static final  String TOMCAT_HOME_PARAMETER       = "runner.tomcat.tomcat_home";
+    public static final  String MEM_SIZE_PARAMETER          = "runner.tomcat.memory";
+    public static final  int    DEFAULT_MEM_SIZE            = 256;
+    private static final Logger LOG                         = LoggerFactory.getLogger(TomcatServer.class);
+    private static final String SERVER_XML                  =
             "<?xml version='1.0' encoding='utf-8'?>\n" +
             "<Server port=\"-1\">\n" +
             "  <Listener className=\"org.apache.catalina.core.AprLifecycleListener\" SSLEngine=\"on\" />\n" +
@@ -70,18 +70,22 @@ public class TomcatServer implements ApplicationServer {
             "    </Engine>\n" +
             "  </Service>\n" +
             "</Server>\n";
+    private static final String TOMCAT_HOME_SYSTEM_PROPERTY = "codenvy.runner.tomcat.home";
+    /** Validator to validate deployment sources. */
     protected final DeploymentSourcesValidator appValidator;
     protected final ExecutorService            pidTaskExecutor;
     private         java.io.File               tomcatHome;
-    private         int                        defaultMemSize;
+    private         int                        memSize;
 
     public TomcatServer() {
         appValidator = new JavaWebApplicationValidator();
         pidTaskExecutor = Executors.newCachedThreadPool(new NamedThreadFactory("TomcatServer-", true));
-        defaultMemSize = DEFAULT_MEM_SIZE;
 
         Configuration configuration = new Configuration();
-        configuration.setFile(TomcatServer.TOMCAT_HOME_PARAMETER, new java.io.File("/home/artem/__tomcat__"));
+        final String tomcatHomeDir = System.getProperty(TOMCAT_HOME_SYSTEM_PROPERTY);
+        if (tomcatHomeDir != null) {
+            configuration.setFile(TomcatServer.TOMCAT_HOME_PARAMETER, new java.io.File(tomcatHomeDir));
+        }
         setConfiguration(configuration);
     }
 
@@ -97,64 +101,33 @@ public class TomcatServer implements ApplicationServer {
                                      StopCallback stopCallback) throws RunnerException {
         final java.io.File myTomcatHome = getTomcatHome();
         if (myTomcatHome == null) {
-            throw new RunnerException("Tomcat home directory is not set");
+            throw new RunnerException(String.format("System property %1$s is not set.", TOMCAT_HOME_SYSTEM_PROPERTY));
         }
         validate(toDeploy);
         try {
             final Path tomcatPath = Files.createDirectory(appDir.toPath().resolve("tomcat"));
             IoUtil.copy(myTomcatHome, tomcatPath.toFile(), null);
-            final Path webappsPath = Files.createDirectory(tomcatPath.resolve("webapps"));
+            final Path webappsPath = tomcatPath.resolve("webapps");
+            if (Files.exists(webappsPath)) {
+                IoUtil.deleteRecursive(webappsPath.toFile());
+            }
+            Files.createDirectory(webappsPath);
             final Path rootPath = Files.createDirectory(webappsPath.resolve("ROOT"));
             if (toDeploy.isArchive()) {
                 ZipUtils.unzip(toDeploy.getFile(), rootPath.toFile());
             } else {
                 IoUtil.copy(toDeploy.getFile(), rootPath.toFile(), null);
             }
-            genServerXml(tomcatPath.toFile(), runnerConfiguration);
+            generateServerXml(tomcatPath.toFile(), runnerConfiguration);
+
             if (SystemInfo.isUnix()) {
                 return startUnix(appDir, runnerConfiguration, stopCallback);
             } else {
-                return startWindows(appDir, runnerConfiguration);
+                return startWindows(appDir, runnerConfiguration, stopCallback);
             }
         } catch (IOException e) {
             throw new RunnerException(e);
         }
-    }
-
-    public java.io.File getTomcatHome() {
-        return tomcatHome;
-    }
-
-    public int getDefaultMemSize() {
-        return defaultMemSize;
-    }
-
-    @Override
-    public Configuration getDefaultConfiguration() {
-        final Configuration defaultConfiguration = new Configuration();
-        defaultConfiguration.setInt(MEM_SIZE_PARAMETER, DEFAULT_MEM_SIZE);
-        return defaultConfiguration;
-    }
-
-    @Override
-    public Configuration getConfiguration() {
-        final Configuration configuration = new Configuration();
-        configuration.setInt(MEM_SIZE_PARAMETER, getDefaultMemSize());
-        if (tomcatHome != null) {
-            configuration.setFile(TOMCAT_HOME_PARAMETER, tomcatHome);
-        }
-        return configuration;
-    }
-
-    @Override
-    public void setConfiguration(Configuration configuration) {
-        defaultMemSize = configuration.getInt(MEM_SIZE_PARAMETER, DEFAULT_MEM_SIZE);
-        tomcatHome = configuration.getFile(TOMCAT_HOME_PARAMETER, null);
-    }
-
-    @Override
-    public String toString() {
-        return "Tomcat Server";
     }
 
     protected void validate(DeploymentSources toDeploy) throws RunnerException {
@@ -164,7 +137,7 @@ public class TomcatServer implements ApplicationServer {
         }
     }
 
-    protected void genServerXml(java.io.File tomcatDir, ApplicationServerRunnerConfiguration runnerConfiguration)
+    protected void generateServerXml(java.io.File tomcatDir, ApplicationServerRunnerConfiguration runnerConfiguration)
             throws RunnerException {
         String cfg = SERVER_XML.replace("${PORT}", Integer.toString(runnerConfiguration.getPort()));
         final java.io.File serverXmlFile = new java.io.File(new java.io.File(tomcatDir, "conf"), "server.xml");
@@ -179,8 +152,7 @@ public class TomcatServer implements ApplicationServer {
 
     protected ApplicationProcess startUnix(final java.io.File appDir,
                                            final ApplicationServerRunnerConfiguration runnerConfiguration,
-                                           StopCallback stopCallback)
-            throws RunnerException {
+                                           StopCallback stopCallback) throws RunnerException {
         java.io.File startUpScriptFile = genStartUpScriptUnix(appDir, runnerConfiguration);
         if (!startUpScriptFile.setExecutable(true, false)) {
             throw new RunnerException("Unable update attributes of the startup script");
@@ -195,7 +167,7 @@ public class TomcatServer implements ApplicationServer {
         logFiles.add(new FileAdapter(new java.io.File(logsDir, "stderr.log"), "logs/stderr.log", "text/plain"));
 
         return new TomcatProcess(runnerConfiguration.getPort(), logFiles, runnerConfiguration.getDebugPort(),
-                                 startUpScriptFile, appDir, stopCallback);
+                                 startUpScriptFile, appDir, stopCallback, pidTaskExecutor);
     }
 
     private java.io.File genStartUpScriptUnix(java.io.File appDir,
@@ -224,7 +196,7 @@ public class TomcatServer implements ApplicationServer {
     private String exportEnvVariablesUnix(ApplicationServerRunnerConfiguration runnerConfiguration) {
         int memory = runnerConfiguration.getMemory();
         if (memory <= 0) {
-            memory = getDefaultMemSize();
+            memory = getMemSize();
         }
         final String catalinaOpts = String.format("export CATALINA_OPTS=\"-Xms%dm -Xmx%dm\"%n", memory, memory);
         final int debugPort = runnerConfiguration.getDebugPort();
@@ -251,11 +223,49 @@ public class TomcatServer implements ApplicationServer {
         return "./bin/catalina.sh run > ../logs/stdout.log 2> ../logs/stderr.log &\n";
     }
 
-    // windows. TODO: implement
+    // Windows
 
-    protected ApplicationProcess startWindows(java.io.File appDir,
-                                              ApplicationServerRunnerConfiguration runnerConfiguration) {
+    // TODO: implement
+    protected ApplicationProcess startWindows(File appDir,
+                                              ApplicationServerRunnerConfiguration runnerConfiguration,
+                                              StopCallback stopCallback) {
         throw new UnsupportedOperationException();
+    }
+
+    public java.io.File getTomcatHome() {
+        return tomcatHome;
+    }
+
+    public int getMemSize() {
+        return memSize;
+    }
+
+    @Override
+    public Configuration getDefaultConfiguration() {
+        final Configuration defaultConfiguration = new Configuration();
+        defaultConfiguration.setInt(MEM_SIZE_PARAMETER, DEFAULT_MEM_SIZE);
+        return defaultConfiguration;
+    }
+
+    @Override
+    public Configuration getConfiguration() {
+        final Configuration configuration = new Configuration();
+        configuration.setInt(MEM_SIZE_PARAMETER, getMemSize());
+        if (tomcatHome != null) {
+            configuration.setFile(TOMCAT_HOME_PARAMETER, tomcatHome);
+        }
+        return configuration;
+    }
+
+    @Override
+    public void setConfiguration(Configuration configuration) {
+        memSize = configuration.getInt(MEM_SIZE_PARAMETER, DEFAULT_MEM_SIZE);
+        tomcatHome = configuration.getFile(TOMCAT_HOME_PARAMETER, null);
+    }
+
+    @Override
+    public String toString() {
+        return "Tomcat Server";
     }
 
     private static class TomcatProcess extends ApplicationProcess {
@@ -271,20 +281,20 @@ public class TomcatServer implements ApplicationServer {
         Process      process;
 
         TomcatProcess(int httpPort, List<FileAdapter> logFiles, int debugPort, File startUpScriptFile, File workDir,
-                      StopCallback stopCallback) {
+                      StopCallback stopCallback, ExecutorService pidTaskExecutor) {
             this.httpPort = httpPort;
             this.logFiles = logFiles;
             this.debugPort = debugPort;
             this.startUpScriptFile = startUpScriptFile;
             this.workDir = workDir;
             this.stopCallback = stopCallback;
-            pidTaskExecutor = Executors.newCachedThreadPool(new NamedThreadFactory("TomcatServer-", true));
+            this.pidTaskExecutor = pidTaskExecutor;
         }
 
         @Override
         public void start() throws RunnerException {
             if (ProcessUtil.isAlive(pid)) {
-                throw new IllegalStateException("Process is already started.");
+                throw new IllegalStateException("Process is already started");
             }
 
             try {
@@ -314,7 +324,7 @@ public class TomcatServer implements ApplicationServer {
                 }).get(5, TimeUnit.SECONDS);
 
                 logger = new TomcatLogger(logFiles);
-                LOG.debug("start tomcat at port {}, application {}", httpPort, workDir);
+                LOG.debug("Start Tomcat at port {}, application {}", httpPort, workDir);
             } catch (IOException | InterruptedException | TimeoutException e) {
                 throw new RunnerException(e);
             } catch (ExecutionException e) {
@@ -325,19 +335,11 @@ public class TomcatServer implements ApplicationServer {
         @Override
         public void stop() throws RunnerException {
             if (pid == -1) {
-                throw new IllegalStateException("Process is not started yet.");
+                throw new IllegalStateException("Process is not started yet");
             }
             ProcessUtil.kill(pid);
-
-//            CustomPortService.getInstance().release(httpPort);
-//            if (debugPort > 0) {
-//                CustomPortService.getInstance().release(debugPort);
-//            }
-
             stopCallback.stopped();
-
-            IoUtil.deleteRecursive(workDir);
-            LOG.debug("stop tomcat at port {}, application {}", httpPort, workDir);
+            LOG.debug("Stop Tomcat at port {}, application {}", httpPort, workDir);
         }
 
         @Override
@@ -387,9 +389,9 @@ public class TomcatServer implements ApplicationServer {
             @Override
             public void getLogs(Appendable output) throws IOException {
                 for (FileAdapter logFile : logFiles) {
-                    output.append("====> " + logFile.getName() + " <====\n");
+                    output.append(String.format("%n====> %1$s <====%n%n", logFile.getName()));
                     CharStreams.copy(new InputStreamReader(new FileInputStream(logFile.getIoFile())), output);
-                    output.append("\n\n");
+                    output.append(System.lineSeparator());
                 }
             }
 

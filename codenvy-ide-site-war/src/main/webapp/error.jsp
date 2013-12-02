@@ -52,7 +52,7 @@
                                     <td style="padding: 2" align="center">User role</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding: 2" align="left">exo/exo</td>
+                                    <td style="padding: 2" align="left">ide/codenvy123</td>
                                     <td style="padding: 2" align="left">developers</td>
                                 </tr>
                             </table>
