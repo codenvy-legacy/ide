@@ -30,7 +30,7 @@ EXO_OPTS="          -Djavasrc=$JAVA_HOME/src.zip \
                     -Djre.lib=$JAVA_HOME/jre/lib \
                     -Dorg.exoplatform.mimetypes=conf/mimetypes.properties \
                     -Dorg.exoplatform.ide.git.server=git \
-                    -Dcom.codenvy.vfs.rootdir=${CATALINA_HOME}/temp/fs-root \
+                    -Dorg.exoplatform.ide.server.fs-root-path=${CATALINA_HOME}/temp/fs-root \
                     -Dtenant.masterhost=localhost \
                     -Dorganization.application.server.url=http://localhost:${PORT}/userdb/ \
                     -Dmailsender.application.server.url=http://localhost:${PORT}/mail/ \
