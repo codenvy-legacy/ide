@@ -20,7 +20,6 @@ package com.codenvy.runner.docker;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.ApplicationLogger;
 import com.codenvy.api.runner.internal.ApplicationProcess;
-import com.codenvy.api.runner.internal.Constants;
 import com.codenvy.api.runner.internal.DeploymentSources;
 import com.codenvy.api.runner.internal.Disposer;
 import com.codenvy.api.runner.internal.Runner;
