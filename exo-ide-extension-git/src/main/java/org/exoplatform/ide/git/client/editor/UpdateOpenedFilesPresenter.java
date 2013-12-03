@@ -38,18 +38,21 @@ public class UpdateOpenedFilesPresenter implements UpdateOpenedFilesHandler, Edi
         IDE.addHandler(EditorFileClosedEvent.TYPE, this);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onEditorFileClosed(EditorFileClosedEvent event) {
         this.openedFiles = event.getOpenedFiles();
         this.openedEditors.remove(event.getFile().getId());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onEditorFileOpened(EditorFileOpenedEvent event) {
         this.openedFiles = event.getOpenedFiles();
         this.openedEditors.put(event.getFile().getId(), event.getEditor());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onUpdateOpenedFiles(UpdateOpenedFilesEvent event) {
         Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
@@ -62,6 +65,8 @@ public class UpdateOpenedFilesPresenter implements UpdateOpenedFilesHandler, Edi
         });
     }
 
+    /** Take editor that handle current resource and try to get from server current state for file if file content is different, than
+     * this editor will be updated */
     private void updateContent(final FileModel resource) {
         final Editor editor = openedEditors.get(resource.getId());
 
