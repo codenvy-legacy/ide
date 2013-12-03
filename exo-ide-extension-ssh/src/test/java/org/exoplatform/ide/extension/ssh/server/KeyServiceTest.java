@@ -86,7 +86,7 @@ public class KeyServiceTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenUploadPrivateKeyWithPassPhrase() throws Exception {
+    public void shouldThrowExceptionWhenUploadPrivateKeyWithPassphrase() throws Exception {
         Path path = Paths.get(Thread.currentThread().getContextClassLoader().getResource("www_example_com.keywithpassphrase").toURI());
         given().auth().basic(JettyHttpServer.ADMIN_USER_NAME, JettyHttpServer.ADMIN_USER_PASSWORD)
                 .multiPart(path.toFile())

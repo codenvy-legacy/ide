@@ -22,20 +22,12 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.ide.extension.ssh.shared.*;
 
 import javax.annotation.security.RolesAllowed;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.io.ByteArrayInputStream;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * REST interface to SshKeyProvider.
@@ -45,6 +37,8 @@ import java.util.Set;
  */
 @Path("{ws-name}/ssh-keys")
 public class KeyService {
+
+    private static final Pattern SSH_WITH_PASSPHRASE = Pattern.compile("(?i)\\s*proc-type:\\s*\\d*,\\s*encrypted\\s*");
     private final SshKeyStore keyStore;
 
     private long MAX_UPLOAD_SIZE = 16384L;
@@ -88,9 +82,11 @@ public class KeyService {
         if (key == null) {
             throw new SshKeyStoreException("Can't find input file.");
         }
-        for (String keyContentLine : new String(key).split("\\n")) {
-            if (keyContentLine.matches("(?i)proc-type:\\s*\\d*,\\s*encrypted\\s*")) {
-                throw new SshKeyStoreException("SSH key with passphrase is not supported");
+        try (Scanner keyContentScanner = new Scanner(new ByteArrayInputStream(key))) {
+            while (keyContentScanner.hasNextLine()) {
+                if (SSH_WITH_PASSPHRASE.matcher(keyContentScanner.nextLine()).matches()) {
+                    throw new SshKeyStoreException("SSH key with passphrase is not supported");
+                }
             }
         }
         keyStore.addPrivateKey(host, key);
