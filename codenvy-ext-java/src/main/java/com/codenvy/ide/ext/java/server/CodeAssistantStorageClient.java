@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.ext.java.server;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.ext.java.shared.ShortTypeInfo;
 import com.codenvy.ide.ext.java.shared.TypeInfo;
 
@@ -44,12 +46,9 @@ import java.util.Set;
  * @version $Id:
  */
 public class CodeAssistantStorageClient implements CodeAssistantStorage {
-    private static final Log LOG = ExoLogger.getLogger(CodeAssistantStorageClient.class);
-
-    private static final String STOGAGE_BASE = "/storage/get";
-
-    public static final String STORAGE_BASE_URL = "exo.ide.codeassistan.storage-base-url";
-
+    private static final Log    LOG              = ExoLogger.getLogger(CodeAssistantStorageClient.class);
+    private static final String STOGAGE_BASE     = "/storage/get";
+    public static final  String STORAGE_BASE_URL = "exo.ide.codeassistan.storage-base-url";
     private final String baseURL;
 
     /**
@@ -134,13 +133,11 @@ public class CodeAssistantStorageClient implements CodeAssistantStorage {
         return readBody(http.getInputStream(), http.getContentLength());
     }
 
-
     /** {@inheritDoc} */
     @Override
-    public List<ShortTypeInfo> getAnnotations(String prefix, Set<String> dependencys) throws CodeAssistantException {
-        return getShortTypeInfo("/annotations?prefix=" + prefix, dependencys);
+    public List<ShortTypeInfo> getAnnotations(@Nullable String prefix, @NotNull Set<String> dependencies) throws CodeAssistantException {
+        return getShortTypeInfo("/annotations?prefix=" + prefix, dependencies);
     }
-
 
     private List<ShortTypeInfo> getShortTypeInfo(String urlPart, Set<String> dependencys) throws CodeAssistantException {
         HttpURLConnection in = null;
@@ -168,39 +165,34 @@ public class CodeAssistantStorageClient implements CodeAssistantStorage {
 
     }
 
-
     /** {@inheritDoc} */
     @Override
-    public List<ShortTypeInfo> getClasses(String prefix, Set<String> dependencys) throws CodeAssistantException {
-        return getShortTypeInfo("/classes?prefix=" + prefix, dependencys);
+    public List<ShortTypeInfo> getClasses(@Nullable String prefix, @NotNull Set<String> dependencies) throws CodeAssistantException {
+        return getShortTypeInfo("/classes?prefix=" + prefix, dependencies);
     }
 
-
     /** {@inheritDoc} */
     @Override
-    public String getClassJavaDoc(String fqn, Set<String> dependencys) throws CodeAssistantException {
-        return getJavadoc("/class-doc?fqn=" + fqn, dependencys);
+    public String getClassJavaDoc(@NotNull String fqn, @NotNull Set<String> dependencies) throws CodeAssistantException {
+        return getJavadoc("/class-doc?fqn=" + fqn, dependencies);
     }
 
-
     /** {@inheritDoc} */
     @Override
-    public List<ShortTypeInfo> getInterfaces(String prefix, Set<String> dependencys) throws CodeAssistantException {
-        return getShortTypeInfo("/interfaces?prefix=" + prefix, dependencys);
+    public List<ShortTypeInfo> getInterfaces(@Nullable String prefix, @NotNull Set<String> dependencies) throws CodeAssistantException {
+        return getShortTypeInfo("/interfaces?prefix=" + prefix, dependencies);
     }
 
-
     /** {@inheritDoc} */
     @Override
-    public String getMemberJavaDoc(String fqn, Set<String> dependencys) throws CodeAssistantException {
+    public String getMemberJavaDoc(@NotNull String fqn, @NotNull Set<String> dependencies) throws CodeAssistantException {
         try {
-            return getJavadoc("/member-doc?fqn=" + URLEncoder.encode(fqn, "UTF-8"), dependencys);
+            return getJavadoc("/member-doc?fqn=" + URLEncoder.encode(fqn, "UTF-8"), dependencies);
         } catch (UnsupportedEncodingException e) {
             LOG.error("Can't encode fqn.", e);
             return null;
         }
     }
-
 
     private String getJavadoc(String urlPart, Set<String> dependencys) throws CodeAssistantException {
         HttpURLConnection in = null;
@@ -220,15 +212,14 @@ public class CodeAssistantStorageClient implements CodeAssistantStorage {
         return null;
     }
 
-
     /** {@inheritDoc} */
     @Override
-    public TypeInfo getTypeByFqn(String fqn, Set<String> dependencys) throws CodeAssistantException {
+    public TypeInfo getTypeByFqn(@NotNull String fqn, @NotNull Set<String> dependencies) throws CodeAssistantException {
         HttpURLConnection in = null;
         try {
             URL url = new URL(baseURL + STOGAGE_BASE + "/type-by-fqn?fqn=" + fqn);
             JsonParser p = new JsonParser();
-            in = run(url, dependencys);
+            in = run(url, dependencies);
             if (in == null)
                 return null;
             p.parse(in.getInputStream());
@@ -246,31 +237,28 @@ public class CodeAssistantStorageClient implements CodeAssistantStorage {
         return null;
     }
 
-
     /** {@inheritDoc} */
     @Override
-    public List<ShortTypeInfo> getTypesByFqnPrefix(String fqnPrefix, Set<String> dependencys)
+    public List<ShortTypeInfo> getTypesByFqnPrefix(@NotNull String fqnPrefix, @NotNull Set<String> dependencies)
             throws CodeAssistantException {
-        return getShortTypeInfo("/type-by-fqn-prefix?prefix=" + fqnPrefix, dependencys);
+        return getShortTypeInfo("/type-by-fqn-prefix?prefix=" + fqnPrefix, dependencies);
     }
 
-
     /** {@inheritDoc} */
     @Override
-    public List<ShortTypeInfo> getTypesByNamePrefix(String namePrefix, Set<String> dependencys)
+    public List<ShortTypeInfo> getTypesByNamePrefix(@NotNull String namePrefix, @NotNull Set<String> dependencies)
             throws CodeAssistantException {
-        return getShortTypeInfo("/type-by-name-prefix?prefix=" + namePrefix, dependencys);
+        return getShortTypeInfo("/type-by-name-prefix?prefix=" + namePrefix, dependencies);
     }
 
-
     /** {@inheritDoc} */
     @Override
-    public List<TypeInfo> getTypesInfoByNamePrefix(String namePrefix, Set<String> dependencys)
+    public List<TypeInfo> getTypesInfoByNamePrefix(@NotNull String namePrefix, @NotNull Set<String> dependencies)
             throws CodeAssistantException {
         HttpURLConnection in = null;
         try {
             URL url = new URL(baseURL + STOGAGE_BASE + "/types-info-by-name-prefix?prefix=" + namePrefix);
-            in = run(url, dependencys);
+            in = run(url, dependencies);
             if (in == null)
                 return null;
             JsonParser p = new JsonParser();
@@ -291,14 +279,13 @@ public class CodeAssistantStorageClient implements CodeAssistantStorage {
         return null;
     }
 
-
     /** {@inheritDoc} */
     @Override
-    public List<String> getPackages(String packagePrefix, Set<String> dependencys) throws CodeAssistantException {
+    public List<String> getPackages(@NotNull String packagePrefix, @NotNull Set<String> dependencies) throws CodeAssistantException {
         HttpURLConnection in = null;
         try {
             URL url = new URL(baseURL + STOGAGE_BASE + "/find-packages?package=" + packagePrefix);
-            in = run(url, dependencys);
+            in = run(url, dependencies);
             if (in == null)
                 return null;
             JsonParser p = new JsonParser();
@@ -319,14 +306,13 @@ public class CodeAssistantStorageClient implements CodeAssistantStorage {
         return null;
     }
 
-
     /** {@inheritDoc} */
     @Override
-    public List<String> getAllPackages(Set<String> dependencys) throws CodeAssistantException {
+    public List<String> getAllPackages(@NotNull Set<String> dependencies) throws CodeAssistantException {
         HttpURLConnection in = null;
         try {
             URL url = new URL(baseURL + STOGAGE_BASE + "/get-packages");
-            in = run(url, dependencys);
+            in = run(url, dependencies);
             if (in == null)
                 return null;
             JsonParser p = new JsonParser();
