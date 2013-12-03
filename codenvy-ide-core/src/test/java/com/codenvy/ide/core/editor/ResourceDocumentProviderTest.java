@@ -24,6 +24,7 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentFactoryImpl;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.event.shared.EventBus;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -44,18 +45,16 @@ import static org.mockito.Mockito.*;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ResourceDocumentProviderTest {
-
     @Mock
     private DocumentCallback callback;
-
     @Mock
-    private EditorInput input;
-
+    private EditorInput      input;
     @Mock
-    private File file;
-
+    private File             file;
     @Mock
-    private Project project;
+    private Project          project;
+    @Mock
+    private EventBus         eventBus;
 
     @Before
     public void setUp() {
@@ -66,7 +65,7 @@ public class ResourceDocumentProviderTest {
 
     @Test
     public void shuldCallProjectGetContent() {
-        ResourceDocumentProvider provider = new ResourceDocumentProvider(new DocumentFactoryImpl());
+        ResourceDocumentProvider provider = new ResourceDocumentProvider(new DocumentFactoryImpl(), eventBus);
         provider.getDocument(input, callback);
         verify(project).getContent(eq(file), Mockito.<AsyncCallback<File>>any());
     }
@@ -74,7 +73,7 @@ public class ResourceDocumentProviderTest {
     @SuppressWarnings("unchecked")
     @Test
     public void shuldCallCallback() {
-        ResourceDocumentProvider provider = new ResourceDocumentProvider(new DocumentFactoryImpl());
+        ResourceDocumentProvider provider = new ResourceDocumentProvider(new DocumentFactoryImpl(), eventBus);
         doAnswer(createServerResponse()).when(project).getContent((File)any(), (AsyncCallback<File>)any());
         provider.getDocument(input, callback);
         verify(callback).onDocument((Document)any());

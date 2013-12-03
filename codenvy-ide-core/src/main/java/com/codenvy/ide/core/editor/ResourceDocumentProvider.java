@@ -21,6 +21,7 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorInput;
+import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentFactory;
@@ -30,6 +31,7 @@ import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,11 +45,13 @@ import java.util.Map;
  */
 public class ResourceDocumentProvider implements DocumentProvider {
     private DocumentFactory documentFactory;
+    private EventBus        eventBus;
     private Map<File, Document> cache = new HashMap<File, Document>();
 
     @Inject
-    public ResourceDocumentProvider(DocumentFactory documentFactory) {
+    public ResourceDocumentProvider(DocumentFactory documentFactory, EventBus eventBus) {
         this.documentFactory = documentFactory;
+        this.eventBus = eventBus;
     }
 
     /**
@@ -102,11 +106,12 @@ public class ResourceDocumentProvider implements DocumentProvider {
     @Override
     public void saveDocument(@Nullable final EditorInput input, @NotNull Document document, boolean overwrite,
                              @NotNull final AsyncCallback<EditorInput> callback) {
-        File file = input.getFile();
+        final File file = input.getFile();
         file.setContent(document.get());
         file.getProject().updateContent(file, new AsyncCallback<File>() {
             @Override
             public void onSuccess(File result) {
+                eventBus.fireEvent(new FileEvent(file, FileEvent.FileOperation.SAVE));
                 callback.onSuccess(input);
             }
 
@@ -120,11 +125,11 @@ public class ResourceDocumentProvider implements DocumentProvider {
     /** {@inheritDoc} */
     @Override
     public void saveDocumentAs(@Nullable EditorInput input, @NotNull Document document, boolean overwrite) {
-        File file = input.getFile();
+        final File file = input.getFile();
         file.getProject().createFile(file.getParent(), file.getName(), file.getContent(), file.getMimeType(), new AsyncCallback<File>() {
             @Override
             public void onSuccess(File result) {
-                //do nothing
+                eventBus.fireEvent(new FileEvent(file, FileEvent.FileOperation.SAVE));
             }
 
             @Override
