@@ -17,14 +17,28 @@
  */
 package com.codenvy.ide.ext.java.server;
 
+import com.codenvy.api.builder.BuildStatus;
+import com.codenvy.api.builder.dto.BuildTaskDescriptor;
+import com.codenvy.api.builder.internal.BuilderException;
+import com.codenvy.api.core.rest.HttpJsonHelper;
+import com.codenvy.api.core.rest.RemoteException;
+import com.codenvy.api.core.rest.shared.dto.Link;
+import com.codenvy.api.core.util.Pair;
 import com.codenvy.api.vfs.server.VirtualFileSystem;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
+import com.codenvy.api.vfs.server.dto.DtoServerImpls;
 import com.codenvy.api.vfs.server.exceptions.InvalidArgumentException;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.shared.ItemType;
 import com.codenvy.api.vfs.shared.PropertyFilter;
 import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.api.vfs.shared.dto.Project;
+import com.codenvy.api.vfs.shared.dto.Property;
+import com.codenvy.builder.maven.dto.MavenDependency;
+import com.codenvy.dto.server.DtoFactory;
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
+import com.codenvy.ide.ext.java.shared.BuildStatusBean;
 import com.codenvy.ide.ext.java.shared.TypeInfo;
 import com.codenvy.ide.ext.java.shared.TypesList;
 
@@ -36,10 +50,12 @@ import org.exoplatform.services.log.Log;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,15 +74,12 @@ import java.util.List;
 @Path("{ws-name}/code-assistant/java")
 public class RestCodeAssistantJava {
 
+    @PathParam("ws-name")
+    private String                     wsName;
     @Inject
-    private JavaCodeAssistant codeAssistant;
-
-//    @Inject
-//    private BuilderClient builderClient;
-
+    private JavaCodeAssistant          codeAssistant;
     @Inject
-    private VirtualFileSystemRegistry vfsRegistry;
-
+    private VirtualFileSystemRegistry  vfsRegistry;
     @Inject
     private CodeAssistantStorageClient storageClient;
 
@@ -97,9 +110,7 @@ public class RestCodeAssistantJava {
         return null;
     }
 
-    /**
-     * Returns the class objects associated with the class or interface with the given simple name prefix.
-     */
+    /** Returns the class objects associated with the class or interface with the given simple name prefix. */
     @GET
     @Path("/classes-by-prefix")
     @Produces(MediaType.APPLICATION_JSON)
@@ -262,9 +273,7 @@ public class RestCodeAssistantJava {
         return codeAssistant.getPackagesByPrefix(packagePrefix, projectId, vfsId);
     }
 
-    /**
-     * Get list of all package names in project
-     */
+    /** Get list of all package names in project */
     @GET
     @Path("/get-packages")
     @Produces(MediaType.APPLICATION_JSON)
@@ -275,165 +284,201 @@ public class RestCodeAssistantJava {
         return codeAssistant.getAllPackages(projectId, vfsId);
     }
 
-    /**
-     * Get list of all package names in project
-     */
+    /** Get list of all package names in project */
     @GET
     @Path("/update-dependencies")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<String> updateDependency(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId)
-            throws CodeAssistantException, VirtualFileSystemException, IOException,  JsonException {
+    public List<String> updateDependency(@QueryParam("vfsid") String vfsId,
+                                         @QueryParam("projectid") String projectId,
+                                         @Context UriInfo uriInfo)
+            throws CodeAssistantException, VirtualFileSystemException, IOException, JsonException, BuilderException {
+
         final VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         Item item = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
-        Project project = null;
-        if (item.getItemType().equals(ItemType.PROJECT))
+        URI uri = uriInfo.getBaseUri();
+        String url = uri.getScheme() + "://" + uri.getHost();
+        int port = uri.getPort();
+        if (port != 0 && port != 80) {
+            url += ":" + port;
+        }
+        url += "/api" + "/" + wsName + "/";
+
+        Project project;
+        String projectName;
+        if (item.getItemType().equals(ItemType.PROJECT)) {
             project = (Project)item;
-        else {
+            projectName = project.getName();
+        } else {
             LOG.warn("Getting item not a project ");
             throw new CodeAssistantException(500, "Getting item not a project");
         }
-//        String buildId = builderClient.dependenciesList(vfs, projectId);
-//        String dependencies = null;
-//        BuildStatus buildStatus = waitBuildTaskFinish(buildId);
-//        if (Status.SUCCESSFUL == buildStatus.getStatus()) {
-//            if (buildStatus.getDownloadUrl() != null && !buildStatus.getDownloadUrl().isEmpty()) {
-//                dependencies = makeRequest(buildStatus.getDownloadUrl());
-//                if (project.hasProperty("exoide:classpath") && project.getPropertyValue("exoide:classpath").equals(dependencies)) {
-//                    return codeAssistant.getAllPackages(project, vfs);
-//                }
-//                List<Property> properties =
-//                        Arrays.<Property>asList(new PropertyImpl("exoide:classpath", dependencies), new PropertyImpl(
-//                                "exoide:build_error", (String)null));
-//                project = (Project)vfs.updateItem(projectId, properties, null);
-//            }
-//        } else {
-//            LOG.warn("Build failed, exit code: " + buildStatus.getExitCode() + ", message: " + buildStatus.getError());
-//            throw new BuilderException(buildStatus.getExitCode(), buildStatus.getError(), "text/plain");
-//        }
-//        buildId = builderClient.dependenciesCopy(vfs, projectId, null);
-//        buildStatus = waitBuildTaskFinish(buildId);
-//        if (Status.FAILED == buildStatus.getStatus()) {
-//            LOG.warn("Build failed, exit code: " + buildStatus.getExitCode() + ", message: " + buildStatus.getError());
-//            throw new BuilderException(buildStatus.getExitCode(), buildStatus.getError(), "text/plain");
-//        }
-//        if (dependencies == null || dependencies.isEmpty() || buildStatus.getDownloadUrl().isEmpty())
-//            return Collections.emptyList();
-//        String statusUrl = storageClient.updateTypeIndex(dependencies, buildStatus.getDownloadUrl());
-//        waitStorageTaskFinish(statusUrl);
-//        buildId = builderClient.dependenciesCopy(vfs, projectId, "sources");
-//        buildStatus = waitBuildTaskFinish(buildId);
-//        if (Status.FAILED == buildStatus.getStatus()) {
-//            LOG.warn("Build failed, exit code: " + buildStatus.getExitCode() + ", message: " + buildStatus.getError());
-//            throw new BuilderException(buildStatus.getExitCode(), buildStatus.getError(), "text/plain");
-//        }
-//
-//        if (buildStatus.getDownloadUrl() != null && !buildStatus.getDownloadUrl().isEmpty())
-//        {
-//            statusUrl = storageClient.updateDockIndex(dependencies, buildStatus.getDownloadUrl());
-//            try {
-//                waitStorageTaskFinish(statusUrl);
-//            } catch (Exception e)// Ignore exception in case add javadoc
-//            {
-//                LOG.debug("Adding sources artifact fail : " + statusUrl, e);
-//            }
-//        }
+
+        try {
+            String jsonDependencies = null;
+            List<MavenDependency> dependencies = null;
+            List<String> dependencyString = new ArrayList<>();
+
+            BuildTaskDescriptor buildStatus = getDependencies(url, projectName, "list");
+
+            if (buildStatus != null && buildStatus.getStatus() == BuildStatus.SUCCESSFUL) {
+                Link downloadLink = findLink("download result", buildStatus.getLinks());
+
+                HttpURLConnection conn = (HttpURLConnection)new URL(downloadLink.getHref()).openConnection();
+                try (InputStream input = conn.getInputStream()) {
+                    jsonDependencies = fromStream(input);
+                    dependencies = DtoFactory.getInstance().createListDtoFromJson(jsonDependencies, MavenDependency.class);
+                }
+
+                List<Property> properties = project.getProperties();
+                Property property = getProperty("exoide:classpath", properties);
+
+                for (MavenDependency mavenDependency : dependencies) {
+                    String value = mavenDependency.toString();
+                    dependencyString.add(value);
+                }
+
+                if (property != null && property.getValue().equals(dependencyString))
+                    return codeAssistant.getAllPackages(project, vfs);
+
+                DtoServerImpls.PropertyImpl classpath = DtoServerImpls.PropertyImpl.make();
+                classpath.setName("exoide:classpath");
+                classpath.setValue(dependencyString);
+
+                List<Property> newproperties = Arrays.<Property>asList(classpath);
+
+                vfs.updateItem(projectId, newproperties, null);
+
+            } else {
+                buildFailed(buildStatus);
+            }
+
+            buildStatus = getDependencies(url, projectName, "copy");
+
+            if (buildStatus.getStatus() == BuildStatus.FAILED) {
+                buildFailed(buildStatus);
+            }
+
+            Link downloadLink = findLink("download result", buildStatus.getLinks());
+
+            if (dependencies == null || dependencies.isEmpty() || downloadLink == null)
+                return Collections.emptyList();
+
+            String statusUrl = storageClient.updateDockIndex(jsonDependencies, downloadLink.getHref());
+            try {
+                waitStorageTaskFinish(statusUrl);
+            } catch (Exception e)// Ignore exception in case add javadoc
+            {
+                LOG.debug("Adding sources artifact fail : " + statusUrl, e);
+            }
+        } catch (IOException e) {
+            LOG.error("Error", e);
+        }
 
         return codeAssistant.getAllPackages(project, vfs);
     }
 
-    private String makeRequest(String requestUrl) {
-        HttpURLConnection http = null;
-        String response = null;
+    @NotNull
+    private String fromStream(@NotNull InputStream in) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            StringBuilder out = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                out.append(line);
+            }
+            return out.toString();
+        }
+    }
+
+    @NotNull
+    private BuildTaskDescriptor getDependencies(@NotNull String url, @NotNull String projectName, @NotNull String analyzeType) {
+        BuildTaskDescriptor buildStatus = null;
         try {
-            URL url = new URL(requestUrl);
-            http = (HttpURLConnection)url.openConnection();
-            http.setRequestMethod("GET");
-            int responseCode = http.getResponseCode();
-            if (responseCode != 200) {
-                LOG.error("Can't download dependency list from: " + requestUrl);
-            }
-            InputStream data = http.getInputStream();
-            response = readBody(data, http.getContentLength());
-        } catch (MalformedURLException e) {
-            LOG.error("Invalid URL", e);
-        } catch (IOException e) {
+            Pair<String, String> projectParam = Pair.of("project", projectName);
+            Pair<String, String> typeParam = Pair.of("type", analyzeType);
+            buildStatus = HttpJsonHelper.request(BuildTaskDescriptor.class,
+                                                 url + "builder/dependencies",
+                                                 "POST",
+                                                 null,
+                                                 projectParam,
+                                                 typeParam);
+            buildStatus = waitTaskFinish(buildStatus);
+        } catch (RemoteException | IOException e) {
             LOG.error("Error", e);
-        } finally {
-            if (http != null) {
-                http.disconnect();
-            }
         }
-        return response;
+        return buildStatus;
     }
 
-//    private BuildStatus waitBuildTaskFinish(String buildId) throws IOException, BuilderException,
-//                                                                   VirtualFileSystemException, UnsupportedEncodingException,
-//                                                                   MalformedURLException, JsonException {
-//        String status;
-//        BuildStatusBean buildStatus;
-//        final int sleepTime = 2000;
-//        JsonParser parser = new JsonParser();
-//        boolean isDone = false;
-//        do {
-//            try {
-//                Thread.sleep(sleepTime);
-//            } catch (InterruptedException ignored) {
-//            }
-//            status = builderClient.status(buildId);
-//            parser.parse(new ByteArrayInputStream(status.getBytes("UTF-8")));
-//            buildStatus = ObjectBuilder.createObject(BuildStatusBean.class, parser.getJsonObject());
-//            if (Status.IN_PROGRESS != buildStatus.getStatus()) {
-//                isDone = true;
-//            }
-//        }
-//        while (!isDone);
-//        return buildStatus;
-//    }
+    @NotNull
+    private BuildTaskDescriptor waitTaskFinish(@NotNull BuildTaskDescriptor buildDescription) throws IOException, RemoteException {
+        BuildTaskDescriptor request = buildDescription;
+        final int sleepTime = 2000;
 
-//    private BuildStatus waitStorageTaskFinish(String buildId) throws IOException, BuilderException,
-//                                                                     VirtualFileSystemException, UnsupportedEncodingException,
-//                                                                     MalformedURLException, JsonException {
-//        String status;
-//        BuildStatusBean buildStatus;
-//        final int sleepTime = 2000;
-//        JsonParser parser = new JsonParser();
-//        boolean isDone = false;
-//        do {
-//            try {
-//                Thread.sleep(sleepTime);
-//            } catch (InterruptedException ignored) {
-//            }
-//            status = storageClient.status(buildId);
-//            parser.parse(new ByteArrayInputStream(status.getBytes("UTF-8")));
-//            buildStatus = ObjectBuilder.createObject(BuildStatusBean.class, parser.getJsonObject());
-//            if (Status.IN_PROGRESS != buildStatus.getStatus()) {
-//                isDone = true;
-//            }
-//        }
-//        while (!isDone);
-//        return buildStatus;
-//    }
+        Link statusLink = findLink("get status", buildDescription.getLinks());
 
-    private String readBody(InputStream input, int contentLength) throws IOException {
-        String body = null;
-        if (contentLength > 0) {
-            byte[] b = new byte[contentLength];
-            int off = 0;
-            int i;
-            while ((i = input.read(b, off, contentLength - off)) > 0) {
-                off += i;
+        if (statusLink != null) {
+            while (request.getStatus() == BuildStatus.IN_PROGRESS || request.getStatus() == BuildStatus.IN_QUEUE) {
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException ignored) {
+                }
+                request = HttpJsonHelper.request(BuildTaskDescriptor.class, statusLink);
             }
-            body = new String(b);
-        } else if (contentLength < 0) {
-            ByteArrayOutputStream bout = new ByteArrayOutputStream();
-            byte[] buf = new byte[1024];
-            int i;
-            while ((i = input.read(buf)) != -1) {
-                bout.write(buf, 0, i);
-            }
-            body = bout.toString();
         }
-        return body;
+
+        return request;
     }
 
+    @Nullable
+    private Link findLink(@NotNull String rel, List<Link> links) {
+        for (Link link : links) {
+            if (link.getRel().equals(rel)) {
+                return link;
+            }
+        }
+        return null;
+    }
+
+    private void buildFailed(@Nullable BuildTaskDescriptor buildStatus) throws BuilderException {
+        if (buildStatus != null) {
+            Link logLink = findLink("view build log", buildStatus.getLinks());
+            LOG.error("Build failed see more detail here: " + logLink.getHref());
+            throw new BuilderException("Build failed see more detail here: " + logLink.getHref());
+        }
+        throw new BuilderException("Build failed");
+    }
+
+    @Nullable
+    private Property getProperty(@NotNull String name, @NotNull List<Property> properties) {
+        for (Property property : properties) {
+            if (property.getName().equals(name)) {
+                return property;
+            }
+        }
+        return null;
+    }
+
+    @NotNull
+    private BuildStatusBean waitStorageTaskFinish(@NotNull String buildId)
+            throws IOException, BuilderException, VirtualFileSystemException, JsonException {
+        String status;
+        BuildStatusBean buildStatus;
+        final int sleepTime = 2000;
+        JsonParser parser = new JsonParser();
+        boolean isDone = false;
+        do {
+            try {
+                Thread.sleep(sleepTime);
+            } catch (InterruptedException ignored) {
+            }
+            status = storageClient.status(buildId);
+            parser.parse(new ByteArrayInputStream(status.getBytes("UTF-8")));
+            buildStatus = ObjectBuilder.createObject(BuildStatusBean.class, parser.getJsonObject());
+            if (com.codenvy.ide.ext.java.shared.BuildStatus.Status.IN_PROGRESS != buildStatus.getStatus()) {
+                isDone = true;
+            }
+        }
+        while (!isDone);
+
+        return buildStatus;
+    }
 }

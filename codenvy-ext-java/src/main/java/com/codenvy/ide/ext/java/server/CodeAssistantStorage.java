@@ -18,7 +18,8 @@
 package com.codenvy.ide.ext.java.server;
 
 
-
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.ext.java.shared.ShortTypeInfo;
 import com.codenvy.ide.ext.java.shared.TypeInfo;
 
@@ -33,23 +34,23 @@ public interface CodeAssistantStorage {
      * Find all annotations by prefix.
      *
      * @param prefix
-     *         matching first letter of type name if it set to null service
-     *         MUST return all founded annotations
+     *         matching first letter of type name if it set to null service MUST return all founded annotations
      * @return {@link List<ShortTypeInfo>}
      * @throws CodeAssistantException
      */
-    List<ShortTypeInfo> getAnnotations(String prefix, Set<String> dependencys) throws CodeAssistantException;
+    @NotNull
+    List<ShortTypeInfo> getAnnotations(@Nullable String prefix, @NotNull Set<String> dependencies) throws CodeAssistantException;
 
     /**
      * Find all classes by prefix.
      *
      * @param prefix
-     *         matching first letter of type name if it set to null service
-     *         MUST return all founded annotations
+     *         matching first letter of type name if it set to null service MUST return all founded annotations
      * @return {@link List<ShortTypeInfo>}
      * @throws CodeAssistantException
      */
-    List<ShortTypeInfo> getClasses(String prefix, Set<String> dependencys) throws CodeAssistantException;
+    @NotNull
+    List<ShortTypeInfo> getClasses(@Nullable String prefix, @NotNull Set<String> dependencies) throws CodeAssistantException;
 
     /**
      * Find JavaDoc for FQN
@@ -60,18 +61,19 @@ public interface CodeAssistantStorage {
      * @throws CodeAssistantException
      *         if Java doc not found
      */
-    String getClassJavaDoc(String fqn, Set<String> dependencys) throws CodeAssistantException;
+    @NotNull
+    String getClassJavaDoc(@NotNull String fqn, @NotNull Set<String> dependencies) throws CodeAssistantException;
 
     /**
      * Find all interfaces by prefix.
      *
      * @param prefix
-     *         matching first letter of type name if it set to null service
-     *         MUST return all founded annotations
+     *         matching first letter of type name if it set to null service MUST return all founded annotations
      * @return {@link List<ShortTypeInfo>}
      * @throws CodeAssistantException
      */
-    List<ShortTypeInfo> getInterfaces(String prefix, Set<String> dependencys) throws CodeAssistantException;
+    @NotNull
+    List<ShortTypeInfo> getInterfaces(@Nullable String prefix, @NotNull Set<String> dependencies) throws CodeAssistantException;
 
     /**
      * Find JavaDoc for Java Class member FQN
@@ -82,25 +84,24 @@ public interface CodeAssistantStorage {
      * @throws CodeAssistantException
      *         if Java doc not found
      */
-    String getMemberJavaDoc(String fqn, Set<String> dependencys) throws CodeAssistantException;
+    @NotNull
+    String getMemberJavaDoc(@NotNull String fqn, @NotNull Set<String> dependencies) throws CodeAssistantException;
 
     /**
-     * Returns the Class object associated with the class or interface with the
-     * given string Full Qualified Name.
+     * Returns the Class object associated with the class or interface with the given string Full Qualified Name.
      *
      * @param fqn
      *         the Full Qualified Name
      * @return {@link TypeInfo} or null if Class object not found.
      * @throws CodeAssistantException
      */
-    TypeInfo getTypeByFqn(String fqn, Set<String> dependencys) throws CodeAssistantException;
+    @NotNull
+    TypeInfo getTypeByFqn(@NotNull String fqn, @NotNull Set<String> dependencies) throws CodeAssistantException;
 
     /**
-     * sets of {@link ShortTypeInfo} matched to prefix (means FQN begin on
-     * {fqnPrefix} ) Example : if prefix = "java.util.c" set must content: {
-     * java.util.Comparator<T> java.util.Calendar java.util.Collection<E>
-     * java.util.Collections java.util.ConcurrentModificationException
-     * java.util.Currency java.util.concurrent java.util.concurrent.atomic
+     * sets of {@link ShortTypeInfo} matched to prefix (means FQN begin on {fqnPrefix} ) Example : if prefix = "java.util.c" set must
+     * content: {java.util.Comparator<T> java.util.Calendar java.util.Collection<E> java.util.Collections
+     * java.util.ConcurrentModificationException java.util.Currency java.util.concurrent java.util.concurrent.atomic
      * java.util.concurrent.locks }
      *
      * @param fqnPrefix
@@ -108,35 +109,36 @@ public interface CodeAssistantStorage {
      * @return {@link List<ShortTypeInfo>}
      * @throws CodeAssistantException
      */
-    List<ShortTypeInfo> getTypesByFqnPrefix(String fqnPrefix, Set<String> dependencys) throws CodeAssistantException;
+    @NotNull
+    List<ShortTypeInfo> getTypesByFqnPrefix(@NotNull String fqnPrefix, @NotNull Set<String> dependencies) throws CodeAssistantException;
 
     /**
-     * Return sets of {@link ShortTypeInfo} object associated with the class or
-     * interface matched to name. (means Class simple name begin on {namePrefix})
-     * Example: if name == "Node" result can content information about: -
-     * javax.xml.soap.Node - com.google.gwt.xml.client.Node - org.w3c.dom.Node -
-     * org.w3c.dom.traversal.NodeFilter - org.w3c.dom.traversal.NodeIterator
+     * Return sets of {@link ShortTypeInfo} object associated with the class or interface matched to name. (means Class simple name begin
+     * on {namePrefix})
+     * Example: if name == "Node" result can content information about: - javax.xml.soap.Node - com.google.gwt.xml.client.Node -
+     * org.w3c.dom.Node - org.w3c.dom.traversal.NodeFilter - org.w3c.dom.traversal.NodeIterator
      *
      * @param namePrefix
      *         the string for matching FQNs
      * @return {@link List<ShortTypeInfo>}
      * @throws CodeAssistantException
      */
-    List<ShortTypeInfo> getTypesByNamePrefix(String namePrefix, Set<String> dependencys) throws CodeAssistantException;
+    @NotNull
+    List<ShortTypeInfo> getTypesByNamePrefix(@NotNull String namePrefix, @NotNull Set<String> dependencies) throws CodeAssistantException;
 
     /**
-     * Return sets of {@link TypeInfo} object associated with the class or
-     * interface matched to name. (means Class simple name begin on {namePrefix})
-     * Example: if name == "Node" result can content information about: -
-     * javax.xml.soap.Node - com.google.gwt.xml.client.Node - org.w3c.dom.Node -
-     * org.w3c.dom.traversal.NodeFilter - org.w3c.dom.traversal.NodeIterator
+     * Return sets of {@link TypeInfo} object associated with the class or interface matched to name. (means Class simple name begin on
+     * {namePrefix})
+     * Example: if name == "Node" result can content information about: - javax.xml.soap.Node - com.google.gwt.xml.client.Node -
+     * org.w3c.dom.Node - org.w3c.dom.traversal.NodeFilter - org.w3c.dom.traversal.NodeIterator
      *
      * @param namePrefix
      *         the string for matching FQNs
      * @return {@link List<ShortTypeInfo>}
      * @throws CodeAssistantException
      */
-    List<TypeInfo> getTypesInfoByNamePrefix(String namePrefix, Set<String> dependencys) throws CodeAssistantException;
+    @NotNull
+    List<TypeInfo> getTypesInfoByNamePrefix(@NotNull String namePrefix, @NotNull Set<String> dependencies) throws CodeAssistantException;
 
     /**
      * Return sets of Strings, associated with the package names
@@ -146,15 +148,17 @@ public interface CodeAssistantStorage {
      * @return List of strings
      * @throws CodeAssistantException
      */
-    List<String> getPackages(String packagePrefix, Set<String> dependencys) throws CodeAssistantException;
+    @NotNull
+    List<String> getPackages(@NotNull String packagePrefix, @NotNull Set<String> dependencies) throws CodeAssistantException;
 
     /**
      * Return sets of Strings, associated with the package names
      *
-     * @param dependencys
+     * @param dependencies
      *         of the project
      * @return List of strings
      * @throws CodeAssistantException
      */
-    List<String> getAllPackages(Set<String> dependencys) throws CodeAssistantException;
+    @NotNull
+    List<String> getAllPackages(@NotNull Set<String> dependencies) throws CodeAssistantException;
 }

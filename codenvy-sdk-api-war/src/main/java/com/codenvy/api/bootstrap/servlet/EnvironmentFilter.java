@@ -39,7 +39,7 @@ public class EnvironmentFilter implements Filter {
         env.setVariable(EnvironmentContext.GIT_SERVER, "git");
         env.setVariable(EnvironmentContext.TMP_DIR, new File("../temp"));
         final String vfsRootDir = System.getProperty("com.codenvy.vfs.rootdir", "../temp/fs-root");
-        env.setVariable(EnvironmentContext.VFS_ROOT_DIR, vfsRootDir);
+        env.setVariable(EnvironmentContext.VFS_ROOT_DIR, new File(vfsRootDir));
         env.setVariable(EnvironmentContext.VFS_INDEX_DIR, new File("../temp/fs-index-root"));
         Set<MembershipEntry> e = new HashSet<>();
         ConversationState.setCurrent(new ConversationState(new Identity("user", e, new HashSet<>(Arrays.asList("developer")))));

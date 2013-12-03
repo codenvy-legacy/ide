@@ -25,4 +25,18 @@
         <type>com.codenvy.ide.ext.java.server.JavaServiceApplication</type>
     </component>
 
+    <component>
+        <type>com.codenvy.ide.ext.java.server.JavaCodeAssistant</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.ide.ext.java.server.CodeAssistantStorageClient</type>
+        <init-params>
+            <value-param>
+                <name>codeassistant-storage-base-url</name>
+                <value>http://localhost:8080/codeassistant-storage</value>
+            </value-param>
+        </init-params>
+    </component>
+
 </configuration>

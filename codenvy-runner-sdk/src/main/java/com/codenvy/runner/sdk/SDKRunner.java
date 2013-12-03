@@ -17,9 +17,19 @@
  */
 package com.codenvy.runner.sdk;
 
-import com.codenvy.api.core.util.*;
+import com.codenvy.api.core.util.CommandLine;
+import com.codenvy.api.core.util.CustomPortService;
+import com.codenvy.api.core.util.LineConsumer;
+import com.codenvy.api.core.util.ProcessUtil;
+import com.codenvy.api.core.util.SystemInfo;
 import com.codenvy.api.runner.RunnerException;
-import com.codenvy.api.runner.internal.*;
+import com.codenvy.api.runner.internal.ApplicationLogger;
+import com.codenvy.api.runner.internal.ApplicationProcess;
+import com.codenvy.api.runner.internal.DeploymentSources;
+import com.codenvy.api.runner.internal.Disposer;
+import com.codenvy.api.runner.internal.Runner;
+import com.codenvy.api.runner.internal.RunnerConfiguration;
+import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
 import com.codenvy.api.runner.internal.dto.RunRequest;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.commons.lang.NamedThreadFactory;
@@ -30,12 +40,19 @@ import org.apache.maven.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Runner implementation to test Codenvy plug-ins by launching
@@ -100,7 +117,7 @@ public class SDKRunner extends Runner {
         // It always should be SDKRunnerConfiguration.
         final SDKRunnerConfiguration runnerCfg = (SDKRunnerConfiguration)configuration;
 
-        final File appDir;
+        final java.io.File appDir;
         try {
             appDir = Files.createTempDirectory(getDeployDirectory().toPath(), ("app_" + getName() + '_')).toFile();
 
@@ -108,7 +125,7 @@ public class SDKRunner extends Runner {
             ZipUtils.unzip(Utils.getTomcatBinaryDistribution().openStream(), tomcatPath.toFile());
 
             final Path webappsPath = tomcatPath.resolve("webapps");
-            final File warFile = buildCodenvyWebApp(toDeploy.getFile()).toFile();
+            final java.io.File warFile = buildCodenvyWebApp(toDeploy.getFile()).toFile();
             ZipUtils.unzip(warFile, webappsPath.resolve("ide").toFile());
 
             configureApiServices(webappsPath, runnerCfg);
@@ -137,7 +154,7 @@ public class SDKRunner extends Runner {
         return applicationProcess;
     }
 
-    private Path buildCodenvyWebApp(File jarFile) throws RunnerException {
+    private Path buildCodenvyWebApp(java.io.File jarFile) throws RunnerException {
         Path warPath;
         try {
             // prepare Codenvy Platform sources
@@ -211,10 +228,10 @@ public class SDKRunner extends Runner {
         Files.write(setenvShPath, setenvShContent.replace("${PORT}", Integer.toString(runnerCfg.getPort())).getBytes());
     }
 
-    private void generateServerXml(File tomcatDir, SDKRunnerConfiguration runnerConfiguration)
+    private void generateServerXml(java.io.File tomcatDir, SDKRunnerConfiguration runnerConfiguration)
             throws RunnerException {
         String cfg = SERVER_XML.replace("${PORT}", Integer.toString(runnerConfiguration.getPort()));
-        final File serverXmlFile = new File(new File(tomcatDir, "conf"), "server.xml");
+        final java.io.File serverXmlFile = new java.io.File(new java.io.File(tomcatDir, "conf"), "server.xml");
         try {
             Files.write(serverXmlFile.toPath(), cfg.getBytes());
         } catch (IOException e) {
@@ -236,7 +253,7 @@ public class SDKRunner extends Runner {
         if (!logsDir.mkdir()) {
             throw new RunnerException("Unable create logs directory");
         }
-        final List<File> logFiles = new ArrayList<>(2);
+        final List<java.io.File> logFiles = new ArrayList<>(2);
         logFiles.add(new java.io.File(logsDir, "stdout.log"));
         logFiles.add(new java.io.File(logsDir, "stderr.log"));
 
@@ -244,7 +261,7 @@ public class SDKRunner extends Runner {
                                  startUpScriptFile, appDir);
     }
 
-    private File genStartUpScriptUnix(File appDir, SDKRunnerConfiguration runnerConfiguration)
+    private java.io.File genStartUpScriptUnix(java.io.File appDir, SDKRunnerConfiguration runnerConfiguration)
             throws RunnerException {
         final String startupScript = "#!/bin/sh\n" +
                                      exportEnvVariablesUnix(runnerConfiguration) +
@@ -254,7 +271,7 @@ public class SDKRunner extends Runner {
                                      "PID=$!\n" +
                                      "echo \"$PID\" >> ../run.pid\n" +
                                      "wait $PID";
-        final File startUpScriptFile = new File(appDir, "startup.sh");
+        final java.io.File startUpScriptFile = new java.io.File(appDir, "startup.sh");
         try {
             Files.write(startUpScriptFile.toPath(), startupScript.getBytes());
         } catch (IOException e) {
@@ -299,23 +316,22 @@ public class SDKRunner extends Runner {
     // Windows
 
     // TODO: implement
-    protected ApplicationProcess startWindows(java.io.File appDir,
-                                              SDKRunnerConfiguration runnerConfiguration) {
+    protected ApplicationProcess startWindows(java.io.File appDir, SDKRunnerConfiguration runnerConfiguration) {
         throw new UnsupportedOperationException();
     }
 
     private static class TomcatProcess extends ApplicationProcess {
-        final int             httpPort;
-        final List<File>      logFiles;
-        final int             debugPort;
-        final ExecutorService pidTaskExecutor;
-        final File            startUpScriptFile;
-        final File            workDir;
+        final int                httpPort;
+        final List<java.io.File> logFiles;
+        final int                debugPort;
+        final ExecutorService    pidTaskExecutor;
+        final java.io.File       startUpScriptFile;
+        final java.io.File       workDir;
         int pid = -1;
         TomcatLogger logger;
         Process      process;
 
-        TomcatProcess(int httpPort, List<File> logFiles, int debugPort, File startUpScriptFile, File workDir) {
+        TomcatProcess(int httpPort, List<java.io.File> logFiles, int debugPort, java.io.File startUpScriptFile, java.io.File workDir) {
             this.httpPort = httpPort;
             this.logFiles = logFiles;
             this.debugPort = debugPort;
@@ -332,13 +348,12 @@ public class SDKRunner extends Runner {
 
             try {
                 process = Runtime.getRuntime()
-                                 .exec(new CommandLine(startUpScriptFile.getAbsolutePath()).toShellCommand(), null,
-                                       workDir);
+                                 .exec(new CommandLine(startUpScriptFile.getAbsolutePath()).toShellCommand(), null, workDir);
 
                 pid = pidTaskExecutor.submit(new Callable<Integer>() {
                     @Override
                     public Integer call() throws Exception {
-                        final File pidFile = new File(workDir, "run.pid");
+                        final java.io.File pidFile = new java.io.File(workDir, "run.pid");
                         final Path pidPath = pidFile.toPath();
                         synchronized (this) {
                             while (!Files.isReadable(pidPath)) {
@@ -389,7 +404,7 @@ public class SDKRunner extends Runner {
             }
             try {
                 process.waitFor();
-            } catch (InterruptedException e) {
+            } catch (InterruptedException ignored) {
             }
             return process.exitValue();
         }
@@ -418,17 +433,19 @@ public class SDKRunner extends Runner {
 
         private static class TomcatLogger implements ApplicationLogger {
 
-            final List<File> logFiles;
+            final List<java.io.File> logFiles;
 
-            TomcatLogger(List<File> logFiles) {
+            TomcatLogger(List<java.io.File> logFiles) {
                 this.logFiles = logFiles;
             }
 
             @Override
             public void getLogs(Appendable output) throws IOException {
-                for (File logFile : logFiles) {
+                for (java.io.File logFile : logFiles) {
                     output.append(String.format("%n====> %1$s <====%n%n", logFile.getName()));
-                    CharStreams.copy(new InputStreamReader(new FileInputStream(logFile)), output);
+                    try (FileReader r = new FileReader(logFile)) {
+                        CharStreams.copy(r, output);
+                    }
                     output.append(System.lineSeparator());
                 }
             }
