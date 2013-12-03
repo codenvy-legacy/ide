@@ -86,6 +86,16 @@ public class KeyServiceTest {
     }
 
     @Test
+    public void shouldThrowExceptionWhenUploadPrivateKeyWithPassPhrase() throws Exception {
+        Path path = Paths.get(Thread.currentThread().getContextClassLoader().getResource("www_example_com.keywithpassphrase").toURI());
+        given().auth().basic(JettyHttpServer.ADMIN_USER_NAME, JettyHttpServer.ADMIN_USER_PASSWORD)
+                .multiPart(path.toFile())
+                .pathParam("ws-name", "dev-monit")
+                .expect().statusCode(500).body(equalTo("SSH key with passphrase is not supported"))
+                .when().post("/private/{ws-name}/ssh-keys/add");
+    }
+
+    @Test
     public void shouldThrowExceptionFileNotFoundWhenUploadPrivateKey() throws Exception {
         given().auth().basic(JettyHttpServer.ADMIN_USER_NAME, JettyHttpServer.ADMIN_USER_PASSWORD)
                 .multiPart("param", "nonexistvalue")

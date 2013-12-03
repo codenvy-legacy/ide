@@ -88,8 +88,10 @@ public class KeyService {
         if (key == null) {
             throw new SshKeyStoreException("Can't find input file.");
         }
-        if (new String(key).toLowerCase().contains("proc-type: 4,encrypted")) {
-            throw new SshKeyStoreException("SSH key with passphrase not supported");
+        for (String keyContentLine : new String(key).split("\\n")) {
+            if (keyContentLine.matches("(?i)proc-type:\\s*\\d*,\\s*encrypted\\s*")) {
+                throw new SshKeyStoreException("SSH key with passphrase is not supported");
+            }
         }
         keyStore.addPrivateKey(host, key);
 
