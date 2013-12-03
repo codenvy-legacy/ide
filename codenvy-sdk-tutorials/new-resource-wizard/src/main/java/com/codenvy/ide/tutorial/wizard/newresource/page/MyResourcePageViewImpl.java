@@ -18,7 +18,6 @@
 package com.codenvy.ide.tutorial.wizard.newresource.page;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -37,8 +36,6 @@ public class MyResourcePageViewImpl extends Composite implements MyResourcePageV
     interface MyResourcePageViewImplUiBinder extends UiBinder<Widget, MyResourcePageViewImpl> {
     }
 
-    private static MyResourcePageViewImplUiBinder ourUiBinder = GWT.create(MyResourcePageViewImplUiBinder.class);
-
     @UiField
     TextBox password;
     @UiField
@@ -46,7 +43,7 @@ public class MyResourcePageViewImpl extends Composite implements MyResourcePageV
     private ActionDelegate delegate;
 
     @Inject
-    public MyResourcePageViewImpl() {
+    public MyResourcePageViewImpl(MyResourcePageViewImplUiBinder ourUiBinder) {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 

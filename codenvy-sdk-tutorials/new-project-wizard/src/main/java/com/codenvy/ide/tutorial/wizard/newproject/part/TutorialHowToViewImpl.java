@@ -21,14 +21,12 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 /**
  * The implementation of {@link TutorialHowToView}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-@Singleton
 public class TutorialHowToViewImpl extends Composite implements TutorialHowToView {
     interface TutorialHowToViewImplUiBinder extends UiBinder<Widget, TutorialHowToViewImpl> {
     }

@@ -19,12 +19,14 @@ package com.codenvy.ide.tutorial.wizard.newresource.page;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
+import com.google.inject.ImplementedBy;
 
 /**
  * The view of {@link MyResourcePagePresenter}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
+@ImplementedBy(MyResourcePageViewImpl.class)
 public interface MyResourcePageView extends View<MyResourcePageView.ActionDelegate> {
     /** Required for delegating functions in view. */
     public interface ActionDelegate {

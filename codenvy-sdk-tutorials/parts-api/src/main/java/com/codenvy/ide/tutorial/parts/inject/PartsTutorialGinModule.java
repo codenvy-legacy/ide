@@ -18,11 +18,7 @@
 package com.codenvy.ide.tutorial.parts.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.tutorial.parts.howto.TutorialHowToView;
-import com.codenvy.ide.tutorial.parts.howto.TutorialHowToViewImpl;
 import com.codenvy.ide.tutorial.parts.part.MyPartFactory;
-import com.codenvy.ide.tutorial.parts.part.MyPartView;
-import com.codenvy.ide.tutorial.parts.part.MyPartViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 
@@ -36,8 +32,6 @@ public class PartsTutorialGinModule extends AbstractGinModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
-        bind(TutorialHowToView.class).to(TutorialHowToViewImpl.class);
-        bind(MyPartView.class).to(MyPartViewImpl.class);
         install(new GinFactoryModuleBuilder().build(MyPartFactory.class));
     }
 }
