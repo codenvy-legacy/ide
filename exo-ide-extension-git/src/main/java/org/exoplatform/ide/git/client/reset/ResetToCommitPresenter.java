@@ -38,7 +38,6 @@ import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.project.api.TreeRefreshedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
@@ -245,11 +244,6 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
         type = (type == null && display.getKeepMode().getValue()) ? ResetType.KEEP : type;
         type = (type == null && display.getMergeMode().getValue()) ? ResetType.MERGE : type;
 
-        // Needed for onSuccess callback to detect which type of event to throw
-//        final ResetType resetType = type;
-
-//        String projectId = getSelectedProject().getId();
-
         try {
             GitClientService.getInstance().reset(vfs.getId(), getSelectedProject().getId(), revision.getId(), type,
                                                  new AsyncRequestCallback<String>() {
@@ -257,9 +251,7 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
                                                      @Override
                                                      protected void onSuccess(String result) {
                                                          IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetSuccessfully(), Type.GIT));
-//                                                         if (ResetType.HARD.equals(resetType)) {
-                                                             IDE.fireEvent(new RefreshBrowserEvent());
-//                                                         }
+                                                         IDE.fireEvent(new RefreshBrowserEvent());
                                                          IDE.fireEvent(new UpdateOpenedFilesEvent());
                                                          IDE.getInstance().closeView(display.asView().getId());
                                                      }
