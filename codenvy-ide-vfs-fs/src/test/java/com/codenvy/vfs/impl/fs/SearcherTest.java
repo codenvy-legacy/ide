@@ -67,6 +67,7 @@ public class SearcherTest extends LocalFileSystemTest {
 
         String folder1 = createDirectory(searchTestPath, "folder01");
         file3 = createFile(folder1, "SearcherTest_File03", "to be or not to be".getBytes());
+        writeProperties(file3, Collections.singletonMap("vfs:mimeType", new String[]{"text/plain"}));
 
         queryToResult = new Pair[10];
         // text
