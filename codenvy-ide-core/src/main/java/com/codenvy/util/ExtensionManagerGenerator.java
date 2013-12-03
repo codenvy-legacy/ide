@@ -127,7 +127,7 @@ public class ExtensionManagerGenerator {
         builder.append(GeneratorUtils.TAB
                        + "/** Contains the map will all the Extension Providers <FullClassFQN, Provider>. */\n");
         builder.append(GeneratorUtils.TAB
-                       + "protected final JsonStringMap<Provider> extensions = JsonCollections.createStringMap();\n\n");
+                       + "protected final JsonStringMap<Provider> extensions = Collections.createStringMap();\n\n");
 
         // generate constructor
 
@@ -187,8 +187,8 @@ public class ExtensionManagerGenerator {
         builder.append("import com.google.inject.Provider;\n");
         builder.append("import com.google.inject.Singleton;\n");
 
-        builder.append("import com.codenvy.ide.json.JsonStringMap;\n");
-        builder.append("import com.codenvy.ide.json.JsonCollections;\n");
+        builder.append("import JsonStringMap;\n");
+        builder.append("import Collections;\n");
 
         // add all Extensions into the import
         // NO NEED TO GENERATE IMPORT FOR EXTENSION, SINCE FULL FQN USED IN CONSTRUCTOR ARGUMENTS

@@ -18,8 +18,8 @@ import elemental.dom.Node;
 import elemental.events.*;
 import elemental.html.Element;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.google.gwt.user.client.Timer;
 
 
@@ -121,7 +121,7 @@ public class HoverController {
 
     private Timer unhoverTimer;
 
-    private final JsonArray<PartnerHolder> partners = JsonCollections.createArray();
+    private final Array<PartnerHolder> partners = Collections.createArray();
 
     /**
      * Adds a partner element to this controller. See class javadoc for

@@ -19,11 +19,11 @@ package com.codenvy.ide.ext.java.client.editor;
 
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.java.client.core.IProblemRequestor;
 import com.codenvy.ide.ext.java.client.core.compiler.IProblem;
 import com.codenvy.ide.ext.java.client.core.dom.CompilationUnit;
 import com.codenvy.ide.ext.java.client.internal.compiler.env.INameEnvironment;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
@@ -72,7 +72,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, AstProvider,
         file = editor.getEditorInput().getFile();
 //        nameEnvironment =
 //                new NameEnvironment(file.getProject().getId(), "/ide/rest");
-//        TypeInfoStorage.get().setPackages(file.getProject().getId(), JsonCollections.createStringSet());
+//        TypeInfoStorage.get().setPackages(file.getProject().getId(), Collections.createStringSet());
 
     }
 
@@ -126,7 +126,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, AstProvider,
     }
 
     @Override
-    public void onProblems(JsonArray<IProblem> problems) {
+    public void onProblems(Array<IProblem> problems) {
         AnnotationModel annotationModel = editor.getDocumentProvider().getAnnotationModel(editor.getEditorInput());
         if (annotationModel == null)
             return;

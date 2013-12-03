@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.resources.model;
 
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringSet;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.JsonStringSet;
 
 /**
  * Description of the project containing nature set and it's specific properties
@@ -54,7 +54,7 @@ public class ProjectDescription {
      */
     protected JsonStringSet asStringSet(String propertyName) {
         Property property = project.getProperty(propertyName);
-        JsonStringSet natures = JsonCollections.createStringSet();
+        JsonStringSet natures = Collections.createStringSet();
         if (property != null) {
             natures.addAll(property.getValue());
         }

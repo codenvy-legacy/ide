@@ -18,8 +18,8 @@
 package com.codenvy.ide.extension.css.editor;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.JsonStringMap;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
@@ -52,7 +52,7 @@ public class CssEditorConfiguration extends TextEditorConfiguration {
     /** {@inheritDoc} */
     @Override
     public JsonStringMap<CodeAssistProcessor> getContentAssistantProcessors(@NotNull TextEditorPartView view) {
-        JsonStringMap<CodeAssistProcessor> map = JsonCollections.createStringMap();
+        JsonStringMap<CodeAssistProcessor> map = Collections.createStringMap();
         map.put(Document.DEFAULT_CONTENT_TYPE, new CssCodeAssistantProcessor(resources));
         return map;
     }

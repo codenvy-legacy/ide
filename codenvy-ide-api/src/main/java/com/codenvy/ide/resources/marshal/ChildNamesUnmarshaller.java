@@ -17,9 +17,9 @@
  */
 package com.codenvy.ide.resources.marshal;
 
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -31,8 +31,8 @@ import com.google.gwt.json.client.JSONValue;
 /**
  *
  */
-public class ChildNamesUnmarshaller implements Unmarshallable<JsonArray<String>> {
-    private JsonArray<String> items;
+public class ChildNamesUnmarshaller implements Unmarshallable<Array<String>> {
+    private Array<String> items;
 
     /** {@inheritDoc} */
     @Override
@@ -48,7 +48,7 @@ public class ChildNamesUnmarshaller implements Unmarshallable<JsonArray<String>>
 
     /** {@inheritDoc} */
     @Override
-    public JsonArray<String> getPayload() {
+    public Array<String> getPayload() {
         return this.items;
     }
 
@@ -60,7 +60,7 @@ public class ChildNamesUnmarshaller implements Unmarshallable<JsonArray<String>>
      * @return list of children items
      */
     private void parseItems(JSONArray itemsArray) {
-        items = JsonCollections.createArray();
+        items = Collections.createArray();
 
         for (int i = 0; i < itemsArray.size(); i++) {
             // get Json Object

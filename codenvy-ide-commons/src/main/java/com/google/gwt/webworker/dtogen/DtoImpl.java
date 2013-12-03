@@ -1,7 +1,7 @@
 package com.google.gwt.webworker.dtogen;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.JsonStringMap;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.webworker.client.messages.CompactJsonMessage;
@@ -140,12 +140,12 @@ abstract class DtoImpl {
         return DtoTemplate.jreWhitelist.contains(genericType);
     }
 
-    /** Tests whether or not a given return type is a JsonArray. */
+    /** Tests whether or not a given return type is a Array. */
     public static boolean isJsonArray(Class<?> returnType) {
-        return returnType.equals(JsonArray.class);
+        return returnType.equals(Array.class);
     }
 
-    /** Tests whether or not a given return type is a JsonArray. */
+    /** Tests whether or not a given return type is a Array. */
     public static boolean isJsonStringMap(Class<?> returnType) {
         return returnType.equals(JsonStringMap.class);
     }
@@ -154,8 +154,8 @@ abstract class DtoImpl {
      * Expands the type and its first generic parameter (which can also have a
      * first generic parameter (...)).
      * <p/>
-     * For example, JsonArray&lt;JsonStringMap&lt;JsonArray&lt;SomeDto&gt;&gt;&gt;
-     * would produce [JsonArray, JsonStringMap, JsonArray, SomeDto].
+     * For example, Array&lt;JsonStringMap&lt;Array&lt;SomeDto&gt;&gt;&gt;
+     * would produce [Array, JsonStringMap, Array, SomeDto].
      */
     public static List<Type> expandType(Type curType) {
         List<Type> types = new ArrayList<Type>();
@@ -187,7 +187,7 @@ abstract class DtoImpl {
                     Class<?> clazz = (Class<?>)curType;
                     if (isJsonArray(clazz) || isJsonStringMap(clazz)) {
                         throw new DtoTemplate.MalformedDtoInterfaceException(
-                                "JsonArray and JsonStringMap MUST have a generic type specified (and no... ? " + "doesn't cut it!).");
+                                "Array and JsonStringMap MUST have a generic type specified (and no... ? " + "doesn't cut it!).");
                     }
                 }
 

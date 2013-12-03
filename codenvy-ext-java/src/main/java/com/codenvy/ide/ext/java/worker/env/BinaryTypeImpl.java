@@ -24,9 +24,9 @@ import com.codenvy.ide.ext.java.worker.internal.compiler.env.IBinaryField;
 import com.codenvy.ide.ext.java.worker.internal.compiler.env.IBinaryMethod;
 import com.codenvy.ide.ext.java.worker.internal.compiler.env.IBinaryNestedType;
 import com.codenvy.ide.ext.java.worker.internal.compiler.env.IBinaryType;
-import com.codenvy.ide.json.JsonObject;
-import com.codenvy.ide.json.js.Jso;
-import com.codenvy.ide.json.js.JsoArray;
+import com.codenvy.ide.collections.JsonObject;
+import com.codenvy.ide.collections.js.Jso;
+import com.codenvy.ide.collections.js.JsoArray;
 
 import java.util.ArrayList;
 import java.util.List;

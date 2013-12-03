@@ -19,8 +19,8 @@ package com.codenvy.ide.ext.git.client.pull;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.git.shared.Remote;
-import com.codenvy.ide.json.JsonArray;
 
 /**
  * The view of {@link PullPresenter}.
@@ -59,7 +59,7 @@ public interface PullView extends View<PullView.ActionDelegate> {
      * @param repositories
      *         available repositories
      */
-    void setRepositories(@NotNull JsonArray<Remote> repositories);
+    void setRepositories(@NotNull Array<Remote> repositories);
 
     /** @return local branch */
     @NotNull
@@ -71,7 +71,7 @@ public interface PullView extends View<PullView.ActionDelegate> {
      * @param branches
      *         local branches
      */
-    void setLocalBranches(@NotNull JsonArray<String> branches);
+    void setLocalBranches(@NotNull Array<String> branches);
 
     /** @return remote branches */
     @NotNull
@@ -83,7 +83,7 @@ public interface PullView extends View<PullView.ActionDelegate> {
      * @param branches
      *         remote branches
      */
-    void setRemoteBranches(@NotNull JsonArray<String> branches);
+    void setRemoteBranches(@NotNull Array<String> branches);
 
     /**
      * Change the enable state of the push button.

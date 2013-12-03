@@ -14,8 +14,8 @@
 
 package com.codenvy.ide.util;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.runtime.Assert;
 
 /**
@@ -27,7 +27,7 @@ import com.codenvy.ide.runtime.Assert;
 public class AbstractTrie<T> implements PrefixIndex<T> {
 
     // TODO: This member should be static and unmodifiable.
-    private final JsonArray<T> emptyList = JsonCollections.createArray();
+    private final Array<T> emptyList = Collections.createArray();
 
     private TrieNode<T> root;
 
@@ -53,7 +53,7 @@ public class AbstractTrie<T> implements PrefixIndex<T> {
     }
 
     @Override
-    public JsonArray<T> search(String prefix) {
+    public Array<T> search(String prefix) {
         TrieNode<T> searchRoot = findNode(prefix, root);
         return (searchRoot == null) ? emptyList : collectSubtree(searchRoot);
     }
@@ -66,10 +66,10 @@ public class AbstractTrie<T> implements PrefixIndex<T> {
      *         node to start from
      * @return all leaf nodes in the matching subtree
      */
-    public static <T> JsonArray<T> collectSubtree(TrieNode<T> searchRoot) {
-        JsonArray<TrieNode<T>> leaves = JsonCollections.createArray();
+    public static <T> Array<T> collectSubtree(TrieNode<T> searchRoot) {
+        Array<TrieNode<T>> leaves = Collections.createArray();
         getAllLeavesInSubtree(searchRoot, leaves);
-        JsonArray<T> result = JsonCollections.createArray();
+        Array<T> result = Collections.createArray();
         for (int i = 0; i < leaves.size(); i++) {
             result.add(leaves.get(i).getValue());
         }
@@ -85,7 +85,7 @@ public class AbstractTrie<T> implements PrefixIndex<T> {
      * @param leaves
      *         output array
      */
-    private static <T> void getAllLeavesInSubtree(TrieNode<T> root, JsonArray<TrieNode<T>> leaves) {
+    private static <T> void getAllLeavesInSubtree(TrieNode<T> root, Array<TrieNode<T>> leaves) {
         if (root.getIsLeaf()) {
             leaves.add(root);
         }
@@ -107,7 +107,7 @@ public class AbstractTrie<T> implements PrefixIndex<T> {
                 return insertIntoTrie(prefix, branch, value);
             } else {
                 // create new trie nodes
-                JsonArray<TrieNode<T>> suffixChain = makeSuffixChain(node, prefix.substring(nodePrefix.length()), value);
+                Array<TrieNode<T>> suffixChain = makeSuffixChain(node, prefix.substring(nodePrefix.length()), value);
                 return suffixChain.peek();
             }
         }
@@ -124,8 +124,8 @@ public class AbstractTrie<T> implements PrefixIndex<T> {
      *         value of the last node in the chain
      * @return the inserted chain in direct order (from the root to the leaf)
      */
-    JsonArray<TrieNode<T>> makeSuffixChain(TrieNode<T> root, String suffix, T value) {
-        JsonArray<TrieNode<T>> result = JsonCollections.createArray();
+    Array<TrieNode<T>> makeSuffixChain(TrieNode<T> root, String suffix, T value) {
+        Array<TrieNode<T>> result = Collections.createArray();
         String rootPrefix = root.getPrefix();
         for (int i = 1, suffixSize = suffix.length(); i <= suffixSize; i++) {
             String newPrefix = rootPrefix + suffix.substring(0, i);

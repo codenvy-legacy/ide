@@ -21,11 +21,9 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Remote;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -116,7 +114,7 @@ public class FetchViewImpl extends DialogBox implements FetchView {
 
     /** {@inheritDoc} */
     @Override
-    public void setRepositories(@NotNull JsonArray<Remote> repositories) {
+    public void setRepositories(@NotNull Array<Remote> repositories) {
         this.repository.clear();
         for (int i = 0; i < repositories.size(); i++) {
             Remote repository = repositories.get(i);
@@ -134,7 +132,7 @@ public class FetchViewImpl extends DialogBox implements FetchView {
 
     /** {@inheritDoc} */
     @Override
-    public void setLocalBranches(@NotNull JsonArray<String> branches) {
+    public void setLocalBranches(@NotNull Array<String> branches) {
         this.localBranch.clear();
         for (int i = 0; i < branches.size(); i++) {
             String branch = branches.get(i);
@@ -152,7 +150,7 @@ public class FetchViewImpl extends DialogBox implements FetchView {
 
     /** {@inheritDoc} */
     @Override
-    public void setRemoteBranches(@NotNull JsonArray<String> branches) {
+    public void setRemoteBranches(@NotNull Array<String> branches) {
         this.remoteBranch.clear();
         for (int i = 0; i < branches.size(); i++) {
             String branch = branches.get(i);

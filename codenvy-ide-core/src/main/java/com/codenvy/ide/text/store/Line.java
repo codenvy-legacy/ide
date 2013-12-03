@@ -14,8 +14,8 @@
 
 package com.codenvy.ide.text.store;
 
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.JsonStringMap;
 
 
 /*
@@ -57,7 +57,7 @@ public class Line implements TaggableLine {
         this.document = document;
         this.text = text;
 
-        tags = JsonCollections.createStringMap();
+        tags = Collections.createStringMap();
     }
 
     public DocumentModel getDocument() {
@@ -128,7 +128,7 @@ public class Line implements TaggableLine {
      * interface
      */
     public void clearTags() {
-        tags = JsonCollections.createStringMap();
+        tags = Collections.createStringMap();
     }
 
     @Override

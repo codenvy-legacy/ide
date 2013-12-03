@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.websocket;
 
-import com.codenvy.ide.json.js.Jso;
-import com.codenvy.ide.json.js.JsoArray;
+import com.codenvy.ide.collections.js.Jso;
+import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.websocket.rest.Pair;
 
 /**

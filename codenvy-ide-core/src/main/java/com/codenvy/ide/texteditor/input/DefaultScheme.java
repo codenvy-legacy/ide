@@ -14,8 +14,8 @@
 
 package com.codenvy.ide.texteditor.input;
 
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonIntegerMap;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.IntegerMap;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
 import com.codenvy.ide.texteditor.selection.SelectionModel.MoveAction;
@@ -53,7 +53,7 @@ public class DefaultScheme extends InputScheme {
 
     private static final boolean ENABLE_ANIMATION_CONTROL_KEYS = false;
 
-    static final JsonIntegerMap<MoveAction> MOVEMENT_KEYS_MAPPING = JsonCollections.createIntegerMap();
+    static final IntegerMap<MoveAction> MOVEMENT_KEYS_MAPPING = Collections.createIntegerMap();
 
     InputMode defaultMode;
 

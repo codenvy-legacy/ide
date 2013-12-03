@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.json.js;
+package com.codenvy.ide.collections.js;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonObject;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.JsonObject;
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
@@ -67,7 +67,7 @@ public class Jso extends JavaScriptObject implements JsonObject {
     }-*/;
 
     @Override
-    public final JsonObject addField(String key, JsonArray<?> value) {
+    public final JsonObject addField(String key, Array<?> value) {
         // Delegate to the JS impl
         return addField(key, (Object)value);
     }

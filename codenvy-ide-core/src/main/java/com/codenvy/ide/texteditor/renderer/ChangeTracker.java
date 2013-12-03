@@ -14,8 +14,8 @@
 
 package com.codenvy.ide.texteditor.renderer;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.text.store.*;
 import com.codenvy.ide.text.store.util.LineUtils;
 import com.codenvy.ide.text.store.util.LineUtils.LineVisitor;
@@ -91,7 +91,7 @@ class ChangeTracker implements DocumentModel.TextListener, ViewportModel.Listene
     private boolean hadContentChangeThatRepositionsFollowingLines;
 
     /** List of lines that need to be re-rendered */
-    private final JsonArray<Line> dirtyLines;
+    private final Array<Line> dirtyLines;
 
     private final LineUtils.LineVisitor dirtyMarkingLineVisitor = new LineVisitor() {
         @Override
@@ -103,7 +103,7 @@ class ChangeTracker implements DocumentModel.TextListener, ViewportModel.Listene
 
     private final Buffer buffer;
 
-    private final JsonArray<Remover> listenerRemovers;
+    private final Array<Remover> listenerRemovers;
 
     /** Command that is scheduled-finally from any callback */
     private final RenderCommand renderCommand = new RenderCommand();
@@ -118,7 +118,7 @@ class ChangeTracker implements DocumentModel.TextListener, ViewportModel.Listene
      * List of lines that were removed. These were in the viewport at time of
      * removal (and hence were most likely rendered)
      */
-    private final JsonArray<Line> viewportRemovedLines;
+    private final Array<Line> viewportRemovedLines;
 
     /**
      * The line number of the topmost line that was added or removed, or
@@ -133,10 +133,10 @@ class ChangeTracker implements DocumentModel.TextListener, ViewportModel.Listene
         this.buffer = buffer;
         this.renderer = renderer;
         this.selection = selection;
-        this.listenerRemovers = JsonCollections.createArray();
+        this.listenerRemovers = Collections.createArray();
         this.changes = EnumSet.noneOf(ChangeType.class);
-        this.viewportRemovedLines = JsonCollections.createArray();
-        this.dirtyLines = JsonCollections.createArray();
+        this.viewportRemovedLines = Collections.createArray();
+        this.dirtyLines = Collections.createArray();
         this.viewport = viewport;
 
         attach(buffer, document, viewport, selection, focusManager);
@@ -148,11 +148,11 @@ class ChangeTracker implements DocumentModel.TextListener, ViewportModel.Listene
         return changes;
     }
 
-    public JsonArray<Line> getDirtyLines() {
+    public Array<Line> getDirtyLines() {
         return dirtyLines;
     }
 
-    public JsonArray<Line> getViewportRemovedLines() {
+    public Array<Line> getViewportRemovedLines() {
         return viewportRemovedLines;
     }
 
@@ -182,7 +182,7 @@ class ChangeTracker implements DocumentModel.TextListener, ViewportModel.Listene
        */
         Position[] viewportRange = getViewportRange();
         if (oldSelectionRange != null && newSelectionRange != null) {
-            JsonArray<Position[]> differenceRanges = PositionUtils.getDifference(oldSelectionRange, newSelectionRange);
+            Array<Position[]> differenceRanges = PositionUtils.getDifference(oldSelectionRange, newSelectionRange);
             for (int i = 0, n = differenceRanges.size(); i < n; i++) {
                 markVisibleLinesDirty(differenceRanges.get(i), viewportRange);
             }
@@ -213,7 +213,7 @@ class ChangeTracker implements DocumentModel.TextListener, ViewportModel.Listene
     }
 
     @Override
-    public void onTextChange(DocumentModel document, JsonArray<TextChange> textChanges) {
+    public void onTextChange(DocumentModel document, Array<TextChange> textChanges) {
 
         for (int i = 0, n = textChanges.size(); i < n; i++) {
          /*
@@ -238,7 +238,7 @@ class ChangeTracker implements DocumentModel.TextListener, ViewportModel.Listene
     }
 
     @Override
-    public void onViewportContentChanged(ViewportModel viewport, int lineNumber, boolean added, JsonArray<Line> lines) {
+    public void onViewportContentChanged(ViewportModel viewport, int lineNumber, boolean added, Array<Line> lines) {
         int relevantContentChangedLineNumber;
         if (!added && viewport.getTopLineNumber() == lineNumber - 1) {
             // TODO: rework this case is handled naturally

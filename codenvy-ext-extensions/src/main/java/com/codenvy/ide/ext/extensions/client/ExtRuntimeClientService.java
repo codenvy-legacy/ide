@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.extensions.client;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
@@ -44,7 +44,7 @@ public interface ExtRuntimeClientService {
      * @throws RequestException
      */
     void createEmptyCodenvyExtensionProject(String projectName,
-                                            JsonArray<Property> properties,
+                                            Array<Property> properties,
                                             AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
@@ -65,7 +65,7 @@ public interface ExtRuntimeClientService {
      * @throws RequestException
      */
     void createSampleCodenvyExtensionProject(String projectName,
-                                             JsonArray<Property> properties,
+                                             Array<Property> properties,
                                              String groupId,
                                              String artifactId,
                                              String version,

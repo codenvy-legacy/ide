@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.resources.model;
 
-import com.codenvy.ide.json.JsonStringSet;
+import com.codenvy.ide.collections.JsonStringSet;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 

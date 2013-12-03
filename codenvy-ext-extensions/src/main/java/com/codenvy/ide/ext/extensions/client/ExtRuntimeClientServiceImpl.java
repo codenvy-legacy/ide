@@ -19,7 +19,7 @@ package com.codenvy.ide.ext.extensions.client;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -80,7 +80,7 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
     /** {@inheritDoc} */
     @Override
     public void createEmptyCodenvyExtensionProject(String projectName,
-                                                   JsonArray<Property> properties,
+                                                   Array<Property> properties,
                                                    AsyncRequestCallback<Void> callback) throws RequestException {
         final String requestUrl = restContext + BASE_URL + CREATE_EMPTY;
         final String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootid=" +
@@ -94,7 +94,7 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
     /** {@inheritDoc} */
     @Override
     public void createSampleCodenvyExtensionProject(String projectName,
-                                                    JsonArray<Property> properties,
+                                                    Array<Property> properties,
                                                     String groupId,
                                                     String artifactId,
                                                     String version,

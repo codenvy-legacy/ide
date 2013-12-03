@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.text.annotation;
 
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.JsonStringMap;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Position;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;

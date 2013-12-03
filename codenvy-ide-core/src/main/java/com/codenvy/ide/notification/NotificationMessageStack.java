@@ -20,8 +20,8 @@ package com.codenvy.ide.notification;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -59,7 +59,7 @@ public class NotificationMessageStack implements NotificationMessage.ActionDeleg
     private Resources                              resources;
     private ActionDelegate                         delegate;
     private Map<Notification, NotificationMessage> notificationMessage;
-    private JsonArray<NotificationMessage>         messages;
+    private Array<NotificationMessage>             messages;
 
     /**
      * Create message stack.
@@ -70,7 +70,7 @@ public class NotificationMessageStack implements NotificationMessage.ActionDeleg
     public NotificationMessageStack(Resources resources) {
         this.resources = resources;
         this.notificationMessage = new HashMap<Notification, NotificationMessage>();
-        this.messages = JsonCollections.createArray();
+        this.messages = Collections.createArray();
     }
 
     /** Sets the delegate for receiving events from this view. */

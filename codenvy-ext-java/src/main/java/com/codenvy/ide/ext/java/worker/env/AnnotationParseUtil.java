@@ -30,8 +30,8 @@ import com.codenvy.ide.ext.java.worker.internal.compiler.impl.IntConstant;
 import com.codenvy.ide.ext.java.worker.internal.compiler.impl.LongConstant;
 import com.codenvy.ide.ext.java.worker.internal.compiler.impl.ShortConstant;
 import com.codenvy.ide.ext.java.worker.internal.compiler.impl.StringConstant;
-import com.codenvy.ide.json.js.Jso;
-import com.codenvy.ide.json.js.JsoArray;
+import com.codenvy.ide.collections.js.Jso;
+import com.codenvy.ide.collections.js.JsoArray;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

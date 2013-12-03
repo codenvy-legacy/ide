@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.json.java;
+package com.codenvy.ide.collections.java;
 
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonStringSet;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.JsonStringSet;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -38,7 +38,7 @@ public class JsonStringSetAdapter implements JsonStringSet {
     }
 
     @Override
-    public JsonArray<String> getKeys() {
+    public Array<String> getKeys() {
         return new JsonArrayListAdapter<String>(new ArrayList<String>(delegate));
     }
 
@@ -60,7 +60,7 @@ public class JsonStringSetAdapter implements JsonStringSet {
     }
 
     @Override
-    public void addAll(JsonArray<String> keys) {
+    public void addAll(Array<String> keys) {
         for (int i = 0, n = keys.size(); i < n; i++) {
             add(keys.get(i));
         }

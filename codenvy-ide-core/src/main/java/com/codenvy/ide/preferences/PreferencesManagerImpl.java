@@ -18,10 +18,10 @@
 package com.codenvy.ide.preferences;
 
 import com.codenvy.ide.api.preferences.PreferencesManager;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.DtoClientImpls;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.json.js.JsoStringMap;
+import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.js.JsoStringMap;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.util.loging.Log;
@@ -50,7 +50,7 @@ public class PreferencesManagerImpl implements PreferencesManager {
      */
     @Inject
     protected PreferencesManagerImpl(UserClientService userService) {
-        this.persistedPreferences = JsonCollections.createStringMap();
+        this.persistedPreferences = Collections.createStringMap();
         this.changedPreferences = JsoStringMap.create();
         this.userService = userService;
     }

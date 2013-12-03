@@ -14,7 +14,7 @@
 
 package com.codenvy.ide.extension.css.editor;
 
-import com.codenvy.ide.json.js.JsoArray;
+import com.codenvy.ide.collections.js.JsoArray;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.regexp.shared.SplitResult;

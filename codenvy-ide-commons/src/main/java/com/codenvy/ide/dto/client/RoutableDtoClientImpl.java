@@ -15,8 +15,7 @@
 package com.codenvy.ide.dto.client;
 
 import com.codenvy.ide.dto.shared.RoutableDto;
-import com.codenvy.ide.dto.shared.RoutableDto;
-import com.codenvy.ide.json.js.Jso;
+import com.codenvy.ide.collections.js.Jso;
 
 /** Client side base class for all DTO payload implementations. */
 public abstract class RoutableDtoClientImpl extends Jso implements RoutableDto {

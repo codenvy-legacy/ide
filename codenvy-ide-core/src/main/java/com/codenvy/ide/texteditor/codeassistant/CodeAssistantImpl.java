@@ -17,9 +17,9 @@
  */
 package com.codenvy.ide.texteditor.codeassistant;
 
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.json.JsonStringMap.IterationCallback;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.JsonStringMap.IterationCallback;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
@@ -115,7 +115,7 @@ public class CodeAssistantImpl implements CodeAssistant {
      *
      */
     public CodeAssistantImpl() {
-        processors = JsonCollections.createStringMap();
+        processors = Collections.createStringMap();
         partitioning = Document.DEFAULT_PARTITIONING;
         res.defaultSimpleListCss().ensureInjected();
         res.autocompleteComponentCss().ensureInjected();

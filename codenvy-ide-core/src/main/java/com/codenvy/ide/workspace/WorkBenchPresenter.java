@@ -20,8 +20,8 @@ package com.codenvy.ide.workspace;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.parts.*;
 import com.codenvy.ide.api.ui.workspace.*;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.JsonStringMap;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -39,7 +39,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class WorkBenchPresenter implements Presenter {
 
-    protected final JsonStringMap<PartStack> partStacks = JsonCollections.createStringMap();
+    protected final JsonStringMap<PartStack> partStacks = Collections.createStringMap();
     private WorkBenchViewImpl view;
 
     /**

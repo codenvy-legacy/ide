@@ -19,7 +19,7 @@ package com.codenvy.ide.ext.java.client.projecttemplate.ant;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -34,7 +34,7 @@ import static com.codenvy.ide.ext.java.client.JavaExtension.JAVA_APPLICATION_PRO
 import static com.codenvy.ide.ext.java.client.JavaExtension.ANT_JAR_PROJECT_ID;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS;
-import static com.codenvy.ide.json.JsonCollections.createArray;
+import static com.codenvy.ide.collections.Collections.createArray;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
@@ -65,7 +65,7 @@ public class CreateAntJavaProjectPage extends AbstractTemplatePage {
     /** {@inheritDoc} */
     @Override
     public void commit(final CommitCallback callback) {
-        JsonArray<Property> properties =
+        Array<Property> properties =
                 createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
                             new Property(PROPERTY_MIXIN_NATURES, createArray(JAVA_APPLICATION_PROJECT_TYPE)),
                             new Property(PROPERTY_SOURCE_FOLDERS, createArray("src")));

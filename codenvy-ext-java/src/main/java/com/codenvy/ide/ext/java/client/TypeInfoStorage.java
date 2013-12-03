@@ -23,7 +23,7 @@ import com.codenvy.ide.ext.java.client.core.IType;
 import com.codenvy.ide.ext.java.client.core.Signature;
 import com.codenvy.ide.ext.java.client.env.TypeImpl;
 
-import com.codenvy.ide.json.JsonStringSet;
+import com.codenvy.ide.collections.JsonStringSet;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;

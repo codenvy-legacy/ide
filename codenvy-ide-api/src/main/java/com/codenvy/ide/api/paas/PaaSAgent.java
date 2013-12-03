@@ -21,8 +21,8 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.extension.SDK;
 import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.JsonStringMap;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Provider;
 
@@ -52,7 +52,7 @@ public interface PaaSAgent {
     void register(@NotNull String id,
                   @NotNull String title,
                   @Nullable ImageResource image,
-                  @NotNull JsonStringMap<JsonArray<String>> natures,
-                  @NotNull JsonArray<Provider<? extends AbstractPaasPage>> wizardPages,
+                  @NotNull JsonStringMap<Array<String>> natures,
+                  @NotNull Array<Provider<? extends AbstractPaasPage>> wizardPages,
                   boolean provideTemplate);
 }

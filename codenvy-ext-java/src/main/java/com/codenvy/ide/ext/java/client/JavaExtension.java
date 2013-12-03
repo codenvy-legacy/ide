@@ -24,6 +24,7 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.java.client.codeassistant.ContentAssistHistory;
 import com.codenvy.ide.ext.java.client.core.JavaCore;
 import com.codenvy.ide.ext.java.client.editor.JavaEditorProvider;
@@ -38,7 +39,6 @@ import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenSpringPr
 import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenWarProjectPage;
 import com.codenvy.ide.ext.java.client.templates.*;
 import com.codenvy.ide.ext.java.client.wizard.*;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.codenvy.ide.rest.MimeType;
 import com.google.gwt.core.client.GWT;
@@ -49,7 +49,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import java.util.HashMap;
 
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
-import static com.codenvy.ide.json.JsonCollections.createArray;
+import static com.codenvy.ide.collections.Collections.createArray;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -141,32 +141,32 @@ public class JavaExtension {
                                null,
                                PRIMARY_NATURE,
                                createArray(JAVA_WEB_APPLICATION_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenWarProjectPage));
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenWarProjectPage));
         templateAgent.register(JAR_PROJECT_ID,
                                "Java project",
                                JavaClientBundle.INSTANCE.javaProject(),
                                PRIMARY_NATURE,
                                createArray(JAVA_APPLICATION_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenJavaProjectPage));
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenJavaProjectPage));
         templateAgent.register(SPRING_PROJECT_ID,
                                "Spring project",
                                JavaClientBundle.INSTANCE.javaProject(),
                                PRIMARY_NATURE,
                                createArray(SPRING_APPLICATION_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenSpringProjectPage));
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenSpringProjectPage));
 
         templateAgent.register(ANT_JAR_PROJECT_ID,
                                "Ant Java project",
                                JavaClientBundle.INSTANCE.javaProject(),
                                PRIMARY_NATURE,
                                createArray(JAVA_APPLICATION_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createAntJavaProjectPage));
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createAntJavaProjectPage));
         templateAgent.register(ANT_SPRING_PROJECT_ID,
                                "Ant Spring project",
                                JavaClientBundle.INSTANCE.javaProject(),
                                PRIMARY_NATURE,
                                createArray(SPRING_APPLICATION_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createAntSpringProjectPage));
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createAntSpringProjectPage));
 
 
 

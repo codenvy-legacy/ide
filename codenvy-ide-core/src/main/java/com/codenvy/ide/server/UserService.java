@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.server;
 
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.JsonStringMap;
 import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
 import com.codenvy.organization.model.Profile;

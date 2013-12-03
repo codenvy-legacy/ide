@@ -18,12 +18,12 @@
 package com.codenvy.ide.ext.github.client;
 
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.github.shared.Collaborators;
 import com.codenvy.ide.ext.github.shared.GitHubRepository;
 import com.codenvy.ide.ext.github.shared.GitHubRepositoryList;
 import com.codenvy.ide.ext.github.shared.GitHubUser;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.JsonStringMap;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.ui.loader.Loader;
@@ -93,7 +93,7 @@ public class GitHubClientServiceImpl implements GitHubClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void getAllRepositories(AsyncRequestCallback<JsonStringMap<JsonArray<GitHubRepository>>> callback)
+    public void getAllRepositories(AsyncRequestCallback<JsonStringMap<Array<GitHubRepository>>> callback)
                                                                                                       throws RequestException {
         String url = restServiceContext + LIST_ALL;
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);

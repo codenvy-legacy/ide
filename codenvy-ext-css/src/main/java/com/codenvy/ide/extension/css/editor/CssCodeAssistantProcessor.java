@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.extension.css.editor;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.js.JsoArray;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Position;
@@ -182,7 +182,7 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor {
         InvocationContext context = new InvocationContext(triggeringString, offset, resources, view);
         switch (completionQuery.getCompletionType()) {
             case PROPERTY:
-                JsonArray<CssCompletionProposal> autocompletions = CssTrie.findAndFilterAutocompletions(cssTrie,
+                Array<CssCompletionProposal> autocompletions = CssTrie.findAndFilterAutocompletions(cssTrie,
                                                                                                         triggeringString, completionQuery
                         .getCompletedProperties());
                 return jsToArray(autocompletions, context);
@@ -203,7 +203,7 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor {
         }
     }
 
-    private CssCompletionProposal[] jsToArray(JsonArray<CssCompletionProposal> autocompletions,
+    private CssCompletionProposal[] jsToArray(Array<CssCompletionProposal> autocompletions,
                                               InvocationContext context) {
         if (autocompletions == null) {
             return null;

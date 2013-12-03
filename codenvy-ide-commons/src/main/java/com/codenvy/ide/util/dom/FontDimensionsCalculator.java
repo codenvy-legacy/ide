@@ -17,8 +17,8 @@ package com.codenvy.ide.util.dom;
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.CssUtils;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -149,7 +149,7 @@ public class FontDimensionsCalculator {
 
     private int pollingDelay = 500;
 
-    private JsonArray<Callback> callbacks = JsonCollections.createArray();
+    private Array<Callback> callbacks = Collections.createArray();
 
     private final FontDimensionsImpl fontDimensions;
 

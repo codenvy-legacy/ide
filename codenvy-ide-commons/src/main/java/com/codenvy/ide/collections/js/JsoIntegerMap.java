@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.json.js;
+package com.codenvy.ide.collections.js;
 
-import com.codenvy.ide.json.JsonIntegerMap;
+import com.codenvy.ide.collections.IntegerMap;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayNumber;
 
@@ -25,7 +25,7 @@ import com.google.gwt.core.client.JsArrayNumber;
  * @param <T>
  *         the type contained as value in the map
  */
-public class JsoIntegerMap<T> extends JavaScriptObject implements JsonIntegerMap<T> {
+public class JsoIntegerMap<T> extends JavaScriptObject implements IntegerMap<T> {
 
     /**
      * Create a new empty map.
@@ -112,11 +112,11 @@ public class JsoIntegerMap<T> extends JavaScriptObject implements JsonIntegerMap
     }-*/;
 
     @Override
-    public final native void iterate(JsonIntegerMap.IterationCallback<T> cb) /*-{
+    public final native void iterate(IntegerMap.IterationCallback<T> cb) /*-{
         for (var key in this) {
             if (this.hasOwnProperty(key)) {
                 cb.
-                    @com.codenvy.ide.json.JsonIntegerMap.IterationCallback::onIteration(ILjava/lang/Object;)
+                    @com.codenvy.ide.collections.IntegerMap.IterationCallback::onIteration(ILjava/lang/Object;)
                     (parseInt(key), this[key]);
             }
         }

@@ -19,10 +19,10 @@ package com.codenvy.ide.ext.java.client.projectmodel;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.java.client.core.JavaConventions;
 import com.codenvy.ide.ext.java.client.core.JavaCore;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.model.*;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -416,8 +416,8 @@ public class JavaProject extends Project {
      *
      * @return the array of source folders
      */
-    public JsonArray<SourceFolder> getSourceFolders() {
-        JsonArray<SourceFolder> sourceFolders = JsonCollections.createArray();
+    public Array<SourceFolder> getSourceFolders() {
+        Array<SourceFolder> sourceFolders = Collections.createArray();
         for (Resource r : getChildren().asIterable()) {
             if (r instanceof SourceFolder) {
                 sourceFolders.add((SourceFolder)r);

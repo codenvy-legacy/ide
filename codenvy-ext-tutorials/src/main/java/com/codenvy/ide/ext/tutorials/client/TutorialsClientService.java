@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.tutorials.client;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
@@ -42,7 +42,7 @@ public interface TutorialsClientService {
      *         callback
      * @throws RequestException
      */
-    void createDTOTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
+    void createDTOTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
                                   @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
@@ -56,7 +56,7 @@ public interface TutorialsClientService {
      *         callback
      * @throws RequestException
      */
-    void createNotificationTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
+    void createNotificationTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
                                            @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
@@ -70,7 +70,7 @@ public interface TutorialsClientService {
      *         callback
      * @throws RequestException
      */
-    void createActionTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
+    void createActionTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
                                      @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
@@ -84,7 +84,7 @@ public interface TutorialsClientService {
      *         callback
      * @throws RequestException
      */
-    void createWizardTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
+    void createWizardTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
                                      @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
@@ -98,7 +98,7 @@ public interface TutorialsClientService {
      *         callback
      * @throws RequestException
      */
-    void createNewProjectWizardTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
+    void createNewProjectWizardTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
                                                @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
@@ -112,7 +112,7 @@ public interface TutorialsClientService {
      *         callback
      * @throws RequestException
      */
-    void createNewResourceWizardTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
+    void createNewResourceWizardTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
                                                 @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
@@ -126,7 +126,7 @@ public interface TutorialsClientService {
      *         callback
      * @throws RequestException
      */
-    void createPartsTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
+    void createPartsTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
                                     @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
@@ -140,7 +140,7 @@ public interface TutorialsClientService {
      *         callback
      * @throws RequestException
      */
-    void createEditorTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
+    void createEditorTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
                                      @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
@@ -154,6 +154,6 @@ public interface TutorialsClientService {
      *         callback
      * @throws RequestException
      */
-    void createGinTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
+    void createGinTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
                                   @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 }

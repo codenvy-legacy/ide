@@ -22,7 +22,7 @@ import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.JsonStringMap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 

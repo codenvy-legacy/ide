@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.resources.model;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 
 /**
  * Representation of Access Control Entry used to interaction with client via JSON.
@@ -31,7 +31,7 @@ public class AccessControlEntry {
     private String principal;
 
     /** Permissions. */
-    private JsonArray<String> permissions;
+    private Array<String> permissions;
 
     /** Empty AccessControlEntry instance. Both principal and permissions are not set. */
     public AccessControlEntry() {
@@ -45,15 +45,15 @@ public class AccessControlEntry {
      * @param permissions
      *         permissions
      */
-    public AccessControlEntry(String principal, JsonArray<String> permissions) {
+    public AccessControlEntry(String principal, Array<String> permissions) {
         this.principal = principal;
         this.permissions = permissions;
     }
 
     /** @return principal's permissions */
-    public JsonArray<String> getPermissions() {
+    public Array<String> getPermissions() {
         if (permissions == null) {
-            permissions = JsonCollections.<String>createArray();
+            permissions = Collections.<String>createArray();
         }
         return permissions;
     }
@@ -62,7 +62,7 @@ public class AccessControlEntry {
      * @param permissions
      *         new set of permissions
      */
-    public void setPermissions(JsonArray<String> permissions) {
+    public void setPermissions(Array<String> permissions) {
         this.permissions = permissions;
     }
 

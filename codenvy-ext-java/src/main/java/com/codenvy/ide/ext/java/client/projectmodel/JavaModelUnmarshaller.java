@@ -17,12 +17,12 @@
  */
 package com.codenvy.ide.ext.java.client.projectmodel;
 
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.java.client.core.JavaConventions;
 import com.codenvy.ide.ext.java.client.core.JavaCore;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringSet;
-import com.codenvy.ide.json.JsonStringSet.IterationCallback;
+import com.codenvy.ide.collections.JsonStringSet;
+import com.codenvy.ide.collections.JsonStringSet.IterationCallback;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
@@ -62,7 +62,7 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
         this.root.getChildren().clear();
         this.project = project;
 
-        sourceFolders = JsonCollections.createStringSet();
+        sourceFolders = Collections.createStringSet();
         projectPath = project.getPath();
         project.getDescription().getSourceFolders().iterate(new IterationCallback() {
             @Override

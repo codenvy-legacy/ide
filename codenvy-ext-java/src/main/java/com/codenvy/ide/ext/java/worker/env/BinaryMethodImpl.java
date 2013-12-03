@@ -22,8 +22,8 @@ import com.codenvy.ide.ext.java.worker.internal.compiler.ClassFileConstants;
 import com.codenvy.ide.ext.java.worker.internal.compiler.codegen.ConstantPool;
 import com.codenvy.ide.ext.java.worker.internal.compiler.env.IBinaryAnnotation;
 import com.codenvy.ide.ext.java.worker.internal.compiler.env.IBinaryMethod;
-import com.codenvy.ide.json.js.Jso;
-import com.codenvy.ide.json.js.JsoArray;
+import com.codenvy.ide.collections.js.Jso;
+import com.codenvy.ide.collections.js.JsoArray;
 
 
 /**

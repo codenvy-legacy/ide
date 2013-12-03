@@ -20,6 +20,7 @@ package com.codenvy.ide.ext.java.client.editor;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.editor.EditorInput;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.core.editor.ResourceDocumentProvider;
 import com.codenvy.ide.ext.java.client.JavaClientBundle;
 import com.codenvy.ide.ext.java.client.JavaCss;
@@ -30,8 +31,7 @@ import com.codenvy.ide.ext.java.client.core.compiler.IProblem;
 import com.codenvy.ide.ext.java.client.core.dom.CompilationUnit;
 import com.codenvy.ide.ext.java.client.internal.text.correction.JavaCorrectionProcessor;
 import com.codenvy.ide.ext.java.client.internal.ui.text.FastJavaPartitionScanner;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.JsonStringMap;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentFactory;
@@ -394,7 +394,7 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
         /** {@inheritDoc} */
         @Override
         public JsonStringMap<String> getAnnotationDecorations() {
-            JsonStringMap<String> decorations = JsonCollections.createStringMap();
+            JsonStringMap<String> decorations = Collections.createStringMap();
             //TODO configure this
             decorations.put("org.eclipse.jdt.ui.error", css.lineError());
             decorations.put("org.eclipse.jdt.ui.warning", css.lineWarning());
@@ -405,7 +405,7 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
         /** {@inheritDoc} */
         @Override
         public JsonStringMap<String> getAnnotationStyle() {
-            JsonStringMap<String> decorations = JsonCollections.createStringMap();
+            JsonStringMap<String> decorations = Collections.createStringMap();
 //            //TODO configure this
             decorations.put("org.eclipse.jdt.ui.error", javaCss.overviewMarkError());
             decorations.put("org.eclipse.jdt.ui.warning", javaCss.overviewMarkWarning());

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.json;
+package com.codenvy.ide.collections;
 
 /** String Set interface. */
 public interface JsonStringSet {
@@ -24,7 +24,7 @@ public interface JsonStringSet {
 
     boolean contains(String key);
 
-    JsonArray<String> getKeys();
+    Array<String> getKeys();
 
     boolean isEmpty();
 
@@ -32,7 +32,7 @@ public interface JsonStringSet {
 
     void add(String key);
 
-    void addAll(JsonArray<String> keys);
+    void addAll(Array<String> keys);
 
     /**
      * Removes the item with the given key.

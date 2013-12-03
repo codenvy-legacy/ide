@@ -18,10 +18,10 @@
 package com.codenvy.ide.ext.git.client.remote;
 
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Remote;
-import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -121,8 +121,8 @@ public class RemoteViewImpl extends DialogBox implements RemoteView {
 
     /** {@inheritDoc} */
     @Override
-    public void setRemotes(@NotNull JsonArray<Remote> remotes) {
-        // Wraps JsonArray in java.util.List
+    public void setRemotes(@NotNull Array<Remote> remotes) {
+        // Wraps Array in java.util.List
         List<Remote> list = new ArrayList<Remote>();
         for (int i = 0; i < remotes.size(); i++) {
             list.add(remotes.get(i));

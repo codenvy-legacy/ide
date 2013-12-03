@@ -16,9 +16,9 @@
 
 package com.codenvy.ide.util.input;
 
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.json.JsonStringMap.IterationCallback;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.JsonStringMap.IterationCallback;
 import com.codenvy.ide.util.input.SignalEvent.KeySignalType;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Event;
@@ -48,7 +48,7 @@ public final class SignalKeyLogic {
     //TODO(danilatos): Use int map
     private static final Set<Integer> NAVIGATION_KEYS = new HashSet<Integer>();
 
-    private static final JsonStringMap<Integer> NAVIGATION_KEY_IDENTIFIERS = JsonCollections.createStringMap();
+    private static final JsonStringMap<Integer> NAVIGATION_KEY_IDENTIFIERS = Collections.createStringMap();
 
     static {
 

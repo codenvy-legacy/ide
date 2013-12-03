@@ -17,20 +17,18 @@
  */
 package com.codenvy.ide.ext.github.client.marshaller;
 
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.github.shared.GitHubRepository;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.JsonStringMap;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -38,16 +36,16 @@ import java.util.Set;
  *
  * @author <a href="mailto:dvishinskiy@codenvy.com">Dmitriy Vyshinskiy</a>
  */
-public class AllRepositoriesUnmarshaller implements Unmarshallable<JsonStringMap<JsonArray<GitHubRepository>>> {
+public class AllRepositoriesUnmarshaller implements Unmarshallable<JsonStringMap<Array<GitHubRepository>>> {
     /** Repositories list. */
-    private JsonStringMap<JsonArray<GitHubRepository>> repositories;
-    
+    private JsonStringMap<Array<GitHubRepository>> repositories;
+
     private DtoFactory dtoFactory;
-    
+
     public AllRepositoriesUnmarshaller(DtoFactory dtoFactory) {
         this.dtoFactory = dtoFactory;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -58,18 +56,18 @@ public class AllRepositoriesUnmarshaller implements Unmarshallable<JsonStringMap
         }
 
         Set<String> keys = jsonObj.keySet();
-        repositories = JsonCollections.createStringMap();
+        repositories = Collections.createStringMap();
 
         for (String key : keys) {
             JSONArray jsonArray = jsonObj.get(key).isArray();
-            JsonArray<GitHubRepository> repos = dtoFactory.createListDtoFromJson(jsonArray.toString(), GitHubRepository.class);
+            Array<GitHubRepository> repos = dtoFactory.createListDtoFromJson(jsonArray.toString(), GitHubRepository.class);
             repositories.put(key, repos);
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public JsonStringMap<JsonArray<GitHubRepository>> getPayload() {
+    public JsonStringMap<Array<GitHubRepository>> getPayload() {
         return repositories;
     }
 }

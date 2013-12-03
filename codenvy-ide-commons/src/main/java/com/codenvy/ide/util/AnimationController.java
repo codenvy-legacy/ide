@@ -23,7 +23,7 @@ import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.html.Element;
 
-import com.codenvy.ide.json.js.Jso;
+import com.codenvy.ide.collections.js.Jso;
 import com.codenvy.ide.util.browser.BrowserUtils;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;

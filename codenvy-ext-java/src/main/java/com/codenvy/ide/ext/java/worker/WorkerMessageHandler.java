@@ -31,7 +31,7 @@ import com.codenvy.ide.ext.java.worker.core.dom.CompilationUnit;
 import com.codenvy.ide.ext.java.worker.internal.codeassist.impl.AssistOptions;
 import com.codenvy.ide.ext.java.worker.internal.compiler.impl.CompilerOptions;
 import com.codenvy.ide.ext.java.worker.internal.compiler.problem.DefaultProblem;
-import com.codenvy.ide.json.js.JsoArray;
+import com.codenvy.ide.collections.js.JsoArray;
 import com.google.gwt.webworker.client.MessageEvent;
 import com.google.gwt.webworker.client.MessageHandler;
 import com.google.gwt.webworker.client.messages.MessageFilter;

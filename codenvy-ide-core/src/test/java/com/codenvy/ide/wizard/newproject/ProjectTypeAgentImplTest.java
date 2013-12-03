@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Collections;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
 
@@ -44,7 +44,7 @@ public class ProjectTypeAgentImplTest extends GwtTestWithMockito {
     public void testRegister() throws Exception {
         assertEquals(agent.getProjectTypes().size(), 0);
 
-        agent.register("type", "title", null, "primaryNature", JsonCollections.createArray("secondaryNature"));
+        agent.register("type", "title", null, "primaryNature", Collections.createArray("secondaryNature"));
 
         assertEquals(agent.getProjectTypes().size(), 1);
     }
@@ -53,11 +53,11 @@ public class ProjectTypeAgentImplTest extends GwtTestWithMockito {
     public void testRegisterWhenProjectTypeIsExist() throws Exception {
         assertEquals(agent.getProjectTypes().size(), 0);
 
-        agent.register("type", "title", null, "primaryNature", JsonCollections.createArray("secondaryNature"));
+        agent.register("type", "title", null, "primaryNature", Collections.createArray("secondaryNature"));
 
         assertEquals(agent.getProjectTypes().size(), 1);
 
-        agent.register("type", "title", null, "primaryNature", JsonCollections.createArray("secondaryNature"));
+        agent.register("type", "title", null, "primaryNature", Collections.createArray("secondaryNature"));
 
         assertEquals(agent.getProjectTypes().size(), 1);
     }

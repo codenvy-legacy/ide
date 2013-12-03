@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.java.client.projectmodel;
 
-import com.codenvy.ide.json.JsonStringSet;
+import com.codenvy.ide.collections.JsonStringSet;
 import com.codenvy.ide.resources.model.ProjectDescription;
 
 

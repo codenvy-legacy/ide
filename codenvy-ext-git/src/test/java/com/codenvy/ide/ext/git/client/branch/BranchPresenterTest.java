@@ -20,8 +20,8 @@ package com.codenvy.ide.ext.git.client.branch;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.ext.git.shared.Branch;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -79,7 +79,7 @@ public class BranchPresenterTest extends BaseTest {
     @Test
     @Ignore
     public void testShowDialogWhenGetBranchesRequestIsSuccessful() throws Exception {
-        final JsonArray<Branch> branches = JsonCollections.createArray();
+        final Array<Branch> branches = Collections.createArray();
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {

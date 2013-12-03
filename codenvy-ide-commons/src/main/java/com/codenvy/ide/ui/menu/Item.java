@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ui.menu;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
 
@@ -54,7 +54,7 @@ public interface Item {
      *
      * @return list of children
      */
-    JsonArray<Item> getItems();
+    Array<Item> getItems();
 
     /**
      * Get menu title

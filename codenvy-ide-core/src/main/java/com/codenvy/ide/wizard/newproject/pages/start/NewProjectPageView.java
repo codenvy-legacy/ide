@@ -19,7 +19,7 @@ package com.codenvy.ide.wizard.newproject.pages.start;
 
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.paas.PaaS;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.ProjectTypeData;
 
 /**
@@ -83,7 +83,7 @@ public interface NewProjectPageView extends View<NewProjectPageView.ActionDelega
      * @param projectTypes
      *         project types those need to be set
      */
-    void setProjectTypes(JsonArray<ProjectTypeData> projectTypes);
+    void setProjectTypes(Array<ProjectTypeData> projectTypes);
 
     /**
      * Set PaaSes on place on view.
@@ -91,7 +91,7 @@ public interface NewProjectPageView extends View<NewProjectPageView.ActionDelega
      * @param paases
      *         paases those need to be set
      */
-    void setPaases(JsonArray<PaaS> paases);
+    void setPaases(Array<PaaS> paases);
 
     /**
      * Select project type on view.

@@ -13,8 +13,8 @@
 // limitations under the License.
 package com.codenvy.ide.texteditor.renderer;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineNumberAndColumn;
 import com.codenvy.ide.texteditor.ot.PositionMigrator;
@@ -45,7 +45,7 @@ public class ErrorRenderer implements LineRenderer {
         }
     };
 
-    public JsonArray<AnnotationCode> getCodeErrors() {
+    public Array<AnnotationCode> getCodeErrors() {
         return codeErrors;
     }
 
@@ -64,12 +64,12 @@ public class ErrorRenderer implements LineRenderer {
     private int nextErrorIndex;
 
     // List of errors for a file.
-    private JsonArray<AnnotationCode> codeErrors;
+    private Array<AnnotationCode> codeErrors;
 
     private PositionMigrator positionMigrator;
 
     public ErrorRenderer() {
-        codeErrors = JsonCollections.createArray();
+        codeErrors = Collections.createArray();
     }
 
     @Override
@@ -185,7 +185,7 @@ public class ErrorRenderer implements LineRenderer {
         return new DocumentPosition(newPosition.lineNumber, newPosition.column);
     }
 
-    public void setCodeErrors(JsonArray<AnnotationCode> codeErrors, PositionMigrator positionMigrator) {
+    public void setCodeErrors(Array<AnnotationCode> codeErrors, PositionMigrator positionMigrator) {
         this.codeErrors = codeErrors;
         this.positionMigrator = positionMigrator;
     }

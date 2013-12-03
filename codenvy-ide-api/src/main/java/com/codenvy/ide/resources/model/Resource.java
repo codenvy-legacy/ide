@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.resources.model;
 
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.JsonStringMap;
 
 /**
  * Resource's superclass.
@@ -147,7 +147,7 @@ public abstract class Resource {
      */
     public JsonStringMap<Link> getLinks() {
         if (links == null) {
-            links = JsonCollections.createStringMap();
+            links = Collections.createStringMap();
         }
         return links;
     }

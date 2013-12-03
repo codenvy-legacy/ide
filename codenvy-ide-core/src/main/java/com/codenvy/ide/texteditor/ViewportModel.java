@@ -14,7 +14,7 @@
 
 package com.codenvy.ide.texteditor;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineFinder;
@@ -63,7 +63,7 @@ public class ViewportModel implements Buffer.ScrollListener, Buffer.ResizeListen
          *         the lines added or removed (see the parameters on
          *         {@link DocumentModel.LineListener})
          */
-        void onViewportContentChanged(ViewportModel viewport, int lineNumber, boolean added, JsonArray<Line> lines);
+        void onViewportContentChanged(ViewportModel viewport, int lineNumber, boolean added, Array<Line> lines);
 
         /**
          * Called when the viewport is shifted, meaning at least one of its edges
@@ -283,7 +283,7 @@ public class ViewportModel implements Buffer.ScrollListener, Buffer.ResizeListen
     }
 
     @Override
-    public void onLineAdded(DocumentModel document, final int lineNumber, final JsonArray<Line> addedLines) {
+    public void onLineAdded(DocumentModel document, final int lineNumber, final Array<Line> addedLines) {
         if (adjustViewportBoundsForLineAdditionOrRemoval(document, lineNumber)) {
             listenerManager.dispatch(new Dispatcher<ViewportModel.Listener>() {
                 @Override
@@ -295,7 +295,7 @@ public class ViewportModel implements Buffer.ScrollListener, Buffer.ResizeListen
     }
 
     @Override
-    public void onLineRemoved(DocumentModel document, final int lineNumber, final JsonArray<Line> removedLines) {
+    public void onLineRemoved(DocumentModel document, final int lineNumber, final Array<Line> removedLines) {
         if (adjustViewportBoundsForLineAdditionOrRemoval(document, lineNumber)) {
             listenerManager.dispatch(new Dispatcher<ViewportModel.Listener>() {
                 @Override

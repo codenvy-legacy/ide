@@ -14,7 +14,7 @@
 
 package com.codenvy.ide.texteditor.documentparser;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.Line;
@@ -83,7 +83,7 @@ public class DocumentParser {
          * Note: This may be called synchronously with a user's key press, so do not
          * do too much work synchronously.
          */
-        void onDocumentLineParsed(Line line, int lineNumber, JsonArray<Token> tokens);
+        void onDocumentLineParsed(Line line, int lineNumber, Array<Token> tokens);
     }
 
     private static final AnchorType PARSER_ANCHOR_TYPE = AnchorType.create(DocumentParser.class, "parser");
@@ -100,7 +100,7 @@ public class DocumentParser {
 
     private final DocumentModel.TextListener documentTextListener = new DocumentModel.TextListener() {
         @Override
-        public void onTextChange(DocumentModel document, JsonArray<TextChange> textChanges) {
+        public void onTextChange(DocumentModel document, Array<TextChange> textChanges) {
          /*
           * Tracks the earliest change in the document, so that can be used as a
           * starting point for the parser
@@ -178,7 +178,7 @@ public class DocumentParser {
      * @return the parsed tokens, or {@code null} if there isn't a snapshot
      *         and it's not the first line
      */
-    public JsonArray<Token> parseLineSync(Line line) {
+    public Array<Token> parseLineSync(Line line) {
         return worker.parseLine(line);
     }
 
@@ -216,7 +216,7 @@ public class DocumentParser {
         });
     }
 
-    void dispatch(final Line line, final int lineNumber, final JsonArray<Token> tokens) {
+    void dispatch(final Line line, final int lineNumber, final Array<Token> tokens) {
         listenerManager.dispatch(new Dispatcher<Listener>() {
             @Override
             public void dispatch(Listener listener) {

@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.json.js;
+package com.codenvy.ide.collections.js;
 
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.JsonStringMap;
 import com.google.gwt.core.client.JavaScriptObject;
 
 
@@ -83,7 +83,7 @@ public final class JsoStringMap<T> extends JavaScriptObject implements JsonStrin
         for (key in this) {
             if (Object.prototype.hasOwnProperty.call(this, key)) {
                 callback.
-                    @com.codenvy.ide.json.JsonStringMap.IterationCallback::onIteration(Ljava/lang/String;Ljava/lang/Object;)
+                    @com.codenvy.ide.collections.JsonStringMap.IterationCallback::onIteration(Ljava/lang/String;Ljava/lang/Object;)
                     (key, this[key]);
             }
         }

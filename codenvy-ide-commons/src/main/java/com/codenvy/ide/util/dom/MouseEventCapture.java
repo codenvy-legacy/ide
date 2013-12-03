@@ -19,7 +19,7 @@ import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.EventTarget;
 
-import com.codenvy.ide.json.js.JsoArray;
+import com.codenvy.ide.collections.js.JsoArray;
 
 
 /** Utility class which allows simulation of Event Capture. */

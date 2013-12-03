@@ -19,9 +19,9 @@ package com.codenvy.ide.wizard.newproject;
 
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.JsonStringMap;
 import com.google.inject.Provider;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
@@ -55,11 +55,11 @@ public class PaaSAgentImplTest extends GwtTestWithMockito {
         assertEquals(agent.getPaaSes().size(), 1);
 
         Provider<? extends AbstractPaasPage> pageProvider = mock(Provider.class);
-        JsonArray<Provider<? extends AbstractPaasPage>> pages = JsonCollections.createArray(pageProvider, pageProvider);
+        Array<Provider<? extends AbstractPaasPage>> pages = Collections.createArray(pageProvider, pageProvider);
 
-        JsonStringMap<JsonArray<String>> natures = JsonCollections.createStringMap();
-        natures.put("primaryNature1", JsonCollections.<String>createArray("secondaryNature1"));
-        natures.put("primaryNature2", JsonCollections.<String>createArray("secondaryNature2"));
+        JsonStringMap<Array<String>> natures = Collections.createStringMap();
+        natures.put("primaryNature1", Collections.<String>createArray("secondaryNature1"));
+        natures.put("primaryNature2", Collections.<String>createArray("secondaryNature2"));
 
         agent.register("id", "title", null, natures, pages, false);
 
@@ -71,11 +71,11 @@ public class PaaSAgentImplTest extends GwtTestWithMockito {
     public void testRegisterWhenPaaSWithGivenIdIsExist() throws Exception {
         assertEquals(agent.getPaaSes().size(), 1);
 
-        agent.register("id", "title", null, null, JsonCollections.<Provider<? extends AbstractPaasPage>>createArray(), false);
+        agent.register("id", "title", null, null, Collections.<Provider<? extends AbstractPaasPage>>createArray(), false);
 
         assertEquals(agent.getPaaSes().size(), 2);
 
-        agent.register("id", "title", null, null, JsonCollections.<Provider<? extends AbstractPaasPage>>createArray(), false);
+        agent.register("id", "title", null, null, Collections.<Provider<? extends AbstractPaasPage>>createArray(), false);
 
         assertEquals(agent.getPaaSes().size(), 2);
     }

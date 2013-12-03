@@ -16,11 +16,11 @@ package com.codenvy.ide.texteditor;
 
 import elemental.html.Element;
 
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.debug.BreakpointGutterManager;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.json.JsonStringMap.IterationCallback;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.JsonStringMap.IterationCallback;
 import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.mvp.UiComponent;
 import com.codenvy.ide.text.*;
@@ -91,32 +91,32 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
             handleFontDimensionsChanged();
         }
     };
-    private final JsonArray<Gutter>                 gutters                       = JsonCollections.createArray();
+    private final Array<Gutter>                     gutters                       = Collections.createArray();
     private final InputController   input;
     private final LeftGutterManager leftGutterManager;
     private final ListenerManager<ReadOnlyListener>  readOnlyListenerManager  = ListenerManager.create();
     private final ListenerManager<TextInputListener> textInputListenerManager = ListenerManager.create();
-    private final EditorActivityManager                      editorActivityManager;
-    private final RenderTimeExecutor                         renderTimeExecutor;
-    private final com.codenvy.ide.Resources                  resources;
-    private final UserActivityManager                        userActivityManager;
-    private final OverviewRuler                              overviewRuller;
-    private       DocumentModel                              textStore;
-    private       UndoManager                                editorUndoManager;
-    private       LocalCursorController                      localCursorController;
-    private       Renderer                                   renderer;
-    private       SelectionManager                           selectionManager;
-    private       ViewportModel                              viewport;
-    private       boolean                                    isReadOnly;
-    private       Document                                   document;
-    private       SyntaxHighlighter                          syntaxHighlighter;
-    private       Parser                                     parser;
-    private       CodeAssistantImpl                          codeAssistant;
-    private       VerticalRuler                              verticalRuler;
-    private       QuickAssistAssistant                       quickAssistAssistant;
-    private       BreakpointGutterManager                    breakpointGutterManager;
-    private       JsonStringMap<JsonArray<AutoEditStrategy>> autoEditStrategies;
-    private       String                                     documentPartitioning;
+    private final EditorActivityManager                  editorActivityManager;
+    private final RenderTimeExecutor                     renderTimeExecutor;
+    private final com.codenvy.ide.Resources              resources;
+    private final UserActivityManager                    userActivityManager;
+    private final OverviewRuler                          overviewRuller;
+    private       DocumentModel                          textStore;
+    private       UndoManager                            editorUndoManager;
+    private       LocalCursorController                  localCursorController;
+    private       Renderer                               renderer;
+    private       SelectionManager                       selectionManager;
+    private       ViewportModel                          viewport;
+    private       boolean                                isReadOnly;
+    private       Document                               document;
+    private       SyntaxHighlighter                      syntaxHighlighter;
+    private       Parser                                 parser;
+    private       CodeAssistantImpl                      codeAssistant;
+    private       VerticalRuler                          verticalRuler;
+    private       QuickAssistAssistant                   quickAssistAssistant;
+    private       BreakpointGutterManager                breakpointGutterManager;
+    private       JsonStringMap<Array<AutoEditStrategy>> autoEditStrategies;
+    private       String                                 documentPartitioning;
 
     public TextEditorViewImpl(com.codenvy.ide.Resources resources, UserActivityManager userActivityManager,
                               BreakpointGutterManager breakpointGutterManager) {
@@ -174,7 +174,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
 
 //        if (fTabsToSpacesConverter != null)
 //            fTabsToSpacesConverter.customizeDocumentCommand(document, command);
-        JsonArray<AutoEditStrategy> strategies = null;
+        Array<AutoEditStrategy> strategies = null;
         try {
             String contentType = TextUtilities.getContentType(document, getDocumentPartitioning(), command.offset, true);
             strategies = autoEditStrategies.get(contentType);
@@ -197,7 +197,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
 
             // make iterator robust against adding/removing strategies from within strategies
             default:
-                strategies = JsonCollections.createArray(strategies.asIterable());
+                strategies = Collections.createArray(strategies.asIterable());
                 for (final Iterator<AutoEditStrategy> iterator = strategies.asIterable().iterator(); iterator.hasNext(); )
                     iterator.next().customizeDocumentCommand(document, command);
 
@@ -583,9 +583,9 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
      */
     protected final void setAutoEditStrategies(AutoEditStrategy[] strategies, String contentType) {
         if (autoEditStrategies == null)
-            autoEditStrategies = JsonCollections.createStringMap();
+            autoEditStrategies = Collections.createStringMap();
 
-        JsonArray<AutoEditStrategy> autoEditStrategies = this.autoEditStrategies.get(contentType);
+        Array<AutoEditStrategy> autoEditStrategies = this.autoEditStrategies.get(contentType);
 
         if (strategies == null) {
             if (autoEditStrategies == null)
@@ -595,12 +595,12 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
 
         } else {
             if (autoEditStrategies == null) {
-                autoEditStrategies = JsonCollections.createArray();
+                autoEditStrategies = Collections.createArray();
                 this.autoEditStrategies.put(contentType, autoEditStrategies);
             }
 
             autoEditStrategies.clear();
-            autoEditStrategies.addAll(JsonCollections.createArray(strategies));
+            autoEditStrategies.addAll(Collections.createArray(strategies));
         }
     }
 

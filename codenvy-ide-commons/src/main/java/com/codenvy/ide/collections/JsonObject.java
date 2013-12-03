@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.json;
+package com.codenvy.ide.collections;
 
 /** Defines a simple, mutable JSON object. */
 public interface JsonObject {
@@ -23,7 +23,7 @@ public interface JsonObject {
 
     JsonObject addField(String key, int value);
 
-    JsonObject addField(String key, JsonArray<?> value);
+    JsonObject addField(String key, Array<?> value);
 
     JsonObject addField(String key, JsonObject value);
 
@@ -33,11 +33,11 @@ public interface JsonObject {
 
     int getIntField(String key);
 
-    JsonArray<String> getKeys();
+    Array<String> getKeys();
 
     JsonObject getObjectField(String key);
 
-    JsonArray<?> getArrayField(String field);
+    Array<?> getArrayField(String field);
 
     String getStringField(String key);
 }

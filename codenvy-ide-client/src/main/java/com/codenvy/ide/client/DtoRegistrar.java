@@ -19,7 +19,7 @@ package com.codenvy.ide.client;
 
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.dto.DtoFactoryVisitor;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.JsonStringMap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;

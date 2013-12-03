@@ -22,7 +22,7 @@ import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.JsonStringMap;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
 import com.codenvy.ide.resources.marshal.UserUnmarshaller;
 import com.codenvy.ide.rest.AsyncRequestCallback;

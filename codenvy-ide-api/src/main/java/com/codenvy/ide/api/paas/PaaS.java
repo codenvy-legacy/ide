@@ -19,8 +19,8 @@ package com.codenvy.ide.api.paas;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.JsonStringMap;
 import com.google.gwt.resources.client.ImageResource;
 
 
@@ -31,13 +31,13 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public class PaaS {
     /** Id of the PaaS. */
-    private String                           id;
+    private String                       id;
     /** Title of the PaaS. */
-    private String                           title;
+    private String                       title;
     /** PaaS image. */
-    private ImageResource                    image;
-    private JsonStringMap<JsonArray<String>> natures;
-    private boolean                          provideTemplate;
+    private ImageResource                image;
+    private JsonStringMap<Array<String>> natures;
+    private boolean                      provideTemplate;
 
     /**
      * Create the PaaS.
@@ -56,7 +56,7 @@ public class PaaS {
     public PaaS(@NotNull String id,
                 @NotNull String title,
                 @Nullable ImageResource image,
-                @NotNull JsonStringMap<JsonArray<String>> natures,
+                @NotNull JsonStringMap<Array<String>> natures,
                 boolean provideTemplate) {
         this.id = id;
         this.title = title;
@@ -94,8 +94,8 @@ public class PaaS {
      *         chosen secondary nature
      * @return <code>true</code> if the PaaS is available, and <code>false</code> otherwise
      */
-    public boolean isAvailable(@NotNull String primaryNature, @NotNull JsonArray<String> secondaryNature) {
-        JsonArray<String> secondary = natures.get(primaryNature);
+    public boolean isAvailable(@NotNull String primaryNature, @NotNull Array<String> secondaryNature) {
+        Array<String> secondary = natures.get(primaryNature);
         if (secondary != null) {
             for (String nature : secondaryNature.asIterable()) {
                 if (!secondary.contains(nature)) {

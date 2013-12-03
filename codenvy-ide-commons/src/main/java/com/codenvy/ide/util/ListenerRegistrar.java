@@ -14,8 +14,8 @@
 
 package com.codenvy.ide.util;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 
 
 /** A manager to register or unregister listeners. */
@@ -32,12 +32,12 @@ public interface ListenerRegistrar<T> {
      * guards against null checks and prevents forgetting to remove listeners.
      */
     public static class RemoverManager implements Remover {
-        private JsonArray<Remover> handlers;
+        private Array<Remover> handlers;
 
         /** Tracks a new handler so that it can be removed in bulk. */
         public RemoverManager track(Remover remover) {
             if (handlers == null) {
-                handlers = JsonCollections.createArray();
+                handlers = Collections.createArray();
             }
 
             handlers.add(remover);

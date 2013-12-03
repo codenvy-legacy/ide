@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.java.client.editor;
 
 import com.codenvy.ide.ext.java.client.core.compiler.IProblem;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
@@ -27,7 +27,7 @@ import com.codenvy.ide.json.JsonArray;
 public interface JavaParserWorker {
 
     public interface JavaParserCallback{
-        void onProblems(JsonArray<IProblem> problems);
+        void onProblems(Array<IProblem> problems);
     }
 
     void parse(String content, String fileName, JavaParserCallback callback);

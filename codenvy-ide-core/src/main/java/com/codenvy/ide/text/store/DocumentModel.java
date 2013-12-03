@@ -14,9 +14,9 @@
 
 package com.codenvy.ide.text.store;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.JsonStringMap;
 import com.codenvy.ide.text.store.anchor.Anchor;
 import com.codenvy.ide.text.store.anchor.AnchorManager;
 import com.codenvy.ide.texteditor.api.UndoManager;
@@ -68,7 +68,7 @@ public class DocumentModel implements TextStoreMutator {
          * @param addedLines
          *         a contiguous list of lines that were added
          */
-        void onLineAdded(DocumentModel document, int lineNumber, JsonArray<Line> addedLines);
+        void onLineAdded(DocumentModel document, int lineNumber, Array<Line> addedLines);
 
         /**
          * @param lineNumber
@@ -78,7 +78,7 @@ public class DocumentModel implements TextStoreMutator {
          *         a contiguous list of (now detached) lines that were
          *         removed
          */
-        void onLineRemoved(DocumentModel document, int lineNumber, JsonArray<Line> removedLines);
+        void onLineRemoved(DocumentModel document, int lineNumber, Array<Line> removedLines);
     }
 
     /**
@@ -98,7 +98,7 @@ public class DocumentModel implements TextStoreMutator {
          * {@link Line} could change, invalidating some of the state in the
          * {@link TextChange}.
          */
-        void onTextChange(DocumentModel document, JsonArray<TextChange> textChanges);
+        void onTextChange(DocumentModel document, Array<TextChange> textChanges);
     }
 
     /**
@@ -165,7 +165,7 @@ public class DocumentModel implements TextStoreMutator {
 
     private final int id = idCounter++;
 
-    private final JsonStringMap<Object> tags = JsonCollections.createStringMap();
+    private final JsonStringMap<Object> tags = Collections.createStringMap();
 
     protected DocumentModel() {
         firstLine = lastLine = Line.create(this, "");
@@ -328,7 +328,7 @@ public class DocumentModel implements TextStoreMutator {
         }
     }
 
-    void dispatchLineAdded(final int lineNumber, final JsonArray<Line> addedLines) {
+    void dispatchLineAdded(final int lineNumber, final Array<Line> addedLines) {
         lineListenerManager.dispatch(new Dispatcher<DocumentModel.LineListener>() {
             @Override
             public void dispatch(LineListener listener) {
@@ -337,7 +337,7 @@ public class DocumentModel implements TextStoreMutator {
         });
     }
 
-    void dispatchLineRemoved(final int lineNumber, final JsonArray<Line> removedLines) {
+    void dispatchLineRemoved(final int lineNumber, final Array<Line> removedLines) {
         lineListenerManager.dispatch(new Dispatcher<DocumentModel.LineListener>() {
             @Override
             public void dispatch(LineListener listener) {
@@ -346,7 +346,7 @@ public class DocumentModel implements TextStoreMutator {
         });
     }
 
-    void dispatchTextChange(final JsonArray<TextChange> textChanges) {
+    void dispatchTextChange(final Array<TextChange> textChanges) {
         textListenerManager.dispatch(new Dispatcher<DocumentModel.TextListener>() {
             @Override
             public void dispatch(TextListener listener) {

@@ -21,7 +21,7 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.parts.base.BaseActionDelegate;
 import com.codenvy.ide.ext.git.shared.Revision;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 
 /**
  * The view of {@link HistoryPresenter}.
@@ -64,7 +64,7 @@ public interface HistoryView extends View<HistoryView.ActionDelegate> {
      * @param revisions
      *         git revisions
      */
-    void setRevisions(@NotNull JsonArray<Revision> revisions);
+    void setRevisions(@NotNull Array<Revision> revisions);
 
     /**
      * Change the selected state of the changes in project button.

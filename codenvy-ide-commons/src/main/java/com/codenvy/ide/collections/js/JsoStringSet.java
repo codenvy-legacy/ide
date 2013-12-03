@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.json.js;
+package com.codenvy.ide.collections.js;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonStringSet;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.JsonStringSet;
 
 /** Client implementation of a set of strings. */
 public class JsoStringSet implements JsonStringSet {
@@ -38,8 +38,8 @@ public class JsoStringSet implements JsonStringSet {
     }
 
     @Override
-    public final JsonArray<String> getKeys() {
-        JsonArray<String> result = delegate.getKeys();
+    public final Array<String> getKeys() {
+        Array<String> result = delegate.getKeys();
         for (int i = 0, n = result.size(); i < n; ++i) {
             result.set(i, toPublicKey(result.get(i)));
         }
@@ -53,7 +53,7 @@ public class JsoStringSet implements JsonStringSet {
 
     @Override
     public final void iterate(IterationCallback callback) {
-        JsonArray<String> keys = getKeys();
+        Array<String> keys = getKeys();
         for (int i = 0, n = keys.size(); i < n; ++i) {
             callback.onIteration(keys.get(i));
         }
@@ -65,7 +65,7 @@ public class JsoStringSet implements JsonStringSet {
     }
 
     @Override
-    public final void addAll(JsonArray<String> keys) {
+    public final void addAll(Array<String> keys) {
         for (int i = 0, n = keys.size(); i < n; ++i) {
             add(keys.get(i));
         }

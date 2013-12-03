@@ -25,7 +25,7 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Branch;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
@@ -208,7 +208,7 @@ public class BranchPresenter implements BranchView.ActionDelegate {
             service.branchList(resourceProvider.getVfsId(), projectId, LIST_ALL, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
                 protected void onSuccess(String result) {
-                    JsonArray<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
+                    Array<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
                     view.setBranches(branches);
                 }
 

@@ -20,7 +20,7 @@ package com.codenvy.ide.dto.client;
 import com.codenvy.ide.dto.DocOp;
 import com.codenvy.ide.dto.DocOpComponent;
 import com.codenvy.ide.dto.shared.DocOpFactory;
-import com.codenvy.ide.json.js.JsoArray;
+import com.codenvy.ide.collections.js.JsoArray;
 
 import static com.codenvy.ide.dto.DocOpComponent.Type.DELETE;
 import static com.codenvy.ide.dto.DocOpComponent.Type.INSERT;

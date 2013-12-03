@@ -19,7 +19,7 @@ package com.codenvy.ide.api.editor;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.JsonStringMap;
 import com.codenvy.ide.resources.model.File;
 
 /**

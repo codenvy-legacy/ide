@@ -18,7 +18,7 @@
 package com.codenvy.ide.api.user;
 
 import com.codenvy.ide.dto.DTO;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.JsonStringMap;
 
 /**
  * Represent information about User.

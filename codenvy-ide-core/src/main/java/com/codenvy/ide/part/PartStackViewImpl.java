@@ -19,8 +19,8 @@ package com.codenvy.ide.part;
 
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.ui.workspace.PartStackView;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -56,7 +56,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
     // DOM Handler
     private final FocusRequestDOMHandler focusRequstHandler = new FocusRequestDOMHandler();
     // list of tabs
-    private final JsonArray<TabButton>   tabs               = JsonCollections.createArray();
+    private final Array<TabButton>       tabs               = Collections.createArray();
     private InsertPanel         tabsPanel;
     private SimplePanel         contentPanel;
     private ActionDelegate      delegate;

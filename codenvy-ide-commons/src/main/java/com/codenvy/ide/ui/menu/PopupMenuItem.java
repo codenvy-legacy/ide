@@ -18,9 +18,9 @@
 
 package com.codenvy.ide.ui.menu;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.JsonStringMap;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
 
@@ -48,7 +48,7 @@ public class PopupMenuItem implements MenuItem {
     private boolean enabled = true;
 
     /** Map of children. */
-    private JsonStringMap<Item> children = JsonCollections.createStringMap();
+    private JsonStringMap<Item> children = Collections.createStringMap();
 
     /** Command which will be executed when this item will be selected. */
     private Command command;
@@ -184,7 +184,7 @@ public class PopupMenuItem implements MenuItem {
     }
 
     /** {@inheritDoc} */
-    public JsonArray<Item> getItems() {
+    public Array<Item> getItems() {
         return children.getValues();
     }
 

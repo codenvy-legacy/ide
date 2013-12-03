@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.extension;
 
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.JsonStringMap;
 
 /**
  * Provides information about Extensions, their description, version and the list of dependencies.

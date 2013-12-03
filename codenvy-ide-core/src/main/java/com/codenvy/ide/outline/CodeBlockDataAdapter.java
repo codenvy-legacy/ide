@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.outline;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.texteditor.api.outline.CodeBlock;
 import com.codenvy.ide.ui.tree.NodeDataAdapter;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
@@ -45,13 +45,13 @@ public class CodeBlockDataAdapter implements NodeDataAdapter<CodeBlock> {
     /** {@inheritDoc} */
     @Override
     public boolean hasChildren(CodeBlock data) {
-        JsonArray<CodeBlock> jsonArray = data.getChildren();
-        return jsonArray != null && !jsonArray.isEmpty();
+        Array<CodeBlock> array = data.getChildren();
+        return array != null && !array.isEmpty();
     }
 
     /** {@inheritDoc} */
     @Override
-    public JsonArray<CodeBlock> getChildren(CodeBlock data) {
+    public Array<CodeBlock> getChildren(CodeBlock data) {
         return data.getChildren();
     }
 
@@ -98,13 +98,13 @@ public class CodeBlockDataAdapter implements NodeDataAdapter<CodeBlock> {
 
     /** {@inheritDoc} */
     @Override
-    public JsonArray<String> getNodePath(CodeBlock data) {
+    public Array<String> getNodePath(CodeBlock data) {
         return PathUtils.getNodePath(this, data);
     }
 
     /** {@inheritDoc} */
     @Override
-    public CodeBlock getNodeByPath(CodeBlock root, JsonArray<String> relativeNodePath) {
+    public CodeBlock getNodeByPath(CodeBlock root, Array<String> relativeNodePath) {
         // TODO Auto-generated method stub
         return null;
     }

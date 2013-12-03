@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.ext.java.client.editor.outline;
 
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.java.client.core.dom.ASTNode;
 import com.codenvy.ide.ext.java.client.core.dom.ASTVisitor;
 import com.codenvy.ide.ext.java.client.core.dom.AbstractTypeDeclaration;
@@ -37,8 +39,6 @@ import com.codenvy.ide.ext.java.client.editor.AstProvider;
 import com.codenvy.ide.ext.java.client.editor.AstProvider.AstListener;
 import com.codenvy.ide.ext.java.client.internal.corext.dom.ASTNodes;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.texteditor.api.outline.CodeBlock;
 import com.codenvy.ide.texteditor.api.outline.OutlineModel;
 
@@ -53,7 +53,7 @@ public class OutlineModelUpdater implements AstListener {
     class OutlineAstVisitor extends ASTVisitor {
         CodeBlock parent;
 
-        JsonArray<CodeBlock> childrens = JsonCollections.createArray();
+        Array<CodeBlock> childrens = Collections.createArray();
 
         private JavaCodeBlock imports;
 
@@ -81,7 +81,7 @@ public class OutlineModelUpdater implements AstListener {
         public boolean visit(ImportDeclaration node) {
             if (imports == null) {
                 imports = new JavaCodeBlock();
-                imports.setChildren(JsonCollections.<CodeBlock>createArray());
+                imports.setChildren(Collections.<CodeBlock>createArray());
                 imports.setType(BlockTypes.IMPORTS.getType());
                 imports.setName("import declarations");
                 imports.setParent(parent);
@@ -233,7 +233,7 @@ public class OutlineModelUpdater implements AstListener {
         if (this.root == null) {
             root = new JavaCodeBlock();
             root.setType(CodeBlock.ROOT_TYPE);
-            root.setChildren(JsonCollections.<CodeBlock>createArray());
+            root.setChildren(Collections.<CodeBlock>createArray());
             outlineModel.updateRoot(root);
 
         }

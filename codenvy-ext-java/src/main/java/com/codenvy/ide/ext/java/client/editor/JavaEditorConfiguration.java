@@ -19,15 +19,14 @@ package com.codenvy.ide.ext.java.client.editor;
 
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.editor.TextEditorPartPresenter;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.java.client.JavaClientBundle;
 import com.codenvy.ide.ext.java.client.JavaPartitions;
 import com.codenvy.ide.ext.java.client.editor.outline.JavaNodeRenderer;
 import com.codenvy.ide.ext.java.client.editor.outline.OutlineModelUpdater;
 import com.codenvy.ide.ext.java.client.internal.ui.text.*;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.JsonStringMap;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.api.AutoEditStrategy;
@@ -100,7 +99,7 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
     @Override
     public JsonStringMap<CodeAssistProcessor> getContentAssistantProcessors(TextEditorPartView view) {
 
-        JsonStringMap<CodeAssistProcessor> map = JsonCollections.createStringMap();
+        JsonStringMap<CodeAssistProcessor> map = Collections.createStringMap();
         map.put(Document.DEFAULT_CONTENT_TYPE, getOrCreateCodeAssistProcessor());
         return map;
     }

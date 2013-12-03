@@ -15,9 +15,9 @@
 package com.google.gwt.webworker.dtogen;
 
 
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.shared.RoutableDto;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.JsonStringMap;
 import com.google.common.base.Preconditions;
 import com.google.gwt.webworker.client.messages.Message;
 import com.google.gwt.webworker.client.messages.SerializationIndex;
@@ -33,7 +33,7 @@ public class DtoImplClientTemplate extends DtoImpl {
     private static final String ROUTABLE_DTO_IMPL = com.google.gwt.webworker.client.messages.Message.class.getPackage().getName()+ ".MessageImpl";
 
 
-    private static final String JSO_TYPE = "com.codenvy.ide.json.js.Jso";
+    private static final String JSO_TYPE = "Jso";
 
     private static boolean isEnum(Class<?> type) {
         return type != null && (type.equals(Enum.class) || isEnum(type.getSuperclass()));
@@ -273,12 +273,12 @@ public class DtoImplClientTemplate extends DtoImpl {
         /*
          * For our Json collections, require the concrete client-side type since we call JSON.stringify on this DTO.
          */
-        if (paramType == JsonArray.class) {
-            paramTypeName = paramTypeName.replace("com.codenvy.ide.json.JsonArray",
-                                                  "com.codenvy.ide.json.js.JsoArray");
+        if (paramType == Array.class) {
+            paramTypeName = paramTypeName.replace("Array",
+                                                  "JsoArray");
         } else if (paramType == JsonStringMap.class) {
-            paramTypeName = paramTypeName.replace("com.codenvy.ide.json.JsonStringMap",
-                                                  "com.codenvy.ide.json.js.JsoStringMap");
+            paramTypeName = paramTypeName.replace("JsonStringMap",
+                                                  "JsoStringMap");
         }
 
         builder.append(paramTypeName);

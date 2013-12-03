@@ -18,9 +18,9 @@
 
 package com.codenvy.ide.ui.menu;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.JsonStringMap;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Element;
@@ -44,7 +44,7 @@ public class MenuBarItem implements MenuItem, ItemSelectedHandler, UpdateItemEna
      */
     boolean pressed = false;
     /** Map of children */
-    private JsonStringMap<Item> children = JsonCollections.createStringMap();
+    private JsonStringMap<Item> children = Collections.createStringMap();
     /** Command which will be called just after menu ber item will be selected. */
     private Command command;
     /** Visual element which is table cell. */
@@ -158,7 +158,7 @@ public class MenuBarItem implements MenuItem, ItemSelectedHandler, UpdateItemEna
     }
 
     /** {@inheritDoc} */
-    public JsonArray<Item> getItems() {
+    public Array<Item> getItems() {
         return children.getValues();
     }
 
@@ -178,7 +178,7 @@ public class MenuBarItem implements MenuItem, ItemSelectedHandler, UpdateItemEna
     }
 
     private boolean hasVisibleItems(JsonStringMap<Item> items) {
-        JsonArray<String> keys = items.getKeys();
+        Array<String> keys = items.getKeys();
         for (String key : keys.asIterable()) {
             Item item = items.get(key);
             if (item.getTitle() == null) {
