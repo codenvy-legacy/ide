@@ -31,12 +31,19 @@ import com.codenvy.ide.ext.java.jdt.core.Signature;
 import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
 import com.codenvy.ide.ext.java.jdt.internal.codeassist.CompletionEngine;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment;
+import com.codenvy.ide.ext.java.messages.ApplyProposalMessage;
+import com.codenvy.ide.ext.java.messages.Change;
 import com.codenvy.ide.ext.java.messages.ComputeCAProposalsMessage;
 import com.codenvy.ide.ext.java.messages.RoutingTypes;
 import com.codenvy.ide.ext.java.messages.WorkerProposal;
 import com.codenvy.ide.ext.java.messages.impl.MessagesImpls;
 import com.codenvy.ide.json.js.JsoArray;
+import com.codenvy.ide.json.js.JsoStringMap;
 import com.codenvy.ide.runtime.AssertionFailedException;
+import com.codenvy.ide.text.DocumentEvent;
+import com.codenvy.ide.text.DocumentListener;
+import com.codenvy.ide.text.Region;
+import com.codenvy.ide.util.UUID;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.webworker.client.messages.MessageFilter;
@@ -69,14 +76,14 @@ public class WorkerCodeAssist {
                 return 0;
         }
     };
-
-    private JavaParserWorker worker;
-    private INameEnvironment nameEnvironment;
-
+    private JavaParserWorker                   worker;
+    private INameEnvironment                   nameEnvironment;
     private TemplateCompletionProposalComputer templateCompletionProposalComputer;
     private String                             projectId;
     private String                             docContext;
     private CompilationUnit                    unit;
+    private JsoStringMap<JavaCompletionProposal> proposalMap = JsoStringMap.create();
+    private String documentContent;
 
     public WorkerCodeAssist(JavaParserWorker worker, MessageFilter messageFilter, INameEnvironment nameEnvironment,
                             TemplateCompletionProposalComputer templateCompletionProposalComputer, String projectId, String docContext) {
@@ -98,16 +105,57 @@ public class WorkerCodeAssist {
 
                                                            @Override
                                                            public void onSuccess() {
-                                                              handleCAMessage(message);
+                                                               handleCAMessage(message);
                                                            }
                                                        });
                                                    }
                                                });
+        messageFilter.registerMessageRecipient(RoutingTypes.APPLY_CA_PROPOSAL, new MessageFilter.MessageRecipient<ApplyProposalMessage>() {
+            @Override
+            public void onMessageReceived(ApplyProposalMessage message) {
+                handleApply(message.id());
+            }
+        });
+    }
+
+    private void handleApply(String id) {
+        if (!proposalMap.containsKey(id)) {
+            return;
+        }
+
+        JavaCompletionProposal proposal = proposalMap.get(id);
+        WorkerDocument document = new WorkerDocument(documentContent);
+        final JsoArray<Change> changes = JsoArray.create();
+        document.addDocumentListener(new DocumentListener() {
+            @Override
+            public void documentAboutToBeChanged(DocumentEvent event) {
+            }
+
+            @Override
+            public void documentChanged(DocumentEvent event) {
+                MessagesImpls.ChangeImpl change = MessagesImpls.ChangeImpl.make();
+                change.setOffset(event.getOffset()).setLength(event.getLength()).setText(event.getText());
+                changes.add(change);
+            }
+        });
+        proposal.apply(document);
+        MessagesImpls.ProposalAppliedMessageImpl message = MessagesImpls.ProposalAppliedMessageImpl.make();
+        message.setChanges(changes);
+        Region selection = proposal.getSelection(document);
+        if (selection != null) {
+            MessagesImpls.RegionImpl region = MessagesImpls.RegionImpl.make();
+            region.setLength(selection.getLength()).setOffset(selection.getOffset());
+            message.setSelectionRegion(region);
+        }
+        message.setId(id);
+        worker.sendMessage(message.serialize());
     }
 
     private void handleCAMessage(ComputeCAProposalsMessage message) {
+        proposalMap = JsoStringMap.create();
+        documentContent = message.docContent();
         JavaCompletionProposal[] proposals =
-                computeCompletionProposals(unit, message.offset(), message.docContent(), message.fileName());
+                computeCompletionProposals(unit, message.offset(), documentContent, message.fileName());
 
         MessagesImpls.CAProposalsComputedMessageImpl caComputedMessage = MessagesImpls.CAProposalsComputedMessageImpl.make();
         caComputedMessage.setId(message.id());
@@ -115,7 +163,10 @@ public class WorkerCodeAssist {
         for (JavaCompletionProposal proposal : proposals) {
             MessagesImpls.WorkerProposalImpl prop = MessagesImpls.WorkerProposalImpl.make();
             prop.setAutoInsertable(proposal.isAutoInsertable()).setDisplayText(proposal.getDisplayString())
-                .setImage(proposal.getImage() == null? null : proposal.getImage().name());
+                .setImage(proposal.getImage() == null ? null : proposal.getImage().name());
+            String uuid = UUID.uuid();
+            prop.setId(uuid);
+            proposalMap.put(uuid, proposal);
             workerProposals.add(prop);
         }
 
@@ -161,7 +212,7 @@ public class WorkerCodeAssist {
                     // insert history types
                     List<String> history =
                             WorkerMessageHandler.get().getContentAssistHistory().getHistory(expectedType.getFullyQualifiedName())
-                                         .getTypes();
+                                                .getTypes();
                     relevance -= history.size() + 1;
                     for (Iterator<String> it = history.iterator(); it.hasNext(); ) {
                         String type = it.next();

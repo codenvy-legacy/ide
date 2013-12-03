@@ -17,17 +17,24 @@
  */
 package com.codenvy.ide.ext.java.messages;
 
+import com.codenvy.ide.dto.shared.RoutingType;
+import com.google.gwt.webworker.client.messages.CompactJsonMessage;
+import com.google.gwt.webworker.client.messages.Message;
+import com.google.gwt.webworker.client.messages.SerializationIndex;
+
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class RoutingTypes {
-    public static final int CONFIG                = 1;
-    public static final int PARSE                 = 2;
-    public static final int PROBLEMS              = 3;
-    public static final int CA_COMPUTE_PROPOSALS  = 4;
-    public static final int CA_PROPOSALS_COMPUTED = 5;
-    public static final int APPLY_CA_PROPOSAL     = 6;
-    public static final int CA_PROPOSAL_APPLIED   = 7;
+@RoutingType(type = Message.NON_ROUTABLE_TYPE)
+public interface Change extends Message, CompactJsonMessage{
 
+    @SerializationIndex(1)
+    int offset();
+
+    @SerializationIndex(2)
+    int length();
+
+    @SerializationIndex(3)
+    String text();
 }

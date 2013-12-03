@@ -17,9 +17,16 @@
  */
 package com.codenvy.ide.ext.java.client.editor;
 
+import com.codenvy.ide.ext.java.messages.Change;
+import com.codenvy.ide.ext.java.messages.ProposalAppliedMessage;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
+import com.codenvy.ide.text.RegionImpl;
+import com.codenvy.ide.texteditor.api.codeassistant.Completion;
 import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -29,27 +36,18 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class CompletionProposalImpl implements CompletionProposal {
 
-    private String display;
+    private String           id;
+    private String           display;
+    private Image            image;
+    private boolean          autoInsertable;
+    private JavaParserWorker worker;
 
-    private Image image;
-
-    private boolean autoInsertable;
-
-    public CompletionProposalImpl(String display, Image image, boolean autoInsertable) {
+    public CompletionProposalImpl(String id, String display, Image image, boolean autoInsertable, JavaParserWorker worker) {
+        this.id = id;
         this.display = display;
         this.image = image;
         this.autoInsertable = autoInsertable;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void apply(Document document) {
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Region getSelection(Document document) {
-        return null;
+        this.worker = worker;
     }
 
     /** {@inheritDoc} */
@@ -72,17 +70,6 @@ public class CompletionProposalImpl implements CompletionProposal {
 
     /** {@inheritDoc} */
     @Override
-    public void apply(Document document, char trigger, int offset) {
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean isValidFor(Document document, int offset) {
-        return false;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public char[] getTriggerCharacters() {
         return new char[0];
     }
@@ -91,5 +78,45 @@ public class CompletionProposalImpl implements CompletionProposal {
     @Override
     public boolean isAutoInsertable() {
         return autoInsertable;
+    }
+
+    @Override
+    public void getCompletion(final CompletionCallback callback) {
+        worker.applyCAProposal(id, new JavaParserWorker.ApplyCallback() {
+            @Override
+            public void onApply(final ProposalAppliedMessage message) {
+                callback.onCompletion(new CompletionImpl(message.changes(), message.selectionRegion()));
+            }
+        });
+    }
+
+    private class CompletionImpl implements Completion {
+
+        private final JsonArray<Change>                        changes;
+        private final com.codenvy.ide.ext.java.messages.Region region;
+
+        private CompletionImpl(JsonArray<Change> changes, com.codenvy.ide.ext.java.messages.Region region) {
+            this.changes = changes;
+            this.region = region;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void apply(Document document) {
+            try {
+                for (Change change : changes.asIterable()) {
+                    document.replace(change.offset(), change.length(), change.text());
+                }
+            } catch (BadLocationException e) {
+                Log.error(CompletionProposalImpl.class, e);
+            }
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public Region getSelection(Document document) {
+            if (region == null) return null;
+            else return new RegionImpl(region.getOffset(), region.getLength());
+        }
     }
 }

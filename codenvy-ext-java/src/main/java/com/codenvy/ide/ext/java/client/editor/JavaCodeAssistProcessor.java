@@ -55,9 +55,9 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor {
                                           CompletionProposal[] proposals = new CompletionProposal[problems.size()];
                                           for (int i = 0; i < problems.size(); i++) {
                                               WorkerProposal proposal = problems.get(i);
-                                              proposals[i] = new CompletionProposalImpl(insertStyle(proposal.displayText()),
+                                              proposals[i] = new CompletionProposalImpl(proposal.id(), insertStyle(proposal.displayText()),
                                                                                         getImage(proposal.image()),
-                                                                                        proposal.autoInsertable());
+                                                                                        proposal.autoInsertable(), worker);
                                           }
 
                                           callback.proposalComputed(proposals);
@@ -74,7 +74,7 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor {
     }
 
     private Image getImage(String image) {
-        if(image == null){
+        if (image == null) {
             return null;
         }
         Images i = Images.valueOf(image);

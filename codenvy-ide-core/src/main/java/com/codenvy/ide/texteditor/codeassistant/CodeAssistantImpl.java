@@ -33,6 +33,7 @@ import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.UndoManager;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistant;
+import com.codenvy.ide.texteditor.api.codeassistant.Completion;
 import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 import com.codenvy.ide.texteditor.codeassistant.AutocompleteBox.Events;
 import com.codenvy.ide.texteditor.codeassistant.AutocompleteUiController.Resources;
@@ -127,21 +128,28 @@ public class CodeAssistantImpl implements CodeAssistant {
     private void applyProposal(CompletionProposal proposal) {
         if (proposal == null)
             return;
-        UndoManager undoManager = textEditor.getEditorDocumentMutator().getUndoManager();
-        if (undoManager != null)
-            undoManager.beginCompoundChange();
-        try {
-            proposal.apply(textEditor.getDocument());
-            Region selection = proposal.getSelection(textEditor.getDocument());
-            if (selection != null) {
-                textEditor.getSelection().selectAndReveal(selection.getOffset(), selection.getLength());
+
+        proposal.getCompletion(new CompletionProposal.CompletionCallback() {
+            @Override
+            public void onCompletion(Completion completion) {
+                UndoManager undoManager = textEditor.getEditorDocumentMutator().getUndoManager();
+                if (undoManager != null)
+                    undoManager.beginCompoundChange();
+                try {
+                    completion.apply(textEditor.getDocument());
+                    Region selection = completion.getSelection(textEditor.getDocument());
+                    if (selection != null) {
+                        textEditor.getSelection().selectAndReveal(selection.getOffset(), selection.getLength());
+                    }
+                } catch (Exception e) {
+                    Log.error(getClass(), e);
+                } finally {
+                    if (undoManager != null)
+                        undoManager.endCompoundChange();
+                }
             }
-        } catch (Exception e) {
-            Log.error(getClass(), e);
-        } finally {
-            if (undoManager != null)
-                undoManager.endCompoundChange();
-        }
+        });
+
     }
 
     /**

@@ -10,13 +10,20 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.templates;
 
+import com.codenvy.ide.ext.java.jdt.Images;
+import com.codenvy.ide.ext.java.jdt.codeassistant.api.CompletionProposal;
 import com.codenvy.ide.runtime.Assert;
-import com.codenvy.ide.text.*;
-import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Widget;
+import com.codenvy.ide.text.BadLocationException;
+import com.codenvy.ide.text.Document;
+import com.codenvy.ide.text.DocumentEvent;
+import com.codenvy.ide.text.Region;
+import com.codenvy.ide.text.RegionImpl;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Global state for templates. Selecting a proposal for the master template variable will cause the value (and the proposals) for
@@ -45,13 +52,13 @@ public class MultiVariableGuess {
         private int fCursorPosition;
 
         /** The image to be displayed in the completion proposal popup */
-        private Image fImage;
+        private Images fImage;
 
         /** The context information of this proposal */
 //      private ContextInformation fContextInformation;
 
         /** The additional info of this proposal */
-        private Widget fAdditionalProposalInfo;
+//        private Widget fAdditionalProposalInfo;
 
         /**
          * Creates a new completion proposal based on the provided information. The replacement string is considered being the
@@ -67,7 +74,7 @@ public class MultiVariableGuess {
          *         the position of the cursor following the insert relative to replacementOffset
          */
         public Proposal(String replacementString, int replacementOffset, int replacementLength, int cursorPosition) {
-            this(replacementString, replacementOffset, replacementLength, cursorPosition, null, null, null);
+            this(replacementString, replacementOffset, replacementLength, cursorPosition, null, null);
         }
 
         /**
@@ -91,7 +98,7 @@ public class MultiVariableGuess {
          *         the additional information associated with this proposal
          */
         public Proposal(String replacementString, int replacementOffset, int replacementLength, int cursorPosition,
-                        Image image, String displayString, Widget additionalProposalInfo) {
+                        Images image, String displayString/*, Widget additionalProposalInfo*/) {
             Assert.isNotNull(replacementString);
             Assert.isTrue(replacementOffset >= 0);
             Assert.isTrue(replacementLength >= 0);
@@ -104,10 +111,10 @@ public class MultiVariableGuess {
             fImage = image;
             fDisplayString = displayString;
 //         fContextInformation = contextInformation;
-            fAdditionalProposalInfo = additionalProposalInfo;
+//            fAdditionalProposalInfo = additionalProposalInfo;
         }
 
-        /*
+        /** {@inheritDoc} */ /*
          * @see ICompletionProposal#apply(IDocument)
          */
         public void apply(Document document) {
@@ -118,7 +125,7 @@ public class MultiVariableGuess {
             }
         }
 
-        /*
+        /** {@inheritDoc} */ /*
          * @see ICompletionProposal#getSelection(IDocument)
          */
         public Region getSelection(Document document) {
@@ -133,14 +140,14 @@ public class MultiVariableGuess {
 //         return fContextInformation;
 //      }
 
-        /*
+        /** {@inheritDoc} */ /*
          * @see ICompletionProposal#getImage()
          */
-        public Image getImage() {
+        public Images getImage() {
             return fImage;
         }
 
-        /*
+        /** {@inheritDoc} */ /*
          * @see ICompletionProposal#getDisplayString()
          */
         public String getDisplayString() {
@@ -149,13 +156,13 @@ public class MultiVariableGuess {
             }
             return fReplacementString;
         }
-
-        /*
-         * @see ICompletionProposal#getAdditionalProposalInfo()
-         */
-        public Widget getAdditionalProposalInfo() {
-            return fAdditionalProposalInfo;
-        }
+//
+//        /*
+//         * @see ICompletionProposal#getAdditionalProposalInfo()
+//         */
+//        public Widget getAdditionalProposalInfo() {
+//            return fAdditionalProposalInfo;
+//        }
 
         /*
          * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension2#apply(org.eclipse.jface.text.ITextViewer, char,
@@ -194,25 +201,25 @@ public class MultiVariableGuess {
             return false;
         }
 
-        /** @see com.codenvy.ide.editor.api.contentassist.CompletionProposal#apply(com.codenvy.ide.editor.text.IDocument, char, int) */
+        /** {@inheritDoc} */
         @Override
         public void apply(Document document, char trigger, int offset) {
             apply(document);
         }
 
-        /** @see com.codenvy.ide.editor.api.contentassist.CompletionProposal#isValidFor(com.codenvy.ide.editor.text.IDocument, int) */
+        /** {@inheritDoc} */
         @Override
         public boolean isValidFor(Document document, int offset) {
             return false;
         }
 
-        /** @see com.codenvy.ide.editor.api.contentassist.CompletionProposal#getTriggerCharacters() */
+        /** {@inheritDoc} */
         @Override
         public char[] getTriggerCharacters() {
             return null;
         }
 
-        /** @see com.codenvy.ide.editor.api.contentassist.CompletionProposal#isAutoInsertable() */
+        /** {@inheritDoc} */
         @Override
         public boolean isAutoInsertable() {
             return false;

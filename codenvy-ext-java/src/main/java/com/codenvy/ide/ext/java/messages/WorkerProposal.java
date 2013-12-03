@@ -37,4 +37,7 @@ public interface WorkerProposal extends Message, CompactJsonMessage {
 
     @SerializationIndex(3)
     boolean autoInsertable();
+
+    @SerializationIndex(4)
+    String id();
 }

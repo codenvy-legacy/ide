@@ -18,6 +18,7 @@
 package com.codenvy.ide.ext.java.client.editor;
 
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
+import com.codenvy.ide.ext.java.messages.ProposalAppliedMessage;
 import com.codenvy.ide.ext.java.messages.WorkerProposal;
 import com.codenvy.ide.json.JsonArray;
 
@@ -31,7 +32,13 @@ public interface JavaParserWorker {
         void onResult(JsonArray<T> problems);
     }
 
+    public interface ApplyCallback {
+        void onApply(ProposalAppliedMessage message);
+    }
+
     void parse(String content, String fileName, String packageName, WorkerCallback<IProblem> callback);
 
     void computeCAProposals(String content, int offset, String fileName, WorkerCallback<WorkerProposal> callback);
+
+    void applyCAProposal(String id, ApplyCallback callback);
 }
