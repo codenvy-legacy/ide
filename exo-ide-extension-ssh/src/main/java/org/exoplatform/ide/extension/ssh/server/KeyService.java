@@ -49,6 +49,10 @@ import java.util.regex.Pattern;
 @Path("{ws-name}/ssh-keys")
 public class KeyService {
 
+    /**
+     * SSH key with passphrase contains line with information that it is encrypted, for example: Proc-Type: 4,ENCRYPTED. This pattern used
+     * for detection SSH keys with passphrase.
+     */
     private static final Pattern SSH_KEY_LINE_WITH_PASSPHRASE = Pattern.compile("(?i)\\s*proc-type:\\s*\\d*,\\s*encrypted\\s*");
     private final SshKeyStore keyStore;
 
