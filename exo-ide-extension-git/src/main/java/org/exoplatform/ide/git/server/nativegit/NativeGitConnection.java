@@ -407,7 +407,7 @@ public class NativeGitConnection implements GitConnection {
     /** @see org.exoplatform.ide.git.server.GitConnection#rm(org.exoplatform.ide.git.shared.RmRequest) */
     @Override
     public void rm(RmRequest request) throws GitException {
-        nativeGit.createRemoveCommand().setListOfFiles(request.getFiles()).execute();
+        nativeGit.createRemoveCommand().setListOfFiles(request.getFiles()).setCached(request.getCached()).execute();
     }
 
     /** @see org.exoplatform.ide.git.server.GitConnection#status(boolean) */

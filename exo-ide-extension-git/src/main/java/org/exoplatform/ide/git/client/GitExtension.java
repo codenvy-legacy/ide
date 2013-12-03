@@ -52,6 +52,7 @@ import org.exoplatform.ide.git.client.control.ShowHistoryControl;
 import org.exoplatform.ide.git.client.control.ShowProjectGitReadOnlyUrl;
 import org.exoplatform.ide.git.client.control.ShowStatusControl;
 import org.exoplatform.ide.git.client.delete.DeleteRepositoryCommandHandler;
+import org.exoplatform.ide.git.client.editor.UpdateOpenedFilesPresenter;
 import org.exoplatform.ide.git.client.fetch.FetchPresenter;
 import org.exoplatform.ide.git.client.github.gitimport.ImportFromGithubControl;
 import org.exoplatform.ide.git.client.github.gitimport.ImportFromGithubPresenter;
@@ -138,6 +139,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
 
         new ImportFromGithubPresenter();
         new SSHKeyProcessor();
+        new UpdateOpenedFilesPresenter();
 
     }
 

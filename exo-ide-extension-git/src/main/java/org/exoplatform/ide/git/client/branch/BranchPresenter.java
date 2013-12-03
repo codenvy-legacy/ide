@@ -30,6 +30,10 @@ import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialog.StringValueReceivedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -38,87 +42,91 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.git.client.editor.UpdateOpenedFilesEvent;
 import org.exoplatform.ide.git.client.marshaller.BranchListUnmarshaller;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.BranchListRequest;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Presenter of view for displaying and work with branches. The view must be pointed in Views.gwt.xml file.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 8, 2011 12:02:49 PM anya $
  */
-public class BranchPresenter extends GitPresenter implements ShowBranchesHandler {
+public class BranchPresenter extends GitPresenter implements ShowBranchesHandler, EditorFileOpenedHandler, EditorFileClosedHandler {
     interface Display extends IsView {
         /**
          * Click handler for create branch button.
-         * 
+         *
          * @return {@link HasClickHandlers}
          */
         HasClickHandlers getCreateBranchButton();
 
         /**
          * Click handler for checkout branch button.
-         * 
+         *
          * @return {@link HasClickHandlers}
          */
         HasClickHandlers getCheckoutBranchButton();
 
         /**
          * Click handler for delete branch button.
-         * 
+         *
          * @return {@link HasClickHandlers}
          */
         HasClickHandlers getDeleteBranchButton();
 
         /**
          * Click handler for rename branch button.
-         * 
+         *
          * @return {@link HasClickHandlers}
          */
         HasClickHandlers getRenameBranchButton();
 
         /**
          * Click handler for close button.
-         * 
+         *
          * @return {@link HasClickHandlers}
          */
         HasClickHandlers getCloseButton();
 
         /**
          * Returns the grid, responsible for displaying branches.
-         * 
+         *
          * @return {@link ListGridItem}
          */
         ListGridItem<Branch> getBranchesGrid();
 
         /**
          * Get selected branch in grid.
-         * 
+         *
          * @return {@link Branch} selected branch
          */
         Branch getSelectedBranch();
 
         /**
          * Change the enable state of the delete button.
-         * 
+         *
          * @param enabled is enabled
          */
         void enableDeleteButton(boolean enabled);
 
         /**
          * Change the enable state of the checkout button.
-         * 
+         *
          * @param enabled is enabled
          */
         void enableCheckoutButton(boolean enabled);
 
         /**
          * Change the enable state of the rename button.
-         * 
+         *
          * @param enabled is enabled
          */
         void enableRenameButton(boolean enabled);
@@ -127,16 +135,17 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
     /** Presenter's display. */
     private Display display;
 
-    /**
-     *
-     */
+    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
+
     public BranchPresenter() {
         IDE.addHandler(ShowBranchesEvent.TYPE, this);
+        IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+        IDE.addHandler(EditorFileClosedEvent.TYPE, this);
     }
 
     /**
      * Bind display with presenter.
-     * 
+     *
      * @param d display
      */
     public void bindDisplay(Display d) {
@@ -161,6 +170,13 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
 
             @Override
             public void onClick(ClickEvent event) {
+                for (Map.Entry<String, FileModel> openedFile : openedFiles.entrySet()) {
+                    if (openedFile.getValue().isContentChanged()) {
+                        Dialogs.getInstance().showInfo(GitExtension.MESSAGES.fileUnsaved(openedFile.getValue().getName()));
+                        return;
+                    }
+                }
+
                 doCheckoutBranch();
             }
         });
@@ -201,7 +217,7 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
 
     /**
      * Get the list of branches.
-     * 
+     *
      * @param workDir Git repository work tree location
      * @param remote get remote branches if <code>true</code>
      */
@@ -264,7 +280,7 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
 
     /**
      * Create branch with pointed name.
-     * 
+     *
      * @param name new branch's name
      */
     private void doCreateBranch(String name) {
@@ -317,6 +333,7 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
                                                               protected void onSuccess(String result) {
                                                                   getBranches(projectId);
                                                                   IDE.fireEvent(new RefreshBrowserEvent());
+                                                                  IDE.fireEvent(new UpdateOpenedFilesEvent());
                                                               }
 
                                                               @Override
@@ -368,7 +385,7 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
 
     /**
      * Rename branch with pointed name.
-     * 
+     *
      * @param name name of branch to delete
      */
     private void doRenameBranch(String oldName, String newName) {
@@ -397,7 +414,7 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
 
     /**
      * Delete branch with pointed name.
-     * 
+     *
      * @param name name of branch to delete
      */
     private void doDeleteBranch(String name) {
@@ -424,5 +441,15 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
             String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.branchDeleteFailed();
             IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
         }
+    }
+
+    @Override
+    public void onEditorFileClosed(EditorFileClosedEvent event) {
+        this.openedFiles = event.getOpenedFiles();
+    }
+
+    @Override
+    public void onEditorFileOpened(EditorFileOpenedEvent event) {
+        this.openedFiles = event.getOpenedFiles();
     }
 }
