@@ -25,6 +25,7 @@ import com.codenvy.api.vfs.server.exceptions.InvalidArgumentException;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.shared.PropertyFilter;
 import com.codenvy.api.vfs.shared.dto.Property;
+import com.codenvy.ide.annotations.NotNull;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -37,11 +38,10 @@ import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.List;
+
+import static com.codenvy.ide.ext.extensions.server.CreateProjectApplication.BASE_URL;
 
 /**
  * Service for creating Codenvy extension projects.
@@ -107,7 +107,7 @@ public class CreateProjectService {
                                                     @QueryParam("artifactid") String artifactId,
                                                     @QueryParam("version") String version)
             throws VirtualFileSystemException, IOException {
-        createProject(vfsId, name, properties, "templates/GistExtensionSample.zip");
+        createProject(vfsId, name, properties, BASE_URL + "/gist-extension.zip");
 
         MavenXpp3Reader pomReader = new MavenXpp3Reader();
         MavenXpp3Writer pomWriter = new MavenXpp3Writer();
@@ -131,9 +131,10 @@ public class CreateProjectService {
         }
     }
 
-    private void createProject(String vfsId, String name,
-                               List<Property> properties, String templatePath) throws VirtualFileSystemException,
-                                                                                      IOException {
+    private void createProject(@NotNull String vfsId,
+                               @NotNull String name,
+                               @NotNull List<Property> properties,
+                               @NotNull String templatePath) throws VirtualFileSystemException, IOException {
         if (templatePath == null || templatePath.isEmpty()) {
             throw new InvalidArgumentException("Can't find project template.");
         }
@@ -142,19 +143,15 @@ public class CreateProjectService {
         MountPoint mountPoint = provider.getMountPoint(false);
         VirtualFile root = mountPoint.getRoot();
         VirtualFile projectFolder = root.createFolder(name);
-        InputStream templateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(templatePath);
-        if (templateStream == null) {
-            throw new InvalidArgumentException("Can't find " + templatePath);
-        }
+        InputStream templateStream = new FileInputStream(new File(templatePath));
         projectFolder.unzip(templateStream, true);
         updateProperties(properties, projectFolder);
     }
 
-    private void updateProperties(List<Property> properties, VirtualFile projectFolder)
+    private void updateProperties(@NotNull List<Property> properties, @NotNull VirtualFile projectFolder)
             throws VirtualFileSystemException {
         List<Property> propertyList = projectFolder.getProperties(PropertyFilter.ALL_FILTER);
         propertyList.addAll(properties);
         projectFolder.updateProperties(propertyList, null);
     }
-
 }
