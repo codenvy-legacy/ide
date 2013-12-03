@@ -27,6 +27,10 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -35,10 +39,14 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.git.client.editor.UpdateOpenedFilesEvent;
 import org.exoplatform.ide.git.shared.Status;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Presenter for view for reseting files from index. The view must be pointed in Views.gwt.xml file.
@@ -49,7 +57,7 @@ import java.util.List;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 13, 2011 4:52:42 PM anya $
  */
-public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandler {
+public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandler, EditorFileOpenedHandler, EditorFileClosedHandler {
 
     interface Display extends IsView {
         /**
@@ -77,16 +85,30 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
     /** Presenter' display. */
     private Display display;
 
+    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
+
     /**
      * @param eventBus events handler
      */
     public ResetFilesPresenter() {
         IDE.addHandler(ResetFilesEvent.TYPE, this);
+        IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+        IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+    }
+
+    @Override
+    public void onEditorFileClosed(EditorFileClosedEvent event) {
+        this.openedFiles = event.getOpenedFiles();
+    }
+
+    @Override
+    public void onEditorFileOpened(EditorFileOpenedEvent event) {
+        this.openedFiles = event.getOpenedFiles();
     }
 
     /**
      * Bind pointed display with presenter.
-     * 
+     *
      * @param d display
      */
     public void bindDisplay(Display d) {
@@ -96,6 +118,13 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
 
             @Override
             public void onClick(ClickEvent event) {
+                for (Map.Entry<String, FileModel> openedFile : openedFiles.entrySet()) {
+                    if (openedFile.getValue().isContentChanged()) {
+                        Dialogs.getInstance().showInfo(GitExtension.MESSAGES.fileUnsaved(openedFile.getValue().getName()));
+                        return;
+                    }
+                }
+
                 doReset();
             }
         });
@@ -119,7 +148,7 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
 
     /**
      * Get the information about git files' states.
-     * 
+     *
      * @param workDir
      */
     private void getStatus(final String projectId) {
@@ -128,8 +157,8 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
                             .status(vfs.getId(),
                                     projectId,
                                     new AsyncRequestCallback<Status>(
-                                                                     new AutoBeanUnmarshaller<Status>(
-                                                                                                      GitExtension.AUTO_BEAN_FACTORY.status())) {
+                                            new AutoBeanUnmarshaller<Status>(
+                                                    GitExtension.AUTO_BEAN_FACTORY.status())) {
 
                                         @Override
                                         protected void onSuccess(Status result) {
@@ -196,6 +225,7 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
                                                          IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetFilesSuccessfully(),
                                                                                        Type.GIT));
                                                          IDE.fireEvent(new TreeRefreshedEvent(getSelectedProject()));
+                                                         IDE.fireEvent(new UpdateOpenedFilesEvent());
                                                      }
 
                                                      @Override
