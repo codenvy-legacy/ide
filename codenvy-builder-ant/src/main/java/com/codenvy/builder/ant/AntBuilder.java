@@ -17,20 +17,20 @@
  */
 package com.codenvy.builder.ant;
 
+import com.codenvy.api.builder.dto.Dependency;
 import com.codenvy.api.builder.internal.BuildListener;
 import com.codenvy.api.builder.internal.BuildResult;
 import com.codenvy.api.builder.internal.BuildTask;
-import com.codenvy.api.builder.internal.BuildTaskConfiguration;
 import com.codenvy.api.builder.internal.Builder;
+import com.codenvy.api.builder.internal.BuilderConfiguration;
 import com.codenvy.api.builder.internal.BuilderException;
 import com.codenvy.api.builder.internal.BuilderTaskType;
 import com.codenvy.api.builder.internal.DependencyCollector;
-import com.codenvy.api.core.config.Configuration;
-import com.codenvy.api.core.rest.FileAdapter;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.builder.tools.ant.AntBuildListener;
 import com.codenvy.builder.tools.ant.AntMessage;
+import com.codenvy.dto.server.DtoFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,11 +66,6 @@ import java.util.zip.ZipOutputStream;
 public class AntBuilder extends Builder {
     private static final Logger LOG = LoggerFactory.getLogger(AntBuilder.class);
 
-    /** It sets min number of port which may be used to connect to AntBuildListener. Default value is 49152. */
-    public static final String ANT_LISTENER_MIN_PORT = "builder.ant_listener_min_port";
-    /** It sets max number of port which may be used to connect to AntBuildListener. Default value is 65535. */
-    public static final String ANT_LISTENER_MAX_PORT = "builder.ant_listener_max_port";
-
     private static final String DEPENDENCIES_JSON_FILE = "dependencies.json";
     private static final String DEPENDENCIES_ZIP_FILE  = "dependencies.zip";
     private static final String BUILD_LISTENER_CLASS;
@@ -104,12 +99,10 @@ public class AntBuilder extends Builder {
     }
 
     private final Map<Long, AntMessageServer> antMessageServers;
-    private final CustomPortService           portService;
 
     public AntBuilder() {
         super();
         antMessageServers = new ConcurrentHashMap<>();
-        portService = new CustomPortService();
     }
 
     @Override
@@ -123,7 +116,7 @@ public class AntBuilder extends Builder {
     }
 
     @Override
-    protected CommandLine createCommandLine(BuildTaskConfiguration config) {
+    protected CommandLine createCommandLine(BuilderConfiguration config) {
         final CommandLine commandLine = new CommandLine(antExecCommand());
         commandLine.add(config.getTargets());
         switch (config.getTaskType()) {
@@ -171,9 +164,8 @@ public class AntBuilder extends Builder {
                 }
             }
 
-            final BuildTaskConfiguration config = task.getConfiguration();
-            final java.io.File srcDir = task.getSources().getDirectory().getIoFile();
-            final Path srcPath = srcDir.toPath();
+            final BuilderConfiguration config = task.getConfiguration();
+            final java.io.File workDir = config.getWorkDir();
             if (config.getTaskType() == BuilderTaskType.DEFAULT) {
                 // Need successful status to continue.
                 if (!antSuccessful) {
@@ -184,7 +176,7 @@ public class AntBuilder extends Builder {
                     if (event.isPack()) {
                         final java.io.File file = event.getPack();
                         if (file.exists()) {
-                            result.getResultUnits().add(new FileAdapter(file, srcPath.relativize(file.toPath()).toString()));
+                            result.getResults().add(file);
                         }
                     }
                 }
@@ -206,17 +198,17 @@ public class AntBuilder extends Builder {
                 }
                 if (config.getTaskType() == BuilderTaskType.LIST_DEPS) {
                     try {
-                        final java.io.File file = new java.io.File(srcDir, DEPENDENCIES_JSON_FILE);
-                        writeDependenciesJson(classpath, srcDir, file);
-                        result.getResultUnits().add(new FileAdapter(file, srcPath.relativize(file.toPath()).toString()));
+                        final java.io.File file = new java.io.File(workDir, DEPENDENCIES_JSON_FILE);
+                        writeDependenciesJson(classpath, workDir, file);
+                        result.getResults().add(file);
                     } catch (IOException e) {
                         throw new BuilderException(e);
                     }
                 } else {
                     try {
-                        final java.io.File file = new java.io.File(srcDir, DEPENDENCIES_ZIP_FILE);
+                        final java.io.File file = new java.io.File(workDir, DEPENDENCIES_ZIP_FILE);
                         writeDependenciesZip(classpath, file);
-                        result.getResultUnits().add(new FileAdapter(file, srcPath.relativize(file.toPath()).toString()));
+                        result.getResults().add(file);
                     } catch (IOException e) {
                         throw new BuilderException(e);
                     }
@@ -231,8 +223,6 @@ public class AntBuilder extends Builder {
     @Override
     public void start() {
         super.start();
-        final Configuration myConfiguration = getConfiguration();
-        portService.setRange(myConfiguration.getInt(ANT_LISTENER_MIN_PORT, 49152), myConfiguration.getInt(ANT_LISTENER_MAX_PORT, 65535));
         addBuildListener(new AntMessageServerStarter());
     }
 
@@ -242,12 +232,12 @@ public class AntBuilder extends Builder {
         // If nobody asked about build results AntMessageServer may be still in the Map.
         final AntMessageServer server = antMessageServers.remove(task.getId());
         if (server != null) {
-            portService.release(server.port);
+            CustomPortService.getInstance().release(server.port);
         }
     }
 
     private int getPort() {
-        final int port = portService.acquire();
+        final int port = CustomPortService.getInstance().acquire();
         if (port < 0) {
             throw new IllegalStateException("Cannot start build process, there are no free ports. ");
         }
@@ -324,20 +314,22 @@ public class AntBuilder extends Builder {
         };
     }
 
-    private void writeDependenciesJson(Set<java.io.File> classpath, java.io.File srcDir, java.io.File jsonFile) throws IOException {
-        final Path srcPath = srcDir.toPath();
+    private void writeDependenciesJson(Set<java.io.File> classpath, java.io.File workDir, java.io.File jsonFile) throws IOException {
+        final Path workDirPath = workDir.toPath();
         final DependencyCollector collector = new DependencyCollector();
         final UniqueNameChecker uniqueNameChecker = new UniqueNameChecker();
         for (java.io.File file : classpath) {
             final Path path = file.toPath();
-            if (path.startsWith(srcPath)) {
+            if (path.startsWith(workDirPath)) {
                 // If library included in project show relative path to it.
-                collector.addDependency(new DependencyCollector.Dependency(srcPath.relativize(path).toString()));
+                collector.addDependency(
+                        DtoFactory.getInstance().createDto(Dependency.class).withFullName(workDirPath.relativize(path).toString()));
             } else {
                 // otherwise show just name of library.
                 // Typically it may means that dependency is obtained with some dependency manager,
-                // e.g. with maven over maven-ant-task.
-                collector.addDependency(new DependencyCollector.Dependency(uniqueNameChecker.maybeAddIndex(file.getName())));
+                // e.g. with builder over builder-ant-task.
+                collector.addDependency(
+                        DtoFactory.getInstance().createDto(Dependency.class).withFullName(uniqueNameChecker.maybeAddIndex(file.getName())));
             }
         }
         collector.writeJson(jsonFile);
@@ -389,7 +381,7 @@ public class AntBuilder extends Builder {
             final AntMessageServer server = antMessageServers.get(task.getId());
             if (server != null) {
                 server.stop = true; // force stop if server is not stopped yet
-                portService.release(server.port);
+                CustomPortService.getInstance().release(server.port);
             }
         }
     }

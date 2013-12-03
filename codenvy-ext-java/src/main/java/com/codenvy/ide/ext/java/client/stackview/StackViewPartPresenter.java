@@ -26,7 +26,7 @@ import com.google.inject.Singleton;
 
 
 /**
- * Dummy part for demo purposes. Can later be used as template for debug stack view
+ * Dummy part for demo purposes. Can later be used as projecttemplate for debug stack view
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */

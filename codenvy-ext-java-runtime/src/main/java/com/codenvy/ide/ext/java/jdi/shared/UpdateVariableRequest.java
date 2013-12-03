@@ -25,4 +25,8 @@ public interface UpdateVariableRequest {
     VariablePath getVariablePath();
 
     String getExpression();
+
+    void setVariablePath(VariablePath variablePath);
+
+    void setExpression(String expression);
 }

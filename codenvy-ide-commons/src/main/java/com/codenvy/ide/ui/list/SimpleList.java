@@ -34,6 +34,8 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
+import java.util.List;
+
 
 /** A simple list widget for displaying flat collections of things. */
 // TODO: When we hit a place where a componenet wants to ditch all of
@@ -370,6 +372,12 @@ public class SimpleList<M> extends UiComponent<SimpleList.View> implements IsWid
      * <p/>
      * <p>This method tries to keep selection.
      */
+    public void render(List<M> items) {
+       render(JsonCollections.createArray(items));
+    }
+
+
+
     public void render(JsonArray<M> items) {
         M selectedItem = model.getSelectedItem();
         model.clearSelection();

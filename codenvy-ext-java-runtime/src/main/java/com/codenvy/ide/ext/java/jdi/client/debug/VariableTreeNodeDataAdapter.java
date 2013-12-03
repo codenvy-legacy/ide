@@ -24,6 +24,7 @@ import com.codenvy.ide.ui.tree.NodeDataAdapter;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * The adapter for debug variable node.
@@ -36,8 +37,8 @@ public class VariableTreeNodeDataAdapter implements NodeDataAdapter<Variable> {
     /** {@inheritDoc} */
     @Override
     public int compare(Variable a, Variable b) {
-        JsonArray<String> pathA = a.getVariablePath().getPath();
-        JsonArray<String> pathB = b.getVariablePath().getPath();
+        List<String> pathA = a.getVariablePath().getPath();
+        List<String> pathB = b.getVariablePath().getPath();
 
         for (int i = 0; i < pathA.size(); i++) {
             String elementA = pathA.get(i);
@@ -55,14 +56,14 @@ public class VariableTreeNodeDataAdapter implements NodeDataAdapter<Variable> {
     /** {@inheritDoc} */
     @Override
     public boolean hasChildren(Variable data) {
-        return !data.primitive();
+        return !data.isPrimitive();
     }
 
     /** {@inheritDoc} */
     @Override
     public JsonArray<Variable> getChildren(Variable data) {
-        JsonArray<Variable> variables = data.getVariables();
-        return variables != null ? variables : JsonCollections.<Variable>createArray();
+        List<Variable> variables = data.getVariables();
+        return variables != null ? JsonCollections.<Variable>createArray(variables) : JsonCollections.<Variable>createArray();
     }
 
     /** {@inheritDoc} */
@@ -110,7 +111,7 @@ public class VariableTreeNodeDataAdapter implements NodeDataAdapter<Variable> {
     /** {@inheritDoc} */
     @Override
     public JsonArray<String> getNodePath(Variable data) {
-        return data.getVariablePath().getPath();
+        return JsonCollections.<String>createArray(data.getVariablePath().getPath());
     }
 
     /** {@inheritDoc} */
@@ -120,7 +121,7 @@ public class VariableTreeNodeDataAdapter implements NodeDataAdapter<Variable> {
         for (int i = 0; i < relativeNodePath.size(); i++) {
             String path = relativeNodePath.get(i);
             if (localRoot != null) {
-                JsonArray<Variable> variables = localRoot.getVariables();
+                JsonArray<Variable> variables = JsonCollections.<Variable>createArray(localRoot.getVariables());
                 localRoot = null;
                 for (int j = 0; j < variables.size(); j++) {
                     Variable variable = variables.get(i);

@@ -21,16 +21,16 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
-import com.codenvy.ide.ext.git.client.marshaller.BranchListUnmarshaller;
-import com.codenvy.ide.ext.git.client.marshaller.RemoteListUnmarshaller;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
@@ -59,6 +59,7 @@ public class PullPresenter implements PullView.ActionDelegate {
     private GitLocalizationConstant constant;
     private NotificationManager     notificationManager;
     private Project                 project;
+    private DtoFactory              dtoFactory;
 
     /**
      * Create presenter.
@@ -71,13 +72,14 @@ public class PullPresenter implements PullView.ActionDelegate {
      */
     @Inject
     public PullPresenter(PullView view, GitClientService service, ResourceProvider resourceProvider,
-                         GitLocalizationConstant constant, NotificationManager notificationManager) {
+                         GitLocalizationConstant constant, NotificationManager notificationManager, DtoFactory dtoFactory) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
         this.constant = constant;
         this.notificationManager = notificationManager;
+        this.dtoFactory = dtoFactory;
     }
 
     /** Show dialog. */
@@ -91,19 +93,19 @@ public class PullPresenter implements PullView.ActionDelegate {
      * local).
      */
     private void getRemotes() {
-        RemoteListUnmarshaller unmarshaller = new RemoteListUnmarshaller();
         final String projectId = project.getId();
         view.setEnablePullButton(true);
 
         try {
             service.remoteList(resourceProvider.getVfsId(), projectId, null, true,
-                               new AsyncRequestCallback<JsonArray<Remote>>(unmarshaller) {
+                               new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                    @Override
-                                   protected void onSuccess(JsonArray<Remote> result) {
+                                   protected void onSuccess(String result) {
+                                       JsonArray<Remote> remotes = dtoFactory.createListDtoFromJson(result, Remote.class);
                                        getBranches(projectId, LIST_REMOTE);
                                        getBranches(projectId, LIST_LOCAL);
                                        view.setEnablePullButton(!result.isEmpty());
-                                       view.setRepositories(result);
+                                       view.setRepositories(remotes);
                                        view.showDialog();
                                    }
 
@@ -131,16 +133,16 @@ public class PullPresenter implements PullView.ActionDelegate {
      *         is a remote mode
      */
     private void getBranches(@NotNull String projectId, @NotNull final String remoteMode) {
-        BranchListUnmarshaller unmarshaller = new BranchListUnmarshaller();
         try {
             service.branchList(resourceProvider.getVfsId(), projectId, remoteMode,
-                               new AsyncRequestCallback<JsonArray<Branch>>(unmarshaller) {
+                               new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                    @Override
-                                   protected void onSuccess(JsonArray<Branch> result) {
+                                   protected void onSuccess(String result) {
+                                       JsonArray<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
                                        if (LIST_REMOTE.equals(remoteMode)) {
-                                           view.setRemoteBranches(getRemoteBranchesToDisplay(view.getRepositoryName(), result));
+                                           view.setRemoteBranches(getRemoteBranchesToDisplay(view.getRepositoryName(), branches));
                                        } else {
-                                           view.setLocalBranches(getLocalBranchesToDisplay(result));
+                                           view.setLocalBranches(getLocalBranchesToDisplay(branches));
                                        }
                                    }
 

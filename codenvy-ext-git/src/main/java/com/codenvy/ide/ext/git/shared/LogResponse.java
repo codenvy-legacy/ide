@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /**
  * The response with the log of commits.

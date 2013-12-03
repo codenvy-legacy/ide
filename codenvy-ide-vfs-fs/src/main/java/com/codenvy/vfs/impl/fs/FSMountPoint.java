@@ -17,13 +17,17 @@
  */
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.util.Pair;
 import com.codenvy.api.vfs.server.ContentStream;
 import com.codenvy.api.vfs.server.LazyIterator;
 import com.codenvy.api.vfs.server.MountPoint;
+import com.codenvy.api.vfs.server.Path;
+import com.codenvy.api.vfs.server.PathLockFactory;
 import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.api.vfs.server.VirtualFileFilter;
 import com.codenvy.api.vfs.server.VirtualFileSystemUser;
 import com.codenvy.api.vfs.server.VirtualFileSystemUserContext;
+import com.codenvy.api.vfs.server.VirtualFileVisitor;
 import com.codenvy.api.vfs.server.exceptions.InvalidArgumentException;
 import com.codenvy.api.vfs.server.exceptions.ItemAlreadyExistException;
 import com.codenvy.api.vfs.server.exceptions.ItemNotFoundException;
@@ -49,6 +53,10 @@ import com.codenvy.commons.lang.cache.Cache;
 import com.codenvy.commons.lang.cache.LoadingValueSLRUCache;
 import com.codenvy.commons.lang.cache.SynchronizedCache;
 import com.codenvy.dto.server.DtoFactory;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
+import com.google.common.io.ByteStreams;
+import com.google.common.io.InputSupplier;
 
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -329,7 +337,7 @@ public class FSMountPoint implements MountPoint {
 
     private VirtualFileImpl doGetVirtualFile(Path vfsPath) throws VirtualFileSystemException {
         final VirtualFileImpl virtualFile =
-                new VirtualFileImpl(new java.io.File(ioRoot, vfsPath.toIoPath()), vfsPath, pathToId(vfsPath), this);
+                new VirtualFileImpl(new java.io.File(ioRoot, toIoPath(vfsPath)), vfsPath, pathToId(vfsPath), this);
         if (!virtualFile.exists()) {
             throw new ItemNotFoundException(String.format("Object '%s' does not exists. ", vfsPath));
         }
@@ -397,7 +405,7 @@ public class FSMountPoint implements MountPoint {
             return null;
         }
         final Path parentPath = virtualFile.getInternalPath().getParent();
-        return new VirtualFileImpl(new java.io.File(ioRoot, parentPath.toIoPath()), parentPath, pathToId(parentPath), this);
+        return new VirtualFileImpl(new java.io.File(ioRoot, toIoPath(parentPath)), parentPath, pathToId(parentPath), this);
     }
 
 
@@ -422,7 +430,8 @@ public class FSMountPoint implements MountPoint {
 
     LazyIterator<VirtualFile> getChildren(VirtualFileImpl parent, VirtualFileFilter filter) throws VirtualFileSystemException {
         if (!parent.isFolder()) {
-            throw new InvalidArgumentException(String.format("Unable get children. Item '%s' is not a folder. ", parent.getPath()));
+            //throw new InvalidArgumentException(String.format("Unable get children. Item '%s' is not a folder. ", parent.getPath()));
+            return LazyIterator.emptyIterator();
         }
 
         final PathLockFactory.PathLock parentLock = pathLockFactory.getLock(parent.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
@@ -463,7 +472,7 @@ public class FSMountPoint implements MountPoint {
         final List<VirtualFile> children = new ArrayList<>(names.length);
         for (String name : names) {
             final Path childPath = virtualFile.getInternalPath().newPath(name);
-            children.add(new VirtualFileImpl(new java.io.File(ioRoot, childPath.toIoPath()), childPath, pathToId(childPath), this));
+            children.add(new VirtualFileImpl(new java.io.File(ioRoot, toIoPath(childPath)), childPath, pathToId(childPath), this));
         }
         return children;
     }
@@ -484,7 +493,7 @@ public class FSMountPoint implements MountPoint {
                         String.format("Unable create new file in '%s'. Operation not permitted. ", parent.getPath()));
             }
             final Path newPath = parent.getInternalPath().newPath(name);
-            final java.io.File newIoFile = new java.io.File(ioRoot, newPath.toIoPath());
+            final java.io.File newIoFile = new java.io.File(ioRoot, toIoPath(newPath));
             try {
                 if (!newIoFile.createNewFile()) // atomic
                 {
@@ -496,8 +505,7 @@ public class FSMountPoint implements MountPoint {
                 throw new VirtualFileSystemException(msg);
             }
 
-            final VirtualFileImpl newVirtualFile =
-                    new VirtualFileImpl(new java.io.File(ioRoot, newPath.toIoPath()), newPath, pathToId(newPath), this);
+            final VirtualFileImpl newVirtualFile = new VirtualFileImpl(newIoFile, newPath, pathToId(newPath), this);
             // Update content if any.
             if (content != null) {
                 doUpdateContent(newVirtualFile, mediaType, content);
@@ -536,10 +544,13 @@ public class FSMountPoint implements MountPoint {
             // If no one folder created then ItemAlreadyExistException is thrown.
             Path currentPath = parent.getInternalPath();
             Path newPath = null;
+            java.io.File newIoFile = null;
             for (String element : Path.fromString(name).elements()) {
                 currentPath = currentPath.newPath(element);
-                if (new java.io.File(ioRoot, currentPath.toIoPath()).mkdir()) {
+                java.io.File currentIoFile = new java.io.File(ioRoot, toIoPath(currentPath));
+                if (currentIoFile.mkdir()) {
                     newPath = currentPath;
+                    newIoFile = currentIoFile;
                 }
             }
 
@@ -550,7 +561,7 @@ public class FSMountPoint implements MountPoint {
 
             // Return first created folder, e.g. assume we need create: folder1/folder2/folder3 in specified folder.
             // If folder1 already exists then return folder2 as first created in hierarchy.
-            return new VirtualFileImpl(new java.io.File(ioRoot, newPath.toIoPath()), newPath, pathToId(newPath), this);
+            return new VirtualFileImpl(newIoFile, newPath, pathToId(newPath), this);
         } finally {
             parentLock.release();
         }
@@ -587,7 +598,7 @@ public class FSMountPoint implements MountPoint {
             }
             final Path newPath = parent.getInternalPath().newPath(source.getName());
             final VirtualFileImpl destination =
-                    new VirtualFileImpl(new java.io.File(ioRoot, newPath.toIoPath()), newPath, pathToId(newPath), this);
+                    new VirtualFileImpl(new java.io.File(ioRoot, toIoPath(newPath)), newPath, pathToId(newPath), this);
             if (destination.exists()) {
                 throw new ItemAlreadyExistException(String.format("Item '%s' already exists. ", newPath));
             }
@@ -703,7 +714,7 @@ public class FSMountPoint implements MountPoint {
             final VirtualFileImpl renamed;
             if (!(newName == null || name.equals(newName))) {
                 final Path newPath = virtualFile.getInternalPath().getParent().newPath(newName);
-                renamed = new VirtualFileImpl(new java.io.File(ioRoot, newPath.toIoPath()), newPath, pathToId(newPath), this);
+                renamed = new VirtualFileImpl(new java.io.File(ioRoot, toIoPath(newPath)), newPath, pathToId(newPath), this);
                 if (renamed.exists()) {
                     throw new ItemAlreadyExistException(String.format("Item '%s' already exists. ", renamed.getName()));
                 }
@@ -760,7 +771,7 @@ public class FSMountPoint implements MountPoint {
             }
             final Path newPath = parent.getInternalPath().newPath(source.getName());
             VirtualFileImpl destination =
-                    new VirtualFileImpl(new java.io.File(ioRoot, newPath.toIoPath()), newPath, pathToId(newPath), this);
+                    new VirtualFileImpl(new java.io.File(ioRoot, toIoPath(newPath)), newPath, pathToId(newPath), this);
             if (destination.exists()) {
                 throw new ItemAlreadyExistException(String.format("Item '%s' already exists. ", newPath));
             }
@@ -986,7 +997,7 @@ public class FSMountPoint implements MountPoint {
     }
 
 
-    ContentStream zip(VirtualFileImpl virtualFile) throws IOException, VirtualFileSystemException {
+    ContentStream zip(VirtualFileImpl virtualFile, VirtualFileFilter filter) throws IOException, VirtualFileSystemException {
         if (!virtualFile.isFolder()) {
             throw new InvalidArgumentException(String.format("Unable export to zip. Item '%s' is not a folder. ", virtualFile.getPath()));
         }
@@ -1007,10 +1018,11 @@ public class FSMountPoint implements MountPoint {
                 final byte[] buff = new byte[COPY_BUFFER_SIZE];
                 while (!q.isEmpty()) {
                     for (VirtualFile current : doGetChildren((VirtualFileImpl)q.pop(), SERVICE_GIT_DIR_FILTER)) {
-                        // Check permission directly for current file only.
+                        // (1) Check filter.
+                        // (2) Check permission directly for current file only.
                         // We already know parent accessible for current user otherwise we should not be here.
                         // Ignore item if don't have permission to read it.
-                        if (hasPermission((VirtualFileImpl)current, BasicPermissions.READ, false)) {
+                        if (filter.accept(current) && hasPermission((VirtualFileImpl)current, BasicPermissions.READ, false)) {
                             final String zipEntryName =
                                     ((VirtualFileImpl)current).getInternalPath().subPath(zipEntryNameTrim).toString().substring(1);
                             if (current.isFile()) {
@@ -1083,7 +1095,7 @@ public class FSMountPoint implements MountPoint {
                     if (relPath.length() > 1) {
                         // create all required parent directories
                         final Path parentPath = parent.getInternalPath().newPath(relPath.subPath(0, relPath.length() - 1));
-                        current = new VirtualFileImpl(new java.io.File(ioRoot, parentPath.toIoPath()), parentPath, pathToId(parentPath),
+                        current = new VirtualFileImpl(new java.io.File(ioRoot, toIoPath(parentPath)), parentPath, pathToId(parentPath),
                                                       this);
                         if (!(current.exists() || current.getIoFile().mkdirs())) {
                             throw new VirtualFileSystemException(String.format("Unable create directory '%s' ", parentPath));
@@ -1304,7 +1316,7 @@ public class FSMountPoint implements MountPoint {
     private java.io.File getLockFile(Path path) {
         java.io.File locksDir = path.isRoot()
                                 ? new java.io.File(ioRoot, LOCKS_DIR)
-                                : new java.io.File(ioRoot, path.getParent().newPath(LOCKS_DIR).toIoPath());
+                                : new java.io.File(ioRoot, toIoPath(path.getParent().newPath(LOCKS_DIR)));
         //boolean result = locksDir.mkdirs();
         //assert result || locksDir.exists();
         return new java.io.File(locksDir, path.getName() + LOCK_FILE_SUFFIX);
@@ -1423,7 +1435,7 @@ public class FSMountPoint implements MountPoint {
     private java.io.File getAclFile(Path path) {
         java.io.File aclDir = path.isRoot()
                               ? new java.io.File(ioRoot, ACL_DIR)
-                              : new java.io.File(ioRoot, path.getParent().newPath(ACL_DIR).toIoPath());
+                              : new java.io.File(ioRoot, toIoPath(path.getParent().newPath(ACL_DIR)));
         //boolean result = aclDir.mkdirs();
         //assert result || aclDir.exists();
         return new java.io.File(aclDir, path.getName() + ACL_FILE_SUFFIX);
@@ -1589,7 +1601,7 @@ public class FSMountPoint implements MountPoint {
     private java.io.File getMetadataFile(Path path) {
         java.io.File metadataDir = path.isRoot()
                                    ? new java.io.File(ioRoot, PROPS_DIR)
-                                   : new java.io.File(ioRoot, path.getParent().newPath(PROPS_DIR).toIoPath());
+                                   : new java.io.File(ioRoot, toIoPath(path.getParent().newPath(PROPS_DIR)));
         //boolean result = metadataDir.mkdirs();
         //assert result || metadataDir.exists();
         return new java.io.File(metadataDir, path.getName() + PROPERTIES_FILE_SUFFIX);
@@ -1622,7 +1634,59 @@ public class FSMountPoint implements MountPoint {
         throw new NotSupportedException("Versioning is not supported. ");
     }
 
+    LazyIterator<Pair<String, String>> countMd5Sums(VirtualFileImpl virtualFile) throws VirtualFileSystemException {
+        if (!virtualFile.isFolder()) {
+            return LazyIterator.emptyIterator();
+        }
+        final PathLockFactory.PathLock lock = pathLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
+        try {
+            final List<Pair<String, String>> hashes = new ArrayList<>();
+            final int trimPathLength = virtualFile.getPath().length() + 1;
+            final HashFunction hashFunction = Hashing.md5();
+            virtualFile.accept(new VirtualFileVisitor() {
+                @Override
+                public void visit(final VirtualFile virtualFile) throws VirtualFileSystemException {
+                    if (virtualFile.isFile()) {
+                        final InputStream stream = virtualFile.getContent().getStream();
+                        try {
+                            final String hexHash = ByteStreams.hash(new InputSupplier<InputStream>() {
+                                @Override
+                                public InputStream getInput() throws IOException {
+                                    return stream;
+                                }
+                            }, hashFunction).toString();
+
+                            hashes.add(Pair.of(hexHash, virtualFile.getPath().substring(trimPathLength)));
+                        } catch (IOException e) {
+                            throw new VirtualFileSystemException(e);
+                        }
+                    } else {
+                        final LazyIterator<VirtualFile> children = virtualFile.getChildren(VirtualFileFilter.ALL);
+                        while (children.hasNext()) {
+                            children.next().accept(this);
+                        }
+                    }
+                }
+            });
+            return LazyIterator.fromList(hashes);
+        } finally {
+            lock.release();
+        }
+    }
+
    /* ============ HELPERS  ============ */
+
+    /* Relative system path */
+    private String toIoPath(Path vfsPath) {
+        if (vfsPath.isRoot()) {
+            return "";
+        }
+        if ('/' == java.io.File.separatorChar) {
+            // Unix like system. Use vfs path as relative i/o path.
+            return vfsPath.toString();
+        }
+        return vfsPath.join(java.io.File.separatorChar);
+    }
 
     private Map<String, String[]> copyMetadataMap(Map<String, String[]> source) {
         final Map<String, String[]> copyMap = new HashMap<>(source.size());

@@ -20,7 +20,7 @@ package com.codenvy.ide.ext.ssh.client.manage;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.ssh.client.SshLocalizationConstant;
 import com.codenvy.ide.ext.ssh.client.SshResources;
-import com.codenvy.ide.ext.ssh.shared.KeyItem;
+import com.codenvy.ide.ext.ssh.dto.KeyItem;
 import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
@@ -97,7 +97,7 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
         Column<KeyItem, String> publicKeyColumn = new Column<KeyItem, String>(new ButtonCell()) {
             @Override
             public String getValue(KeyItem object) {
-                if (object.getPublicKeyURL() != null) {
+                if (object.getPublicKeyUrl() != null) {
                     return "View";
                 } else {
                     return "";

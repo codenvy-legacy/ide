@@ -31,6 +31,7 @@ import com.codenvy.ide.util.executor.UserActivityManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -43,24 +44,29 @@ public class JavaEditorProvider implements EditorProvider {
     private final NotificationManager         notificationManager;
     private       Provider<CodenvyTextEditor> editorProvider;
     private       ResourceProvider            resourceProvider;
-    private JavaParserWorker worker;
+    private       JavaParserWorker            worker;
 
     /**
      * @param resources
      * @param activityManager
      */
     @Inject
-    public JavaEditorProvider(Resources resources, UserActivityManager activityManager,
-                              Provider<CodenvyTextEditor> editorProvider, DocumentFactory documentFactory,
-                              NotificationManager notificationManager, ResourceProvider resourceProvider,
-                              JavaParserWorker worker) {
+    public JavaEditorProvider(Resources resources,
+                              UserActivityManager activityManager,
+                              Provider<CodenvyTextEditor> editorProvider,
+                              DocumentFactory documentFactory,
+                              NotificationManager notificationManager,
+                              ResourceProvider resourceProvider,
+                              JavaParserWorker worker,
+                              EventBus eventBus) {
         super();
         this.activityManager = activityManager;
         this.editorProvider = editorProvider;
         this.resourceProvider = resourceProvider;
         this.worker = worker;
         this.documentProvider =
-                new CompilationUnitDocumentProvider(resources.workspaceEditorCss(), JavaClientBundle.INSTANCE.css(), documentFactory);
+                new CompilationUnitDocumentProvider(resources.workspaceEditorCss(), JavaClientBundle.INSTANCE.css(), documentFactory,
+                                                    eventBus);
         this.notificationManager = notificationManager;
     }
 

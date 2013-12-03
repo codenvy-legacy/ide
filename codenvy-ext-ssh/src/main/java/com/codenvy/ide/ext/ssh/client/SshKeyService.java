@@ -18,11 +18,13 @@
 package com.codenvy.ide.ext.ssh.client;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.ext.ssh.shared.GenKeyRequest;
-import com.codenvy.ide.ext.ssh.shared.KeyItem;
+import com.codenvy.ide.ext.ssh.dto.GenKeyRequest;
+import com.codenvy.ide.ext.ssh.dto.KeyItem;
+import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * The client service for working with ssh key.
@@ -31,12 +33,28 @@ import com.google.gwt.http.client.RequestException;
  * @version $Id: SshService May 18, 2011 4:49:49 PM evgen $
  */
 public interface SshKeyService {
+    
+     /**
+      * Get the list of SSH keys providers.
+      * 
+     * @return {@link JsonStringMap}
+     */
+    JsonStringMap<SshKeyProvider> getSshKeyProviders();
+     
+     /**
+      * Register SSH key provider
+      * 
+     * @param host host, for which to provide keys
+     * @param sshKeyProvider keys provider
+     */
+    void registerSshKeyProvider(@NotNull String host, @NotNull SshKeyProvider sshKeyProvider);
+    
     /**
      * Receive all ssh key, stored on server
      *
      * @param callback
      */
-    void getAllKeys(@NotNull JsonpAsyncCallback<JavaScriptObject> callback);
+    void getAllKeys(@NotNull AsyncCallback<JavaScriptObject> callback);
 
     /**
      * Generate new ssh key pare
@@ -55,7 +73,7 @@ public interface SshKeyService {
      *         to get public key
      * @param callback
      */
-    void getPublicKey(@NotNull KeyItem keyItem, @NotNull JsonpAsyncCallback<JavaScriptObject> callback);
+    void getPublicKey(@NotNull KeyItem keyItem, @NotNull AsyncCallback<JavaScriptObject> callback);
 
     /**
      * Delete ssh key
@@ -64,5 +82,5 @@ public interface SshKeyService {
      *         to delete
      * @param callback
      */
-    void deleteKey(@NotNull KeyItem keyItem, @NotNull JsonpAsyncCallback<Void> callback);
+    void deleteKey(@NotNull KeyItem keyItem, @NotNull AsyncCallback<Void> callback);
 }

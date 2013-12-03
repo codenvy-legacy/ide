@@ -18,14 +18,13 @@
     from Codenvy S.A..
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
-        <version>3.0.0-M3-SNAPSHOT</version>
+        <version>3.0.0-M4-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-application-war</artifactId>
     <packaging>war</packaging>
@@ -87,17 +86,6 @@
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-client</artifactId>
-            <!-- Next two dependencies are added to client module only to allow launching Codenvy SDK in GWT DevMode. -->
-            <exclusions>
-                <exclusion>
-                    <groupId>com.codenvy.ide</groupId>
-                    <artifactId>codenvy-ext-tutorials</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.codenvy.ide</groupId>
-                    <artifactId>codenvy-ext-extensions-runtime</artifactId>
-                </exclusion>
-            </exclusions>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -105,12 +93,13 @@
             <artifactId>codenvy-ide-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <!-- Server-side VFS -->
         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-vfs-fs</artifactId>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-vfs</artifactId>
             <scope>runtime</scope>
-            <version>${org.exoplatform.ide.version}</version>
+            <version>${com.codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -120,20 +109,33 @@
                     <groupId>ch.qos.logback</groupId>
                     <artifactId>logback-classic</artifactId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>httpclient</artifactId>
+                    <groupId>org.apache.httpcomponents</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.ide</groupId>
+                    <artifactId>exo-ide-server</artifactId>
+                </exclusion>
             </exclusions>
             <version>${org.exoplatform.ide.version}</version>
         </dependency>
+
         <!-- Extensions -->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-java</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-java-runtime</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-demo</artifactId>
@@ -144,19 +146,24 @@
             <artifactId>codenvy-ext-css</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+      <!--  <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-git</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
+        </dependency>-->
+         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-maven</artifactId>
+            <artifactId>codenvy-ext-github</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-ssh</artifactId>
+            <artifactId>codenvy-ext-extensions</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-tutorials</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -178,11 +185,9 @@
             <scope>compile</scope>
             <version>${reflections.version}</version>
         </dependency>
-
     </dependencies>
 
     <build>
-
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

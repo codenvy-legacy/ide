@@ -36,13 +36,18 @@
     <!-- Other module inherits                                      -->
     <inherits name='com.codenvy.ide.Api'/>
     <inherits name="com.codenvy.ide.Core"/>
-    <inherits name='com.codenvy.ide.ext.java.Java'/>
-    <inherits name='com.codenvy.ide.ext.java.jdi.JavaRuntimeExtension'/>
     <inherits name='com.codenvy.ide.extension.demo.Demo'/>
     <inherits name='com.codenvy.ide.extension.css.Css'/>
-    <inherits name='com.codenvy.ide.extension.maven.Maven'/>
+    <inherits name='com.codenvy.ide.ext.java.Java'/>
+    <inherits name='com.codenvy.ide.extension.builder.Builder'/>
+    <inherits name='com.codenvy.ide.extension.runner.Runner'/>
     <inherits name='com.codenvy.ide.ext.git.Git'/>
+    <inherits name='com.codenvy.ide.ext.github.GitHub'/>
     <inherits name='com.codenvy.ide.ext.ssh.Ssh'/>
+    <inherits name='com.codenvy.ide.ext.extensions.Extensions'/>
+    <inherits name='com.codenvy.ide.ext.tutorials.Tutorials'/>
+
+    <inherits name='com.codenvy.api.PlatformAPI'/>
 
     <stylesheet src="IDE.css"/>
 

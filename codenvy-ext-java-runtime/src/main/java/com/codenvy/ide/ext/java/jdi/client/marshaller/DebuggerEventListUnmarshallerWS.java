@@ -18,7 +18,6 @@
 package com.codenvy.ide.ext.java.jdi.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.ext.java.jdi.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerEventList;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.rest.Unmarshallable;
@@ -30,17 +29,17 @@ import com.codenvy.ide.websocket.rest.Unmarshallable;
  * @version $Id: DebuggerEventListUnmarshallerWS.java Nov 19, 2012 12:42:58 PM azatsarynnyy $
  */
 public class DebuggerEventListUnmarshallerWS implements Unmarshallable<DebuggerEventList> {
-    private DtoClientImpls.DebuggerEventListImpl events;
+//    private DtoClientImpls.DebuggerEventListImpl events;
 
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Message response) throws UnmarshallerException {
-        events = DtoClientImpls.DebuggerEventListImpl.deserialize(response.getBody());
+//        events = DtoClientImpls.DebuggerEventListImpl.deserialize(response.getBody());
     }
 
     /** {@inheritDoc} */
     @Override
     public DebuggerEventList getPayload() {
-        return events;
+        return null;//events;
     }
 }

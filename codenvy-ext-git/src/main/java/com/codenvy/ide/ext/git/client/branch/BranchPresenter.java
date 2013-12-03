@@ -21,13 +21,14 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
-import com.codenvy.ide.ext.git.client.marshaller.BranchListUnmarshaller;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
@@ -53,6 +54,7 @@ public class BranchPresenter implements BranchView.ActionDelegate {
     private NotificationManager     notificationManager;
     private Branch                  selectedBranch;
     private Project                 project;
+    private DtoFactory              dtoFactory;
 
     /**
      * Create presenter.
@@ -65,13 +67,14 @@ public class BranchPresenter implements BranchView.ActionDelegate {
      */
     @Inject
     public BranchPresenter(BranchView view, GitClientService service, ResourceProvider resourceProvider, GitLocalizationConstant constant,
-                           NotificationManager notificationManager) {
+                           NotificationManager notificationManager, DtoFactory dtoFactory) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
         this.constant = constant;
         this.notificationManager = notificationManager;
+        this.dtoFactory = dtoFactory;
     }
 
     /** Show dialog. */
@@ -154,7 +157,7 @@ public class BranchPresenter implements BranchView.ActionDelegate {
     public void onCheckoutClicked() {
         String name = selectedBranch.getDisplayName();
         String startingPoint = null;
-        boolean remote = selectedBranch.remote();
+        boolean remote = selectedBranch.isRemote();
         if (remote) {
             startingPoint = selectedBranch.getDisplayName();
         }
@@ -201,13 +204,12 @@ public class BranchPresenter implements BranchView.ActionDelegate {
      *         project id
      */
     private void getBranches(@NotNull String projectId) {
-        BranchListUnmarshaller unmarshaller = new BranchListUnmarshaller();
-
         try {
-            service.branchList(resourceProvider.getVfsId(), projectId, LIST_ALL, new AsyncRequestCallback<JsonArray<Branch>>(unmarshaller) {
+            service.branchList(resourceProvider.getVfsId(), projectId, LIST_ALL, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
-                protected void onSuccess(JsonArray<Branch> result) {
-                    view.setBranches(result);
+                protected void onSuccess(String result) {
+                    JsonArray<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
+                    view.setBranches(branches);
                 }
 
                 @Override
@@ -257,7 +259,7 @@ public class BranchPresenter implements BranchView.ActionDelegate {
     @Override
     public void onBranchSelected(@NotNull Branch branch) {
         selectedBranch = branch;
-        boolean enabled = !selectedBranch.active();
+        boolean enabled = !selectedBranch.isActive();
         view.setEnableCheckoutButton(enabled);
         view.setEnableDeleteButton(true);
         view.setEnableRenameButton(true);

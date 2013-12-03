@@ -3,6 +3,4 @@
     <inherits name="com.codenvy.ide.Api"/>
     <inherits name="com.google.gwt.inject.Inject"/>
     <source path=""/>
-    <!-- For GWT Designer -->
-    <source path="part"/>
 </module>

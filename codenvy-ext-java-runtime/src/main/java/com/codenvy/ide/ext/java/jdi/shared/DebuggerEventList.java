@@ -18,10 +18,12 @@
 package com.codenvy.ide.ext.java.jdi.shared;
 
 import com.codenvy.ide.dto.DTO;
-import com.codenvy.ide.json.JsonArray;
+import java.util.List;
 
 /** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
 @DTO
 public interface DebuggerEventList {
-    JsonArray<DebuggerEvent> getEvents();
+    List<DebuggerEvent> getEvents();
+
+    void setEvents(List<DebuggerEvent> events);
 }

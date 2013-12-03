@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.ext.git.client.merge;
 
-import com.codenvy.ide.ext.git.shared.Reference;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.ui.tree.NodeDataAdapter;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 
@@ -41,8 +41,7 @@ public class ReferenceTreeNodeDataAdapter implements NodeDataAdapter<Reference> 
     /** {@inheritDoc} */
     @Override
     public boolean hasChildren(Reference data) {
-        JsonArray<Reference> branches = data.getBranches();
-        return branches != null && !branches.isEmpty();
+        return data.getBranches() != null && !data.getBranches().isEmpty();
     }
 
     /** {@inheritDoc} */

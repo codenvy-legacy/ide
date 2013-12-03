@@ -24,7 +24,7 @@
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
-        <version>3.0.0-M3-SNAPSHOT</version>
+        <version>3.0.0-M4-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ide-core</artifactId>
     <packaging>jar</packaging>
@@ -70,6 +70,32 @@
                 </exclusion>
             </exclusions>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.commons</groupId>
+            <artifactId>codenvy-commons-env</artifactId>
+            <version>${com.codenvy.commons.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.commons</groupId>
+            <artifactId>codenvy-commons-servlet</artifactId>
+            <version>${com.codenvy.commons.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>javassist</groupId>
+                    <artifactId>javassist</artifactId>
+                </exclusion>
+            </exclusions>
+            <version>${everrest.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-integration-exo</artifactId>
+            <version>${everrest.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.commons</groupId>

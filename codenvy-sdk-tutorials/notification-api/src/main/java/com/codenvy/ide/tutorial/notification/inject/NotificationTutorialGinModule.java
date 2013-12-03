@@ -21,7 +21,6 @@ import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.tutorial.notification.part.TutorialHowToView;
 import com.codenvy.ide.tutorial.notification.part.TutorialHowToViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
-import com.google.inject.Singleton;
 
 /**
  * GIN module for 'Notification Tutorial' extension.
@@ -33,6 +32,6 @@ public class NotificationTutorialGinModule extends AbstractGinModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
-        bind(TutorialHowToView.class).to(TutorialHowToViewImpl.class).in(Singleton.class);
+        bind(TutorialHowToView.class).to(TutorialHowToViewImpl.class);
     }
 }

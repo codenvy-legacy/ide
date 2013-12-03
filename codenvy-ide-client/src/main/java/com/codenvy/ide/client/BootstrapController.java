@@ -75,6 +75,7 @@ public class BootstrapController {
                           }
                       }).inject();
 
+
         try {
             dtoRegistrar.registerDtoProviders();
             UserUnmarshaller unmarshaller = new UserUnmarshaller();

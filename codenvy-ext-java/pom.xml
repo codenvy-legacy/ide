@@ -24,7 +24,7 @@
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
-        <version>3.0.0-M3-SNAPSHOT</version>
+        <version>3.0.0-M4-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ext-java</artifactId>
     <packaging>jar</packaging>
@@ -56,6 +56,17 @@
             <version>collide</version>
         </dependency>
         <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-vfs</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javassist</groupId>
+                    <artifactId>javassist</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-api</artifactId>
             <version>${project.version}</version>
@@ -63,6 +74,11 @@
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-builder-maven</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -79,20 +95,14 @@
 
         <!-- Server libraries -->
         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-java</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javassist</groupId>
-                    <artifactId>javassist</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>ch.qos.logback</groupId>
-                    <artifactId>logback-classic</artifactId>
-                </exclusion>
-            </exclusions>
-            <scope>runtime</scope>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-builder</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.thoughtworks.qdox</groupId>
+            <artifactId>qdox</artifactId>
+            <version>${qdox-patched.version}</version>
         </dependency>
 
         <!-- Testing libraries -->

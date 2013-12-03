@@ -17,23 +17,24 @@
  */
 package com.codenvy.builder.maven;
 
+import com.codenvy.api.builder.dto.Dependency;
 import com.codenvy.api.builder.internal.BuildLogger;
 import com.codenvy.api.builder.internal.BuildResult;
-import com.codenvy.api.builder.internal.BuildTaskConfiguration;
 import com.codenvy.api.builder.internal.Builder;
+import com.codenvy.api.builder.internal.BuilderConfiguration;
 import com.codenvy.api.builder.internal.BuilderException;
 import com.codenvy.api.builder.internal.DelegateBuildLogger;
 import com.codenvy.api.builder.internal.DependencyCollector;
-import com.codenvy.api.core.rest.FileAdapter;
 import com.codenvy.api.core.util.CommandLine;
+import com.codenvy.builder.maven.dto.MavenDependency;
 import com.codenvy.builder.tools.maven.MavenProjectModel;
 import com.codenvy.builder.tools.maven.MavenProjectModelFactory;
+import com.codenvy.dto.server.DtoFactory;
 
 import java.io.BufferedReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,7 +46,7 @@ import java.util.regex.Pattern;
  */
 public class MavenBuilder extends Builder {
 
-    /** Rules for maven assembly plugin. Use it for create zip of all project dependencies. */
+    /** Rules for builder assembly plugin. Use it for create zip of all project dependencies. */
     private static final String assemblyDescriptor       = "<assembly>\n" +
                                                            "  <id>dependencies</id>\n" +
                                                            "  <formats>\n" +
@@ -77,7 +78,7 @@ public class MavenBuilder extends Builder {
     }
 
     @Override
-    protected CommandLine createCommandLine(BuildTaskConfiguration config) throws BuilderException {
+    protected CommandLine createCommandLine(BuilderConfiguration config) throws BuilderException {
         final CommandLine commandLine = new CommandLine(mavenExecCommand());
         final List<String> targets = config.getTargets();
         if (!targets.isEmpty()) {
@@ -93,7 +94,7 @@ public class MavenBuilder extends Builder {
                 case COPY_DEPS:
                     // Prepare file for assembly plugin. Plugin create zip archive of all dependencies.
                     try {
-                        Files.write(new java.io.File(config.getSources().getDirectory().getIoFile(), ASSEMBLY_DESCRIPTOR_FILE).toPath(),
+                        Files.write(new java.io.File(config.getWorkDir(), ASSEMBLY_DESCRIPTOR_FILE).toPath(),
                                     assemblyDescriptor.getBytes());
                     } catch (IOException e) {
                         throw new BuilderException(e);
@@ -112,7 +113,7 @@ public class MavenBuilder extends Builder {
         final java.io.File mvnHome = getMavenHome();
         if (mvnHome != null) {
             final String mvn = "bin" + java.io.File.separatorChar + "mvn";
-            return new java.io.File(mvnHome, mvn).getAbsolutePath(); // If maven home directory set use it
+            return new java.io.File(mvnHome, mvn).getAbsolutePath(); // If builder home directory set use it
         } else {
             return "mvn"; // otherwise 'mvn' should be in PATH variable
         }
@@ -159,17 +160,17 @@ public class MavenBuilder extends Builder {
             return new BuildResult(false, getBuildReport(task));
         }
 
-        final BuildTaskConfiguration config = task.getConfiguration();
-        final java.io.File srcDir = task.getSources().getDirectory().getIoFile();
+        final BuilderConfiguration config = task.getConfiguration();
+        final java.io.File workDir = config.getWorkDir();
         final BuildResult result = new BuildResult(true, getBuildReport(task));
         java.io.File[] files = null;
         switch (config.getTaskType()) {
             case DEFAULT:
                 final MavenProjectModelFactory factory = MavenProjectModelFactory.getInstance();
-                final MavenProjectModel mavenProjectModel = factory.getMavenProjectModel(srcDir);
+                final MavenProjectModel mavenProjectModel = factory.getMavenProjectModel(workDir);
                 final String packaging = mavenProjectModel.getPackaging();
                 final String fileExt = packaging != null ? '.' + packaging : ".jar";
-                files = new java.io.File(srcDir, "target").listFiles(new FilenameFilter() {
+                files = new java.io.File(workDir, "target").listFiles(new FilenameFilter() {
                     @Override
                     public boolean accept(java.io.File dir, String name) {
                         return !name.endsWith("-sources.jar") && name.endsWith(fileExt);
@@ -177,7 +178,7 @@ public class MavenBuilder extends Builder {
                 });
                 break;
             case LIST_DEPS:
-                files = srcDir.listFiles(new FilenameFilter() {
+                files = workDir.listFiles(new FilenameFilter() {
                     @Override
                     public boolean accept(java.io.File dir, String name) {
                         return name.equals(DEPENDENCIES_JSON_FILE);
@@ -185,7 +186,7 @@ public class MavenBuilder extends Builder {
                 });
                 break;
             case COPY_DEPS:
-                files = new java.io.File(srcDir, "target").listFiles(new FilenameFilter() {
+                files = new java.io.File(workDir, "target").listFiles(new FilenameFilter() {
                     @Override
                     public boolean accept(java.io.File dir, String name) {
                         return name.endsWith("-dependencies.zip");
@@ -195,9 +196,8 @@ public class MavenBuilder extends Builder {
         }
 
         if (files != null && files.length > 0) {
-            final Path srcPath = srcDir.toPath();
             for (java.io.File file : files) {
-                result.getResultUnits().add(new FileAdapter(file, srcPath.relativize(file.toPath()).toString()));
+                result.getResults().add(file);
             }
         }
 
@@ -211,18 +211,17 @@ public class MavenBuilder extends Builder {
      *         task
      * @return report or {@code null} if surefire reports is not available
      */
-    protected FileAdapter getBuildReport(FutureBuildTask task) {
-        final java.io.File dir = task.getSources().getDirectory().getIoFile();
+    protected java.io.File getBuildReport(FutureBuildTask task) {
+        final java.io.File dir = task.getConfiguration().getWorkDir();
         final String reports = "target" + java.io.File.separatorChar + "surefire-reports";
         final java.io.File reportsDir = new java.io.File(dir, reports);
-        return reportsDir.exists() ? new FileAdapter(reportsDir, reports, null) : null;
+        return reportsDir.exists() ? reportsDir : null;
     }
 
     @Override
-    protected BuildLogger createBuildLogger(BuildTaskConfiguration buildConfiguration, java.io.File logFile) throws BuilderException {
-        return new DependencyBuildLogger(super.createBuildLogger(buildConfiguration, logFile),
-                                         new java.io.File(buildConfiguration.getSources().getDirectory().getIoFile(),
-                                                          DEPENDENCIES_JSON_FILE));
+    protected BuildLogger createBuildLogger(BuilderConfiguration configuration, java.io.File logFile) throws BuilderException {
+        return new DependencyBuildLogger(super.createBuildLogger(configuration, logFile),
+                                         new java.io.File(configuration.getWorkDir(), DEPENDENCIES_JSON_FILE));
     }
 
     private static final Pattern LOGGER_PREFIX_REMOVER = Pattern.compile("(\\[INFO\\]|\\[WARNING\\]|\\[DEBUG\\])\\s+(.*)");
@@ -272,7 +271,15 @@ public class MavenBuilder extends Builder {
                                 classifier = segments[3];
                                 scope = segments[5];
                             }
-                            collector.addDependency(new MavenDependency(groupId, artifactId, type, version, classifier, scope));
+                            final Dependency dep = DtoFactory.getInstance().createDto(MavenDependency.class)
+                                                             .withGroupId(groupId)
+                                                             .withArtifactId(artifactId)
+                                                             .withType(type)
+                                                             .withVersion(version)
+                                                             .withClassifier(classifier)
+                                                             .withScope(scope)
+                                                             .withFullName(groupId + ':' + artifactId + ':' + version + ':' + type);
+                            collector.addDependency(dep);
                         }
                     }
                 } else if ("The following files have been resolved:".equals(trimmed)) {

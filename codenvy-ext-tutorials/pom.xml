@@ -24,7 +24,7 @@
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
-        <version>3.0.0-M3-SNAPSHOT</version>
+        <version>3.0.0-M4-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ext-tutorials</artifactId>
     <packaging>jar</packaging>
@@ -45,12 +45,17 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-java</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-extensions-runtime</artifactId>
+            <artifactId>codenvy-ext-extensions</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -61,14 +66,9 @@
             <version>${javax.ws.rs.version}</version>
         </dependency>
         <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-vfs</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-vfs</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
         </dependency>
 
         <!-- Testing libraries -->

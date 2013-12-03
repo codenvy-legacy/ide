@@ -737,41 +737,6 @@ public interface GitLocalizationConstant extends Messages {
     @Key("welcome.clone.text")
     String welcomeCloneText();
 
-    @Key("welcome.import.title")
-    String welcomeImportTitle();
-
-    @Key("welcome.import.text")
-    String welcomeImportText();
-
-    /*
-     * ImportFromGitHub
-     */
-    @Key("import.github.title")
-    String importFromGithubTitle();
-
-    @Key("import.github.account")
-    String importFromGithubAccount();
-
-    @Key("import.github.selectProjectType")
-    String importFromGithubSelectProjectType();
-
-    @Key("import.github.login")
-    String importFromGithubLogin();
-
-    @Key("import.github.login.failed")
-    String importFromGithubLoginFailed();
-
-    @Key("git.read.only")
-    String gitReadOnly();
-
-    @Key("user.not.found")
-    String userNotFound();
-
-    @Key("login.oauth.title")
-    String loginOAuthTitle();
-
-    @Key("login.oauth.label")
-    String loginOAuthLabel();
 
     /*
      * Project
@@ -790,10 +755,4 @@ public interface GitLocalizationConstant extends Messages {
 
     @Key("samplesListGrid.column.type")
     String samplesListTypeColumn();
-
-    @Key("github.sshkey.title")
-    String githubSshKeyTitle();
-
-    @Key("github.sshkey.label")
-    String githubSshKeyLabel();
 }
