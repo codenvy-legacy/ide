@@ -56,29 +56,6 @@ public class CreateProjectService {
     private VirtualFileSystemRegistry vfsRegistry;
 
     /**
-     * Create empty Codenvy extension project.
-     *
-     * @param vfsId
-     *         identifier of virtual file system
-     * @param name
-     *         name of the newly created project
-     * @param properties
-     *         properties to set to project
-     * @throws VirtualFileSystemException
-     *         if any error occurred in VFS
-     * @throws IOException
-     *         if any error occurred while input-output operations
-     */
-    @Path("empty")
-    @POST
-    public void createEmptyCodenvyExtensionProject(@QueryParam("vfsid") String vfsId,
-                                                   @QueryParam("name") String name,
-                                                   List<Property> properties) throws VirtualFileSystemException,
-                                                                                     IOException {
-        createProject(vfsId, name, properties, "templates/EmptyExtension.zip");
-    }
-
-    /**
      * Create sample Codenvy extension project.
      *
      * @param vfsId
