@@ -18,8 +18,8 @@
 package com.codenvy.ide.ext.java.client.projectmodel;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.ext.java.client.core.JavaConventions;
-import com.codenvy.ide.ext.java.client.core.JavaCore;
+import com.codenvy.ide.ext.java.jdt.core.JavaConventions;
+import com.codenvy.ide.ext.java.jdt.core.JavaCore;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringSet;
 import com.codenvy.ide.json.JsonStringSet.IterationCallback;

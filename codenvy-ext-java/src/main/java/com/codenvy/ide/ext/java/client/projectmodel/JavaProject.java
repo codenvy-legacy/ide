@@ -19,11 +19,15 @@ package com.codenvy.ide.ext.java.client.projectmodel;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
-import com.codenvy.ide.ext.java.client.core.JavaConventions;
-import com.codenvy.ide.ext.java.client.core.JavaCore;
+import com.codenvy.ide.ext.java.jdt.core.JavaConventions;
+import com.codenvy.ide.ext.java.jdt.core.JavaCore;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.resources.model.*;
+import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.resources.model.Folder;
+import com.codenvy.ide.resources.model.Link;
+import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;

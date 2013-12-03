@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.client.core.rewrite;
 
-import com.codenvy.ide.ext.java.client.internal.core.dom.rewrite.SourceModifierImpl;
+import com.codenvy.ide.ext.java.jdt.internal.core.dom.rewrite.SourceModifierImpl;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.edits.MultiTextEdit;

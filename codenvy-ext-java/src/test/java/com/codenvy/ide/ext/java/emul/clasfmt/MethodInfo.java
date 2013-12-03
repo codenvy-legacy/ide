@@ -10,10 +10,10 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.emul.clasfmt;
 
-import com.codenvy.ide.ext.java.client.core.compiler.CharOperation;
-import com.codenvy.ide.ext.java.client.internal.compiler.env.IBinaryAnnotation;
-import com.codenvy.ide.ext.java.client.internal.compiler.env.IBinaryMethod;
-import com.codenvy.ide.ext.java.client.internal.compiler.util.Util;
+import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryAnnotation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryMethod;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.util.Util;
 
 public class MethodInfo extends ClassFileStruct implements IBinaryMethod, Comparable {
     static private final char[][] noException = CharOperation.NO_CHAR_CHAR;

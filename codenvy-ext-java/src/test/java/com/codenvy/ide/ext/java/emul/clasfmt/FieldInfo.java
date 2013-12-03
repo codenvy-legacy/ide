@@ -10,12 +10,12 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.emul.clasfmt;
 
-import com.codenvy.ide.ext.java.client.core.compiler.CharOperation;
-import com.codenvy.ide.ext.java.client.internal.compiler.env.IBinaryAnnotation;
-import com.codenvy.ide.ext.java.client.internal.compiler.env.IBinaryField;
-import com.codenvy.ide.ext.java.client.internal.compiler.impl.*;
-import com.codenvy.ide.ext.java.client.internal.compiler.lookup.TypeIds;
-import com.codenvy.ide.ext.java.client.internal.compiler.util.Util;
+import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryAnnotation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryField;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeIds;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.util.Util;
 
 public class FieldInfo extends ClassFileStruct implements IBinaryField, Comparable {
     protected int accessFlags;

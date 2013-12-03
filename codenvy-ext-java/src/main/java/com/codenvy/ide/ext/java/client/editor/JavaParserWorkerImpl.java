@@ -20,11 +20,14 @@ package com.codenvy.ide.ext.java.client.editor;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.ext.java.client.core.compiler.IProblem;
-import com.codenvy.ide.ext.java.client.internal.compiler.problem.DefaultProblem;
+import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.DefaultProblem;
+import com.codenvy.ide.ext.java.messages.CAProposalsComputedMessage;
 import com.codenvy.ide.ext.java.messages.Problem;
 import com.codenvy.ide.ext.java.messages.ProblemsMessage;
+import com.codenvy.ide.ext.java.messages.ProposalAppliedMessage;
 import com.codenvy.ide.ext.java.messages.RoutingTypes;
+import com.codenvy.ide.ext.java.messages.WorkerProposal;
 import com.codenvy.ide.ext.java.messages.impl.MessagesImpls;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
@@ -48,10 +51,11 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHandler, MessageFilter.MessageRecipient<ProblemsMessage> {
 
-    private final MessageFilter    messageFilter;
-    private       Worker           worker;
-    private       ResourceProvider resourceProvider;
-    private JsonStringMap<JavaParserCallback> callbacks;
+    private final MessageFilter                    messageFilter;
+    private       Worker                           worker;
+    private       ResourceProvider                 resourceProvider;
+    private       JsonStringMap<WorkerCallback<?>> callbacks;
+    private JsonStringMap<ApplyCallback> applyCallback = JsonCollections.createStringMap();
 
     @Inject
     public JavaParserWorkerImpl(ResourceProvider resourceProvider, EventBus eventBus) {
@@ -60,20 +64,79 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         messageFilter = new MessageFilter();
         callbacks = JsonCollections.createStringMap();
         messageFilter.registerMessageRecipient(RoutingTypes.PROBLEMS, this);
+        messageFilter.registerMessageRecipient(RoutingTypes.CA_PROPOSALS_COMPUTED,
+                                               new MessageFilter.MessageRecipient<CAProposalsComputedMessage>() {
+                                                   @Override
+                                                   public void onMessageReceived(CAProposalsComputedMessage message) {
+                                                       handleCAComputed(message);
+                                                   }
+                                               });
+
+        messageFilter
+                .registerMessageRecipient(RoutingTypes.CA_PROPOSAL_APPLIED, new MessageFilter.MessageRecipient<ProposalAppliedMessage>() {
+                    @Override
+                    public void onMessageReceived(ProposalAppliedMessage message) {
+                        handleProposalApplied(message);
+                    }
+                });
 
     }
 
+    private void handleProposalApplied(ProposalAppliedMessage message) {
+        if(applyCallback.containsKey(message.id())){
+            ApplyCallback callback = applyCallback.remove(message.id());
+            callback.onApply(message);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void handleCAComputed(CAProposalsComputedMessage message) {
+        if (!callbacks.containsKey(message.id())) {
+            return;
+        }
+
+        WorkerCallback<WorkerProposal> callback = (WorkerCallback<WorkerProposal>)callbacks.remove(message.id());
+        callback.onResult(message.proposals());
+    }
+
+    /** {@inheritDoc} */
     @Override
-    public void parse(String content, String fileName, JavaParserCallback callback) {
-        if(worker == null){
+    public void parse(String content, String fileName, String packageName, WorkerCallback<IProblem> callback) {
+        if (worker == null) {
             return;
         }
 
         MessagesImpls.ParseMessageImpl parseMessage = MessagesImpls.ParseMessageImpl.make();
         String uuid = UUID.uuid();
         callbacks.put(uuid, callback);
-        parseMessage.setSource(content).setFileName(fileName).setId(uuid);
+        parseMessage.setSource(content).setFileName(fileName).setId(uuid).setPackageName(packageName);
         worker.postMessage(parseMessage.serialize());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void computeCAProposals(String content, int offset, String fileName, WorkerCallback<WorkerProposal> callback) {
+        if (worker == null) {
+            return;
+        }
+
+        MessagesImpls.ComputeCAProposalsMessageImpl computeMessage = MessagesImpls.ComputeCAProposalsMessageImpl.make();
+        String uuid = UUID.uuid();
+        callbacks.put(uuid, callback);
+        computeMessage.setDocContent(content).setOffset(offset).setFileName(fileName).setId(uuid);
+        worker.postMessage(computeMessage.serialize());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void applyCAProposal(String id, ApplyCallback callback) {
+        if (worker == null) {
+            return;
+        }
+        MessagesImpls.ApplyProposalMessageImpl message = MessagesImpls.ApplyProposalMessageImpl.make();
+        message.setId(id);
+        applyCallback.put(id, callback);
+        worker.postMessage(message.serialize());
     }
 
     /**
@@ -98,7 +161,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         worker.setOnError(new ErrorHandler() {
             @Override
             public void onError(ErrorEvent event) {
-                Log.error(JavaParserWorkerImpl.class, event.getMessage());
+                Log.error(JavaParserWorkerImpl.class, event.getMessage(), event.getFilename(), event.getLineNumber());
             }
         });
 
@@ -107,6 +170,9 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         config.setRestContext("/ide/rest");
         config.setVfsId(resourceProvider.getVfsId());
         config.setWsName("/" + Utils.getWorkspaceName());
+        config.setProjectName(event.getProject().getName());
+        config.setJavaDocContext(//TODO configure doc context
+                                 "rest/ide/code-assistant/java/class-doc?fqn=");
         worker.postMessage(config.serialize());
     }
 
@@ -132,25 +198,27 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
     public void onProjectDescriptionChanged(ProjectActionEvent event) {
     }
 
-
     /** {@inheritDoc} */
     @Override
+    @SuppressWarnings("unchecked")
     public void onMessageReceived(ProblemsMessage message) {
-        if(!callbacks.containsKey(message.id())){
+        if (!callbacks.containsKey(message.id())) {
             return;
         }
         JsonArray<Problem> problems = message.problems();
         JsonArray<IProblem> iProblems = JsonCollections.createArray();
-                for (Problem p : problems.asIterable()) {
-                String[] arg = new String[p.stringArguments().size()];
-                for(int i = 0; i< p.stringArguments().size(); i++){
-                    arg[i] = p.stringArguments().get(i);
-                }
-               iProblems.add(new DefaultProblem(p.originatingFileName().toCharArray(), p.message(), p.id(), arg, p.severity(), p.startPosition(),
-                                           p.endPosition(), p.line(), p.column()));
+        for (Problem p : problems.asIterable()) {
+            String[] arg = new String[p.stringArguments().size()];
+            for (int i = 0; i < p.stringArguments().size(); i++) {
+                arg[i] = p.stringArguments().get(i);
             }
-        JavaParserCallback callback = callbacks.remove(message.id());
-        callback.onProblems(iProblems);
+            iProblems.add(new DefaultProblem(p.originatingFileName().toCharArray(), p.message(), p.id(), arg, p.severity(),
+                                             p.startPosition(),
+                                             p.endPosition(), p.line(), p.column()));
+        }
+
+        WorkerCallback<IProblem> callback = (WorkerCallback<IProblem>)callbacks.remove(message.id());
+        callback.onResult(iProblems);
     }
 
 }

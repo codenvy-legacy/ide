@@ -29,21 +29,31 @@ import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
-import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
-import com.codenvy.ide.ext.java.client.codeassistant.ContentAssistHistory;
-import com.codenvy.ide.ext.java.client.core.JavaCore;
+import com.codenvy.ide.ext.java.jdt.codeassistant.ContentAssistHistory;
+import com.codenvy.ide.ext.java.jdt.core.JavaCore;
 import com.codenvy.ide.ext.java.client.editor.JavaEditorProvider;
-import com.codenvy.ide.ext.java.client.internal.codeassist.impl.AssistOptions;
-import com.codenvy.ide.ext.java.client.internal.compiler.impl.CompilerOptions;
+import com.codenvy.ide.ext.java.jdt.internal.codeassist.impl.AssistOptions;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.CompilerOptions;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProjectModelProvider;
-import com.codenvy.ide.ext.java.client.projecttemplate.ant.CreateAntJavaProjectPage;
-import com.codenvy.ide.ext.java.client.projecttemplate.ant.CreateAntSpringProjectPage;
-import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenJavaProjectPage;
-import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenSpringProjectPage;
-import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenWarProjectPage;
-import com.codenvy.ide.ext.java.client.templates.*;
 import com.codenvy.ide.ext.java.client.wizard.*;
+import com.codenvy.ide.ext.java.jdt.templates.CodeTemplateContextType;
+import com.codenvy.ide.ext.java.jdt.templates.ContextTypeRegistry;
+import com.codenvy.ide.ext.java.jdt.templates.ElementTypeResolver;
+import com.codenvy.ide.ext.java.jdt.templates.ExceptionVariableNameResolver;
+import com.codenvy.ide.ext.java.jdt.templates.FieldResolver;
+import com.codenvy.ide.ext.java.jdt.templates.ImportsResolver;
+import com.codenvy.ide.ext.java.jdt.templates.JavaContextType;
+import com.codenvy.ide.ext.java.jdt.templates.JavaDocContextType;
+import com.codenvy.ide.ext.java.jdt.templates.LinkResolver;
+import com.codenvy.ide.ext.java.jdt.templates.LocalVarResolver;
+import com.codenvy.ide.ext.java.jdt.templates.NameResolver;
+import com.codenvy.ide.ext.java.jdt.templates.StaticImportResolver;
+import com.codenvy.ide.ext.java.jdt.templates.TemplateStore;
+import com.codenvy.ide.ext.java.jdt.templates.TypeResolver;
+import com.codenvy.ide.ext.java.jdt.templates.TypeVariableResolver;
+import com.codenvy.ide.ext.java.jdt.templates.VarResolver;
+import com.codenvy.ide.ext.java.worker.Preferences;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.codenvy.ide.resources.model.Project;
@@ -122,6 +132,7 @@ public class JavaExtension {
                          Provider<CreateAntSpringProjectPage> createAntSpringProjectPage) {
 
         this();
+        FileType javaFile = new FileType(JavaResources.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
         this.resourceProvider = resourceProvider;
         this.notificationManager = notificationManager;
         this.restContext = restContext;
@@ -130,7 +141,7 @@ public class JavaExtension {
         editorRegistry.register(javaFile, javaEditorProvider);
         resourceProvider.registerFileType(javaFile);
         resourceProvider.registerModelProvider(JavaProject.PRIMARY_NATURE, new JavaProjectModelProvider(eventBus));
-        JavaClientBundle.INSTANCE.css().ensureInjected();
+        JavaResources.INSTANCE.css().ensureInjected();
 
         projectTypeAgent.register(JavaProject.PRIMARY_NATURE,
                                   "Java application",
