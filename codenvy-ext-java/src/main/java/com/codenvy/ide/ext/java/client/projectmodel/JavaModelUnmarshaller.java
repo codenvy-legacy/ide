@@ -212,7 +212,7 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
     /** {@inheritDoc} */
     @Override
     public Folder getPayload() {
-        return project;
+        return root;
     }
 
 }

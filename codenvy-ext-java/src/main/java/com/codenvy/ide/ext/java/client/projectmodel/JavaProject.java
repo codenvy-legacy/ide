@@ -66,7 +66,7 @@ public class JavaProject extends Project {
 
     /** {@inheritDoc} */
     @Override
-    protected void refreshTree(Folder root, final AsyncCallback<Folder> callback) {
+    public void refreshTree(Folder root, final AsyncCallback<Folder> callback) {
         try {
             // create internal wrapping Request Callback with proper Unmarshaller
             AsyncRequestCallback<Folder> internalCallback =

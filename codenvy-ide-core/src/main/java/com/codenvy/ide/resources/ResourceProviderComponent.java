@@ -18,15 +18,35 @@
 package com.codenvy.ide.resources;
 
 import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.core.Component;
 import com.codenvy.ide.core.ComponentException;
-import com.codenvy.ide.json.*;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonIntegerMap;
 import com.codenvy.ide.json.JsonIntegerMap.IterationCallback;
-import com.codenvy.ide.resources.marshal.*;
-import com.codenvy.ide.resources.model.*;
+import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.json.JsonStringSet;
+import com.codenvy.ide.resources.marshal.ChildNamesUnmarshaller;
+import com.codenvy.ide.resources.marshal.FolderUnmarshaller;
+import com.codenvy.ide.resources.marshal.JSONSerializer;
+import com.codenvy.ide.resources.marshal.ProjectModelProviderAdapter;
+import com.codenvy.ide.resources.marshal.ProjectModelUnmarshaller;
+import com.codenvy.ide.resources.marshal.StringUnmarshaller;
+import com.codenvy.ide.resources.marshal.VFSInfoUnmarshaller;
+import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.resources.model.Folder;
+import com.codenvy.ide.resources.model.Link;
+import com.codenvy.ide.resources.model.Lock;
+import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.resources.model.ProjectDescription;
+import com.codenvy.ide.resources.model.ProjectNature;
+import com.codenvy.ide.resources.model.Property;
+import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.resources.model.VirtualFileSystemInfo;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
@@ -174,6 +194,43 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         }
     }
 
+    public void getFolder(final Folder folder, final AsyncCallback<Folder> callback) {
+        // create internal wrapping Request Callback with proper Unmarshaller
+        AsyncRequestCallback<Folder> internalCallback =
+                new AsyncRequestCallback<Folder>(new FolderUnmarshaller()) {
+                    @Override
+                    protected void onSuccess(Folder result) {
+                        result.setParent(folder.getParent());
+                        result.setProject(folder.getProject());
+                        activeProject.refreshTree(result, new AsyncCallback<Folder>() {
+                            @Override
+                            public void onSuccess(Folder folder) {
+                                eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(folder));
+                                callback.onSuccess(folder);
+                            }
+
+                            @Override
+                            public void onFailure(Throwable exception) {
+                                callback.onFailure(exception);
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        callback.onFailure(exception);
+                    }
+                };
+
+        try {
+            String url = folder.getLinkByRelation(Link.REL_SELF).getHref();
+            AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(loader).send(internalCallback);
+        } catch (RequestException e) {
+            callback.onFailure(e);
+        }
+    }
+    
     /** {@inheritDoc} */
     @Override
     public void listProjects(final AsyncCallback<JsonArray<String>> callback) {
@@ -472,16 +529,29 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 if (item instanceof Project) {
                     showListProjects();
                     callback.onSuccess(result);
-                } else {
+                } else if (item.getParent() instanceof Project) {
                     getProject(activeProject.getName(), new AsyncCallback<Project>() {
                         @Override
                         public void onSuccess(Project result) {
                             callback.onSuccess(result.toString());
                         }
-
+                        
                         @Override
                         public void onFailure(Throwable caught) {
                             callback.onFailure(caught);
+                        }
+                    });
+                } else {
+                    getFolder(item.getParent(), new AsyncCallback<Folder>() {
+
+                        @Override
+                        public void onSuccess(Folder result) {
+                            callback.onSuccess(result.toString());
+                        }
+
+                        @Override
+                        public void onFailure(Throwable exception) {
+                            callback.onFailure(exception);
                         }
                     });
                 }

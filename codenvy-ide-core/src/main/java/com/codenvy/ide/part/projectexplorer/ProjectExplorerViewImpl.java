@@ -106,4 +106,12 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
             }
         });
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public void updateItem(Resource oldResource, Resource newResource) {
+        tree.replaceSubtree(oldResource, newResource, true);
+    }
+
+   
 }
