@@ -36,4 +36,8 @@ public interface Member {
     /** @return the name */
     String getName();
 
+    void setModifiers(int modifiers);
+
+    void setName(String name);
+
 }

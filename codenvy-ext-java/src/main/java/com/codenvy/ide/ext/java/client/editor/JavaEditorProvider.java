@@ -42,7 +42,6 @@ public class JavaEditorProvider implements EditorProvider {
     private final UserActivityManager         activityManager;
     private final NotificationManager         notificationManager;
     private       Provider<CodenvyTextEditor> editorProvider;
-    private       ResourceProvider            resourceProvider;
     private       JavaParserWorker            worker;
 
     /**
@@ -55,17 +54,14 @@ public class JavaEditorProvider implements EditorProvider {
                               Provider<CodenvyTextEditor> editorProvider,
                               DocumentFactory documentFactory,
                               NotificationManager notificationManager,
-                              ResourceProvider resourceProvider,
                               JavaParserWorker worker,
                               EventBus eventBus) {
         super();
         this.activityManager = activityManager;
         this.editorProvider = editorProvider;
-        this.resourceProvider = resourceProvider;
         this.worker = worker;
-        this.javaResources = javaResources;
         this.documentProvider =
-                new CompilationUnitDocumentProvider(resources.workspaceEditorCss(), JavaClientBundle.INSTANCE.css(), documentFactory,
+                new CompilationUnitDocumentProvider(resources.workspaceEditorCss(), JavaResources.INSTANCE.css(), documentFactory,
                                                     eventBus);
         this.notificationManager = notificationManager;
     }
@@ -77,7 +73,7 @@ public class JavaEditorProvider implements EditorProvider {
         CodenvyTextEditor textEditor = editorProvider.get();
         JavaEditorConfiguration configuration =
                 new JavaEditorConfiguration(activityManager, JavaResources.INSTANCE, textEditor, JavaPartitions.JAVA_PARTITIONING,
-                                            worker, javaResources);
+                                            worker);
 
         textEditor.initialize(configuration, documentProvider, notificationManager);
         return textEditor;

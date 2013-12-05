@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.ext.java.worker;
 
-import com.codenvy.ide.ext.java.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
+import com.codenvy.ide.ext.java.jdt.env.TypesListImpl;
 import com.codenvy.ide.ext.java.jdt.internal.codeassist.ISearchRequestor;
 import com.codenvy.ide.ext.java.shared.JavaType;
 import com.codenvy.ide.ext.java.shared.ShortTypeInfo;
@@ -417,9 +417,11 @@ public class WorkerNameEnvironment implements INameEnvironment {
 
             String typesJson = runSyncReques(url);
             if (typesJson != null) {
-                DtoClientImpls.TypesListImpl autoBean = DtoClientImpls.TypesListImpl.deserialize(typesJson);
 
-                for (ShortTypeInfo info : autoBean.getTypes().asIterable()) {
+                TypesListImpl typesList = TypesListImpl.deserialize(typesJson);
+
+
+                for (ShortTypeInfo info : typesList.getTypes().asIterable()) {
                     requestor.acceptType(info.getName().substring(0, info.getName().lastIndexOf(".")).toCharArray(),
                                          info.getName().substring(info.getName().lastIndexOf(".") + 1).toCharArray(),
                                          null,

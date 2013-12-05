@@ -65,13 +65,13 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
 
 
     public JavaEditorConfiguration(UserActivityManager manager, JavaResources resources, TextEditorPartPresenter javaEditor,
-                                   String documentPartitioning, JavaParserWorker worker, JavaResources javaResources) {
+                                   String documentPartitioning, JavaParserWorker worker) {
         super();
         this.manager = manager;
         this.javaEditor = javaEditor;
         this.documentPartitioning = documentPartitioning;
         this.worker = worker;
-        this.javaResources = javaResources;
+        this.javaResources = resources;
         outlineModel = new OutlineModel(new JavaNodeRenderer(resources));
         reconcilerStrategy = new JavaReconcilerStrategy(javaEditor, worker);
     }
