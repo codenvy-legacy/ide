@@ -133,7 +133,7 @@ public class GitHub extends GitVendorService {
      *         if GitHub server return unexpected or error status for request
      */
     public GitHubRepositoryList getPage(String url) throws ProviderException, JsonParseException {
-        Response response = new RequestBuilder().withUrl(url + getTokenString())
+        Response response = new RequestBuilder().withUrl(url + (url.contains("?") ? getTokenString().replace('?', '&') : getTokenString()))
                                                 .withMethod(HTTPMethod.GET)
                                                 .withResponseHeader(HEADER_LINK)
                                                 .withRequestHeader(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
