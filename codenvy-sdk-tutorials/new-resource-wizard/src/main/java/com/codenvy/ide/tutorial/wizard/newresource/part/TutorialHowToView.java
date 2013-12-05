@@ -18,15 +18,16 @@
 package com.codenvy.ide.tutorial.wizard.newresource.part;
 
 import com.codenvy.ide.api.mvp.View;
+import com.google.inject.ImplementedBy;
 
 /**
  * The view of {@link TutorialHowToPresenter}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
+@ImplementedBy(TutorialHowToViewImpl.class)
 public interface TutorialHowToView extends View<TutorialHowToView.ActionDelegate> {
     /** Required for delegating functions in view. */
     public interface ActionDelegate {
-
     }
 }
