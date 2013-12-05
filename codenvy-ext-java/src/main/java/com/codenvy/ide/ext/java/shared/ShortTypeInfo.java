@@ -32,4 +32,8 @@ public interface ShortTypeInfo extends Member {
     /** return the signature of the class. May be <tt>null</tt>. */
     String getSignature();
 
+    void setType(String type);
+
+    void setSignature(String signature);
+
 }

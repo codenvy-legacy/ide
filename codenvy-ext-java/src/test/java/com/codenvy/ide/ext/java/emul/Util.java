@@ -11,11 +11,11 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.emul;
 
-import com.codenvy.ide.ext.java.client.core.compiler.CharOperation;
-import com.codenvy.ide.ext.java.client.internal.compiler.ClassFileConstants;
-import com.codenvy.ide.ext.java.client.internal.compiler.ast.TypeDeclaration;
-import com.codenvy.ide.ext.java.client.internal.compiler.lookup.ExtraCompilerModifiers;
-import com.codenvy.ide.ext.java.client.internal.compiler.util.SuffixConstants;
+import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ClassFileConstants;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ExtraCompilerModifiers;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.util.SuffixConstants;
 
 import java.io.*;
 import java.util.StringTokenizer;

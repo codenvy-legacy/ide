@@ -8,6 +8,8 @@
     <inherits name="com.google.gwt.i18n.I18N"/>
     <inherits name="com.codenvy.ide.json.JSON"/>
     <inherits name="com.codenvy.ide.runtime.Runtime"/>
+    <inherits name="com.codenvy.ide.Text"/>
+    <inherits name="com.codenvy.ide.TextImpl"/>
 
     <entry-point class='com.codenvy.ide.ext.java.worker.JavaParserWorker'/>
     <add-linker name="dedicatedworker" />
@@ -18,4 +20,5 @@
     <source path="shared"/>
     <source path="dto"/>
     <source path="messages"/>
+    <source path="jdt"/>
 </module>

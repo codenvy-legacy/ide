@@ -257,6 +257,7 @@
                                 <module>com.codenvy.ide.ext.java.JavaParserWorker</module>
                             </modules>
                             <logLevel>INFO</logLevel>
+                            <style>PRETTY</style>
                         </configuration>
                         <goals>
                             <goal>compile</goal>

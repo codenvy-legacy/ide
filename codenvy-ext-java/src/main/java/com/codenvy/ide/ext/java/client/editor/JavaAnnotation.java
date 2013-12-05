@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.client.editor;
 
-import com.codenvy.ide.ext.java.client.core.compiler.CategorizedProblem;
-import com.codenvy.ide.ext.java.client.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.compiler.CategorizedProblem;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
 
 import java.util.Iterator;
 

@@ -17,28 +17,28 @@
  */
 package com.codenvy.ide.ext.java.client.editor.outline;
 
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.ext.java.client.core.dom.ASTNode;
-import com.codenvy.ide.ext.java.client.core.dom.ASTVisitor;
-import com.codenvy.ide.ext.java.client.core.dom.AbstractTypeDeclaration;
-import com.codenvy.ide.ext.java.client.core.dom.AnnotationTypeDeclaration;
-import com.codenvy.ide.ext.java.client.core.dom.AnonymousClassDeclaration;
-import com.codenvy.ide.ext.java.client.core.dom.ClassInstanceCreation;
-import com.codenvy.ide.ext.java.client.core.dom.CompilationUnit;
-import com.codenvy.ide.ext.java.client.core.dom.EnumDeclaration;
-import com.codenvy.ide.ext.java.client.core.dom.FieldDeclaration;
-import com.codenvy.ide.ext.java.client.core.dom.ImportDeclaration;
-import com.codenvy.ide.ext.java.client.core.dom.MethodDeclaration;
-import com.codenvy.ide.ext.java.client.core.dom.PackageDeclaration;
-import com.codenvy.ide.ext.java.client.core.dom.SingleVariableDeclaration;
-import com.codenvy.ide.ext.java.client.core.dom.Type;
-import com.codenvy.ide.ext.java.client.core.dom.TypeDeclaration;
-import com.codenvy.ide.ext.java.client.core.dom.VariableDeclarationFragment;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTVisitor;
+import com.codenvy.ide.ext.java.jdt.core.dom.AbstractTypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.AnnotationTypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.AnonymousClassDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.ClassInstanceCreation;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.dom.EnumDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.FieldDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.ImportDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.PackageDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.SingleVariableDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.Type;
+import com.codenvy.ide.ext.java.jdt.core.dom.TypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationFragment;
 import com.codenvy.ide.ext.java.client.editor.AstProvider;
 import com.codenvy.ide.ext.java.client.editor.AstProvider.AstListener;
-import com.codenvy.ide.ext.java.client.internal.corext.dom.ASTNodes;
+import com.codenvy.ide.ext.java.jdt.internal.corext.dom.ASTNodes;
 
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.texteditor.api.outline.CodeBlock;
 import com.codenvy.ide.texteditor.api.outline.OutlineModel;
 

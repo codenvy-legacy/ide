@@ -31,4 +31,5 @@
 
     <source path="client"/>
     <source path="worker"/>
+    <source path="jdt"/>
 </module>

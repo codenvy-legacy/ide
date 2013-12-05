@@ -17,20 +17,20 @@
  */
 package com.codenvy.ide.ext.java.worker;
 
-import com.codenvy.ide.ext.java.dto.client.DtoClientImpls;
+import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
+import com.codenvy.ide.ext.java.jdt.env.TypesListImpl;
+import com.codenvy.ide.ext.java.jdt.internal.codeassist.ISearchRequestor;
 import com.codenvy.ide.ext.java.shared.JavaType;
 import com.codenvy.ide.ext.java.shared.ShortTypeInfo;
-import com.codenvy.ide.ext.java.worker.core.Flags;
-import com.codenvy.ide.ext.java.worker.core.Signature;
-import com.codenvy.ide.ext.java.worker.core.compiler.CharOperation;
-import com.codenvy.ide.ext.java.worker.core.search.IJavaSearchConstants;
-import com.codenvy.ide.ext.java.worker.env.BinaryTypeImpl;
-import com.codenvy.ide.ext.java.worker.internal.codeassist.ISearchRequestor;
-import com.codenvy.ide.ext.java.worker.internal.compiler.env.AccessRestriction;
-import com.codenvy.ide.ext.java.worker.internal.compiler.env.IBinaryMethod;
-import com.codenvy.ide.ext.java.worker.internal.compiler.env.IBinaryType;
-import com.codenvy.ide.ext.java.worker.internal.compiler.env.INameEnvironment;
-import com.codenvy.ide.ext.java.worker.internal.compiler.env.NameEnvironmentAnswer;
+import com.codenvy.ide.ext.java.jdt.core.Flags;
+import com.codenvy.ide.ext.java.jdt.core.Signature;
+import com.codenvy.ide.ext.java.jdt.core.search.IJavaSearchConstants;
+import com.codenvy.ide.ext.java.jdt.env.BinaryTypeImpl;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.AccessRestriction;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryMethod;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryType;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.NameEnvironmentAnswer;
 import com.codenvy.ide.commons.Jso;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONArray;
@@ -417,9 +417,11 @@ public class WorkerNameEnvironment implements INameEnvironment {
 
             String typesJson = runSyncReques(url);
             if (typesJson != null) {
-                DtoClientImpls.TypesListImpl autoBean = DtoClientImpls.TypesListImpl.deserialize(typesJson);
 
-                for (ShortTypeInfo info : autoBean.getTypes().asIterable()) {
+                TypesListImpl typesList = TypesListImpl.deserialize(typesJson);
+
+
+                for (ShortTypeInfo info : typesList.getTypes().asIterable()) {
                     requestor.acceptType(info.getName().substring(0, info.getName().lastIndexOf(".")).toCharArray(),
                                          info.getName().substring(info.getName().lastIndexOf(".") + 1).toCharArray(),
                                          null,
@@ -427,7 +429,7 @@ public class WorkerNameEnvironment implements INameEnvironment {
                                          null);
                 }
             }
-//            WorkerTypeInfoStorage.get().setShortTypesInfo(typesJson);
+            WorkerTypeInfoStorage.get().setShortTypesInfo(typesJson);
         } catch (Throwable e) {
 //            Log.error(getClass(), e);
             throw new RuntimeException(e);

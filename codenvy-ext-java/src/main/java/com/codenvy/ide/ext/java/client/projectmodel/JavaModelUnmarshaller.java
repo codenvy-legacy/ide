@@ -17,10 +17,10 @@
  */
 package com.codenvy.ide.ext.java.client.projectmodel;
 
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.ext.java.client.core.JavaConventions;
-import com.codenvy.ide.ext.java.client.core.JavaCore;
+import com.codenvy.ide.ext.java.jdt.core.JavaConventions;
+import com.codenvy.ide.ext.java.jdt.core.JavaCore;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringSet;
 import com.codenvy.ide.collections.StringSet.IterationCallback;
 import com.codenvy.ide.resources.model.File;
@@ -51,10 +51,10 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
     private static final String ID       = "id";
     private static final String PATH     = "path";
     private static final String NAME     = "name";
-    private JavaProject project;
-    private StringSet   sourceFolders;
-    private String      projectPath;
-    private Folder      root;
+    private JavaProject   project;
+    private StringSet sourceFolders;
+    private String        projectPath;
+    private Folder        root;
 
     public JavaModelUnmarshaller(Folder root, JavaProject project) {
         super();

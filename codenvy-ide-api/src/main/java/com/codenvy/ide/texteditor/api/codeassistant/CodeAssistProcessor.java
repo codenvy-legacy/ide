@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.texteditor.api.codeassistant;
 
+import com.codenvy.ide.texteditor.api.CodeAssistCallback;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 
 /**
@@ -31,6 +32,7 @@ import com.codenvy.ide.texteditor.api.TextEditorPartView;
  * @version $Id:
  */
 public interface CodeAssistProcessor {
+
     /**
      * Returns a list of completion proposals based on the
      * specified location within the document that corresponds
@@ -42,7 +44,7 @@ public interface CodeAssistProcessor {
      *         an offset within the document for which completions should be computed
      * @return an array of completion proposals or <code>null</code> if no proposals are possible
      */
-    CompletionProposal[] computeCompletionProposals(TextEditorPartView view, int offset);
+    void computeCompletionProposals(TextEditorPartView view, int offset, CodeAssistCallback callback);
 
     /**
      * Returns the characters which when entered by the user should

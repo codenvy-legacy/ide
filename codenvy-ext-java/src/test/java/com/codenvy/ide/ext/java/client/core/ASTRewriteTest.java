@@ -17,10 +17,10 @@
  */
 package com.codenvy.ide.ext.java.client.core;
 
-import com.codenvy.ide.ext.java.client.core.dom.*;
-import com.codenvy.ide.ext.java.client.core.dom.rewrite.ASTRewrite;
-import com.codenvy.ide.ext.java.client.core.dom.rewrite.ITrackedNodePosition;
-import com.codenvy.ide.ext.java.client.core.dom.rewrite.ListRewrite;
+import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ASTRewrite;
+import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ITrackedNodePosition;
+import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ListRewrite;
 
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;

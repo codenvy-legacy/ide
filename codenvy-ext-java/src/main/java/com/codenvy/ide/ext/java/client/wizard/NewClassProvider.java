@@ -19,7 +19,7 @@ package com.codenvy.ide.ext.java.client.wizard;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.ext.java.client.JavaClientBundle;
+import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
@@ -35,7 +35,7 @@ public class NewClassProvider extends AbstractNewJavaResourceProvider {
 
     @Inject
     public NewClassProvider(SelectionAgent selectionAgent) {
-        super("Java Class", "Java Class", JavaClientBundle.INSTANCE.newClassWizz(), "java", selectionAgent);
+        super("Java Class", "Java Class", JavaResources.INSTANCE.newClassWizz(), "java", selectionAgent);
     }
 
     /** {@inheritDoc} */

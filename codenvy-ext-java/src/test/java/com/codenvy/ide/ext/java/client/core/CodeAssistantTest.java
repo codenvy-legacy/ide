@@ -17,11 +17,14 @@
  */
 package com.codenvy.ide.ext.java.client.core;
 
-import com.codenvy.ide.ext.java.client.core.compiler.IProblem;
-
-import com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit;
-import com.codenvy.ide.ext.java.client.internal.codeassist.CompletionEngine;
+import com.codenvy.ide.ext.java.client.core.ParserBaseTest;
 import com.codenvy.ide.ext.java.emul.FileSystem;
+import com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.CompletionProposal;
+import com.codenvy.ide.ext.java.jdt.core.CompletionRequestor;
+import com.codenvy.ide.ext.java.jdt.core.JavaCore;
+import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
+import com.codenvy.ide.ext.java.jdt.internal.codeassist.CompletionEngine;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +32,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -67,13 +72,13 @@ public class CodeAssistantTest extends ParserBaseTest {
 
         private List<CompletionProposal> proposals = new ArrayList<CompletionProposal>();
 
-        /** @see com.codenvy.ide.ext.java.client.core.CompletionRequestor#accept(com.codenvy.ide.ext.java.client.core.CompletionProposal) */
+        /** @see com.codenvy.ide.ext.java.jdt.core.CompletionRequestor#accept(com.codenvy.ide.ext.java.jdt.core.CompletionProposal) */
         @Override
         public void accept(CompletionProposal proposal) {
             proposals.add(proposal);
         }
 
-        /** @see com.codenvy.ide.ext.java.client.core.CompletionRequestor#completionFailure(com.codenvy.ide.ext.java.client.core.compiler
+        /** @see com.codenvy.ide.ext.java.jdt.core.CompletionRequestor#completionFailure(com.codenvy.ide.ext.java.jdt.core.compiler
          * .IProblem) */
         @Override
         public void completionFailure(IProblem problem) {
