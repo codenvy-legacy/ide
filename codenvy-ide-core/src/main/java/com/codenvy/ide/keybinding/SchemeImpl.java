@@ -23,7 +23,7 @@ import com.codenvy.ide.api.ui.keybinding.Scheme;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.IntegerMap;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.util.input.CharCodeWithModifiers;
 
 
@@ -39,7 +39,7 @@ public class SchemeImpl implements Scheme {
 
     private IntegerMap<Array<String>> handlers;
 
-    private JsonStringMap<CharCodeWithModifiers> actionId2CharCode;
+    private StringMap<CharCodeWithModifiers> actionId2CharCode;
 
 
     public SchemeImpl(String id, String description) {

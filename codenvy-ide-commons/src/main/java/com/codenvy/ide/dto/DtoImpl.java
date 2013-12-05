@@ -21,7 +21,7 @@ package com.codenvy.ide.dto;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.shared.SerializationIndex;
 import com.codenvy.ide.dto.shared.CompactJsonDto;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
@@ -165,15 +165,15 @@ abstract class DtoImpl {
 
     /** Tests whether or not a given return type is a Array. */
     public static boolean isJsonStringMap(Class<?> returnType) {
-        return returnType.equals(JsonStringMap.class);
+        return returnType.equals(StringMap.class);
     }
 
     /**
      * Expands the type and its first generic parameter (which can also have a
      * first generic parameter (...)).
      * <p/>
-     * For example, Array&lt;JsonStringMap&lt;Array&lt;SomeDto&gt;&gt;&gt;
-     * would produce [Array, JsonStringMap, Array, SomeDto].
+     * For example, Array&lt;StringMap&lt;Array&lt;SomeDto&gt;&gt;&gt;
+     * would produce [Array, StringMap, Array, SomeDto].
      */
     public static List<Type> expandType(Type curType) {
         List<Type> types = new ArrayList<Type>();
@@ -205,7 +205,7 @@ abstract class DtoImpl {
                     Class<?> clazz = (Class<?>)curType;
                     if (isJsonArray(clazz) || isJsonStringMap(clazz)) {
                         throw new DtoTemplate.MalformedDtoInterfaceException(
-                                "Array and JsonStringMap MUST have a generic type specified (and no... ? " + "doesn't cut it!).");
+                                "Array and StringMap MUST have a generic type specified (and no... ? " + "doesn't cut it!).");
                     }
                 }
 

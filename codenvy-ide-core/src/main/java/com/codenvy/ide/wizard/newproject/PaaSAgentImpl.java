@@ -25,7 +25,7 @@ import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -54,8 +54,8 @@ public class PaaSAgentImpl implements PaaSAgent {
         }
     }
 
-    private       NewProjectWizard    newProjectWizard;
-    private final JsonStringMap<PaaS> registeredPaaS;
+    private       NewProjectWizard newProjectWizard;
+    private final StringMap<PaaS>  registeredPaaS;
 
     /** Create agent. */
     @Inject
@@ -70,7 +70,7 @@ public class PaaSAgentImpl implements PaaSAgent {
     public void register(@NotNull String id,
                          @NotNull String title,
                          @Nullable ImageResource image,
-                         @NotNull JsonStringMap<Array<String>> natures,
+                         @NotNull StringMap<Array<String>> natures,
                          @NotNull Array<Provider<? extends AbstractPaasPage>> wizardPages,
                          boolean provideTemplate) {
         if (registeredPaaS.containsKey(id)) {

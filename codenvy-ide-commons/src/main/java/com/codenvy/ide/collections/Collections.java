@@ -16,7 +16,7 @@ package com.codenvy.ide.collections;
 
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.collections.java.JsonIntegerMapAdapter;
-import com.codenvy.ide.collections.js.Jso;
+import com.codenvy.ide.commons.Jso;
 import com.codenvy.ide.collections.js.JsoStringSet;
 import com.codenvy.ide.collections.java.JsonArrayListAdapter;
 import com.codenvy.ide.collections.java.JsonStringMapAdapter;
@@ -37,11 +37,11 @@ public final class Collections {
     public interface Implementation {
         <T> Array<T> createArray();
 
-        <T> JsonStringMap<T> createStringMap();
+        <T> StringMap<T> createStringMap();
 
         <T> IntegerMap<T> createIntegerMap();
 
-        JsonStringSet createStringSet();
+        StringSet createStringSet();
     }
 
     // If running in pure java (server code or tests) or in dev mode, use the pure java impl
@@ -52,7 +52,7 @@ public final class Collections {
         return implementation.createArray();
     }
 
-    public static <T> JsonStringMap<T> createStringMap() {
+    public static <T> StringMap<T> createStringMap() {
         return implementation.createStringMap();
     }
 
@@ -78,20 +78,20 @@ public final class Collections {
         return array;
     }
 
-    public static JsonStringSet createStringSet() {
+    public static StringSet createStringSet() {
         return implementation.createStringSet();
     }
 
-    public static JsonStringSet createStringSet(String... items) {
-        JsonStringSet set = createStringSet();
+    public static StringSet createStringSet(String... items) {
+        StringSet set = createStringSet();
         for (int i = 0, n = items.length; i < n; i++) {
             set.add(items[i]);
         }
         return set;
     }
 
-    public static JsonStringSet createStringSet(Iterator<String> iterator) {
-        JsonStringSet set = createStringSet();
+    public static StringSet createStringSet(Iterator<String> iterator) {
+        StringSet set = createStringSet();
         while (iterator.hasNext()) {
             set.add(iterator.next());
         }
@@ -122,12 +122,12 @@ public final class Collections {
         }
 
         @Override
-        public <T> JsonStringMap<T> createStringMap() {
+        public <T> StringMap<T> createStringMap() {
             return new JsonStringMapAdapter<T>(new HashMap<String, T>());
         }
 
         @Override
-        public JsonStringSet createStringSet() {
+        public StringSet createStringSet() {
             return new JsonStringSetAdapter(new HashSet<String>());
         }
 
@@ -139,12 +139,12 @@ public final class Collections {
 
     private static class NativeImplementation implements Implementation {
         @Override
-        public <T> JsonStringMap<T> createStringMap() {
+        public <T> StringMap<T> createStringMap() {
             return JsoStringMap.create();
         }
 
         @Override
-        public JsonStringSet createStringSet() {
+        public StringSet createStringSet() {
             return JsoStringSet.create();
         }
 

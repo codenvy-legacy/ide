@@ -18,11 +18,11 @@
 package com.codenvy.ide.ext.ssh.client;
 
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.ssh.dto.GenKeyRequest;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.JsonStringMap;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
@@ -46,11 +46,11 @@ import com.google.inject.name.Named;
  */
 @Singleton
 public class SshKeyServiceImpl implements SshKeyService {
-    private final String restContext;
-    private final Loader loader;
-    private final String wsName;
-    private final DtoFactory dtoFactory;
-    private JsonStringMap<SshKeyProvider> sshKeyProviders;
+    private final String                    restContext;
+    private final Loader                    loader;
+    private final String                    wsName;
+    private final DtoFactory                dtoFactory;
+    private       StringMap<SshKeyProvider> sshKeyProviders;
 
     /**
      * Create service.
@@ -108,7 +108,7 @@ public class SshKeyServiceImpl implements SshKeyService {
 
     /** {@inheritDoc} */
     @Override
-    public JsonStringMap<SshKeyProvider> getSshKeyProviders() {
+    public StringMap<SshKeyProvider> getSshKeyProviders() {
         return sshKeyProviders;
     }
 

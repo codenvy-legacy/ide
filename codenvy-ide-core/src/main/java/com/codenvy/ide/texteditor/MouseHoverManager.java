@@ -16,10 +16,10 @@ package com.codenvy.ide.texteditor;
 
 import elemental.events.Event;
 
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.common.Constants;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.JsonStringMap;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.texteditor.api.KeyListener;
 import com.codenvy.ide.texteditor.api.NativeKeyUpListener;
@@ -68,7 +68,7 @@ public class MouseHoverManager {
 
     private final TextEditorViewImpl editor;
 
-    private final JsonStringMap<ListenerManager<MouseHoverListener>> listenerManagers = Collections.createStringMap();
+    private final StringMap<ListenerManager<MouseHoverListener>> listenerManagers = Collections.createStringMap();
 
     /**
      * Current key combination that we will dispatch the mouse hover events for.

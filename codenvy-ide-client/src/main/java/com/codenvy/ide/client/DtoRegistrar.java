@@ -19,7 +19,7 @@ package com.codenvy.ide.client;
 
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.dto.DtoFactoryVisitor;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -43,7 +43,7 @@ public class DtoRegistrar {
 
     public void registerDtoProviders() {
         dtoFactoryVisitorRegistry.getDtoFactoryVisitors().iterate(
-                new JsonStringMap.IterationCallback<Provider>() {
+                new StringMap.IterationCallback<Provider>() {
                     @Override
                     public void onIteration(String dtoFactoryVisitorFqn, Provider dtoFactoryVisitorProvider) {
                         ((DtoFactoryVisitor)dtoFactoryVisitorProvider.get()).accept(dtoFactory);

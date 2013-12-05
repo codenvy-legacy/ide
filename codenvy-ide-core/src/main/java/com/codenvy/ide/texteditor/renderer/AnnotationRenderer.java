@@ -20,7 +20,7 @@ package com.codenvy.ide.texteditor.renderer;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.client.ClientDocOpFactory;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.Position;
@@ -47,12 +47,12 @@ public class AnnotationRenderer implements AnnotationModelListener {
 
     private AnnotationModel annotationModel;
 
-    private final JsonStringMap<String> decorations;
+    private final StringMap<String> decorations;
 
     private ErrorRenderer renderer;
 
     /** @param editor */
-    public AnnotationRenderer(TextEditorViewImpl editor, JsonStringMap<String> decorations) {
+    public AnnotationRenderer(TextEditorViewImpl editor, StringMap<String> decorations) {
         super();
         this.editor = editor;
         this.decorations = decorations;

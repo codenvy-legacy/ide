@@ -19,8 +19,8 @@ package com.codenvy.ide.ext.java.worker.env;
 
 import com.codenvy.ide.ext.java.worker.internal.compiler.env.IBinaryAnnotation;
 import com.codenvy.ide.ext.java.worker.internal.compiler.env.IBinaryElementValuePair;
-import com.codenvy.ide.collections.JsonObject;
-import com.codenvy.ide.collections.js.Jso;
+import com.codenvy.ide.commons.JsonObject;
+import com.codenvy.ide.commons.Jso;
 import com.codenvy.ide.collections.js.JsoArray;
 
 

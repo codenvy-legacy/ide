@@ -25,7 +25,7 @@ import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -39,8 +39,8 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class TemplateAgentImpl implements TemplateAgent {
-    private       NewProjectWizard        newProjectWizard;
-    private final JsonStringMap<Template> templates;
+    private       NewProjectWizard    newProjectWizard;
+    private final StringMap<Template> templates;
 
     /** Create agent. */
     @Inject

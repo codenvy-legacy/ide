@@ -9,7 +9,7 @@ import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.codenvy.ide.tutorial.wizard.newproject.pages.paas.PaasPageProvider;
 import com.codenvy.ide.tutorial.wizard.newproject.pages.page.PageProvider;
@@ -61,7 +61,7 @@ public class NewProjectWizardTutorialExtension {
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(
                                        new TemplatePageProvider("Template 2 page", MY_TEMPLATE_2)));
 
-        JsonStringMap<Array<String>> natures = Collections.createStringMap();
+        StringMap<Array<String>> natures = Collections.createStringMap();
         natures.put(MY_PROJECT_TYPE, Collections.<String>createArray());
 
         Array<Provider<? extends AbstractPaasPage>> wizardPages = Collections.createArray();
@@ -69,7 +69,7 @@ public class NewProjectWizardTutorialExtension {
 
         paasAgent.register(MY_PAAS_1, MY_PAAS_1, null, natures, wizardPages, false);
 
-        JsonStringMap<Array<String>> natures2 = Collections.createStringMap();
+        StringMap<Array<String>> natures2 = Collections.createStringMap();
         natures2.put(MY_PROJECT_TYPE, Collections.<String>createArray());
 
         Array<Provider<? extends AbstractPaasPage>> wizardPages2 = Collections.createArray();

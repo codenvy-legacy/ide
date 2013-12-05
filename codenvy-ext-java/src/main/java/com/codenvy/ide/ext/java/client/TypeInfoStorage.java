@@ -23,7 +23,7 @@ import com.codenvy.ide.ext.java.client.core.IType;
 import com.codenvy.ide.ext.java.client.core.Signature;
 import com.codenvy.ide.ext.java.client.env.TypeImpl;
 
-import com.codenvy.ide.collections.JsonStringSet;
+import com.codenvy.ide.collections.StringSet;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -46,7 +46,7 @@ public class TypeInfoStorage {
 
     private Storage storage;
 
-    private JsonStringSet packages;
+    private StringSet packages;
 
     protected TypeInfoStorage() {
         storage = Storage.getSessionStorageIfSupported();
@@ -139,11 +139,11 @@ public class TypeInfoStorage {
      * @param projectId
      * @param packages
      */
-    public void setPackages(String projectId, JsonStringSet packages) {
+    public void setPackages(String projectId, StringSet packages) {
         this.packages = packages;
     }
 
-    public JsonStringSet getPackages(String projectId) {
+    public StringSet getPackages(String projectId) {
         return packages;
     }
 }

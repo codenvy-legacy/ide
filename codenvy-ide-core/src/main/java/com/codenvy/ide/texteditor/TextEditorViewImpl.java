@@ -17,10 +17,10 @@ package com.codenvy.ide.texteditor;
 import elemental.html.Element;
 
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.JsonStringMap;
-import com.codenvy.ide.collections.JsonStringMap.IterationCallback;
+import com.codenvy.ide.collections.StringMap.IterationCallback;
 import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.mvp.UiComponent;
 import com.codenvy.ide.text.*;
@@ -96,27 +96,27 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
     private final LeftGutterManager leftGutterManager;
     private final ListenerManager<ReadOnlyListener>  readOnlyListenerManager  = ListenerManager.create();
     private final ListenerManager<TextInputListener> textInputListenerManager = ListenerManager.create();
-    private final EditorActivityManager                  editorActivityManager;
-    private final RenderTimeExecutor                     renderTimeExecutor;
-    private final com.codenvy.ide.Resources              resources;
-    private final UserActivityManager                    userActivityManager;
-    private final OverviewRuler                          overviewRuller;
-    private       DocumentModel                          textStore;
-    private       UndoManager                            editorUndoManager;
-    private       LocalCursorController                  localCursorController;
-    private       Renderer                               renderer;
-    private       SelectionManager                       selectionManager;
-    private       ViewportModel                          viewport;
-    private       boolean                                isReadOnly;
-    private       Document                               document;
-    private       SyntaxHighlighter                      syntaxHighlighter;
-    private       Parser                                 parser;
-    private       CodeAssistantImpl                      codeAssistant;
-    private       VerticalRuler                          verticalRuler;
-    private       QuickAssistAssistant                   quickAssistAssistant;
-    private       BreakpointGutterManager                breakpointGutterManager;
-    private       JsonStringMap<Array<AutoEditStrategy>> autoEditStrategies;
-    private       String                                 documentPartitioning;
+    private final EditorActivityManager              editorActivityManager;
+    private final RenderTimeExecutor                 renderTimeExecutor;
+    private final com.codenvy.ide.Resources          resources;
+    private final UserActivityManager                userActivityManager;
+    private final OverviewRuler                      overviewRuller;
+    private       DocumentModel                      textStore;
+    private       UndoManager                        editorUndoManager;
+    private       LocalCursorController              localCursorController;
+    private       Renderer                           renderer;
+    private       SelectionManager                   selectionManager;
+    private       ViewportModel                      viewport;
+    private       boolean                            isReadOnly;
+    private       Document                           document;
+    private       SyntaxHighlighter                  syntaxHighlighter;
+    private       Parser                             parser;
+    private       CodeAssistantImpl                  codeAssistant;
+    private       VerticalRuler                      verticalRuler;
+    private       QuickAssistAssistant               quickAssistAssistant;
+    private       BreakpointGutterManager            breakpointGutterManager;
+    private       StringMap<Array<AutoEditStrategy>> autoEditStrategies;
+    private       String                             documentPartitioning;
 
     public TextEditorViewImpl(com.codenvy.ide.Resources resources, UserActivityManager userActivityManager,
                               BreakpointGutterManager breakpointGutterManager) {
@@ -502,7 +502,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         parser = configuration.getParser(this);
         RootActionExecutor actionExecutor = getInput().getActionExecutor();
         actionExecutor.addDelegate(TextActions.INSTANCE);
-        JsonStringMap<CodeAssistProcessor> processors = configuration.getContentAssistantProcessors(this);
+        StringMap<CodeAssistProcessor> processors = configuration.getContentAssistantProcessors(this);
         setDocumentPartitioning(configuration.getConfiguredDocumentPartitioning(this));
         Reconciler reconciler = configuration.getReconciler(this);
         if (reconciler != null) {

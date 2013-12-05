@@ -19,7 +19,7 @@ package com.codenvy.ide.texteditor.api;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.texteditor.api.outline.OutlineModel;
@@ -96,7 +96,7 @@ public class TextEditorConfiguration {
      * @return a content assistant or <code>null</code> if content assist should not be supported
      */
     @Nullable
-    public JsonStringMap<CodeAssistProcessor> getContentAssistantProcessors(@NotNull TextEditorPartView view) {
+    public StringMap<CodeAssistProcessor> getContentAssistantProcessors(@NotNull TextEditorPartView view) {
         return null;
     }
 

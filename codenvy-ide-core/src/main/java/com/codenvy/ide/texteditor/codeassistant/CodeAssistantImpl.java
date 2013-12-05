@@ -18,8 +18,8 @@
 package com.codenvy.ide.texteditor.codeassistant;
 
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.JsonStringMap;
-import com.codenvy.ide.collections.JsonStringMap.IterationCallback;
+import com.codenvy.ide.collections.StringMap;
+import com.codenvy.ide.collections.StringMap.IterationCallback;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
@@ -51,7 +51,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
  */
 public class CodeAssistantImpl implements CodeAssistant {
 
-    private JsonStringMap<CodeAssistProcessor> processors;
+    private StringMap<CodeAssistProcessor> processors;
 
     private AutocompleteBox box;
 

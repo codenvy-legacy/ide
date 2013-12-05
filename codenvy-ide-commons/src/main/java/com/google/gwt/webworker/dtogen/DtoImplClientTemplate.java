@@ -16,8 +16,8 @@ package com.google.gwt.webworker.dtogen;
 
 
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.dto.shared.RoutableDto;
-import com.codenvy.ide.collections.JsonStringMap;
 import com.google.common.base.Preconditions;
 import com.google.gwt.webworker.client.messages.Message;
 import com.google.gwt.webworker.client.messages.SerializationIndex;
@@ -276,8 +276,8 @@ public class DtoImplClientTemplate extends DtoImpl {
         if (paramType == Array.class) {
             paramTypeName = paramTypeName.replace("Array",
                                                   "JsoArray");
-        } else if (paramType == JsonStringMap.class) {
-            paramTypeName = paramTypeName.replace("JsonStringMap",
+        } else if (paramType == StringMap.class) {
+            paramTypeName = paramTypeName.replace("StringMap",
                                                   "JsoStringMap");
         }
 

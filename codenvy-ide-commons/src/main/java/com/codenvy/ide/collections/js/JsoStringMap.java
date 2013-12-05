@@ -14,18 +14,19 @@
 
 package com.codenvy.ide.collections.js;
 
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
+import com.codenvy.ide.commons.Jso;
 import com.google.gwt.core.client.JavaScriptObject;
 
 
 /**
  * This is used to satisfy DTO casting requirements.
  * <p/>
- * On the client, if you have a reference to JsonStringMap, or JsoStringMap
+ * On the client, if you have a reference to StringMap, or JsoStringMap
  * (the JavaScriptObject backed impl), feel free to cross cast this to the more
- * robust {@link Jso}.
+ * robust {@link com.codenvy.ide.commons.Jso}.
  */
-public final class JsoStringMap<T> extends JavaScriptObject implements JsonStringMap<T> {
+public final class JsoStringMap<T> extends JavaScriptObject implements StringMap<T> {
 
   /*
    * GWT dev mode adds a __gwt_ObjectId property to all objects. We have to call
@@ -83,7 +84,7 @@ public final class JsoStringMap<T> extends JavaScriptObject implements JsonStrin
         for (key in this) {
             if (Object.prototype.hasOwnProperty.call(this, key)) {
                 callback.
-                    @com.codenvy.ide.collections.JsonStringMap.IterationCallback::onIteration(Ljava/lang/String;Ljava/lang/Object;)
+                    @com.codenvy.ide.collections.StringMap.IterationCallback::onIteration(Ljava/lang/String;Ljava/lang/Object;)
                     (key, this[key]);
             }
         }
@@ -96,7 +97,7 @@ public final class JsoStringMap<T> extends JavaScriptObject implements JsonStrin
     }-*/;
 
     @Override
-    public void putAll(JsonStringMap<T> map) {
+    public void putAll(StringMap<T> map) {
         map.iterate(new IterationCallback<T>() {
             @Override
             public void onIteration(String key, T value) {

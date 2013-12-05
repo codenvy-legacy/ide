@@ -20,9 +20,9 @@ package com.codenvy.util;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.extension.SDK;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.JsonStringMap;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
@@ -111,7 +111,7 @@ public class ExtensionRegistryGenerator extends Generator {
         SourceWriter sw = composerFactory.createSourceWriter(context, pw);
         // begin class definition
         // fields
-        sw.println("private final JsonStringMap<ExtensionDescription> extensions = Collections.createStringMap();");
+        sw.println("private final StringMap<ExtensionDescription> extensions = Collections.createStringMap();");
 
         generateConstructor(className, extensions, sw);
 
@@ -137,8 +137,8 @@ public class ExtensionRegistryGenerator extends Generator {
         composerFactory.addImport(ExtensionRegistry.class.getCanonicalName());
         composerFactory.addImport(Inject.class.getCanonicalName());
         composerFactory.addImport(Provider.class.getCanonicalName());
-        composerFactory.addImport(JsonStringMap.class.getCanonicalName());
-        composerFactory.addImport(JsonStringMap.IterationCallback.class.getCanonicalName());
+        composerFactory.addImport(StringMap.class.getCanonicalName());
+        composerFactory.addImport(StringMap.IterationCallback.class.getCanonicalName());
         composerFactory.addImport(Array.class.getCanonicalName());
         composerFactory.addImport(Collections.class.getCanonicalName());
         // import for extensions
@@ -243,14 +243,14 @@ public class ExtensionRegistryGenerator extends Generator {
     private void generateGetExtensionsMethod(SourceWriter sw) {
       /*
             @Override
-            public JsonStringMap<ExtensionDescription> getExtensionDescriptions()
+            public StringMap<ExtensionDescription> getExtensionDescriptions()
             {
                return extensions;
             }
        */
 
         sw.println("@Override");
-        sw.println("public JsonStringMap<ExtensionDescription> getExtensionDescriptions()");
+        sw.println("public StringMap<ExtensionDescription> getExtensionDescriptions()");
 
         sw.println("{");
         sw.indent();

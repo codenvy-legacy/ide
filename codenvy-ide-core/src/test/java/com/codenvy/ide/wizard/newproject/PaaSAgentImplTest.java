@@ -21,7 +21,7 @@ import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 import com.google.inject.Provider;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
@@ -57,7 +57,7 @@ public class PaaSAgentImplTest extends GwtTestWithMockito {
         Provider<? extends AbstractPaasPage> pageProvider = mock(Provider.class);
         Array<Provider<? extends AbstractPaasPage>> pages = Collections.createArray(pageProvider, pageProvider);
 
-        JsonStringMap<Array<String>> natures = Collections.createStringMap();
+        StringMap<Array<String>> natures = Collections.createStringMap();
         natures.put("primaryNature1", Collections.<String>createArray("secondaryNature1"));
         natures.put("primaryNature2", Collections.<String>createArray("secondaryNature2"));
 

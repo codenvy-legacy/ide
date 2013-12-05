@@ -16,16 +16,16 @@ package com.codenvy.ide.collections.java;
 
 
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 /**
  * Server wrapper for a {@link java.util.Map} that implements
- * {@link JsonStringMap}.
+ * {@link com.codenvy.ide.collections.StringMap}.
  */
-public class JsonStringMapAdapter<T> implements JsonStringMap<T> {
+public class JsonStringMapAdapter<T> implements StringMap<T> {
     private final Map<String, T> delegate;
 
     public JsonStringMapAdapter(Map<String, T> delegate) {
@@ -66,7 +66,7 @@ public class JsonStringMapAdapter<T> implements JsonStringMap<T> {
 
     /** {@inheritDoc} */
     @Override
-    public void putAll(JsonStringMap<T> otherMap) {
+    public void putAll(StringMap<T> otherMap) {
         Array<String> keys = otherMap.getKeys();
         for (int i = 0, n = keys.size(); i < n; i++) {
             String key = keys.get(i);

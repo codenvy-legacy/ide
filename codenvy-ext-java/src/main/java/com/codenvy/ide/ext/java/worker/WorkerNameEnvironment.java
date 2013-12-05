@@ -31,7 +31,7 @@ import com.codenvy.ide.ext.java.worker.internal.compiler.env.IBinaryMethod;
 import com.codenvy.ide.ext.java.worker.internal.compiler.env.IBinaryType;
 import com.codenvy.ide.ext.java.worker.internal.compiler.env.INameEnvironment;
 import com.codenvy.ide.ext.java.worker.internal.compiler.env.NameEnvironmentAnswer;
-import com.codenvy.ide.collections.js.Jso;
+import com.codenvy.ide.commons.Jso;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;

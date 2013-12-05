@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.java.client;
 
+import com.codenvy.ide.collections.StringSet;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.java.client.core.Flags;
 import com.codenvy.ide.ext.java.client.core.Signature;
@@ -30,8 +31,7 @@ import com.codenvy.ide.ext.java.client.internal.compiler.env.INameEnvironment;
 import com.codenvy.ide.ext.java.client.internal.compiler.env.NameEnvironmentAnswer;
 import com.codenvy.ide.ext.java.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.java.shared.*;
-import com.codenvy.ide.collections.JsonStringSet;
-import com.codenvy.ide.collections.JsonStringSet.IterationCallback;
+import com.codenvy.ide.collections.StringSet.IterationCallback;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPStatus;
@@ -237,7 +237,7 @@ public class NameEnvironment implements INameEnvironment {
 //         }
 //      }
 //      p.append(packageName);
-//      JsonStringSet packages = TypeInfoStorage.get().getPackages(projectId);
+//      StringSet packages = TypeInfoStorage.get().getPackages(projectId);
 //      //TODO maybe need more actions on this
 //      if (packages == null)
 //         return false;
@@ -338,7 +338,7 @@ public class NameEnvironment implements INameEnvironment {
      */
     @Override
     public void findPackages(char[] qualifiedName, final ISearchRequestor requestor) {
-        JsonStringSet packages = TypeInfoStorage.get().getPackages(projectId);
+        StringSet packages = TypeInfoStorage.get().getPackages(projectId);
         final String pack = new String(qualifiedName);
         packages.iterate(new IterationCallback() {
 

@@ -22,8 +22,8 @@ import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.commons.exception.ServerException;
-import com.codenvy.ide.collections.JsonStringMap;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.texteditor.renderer.DebugLineRenderer;
 import com.codenvy.ide.texteditor.renderer.LineNumberRenderer;
@@ -44,13 +44,13 @@ import java.util.List;
  */
 @Singleton
 public class BreakpointGutterManager {
-    private JsonStringMap<Array<Breakpoint>> breakPoints;
-    private EditorAgent                      editorAgent;
-    private DebuggerManager                  debuggerManager;
-    private ConsolePart                      console;
-    private LineNumberRenderer               renderer;
-    private DebugLineRenderer                debugLineRenderer;
-    private Breakpoint                       markedBreakPoint;
+    private StringMap<Array<Breakpoint>> breakPoints;
+    private EditorAgent                  editorAgent;
+    private DebuggerManager              debuggerManager;
+    private ConsolePart                  console;
+    private LineNumberRenderer           renderer;
+    private DebugLineRenderer            debugLineRenderer;
+    private Breakpoint                   markedBreakPoint;
 
     /**
      * Create manager.
@@ -169,7 +169,7 @@ public class BreakpointGutterManager {
         }
         activeFileId = activeFile != null ? activeFile.getId() : null;
 
-        breakPoints.iterate(new JsonStringMap.IterationCallback<Array<Breakpoint>>() {
+        breakPoints.iterate(new StringMap.IterationCallback<Array<Breakpoint>>() {
             @Override
             public void onIteration(String key, Array<Breakpoint> value) {
                 breakPoints.remove(key);
@@ -209,7 +209,7 @@ public class BreakpointGutterManager {
     public List<Breakpoint> getBreakPoints() {
         final List<Breakpoint> points = new ArrayList<Breakpoint>(breakPoints.size());
 
-        breakPoints.iterate(new JsonStringMap.IterationCallback<Array<Breakpoint>>() {
+        breakPoints.iterate(new StringMap.IterationCallback<Array<Breakpoint>>() {
             @Override
             public void onIteration(String key, Array<Breakpoint> value) {
                 points.addAll((Collection<? extends Breakpoint>)value);

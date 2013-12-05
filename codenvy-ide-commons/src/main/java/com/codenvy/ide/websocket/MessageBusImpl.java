@@ -19,7 +19,7 @@ package com.codenvy.ide.websocket;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.loging.Log;
@@ -152,10 +152,10 @@ public class MessageBusImpl implements MessageBus {
     /** WebSocket server URL. */
     private String    url;
     /** Map of the message identifier to the {@link ReplyHandler}. */
-    private JsonStringMap<RequestCallback>           requestCallbackMap       = Collections.createStringMap();
-    private JsonStringMap<ReplyHandler>              replyCallbackMap         = Collections.createStringMap();
+    private StringMap<RequestCallback>               requestCallbackMap       = Collections.createStringMap();
+    private StringMap<ReplyHandler>                  replyCallbackMap         = Collections.createStringMap();
     /** Map of the channel to the subscribers. */
-    private JsonStringMap<Array<MessageHandler>>     channelToSubscribersMap  = Collections.createStringMap();
+    private StringMap<Array<MessageHandler>>         channelToSubscribersMap  = Collections.createStringMap();
     private ListenerManager<ConnectionOpenedHandler> connectionOpenedHandlers = ListenerManager.create();
     private ListenerManager<ConnectionClosedHandler> connectionClosedHandlers = ListenerManager.create();
     private ListenerManager<ConnectionErrorHandler>  connectionErrorHandlers  = ListenerManager.create();

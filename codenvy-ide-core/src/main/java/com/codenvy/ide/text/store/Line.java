@@ -15,7 +15,7 @@
 package com.codenvy.ide.text.store;
 
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 
 
 /*
@@ -49,7 +49,7 @@ public class Line implements TaggableLine {
     private Line previousLine;
 
     // Not final so we can do O(1) clearTags
-    private JsonStringMap<Object> tags;
+    private StringMap<Object> tags;
 
     private String text;
 

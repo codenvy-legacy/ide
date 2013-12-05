@@ -19,7 +19,7 @@
 package com.codenvy.ide.ui.menu;
 
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
@@ -194,8 +194,8 @@ public class MenuBar extends Composite implements ItemSelectedHandler, CloseMenu
      *
      * @return list of items
      */
-    public JsonStringMap<Item> getItems() {
-        JsonStringMap<Item> items = Collections.createStringMap();
+    public StringMap<Item> getItems() {
+        StringMap<Item> items = Collections.createStringMap();
 
         for (MenuBarItem item : menuBarItems.values()) {
             items.put(item.getTitle(), item);

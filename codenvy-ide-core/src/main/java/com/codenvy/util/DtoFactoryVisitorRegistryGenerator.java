@@ -125,7 +125,7 @@ public class DtoFactoryVisitorRegistryGenerator {
         builder.append("import com.google.inject.Provider;\n");
         builder.append("import com.google.inject.Singleton;\n");
 
-        builder.append("import JsonStringMap;\n");
+        builder.append("import StringMap;\n");
         builder.append("import Collections;\n");
     }
 
@@ -150,7 +150,7 @@ public class DtoFactoryVisitorRegistryGenerator {
                        +
                        "/** Contains the map will all the DtoFactoryVisitor Providers <FullClassFQN, Provider>. */\n");
         builder.append(GeneratorUtils.TAB
-                       + "protected final JsonStringMap<Provider> providers = Collections.createStringMap();\n\n");
+                       + "protected final StringMap<Provider> providers = Collections.createStringMap();\n\n");
 
         // generate constructor
 
@@ -190,7 +190,7 @@ public class DtoFactoryVisitorRegistryGenerator {
         builder.append(GeneratorUtils.TAB
                        +
                        "/** Returns  the map will all the DtoFactoryVisitor Providers <FullClassFQN, Provider>. */\n");
-        builder.append(GeneratorUtils.TAB + "public JsonStringMap<Provider> getDtoFactoryVisitors()\n");
+        builder.append(GeneratorUtils.TAB + "public StringMap<Provider> getDtoFactoryVisitors()\n");
         builder.append(GeneratorUtils.TAB + "{\n");
         builder.append(GeneratorUtils.TAB2 + "return providers;\n");
         builder.append(GeneratorUtils.TAB + "}\n");

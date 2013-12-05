@@ -16,7 +16,7 @@ package com.codenvy.ide.texteditor.linedimensions;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.DocumentModel.PreTextListener;
 import com.codenvy.ide.text.store.DocumentModel.TextListener;
@@ -209,7 +209,7 @@ public class LineDimensionsCalculator {
      * A cache used to cache the width of special characters. Would be final
      * except there isn't a fast way to clear a map.
      */
-    private static JsonStringMap<Double> characterWidthCache = Collections.createStringMap();
+    private static StringMap<Double> characterWidthCache = Collections.createStringMap();
 
     /**
      * A listener which notifies us of dirty lines. We only have to handle the

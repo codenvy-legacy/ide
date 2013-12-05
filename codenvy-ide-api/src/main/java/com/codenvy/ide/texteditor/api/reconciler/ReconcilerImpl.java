@@ -18,8 +18,8 @@
 package com.codenvy.ide.texteditor.api.reconciler;
 
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.JsonStringMap;
-import com.codenvy.ide.collections.JsonStringMap.IterationCallback;
+import com.codenvy.ide.collections.StringMap;
+import com.codenvy.ide.collections.StringMap.IterationCallback;
 import com.codenvy.ide.text.*;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.TextInputListener;
@@ -62,7 +62,7 @@ public class ReconcilerImpl implements Reconciler {
 
     }
 
-    private JsonStringMap<ReconcilingStrategy> strategys;
+    private StringMap<ReconcilingStrategy> strategys;
 
     private String partition;
 

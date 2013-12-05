@@ -19,8 +19,8 @@ package com.codenvy.ide.preferences;
 
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.resources.DtoClientImpls;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.collections.js.JsoStringMap;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.api.user.UserClientService;
@@ -30,6 +30,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * The implementation of {@link PreferencesManager}.
  *
@@ -37,11 +40,12 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class PreferencesManagerImpl implements PreferencesManager {
-    private JsonStringMap<String> persistedPreferences;
+    private Map<String, String> persistedPreferences;
 
-    private JsonStringMap<String> changedPreferences;
+    private Map<String, String> changedPreferences;
 
     private UserClientService userService;
+    private DtoFactory dtoFactory;
 
     /**
      * Create preferences.
@@ -49,9 +53,11 @@ public class PreferencesManagerImpl implements PreferencesManager {
      * @param userService
      */
     @Inject
-    protected PreferencesManagerImpl(UserClientService userService) {
-        this.persistedPreferences = Collections.createStringMap();
-        this.changedPreferences = JsoStringMap.create();
+    protected PreferencesManagerImpl(UserClientService userService,
+                                     DtoFactory dtoFactory) {
+        this.dtoFactory = dtoFactory;
+        this.persistedPreferences = new HashMap<>();
+        this.changedPreferences = new HashMap<>();
         this.userService = userService;
     }
 
@@ -82,21 +88,15 @@ public class PreferencesManagerImpl implements PreferencesManager {
     /** {@inheritDoc} */
     @Override
     public void flushPreferences(final AsyncCallback<Void> callback) {
-        DtoClientImpls.UpdateUserAttributesImpl attributes = DtoClientImpls.UpdateUserAttributesImpl.make();
-        attributes.setAttributes(changedPreferences);
+        Map<String, String> attributes = new HashMap<>();
+        attributes.putAll(changedPreferences);
 
         try {
             userService.updateUserAttributes(attributes, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
-                    changedPreferences.iterate(new JsonStringMap.IterationCallback<String>() {
-                        @Override
-                        public void onIteration(String key, String value) {
-                            persistedPreferences.put(key, value);
-                        }
-                    });
-                    changedPreferences = JsoStringMap.create();
-
+                    persistedPreferences.putAll(changedPreferences);
+                    changedPreferences.clear();
                     callback.onSuccess(result);
                 }
 
@@ -116,7 +116,7 @@ public class PreferencesManagerImpl implements PreferencesManager {
      *
      * @param preferences
      */
-    public void load(JsonStringMap<String> preferences) {
+    public void load(Map<String, String> preferences) {
         persistedPreferences.putAll(preferences);
     }
 }

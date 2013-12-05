@@ -14,12 +14,12 @@
 
 package com.codenvy.ide.dto;
 
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.dto.shared.ClientToServerDto;
 import com.codenvy.ide.dto.shared.RoutableDto;
 import com.codenvy.ide.dto.shared.SerializationIndex;
 import com.codenvy.ide.dto.shared.ServerToClientDto;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.JsonStringMap;
 import com.google.common.base.Preconditions;
 
 import java.lang.reflect.Method;
@@ -276,8 +276,8 @@ public class DtoImplClientTemplate extends DtoImpl {
         if (paramType == Array.class) {
             paramTypeName = paramTypeName.replace("com.google.collide.json.shared.Array",
                                                   "com.google.collide.json.client.JsoArray");
-        } else if (paramType == JsonStringMap.class) {
-            paramTypeName = paramTypeName.replace("com.google.collide.json.shared.JsonStringMap",
+        } else if (paramType == StringMap.class) {
+            paramTypeName = paramTypeName.replace("com.google.collide.json.shared.StringMap",
                                                   "com.google.collide.json.client.JsoStringMap");
         }
 

@@ -20,7 +20,7 @@ package com.codenvy.ide.resources.model;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 
 
 /**
@@ -204,11 +204,11 @@ public class VirtualFileSystemInfo {
      * http://localhost/service/vfs/jcr/file/MyFolder001?name=NewFile.txt&mediaType=text/plain
      * </pre>
      */
-    private JsonStringMap<Link> urlTemplates;
+    private StringMap<Link> urlTemplates;
 
     public VirtualFileSystemInfo(String id, boolean versioningSupported, boolean lockSupported,
                                  String anonymousPrincipal, String anyPrincipal, Array<String> permissions, ACLCapability aclCapability,
-                                 QueryCapability queryCapability, JsonStringMap<Link> urlTemplates, Folder root) {
+                                 QueryCapability queryCapability, StringMap<Link> urlTemplates, Folder root) {
         this.versioningSupported = versioningSupported;
         this.lockSupported = lockSupported;
         this.anonymousPrincipal = anonymousPrincipal;
@@ -290,14 +290,14 @@ public class VirtualFileSystemInfo {
         this.queryCapability = queryCapability;
     }
 
-    public JsonStringMap<Link> getUrlTemplates() {
+    public StringMap<Link> getUrlTemplates() {
         if (urlTemplates == null) {
             urlTemplates = Collections.createStringMap();
         }
         return urlTemplates;
     }
 
-    public void setUrlTemplates(JsonStringMap<Link> uriTemplates) {
+    public void setUrlTemplates(StringMap<Link> uriTemplates) {
         this.urlTemplates = uriTemplates;
     }
 

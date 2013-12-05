@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.java.client.projectmodel;
 
-import com.codenvy.ide.collections.JsonStringSet;
+import com.codenvy.ide.collections.StringSet;
 import com.codenvy.ide.resources.model.ProjectDescription;
 
 
@@ -33,7 +33,7 @@ public class JavaProjectDesctiprion extends ProjectDescription {
 
 
     /** @return The set of Project's source folders or empty set. */
-    public JsonStringSet getSourceFolders() {
+    public StringSet getSourceFolders() {
         return asStringSet(PROPERTY_SOURCE_FOLDERS);
     }
 }

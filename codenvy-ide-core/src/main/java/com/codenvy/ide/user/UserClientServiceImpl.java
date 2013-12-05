@@ -17,9 +17,10 @@
  */
 package com.codenvy.ide.user;
 
-import com.codenvy.ide.api.user.UpdateUserAttributes;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
+import com.codenvy.ide.dto.DtoFactory;
+import com.codenvy.ide.json.JsonHelper;
 import com.codenvy.ide.resources.DtoClientImpls;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -30,6 +31,8 @@ import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+
+import java.util.Map;
 
 /**
  * The implementation of {@link com.codenvy.ide.api.user.UserClientService}.
@@ -51,14 +54,15 @@ public class UserClientServiceImpl implements UserClientService {
      * @param loader
      */
     @Inject
-    protected UserClientServiceImpl(@Named("restContext") String restContext, Loader loader) {
+    protected UserClientServiceImpl(@Named("restContext") String restContext,
+                                    Loader loader) {
         this.restContext = restContext;
         this.loader = loader;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void getUser(AsyncRequestCallback<User> callback) throws RequestException {
+    public void getUser(AsyncRequestCallback<String> callback) throws RequestException {
         final String requestUrl = restContext + GET_USER;
 
         AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(loader).send(callback);
@@ -66,13 +70,10 @@ public class UserClientServiceImpl implements UserClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void updateUserAttributes(UpdateUserAttributes updateUserAttributes, AsyncRequestCallback<Void> callback)
+    public void updateUserAttributes(Map<String, String> updateUserAttributes, AsyncRequestCallback<Void> callback)
             throws RequestException {
         final String requestUrl = restContext + UPDATE_USER_ATTRIBUTES;
-
-        DtoClientImpls.UpdateUserAttributesImpl userAttributes = (DtoClientImpls.UpdateUserAttributesImpl)updateUserAttributes;
-        String updateAttributesData = userAttributes.serialize();
-
+        String updateAttributesData = JsonHelper.toJson(updateUserAttributes);
         AsyncRequest.build(RequestBuilder.POST, requestUrl).loader(loader).data(updateAttributesData).send(callback);
     }
 }

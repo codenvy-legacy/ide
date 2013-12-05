@@ -15,7 +15,7 @@
 package com.codenvy.ide.collections;
 
 /** String Set interface. */
-public interface JsonStringSet {
+public interface StringSet {
 
     /** Callback to support iterating through the keys of this set. */
     public interface IterationCallback {

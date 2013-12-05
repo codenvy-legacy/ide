@@ -24,8 +24,8 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.IntegerMap;
-import com.codenvy.ide.collections.JsonStringMap;
-import com.codenvy.ide.collections.JsonStringSet;
+import com.codenvy.ide.collections.StringMap;
+import com.codenvy.ide.collections.StringSet;
 import com.codenvy.ide.core.Component;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.json.*;
@@ -61,13 +61,13 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     /** Used for compatibility with IDE-VFS 1.x */
     private static final String DEPRECATED_PROJECT_TYPE = "deprecated.project.type";
     /** Fully qualified URL to root folder of VFS */
-    private final   String                       workspaceURL;
-    private         Loader                       loader;
-    private final   JsonStringMap<ModelProvider> modelProviders;
-    private final   JsonStringMap<ProjectNature> natures;
-    private final   IntegerMap<FileType>         fileTypes;
-    protected       VirtualFileSystemInfo        vfsInfo;
-    protected final ModelProvider                genericModelProvider;
+    private final   String                   workspaceURL;
+    private         Loader                   loader;
+    private final   StringMap<ModelProvider> modelProviders;
+    private final   StringMap<ProjectNature> natures;
+    private final   IntegerMap<FileType>     fileTypes;
+    protected       VirtualFileSystemInfo    vfsInfo;
+    protected final ModelProvider            genericModelProvider;
     @SuppressWarnings("unused")
     private boolean initialized = false;
     private       Project  activeProject;
@@ -357,10 +357,10 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
             throw new IllegalStateException("Can't set primary nature in runtime");
         }
 
-        JsonStringSet natureCategories = nature.getNatureCategories();
-        JsonStringSet requiredNatureIds = nature.getRequiredNatureIds();
+        StringSet natureCategories = nature.getNatureCategories();
+        StringSet requiredNatureIds = nature.getRequiredNatureIds();
 
-        JsonStringSet appliedNatureIds = project.getDescription().getNatures();
+        StringSet appliedNatureIds = project.getDescription().getNatures();
         // checj already applied
         if (appliedNatureIds.contains(nature.getNatureId())) {
             throw new IllegalStateException("Nature aready applied");

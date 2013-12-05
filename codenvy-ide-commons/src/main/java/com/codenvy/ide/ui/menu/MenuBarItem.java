@@ -20,7 +20,7 @@ package com.codenvy.ide.ui.menu;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Element;
@@ -44,7 +44,7 @@ public class MenuBarItem implements MenuItem, ItemSelectedHandler, UpdateItemEna
      */
     boolean pressed = false;
     /** Map of children */
-    private JsonStringMap<Item> children = Collections.createStringMap();
+    private StringMap<Item> children = Collections.createStringMap();
     /** Command which will be called just after menu ber item will be selected. */
     private Command command;
     /** Visual element which is table cell. */
@@ -177,7 +177,7 @@ public class MenuBarItem implements MenuItem, ItemSelectedHandler, UpdateItemEna
         this.title = title;
     }
 
-    private boolean hasVisibleItems(JsonStringMap<Item> items) {
+    private boolean hasVisibleItems(StringMap<Item> items) {
         Array<String> keys = items.getKeys();
         for (String key : keys.asIterable()) {
             Item item = items.get(key);

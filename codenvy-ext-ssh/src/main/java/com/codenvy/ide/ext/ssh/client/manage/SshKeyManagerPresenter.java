@@ -33,7 +33,6 @@ import com.codenvy.ide.ext.ssh.client.key.SshKeyPresenter;
 import com.codenvy.ide.ext.ssh.client.upload.UploadSshKeyPresenter;
 import com.codenvy.ide.ext.ssh.dto.GenKeyRequest;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
-import com.codenvy.ide.resources.marshal.UserUnmarshaller;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.loging.Log;

@@ -20,7 +20,7 @@ package com.codenvy.ide.api.paas;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 import com.google.gwt.resources.client.ImageResource;
 
 
@@ -31,13 +31,13 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public class PaaS {
     /** Id of the PaaS. */
-    private String                       id;
+    private String                   id;
     /** Title of the PaaS. */
-    private String                       title;
+    private String                   title;
     /** PaaS image. */
-    private ImageResource                image;
-    private JsonStringMap<Array<String>> natures;
-    private boolean                      provideTemplate;
+    private ImageResource            image;
+    private StringMap<Array<String>> natures;
+    private boolean                  provideTemplate;
 
     /**
      * Create the PaaS.
@@ -56,7 +56,7 @@ public class PaaS {
     public PaaS(@NotNull String id,
                 @NotNull String title,
                 @Nullable ImageResource image,
-                @NotNull JsonStringMap<Array<String>> natures,
+                @NotNull StringMap<Array<String>> natures,
                 boolean provideTemplate) {
         this.id = id;
         this.title = title;

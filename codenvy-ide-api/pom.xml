@@ -101,7 +101,7 @@
                             <goal>java</goal>
                         </goals>
                         <configuration>
-                            <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
+                            <mainClass>com.codenvy.dto.generator.DtoGenerator</mainClass>
                             <arguments>
                                 <argument>--dto_packages=com.codenvy.ide.api.user</argument>
                                 <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/resources/DtoClientImpls.java</argument>

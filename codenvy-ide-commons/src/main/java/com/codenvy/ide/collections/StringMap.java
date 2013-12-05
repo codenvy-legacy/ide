@@ -18,12 +18,12 @@ package com.codenvy.ide.collections;
  * String Map interface for use in DTOs.
  * <p/>
  * On the client it is safe to cast this to a
- * {@link com.codenvy.ide.collections.js.Jso}.
+ * {@link com.codenvy.ide.commons.Jso}.
  * <p/>
  * On the server this is an instance of a wrapper object
  * {@link com.codenvy.ide.collections.java.JsonStringMapAdapter}.
  */
-public interface JsonStringMap<T> {
+public interface StringMap<T> {
     /**
      * Callback to support iterating through the fields on this map.
      *
@@ -43,7 +43,7 @@ public interface JsonStringMap<T> {
 
     void put(String key, T value);
 
-    void putAll(JsonStringMap<T> otherMap);
+    void putAll(StringMap<T> otherMap);
 
     /** Removes the item with the given key, and returns it. */
     T remove(String key);

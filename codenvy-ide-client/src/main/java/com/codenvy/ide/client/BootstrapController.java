@@ -22,10 +22,10 @@ import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
-import com.codenvy.ide.resources.marshal.UserUnmarshaller;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.workspace.WorkspacePresenter;
 import com.google.gwt.core.client.Callback;
@@ -37,12 +37,16 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+import java.util.Map;
+
 /**
  * Performs initial application startup
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public class BootstrapController {
+
+    private DtoFactory dtoFactory;
 
     /**
      * Create controller.
@@ -57,10 +61,16 @@ public class BootstrapController {
      * @param dtoRegistrar
      */
     @Inject
-    public BootstrapController(final ComponentRegistry componentRegistry, final Provider<WorkspacePresenter> workspaceProvider,
-                               StyleInjector styleInjector, final ExtensionInitializer extensionInitializer,
-                               final PreferencesManagerImpl preferencesManager, UserClientService userService,
-                               final ResourceProvider resourceProvider, DtoRegistrar dtoRegistrar) {
+    public BootstrapController(final ComponentRegistry componentRegistry,
+                               final Provider<WorkspacePresenter> workspaceProvider,
+                               StyleInjector styleInjector,
+                               final ExtensionInitializer extensionInitializer,
+                               final PreferencesManagerImpl preferencesManager,
+                               UserClientService userService,
+                               final ResourceProvider resourceProvider,
+                               DtoRegistrar dtoRegistrar,
+                               final DtoFactory dtoFactory) {
+        this.dtoFactory = dtoFactory;
         styleInjector.inject();
         ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW)
                       .setCallback(new Callback<Void, Exception>() {
@@ -78,11 +88,12 @@ public class BootstrapController {
 
         try {
             dtoRegistrar.registerDtoProviders();
-            UserUnmarshaller unmarshaller = new UserUnmarshaller();
-            userService.getUser(new AsyncRequestCallback<User>(unmarshaller) {
+            StringUnmarshaller unmarshaller = new StringUnmarshaller();
+            userService.getUser(new AsyncRequestCallback<String>(unmarshaller) {
                 @Override
-                protected void onSuccess(final User user) {
-                    JsonStringMap<String> attributes = user.getProfileAttributes();
+                protected void onSuccess(final String result) {
+                    final User user = dtoFactory.createDtoFromJson(result, User.class);
+                    Map<String,String> attributes = user.getProfileAttributes();
                     preferencesManager.load(attributes);
 
                     // initialize components

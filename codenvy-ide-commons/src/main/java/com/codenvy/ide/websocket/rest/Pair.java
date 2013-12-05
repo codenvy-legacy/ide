@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.websocket.rest;
 
-import com.codenvy.ide.collections.js.Jso;
+import com.codenvy.ide.commons.Jso;
 
 /**
  * Pair that may be used to emulate headers of HTTP request/response.

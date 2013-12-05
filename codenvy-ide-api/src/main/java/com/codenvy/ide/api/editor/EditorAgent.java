@@ -19,7 +19,7 @@ package com.codenvy.ide.api.editor;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.resources.model.File;
 
 /**
@@ -42,7 +42,7 @@ public interface EditorAgent {
      * @return map with all opened editors
      */
     @NotNull
-    JsonStringMap<EditorPartPresenter> getOpenedEditors();
+    StringMap<EditorPartPresenter> getOpenedEditors();
 
     /**
      * Current active editor

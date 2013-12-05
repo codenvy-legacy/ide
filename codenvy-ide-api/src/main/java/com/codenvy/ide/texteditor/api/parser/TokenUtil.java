@@ -16,7 +16,7 @@ package com.codenvy.ide.texteditor.api.parser;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.util.Pair;
 import com.codenvy.ide.util.StringUtils;
 
@@ -28,7 +28,7 @@ public class TokenUtil {
      * <p/>
      * <p>Used by {@link #getPlaceholderForMode} to cache placeholder tokens.
      */
-    private static final JsonStringMap<Token> cachedPlaceholders = Collections.createStringMap();
+    private static final StringMap<Token> cachedPlaceholders = Collections.createStringMap();
 
     // Do not instantiate.
     private TokenUtil() {
@@ -107,7 +107,7 @@ public class TokenUtil {
         return modes;
     }
 
-    static void addPlaceholders(String mode, JsonStringMap<Array<Token>> splitTokenMap, int width) {
+    static void addPlaceholders(String mode, StringMap<Array<Token>> splitTokenMap, int width) {
         for (String key : splitTokenMap.getKeys().asIterable()) {
             if (!key.equals(mode)) {
                 splitTokenMap.get(key).add(getPlaceholderForMode(key, width));

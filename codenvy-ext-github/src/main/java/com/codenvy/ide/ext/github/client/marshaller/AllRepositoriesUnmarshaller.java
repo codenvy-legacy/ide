@@ -22,7 +22,7 @@ import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.github.shared.GitHubRepository;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -36,9 +36,9 @@ import java.util.Set;
  *
  * @author <a href="mailto:dvishinskiy@codenvy.com">Dmitriy Vyshinskiy</a>
  */
-public class AllRepositoriesUnmarshaller implements Unmarshallable<JsonStringMap<Array<GitHubRepository>>> {
+public class AllRepositoriesUnmarshaller implements Unmarshallable<StringMap<Array<GitHubRepository>>> {
     /** Repositories list. */
-    private JsonStringMap<Array<GitHubRepository>> repositories;
+    private StringMap<Array<GitHubRepository>> repositories;
 
     private DtoFactory dtoFactory;
 
@@ -67,7 +67,7 @@ public class AllRepositoriesUnmarshaller implements Unmarshallable<JsonStringMap
 
     /** {@inheritDoc} */
     @Override
-    public JsonStringMap<Array<GitHubRepository>> getPayload() {
+    public StringMap<Array<GitHubRepository>> getPayload() {
         return repositories;
     }
 }

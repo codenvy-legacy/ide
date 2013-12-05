@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.collections.js;
+package com.codenvy.ide.commons;
 
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.JsonObject;
+import com.codenvy.ide.commons.JsonObject;
+import com.codenvy.ide.collections.js.JsoArray;
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**

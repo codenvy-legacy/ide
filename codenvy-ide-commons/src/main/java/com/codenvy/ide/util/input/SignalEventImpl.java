@@ -17,8 +17,8 @@
 package com.codenvy.ide.util.input;
 
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.JsonStringSet;
-import com.codenvy.ide.collections.js.Jso;
+import com.codenvy.ide.collections.StringSet;
+import com.codenvy.ide.commons.Jso;
 import com.codenvy.ide.util.browser.QuirksConstants;
 import com.codenvy.ide.util.browser.UserAgent;
 import com.codenvy.ide.util.input.SignalKeyLogic.OperatingSystem;
@@ -147,25 +147,25 @@ public class SignalEventImpl implements SignalEvent {
         }
     }
 
-    private static final JsonStringSet KEY_EVENTS = Collections.createStringSet();
+    private static final StringSet KEY_EVENTS = Collections.createStringSet();
 
-    private static final JsonStringSet COMPOSITION_EVENTS = Collections.createStringSet();
+    private static final StringSet COMPOSITION_EVENTS = Collections.createStringSet();
 
-    private static final JsonStringSet MOUSE_EVENTS = Collections.createStringSet();
+    private static final StringSet MOUSE_EVENTS = Collections.createStringSet();
 
-    private static final JsonStringSet MOUSE_BUTTON_EVENTS = Collections.createStringSet();
+    private static final StringSet MOUSE_BUTTON_EVENTS = Collections.createStringSet();
 
-    private static final JsonStringSet MOUSE_BUTTONLESS_EVENTS = Collections.createStringSet();
+    private static final StringSet MOUSE_BUTTONLESS_EVENTS = Collections.createStringSet();
 
-    private static final JsonStringSet FOCUS_EVENTS = Collections.createStringSet();
+    private static final StringSet FOCUS_EVENTS = Collections.createStringSet();
 
-    private static final JsonStringSet CLIPBOARD_EVENTS = Collections.createStringSet();
+    private static final StringSet CLIPBOARD_EVENTS = Collections.createStringSet();
 
     /**
      * Events affected by
      * {@link QuirksConstants#CANCEL_BUBBLING_CANCELS_IME_COMPOSITION_AND_CONTEXTMENU}.
      */
-    private static final JsonStringSet CANCEL_BUBBLE_QUIRKS = Collections.createStringSet();
+    private static final StringSet CANCEL_BUBBLE_QUIRKS = Collections.createStringSet();
 
     static {
         for (String e : new String[]{"keydown", "keypress", "keyup"}) {

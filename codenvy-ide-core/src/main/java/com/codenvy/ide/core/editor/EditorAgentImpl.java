@@ -36,7 +36,7 @@ import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
@@ -52,7 +52,7 @@ import com.google.web.bindery.event.shared.EventBus;
 @Singleton
 public class EditorAgentImpl implements EditorAgent {
 
-    private final JsonStringMap<EditorPartPresenter> openedEditors;
+    private final StringMap<EditorPartPresenter> openedEditors;
 
     /** Used to notify {@link EditorAgentImpl} that editor has closed */
     private final EditorPartCloseHandler editorClosed = new EditorPartCloseHandler() {
@@ -187,7 +187,7 @@ public class EditorAgentImpl implements EditorAgent {
 
     /** {@inheritDoc} */
     @Override
-    public JsonStringMap<EditorPartPresenter> getOpenedEditors() {
+    public StringMap<EditorPartPresenter> getOpenedEditors() {
         return openedEditors;
     }
 

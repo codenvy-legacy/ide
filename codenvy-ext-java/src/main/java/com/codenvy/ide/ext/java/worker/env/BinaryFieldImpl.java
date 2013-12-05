@@ -28,7 +28,7 @@ import com.codenvy.ide.ext.java.worker.internal.compiler.impl.DoubleConstant;
 import com.codenvy.ide.ext.java.worker.internal.compiler.impl.FloatConstant;
 import com.codenvy.ide.ext.java.worker.internal.compiler.impl.IntConstant;
 import com.codenvy.ide.ext.java.worker.internal.compiler.impl.LongConstant;
-import com.codenvy.ide.collections.js.Jso;
+import com.codenvy.ide.commons.Jso;
 
 
 /**

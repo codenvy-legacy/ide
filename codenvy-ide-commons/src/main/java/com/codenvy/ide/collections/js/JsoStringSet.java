@@ -15,10 +15,11 @@
 package com.codenvy.ide.collections.js;
 
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.JsonStringSet;
+import com.codenvy.ide.collections.StringSet;
+import com.codenvy.ide.commons.Jso;
 
 /** Client implementation of a set of strings. */
-public class JsoStringSet implements JsonStringSet {
+public class JsoStringSet implements StringSet {
 
     private static final String KEY_PREFIX = "#";
 

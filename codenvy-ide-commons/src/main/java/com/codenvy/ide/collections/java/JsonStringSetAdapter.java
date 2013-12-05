@@ -16,16 +16,16 @@ package com.codenvy.ide.collections.java;
 
 
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.JsonStringSet;
+import com.codenvy.ide.collections.StringSet;
 
 import java.util.ArrayList;
 import java.util.Set;
 
 /**
  * Server wrapper for a {@link java.util.Set} that implements
- * {@link JsonStringSet}.
+ * {@link com.codenvy.ide.collections.StringSet}.
  */
-public class JsonStringSetAdapter implements JsonStringSet {
+public class JsonStringSetAdapter implements StringSet {
     private final Set<String> delegate;
 
     public JsonStringSetAdapter(Set<String> delegate) {

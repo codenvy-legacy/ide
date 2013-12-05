@@ -16,7 +16,7 @@ package com.codenvy.ide.extension.css.editor;
 
 import elemental.js.util.JsMapFromStringToBoolean;
 
-import com.codenvy.ide.collections.js.Jso;
+import com.codenvy.ide.commons.Jso;
 import com.codenvy.ide.collections.js.JsoArray;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;

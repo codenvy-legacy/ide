@@ -28,7 +28,7 @@ import com.codenvy.ide.ext.java.messages.Problem;
 import com.codenvy.ide.ext.java.messages.ProblemsMessage;
 import com.codenvy.ide.ext.java.messages.RoutingTypes;
 import com.codenvy.ide.ext.java.messages.impl.MessagesImpls;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.util.UUID;
 import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.util.loging.Log;
@@ -48,10 +48,10 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHandler, MessageFilter.MessageRecipient<ProblemsMessage> {
 
-    private final MessageFilter    messageFilter;
-    private       Worker           worker;
-    private       ResourceProvider resourceProvider;
-    private JsonStringMap<JavaParserCallback> callbacks;
+    private final MessageFilter                 messageFilter;
+    private       Worker                        worker;
+    private       ResourceProvider              resourceProvider;
+    private       StringMap<JavaParserCallback> callbacks;
 
     @Inject
     public JavaParserWorkerImpl(ResourceProvider resourceProvider, EventBus eventBus) {
@@ -65,7 +65,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
 
     @Override
     public void parse(String content, String fileName, JavaParserCallback callback) {
-        if(worker == null){
+        if (worker == null) {
             return;
         }
 

@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.text.annotation;
 
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Position;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
@@ -147,12 +147,12 @@ public interface AnnotationModel {
      *
      * @return all decorations
      */
-    JsonStringMap<String> getAnnotationDecorations();
+    StringMap<String> getAnnotationDecorations();
 
     /**
      * Returns styles (CSS styles) mapped to Annotation type
      *
      * @return all decorations
      */
-    JsonStringMap<String> getAnnotationStyle();
+    StringMap<String> getAnnotationStyle();
 }

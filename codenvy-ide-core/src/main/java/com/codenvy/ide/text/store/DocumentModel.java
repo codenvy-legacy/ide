@@ -16,7 +16,7 @@ package com.codenvy.ide.text.store;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.text.store.anchor.Anchor;
 import com.codenvy.ide.text.store.anchor.AnchorManager;
 import com.codenvy.ide.texteditor.api.UndoManager;
@@ -165,7 +165,7 @@ public class DocumentModel implements TextStoreMutator {
 
     private final int id = idCounter++;
 
-    private final JsonStringMap<Object> tags = Collections.createStringMap();
+    private final StringMap<Object> tags = Collections.createStringMap();
 
     protected DocumentModel() {
         firstLine = lastLine = Line.create(this, "");

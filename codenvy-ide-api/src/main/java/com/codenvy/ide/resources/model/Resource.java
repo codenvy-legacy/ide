@@ -18,7 +18,7 @@
 package com.codenvy.ide.resources.model;
 
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 
 /**
  * Resource's superclass.
@@ -45,7 +45,7 @@ public abstract class Resource {
     protected long creationDate;
 
     /** Links. */
-    protected JsonStringMap<Link> links;
+    protected StringMap<Link> links;
 
     /** Parent Project */
     protected Project project;
@@ -145,7 +145,7 @@ public abstract class Resource {
      *
      * @return links map. Never <code>null</code> but empty map instead
      */
-    public JsonStringMap<Link> getLinks() {
+    public StringMap<Link> getLinks() {
         if (links == null) {
             links = Collections.createStringMap();
         }

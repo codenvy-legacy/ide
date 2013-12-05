@@ -24,6 +24,7 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
@@ -35,7 +36,6 @@ import com.codenvy.ide.ext.github.client.GitHubSshKeyProvider;
 import com.codenvy.ide.ext.github.client.marshaller.AllRepositoriesUnmarshaller;
 import com.codenvy.ide.ext.github.shared.GitHubRepository;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.JsonStringMap;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
@@ -63,19 +63,19 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 @Singleton
 public class ImportPresenter implements ImportView.ActionDelegate {
-    private ImportView                             view;
-    private GitHubClientService                    service;
-    private GitClientService                       gitService;
-    private EventBus                               eventBus;
-    private JsonStringMap<Array<GitHubRepository>> repositories;
-    private ProjectData                            selectedRepository;
-    private GitHubLocalizationConstant             constant;
-    private GitLocalizationConstant                gitConstant;
-    private ResourceProvider                       resourceProvider;
-    private NotificationManager                    notificationManager;
-    private Notification                           notification;
-    private GitHubSshKeyProvider                   gitHubSshKeyProvider;
-    private DtoFactory                             dtoFactory;
+    private ImportView                         view;
+    private GitHubClientService                service;
+    private GitClientService                   gitService;
+    private EventBus                           eventBus;
+    private StringMap<Array<GitHubRepository>> repositories;
+    private ProjectData                        selectedRepository;
+    private GitHubLocalizationConstant         constant;
+    private GitLocalizationConstant            gitConstant;
+    private ResourceProvider                   resourceProvider;
+    private NotificationManager                notificationManager;
+    private Notification                       notification;
+    private GitHubSshKeyProvider               gitHubSshKeyProvider;
+    private DtoFactory                         dtoFactory;
 
 
     /**
@@ -130,9 +130,9 @@ public class ImportPresenter implements ImportView.ActionDelegate {
     private void getUserRepos() {
         try {
             service.getAllRepositories(
-                    new AsyncRequestCallback<JsonStringMap<Array<GitHubRepository>>>(new AllRepositoriesUnmarshaller(dtoFactory)) {
+                    new AsyncRequestCallback<StringMap<Array<GitHubRepository>>>(new AllRepositoriesUnmarshaller(dtoFactory)) {
                         @Override
-                        protected void onSuccess(JsonStringMap<Array<GitHubRepository>> result) {
+                        protected void onSuccess(StringMap<Array<GitHubRepository>> result) {
                             onListLoaded(result);
                         }
 
@@ -161,7 +161,7 @@ public class ImportPresenter implements ImportView.ActionDelegate {
      * @param repositories
      *         loaded list of repositories
      */
-    private void onListLoaded(@NotNull JsonStringMap<Array<GitHubRepository>> repositories) {
+    private void onListLoaded(@NotNull StringMap<Array<GitHubRepository>> repositories) {
         this.repositories = repositories;
 
         view.setAccountNames(repositories.getKeys());
