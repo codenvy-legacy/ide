@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.ext.java.jdt.env;
 
+import com.codenvy.ide.commons.Jso;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryElementValuePair;
-import com.codenvy.ide.json.js.Jso;
 
 
 /**

@@ -56,8 +56,8 @@ public class PreferencesManagerImpl implements PreferencesManager {
     protected PreferencesManagerImpl(UserClientService userService,
                                      DtoFactory dtoFactory) {
         this.dtoFactory = dtoFactory;
-        this.persistedPreferences = new HashMap<>();
-        this.changedPreferences = new HashMap<>();
+        this.persistedPreferences = new HashMap<String, String>();
+        this.changedPreferences = new HashMap<String, String>();
         this.userService = userService;
     }
 
@@ -88,7 +88,7 @@ public class PreferencesManagerImpl implements PreferencesManager {
     /** {@inheritDoc} */
     @Override
     public void flushPreferences(final AsyncCallback<Void> callback) {
-        Map<String, String> attributes = new HashMap<>();
+        Map<String, String> attributes = new HashMap<String, String>();
         attributes.putAll(changedPreferences);
 
         try {

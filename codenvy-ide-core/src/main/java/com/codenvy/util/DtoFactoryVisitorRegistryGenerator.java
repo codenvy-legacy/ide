@@ -125,8 +125,8 @@ public class DtoFactoryVisitorRegistryGenerator {
         builder.append("import com.google.inject.Provider;\n");
         builder.append("import com.google.inject.Singleton;\n");
 
-        builder.append("import StringMap;\n");
-        builder.append("import Collections;\n");
+        builder.append("import com.codenvy.ide.collections.StringMap;\n");
+        builder.append("import com.codenvy.ide.collections.Collections;\n");
     }
 
     /**

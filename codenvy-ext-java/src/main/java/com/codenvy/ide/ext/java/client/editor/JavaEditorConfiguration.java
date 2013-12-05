@@ -102,9 +102,9 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
 
     /** {@inheritDoc} */
     @Override
-    public JsonStringMap<CodeAssistProcessor> getContentAssistantProcessors(TextEditorPartView view) {
+    public StringMap<CodeAssistProcessor> getContentAssistantProcessors(TextEditorPartView view) {
 
-        JsonStringMap<CodeAssistProcessor> map = JsonCollections.createStringMap();
+        StringMap<CodeAssistProcessor> map = Collections.createStringMap();
         map.put(Document.DEFAULT_CONTENT_TYPE, getOrCreateCodeAssistProcessor());
         return map;
     }

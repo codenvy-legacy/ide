@@ -55,7 +55,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
     private       Worker                           worker;
     private       ResourceProvider                 resourceProvider;
     private       StringMap<WorkerCallback<?>> callbacks;
-    private       StringMap<ApplyCallback> applyCallback = JsonCollections.createStringMap();
+    private       StringMap<ApplyCallback> applyCallback = Collections.createStringMap();
 
     @Inject
     public JavaParserWorkerImpl(ResourceProvider resourceProvider, EventBus eventBus) {

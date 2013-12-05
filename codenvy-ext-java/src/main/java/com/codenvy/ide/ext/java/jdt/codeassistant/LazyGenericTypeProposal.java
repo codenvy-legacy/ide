@@ -10,25 +10,19 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.codeassistant;
 
+import com.codenvy.ide.collections.js.JsoArray;
+import com.codenvy.ide.commons.Jso;
+import com.codenvy.ide.commons.JsonObject;
 import com.codenvy.ide.ext.java.jdt.core.CompletionProposal;
 import com.codenvy.ide.ext.java.jdt.core.Signature;
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
-
 import com.codenvy.ide.ext.java.jdt.env.BinaryTypeImpl;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryType;
-import com.codenvy.ide.ext.java.worker.WorkerMessageHandler;
-import com.codenvy.ide.ext.java.worker.WorkerNameEnvironment;
 import com.codenvy.ide.ext.java.worker.WorkerTypeInfoStorage;
-import com.codenvy.ide.json.JsonObject;
-import com.codenvy.ide.json.js.Jso;
-import com.codenvy.ide.json.js.JsoArray;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.RegionImpl;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
 
 
 /**

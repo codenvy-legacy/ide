@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.java.messages;
 
 import com.codenvy.ide.dto.shared.RoutingType;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.google.gwt.webworker.client.messages.Message;
 
 /**
@@ -30,5 +30,5 @@ public interface CAProposalsComputedMessage extends Message {
 
     String id();
 
-    JsonArray<WorkerProposal> proposals();
+    Array<WorkerProposal> proposals();
 }

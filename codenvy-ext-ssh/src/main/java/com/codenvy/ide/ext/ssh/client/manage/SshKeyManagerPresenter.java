@@ -34,6 +34,7 @@ import com.codenvy.ide.ext.ssh.client.upload.UploadSshKeyPresenter;
 import com.codenvy.ide.ext.ssh.dto.GenKeyRequest;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -186,14 +187,15 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
                     if (needToCreate) {
                         loader.show();
                         try {
-                            UserUnmarshaller unmarshaller = new UserUnmarshaller();
+                            StringUnmarshaller unmarshaller = new StringUnmarshaller();
 
-                            userService.getUser(new AsyncRequestCallback<User>(unmarshaller) {
+                            userService.getUser(new AsyncRequestCallback<String>(unmarshaller) {
                                 @Override
-                                protected void onSuccess(User result) {
+                                protected void onSuccess(String result) {
+                                    User user = dtoFactory.createDtoFromJson(result, User.class);
                                     if (service.getSshKeyProviders().containsKey(GITHUB_HOST)) {
                                         service.getSshKeyProviders().get(GITHUB_HOST)
-                                               .generateKey(result.getUserId(), new AsyncRequestCallback<Void>() {
+                                               .generateKey(user.getUserId(), new AsyncRequestCallback<Void>() {
                                                    @Override
                                                    public void onSuccess(Void result) {
                                                        loader.hide();

@@ -21,7 +21,7 @@ import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.jdt.Images;
 import com.codenvy.ide.ext.java.messages.WorkerProposal;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.texteditor.api.CodeAssistCallback;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
@@ -51,7 +51,7 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor {
         worker.computeCAProposals(view.getDocument().get(), offset, editor.getEditorInput().getFile().getName(),
                                   new JavaParserWorker.WorkerCallback<WorkerProposal>() {
                                       @Override
-                                      public void onResult(JsonArray<WorkerProposal> problems) {
+                                      public void onResult(Array<WorkerProposal> problems) {
                                           CompletionProposal[] proposals = new CompletionProposal[problems.size()];
                                           for (int i = 0; i < problems.size(); i++) {
                                               WorkerProposal proposal = problems.get(i);

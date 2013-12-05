@@ -218,7 +218,7 @@ public class JavaExtension {
 
     public void updateDependencies() {
         Project project = resourceProvider.getActiveProject();
-        JsonArray<Resource> children = project.getChildren();
+        Array<Resource> children = project.getChildren();
         if (!children.isEmpty() && hasPomFile(children)) {
             String projectId = project.getId();
             String vfsId = resourceProvider.getVfsId();

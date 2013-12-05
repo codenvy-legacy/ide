@@ -61,11 +61,11 @@ public class MessagesImpls {
     protected CAProposalsComputedMessageImpl() {}
 
     @Override
-    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.java.messages.WorkerProposal> proposals() /*-{
+    public final native com.codenvy.ide.collections.Array<com.codenvy.ide.ext.java.messages.WorkerProposal> proposals() /*-{
       return this["proposals"];
     }-*/;
 
-    public final native CAProposalsComputedMessageImpl setProposals(com.codenvy.ide.json.js.JsoArray<com.codenvy.ide.ext.java.messages.WorkerProposal> proposals) /*-{
+    public final native CAProposalsComputedMessageImpl setProposals(com.codenvy.ide.collections.js.JsoArray<com.codenvy.ide.ext.java.messages.WorkerProposal> proposals) /*-{
       this["proposals"] = proposals;
       return this;
     }-*/;
@@ -561,11 +561,11 @@ public class MessagesImpls {
     }-*/;
 
     @Override
-    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.java.messages.Change> changes() /*-{
+    public final native com.codenvy.ide.collections.Array<com.codenvy.ide.ext.java.messages.Change> changes() /*-{
       return this["changes"];
     }-*/;
 
-    public final native ProposalAppliedMessageImpl setChanges(com.codenvy.ide.json.js.JsoArray<com.codenvy.ide.ext.java.messages.Change> changes) /*-{
+    public final native ProposalAppliedMessageImpl setChanges(com.codenvy.ide.collections.js.JsoArray<com.codenvy.ide.ext.java.messages.Change> changes) /*-{
       this["changes"] = changes;
       return this;
     }-*/;
