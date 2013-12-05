@@ -23,6 +23,12 @@
 
     <component>
         <type>com.codenvy.ide.ext.extensions.server.CreateProjectApplication</type>
+        <init-params>
+            <value-param>
+                <name>extension-url</name>
+                <value>${catalina.base}/tutorials</value>
+            </value-param>
+        </init-params>
     </component>
 
 </configuration>

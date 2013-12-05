@@ -18,6 +18,7 @@
 package com.codenvy.ide.ext.extensions.client;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -31,22 +32,6 @@ import com.google.gwt.http.client.RequestException;
  * @version $Id: ExtRuntimeClientService.java Jul 3, 2013 12:48:08 PM azatsarynnyy $
  */
 public interface ExtRuntimeClientService {
-
-    /**
-     * Create empty Codenvy extension project.
-     *
-     * @param projectName
-     *         name of the project to create
-     * @param properties
-     *         properties to set to a newly created project
-     * @param callback
-     *         callback
-     * @throws RequestException
-     */
-    void createEmptyCodenvyExtensionProject(String projectName,
-                                            Array<Property> properties,
-                                            AsyncRequestCallback<Void> callback) throws RequestException;
-
     /**
      * Create sample Codenvy extension project.
      *
@@ -64,12 +49,12 @@ public interface ExtRuntimeClientService {
      *         callback
      * @throws RequestException
      */
-    void createSampleCodenvyExtensionProject(String projectName,
-                                             Array<Property> properties,
-                                             String groupId,
-                                             String artifactId,
-                                             String version,
-                                             AsyncRequestCallback<Void> callback) throws RequestException;
+    void createSampleCodenvyExtensionProject(@NotNull String projectName,
+                                             @NotNull Array<Property> properties,
+                                             @NotNull String groupId,
+                                             @NotNull String artifactId,
+                                             @NotNull String version,
+                                             @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
      * Run a specified WAR, that contains Codenvy Platform with (or without) any extension.
@@ -88,9 +73,9 @@ public interface ExtRuntimeClientService {
      *         callback
      * @throws WebSocketException
      */
-    public void launch(String projectName, AsyncRequestCallback<String> callback) throws RequestException;
+    void launch(@NotNull String projectName, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
-    public void getStatus(Link link, AsyncRequestCallback<String> callback) throws RequestException;
+    void getStatus(@NotNull Link link, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Get logs of launched Codenvy application.
@@ -100,7 +85,7 @@ public interface ExtRuntimeClientService {
      *         callback
      * @throws RequestException
      */
-    public void getLogs(Link link, AsyncRequestCallback<String> callback) throws RequestException;
+    void getLogs(@NotNull Link link, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Stop Codenvy application.
@@ -110,5 +95,5 @@ public interface ExtRuntimeClientService {
      *         callback
      * @throws RequestException
      */
-    public void stop(Link link, AsyncRequestCallback<String> callback) throws RequestException;
+    void stop(@NotNull Link link, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 }

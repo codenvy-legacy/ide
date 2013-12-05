@@ -132,6 +132,12 @@
             <type>jar</type>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>gist-extension</artifactId>
+            <type>jar</type>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.codenvy.ide</groupId>
@@ -379,6 +385,15 @@
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
                                     <destFileName>gin-tutorial.zip</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>gist-extension</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>gist-extension.zip</destFileName>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>

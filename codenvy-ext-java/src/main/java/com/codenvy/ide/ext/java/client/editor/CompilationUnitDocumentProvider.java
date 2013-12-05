@@ -44,6 +44,7 @@ import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.TextEditorViewImpl.Css;
 import com.codenvy.ide.texteditor.api.quickassist.QuickFixableAnnotation;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -72,8 +73,8 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
      * @param javaCss
      * @param documentFactory
      */
-    public CompilationUnitDocumentProvider(Css css, JavaCss javaCss, DocumentFactory documentFactory) {
-        super(documentFactory);
+    public CompilationUnitDocumentProvider(Css css, JavaCss javaCss, DocumentFactory documentFactory, EventBus eventBus) {
+        super(documentFactory, eventBus);
         this.css = css;
         this.javaCss = javaCss;
     }

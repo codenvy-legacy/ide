@@ -18,12 +18,14 @@
 package com.codenvy.ide.tutorial.wizard.pages.page1;
 
 import com.codenvy.ide.api.mvp.View;
+import com.google.inject.ImplementedBy;
 
 /**
  * The view of {@link Page1Presenter}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
+@ImplementedBy(Page1ViewImpl.class)
 public interface Page1View extends View<Page1View.ActionDelegate> {
     /** Required for delegating functions in view. */
     public interface ActionDelegate {

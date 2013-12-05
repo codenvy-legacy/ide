@@ -17,20 +17,33 @@
  */
 package com.codenvy.ide.ext.extensions.client.template;
 
+import com.codenvy.ide.api.paas.PaaS;
+import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.template.Template;
+import com.codenvy.ide.api.ui.wizard.WizardContext;
+import com.codenvy.ide.api.ui.wizard.WizardPage;
+import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
+import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
+import com.codenvy.ide.ext.extensions.client.ExtRuntimeClientService;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
-import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.googlecode.gwt.test.utils.GwtReflectionUtils;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
-import java.lang.reflect.Method;
-
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.*;
 import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.EMPTY_EXTENSION_ID;
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 /**
@@ -38,78 +51,98 @@ import static org.mockito.Mockito.*;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class CreateEmptyCodenvyExtensionPageTest extends BaseCreateExtensionTest {
+@RunWith(MockitoJUnitRunner.class)
+public class CreateEmptyCodenvyExtensionPageTest {
+    public static final String  PROJECT_NAME     = "projectName";
+    public static final String  TEMPLATE_ID      = "templateID";
+    public static final boolean PROVIDE_TEMPLATE = true;
+    public static final boolean IN_CONTEXT       = true;
+    @Mock
+    private ExtRuntimeClientService   service;
+    @Mock
+    private ResourceProvider          resourceProvider;
+    @Mock
+    private WizardPage.CommitCallback callback;
+    @Mock
+    private Project                   project;
+    @Mock
+    private WizardContext             wizardContext;
+    @Mock
+    private Throwable                 throwable;
+    @Mock
+    private PaaS                      paas;
+    @Mock
+    private Template                  template;
+    private AbstractTemplatePage      page;
 
-    @Override
+    @Before
     public void setUp() {
-        super.setUp();
-        page = new CreateEmptyCodenvyExtensionPage(service, resourceProvider);
+        when(wizardContext.getData(NewProjectWizard.PROJECT_NAME)).thenReturn(PROJECT_NAME);
+        when(wizardContext.getData(PAAS)).thenReturn(paas);
+        when(wizardContext.getData(TEMPLATE)).thenReturn(template);
+        when(template.getId()).thenReturn(TEMPLATE_ID);
+
+        page = new CreateEmptyCodenvyExtensionPage(resourceProvider);
         page.setContext(wizardContext);
     }
 
-    @Override
-    public void testCreateWhenGetProjectRequestIsSuccessful() throws Exception {
+    @Test
+    public void testCreateWhenCreateProjectRequestIsSuccessful() throws Exception {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[2];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, (Void)null);
+                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[2];
+                callback.onSuccess(project);
                 return callback;
             }
-        }).when(service)
-                .createEmptyCodenvyExtensionProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        }).when(resourceProvider)
+                .createProject(anyString(), (Array<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
 
-        super.testCreateWhenGetProjectRequestIsSuccessful();
+        page.commit(callback);
+
+        verify(wizardContext).putData(eq(PROJECT), eq(project));
+        verify(callback).onSuccess();
     }
 
-    @Override
-    public void testCreateWhenCreateTutorialRequestIsFailed() throws Exception {
+    @Test
+    public void testCreateWhenCreateProjectRequestIsFailed() throws Exception {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[2];
-                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
-                onFailure.invoke(callback, throwable);
+                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[2];
+                callback.onFailure(throwable);
                 return callback;
             }
-        }).when(service)
-                .createEmptyCodenvyExtensionProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        }).when(resourceProvider)
+                .createProject(anyString(), (Array<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
 
-        super.testCreateWhenCreateTutorialRequestIsFailed();
+        page.commit(callback);
+
+        verify(callback).onFailure(eq(throwable));
     }
 
-    @Override
-    public void testCreateWhenGetProjectRequestIsFailed() throws Exception {
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[2];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, (Void)null);
-                return callback;
-            }
-        }).when(service)
-                .createEmptyCodenvyExtensionProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+    @Test
+    public void testInContextWhenPaasProvideTemplate() {
+        when(paas.isProvideTemplate()).thenReturn(PROVIDE_TEMPLATE);
 
-        super.testCreateWhenGetProjectRequestIsFailed();
+        assertEquals(page.inContext(), !IN_CONTEXT);
     }
 
-    @Override
-    public void testCreateWhenRequestExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(service)
-                .createEmptyCodenvyExtensionProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+    @Test
+    public void testInContextWhenThisPaasIsNotChosen() {
+        when(paas.isProvideTemplate()).thenReturn(!PROVIDE_TEMPLATE);
+        when(template.getId()).thenReturn(PROJECT_NAME);
 
-        super.testCreateWhenRequestExceptionHappened();
+        assertEquals(page.inContext(), !IN_CONTEXT);
     }
 
-    @Override
+    @Test
     public void testInContext() {
         when(template.getId()).thenReturn(EMPTY_EXTENSION_ID);
+        when(paas.isProvideTemplate()).thenReturn(!PROVIDE_TEMPLATE);
 
-        super.testInContext();
+        assertEquals(page.inContext(), IN_CONTEXT);
     }
 }
