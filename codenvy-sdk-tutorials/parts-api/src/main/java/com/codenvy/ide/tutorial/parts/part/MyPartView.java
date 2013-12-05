@@ -19,12 +19,14 @@ package com.codenvy.ide.tutorial.parts.part;
 
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.parts.base.BaseActionDelegate;
+import com.google.inject.ImplementedBy;
 
 /**
  * The view of {@link MyPartPresenter}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
+@ImplementedBy(MyPartViewImpl.class)
 public interface MyPartView extends View<MyPartView.ActionDelegate> {
     /** Required for delegating functions in view. */
     public interface ActionDelegate extends BaseActionDelegate {

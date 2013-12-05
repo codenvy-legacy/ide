@@ -38,14 +38,14 @@ import com.codenvy.ide.ext.java.client.projecttemplate.ant.CreateAntSpringProjec
 import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenJavaProjectPage;
 import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenSpringProjectPage;
 import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenWarProjectPage;
-import com.codenvy.ide.ext.java.client.wizard.NewAnnotationProvider;
-import com.codenvy.ide.ext.java.client.wizard.NewClassProvider;
-import com.codenvy.ide.ext.java.client.wizard.NewEnumProvider;
-import com.codenvy.ide.ext.java.client.wizard.NewInterfaceProvider;
-import com.codenvy.ide.ext.java.client.wizard.NewPackageProvider;
+import com.codenvy.ide.ext.java.client.templates.*;
+import com.codenvy.ide.ext.java.client.wizard.*;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeAgent;
+import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.MimeType;
@@ -202,7 +202,7 @@ public class JavaExtension {
             @Override
             public void onFileOperation(FileEvent event) {
                 String name = event.getFile().getName();
-                if (event.getOperationType() == FileEvent.FileOperation.SAVE && name.equals("pom.xml"))
+                if (event.getOperationType() == FileEvent.FileOperation.SAVE && "pom.xml".equals(name))
                     updateDependencies();
             }
         });
@@ -214,34 +214,46 @@ public class JavaExtension {
 
     public void updateDependencies() {
         Project project = resourceProvider.getActiveProject();
-        String projectId = project.getId();
-        String vfsId = resourceProvider.getVfsId();
-        String url = restContext + '/' + Utils.getWorkspaceName() + "/code-assistant/java/update-dependencies?projectid=" + projectId +
-                     "&vfsid=" + vfsId;
+        JsonArray<Resource> children = project.getChildren();
+        if (!children.isEmpty() && hasPomFile(children)) {
+            String projectId = project.getId();
+            String vfsId = resourceProvider.getVfsId();
+            String url = restContext + '/' + Utils.getWorkspaceName() + "/code-assistant/java/update-dependencies?projectid=" + projectId +
+                         "&vfsid=" + vfsId;
 
-        final Notification notification = new Notification("Updating dependencies...", PROGRESS);
-        notificationManager.showNotification(notification);
+            final Notification notification = new Notification("Updating dependencies...", PROGRESS);
+            notificationManager.showNotification(notification);
 
-        StringUnmarshaller unmarshaller = new StringUnmarshaller();
-        try {
-            AsyncRequest.build(RequestBuilder.GET, url, true).send(new AsyncRequestCallback<String>(unmarshaller) {
-                @Override
-                protected void onSuccess(String result) {
-                    notification.setMessage("Dependencies successfully updated ");
-                    notification.setStatus(FINISHED);
-                }
+            StringUnmarshaller unmarshaller = new StringUnmarshaller();
+            try {
+                AsyncRequest.build(RequestBuilder.GET, url, true).send(new AsyncRequestCallback<String>(unmarshaller) {
+                    @Override
+                    protected void onSuccess(String result) {
+                        notification.setMessage("Dependencies successfully updated ");
+                        notification.setStatus(FINISHED);
+                    }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    notification.setMessage(exception.getMessage());
-                    notification.setType(ERROR);
-                    notification.setStatus(FINISHED);
-                }
-            });
-        } catch (RequestException e) {
-            notification.setMessage(e.getMessage());
-            notification.setType(ERROR);
-            notification.setStatus(FINISHED);
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        notification.setMessage(exception.getMessage());
+                        notification.setType(ERROR);
+                        notification.setStatus(FINISHED);
+                    }
+                });
+            } catch (RequestException e) {
+                notification.setMessage(e.getMessage());
+                notification.setType(ERROR);
+                notification.setStatus(FINISHED);
+            }
         }
+    }
+
+    private boolean hasPomFile(@NotNull JsonArray<Resource> children) {
+        for (Resource child : children.asIterable()) {
+            if (child instanceof File && "pom.xml".equals(child.getName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
