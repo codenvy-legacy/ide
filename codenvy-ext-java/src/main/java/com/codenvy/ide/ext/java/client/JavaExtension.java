@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.java.client;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
@@ -38,8 +39,11 @@ import com.codenvy.ide.ext.java.client.projecttemplate.ant.CreateAntSpringProjec
 import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenJavaProjectPage;
 import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenSpringProjectPage;
 import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenWarProjectPage;
-import com.codenvy.ide.ext.java.client.templates.*;
-import com.codenvy.ide.ext.java.client.wizard.*;
+import com.codenvy.ide.ext.java.client.wizard.NewAnnotationProvider;
+import com.codenvy.ide.ext.java.client.wizard.NewClassProvider;
+import com.codenvy.ide.ext.java.client.wizard.NewEnumProvider;
+import com.codenvy.ide.ext.java.client.wizard.NewInterfaceProvider;
+import com.codenvy.ide.ext.java.client.wizard.NewPackageProvider;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeAgent;
