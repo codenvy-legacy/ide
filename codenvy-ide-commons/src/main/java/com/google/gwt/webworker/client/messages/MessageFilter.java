@@ -17,8 +17,8 @@
  */
 package com.google.gwt.webworker.client.messages;
 
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonIntegerMap;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.IntegerMap;
 
 /**
  * Class responsible for routing JsonMessages based on the message type that get
@@ -28,8 +28,8 @@ import com.codenvy.ide.json.JsonIntegerMap;
  * @version $Id:
  */
 public class MessageFilter {
-    private final JsonIntegerMap<MessageRecipient<? extends Message>> messageRecipients =
-            JsonCollections.createIntegerMap();
+    private final IntegerMap<MessageRecipient<? extends Message>> messageRecipients =
+            Collections.createIntegerMap();
 
     /**
      * Dispatches an incoming DTO message to a registered recipient.

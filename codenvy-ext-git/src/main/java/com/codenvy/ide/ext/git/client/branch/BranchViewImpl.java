@@ -23,10 +23,10 @@ import elemental.html.TableElement;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.shared.Branch;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.core.client.GWT;
@@ -141,7 +141,7 @@ public class BranchViewImpl extends DialogBox implements BranchView {
 
     /** {@inheritDoc} */
     @Override
-    public void setBranches(@NotNull JsonArray<Branch> branches) {
+    public void setBranches(@NotNull Array<Branch> branches) {
         this.branches.render(branches);
     }
 

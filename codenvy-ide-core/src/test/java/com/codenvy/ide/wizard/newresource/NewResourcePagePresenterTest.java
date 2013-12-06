@@ -27,8 +27,8 @@ import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceWizardKeys;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
@@ -90,7 +90,7 @@ public class NewResourcePagePresenterTest {
     private NewResourcePagePresenter                       presenter;
 
     @SuppressWarnings("unchecked")
-    private void setUp(Resource resource, JsonArray<NewResourceProvider> resourceDatas) {
+    private void setUp(Resource resource, Array<NewResourceProvider> resourceDatas) {
         if (resource != null) {
             Selection selection = mock(Selection.class);
             when(selection.getFirstElement()).thenReturn(resource);
@@ -99,7 +99,7 @@ public class NewResourcePagePresenterTest {
 
         Resource child = mock(Resource.class);
         when(child.getName()).thenReturn(RESOURCE_NAME);
-        when(project.getChildren()).thenReturn(JsonCollections.createArray(child));
+        when(project.getChildren()).thenReturn(Collections.createArray(child));
 
         when(file.isFile()).thenReturn(true);
         when(folder.isFile()).thenReturn(false);
@@ -133,7 +133,7 @@ public class NewResourcePagePresenterTest {
 
     /** In case resource name is empty. */
     private void prepareTestCase1() {
-        setUp(project, JsonCollections.<NewResourceProvider>createArray());
+        setUp(project, Collections.<NewResourceProvider>createArray());
         when(view.getResourceName()).thenReturn("");
     }
 
@@ -155,7 +155,7 @@ public class NewResourcePagePresenterTest {
 
     /** In case resource name is invalid. */
     private void prepareTestCase2() {
-        setUp(project, JsonCollections.<NewResourceProvider>createArray(selectedResource));
+        setUp(project, Collections.<NewResourceProvider>createArray(selectedResource));
         when(view.getResourceName()).thenReturn("resourceName!");
 
         presenter.onResourceNameChanged();
@@ -179,7 +179,7 @@ public class NewResourcePagePresenterTest {
 
     /** In case a resource with same name exist. */
     private void prepareTestCase3() {
-        setUp(project, JsonCollections.<NewResourceProvider>createArray(selectedResource));
+        setUp(project, Collections.<NewResourceProvider>createArray(selectedResource));
         when(view.getResourceName()).thenReturn(RESOURCE_NAME);
 
         presenter.onResourceNameChanged();
@@ -203,7 +203,7 @@ public class NewResourcePagePresenterTest {
 
     /** In case no resource type is selected.. */
     private void prepareTestCase4() {
-        setUp(project, JsonCollections.<NewResourceProvider>createArray());
+        setUp(project, Collections.<NewResourceProvider>createArray());
         when(view.getResourceName()).thenReturn("someResource");
 
         presenter.onResourceNameChanged();
@@ -225,7 +225,7 @@ public class NewResourcePagePresenterTest {
 
     /** In case all fields are fulled. */
     private void prepareTestCase5() {
-        setUp(project, JsonCollections.<NewResourceProvider>createArray(selectedResource));
+        setUp(project, Collections.<NewResourceProvider>createArray(selectedResource));
         when(view.getResourceName()).thenReturn("someResource");
 
         presenter.onResourceNameChanged();
@@ -233,7 +233,7 @@ public class NewResourcePagePresenterTest {
 
     @Test
     public void testFocusComponent() throws Exception {
-        setUp(project, JsonCollections.<NewResourceProvider>createArray());
+        setUp(project, Collections.<NewResourceProvider>createArray());
 
         presenter.focusComponent();
 
@@ -245,7 +245,7 @@ public class NewResourcePagePresenterTest {
 
     @Test
     public void testRemoveOptions() throws Exception {
-        setUp(project, JsonCollections.<NewResourceProvider>createArray());
+        setUp(project, Collections.<NewResourceProvider>createArray());
 
         presenter.removeOptions();
 
@@ -257,7 +257,7 @@ public class NewResourcePagePresenterTest {
 
     @Test
     public void testGo() throws Exception {
-        setUp(project, JsonCollections.<NewResourceProvider>createArray());
+        setUp(project, Collections.<NewResourceProvider>createArray());
         AcceptsOneWidget container = mock(AcceptsOneWidget.class);
 
         presenter.go(container);
@@ -305,7 +305,7 @@ public class NewResourcePagePresenterTest {
         // Needs custom implementation of File class because getParent() method is final. That's why mockito can't override its method.
         TestFile file = new TestFile();
         file.setParent(folder);
-        setUp(file, JsonCollections.<NewResourceProvider>createArray(selectedResource));
+        setUp(file, Collections.<NewResourceProvider>createArray(selectedResource));
         when(view.getResourceName()).thenReturn(RESOURCE_NAME);
 
         presenter.commit(mock(WizardPage.CommitCallback.class));
@@ -315,7 +315,7 @@ public class NewResourcePagePresenterTest {
 
     @Test
     public void testCommitWhenFolderIsSelected() throws Exception {
-        setUp(folder, JsonCollections.<NewResourceProvider>createArray(selectedResource));
+        setUp(folder, Collections.<NewResourceProvider>createArray(selectedResource));
         when(view.getResourceName()).thenReturn(RESOURCE_NAME);
 
         presenter.commit(mock(WizardPage.CommitCallback.class));
@@ -325,7 +325,7 @@ public class NewResourcePagePresenterTest {
 
     @Test
     public void testCommitWhenNothingIsSelected() throws Exception {
-        setUp(null, JsonCollections.<NewResourceProvider>createArray(selectedResource));
+        setUp(null, Collections.<NewResourceProvider>createArray(selectedResource));
         when(view.getResourceName()).thenReturn(RESOURCE_NAME);
 
         presenter.commit(mock(WizardPage.CommitCallback.class));
@@ -335,7 +335,7 @@ public class NewResourcePagePresenterTest {
 
     @Test
     public void testCommitWhenFolderIsCreated() throws Exception {
-        setUp(project, JsonCollections.<NewResourceProvider>createArray(selectedResource));
+        setUp(project, Collections.<NewResourceProvider>createArray(selectedResource));
         when(view.getResourceName()).thenReturn(RESOURCE_NAME);
         doAnswer(new Answer() {
             @Override
@@ -354,7 +354,7 @@ public class NewResourcePagePresenterTest {
 
     @Test
     public void testCommitWhenFileIsCreated() throws Exception {
-        setUp(project, JsonCollections.<NewResourceProvider>createArray(selectedResource));
+        setUp(project, Collections.<NewResourceProvider>createArray(selectedResource));
         when(view.getResourceName()).thenReturn(RESOURCE_NAME);
         doAnswer(new Answer() {
             @Override

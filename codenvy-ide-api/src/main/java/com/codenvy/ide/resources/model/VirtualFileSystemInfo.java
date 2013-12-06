@@ -18,9 +18,9 @@
 package com.codenvy.ide.resources.model;
 
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 
 
 /**
@@ -181,7 +181,7 @@ public class VirtualFileSystemInfo {
 
     private String anyPrincipal;
 
-    private JsonArray<String> permissions;
+    private Array<String> permissions;
 
     private ACLCapability aclCapability;
 
@@ -204,11 +204,11 @@ public class VirtualFileSystemInfo {
      * http://localhost/service/vfs/jcr/file/MyFolder001?name=NewFile.txt&mediaType=text/plain
      * </pre>
      */
-    private JsonStringMap<Link> urlTemplates;
+    private StringMap<Link> urlTemplates;
 
     public VirtualFileSystemInfo(String id, boolean versioningSupported, boolean lockSupported,
-                                 String anonymousPrincipal, String anyPrincipal, JsonArray<String> permissions, ACLCapability aclCapability,
-                                 QueryCapability queryCapability, JsonStringMap<Link> urlTemplates, Folder root) {
+                                 String anonymousPrincipal, String anyPrincipal, Array<String> permissions, ACLCapability aclCapability,
+                                 QueryCapability queryCapability, StringMap<Link> urlTemplates, Folder root) {
         this.versioningSupported = versioningSupported;
         this.lockSupported = lockSupported;
         this.anonymousPrincipal = anonymousPrincipal;
@@ -222,7 +222,7 @@ public class VirtualFileSystemInfo {
     }
 
     public VirtualFileSystemInfo() {
-        this("default", false, false, ANONYMOUS_PRINCIPAL, ANY_PRINCIPAL, JsonCollections.<String>createArray(),
+        this("default", false, false, ANONYMOUS_PRINCIPAL, ANY_PRINCIPAL, Collections.<String>createArray(),
              ACLCapability.NONE, QueryCapability.NONE, null, null);
     }
 
@@ -266,11 +266,11 @@ public class VirtualFileSystemInfo {
         this.anonymousPrincipal = anonymousPrincipal;
     }
 
-    public JsonArray<String> getPermissions() {
+    public Array<String> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(JsonArray<String> permissions) {
+    public void setPermissions(Array<String> permissions) {
         this.permissions = permissions;
     }
 
@@ -290,14 +290,14 @@ public class VirtualFileSystemInfo {
         this.queryCapability = queryCapability;
     }
 
-    public JsonStringMap<Link> getUrlTemplates() {
+    public StringMap<Link> getUrlTemplates() {
         if (urlTemplates == null) {
-            urlTemplates = JsonCollections.createStringMap();
+            urlTemplates = Collections.createStringMap();
         }
         return urlTemplates;
     }
 
-    public void setUrlTemplates(JsonStringMap<Link> uriTemplates) {
+    public void setUrlTemplates(StringMap<Link> uriTemplates) {
         this.urlTemplates = uriTemplates;
     }
 

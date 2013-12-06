@@ -14,14 +14,14 @@
 
 package com.codenvy.ide.texteditor.api.parser;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 
 
 /** Token factory that do not use information from {@link State}. */
 public class BasicTokenFactory implements TokenFactory<State> {
 
     @Override
-    public void push(String stylePrefix, State state, String tokenType, String tokenValue, JsonArray<Token> tokens) {
+    public void push(String stylePrefix, State state, String tokenType, String tokenValue, Array<Token> tokens) {
         tokens.add(new Token(stylePrefix, TokenType.resolveTokenType(tokenType, tokenValue), tokenValue));
     }
 }

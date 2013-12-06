@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.tutorial.wizard.pages.page1;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -37,8 +36,6 @@ public class Page1ViewImpl extends Composite implements Page1View {
     interface Page1ViewImplUiBinder extends UiBinder<Widget, Page1ViewImpl> {
     }
 
-    private static Page1ViewImplUiBinder ourUiBinder = GWT.create(Page1ViewImplUiBinder.class);
-
     @UiField
     RadioButton page2;
     @UiField
@@ -48,7 +45,7 @@ public class Page1ViewImpl extends Composite implements Page1View {
     private ActionDelegate delegate;
 
     @Inject
-    public Page1ViewImpl() {
+    public Page1ViewImpl(Page1ViewImplUiBinder ourUiBinder) {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 

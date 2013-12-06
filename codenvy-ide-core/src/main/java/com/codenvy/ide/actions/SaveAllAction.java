@@ -22,7 +22,7 @@ import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -46,8 +46,8 @@ public class SaveAllAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        JsonStringMap<EditorPartPresenter> editors = editorAgent.getOpenedEditors();
-        editors.iterate(new JsonStringMap.IterationCallback<EditorPartPresenter>() {
+        StringMap<EditorPartPresenter> editors = editorAgent.getOpenedEditors();
+        editors.iterate(new StringMap.IterationCallback<EditorPartPresenter>() {
             @Override
             public void onIteration(String key, EditorPartPresenter value) {
                 if (value.isDirty()) {

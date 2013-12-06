@@ -18,8 +18,8 @@ import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 import elemental.html.SpanElement;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.texteditor.Buffer;
@@ -83,7 +83,7 @@ class LineRendererController {
      * A list of all of the line renderers that are registered on the editor (Note
      * that some may not be participating in the current line)
      */
-    private final JsonArray<LineRenderer> lineRenderers;
+    private final Array<LineRenderer> lineRenderers;
 
     private final Buffer buffer;
 
@@ -91,7 +91,7 @@ class LineRendererController {
         this.buffer = buffer;
         currentLineRendererTargets =
                 new SortedList<LineRendererController.LineRendererTarget>(new LineRendererTarget.Comparator());
-        lineRenderers = JsonCollections.createArray();
+        lineRenderers = Collections.createArray();
     }
 
     void addLineRenderer(LineRenderer lineRenderer) {

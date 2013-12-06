@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.resources.marshal;
 
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
@@ -27,8 +27,8 @@ import com.google.gwt.json.client.JSONParser;
 
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
-public class PropertyUnmarshaller implements Unmarshallable<JsonArray<Property>> {
-    protected JsonArray<Property> properties;
+public class PropertyUnmarshaller implements Unmarshallable<Array<Property>> {
+    protected Array<Property> properties;
 
     /** {@inheritDoc} */
     @Override
@@ -44,7 +44,7 @@ public class PropertyUnmarshaller implements Unmarshallable<JsonArray<Property>>
 
     /** {@inheritDoc} */
     @Override
-    public JsonArray<Property> getPayload() {
+    public Array<Property> getPayload() {
         return this.properties;
     }
 }

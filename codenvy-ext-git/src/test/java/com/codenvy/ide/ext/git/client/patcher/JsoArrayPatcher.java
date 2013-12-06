@@ -17,14 +17,14 @@
  */
 package com.codenvy.ide.ext.git.client.patcher;
 
-import com.codenvy.ide.json.js.JsoArray;
+import com.codenvy.ide.collections.js.JsoArray;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 
 import static org.mockito.Mockito.mock;
 
 /**
- * Patcher for JsoArray class. Replace native method into JsonArray.
+ * Patcher for JsoArray class. Replace native method into Array.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */

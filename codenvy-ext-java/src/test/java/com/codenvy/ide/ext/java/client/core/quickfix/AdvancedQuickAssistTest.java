@@ -13,18 +13,17 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.client.core.quickfix;
 
-import com.codenvy.ide.ext.java.client.core.JavaCore;
-import com.codenvy.ide.ext.java.client.core.formatter.DefaultCodeFormatterConstants;
-
 import com.codenvy.ide.ext.java.client.JavaExtension;
 import com.codenvy.ide.ext.java.client.editor.JavaCorrectionAssistant;
-import com.codenvy.ide.ext.java.client.editor.JavaReconcilerStrategy;
-import com.codenvy.ide.ext.java.client.internal.corext.codemanipulation.StubUtility;
-import com.codenvy.ide.ext.java.client.internal.text.correction.AssistContext;
-import com.codenvy.ide.ext.java.client.internal.text.correction.JavaCorrectionProcessor;
-import com.codenvy.ide.ext.java.client.internal.text.correction.proposals.CUCorrectionProposal;
-import com.codenvy.ide.ext.java.client.templates.CodeTemplateContextType;
+import com.codenvy.ide.ext.java.client.editor.JavaCorrectionProcessor;
 import com.codenvy.ide.ext.java.emul.FileSystem;
+import com.codenvy.ide.ext.java.jdt.core.JavaCore;
+import com.codenvy.ide.ext.java.jdt.core.formatter.DefaultCodeFormatterConstants;
+import com.codenvy.ide.ext.java.jdt.internal.corext.codemanipulation.StubUtility;
+import com.codenvy.ide.ext.java.jdt.internal.text.correction.AssistContext;
+import com.codenvy.ide.ext.java.jdt.internal.text.correction.proposals.CUCorrectionProposal;
+import com.codenvy.ide.ext.java.jdt.templates.CodeTemplateContextType;
+import com.codenvy.ide.ext.java.worker.WorkerMessageHandler;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentImpl;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -46,13 +45,12 @@ public class AdvancedQuickAssistTest extends QuickFixTest {
         options.put(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR, JavaCore.SPACE);
         options.put(DefaultCodeFormatterConstants.FORMATTER_TAB_SIZE, "4");
 
-        new JavaCorrectionProcessor(new JavaCorrectionAssistant(null, astProvider), astProvider);
+        new JavaCorrectionProcessor(new JavaCorrectionAssistant(null, null), null);
         new JavaExtension();
-        new JavaReconcilerStrategy(null, null, null);
-        GwtReflectionUtils.setPrivateFieldValue(JavaReconcilerStrategy.get(), "nameEnvironment", new FileSystem(
+        new WorkerMessageHandler(null);
+        GwtReflectionUtils.setPrivateFieldValue(WorkerMessageHandler.get(), "nameEnvironment", new FileSystem(
                 new String[]{System.getProperty("java.home") + "/lib/rt.jar"}, null, "UTF-8"));
-        JavaExtension.get().getOptions().putAll(options);
-
+        WorkerMessageHandler.get().getOptions().putAll(options);
         //      IPreferenceStore store = JavaPlugin.getDefault().getPreferenceStore();
         //      store.setValue(PreferenceConstants.CODEGEN_ADD_COMMENTS, false);
         //      store.setValue(PreferenceConstants.CODEGEN_KEYWORD_THIS, false);

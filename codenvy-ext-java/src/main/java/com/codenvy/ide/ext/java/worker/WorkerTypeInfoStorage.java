@@ -17,8 +17,11 @@
  */
 package com.codenvy.ide.ext.java.worker;
 
-import com.codenvy.ide.ext.java.worker.core.Signature;
-import com.codenvy.ide.ext.java.worker.internal.compiler.env.IBinaryType;
+import com.codenvy.ide.ext.java.jdt.core.IType;
+import com.codenvy.ide.ext.java.jdt.core.Signature;
+import com.codenvy.ide.ext.java.jdt.env.BinaryTypeImpl;
+import com.codenvy.ide.ext.java.jdt.env.TypeImpl;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +36,8 @@ public class WorkerTypeInfoStorage {
 
     private static WorkerTypeInfoStorage instance;
 
-    private Map<String, IBinaryType> storage = new HashMap<String,IBinaryType>();
+    private Map<String, IBinaryType> storage = new HashMap<String, IBinaryType>();
+    private String shortTypesInfo;
 
     public static WorkerTypeInfoStorage get() {
         if (instance == null) {
@@ -64,7 +68,7 @@ public class WorkerTypeInfoStorage {
 
     public List<IBinaryType> getTypesByNamePrefix(String prefix, boolean fqnPart) {
         List<IBinaryType> res = new ArrayList<IBinaryType>();
-        for(String key : storage.keySet()){
+        for (String key : storage.keySet()) {
             if (fqnPart && !key.startsWith(prefix)) {
                 continue;
             } else {
@@ -75,5 +79,18 @@ public class WorkerTypeInfoStorage {
             res.add(storage.get(key));
         }
         return res;
+    }
+
+    public IType getTypeByFqn(String fqn) {
+        BinaryTypeImpl type = (BinaryTypeImpl)getType(fqn);
+        return type != null ? new TypeImpl(type) : null;
+    }
+
+    public void setShortTypesInfo(String shortTypesInfo) {
+        this.shortTypesInfo = shortTypesInfo;
+    }
+
+    public String getShortTypesInfo() {
+        return shortTypesInfo;
     }
 }

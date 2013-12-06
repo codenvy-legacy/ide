@@ -17,7 +17,7 @@ package com.codenvy.ide.texteditor.ot;
 import com.codenvy.ide.dto.DocOp;
 import com.codenvy.ide.dto.DocOpComponent;
 import com.codenvy.ide.dto.shared.DocOpFactory;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 
 import static com.codenvy.ide.dto.DocOpComponent.Type.DELETE;
 import static com.codenvy.ide.dto.DocOpComponent.Type.INSERT;
@@ -27,7 +27,7 @@ import static com.codenvy.ide.dto.DocOpComponent.Type.RETAIN_LINE;
 /** Helper to create document operations via a method call for each component. */
 public class DocOpCapturer implements DocOpCursor {
 
-    private final JsonArray<DocOpComponent> components;
+    private final Array<DocOpComponent> components;
 
     private final DocOpFactory factory;
 

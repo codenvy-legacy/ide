@@ -10,11 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.client.core.rewrite;
 
-import com.codenvy.ide.ext.java.client.core.dom.*;
-import com.codenvy.ide.ext.java.client.core.dom.rewrite.ASTRewrite;
-import com.codenvy.ide.ext.java.client.core.dom.rewrite.ListRewrite;
+import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ASTRewrite;
+import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ListRewrite;
 
-import com.codenvy.ide.ext.java.client.internal.compiler.env.ICompilationUnit;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.ICompilationUnit;
 
 import org.junit.Test;
 
@@ -45,7 +45,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
                 "SecurityException;\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -169,7 +169,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    public void hee(int p1, byte p2) {}\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -227,7 +227,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    public<X>void hee(int p1, byte p2) {}\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -278,7 +278,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    /* comment */ void gee3() {}\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -384,7 +384,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    public /* comment */ void gee3() {}\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -488,7 +488,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    /* comment */ void gee3() {}\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -603,7 +603,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    public /* comment */ void gee3() {}\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -706,7 +706,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
                 "SecurityException;\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -811,7 +811,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    public void setMyProp(String property1) {}\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST(cu);
         AST ast = astRoot.getAST();
@@ -860,7 +860,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
                 "SecurityException;\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -1064,7 +1064,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
                 "SecurityException;\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -1126,7 +1126,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
                 "SecurityException;\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -1236,7 +1236,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    public E(int p1, int p2, int p3) {}\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -1296,7 +1296,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    }\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -1354,7 +1354,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
                 "SecurityException;\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -1434,7 +1434,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    public Object foo7(int i)[][] { return null; }\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -1540,7 +1540,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    Object foo9() { return null; }\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -1658,7 +1658,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    public Object foo4() { return null; }\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -1718,7 +1718,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    @Deprecated()Object foo4() { return null; }\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -1776,7 +1776,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    static final int i3= 1, k3= 2, n3= 3;\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -1858,7 +1858,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    }\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -1914,7 +1914,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    public Object foo1(int i, boolean b) { return null; }\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -1958,7 +1958,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    public Object foo1(int i, boolean b) { return null; }\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -1999,7 +1999,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    };\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -2044,7 +2044,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    }\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -2092,7 +2092,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    }\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -2152,7 +2152,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    }\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -2204,7 +2204,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    }\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -2261,7 +2261,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    }\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
         AST ast = astRoot.getAST();
@@ -2303,7 +2303,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    String value3() default 2;\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
         AST ast = astRoot.getAST();
@@ -2350,7 +2350,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    E1(1), E2, E3(), E4(1, 2)\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
         AST ast = astRoot.getAST();
@@ -2419,7 +2419,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    }\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
         AST ast = astRoot.getAST();
@@ -2561,7 +2561,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    RED, BROWN(), GREEN(){};\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -2593,7 +2593,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("   }\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         // Get method declaration and its body
         CompilationUnit astRoot = createAST(cu);
@@ -2647,7 +2647,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("class E {\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -2736,7 +2736,7 @@ public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
         buf.append("    }\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());

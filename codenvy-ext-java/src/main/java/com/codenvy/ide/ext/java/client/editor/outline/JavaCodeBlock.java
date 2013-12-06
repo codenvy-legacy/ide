@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.ext.java.client.editor.outline;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.texteditor.api.outline.CodeBlock;
 
 
@@ -28,7 +28,7 @@ import com.codenvy.ide.texteditor.api.outline.CodeBlock;
  */
 public class JavaCodeBlock implements CodeBlock {
 
-    private JsonArray<CodeBlock> children = JsonCollections.createArray();
+    private Array<CodeBlock> children = Collections.createArray();
 
     private CodeBlock parent;
 
@@ -86,7 +86,7 @@ public class JavaCodeBlock implements CodeBlock {
 
     /** {@inheritDoc} */
     @Override
-    public JsonArray<CodeBlock> getChildren() {
+    public Array<CodeBlock> getChildren() {
         return children;
     }
 
@@ -100,7 +100,7 @@ public class JavaCodeBlock implements CodeBlock {
      * @param children
      *         the children to set
      */
-    public void setChildren(JsonArray<CodeBlock> children) {
+    public void setChildren(Array<CodeBlock> children) {
         this.children = children;
     }
 

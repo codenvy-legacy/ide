@@ -18,9 +18,9 @@
 package com.codenvy.ide.texteditor.codeassistant;
 
 import com.codenvy.ide.text.Document;
+import com.codenvy.ide.texteditor.api.CodeAssistCallback;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
-import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 import com.codenvy.ide.texteditor.api.quickassist.QuickAssistAssistant;
 import com.codenvy.ide.texteditor.api.quickassist.QuickAssistProcessor;
 
@@ -49,8 +49,8 @@ public class QuickAssistAssistantImpl implements QuickAssistAssistant {
 
         /** {@inheritDoc} */
         @Override
-        public CompletionProposal[] computeCompletionProposals(TextEditorPartView view, int offset) {
-            return processor.computeQuickAssistProposals(new TextInvocationContext(view, offset, -1));
+        public void computeCompletionProposals(TextEditorPartView view, int offset, CodeAssistCallback callback) {
+            processor.computeQuickAssistProposals(new TextInvocationContext(view, offset, -1), callback);
         }
 
         /** {@inheritDoc} */

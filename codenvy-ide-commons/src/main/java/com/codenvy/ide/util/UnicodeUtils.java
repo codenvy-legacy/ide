@@ -14,7 +14,7 @@
 
 package com.codenvy.ide.util;
 
-import com.codenvy.ide.json.js.JsoArray;
+import com.codenvy.ide.collections.js.JsoArray;
 import com.google.gwt.regexp.shared.RegExp;
 
 /**

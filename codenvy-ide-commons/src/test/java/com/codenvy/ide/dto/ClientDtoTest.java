@@ -19,7 +19,7 @@ package com.codenvy.ide.dto;
 
 import com.codenvy.ide.dto.definitions.ComplicatedDto;
 import com.codenvy.ide.dto.definitions.SimpleDto;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.google.gwt.json.client.*;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTest;
@@ -111,7 +111,7 @@ public class ClientDtoTest extends GwtTest {
         jsonArray.set(1, json2);
 
         // TODO JSONParserPatcher doesn't handle JSON array
-        JsonArray<SimpleDto> listDtoFromJson = dtoFactory.createListDtoFromJson(jsonArray.toString(), SimpleDto.class);
+        Array<SimpleDto> listDtoFromJson = dtoFactory.createListDtoFromJson(jsonArray.toString(), SimpleDto.class);
 
         Assert.assertEquals(listDtoFromJson.get(0).getName(), fooString_1);
         Assert.assertEquals(listDtoFromJson.get(0).getId(), fooId_1);

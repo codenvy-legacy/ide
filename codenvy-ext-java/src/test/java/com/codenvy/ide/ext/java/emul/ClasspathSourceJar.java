@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.emul;
 
-import com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit;
-import com.codenvy.ide.ext.java.client.internal.compiler.env.NameEnvironmentAnswer;
+import com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.NameEnvironmentAnswer;
 
 import java.io.File;
 import java.io.IOException;

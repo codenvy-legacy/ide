@@ -20,8 +20,8 @@ package com.codenvy.ide.notification;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.inject.Inject;
@@ -43,7 +43,7 @@ public class NotificationManagerImpl implements NotificationManager, Notificatio
     private NotificationManagerView  view;
     private NotificationContainer    notificationContainer;
     private NotificationMessageStack notificationMessageStack;
-    private JsonArray<Notification>  notifications;
+    private Array<Notification>      notifications;
 
     /**
      * Create manager.
@@ -62,7 +62,7 @@ public class NotificationManagerImpl implements NotificationManager, Notificatio
         this.notificationContainer.setDelegate(this);
         this.notificationMessageStack = notificationMessageStack;
         this.notificationMessageStack.setDelegate(this);
-        this.notifications = JsonCollections.createArray();
+        this.notifications = Collections.createArray();
     }
 
     /** {@inheritDoc} */

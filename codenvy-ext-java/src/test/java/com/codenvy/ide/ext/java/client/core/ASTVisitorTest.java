@@ -17,9 +17,9 @@
  */
 package com.codenvy.ide.ext.java.client.core;
 
-import com.codenvy.ide.ext.java.client.core.dom.ASTVisitor;
-import com.codenvy.ide.ext.java.client.core.dom.MethodDeclaration;
-import com.codenvy.ide.ext.java.client.core.dom.TypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTVisitor;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.TypeDeclaration;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -48,7 +48,7 @@ public class ASTVisitorTest extends ParserBaseTest {
     private static class MethodDeclarationVisitor extends ASTVisitor {
         private int methodCount;
 
-        /** @see com.codenvy.ide.ext.java.client.core.dom.ASTVisitor#visit(com.codenvy.ide.ext.java.client.core.dom.MethodDeclaration) */
+        /** @see com.codenvy.ide.ext.java.jdt.core.dom.ASTVisitor#visit(com.codenvy.ide.ext.java.jdt.core.dom.MethodDeclaration) */
         @Override
         public boolean visit(MethodDeclaration node) {
             methodCount++;
@@ -59,7 +59,7 @@ public class ASTVisitorTest extends ParserBaseTest {
     private static class TypeDeclarationVisitor extends ASTVisitor {
         private int typeCount;
 
-        /** @see com.codenvy.ide.ext.java.client.core.dom.ASTVisitor#visit(com.codenvy.ide.ext.java.client.core.dom.TypeDeclaration) */
+        /** @see com.codenvy.ide.ext.java.jdt.core.dom.ASTVisitor#visit(com.codenvy.ide.ext.java.jdt.core.dom.TypeDeclaration) */
         @Override
         public boolean visit(TypeDeclaration node) {
             typeCount++;

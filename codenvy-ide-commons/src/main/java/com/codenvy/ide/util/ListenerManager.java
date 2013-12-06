@@ -14,8 +14,8 @@
 
 package com.codenvy.ide.util;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 
 /**
  * Lightweight manager for listeners that's designed to reduce boilerplate in
@@ -63,20 +63,20 @@ public class ListenerManager<L> implements ListenerRegistrar<L> {
 
     private boolean isDispatching;
 
-    private final JsonArray<L> listeners;
+    private final Array<L> listeners;
 
     /** Listeners that were added during a dispatch */
-    private final JsonArray<L> queuedListenerAdditions;
+    private final Array<L> queuedListenerAdditions;
 
     /** Listeners that were removed during a dispatch */
-    private final JsonArray<L> queuedListenerRemovals;
+    private final Array<L> queuedListenerRemovals;
 
     private final RegistrationListener<L> registrationListener;
 
     private ListenerManager(RegistrationListener<L> registrationListener) {
-        this.listeners = JsonCollections.createArray();
-        this.queuedListenerAdditions = JsonCollections.createArray();
-        this.queuedListenerRemovals = JsonCollections.createArray();
+        this.listeners = Collections.createArray();
+        this.queuedListenerAdditions = Collections.createArray();
+        this.queuedListenerRemovals = Collections.createArray();
         this.registrationListener = registrationListener;
     }
 

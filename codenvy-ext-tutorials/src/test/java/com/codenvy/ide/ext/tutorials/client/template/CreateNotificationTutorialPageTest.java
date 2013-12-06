@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.tutorials.client.template;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
@@ -60,7 +60,7 @@ public class CreateNotificationTutorialPageTest extends BaseCreateTutorialTest {
                 return callback;
             }
         }).when(service)
-                .createNotificationTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .createNotificationTutorialProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsSuccessful();
     }
@@ -77,7 +77,7 @@ public class CreateNotificationTutorialPageTest extends BaseCreateTutorialTest {
                 return callback;
             }
         }).when(service)
-                .createNotificationTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .createNotificationTutorialProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenCreateTutorialRequestIsFailed();
     }
@@ -94,7 +94,7 @@ public class CreateNotificationTutorialPageTest extends BaseCreateTutorialTest {
                 return callback;
             }
         }).when(service)
-                .createNotificationTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .createNotificationTutorialProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsFailed();
     }
@@ -102,7 +102,7 @@ public class CreateNotificationTutorialPageTest extends BaseCreateTutorialTest {
     @Override
     public void testCreateWhenRequestExceptionHappened() throws Exception {
         doThrow(RequestException.class).when(service)
-                .createNotificationTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .createNotificationTutorialProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenRequestExceptionHappened();
     }

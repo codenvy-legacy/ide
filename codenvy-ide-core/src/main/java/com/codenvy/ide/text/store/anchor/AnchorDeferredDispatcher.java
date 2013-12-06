@@ -14,8 +14,8 @@
 
 package com.codenvy.ide.text.store.anchor;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 
 
 /**
@@ -24,8 +24,8 @@ import com.codenvy.ide.json.JsonCollections;
  */
 class AnchorDeferredDispatcher {
 
-    private JsonArray<Anchor> shiftedAnchors;
-    private JsonArray<Anchor> removedAnchors;
+    private Array<Anchor> shiftedAnchors;
+    private Array<Anchor> removedAnchors;
 
     void deferDispatchShifted(Anchor anchor) {
         if (removedAnchors != null && removedAnchors.contains(anchor)) {
@@ -34,7 +34,7 @@ class AnchorDeferredDispatcher {
         }
 
         if (shiftedAnchors == null) {
-            shiftedAnchors = JsonCollections.createArray();
+            shiftedAnchors = Collections.createArray();
         }
 
         shiftedAnchors.add(anchor);
@@ -42,7 +42,7 @@ class AnchorDeferredDispatcher {
 
     void deferDispatchRemoved(Anchor anchor) {
         if (removedAnchors == null) {
-            removedAnchors = JsonCollections.createArray();
+            removedAnchors = Collections.createArray();
         }
 
         removedAnchors.add(anchor);
@@ -53,7 +53,7 @@ class AnchorDeferredDispatcher {
         }
     }
 
-    JsonArray<Anchor> getShiftedAnchors() {
+    Array<Anchor> getShiftedAnchors() {
         return shiftedAnchors;
     }
 

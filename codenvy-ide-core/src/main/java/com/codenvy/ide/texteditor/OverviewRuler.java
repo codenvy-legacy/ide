@@ -20,8 +20,8 @@ package com.codenvy.ide.texteditor;
 import elemental.events.Event;
 import elemental.events.EventListener;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.annotation.Annotation;
@@ -50,13 +50,13 @@ public class OverviewRuler {
     private       AnnotationModel           model;
     private       ListenerRegistrar.Remover remover;
     private       InternalListener          listener;
-    private       JsonArray<Mark>           elements;
+    private       Array<Mark>               elements;
 
     public OverviewRuler(Gutter view, TextEditorViewImpl editor) {
         this.view = view;
         this.editor = editor;
         listener = new InternalListener();
-        elements = JsonCollections.createArray();
+        elements = Collections.createArray();
     }
 
     private void update() {
@@ -99,7 +99,7 @@ public class OverviewRuler {
     }
 
     private void showToolTip(Mark mark) {
-        JsonArray<String> messages = JsonCollections.createArray();
+        Array<String> messages = Collections.createArray();
         for (Mark m : elements.asIterable()) {
             if (m.lineNumber == mark.lineNumber) {
                 messages.add(m.annotation.getText());
@@ -124,7 +124,7 @@ public class OverviewRuler {
      *         the messages to format (element type: {@link String})
      * @return the formatted message
      */
-    protected String[] formatMultipleMessages(JsonArray<String> messages) {
+    protected String[] formatMultipleMessages(Array<String> messages) {
         String[] message = new String[messages.size() + 1];
         message[0] = "Multiple markers at this line";
         for (int i = 0; i < messages.size(); i++) {

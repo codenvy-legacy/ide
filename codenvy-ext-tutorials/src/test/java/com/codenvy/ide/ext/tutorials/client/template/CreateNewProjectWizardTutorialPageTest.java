@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.tutorials.client.template;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
@@ -59,7 +59,7 @@ public class CreateNewProjectWizardTutorialPageTest extends BaseCreateTutorialTe
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service).createNewProjectWizardTutorialProject(anyString(), (JsonArray<Property>)anyObject(),
+        }).when(service).createNewProjectWizardTutorialProject(anyString(), (Array<Property>)anyObject(),
                                                                (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsSuccessful();
@@ -76,7 +76,7 @@ public class CreateNewProjectWizardTutorialPageTest extends BaseCreateTutorialTe
                 onFailure.invoke(callback, throwable);
                 return callback;
             }
-        }).when(service).createNewProjectWizardTutorialProject(anyString(), (JsonArray<Property>)anyObject(),
+        }).when(service).createNewProjectWizardTutorialProject(anyString(), (Array<Property>)anyObject(),
                                                                (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenCreateTutorialRequestIsFailed();
@@ -93,7 +93,7 @@ public class CreateNewProjectWizardTutorialPageTest extends BaseCreateTutorialTe
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service).createNewProjectWizardTutorialProject(anyString(), (JsonArray<Property>)anyObject(),
+        }).when(service).createNewProjectWizardTutorialProject(anyString(), (Array<Property>)anyObject(),
                                                                (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsFailed();
@@ -102,7 +102,7 @@ public class CreateNewProjectWizardTutorialPageTest extends BaseCreateTutorialTe
     @Override
     public void testCreateWhenRequestExceptionHappened() throws Exception {
         doThrow(RequestException.class).when(service).createNewProjectWizardTutorialProject(anyString(),
-                                                                                            (JsonArray<Property>)anyObject(),
+                                                                                            (Array<Property>)anyObject(),
                                                                                             (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenRequestExceptionHappened();

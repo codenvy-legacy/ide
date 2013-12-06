@@ -20,10 +20,10 @@ package com.codenvy.ide.ext.git.client.merge;
 import elemental.html.DragEvent;
 
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 import com.codenvy.ide.util.input.SignalEvent;
@@ -146,20 +146,20 @@ public class MergeViewImpl extends DialogBox implements MergeView {
 
         remoteBranch = new Reference(REMOTE_BRANCHES_TITLE, REMOTE_BRANCHES_TITLE, REMOTE_BRANCH);
 
-        JsonArray<Reference> branches = JsonCollections.createArray(localBranch, remoteBranch);
+        Array<Reference> branches = Collections.createArray(localBranch, remoteBranch);
         root.setBranches(branches);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setLocalBranches(@NotNull JsonArray<Reference> references) {
+    public void setLocalBranches(@NotNull Array<Reference> references) {
         localBranch.setBranches(references);
         this.references.renderTree(0);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setRemoteBranches(@NotNull JsonArray<Reference> references) {
+    public void setRemoteBranches(@NotNull Array<Reference> references) {
         remoteBranch.setBranches(references);
         this.references.renderTree(0);
     }

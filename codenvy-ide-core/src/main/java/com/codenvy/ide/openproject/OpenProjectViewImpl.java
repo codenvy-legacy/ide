@@ -22,7 +22,7 @@ import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.list.SimpleList.View;
 import com.codenvy.ide.util.dom.Elements;
@@ -118,7 +118,7 @@ public class OpenProjectViewImpl extends DialogBox implements OpenProjectView {
 
     /** {@inheritDoc} */
     @Override
-    public void setProjects(JsonArray<String> projects) {
+    public void setProjects(Array<String> projects) {
         list.render(projects);
     }
 

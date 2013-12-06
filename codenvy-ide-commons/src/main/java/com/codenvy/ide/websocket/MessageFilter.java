@@ -14,9 +14,9 @@
 
 package com.codenvy.ide.websocket;
 
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.IntegerMap;
 import com.codenvy.ide.dto.shared.ServerToClientDto;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonIntegerMap;
 
 /**
  * Class responsible for routing JsonMessages based on the message type that get
@@ -28,7 +28,7 @@ public class MessageFilter {
         void onMessageReceived(T message);
     }
 
-    private final JsonIntegerMap<MessageRecipient<? extends ServerToClientDto>> messageRecipients = JsonCollections.createIntegerMap();
+    private final IntegerMap<MessageRecipient<? extends ServerToClientDto>> messageRecipients = Collections.createIntegerMap();
 
     /**
      * Dispatches an incoming DTO message to a registered recipient.

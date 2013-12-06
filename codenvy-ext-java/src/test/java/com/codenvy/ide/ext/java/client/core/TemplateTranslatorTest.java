@@ -11,10 +11,10 @@
 package com.codenvy.ide.ext.java.client.core;
 
 import com.codenvy.ide.ext.java.client.BaseTest;
-import com.codenvy.ide.ext.java.client.templates.api.TemplateBuffer;
-import com.codenvy.ide.ext.java.client.templates.api.TemplateException;
-import com.codenvy.ide.ext.java.client.templates.api.TemplateTranslator;
-import com.codenvy.ide.ext.java.client.templates.api.TemplateVariable;
+import com.codenvy.ide.ext.java.jdt.templates.api.TemplateBuffer;
+import com.codenvy.ide.ext.java.jdt.templates.api.TemplateException;
+import com.codenvy.ide.ext.java.jdt.templates.api.TemplateTranslator;
+import com.codenvy.ide.ext.java.jdt.templates.api.TemplateVariable;
 
 import org.junit.Before;
 import org.junit.Test;

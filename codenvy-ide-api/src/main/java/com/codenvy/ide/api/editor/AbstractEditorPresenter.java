@@ -19,8 +19,8 @@ package com.codenvy.ide.api.editor;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.workspace.AbstractPartPresenter;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.google.gwt.user.client.Window;
 
 /**
@@ -32,7 +32,7 @@ import com.google.gwt.user.client.Window;
 public abstract class AbstractEditorPresenter extends AbstractPartPresenter implements EditorPartPresenter {
     protected boolean     dirtyState;
     protected EditorInput input;
-    protected final JsonArray<EditorPartCloseHandler> closeHandlers = JsonCollections.createArray();
+    protected final Array<EditorPartCloseHandler> closeHandlers = Collections.createArray();
 
     /** {@inheritDoc} */
     @Override

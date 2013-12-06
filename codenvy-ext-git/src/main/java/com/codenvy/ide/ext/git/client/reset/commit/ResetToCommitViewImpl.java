@@ -172,7 +172,7 @@ public class ResetToCommitViewImpl extends DialogBox implements ResetToCommitVie
     /** {@inheritDoc} */
     @Override
     public void setRevisions(@NotNull List<Revision> revisions) {
-        // Wraps JsonArray in java.util.List
+        // Wraps Array in java.util.List
         List<Revision> list = new ArrayList<Revision>();
         for (int i = 0; i < revisions.size(); i++) {
             list.add(revisions.get(i));

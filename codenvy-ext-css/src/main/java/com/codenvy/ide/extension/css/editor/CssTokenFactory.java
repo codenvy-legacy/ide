@@ -14,7 +14,7 @@
 
 package com.codenvy.ide.extension.css.editor;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.texteditor.api.parser.Token;
 import com.codenvy.ide.texteditor.api.parser.TokenFactory;
 import com.codenvy.ide.texteditor.api.parser.TokenType;
@@ -24,7 +24,7 @@ import com.codenvy.ide.texteditor.api.parser.TokenType;
 public class CssTokenFactory implements TokenFactory<CssState> {
 
     @Override
-    public void push(String stylePrefix, CssState state, String tokenType, String tokenValue, JsonArray<Token> tokens) {
+    public void push(String stylePrefix, CssState state, String tokenType, String tokenValue, Array<Token> tokens) {
         tokens.add(createToken(stylePrefix, state, tokenType, tokenValue));
     }
 
@@ -45,7 +45,7 @@ public class CssTokenFactory implements TokenFactory<CssState> {
      * @return newly created {@link CssToken}.
      */
     static CssToken createToken(String stylePrefix, CssState state, String tokenType, String tokenValue) {
-        JsonArray<String> stack = state.getStack();
+        Array<String> stack = state.getStack();
         String context = (stack != null && stack.size() > 0) ? stack.peek() : null;
         return new CssToken(stylePrefix, TokenType.resolveTokenType(tokenType, tokenValue), tokenValue, context);
     }

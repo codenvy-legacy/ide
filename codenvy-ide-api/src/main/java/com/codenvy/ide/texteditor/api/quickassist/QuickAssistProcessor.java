@@ -18,7 +18,7 @@
 package com.codenvy.ide.texteditor.api.quickassist;
 
 import com.codenvy.ide.text.annotation.Annotation;
-import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
+import com.codenvy.ide.texteditor.api.CodeAssistCallback;
 
 /**
  * Quick assist processor for quick fixes and quick assists.
@@ -42,7 +42,7 @@ public interface QuickAssistProcessor {
      *         the invocation context
      * @return an array of completion proposals or <code>null</code> if no proposals are available
      */
-    CompletionProposal[] computeQuickAssistProposals(QuickAssistInvocationContext invocationContext);
+    void computeQuickAssistProposals(QuickAssistInvocationContext invocationContext, CodeAssistCallback callback);
 
     /**
      * Returns the reason why this quick assist processor

@@ -17,9 +17,7 @@
  */
 package com.codenvy.ide.ext.java.client.editor;
 
-import com.codenvy.ide.ext.java.client.core.dom.CompilationUnit;
-import com.codenvy.ide.ext.java.client.internal.compiler.env.INameEnvironment;
-
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
 
@@ -34,8 +32,6 @@ public interface AstProvider {
     }
 
     Remover addAstListener(AstListener listener);
-
-    INameEnvironment getNameEnvironment();
 
     File getFile();
 }

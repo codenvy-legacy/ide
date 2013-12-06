@@ -14,9 +14,9 @@
 
 package com.codenvy.ide.texteditor.api.parser;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.util.Pair;
 import com.codenvy.ide.util.StringUtils;
 
@@ -28,7 +28,7 @@ public class TokenUtil {
      * <p/>
      * <p>Used by {@link #getPlaceholderForMode} to cache placeholder tokens.
      */
-    private static final JsonStringMap<Token> cachedPlaceholders = JsonCollections.createStringMap();
+    private static final StringMap<Token> cachedPlaceholders = Collections.createStringMap();
 
     // Do not instantiate.
     private TokenUtil() {
@@ -58,7 +58,7 @@ public class TokenUtil {
      * @throws IllegalArgumentException
      *         if the column is < 0
      */
-    public static String findModeForColumn(String initialMode, JsonArray<Pair<Integer, String>> modes, int column) {
+    public static String findModeForColumn(String initialMode, Array<Pair<Integer, String>> modes, int column) {
         if (column < 0) {
             throw new IllegalArgumentException("Column should be >= 0 but was " + column);
         }
@@ -87,8 +87,8 @@ public class TokenUtil {
      *         tokens from which to build the map
      * @return array of pairs (column, mode)
      */
-    public static JsonArray<Pair<Integer, String>> buildModes(String initialMode, JsonArray<Token> tokens) {
-        JsonArray<Pair<Integer, String>> modes = JsonCollections.createArray();
+    public static Array<Pair<Integer, String>> buildModes(String initialMode, Array<Token> tokens) {
+        Array<Pair<Integer, String>> modes = Collections.createArray();
         String currentMode = initialMode;
         int currentColumn = 0;
 
@@ -107,7 +107,7 @@ public class TokenUtil {
         return modes;
     }
 
-    static void addPlaceholders(String mode, JsonStringMap<JsonArray<Token>> splitTokenMap, int width) {
+    static void addPlaceholders(String mode, StringMap<Array<Token>> splitTokenMap, int width) {
         for (String key : splitTokenMap.getKeys().asIterable()) {
             if (!key.equals(mode)) {
                 splitTokenMap.get(key).add(getPlaceholderForMode(key, width));

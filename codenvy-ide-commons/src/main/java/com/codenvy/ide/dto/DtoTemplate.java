@@ -206,7 +206,7 @@ public class DtoTemplate {
             builder.append("\n");
             builder.append("import com.google.gson.Gson;\n");
             builder.append("import com.google.gson.GsonBuilder;\n");
-            builder.append("import com.google.gson.JsonArray;\n");
+            builder.append("import com.google.gson.Array;\n");
             builder.append("import com.google.gson.JsonElement;\n");
             builder.append("import com.google.gson.JsonNull;\n");
             builder.append("import com.google.gson.JsonObject;\n");

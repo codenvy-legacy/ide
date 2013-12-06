@@ -17,9 +17,13 @@
  */
 package com.codenvy.ide.ext.extensions.server;
 
+import org.exoplatform.container.xml.InitParams;
+
 import javax.ws.rs.core.Application;
 import java.util.Collections;
 import java.util.Set;
+
+import static com.codenvy.ide.commons.ContainerUtils.readValueParam;
 
 /**
  * JAX-RS application for Codenvy extensions runtime.
@@ -28,6 +32,12 @@ import java.util.Set;
  * @version $Id: CreateProjectApplication.java Jul 3, 2013 3:26:32 PM azatsarynnyy $
  */
 public class CreateProjectApplication extends Application {
+    public static String BASE_URL;
+
+    public CreateProjectApplication(InitParams initParams) {
+        BASE_URL = readValueParam(initParams, "extension-url", "");
+    }
+
     /** {@inheritDoc} */
     @Override
     public Set<Class<?>> getClasses() {

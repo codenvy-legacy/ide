@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.websocket.rest;
 
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.events.MessageHandler;
 import com.codenvy.ide.websocket.rest.exceptions.ServerException;
@@ -87,7 +87,7 @@ public abstract class SubscriptionHandler<T> implements MessageHandler {
      * @return <code>true</code> if message is successful and <code>false</code> if not
      */
     protected final boolean isSuccessful(Message message) {
-        JsonArray<Pair> headers = message.getHeaders();
+        Array<Pair> headers = message.getHeaders();
         for (int i = 0; i < headers.size(); i++) {
             Pair header = headers.get(i);
             if ("x-everrest-websocket-message-type".equals(header.getName()) && "none".equals(header.getValue())) {

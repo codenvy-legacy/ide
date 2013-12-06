@@ -20,7 +20,7 @@ package com.codenvy.ide.ext.git.client.branch;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.ext.git.shared.Branch;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 
 /**
  * The view of {@link BranchPresenter}.
@@ -60,7 +60,7 @@ public interface BranchView extends View<BranchView.ActionDelegate> {
      * @param branches
      *         git branches
      */
-    void setBranches(@NotNull JsonArray<Branch> branches);
+    void setBranches(@NotNull Array<Branch> branches);
 
     /**
      * Change the enable state of the delete button.

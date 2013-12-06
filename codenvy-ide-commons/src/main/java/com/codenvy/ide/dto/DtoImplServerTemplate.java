@@ -14,12 +14,12 @@
 
 package com.codenvy.ide.dto;
 
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.dto.shared.ClientToServerDto;
 import com.codenvy.ide.dto.shared.RoutableDto;
 import com.codenvy.ide.dto.shared.SerializationIndex;
 import com.codenvy.ide.dto.shared.ServerToClientDto;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonStringMap;
 import com.google.common.base.Preconditions;
 import com.google.common.primitives.Primitives;
 
@@ -31,15 +31,15 @@ import java.util.*;
 
 /** Generates the source code for a generated Server DTO impl. */
 public class DtoImplServerTemplate extends DtoImpl {
-    private static final String JSON_ARRAY = JsonArray.class.getCanonicalName();
+    private static final String JSON_ARRAY = Array.class.getCanonicalName();
 
-    private static final String JSON_ARRAY_ADAPTER = JsonStringMap.class.getPackage().getName().replace(".json",
-                                                                                                        ".json.java.JsonArrayListAdapter");
+    private static final String JSON_ARRAY_ADAPTER = StringMap.class.getPackage().getName().replace(".json",
+                                                                                                    ".json.java.JsonArrayListAdapter");
 
-    private static final String JSON_MAP = JsonStringMap.class.getCanonicalName();
+    private static final String JSON_MAP = StringMap.class.getCanonicalName();
 
-    private static final String JSON_MAP_ADAPTER = JsonStringMap.class.getPackage().getName().replace(".json",
-                                                                                                      ".json.java.JsonStringMapAdapter");
+    private static final String JSON_MAP_ADAPTER = StringMap.class.getPackage().getName().replace(".json",
+                                                                                                  ".json.java.JsonStringMapAdapter");
 
     private static final String ROUTABLE_DTO_IMPL = RoutableDto.class.getPackage().getName().replace("dto.shared",
                                                                                                      "dto.server") +
@@ -249,7 +249,7 @@ public class DtoImplServerTemplate extends DtoImpl {
         builder.append("\n    @Override\n");
         builder.append("    public JsonElement toJsonElement() {\n");
         if (isCompactJson()) {
-            builder.append("      JsonArray result = new JsonArray();\n");
+            builder.append("      Array result = new Array();\n");
             for (Method method : methods) {
                 emitSerializeFieldForMethodCompact(method, builder);
             }
@@ -344,7 +344,7 @@ public class DtoImplServerTemplate extends DtoImpl {
 
         if (isJsonArray(rawClass)) {
             String childInTypeName = getImplName(expandedTypes.get(depth + 1), false);
-            builder.append(i).append("JsonArray ").append(outVar).append(" = new JsonArray();\n");
+            builder.append(i).append("Array ").append(outVar).append(" = new Array();\n");
             if (depth == 0) {
                 builder.append(i).append(getEnsureName(inVar)).append("();\n");
             }
@@ -406,7 +406,7 @@ public class DtoImplServerTemplate extends DtoImpl {
         builder.append("      ").append(getImplClassName()).append(" dto = new ").append(getImplClassName()).append(
                 "();\n");
         if (isCompactJson()) {
-            builder.append("      JsonArray json = jsonElem.getAsJsonArray();\n");
+            builder.append("      Array json = jsonElem.getAsJsonArray();\n");
             for (Method method : methods) {
                 if (method == null) {
                     continue;
@@ -624,7 +624,7 @@ public class DtoImplServerTemplate extends DtoImpl {
             builder.append(fieldName);
             builder.append(")");
         } else if (isJsonStringMap(method.getReturnType())) {
-            // Wrap the JsonArray.
+            // Wrap the Array.
             builder.append("(");
             builder.append(JSON_MAP);
             builder.append(") new ");
@@ -743,7 +743,7 @@ public class DtoImplServerTemplate extends DtoImpl {
 
     /**
      * In most cases we simply echo the return type and field name, except for
-     * JsonArray<T>, which is special in the server impl case, since it must be
+     * Array<T>, which is special in the server impl case, since it must be
      * represented by a List<T> for Gson to correctly serialize/deserialize it.
      *
      * @param method
@@ -765,14 +765,14 @@ public class DtoImplServerTemplate extends DtoImpl {
      * Returns the fully-qualified type name using Java concrete implementation
      * classes.
      * <p/>
-     * For example, for JsonArray&lt;JsonStringMap&lt;Dto&gt;&gt;, this would
+     * For example, for Array&lt;StringMap&lt;Dto&gt;&gt;, this would
      * return "ArrayList&lt;Map&lt;String, DtoImpl&gt;&gt;".
      */
     private String getImplName(Type type, boolean allowJreCollectionInterface) {
         Class<?> rawClass = getRawClass(type);
         String fqName = getFqParameterizedName(type);
-        fqName = fqName.replaceAll(JsonArray.class.getCanonicalName(), ArrayList.class.getCanonicalName());
-        fqName = fqName.replaceAll(JsonStringMap.class.getCanonicalName() + "<",
+        fqName = fqName.replaceAll(Array.class.getCanonicalName(), ArrayList.class.getCanonicalName());
+        fqName = fqName.replaceAll(StringMap.class.getCanonicalName() + "<",
                                    HashMap.class.getCanonicalName() + "<String, ");
 
         if (allowJreCollectionInterface) {

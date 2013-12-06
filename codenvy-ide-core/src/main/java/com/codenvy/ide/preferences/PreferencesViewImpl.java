@@ -23,7 +23,7 @@ import elemental.html.TableElement;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.list.SimpleList.View;
 import com.codenvy.ide.util.dom.Elements;
@@ -186,7 +186,7 @@ public class PreferencesViewImpl extends DialogBox implements PreferencesView {
 
     /** {@inheritDoc} */
     @Override
-    public void setPreferences(JsonArray<PreferencesPagePresenter> preferences) {
+    public void setPreferences(Array<PreferencesPagePresenter> preferences) {
         list.render(preferences);
 
         if (preferences.size() > 0) {

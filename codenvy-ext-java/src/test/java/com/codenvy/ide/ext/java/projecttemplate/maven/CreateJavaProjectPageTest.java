@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.ext.java.projecttemplate.maven;
 
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenJavaProjectPage;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
@@ -62,7 +62,7 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
                 return callback;
             }
         }).when(service)
-                .createJavaProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .createJavaProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsSuccessful();
     }
@@ -79,7 +79,7 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
                 return callback;
             }
         }).when(service)
-                .createJavaProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .createJavaProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenCreateTutorialRequestIsFailed();
     }
@@ -96,7 +96,7 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
                 return callback;
             }
         }).when(service)
-                .createJavaProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .createJavaProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsFailed();
     }
@@ -104,7 +104,7 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
     @Override
     public void testCreateWhenRequestExceptionHappened() throws Exception {
         doThrow(RequestException.class).when(service)
-                .createJavaProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .createJavaProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenRequestExceptionHappened();
     }

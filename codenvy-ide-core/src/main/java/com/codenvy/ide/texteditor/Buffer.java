@@ -24,8 +24,8 @@ import elemental.html.ClientRect;
 import elemental.html.DivElement;
 import elemental.html.Element;
 
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.common.Constants;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.mvp.UiComponent;
 import com.codenvy.ide.text.store.DocumentModel;
@@ -930,7 +930,7 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
     }
 
     @Override
-    public void onLineAdded(DocumentModel document, final int lineNumber, final JsonArray<Line> addedLines) {
+    public void onLineAdded(DocumentModel document, final int lineNumber, final Array<Line> addedLines) {
         renderTimeExecutor.execute(new Runnable() {
             @Override
             public void run() {
@@ -941,7 +941,7 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
     }
 
     @Override
-    public void onLineRemoved(final DocumentModel document, final int lineNumber, final JsonArray<Line> removedLines) {
+    public void onLineRemoved(final DocumentModel document, final int lineNumber, final Array<Line> removedLines) {
         renderTimeExecutor.execute(new Runnable() {
             @Override
             public void run() {

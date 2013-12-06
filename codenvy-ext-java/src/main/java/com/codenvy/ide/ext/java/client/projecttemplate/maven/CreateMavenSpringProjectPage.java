@@ -19,8 +19,8 @@ package com.codenvy.ide.ext.java.client.projecttemplate.maven;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.java.client.JavaExtension;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -33,7 +33,7 @@ import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS;
-import static com.codenvy.ide.json.JsonCollections.createArray;
+import static com.codenvy.ide.collections.Collections.createArray;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
@@ -64,7 +64,7 @@ public class CreateMavenSpringProjectPage extends AbstractTemplatePage {
     /** {@inheritDoc} */
     @Override
     public void commit(final CommitCallback callback) {
-        JsonArray<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
+        Array<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
                                                      new Property(PROPERTY_MIXIN_NATURES, JavaExtension.SPRING_APPLICATION_PROJECT_TYPE),
                                                      new Property(PROPERTY_SOURCE_FOLDERS, createArray("src/main/java")));
         final String projectName = wizardContext.getData(PROJECT_NAME);

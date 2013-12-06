@@ -28,7 +28,7 @@ public final class FieldInfoWithAnnotation extends FieldInfo {
         this.annotations = annos;
     }
 
-    public com.codenvy.ide.ext.java.client.internal.compiler.env.IBinaryAnnotation[] getAnnotations() {
+    public com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryAnnotation[] getAnnotations() {
         return this.annotations;
     }
 

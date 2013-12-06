@@ -19,10 +19,10 @@ package com.codenvy.ide.ext.extensions.client.template;
 
 import com.codenvy.ide.api.ui.wizard.Wizard;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.extensions.client.ExtRuntimeResources;
 import com.codenvy.ide.ext.extensions.client.template.sample.CreateSampleCodenvyExtensionPage;
 import com.codenvy.ide.ext.extensions.client.template.sample.CreateSampleCodenvyExtensionPageView;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
@@ -164,7 +164,7 @@ public class CreateSampleCodenvyExtensionPageTest extends BaseCreateExtensionTes
                 return callback;
             }
         }).when(service)
-                .createSampleCodenvyExtensionProject(anyString(), (JsonArray<Property>)anyObject(), anyString(), anyString(), anyString(),
+                .createSampleCodenvyExtensionProject(anyString(), (Array<Property>)anyObject(), anyString(), anyString(), anyString(),
                                                      (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsSuccessful();
@@ -186,7 +186,7 @@ public class CreateSampleCodenvyExtensionPageTest extends BaseCreateExtensionTes
                 return callback;
             }
         }).when(service)
-                .createSampleCodenvyExtensionProject(anyString(), (JsonArray<Property>)anyObject(), anyString(), anyString(), anyString(),
+                .createSampleCodenvyExtensionProject(anyString(), (Array<Property>)anyObject(), anyString(), anyString(), anyString(),
                                                      (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenCreateTutorialRequestIsFailed();
@@ -208,7 +208,7 @@ public class CreateSampleCodenvyExtensionPageTest extends BaseCreateExtensionTes
                 return callback;
             }
         }).when(service)
-                .createSampleCodenvyExtensionProject(anyString(), (JsonArray<Property>)anyObject(), anyString(), anyString(), anyString(),
+                .createSampleCodenvyExtensionProject(anyString(), (Array<Property>)anyObject(), anyString(), anyString(), anyString(),
                                                      (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsFailed();
@@ -221,7 +221,7 @@ public class CreateSampleCodenvyExtensionPageTest extends BaseCreateExtensionTes
     @Override
     public void testCreateWhenRequestExceptionHappened() throws Exception {
         doThrow(RequestException.class).when(service)
-                .createSampleCodenvyExtensionProject(anyString(), (JsonArray<Property>)anyObject(), anyString(), anyString(), anyString(),
+                .createSampleCodenvyExtensionProject(anyString(), (Array<Property>)anyObject(), anyString(), anyString(), anyString(),
                                                      (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenRequestExceptionHappened();

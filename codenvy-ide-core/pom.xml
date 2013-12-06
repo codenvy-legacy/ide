@@ -24,7 +24,7 @@
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
-        <version>3.0.0-M4-SNAPSHOT</version>
+        <version>3.0.0-M5-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ide-core</artifactId>
     <packaging>jar</packaging>
@@ -34,7 +34,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
-        <generated.sources.directory>${project.build.directory}/generated-sources/gen</generated.sources.directory>
+        <dto-generator-out-directory>${project.build.directory}/generated-sources/dto/</dto-generator-out-directory>
     </properties>
 
     <dependencies>
@@ -197,104 +197,100 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>compile-dto-interfaces</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                        <configuration>
-                            <source>${maven.compiler.source}</source>
-                            <target>${maven.compiler.target}</target>
-                            <includes>
-                                <include>**/dto/*</include>
-                            </includes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
-                <executions>
-                    <execution>
-                        <id>dto-server</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
-                            <arguments>
-                                <argument>--dto_packages=com.codenvy.ide.api.user</argument>
-                                <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/server/DtoServerImpls.java
-                                </argument>
-                                <argument>--impl=server</argument>
-                                <argument>--package_base=${generated.sources.directory}/</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>editor-dto-server</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
-                            <arguments>
-                                <argument>--dto_packages=com.codenvy.ide.dto</argument>
-                                <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/dto/server/DtoServerImpls.java
-                                </argument>
-                                <argument>--impl=server</argument>
-                                <argument>--package_base=${generated.sources.directory}/</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>editor-dto-client</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
-                            <arguments>
-                                <argument>--dto_packages=com.codenvy.ide.dto</argument>
-                                <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/dto/client/DtoClientImpls.java
-                                </argument>
-                                <argument>--impl=client</argument>
-                                <argument>--package_base=${generated.sources.directory}/</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <version>1.8</version>
                 <executions>
                     <execution>
-                        <id>add-generated-dto-source</id>
-                        <phase>generate-sources</phase>
+                        <id>add-resource</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>${dto-generator-out-directory}/META-INF</directory>
+                                    <targetPath>META-INF</targetPath>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>process-sources</phase>
                         <goals>
                             <goal>add-source</goal>
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${generated.sources.directory}</source>
+                                <source>${dto-generator-out-directory}</source>
                             </sources>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>pre-compile</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.codenvy.platform-api</groupId>
+                <artifactId>codenvy-dto-maven-plugin</artifactId>
+                <version>${com.codenvy.platform-api.version}</version>
+                <executions>
+                    <execution>
+                        <id>generate-client-dto</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <dtoPackages>
+                                <package>com.codenvy.ide.api.user</package>
+                                <package>com.codenvy.ide.dto</package>
+                            </dtoPackages>
+                            <outputDirectory>${dto-generator-out-directory}</outputDirectory>
+                            <genClassName>com.codenvy.ide.core.client.DtoClientImpls</genClassName>
+                            <impl>client</impl>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-server-dto</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <dtoPackages>
+                                <package>com.codenvy.ide.api.user</package>
+                            </dtoPackages>
+                            <outputDirectory>${dto-generator-out-directory}</outputDirectory>
+                            <genClassName>com.codenvy.ide.core.server.DtoServerImpls</genClassName>
+                            <impl>server</impl>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.codenvy.ide</groupId>
+                        <artifactId>codenvy-ide-api</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                    <!--
+                    Other dependencies if DTOs from current project need them.
+                    -->
+                </dependencies>
+            </plugin>
         </plugins>
-
         <resources>
             <resource>
                 <directory>src/main/java</directory>
@@ -303,7 +299,7 @@
                 <directory>src/main/resources</directory>
             </resource>
             <resource>
-                <directory>${generated.sources.directory}</directory>
+                <directory>${dto-generator-out-directory}</directory>
             </resource>
         </resources>
         <testSourceDirectory>src/test/java</testSourceDirectory>

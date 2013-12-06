@@ -27,7 +27,7 @@
     </parent>
     <groupId>com.codenvy.ide</groupId>
     <artifactId>codenvy-ide-parent</artifactId>
-    <version>3.0.0-M4-SNAPSHOT</version>
+    <version>3.0.0-M5-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Codenvy :: Parent</name>
     <scm>
@@ -47,9 +47,9 @@
         <exo.product.name>codenvy-ide</exo.product.name>
 
         <!-- Codenvy -->
-        <com.codenvy.commons.version>0.9.1</com.codenvy.commons.version>
-        <com.codenvy.organization.version>0.8.1</com.codenvy.organization.version>
-        <com.codenvy.platform-api.version>0.4.0-SNAPSHOT</com.codenvy.platform-api.version>
+        <com.codenvy.commons.version>0.10.2</com.codenvy.commons.version>
+        <com.codenvy.organization.version>0.9.1</com.codenvy.organization.version>
+        <com.codenvy.platform-api.version>0.4.0</com.codenvy.platform-api.version>
 
         <!-- eXo -->
         <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>
@@ -156,6 +156,7 @@
         <module>codenvy-sdk-tutorials/new-resource-wizard</module>
         <module>codenvy-sdk-tutorials/editor-api</module>
         <module>codenvy-sdk-tutorials/gin</module>
+        <module>codenvy-sdk-tutorials/gist-ext</module>
         <module>codenvy-application-war</module>
         <module>codenvy-ide-site-war</module>
         <module>codenvy-sdk-private-dependencies</module>
