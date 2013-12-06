@@ -17,42 +17,78 @@ package com.codenvy.ide.dto.client;
 
 // TODO: These should be moved to an Editor2-specific package
 
+import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.dto.DocOp;
 import com.codenvy.ide.dto.DocOpComponent;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.dto.shared.DocOpFactory;
+
+import static com.codenvy.ide.dto.DocOpComponent.Delete;
+import static com.codenvy.ide.dto.DocOpComponent.Insert;
+import static com.codenvy.ide.dto.DocOpComponent.Retain;
+import static com.codenvy.ide.dto.DocOpComponent.RetainLine;
+import static com.codenvy.ide.dto.DocOpComponent.Type.DELETE;
+import static com.codenvy.ide.dto.DocOpComponent.Type.INSERT;
+import static com.codenvy.ide.dto.DocOpComponent.Type.RETAIN;
+import static com.codenvy.ide.dto.DocOpComponent.Type.RETAIN_LINE;
 
 /**
  */
 //FIXME : XXX
 public final class ClientDocOpFactory implements DocOpFactory {
 
-    public static final ClientDocOpFactory INSTANCE = new ClientDocOpFactory();
+    private static ClientDocOpFactory instance;
+    private DtoFactory factory;
 
-    private ClientDocOpFactory() {
+    private ClientDocOpFactory(DtoFactory factory) {
+        this.factory = factory;
+    }
+
+    public static ClientDocOpFactory getInstance(DtoFactory factory) {
+        if (instance == null) {
+            instance = new ClientDocOpFactory(factory);
+        }
+        return instance;
     }
 
     @Override
-    public DocOpComponent.Delete createDelete(String text) {
-        return null;//(DocOpComponent.Delete)DtoClientImpls.DeleteImpl.make().setText(text).setType(DELETE);
+    public Delete createDelete(String text) {
+        Delete del = factory.createDto(Delete.class);
+        del.setText(text);
+        del.setType(DELETE);
+        return del;//(DocOpComponent.Delete)DtoClientImpls.DeleteImpl.make().setText(text).setType(DELETE);
     }
 
     @Override
     public DocOp createDocOp() {
-        return null;//DtoClientImpls.DocOpImpl.make().setComponents(JsoArray.<DocOpComponent>create());
+        DocOp docOp = factory.createDto(DocOp.class);
+        docOp.setComponents(JsoArray.<DocOpComponent>create());
+        return docOp;//DtoClientImpls.DocOpImpl.make().setComponents(JsoArray.<DocOpComponent>create());
     }
 
     @Override
-    public DocOpComponent.Insert createInsert(String text) {
-        return null;//(DocOpComponent.Insert)DtoClientImpls.InsertImpl.make().setText(text).setType(INSERT);
+    public Insert createInsert(String text) {
+        Insert insert = factory.createDto(Insert.class);
+        insert.setText(text);
+        insert.setType(INSERT);
+        return insert;//(DocOpComponent.Insert)DtoClientImpls.InsertImpl.make().setText(text).setType(INSERT);
     }
 
     @Override
-    public DocOpComponent.Retain createRetain(int count, boolean hasTrailingNewline) {
-        return null;//(DocOpComponent.Retain)DtoClientImpls.RetainImpl.make().setCount(count).setHasTrailingNewline(hasTrailingNewline).setType(RETAIN);
+    public Retain createRetain(int count, boolean hasTrailingNewline) {
+        Retain retain = factory.createDto(Retain.class);
+        retain.setCount(count);
+        retain.setTrailingNewline(hasTrailingNewline);
+        retain.setType(RETAIN);
+        return retain;//(DocOpComponent.Retain)DtoClientImpls.RetainImpl.make().setCount(count).setHasTrailingNewline(hasTrailingNewline)
+        // .setType(RETAIN);
     }
 
     @Override
-    public DocOpComponent.RetainLine createRetainLine(int lineCount) {
-        return null;//(DocOpComponent.RetainLine)DtoClientImpls.RetainLineImpl.make().setLineCount(lineCount).setType(RETAIN_LINE);
+    public RetainLine createRetainLine(int lineCount) {
+        RetainLine retainLine = factory.createDto(RetainLine.class);
+        retainLine.setLineCount(lineCount);
+        retainLine.setType(RETAIN_LINE);
+        return retainLine;//(DocOpComponent.RetainLine)DtoClientImpls.RetainLineImpl.make().setLineCount(lineCount).setType(RETAIN_LINE);
     }
 }

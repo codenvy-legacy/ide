@@ -21,6 +21,7 @@ import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.StringMap.IterationCallback;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.mvp.UiComponent;
 import com.codenvy.ide.text.*;
@@ -96,33 +97,35 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
     private final LeftGutterManager leftGutterManager;
     private final ListenerManager<ReadOnlyListener>  readOnlyListenerManager  = ListenerManager.create();
     private final ListenerManager<TextInputListener> textInputListenerManager = ListenerManager.create();
-    private final EditorActivityManager              editorActivityManager;
-    private final RenderTimeExecutor                 renderTimeExecutor;
-    private final com.codenvy.ide.Resources          resources;
-    private final UserActivityManager                userActivityManager;
-    private final OverviewRuler                      overviewRuller;
-    private       DocumentModel                      textStore;
-    private       UndoManager                        editorUndoManager;
-    private       LocalCursorController              localCursorController;
-    private       Renderer                           renderer;
-    private       SelectionManager                   selectionManager;
-    private       ViewportModel                      viewport;
-    private       boolean                            isReadOnly;
-    private       Document                           document;
-    private       SyntaxHighlighter                  syntaxHighlighter;
-    private       Parser                             parser;
-    private       CodeAssistantImpl                  codeAssistant;
-    private       VerticalRuler                      verticalRuler;
-    private       QuickAssistAssistant               quickAssistAssistant;
-    private       BreakpointGutterManager            breakpointGutterManager;
-    private       StringMap<Array<AutoEditStrategy>> autoEditStrategies;
-    private       String                             documentPartitioning;
+    private final EditorActivityManager     editorActivityManager;
+    private final RenderTimeExecutor        renderTimeExecutor;
+    private final com.codenvy.ide.Resources resources;
+    private final UserActivityManager       userActivityManager;
+    private final OverviewRuler             overviewRuller;
+    private       DocumentModel             textStore;
+    private       UndoManager               editorUndoManager;
+    private       LocalCursorController     localCursorController;
+    private       Renderer                  renderer;
+    private       SelectionManager          selectionManager;
+    private       ViewportModel             viewport;
+    private       boolean                   isReadOnly;
+    private       Document                  document;
+    private       SyntaxHighlighter         syntaxHighlighter;
+    private       Parser                    parser;
+    private       CodeAssistantImpl         codeAssistant;
+    private       VerticalRuler             verticalRuler;
+    private       QuickAssistAssistant      quickAssistAssistant;
+    private       BreakpointGutterManager   breakpointGutterManager;
+    private DtoFactory dtoFactory;
+    private StringMap<Array<AutoEditStrategy>> autoEditStrategies;
+    private String                             documentPartitioning;
 
     public TextEditorViewImpl(com.codenvy.ide.Resources resources, UserActivityManager userActivityManager,
-                              BreakpointGutterManager breakpointGutterManager) {
+                              BreakpointGutterManager breakpointGutterManager, DtoFactory dtoFactory) {
         this.resources = resources;
         this.userActivityManager = userActivityManager;
         this.breakpointGutterManager = breakpointGutterManager;
+        this.dtoFactory = dtoFactory;
         editorFontDimensionsCalculator = FontDimensionsCalculator.get(resources.workspaceEditorCss().editorFont());
         renderTimeExecutor = new RenderTimeExecutor();
         LineDimensionsCalculator lineDimensions = LineDimensionsCalculator.create(editorFontDimensionsCalculator);
@@ -669,7 +672,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         if (annotationModel != null) {
             annotationModel.connect(document);
             verticalRuler.setModel(annotationModel);
-            new AnnotationRenderer(this, annotationModel.getAnnotationDecorations()).setMode(annotationModel);
+            new AnnotationRenderer(this, annotationModel.getAnnotationDecorations(), dtoFactory).setMode(annotationModel);
             overviewRuller.setModel(annotationModel);
         }
     }

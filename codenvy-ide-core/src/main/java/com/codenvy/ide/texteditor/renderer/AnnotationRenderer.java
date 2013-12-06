@@ -19,6 +19,7 @@ package com.codenvy.ide.texteditor.renderer;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.dto.client.ClientDocOpFactory;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.text.BadLocationException;
@@ -52,13 +53,13 @@ public class AnnotationRenderer implements AnnotationModelListener {
     private ErrorRenderer renderer;
 
     /** @param editor */
-    public AnnotationRenderer(TextEditorViewImpl editor, StringMap<String> decorations) {
+    public AnnotationRenderer(TextEditorViewImpl editor, StringMap<String> decorations, DtoFactory dtoFactory) {
         super();
         this.editor = editor;
         this.decorations = decorations;
         renderer = new ErrorRenderer();
         editor.addLineRenderer(renderer);
-        this.positionMigrator = new PositionMigrator(ClientDocOpFactory.INSTANCE);
+        this.positionMigrator = new PositionMigrator(ClientDocOpFactory.getInstance(dtoFactory));
     }
 
     /** {@inheritDoc} */

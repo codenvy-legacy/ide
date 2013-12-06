@@ -25,6 +25,7 @@ import com.codenvy.ide.api.editor.DocumentProvider.DocumentCallback;
 import com.codenvy.ide.api.editor.SelectionProvider;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.debug.BreakpointGutterManager;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.outline.OutlineImpl;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.annotation.AnnotationModel;
@@ -61,13 +62,15 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
     private   UserActivityManager     userActivityManager;
     private   OutlineImpl             outline;
     private   BreakpointGutterManager breakpointGutterManager;
+    private   DtoFactory              dtoFactory;
 
     @Inject
     public TextEditorPresenter(Resources resources, UserActivityManager userActivityManager,
-                               BreakpointGutterManager breakpointGutterManager) {
+                               BreakpointGutterManager breakpointGutterManager, DtoFactory dtoFactory) {
         this.resources = resources;
         this.userActivityManager = userActivityManager;
         this.breakpointGutterManager = breakpointGutterManager;
+        this.dtoFactory = dtoFactory;
     }
 
     /** {@inheritDoc} */
@@ -156,7 +159,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
     public void initialize(@NotNull TextEditorConfiguration configuration, @NotNull DocumentProvider documentProvider,
                            @NotNull NotificationManager notificationManager) {
         super.initialize(configuration, documentProvider, notificationManager);
-        editor = new TextEditorViewImpl(resources, userActivityManager, breakpointGutterManager);
+        editor = new TextEditorViewImpl(resources, userActivityManager, breakpointGutterManager, dtoFactory);
         editor.getTextListenerRegistrar().add(textListener);
     }
 

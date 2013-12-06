@@ -33,4 +33,6 @@ import com.codenvy.ide.collections.Array;
 @DTO
 public interface DocOp {
     Array<DocOpComponent> getComponents();
+
+    void setComponents(Array<DocOpComponent> components);
 }
