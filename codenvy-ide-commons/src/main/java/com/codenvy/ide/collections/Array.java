@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.json;
+package com.codenvy.ide.collections;
 
 import java.util.Comparator;
 
@@ -22,25 +22,25 @@ import java.util.Comparator;
  * When used with DTOs:
  * <p/>
  * On the client it is safe to cast this to a
- * {@link com.codenvy.ide.json.js.JsoArray}.
+ * {@link com.codenvy.ide.collections.js.JsoArray}.
  * <p/>
  * Native to JavaScript "sparse" arrays are not supported.
  * <p/>
  * On the server, this is an instance of
- * {@link com.codenvy.ide.json.java.JsonArrayListAdapter} which
+ * {@link com.codenvy.ide.collections.java.JsonArrayListAdapter} which
  * is a wrapper around a List.
  */
-public interface JsonArray<T> {
+public interface Array<T> {
 
     void add(T item);
 
-    void addAll(JsonArray<? extends T> item);
+    void addAll(Array<? extends T> item);
 
     void clear();
 
     boolean contains(T item);
 
-    JsonArray<T> copy();
+    Array<T> copy();
 
     T get(int index);
 
@@ -75,9 +75,9 @@ public interface JsonArray<T> {
 
     int size();
 
-    JsonArray<T> slice(int start, int end);
+    Array<T> slice(int start, int end);
 
-    JsonArray<T> splice(int index, int deleteCount, T value);
+    Array<T> splice(int index, int deleteCount, T value);
 
-    JsonArray<T> splice(int index, int deleteCount);
+    Array<T> splice(int index, int deleteCount);
 }

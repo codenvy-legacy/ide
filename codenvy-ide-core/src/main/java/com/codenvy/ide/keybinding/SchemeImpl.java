@@ -20,10 +20,10 @@ package com.codenvy.ide.keybinding;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.ui.keybinding.Scheme;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonIntegerMap;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.IntegerMap;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.util.input.CharCodeWithModifiers;
 
 
@@ -37,16 +37,16 @@ public class SchemeImpl implements Scheme {
 
     private String description;
 
-    private JsonIntegerMap<JsonArray<String>> handlers;
+    private IntegerMap<Array<String>> handlers;
 
-    private JsonStringMap<CharCodeWithModifiers> actionId2CharCode;
+    private StringMap<CharCodeWithModifiers> actionId2CharCode;
 
 
     public SchemeImpl(String id, String description) {
         this.id = id;
         this.description = description;
-        handlers = JsonCollections.createIntegerMap();
-        actionId2CharCode = JsonCollections.createStringMap();
+        handlers = Collections.createIntegerMap();
+        actionId2CharCode = Collections.createStringMap();
     }
 
     /** {@inheritDoc} */
@@ -66,7 +66,7 @@ public class SchemeImpl implements Scheme {
     public void addKey(@NotNull CharCodeWithModifiers key, @NotNull String actionId) {
         int digest = key.getKeyDigest();
         if (!handlers.hasKey(digest)) {
-            handlers.put(digest, JsonCollections.<String>createArray());
+            handlers.put(digest, Collections.<String>createArray());
         }
         handlers.get(digest).add(actionId);
         actionId2CharCode.put(actionId, key);
@@ -75,11 +75,11 @@ public class SchemeImpl implements Scheme {
     /** {@inheritDoc} */
     @NotNull
     @Override
-    public JsonArray<String> getActionIds(int digest) {
+    public Array<String> getActionIds(int digest) {
         if (handlers.hasKey(digest)) {
             return handlers.get(digest);
         }
-        return JsonCollections.createArray();
+        return Collections.createArray();
     }
 
     /** {@inheritDoc} */

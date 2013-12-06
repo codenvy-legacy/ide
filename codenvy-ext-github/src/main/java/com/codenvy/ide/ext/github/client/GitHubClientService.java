@@ -22,8 +22,8 @@ import com.codenvy.ide.ext.github.shared.Collaborators;
 import com.codenvy.ide.ext.github.shared.GitHubRepository;
 import com.codenvy.ide.ext.github.shared.GitHubRepositoryList;
 import com.codenvy.ide.ext.github.shared.GitHubUser;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 
@@ -105,7 +105,7 @@ public interface GitHubClientService {
      * 
      * @param callback the callback client has to implement
      */
-    public abstract void getAllRepositories(@NotNull AsyncRequestCallback<JsonStringMap<JsonArray<GitHubRepository>>> callback) throws RequestException;
+    public abstract void getAllRepositories(@NotNull AsyncRequestCallback<StringMap<Array<GitHubRepository>>> callback) throws RequestException;
     
     /**
      * Get the list of the organizations, where authorized user is a member.

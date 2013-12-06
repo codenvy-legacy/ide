@@ -22,7 +22,7 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.ext.tutorials.client.TutorialsClientService;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -37,7 +37,7 @@ import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_N
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS;
 import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.ACTION_TUTORIAL_ID;
 import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.TUTORIAL_PROJECT_TYPE;
-import static com.codenvy.ide.json.JsonCollections.createArray;
+import static com.codenvy.ide.collections.Collections.createArray;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
@@ -67,7 +67,7 @@ public class CreateActionTutorialPage extends AbstractTemplatePage {
     /** {@inheritDoc} */
     @Override
     public void commit(@NotNull final CommitCallback callback) {
-        JsonArray<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
+        Array<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
                                                      new Property(PROPERTY_MIXIN_NATURES,
                                                                   createArray(TUTORIAL_PROJECT_TYPE, CODENVY_EXTENSION_PROJECT_TYPE)),
                                                      new Property(PROPERTY_SOURCE_FOLDERS,

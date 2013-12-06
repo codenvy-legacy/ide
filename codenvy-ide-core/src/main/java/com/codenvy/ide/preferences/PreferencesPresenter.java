@@ -18,8 +18,8 @@
 package com.codenvy.ide.preferences;
 
 import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -36,11 +36,11 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class PreferencesPresenter implements PreferencesView.ActionDelegate, PreferencesPagePresenter.DirtyStateListener {
-    private PreferencesView                     view;
-    private PreferencesPagePresenter            currentPage;
-    private JsonArray<PreferencesPagePresenter> preferences;
-    private boolean                             hasDirtyPage;
-    private PreferencesAgentImpl                agent;
+    private PreferencesView                 view;
+    private PreferencesPagePresenter        currentPage;
+    private Array<PreferencesPagePresenter> preferences;
+    private boolean                         hasDirtyPage;
+    private PreferencesAgentImpl            agent;
 
     /**
      * Create presenter.
@@ -100,8 +100,8 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
     /** Shows preferences. */
     public void showPreferences() {
         if (preferences == null) {
-            JsonArray<Provider<? extends PreferencesPagePresenter>> preferenceProvides = agent.getPreferences();
-            preferences = JsonCollections.createArray();
+            Array<Provider<? extends PreferencesPagePresenter>> preferenceProvides = agent.getPreferences();
+            preferences = Collections.createArray();
             for (Provider<? extends PreferencesPagePresenter> provider : preferenceProvides.asIterable()) {
                 preferences.add(provider.get());
             }

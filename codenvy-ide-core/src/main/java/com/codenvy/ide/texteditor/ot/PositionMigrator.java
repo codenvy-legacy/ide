@@ -14,10 +14,10 @@
 
 package com.codenvy.ide.texteditor.ot;
 
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DocOp;
 import com.codenvy.ide.dto.shared.DocOpFactory;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.LineNumberAndColumn;
 import com.codenvy.ide.text.store.TextChange;
@@ -35,13 +35,13 @@ public class PositionMigrator {
 
     private final DocumentModel.TextListener textListener = new DocumentModel.TextListener() {
         @Override
-        public void onTextChange(DocumentModel document, JsonArray<TextChange> textChanges) {
+        public void onTextChange(DocumentModel document, Array<TextChange> textChanges) {
             PositionMigrator.this.onTextChange(textChanges);
         }
     };
 
     private final DocOpFactory docOpFactory;
-    private final JsonArray<DocOp> appliedDocOps = JsonCollections.createArray();
+    private final Array<DocOp> appliedDocOps = Collections.createArray();
     private ListenerRegistrar.Remover textListenerRemover;
 
     public PositionMigrator(DocOpFactory docOpFactory) {
@@ -127,7 +127,7 @@ public class PositionMigrator {
         }
     }
 
-    private void onTextChange(JsonArray<TextChange> textChanges) {
+    private void onTextChange(Array<TextChange> textChanges) {
         try {
             appliedDocOps.add(DocOpUtils.createFromTextChanges(docOpFactory, textChanges));
         } catch (Composer.ComposeException e) {

@@ -7,9 +7,9 @@ import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.codenvy.ide.tutorial.wizard.newproject.pages.paas.PaasPageProvider;
 import com.codenvy.ide.tutorial.wizard.newproject.pages.page.PageProvider;
@@ -44,35 +44,35 @@ public class NewProjectWizardTutorialExtension {
                                   MY_PROJECT_TYPE,
                                   null,
                                   MY_PROJECT_TYPE,
-                                  JsonCollections.<String>createArray());
+                                  Collections.<String>createArray());
 
         templateAgent.register(MY_TEMPLATE_1,
                                MY_TEMPLATE_1,
                                null,
                                MY_PROJECT_TYPE,
-                               JsonCollections.<String>createArray(),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(
+                               Collections.<String>createArray(),
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(
                                        new TemplatePageProvider("Template 1 page", MY_TEMPLATE_1)));
         templateAgent.register(MY_TEMPLATE_2,
                                MY_TEMPLATE_2,
                                null,
                                MY_PROJECT_TYPE,
-                               JsonCollections.<String>createArray(),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(
+                               Collections.<String>createArray(),
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(
                                        new TemplatePageProvider("Template 2 page", MY_TEMPLATE_2)));
 
-        JsonStringMap<JsonArray<String>> natures = JsonCollections.createStringMap();
-        natures.put(MY_PROJECT_TYPE, JsonCollections.<String>createArray());
+        StringMap<Array<String>> natures = Collections.createStringMap();
+        natures.put(MY_PROJECT_TYPE, Collections.<String>createArray());
 
-        JsonArray<Provider<? extends AbstractPaasPage>> wizardPages = JsonCollections.createArray();
+        Array<Provider<? extends AbstractPaasPage>> wizardPages = Collections.createArray();
         wizardPages.add(new PaasPageProvider("PaaS 1 page", MY_PAAS_1));
 
         paasAgent.register(MY_PAAS_1, MY_PAAS_1, null, natures, wizardPages, false);
 
-        JsonStringMap<JsonArray<String>> natures2 = JsonCollections.createStringMap();
-        natures2.put(MY_PROJECT_TYPE, JsonCollections.<String>createArray());
+        StringMap<Array<String>> natures2 = Collections.createStringMap();
+        natures2.put(MY_PROJECT_TYPE, Collections.<String>createArray());
 
-        JsonArray<Provider<? extends AbstractPaasPage>> wizardPages2 = JsonCollections.createArray();
+        Array<Provider<? extends AbstractPaasPage>> wizardPages2 = Collections.createArray();
         wizardPages2.add(new PaasPageProvider("PaaS 2 page", MY_PAAS_2));
 
         paasAgent.register(MY_PAAS_2, MY_PAAS_2, null, natures2, wizardPages2, false);

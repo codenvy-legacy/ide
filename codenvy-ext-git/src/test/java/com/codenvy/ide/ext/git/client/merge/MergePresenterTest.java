@@ -18,13 +18,12 @@
 package com.codenvy.ide.ext.git.client.merge;
 
 import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.MergeResult;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
@@ -38,7 +37,6 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 
 import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_LOCAL;
 import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_REMOTE;
@@ -72,7 +70,7 @@ public class MergePresenterTest extends BaseTest {
     @Ignore
     public void testShowDialogWhenAllOperationsAreSuccessful() throws Exception {
         // TODO problem with DTO
-        final JsonArray<Branch> branches = JsonCollections.createArray();
+        final Array<Branch> branches = Collections.createArray();
         branches.add(mock(Branch.class));
 
         doAnswer(new Answer() {
@@ -103,8 +101,8 @@ public class MergePresenterTest extends BaseTest {
         verify(view).showDialog();
         verify(service).branchList(eq(VFS_ID), eq(PROJECT_ID), eq(LIST_LOCAL), (AsyncRequestCallback<String>)anyObject());
         verify(service).branchList(eq(VFS_ID), eq(PROJECT_ID), eq(LIST_REMOTE), (AsyncRequestCallback<String>)anyObject());
-        verify(view).setRemoteBranches((JsonArray<Reference>)anyObject());
-        verify(view).setLocalBranches((JsonArray<Reference>)anyObject());
+        verify(view).setRemoteBranches((Array<Reference>)anyObject());
+        verify(view).setLocalBranches((Array<Reference>)anyObject());
         verify(eventBus, never()).fireEvent((ExceptionThrownEvent)anyObject());
         verify(notificationManager, never()).showNotification((Notification)anyObject());
     }

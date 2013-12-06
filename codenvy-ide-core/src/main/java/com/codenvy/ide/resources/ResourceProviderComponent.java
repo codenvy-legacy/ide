@@ -21,10 +21,15 @@ import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.IntegerMap;
+import com.codenvy.ide.collections.StringMap;
+import com.codenvy.ide.collections.StringSet;
 import com.codenvy.ide.core.Component;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.json.*;
-import com.codenvy.ide.json.JsonIntegerMap.IterationCallback;
+import com.codenvy.ide.collections.IntegerMap.IterationCallback;
 import com.codenvy.ide.resources.marshal.*;
 import com.codenvy.ide.resources.model.*;
 import com.codenvy.ide.rest.AsyncRequest;
@@ -56,13 +61,13 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     /** Used for compatibility with IDE-VFS 1.x */
     private static final String DEPRECATED_PROJECT_TYPE = "deprecated.project.type";
     /** Fully qualified URL to root folder of VFS */
-    private final   String                       workspaceURL;
-    private         Loader                       loader;
-    private final   JsonStringMap<ModelProvider> modelProviders;
-    private final   JsonStringMap<ProjectNature> natures;
-    private final   JsonIntegerMap<FileType>     fileTypes;
-    protected       VirtualFileSystemInfo        vfsInfo;
-    protected final ModelProvider                genericModelProvider;
+    private final   String                   workspaceURL;
+    private         Loader                   loader;
+    private final   StringMap<ModelProvider> modelProviders;
+    private final   StringMap<ProjectNature> natures;
+    private final   IntegerMap<FileType>     fileTypes;
+    protected       VirtualFileSystemInfo    vfsInfo;
+    protected final ModelProvider            genericModelProvider;
     @SuppressWarnings("unused")
     private boolean initialized = false;
     private       Project  activeProject;
@@ -84,9 +89,9 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         this.eventBus = eventBus;
         this.defaultFile = defaultFile;
         this.workspaceURL = restContext + '/' + Utils.getWorkspaceName() + "/vfs/v2";
-        this.modelProviders = JsonCollections.<ModelProvider>createStringMap();
-        this.natures = JsonCollections.<ProjectNature>createStringMap();
-        this.fileTypes = JsonCollections.createIntegerMap();
+        this.modelProviders = Collections.<ModelProvider>createStringMap();
+        this.natures = Collections.<ProjectNature>createStringMap();
+        this.fileTypes = Collections.createIntegerMap();
         this.loader = loader;
     }
 
@@ -176,12 +181,12 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
 
     /** {@inheritDoc} */
     @Override
-    public void listProjects(final AsyncCallback<JsonArray<String>> callback) {
+    public void listProjects(final AsyncCallback<Array<String>> callback) {
         // internal callback
-        AsyncRequestCallback<JsonArray<String>> internalCallback =
-                new AsyncRequestCallback<JsonArray<String>>(new ChildNamesUnmarshaller()) {
+        AsyncRequestCallback<Array<String>> internalCallback =
+                new AsyncRequestCallback<Array<String>>(new ChildNamesUnmarshaller()) {
                     @Override
-                    protected void onSuccess(JsonArray<String> result) {
+                    protected void onSuccess(Array<String> result) {
                         callback.onSuccess(result);
                     }
 
@@ -204,7 +209,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
 
     /** {@inheritDoc} */
     @Override
-    public void createProject(String name, JsonArray<Property> properties, final AsyncCallback<Project> callback) {
+    public void createProject(String name, Array<Property> properties, final AsyncCallback<Project> callback) {
         final Folder rootFolder = vfsInfo.getRoot();
 
         // create internal wrapping Request Callback with proper Unmarshaller
@@ -352,10 +357,10 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
             throw new IllegalStateException("Can't set primary nature in runtime");
         }
 
-        JsonStringSet natureCategories = nature.getNatureCategories();
-        JsonStringSet requiredNatureIds = nature.getRequiredNatureIds();
+        StringSet natureCategories = nature.getNatureCategories();
+        StringSet requiredNatureIds = nature.getRequiredNatureIds();
 
-        JsonStringSet appliedNatureIds = project.getDescription().getNatures();
+        StringSet appliedNatureIds = project.getDescription().getNatures();
         // checj already applied
         if (appliedNatureIds.contains(nature.getNatureId())) {
             throw new IllegalStateException("Nature aready applied");
@@ -392,8 +397,8 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     public FileType getFileType(File file) {
         String mimeType = file.getMimeType();
         final String name = file.getName();
-        final JsonArray<FileType> filtered = JsonCollections.createArray();
-        final JsonArray<FileType> nameMatch = JsonCollections.createArray();
+        final Array<FileType> filtered = Collections.createArray();
+        final Array<FileType> nameMatch = Collections.createArray();
         fileTypes.iterate(new IterationCallback<FileType>() {
 
             @Override
@@ -512,9 +517,9 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         final Folder rootFolder = vfsInfo.getRoot();
         rootFolder.getChildren().clear();
 
-        listProjects(new AsyncCallback<JsonArray<String>>() {
+        listProjects(new AsyncCallback<Array<String>>() {
             @Override
-            public void onSuccess(JsonArray<String> result) {
+            public void onSuccess(Array<String> result) {
                 for (String projectName : result.asIterable()) {
                     Project project = new Project(eventBus);
                     project.setName(projectName);

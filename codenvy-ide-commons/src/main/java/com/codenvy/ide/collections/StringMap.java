@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.json;
+package com.codenvy.ide.collections;
 
 /**
  * String Map interface for use in DTOs.
  * <p/>
  * On the client it is safe to cast this to a
- * {@link com.codenvy.ide.json.js.Jso}.
+ * {@link com.codenvy.ide.commons.Jso}.
  * <p/>
  * On the server this is an instance of a wrapper object
- * {@link com.codenvy.ide.json.java.JsonStringMapAdapter}.
+ * {@link com.codenvy.ide.collections.java.JsonStringMapAdapter}.
  */
-public interface JsonStringMap<T> {
+public interface StringMap<T> {
     /**
      * Callback to support iterating through the fields on this map.
      *
@@ -35,7 +35,7 @@ public interface JsonStringMap<T> {
 
     T get(String key);
 
-    JsonArray<String> getKeys();
+    Array<String> getKeys();
 
     boolean isEmpty();
 
@@ -43,7 +43,7 @@ public interface JsonStringMap<T> {
 
     void put(String key, T value);
 
-    void putAll(JsonStringMap<T> otherMap);
+    void putAll(StringMap<T> otherMap);
 
     /** Removes the item with the given key, and returns it. */
     T remove(String key);
@@ -57,5 +57,5 @@ public interface JsonStringMap<T> {
      *
      * @return a snapshot of the values contained in the map
      */
-    JsonArray<T> getValues();
+    Array<T> getValues();
 }

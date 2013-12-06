@@ -22,9 +22,9 @@ import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.tutorials.client.action.ShowTutorialGuideAction;
 import com.codenvy.ide.ext.tutorials.client.template.*;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -83,58 +83,58 @@ public class TutorialsExtension {
                                   "Codenvy tutorial",
                                   resources.codenvyTutorialProject(),
                                   PRIMARY_NATURE,
-                                  JsonCollections.<String>createArray(TUTORIAL_PROJECT_TYPE));
+                                  Collections.<String>createArray(TUTORIAL_PROJECT_TYPE));
 
         // register templates
         templateAgent.register(NOTIFICATION_TUTORIAL_ID,
                                "Notification API tutorial.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
-                               JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createNotificationTutorialPage));
+                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createNotificationTutorialPage));
         templateAgent.register(ACTION_TUTORIAL_ID,
                                "Action API tutorial.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
-                               JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createActionTutorialPage));
+                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createActionTutorialPage));
         templateAgent.register(WIZARD_TUTORIAL_ID,
                                "Wizard API tutorial.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
-                               JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createWizardTutorialPageProvider));
+                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createWizardTutorialPageProvider));
         templateAgent.register(NEW_PROJECT_WIZARD_TUTORIAL_ID,
                                "New project wizard tutorial.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
-                               JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(
+                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(
                                        createNewProjectWizardTutorialPageProvider));
         templateAgent.register(NEW_RESOURCE_WIZARD_TUTORIAL_ID,
                                "New resource wizard tutorial.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
-                               JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(
+                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(
                                        createNewResourceWizardTutorialPageProvider));
         templateAgent.register(PARTS_TUTORIAL_ID,
                                "Part API tutorial.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
-                               JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createPartsTutorialPageProvider));
+                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createPartsTutorialPageProvider));
         templateAgent.register(EDITOR_TUTORIAL_ID,
                                "Editor API tutorial.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
-                               JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createEditorTutorialPageProvider));
+                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createEditorTutorialPageProvider));
         templateAgent.register(GIN_TUTORIAL_ID,
                                "GIN (GWT Injection) tutorial.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
-                               JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createGinTutorialPageProvider));
+                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createGinTutorialPageProvider));
     }
 }

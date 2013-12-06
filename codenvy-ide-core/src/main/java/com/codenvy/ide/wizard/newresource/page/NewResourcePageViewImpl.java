@@ -24,7 +24,7 @@ import elemental.html.TableElement;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.list.SimpleList.View;
 import com.codenvy.ide.util.dom.Elements;
@@ -139,7 +139,7 @@ public class NewResourcePageViewImpl extends Composite implements NewResourcePag
 
     /** {@inheritDoc} */
     @Override
-    public void setResourceWizard(@NotNull JsonArray<NewResourceProvider> resources) {
+    public void setResourceWizard(@NotNull Array<NewResourceProvider> resources) {
         list.render(resources);
     }
 

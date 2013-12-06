@@ -19,7 +19,7 @@ package com.codenvy.ide.wizard.newproject.pages.template;
 
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.template.Template;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 
 /**
  * The view of {@link ChooseTemplatePagePresenter}.
@@ -42,7 +42,7 @@ public interface ChooseTemplatePageView extends View<ChooseTemplatePageView.Acti
      *
      * @param templates
      */
-    void setTemplates(JsonArray<Template> templates);
+    void setTemplates(Array<Template> templates);
 
     void selectItem(Template template);
 }

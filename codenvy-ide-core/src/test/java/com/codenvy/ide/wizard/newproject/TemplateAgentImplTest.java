@@ -19,8 +19,8 @@ package com.codenvy.ide.wizard.newproject;
 
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.google.inject.Provider;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
@@ -52,29 +52,29 @@ public class TemplateAgentImplTest extends GwtTestWithMockito {
     @SuppressWarnings("unchecked")
     @Test
     public void testRegister() throws Exception {
-        assertEquals(agent.getTemplatesForProjectType("primaryNature", JsonCollections.createArray("secondaryNature")).size(), 0);
+        assertEquals(agent.getTemplatesForProjectType("primaryNature", Collections.createArray("secondaryNature")).size(), 0);
 
         Provider<? extends AbstractTemplatePage> pageProvider = mock(Provider.class);
-        JsonArray<Provider<? extends AbstractTemplatePage>> pages = JsonCollections.createArray(pageProvider, pageProvider);
+        Array<Provider<? extends AbstractTemplatePage>> pages = Collections.createArray(pageProvider, pageProvider);
 
-        agent.register("id", "title", null, "primaryNature", JsonCollections.createArray("secondaryNature"), pages);
+        agent.register("id", "title", null, "primaryNature", Collections.createArray("secondaryNature"), pages);
 
-        assertEquals(agent.getTemplatesForProjectType("primaryNature", JsonCollections.createArray("secondaryNature")).size(), 1);
+        assertEquals(agent.getTemplatesForProjectType("primaryNature", Collections.createArray("secondaryNature")).size(), 1);
         verify(newProjectWizard, times(pages.size())).addPageAfterChooseTemplate(eq(pageProvider));
     }
 
     @Test
     public void testRegisterWhenTemplateWithGivenIdIsExist() throws Exception {
-        assertEquals(agent.getTemplatesForProjectType("primaryNature", JsonCollections.createArray("secondaryNature")).size(), 0);
+        assertEquals(agent.getTemplatesForProjectType("primaryNature", Collections.createArray("secondaryNature")).size(), 0);
 
-        agent.register("id", "title", null, "primaryNature", JsonCollections.createArray("secondaryNature"),
-                       JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray());
+        agent.register("id", "title", null, "primaryNature", Collections.createArray("secondaryNature"),
+                       Collections.<Provider<? extends AbstractTemplatePage>>createArray());
 
-        assertEquals(agent.getTemplatesForProjectType("primaryNature", JsonCollections.createArray("secondaryNature")).size(), 1);
+        assertEquals(agent.getTemplatesForProjectType("primaryNature", Collections.createArray("secondaryNature")).size(), 1);
 
-        agent.register("id", "title", null, "primaryNature", JsonCollections.createArray("secondaryNature"),
-                       JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray());
+        agent.register("id", "title", null, "primaryNature", Collections.createArray("secondaryNature"),
+                       Collections.<Provider<? extends AbstractTemplatePage>>createArray());
 
-        assertEquals(agent.getTemplatesForProjectType("primaryNature", JsonCollections.createArray("secondaryNature")).size(), 1);
+        assertEquals(agent.getTemplatesForProjectType("primaryNature", Collections.createArray("secondaryNature")).size(), 1);
     }
 }

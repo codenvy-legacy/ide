@@ -14,7 +14,7 @@
 
 package com.codenvy.ide.texteditor.syntaxhighlighter;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
@@ -45,7 +45,7 @@ public class SyntaxHighlighterRenderer implements LineRenderer {
 
     private final SyntaxHighlighter syntaxHighlighter;
 
-    private JsonArray<Token> tokens;
+    private Array<Token> tokens;
 
     private int tokenPos;
 

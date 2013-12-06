@@ -25,7 +25,7 @@ import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.ext.extensions.client.ExtRuntimeClientService;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -97,7 +97,7 @@ public class CreateEmptyCodenvyExtensionPageTest {
                 return callback;
             }
         }).when(resourceProvider)
-                .createProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
+                .createProject(anyString(), (Array<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
 
         page.commit(callback);
 
@@ -116,7 +116,7 @@ public class CreateEmptyCodenvyExtensionPageTest {
                 return callback;
             }
         }).when(resourceProvider)
-                .createProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
+                .createProject(anyString(), (Array<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
 
         page.commit(callback);
 

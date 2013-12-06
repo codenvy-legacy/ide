@@ -44,8 +44,8 @@ import com.codenvy.ide.ext.java.client.wizard.NewClassProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewEnumProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewInterfaceProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewPackageProvider;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
@@ -66,7 +66,7 @@ import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
-import static com.codenvy.ide.json.JsonCollections.createArray;
+import static com.codenvy.ide.collections.Collections.createArray;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -156,32 +156,32 @@ public class JavaExtension {
                                null,
                                PRIMARY_NATURE,
                                createArray(JAVA_WEB_APPLICATION_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenWarProjectPage));
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenWarProjectPage));
         templateAgent.register(JAR_PROJECT_ID,
                                "Java project",
                                JavaResources.INSTANCE.javaProject(),
                                PRIMARY_NATURE,
                                createArray(JAVA_APPLICATION_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenJavaProjectPage));
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenJavaProjectPage));
         templateAgent.register(SPRING_PROJECT_ID,
                                "Spring project",
                                JavaResources.INSTANCE.javaProject(),
                                PRIMARY_NATURE,
                                createArray(SPRING_APPLICATION_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenSpringProjectPage));
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenSpringProjectPage));
 
         templateAgent.register(ANT_JAR_PROJECT_ID,
                                "Ant Java project",
                                JavaResources.INSTANCE.javaProject(),
                                PRIMARY_NATURE,
                                createArray(JAVA_APPLICATION_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createAntJavaProjectPage));
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createAntJavaProjectPage));
         templateAgent.register(ANT_SPRING_PROJECT_ID,
                                "Ant Spring project",
                                JavaResources.INSTANCE.javaProject(),
                                PRIMARY_NATURE,
                                createArray(SPRING_APPLICATION_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createAntSpringProjectPage));
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createAntSpringProjectPage));
 
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
@@ -218,7 +218,7 @@ public class JavaExtension {
 
     public void updateDependencies() {
         Project project = resourceProvider.getActiveProject();
-        JsonArray<Resource> children = project.getChildren();
+        Array<Resource> children = project.getChildren();
         if (!children.isEmpty() && hasPomFile(children)) {
             String projectId = project.getId();
             String vfsId = resourceProvider.getVfsId();
@@ -252,7 +252,7 @@ public class JavaExtension {
         }
     }
 
-    private boolean hasPomFile(@NotNull JsonArray<Resource> children) {
+    private boolean hasPomFile(@NotNull Array<Resource> children) {
         for (Resource child : children.asIterable()) {
             if (child instanceof File && "pom.xml".equals(child.getName())) {
                 return true;

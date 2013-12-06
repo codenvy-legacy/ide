@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.websocket.rest;
 
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.AsyncRequestLoader;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.HTTPStatus;
@@ -136,7 +136,7 @@ public abstract class RequestCallback<T> {
             successCodes = DEFAULT_SUCCESS_CODES;
         }
 
-        JsonArray<Pair> headers = response.getHeaders();
+        Array<Pair> headers = response.getHeaders();
         for (int i = 0; i < headers.size(); i++) {
             Pair header = headers.get(i);
             if (HTTPHeader.JAXRS_BODY_PROVIDED.equals(header.getName()) && "Authentication-required".equals(header.getValue())) {

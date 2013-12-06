@@ -21,8 +21,8 @@ import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.html.Element;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Position;
@@ -55,14 +55,14 @@ public class VerticalRuler {
     private       AnnotationModel    model;
     private       Remover            remover;
     private       InternalListener   listener;
-    private       JsonArray<Mark>    elements;
+    private       Array<Mark>        elements;
 
     /** @param leftNotificationGutter */
     public VerticalRuler(Gutter leftNotificationGutter, TextEditorViewImpl editor) {
         this.view = leftNotificationGutter;
         this.editor = editor;
         listener = new InternalListener();
-        elements = JsonCollections.createArray();
+        elements = Collections.createArray();
         view.getClickListenerRegistrar().add(new ClickListener() {
 
             @Override
@@ -84,7 +84,7 @@ public class VerticalRuler {
     }
 
     private void showToolTip(Mark mark) {
-        JsonArray<String> messages = JsonCollections.createArray();
+        Array<String> messages = Collections.createArray();
         for (Mark m : elements.asIterable()) {
             if (m.lineNumber == mark.lineNumber) {
                 messages.add(m.annotation.getText());
@@ -148,7 +148,7 @@ public class VerticalRuler {
      *         the messages to format (element type: {@link String})
      * @return the formatted message
      */
-    protected String[] formatMultipleMessages(JsonArray<String> messages) {
+    protected String[] formatMultipleMessages(Array<String> messages) {
         String[] message = new String[messages.size() + 1];
         message[0] = "Multiple markers at this line";
         for (int i = 0; i < messages.size(); i++) {

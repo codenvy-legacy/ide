@@ -18,7 +18,7 @@
 package com.codenvy.ide.api.resources;
 
 import com.codenvy.ide.api.extension.SDK;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.*;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -63,7 +63,7 @@ public interface ResourceProvider {
      * @param properties
      * @param callback
      */
-    public void createProject(String name, JsonArray<Property> properties, AsyncCallback<Project> callback);
+    public void createProject(String name, Array<Property> properties, AsyncCallback<Project> callback);
 
 
     /**
@@ -71,7 +71,7 @@ public interface ResourceProvider {
      *
      * @param callback
      */
-    public void listProjects(AsyncCallback<JsonArray<String>> callback);
+    public void listProjects(AsyncCallback<Array<String>> callback);
 
     /**
      * Reads already stored projects and shows them in project explorer.

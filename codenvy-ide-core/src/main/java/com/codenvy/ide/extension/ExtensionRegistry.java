@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.extension;
 
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 
 /**
  * Provides information about Extensions, their description, version and the list of dependencies.
@@ -33,6 +33,6 @@ public interface ExtensionRegistry {
      *
      * @return
      */
-    public JsonStringMap<ExtensionDescription> getExtensionDescriptions();
+    public StringMap<ExtensionDescription> getExtensionDescriptions();
 
 }

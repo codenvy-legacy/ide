@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.json.java;
+package com.codenvy.ide.collections.java;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonArrayIterator;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.ArrayIterator;
 
 import java.util.*;
 
 /** Wraps a {@link java.util.List} for use on the server. */
-public class JsonArrayListAdapter<T> implements JsonArray<T> {
+public class JsonArrayListAdapter<T> implements Array<T> {
 
     private final List<T> delegate;
 
@@ -34,7 +34,7 @@ public class JsonArrayListAdapter<T> implements JsonArray<T> {
     }
 
     @Override
-    public void addAll(JsonArray<? extends T> array) {
+    public void addAll(Array<? extends T> array) {
         for (int i = 0; i < array.size(); i++) {
             add(array.get(i));
         }
@@ -63,7 +63,7 @@ public class JsonArrayListAdapter<T> implements JsonArray<T> {
     }
 
     @Override
-    public JsonArray<T> copy() {
+    public Array<T> copy() {
         return new JsonArrayListAdapter<T>(new ArrayList<T>(delegate));
     }
 
@@ -120,9 +120,9 @@ public class JsonArrayListAdapter<T> implements JsonArray<T> {
     }
 
     @Override
-    public JsonArray<T> slice(int start, int end) {
+    public Array<T> slice(int start, int end) {
 
-        JsonArray<T> sliced = new JsonArrayListAdapter<T>(new ArrayList<T>());
+        Array<T> sliced = new JsonArrayListAdapter<T>(new ArrayList<T>());
         for (int i = start; i < end && i < size(); i++) {
             sliced.add(get(i));
         }
@@ -136,17 +136,17 @@ public class JsonArrayListAdapter<T> implements JsonArray<T> {
     }
 
     @Override
-    public JsonArray<T> splice(int index, int deleteCount) {
+    public Array<T> splice(int index, int deleteCount) {
         return spliceImpl(index, deleteCount, false, null);
     }
 
     @Override
-    public JsonArray<T> splice(int index, int deleteCount, T value) {
+    public Array<T> splice(int index, int deleteCount, T value) {
         return spliceImpl(index, deleteCount, true, value);
     }
 
-    private JsonArray<T> spliceImpl(int index, int deleteCount, boolean hasValue, T value) {
-        JsonArray<T> removedArray = new JsonArrayListAdapter<T>(new ArrayList<T>());
+    private Array<T> spliceImpl(int index, int deleteCount, boolean hasValue, T value) {
+        Array<T> removedArray = new JsonArrayListAdapter<T>(new ArrayList<T>());
         for (int i = deleteCount; i > 0; i--) {
             removedArray.add(remove(index));
         }
@@ -194,7 +194,7 @@ public class JsonArrayListAdapter<T> implements JsonArray<T> {
         return new Iterable<T>() {
             @Override
             public Iterator<T> iterator() {
-                return new JsonArrayIterator<T>(JsonArrayListAdapter.this);
+                return new ArrayIterator<T>(JsonArrayListAdapter.this);
             }
         };
     }

@@ -29,8 +29,8 @@ import com.codenvy.ide.ext.java.jdt.core.compiler.CategorizedProblem;
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
 import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
 import com.codenvy.ide.ext.java.jdt.internal.ui.text.FastJavaPartitionScanner;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentFactory;
@@ -393,8 +393,8 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
 
         /** {@inheritDoc} */
         @Override
-        public JsonStringMap<String> getAnnotationDecorations() {
-            JsonStringMap<String> decorations = JsonCollections.createStringMap();
+        public StringMap<String> getAnnotationDecorations() {
+            StringMap<String> decorations = Collections.createStringMap();
             //TODO configure this
             decorations.put("org.eclipse.jdt.ui.error", css.lineError());
             decorations.put("org.eclipse.jdt.ui.warning", css.lineWarning());
@@ -404,8 +404,8 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
 
         /** {@inheritDoc} */
         @Override
-        public JsonStringMap<String> getAnnotationStyle() {
-            JsonStringMap<String> decorations = JsonCollections.createStringMap();
+        public StringMap<String> getAnnotationStyle() {
+            StringMap<String> decorations = Collections.createStringMap();
 //            //TODO configure this
             decorations.put("org.eclipse.jdt.ui.error", javaCss.overviewMarkError());
             decorations.put("org.eclipse.jdt.ui.warning", javaCss.overviewMarkWarning());

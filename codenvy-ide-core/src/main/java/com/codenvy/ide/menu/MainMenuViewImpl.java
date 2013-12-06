@@ -25,8 +25,8 @@ import com.codenvy.ide.api.ui.action.ActionPlaces;
 import com.codenvy.ide.api.ui.action.IdeActions;
 import com.codenvy.ide.api.ui.action.Presentation;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.toolbar.ActionSelectedHandler;
 import com.codenvy.ide.toolbar.CloseMenuHandler;
 import com.codenvy.ide.toolbar.MenuLockLayer;
@@ -59,8 +59,8 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
     }
 
     private final MenuItemPresentationFactory presentationFactory;
-    private       JsonArray<Action>           newVisibleActions;
-    private       JsonArray<Action>           visibleActions;
+    private       Array<Action>               newVisibleActions;
+    private       Array<Action>               visibleActions;
     private       ActionManager               actionManager;
     private       KeyBindingAgent             keyBindingAgent;
     /** Panel, which contains top menu. */
@@ -98,8 +98,8 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
         table.setCellSpacing(0);
         DOM.setElementAttribute(table.getElement(), "border", "0");
         absolutePanel.add(table);
-        visibleActions = JsonCollections.createArray();
-        newVisibleActions = JsonCollections.createArray();
+        visibleActions = Collections.createArray();
+        newVisibleActions = Collections.createArray();
         presentationFactory = new MenuItemPresentationFactory();
     }
 
@@ -130,7 +130,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
             // should rebuild UI
             final boolean changeBarVisibility = newVisibleActions.isEmpty() || visibleActions.isEmpty();
 
-            final JsonArray<Action> temp = visibleActions;
+            final Array<Action> temp = visibleActions;
             visibleActions = newVisibleActions;
             newVisibleActions = temp;
 
@@ -148,7 +148,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
         action2barItem.clear();
     }
 
-    private void expandActionGroup(final JsonArray<Action> newVisibleActions, ActionManager actionManager) {
+    private void expandActionGroup(final Array<Action> newVisibleActions, ActionManager actionManager) {
         final ActionGroup mainActionGroup = (ActionGroup)actionManager
                 .getAction(IdeActions.GROUP_MAIN_MENU); //CustomActionsSchema.getInstance().getCorrectedAction(IdeActions.GROUP_MAIN_MENU);
         if (mainActionGroup == null) return;

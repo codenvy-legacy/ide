@@ -21,6 +21,9 @@
 package com.codenvy.ide.ext.java.messages.impl;
 
 
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.js.JsoArray;
+import com.codenvy.ide.ext.java.messages.Problem;
 
 @SuppressWarnings({"unchecked", "cast"})
 public class MessagesImpls {
@@ -58,11 +61,11 @@ public class MessagesImpls {
     protected CAProposalsComputedMessageImpl() {}
 
     @Override
-    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.java.messages.WorkerProposal> proposals() /*-{
+    public final native com.codenvy.ide.collections.Array<com.codenvy.ide.ext.java.messages.WorkerProposal> proposals() /*-{
       return this["proposals"];
     }-*/;
 
-    public final native CAProposalsComputedMessageImpl setProposals(com.codenvy.ide.json.js.JsoArray<com.codenvy.ide.ext.java.messages.WorkerProposal> proposals) /*-{
+    public final native CAProposalsComputedMessageImpl setProposals(com.codenvy.ide.collections.js.JsoArray<com.codenvy.ide.ext.java.messages.WorkerProposal> proposals) /*-{
       this["proposals"] = proposals;
       return this;
     }-*/;
@@ -414,11 +417,11 @@ public class MessagesImpls {
     }-*/;
 
     @Override
-    public final native com.codenvy.ide.json.JsonArray<java.lang.String> stringArguments() /*-{
+    public final native Array<String> stringArguments() /*-{
       return this[3];
     }-*/;
 
-    public final native ProblemImpl setStringArguments(com.codenvy.ide.json.js.JsoArray<java.lang.String> stringArguments) /*-{
+    public final native ProblemImpl setStringArguments(JsoArray<String> stringArguments) /*-{
       this[3] = stringArguments;
       return this;
     }-*/;
@@ -506,11 +509,11 @@ public class MessagesImpls {
     protected ProblemsMessageImpl() {}
 
     @Override
-    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.java.messages.Problem> problems() /*-{
+    public final native Array<Problem> problems() /*-{
       return this["problems"];
     }-*/;
 
-    public final native ProblemsMessageImpl setProblems(com.codenvy.ide.json.js.JsoArray<com.codenvy.ide.ext.java.messages.Problem> problems) /*-{
+    public final native ProblemsMessageImpl setProblems(JsoArray<Problem> problems) /*-{
       this["problems"] = problems;
       return this;
     }-*/;
@@ -558,11 +561,11 @@ public class MessagesImpls {
     }-*/;
 
     @Override
-    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.java.messages.Change> changes() /*-{
+    public final native com.codenvy.ide.collections.Array<com.codenvy.ide.ext.java.messages.Change> changes() /*-{
       return this["changes"];
     }-*/;
 
-    public final native ProposalAppliedMessageImpl setChanges(com.codenvy.ide.json.js.JsoArray<com.codenvy.ide.ext.java.messages.Change> changes) /*-{
+    public final native ProposalAppliedMessageImpl setChanges(com.codenvy.ide.collections.js.JsoArray<com.codenvy.ide.ext.java.messages.Change> changes) /*-{
       this["changes"] = changes;
       return this;
     }-*/;

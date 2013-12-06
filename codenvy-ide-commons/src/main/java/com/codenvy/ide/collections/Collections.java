@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.json;
+package com.codenvy.ide.collections;
 
 import com.codenvy.ide.annotations.Nullable;
-import com.codenvy.ide.json.java.JsonArrayListAdapter;
-import com.codenvy.ide.json.java.JsonIntegerMapAdapter;
-import com.codenvy.ide.json.java.JsonStringMapAdapter;
-import com.codenvy.ide.json.java.JsonStringSetAdapter;
-import com.codenvy.ide.json.js.Jso;
-import com.codenvy.ide.json.js.JsoArray;
-import com.codenvy.ide.json.js.JsoIntegerMap;
-import com.codenvy.ide.json.js.JsoStringMap;
-import com.codenvy.ide.json.js.JsoStringSet;
+import com.codenvy.ide.collections.java.JsonIntegerMapAdapter;
+import com.codenvy.ide.commons.Jso;
+import com.codenvy.ide.collections.js.JsoStringSet;
+import com.codenvy.ide.collections.java.JsonArrayListAdapter;
+import com.codenvy.ide.collections.java.JsonStringMapAdapter;
+import com.codenvy.ide.collections.java.JsonStringSetAdapter;
+import com.codenvy.ide.collections.js.JsoArray;
+import com.codenvy.ide.collections.js.JsoIntegerMap;
+import com.codenvy.ide.collections.js.JsoStringMap;
 import com.google.gwt.core.client.GWT;
 
 import java.util.ArrayList;
@@ -32,36 +32,36 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 /** A set of static factory methods for lightweight collections. */
-public final class JsonCollections {
+public final class Collections {
 
     public interface Implementation {
-        <T> JsonArray<T> createArray();
+        <T> Array<T> createArray();
 
-        <T> JsonStringMap<T> createStringMap();
+        <T> StringMap<T> createStringMap();
 
-        <T> JsonIntegerMap<T> createIntegerMap();
+        <T> IntegerMap<T> createIntegerMap();
 
-        JsonStringSet createStringSet();
+        StringSet createStringSet();
     }
 
     // If running in pure java (server code or tests) or in dev mode, use the pure java impl
     private static Implementation implementation = GWT.isClient() || !GWT.isScript() ? new PureJavaImplementation()
                                                                                      : new NativeImplementation();
 
-    public static <T> JsonArray<T> createArray() {
+    public static <T> Array<T> createArray() {
         return implementation.createArray();
     }
 
-    public static <T> JsonStringMap<T> createStringMap() {
+    public static <T> StringMap<T> createStringMap() {
         return implementation.createStringMap();
     }
 
-    public static <T> JsonIntegerMap<T> createIntegerMap() {
+    public static <T> IntegerMap<T> createIntegerMap() {
         return implementation.createIntegerMap();
     }
 
-    public static <T> JsonArray<T> createArray(T... items) {
-        JsonArray<T> array = createArray();
+    public static <T> Array<T> createArray(T... items) {
+        Array<T> array = createArray();
         for (int i = 0, n = items.length; i < n; i++) {
             array.add(items[i]);
         }
@@ -69,8 +69,8 @@ public final class JsonCollections {
         return array;
     }
 
-    public static <T> JsonArray<T> createArray(Iterable<T> items) {
-        JsonArray<T> array = createArray();
+    public static <T> Array<T> createArray(Iterable<T> items) {
+        Array<T> array = createArray();
         for (Iterator<T> it = items.iterator(); it.hasNext(); ) {
             array.add(it.next());
         }
@@ -78,20 +78,20 @@ public final class JsonCollections {
         return array;
     }
 
-    public static JsonStringSet createStringSet() {
+    public static StringSet createStringSet() {
         return implementation.createStringSet();
     }
 
-    public static JsonStringSet createStringSet(String... items) {
-        JsonStringSet set = createStringSet();
+    public static StringSet createStringSet(String... items) {
+        StringSet set = createStringSet();
         for (int i = 0, n = items.length; i < n; i++) {
             set.add(items[i]);
         }
         return set;
     }
 
-    public static JsonStringSet createStringSet(Iterator<String> iterator) {
-        JsonStringSet set = createStringSet();
+    public static StringSet createStringSet(Iterator<String> iterator) {
+        StringSet set = createStringSet();
         while (iterator.hasNext()) {
             set.add(iterator.next());
         }
@@ -99,13 +99,13 @@ public final class JsonCollections {
     }
 
     // TODO: Is it used?
-    public static <T> void addAllMissing(JsonArray<T> self, JsonArray<T> b) {
+    public static <T> void addAllMissing(Array<T> self, Array<T> b) {
 
         if (b == null || self == b) {
             return;
         }
 
-        JsonArray<T> addList = createArray();
+        Array<T> addList = createArray();
         for (int i = 0, n = b.size(); i < n; i++) {
             T addCandidate = b.get(i);
             if (!self.contains(addCandidate)) {
@@ -117,58 +117,47 @@ public final class JsonCollections {
 
     private static class PureJavaImplementation implements Implementation {
         @Override
-        public <T> JsonArray<T> createArray() {
+        public <T> Array<T> createArray() {
             return new JsonArrayListAdapter<T>(new ArrayList<T>());
         }
 
         @Override
-        public <T> JsonStringMap<T> createStringMap() {
+        public <T> StringMap<T> createStringMap() {
             return new JsonStringMapAdapter<T>(new HashMap<String, T>());
         }
 
         @Override
-        public JsonStringSet createStringSet() {
+        public StringSet createStringSet() {
             return new JsonStringSetAdapter(new HashSet<String>());
         }
 
         @Override
-        public <T> JsonIntegerMap<T> createIntegerMap() {
+        public <T> IntegerMap<T> createIntegerMap() {
             return new JsonIntegerMapAdapter<T>(new HashMap<Integer, T>());
         }
     }
 
     private static class NativeImplementation implements Implementation {
         @Override
-        public <T> JsonStringMap<T> createStringMap() {
+        public <T> StringMap<T> createStringMap() {
             return JsoStringMap.create();
         }
 
         @Override
-        public JsonStringSet createStringSet() {
+        public StringSet createStringSet() {
             return JsoStringSet.create();
         }
 
         @Override
-        public <T> JsonArray<T> createArray() {
+        public <T> Array<T> createArray() {
             return Jso.createArray().<JsoArray<T>>cast();
         }
 
         @Override
-        public <T> JsonIntegerMap<T> createIntegerMap() {
+        public <T> IntegerMap<T> createIntegerMap() {
             return JsoIntegerMap.create();
         }
     }
-
-//      /**
-//       * Check if two lists are equal. The lists are equal if they are both the same
-//       * size, and the items at every index are equal. Returns true if both lists
-//       * are null.
-//       *
-//       * @param <T> the data type of the arrays
-//       */
-//      public static <T> boolean equals(JsonArray<T> a, JsonArray<T> b) {
-//        return equals(a, b, null);
-//      }
 
     /**
      * Check if two lists are equal. The lists are equal if they are both the same
@@ -179,7 +168,7 @@ public final class JsonCollections {
      *         the data type of the arrays
      */
     public static <T> boolean equals(
-            JsonArray<T> a, JsonArray<T> b) {
+            Array<T> a, Array<T> b) {
         if (a == b) {
             // Same list or both null.
             return true;
@@ -220,52 +209,4 @@ public final class JsonCollections {
         return a == b || (a != null && a.equals(b));
     }
 
-    //  /**
-    //   * Check if two maps are equal. The maps are equal if they have exactly the
-    //   * same set of keys value pairs.
-    //   *
-    //   * @param <T> the data type of the arrays
-    //   */
-    //  public static <T> boolean equals(final JsonStringMap<T> a, final JsonStringMap<T> b) {
-    //    return equals(a, b, null);
-    //  }
-    //
-    //  /**
-    //   * Check if two maps are equal. The maps are equal if they have exactly the
-    //   * same set of keys value pairs. Checks the values using a custom
-    //   * {@link Equivalence} check.
-    //   *
-    //   * @param equivalence if null {@link Objects#equal(Object, Object)} is used to
-    //   *        verify equivalence.
-    //   *
-    //   * @param <T> the data type of the arrays
-    //   */
-    //  public static <T> boolean equals(
-    //      final JsonStringMap<T> a, final JsonStringMap<T> b, @Nullable Equivalence<T> equivalence) {
-    //    if (a == b) {
-    //      // Same map or both null.
-    //      return true;
-    //    } else if (a == null || b == null) {
-    //      // One map is null, the other is not.
-    //      return false;
-    //    } else {
-    //      JsonArray<String> keys = a.getKeys();
-    //      if (!equals(keys, b.getKeys())) {
-    //        return false;
-    //      }
-    //
-    //      for (int i = 0; i < keys.size(); i++) {
-    //        String key = keys.get(i);
-    //        T valueA = a.get(key);
-    //        T valueB = b.get(key);
-    //        boolean isNotEquivalent = (equivalence == null && !Objects.equal(valueA, valueB))
-    //            || (equivalence != null && !equivalence.equivalent(valueA, valueB));
-    //        if (isNotEquivalent) {
-    //          return false;
-    //        }
-    //      }
-    //
-    //      return true;
-    //    }
-    //  }
 }

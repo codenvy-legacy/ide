@@ -14,10 +14,10 @@
 
 package com.codenvy.ide.util;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonIntegerMap;
-import com.codenvy.ide.json.js.JsoArray;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.IntegerMap;
+import com.codenvy.ide.collections.js.JsoArray;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArrayString;
 
@@ -29,13 +29,13 @@ public class StringUtils {
      * Map [N] -> string of N spaces. Used by {@link #getSpaces} to cache strings
      * of spaces.
      */
-    private static final JsonIntegerMap<String> cachedSpaces   = JsonCollections.createIntegerMap();
+    private static final IntegerMap<String> cachedSpaces   = Collections.createIntegerMap();
     /**
      * By default, this is a pure java implementation, but can be set to a more
      * optimized version by the client
      */
-    private static       Implementation         implementation = GWT.isClient() || !GWT.isScript() ?
-                                                                 new PureJavaImplementation() : new NativeImplementation();
+    private static       Implementation     implementation = GWT.isClient() || !GWT.isScript() ?
+                                                             new PureJavaImplementation() : new NativeImplementation();
 
     /** Sets the implementation for methods */
     public static void setImplementation(Implementation implementation) {
@@ -112,7 +112,7 @@ public class StringUtils {
         return s.toString();
     }
 
-    public static <T> String join(JsonArray<T> items, String separator) {
+    public static <T> String join(Array<T> items, String separator) {
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < items.size(); i++) {
             s.append(items.get(i)).append(separator);
@@ -269,7 +269,7 @@ public class StringUtils {
      * <li>{@code split("ab", "")} should produce {@code ["a", "b"]}
      * </ul>
      */
-    public static JsonArray<String> split(String s, String separator) {
+    public static Array<String> split(String s, String separator) {
         return implementation.split(s, separator);
     }
 
@@ -455,13 +455,13 @@ public class StringUtils {
      * differing client and server implementations.
      */
     public interface Implementation {
-        JsonArray<String> split(String string, String separator);
+        Array<String> split(String string, String separator);
     }
 
     private static class PureJavaImplementation implements Implementation {
         @Override
-        public JsonArray<String> split(String string, String separator) {
-            JsonArray<String> result = JsonCollections.createArray();
+        public Array<String> split(String string, String separator) {
+            Array<String> result = Collections.createArray();
 
             int sepLength = separator.length();
             if (sepLength == 0) {
@@ -491,7 +491,7 @@ public class StringUtils {
         }-*/;
 
         @Override
-        public JsonArray<String> split(String string, String separator) {
+        public Array<String> split(String string, String separator) {
             return nativeSplit(string, separator).<JsoArray<String>>cast();
         }
 

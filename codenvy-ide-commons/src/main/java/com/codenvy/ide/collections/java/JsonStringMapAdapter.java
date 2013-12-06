@@ -12,20 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.json.java;
+package com.codenvy.ide.collections.java;
 
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.StringMap;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 /**
  * Server wrapper for a {@link java.util.Map} that implements
- * {@link JsonStringMap}.
+ * {@link com.codenvy.ide.collections.StringMap}.
  */
-public class JsonStringMapAdapter<T> implements JsonStringMap<T> {
+public class JsonStringMapAdapter<T> implements StringMap<T> {
     private final Map<String, T> delegate;
 
     public JsonStringMapAdapter(Map<String, T> delegate) {
@@ -40,7 +40,7 @@ public class JsonStringMapAdapter<T> implements JsonStringMap<T> {
 
     /** {@inheritDoc} */
     @Override
-    public JsonArray<String> getKeys() {
+    public Array<String> getKeys() {
         return new JsonArrayListAdapter<String>(new ArrayList<String>(delegate.keySet()));
     }
 
@@ -66,8 +66,8 @@ public class JsonStringMapAdapter<T> implements JsonStringMap<T> {
 
     /** {@inheritDoc} */
     @Override
-    public void putAll(JsonStringMap<T> otherMap) {
-        JsonArray<String> keys = otherMap.getKeys();
+    public void putAll(StringMap<T> otherMap) {
+        Array<String> keys = otherMap.getKeys();
         for (int i = 0, n = keys.size(); i < n; i++) {
             String key = keys.get(i);
             put(key, otherMap.get(key));
@@ -94,7 +94,7 @@ public class JsonStringMapAdapter<T> implements JsonStringMap<T> {
 
     /** {@inheritDoc} */
     @Override
-    public JsonArray<T> getValues() {
+    public Array<T> getValues() {
         return new JsonArrayListAdapter<T>(new ArrayList<T>(delegate.values()));
     }
 

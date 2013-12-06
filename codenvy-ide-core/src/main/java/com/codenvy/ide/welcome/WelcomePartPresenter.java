@@ -22,8 +22,8 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.parts.WelcomeItemAction;
 import com.codenvy.ide.api.parts.WelcomePart;
 import com.codenvy.ide.api.ui.workspace.AbstractPartPresenter;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -37,9 +37,9 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class WelcomePartPresenter extends AbstractPartPresenter implements WelcomePart, WelcomePartView.ActionDelegate {
-    private WelcomePartView              view;
-    private Resources                    resources;
-    private JsonArray<WelcomeItemAction> actions;
+    private WelcomePartView          view;
+    private Resources                resources;
+    private Array<WelcomeItemAction> actions;
 
     /**
      * Create presenter.
@@ -52,7 +52,7 @@ public class WelcomePartPresenter extends AbstractPartPresenter implements Welco
         this.view = view;
         this.view.setDelegate(this);
         this.resources = resources;
-        this.actions = JsonCollections.createArray();
+        this.actions = Collections.createArray();
     }
 
     /** {@inheritDoc} */

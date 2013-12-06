@@ -20,7 +20,7 @@ package com.codenvy.ide.ext.java.client.editor;
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
 import com.codenvy.ide.ext.java.messages.ProposalAppliedMessage;
 import com.codenvy.ide.ext.java.messages.WorkerProposal;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
@@ -29,7 +29,7 @@ import com.codenvy.ide.json.JsonArray;
 public interface JavaParserWorker {
 
     public interface WorkerCallback<T> {
-        void onResult(JsonArray<T> problems);
+        void onResult(Array<T> problems);
     }
 
     public interface ApplyCallback {

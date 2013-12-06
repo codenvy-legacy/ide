@@ -18,11 +18,11 @@
 package com.codenvy.ide.ext.git.client.reset.files;
 
 import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.ext.git.shared.IndexFile;
 import com.codenvy.ide.ext.git.shared.ResetRequest;
 import com.codenvy.ide.ext.git.shared.Status;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
@@ -37,9 +37,7 @@ import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
@@ -92,7 +90,7 @@ public class ResetFilesPresenterTest extends BaseTest {
 
         verify(resourceProvider).getActiveProject();
         verify(service).status(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<String>)anyObject());
-        verify(view).setIndexedFiles((JsonArray<IndexFile>)anyObject());
+        verify(view).setIndexedFiles((Array<IndexFile>)anyObject());
         verify(view).showDialog();
     }
 

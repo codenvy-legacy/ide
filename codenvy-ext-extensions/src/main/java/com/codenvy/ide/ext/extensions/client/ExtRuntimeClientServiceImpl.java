@@ -20,7 +20,7 @@ package com.codenvy.ide.ext.extensions.client;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -81,7 +81,7 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
     /** {@inheritDoc} */
     @Override
     public void createSampleCodenvyExtensionProject(@NotNull String projectName,
-                                                    @NotNull JsonArray<Property> properties,
+                                                    @NotNull Array<Property> properties,
                                                     @NotNull String groupId,
                                                     @NotNull String artifactId,
                                                     @NotNull String version,

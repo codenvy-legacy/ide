@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.texteditor.api.outline;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 
 /**
  * An interface representing a continuous namespace in the source code. It may
@@ -44,7 +44,7 @@ public interface CodeBlock {
     int getLength();
 
     /** @return the list of the nested code blocks */
-    JsonArray<CodeBlock> getChildren();
+    Array<CodeBlock> getChildren();
 
     /** @return parent of this code block, if code block has no parent then return <code>null</code> */
     CodeBlock getParent();

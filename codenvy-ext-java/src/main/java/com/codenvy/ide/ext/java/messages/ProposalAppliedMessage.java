@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.java.messages;
 
 import com.codenvy.ide.dto.shared.RoutingType;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.google.gwt.webworker.client.messages.Message;
 
 /**
@@ -28,7 +28,7 @@ import com.google.gwt.webworker.client.messages.Message;
 @RoutingType(type = RoutingTypes.CA_PROPOSAL_APPLIED)
 public interface ProposalAppliedMessage extends Message {
 
-    JsonArray<Change> changes();
+    Array<Change> changes();
 
     Region selectionRegion();
 

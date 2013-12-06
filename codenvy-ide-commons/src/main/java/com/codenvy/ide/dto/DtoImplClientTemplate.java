@@ -14,12 +14,12 @@
 
 package com.codenvy.ide.dto;
 
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.dto.shared.ClientToServerDto;
 import com.codenvy.ide.dto.shared.RoutableDto;
 import com.codenvy.ide.dto.shared.SerializationIndex;
 import com.codenvy.ide.dto.shared.ServerToClientDto;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Array;
 import com.google.common.base.Preconditions;
 
 import java.lang.reflect.Method;
@@ -33,7 +33,7 @@ public class DtoImplClientTemplate extends DtoImpl {
     private static final String ROUTABLE_DTO_IMPL = RoutableDto.class.getPackage().getName().replace("dto.shared", "dto.client") +
                                                     ".RoutableDtoClientImpl";
 
-    private static final String JSO_TYPE = "com.codenvy.ide.json.js.Jso";
+    private static final String JSO_TYPE = "Jso";
 
     private static boolean isEnum(Class<?> type) {
         return type != null && (type.equals(Enum.class) || isEnum(type.getSuperclass()));
@@ -273,11 +273,11 @@ public class DtoImplClientTemplate extends DtoImpl {
      * For our Json collections, require the concrete client-side type since we
      * call JSON.stringify on this DTO.
      */
-        if (paramType == JsonArray.class) {
-            paramTypeName = paramTypeName.replace("com.google.collide.json.shared.JsonArray",
+        if (paramType == Array.class) {
+            paramTypeName = paramTypeName.replace("com.google.collide.json.shared.Array",
                                                   "com.google.collide.json.client.JsoArray");
-        } else if (paramType == JsonStringMap.class) {
-            paramTypeName = paramTypeName.replace("com.google.collide.json.shared.JsonStringMap",
+        } else if (paramType == StringMap.class) {
+            paramTypeName = paramTypeName.replace("com.google.collide.json.shared.StringMap",
                                                   "com.google.collide.json.client.JsoStringMap");
         }
 

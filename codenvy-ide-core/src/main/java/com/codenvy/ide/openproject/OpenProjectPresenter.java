@@ -18,7 +18,7 @@
 package com.codenvy.ide.openproject;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -88,9 +88,9 @@ public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
 
     /** Show dialog. */
     public void showDialog() {
-        resourceProvider.listProjects(new AsyncCallback<JsonArray<String>>() {
+        resourceProvider.listProjects(new AsyncCallback<Array<String>>() {
             @Override
-            public void onSuccess(JsonArray<String> result) {
+            public void onSuccess(Array<String> result) {
                 view.setProjects(result);
                 view.showDialog();
             }

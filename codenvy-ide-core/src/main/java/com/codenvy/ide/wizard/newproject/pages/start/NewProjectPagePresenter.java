@@ -22,7 +22,7 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.wizard.newproject.PaaSAgentImpl;
 import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
@@ -40,16 +40,16 @@ import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.*;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public class NewProjectPagePresenter extends AbstractWizardPage implements NewProjectPageView.ActionDelegate {
-    private NewProjectPageView         view;
-    private JsonArray<PaaS>            paases;
-    private JsonArray<ProjectTypeData> projectTypes;
-    private CoreLocalizationConstant   constant;
-    private boolean                    hasProjectNameIncorrectSymbol;
-    private boolean                    hasSameProject;
-    private boolean                    hasProjectList;
-    private JsonArray<String>          projectList;
-    private ProjectTypeAgentImpl       projectTypeAgent;
-    private PaaSAgentImpl              paasAgent;
+    private NewProjectPageView       view;
+    private Array<PaaS>              paases;
+    private Array<ProjectTypeData>   projectTypes;
+    private CoreLocalizationConstant constant;
+    private boolean                  hasProjectNameIncorrectSymbol;
+    private boolean                  hasSameProject;
+    private boolean                  hasProjectList;
+    private Array<String>            projectList;
+    private ProjectTypeAgentImpl     projectTypeAgent;
+    private PaaSAgentImpl            paasAgent;
 
     /**
      * Create presenter.
@@ -71,9 +71,9 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
 
         super("Select project type and paas", resources.newResourceIcon());
 
-        resourceProvider.listProjects(new AsyncCallback<JsonArray<String>>() {
+        resourceProvider.listProjects(new AsyncCallback<Array<String>>() {
             @Override
-            public void onSuccess(JsonArray<String> result) {
+            public void onSuccess(Array<String> result) {
                 projectList = result;
                 hasProjectList = true;
             }

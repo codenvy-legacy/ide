@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.json;
+package com.codenvy.ide.collections;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -23,13 +23,13 @@ import java.util.NoSuchElementException;
  * @param <T>
  *         items type
  */
-public class JsonArrayIterator<T> implements Iterator<T> {
+public class ArrayIterator<T> implements Iterator<T> {
 
-    private       int          index;
-    private final JsonArray<T> items;
-    private       boolean      hasRemovedSinceNextCall;
+    private       int      index;
+    private final Array<T> items;
+    private       boolean  hasRemovedSinceNextCall;
 
-    public JsonArrayIterator(JsonArray<T> items) {
+    public ArrayIterator(Array<T> items) {
         this.items = items;
     }
 

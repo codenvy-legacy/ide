@@ -18,8 +18,8 @@
 
 package com.codenvy.ide.ui.tree;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.js.JsoArray;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.ui.tree.Tree.Css;
 import com.codenvy.ide.util.input.SignalEvent;
 
@@ -91,8 +91,8 @@ public class SelectionModel<D> {
      * Restores visual selection for all selected nodes tracked by the
      * SelectionModel.
      */
-    public JsonArray<JsonArray<String>> computeSelectedPaths() {
-        JsoArray<JsonArray<String>> selectedPaths = JsoArray.create();
+    public Array<Array<String>> computeSelectedPaths() {
+        JsoArray<Array<String>> selectedPaths = JsoArray.create();
         for (int i = 0, n = selectedNodes.size(); i < n; i++) {
             D nodeData = selectedNodes.get(i);
             selectedPaths.add(dataAdapter.getNodePath(nodeData));
@@ -207,7 +207,7 @@ public class SelectionModel<D> {
         JsoArray<D> range = JsoArray.create();
 
         // Do a linear scan until we find the startNode.
-        JsonArray<D> children = dataAdapter.getChildren(parentNode);
+        Array<D> children = dataAdapter.getChildren(parentNode);
         int i = 0;
         boolean adding = false;
         for (int n = children.size(); i < n; i++) {
@@ -348,7 +348,7 @@ public class SelectionModel<D> {
         }
     }
 
-    private void visuallySelect(JsonArray<D> nodeDatas, boolean isSelected) {
+    private void visuallySelect(Array<D> nodeDatas, boolean isSelected) {
         for (int i = 0, n = nodeDatas.size(); i < n; i++) {
             visuallySelect(nodeDatas.get(i), isSelected);
         }

@@ -19,8 +19,8 @@ package com.codenvy.ide.api.ui.action;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.UIUtil;
 import com.google.gwt.resources.client.ImageResource;
@@ -32,7 +32,7 @@ import com.google.gwt.resources.client.ImageResource;
  * @version $Id:
  */
 public final class Presentation {
-    private JsonStringMap<Object> userMap;
+    private StringMap<Object> userMap;
     /**
      * Defines tool tip for button at tool bar or text for element at menu
      * value: String
@@ -241,7 +241,7 @@ public final class Presentation {
 
     public void putClientProperty(@NotNull String key, @Nullable Object value) {
         if (userMap == null) {
-            userMap = JsonCollections.createStringMap();
+            userMap = Collections.createStringMap();
         }
 
         Object oldValue = userMap.get(key);

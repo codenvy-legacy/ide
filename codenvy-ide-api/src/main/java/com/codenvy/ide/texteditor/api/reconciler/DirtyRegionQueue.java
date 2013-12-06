@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.texteditor.api.reconciler;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 
 /**
  * Queue used by {@link ReconcilerImpl} to manage
@@ -21,7 +21,7 @@ import com.codenvy.ide.json.JsonCollections;
 class DirtyRegionQueue {
 
     /** The list of dirty regions. */
-    private JsonArray<DirtyRegion> fDirtyRegions = JsonCollections.createArray();
+    private Array<DirtyRegion> fDirtyRegions = Collections.createArray();
 
     /** Creates a new empty dirty region. */
     public DirtyRegionQueue() {

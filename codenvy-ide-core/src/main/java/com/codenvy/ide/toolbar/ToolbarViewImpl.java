@@ -26,8 +26,8 @@ import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.Presentation;
 import com.codenvy.ide.api.ui.action.Separator;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
@@ -47,8 +47,8 @@ public class ToolbarViewImpl extends Composite implements ToolbarView {
     private       ActionGroup         actionGroup;
     private       ActionManager       actionManager;
     private       KeyBindingAgent     keyBindingAgent;
-    private       JsonArray<Action>   newVisibleActions;
-    private       JsonArray<Action>   visibleActions;
+    private       Array<Action>       newVisibleActions;
+    private       Array<Action>       visibleActions;
     private       PresentationFactory presentationFactory;
     private       boolean             addSeparatorFirst;
     private final DefaultActionGroup  secondaryActions;
@@ -67,8 +67,8 @@ public class ToolbarViewImpl extends Composite implements ToolbarView {
         this.keyBindingAgent = keyBindingAgent;
         toolbar = new Toolbar();
         initWidget(toolbar);
-        newVisibleActions = JsonCollections.createArray();
-        visibleActions = JsonCollections.createArray();
+        newVisibleActions = Collections.createArray();
+        visibleActions = Collections.createArray();
         presentationFactory = new PresentationFactory();
         secondaryActions = new DefaultActionGroup(actionManager);
     }
@@ -95,8 +95,8 @@ public class ToolbarViewImpl extends Composite implements ToolbarView {
     private void updateActions() {
         newVisibleActions.clear();
         Utils.expandActionGroup(actionGroup, newVisibleActions, presentationFactory, place, actionManager, false);
-        if (!JsonCollections.equals(newVisibleActions, visibleActions)) {
-            final JsonArray<Action> temp = visibleActions;
+        if (!Collections.equals(newVisibleActions, visibleActions)) {
+            final Array<Action> temp = visibleActions;
             visibleActions = newVisibleActions;
             newVisibleActions = temp;
             removeAll();
@@ -105,7 +105,7 @@ public class ToolbarViewImpl extends Composite implements ToolbarView {
         }
     }
 
-    private void fillToolbar(JsonArray<Action> actions, boolean layoutSecondaries) {
+    private void fillToolbar(Array<Action> actions, boolean layoutSecondaries) {
         if (addSeparatorFirst) {
             toolbar.add(new DelimiterItem());
         }

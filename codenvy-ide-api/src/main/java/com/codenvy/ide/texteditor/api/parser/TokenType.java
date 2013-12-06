@@ -14,8 +14,8 @@
 
 package com.codenvy.ide.texteditor.api.parser;
 
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.runtime.Assert;
 
 /**
@@ -59,11 +59,11 @@ public enum TokenType {
         return typeName;
     }
 
-    private static JsonStringMap<TokenType> typesMap;
+    private static StringMap<TokenType> typesMap;
 
-    private static JsonStringMap<TokenType> getTypesMap() {
+    private static StringMap<TokenType> getTypesMap() {
         if (typesMap == null) {
-            JsonStringMap<TokenType> temp = JsonCollections.createStringMap();
+            StringMap<TokenType> temp = Collections.createStringMap();
             TokenType[] types = TokenType.values();
             for (int i = 0, l = types.length; i < l; i++) {
                 TokenType type = types[i];

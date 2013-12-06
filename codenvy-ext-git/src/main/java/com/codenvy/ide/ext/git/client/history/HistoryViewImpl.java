@@ -20,10 +20,10 @@ package com.codenvy.ide.ext.git.client.history;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.shared.Revision;
-import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -157,8 +157,8 @@ public class HistoryViewImpl extends BaseView<HistoryView.ActionDelegate> implem
 
     /** {@inheritDoc} */
     @Override
-    public void setRevisions(@NotNull JsonArray<Revision> revisions) {
-        // Wraps JsonArray in java.util.List
+    public void setRevisions(@NotNull Array<Revision> revisions) {
+        // Wraps Array in java.util.List
         List<Revision> list = new ArrayList<Revision>();
         for (int i = 0; i < revisions.size(); i++) {
             list.add(revisions.get(i));

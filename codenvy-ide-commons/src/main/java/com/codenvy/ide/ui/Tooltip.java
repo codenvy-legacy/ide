@@ -19,8 +19,8 @@ import elemental.events.*;
 import elemental.html.Element;
 import elemental.util.Timer;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ui.menu.AutoHideComponent;
 import com.codenvy.ide.ui.menu.AutoHideView;
 import com.codenvy.ide.ui.menu.PositionController;
@@ -53,11 +53,11 @@ public class Tooltip extends AutoHideComponent<AutoHideView<Void>,
     private static Tooltip                       activeTooltip;
     /** Holds a reference to the css. */
     private final  Css                           css;
-    private final  JsonArray<Element>            targetElements;
+    private final  Array<Element>                targetElements;
     private final  Timer                         showTimer;
     private final  TooltipRenderer               renderer;
     private final  PositionController            positionController;
-    private final  JsonArray<EventRemover>       eventRemovers;
+    private final  Array<EventRemover>           eventRemovers;
     private final  PositionController.Positioner positioner;
     private        Element                       contentElement;
     private        String                        title;
@@ -72,7 +72,7 @@ public class Tooltip extends AutoHideComponent<AutoHideView<Void>,
 
     private Tooltip(AutoHideView<Void> view,
                     Resources res,
-                    JsonArray<Element> targetElements,
+                    Array<Element> targetElements,
                     PositionController.Positioner positioner,
                     TooltipRenderer renderer,
                     boolean shouldShowOnHover) {
@@ -83,7 +83,7 @@ public class Tooltip extends AutoHideComponent<AutoHideView<Void>,
         this.targetElements = targetElements;
 
         this.eventRemovers =
-                shouldShowOnHover ? attachToTargetElement() : JsonCollections.<EventRemover>createArray();
+                shouldShowOnHover ? attachToTargetElement() : Collections.<EventRemover>createArray();
 
         getView().setAnimationController(AnimationController.FADE_ANIMATION_CONTROLLER);
 
@@ -230,8 +230,8 @@ public class Tooltip extends AutoHideComponent<AutoHideView<Void>,
      * Adds event handlers to the target element for the tooltip to show it on
      * hover, and update position on mouse move.
      */
-    private JsonArray<EventRemover> attachToTargetElement() {
-        JsonArray<EventRemover> removers = JsonCollections.createArray();
+    private Array<EventRemover> attachToTargetElement() {
+        Array<EventRemover> removers = Collections.createArray();
         for (int i = 0; i < targetElements.size(); i++) {
             final Element targetElement = targetElements.get(i);
             addPartner(targetElement);
@@ -372,7 +372,7 @@ public class Tooltip extends AutoHideComponent<AutoHideView<Void>,
     public static class Builder {
 
         private final Resources                     res;
-        private final JsonArray<Element>            targetElements;
+        private final Array<Element>                targetElements;
         private final PositionController.Positioner positioner;
         private boolean shouldShowOnHover = true;
         private TooltipRenderer renderer;
@@ -381,7 +381,7 @@ public class Tooltip extends AutoHideComponent<AutoHideView<Void>,
         public Builder(Element targetElement, PositionController.Positioner positioner) {
             this.res = RESOURCES;
             this.positioner = positioner;
-            this.targetElements = JsonCollections.createArray(targetElement);
+            this.targetElements = Collections.createArray(targetElement);
         }
 
         /**

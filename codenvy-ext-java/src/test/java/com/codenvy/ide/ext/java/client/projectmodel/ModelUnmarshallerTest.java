@@ -19,15 +19,8 @@ package com.codenvy.ide.ext.java.client.projectmodel;
 
 import com.codenvy.ide.ext.java.client.BaseTest;
 
-import com.codenvy.ide.ext.java.client.projectmodel.CompilationUnit;
-import com.codenvy.ide.ext.java.client.projectmodel.JavaModelUnmarshaller;
-import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
-import com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion;
-import com.codenvy.ide.ext.java.client.projectmodel.Package;
-import com.codenvy.ide.ext.java.client.projectmodel.SourceFolder;
-
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Resource;
@@ -92,7 +85,7 @@ public class ModelUnmarshallerTest extends BaseTest {
         when(project.getDescription()).thenReturn(projectDescription);
         when(project.getPath()).thenReturn("/SpringProject");
         when(projectDescription.getSourceFolders()).thenReturn(
-                JsonCollections.createStringSet("src/main/java", "src/main/resources", "src/test/java", "src/test/resources"));
+                Collections.createStringSet("src/main/java", "src/main/resources", "src/test/java", "src/test/resources"));
         when(response.getText()).thenReturn(projectJs);
     }
 

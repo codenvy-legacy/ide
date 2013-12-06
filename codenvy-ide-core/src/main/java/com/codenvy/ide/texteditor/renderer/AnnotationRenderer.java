@@ -17,10 +17,10 @@
  */
 package com.codenvy.ide.texteditor.renderer;
 
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.client.ClientDocOpFactory;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.Position;
@@ -47,12 +47,12 @@ public class AnnotationRenderer implements AnnotationModelListener {
 
     private AnnotationModel annotationModel;
 
-    private final JsonStringMap<String> decorations;
+    private final StringMap<String> decorations;
 
     private ErrorRenderer renderer;
 
     /** @param editor */
-    public AnnotationRenderer(TextEditorViewImpl editor, JsonStringMap<String> decorations) {
+    public AnnotationRenderer(TextEditorViewImpl editor, StringMap<String> decorations) {
         super();
         this.editor = editor;
         this.decorations = decorations;
@@ -65,7 +65,7 @@ public class AnnotationRenderer implements AnnotationModelListener {
     @Override
     public void modelChanged(AnnotationModelEvent event) {
 
-        JsonArray<AnnotationCode> annotations = JsonCollections.createArray();
+        Array<AnnotationCode> annotations = Collections.createArray();
         for (Iterator<Annotation> iterator = annotationModel.getAnnotationIterator(); iterator.hasNext(); ) {
             Annotation annotation = iterator.next();
             //only annotation with decoration
@@ -92,11 +92,11 @@ public class AnnotationRenderer implements AnnotationModelListener {
         return null;
     }
 
-    private void onAnnotationsChanged(JsonArray<AnnotationCode> newErrors) {
+    private void onAnnotationsChanged(Array<AnnotationCode> newErrors) {
         if (editor.getDocument() == null) {
             return;
         }
-        JsonArray<Line> linesToRender = JsonCollections.createArray();
+        Array<Line> linesToRender = Collections.createArray();
         getLinesOfErrorsInViewport(renderer.getCodeErrors(), linesToRender);
         getLinesOfErrorsInViewport(newErrors, linesToRender);
         positionMigrator.reset();
@@ -108,7 +108,7 @@ public class AnnotationRenderer implements AnnotationModelListener {
         editor.getRenderer().renderChanges();
     }
 
-    private void getLinesOfErrorsInViewport(JsonArray<AnnotationCode> errors, JsonArray<Line> lines) {
+    private void getLinesOfErrorsInViewport(Array<AnnotationCode> errors, Array<Line> lines) {
         LineFinder lineFinder = ((DocumentImpl)editor.getDocument()).getTextStore().getLineFinder();
         int topLineNumber = editor.getViewport().getTopLineNumber();
         int bottomLineNumber = editor.getViewport().getBottomLineNumber();

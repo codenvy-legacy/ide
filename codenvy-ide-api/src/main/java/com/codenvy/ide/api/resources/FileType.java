@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.api.resources;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.google.gwt.resources.client.ImageResource;
 
 
@@ -46,7 +46,7 @@ public class FileType {
 
     private ImageResource image;
 
-    private JsonArray<String> mimeTypes;
+    private Array<String> mimeTypes;
 
     private String extension;
 
@@ -54,10 +54,10 @@ public class FileType {
 
 
     public FileType(ImageResource image, String mimeType, String extension) {
-        this(image, JsonCollections.createArray(mimeType), extension);
+        this(image, Collections.createArray(mimeType), extension);
     }
 
-    public FileType(ImageResource image, JsonArray<String> mimeTypes, String extension) {
+    public FileType(ImageResource image, Array<String> mimeTypes, String extension) {
         this(image, mimeTypes, extension, null);
     }
 
@@ -65,7 +65,7 @@ public class FileType {
         this(image, null, null, namePattern);
     }
 
-    private FileType(ImageResource image, JsonArray<String> mimeTypes, String extension, String namePattern) {
+    private FileType(ImageResource image, Array<String> mimeTypes, String extension, String namePattern) {
         super();
         this.image = image;
         this.mimeTypes = mimeTypes;
@@ -75,7 +75,7 @@ public class FileType {
     }
 
     /** @return the mimeTypes */
-    public JsonArray<String> getMimeTypes() {
+    public Array<String> getMimeTypes() {
         return mimeTypes;
     }
 

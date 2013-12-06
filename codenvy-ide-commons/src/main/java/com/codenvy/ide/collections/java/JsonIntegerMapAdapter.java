@@ -12,22 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.json.java;
+package com.codenvy.ide.collections.java;
 
 
-import com.codenvy.ide.json.JsonIntegerMap;
+import com.codenvy.ide.collections.IntegerMap;
 
 import java.util.Map;
 import java.util.Map.Entry;
 
 /**
  * Server wrapper for a {@link java.util.Map} that implements
- * {@link JsonIntegerMap}.
+ * {@link com.codenvy.ide.collections.IntegerMap}.
  *
  * @param <T>
  *         the type contained as value in the map
  */
-public class JsonIntegerMapAdapter<T> implements JsonIntegerMap<T> {
+public class JsonIntegerMapAdapter<T> implements IntegerMap<T> {
     private final Map<Integer, T> delegate;
 
     public JsonIntegerMapAdapter(Map<Integer, T> delegate) {
@@ -60,7 +60,7 @@ public class JsonIntegerMapAdapter<T> implements JsonIntegerMap<T> {
     }
 
     @Override
-    public void iterate(JsonIntegerMap.IterationCallback<T> cb) {
+    public void iterate(IntegerMap.IterationCallback<T> cb) {
         for (Entry<Integer, T> entry : delegate.entrySet()) {
             cb.onIteration(entry.getKey().intValue(), entry.getValue());
         }

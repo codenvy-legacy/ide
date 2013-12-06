@@ -14,8 +14,8 @@
 
 package com.codenvy.ide.texteditor.input;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.input.SignalEvent;
 
 /** Implementation of proxy that delegated execution to a list of executors. */
@@ -35,7 +35,7 @@ public class RootActionExecutor implements ActionExecutor {
         }
     }
 
-    private final JsonArray<ActionExecutor> delegates = JsonCollections.createArray();
+    private final Array<ActionExecutor> delegates = Collections.createArray();
 
     public Remover addDelegate(ActionExecutor delegate) {
         delegates.add(delegate);

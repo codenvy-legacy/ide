@@ -20,7 +20,6 @@ package com.codenvy.ide.ext.git.client.remove;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.ext.git.client.BaseTest;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;

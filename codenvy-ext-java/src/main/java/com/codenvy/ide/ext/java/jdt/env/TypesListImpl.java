@@ -17,13 +17,11 @@
  */
 package com.codenvy.ide.ext.java.jdt.env;
 
+import com.codenvy.dto.shared.JsonArray;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.java.shared.ShortTypeInfo;
 import com.codenvy.ide.ext.java.shared.TypesList;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonObject;
-import com.codenvy.ide.json.js.Jso;
-import com.codenvy.ide.json.js.JsoArray;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
@@ -42,8 +40,8 @@ public class TypesListImpl implements TypesList {
     }
 
     @Override
-    public JsonArray<ShortTypeInfo> getTypes() {
-        JsonArray<ShortTypeInfo> typeInfos = JsonCollections.createArray();
+    public Array<ShortTypeInfo> getTypes() {
+        Array<ShortTypeInfo> typeInfos = Collections.createArray();
         for (int i = 0; i < json.size(); i++) {
             typeInfos.add(new ShortTypeInfoImpl(json.get(i).isObject()));
         }

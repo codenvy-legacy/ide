@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.json;
+package com.codenvy.ide.collections;
 
 /**
  * Integer Map interface.
@@ -20,7 +20,7 @@ package com.codenvy.ide.json;
  * @param <T>
  *         the type contained as value in the map
  */
-public interface JsonIntegerMap<T> {
+public interface IntegerMap<T> {
 
     /** Callback interface for int,double key value pairs. */
     public interface IterationCallback<T> {

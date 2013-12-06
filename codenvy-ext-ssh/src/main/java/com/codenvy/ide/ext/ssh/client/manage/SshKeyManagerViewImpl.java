@@ -21,7 +21,7 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.ssh.client.SshLocalizationConstant;
 import com.codenvy.ide.ext.ssh.client.SshResources;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.TextCell;
@@ -139,8 +139,8 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
 
     /** {@inheritDoc} */
     @Override
-    public void setKeys(@NotNull JsonArray<KeyItem> keys) {
-        // Wraps JsonArray in java.util.List
+    public void setKeys(@NotNull Array<KeyItem> keys) {
+        // Wraps Array in java.util.List
         List<KeyItem> appList = new ArrayList<KeyItem>();
         for (int i = 0; i < keys.size(); i++) {
             appList.add(keys.get(i));

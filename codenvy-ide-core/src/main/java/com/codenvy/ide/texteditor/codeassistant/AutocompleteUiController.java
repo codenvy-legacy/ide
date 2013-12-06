@@ -21,8 +21,8 @@ import elemental.html.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.js.JsoArray;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.store.anchor.ReadOnlyAnchor;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
@@ -336,7 +336,7 @@ public class AutocompleteUiController implements AutocompleteBox {
             list.getSelectionModel().clearSelection();
         }
 
-        final JsonArray<CompletionProposal> itemsToDisplay = JsoArray.<CompletionProposal>create();
+        final Array<CompletionProposal> itemsToDisplay = JsoArray.<CompletionProposal>create();
         String hintText = null;//items.getHint();
         if (items != null && items.length != 0) {
             for (int i = 0; i < items.length; i++) {

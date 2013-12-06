@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.json.js;
+package com.codenvy.ide.collections.js;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonArrayIterator;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.ArrayIterator;
 import com.google.gwt.core.client.JavaScriptObject;
 
 import java.util.Comparator;
@@ -32,7 +32,7 @@ import java.util.List;
  * @param <T>
  *         the type of each entry in the array
  */
-public class JsoArray<T> extends JavaScriptObject implements JsonArray<T> {
+public class JsoArray<T> extends JavaScriptObject implements Array<T> {
 
     /** Concatenate 2 arrays. */
     public static final native <T> JsoArray<T> concat(JsoArray<?> a, JsoArray<?> b) /*-{
@@ -50,11 +50,11 @@ public class JsoArray<T> extends JavaScriptObject implements JsonArray<T> {
     }-*/;
 
     /**
-     * Casts a JsonArray to a JsoArray. Unsafe, but on client we know we always
+     * Casts a Array to a JsoArray. Unsafe, but on client we know we always
      * have a JsoArray.
      */
     @SuppressWarnings("unchecked")
-    public static <M, T extends M> JsoArray<M> from(JsonArray<T> array) {
+    public static <M, T extends M> JsoArray<M> from(Array<T> array) {
         return (JsoArray<M>)array;
     }
 
@@ -99,7 +99,7 @@ public class JsoArray<T> extends JavaScriptObject implements JsonArray<T> {
 
     /** Adds all of the elements in the given {@code array} to this array. */
     @Override
-    public final void addAll(JsonArray<? extends T> array) {
+    public final void addAll(Array<? extends T> array) {
         for (int i = 0, n = array.size(); i < n; ++i) {
             add(array.get(i));
         }
@@ -324,7 +324,7 @@ public class JsoArray<T> extends JavaScriptObject implements JsonArray<T> {
         return new Iterable<T>() {
             @Override
             public Iterator<T> iterator() {
-                return new JsonArrayIterator<T>(JsoArray.this);
+                return new ArrayIterator<T>(JsoArray.this);
             }
         };
     }

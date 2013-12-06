@@ -17,24 +17,24 @@
  */
 package com.codenvy.ide.ext.github.client.load;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ProjectData.java Nov 18, 2011 3:27:38 PM vereshchaka $
  */
 public class ProjectData {
-    private String            name;
-    private String            description;
-    private String            type;
+    private String        name;
+    private String        description;
+    private String        type;
     /** Url to clone from GitHub. */
-    private String            repositoryUrl;
+    private String        repositoryUrl;
     /** Url to clone from GitHub (readOnly). */
-    private String            readOnlyUrl;
-    private JsonArray<String> targets;
+    private String        readOnlyUrl;
+    private Array<String> targets;
 
-    public ProjectData(String name, String description, String type, JsonArray<String> targets, String repositoryUrl, String readOnlyUrl) {
+    public ProjectData(String name, String description, String type, Array<String> targets, String repositoryUrl, String readOnlyUrl) {
         this.name = name;
         this.description = description;
         this.type = type;
@@ -88,9 +88,9 @@ public class ProjectData {
     }
 
     /** @return the targets */
-    public JsonArray<String> getTargets() {
+    public Array<String> getTargets() {
         if (targets == null) {
-            targets = JsonCollections.createArray();
+            targets = Collections.createArray();
         }
         return targets;
     }
@@ -99,7 +99,7 @@ public class ProjectData {
      * @param targets
      *         the targets to set
      */
-    public void setTargets(JsonArray<String> targets) {
+    public void setTargets(Array<String> targets) {
         this.targets = targets;
     }
 

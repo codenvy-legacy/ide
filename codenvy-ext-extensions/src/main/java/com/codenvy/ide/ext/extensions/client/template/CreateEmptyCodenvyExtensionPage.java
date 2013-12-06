@@ -20,7 +20,8 @@ package com.codenvy.ide.ext.extensions.client.template;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.ext.extensions.client.ExtRuntimeClientService;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -33,7 +34,7 @@ import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.CODENVY_
 import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.EMPTY_EXTENSION_ID;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS;
-import static com.codenvy.ide.json.JsonCollections.createArray;
+import static com.codenvy.ide.collections.Collections.createArray;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
@@ -61,7 +62,7 @@ public class CreateEmptyCodenvyExtensionPage extends AbstractTemplatePage {
     /** {@inheritDoc} */
     @Override
     public void commit(@NotNull final CommitCallback callback) {
-        JsonArray<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
+        Array<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
                                                      new Property(PROPERTY_MIXIN_NATURES, CODENVY_EXTENSION_PROJECT_TYPE),
                                                      new Property(PROPERTY_SOURCE_FOLDERS,
                                                                   createArray("src/main/java", "src/main/resources")),

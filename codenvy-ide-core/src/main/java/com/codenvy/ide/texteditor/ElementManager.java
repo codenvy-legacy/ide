@@ -17,9 +17,9 @@ package com.codenvy.ide.texteditor;
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonIntegerMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.IntegerMap;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.anchor.Anchor;
 import com.codenvy.ide.text.store.anchor.AnchorManager;
@@ -64,7 +64,7 @@ public class ElementManager {
     private final ReadOnlyAnchor.RemoveListener anchorRemovalListener = new ReadOnlyAnchor.RemoveListener() {
         @Override
         public void onAnchorRemoved(ReadOnlyAnchor anchor) {
-            JsonArray<Element> elements = anchoredElements.get(anchor.getId());
+            Array<Element> elements = anchoredElements.get(anchor.getId());
             for (int i = 0, n = elements.size(); i < n; i++) {
                 removeAnchoredElement(anchor, elements.get(i));
             }
@@ -75,15 +75,15 @@ public class ElementManager {
 
     private final Element container;
 
-    private final JsonIntegerMap<JsonArray<Element>> anchoredElements = JsonCollections.createIntegerMap();
+    private final IntegerMap<Array<Element>> anchoredElements = Collections.createIntegerMap();
 
-    private final JsonArray<ReadOnlyAnchor> anchoredElementAnchors = JsonCollections.createArray();
+    private final Array<ReadOnlyAnchor> anchoredElementAnchors = Collections.createArray();
 
     private final Renderer.LineLifecycleListener renderedLineLifecycleListener = new Renderer.LineLifecycleListener() {
         private final AnchorVisitor lineCreatedAnchorVisitor = new AnchorVisitor() {
             @Override
             public void visitAnchor(Anchor anchor) {
-                JsonArray<Element> elements = anchoredElements.get(anchor.getId());
+                Array<Element> elements = anchoredElements.get(anchor.getId());
                 if (elements != null) {
                     for (int i = 0, n = elements.size(); i < n; i++) {
                         Element element = elements.get(i);
@@ -97,7 +97,7 @@ public class ElementManager {
         private final AnchorVisitor lineShiftedAnchorVisitor = new AnchorVisitor() {
             @Override
             public void visitAnchor(Anchor anchor) {
-                JsonArray<Element> elements = anchoredElements.get(anchor.getId());
+                Array<Element> elements = anchoredElements.get(anchor.getId());
                 if (elements != null) {
                     for (int i = 0, n = elements.size(); i < n; i++) {
                         updateAnchoredElement(anchor, elements.get(i));
@@ -109,7 +109,7 @@ public class ElementManager {
         private final AnchorVisitor lineGarbageCollectedAnchorVisitor = new AnchorVisitor() {
             @Override
             public void visitAnchor(Anchor anchor) {
-                JsonArray<Element> elements = anchoredElements.get(anchor.getId());
+                Array<Element> elements = anchoredElements.get(anchor.getId());
                 if (elements != null) {
                     for (int i = 0, n = elements.size(); i < n; i++) {
                         detachElement(elements.get(i));
@@ -140,7 +140,7 @@ public class ElementManager {
 
     private ListenerRegistrar.Remover rendererListenerRemover;
 
-    private final JsonArray<Element> unmanagedElements = JsonCollections.createArray();
+    private final Array<Element> unmanagedElements = Collections.createArray();
 
     private ViewportModel viewport;
 
@@ -168,9 +168,9 @@ public class ElementManager {
             throw new IllegalArgumentException("The given anchor does not have a line number; create it with line numbers");
         }
 
-        JsonArray<Element> elements = anchoredElements.get(anchor.getId());
+        Array<Element> elements = anchoredElements.get(anchor.getId());
         if (elements == null) {
-            elements = JsonCollections.createArray();
+            elements = Collections.createArray();
             anchoredElements.put(anchor.getId(), elements);
 
             anchoredElementAnchors.add(anchor);
@@ -191,7 +191,7 @@ public class ElementManager {
     }
 
     public void removeAnchoredElement(ReadOnlyAnchor anchor, Element element) {
-        JsonArray<Element> elements = anchoredElements.get(anchor.getId());
+        Array<Element> elements = anchoredElements.get(anchor.getId());
         if (elements == null || !elements.remove(element)) {
             return;
         }
@@ -211,7 +211,7 @@ public class ElementManager {
     private void removeAnchoredElements() {
         while (anchoredElementAnchors.size() > 0) {
             ReadOnlyAnchor anchor = anchoredElementAnchors.get(0);
-            JsonArray<Element> elements = anchoredElements.get(anchor.getId());
+            Array<Element> elements = anchoredElements.get(anchor.getId());
             for (int i = 0, n = elements.size(); i < n; i++) {
                 removeAnchoredElement(anchor, elements.get(i));
             }
@@ -233,7 +233,7 @@ public class ElementManager {
     }
 
     private void updateAnchoredElements(ReadOnlyAnchor anchor) {
-        JsonArray<Element> elements = anchoredElements.get(anchor.getId());
+        Array<Element> elements = anchoredElements.get(anchor.getId());
         if (elements != null) {
             for (int i = 0, n = elements.size(); i < n; i++) {
                 updateAnchoredElement(anchor, elements.get(i));
@@ -286,7 +286,7 @@ public class ElementManager {
         container.appendChild(element);
     }
 
-    private void detachElements(JsonArray<Element> elements) {
+    private void detachElements(Array<Element> elements) {
         for (int i = 0, n = elements.size(); i < n; i++) {
             detachElement(elements.get(i));
         }
@@ -305,7 +305,7 @@ public class ElementManager {
                 continue;
             }
 
-            JsonArray<Element> elements = anchoredElements.get(anchor.getId());
+            Array<Element> elements = anchoredElements.get(anchor.getId());
             for (int elementsPos = 0, elementsSize = elements.size(); elementsPos < elementsSize; elementsPos++) {
                 positionElementToAnchorTopLeft(anchor, elements.get(elementsPos));
             }

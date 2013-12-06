@@ -18,7 +18,7 @@
 
 package com.codenvy.ide.ui.menu;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -140,7 +140,7 @@ public class PopupMenu extends Composite {
      */
     private String itemIdPrefix;
 
-    public PopupMenu(JsonArray<Item> menuItems, MenuLockLayer lockLayer, ItemSelectedHandler itemSelectedCallback) {
+    public PopupMenu(Array<Item> menuItems, MenuLockLayer lockLayer, ItemSelectedHandler itemSelectedCallback) {
         this(menuItems, lockLayer, itemSelectedCallback, null);
     }
 
@@ -154,7 +154,7 @@ public class PopupMenu extends Composite {
      * @param itemSelectedCallback
      *         - callback, uses for notifying parent menu when menu item is selected.
      */
-    public PopupMenu(JsonArray<Item> menuItems, MenuLockLayer lockLayer, ItemSelectedHandler itemSelectedCallback,
+    public PopupMenu(Array<Item> menuItems, MenuLockLayer lockLayer, ItemSelectedHandler itemSelectedCallback,
                      String itemIdPrefix) {
         this.items = new ArrayList<Item>();
         this.itemIdPrefix = itemIdPrefix;

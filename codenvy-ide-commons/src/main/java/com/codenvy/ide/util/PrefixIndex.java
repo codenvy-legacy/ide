@@ -14,7 +14,7 @@
 
 package com.codenvy.ide.util;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 
 /**
  * Interface of the index structure which supports search by the key prefix.
@@ -30,5 +30,5 @@ public interface PrefixIndex<T> {
      *         search key prefix
      * @return values having keys prefixed with {@code prefix}
      */
-    JsonArray<? extends T> search(String prefix);
+    Array<? extends T> search(String prefix);
 }

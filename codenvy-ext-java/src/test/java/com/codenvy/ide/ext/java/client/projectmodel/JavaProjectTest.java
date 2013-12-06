@@ -17,12 +17,8 @@
  */
 package com.codenvy.ide.ext.java.client.projectmodel;
 
-import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
-import com.codenvy.ide.ext.java.client.projectmodel.Package;
-import com.codenvy.ide.ext.java.client.projectmodel.SourceFolder;
-
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Resource;
 
@@ -57,7 +53,7 @@ public class JavaProjectTest {
 
     @Before
     public void setUp() {
-        JsonArray<Resource> childrens = JsonCollections.createArray();
+        Array<Resource> childrens = Collections.createArray();
         for (String pack : packages) {
             Package p = Mockito.mock(Package.class);
             Mockito.when(p.getName()).thenReturn(pack);

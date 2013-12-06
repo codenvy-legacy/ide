@@ -14,8 +14,8 @@
 
 package com.codenvy.ide.text.store;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.store.TextChange.Type;
 import com.codenvy.ide.text.store.anchor.Anchor;
@@ -31,15 +31,15 @@ import com.codenvy.ide.util.StringUtils;
  */
 class DocumentMutatorImpl implements TextStoreMutator {
 
-    private final DocumentModel         document;
-    private final JsonArray<TextChange> textChanges;
-    private       AnchorManager         anchorManager;
+    private final DocumentModel     document;
+    private final Array<TextChange> textChanges;
+    private       AnchorManager     anchorManager;
 
     DocumentMutatorImpl(DocumentModel document) {
         this.document = document;
         this.anchorManager = document.getAnchorManager();
 
-        textChanges = JsonCollections.createArray();
+        textChanges = Collections.createArray();
     }
 
     @Override
@@ -58,7 +58,7 @@ class DocumentMutatorImpl implements TextStoreMutator {
         if (column >= line.getText().length()) {
             throw new IndexOutOfBoundsException("Attempt to delete text at column " + column
                                                 + " which is greater than line length " + line.getText().length() + "(line text is: " +
-                                                line.getText()+ ")");
+                                                line.getText() + ")");
         }
 
         String deletedText = document.getText(line, column, deleteCount);
@@ -140,7 +140,7 @@ class DocumentMutatorImpl implements TextStoreMutator {
         Assert.isNotNull(lineText.endsWith("\n") ? column < lineText.length() : column <= lineText.length(),
                          "Given column is out-of-bounds");
 
-        JsonArray<Line> linesAdded = JsonCollections.createArray();
+        Array<Line> linesAdded = Collections.createArray();
 
       /*
        * The given "line" has two chunks of text: from column 0 to the "column"
@@ -156,7 +156,7 @@ class DocumentMutatorImpl implements TextStoreMutator {
         // First, split the line receiving the text
         String firstChunk = lineText.substring(0, column);
         String secondChunk = lineText.substring(column);
-        JsonArray<String> insertionLineTexts = StringUtils.split(text, "\n");
+        Array<String> insertionLineTexts = StringUtils.split(text, "\n");
 
         line.setText(firstChunk + insertionLineTexts.get(0) + "\n");
 
@@ -267,9 +267,9 @@ class DocumentMutatorImpl implements TextStoreMutator {
     }
 
     private class TextDeleter {
-        private final JsonArray<Anchor> anchorsInDeletedRangeToRemove = JsonCollections.createArray();
-        private final JsonArray<Anchor> anchorsInDeletedRangeToShift  = JsonCollections.createArray();
-        private final JsonArray<Anchor> anchorsLeftoverFromLastLine   = JsonCollections.createArray();
+        private final Array<Anchor> anchorsInDeletedRangeToRemove = Collections.createArray();
+        private final Array<Anchor> anchorsInDeletedRangeToShift  = Collections.createArray();
+        private final Array<Anchor> anchorsLeftoverFromLastLine   = Collections.createArray();
         private final int    firstLineColumn;
         private final Line   firstLine;
         private final int    firstLineNumber;
@@ -290,7 +290,7 @@ class DocumentMutatorImpl implements TextStoreMutator {
         }
 
         void delete() {
-            JsonArray<Line> removedLines = JsonCollections.createArray();
+            Array<Line> removedLines = Collections.createArray();
 
             boolean wasNewlineCharDeleted = deleteFromCurLine(true);
 

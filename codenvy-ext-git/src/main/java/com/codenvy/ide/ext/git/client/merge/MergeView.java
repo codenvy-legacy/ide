@@ -19,7 +19,7 @@ package com.codenvy.ide.ext.git.client.merge;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 
 /**
  * The view of {@link MergePresenter}.
@@ -50,7 +50,7 @@ public interface MergeView extends View<MergeView.ActionDelegate> {
      * @param references
      *         local branches
      */
-    void setLocalBranches(@NotNull JsonArray<Reference> references);
+    void setLocalBranches(@NotNull Array<Reference> references);
 
     /**
      * Set remote branches.
@@ -58,7 +58,7 @@ public interface MergeView extends View<MergeView.ActionDelegate> {
      * @param references
      *         remote branches
      */
-    void setRemoteBranches(@NotNull JsonArray<Reference> references);
+    void setRemoteBranches(@NotNull Array<Reference> references);
 
     /**
      * Change the enable state of the merge button.

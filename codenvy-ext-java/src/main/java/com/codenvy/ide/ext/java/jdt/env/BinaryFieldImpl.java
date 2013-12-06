@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.java.jdt.env;
 
+import com.codenvy.ide.commons.Jso;
 import com.codenvy.ide.ext.java.jdt.core.Signature;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryAnnotation;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryField;
@@ -28,7 +29,6 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.DoubleConstant;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.FloatConstant;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.IntConstant;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.LongConstant;
-import com.codenvy.ide.json.js.Jso;
 
 
 /**

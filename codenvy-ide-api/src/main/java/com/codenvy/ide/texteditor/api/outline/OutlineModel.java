@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.texteditor.api.outline;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.ui.tree.NodeRenderer;
 
@@ -71,8 +71,8 @@ public class OutlineModel {
      * @param nodes
      *         new children's
      */
-    public void setRootChildren(JsonArray<CodeBlock> nodes) {
-        JsonArray<CodeBlock> rootChildren = root.getChildren();
+    public void setRootChildren(Array<CodeBlock> nodes) {
+        Array<CodeBlock> rootChildren = root.getChildren();
         rootChildren.clear();
         rootChildren.addAll(nodes);
         if (listener != null) {

@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.ext.java.worker;
 
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -36,7 +36,7 @@ public class Preferences {
 
     public static final String QUALIFIED_TYPE_NAMEHISTORY = "Qualified_Type_Name_History_";
 
-    private JsonStringMap<String> storage = JsonCollections.createStringMap();
+    private StringMap<String> storage = Collections.createStringMap();
 
     /**
      *

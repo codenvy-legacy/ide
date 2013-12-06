@@ -24,7 +24,7 @@ import com.codenvy.ide.dto.shared.ClientToServerDto;
 import com.codenvy.ide.dto.shared.RoutableDto;
 import com.codenvy.ide.dto.shared.ServerError;
 import com.codenvy.ide.dto.shared.ServerToClientDto;
-import com.codenvy.ide.json.js.Jso;
+import com.codenvy.ide.commons.Jso;
 import com.codenvy.ide.websocket.events.ReplyHandler;
 
 /**

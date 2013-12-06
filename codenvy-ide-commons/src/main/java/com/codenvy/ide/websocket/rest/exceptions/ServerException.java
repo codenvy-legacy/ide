@@ -18,7 +18,7 @@
 
 package com.codenvy.ide.websocket.rest.exceptions;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.rest.Pair;
@@ -52,7 +52,7 @@ public class ServerException extends Exception {
     }
 
     public String getHeader(String key) {
-        JsonArray<Pair> headers = response.getHeaders();
+        Array<Pair> headers = response.getHeaders();
         for (int i = 0; i < headers.size(); i++) {
             Pair header = headers.get(i);
             if (key.equals(header.getName())) {

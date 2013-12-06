@@ -18,8 +18,8 @@
 package com.codenvy.ide.resources.marshal;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.Unmarshallable;
@@ -47,7 +47,7 @@ public class ProjectModelUnmarshaller implements Unmarshallable<ProjectModelProv
         try {
             // Read Primary nature of the project
             JSONObject jsonObject = JSONParser.parseLenient(response.getText()).isObject();
-            JsonArray<Property> properties = JSONDeserializer.PROPERTY_DESERIALIZER.toList(jsonObject.get("properties"));
+            Array<Property> properties = JSONDeserializer.PROPERTY_DESERIALIZER.toList(jsonObject.get("properties"));
 
             // Create project instance using ModelProvider
             modelProviderAdapter = new ProjectModelProviderAdapter(resourceProvider);

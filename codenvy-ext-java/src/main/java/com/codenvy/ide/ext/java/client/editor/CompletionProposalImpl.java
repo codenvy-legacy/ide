@@ -19,7 +19,7 @@ package com.codenvy.ide.ext.java.client.editor;
 
 import com.codenvy.ide.ext.java.messages.Change;
 import com.codenvy.ide.ext.java.messages.ProposalAppliedMessage;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
@@ -92,10 +92,10 @@ public class CompletionProposalImpl implements CompletionProposal {
 
     private class CompletionImpl implements Completion {
 
-        private final JsonArray<Change>                        changes;
+        private final Array<Change>                        changes;
         private final com.codenvy.ide.ext.java.messages.Region region;
 
-        private CompletionImpl(JsonArray<Change> changes, com.codenvy.ide.ext.java.messages.Region region) {
+        private CompletionImpl(Array<Change> changes, com.codenvy.ide.ext.java.messages.Region region) {
             this.changes = changes;
             this.region = region;
         }

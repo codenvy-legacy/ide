@@ -13,7 +13,7 @@
 // limitations under the License.
 package com.codenvy.ide.texteditor.documentparser;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.texteditor.api.parser.State;
 import com.codenvy.ide.texteditor.api.parser.Token;
@@ -31,18 +31,18 @@ import com.codenvy.ide.texteditor.api.parser.Token;
  */
 public class ParseResult<T extends State> {
 
-    private final JsonArray<Token> tokens;
+    private final Array<Token> tokens;
 
     private final T state;
 
-    public ParseResult(JsonArray<Token> tokens, T state) {
+    public ParseResult(Array<Token> tokens, T state) {
         Assert.isNotNull(tokens, "tokens");
         Assert.isNotNull(state, "state");
         this.tokens = tokens;
         this.state = state;
     }
 
-    public JsonArray<Token> getTokens() {
+    public Array<Token> getTokens() {
         return tokens;
     }
 

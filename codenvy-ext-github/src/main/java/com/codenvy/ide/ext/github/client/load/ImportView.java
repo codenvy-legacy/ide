@@ -19,7 +19,7 @@ package com.codenvy.ide.ext.github.client.load;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 
 /**
  * The view of {@link ImportPresenter}.
@@ -65,7 +65,7 @@ public interface ImportView extends View<ImportView.ActionDelegate> {
      * @param repositories
      *         available repositories
      */
-    void setRepositories(@NotNull JsonArray<ProjectData> repositories);
+    void setRepositories(@NotNull Array<ProjectData> repositories);
 
     /**
      * Change the enable state of the finish button.
@@ -85,7 +85,7 @@ public interface ImportView extends View<ImportView.ActionDelegate> {
      * @param names
      *         available names
      */
-    void setAccountNames(@NotNull JsonArray<String> names);
+    void setAccountNames(@NotNull Array<String> names);
 
     /** Close dialog. */
     void close();

@@ -15,10 +15,10 @@
 package com.codenvy.ide.texteditor.ot;
 
 
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DocOp;
 import com.codenvy.ide.dto.DocOpComponent;
 import com.codenvy.ide.dto.shared.DocOpFactory;
-import com.codenvy.ide.json.JsonArray;
 
 /**
  * Inverts document operations such that A composed with the inverse of A is an
@@ -29,9 +29,9 @@ public class Inverter {
     /** Inverts the given document operation. */
     public static DocOp invert(DocOpFactory factory, DocOp docOp) {
         DocOp invertedDocOp = factory.createDocOp();
-        JsonArray<DocOpComponent> invertedDocOpComponents = invertedDocOp.getComponents();
+        Array<DocOpComponent> invertedDocOpComponents = invertedDocOp.getComponents();
 
-        JsonArray<DocOpComponent> components = docOp.getComponents();
+        Array<DocOpComponent> components = docOp.getComponents();
         for (int i = 0, n = components.size(); i < n; i++) {
             invertedDocOpComponents.add(invertComponent(factory, components.get(i)));
         }

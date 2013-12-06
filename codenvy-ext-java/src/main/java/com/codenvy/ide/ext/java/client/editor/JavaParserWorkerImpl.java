@@ -29,9 +29,9 @@ import com.codenvy.ide.ext.java.messages.ProposalAppliedMessage;
 import com.codenvy.ide.ext.java.messages.RoutingTypes;
 import com.codenvy.ide.ext.java.messages.WorkerProposal;
 import com.codenvy.ide.ext.java.messages.impl.MessagesImpls;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.util.UUID;
 import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.util.loging.Log;
@@ -54,15 +54,15 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
     private final MessageFilter                    messageFilter;
     private       Worker                           worker;
     private       ResourceProvider                 resourceProvider;
-    private       JsonStringMap<WorkerCallback<?>> callbacks;
-    private JsonStringMap<ApplyCallback> applyCallback = JsonCollections.createStringMap();
+    private       StringMap<WorkerCallback<?>> callbacks;
+    private       StringMap<ApplyCallback> applyCallback = Collections.createStringMap();
 
     @Inject
     public JavaParserWorkerImpl(ResourceProvider resourceProvider, EventBus eventBus) {
         this.resourceProvider = resourceProvider;
         eventBus.addHandler(ProjectActionEvent.TYPE, this);
         messageFilter = new MessageFilter();
-        callbacks = JsonCollections.createStringMap();
+        callbacks = Collections.createStringMap();
         messageFilter.registerMessageRecipient(RoutingTypes.PROBLEMS, this);
         messageFilter.registerMessageRecipient(RoutingTypes.CA_PROPOSALS_COMPUTED,
                                                new MessageFilter.MessageRecipient<CAProposalsComputedMessage>() {
@@ -205,8 +205,8 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         if (!callbacks.containsKey(message.id())) {
             return;
         }
-        JsonArray<Problem> problems = message.problems();
-        JsonArray<IProblem> iProblems = JsonCollections.createArray();
+        Array<Problem> problems = message.problems();
+        Array<IProblem> iProblems = Collections.createArray();
         for (Problem p : problems.asIterable()) {
             String[] arg = new String[p.stringArguments().size()];
             for (int i = 0; i < p.stringArguments().size(); i++) {

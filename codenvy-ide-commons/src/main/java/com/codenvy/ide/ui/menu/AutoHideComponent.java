@@ -21,8 +21,8 @@ import elemental.events.EventRemover;
 import elemental.html.Element;
 import elemental.util.Timer;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.mvp.UiComponent;
 import com.codenvy.ide.util.HoverController;
 import com.codenvy.ide.util.HoverController.UnhoverListener;
@@ -91,7 +91,7 @@ public abstract class AutoHideComponent<V extends AutoHideView<?>, M extends Aut
 
     private final HoverController hoverController;
 
-    private final JsonArray<Element> clickTargets = JsonCollections.createArray();
+    private final Array<Element> clickTargets = Collections.createArray();
 
     private final Timer hideTimer = new Timer() {
         @Override

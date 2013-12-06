@@ -19,8 +19,8 @@ package com.codenvy.ide.resources.model;
 
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.marshal.*;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -48,7 +48,7 @@ public class Project extends Folder {
     public static final String TYPE              = "project";
     private         ProjectDescription    description;
     /** Properties. */
-    protected       JsonArray<Property>   properties;
+    protected       Array<Property>       properties;
     protected       Loader                loader;
     protected final EventBus              eventBus;
     protected       VirtualFileSystemInfo vfsInfo;
@@ -61,7 +61,7 @@ public class Project extends Folder {
     public Project(EventBus eventBus) {
         super(TYPE, PROJECT_MIME_TYPE);
         this.description = new ProjectDescription(this);
-        this.properties = JsonCollections.<Property>createArray();
+        this.properties = Collections.<Property>createArray();
         this.eventBus = eventBus;
         // TODO : receive it in some way
         this.loader = new EmptyLoader();
@@ -94,9 +94,9 @@ public class Project extends Folder {
      *
      * @return properties. If there is no properties then empty list returned, never <code>null</code>
      */
-    public JsonArray<Property> getProperties() {
+    public Array<Property> getProperties() {
         if (properties == null) {
-            properties = JsonCollections.<Property>createArray();
+            properties = Collections.<Property>createArray();
         }
         return properties;
     }
@@ -109,7 +109,7 @@ public class Project extends Folder {
      * @return property or <code>null</code> if there is not property with specified name
      */
     public Property getProperty(String name) {
-        JsonArray<Property> props = getProperties();
+        Array<Property> props = getProperties();
         for (int i = 0; i < props.size(); i++) {
             Property p = props.get(i);
             if (p.getName().equals(name)) {
@@ -163,7 +163,7 @@ public class Project extends Folder {
      * @return set of property values or <code>null</code> if property does not exists
      * @see #getPropertyValue(String)
      */
-    public JsonArray<String> getPropertyValues(String name) {
+    public Array<String> getPropertyValues(String name) {
         Property p = getProperty(name);
         if (p != null) {
             return p.getValue().copy();
@@ -629,12 +629,12 @@ public class Project extends Folder {
      */
     public void refreshProperties(final AsyncCallback<Project> callback) {
         try {
-            final JsonArray<Property> currentProperties = properties;
+            final Array<Property> currentProperties = properties;
 
-            AsyncRequestCallback<JsonArray<Property>> internalCallback =
-                    new AsyncRequestCallback<JsonArray<Property>>(new PropertyUnmarshaller()) {
+            AsyncRequestCallback<Array<Property>> internalCallback =
+                    new AsyncRequestCallback<Array<Property>>(new PropertyUnmarshaller()) {
                         @Override
-                        protected void onSuccess(JsonArray<Property> properties) {
+                        protected void onSuccess(Array<Property> properties) {
                             // Update properties on client-side Object
                             currentProperties.clear();
                             currentProperties.addAll(properties);
@@ -665,7 +665,7 @@ public class Project extends Folder {
      * @param callback
      * @throws ResourceException
      */
-    public void search(final AsyncCallback<JsonArray<Resource>> callback) {
+    public void search(final AsyncCallback<Array<Resource>> callback) {
         callback.onFailure(new Exception("Operation not currently supported"));
     }
 

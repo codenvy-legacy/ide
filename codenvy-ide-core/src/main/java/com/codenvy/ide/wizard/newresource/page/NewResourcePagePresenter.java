@@ -25,8 +25,8 @@ import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.model.*;
 import com.codenvy.ide.wizard.NewResourceAgentImpl;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePageView.ActionDelegate;
@@ -73,9 +73,9 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
         this.editorAgent = editorAgent;
         this.constant = constant;
 
-        JsonArray<NewResourceProvider> newResources = newResourceAgent.getResources();
+        Array<NewResourceProvider> newResources = newResourceAgent.getResources();
         if (!newResources.isEmpty()) {
-            JsonArray<NewResourceProvider> availableResources = JsonCollections.createArray();
+            Array<NewResourceProvider> availableResources = Collections.createArray();
             for (NewResourceProvider resourceData : newResources.asIterable()) {
                 if (resourceData.inContext()) {
                     availableResources.add(resourceData);
@@ -176,7 +176,7 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
             resourceName = resourceName + extension;
 
             hasSameResource = false;
-            JsonArray<Resource> children = parent.getChildren();
+            Array<Resource> children = parent.getChildren();
             for (int i = 0; i < children.size() && !hasSameResource; i++) {
                 Resource child = children.get(i);
                 hasSameResource = child.getName().equals(resourceName);

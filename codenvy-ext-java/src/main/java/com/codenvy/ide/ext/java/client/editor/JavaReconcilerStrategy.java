@@ -20,7 +20,7 @@ package com.codenvy.ide.ext.java.client.editor;
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.ext.java.jdt.core.IProblemRequestor;
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
@@ -86,7 +86,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, AstProvider,
     }
 
     @Override
-    public void onResult(JsonArray<IProblem> problems) {
+    public void onResult(Array<IProblem> problems) {
         AnnotationModel annotationModel = editor.getDocumentProvider().getAnnotationModel(editor.getEditorInput());
         if (annotationModel == null)
             return;
