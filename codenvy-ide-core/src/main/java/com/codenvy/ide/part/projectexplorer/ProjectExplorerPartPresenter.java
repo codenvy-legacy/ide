@@ -90,6 +90,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
      */
     public void setContent(@NotNull Resource resource) {
         view.setItems(resource);
+        onResourceSelected(null);
     }
 
     /** Adds behavior to view components */
