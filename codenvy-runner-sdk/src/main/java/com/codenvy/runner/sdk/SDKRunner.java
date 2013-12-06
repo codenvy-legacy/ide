@@ -342,7 +342,7 @@ public class SDKRunner extends Runner {
 
         @Override
         public synchronized void start() throws RunnerException {
-            if (ProcessUtil.isAlive(pid)) {
+            if (pid != -1) {
                 throw new IllegalStateException("Process is already started");
             }
 

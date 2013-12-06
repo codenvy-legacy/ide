@@ -72,10 +72,12 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
             @Override
             public void onNodeClosed(TreeNodeElement<Resource> node) {
+                delegate.onResourceSelected(node.getData());
             }
 
             @Override
             public void onNodeContextMenu(int mouseX, int mouseY, TreeNodeElement<Resource> node) {
+                delegate.onResourceSelected(node.getData());
                 delegate.onContextMenu(mouseX, mouseY);
             }
 
@@ -89,6 +91,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
             @Override
             public void onNodeExpanded(TreeNodeElement<Resource> node) {
+                delegate.onResourceSelected(node.getData());
             }
 
             @Override

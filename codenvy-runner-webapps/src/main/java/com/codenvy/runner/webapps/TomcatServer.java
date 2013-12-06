@@ -305,7 +305,7 @@ public class TomcatServer implements ApplicationServer {
 
         @Override
         public void start() throws RunnerException {
-            if (ProcessUtil.isAlive(pid)) {
+            if (pid != -1) {
                 throw new IllegalStateException("Process is already started");
             }
 
