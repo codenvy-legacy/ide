@@ -91,9 +91,9 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      */
     @Inject
     public RunnerController(ResourceProvider resourceProvider, EventBus eventBus, WorkspaceAgent workspaceAgent,
-                               final ConsolePart console, RunnerClientService service,
-                               RunnerLocalizationConstant constant, NotificationManager notificationManager,
-                               DtoFactory dtoFactory) {
+                            final ConsolePart console, RunnerClientService service,
+                            RunnerLocalizationConstant constant, NotificationManager notificationManager,
+                            DtoFactory dtoFactory) {
         this.resourceProvider = resourceProvider;
         this.workspaceAgent = workspaceAgent;
         this.console = console;

@@ -14,6 +14,8 @@
 
 package com.codenvy.ide.dto;
 
+import com.codenvy.dto.shared.DTO;
+
 /**
  * Models one component of a document operation for the Collide code editor.
  * <p/>

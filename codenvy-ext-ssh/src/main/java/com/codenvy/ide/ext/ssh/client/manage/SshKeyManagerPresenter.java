@@ -58,7 +58,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 @Singleton
 public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter implements SshKeyManagerView.ActionDelegate {
     public static final String GITHUB_HOST = "github.com";
-    
+
     private SshKeyManagerView       view;
     private SshKeyService           service;
     private SshLocalizationConstant constant;
@@ -86,7 +86,8 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     @Inject
     public SshKeyManagerPresenter(SshKeyManagerView view, SshKeyService service, SshResources resources, SshLocalizationConstant constant,
                                   EventBus eventBus, Loader loader, UserClientService userService, SshKeyPresenter sshKeyPresenter,
-                                  UploadSshKeyPresenter uploadSshKeyPresenter, NotificationManager notificationManager, DtoFactory dtoFactory) {
+                                  UploadSshKeyPresenter uploadSshKeyPresenter, NotificationManager notificationManager,
+                                  DtoFactory dtoFactory) {
         super(constant.sshManagerTitle(), resources.sshKeyManager());
 
         this.view = view;
@@ -101,7 +102,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
         this.notificationManager = notificationManager;
         this.dtoFactory = dtoFactory;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onViewClicked(@NotNull KeyItem key) {

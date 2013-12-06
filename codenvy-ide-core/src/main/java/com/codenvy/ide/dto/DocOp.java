@@ -15,6 +15,7 @@
 package com.codenvy.ide.dto;
 
 
+import com.codenvy.dto.shared.DTO;
 import com.codenvy.ide.collections.Array;
 
 /**

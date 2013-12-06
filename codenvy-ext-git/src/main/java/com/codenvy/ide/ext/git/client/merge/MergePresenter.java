@@ -107,7 +107,7 @@ public class MergePresenter implements MergeView.ActionDelegate {
                                    @Override
                                    protected void onSuccess(String result) {
                                        Array<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
-                                       if (branches.isEmpty()){
+                                       if (branches.isEmpty()) {
                                            return;
                                        }
 
