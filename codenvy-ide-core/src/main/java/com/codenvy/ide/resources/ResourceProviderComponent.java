@@ -35,12 +35,10 @@ import com.codenvy.ide.resources.marshal.FolderUnmarshaller;
 import com.codenvy.ide.resources.marshal.JSONSerializer;
 import com.codenvy.ide.resources.marshal.ProjectModelProviderAdapter;
 import com.codenvy.ide.resources.marshal.ProjectModelUnmarshaller;
-import com.codenvy.ide.resources.marshal.StringUnmarshaller;
 import com.codenvy.ide.resources.marshal.VFSInfoUnmarshaller;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Link;
-import com.codenvy.ide.resources.model.Lock;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.ProjectDescription;
 import com.codenvy.ide.resources.model.ProjectNature;
@@ -514,22 +512,22 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     /** {@inheritDoc} */
     @Override
     public void delete(final Resource item, final AsyncCallback<String> callback) {
-        String url = item.getLinkByRelation(Link.REL_DELETE).getHref();
-        if (item instanceof File) {
-            Lock lock = ((File)item).getLock();
-            if (lock != null) {
-                url = URL.decode(url).replace("[lockToken]", lock.getLockToken());
-            }
-        }
+        final Folder parent = item.getParent();
+        activeProject.deleteChild(item, new AsyncCallback<Void>() {
 
-        StringUnmarshaller unmarshaller = new StringUnmarshaller();
-        AsyncRequestCallback<String> internalCallback = new AsyncRequestCallback<String>(unmarshaller) {
             @Override
-            protected void onSuccess(final String result) {
+            public void onFailure(Throwable caught) {
+                caught.printStackTrace();
+                callback.onFailure(caught);
+            }
+
+            @Override
+            public void onSuccess(Void result) {
                 if (item instanceof Project) {
                     showListProjects();
-                    callback.onSuccess(result);
-                } else if (item.getParent() instanceof Project) {
+                    //TODO onSuccess
+                    callback.onSuccess(item.toString());
+                } else if (parent instanceof Project) {
                     getProject(activeProject.getName(), new AsyncCallback<Project>() {
                         @Override
                         public void onSuccess(Project result) {
@@ -542,7 +540,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                         }
                     });
                 } else {
-                    getFolder(item.getParent(), new AsyncCallback<Folder>() {
+                    getFolder(parent, new AsyncCallback<Folder>() {
 
                         @Override
                         public void onSuccess(Folder result) {
@@ -554,21 +552,9 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                             callback.onFailure(exception);
                         }
                     });
-                }
+                } 
             }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                callback.onFailure(exception);
-            }
-        };
-
-        loader.setMessage("Deleting item...");
-        try {
-            AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(internalCallback);
-        } catch (RequestException e) {
-            callback.onFailure(e);
-        }
+        });
     }
 
     /** {@inheritDoc} */
