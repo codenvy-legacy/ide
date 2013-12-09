@@ -125,12 +125,12 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
             @Override
             public void onResourceDeleted(ResourceChangedEvent event) {
-                setContent(event.getResource().getProject().getParent());
+                updateItem(event.getResource().getParent());
             }
 
             @Override
             public void onResourceCreated(ResourceChangedEvent event) {
-                setContent(event.getResource().getProject().getParent());
+                updateItem(event.getResource().getParent());
             }
 
             @Override
@@ -145,6 +145,19 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                 }
             }
         });
+    }
+
+    /**
+     * Update item in the project explorer.
+     *
+     * @param resource
+     *         the resource that need to be updated
+     */
+    private void updateItem(@NotNull Resource resource) {
+        Project project = resource.getProject();
+        Resource oldResource = project.findResourceById(resource.getId());
+
+        view.updateItem(oldResource, resource);
     }
 
     /** {@inheritDoc} */
