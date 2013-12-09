@@ -163,6 +163,7 @@ public class SDKRunner extends Runner {
             ZipUtils.unzip(Utils.getCodenvyPlatformBinaryDistribution().openStream(), appDirPath.toFile());
 
             // add extension to Codenvy Platform
+            // TODO avoid unzipping jar-file, use java.util.zip.*
             final Path jarUnzipped =
                     Files.createTempDirectory(getDeployDirectory().toPath(), ("jar_" + getName() + '_'));
             ZipUtils.unzip(jarFile, jarUnzipped.toFile());
