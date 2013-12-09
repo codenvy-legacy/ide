@@ -92,6 +92,8 @@ public class ResourceChangedEvent extends GwtEvent<ResourceChangedHandler> {
             case MOVED:
                 handler.onResourceMoved(this);
                 break;
+            case TREE_REFRESHED:
+                handler.onResourceTreeRefreshed(this);
             default:
                 break;
         }

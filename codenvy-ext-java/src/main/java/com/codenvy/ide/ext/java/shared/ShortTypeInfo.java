@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.java.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /**
  * Short information about class or interface. Contain fqn, short name,

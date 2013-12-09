@@ -73,7 +73,7 @@ public abstract class BaseTest extends GwtTestWithMockito {
     protected SelectionAgent          selectionAgent;
     @Mock
     protected NotificationManager     notificationManager;
-    
+
     @Mock
     protected DtoFactory              dtoFactory;
 

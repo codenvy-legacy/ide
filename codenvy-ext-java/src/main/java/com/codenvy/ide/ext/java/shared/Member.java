@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.java.shared;
 
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /**
  * Member is reflects identifying information about a single member (a field or

@@ -38,7 +38,7 @@
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-api</artifactId>
-            <version>3.0.0-M5-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

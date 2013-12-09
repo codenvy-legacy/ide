@@ -18,10 +18,7 @@
 package com.codenvy.ide.preferences;
 
 import com.codenvy.ide.api.preferences.PreferencesManager;
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.collections.js.JsoStringMap;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.util.loging.Log;
@@ -45,7 +42,7 @@ public class PreferencesManagerImpl implements PreferencesManager {
     private Map<String, String> changedPreferences;
 
     private UserClientService userService;
-    private DtoFactory dtoFactory;
+    private DtoFactory        dtoFactory;
 
     /**
      * Create preferences.

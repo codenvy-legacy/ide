@@ -64,7 +64,8 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
 
     @Inject
     public CloneRepositoryPresenter(CloneRepositoryView view, GitClientService service, ResourceProvider resourceProvider,
-                                    EventBus eventBus, GitLocalizationConstant constant, NotificationManager notificationManager, DtoFactory dtoFactory) {
+                                    EventBus eventBus, GitLocalizationConstant constant, NotificationManager notificationManager,
+                                    DtoFactory dtoFactory) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;

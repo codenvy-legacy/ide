@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.ext.java.shared;
 
+import com.codenvy.dto.shared.DTO;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.dto.DTO;
 
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>

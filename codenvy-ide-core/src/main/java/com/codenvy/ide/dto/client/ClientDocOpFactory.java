@@ -23,6 +23,8 @@ import com.codenvy.ide.dto.DocOpComponent;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.dto.shared.DocOpFactory;
 
+import java.util.ArrayList;
+
 import static com.codenvy.ide.dto.DocOpComponent.Delete;
 import static com.codenvy.ide.dto.DocOpComponent.Insert;
 import static com.codenvy.ide.dto.DocOpComponent.Retain;
@@ -62,7 +64,7 @@ public final class ClientDocOpFactory implements DocOpFactory {
     @Override
     public DocOp createDocOp() {
         DocOp docOp = factory.createDto(DocOp.class);
-        docOp.setComponents(JsoArray.<DocOpComponent>create());
+        docOp.setComponents(new ArrayList<DocOpComponent>());
         return docOp;//DtoClientImpls.DocOpImpl.make().setComponents(JsoArray.<DocOpComponent>create());
     }
 
@@ -80,7 +82,7 @@ public final class ClientDocOpFactory implements DocOpFactory {
         retain.setCount(count);
         retain.setTrailingNewline(hasTrailingNewline);
         retain.setType(RETAIN);
-        return retain;//(DocOpComponent.Retain)DtoClientImpls.RetainImpl.make().setCount(count).setHasTrailingNewline(hasTrailingNewline)
+        return retain;//(DocOpComponent.Retain)DtoClientImpls.RetainImpl.make().setCount(count).setHasTrailingNewline(isTrailingNewline)
         // .setType(RETAIN);
     }
 

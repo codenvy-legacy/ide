@@ -90,6 +90,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
      */
     public void setContent(@NotNull Resource resource) {
         view.setItems(resource);
+        onResourceSelected(null);
     }
 
     /** Adds behavior to view components */
@@ -130,6 +131,18 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             @Override
             public void onResourceCreated(ResourceChangedEvent event) {
                 setContent(event.getResource().getProject().getParent());
+            }
+
+            @Override
+            public void onResourceTreeRefreshed(ResourceChangedEvent event) {
+                if (event.getResource() instanceof Project && event.getResource().getProject() != null) {
+                    view.updateItem(event.getResource().getProject(), event.getResource());
+                } else if (event.getResource().getProject() != null) {
+                    Resource oldResource = event.getResource().getProject().findResourceById(event.getResource().getId());
+                    if (oldResource != null) {
+                        view.updateItem(oldResource, event.getResource());
+                    }
+                }
             }
         });
     }

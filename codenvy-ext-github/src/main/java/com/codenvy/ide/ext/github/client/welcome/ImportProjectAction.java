@@ -43,7 +43,7 @@ public class ImportProjectAction implements WelcomeItemAction {
     private GitHubResources            resources;
     private ImportPresenter            importPresenter;
     private UserClientService          service;
-    private DtoFactory dtoFactory;
+    private DtoFactory                 dtoFactory;
 
     /**
      * Create action.
