@@ -280,6 +280,16 @@
                         <artifactId>codenvy-ide-api</artifactId>
                         <version>${project.version}</version>
                     </dependency>
+                    <dependency>
+                        <groupId>com.codenvy.ide</groupId>
+                        <artifactId>codenvy-ide-core</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.codenvy.ide</groupId>
+                        <artifactId>codenvy-ide-commons</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
                     <!--
                     Other dependencies if DTOs from current project need them.
                     -->

@@ -54,7 +54,7 @@ public interface DocOpComponent {
 
   /*-
    * The Retain must indicate whether it is covering the end of the line. This
-   * is exposed by the hasTrailingNewline() method.
+   * is exposed by the isTrailingNewline() method.
    *
    * Here's an example of why this is required: Imagine we are composing
    * operations A and B in a two line document:
@@ -91,7 +91,7 @@ public interface DocOpComponent {
     public interface Retain extends DocOpComponent {
         int getCount();
 
-        boolean hasTrailingNewline();
+        boolean isTrailingNewline();
 
         void setCount(int count);
 

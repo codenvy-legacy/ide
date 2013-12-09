@@ -15,6 +15,7 @@
 package com.codenvy.ide.texteditor.ot;
 
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DocOp;
 import com.codenvy.ide.dto.DocOpComponent;
 import com.codenvy.ide.dto.shared.DocOpFactory;
@@ -36,7 +37,7 @@ import static com.codenvy.ide.dto.DocOpComponent.Type.RETAIN_LINE;
 public final class DocOpUtils {
 
     public static void accept(DocOp docOp, DocOpCursor visitor) {
-        Array<DocOpComponent> components = docOp.getComponents();
+        Array<DocOpComponent> components = Collections.createArray(docOp.getComponents());
 
         for (int i = 0, n = components.size(); i < n; i++) {
             acceptComponent(components.get(i), visitor);
@@ -55,7 +56,7 @@ public final class DocOpUtils {
 
             case RETAIN:
                 DocOpComponent.Retain retain = (DocOpComponent.Retain)component;
-                visitor.retain(retain.getCount(), retain.hasTrailingNewline());
+                visitor.retain(retain.getCount(), retain.isTrailingNewline());
                 break;
 
             case RETAIN_LINE:
@@ -71,7 +72,7 @@ public final class DocOpUtils {
     public static DocOp createFromTextChange(DocOpFactory factory, TextChange textChange) {
 
         DocOp docOp = factory.createDocOp();
-        Array<DocOpComponent> components = docOp.getComponents();
+        Array<DocOpComponent> components = Collections.createArray(docOp.getComponents());
 
         int lineNumber = textChange.getLineNumber();
         if (lineNumber > 0) {
@@ -231,7 +232,7 @@ public final class DocOpUtils {
 
             case RETAIN:
                 DocOpComponent.Retain retain = (DocOpComponent.Retain)component;
-                return "R(" + (retain.hasTrailingNewline() ? (retain.getCount() - 1) + "\\n" : ""
+                return "R(" + (retain.isTrailingNewline() ? (retain.getCount() - 1) + "\\n" : ""
                                                                                                + retain.getCount()) + ")";
 
             case RETAIN_LINE:

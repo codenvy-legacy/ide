@@ -16,7 +16,8 @@ package com.codenvy.ide.dto;
 
 
 import com.codenvy.dto.shared.DTO;
-import com.codenvy.ide.collections.Array;
+
+import java.util.List;
 
 /**
  * Models a document operation for the Collide code editor.
@@ -33,7 +34,7 @@ import com.codenvy.ide.collections.Array;
  */
 @DTO
 public interface DocOp {
-    Array<DocOpComponent> getComponents();
+    List<DocOpComponent> getComponents();
 
-    void setComponents(Array<DocOpComponent> components);
+    void setComponents(List<DocOpComponent> components);
 }
