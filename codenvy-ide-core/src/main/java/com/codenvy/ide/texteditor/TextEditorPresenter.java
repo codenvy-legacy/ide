@@ -24,9 +24,13 @@ import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.DocumentProvider.DocumentCallback;
 import com.codenvy.ide.api.editor.SelectionProvider;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.resources.FileEvent;
+import com.codenvy.ide.api.resources.FileEventHandler;
+import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.outline.OutlineImpl;
+import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.annotation.AnnotationModel;
 import com.codenvy.ide.text.store.TextChange;
@@ -40,13 +44,14 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class TextEditorPresenter extends AbstractTextEditorPresenter {
+public class TextEditorPresenter extends AbstractTextEditorPresenter implements FileEventHandler {
 
     private final TextListener textListener = new TextListener() {
 
@@ -63,14 +68,22 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
     private   OutlineImpl             outline;
     private   BreakpointGutterManager breakpointGutterManager;
     private   DtoFactory              dtoFactory;
+    private   WorkspaceAgent          workspaceAgent;
 
     @Inject
-    public TextEditorPresenter(Resources resources, UserActivityManager userActivityManager,
-                               BreakpointGutterManager breakpointGutterManager, DtoFactory dtoFactory) {
+    public TextEditorPresenter(Resources resources,
+                               UserActivityManager userActivityManager,
+                               BreakpointGutterManager breakpointGutterManager,
+                               DtoFactory dtoFactory,
+                               WorkspaceAgent workspaceAgent,
+                               EventBus eventBus) {
         this.resources = resources;
         this.userActivityManager = userActivityManager;
         this.breakpointGutterManager = breakpointGutterManager;
         this.dtoFactory = dtoFactory;
+        this.workspaceAgent = workspaceAgent;
+
+        eventBus.addHandler(FileEvent.TYPE, this);
     }
 
     /** {@inheritDoc} */
@@ -156,7 +169,8 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
 
     /** {@inheritDoc} */
     @Override
-    public void initialize(@NotNull TextEditorConfiguration configuration, @NotNull DocumentProvider documentProvider,
+    public void initialize(@NotNull TextEditorConfiguration configuration,
+                           @NotNull DocumentProvider documentProvider,
                            @NotNull NotificationManager notificationManager) {
         super.initialize(configuration, documentProvider, notificationManager);
         editor = new TextEditorViewImpl(resources, userActivityManager, breakpointGutterManager, dtoFactory);
@@ -167,5 +181,18 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
     @Override
     public void activate() {
         editor.getBuffer().synchronizeScrollTop();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onFileOperation(FileEvent event) {
+        if (event.getOperationType() != FileEvent.FileOperation.CLOSE) {
+            return;
+        }
+
+        File eventFile = event.getFile();
+        File file = input.getFile();
+        if (file.equals(eventFile))
+            workspaceAgent.removePart(this);
     }
 }
