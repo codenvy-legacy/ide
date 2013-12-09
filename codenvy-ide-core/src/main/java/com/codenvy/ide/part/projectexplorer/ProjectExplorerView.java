@@ -35,6 +35,13 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
      *         The root resource item
      */
     void setItems(@NotNull Resource resource);
+    
+    /**
+     * Updates the pointed item.
+     * 
+     * @param resource
+     */
+    void updateItem(@NotNull Resource oldResource, @NotNull Resource newResource);
 
     /**
      * Sets title of part.

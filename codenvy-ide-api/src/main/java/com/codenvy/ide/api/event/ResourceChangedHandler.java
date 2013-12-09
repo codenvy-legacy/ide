@@ -52,5 +52,11 @@ public interface ResourceChangedHandler extends EventHandler {
      * @param event
      */
     void onResourceMoved(ResourceChangedEvent event);
-
+    
+    /**
+     * Resource tree refreshed
+     * 
+     * @param event
+     */
+    void onResourceTreeRefreshed(ResourceChangedEvent event);
 }

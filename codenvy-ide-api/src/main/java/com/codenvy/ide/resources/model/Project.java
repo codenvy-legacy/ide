@@ -298,7 +298,7 @@ public class Project extends Folder {
      * @param newFolderId
      * @param callback
      */
-    protected void refreshTree(final Folder root, final AsyncCallback<Folder> callback) {
+    public void refreshTree(final Folder root, final AsyncCallback<Folder> callback) {
         try {
             // create internal wrapping Request Callback with proper Unmarshaller
             AsyncRequestCallback<Folder> internalCallback =
