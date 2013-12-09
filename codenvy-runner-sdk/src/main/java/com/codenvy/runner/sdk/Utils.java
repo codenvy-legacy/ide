@@ -30,9 +30,7 @@ import java.net.URL;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.EnumSet;
-import java.util.List;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.nio.file.FileVisitResult.TERMINATE;
 
@@ -133,58 +131,6 @@ class Utils {
         pom.getDependencies().add(dep);
 
         writePom(pom, path);
-    }
-
-    /**
-     * Add the specified module name as a dependency to the provided GWT module descriptor.
-     *
-     * @param path
-     *         GWT module descriptor
-     * @param inheritableModuleLogicalName
-     *         logical name of the GWT module to inherit
-     * @throws java.io.IOException
-     *         error occurred while reading or writing content of file
-     */
-    static void inheritGwtModule(Path path, String inheritableModuleLogicalName) throws IOException {
-        final String inheritsString = "    <inherits name='" + inheritableModuleLogicalName + "'/>";
-        List<String> content = Files.readAllLines(path, UTF_8);
-        // insert custom module as last 'inherits' entry
-        int i = 0, lastInheritsLine = 0;
-        for (String str : content) {
-            i++;
-            if (str.contains("<inherits")) {
-                lastInheritsLine = i;
-            }
-        }
-        content.add(lastInheritsLine, inheritsString);
-        Files.write(path, content, UTF_8);
-    }
-
-    /**
-     * Detects and returns GWT module logical name.
-     *
-     * @param folder
-     *         path to folder that contains project sources
-     * @return GWT module logical name
-     * @throws java.io.IOException
-     *         if an I/O error is thrown while finding GWT module descriptor
-     * @throws IllegalArgumentException
-     *         if GWT module descriptor not found
-     */
-    static String detectGwtModuleLogicalName(Path folder) throws IOException {
-        final String fileExtension = ".gwt.xml";
-        final String resourcesDir = folder.toString();
-
-        Finder finder = new Finder("*" + fileExtension);
-        Files.walkFileTree(folder, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, finder);
-        if (finder.getFirstMatchedFile() == null) {
-            throw new IllegalArgumentException("GWT module descriptor (gwt.xml) not found.");
-        }
-
-        String filePath = finder.getFirstMatchedFile().toString();
-        filePath = filePath.substring(filePath.indexOf(resourcesDir) + resourcesDir.length() + 1,
-                                      filePath.length() - fileExtension.length());
-        return filePath.replace(File.separatorChar, '.');
     }
 
     /**

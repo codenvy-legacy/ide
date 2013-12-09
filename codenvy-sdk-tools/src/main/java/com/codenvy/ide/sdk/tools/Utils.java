@@ -120,31 +120,6 @@ class Utils {
     }
 
     /**
-     * Add the specified module name as a dependency to the provided GWT module descriptor.
-     *
-     * @param path
-     *         GWT module descriptor
-     * @param inheritableModuleLogicalName
-     *         logical name of the GWT module to inherit
-     * @throws java.io.IOException
-     *         error occurred while reading or writing content of file
-     */
-    static void inheritGwtModule(Path path, String inheritableModuleLogicalName) throws IOException {
-        final String inheritsString = "    <inherits name='" + inheritableModuleLogicalName + "'/>";
-        List<String> content = Files.readAllLines(path, UTF_8);
-        // insert custom module as last 'inherits' entry
-        int i = 0, lastInheritsLine = 0;
-        for (String str : content) {
-            i++;
-            if (str.contains("<inherits")) {
-                lastInheritsLine = i;
-            }
-        }
-        content.add(lastInheritsLine, inheritsString);
-        Files.write(path, content, UTF_8);
-    }
-
-    /**
      * Detects and returns {@code Path} to file by name pattern.
      *
      * @param pattern

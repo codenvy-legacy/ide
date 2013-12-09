@@ -18,6 +18,7 @@
 package com.codenvy.ide.sdk.tools;
 
 import com.codenvy.ide.commons.FileUtils;
+import com.codenvy.ide.commons.GwtXmlUtils;
 
 import org.apache.maven.model.Model;
 
@@ -88,7 +89,7 @@ public class InstallExtension {
             Utils.addDependencyToPom(extResourcesWorkDirPath.resolve("pom.xml"),
                                      extension.groupId, extension.artifactId, extension.artifactVersion);
             final Path ideGwtXmlPath = Utils.findFile(IDE_GWT_XML_FILE_NAME, extResourcesWorkDirPath);
-            Utils.inheritGwtModule(ideGwtXmlPath, extension.gwtModuleName);
+            GwtXmlUtils.inheritGwtModule(ideGwtXmlPath, extension.gwtModuleName);
         }
     }
 
@@ -133,7 +134,6 @@ public class InstallExtension {
 
         String gwtModuleName = gwtXmlEntry.getName().replace(File.separatorChar, '.');
         gwtModuleName = gwtModuleName.substring(0, gwtModuleName.length() - GWT_MODULE_XML_SUFFIX.length());
-        // TODO use utils from codenvy-builder-tools
         final Model pom = Utils.readPom(zipFile.getInputStream(pomEntry));
         zipFile.close();
         return new Extension(gwtModuleName, pom.getGroupId(), pom.getArtifactId(), pom.getVersion());
