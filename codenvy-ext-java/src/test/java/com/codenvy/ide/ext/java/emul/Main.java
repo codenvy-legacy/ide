@@ -15,8 +15,8 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.emul;
 
-import com.codenvy.ide.ext.java.client.internal.compiler.problem.ProblemSeverities;
-import com.codenvy.ide.ext.java.client.internal.compiler.util.SuffixConstants;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.ProblemSeverities;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.util.SuffixConstants;
 
 public class Main implements ProblemSeverities, SuffixConstants {
 //	public static class Logger {

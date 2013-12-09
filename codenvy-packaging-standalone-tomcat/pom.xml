@@ -25,7 +25,7 @@
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
-        <version>3.0.0-M4-SNAPSHOT</version>
+        <version>3.0.0-M5-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-packaging-standalone-tomcat</artifactId>
     <packaging>pom</packaging>
@@ -132,17 +132,13 @@
             <type>jar</type>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>gist-extension</artifactId>
+            <type>jar</type>
+            <version>${project.version}</version>
+        </dependency>
 
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-maven</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-ant</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-git</artifactId>
@@ -379,6 +375,15 @@
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
                                     <destFileName>gin-tutorial.zip</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>gist-extension</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>gist-extension.zip</destFileName>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>

@@ -24,7 +24,7 @@
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
-        <version>3.0.0-M4-SNAPSHOT</version>
+        <version>3.0.0-M5-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ide-api</artifactId>
     <packaging>jar</packaging>
@@ -101,7 +101,7 @@
                             <goal>java</goal>
                         </goals>
                         <configuration>
-                            <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
+                            <mainClass>com.codenvy.dto.generator.DtoGenerator</mainClass>
                             <arguments>
                                 <argument>--dto_packages=com.codenvy.ide.api.user</argument>
                                 <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/resources/DtoClientImpls.java</argument>

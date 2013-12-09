@@ -19,7 +19,7 @@ package com.codenvy.ide.ext.java.client.wizard;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.ext.java.client.JavaClientBundle;
+import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
@@ -35,7 +35,7 @@ public class NewEnumProvider extends AbstractNewJavaResourceProvider {
 
     @Inject
     public NewEnumProvider(SelectionAgent selectionAgent) {
-        super("Java Enum", "Java Enum", JavaClientBundle.INSTANCE.enumItem(), "java", selectionAgent);
+        super("Java Enum", "Java Enum", JavaResources.INSTANCE.enumItem(), "java", selectionAgent);
     }
 
     /** {@inheritDoc} */

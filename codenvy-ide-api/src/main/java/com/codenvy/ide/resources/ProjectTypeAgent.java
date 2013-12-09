@@ -19,7 +19,7 @@ package com.codenvy.ide.resources;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
@@ -46,5 +46,5 @@ public interface ProjectTypeAgent {
                   @NotNull String title,
                   @Nullable ImageResource icon,
                   @NotNull String primaryNature,
-                  @NotNull JsonArray<String> secondaryNature);
+                  @NotNull Array<String> secondaryNature);
 }

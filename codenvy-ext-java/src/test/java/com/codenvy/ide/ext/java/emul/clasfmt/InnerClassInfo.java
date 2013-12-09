@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.emul.clasfmt;
 
-import com.codenvy.ide.ext.java.client.internal.compiler.env.IBinaryNestedType;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryNestedType;
 
 /**
  * Describes one entry in the classes table of the InnerClasses attribute.

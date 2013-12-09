@@ -17,10 +17,10 @@ package com.codenvy.ide.texteditor.renderer;
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.debug.BreakpointGutterManager;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.js.JsoIntegerMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.js.JsoIntegerMap;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.texteditor.Buffer;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
@@ -70,7 +70,7 @@ public class LineNumberRenderer {
 
     private BreakpointGutterManager breakpointGutterManager;
 
-    private final JsonArray<ListenerRegistrar.Remover> listenerRemovers = JsonCollections.createArray();
+    private final Array<ListenerRegistrar.Remover> listenerRemovers = Collections.createArray();
 
     private final SelectionModel.CursorListener cursorListener = new SelectionModel.CursorListener() {
         @Override

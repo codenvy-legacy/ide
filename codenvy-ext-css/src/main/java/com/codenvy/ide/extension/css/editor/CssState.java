@@ -13,7 +13,7 @@
 // limitations under the License.
 package com.codenvy.ide.extension.css.editor;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.texteditor.api.parser.CmState;
 
 
@@ -23,7 +23,7 @@ public class CssState extends CmState {
     protected CssState() {
     }
 
-    final native JsonArray<String> getStack() /*-{
+    final native Array<String> getStack() /*-{
         return this.stack;
     }-*/;
 }

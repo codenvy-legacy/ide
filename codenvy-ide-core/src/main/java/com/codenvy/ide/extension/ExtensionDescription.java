@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.extension;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 
 /**
  * Provides Extension information:
@@ -31,11 +31,11 @@ import com.codenvy.ide.json.JsonArray;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public class ExtensionDescription {
-    private final String                           id;
-    private final String                           version;
-    private final JsonArray<DependencyDescription> dependencies;
-    private final String                           title;
-    private final String                           description;
+    private final String                       id;
+    private final String                       version;
+    private final Array<DependencyDescription> dependencies;
+    private final String                       title;
+    private final String                       description;
     private boolean enabled = false;
 
     /**
@@ -48,7 +48,7 @@ public class ExtensionDescription {
      * @param description
      */
     public ExtensionDescription(String id, String version, String title, String description,
-                                JsonArray<DependencyDescription> dependencies) {
+                                Array<DependencyDescription> dependencies) {
         this.id = id;
         this.version = version;
         this.title = title;
@@ -97,7 +97,7 @@ public class ExtensionDescription {
      *
      * @return
      */
-    public JsonArray<DependencyDescription> getDependencies() {
+    public Array<DependencyDescription> getDependencies() {
         return dependencies;
     }
 

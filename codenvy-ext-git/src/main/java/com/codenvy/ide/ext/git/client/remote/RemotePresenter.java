@@ -26,7 +26,7 @@ import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.remote.add.AddRemoteRepositoryPresenter;
 import com.codenvy.ide.ext.git.shared.Remote;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.google.gwt.http.client.RequestException;
@@ -67,7 +67,8 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
      */
     @Inject
     public RemotePresenter(RemoteView view, GitClientService service, ResourceProvider resourceProvider, GitLocalizationConstant constant,
-                           AddRemoteRepositoryPresenter addRemoteRepositoryPresenter, NotificationManager notificationManager, DtoFactory dtoFactory) {
+                           AddRemoteRepositoryPresenter addRemoteRepositoryPresenter, NotificationManager notificationManager,
+                           DtoFactory dtoFactory) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
@@ -94,7 +95,7 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
                                new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                    @Override
                                    protected void onSuccess(String result) {
-                                       JsonArray<Remote> remotes = dtoFactory.createListDtoFromJson(result, Remote.class);
+                                       Array<Remote> remotes = dtoFactory.createListDtoFromJson(result, Remote.class);
                                        view.setEnableDeleteButton(false);
                                        view.setRemotes(remotes);
                                        if (!view.isShown()) {

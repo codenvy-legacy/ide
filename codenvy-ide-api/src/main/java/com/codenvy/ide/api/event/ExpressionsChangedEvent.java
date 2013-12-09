@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.api.event;
 
-import com.codenvy.ide.json.JsonIntegerMap;
+import com.codenvy.ide.collections.IntegerMap;
 import com.google.gwt.event.shared.GwtEvent;
 
 
@@ -29,13 +29,13 @@ import com.google.gwt.event.shared.GwtEvent;
 public class ExpressionsChangedEvent extends GwtEvent<ExpressionsChangedHandler> {
     public static Type<ExpressionsChangedHandler> TYPE = new Type<ExpressionsChangedHandler>();
 
-    private final JsonIntegerMap<Boolean> expressions;
+    private final IntegerMap<Boolean> expressions;
 
     /**
      * @param expressions
      *         the map of ID's and current values
      */
-    public ExpressionsChangedEvent(JsonIntegerMap<Boolean> expressions) {
+    public ExpressionsChangedEvent(IntegerMap<Boolean> expressions) {
         this.expressions = expressions;
     }
 
@@ -45,7 +45,7 @@ public class ExpressionsChangedEvent extends GwtEvent<ExpressionsChangedHandler>
     }
 
     /** @return the map, having identifier of the expressions and their new values */
-    public JsonIntegerMap<Boolean> getChangedExpressions() {
+    public IntegerMap<Boolean> getChangedExpressions() {
         return expressions;
     }
 

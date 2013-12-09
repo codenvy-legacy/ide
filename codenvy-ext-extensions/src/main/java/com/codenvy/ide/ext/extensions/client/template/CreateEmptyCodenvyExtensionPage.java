@@ -20,12 +20,10 @@ package com.codenvy.ide.ext.extensions.client.template;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.extensions.client.ExtRuntimeClientService;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
-import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -36,7 +34,7 @@ import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.CODENVY_
 import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.EMPTY_EXTENSION_ID;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS;
-import static com.codenvy.ide.json.JsonCollections.createArray;
+import static com.codenvy.ide.collections.Collections.createArray;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
@@ -48,55 +46,42 @@ import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMAR
  */
 @Singleton
 public class CreateEmptyCodenvyExtensionPage extends AbstractTemplatePage {
-    private ExtRuntimeClientService service;
-    private ResourceProvider        resourceProvider;
+    private ResourceProvider resourceProvider;
 
     /**
      * Create page.
      *
-     * @param service
      * @param resourceProvider
      */
     @Inject
-    public CreateEmptyCodenvyExtensionPage(ExtRuntimeClientService service, ResourceProvider resourceProvider) {
+    public CreateEmptyCodenvyExtensionPage(ResourceProvider resourceProvider) {
         super(null, null, EMPTY_EXTENSION_ID);
-        this.service = service;
         this.resourceProvider = resourceProvider;
     }
 
     /** {@inheritDoc} */
     @Override
     public void commit(@NotNull final CommitCallback callback) {
-        JsonArray<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
+        Array<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
                                                      new Property(PROPERTY_MIXIN_NATURES, CODENVY_EXTENSION_PROJECT_TYPE),
                                                      new Property(PROPERTY_SOURCE_FOLDERS,
-                                                                  createArray("src/main/java", "src/main/resources")));
+                                                                  createArray("src/main/java", "src/main/resources")),
+                                                     new Property("builder_name", "maven"),
+                                                     new Property("builder_maven_targets", createArray("clean", "install")),
+                                                     new Property("runner_name", "sdk"));
         final String projectName = wizardContext.getData(PROJECT_NAME);
-        try {
-            service.createEmptyCodenvyExtensionProject(projectName, properties, new AsyncRequestCallback<Void>() {
-                @Override
-                protected void onSuccess(Void result) {
-                    resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
-                        @Override
-                        public void onSuccess(Project result) {
-                            wizardContext.putData(PROJECT, result);
-                            callback.onSuccess();
-                        }
 
-                        @Override
-                        public void onFailure(Throwable caught) {
-                            callback.onFailure(caught);
-                        }
-                    });
-                }
+        resourceProvider.createProject(projectName, properties, new AsyncCallback<Project>() {
+            @Override
+            public void onSuccess(Project result) {
+                wizardContext.putData(PROJECT, result);
+                callback.onSuccess();
+            }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    callback.onFailure(exception);
-                }
-            });
-        } catch (RequestException e) {
-            callback.onFailure(e);
-        }
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
+            }
+        });
     }
 }

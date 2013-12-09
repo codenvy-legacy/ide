@@ -18,8 +18,8 @@
 
 package com.codenvy.ide.tree;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Resource;
@@ -39,7 +39,7 @@ public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource> {
     }
 
     @Override
-    public JsonArray<Resource> getChildren(Resource data) {
+    public Array<Resource> getChildren(Resource data) {
         if (data instanceof Folder) {
             return ((Folder)data).getChildren();
         }
@@ -85,9 +85,9 @@ public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource> {
     }
 
     @Override
-    public JsonArray<String> getNodePath(Resource data) {
-        JsonArray<String> list = JsonCollections.<String>createArray();
-        JsonArray<String> result = JsonCollections.<String>createArray();
+    public Array<String> getNodePath(Resource data) {
+        Array<String> list = Collections.<String>createArray();
+        Array<String> result = Collections.<String>createArray();
         list.add(data.getId());
 
         Resource localData = data;
@@ -103,7 +103,7 @@ public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource> {
     }
 
     @Override
-    public Resource getNodeByPath(Resource root, JsonArray<String> relativeNodePath) {
+    public Resource getNodeByPath(Resource root, Array<String> relativeNodePath) {
         if (root instanceof Folder) {
             Folder localRoot = (Folder)root;
             for (int i = 0; i < relativeNodePath.size(); i++) {

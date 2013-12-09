@@ -11,12 +11,12 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.emul.clasfmt;
 
-import com.codenvy.ide.ext.java.client.core.compiler.CharOperation;
+import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
 
 import java.util.Arrays;
 
 
-public class ElementValuePairInfo implements com.codenvy.ide.ext.java.client.internal.compiler.env.IBinaryElementValuePair {
+public class ElementValuePairInfo implements com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryElementValuePair {
 
     static final ElementValuePairInfo[] NoMembers = new ElementValuePairInfo[0];
 

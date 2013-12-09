@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.text.annotation;
 
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.BadPositionCategoryException;
@@ -476,13 +476,13 @@ public class AnnotationModelImpl implements AnnotationModel {
 
     /** {@inheritDoc} */
     @Override
-    public JsonStringMap<String> getAnnotationDecorations() {
-        return JsonCollections.createStringMap();
+    public StringMap<String> getAnnotationDecorations() {
+        return Collections.createStringMap();
     }
 
     @Override
-    public JsonStringMap<String> getAnnotationStyle() {
-        return JsonCollections.createStringMap();
+    public StringMap<String> getAnnotationStyle() {
+        return Collections.createStringMap();
     }
 
 }

@@ -21,14 +21,14 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.MergeResult;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
@@ -106,12 +106,12 @@ public class MergePresenter implements MergeView.ActionDelegate {
                                new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                    @Override
                                    protected void onSuccess(String result) {
-                                       JsonArray<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
-                                       if (branches.isEmpty()){
+                                       Array<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
+                                       if (branches.isEmpty()) {
                                            return;
                                        }
 
-                                       JsonArray<Reference> references = JsonCollections.createArray();
+                                       Array<Reference> references = Collections.createArray();
                                        for (int i = 0; i < branches.size(); i++) {
                                            Branch branch = branches.get(i);
                                            if (!branch.isActive()) {
@@ -140,13 +140,13 @@ public class MergePresenter implements MergeView.ActionDelegate {
                                new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                    @Override
                                    protected void onSuccess(String result) {
-                                       JsonArray<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
+                                       Array<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
                                        
                                        if (branches.isEmpty()){
                                            return;
                                        }
 
-                                       JsonArray<Reference> references = JsonCollections.createArray();
+                                       Array<Reference> references = Collections.createArray();
                                        for (int i = 0; i < branches.size(); i++) {
                                            Branch branch = branches.get(i);
                                            if (!branch.isActive()) {

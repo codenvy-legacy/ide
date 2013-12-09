@@ -15,8 +15,8 @@
 package com.codenvy.ide.texteditor.selection;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.texteditor.Buffer;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
@@ -44,8 +44,8 @@ public class LocalCursorController
 
     private final Buffer     buffer;
     private final CursorView cursorView;
-    private final JsonArray<ListenerRegistrar.Remover> listenerRemovers =
-            JsonCollections.createArray();
+    private final Array<ListenerRegistrar.Remover> listenerRemovers =
+            Collections.createArray();
     private final SelectionModel selectionModel;
 
     private LocalCursorController(com.codenvy.ide.texteditor.api.FocusManager focusManager, SelectionModel selectionModel,

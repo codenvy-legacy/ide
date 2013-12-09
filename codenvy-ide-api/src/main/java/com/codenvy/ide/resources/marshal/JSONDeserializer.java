@@ -17,9 +17,9 @@
  */
 package com.codenvy.ide.resources.marshal;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.resources.model.*;
 import com.codenvy.ide.resources.model.VirtualFileSystemInfo.ACLCapability;
 import com.codenvy.ide.resources.model.VirtualFileSystemInfo.QueryCapability;
@@ -229,7 +229,7 @@ public abstract class JSONDeserializer<O> {
 
     protected abstract O[] createArray(int length);
 
-    public JsonArray<O> toList(JSONValue json) {
+    public Array<O> toList(JSONValue json) {
         if (json == null) {
             return null;
         }
@@ -238,14 +238,14 @@ public abstract class JSONDeserializer<O> {
             return null;
         }
         int size = jsonArray.size();
-        JsonArray<O> list = JsonCollections.createArray();
+        Array<O> list = Collections.createArray();
         for (int i = 0; i < size; i++) {
             list.add(toObject(jsonArray.get(i)));
         }
         return list;
     }
 
-    public JsonStringMap<O> toMap(JSONValue json) {
+    public StringMap<O> toMap(JSONValue json) {
         if (json == null) {
             return null;
         }
@@ -255,7 +255,7 @@ public abstract class JSONDeserializer<O> {
         }
         // TODO switch from gwt.JSonObject to Jso from collide
         Set<String> keySet = jsonObject.keySet();
-        JsonStringMap<O> map = JsonCollections.<O>createStringMap();
+        StringMap<O> map = Collections.<O>createStringMap();
         for (Iterator<String> i = keySet.iterator(); i.hasNext(); ) {
             String key = i.next();
             map.put(key, toObject(jsonObject.get(key)));

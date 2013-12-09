@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.ext.java.messages;
 
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.shared.RoutingType;
-import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.webworker.client.messages.Message;
 
 /**
@@ -27,7 +27,7 @@ import com.google.gwt.webworker.client.messages.Message;
  */
 @RoutingType(type = RoutingTypes.PROBLEMS)
 public interface ProblemsMessage extends Message {
-    JsonArray<Problem> problems();
+    Array<Problem> problems();
 
     String id();
 }

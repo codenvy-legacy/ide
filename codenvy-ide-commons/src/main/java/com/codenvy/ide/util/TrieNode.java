@@ -14,8 +14,8 @@
 
 package com.codenvy.ide.util;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 
 /**
  * A node in a trie that can be used for efficient autocompletion lookup.
@@ -26,21 +26,21 @@ import com.codenvy.ide.json.JsonCollections;
 public final class TrieNode<T> {
     private final String prefix;
 
-    private final JsonArray<TrieNode<T>> children;
+    private final Array<TrieNode<T>> children;
 
     private T value;
 
     private TrieNode(String prefix) {
         this.prefix = prefix;
         this.value = null;
-        this.children = JsonCollections.createArray();
+        this.children = Collections.createArray();
     }
 
     public static <T> TrieNode<T> makeNode(String prefix) {
         return new TrieNode<T>(prefix);
     }
 
-    public JsonArray<TrieNode<T>> getChildren() {
+    public Array<TrieNode<T>> getChildren() {
         return children;
     }
 

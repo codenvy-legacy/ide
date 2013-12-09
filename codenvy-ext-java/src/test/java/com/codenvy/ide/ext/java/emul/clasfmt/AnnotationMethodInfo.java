@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.emul.clasfmt;
 
-import com.codenvy.ide.ext.java.client.core.compiler.CharOperation;
+import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
 
 public class AnnotationMethodInfo extends MethodInfo {
     protected Object defaultValue = null;

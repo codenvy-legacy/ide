@@ -10,12 +10,12 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.client.core.rewrite;
 
-import com.codenvy.ide.ext.java.client.core.dom.*;
-import com.codenvy.ide.ext.java.client.core.dom.rewrite.ASTRewrite;
-import com.codenvy.ide.ext.java.client.core.dom.rewrite.ListRewrite;
+import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ASTRewrite;
+import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ListRewrite;
 
-import com.codenvy.ide.ext.java.client.internal.compiler.env.ICompilationUnit;
-import com.codenvy.ide.ext.java.client.internal.core.dom.rewrite.LineCommentEndOffsets;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.ICompilationUnit;
+import com.codenvy.ide.ext.java.jdt.internal.core.dom.rewrite.LineCommentEndOffsets;
 
 import org.junit.Test;
 
@@ -51,7 +51,7 @@ public class LineCommentOffsetsTest extends ASTRewritingTest {
         buf.append("}//comment Y");
         String contents = buf.toString();
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
 
@@ -118,7 +118,7 @@ public class LineCommentOffsetsTest extends ASTRewritingTest {
         String content = buf.toString();
 
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
         CompilationUnit astRoot = createAST(cu);
 
         LineCommentEndOffsets offsets = new LineCommentEndOffsets(astRoot.getCommentList());
@@ -169,7 +169,7 @@ public class LineCommentOffsetsTest extends ASTRewritingTest {
         String content = buf.toString();
 
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
         CompilationUnit astRoot = createAST(cu);
 
         LineCommentEndOffsets offsets = new LineCommentEndOffsets(astRoot.getCommentList());
@@ -205,7 +205,7 @@ public class LineCommentOffsetsTest extends ASTRewritingTest {
         buf.append("{\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -239,7 +239,7 @@ public class LineCommentOffsetsTest extends ASTRewritingTest {
         buf.append("{\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -272,7 +272,7 @@ public class LineCommentOffsetsTest extends ASTRewritingTest {
         buf.append("{\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -311,7 +311,7 @@ public class LineCommentOffsetsTest extends ASTRewritingTest {
         buf.append("  }\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -356,7 +356,7 @@ public class LineCommentOffsetsTest extends ASTRewritingTest {
         buf.append("  }\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -407,7 +407,7 @@ public class LineCommentOffsetsTest extends ASTRewritingTest {
         buf.append("  }\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -448,7 +448,7 @@ public class LineCommentOffsetsTest extends ASTRewritingTest {
         buf.append("  }\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -491,7 +491,7 @@ public class LineCommentOffsetsTest extends ASTRewritingTest {
         buf.append("  }\n");
         buf.append("}\n");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
@@ -543,7 +543,7 @@ public class LineCommentOffsetsTest extends ASTRewritingTest {
         buf.append("{\n");
         buf.append("}//comment");
         ICompilationUnit cu =
-                new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+                new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
         CompilationUnit astRoot = createAST3(cu);
         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());

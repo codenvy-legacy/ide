@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.java.client.core;
 
-import com.codenvy.ide.ext.java.client.core.dom.TypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.TypeDeclaration;
 
 import org.junit.Test;
 

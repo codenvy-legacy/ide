@@ -23,9 +23,9 @@ import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -39,14 +39,14 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class TemplateAgentImpl implements TemplateAgent {
-    private       NewProjectWizard        newProjectWizard;
-    private final JsonStringMap<Template> templates;
+    private       NewProjectWizard    newProjectWizard;
+    private final StringMap<Template> templates;
 
     /** Create agent. */
     @Inject
     protected TemplateAgentImpl(NewProjectWizard newProjectWizard) {
         this.newProjectWizard = newProjectWizard;
-        this.templates = JsonCollections.createStringMap();
+        this.templates = Collections.createStringMap();
     }
 
     /** {@inheritDoc} */
@@ -55,8 +55,8 @@ public class TemplateAgentImpl implements TemplateAgent {
                          @NotNull String title,
                          @Nullable ImageResource icon,
                          @NotNull String primaryNature,
-                         @NotNull JsonArray<String> secondaryNatures,
-                         @NotNull JsonArray<Provider<? extends AbstractTemplatePage>> wizardPages) {
+                         @NotNull Array<String> secondaryNatures,
+                         @NotNull Array<Provider<? extends AbstractTemplatePage>> wizardPages) {
         if (templates.containsKey(id)) {
             Window.alert("Template with " + id + " id already exists");
             return;
@@ -79,8 +79,8 @@ public class TemplateAgentImpl implements TemplateAgent {
      * @return available project type
      */
     @NotNull
-    public JsonArray<Template> getTemplatesForProjectType(@NotNull String primaryNature, @NotNull JsonArray<String> secondaryNatures) {
-        JsonArray<Template> availableTemplates = JsonCollections.createArray();
+    public Array<Template> getTemplatesForProjectType(@NotNull String primaryNature, @NotNull Array<String> secondaryNatures) {
+        Array<Template> availableTemplates = Collections.createArray();
         for (Template template : templates.getValues().asIterable()) {
             if (template.isAvailable(primaryNature, secondaryNatures)) {
                 availableTemplates.add(template);

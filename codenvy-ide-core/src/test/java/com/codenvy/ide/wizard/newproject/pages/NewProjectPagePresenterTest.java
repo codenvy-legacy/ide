@@ -23,8 +23,8 @@ import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.wizard.newproject.PaaSAgentImpl;
 import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
@@ -87,22 +87,22 @@ public class NewProjectPagePresenterTest {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 Object[] arguments = invocationOnMock.getArguments();
-                AsyncCallback<JsonArray<String>> callback = (AsyncCallback<JsonArray<String>>)arguments[0];
-                JsonArray<String> projects = JsonCollections.createArray(PROJECT_NAME);
+                AsyncCallback<Array<String>> callback = (AsyncCallback<Array<String>>)arguments[0];
+                Array<String> projects = Collections.createArray(PROJECT_NAME);
                 callback.onSuccess(projects);
                 return null;
             }
-        }).when(resourceProvider).listProjects((AsyncCallback<JsonArray<String>>)anyObject());
+        }).when(resourceProvider).listProjects((AsyncCallback<Array<String>>)anyObject());
 
         setUp();
     }
 
     /** Prepare test when project list is not come. */
     private void setUp() {
-        JsonArray<ProjectTypeData> projectTypes = JsonCollections.createArray(projectType);
+        Array<ProjectTypeData> projectTypes = Collections.createArray(projectType);
         when(projectTypeAgent.getProjectTypes()).thenReturn(projectTypes);
 
-        JsonArray<PaaS> paases = JsonCollections.createArray(paas);
+        Array<PaaS> paases = Collections.createArray(paas);
         when(paasAgent.getPaaSes()).thenReturn(paases);
 
         presenter = new NewProjectPagePresenter(view, resources, projectTypeAgent, paasAgent, resourceProvider, constant);
@@ -148,7 +148,7 @@ public class NewProjectPagePresenterTest {
     @Test
     public void testFocusComponent() throws Exception {
         setUp();
-        when(paas.isAvailable(anyString(), (JsonArray<String>)anyObject())).thenReturn(AVAILABLE);
+        when(paas.isAvailable(anyString(), (Array<String>)anyObject())).thenReturn(AVAILABLE);
 
         presenter.focusComponent();
 
@@ -260,7 +260,7 @@ public class NewProjectPagePresenterTest {
     @Test
     public void testOnProjectTypeSelected() throws Exception {
         setUp();
-        when(paas.isAvailable(anyString(), (JsonArray<String>)anyObject())).thenReturn(AVAILABLE);
+        when(paas.isAvailable(anyString(), (Array<String>)anyObject())).thenReturn(AVAILABLE);
 
         presenter.focusComponent();
         reset(view);

@@ -15,8 +15,8 @@
 package com.codenvy.ide.text.store.anchor;
 
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.anchor.InsertionPlacementStrategy.Placement;
@@ -153,12 +153,12 @@ public class AnchorManager {
      * Returns anchors of the given type on the given line, or null if there are
      * no anchors of any kind on the given line.
      */
-    public static JsonArray<Anchor> getAnchorsByTypeOrNull(Line line, AnchorType type) {
+    public static Array<Anchor> getAnchorsByTypeOrNull(Line line, AnchorType type) {
         AnchorList anchorList = getAnchorsOrNull(line);
         if (anchorList == null) {
             return null;
         }
-        JsonArray<Anchor> anchors = JsonCollections.createArray();
+        Array<Anchor> anchors = Collections.createArray();
         for (int i = 0; i < anchorList.size(); i++) {
             Anchor anchor = anchorList.get(i);
             if (type.equals(anchor.getType())) {
@@ -274,8 +274,8 @@ public class AnchorManager {
 
     // TODO: not public
     public void handleTextPredeletionForLine(Line line, int column, int deleteCountForLine,
-                                             final JsonArray<Anchor> anchorsInDeletedRangeToRemove,
-                                             final JsonArray<Anchor> anchorsInDeletedRangeToShift, boolean isFirstLine) {
+                                             final Array<Anchor> anchorsInDeletedRangeToRemove,
+                                             final Array<Anchor> anchorsInDeletedRangeToShift, boolean isFirstLine) {
 
         AnchorList anchors = getAnchorsOrNull(line);
         if (anchors == null) {
@@ -306,7 +306,7 @@ public class AnchorManager {
     }
 
     // TODO: not public
-    public void handleTextDeletionLastLineLeftover(JsonArray<Anchor> anchorsLeftoverFromLastLine,
+    public void handleTextDeletionLastLineLeftover(Array<Anchor> anchorsLeftoverFromLastLine,
                                                    Line firstLine, Line lastLine, int lastLineFirstUntouchedColumn) {
 
         AnchorList anchors = getAnchorsOrNull(lastLine);
@@ -335,8 +335,8 @@ public class AnchorManager {
      *         of the deletion. If all of the characters on the last line were
      *         deleted, this will be the length of the text on the line
      */
-    public void handleTextDeletionFinished(JsonArray<Anchor> anchorsInDeletedRangeToRemove,
-                                           JsonArray<Anchor> anchorsInDeletionRangeToShift, JsonArray<Anchor> anchorsLeftoverOnLastLine,
+    public void handleTextDeletionFinished(Array<Anchor> anchorsInDeletedRangeToRemove,
+                                           Array<Anchor> anchorsInDeletionRangeToShift, Array<Anchor> anchorsLeftoverOnLastLine,
                                            Line firstLine, int firstLineNumber, int firstLineColumn, int numberOfLinesDeleted,
                                            int lastLineFirstUntouchedColumn) {
 
@@ -382,7 +382,7 @@ public class AnchorManager {
     }
 
     private void categorizeAccordingToRemovalStrategy(Anchor anchor,
-                                                      JsonArray<Anchor> anchorsToRemove, JsonArray<Anchor> anchorsToShift) {
+                                                      Array<Anchor> anchorsToRemove, Array<Anchor> anchorsToShift) {
 
         switch (anchor.getRemovalStrategy()) {
             case SHIFT:
@@ -594,7 +594,7 @@ public class AnchorManager {
         }
 
         // Re-adding in the loop above can cause problems if shiftAmount > 0
-        JsonArray<Anchor> shiftedAnchors = dispatcher.getShiftedAnchors();
+        Array<Anchor> shiftedAnchors = dispatcher.getShiftedAnchors();
         if (shiftedAnchors != null) {
             for (int i = 0, n = shiftedAnchors.size(); i < n; i++) {
                 anchors.add(shiftedAnchors.get(i));

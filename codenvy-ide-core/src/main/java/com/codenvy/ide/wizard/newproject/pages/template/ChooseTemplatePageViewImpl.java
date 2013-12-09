@@ -23,7 +23,7 @@ import elemental.html.TableElement;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.template.Template;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.list.SimpleList.View;
 import com.codenvy.ide.util.dom.Elements;
@@ -117,7 +117,7 @@ public class ChooseTemplatePageViewImpl extends Composite implements ChooseTempl
 
     /** {@inheritDoc} */
     @Override
-    public void setTemplates(JsonArray<Template> templates) {
+    public void setTemplates(Array<Template> templates) {
         list.render(templates);
     }
 

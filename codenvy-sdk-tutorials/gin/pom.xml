@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.codenvy.ide</groupId>
-    <version>3.0.0-M4-SNAPSHOT</version>
+    <version>3.0.0-M5-SNAPSHOT</version>
     <artifactId>gin-tutorial</artifactId>
     <name>Codenvy Tutorial :: GIN</name>
     <packaging>jar</packaging>

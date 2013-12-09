@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.resources.model;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
@@ -27,7 +27,7 @@ import com.codenvy.ide.json.JsonCollections;
 public class Property {
     protected String name;
 
-    protected JsonArray<String> value;
+    protected Array<String> value;
 
     /**
      * Create multi-valued Property
@@ -35,7 +35,7 @@ public class Property {
      * @param name
      * @param value
      */
-    public Property(String name, JsonArray<String> value) {
+    public Property(String name, Array<String> value) {
         this.name = name;
         this.value = value;
     }
@@ -45,7 +45,7 @@ public class Property {
      * <p/>
      * <pre>
      * String val = ...;
-     * JsonArray&lt;String&gt; l = JsonCollections.&lt;String&gt;createArray();
+     * Array&lt;String&gt; l = Collections.&lt;String&gt;createArray();
      * l.add(val);
      * new Property(&quot;MyName&quot;, l);
      * </pre>
@@ -57,7 +57,7 @@ public class Property {
      */
     public Property(String name, String value) {
         this.name = name;
-        this.value = JsonCollections.<String>createArray();
+        this.value = Collections.<String>createArray();
         this.value.add(value);
     }
 
@@ -83,7 +83,7 @@ public class Property {
      *
      * @return
      */
-    public JsonArray<String> getValue() {
+    public Array<String> getValue() {
         return value;
     }
 
@@ -92,7 +92,7 @@ public class Property {
      *
      * @param value
      */
-    public void setValue(JsonArray<String> value) {
+    public void setValue(Array<String> value) {
         this.value = value;
     }
 

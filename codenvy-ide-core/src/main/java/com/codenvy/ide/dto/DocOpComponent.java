@@ -14,6 +14,8 @@
 
 package com.codenvy.ide.dto;
 
+import com.codenvy.dto.shared.DTO;
+
 /**
  * Models one component of a document operation for the Collide code editor.
  * <p/>
@@ -34,6 +36,8 @@ public interface DocOpComponent {
     @DTO
     public interface Delete extends DocOpComponent {
         String getText();
+
+        void setText(String text);
     }
 
     /**
@@ -44,6 +48,8 @@ public interface DocOpComponent {
     @DTO
     public interface Insert extends DocOpComponent {
         String getText();
+
+        void setText(String text);
     }
 
   /*-
@@ -86,6 +92,10 @@ public interface DocOpComponent {
         int getCount();
 
         boolean hasTrailingNewline();
+
+        void setCount(int count);
+
+        void setTrailingNewline(boolean hasTrailingNewline);
     }
 
     /**
@@ -100,6 +110,8 @@ public interface DocOpComponent {
     @DTO
     public interface RetainLine extends DocOpComponent {
         int getLineCount();
+
+        void setLineCount(int lineCount);
     }
 
     /*
@@ -114,5 +126,7 @@ public interface DocOpComponent {
         public static final int RETAIN_LINE = 3;
     }
 
-    public int getType();
+    int getType();
+
+    void setType(int type);
 }

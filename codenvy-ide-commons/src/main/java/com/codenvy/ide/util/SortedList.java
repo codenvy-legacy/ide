@@ -14,8 +14,8 @@
 
 package com.codenvy.ide.util;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.runtime.Assert;
 
 
@@ -77,14 +77,14 @@ public class SortedList<T> {
 
     private static final boolean ENSURE_SORTED_PRECONDITIONS_ENABLED = false;
 
-    private final JsonArray<T> array;
+    private final Array<T> array;
 
     private final Comparator<T> comparator;
 
     private final ComparatorDelegator comparatorDelegator = new ComparatorDelegator();
 
     public SortedList(Comparator<T> comparator) {
-        this.array = JsonCollections.createArray();
+        this.array = Collections.createArray();
         this.comparator = comparator;
     }
 
@@ -212,15 +212,15 @@ public class SortedList<T> {
     }
 
     /** Removes the items starting at {@code index} through to the end. */
-    public JsonArray<T> removeThisAndFollowing(int index) {
-        JsonArray<T> items = removeSublist(index, array.size() - index);
+    public Array<T> removeThisAndFollowing(int index) {
+        Array<T> items = removeSublist(index, array.size() - index);
         ensureSortedIfEnabled();
         return items;
     }
 
     /** Removes the items starting at {@code index} through to the end. */
-    public JsonArray<T> removeSublist(int index, int sublistSize) {
-        JsonArray<T> sublist = array.splice(index, sublistSize);
+    public Array<T> removeSublist(int index, int sublistSize) {
+        Array<T> sublist = array.splice(index, sublistSize);
         ensureSortedIfEnabled();
         return sublist;
     }
@@ -242,7 +242,7 @@ public class SortedList<T> {
     }
 
     /** @return copy of this list as an array */
-    public JsonArray<T> toArray() {
+    public Array<T> toArray() {
         return array.copy();
     }
 
@@ -261,7 +261,7 @@ public class SortedList<T> {
         ensureSortedIfEnabled();
     }
 
-    public static <T> int binarySearch(JsonArray<T> array, OneWayComparator<T> comparator) {
+    public static <T> int binarySearch(Array<T> array, OneWayComparator<T> comparator) {
         int lower = 0;
         int upper = array.size() - 1;
 

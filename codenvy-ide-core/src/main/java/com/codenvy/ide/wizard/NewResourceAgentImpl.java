@@ -20,9 +20,9 @@ package com.codenvy.ide.wizard;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 
@@ -35,12 +35,12 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class NewResourceAgentImpl implements NewResourceAgent {
-    private final JsonStringMap<NewResourceProvider> resources;
+    private final StringMap<NewResourceProvider> resources;
 
     /** Create agent */
     @Inject
     protected NewResourceAgentImpl() {
-        resources = JsonCollections.createStringMap();
+        resources = Collections.createStringMap();
     }
 
     /** {@inheritDoc} */
@@ -56,7 +56,7 @@ public class NewResourceAgentImpl implements NewResourceAgent {
     }
 
     /** @return all registered resources */
-    public JsonArray<NewResourceProvider> getResources() {
+    public Array<NewResourceProvider> getResources() {
         return resources.getValues();
     }
 }

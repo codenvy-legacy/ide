@@ -19,8 +19,8 @@ package com.codenvy.ide.api.notification;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 
 import java.util.Date;
 
@@ -76,15 +76,15 @@ public final class Notification {
         READ, UNREAD
     }
 
-    private String                          message;
-    private Type                            type;
-    private Status                          status;
-    private State                           state;
-    private Date                            time;
-    private boolean                         important;
-    private OpenNotificationHandler         openHandler;
-    private CloseNotificationHandler        closeHandler;
-    private JsonArray<NotificationObserver> observers;
+    private String                      message;
+    private Type                        type;
+    private Status                      status;
+    private State                       state;
+    private Date                        time;
+    private boolean                     important;
+    private OpenNotificationHandler     openHandler;
+    private CloseNotificationHandler    closeHandler;
+    private Array<NotificationObserver> observers;
 
     /**
      * Create notification with message and type. Other parameters will be added with default values. This notification has got
@@ -399,7 +399,7 @@ public final class Notification {
         this.important = important;
         this.openHandler = openHandler;
         this.closeHandler = closeHandler;
-        this.observers = JsonCollections.createArray();
+        this.observers = Collections.createArray();
     }
 
     /** @return notification's message */

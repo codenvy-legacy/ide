@@ -100,4 +100,6 @@ public interface MethodInfo extends Member {
 
     void setAnnotationDefault(AnnotationValue value);
 
+    void setIsConstructor(boolean constructor);
+
 }

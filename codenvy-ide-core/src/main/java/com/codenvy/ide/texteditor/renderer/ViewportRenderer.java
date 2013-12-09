@@ -17,7 +17,7 @@ package com.codenvy.ide.texteditor.renderer;
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineInfo;
@@ -198,7 +198,7 @@ public class ViewportRenderer {
      * Re-renders the lines marked as dirty. If the line was not previously
      * rendered, it will not be rendered here.
      */
-    void renderDirtyLines(JsonArray<Line> dirtyLines) {
+    void renderDirtyLines(Array<Line> dirtyLines) {
         int maxLineLength = buffer.getMaxLineLength();
         int newMaxLineLength = maxLineLength;
 
@@ -236,7 +236,7 @@ public class ViewportRenderer {
      * @param removedLines
      *         these lines were in the viewport at time of removal
      */
-    void renderViewportContentChange(int beginLineNumber, JsonArray<Line> removedLines) {
+    void renderViewportContentChange(int beginLineNumber, Array<Line> removedLines) {
 
         // Garbage collect the elements of removed lines
         for (int i = 0, n = removedLines.size(); i < n; i++) {

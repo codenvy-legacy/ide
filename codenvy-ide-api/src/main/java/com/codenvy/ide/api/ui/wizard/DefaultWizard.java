@@ -21,8 +21,8 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.assistedinject.Assisted;
@@ -44,13 +44,13 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
-    private NotificationManager                       notificationManager;
-    private String                                    title;
-    private UpdateDelegate                            delegate;
-    private WizardContext                             wizardContext;
-    private JsonArray<Provider<? extends WizardPage>> wizardPageProviders;
-    private JsonArray<WizardPage>                     wizardPages;
-    private int                                       index;
+    private NotificationManager                   notificationManager;
+    private String                                title;
+    private UpdateDelegate                        delegate;
+    private WizardContext                         wizardContext;
+    private Array<Provider<? extends WizardPage>> wizardPageProviders;
+    private Array<WizardPage>                     wizardPages;
+    private int                                   index;
 
     /**
      * Create default wizard.
@@ -65,8 +65,8 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
         this.notificationManager = notificationManager;
         this.title = title;
         wizardContext = new WizardContext();
-        wizardPages = JsonCollections.createArray();
-        wizardPageProviders = JsonCollections.createArray();
+        wizardPages = Collections.createArray();
+        wizardPageProviders = Collections.createArray();
     }
 
     /**
@@ -99,9 +99,9 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
         if (replace) {
             wizardPageProviders.set(index, page);
         } else {
-            JsonArray<Provider<? extends WizardPage>> before = wizardPageProviders.slice(0, index);
+            Array<Provider<? extends WizardPage>> before = wizardPageProviders.slice(0, index);
             Provider<? extends WizardPage> currentPage = wizardPageProviders.get(index);
-            JsonArray<Provider<? extends WizardPage>> after = wizardPageProviders.slice(index + 1, wizardPageProviders.size());
+            Array<Provider<? extends WizardPage>> after = wizardPageProviders.slice(index + 1, wizardPageProviders.size());
 
             wizardPageProviders.clear();
             wizardPageProviders.addAll(before);

@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.resources.marshal;
 
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
@@ -57,7 +57,7 @@ public class FolderTreeUnmarshaller implements Unmarshallable<Folder> {
      */
     public FolderTreeUnmarshaller(Folder parentFolder, Project parentProject) {
         this.parentFolder = parentFolder;
-        this.parentFolder.setChildren(JsonCollections.<Resource>createArray());
+        this.parentFolder.setChildren(Collections.<Resource>createArray());
         this.parentProject = parentProject;
     }
 

@@ -14,8 +14,8 @@
 
 package com.codenvy.ide.texteditor.documentparser;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.Position;
 import com.codenvy.ide.text.store.TaggableLine;
@@ -46,7 +46,7 @@ class DocumentParserWorker {
     }
 
     private interface ParsedTokensRecipient {
-        void onTokensParsed(Line line, int lineNumber, JsonArray<Token> tokens);
+        void onTokensParsed(Line line, int lineNumber, Array<Token> tokens);
     }
 
     private static final String LINE_TAG_END_OF_LINE_PARSER_STATE_SNAPSHOT = DocumentParserWorker.class.getName()
@@ -58,7 +58,7 @@ class DocumentParserWorker {
 
     private final ParsedTokensRecipient documentParserDispatcher = new ParsedTokensRecipient() {
         @Override
-        public void onTokensParsed(Line line, int lineNumber, JsonArray<Token> tokens) {
+        public void onTokensParsed(Line line, int lineNumber, Array<Token> tokens) {
             documentParser.dispatch(line, lineNumber, tokens);
         }
     };
@@ -101,7 +101,7 @@ class DocumentParserWorker {
                 stateToSave = parserState.copy(codeMirrorParser);
             }
 
-            JsonArray<Token> tokens;
+            Array<Token> tokens;
             try {
                 tokens = parseLine(parserState, line.getText());
             } catch (ParserException e) {
@@ -143,12 +143,12 @@ class DocumentParserWorker {
      * @return the parsed tokens, or {@code null} if the line could not be parsed
      *         because there isn't a snapshot and it's not the first line
      */
-    JsonArray<Token> parseLine(Line line) {
+    Array<Token> parseLine(Line line) {
         class TokensRecipient implements ParsedTokensRecipient {
-            JsonArray<Token> tokens;
+            Array<Token> tokens;
 
             @Override
-            public void onTokensParsed(Line line, int lineNumber, JsonArray<Token> tokens) {
+            public void onTokensParsed(Line line, int lineNumber, Array<Token> tokens) {
                 this.tokens = tokens;
             }
         }
@@ -217,7 +217,7 @@ class DocumentParserWorker {
      * <p/>
      * <p>New line char at the end of line is transformed to newline token.
      */
-    private JsonArray<Token> parseLine(State parserState, String lineText) throws ParserException {
+    private Array<Token> parseLine(State parserState, String lineText) throws ParserException {
         boolean endsWithNewline = lineText.endsWith("\n");
         lineText = endsWithNewline ? lineText.substring(0, lineText.length() - 1) : lineText;
 
@@ -229,7 +229,7 @@ class DocumentParserWorker {
 
         try {
             Stream stream = codeMirrorParser.createStream(lineText);
-            JsonArray<Token> tokens = JsonCollections.createArray();
+            Array<Token> tokens = Collections.createArray();
             while (!stream.isEnd()) {
                 codeMirrorParser.parseNext(stream, parserState, tokens);
             }
@@ -269,7 +269,7 @@ class DocumentParserWorker {
             lineText = lineText + appendedText;
         }
 
-        JsonArray<Token> tokens;
+        Array<Token> tokens;
         try {
             tokens = parseLine(parserState, lineText);
             return new ParseResult<T>(tokens, parserState);

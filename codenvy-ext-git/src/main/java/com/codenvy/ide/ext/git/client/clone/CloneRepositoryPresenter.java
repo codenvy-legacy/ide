@@ -21,12 +21,12 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.RepoInfo;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -64,7 +64,8 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
 
     @Inject
     public CloneRepositoryPresenter(CloneRepositoryView view, GitClientService service, ResourceProvider resourceProvider,
-                                    EventBus eventBus, GitLocalizationConstant constant, NotificationManager notificationManager, DtoFactory dtoFactory) {
+                                    EventBus eventBus, GitLocalizationConstant constant, NotificationManager notificationManager,
+                                    DtoFactory dtoFactory) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
@@ -84,7 +85,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
         notification = new Notification(constant.cloneStarted(projectName, remoteName), PROGRESS);
         notificationManager.showNotification(notification);
 
-        resourceProvider.createProject(projectName, JsonCollections.<Property>createArray(), new AsyncCallback<Project>() {
+        resourceProvider.createProject(projectName, Collections.<Property>createArray(), new AsyncCallback<Project>() {
             @Override
             public void onSuccess(Project result) {
                 cloneRepository(remoteUri, remoteName, result);

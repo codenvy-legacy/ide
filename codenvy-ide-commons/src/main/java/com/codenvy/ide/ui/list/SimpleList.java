@@ -19,8 +19,8 @@ import elemental.events.EventListener;
 import elemental.html.Element;
 import elemental.js.html.JsElement;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.mvp.UiComponent;
 import com.codenvy.ide.ui.ElementView;
 import com.codenvy.ide.util.CssUtils;
@@ -198,7 +198,7 @@ public class SimpleList<M> extends UiComponent<SimpleList.View> implements IsWid
 
         private final ListEventDelegate<M> delegate;
 
-        private final JsonArray<ListItem<M>> listItems = JsonCollections.createArray();
+        private final Array<ListItem<M>> listItems = Collections.createArray();
 
         private int selectedIndex;
 
@@ -373,12 +373,11 @@ public class SimpleList<M> extends UiComponent<SimpleList.View> implements IsWid
      * <p>This method tries to keep selection.
      */
     public void render(List<M> items) {
-       render(JsonCollections.createArray(items));
+        render(Collections.createArray(items));
     }
 
 
-
-    public void render(JsonArray<M> items) {
+    public void render(Array<M> items) {
         M selectedItem = model.getSelectedItem();
         model.clearSelection();
 

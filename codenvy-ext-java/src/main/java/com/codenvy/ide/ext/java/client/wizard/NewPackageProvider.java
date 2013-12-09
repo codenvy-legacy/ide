@@ -19,7 +19,7 @@ package com.codenvy.ide.ext.java.client.wizard;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.ext.java.client.JavaClientBundle;
+import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.client.projectmodel.Package;
 import com.codenvy.ide.resources.model.Folder;
@@ -37,7 +37,7 @@ public class NewPackageProvider extends AbstractNewJavaResourceProvider {
 
     @Inject
     public NewPackageProvider(SelectionAgent selectionAgent) {
-        super("Java Package", "Java Package", JavaClientBundle.INSTANCE.packageItem(), null, selectionAgent);
+        super("Java Package", "Java Package", JavaResources.INSTANCE.packageItem(), null, selectionAgent);
     }
 
     /** {@inheritDoc} */

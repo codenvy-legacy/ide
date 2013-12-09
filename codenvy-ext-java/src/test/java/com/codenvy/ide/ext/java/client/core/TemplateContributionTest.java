@@ -11,8 +11,29 @@
 package com.codenvy.ide.ext.java.client.core;
 
 import com.codenvy.ide.ext.java.client.BaseTest;
-import com.codenvy.ide.ext.java.client.templates.*;
-import com.codenvy.ide.ext.java.client.templates.api.*;
+import com.codenvy.ide.ext.java.jdt.templates.CodeTemplateContextType;
+import com.codenvy.ide.ext.java.jdt.templates.ContextTypeRegistry;
+import com.codenvy.ide.ext.java.jdt.templates.ElementTypeResolver;
+import com.codenvy.ide.ext.java.jdt.templates.ExceptionVariableNameResolver;
+import com.codenvy.ide.ext.java.jdt.templates.FieldResolver;
+import com.codenvy.ide.ext.java.jdt.templates.ImportsResolver;
+import com.codenvy.ide.ext.java.jdt.templates.JavaContextType;
+import com.codenvy.ide.ext.java.jdt.templates.JavaDocContextType;
+import com.codenvy.ide.ext.java.jdt.templates.LinkResolver;
+import com.codenvy.ide.ext.java.jdt.templates.LocalVarResolver;
+import com.codenvy.ide.ext.java.jdt.templates.NameResolver;
+import com.codenvy.ide.ext.java.jdt.templates.StaticImportResolver;
+import com.codenvy.ide.ext.java.jdt.templates.TemplateStore;
+import com.codenvy.ide.ext.java.jdt.templates.TypeResolver;
+import com.codenvy.ide.ext.java.jdt.templates.TypeVariableResolver;
+import com.codenvy.ide.ext.java.jdt.templates.VarResolver;
+import com.codenvy.ide.ext.java.jdt.templates.api.Template;
+import com.codenvy.ide.ext.java.jdt.templates.api.TemplateBuffer;
+import com.codenvy.ide.ext.java.jdt.templates.api.TemplateContextType;
+import com.codenvy.ide.ext.java.jdt.templates.api.TemplateException;
+import com.codenvy.ide.ext.java.jdt.templates.api.TemplateTranslator;
+import com.codenvy.ide.ext.java.jdt.templates.api.TemplateVariable;
+import com.codenvy.ide.ext.java.jdt.templates.api.TemplateVariableResolver;
 
 import org.junit.Assert;
 import org.junit.Test;

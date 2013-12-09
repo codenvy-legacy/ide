@@ -17,9 +17,9 @@
  */
 package com.codenvy.ide.texteditor.codeassistant;
 
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.json.JsonStringMap.IterationCallback;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
+import com.codenvy.ide.collections.StringMap.IterationCallback;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
@@ -27,11 +27,13 @@ import com.codenvy.ide.text.TextUtilities;
 import com.codenvy.ide.texteditor.Buffer;
 import com.codenvy.ide.texteditor.Buffer.ScrollListener;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
+import com.codenvy.ide.texteditor.api.CodeAssistCallback;
 import com.codenvy.ide.texteditor.api.KeyListener;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.UndoManager;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistant;
+import com.codenvy.ide.texteditor.api.codeassistant.Completion;
 import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 import com.codenvy.ide.texteditor.codeassistant.AutocompleteBox.Events;
 import com.codenvy.ide.texteditor.codeassistant.AutocompleteUiController.Resources;
@@ -51,7 +53,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
  */
 public class CodeAssistantImpl implements CodeAssistant {
 
-    private JsonStringMap<CodeAssistProcessor> processors;
+    private StringMap<CodeAssistProcessor> processors;
 
     private AutocompleteBox box;
 
@@ -115,7 +117,7 @@ public class CodeAssistantImpl implements CodeAssistant {
      *
      */
     public CodeAssistantImpl() {
-        processors = JsonCollections.createStringMap();
+        processors = Collections.createStringMap();
         partitioning = Document.DEFAULT_PARTITIONING;
         res.defaultSimpleListCss().ensureInjected();
         res.autocompleteComponentCss().ensureInjected();
@@ -126,21 +128,28 @@ public class CodeAssistantImpl implements CodeAssistant {
     private void applyProposal(CompletionProposal proposal) {
         if (proposal == null)
             return;
-        UndoManager undoManager = textEditor.getEditorDocumentMutator().getUndoManager();
-        if (undoManager != null)
-            undoManager.beginCompoundChange();
-        try {
-            proposal.apply(textEditor.getDocument());
-            Region selection = proposal.getSelection(textEditor.getDocument());
-            if (selection != null) {
-                textEditor.getSelection().selectAndReveal(selection.getOffset(), selection.getLength());
+
+        proposal.getCompletion(new CompletionProposal.CompletionCallback() {
+            @Override
+            public void onCompletion(Completion completion) {
+                UndoManager undoManager = textEditor.getEditorDocumentMutator().getUndoManager();
+                if (undoManager != null)
+                    undoManager.beginCompoundChange();
+                try {
+                    completion.apply(textEditor.getDocument());
+                    Region selection = completion.getSelection(textEditor.getDocument());
+                    if (selection != null) {
+                        textEditor.getSelection().selectAndReveal(selection.getOffset(), selection.getLength());
+                    }
+                } catch (Exception e) {
+                    Log.error(getClass(), e);
+                } finally {
+                    if (undoManager != null)
+                        undoManager.endCompoundChange();
+                }
             }
-        } catch (Exception e) {
-            Log.error(getClass(), e);
-        } finally {
-            if (undoManager != null)
-                undoManager.endCompoundChange();
-        }
+        });
+
     }
 
     /**
@@ -191,14 +200,20 @@ public class CodeAssistantImpl implements CodeAssistant {
                         TextUtilities.getOffset(textEditor.getDocument(), textEditor.getSelection().getCursorLineNumber(),
                                                 textEditor.getSelection().getCursorColumn());
                 if (offset > 0) {
-                    CompletionProposal[] proposals = computeCompletionProposals(textEditor, offset);
-                    if (!box.isShowing()) {
-                        if (proposals != null && proposals.length == 1 && proposals[0].isAutoInsertable()) {
-                            applyProposal(proposals[0]);
-                            return;
+                    computeCompletionProposals(textEditor, offset, new CodeAssistCallback() {
+
+                        @Override
+                        public void proposalComputed(CompletionProposal[] proposals) {
+                            if (!box.isShowing()) {
+                                if (proposals != null && proposals.length == 1 && proposals[0].isAutoInsertable()) {
+                                    applyProposal(proposals[0]);
+                                    return;
+                                }
+                            }
+                            box.positionAndShow(proposals);
                         }
-                    }
-                    box.positionAndShow(proposals);
+                    });
+
                 }
             }
         });
@@ -209,6 +224,7 @@ public class CodeAssistantImpl implements CodeAssistant {
     public String showPossibleCompletions() {
         //TODO introduce async API
         scheduleRequestCodeassistant();
+
         return lastErrorMessage;
     }
 
@@ -222,18 +238,14 @@ public class CodeAssistantImpl implements CodeAssistant {
      *         a document offset
      * @return an array of completion proposals or <code>null</code> if no proposals are possible
      */
-    CompletionProposal[] computeCompletionProposals(TextEditorPartView view, int offset) {
+    void computeCompletionProposals(TextEditorPartView view, int offset, CodeAssistCallback callback) {
         lastErrorMessage = null;
-
-        CompletionProposal[] result = null;
 
         CodeAssistProcessor p = getProcessor(view, offset);
         if (p != null) {
-            result = p.computeCompletionProposals(view, offset);
+            p.computeCompletionProposals(view, offset, callback);
             lastErrorMessage = p.getErrorMessage();
         }
-
-        return result;
     }
 
     /**

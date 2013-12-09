@@ -17,15 +17,15 @@
  */
 package com.codenvy.ide.ext.java.client.core;
 
-import com.codenvy.ide.ext.java.client.core.dom.AST;
-import com.codenvy.ide.ext.java.client.core.dom.ASTNode;
-import com.codenvy.ide.ext.java.client.core.dom.ASTParser;
-import com.codenvy.ide.ext.java.client.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.dom.AST;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTParser;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
 
 import com.codenvy.ide.ext.java.client.BaseTest;
-import com.codenvy.ide.ext.java.client.internal.codeassist.ISearchRequestor;
-import com.codenvy.ide.ext.java.client.internal.compiler.env.INameEnvironment;
-import com.codenvy.ide.ext.java.client.internal.compiler.env.NameEnvironmentAnswer;
+import com.codenvy.ide.ext.java.jdt.internal.codeassist.ISearchRequestor;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.NameEnvironmentAnswer;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
@@ -66,28 +66,28 @@ public abstract class ParserBaseTest extends BaseTest {
 
     private class MockNameEnv implements INameEnvironment {
 
-        /** @see com.codenvy.ide.ext.java.client.internal.compiler.env.INameEnvironment#findType(char[][]) */
+        /** @see com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment#findType(char[][]) */
         @Override
         public NameEnvironmentAnswer findType(char[][] compoundTypeName) {
             // TODO Auto-generated method stub
             return null;
         }
 
-        /** @see com.codenvy.ide.ext.java.client.internal.compiler.env.INameEnvironment#findType(char[], char[][]) */
+        /** @see com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment#findType(char[], char[][]) */
         @Override
         public NameEnvironmentAnswer findType(char[] typeName, char[][] packageName) {
             // TODO Auto-generated method stub
             return null;
         }
 
-        /** @see com.codenvy.ide.ext.java.client.internal.compiler.env.INameEnvironment#isPackage(char[][], char[]) */
+        /** @see com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment#isPackage(char[][], char[]) */
         @Override
         public boolean isPackage(char[][] parentPackageName, char[] packageName) {
             // TODO Auto-generated method stub
             return false;
         }
 
-        /** @see com.codenvy.ide.ext.java.client.internal.compiler.env.INameEnvironment#cleanup() */
+        /** @see com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment#cleanup() */
         @Override
         public void cleanup() {
             // TODO Auto-generated method stub
@@ -95,8 +95,8 @@ public abstract class ParserBaseTest extends BaseTest {
         }
 
         /**
-         * @see com.codenvy.ide.ext.java.client.internal.compiler.env.INameEnvironment#findTypes(char[], boolean, boolean, int,
-         *      com.codenvy.ide.ext.java.client.internal.codeassist.ISearchRequestor, com.codenvy.ide.ext.java.client.runtime.IProgressMonitor)
+         * @see com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment#findTypes(char[], boolean, boolean, int,
+         *      com.codenvy.ide.ext.java.jdt.internal.codeassist.ISearchRequestor, com.codenvy.ide.ext.java.jdt.runtime.IProgressMonitor)
          */
         @Override
         public void findTypes(char[] qualifiedName, boolean b, boolean camelCaseMatch, int searchFor,
@@ -104,24 +104,24 @@ public abstract class ParserBaseTest extends BaseTest {
         }
 
         /**
-         * @see com.codenvy.ide.ext.java.client.internal.compiler.env.INameEnvironment#findPackages(char[],
-         *      com.codenvy.ide.ext.java.client.internal.codeassist.ISearchRequestor)
+         * @see com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment#findPackages(char[],
+         *      com.codenvy.ide.ext.java.jdt.internal.codeassist.ISearchRequestor)
          */
         @Override
         public void findPackages(char[] qualifiedName, ISearchRequestor requestor) {
         }
 
         /**
-         * @see com.codenvy.ide.ext.java.client.internal.compiler.env.INameEnvironment#findConstructorDeclarations(char[], boolean,
-         *      com.codenvy.ide.ext.java.client.internal.codeassist.ISearchRequestor, com.codenvy.ide.ext.java.client.runtime.IProgressMonitor)
+         * @see com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment#findConstructorDeclarations(char[], boolean,
+         *      com.codenvy.ide.ext.java.jdt.internal.codeassist.ISearchRequestor, com.codenvy.ide.ext.java.jdt.runtime.IProgressMonitor)
          */
         @Override
         public void findConstructorDeclarations(char[] prefix, boolean camelCaseMatch, final ISearchRequestor requestor) {
         }
 
         /**
-         * @see com.codenvy.ide.ext.java.client.internal.compiler.env.INameEnvironment#findExactTypes(char[], boolean, int,
-         *      com.codenvy.ide.ext.java.client.internal.codeassist.ISearchRequestor)
+         * @see com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment#findExactTypes(char[], boolean, int,
+         *      com.codenvy.ide.ext.java.jdt.internal.codeassist.ISearchRequestor)
          */
         @Override
         public void findExactTypes(char[] missingSimpleName, boolean b, int type, ISearchRequestor storage) {

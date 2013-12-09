@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.resources.model;
 
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringSet;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringSet;
 
 /**
  * Description of the project containing nature set and it's specific properties
@@ -44,7 +44,7 @@ public class ProjectDescription {
     }
 
     /** @return The set of Mixin natures or empty set */
-    public JsonStringSet getNatures() {
+    public StringSet getNatures() {
         return asStringSet(PROPERTY_MIXIN_NATURES);
     }
 
@@ -52,9 +52,9 @@ public class ProjectDescription {
      * @param property
      * @return
      */
-    protected JsonStringSet asStringSet(String propertyName) {
+    protected StringSet asStringSet(String propertyName) {
         Property property = project.getProperty(propertyName);
-        JsonStringSet natures = JsonCollections.createStringSet();
+        StringSet natures = Collections.createStringSet();
         if (property != null) {
             natures.addAll(property.getValue());
         }

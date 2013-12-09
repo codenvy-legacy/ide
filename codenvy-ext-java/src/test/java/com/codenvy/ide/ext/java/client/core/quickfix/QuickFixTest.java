@@ -17,24 +17,24 @@
  */
 package com.codenvy.ide.ext.java.client.core.quickfix;
 
-import com.codenvy.ide.ext.java.client.codeassistant.api.IProblemLocation;
-import com.codenvy.ide.ext.java.client.core.compiler.IProblem;
-import com.codenvy.ide.ext.java.client.core.dom.AST;
-import com.codenvy.ide.ext.java.client.core.dom.ASTParser;
-import com.codenvy.ide.ext.java.client.core.dom.CompilationUnit;
 import com.codenvy.ide.ext.java.client.editor.AstProvider;
-import com.codenvy.ide.ext.java.client.editor.JavaReconcilerStrategy;
-import com.codenvy.ide.ext.java.client.internal.text.correction.AssistContext;
-import com.codenvy.ide.ext.java.client.internal.text.correction.ICommandAccess;
-import com.codenvy.ide.ext.java.client.internal.text.correction.JavaCorrectionProcessor;
-import com.codenvy.ide.ext.java.client.internal.text.correction.ProblemLocation;
-import com.codenvy.ide.ext.java.client.internal.text.correction.proposals.CUCorrectionProposal;
-import com.codenvy.ide.ext.java.client.quickassist.api.InvocationContext;
+import com.codenvy.ide.ext.java.client.editor.JavaCorrectionProcessor;
+import com.codenvy.ide.ext.java.jdt.codeassistant.api.CompletionProposal;
+import com.codenvy.ide.ext.java.jdt.codeassistant.api.IProblemLocation;
+import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
+import com.codenvy.ide.ext.java.jdt.core.dom.AST;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTParser;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.internal.text.correction.AssistContext;
+import com.codenvy.ide.ext.java.jdt.internal.text.correction.ICommandAccess;
+import com.codenvy.ide.ext.java.jdt.internal.text.correction.ProblemLocation;
+import com.codenvy.ide.ext.java.jdt.internal.text.correction.proposals.CUCorrectionProposal;
+import com.codenvy.ide.ext.java.jdt.quickassist.api.InvocationContext;
+import com.codenvy.ide.ext.java.worker.WorkerMessageHandler;
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.runtime.IStatus;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
-import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
 
@@ -237,7 +237,7 @@ public abstract class QuickFixTest extends GwtTestWithMockito {
         astParser.setResolveBindings(true);
         astParser.setStatementsRecovery(true);
         astParser.setBindingsRecovery(true);
-        astParser.setNameEnvironment(JavaReconcilerStrategy.get().getNameEnvironment());
+        astParser.setNameEnvironment(WorkerMessageHandler.get().getNameEnvironment());
         astParser.setUnitName(name);
         return (CompilationUnit)astParser.createAST();
     }

@@ -20,10 +20,10 @@ package com.codenvy.ide.debug;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.commons.exception.ServerException;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.texteditor.renderer.DebugLineRenderer;
 import com.codenvy.ide.texteditor.renderer.LineNumberRenderer;
@@ -44,13 +44,13 @@ import java.util.List;
  */
 @Singleton
 public class BreakpointGutterManager {
-    private JsonStringMap<JsonArray<Breakpoint>> breakPoints;
-    private EditorAgent                          editorAgent;
-    private DebuggerManager                      debuggerManager;
-    private ConsolePart                          console;
-    private LineNumberRenderer                   renderer;
-    private DebugLineRenderer                    debugLineRenderer;
-    private Breakpoint                           markedBreakPoint;
+    private StringMap<Array<Breakpoint>> breakPoints;
+    private EditorAgent                  editorAgent;
+    private DebuggerManager              debuggerManager;
+    private ConsolePart                  console;
+    private LineNumberRenderer           renderer;
+    private DebugLineRenderer            debugLineRenderer;
+    private Breakpoint                   markedBreakPoint;
 
     /**
      * Create manager.
@@ -62,7 +62,7 @@ public class BreakpointGutterManager {
     @Inject
     protected BreakpointGutterManager(EditorAgent editorAgent, DebuggerManager debuggerManager, ConsolePart console) {
         this.editorAgent = editorAgent;
-        this.breakPoints = JsonCollections.createStringMap();
+        this.breakPoints = Collections.createStringMap();
         this.debuggerManager = debuggerManager;
         this.console = console;
     }
@@ -93,7 +93,7 @@ public class BreakpointGutterManager {
      */
     public void changeBreakPoint(final int lineNumber) {
         final File activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
-        final JsonArray<Breakpoint> breakPoints = this.breakPoints.get(activeFile.getId());
+        final Array<Breakpoint> breakPoints = this.breakPoints.get(activeFile.getId());
         final Debugger debugger = debuggerManager.getDebugger();
 
         if (debugger != null) {
@@ -136,7 +136,7 @@ public class BreakpointGutterManager {
                             breakPoints.add(result);
                         } else {
                             BreakpointGutterManager.this.breakPoints.put(activeFile.getId(),
-                                                                         JsonCollections.<Breakpoint>createArray(result));
+                                                                         Collections.<Breakpoint>createArray(result));
                         }
                         renderer.fillOrUpdateLines(lineNumber, lineNumber);
                     }
@@ -169,9 +169,9 @@ public class BreakpointGutterManager {
         }
         activeFileId = activeFile != null ? activeFile.getId() : null;
 
-        breakPoints.iterate(new JsonStringMap.IterationCallback<JsonArray<Breakpoint>>() {
+        breakPoints.iterate(new StringMap.IterationCallback<Array<Breakpoint>>() {
             @Override
-            public void onIteration(String key, JsonArray<Breakpoint> value) {
+            public void onIteration(String key, Array<Breakpoint> value) {
                 breakPoints.remove(key);
                 if (key.equals(activeFileId)) {
                     for (int i = 0; i < value.size(); i++) {
@@ -193,7 +193,7 @@ public class BreakpointGutterManager {
      */
     public boolean isBreakPointExist(int lineNumber) {
         File activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
-        JsonArray<Breakpoint> breakPoints = this.breakPoints.get(activeFile.getId());
+        Array<Breakpoint> breakPoints = this.breakPoints.get(activeFile.getId());
         if (breakPoints != null) {
             for (int i = 0; i < breakPoints.size(); i++) {
                 Breakpoint breakpoint = breakPoints.get(i);
@@ -209,9 +209,9 @@ public class BreakpointGutterManager {
     public List<Breakpoint> getBreakPoints() {
         final List<Breakpoint> points = new ArrayList<Breakpoint>(breakPoints.size());
 
-        breakPoints.iterate(new JsonStringMap.IterationCallback<JsonArray<Breakpoint>>() {
+        breakPoints.iterate(new StringMap.IterationCallback<Array<Breakpoint>>() {
             @Override
-            public void onIteration(String key, JsonArray<Breakpoint> value) {
+            public void onIteration(String key, Array<Breakpoint> value) {
                 points.addAll((Collection<? extends Breakpoint>)value);
             }
         });

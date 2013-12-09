@@ -24,7 +24,7 @@ import com.codenvy.ide.api.ui.action.ActionGroup;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.Presentation;
 import com.codenvy.ide.api.ui.action.Separator;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.util.loging.Log;
 
 /**
@@ -40,7 +40,7 @@ public class Utils {
      *         manager
      */
     public static void expandActionGroup(@NotNull ActionGroup group,
-                                         JsonArray<Action> list,
+                                         Array<Action> list,
                                          PresentationFactory presentationFactory,
                                          @NotNull String place,
                                          ActionManager actionManager,
@@ -110,7 +110,7 @@ public class Utils {
      *         manager
      */
     public static void expandActionGroup(@NotNull ActionGroup group,
-                                         JsonArray<Action> list,
+                                         Array<Action> list,
                                          PresentationFactory presentationFactory,
                                          String place,
                                          ActionManager actionManager) {

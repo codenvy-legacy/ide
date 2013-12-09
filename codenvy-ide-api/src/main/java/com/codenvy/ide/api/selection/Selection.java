@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.api.selection;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 
 /**
  * This class contains a single selected object or the bulk of selected objects.
@@ -27,16 +27,16 @@ import com.codenvy.ide.json.JsonCollections;
  * Single selection can be created using {@link Selection#Selection(Object)} constructor
  * that accept one Object.
  * <br/>
- * Multiselection can be created with the help of {@link Selection#Selection(JsonArray)}.
+ * Multiselection can be created with the help of {@link Selection#Selection(com.codenvy.ide.collections.Array)}.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public class Selection<T> {
-    JsonArray<T> elements;
+    Array<T> elements;
 
     /** Creates an empty selection */
     public Selection() {
-        this(JsonCollections.<T>createArray());
+        this(Collections.<T>createArray());
     }
 
     /**
@@ -57,7 +57,7 @@ public class Selection<T> {
      *
      * @param list
      */
-    public Selection(JsonArray<T> list) {
+    public Selection(Array<T> list) {
         elements = list;
     }
 
@@ -85,8 +85,8 @@ public class Selection<T> {
     }
 
     /** @return the copy of Selection. */
-    public JsonArray<T> getAll() {
-        JsonArray<T> copy = JsonCollections.createArray();
+    public Array<T> getAll() {
+        Array<T> copy = Collections.createArray();
         copy.addAll(elements);
         return copy;
     }

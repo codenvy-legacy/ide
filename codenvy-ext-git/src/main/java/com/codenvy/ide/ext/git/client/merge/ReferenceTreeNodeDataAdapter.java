@@ -17,8 +17,7 @@
  */
 package com.codenvy.ide.ext.git.client.merge;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.tree.NodeDataAdapter;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 
@@ -46,7 +45,7 @@ public class ReferenceTreeNodeDataAdapter implements NodeDataAdapter<Reference> 
 
     /** {@inheritDoc} */
     @Override
-    public JsonArray<Reference> getChildren(Reference data) {
+    public Array<Reference> getChildren(Reference data) {
         return data.getBranches();
     }
 
@@ -94,13 +93,13 @@ public class ReferenceTreeNodeDataAdapter implements NodeDataAdapter<Reference> 
 
     /** {@inheritDoc} */
     @Override
-    public JsonArray<String> getNodePath(Reference data) {
+    public Array<String> getNodePath(Reference data) {
         return null;
     }
 
     /** {@inheritDoc} */
     @Override
-    public Reference getNodeByPath(Reference root, JsonArray<String> relativeNodePath) {
+    public Reference getNodeByPath(Reference root, Array<String> relativeNodePath) {
         return null;
     }
 }

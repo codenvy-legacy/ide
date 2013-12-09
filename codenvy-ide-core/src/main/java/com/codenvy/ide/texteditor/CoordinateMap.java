@@ -14,7 +14,7 @@
 
 package com.codenvy.ide.texteditor;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineInfo;
@@ -313,12 +313,12 @@ class CoordinateMap implements DocumentModel.LineListener {
     }
 
     @Override
-    public void onLineAdded(DocumentModel document, int lineNumber, JsonArray<Line> addedLines) {
+    public void onLineAdded(DocumentModel document, int lineNumber, Array<Line> addedLines) {
         invalidateLineNumberAndFollowing(lineNumber);
     }
 
     @Override
-    public void onLineRemoved(DocumentModel document, int lineNumber, JsonArray<Line> removedLines) {
+    public void onLineRemoved(DocumentModel document, int lineNumber, Array<Line> removedLines) {
         invalidateLineNumberAndFollowing(lineNumber);
     }
 

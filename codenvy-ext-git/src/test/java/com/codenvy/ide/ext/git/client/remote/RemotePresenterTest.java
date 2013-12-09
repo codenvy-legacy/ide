@@ -18,11 +18,11 @@
 package com.codenvy.ide.ext.git.client.remote;
 
 import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.ext.git.client.remote.add.AddRemoteRepositoryPresenter;
 import com.codenvy.ide.ext.git.shared.Remote;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -69,7 +69,7 @@ public class RemotePresenterTest extends BaseTest {
     @Test
     @Ignore
     public void testShowDialogWhenRemoteListRequestIsSuccessful() throws Exception {
-        final JsonArray<Remote> remotes = JsonCollections.createArray();
+        final Array<Remote> remotes = Collections.createArray();
         remotes.add(selectedRemote);
         when(view.isShown()).thenReturn(!IS_SHOWN);
         doAnswer(new Answer() {
@@ -90,7 +90,7 @@ public class RemotePresenterTest extends BaseTest {
         verify(service).remoteList(eq(VFS_ID), eq(PROJECT_ID), anyString(), eq(SHOW_ALL_INFORMATION),
                                    (AsyncRequestCallback<String>)anyObject());
         verify(view).setEnableDeleteButton(eq(DISABLE_BUTTON));
-        verify(view).setRemotes((JsonArray<Remote>)anyObject());
+        verify(view).setRemotes((Array<Remote>)anyObject());
         verify(view).showDialog();
     }
 

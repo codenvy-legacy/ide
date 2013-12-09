@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.git.client.merge;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 
 
 /**
@@ -34,15 +34,15 @@ public class Reference {
     }
 
     /** Short name of the reference to display. */
-    private String  displayName;
+    private String displayName;
 
     /** Full name of the reference. */
-    private String  fullName;
+    private String fullName;
 
     /** Type of the reference. */
     private RefType refType;
-    
-    private JsonArray<Reference> branches;
+
+    private Array<Reference> branches;
 
     /**
      * @param fullName full name of the reference
@@ -71,12 +71,12 @@ public class Reference {
     }
 
     /** @return the branches */
-    public JsonArray<Reference> getBranches() {
+    public Array<Reference> getBranches() {
         return branches;
     }
 
     /** @param branches the branches to set */
-    public void setBranches(JsonArray<Reference> branches) {
+    public void setBranches(Array<Reference> branches) {
         this.branches = branches;
     }
 }

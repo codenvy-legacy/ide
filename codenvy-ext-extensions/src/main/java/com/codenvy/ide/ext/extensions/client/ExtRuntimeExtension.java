@@ -22,12 +22,12 @@ import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.extensions.client.actions.GetLogsAction;
 import com.codenvy.ide.ext.extensions.client.actions.LaunchAction;
 import com.codenvy.ide.ext.extensions.client.actions.StopAction;
 import com.codenvy.ide.ext.extensions.client.template.CreateEmptyCodenvyExtensionPage;
 import com.codenvy.ide.ext.extensions.client.template.sample.CreateSampleCodenvyExtensionPage;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -77,23 +77,23 @@ public class ExtRuntimeExtension {
                                   "Codenvy extension",
                                   resources.codenvyExtensionProject(),
                                   PRIMARY_NATURE,
-                                  JsonCollections.createArray(CODENVY_EXTENSION_PROJECT_TYPE));
+                                  Collections.createArray(CODENVY_EXTENSION_PROJECT_TYPE));
 
         // register templates
         templateAgent.register(EMPTY_EXTENSION_ID,
                                "Empty Codenvy extension project.",
                                resources.codenvyExtensionTemplate(),
                                PRIMARY_NATURE,
-                               JsonCollections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(
+                               Collections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(
                                        createEmptyCodenvyExtensionPage));
 
         templateAgent.register(SAMPLE_EXTENSION_ID,
                                "Gist extension project.",
                                resources.codenvyExtensionTemplate(),
                                PRIMARY_NATURE,
-                               JsonCollections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(
+                               Collections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(
                                        createSampleCodenvyExtensionPage));
     }
 }

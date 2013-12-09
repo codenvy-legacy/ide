@@ -19,8 +19,8 @@ package com.codenvy.ide.ext.ssh.client.manage;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
-import com.codenvy.ide.json.JsonArray;
 
 /**
  * The view of {@link SshKeyManagerPresenter}.
@@ -62,5 +62,5 @@ public interface SshKeyManagerView extends View<SshKeyManagerView.ActionDelegate
      * @param keys
      *         available keys
      */
-    void setKeys(@NotNull JsonArray<KeyItem> keys);
+    void setKeys(@NotNull Array<KeyItem> keys);
 }
