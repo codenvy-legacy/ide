@@ -14,6 +14,7 @@
 
 package com.codenvy.ide.texteditor.ot;
 
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DocOp;
 import com.codenvy.ide.dto.DocOpComponent;
 import com.codenvy.ide.dto.shared.DocOpFactory;
@@ -58,7 +59,7 @@ public class DocOpCapturer implements DocOpCursor {
         this.shouldCompact = shouldCompact;
 
         op = factory.createDocOp();
-        components = op.getComponents();
+        components = Collections.createArray(op.getComponents());
     }
 
     @Override

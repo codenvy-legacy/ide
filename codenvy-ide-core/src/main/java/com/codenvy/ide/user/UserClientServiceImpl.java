@@ -17,11 +17,8 @@
  */
 package com.codenvy.ide.user;
 
-import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.json.JsonHelper;
-import com.codenvy.ide.resources.DtoClientImpls;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.ui.loader.Loader;

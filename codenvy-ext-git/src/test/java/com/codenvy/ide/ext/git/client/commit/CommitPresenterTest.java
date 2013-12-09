@@ -18,7 +18,6 @@
 package com.codenvy.ide.ext.git.client.commit;
 
 import com.codenvy.ide.api.notification.Notification;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.ext.git.shared.RepoInfo;
 import com.codenvy.ide.ext.git.shared.Revision;

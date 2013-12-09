@@ -103,23 +103,24 @@ public class CommitPresenter implements CommitView.ActionDelegate {
         boolean amend = view.isAmend();
 
         try {
-            service.commitWS(resourceProvider.getVfsId(), project, message, all, amend, new RequestCallback<String>(new StringUnmarshaller()) {
-                @Override
-                protected void onSuccess(String result) {
-                    Revision revision = dtoFactory.createDtoFromJson(result, Revision.class);
-                    if (!revision.isFake()) {
-                        onCommitSuccess(revision);
-                    } else {
-                        Notification notification = new Notification(revision.getMessage(), ERROR);
-                        notificationManager.showNotification(notification);
-                    }
-                }
+            service.commitWS(resourceProvider.getVfsId(), project, message, all, amend,
+                             new RequestCallback<String>(new StringUnmarshaller()) {
+                                 @Override
+                                 protected void onSuccess(String result) {
+                                     Revision revision = dtoFactory.createDtoFromJson(result, Revision.class);
+                                     if (!revision.isFake()) {
+                                         onCommitSuccess(revision);
+                                     } else {
+                                         Notification notification = new Notification(revision.getMessage(), ERROR);
+                                         notificationManager.showNotification(notification);
+                                     }
+                                 }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    handleError(exception);
-                }
-            });
+                                 @Override
+                                 protected void onFailure(Throwable exception) {
+                                     handleError(exception);
+                                 }
+                             });
         } catch (WebSocketException e) {
             doCommitREST(project, message, all, amend);
         }

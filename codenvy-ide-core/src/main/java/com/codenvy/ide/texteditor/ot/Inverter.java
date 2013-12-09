@@ -16,6 +16,7 @@ package com.codenvy.ide.texteditor.ot;
 
 
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DocOp;
 import com.codenvy.ide.dto.DocOpComponent;
 import com.codenvy.ide.dto.shared.DocOpFactory;
@@ -29,9 +30,9 @@ public class Inverter {
     /** Inverts the given document operation. */
     public static DocOp invert(DocOpFactory factory, DocOp docOp) {
         DocOp invertedDocOp = factory.createDocOp();
-        Array<DocOpComponent> invertedDocOpComponents = invertedDocOp.getComponents();
+        Array<DocOpComponent> invertedDocOpComponents = Collections.createArray(invertedDocOp.getComponents());
 
-        Array<DocOpComponent> components = docOp.getComponents();
+        Array<DocOpComponent> components = Collections.createArray(docOp.getComponents());
         for (int i = 0, n = components.size(); i < n; i++) {
             invertedDocOpComponents.add(invertComponent(factory, components.get(i)));
         }
