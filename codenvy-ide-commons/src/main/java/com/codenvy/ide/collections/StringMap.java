@@ -18,7 +18,7 @@ package com.codenvy.ide.collections;
  * String Map interface for use in DTOs.
  * <p/>
  * On the client it is safe to cast this to a
- * {@link com.codenvy.ide.commons.Jso}.
+ * {@link Jso}.
  * <p/>
  * On the server this is an instance of a wrapper object
  * {@link com.codenvy.ide.collections.java.JsonStringMapAdapter}.

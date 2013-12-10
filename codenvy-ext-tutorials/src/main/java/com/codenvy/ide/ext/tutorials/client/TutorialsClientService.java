@@ -156,4 +156,18 @@ public interface TutorialsClientService {
      */
     void createGinTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
                                   @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+
+    /**
+     * Create 'WYSUWYG Editor' project.
+     *
+     * @param projectName
+     *         name of the project to create
+     * @param properties
+     *         properties to set to a newly created project
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
+    void createWYSIWYGEditorProject(@NotNull String projectName, @NotNull Array<Property> properties,
+                                  @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 }

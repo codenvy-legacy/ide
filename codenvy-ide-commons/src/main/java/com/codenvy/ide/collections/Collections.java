@@ -16,7 +16,6 @@ package com.codenvy.ide.collections;
 
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.collections.java.JsonIntegerMapAdapter;
-import com.codenvy.ide.commons.Jso;
 import com.codenvy.ide.collections.js.JsoStringSet;
 import com.codenvy.ide.collections.java.JsonArrayListAdapter;
 import com.codenvy.ide.collections.java.JsonStringMapAdapter;

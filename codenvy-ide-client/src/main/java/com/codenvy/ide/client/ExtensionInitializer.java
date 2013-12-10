@@ -22,7 +22,7 @@ import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.extension.ExtensionDescription;
 import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.collections.StringMap.IterationCallback;
-import com.codenvy.ide.commons.Jso;
+import com.codenvy.ide.collections.Jso;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;

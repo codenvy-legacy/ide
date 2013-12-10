@@ -11,8 +11,8 @@
 package com.codenvy.ide.ext.java.jdt.codeassistant;
 
 import com.codenvy.ide.collections.js.JsoArray;
-import com.codenvy.ide.commons.Jso;
-import com.codenvy.ide.commons.JsonObject;
+import com.codenvy.ide.collections.Jso;
+import com.codenvy.ide.collections.JsonObject;
 import com.codenvy.ide.ext.java.jdt.core.CompletionProposal;
 import com.codenvy.ide.ext.java.jdt.core.Signature;
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
