@@ -21,7 +21,7 @@ deleteFileIfExists() {
     ssh -i ~/.ssh/${SSH_KEY_NAME} ${SSH_AS_USER_NAME}@${AS_IP} "mv ${home}/${filename} ${home}/ide"
     ssh -i ~/.ssh/${SSH_KEY_NAME} ${SSH_AS_USER_NAME}@${AS_IP} "cd ${home}/ide && unzip ${filename}"
     echo "install deps..."
-    ssh -i ~/.ssh/${SSH_KEY_NAME} ${SSH_AS_USER_NAME}@${AS_IP} "cd ${home}/ide;./install.sh /home/admin/.m2/repository"
+    ssh -i ~/.ssh/${SSH_KEY_NAME} ${SSH_AS_USER_NAME}@${AS_IP} "cd ${home}/ide;./install.sh /home/cl-server/.m2/repository"
     echo "start new tomcat... on ${AS_IP}"
     ssh -i ~/.ssh/${SSH_KEY_NAME} ${SSH_AS_USER_NAME}@${AS_IP} "cd ${home}/ide/bin;./catalina.sh start"
 
