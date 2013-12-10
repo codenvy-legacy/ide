@@ -17,22 +17,13 @@
  */
 package com.codenvy.runner.sdk;
 
-import com.codenvy.api.core.util.CommandLine;
-import com.codenvy.api.core.util.CustomPortService;
-import com.codenvy.api.core.util.LineConsumer;
-import com.codenvy.api.core.util.ProcessUtil;
-import com.codenvy.api.core.util.SystemInfo;
+import com.codenvy.api.core.util.*;
 import com.codenvy.api.runner.RunnerException;
-import com.codenvy.api.runner.internal.ApplicationLogger;
-import com.codenvy.api.runner.internal.ApplicationProcess;
-import com.codenvy.api.runner.internal.DeploymentSources;
-import com.codenvy.api.runner.internal.Disposer;
-import com.codenvy.api.runner.internal.Runner;
-import com.codenvy.api.runner.internal.RunnerConfiguration;
-import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
+import com.codenvy.api.runner.internal.*;
 import com.codenvy.api.runner.internal.dto.RunRequest;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.commons.lang.NamedThreadFactory;
+import com.codenvy.ide.commons.GwtXmlUtils;
 import com.codenvy.ide.commons.ZipUtils;
 import com.google.common.io.CharStreams;
 
@@ -47,12 +38,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 
 /**
  * Runner implementation to test Codenvy plug-ins by launching
@@ -163,6 +149,7 @@ public class SDKRunner extends Runner {
             ZipUtils.unzip(Utils.getCodenvyPlatformBinaryDistribution().openStream(), appDirPath.toFile());
 
             // add extension to Codenvy Platform
+            // TODO avoid unzipping jar-file, use java.util.zip.*
             final Path jarUnzipped =
                     Files.createTempDirectory(getDeployDirectory().toPath(), ("jar_" + getName() + '_'));
             ZipUtils.unzip(jarFile, jarUnzipped.toFile());
@@ -171,7 +158,7 @@ public class SDKRunner extends Runner {
 
             Utils.addDependencyToPom(appDirPath.resolve("pom.xml"), pomExt);
             final Path mainGwtModuleDescriptor = Utils.findFile("*.gwt.xml", appDirPath);
-            Utils.inheritGwtModule(mainGwtModuleDescriptor, Utils.detectGwtModuleLogicalName(jarUnzipped));
+            GwtXmlUtils.inheritGwtModule(mainGwtModuleDescriptor, GwtXmlUtils.detectGwtModuleLogicalName(jarUnzipped));
 
             // build WAR by invoking Maven directly
             warPath = buildWar(appDirPath);
@@ -331,7 +318,8 @@ public class SDKRunner extends Runner {
         TomcatLogger logger;
         Process      process;
 
-        TomcatProcess(int httpPort, List<java.io.File> logFiles, int debugPort, java.io.File startUpScriptFile, java.io.File workDir) {
+        TomcatProcess(int httpPort, List<java.io.File> logFiles, int debugPort, java.io.File startUpScriptFile,
+                      java.io.File workDir) {
             this.httpPort = httpPort;
             this.logFiles = logFiles;
             this.debugPort = debugPort;
@@ -348,7 +336,8 @@ public class SDKRunner extends Runner {
 
             try {
                 process = Runtime.getRuntime()
-                                 .exec(new CommandLine(startUpScriptFile.getAbsolutePath()).toShellCommand(), null, workDir);
+                                 .exec(new CommandLine(startUpScriptFile.getAbsolutePath()).toShellCommand(), null,
+                                       workDir);
 
                 pid = pidTaskExecutor.submit(new Callable<Integer>() {
                     @Override

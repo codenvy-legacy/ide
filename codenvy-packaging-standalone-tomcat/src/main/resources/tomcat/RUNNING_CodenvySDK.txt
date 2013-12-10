@@ -63,7 +63,7 @@ Installing
 5.1. Execute the following command:
 
 On *nix:
-      install.sh path_to_repo
+      ./install.sh path_to_repo
       , where path_to_repo is a path to your local Maven repository.
 
 
@@ -82,6 +82,22 @@ After launching, Codenvy Platform SDK application will be available on http://lo
 
 On *nix:
       ./catalina.sh stop
+
+
+===============================================
+Contribute 3rd-party extensions to Codenvy IDE
+===============================================
+
+1. To contribute 3rd-party extensions to Codenvy IDE, one need to do the following steps:
+
+1.1. Place an appropriate jar-files into "ext" directory.
+
+1.2. Execute the following script:
+
+On *nix:
+      ./extInstall.sh
+
+1.3. Restart Codenvy IDE if it is currently running.
 
 
 ===============================

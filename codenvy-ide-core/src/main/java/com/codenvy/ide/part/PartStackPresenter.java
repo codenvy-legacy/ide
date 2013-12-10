@@ -81,7 +81,8 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     /** Creates PartStack with given instance of display and resources (CSS and Images) */
     @Inject
     public PartStackPresenter(EventBus eventBus,
-                              PartStackEventHandler partStackEventHandler, @Assisted PartStackView view,
+                              PartStackEventHandler partStackEventHandler,
+                              @Assisted PartStackView view,
                               @Assisted WorkBenchPartController workBenchPartController) {
         this.view = view;
         this.eventBus = eventBus;

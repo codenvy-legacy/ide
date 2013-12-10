@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.runner.sdk;
+package com.codenvy.ide.sdk.tools;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
@@ -23,14 +23,14 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.EnumSet;
+import java.util.List;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.nio.file.FileVisitResult.TERMINATE;
 
@@ -98,20 +98,6 @@ class Utils {
      *
      * @param path
      *         pom.xml path
-     * @param pom
-     *         POM of artifact to add as dependency
-     * @throws java.io.IOException
-     *         error occurred while reading or writing content of file
-     */
-    static void addDependencyToPom(Path path, Model pom) throws IOException {
-        addDependencyToPom(path, pom.getGroupId(), pom.getArtifactId(), pom.getVersion());
-    }
-
-    /**
-     * Add dependency to the specified pom.xml.
-     *
-     * @param path
-     *         pom.xml path
      * @param groupId
      *         groupId
      * @param artifactId
@@ -153,44 +139,6 @@ class Utils {
             throw new IllegalArgumentException("File not found.");
         }
         return finder.getFirstMatchedFile();
-    }
-
-    /** Returns URL to get Tomcat binary distribution. */
-    static URL getTomcatBinaryDistribution() throws IOException {
-        URL tomcatDistributionUrl = Thread.currentThread().getContextClassLoader().getResource("tomcat.zip");
-        if (tomcatDistributionUrl == null) {
-            throw new IOException("Unable to get Tomcat binary distribution.");
-        }
-        return tomcatDistributionUrl;
-    }
-
-    /** Returns URL to get Codenvy Platform binary distribution. */
-    static URL getCodenvyPlatformBinaryDistribution() throws IOException {
-        URL codenvyPlatformDistributionUrl =
-                Thread.currentThread().getContextClassLoader().getResource("CodenvyPlatform.zip");
-        if (codenvyPlatformDistributionUrl == null) {
-            throw new IOException("Unable to get Codenvy Platform binary distribution.");
-        }
-        return codenvyPlatformDistributionUrl;
-    }
-
-    static String getMavenExecCommand() {
-        final File mvnHome = getMavenHome();
-        if (mvnHome != null) {
-            final String mvn = "bin" + File.separatorChar + "mvn";
-            return new File(mvnHome, mvn).getAbsolutePath(); // use Maven home directory if it's set
-        } else {
-            return "mvn"; // otherwise 'mvn' should be in PATH variable
-        }
-    }
-
-    static File getMavenHome() {
-        final String m2HomeEnv = System.getenv("M2_HOME");
-        if (m2HomeEnv == null) {
-            return null;
-        }
-        final File m2Home = new File(m2HomeEnv);
-        return m2Home.exists() ? m2Home : null;
     }
 
     /** A {@code FileVisitor} that finds first file that match the specified pattern. */

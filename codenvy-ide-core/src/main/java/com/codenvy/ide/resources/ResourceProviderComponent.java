@@ -19,6 +19,7 @@ package com.codenvy.ide.resources;
 
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
+import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -36,7 +37,15 @@ import com.codenvy.ide.resources.marshal.JSONSerializer;
 import com.codenvy.ide.resources.marshal.ProjectModelProviderAdapter;
 import com.codenvy.ide.resources.marshal.ProjectModelUnmarshaller;
 import com.codenvy.ide.resources.marshal.VFSInfoUnmarshaller;
-import com.codenvy.ide.resources.model.*;
+import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.resources.model.Folder;
+import com.codenvy.ide.resources.model.Link;
+import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.resources.model.ProjectDescription;
+import com.codenvy.ide.resources.model.ProjectNature;
+import com.codenvy.ide.resources.model.Property;
+import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.resources.model.VirtualFileSystemInfo;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
@@ -220,7 +229,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
             callback.onFailure(e);
         }
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void listProjects(final AsyncCallback<Array<String>> callback) {
@@ -525,7 +534,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                         public void onSuccess(Project result) {
                             callback.onSuccess(result.toString());
                         }
-                        
+
                         @Override
                         public void onFailure(Throwable caught) {
                             callback.onFailure(caught);
@@ -533,9 +542,11 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                     });
                 } else {
                     getFolder(parent, new AsyncCallback<Folder>() {
-
                         @Override
                         public void onSuccess(Folder result) {
+                            if (item instanceof File) {
+                                eventBus.fireEvent(new FileEvent((File)item, FileEvent.FileOperation.CLOSE));
+                            }
                             callback.onSuccess(result.toString());
                         }
 
@@ -544,7 +555,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                             callback.onFailure(exception);
                         }
                     });
-                } 
+                }
             }
         });
     }

@@ -166,7 +166,6 @@ public class Folder extends Resource {
      */
     public void removeChild(Resource resource) {
         children.remove(resource);
-        resource.setParent(null);
     }
 
     /** {@inheritDoc} */
