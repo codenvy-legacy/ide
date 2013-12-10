@@ -49,8 +49,6 @@ import java.util.zip.ZipFile;
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
 public class InstallExtension {
-    /** Filename suffix used for GWT module XML files. */
-    public static final String GWT_MODULE_XML_SUFFIX       = ".gwt.xml";
     public static final String IDE_GWT_XML_FILE_NAME       = "IDE.gwt.xml";
     /** CLI argument specifies the location of the directory that contains extensions to add. */
     public static final String EXT_DIR_PARAMETER           = "--extDir=";
@@ -119,7 +117,7 @@ public class InstallExtension {
         while (entries.hasMoreElements()) {
             ZipEntry entry = entries.nextElement();
             if (!entry.isDirectory()) {
-                if (entry.getName().endsWith(GWT_MODULE_XML_SUFFIX)) {
+                if (entry.getName().endsWith(GwtXmlUtils.GWT_MODULE_XML_SUFFIX)) {
                     gwtXmlEntry = entry;
                 } else if (entry.getName().endsWith("pom.xml")) {
                     pomEntry = entry;
@@ -133,7 +131,7 @@ public class InstallExtension {
         }
 
         String gwtModuleName = gwtXmlEntry.getName().replace(File.separatorChar, '.');
-        gwtModuleName = gwtModuleName.substring(0, gwtModuleName.length() - GWT_MODULE_XML_SUFFIX.length());
+        gwtModuleName = gwtModuleName.substring(0, gwtModuleName.length() - GwtXmlUtils.GWT_MODULE_XML_SUFFIX.length());
         final Model pom = Utils.readPom(zipFile.getInputStream(pomEntry));
         zipFile.close();
         return new Extension(gwtModuleName, pom.getGroupId(), pom.getArtifactId(), pom.getVersion());

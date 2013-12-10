@@ -388,7 +388,6 @@
                             </artifactItems>
                         </configuration>
                     </execution>
-
                     <execution>
                         <id>copy-sdk-tools</id>
                         <phase>process-resources</phase>
@@ -401,13 +400,13 @@
                                     <groupId>com.codenvy.ide</groupId>
                                     <artifactId>codenvy-sdk-tools</artifactId>
                                     <version>${project.version}</version>
+                                    <classifier>jar-with-dependencies</classifier>
                                     <outputDirectory>${project.build.directory}/tomcat-ide/sdk-tools</outputDirectory>
                                     <destFileName>codenvy-sdk-tools.jar</destFileName>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
-
                     <execution>
                         <id>copy-lucene-autocomplite-index</id>
                         <phase>process-resources</phase>

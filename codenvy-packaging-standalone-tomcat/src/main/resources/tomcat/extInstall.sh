@@ -8,8 +8,8 @@
 EXT_DIR_REL_PATH="ext"
 
 # Specifies the location of the directory that contains resource files to re-build Codenvy IDE
-EXT_RES_DIR_REL_PATH="ext-resources"
-EXT_RES_WORK_DIR_REL_PATH="ext-resources/temp"
+EXT_RES_DIR_REL_PATH="sdk-resources"
+EXT_RES_WORK_DIR_REL_PATH="sdk-resources/temp"
 
 # Install every 3rd-party extension into local Maven repository
 for file in $EXT_DIR_REL_PATH/*.jar
