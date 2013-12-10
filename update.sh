@@ -1,8 +1,8 @@
 filename=`ls codenvy-packaging-standalone-tomcat/target | grep codenvy`
 SSH_KEY_NAME=idex
-SSH_AS_USER_NAME=admin
-AS_IP=172.19.11.20
-home=/home/admin/tomcat-ide3/
+SSH_AS_USER_NAME=cl-server
+AS_IP=172.19.11.69
+home=/home/cl-server/tomcat-ide3/
 
 deleteFileIfExists() {
     if [ -f $1 ]; then
