@@ -52,6 +52,27 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>replacer</artifactId>
+                <version>1.5.2</version>
+                <executions>
+                    <execution>
+                        <id>put-current-version</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.build.directory}/classes/codenvyPlatform/pom.xml</file>
+                            <token>$current_version$</token>
+                            <value>${project.version}</value>
+                            <regex>false</regex>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
