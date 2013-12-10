@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.java.jdt.env;
 
-import com.codenvy.ide.commons.Jso;
+import com.codenvy.ide.collections.Jso;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryNestedType;
 
 

@@ -1,190 +1,127 @@
-<div>
+﻿<ul>
+    <li><a href="#ways-to-add-editor">Ways to Add Editor</a></li>
+    <li><a href="#create-editor">Create an Editor</a></li>
+    <li><a href="#add-toolbar">Adding WYSIWYG Toolbar</a></li>
+    <li><a href="#bind-editor">Binding Editor With a Particular File Type</a></li>
+</ul>
 
-In this tutorial:
+In this tutorial we will use a standard GWT component <a href="http://www.gwtproject.org/javadoc/latest/com/google/gwt/user/client/ui/RichTextArea.html" target="_blank">RichTextArea</a> as a WYSIWYG editor for HTML files that allows complex styling and formatting.
+
+<h1 id="ways-to-add-editor">Ways to Add an Editor</h1>
+
+There are two ways to add an editor:
+
 <ul>
-	<li><a href="#create-part">Create Own Part</a></li>
-	<li><a href="#own-ui">Create part with own UI</a></li>
-	<li><a href="#provided-ui">Create Own Part Partially Using Provided UI</a></li>
-	<li><a href="#mvp">Use of MVP</a></li>
-	<li><a href="#methods">Methods Overview</a></li>
-	<li><a href="#add-parts">Add Own Parts</a></li>
-	<li><a href="#parameters">Parameters Used</a></li>
-	<li><a href="#where-to-add-parts">Where to Add Parts</a></li>
+    <li><b>implement</b> com.codenvy.ide.api.editor.EditorPartPresenter</li>
+
+    or
+
+    <li><b>extend</b> com.codenvy.ide.api.editor.AbstractEditorPresenter that has partially implemented a few methods. Both classes are provided in the API, although the second option is recommended by IDE3 team as simpler and more convenient. This tutorial will follow it as well.</li></ul>
+
+<h1 id="create-editor">Create an Editor</h1>
+
+The editor actually starts working when calling init method that gets a file to be opened in an editor. The init method that has been already implemented in <b>AbstractEditorPresenter</b> which calls an abstract method - <b>initializeEditor</b>. Our goal is to implement it:
+
+<pre>
+@Override
+    protected void initializeEditor() {
+        //create editor
+        textArea = new RichTextArea();
+
+        //use or load content of the file
+        if(input.getFile().getContent() == null){
+            input.getFile().getProject().getContent(input.getFile(), new AsyncCallback<File>() {
+    @Override
+    public void onFailure(Throwable caught) {
+    Log.error(WysiwygEditor.class, caught);
+    }
+
+    @Override
+    public void onSuccess(File result) {
+    textArea.setHTML(input.getFile().getContent());
+    }
+    });
+    }
+    else{
+    textArea.setHTML(input.getFile().getContent());
+    }
+    }
+</pre>
+What happens in the above code is:
+<ul>
+    <li>First we actually create an editor:
+
+<pre>
+textArea = new RichTextArea();</pre></li>
+
+    <li>Then, it is time to check if the file that needs to be opened has content. If it has content, we'll paste it into the editor.</li>
 </ul>
+Full code: <b>com.codenvy.ide.tutorial.wysiwyg.editor.WysiwygEditor</b>
 
-Parts are visual elements that can be placed in a developer's workspace. Normally, parts are tab-like UI elements that perform certain tasks and business logic, for instance output console, build result view, file outline, project explorer. With Codenvy SDK, developers can add own parts. We provide Parts API, where AbstractPartPresenter actually stands behind all parts. Read through this quick tutorial to learn how to create and add new parts.
-
-<h1 id="create-part">Create Own Part</h1>
-
-It is possible to create 2 types of parts (they are essentially the same, but different visually, and use different classes).
-
-<h2 id="own-ui">Create part with own UI</h2>
-
-This kind of part is created in EDITOR in this Tutorial, but it is possible to create it in <a href="/sdk/tutorials/parts-api-tutorial/#where-to-add-parts">any available area</a>.
-Let's get started. As mentioned above, we'll have to extend AbstractPartPresenter class:
+<h1 id="add-toolbar">Displaying Editor in IDE</h1>
+Having done that, we should now specify how an editor will be displayed in IDE. Here we rely on <b>go</b> method comes from Interface Presenter that is common for all IDE UI components.
 
 <pre>
-public class TutorialHowToPresenter extends AbstractPartPresenter implements TutorialHowToView.ActionDelegate {
-    private TutorialHowToView view;
+public void go(AcceptsOneWidget container) {
+        textArea.setSize("100%", "100%");
+        RichTextToolbar toolbar = new RichTextToolbar(textArea);
 
-    @Inject
-    public TutorialHowToPresenter(TutorialHowToView view) {
-        this.view = view;
-        this.view.setDelegate(this);
-    }
+        DockLayoutPanel panel = new DockLayoutPanel(Style.Unit.PX);
+        panel.setWidth("100%");
+        panel.setHeight("100%");
+        panel.addNorth(toolbar, 60);
+        panel.add(textArea);
 
-    /** {@inheritDoc} */
-    @Override
-    public String getTitle() {
-        return "Parts tutorial";
+        // Add the components to a panel
+        container.setWidget(panel);
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public ImageResource getTitleImage() {
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getTitleToolTip() {
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void go(AcceptsOneWidget container) {
-        container.setWidget(view);
-    }
-}
 </pre>
 
-Browse code in <pre>com.codenvy.ide.tutorial.parts.howto.TutorialHowToPresenter</pre>
+Here we've set editor size (100% for width and height), and then created a RichTextToolbar which is a custom component that represents rich text editor buttons (changing background color, font color, text layout, adding bullet lists etc).
 
-As seen above, we can implement methods to add UI elements, like Pic, title, tooltip etc. In the above example, we return null for almost all elements, but the Title (return return "Parts tutorial";), but you can use own UI elements.
+With <b>DockLayoutPanel</b> (class provided by RichTextArea) we group this toolbar to ensure it is always located on the top (60px stripe on the top of the editor) and the rest area is reserved for editor itself.
 
-<h2 id ="provided-ui">Create Own Part Partially Using Provided UI</h2>
+<h1 id="get-instance-editor">Getting Instance of an Editor</h1>
 
-These types of parts are available with pre-defined UI elements, and can be created in Navigation, Tooling and Information areas in this tutorial. However, developers can create them in any other suitable workspace areas.
+Editor provider is used to create a new instance on an editor. To do that we should implement EditorProvider class. It is important that Editor Provider always returns a new instance.
 
-The workflow here slightly differs from the above case. We'll need to extend com.codenvy.ide.api.parts.base.BasePresenter:
 <pre>
-public class MyPartPresenter extends BasePresenter implements MyPartView.ActionDelegate {
-    private MyPartView view;
-    private String     title;
-
-    @Inject
-    public MyPartPresenter(MyPartView view, @Assisted String title) {
-        this.view = view;
-        this.view.setDelegate(this);
-        this.view.setTitle(title);
-        this.title = title;
+ public EditorPartPresenter getEditor() {
+        return new WysiwygEditor();
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onButtonClicked() {
-        Window.alert(title);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getTitle() {
-        return title;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public ImageResource getTitleImage() {
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getTitleToolTip() {
-        return "Tooltip";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void go(AcceptsOneWidget container) {
-        container.setWidget(view);
-    }
-}
 </pre>
 
-while basePresenter extends abstractPartPresenter. This basePresent class has a pre-defined method 
-<pre>void minimize()</pre> that comes into play when you click minimize button. This button won't work if a part has been created in the EDITOR area (minimizing an editor is a fairly rare use case).
+Full code: <b>com.codenvy.ide.tutorial.wysiwyg.WysiwygEditorProvider</b>
 
-<h2 id="mvp">Use of MVP</h2>
+<h1 id="bind-editor">Binding Editor With a Particular File Type</h1>
 
-We use our MVP model with delegating functions. Here's a simple example:
+Now we need to make sure IDE knows what exact editor to use when opening particular files types. In other words, we should ensure all HTML files are opened with WYSIWYG editor.
+
 <pre>
-/** Required for delegating functions in view. */
-public interface ActionDelegate extends BaseActionDelegate {
-    /** Performs some actions in response to a user's clicking on Button */
-    void onButtonClicked();
-}
+@Inject
+    public WysiwygExtension(ResourceProvider resourceProvider, WysiwygEditorProvider editorProvider, EditorRegistry editorRegistry, NewHTMLFileProvider newHTMLFileProvider, NewResourceAgent newResourceAgent) {
+
+        FileType htmlFileType = new FileType(null, "text/html", "html");
+        resourceProvider.registerFileType(htmlFileType);
+        editorRegistry.register(htmlFileType, editorProvider);
+        newResourceAgent.register(newHTMLFileProvider);
+    }
+
 </pre>
 
-ActionDelegate is delegating functions from presenter. When we click minimize, a minimize method is called on the presenter through this delegate class. So, ActionDelegate for this kind of part should extend BaseActionDelegate.
+Full code: <b>com.codenvy.ide.tutorial.wysiwyg.WysiwygExtension</b>
 
-This also concerns View that should extend com.codenvy.ide.api.parts.base.BaseView. We extend baseView and pass it over to ActionDelegate. BaseView has own UI, background, minimize icon, and possibility to add title.
+A few words on what happens in this code:
+<ul>
+
+    <li>Register a new file type (can be skipped if you already have it)
+
+        <pre>new FileType(null, "text/html", "html")</pre>
+
+        Instead of <b>null</b> an icon should be used (it’ll be displayed in the project tree and file tab in the editor)</li>
+
+    <li>bind this file type with editor provider
+
 <pre>
-public class MyPartViewImpl extends BaseView&lt;MyPartView.ActionDelegate&gt; implements MyPartView {
-    interface MyPartViewImplUiBinder extends UiBinder&lt;Widget, MyPartViewImpl&gt; {
-    }
-
-    private static MyPartViewImplUiBinder ourUiBinder = GWT.create(MyPartViewImplUiBinder.class);
-
-    @UiField
-    Button button;
-
-    @Inject
-    public MyPartViewImpl(PartStackUIResources resources) {
-        super(resources);
-        container.add(ourUiBinder.createAndBindUi(this));
-    }
-
-    @UiHandler("button")
-    public void onButtonClicked(ClickEvent event) {
-        delegate.onButtonClicked();
-    }
-}
-</pre>
-
-Reference to a full class: <pre>com.codenvy.ide.tutorial.parts.part.MyPartView</pre>
-
-<h2 id="methods">Methods Overview</h2>
-
-<li>setTitle (in baseView) - sets title</li>
-<li>void hidePart(PartPresenter part) - minimizes a part</li>
-<li>void removePart(PartPresenter part) - deletes the part</li>
-<li>void setActivePart(PartPresenter part) - sets active part when several of them are opened. By default the last opened part is is active. This concerns only parts created in the <strong>EDIT</strong> group. Parts created in other groups are closed by default.</li>
-
-<h1 id="add-parts">Add Own Parts</h1>
-
-Traditionally, when adding something, we need to get something first. In our case, this is a workspace agent.
-
-<pre>@Inject public PartsTutorialExtension(WorkspaceAgent workspaceAgent...) {</pre>
-
-Full Code is available in <pre>com.codenvy.ide.tutorial.parts.PartsTutorialExtension</pre>
-
-Having received a workspace agent, let's call openPart method on it:
-<pre>workspaceAgent.openPart(howToPresenter, EDITING);</pre>
-
-<h2 id="parameters">Parameters Used</h2>
-
-<li><strong>What part</strong> should be added: howToPresenter in our example</li>
-<li><strong>Where</strong> this part needs to be <strong>added</strong>: (EDITING in our example)</li>
-
-<h2 id="where-to-add">Where to Add Parts?</h2>
-
-There are 4 options available on where to add parts:<ul>
-<li>EDITING: area just above the editor, like a file tab</li>
-<li>NAVIGATION: area on the left to project explorer</li>
-<li>TOOLING: area to the right of the editor</li>
-<li>INFORMATION: area under the editor, 'console' area</li>
+  editorRegistry.register(htmlFileType, editorProvider);</pre></li>
 </ul>
-
-</div>

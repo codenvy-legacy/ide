@@ -16,7 +16,7 @@ package com.codenvy.ide.collections.js;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.StringSet;
-import com.codenvy.ide.commons.Jso;
+import com.codenvy.ide.collections.Jso;
 
 /** Client implementation of a set of strings. */
 public class JsoStringSet implements StringSet {

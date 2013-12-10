@@ -391,6 +391,15 @@
                                     <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
                                     <destFileName>gist-extension.zip</destFileName>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>wysiwyg-editor-tutorial</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>wysiwyg-editor-tutorial.zip</destFileName>
+                                </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>

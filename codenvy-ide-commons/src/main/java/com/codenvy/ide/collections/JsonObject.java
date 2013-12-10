@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.commons;
-
-import com.codenvy.ide.collections.Array;
+package com.codenvy.ide.collections;
 
 /** Defines a simple, mutable JSON object. */
 public interface JsonObject {

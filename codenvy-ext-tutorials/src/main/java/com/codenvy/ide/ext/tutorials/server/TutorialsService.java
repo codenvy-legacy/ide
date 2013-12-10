@@ -203,6 +203,27 @@ public class TutorialsService {
             throws VirtualFileSystemException, IOException {
         createProject(vfsId, BASE_URL + "/editor-api-tutorial.zip", name, properties);
     }
+        /**
+     * Create 'Editor tutorial' project.
+     *
+     * @param vfsId
+     *         identifier of virtual file system
+     * @param name
+     *         name of the newly created project
+     * @param properties
+     *         properties to set to project
+     * @throws VirtualFileSystemException
+     *         if any error occurred in VFS
+     * @throws IOException
+     *         if any error occurred while input-output operations
+     */
+    @Path("wysiwyg")
+    @POST
+    public void createWysiwygEditorTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
+                                            List<Property> properties)
+            throws VirtualFileSystemException, IOException {
+        createProject(vfsId, BASE_URL + "/wysiwyg-editor-tutorial.zip", name, properties);
+    }
 
     /**
      * Create 'GIN tutorial' project.
