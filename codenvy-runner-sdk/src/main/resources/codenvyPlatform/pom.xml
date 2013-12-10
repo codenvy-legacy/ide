@@ -21,39 +21,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.codenvy.ide</groupId>
-    <artifactId>codenvy-ide-client</artifactId>
-    <version>3.0.0-M4</version>
+    <parent>
+        <groupId>com.codenvy.ide</groupId>
+        <artifactId>codenvy-ide-parent</artifactId>
+        <version>3.0.0-M5-SNAPSHOT</version>
+    </parent>
+    <artifactId>codenvy-application-war</artifactId>
     <packaging>war</packaging>
-    <name>Codenvy :: Client</name>
+    <name>Codenvy :: Packaging :: Application</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <generated.sources.directory>${project.build.directory}/generated-sources/gen</generated.sources.directory>
-
-        <!-- Codenvy -->
-        <com.codenvy.platform-api.version>0.4.0</com.codenvy.platform-api.version>
-
-        <!-- eXo -->
-        <org.exoplatform.ide.version>2.8.1</org.exoplatform.ide.version>
-
-        <!-- GWT -->
-        <gwt.version>2.5.1</gwt.version>
-        <gwt.maven.plugin.version>2.5.1</gwt.maven.plugin.version>
-
-        <!-- Testing libraries -->
-        <junit.version>4.7</junit.version>
-        <mockito.version>1.9.5</mockito.version>
-        <gwt-test-utils.version>0.45</gwt-test-utils.version>
-
-        <!-- Logging libraries -->
-        <org.slf4j.version>1.6.2</org.slf4j.version>
-
-        <!-- Third parties -->
-        <commons-io.version>2.4</commons-io.version>
-        <gin.version>2.1.2</gin.version>
-        <jgit.version>2.3.1.201302201838-r</jgit.version>
-        <reflections.version>0.9.9-RC1</reflections.version>
     </properties>
 
     <!--
@@ -333,38 +312,4 @@
             </plugin>
         </plugins>
     </build>
-    <!--
-    This profile is required for launching Codenvy extensions in 'codenvy-ext-extensions' module.
-    See com.codenvy.ide.ext.extruntime.server.codeserver.GWTMavenCodeServer.fixMGWT332Bug() method.
-    It's a recommended (https://groups.google.com/d/msg/codehaus-mojo-gwt-maven-plugin-users/zvJ0IlGN7Fw/RbyteSEKXtoJ)
-    workaround of a known bug of Maven GWT Plugin (https://jira.codehaus.org/browse/MGWT-332).
-    -->
-    <profiles>
-        <profile>
-            <id>customExtensionSources</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <version>1.8</version>
-                        <executions>
-                            <execution>
-                                <id>add-extension-sources</id>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <goal>add-source</goal>
-                                </goals>
-                                <!-- configuration section should be added by
-                                com.codenvy.ide.ext.extruntime.server.codeserver.GWTMavenCodeServer.fixMGWT332Bug() method -->
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>
