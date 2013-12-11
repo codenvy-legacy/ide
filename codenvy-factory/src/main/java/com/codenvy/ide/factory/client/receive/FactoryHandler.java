@@ -142,13 +142,10 @@ public class FactoryHandler
         projectAttributes.put(PROJECT_TYPE, getParamValue(PROJECT_TYPE, parameterMap));
         projectAttributes.put(PROJECT_NAME, getParamValue(PROJECT_NAME, parameterMap));
 
-        final String ID_OF_COMMIT = getParamValue(COMMIT_ID, parameterMap) != null ? getParamValue(COMMIT_ID, parameterMap)
-                                                                                   : getParamValue("idcommit", parameterMap);
-
         factoryUrl = new SimpleFactoryUrl(getParamValue(FACTORY_VERSION, parameterMap),
                                           getParamValue(VCS_TYPE, parameterMap),
                                           getParamValue(VCS_URL, parameterMap),
-                                          ID_OF_COMMIT,
+                                          getParamValue(COMMIT_ID, parameterMap),
                                           getParamValue(ACTION, parameterMap),
                                           getParamValue(OPEN_FILE, parameterMap),
                                           Boolean.parseBoolean(getParamValue(VCS_INFO, parameterMap)),
@@ -156,6 +153,11 @@ public class FactoryHandler
                                           getParamValue(AFFILIATE_ID, parameterMap),
                                           getParamValue(VCS_BRANCH, parameterMap),
                                           projectAttributes);
+
+        //For back compatibility we check if user pass through factory url old version of commit id parameter.
+        if (factoryUrl.getCommitid() == null && getParamValue("idcommit", parameterMap) != null) {
+            factoryUrl.setCommitid(getParamValue("idcommit", parameterMap));
+        }
 
         prepareCloning();
     }
