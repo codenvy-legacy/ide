@@ -79,33 +79,6 @@ public class SDKRunner extends Runner {
             "  </Service>\n" +
             "</Server>\n";
 
-    private static Extension getExtensionFromJarFile(ZipFile zipFile) throws IOException {
-        Enumeration<? extends ZipEntry> entries = zipFile.entries();
-        ZipEntry gwtXmlEntry = null;
-        ZipEntry pomEntry = null;
-        while (entries.hasMoreElements()) {
-            ZipEntry entry = entries.nextElement();
-            if (!entry.isDirectory()) {
-                if (entry.getName().endsWith(GwtXmlUtils.GWT_MODULE_XML_SUFFIX)) {
-                    gwtXmlEntry = entry;
-                } else if (entry.getName().endsWith("pom.xml")) {
-                    pomEntry = entry;
-                }
-            }
-        }
-
-        // TODO consider Codenvy extension validator
-        if (gwtXmlEntry == null || pomEntry == null) {
-            throw new IllegalArgumentException(zipFile.getName() + " is not a valid Codenvy extension");
-        }
-
-        String gwtModuleName = gwtXmlEntry.getName().replace(File.separatorChar, '.');
-        gwtModuleName = gwtModuleName.substring(0, gwtModuleName.length() - GwtXmlUtils.GWT_MODULE_XML_SUFFIX.length());
-        final Model pom = Utils.readPom(zipFile.getInputStream(pomEntry));
-        zipFile.close();
-        return new Extension(gwtModuleName, pom.getGroupId(), pom.getArtifactId(), pom.getVersion());
-    }
-
     @Override
     public String getName() {
         return "sdk";
@@ -173,7 +146,7 @@ public class SDKRunner extends Runner {
     }
 
     private Path buildCodenvyWebAppWithExtension(java.io.File extensionJarFile) throws RunnerException {
-        Path warPath;
+        final Path warPath;
         try {
             // prepare Codenvy Platform sources
             final Path appDirPath =
@@ -187,14 +160,43 @@ public class SDKRunner extends Runner {
             GwtXmlUtils.inheritGwtModule(Utils.findFile(IDE_GWT_XML_FILE_NAME, appDirPath), extension.gwtModuleName);
 
             // build WAR with Maven
-            warPath = buildAppAndGetWar(appDirPath);
+            warPath = buildWebAppAndGetWar(appDirPath);
         } catch (IOException e) {
             throw new RunnerException(e);
         }
         return warPath;
     }
 
-    private Path buildAppAndGetWar(Path appDirPath) throws RunnerException {
+    private Extension getExtensionFromJarFile(ZipFile zipFile) throws IOException {
+        Enumeration<? extends ZipEntry> entries = zipFile.entries();
+        ZipEntry gwtXmlEntry = null;
+        ZipEntry pomEntry = null;
+        while (entries.hasMoreElements()) {
+            ZipEntry entry = entries.nextElement();
+            if (!entry.isDirectory()) {
+                if (entry.getName().endsWith(GwtXmlUtils.GWT_MODULE_XML_SUFFIX)) {
+                    gwtXmlEntry = entry;
+                } else if (entry.getName().endsWith("pom.xml")) {
+                    pomEntry = entry;
+                }
+            }
+        }
+
+        // TODO consider Codenvy extension validator
+        if (gwtXmlEntry == null || pomEntry == null) {
+            throw new IllegalArgumentException(zipFile.getName() + " is not a valid Codenvy extension");
+        }
+
+        String gwtModuleName = gwtXmlEntry.getName().replace(File.separatorChar, '.');
+        gwtModuleName = gwtModuleName.substring(0, gwtModuleName.length() - GwtXmlUtils.GWT_MODULE_XML_SUFFIX.length());
+        final Model pom = Utils.readPom(zipFile.getInputStream(pomEntry));
+        zipFile.close();
+        final String groupId = pom.getGroupId() == null ? pom.getParent().getGroupId() : pom.getGroupId();
+        final String version = pom.getVersion() == null ? pom.getParent().getVersion() : pom.getVersion();
+        return new Extension(gwtModuleName, groupId, pom.getArtifactId(), version);
+    }
+
+    private Path buildWebAppAndGetWar(Path appDirPath) throws RunnerException {
         final String[] command = new String[]{Utils.getMavenExecCommand(), "package"};
 
         try {
@@ -255,8 +257,7 @@ public class SDKRunner extends Runner {
     // *nix
 
     protected ApplicationProcess startUnix(final java.io.File appDir,
-                                           final SDKRunnerConfiguration runnerConfiguration)
-            throws RunnerException {
+                                           final SDKRunnerConfiguration runnerConfiguration) throws RunnerException {
         java.io.File startUpScriptFile = genStartUpScriptUnix(appDir, runnerConfiguration);
         if (!startUpScriptFile.setExecutable(true, false)) {
             throw new RunnerException("Unable update attributes of the startup script");
@@ -328,7 +329,6 @@ public class SDKRunner extends Runner {
 
     // Windows
 
-    // TODO: implement
     protected ApplicationProcess startWindows(java.io.File appDir, SDKRunnerConfiguration runnerConfiguration) {
         throw new UnsupportedOperationException();
     }
