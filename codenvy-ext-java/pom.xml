@@ -207,21 +207,6 @@
                 <version>${com.codenvy.platform-api.version}</version>
                 <executions>
                     <execution>
-                        <id>generate-client-dto</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <dtoPackages>
-                                <package>com.codenvy.ide.ext.git.shared</package>
-                            </dtoPackages>
-                            <outputDirectory>${dto-generator-out-directory}</outputDirectory>
-                            <genClassName>com.codenvy.ide.ext.git.client.dto.DtoClientImpls</genClassName>
-                            <impl>client</impl>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>generate-server-dto</id>
                         <phase>process-sources</phase>
                         <goals>
@@ -229,10 +214,10 @@
                         </goals>
                         <configuration>
                             <dtoPackages>
-                                <package>com.codenvy.ide.ext.git.shared</package>
+                                <package>com.codenvy.ide.ext.java.shared</package>
                             </dtoPackages>
                             <outputDirectory>${dto-generator-out-directory}</outputDirectory>
-                            <genClassName>com.codenvy.ide.ext.git.server.dto.DtoServerImpls</genClassName>
+                            <genClassName>com.codenvy.ide.ext.java.server.dto.DtoServerImpls</genClassName>
                             <impl>server</impl>
                         </configuration>
                     </execution>

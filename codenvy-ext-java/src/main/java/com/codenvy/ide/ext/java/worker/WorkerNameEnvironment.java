@@ -421,7 +421,7 @@ public class WorkerNameEnvironment implements INameEnvironment {
                 TypesListImpl typesList = TypesListImpl.deserialize(typesJson);
 
 
-                for (ShortTypeInfo info : typesList.getTypes().asIterable()) {
+                for (ShortTypeInfo info : typesList.getTypes()) {
                     requestor.acceptType(info.getName().substring(0, info.getName().lastIndexOf(".")).toCharArray(),
                                          info.getName().substring(info.getName().lastIndexOf(".") + 1).toCharArray(),
                                          null,

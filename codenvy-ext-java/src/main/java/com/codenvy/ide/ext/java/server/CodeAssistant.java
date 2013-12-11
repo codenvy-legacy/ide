@@ -25,18 +25,16 @@ import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.shared.PropertyFilter;
 import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.api.vfs.shared.dto.Project;
+import com.codenvy.api.vfs.shared.dto.Property;
+import com.codenvy.builder.maven.dto.MavenDependency;
+import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.ext.java.shared.JavaType;
 import com.codenvy.ide.ext.java.shared.ShortTypeInfo;
 import com.codenvy.ide.ext.java.shared.TypeInfo;
 
-import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
-import org.everrest.core.impl.provider.json.ObjectBuilder;
 
 
-
-
-import java.io.ByteArrayInputStream;
 import java.util.*;
 
 /**
@@ -128,20 +126,22 @@ public abstract class CodeAssistant {
         Set<String> set = new HashSet<String>();
         //add rt.jar as dependency
         set.add("java:rt:1.6:jar");
-//        if (project.hasProperty("exoide:classpath")) {
-//            String classpath = (String)project.getPropertyValue("exoide:classpath");
-//            JsonParser parser = new JsonParser();
-//            try {
-//                parser.parse(new ByteArrayInputStream(classpath.getBytes()));
-//                Dependency[] dependencys =
-//                        (Dependency[])ObjectBuilder.createArray(Dependency[].class, parser.getJsonObject());
-//                for (Dependency d : dependencys)
-//                    set.add(d.toString());
-//            } catch (JsonException e) {
-//
-//                throw new CodeAssistantException(500, "Can't parse dependencys for project: " + project.getPath());
-//            }
-//        }
+        List<Property> properties = project.getProperties();
+        JsonParser parser = new JsonParser();
+        for (int i = 0; i < properties.size(); i++) {
+            Property property = properties.get(i);
+            if (property.getName().equals("exoide:classpath"))
+            {
+                List<String> classpath = property.getValue();
+                for (int j = 0; j < classpath.size(); j++) {
+                    String s = classpath.get(j);
+                    MavenDependency mavenDependency = DtoFactory.getInstance().createDtoFromJson(s, MavenDependency.class);
+                    StringBuilder builder = new StringBuilder(mavenDependency.getGroupID());
+                    builder.append(':').append(mavenDependency.getArtifactID()).append(':').append(mavenDependency.getVersion()).append(':').append(mavenDependency.getType());
+                    set.add(builder.toString());
+                }
+            }
+        }
         return set;
     }
 
