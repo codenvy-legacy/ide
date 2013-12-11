@@ -142,10 +142,13 @@ public class FactoryHandler
         projectAttributes.put(PROJECT_TYPE, getParamValue(PROJECT_TYPE, parameterMap));
         projectAttributes.put(PROJECT_NAME, getParamValue(PROJECT_NAME, parameterMap));
 
+        final String ID_OF_COMMIT = getParamValue(COMMIT_ID, parameterMap) != null ? getParamValue(COMMIT_ID, parameterMap)
+                                                                                   : getParamValue("idcommit", parameterMap);
+
         factoryUrl = new SimpleFactoryUrl(getParamValue(FACTORY_VERSION, parameterMap),
                                           getParamValue(VCS_TYPE, parameterMap),
                                           getParamValue(VCS_URL, parameterMap),
-                                          getParamValue(COMMIT_ID, parameterMap),
+                                          ID_OF_COMMIT,
                                           getParamValue(ACTION, parameterMap),
                                           getParamValue(OPEN_FILE, parameterMap),
                                           Boolean.parseBoolean(getParamValue(VCS_INFO, parameterMap)),
