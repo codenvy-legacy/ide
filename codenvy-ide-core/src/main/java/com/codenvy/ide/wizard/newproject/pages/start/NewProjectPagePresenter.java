@@ -17,12 +17,16 @@
  */
 package com.codenvy.ide.wizard.newproject.pages.start;
 
+import com.codenvy.api.vfs.shared.dto.Item;
+import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.wizard.newproject.PaaSAgentImpl;
 import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
@@ -50,6 +54,8 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
     private Array<String>            projectList;
     private ProjectTypeAgentImpl     projectTypeAgent;
     private PaaSAgentImpl            paasAgent;
+    private DtoFactory dtoFactory;
+
 
     /**
      * Create presenter.
@@ -67,14 +73,19 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
                                    ProjectTypeAgentImpl projectTypeAgent,
                                    PaaSAgentImpl paasAgent,
                                    ResourceProvider resourceProvider,
-                                   CoreLocalizationConstant constant) {
+                                   CoreLocalizationConstant constant,
+                                   final DtoFactory dtoFactory) {
 
         super("Select project type and paas", resources.newResourceIcon());
-
-        resourceProvider.listProjects(new AsyncCallback<Array<String>>() {
+        this.dtoFactory = dtoFactory;
+        resourceProvider.listProjects(new AsyncCallback<String>() {
             @Override
-            public void onSuccess(Array<String> result) {
-                projectList = result;
+            public void onSuccess(String result) {
+                projectList = Collections.createArray();
+                ItemList itemList = dtoFactory.createDtoFromJson(result, ItemList.class);
+                for (Item item : itemList.getItems()) {
+                    projectList.add(item.getName());
+                }
                 hasProjectList = true;
             }
 

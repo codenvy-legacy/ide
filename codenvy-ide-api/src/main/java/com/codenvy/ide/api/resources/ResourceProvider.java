@@ -71,7 +71,7 @@ public interface ResourceProvider {
      *
      * @param callback
      */
-    public void listProjects(AsyncCallback<Array<String>> callback);
+    public void listProjects(AsyncCallback<String> callback);
 
     /**
      * Reads already stored projects and shows them in project explorer.

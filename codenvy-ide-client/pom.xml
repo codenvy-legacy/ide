@@ -59,6 +59,11 @@
             <artifactId>codenvy-ide-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-vfs-fs</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- Testing libraries -->
         <dependency>
@@ -92,12 +97,7 @@
             <version>${org.slf4j.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-vfs-fs</artifactId>
-            <scope>runtime</scope>
-            <version>${project.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-websocket</artifactId>
