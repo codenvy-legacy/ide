@@ -36,13 +36,6 @@
         <tag>HEAD</tag>
     </scm>
 
-    <!--
-        IMPORTANT!
-        Make sure that the same properties in files
-        codenvy-runner-sdk/src/main/resource/codenvyPlatform/pom.xml
-        codenvy-sdk-tutorials/*/pom.xml
-        have the same values.
-    -->
     <properties>
         <exo.product.name>codenvy-ide</exo.product.name>
 

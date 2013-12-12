@@ -96,7 +96,7 @@ public class SearchEngine {
     /** @param result */
     private void typeListReceived(TypesList result) {
         index++;
-        for (ShortTypeInfo typeInfo : result.getTypes().asIterable()) {
+        for (ShortTypeInfo typeInfo : result.getTypes()) {
             Type type = new Type(typeInfo);
             if (!Modifier.isPublic(typeInfo.getModifiers())) {
                 if (!currentPackage.getElementName().equals(type.getPackageFragment().getElementName()))

@@ -32,13 +32,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * Runner implementation to test Codenvy plug-ins by launching
@@ -47,6 +51,7 @@ import java.util.concurrent.*;
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
 public class SDKRunner extends Runner {
+    public static final  String IDE_GWT_XML_FILE_NAME     = "IDEPlatform.gwt.xml";
     public static final  int    DEFAULT_MEM_SIZE          = 256;
     public static final  String DEBUG_TRANSPORT_PROTOCOL  = "dt_socket";
     private static final Logger LOG                       = LoggerFactory.getLogger(SDKRunner.class);
@@ -111,7 +116,7 @@ public class SDKRunner extends Runner {
             ZipUtils.unzip(Utils.getTomcatBinaryDistribution().openStream(), tomcatPath.toFile());
 
             final Path webappsPath = tomcatPath.resolve("webapps");
-            final java.io.File warFile = buildCodenvyWebApp(toDeploy.getFile()).toFile();
+            final java.io.File warFile = buildCodenvyWebAppWithExtension(toDeploy.getFile()).toFile();
             ZipUtils.unzip(warFile, webappsPath.resolve("ide").toFile());
 
             configureApiServices(webappsPath, runnerCfg);
@@ -140,35 +145,58 @@ public class SDKRunner extends Runner {
         return applicationProcess;
     }
 
-    private Path buildCodenvyWebApp(java.io.File jarFile) throws RunnerException {
-        Path warPath;
+    private Path buildCodenvyWebAppWithExtension(java.io.File extensionJarFile) throws RunnerException {
+        final Path warPath;
         try {
             // prepare Codenvy Platform sources
             final Path appDirPath =
                     Files.createTempDirectory(getDeployDirectory().toPath(), ("war_" + getName() + '_'));
             ZipUtils.unzip(Utils.getCodenvyPlatformBinaryDistribution().openStream(), appDirPath.toFile());
 
-            // add extension to Codenvy Platform
-            // TODO avoid unzipping jar-file, use java.util.zip.*
-            final Path jarUnzipped =
-                    Files.createTempDirectory(getDeployDirectory().toPath(), ("jar_" + getName() + '_'));
-            ZipUtils.unzip(jarFile, jarUnzipped.toFile());
-            final Path pomXmlExt = Utils.findFile("pom.xml", jarUnzipped);
-            Model pomExt = Utils.readPom(pomXmlExt);
+            // integrate extension to Codenvy Platform
+            final Extension extension = getExtensionFromJarFile(new ZipFile(extensionJarFile));
+            Utils.addDependencyToPom(appDirPath.resolve("pom.xml"), extension.groupId, extension.artifactId,
+                                     extension.version);
+            GwtXmlUtils.inheritGwtModule(Utils.findFile(IDE_GWT_XML_FILE_NAME, appDirPath), extension.gwtModuleName);
 
-            Utils.addDependencyToPom(appDirPath.resolve("pom.xml"), pomExt);
-            final Path mainGwtModuleDescriptor = Utils.findFile("*.gwt.xml", appDirPath);
-            GwtXmlUtils.inheritGwtModule(mainGwtModuleDescriptor, GwtXmlUtils.detectGwtModuleLogicalName(jarUnzipped));
-
-            // build WAR by invoking Maven directly
-            warPath = buildWar(appDirPath);
+            // build WAR with Maven
+            warPath = buildWebAppAndGetWar(appDirPath);
         } catch (IOException e) {
             throw new RunnerException(e);
         }
         return warPath;
     }
 
-    private Path buildWar(Path appDirPath) throws RunnerException {
+    private Extension getExtensionFromJarFile(ZipFile zipFile) throws IOException {
+        Enumeration<? extends ZipEntry> entries = zipFile.entries();
+        ZipEntry gwtXmlEntry = null;
+        ZipEntry pomEntry = null;
+        while (entries.hasMoreElements()) {
+            ZipEntry entry = entries.nextElement();
+            if (!entry.isDirectory()) {
+                if (entry.getName().endsWith(GwtXmlUtils.GWT_MODULE_XML_SUFFIX)) {
+                    gwtXmlEntry = entry;
+                } else if (entry.getName().endsWith("pom.xml")) {
+                    pomEntry = entry;
+                }
+            }
+        }
+
+        // TODO consider Codenvy extension validator
+        if (gwtXmlEntry == null || pomEntry == null) {
+            throw new IllegalArgumentException(zipFile.getName() + " is not a valid Codenvy extension");
+        }
+
+        String gwtModuleName = gwtXmlEntry.getName().replace(File.separatorChar, '.');
+        gwtModuleName = gwtModuleName.substring(0, gwtModuleName.length() - GwtXmlUtils.GWT_MODULE_XML_SUFFIX.length());
+        final Model pom = Utils.readPom(zipFile.getInputStream(pomEntry));
+        zipFile.close();
+        final String groupId = pom.getGroupId() == null ? pom.getParent().getGroupId() : pom.getGroupId();
+        final String version = pom.getVersion() == null ? pom.getParent().getVersion() : pom.getVersion();
+        return new Extension(gwtModuleName, groupId, pom.getArtifactId(), version);
+    }
+
+    private Path buildWebAppAndGetWar(Path appDirPath) throws RunnerException {
         final String[] command = new String[]{Utils.getMavenExecCommand(), "package"};
 
         try {
@@ -229,8 +257,7 @@ public class SDKRunner extends Runner {
     // *nix
 
     protected ApplicationProcess startUnix(final java.io.File appDir,
-                                           final SDKRunnerConfiguration runnerConfiguration)
-            throws RunnerException {
+                                           final SDKRunnerConfiguration runnerConfiguration) throws RunnerException {
         java.io.File startUpScriptFile = genStartUpScriptUnix(appDir, runnerConfiguration);
         if (!startUpScriptFile.setExecutable(true, false)) {
             throw new RunnerException("Unable update attributes of the startup script");
@@ -302,9 +329,22 @@ public class SDKRunner extends Runner {
 
     // Windows
 
-    // TODO: implement
     protected ApplicationProcess startWindows(java.io.File appDir, SDKRunnerConfiguration runnerConfiguration) {
         throw new UnsupportedOperationException();
+    }
+
+    private static class Extension {
+        String gwtModuleName;
+        String groupId;
+        String artifactId;
+        String version;
+
+        Extension(String gwtModuleName, String groupId, String artifactId, String version) {
+            this.gwtModuleName = gwtModuleName;
+            this.groupId = groupId;
+            this.artifactId = artifactId;
+            this.version = version;
+        }
     }
 
     private static class TomcatProcess extends ApplicationProcess {

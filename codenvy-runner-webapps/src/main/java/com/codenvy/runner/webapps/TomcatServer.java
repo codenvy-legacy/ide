@@ -237,7 +237,6 @@ public class TomcatServer implements ApplicationServer {
 
     // Windows
 
-    // TODO: implement
     protected ApplicationProcess startWindows(java.io.File appDir,
                                               ApplicationServerRunnerConfiguration runnerConfiguration,
                                               StopCallback stopCallback) {

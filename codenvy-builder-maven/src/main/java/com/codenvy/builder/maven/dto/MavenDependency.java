@@ -27,11 +27,11 @@ import com.codenvy.dto.shared.DTO;
  */
 @DTO
 public interface MavenDependency extends Dependency {
-    String getArtifactId();
+    String getArtifactID();
 
-    MavenDependency withArtifactId(String artifactId);
+    MavenDependency withArtifactID(String artifactID);
 
-    void setArtifactId(String artifactId);
+    void setArtifactID(String artifactID);
 
     String getClassifier();
 
@@ -39,11 +39,11 @@ public interface MavenDependency extends Dependency {
 
     void setClassifier(String classifier);
 
-    String getGroupId();
+    String getGroupID();
 
-    MavenDependency withGroupId(String groupId);
+    MavenDependency withGroupID(String groupID);
 
-    void setGroupId(String groupId);
+    void setGroupID(String groupID);
 
     String getType();
 

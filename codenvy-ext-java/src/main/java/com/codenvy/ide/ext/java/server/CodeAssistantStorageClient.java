@@ -130,6 +130,16 @@ public class CodeAssistantStorageClient implements CodeAssistantStorage {
         w.write("}");
         w.flush();
         w.close();
+
+        String rr = "{\"dependencies\":";
+        rr+=dependencyList;
+        rr+=",\"zipUrl\":";
+        rr+="\"" + zipUrl + "\"";
+        rr+="}";
+
+        System.out.println("      >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>        " + rr);
+
+
         return readBody(http.getInputStream(), http.getContentLength());
     }
 

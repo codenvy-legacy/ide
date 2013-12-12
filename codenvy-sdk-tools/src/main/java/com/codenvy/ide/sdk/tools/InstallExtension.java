@@ -134,7 +134,9 @@ public class InstallExtension {
         gwtModuleName = gwtModuleName.substring(0, gwtModuleName.length() - GwtXmlUtils.GWT_MODULE_XML_SUFFIX.length());
         final Model pom = Utils.readPom(zipFile.getInputStream(pomEntry));
         zipFile.close();
-        return new Extension(gwtModuleName, pom.getGroupId(), pom.getArtifactId(), pom.getVersion());
+        final String groupId = pom.getGroupId() == null ? pom.getParent().getGroupId() : pom.getGroupId();
+        final String version = pom.getVersion() == null ? pom.getParent().getVersion() : pom.getVersion();
+        return new Extension(gwtModuleName, groupId, pom.getArtifactId(), version);
     }
 
     private static class Extension {
