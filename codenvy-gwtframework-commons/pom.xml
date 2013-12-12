@@ -23,7 +23,7 @@
     <parent>
         <artifactId>exo-ide-parent</artifactId>
         <groupId>org.exoplatform.ide</groupId>
-        <version>2.9.3</version>
+        <version>2.9.4-SNAPSHOT</version>
     </parent>
     <groupId>org.exoplatform.gwt</groupId>
     <artifactId>codenvy-gwtframework-commons</artifactId>
