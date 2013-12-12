@@ -67,8 +67,9 @@ import java.util.HashMap;
  */
 public class WorkerMessageHandler implements MessageHandler, MessageFilter.MessageRecipient<ParseMessage> {
 
-    private static WorkerMessageHandler instance;
-    private        INameEnvironment     nameEnvironment;
+    private static WorkerMessageHandler      instance;
+    private final  WorkerOutlineModelUpdater outlineModelUpdater;
+    private        INameEnvironment          nameEnvironment;
     private HashMap<String, String> options = new HashMap<String, String>();
     private MessageFilter                      messageFilter;
     private JavaParserWorker                   worker;
@@ -101,6 +102,7 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
         messageFilter.registerMessageRecipient(RoutingTypes.CONFIG, configMessageRecipient);
         messageFilter.registerMessageRecipient(RoutingTypes.PARSE, this);
         templateCompletionProposalComputer = new TemplateCompletionProposalComputer(getTemplateContextRegistry());
+        outlineModelUpdater = new WorkerOutlineModelUpdater(worker);
     }
 
     public static WorkerMessageHandler get() {
@@ -172,6 +174,7 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
                 problemsMessage.setProblems(problemsArray);
                 problemsMessage.setId(message.id());
                 worker.sendMessage(problemsMessage.serialize());
+                outlineModelUpdater.onCompilationUnitChanged(unit, message.fileId());
             }
         });
 

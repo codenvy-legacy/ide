@@ -275,10 +275,10 @@ public class DtoImplClientTemplate extends DtoImpl {
          */
         if (paramType == Array.class) {
             paramTypeName = paramTypeName.replace("Array",
-                                                  "JsoArray");
+                                                  "js.JsoArray");
         } else if (paramType == StringMap.class) {
             paramTypeName = paramTypeName.replace("StringMap",
-                                                  "JsoStringMap");
+                                                  "js.JsoStringMap");
         }
 
         builder.append(paramTypeName);

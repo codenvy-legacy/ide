@@ -15,23 +15,32 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.client.editor;
-
-import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
-import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.util.ListenerRegistrar.Remover;
-
+package com.codenvy.ide.ext.java.messages;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
+ * Java code blocks types
+ *
+ * @author Evgen Vidolob
  */
-public interface AstProvider {
-    public interface AstListener {
-        void onCompilationUnitChanged(CompilationUnit cUnit);
+public enum BlockTypes {
+    PACKAGE("Package"), //
+    IMPORTS("Imports"), //
+    IMPORT("Import"), //
+    CLASS("Class"), //
+    INTERFACE("Interface"), //
+    ENUM("Enum"), //
+    ANNOTATION("Annotation"), //
+    FIELD("Field"), //
+    METHOD("Method");
+
+    private String type;
+
+    BlockTypes(String type) {
+        this.type = type;
     }
 
-    Remover addAstListener(AstListener listener);
-
-    File getFile();
+    /** @return the type */
+    public String getType() {
+        return type;
+    }
 }

@@ -15,11 +15,10 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.client.editor.outline;
+package com.codenvy.ide.ext.java.messages.impl;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Jso;
-import com.codenvy.ide.texteditor.api.outline.CodeBlock;
 
 
 /**
@@ -27,9 +26,9 @@ import com.codenvy.ide.texteditor.api.outline.CodeBlock;
  *
  * @author Evgen Vidolob
  */
-public class JavaCodeBlock extends Jso implements CodeBlock {
+public class WorkerCodeBlock extends Jso {
 
-    protected JavaCodeBlock() {
+    protected WorkerCodeBlock() {
     }
 
     /** {@inheritDoc} */
@@ -41,7 +40,7 @@ public class JavaCodeBlock extends Jso implements CodeBlock {
      * @param type
      *         the type to set
      */
-    public native final JavaCodeBlock setType(String type) /*-{
+    public native final WorkerCodeBlock setType(String type) /*-{
         this[0] = type;
         return this;
     }-*/;
@@ -55,7 +54,7 @@ public class JavaCodeBlock extends Jso implements CodeBlock {
      * @param offset
      *         the offset to set
      */
-    public native final JavaCodeBlock setOffset(int offset) /*-{
+    public native final WorkerCodeBlock setOffset(int offset) /*-{
         this[1] = offset;
         return this;
     }-*/;
@@ -69,13 +68,13 @@ public class JavaCodeBlock extends Jso implements CodeBlock {
      * @param length
      *         the length to set
      */
-    public native final JavaCodeBlock setLength(int length) /*-{
+    public native final WorkerCodeBlock setLength(int length) /*-{
         this[2] = length;
         return this;
     }-*/;
 
     /** {@inheritDoc} */
-    public native final Array<CodeBlock> getChildren() /*-{
+    public native final Array<WorkerCodeBlock> getChildren() /*-{
         return this[3];
     }-*/;
 
@@ -83,22 +82,8 @@ public class JavaCodeBlock extends Jso implements CodeBlock {
      * @param children
      *         the children to set
      */
-    public native final JavaCodeBlock setChildren(Array<JavaCodeBlock> children) /*-{
+    public native final WorkerCodeBlock setChildren(Array<WorkerCodeBlock> children) /*-{
         this[3] = children;
-        return this;
-    }-*/;
-
-    /** {@inheritDoc} */
-    public native final JavaCodeBlock getParent() /*-{
-        return this[4];
-    }-*/;
-
-    /**
-     * @param parent
-     *         the parent to set
-     */
-    public native final JavaCodeBlock setParent(JavaCodeBlock parent) /*-{
-        this[4] = parent;
         return this;
     }-*/;
 
@@ -111,7 +96,7 @@ public class JavaCodeBlock extends Jso implements CodeBlock {
      * @param name
      *         the name to set
      */
-    public native final JavaCodeBlock setName(String name) /*-{
+    public native final WorkerCodeBlock setName(String name) /*-{
         this[5] = name;
         return this;
     }-*/;
@@ -126,7 +111,7 @@ public class JavaCodeBlock extends Jso implements CodeBlock {
      * @param modifiers
      *         the modifiers to set
      */
-    public native final JavaCodeBlock setModifiers(int modifiers) /*-{
+    public native final WorkerCodeBlock setModifiers(int modifiers) /*-{
         this[6] = modifiers;
     }-*/;
 
@@ -139,7 +124,7 @@ public class JavaCodeBlock extends Jso implements CodeBlock {
      * @param javaType
      *         the javaType to set
      */
-    public native final JavaCodeBlock setJavaType(String javaType) /*-{
+    public native final WorkerCodeBlock setJavaType(String javaType) /*-{
         this[7] = javaType;
     }-*/;
 
@@ -149,7 +134,7 @@ public class JavaCodeBlock extends Jso implements CodeBlock {
     }
 
 
-    public static native JavaCodeBlock make() /*-{
+    public static native WorkerCodeBlock make() /*-{
         return [];
     }-*/;
 }
