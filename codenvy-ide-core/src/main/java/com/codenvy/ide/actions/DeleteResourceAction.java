@@ -75,22 +75,22 @@ public class DeleteResourceAction extends Action {
         Project activeProject = resourceProvider.getActiveProject();
         Selection<Resource> selection = (Selection<Resource>)selectionAgent.getSelection();
         Resource resource = selection.getFirstElement();
-
-        if (activeProject != null) {
-            delete(resource);
-        } else {
-            resourceProvider.getProject(resource.getName(), new AsyncCallback<Project>() {
-                @Override
-                public void onSuccess(Project result) {
-                    delete(result);
-                }
-
-                @Override
-                public void onFailure(Throwable caught) {
-                    showErrorMessage(caught);
-                }
-            });
-        }
+        delete(resource);
+//
+//        if (activeProject != null) {
+//        } else {
+//            resourceProvider.getProject(resource.getName(), new AsyncCallback<Project>() {
+//                @Override
+//                public void onSuccess(Project result) {
+//                    delete(result);
+//                }
+//
+//                @Override
+//                public void onFailure(Throwable caught) {
+//                    showErrorMessage(caught);
+//                }
+//            });
+//        }
     }
 
     /**

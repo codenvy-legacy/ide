@@ -33,12 +33,12 @@
     <!-- Other module inherits                                      -->
 
 
-    <!-- Specify the app entry point class.                         -->
-    <entry-point class='com.codenvy.ide.client.IDE'/>
+
 
     <!-- Specify the paths for translatable code                    -->
     <source path='builder'/>
     <source path='runner'/>
     <source path='core'/>
+    <source path='vfs'/>
 
 </module>
