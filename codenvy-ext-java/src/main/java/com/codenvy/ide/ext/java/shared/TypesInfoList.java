@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.java.shared;
 
+import com.codenvy.dto.shared.DTO;
+
 import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 11:37:40 AM 34360 2009-07-22 23:58:59Z evgen $
  */
+@DTO
 public interface TypesInfoList {
     void setTypes(List<TypeInfo> types);
 
