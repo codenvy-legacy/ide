@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.ext.java.shared;
 
+import com.codenvy.dto.shared.DTO;
+
 import java.util.List;
 
 /**
@@ -34,6 +36,7 @@ import java.util.List;
  * }
  * </code>
  */
+@DTO
 public interface MethodInfo extends Member {
 
     String getDeclaringClass();
@@ -65,11 +68,6 @@ public interface MethodInfo extends Member {
     /** @return the isConstructor */
     boolean isConstructor();
 
-    /**
-     * @param isConstructor
-     *         the isConstructor to set
-     */
-    void setConstructor(boolean isConstructor);
 
     void setDeclaringClass(String declaringClass);
 
@@ -100,6 +98,6 @@ public interface MethodInfo extends Member {
 
     void setAnnotationDefault(AnnotationValue value);
 
-    void setIsConstructor(boolean constructor);
+    void setConstructor(boolean constructor);
 
 }

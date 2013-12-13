@@ -17,10 +17,13 @@
  */
 package com.codenvy.ide.ext.java.shared;
 
+import com.codenvy.dto.shared.DTO;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
+@DTO
 public interface AnnotationParameter {
 
     String getName();

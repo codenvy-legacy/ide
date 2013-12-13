@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.ext.java.shared;
 
+import com.codenvy.dto.shared.DTO;
+
 /**
  * Represent information about class field. Can be transform to JSON. Example of
  * JSON: <code>
@@ -30,6 +32,7 @@ package com.codenvy.ide.ext.java.shared;
  * }
  * </code>
  */
+@DTO
 public interface FieldInfo extends Member {
 
     String getDeclaringClass();
