@@ -95,7 +95,7 @@ public class DeleteRepositoryPresenter {
     /** Perform deleting Git repository. */
     private void doDeleteRepository() {
         try {
-            service.deleteRepository(resourceProvider.getVfsId(), project.getId(), new AsyncRequestCallback<Void>() {
+            service.deleteRepository(resourceProvider.getVfsInfo().getId(), project.getId(), new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     project.refreshProperties(new AsyncCallback<Project>() {

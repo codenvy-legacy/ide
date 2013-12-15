@@ -105,7 +105,7 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
         String projectId = resourceProvider.getActiveProject().getId();
 
         try {
-            service.renameApplication(resourceProvider.getVfsId(), projectId, applicationName, null, newName,
+            service.renameApplication(resourceProvider.getVfsInfo().getId(), projectId, applicationName, null, newName,
                                       new CloudFoundryAsyncRequestCallback<String>(null, renameAppLoggedInHandler, null, eventBus, console,
                                                                                    constant, loginPresenter, paasProvider) {
                                           @Override
@@ -141,7 +141,7 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
         CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
 
         try {
-            service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
+            service.getApplicationInfo(resourceProvider.getVfsInfo().getId(), projectId, null, null,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, appInfoLoggedInHandler,
                                                                                                      null, eventBus, console, constant,
                                                                                                      loginPresenter, paasProvider) {

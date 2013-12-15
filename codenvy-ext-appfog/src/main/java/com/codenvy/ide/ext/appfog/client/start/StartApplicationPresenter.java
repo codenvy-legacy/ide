@@ -142,7 +142,7 @@ public class StartApplicationPresenter {
         AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
         try {
-            service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
+            service.getApplicationInfo(resourceProvider.getVfsInfo().getId(), project.getId(), null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, checkIsStartedLoggedInHandler,
                                                                                          null, eventBus, constant, loginPresenter,
                                                                                          notificationManager) {
@@ -259,7 +259,7 @@ public class StartApplicationPresenter {
         AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
         try {
-            service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
+            service.getApplicationInfo(resourceProvider.getVfsInfo().getId(), project.getId(), null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, checkIsStoppedLoggedInHandler,
                                                                                          null, eventBus, constant, loginPresenter,
                                                                                          notificationManager) {
@@ -304,7 +304,7 @@ public class StartApplicationPresenter {
                                             AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
                                             try {
-                                                service.getApplicationInfo(resourceProvider.getVfsId(), projectId, name, null,
+                                                service.getApplicationInfo(resourceProvider.getVfsInfo().getId(), projectId, name, null,
                                                                            new AppfogAsyncRequestCallback<AppfogApplication>(
                                                                                    unmarshaller, null, null, eventBus, constant,
                                                                                    loginPresenter, notificationManager) {

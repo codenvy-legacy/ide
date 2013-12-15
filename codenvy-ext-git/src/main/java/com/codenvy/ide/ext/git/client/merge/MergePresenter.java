@@ -102,7 +102,7 @@ public class MergePresenter implements MergeView.ActionDelegate {
         view.setEnableMergeButton(false);
 
         try {
-            service.branchList(resourceProvider.getVfsId(), projectId, LIST_LOCAL,
+            service.branchList(resourceProvider.getVfsInfo().getId(), projectId, LIST_LOCAL,
                                new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                    @Override
                                    protected void onSuccess(String result) {
@@ -136,7 +136,7 @@ public class MergePresenter implements MergeView.ActionDelegate {
         }
 
         try {
-            service.branchList(resourceProvider.getVfsId(), projectId, LIST_REMOTE,
+            service.branchList(resourceProvider.getVfsInfo().getId(), projectId, LIST_REMOTE,
                                new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                    @Override
                                    protected void onSuccess(String result) {
@@ -183,7 +183,7 @@ public class MergePresenter implements MergeView.ActionDelegate {
     @Override
     public void onMergeClicked() {
         try {
-            service.merge(resourceProvider.getVfsId(), projectId, selectedReference.getDisplayName(),
+            service.merge(resourceProvider.getVfsInfo().getId(), projectId, selectedReference.getDisplayName(),
                           new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                               @Override
                               protected void onSuccess(String result) {

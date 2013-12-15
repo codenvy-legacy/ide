@@ -30,6 +30,7 @@ import com.codenvy.ide.api.resources.FileEvent.FileOperation;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.contexmenu.ContextMenuPresenter;
+import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
@@ -44,20 +45,21 @@ import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Project Explorer display Project Model in a dedicated Part (view).
- *
+ * 
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @Singleton
 public class ProjectExplorerPartPresenter extends BasePresenter implements ProjectExplorerView.ActionDelegate, ProjectExplorerPart {
-    protected ProjectExplorerView  view;
-    protected EventBus             eventBus;
-    private   Resources            resources;
-    private   ResourceProvider     resourceProvider;
-    private   ContextMenuPresenter contextMenuPresenter;
+    protected ProjectExplorerView      view;
+    protected EventBus                 eventBus;
+    private Resources                  resources;
+    private ResourceProvider           resourceProvider;
+    private ContextMenuPresenter       contextMenuPresenter;
+    private SelectProjectTypePresenter selectProjectTypePresenter;
 
     /**
      * Instantiates the ProjectExplorer Presenter
-     *
+     * 
      * @param view
      * @param eventBus
      * @param resources
@@ -65,14 +67,19 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
      * @param contextMenuPresenter
      */
     @Inject
-    public ProjectExplorerPartPresenter(ProjectExplorerView view, EventBus eventBus, Resources resources,
-                                        ResourceProvider resourceProvider, ContextMenuPresenter contextMenuPresenter) {
+    public ProjectExplorerPartPresenter(ProjectExplorerView view,
+                                        EventBus eventBus,
+                                        Resources resources,
+                                        ResourceProvider resourceProvider,
+                                        ContextMenuPresenter contextMenuPresenter,
+                                        SelectProjectTypePresenter selectProjectTypePresenter) {
         this.view = view;
         this.eventBus = eventBus;
         this.resources = resources;
         this.resourceProvider = resourceProvider;
         this.view.setTitle("Project Explorer");
         this.contextMenuPresenter = contextMenuPresenter;
+        this.selectProjectTypePresenter = selectProjectTypePresenter;
 
         bind();
     }
@@ -85,7 +92,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     /**
      * Sets content.
-     *
+     * 
      * @param resource
      */
     public void setContent(@NotNull Resource resource) {
@@ -99,6 +106,9 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
+                if (event.getProject() != null){
+                    processUndefinedProjectType(event.getProject());
+                }
                 setContent(event.getProject().getParent());
             }
 
@@ -169,6 +179,9 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     @Override
     public void onResourceSelected(@NotNull Resource resource) {
         setSelection(new Selection<Resource>(resource));
+        if (resource != null) {
+            resourceProvider.setActiveProject(resource.getProject());
+        }
     }
 
     /** {@inheritDoc} */
@@ -178,7 +191,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         if (resource.isFile()) {
             eventBus.fireEvent(new FileEvent((File)resource, FileOperation.OPEN));
         }
-        //open project
+        // open project
         if (resource.getResourceType().equals(Project.TYPE) && resourceProvider.getActiveProject() == null) {
             resourceProvider.getProject(resource.getName(), new AsyncCallback<Project>() {
                 @Override
@@ -197,5 +210,39 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     @Override
     public void onContextMenu(int mouseX, int mouseY) {
         contextMenuPresenter.show(mouseX, mouseY);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onResourceOpened(Resource resource) {
+        if (resource.getResourceType().equals(Project.TYPE) && ((Project)resource).getProperties().isEmpty()) {
+            ((Project)resource).setVFSInfo(resourceProvider.getVfsInfo());
+            ((Project)resource).refreshProperties(new AsyncCallback<Project>() {
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    Log.error(ProjectExplorerPartPresenter.class, "Can not get project's properties.", caught);
+                }
+
+                @Override
+                public void onSuccess(Project result) {
+                    processUndefinedProjectType(result);
+                }
+            });
+        } else if (resource.getResourceType().equals(Project.TYPE) && ((Project)resource).getProperties().size() > 0) {
+            processUndefinedProjectType((Project)resource);
+        }
+    }
+    
+    /**
+     * Check, whether project type is "undefined" and call {@link SelectProjectTypePresenter} to set it.
+     * 
+     * @param project
+     */
+    private void processUndefinedProjectType(Project project) {
+        String projectType = (String)project.getPropertyValue("vfs:projectType");
+        if (projectType != null && projectType.equals("undefined")) {
+            selectProjectTypePresenter.showDialog(project);
+        }
     }
 }

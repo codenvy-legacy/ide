@@ -289,7 +289,7 @@ public class GAEWizardPagePresenter extends AbstractPaasPage implements GAEWizar
      *         project in what should be changed configuration files.
      */
     private void setExistedApplicationId(Project project) {
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
 
         try {
             service.setApplicationId(vfsId, project.getId(), existedAppId,

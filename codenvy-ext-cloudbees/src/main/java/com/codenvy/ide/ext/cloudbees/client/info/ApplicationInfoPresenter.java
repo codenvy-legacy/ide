@@ -102,7 +102,7 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
         };
 
         try {
-            service.getApplicationInfo(null, resourceProvider.getVfsId(), projectId,
+            service.getApplicationInfo(null, resourceProvider.getVfsInfo().getId(), projectId,
                                        new CloudBeesAsyncRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null, eventBus,
                                                                                           loginPresenter, notificationManager) {
                                            @Override

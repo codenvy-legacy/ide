@@ -180,7 +180,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         final String projectId =
                 resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId()
                                                             : null;
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
 
         UrlBuilder builder = new UrlBuilder();
         String redirectUrl = builder.setProtocol(Window.Location.getProtocol())
@@ -254,7 +254,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     /** Starts upload application to Google App Engine. */
     private void uploadApplication() {
         ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
         notification = new Notification(constant.deployApplicationStarted(project.getName()), PROGRESS);
         notificationManager.showNotification(notification);
 

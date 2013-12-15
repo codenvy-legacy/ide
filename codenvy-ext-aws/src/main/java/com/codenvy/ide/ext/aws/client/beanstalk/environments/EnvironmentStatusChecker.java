@@ -210,7 +210,7 @@ public class EnvironmentStatusChecker {
         EventsListUnmarshaller unmarshaller = new EventsListUnmarshaller();
 
         try {
-            service.getApplicationEvents(resourceProvider.getVfsId(), project.getId(), listEventsRequest,
+            service.getApplicationEvents(resourceProvider.getVfsInfo().getId(), project.getId(), listEventsRequest,
                                          new AwsAsyncRequestCallback<EventsList>(unmarshaller, loggedInHandler, null, loginPresenter) {
                                              @Override
                                              protected void processFail(Throwable exception) {

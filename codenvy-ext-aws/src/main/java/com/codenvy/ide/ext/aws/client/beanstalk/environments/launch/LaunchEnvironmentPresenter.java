@@ -167,7 +167,7 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentView.ActionD
         ApplicationVersionListUnmarshaller unmarshaller = new ApplicationVersionListUnmarshaller();
 
         try {
-            service.getVersions(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(),
+            service.getVersions(resourceProvider.getVfsInfo().getId(), resourceProvider.getActiveProject().getId(),
                                 new AwsAsyncRequestCallback<JsonArray<ApplicationVersionInfo>>(unmarshaller, loggedInHandler, null,
                                                                                                loginPresenter) {
                                     @Override
@@ -216,7 +216,7 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentView.ActionD
         EnvironmentInfoUnmarshaller unmarshaller = new EnvironmentInfoUnmarshaller();
 
         try {
-            service.createEnvironment(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(), createEnvironmentRequest,
+            service.createEnvironment(resourceProvider.getVfsInfo().getId(), resourceProvider.getActiveProject().getId(), createEnvironmentRequest,
                                       new AwsAsyncRequestCallback<EnvironmentInfo>(unmarshaller, loggedInHandler, null, loginPresenter) {
                                           @Override
                                           protected void processFail(Throwable exception) {

@@ -98,7 +98,7 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
             }
         };
         try {
-            service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
+            service.getApplicationInfo(resourceProvider.getVfsInfo().getId(), projectId, null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, loggedInHandler, null, eventBus,
                                                                                          constant, loginPresenter, notificationManager) {
                                            @Override

@@ -252,7 +252,7 @@ public class ImportPresenter implements ImportView.ActionDelegate {
      */
     private void cloneRepository(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
       try {
-            gitService.cloneRepositoryWS(resourceProvider.getVfsId(), project, remoteUri, remoteName,
+            gitService.cloneRepositoryWS(resourceProvider.getVfsInfo().getId(), project, remoteUri, remoteName,
                                          new RequestCallback<String>(new com.codenvy.ide.ext.git.client.marshaller.StringUnmarshaller()) {
                                              @Override
                                              protected void onSuccess(String result) {
@@ -284,7 +284,7 @@ public class ImportPresenter implements ImportView.ActionDelegate {
      */
     private void cloneRepositoryREST(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
        try {
-            gitService.cloneRepository(resourceProvider.getVfsId(), project, remoteUri, remoteName,
+            gitService.cloneRepository(resourceProvider.getVfsInfo().getId(), project, remoteUri, remoteName,
                                        new AsyncRequestCallback<String>(new com.codenvy.ide.rest.StringUnmarshaller()) {
                                            @Override
                                            protected void onSuccess(String result) {

@@ -124,7 +124,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
         AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
         try {
-            service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
+            service.getApplicationInfo(resourceProvider.getVfsInfo().getId(), projectId, null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, appInfoLoggedInHandler, null,
                                                                                          eventBus, constant, loginPresenter,
                                                                                          notificationManager) {
@@ -159,7 +159,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
         }
 
         try {
-            service.deleteApplication(resourceProvider.getVfsId(), projectId, appName, serverName, isDeleteServices,
+            service.deleteApplication(resourceProvider.getVfsInfo().getId(), projectId, appName, serverName, isDeleteServices,
                                       new AppfogAsyncRequestCallback<String>(null, deleteAppLoggedInHandler, null, eventBus, constant,
                                                                              loginPresenter, notificationManager) {
                                           @Override

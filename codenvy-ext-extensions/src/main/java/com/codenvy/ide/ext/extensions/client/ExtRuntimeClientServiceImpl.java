@@ -87,7 +87,7 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
                                                     @NotNull String version,
                                                     @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
         final String requestUrl = restContext + BASE_URL + CREATE_SAMPLE;
-        final String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootid=" +
+        final String param = "?vfsid=" + resourceProvider.getVfsInfo().getId() + "&name=" + projectName + "&rootid=" +
                              resourceProvider.getRootId()
                              + "&groupid=" + groupId + "&artifactid=" + artifactId + "&version=" + version;
         loader.setMessage("Creating new project...");

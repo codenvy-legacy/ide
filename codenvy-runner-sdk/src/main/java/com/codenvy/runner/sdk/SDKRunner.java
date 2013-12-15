@@ -33,6 +33,7 @@ import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
 import com.codenvy.api.runner.internal.dto.RunRequest;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.commons.lang.NamedThreadFactory;
+import com.codenvy.ide.commons.MavenUtils;
 import com.codenvy.ide.commons.ZipUtils;
 import com.google.common.io.CharStreams;
 
@@ -122,7 +123,7 @@ public class SDKRunner extends Runner {
             appDir = Files.createTempDirectory(getDeployDirectory().toPath(), ("app_" + getName() + '_')).toFile();
 
             final Path tomcatPath = Files.createDirectory(appDir.toPath().resolve("tomcat"));
-            ZipUtils.unzip(Utils.getTomcatBinaryDistribution().openStream(), tomcatPath.toFile());
+            ZipUtils.unzip(MavenUtils.getTomcatBinaryDistribution().openStream(), tomcatPath.toFile());
 
             final Path webappsPath = tomcatPath.resolve("webapps");
             final java.io.File warFile = buildCodenvyWebApp(toDeploy.getFile()).toFile();
@@ -160,18 +161,18 @@ public class SDKRunner extends Runner {
             // prepare Codenvy Platform sources
             final Path appDirPath =
                     Files.createTempDirectory(getDeployDirectory().toPath(), ("war_" + getName() + '_'));
-            ZipUtils.unzip(Utils.getCodenvyPlatformBinaryDistribution().openStream(), appDirPath.toFile());
+            ZipUtils.unzip(MavenUtils.getCodenvyPlatformBinaryDistribution().openStream(), appDirPath.toFile());
 
             // add extension to Codenvy Platform
             final Path jarUnzipped =
                     Files.createTempDirectory(getDeployDirectory().toPath(), ("jar_" + getName() + '_'));
             ZipUtils.unzip(jarFile, jarUnzipped.toFile());
-            final Path pomXmlExt = Utils.findFile("pom.xml", jarUnzipped);
-            Model pomExt = Utils.readPom(pomXmlExt);
+            final Path pomXmlExt = MavenUtils.findFile("pom.xml", jarUnzipped);
+            Model pomExt = MavenUtils.readPom(pomXmlExt);
 
-            Utils.addDependencyToPom(appDirPath.resolve("pom.xml"), pomExt);
-            final Path mainGwtModuleDescriptor = Utils.findFile("*.gwt.xml", appDirPath);
-            Utils.inheritGwtModule(mainGwtModuleDescriptor, Utils.detectGwtModuleLogicalName(jarUnzipped));
+            MavenUtils.addDependencyToPom(appDirPath.resolve("pom.xml"), pomExt);
+            final Path mainGwtModuleDescriptor = MavenUtils.findFile("*.gwt.xml", appDirPath);
+            MavenUtils.inheritGwtModule(mainGwtModuleDescriptor, MavenUtils.detectGwtModuleLogicalName(jarUnzipped));
 
             // build WAR by invoking Maven directly
             warPath = buildWar(appDirPath);
@@ -182,7 +183,7 @@ public class SDKRunner extends Runner {
     }
 
     private Path buildWar(Path appDirPath) throws RunnerException {
-        final String[] command = new String[]{Utils.getMavenExecCommand(), "package"};
+        final String[] command = new String[]{MavenUtils.getMavenExecCommand(), "package"};
 
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(command).directory(appDirPath.toFile());
@@ -193,7 +194,7 @@ public class SDKRunner extends Runner {
             if (process.exitValue() != 0) {
                 throw new RunnerException(consumer.getOutput().toString());
             }
-            return Utils.findFile("*.war", appDirPath.resolve("target"));
+            return MavenUtils.findFile("*.war", appDirPath.resolve("target"));
         } catch (IOException | InterruptedException e) {
             throw new RunnerException(e);
         }

@@ -168,7 +168,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         MessagesImpls.ConfigMessageImpl config = MessagesImpls.ConfigMessageImpl.make();
         config.setProjectId(event.getProject().getId());
         config.setRestContext("/ide/rest");
-        config.setVfsId(resourceProvider.getVfsId());
+        config.setVfsId(resourceProvider.getVfsInfo().getId());
         config.setWsName("/" + Utils.getWorkspaceName());
         config.setProjectName(event.getProject().getName());
         config.setJavaDocContext(//TODO configure doc context

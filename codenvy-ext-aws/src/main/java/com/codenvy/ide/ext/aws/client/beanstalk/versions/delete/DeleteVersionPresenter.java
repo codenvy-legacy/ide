@@ -103,7 +103,7 @@ public class DeleteVersionPresenter implements DeleteVersionView.ActionDelegate 
         };
 
         try {
-            service.deleteVersion(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(), version.getApplicationName(),
+            service.deleteVersion(resourceProvider.getVfsInfo().getId(), resourceProvider.getActiveProject().getId(), version.getApplicationName(),
                                   version.getVersionLabel(), view.getDeleteS3Bundle(),
                                   new AwsAsyncRequestCallback<Object>(null, loggedInHandler, null, loginPresenter) {
                                       @Override

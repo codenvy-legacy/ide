@@ -111,7 +111,7 @@ public class DescriptionUpdatePresenter implements DescriptionUpdateView.ActionD
         ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
 
         try {
-            service.updateApplication(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(), updateApplicationRequest,
+            service.updateApplication(resourceProvider.getVfsInfo().getId(), resourceProvider.getActiveProject().getId(), updateApplicationRequest,
                                       new AwsAsyncRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null, loginPresenter) {
                                           @Override
                                           protected void processFail(Throwable exception) {

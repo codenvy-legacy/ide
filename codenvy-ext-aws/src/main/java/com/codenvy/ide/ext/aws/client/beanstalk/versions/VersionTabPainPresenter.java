@@ -1,4 +1,4 @@
-/*
+r/*
  * CODENVY CONFIDENTIAL
  * __________________
  *
@@ -142,7 +142,7 @@ public class VersionTabPainPresenter implements Presenter, VersionTabPainView.Ac
         ApplicationVersionListUnmarshaller unmarshaller = new ApplicationVersionListUnmarshaller();
 
         try {
-            service.getVersions(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(),
+            service.getVersions(resourceProvider.getVfsInfo().getId(), resourceProvider.getActiveProject().getId(),
                                 new AwsAsyncRequestCallback<JsonArray<ApplicationVersionInfo>>(unmarshaller, loggedInHandler, null,
                                                                                                loginPresenter) {
                                     @Override

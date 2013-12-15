@@ -111,7 +111,7 @@ public class DeleteApplicationPresenter {
             };
 
             try {
-                service.getApplicationInfo(null, resourceProvider.getVfsId(), projectId,
+                service.getApplicationInfo(null, resourceProvider.getVfsInfo().getId(), projectId,
                                            new CloudBeesAsyncRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null, eventBus,
                                                                                               loginPresenter, notificationManager) {
                                                @Override
@@ -158,7 +158,7 @@ public class DeleteApplicationPresenter {
                 }
             };
 
-            service.deleteApplication(appId, resourceProvider.getVfsId(), projectId,
+            service.deleteApplication(appId, resourceProvider.getVfsInfo().getId(), projectId,
                                       new CloudBeesAsyncRequestCallback<String>(loggedInHandler, null, eventBus, loginPresenter,
                                                                                 notificationManager) {
                                           @Override

@@ -168,7 +168,7 @@ public class BuildApplicationPresenter extends BasePresenter
 
                 try {
                     BuildApplicationPresenter.this.service
-                            .jobStatus(BuildApplicationPresenter.this.resourceProvider.getVfsId(), project.getId(), jobName,
+                            .jobStatus(BuildApplicationPresenter.this.resourceProvider.getVfsInfo().getId(), project.getId(), jobName,
                                        new AsyncRequestCallback<JobStatus>(unmarshaller) {
                                            @Override
                                            protected void onSuccess(JobStatus status) {
@@ -276,7 +276,7 @@ public class BuildApplicationPresenter extends BasePresenter
 
         StringContentUnmarshaller unmarshaller = new StringContentUnmarshaller();
         try {
-            service.getJenkinsOutput(resourceProvider.getVfsId(), project.getId(), jobName, new AsyncRequestCallback<String>(unmarshaller) {
+            service.getJenkinsOutput(resourceProvider.getVfsInfo().getId(), project.getId(), jobName, new AsyncRequestCallback<String>(unmarshaller) {
                 @Override
                 protected void onSuccess(String result) {
                     showBuildMessage(result);
@@ -348,7 +348,7 @@ public class BuildApplicationPresenter extends BasePresenter
     /** Initialize of the Git-repository by sending request over WebSocket or HTTP. */
     private void initRepository(@NotNull final Project project) {
         try {
-            gitClientService.initWS(resourceProvider.getVfsId(), project.getId(), project.getName(), false, new RequestCallback<String>() {
+            gitClientService.initWS(resourceProvider.getVfsInfo().getId(), project.getId(), project.getName(), false, new RequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     onInitSuccess();
@@ -368,7 +368,7 @@ public class BuildApplicationPresenter extends BasePresenter
     private void initRepositoryREST(@NotNull final Project project) {
         try {
             gitClientService
-                    .init(resourceProvider.getVfsId(), project.getId(), project.getName(), false, new AsyncRequestCallback<String>() {
+                    .init(resourceProvider.getVfsInfo().getId(), project.getId(), project.getName(), false, new AsyncRequestCallback<String>() {
                         @Override
                         protected void onSuccess(String result) {
                             project.refreshProperties(new AsyncCallback<Project>() {
@@ -426,7 +426,7 @@ public class BuildApplicationPresenter extends BasePresenter
 
         try {
             service.createJenkinsJob(uName + "-" + getProjectName() + "-" + Random.nextInt(Integer.MAX_VALUE), uName, mail,
-                                     resourceProvider.getVfsId(), project.getId(), new AsyncRequestCallback<Job>(marshaller) {
+                                     resourceProvider.getVfsInfo().getId(), project.getId(), new AsyncRequestCallback<Job>(marshaller) {
                 @Override
                 protected void onSuccess(Job result) {
                     build(result.getName());
@@ -470,7 +470,7 @@ public class BuildApplicationPresenter extends BasePresenter
      */
     private void build(@NotNull final String jobName) {
         try {
-            service.buildJob(resourceProvider.getVfsId(), project.getId(), jobName, new AsyncRequestCallback<Object>() {
+            service.buildJob(resourceProvider.getVfsInfo().getId(), project.getId(), jobName, new AsyncRequestCallback<Object>() {
                 @Override
                 protected void onSuccess(Object result) {
                     buildInProgress = true;

@@ -113,7 +113,7 @@ public class LogsPresenter extends BasePresenter implements LogsView.ActionDeleg
     public void getLogs() {
         String severity = severityFormatted.get(view.getLogsSeverity());
         int numDays = view.getLogsDaysCount();
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
         StringUnmarshaller unmarshaller = new StringUnmarshaller();
 
         try {

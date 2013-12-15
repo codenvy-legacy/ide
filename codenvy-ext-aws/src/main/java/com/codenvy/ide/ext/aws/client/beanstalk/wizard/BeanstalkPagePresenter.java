@@ -214,7 +214,7 @@ public class BeanstalkPagePresenter extends AbstractPaasPage implements Beanstal
         notificationManager.showNotification(notification);
 
         try {
-            service.createApplication(resourceProvider.getVfsId(), project.getId(), createApplicationRequest,
+            service.createApplication(resourceProvider.getVfsInfo().getId(), project.getId(), createApplicationRequest,
                                       new AwsAsyncRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null, loginPresenter) {
                                           @Override
                                           protected void processFail(Throwable exception) {
@@ -273,7 +273,7 @@ public class BeanstalkPagePresenter extends AbstractPaasPage implements Beanstal
         EnvironmentInfoUnmarshaller unmarshaller = new EnvironmentInfoUnmarshaller();
 
         try {
-            service.createEnvironment(resourceProvider.getVfsId(), project.getId(), createEnvironmentRequest,
+            service.createEnvironment(resourceProvider.getVfsInfo().getId(), project.getId(), createEnvironmentRequest,
                                       new AwsAsyncRequestCallback<EnvironmentInfo>(unmarshaller, loggedInHandler, null, loginPresenter) {
                                           @Override
                                           protected void processFail(Throwable exception) {

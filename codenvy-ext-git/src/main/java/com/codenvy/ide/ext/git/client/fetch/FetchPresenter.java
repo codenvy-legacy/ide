@@ -100,7 +100,7 @@ public class FetchPresenter implements FetchView.ActionDelegate {
         final String projectId = project.getId();
 
         try {
-            service.remoteList(resourceProvider.getVfsId(), projectId, null, true,
+            service.remoteList(resourceProvider.getVfsInfo().getId(), projectId, null, true,
                                new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                    @Override
                                    protected void onSuccess(String result) {
@@ -137,7 +137,7 @@ public class FetchPresenter implements FetchView.ActionDelegate {
      */
     private void getBranches(@NotNull String projectId, @NotNull final String remoteMode) {
         try {
-            service.branchList(resourceProvider.getVfsId(), projectId, remoteMode,
+            service.branchList(resourceProvider.getVfsInfo().getId(), projectId, remoteMode,
                                new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                    @Override
                                    protected void onSuccess(String result) {
@@ -231,7 +231,7 @@ public class FetchPresenter implements FetchView.ActionDelegate {
         boolean removeDeletedRefs = view.isRemoveDeletedRefs();
         
         try {
-            service.fetchWS(resourceProvider.getVfsId(), project, remoteName, getRefs(), removeDeletedRefs, new RequestCallback<String>() {
+            service.fetchWS(resourceProvider.getVfsInfo().getId(), project, remoteName, getRefs(), removeDeletedRefs, new RequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     Notification notification = new Notification(constant.fetchSuccess(remoteUrl), INFO);
@@ -252,7 +252,7 @@ public class FetchPresenter implements FetchView.ActionDelegate {
     /** Perform fetch from remote repository (sends request over HTTP). */
     private void doFetchREST(@NotNull String remoteName, boolean removeDeletedRefs, @NotNull final String remoteUrl) {
         try {
-            service.fetch(resourceProvider.getVfsId(), project, remoteName, getRefs(), removeDeletedRefs,
+            service.fetch(resourceProvider.getVfsInfo().getId(), project, remoteName, getRefs(), removeDeletedRefs,
                           new AsyncRequestCallback<String>() {
                               @Override
                               protected void onSuccess(String result) {

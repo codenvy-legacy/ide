@@ -94,7 +94,7 @@ public class GeneralTabPanePresenter implements Presenter, GeneralTabPaneView.Ac
     /** {@inheritDoc} */
     @Override
     public void onRollBackApplicationClicked() {
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
 
         try {
             service.rollback(vfsId, project.getId(),
@@ -119,7 +119,7 @@ public class GeneralTabPanePresenter implements Presenter, GeneralTabPaneView.Ac
     /** {@inheritDoc} */
     @Override
     public void onUpdateIndexesClicked() {
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
 
         try {
             service.updateIndexes(vfsId, project.getId(),
@@ -138,7 +138,7 @@ public class GeneralTabPanePresenter implements Presenter, GeneralTabPaneView.Ac
     /** {@inheritDoc} */
     @Override
     public void onVacuumIndexesClicked() {
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
 
         try {
             service.vacuumIndexes(vfsId, project.getId(),
@@ -157,7 +157,7 @@ public class GeneralTabPanePresenter implements Presenter, GeneralTabPaneView.Ac
     /** {@inheritDoc} */
     @Override
     public void onUpdatePageSpeedClicked() {
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
 
         try {
             service.updatePagespeed(vfsId, project.getId(),
@@ -176,7 +176,7 @@ public class GeneralTabPanePresenter implements Presenter, GeneralTabPaneView.Ac
     /** {@inheritDoc} */
     @Override
     public void onUpdateQueuesClicked() {
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
 
         try {
             service.updateQueues(vfsId, project.getId(),
@@ -195,7 +195,7 @@ public class GeneralTabPanePresenter implements Presenter, GeneralTabPaneView.Ac
     /** {@inheritDoc} */
     @Override
     public void onUpdateDoSClicked() {
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
 
         try {
             service.updateDos(vfsId, project.getId(),

@@ -1,4 +1,4 @@
-/*
+RR/*
  * CODENVY CONFIDENTIAL
  * __________________
  *
@@ -96,7 +96,7 @@ public class CloudBeesProjectPresenter implements CloudBeesProjectView.ActionDel
         };
 
         try {
-            service.getApplicationInfo(null, resourceProvider.getVfsId(), project.getId(),
+            service.getApplicationInfo(null, resourceProvider.getVfsInfo().getId(), project.getId(),
                                        new CloudBeesAsyncRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null, eventBus,
                                                                                           loginPresenter, notificationManager) {
                                            @Override

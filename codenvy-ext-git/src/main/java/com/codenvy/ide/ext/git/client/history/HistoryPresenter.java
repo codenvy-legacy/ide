@@ -143,7 +143,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
     /** Get the log of the commits. If successfully received, then display in revision grid, otherwise - show error in output panel. */
     private void getCommitsLog(@NotNull String projectId) {
         try {
-            service.log(resourceProvider.getVfsId(), projectId, false, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+            service.log(resourceProvider.getVfsInfo().getId(), projectId, false, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
                 protected void onSuccess(String result) {
                     LogResponse logResponse = dtoFactory.createDtoFromJson(result, LogResponse.class);
@@ -347,7 +347,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
         String projectId = resourceProvider.getActiveProject().getId();
 
         try {
-            service.diff(resourceProvider.getVfsId(), projectId, filePatterns, RAW, false, 0, revision.getId(), isCached,
+            service.diff(resourceProvider.getVfsInfo().getId(), projectId, filePatterns, RAW, false, 0, revision.getId(), isCached,
                          new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                              @Override
                              protected void onSuccess(String result) {
@@ -391,7 +391,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
             final Revision revisionA = revisions.get(index + 1);
             String projectId = resourceProvider.getActiveProject().getId();
             try {
-                service.diff(resourceProvider.getVfsId(), projectId, filePatterns, RAW, false, 0, revisionA.getId(), revisionB.getId(),
+                service.diff(resourceProvider.getVfsInfo().getId(), projectId, filePatterns, RAW, false, 0, revisionA.getId(), revisionB.getId(),
                              new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                  @Override
                                  protected void onSuccess(String result) {

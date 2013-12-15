@@ -79,7 +79,7 @@ public abstract class BaseTest extends GwtTestWithMockito {
 
     @Before
     public void disarm() {
-        when(resourceProvider.getVfsId()).thenReturn(VFS_ID);
+        when(resourceProvider.getVfsInfo().getId()).thenReturn(VFS_ID);
         when(resourceProvider.getActiveProject()).thenReturn(project);
         when(project.getId()).thenReturn(PROJECT_ID);
         when(project.getPath()).thenReturn(PROJECT_PATH);

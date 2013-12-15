@@ -135,6 +135,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     /** {@inheritDoc} */
     @Override
     public void getProject(final String name, final AsyncCallback<Project> callback) {
+        System.out.println("ResourceProviderComponent.getProject()");
         // create internal wrapping Request Callback with proper Unmarshaller
         AsyncRequestCallback<ProjectModelProviderAdapter> internalCallback =
                 new AsyncRequestCallback<ProjectModelProviderAdapter>(new ProjectModelUnmarshaller(this)) {
@@ -491,8 +492,8 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
 
     /** {@inheritDoc} */
     @Override
-    public String getVfsId() {
-        return vfsInfo.getId();
+    public VirtualFileSystemInfo getVfsInfo() {
+        return vfsInfo;
     }
 
     /** {@inheritDoc} */
@@ -576,5 +577,11 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 Log.error(ResourceProviderComponent.class, "Can not get list of projects", caught);
             }
         });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setActiveProject(Project project) {
+        this.activeProject = project;
     }
 }

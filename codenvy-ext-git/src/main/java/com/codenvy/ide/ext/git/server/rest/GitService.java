@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.git.server.rest;
 
+import com.codenvy.api.vfs.server.ContentStream;
 import com.codenvy.api.vfs.server.GitUrlResolver;
 import com.codenvy.api.vfs.server.LocalPathResolver;
 import com.codenvy.api.vfs.server.MountPoint;
@@ -24,13 +25,18 @@ import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.api.vfs.server.VirtualFileSystem;
 import com.codenvy.api.vfs.server.VirtualFileSystemImpl;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
+import com.codenvy.api.vfs.server.exceptions.InvalidArgumentException;
+import com.codenvy.api.vfs.server.exceptions.ItemNotFoundException;
 import com.codenvy.api.vfs.server.exceptions.LocalPathResolveException;
+import com.codenvy.api.vfs.server.exceptions.PermissionDeniedException;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.shared.ItemType;
 import com.codenvy.api.vfs.shared.PropertyFilter;
 import com.codenvy.api.vfs.shared.dto.Item;
+import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.dto.server.DtoFactory;
+import com.codenvy.ide.commons.MavenUtils;
 import com.codenvy.ide.ext.git.server.GitConnection;
 import com.codenvy.ide.ext.git.server.GitConnectionFactory;
 import com.codenvy.ide.ext.git.server.GitException;
@@ -72,6 +78,7 @@ import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
 import com.codenvy.organization.model.User;
 
+import org.apache.maven.model.Model;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
@@ -103,7 +110,7 @@ import java.util.List;
 @Path("{ws-name}/git")
 public class GitService {
     private static final Log LOG = ExoLogger.getLogger(GitService.class);
-
+    
     @Inject
     private LocalPathResolver localPathResolver;
 
@@ -219,6 +226,7 @@ public class GitService {
         try {
             gitConnection.clone(request);
             setGitRepositoryProp();
+            determineProjectType();
             addToIndex();
             return DtoFactory.getInstance().createDto(RepoInfo.class).withRemoteUri(request.getRemoteUri());
         } finally {
@@ -247,6 +255,64 @@ public class GitService {
             propertiesList.add(isGitRepositoryProperty);
             vfs.updateItem(projectId, propertiesList, null);
         }
+    }
+    
+    private void determineProjectType() throws VirtualFileSystemException {
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+        ItemList files = vfs.getChildren(projectId, -1, 0, "file", false, PropertyFilter.NONE_FILTER);
+        for (Item file : files.getItems()){
+            if ("pom.xml".equals(file.getName())){
+                boolean isMultiModule = isMultiModule(vfs.getContent(file.getId()));
+                List<Property> propertiesList = new ArrayList<Property>();
+                if (isMultiModule){
+                    Property projectTypeProperty = DtoFactory.getInstance().createDto(Property.class).withName("vfs:projectType").withValue(new ArrayList<String>(Arrays.asList("Multiple Module Project")));
+                    propertiesList.add(projectTypeProperty);
+                    propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("nature.primary").withValue(new ArrayList<String>(Arrays.asList("java"))));
+                    propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("vfs:mimeType").withValue(new ArrayList<String>(Arrays.asList("text/vnd.ideproject+directory"))));
+                    propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("builder_name").withValue(new ArrayList<String>(Arrays.asList("maven"))));
+                    processMultiModuleMavenProject(vfs, projectId);
+                } else {
+                    Property projectTypeProperty = DtoFactory.getInstance().createDto(Property.class).withName("vfs:projectType").withValue(new ArrayList<String>(Arrays.asList("undefined")));
+                    propertiesList.add(projectTypeProperty);
+                }
+                vfs.updateItem(projectId, propertiesList, null);
+                break;
+            }
+        }
+    }
+    
+    private void processMultiModuleMavenProject(VirtualFileSystem vfs, String parentProjectId) throws ItemNotFoundException,
+                                                                                              InvalidArgumentException,
+                                                                                              PermissionDeniedException,
+                                                                                              VirtualFileSystemException {
+        ItemList folders = vfs.getChildren(projectId, -1, 0, "folder", false, PropertyFilter.NONE_FILTER);
+        for (Item folder : folders.getItems()) {
+            ItemList files = vfs.getChildren(folder.getId(), -1, 0, "file", false, PropertyFilter.NONE_FILTER);
+            for (Item file : files.getItems()) {
+                if ("pom.xml".equals(file.getName())) {
+                    List<Property> propertiesList = new ArrayList<Property>();
+                    Property projectTypeProperty =
+                                                   DtoFactory.getInstance().createDto(Property.class).withName("vfs:projectType")
+                                                             .withValue(new ArrayList<String>(Arrays.asList("undefined")));
+                    propertiesList.add(projectTypeProperty);
+                    propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("vfs:mimeType")
+                                                 .withValue(new ArrayList<String>(Arrays.asList("text/vnd.ideproject+directory"))));
+                    vfs.updateItem(folder.getId(), propertiesList, null);
+                    break;
+                }
+            }
+        }
+    }
+    
+    private boolean isMultiModule(ContentStream pomContent){
+        Model pomModel;
+        try {
+            pomModel = MavenUtils.readPom(pomContent.getStream());
+            return (pomModel.getPackaging() != null && pomModel.getPackaging().equals("pom"));
+        } catch (IOException e) {
+            LOG.error("Can't read pom.xml to determine project's type.", e);
+        }
+        return false;
     }
 
     private void addToIndex() throws VirtualFileSystemException {

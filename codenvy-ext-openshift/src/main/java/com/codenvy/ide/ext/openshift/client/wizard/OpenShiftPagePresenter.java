@@ -237,7 +237,7 @@ public class OpenShiftPagePresenter extends AbstractPaasPage implements OpenShif
         ApplicationInfoUnmarshallerWS unmarshaller = new ApplicationInfoUnmarshallerWS();
 
         try {
-            service.createApplicationWS(projectName, resourceProvider.getVfsId(), project.getId(), view.getApplicationType(),
+            service.createApplicationWS(projectName, resourceProvider.getVfsInfo().getId(), project.getId(), view.getApplicationType(),
                                         view.getScalingValue(),
                                         new OpenShiftWSRequestCallback<AppInfo>(unmarshaller, loggedInHandler, null, eventBus,
                                                                                 loginPresenter, notificationManager) {
@@ -273,7 +273,7 @@ public class OpenShiftPagePresenter extends AbstractPaasPage implements OpenShif
         ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
 
         try {
-            service.createApplication(projectName, resourceProvider.getVfsId(), project.getId(), view.getApplicationType(),
+            service.createApplication(projectName, resourceProvider.getVfsInfo().getId(), project.getId(), view.getApplicationType(),
                                       view.getScalingValue(),
                                       new OpenShiftAsyncRequestCallback<AppInfo>(unmarshaller, loggedInHandler, null, eventBus,
                                                                                  loginPresenter, notificationManager) {
@@ -341,7 +341,7 @@ public class OpenShiftPagePresenter extends AbstractPaasPage implements OpenShif
      */
     private void pullSources(final AppInfo application) {
         new PullApplicationSourceHandler()
-                .pullApplicationSources(resourceProvider.getVfsId(), project, gitService, new AsyncCallback<Boolean>() {
+                .pullApplicationSources(resourceProvider.getVfsInfo().getId(), project, gitService, new AsyncCallback<Boolean>() {
                     @Override
                     public void onFailure(Throwable caught) {
                         String msg = constant.applicationSourcePullingFailed();

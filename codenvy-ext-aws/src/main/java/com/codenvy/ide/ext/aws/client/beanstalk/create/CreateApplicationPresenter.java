@@ -257,7 +257,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
 
         try {
-            service.createApplication(resourceProvider.getVfsId(), openedProject.getId(), createApplicationRequest,
+            service.createApplication(resourceProvider.getVfsInfo().getId(), openedProject.getId(), createApplicationRequest,
                                       new AwsAsyncRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null, loginPresenter) {
                                           @Override
                                           protected void processFail(Throwable exception) {
@@ -322,7 +322,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         EnvironmentInfoUnmarshaller unmarshaller = new EnvironmentInfoUnmarshaller();
 
         try {
-            service.createEnvironment(resourceProvider.getVfsId(), openedProject.getId(), createEnvironmentRequest,
+            service.createEnvironment(resourceProvider.getVfsInfo().getId(), openedProject.getId(), createEnvironmentRequest,
                                       new AwsAsyncRequestCallback<EnvironmentInfo>(unmarshaller, loggedInHandler, null, loginPresenter) {
                                           @Override
                                           protected void processFail(Throwable exception) {

@@ -71,10 +71,11 @@ public class JavaProject extends Project {
     /** {@inheritDoc} */
     @Override
     public void refreshTree(Folder root, final AsyncCallback<Folder> callback) {
+        System.out.println("JavaProject.refreshTree()");
         try {
             // create internal wrapping Request Callback with proper Unmarshaller
             AsyncRequestCallback<Folder> internalCallback =
-                    new AsyncRequestCallback<Folder>(new JavaModelUnmarshaller(root, (JavaProject)root.getProject())) {
+                    new AsyncRequestCallback<Folder>(new JavaModelUnmarshaller(root, (JavaProject)root.getProject(), eventBus)) {
                         @Override
                         protected void onSuccess(Folder refreshedRoot) {
                             callback.onSuccess(refreshedRoot);

@@ -166,7 +166,7 @@ public class CreateVersionPresenter implements CreateVersionView.ActionDelegate,
         ApplicationVersionInfoUnmarshaller unmarshaller = new ApplicationVersionInfoUnmarshaller();
 
         try {
-            service.createVersion(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(), createApplicationVersionRequest,
+            service.createVersion(resourceProvider.getVfsInfo().getId(), resourceProvider.getActiveProject().getId(), createApplicationVersionRequest,
                                   new AwsAsyncRequestCallback<ApplicationVersionInfo>(unmarshaller, loggedInHandler, null, loginPresenter) {
                                       @Override
                                       protected void processFail(Throwable exception) {
