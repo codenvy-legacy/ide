@@ -18,9 +18,10 @@
 package com.codenvy.ide.ext.java.client.editor;
 
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.client.editor.outline.JavaNodeRenderer;
-import com.codenvy.ide.ext.java.client.editor.outline.OutlineModelUpdater;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.jdt.JavaPartitions;
 import com.codenvy.ide.ext.java.jdt.internal.ui.text.BracketInserter;
@@ -28,8 +29,6 @@ import com.codenvy.ide.ext.java.jdt.internal.ui.text.JavaAutoEditStrategy;
 import com.codenvy.ide.ext.java.jdt.internal.ui.text.JavaDocAutoIndentStrategy;
 import com.codenvy.ide.ext.java.jdt.internal.ui.text.JavaStringAutoIndentStrategy;
 import com.codenvy.ide.ext.java.jdt.internal.ui.text.SmartSemicolonAutoEditStrategy;
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.api.AutoEditStrategy;
@@ -48,8 +47,8 @@ import com.codenvy.ide.util.executor.UserActivityManager;
 
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
+ * Java specific configuration of the editor
+ * @author Evgen Vidolob
  */
 public class JavaEditorConfiguration extends TextEditorConfiguration {
 
@@ -73,7 +72,8 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
         this.worker = worker;
         this.javaResources = resources;
         outlineModel = new OutlineModel(new JavaNodeRenderer(resources));
-        reconcilerStrategy = new JavaReconcilerStrategy(javaEditor, worker);
+        reconcilerStrategy = new JavaReconcilerStrategy(javaEditor, worker, outlineModel);
+
     }
 
     /** {@inheritDoc} */
@@ -121,9 +121,7 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
     /** {@inheritDoc} */
     @Override
     public OutlineModel getOutline(TextEditorPartView view) {
-        new OutlineModelUpdater(outlineModel, reconcilerStrategy);
         return outlineModel;
-//        return super.getOutline(view);
     }
 
     @Override

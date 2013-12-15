@@ -30,7 +30,7 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.IntConstant;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.LongConstant;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.ShortConstant;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.StringConstant;
-import com.codenvy.ide.commons.Jso;
+import com.codenvy.ide.collections.Jso;
 import com.codenvy.ide.collections.js.JsoArray;
 
 /**

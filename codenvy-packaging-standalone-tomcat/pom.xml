@@ -128,6 +128,12 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
+            <artifactId>wysiwyg-editor-tutorial</artifactId>
+            <type>zip</type>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-core</artifactId>
             <type>jar</type>
             <version>${project.version}</version>
@@ -385,6 +391,34 @@
                                     <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
                                     <destFileName>gist-extension.zip</destFileName>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>wysiwyg-editor-tutorial</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>wysiwyg-editor-tutorial.zip</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-sdk-tools</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>codenvy-sdk-tools</artifactId>
+                                    <version>${project.version}</version>
+                                    <classifier>jar-with-dependencies</classifier>
+                                    <outputDirectory>${project.build.directory}/tomcat-ide/sdk-tools</outputDirectory>
+                                    <destFileName>codenvy-sdk-tools.jar</destFileName>
+                                </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
@@ -450,6 +484,11 @@
                                 </copy>
                                 <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x" includes="**/*.sh"/>
 
+                                <!-- Copy resources to re-build Codenvy IDE with 3rd-party extensions. -->
+                                <copy todir="${project.build.directory}/tomcat-ide/sdk-resources" overwrite="true">
+                                    <fileset dir="${project.build.directory}/../../codenvy-application-war" includes="src/**, pom.xml"/>
+                                </copy>
+
                                 <unwar src="${project.build.directory}/packager-conf/war/codenvy-application-war-${project.version}.war"
                                        dest="${project.build.directory}/packager-conf/war/ide">
                                 </unwar>
@@ -478,8 +517,10 @@
                                       tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true"/>
                                 <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"
                                        dest="${project.build.directory}/tomcat-ide"/>
+
                                 <unzip src="${project.build.directory}/repo.zip" dest="${project.build.directory}/tomcat-ide"/>
-                                <chmod dir="${project.build.directory}/tomcat-ide" perm="+x" includes="install.sh"/>
+
+                                <chmod dir="${project.build.directory}/tomcat-ide" perm="+x" includes="*.sh"/>
                             </target>
                         </configuration>
                         <goals>

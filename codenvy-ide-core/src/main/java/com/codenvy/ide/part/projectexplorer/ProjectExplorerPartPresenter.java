@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.part.projectexplorer;
 
+import com.codenvy.api.vfs.shared.ItemType;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -135,12 +136,15 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
             @Override
             public void onResourceDeleted(ResourceChangedEvent event) {
-                setContent(event.getResource().getProject().getParent());
+                if (event.getResource().getResourceType().equals(ItemType.PROJECT.value()))
+                    resourceProvider.showListProjects();
+                else
+                    updateItem(event.getResource().getParent());
             }
 
             @Override
             public void onResourceCreated(ResourceChangedEvent event) {
-                setContent(event.getResource().getProject().getParent());
+                updateItem(event.getResource().getParent());
             }
 
             @Override
@@ -155,6 +159,24 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                 }
             }
         });
+    }
+
+    /**
+     * Update item in the project explorer.
+     *
+     * @param resource
+     *         the resource that need to be updated
+     */
+    private void updateItem(@NotNull Resource resource) {
+        Project project = resource.getProject();
+        Resource oldResource;
+        if (resource.getParent().getId().equals(resourceProvider.getRootId())) {
+            oldResource = project;
+        } else {
+            oldResource = project.findResourceById(resource.getId());
+
+        }
+        view.updateItem(oldResource, resource);
     }
 
     /** {@inheritDoc} */

@@ -21,16 +21,13 @@
 package com.codenvy.ide.ext.java.messages.impl;
 
 
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.js.JsoArray;
-import com.codenvy.ide.ext.java.messages.Problem;
 
 @SuppressWarnings({"unchecked", "cast"})
 public class MessagesImpls {
 
   private  MessagesImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "2fb14f08eb554544bf90cc47f1f56e470f6f9302";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "f2f5a3f9c51a701eedcc817b3325561e79c4f789";
 
 
   public static class ApplyProposalMessageImpl extends com.google.gwt.webworker.client.messages.MessageImpl implements com.codenvy.ide.ext.java.messages.ApplyProposalMessage {
@@ -229,17 +226,17 @@ public class MessagesImpls {
     }-*/;
 
     @Override
-    public final native java.lang.String javaDocContext() /*-{
-      return this["javaDocContext"];
+    public final native java.lang.String wsName() /*-{
+      return this["wsName"];
     }-*/;
 
-    public final native ConfigMessageImpl setJavaDocContext(java.lang.String javaDocContext) /*-{
-      this["javaDocContext"] = javaDocContext;
+    public final native ConfigMessageImpl setWsName(java.lang.String wsName) /*-{
+      this["wsName"] = wsName;
       return this;
     }-*/;
 
-    public final native boolean hasJavaDocContext() /*-{
-      return this.hasOwnProperty("javaDocContext");
+    public final native boolean hasWsName() /*-{
+      return this.hasOwnProperty("wsName");
     }-*/;
 
     @Override
@@ -257,31 +254,17 @@ public class MessagesImpls {
     }-*/;
 
     @Override
-    public final native java.lang.String vfsId() /*-{
-      return this["vfsId"];
+    public final native java.lang.String javaDocContext() /*-{
+      return this["javaDocContext"];
     }-*/;
 
-    public final native ConfigMessageImpl setVfsId(java.lang.String vfsId) /*-{
-      this["vfsId"] = vfsId;
+    public final native ConfigMessageImpl setJavaDocContext(java.lang.String javaDocContext) /*-{
+      this["javaDocContext"] = javaDocContext;
       return this;
     }-*/;
 
-    public final native boolean hasVfsId() /*-{
-      return this.hasOwnProperty("vfsId");
-    }-*/;
-
-    @Override
-    public final native java.lang.String wsName() /*-{
-      return this["wsName"];
-    }-*/;
-
-    public final native ConfigMessageImpl setWsName(java.lang.String wsName) /*-{
-      this["wsName"] = wsName;
-      return this;
-    }-*/;
-
-    public final native boolean hasWsName() /*-{
-      return this.hasOwnProperty("wsName");
+    public final native boolean hasJavaDocContext() /*-{
+      return this.hasOwnProperty("javaDocContext");
     }-*/;
 
     @Override
@@ -298,6 +281,20 @@ public class MessagesImpls {
       return this.hasOwnProperty("projectId");
     }-*/;
 
+    @Override
+    public final native java.lang.String vfsId() /*-{
+      return this["vfsId"];
+    }-*/;
+
+    public final native ConfigMessageImpl setVfsId(java.lang.String vfsId) /*-{
+      this["vfsId"] = vfsId;
+      return this;
+    }-*/;
+
+    public final native boolean hasVfsId() /*-{
+      return this.hasOwnProperty("vfsId");
+    }-*/;
+
     public static native ConfigMessageImpl make() /*-{
       return {
         _type: 1
@@ -307,6 +304,20 @@ public class MessagesImpls {
 
   public static class ParseMessageImpl extends com.google.gwt.webworker.client.messages.MessageImpl implements com.codenvy.ide.ext.java.messages.ParseMessage {
     protected ParseMessageImpl() {}
+
+    @Override
+    public final native java.lang.String fileId() /*-{
+      return this["fileId"];
+    }-*/;
+
+    public final native ParseMessageImpl setFileId(java.lang.String fileId) /*-{
+      this["fileId"] = fileId;
+      return this;
+    }-*/;
+
+    public final native boolean hasFileId() /*-{
+      return this.hasOwnProperty("fileId");
+    }-*/;
 
     @Override
     public final native java.lang.String packageName() /*-{
@@ -417,11 +428,11 @@ public class MessagesImpls {
     }-*/;
 
     @Override
-    public final native Array<String> stringArguments() /*-{
+    public final native com.codenvy.ide.collections.Array<java.lang.String> stringArguments() /*-{
       return this[3];
     }-*/;
 
-    public final native ProblemImpl setStringArguments(JsoArray<String> stringArguments) /*-{
+    public final native ProblemImpl setStringArguments(com.codenvy.ide.collections.js.JsoArray<java.lang.String> stringArguments) /*-{
       this[3] = stringArguments;
       return this;
     }-*/;
@@ -509,11 +520,11 @@ public class MessagesImpls {
     protected ProblemsMessageImpl() {}
 
     @Override
-    public final native Array<Problem> problems() /*-{
+    public final native com.codenvy.ide.collections.Array<com.codenvy.ide.ext.java.messages.Problem> problems() /*-{
       return this["problems"];
     }-*/;
 
-    public final native ProblemsMessageImpl setProblems(JsoArray<Problem> problems) /*-{
+    public final native ProblemsMessageImpl setProblems(com.codenvy.ide.collections.js.JsoArray<com.codenvy.ide.ext.java.messages.Problem> problems) /*-{
       this["problems"] = problems;
       return this;
     }-*/;

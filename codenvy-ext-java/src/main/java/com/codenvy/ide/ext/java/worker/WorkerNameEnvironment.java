@@ -31,7 +31,7 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryMethod;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryType;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.NameEnvironmentAnswer;
-import com.codenvy.ide.commons.Jso;
+import com.codenvy.ide.collections.Jso;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -421,7 +421,7 @@ public class WorkerNameEnvironment implements INameEnvironment {
                 TypesListImpl typesList = TypesListImpl.deserialize(typesJson);
 
 
-                for (ShortTypeInfo info : typesList.getTypes().asIterable()) {
+                for (ShortTypeInfo info : typesList.getTypes()) {
                     requestor.acceptType(info.getName().substring(0, info.getName().lastIndexOf(".")).toCharArray(),
                                          info.getName().substring(info.getName().lastIndexOf(".") + 1).toCharArray(),
                                          null,

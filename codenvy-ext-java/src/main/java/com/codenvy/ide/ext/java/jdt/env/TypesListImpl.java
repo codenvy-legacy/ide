@@ -26,6 +26,9 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
@@ -40,12 +43,17 @@ public class TypesListImpl implements TypesList {
     }
 
     @Override
-    public Array<ShortTypeInfo> getTypes() {
-        Array<ShortTypeInfo> typeInfos = Collections.createArray();
+    public List<ShortTypeInfo> getTypes() {
+        ArrayList<ShortTypeInfo> typeInfos = new ArrayList<ShortTypeInfo>();
         for (int i = 0; i < json.size(); i++) {
             typeInfos.add(new ShortTypeInfoImpl(json.get(i).isObject()));
         }
         return typeInfos;
+    }
+
+    @Override
+    public void setTypes(List<ShortTypeInfo> types) {
+        //nothing todo
     }
 
     public static TypesListImpl deserialize(String json) {

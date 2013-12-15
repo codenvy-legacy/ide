@@ -17,10 +17,15 @@
  */
 package com.codenvy.ide.ext.java.shared;
 
+import com.codenvy.dto.shared.DTO;
+
+import java.util.List;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
+@DTO
 public interface AnnotationValue {
 
     /**
@@ -38,14 +43,14 @@ public interface AnnotationValue {
      *
      * @return
      */
-    String[] getPrimitiveType();
+    List<String> getPrimitiveType();
 
     /**
      * Must return array with of values, where first value is Array type
      *
      * @return
      */
-    String[] getArrayType();
+    List<String> getArrayType();
 
     String getClassSignature();
 
@@ -55,21 +60,20 @@ public interface AnnotationValue {
      *
      * @return
      */
-    String[] getEnumConstant();
+    List<String> getEnumConstant();
 
     Annotation getAnnotation();
 
-    Annotation[] getAnnotations();
 
-    void setPrimitiveType(String[] value);
+    void setPrimitiveType(List<String> value);
 
-    void setArrayType(String[] value);
+    void setArrayType(List<String> value);
 
     void setClassSignature(String value);
 
-    void setEnumConstant(String[] value);
+    void setEnumConstant(List<String> value);
 
     void setAnnotation(Annotation annotation);
 
-    void setAnnotations(Annotation[] annotation);
+
 }

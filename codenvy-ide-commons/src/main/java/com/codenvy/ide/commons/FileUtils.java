@@ -64,18 +64,15 @@ public class FileUtils {
      *
      * @param fileOrDirectory
      *         the file or directory to cancel
-     * @param readSymlinks
-     *         if <code>true</code> - when <code>fileOrDirectory</code> represents a symbolic link
-     *         to a folder then all child elements of a target folder will be deleted,
-     *         if <code>false</code> - when <code>fileOrDirectory</code> represents a symbolic link
-     *         to a folder then target folder's content will not be read, just symbolic link itself will be deleted
+     * @param followLinks
+     *         are symbolic links followed or not?
      * @return <code>true</code> if specified File was deleted and <code>false</code> otherwise
      */
-    public static boolean deleteRecursive(File fileOrDirectory, boolean readSymlinks) {
+    public static boolean deleteRecursive(File fileOrDirectory, boolean followLinks) {
         if (fileOrDirectory.isDirectory()) {
             // If fileOrDirectory represents a symbolic link to a folder, do not read a target folder content.
             // Just remove a symbolic link itself.
-            if (!readSymlinks && Files.isSymbolicLink(fileOrDirectory.toPath())) {
+            if (!followLinks && Files.isSymbolicLink(fileOrDirectory.toPath())) {
                 return !fileOrDirectory.exists() || fileOrDirectory.delete();
             }
             File[] list = fileOrDirectory.listFiles();
@@ -83,7 +80,7 @@ public class FileUtils {
                 return false;
             }
             for (File f : list) {
-                if (!deleteRecursive(f, readSymlinks)) {
+                if (!deleteRecursive(f, followLinks)) {
                     return false;
                 }
             }

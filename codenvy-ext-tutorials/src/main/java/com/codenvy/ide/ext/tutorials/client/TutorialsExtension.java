@@ -54,6 +54,7 @@ public class TutorialsExtension {
     public static final String PARTS_TUTORIAL_ID               = "PartsTutorial";
     public static final String EDITOR_TUTORIAL_ID              = "EditorTutorial";
     public static final String GIN_TUTORIAL_ID                 = "GinTutorial";
+    public static final String WYSIWIG_EDITOR_TUTORIAL_ID                 = "WysiwygEditorTutorial";
 
     @Inject
     public TutorialsExtension(TemplateAgent templateAgent,
@@ -65,6 +66,7 @@ public class TutorialsExtension {
                               Provider<CreatePartsTutorialPage> createPartsTutorialPageProvider,
                               Provider<CreateEditorTutorialPage> createEditorTutorialPageProvider,
                               Provider<CreateGinTutorialPage> createGinTutorialPageProvider,
+                              Provider<CreateWysiwygTutorialPage> createWysiwygTutorialPageProvider,
                               ProjectTypeAgent projectTypeAgent,
                               TutorialsResources resources,
                               TutorialsLocalizationConstant localizationConstants,
@@ -136,5 +138,12 @@ public class TutorialsExtension {
                                PRIMARY_NATURE,
                                Collections.createArray(TUTORIAL_PROJECT_TYPE),
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(createGinTutorialPageProvider));
+
+        templateAgent.register(WYSIWIG_EDITOR_TUTORIAL_ID,
+                               "WYSIWYG Editor tutorial.",
+                               resources.codenvyTutorialTemplate(),
+                               PRIMARY_NATURE,
+                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createWysiwygTutorialPageProvider));
     }
 }

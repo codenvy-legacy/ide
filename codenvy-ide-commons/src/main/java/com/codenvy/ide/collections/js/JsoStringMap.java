@@ -15,7 +15,7 @@
 package com.codenvy.ide.collections.js;
 
 import com.codenvy.ide.collections.StringMap;
-import com.codenvy.ide.commons.Jso;
+import com.codenvy.ide.collections.Jso;
 import com.google.gwt.core.client.JavaScriptObject;
 
 
@@ -24,7 +24,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  * <p/>
  * On the client, if you have a reference to StringMap, or JsoStringMap
  * (the JavaScriptObject backed impl), feel free to cross cast this to the more
- * robust {@link com.codenvy.ide.commons.Jso}.
+ * robust {@link com.codenvy.ide.collections.Jso}.
  */
 public final class JsoStringMap<T> extends JavaScriptObject implements StringMap<T> {
 

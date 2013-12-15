@@ -54,6 +54,7 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
     private static final String CREATE_PARTS_TUTORIAL               = "/parts";
     private static final String CREATE_EDITOR_TUTORIAL              = "/editor";
     private static final String CREATE_GIN_TUTORIAL                 = "/gin";
+    private static final String CREATE_WYSIWYG_TUTORIAL                 = "/wysiwyg";
     /** REST-service context. */
     private String           restContext;
     /** Loader to be displayed. */
@@ -148,6 +149,13 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
     public void createGinTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
                                          @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
         String requestUrl = restContext + BASE_URL + CREATE_GIN_TUTORIAL;
+        sendRequest(requestUrl, projectName, properties, callback);
+    }
+
+    @Override
+    public void createWYSIWYGEditorProject(@NotNull String projectName, @NotNull Array<Property> properties,
+                                           @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
+        String requestUrl = restContext + BASE_URL + CREATE_WYSIWYG_TUTORIAL;
         sendRequest(requestUrl, projectName, properties, callback);
     }
 

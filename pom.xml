@@ -36,13 +36,6 @@
         <tag>HEAD</tag>
     </scm>
 
-    <!--
-        IMPORTANT!
-        Make sure that the same properties in files
-        codenvy-runner-sdk/src/main/resource/codenvyPlatform/pom.xml
-        codenvy-sdk-tutorials/*/pom.xml
-        have the same values.
-    -->
     <properties>
         <exo.product.name>codenvy-ide</exo.product.name>
 
@@ -157,9 +150,11 @@
         <module>codenvy-sdk-tutorials/editor-api</module>
         <module>codenvy-sdk-tutorials/gin</module>
         <module>codenvy-sdk-tutorials/gist-ext</module>
+        <module>codenvy-sdk-tutorials/wysiwyg-editor</module>
         <module>codenvy-application-war</module>
         <module>codenvy-ide-site-war</module>
         <module>codenvy-sdk-private-dependencies</module>
+        <module>codenvy-sdk-tools</module>
         <module>codenvy-packaging-standalone-tomcat</module>
     </modules>
 </project>
