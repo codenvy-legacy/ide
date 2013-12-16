@@ -67,11 +67,10 @@ public class JavaProject extends Project {
     public JavaProjectDesctiprion getDescription() {
         return description;
     }
-
+  
     /** {@inheritDoc} */
     @Override
     public void refreshTree(Folder root, final AsyncCallback<Folder> callback) {
-        System.out.println("JavaProject.refreshTree()");
         try {
             // create internal wrapping Request Callback with proper Unmarshaller
             AsyncRequestCallback<Folder> internalCallback =
