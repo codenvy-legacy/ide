@@ -19,7 +19,6 @@ package com.codenvy.runner.sdk;
 
 import com.codenvy.api.core.config.Configuration;
 import com.codenvy.api.core.util.CommandLine;
-import com.codenvy.api.core.util.LineConsumer;
 import com.codenvy.api.core.util.ProcessUtil;
 import com.codenvy.api.core.util.SystemInfo;
 import com.codenvy.api.runner.RunnerException;
@@ -27,6 +26,7 @@ import com.codenvy.api.runner.internal.ApplicationLogger;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.commons.lang.NamedThreadFactory;
 import com.codenvy.commons.lang.ZipUtils;
+import com.codenvy.ide.commons.MavenUtils;
 import com.google.common.io.CharStreams;
 
 import org.slf4j.Logger;
@@ -103,7 +103,7 @@ public class TomcatServer implements ApplicationServer {
         validate(webApp);
         try {
             final Path tomcatPath = Files.createDirectory(appDir.toPath().resolve("tomcat"));
-            ZipUtils.unzip(Utils.getTomcatBinaryDistribution().openStream(), tomcatPath.toFile());
+            ZipUtils.unzip(MavenUtils.getTomcatBinaryDistribution().openStream(), tomcatPath.toFile());
 
             final Path webappsPath = tomcatPath.resolve("webapps");
             ZipUtils.unzip(new File(webApp.getName()), webappsPath.resolve("ide").toFile());

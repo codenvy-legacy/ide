@@ -229,16 +229,18 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
     private void afterApplicationLaunched(ApplicationProcessDescriptor appDescriptor) {
         this.applicationProcessDescriptor = appDescriptor;
 
-        String[] split = getAppLink(appDescriptor, LinkRel.CODE_SERVER).getHref().split(":");
-//        final String codeServerHost = split[0];
-        final String codeServerPort = split[1];
+        UrlBuilder uriBuilder = new UrlBuilder().setProtocol(Window.Location.getProtocol())
+                                                .setHost(Window.Location.getHostName())
+                                                .setPort(appDescriptor.getPort())
+                                                .setPath("ide/dev-monit");
 
-        final String uri = new UrlBuilder().setProtocol(Window.Location.getProtocol())
-                                           .setHost(Window.Location.getHostName())
-                                           .setPort(appDescriptor.getPort())
-                                           .setPath("ide/dev-monit")
-                                           .setParameter("h", Window.Location.getHostName())
-                                           .setParameter("p", codeServerPort).buildString();
+        final Link codeServerLink = getAppLink(appDescriptor, LinkRel.CODE_SERVER);
+        if (codeServerLink != null) {
+            String[] codeServerAddress = codeServerLink.getHref().split(":");
+            uriBuilder.setParameter("h", Window.Location.getHostName()).setParameter("p", codeServerAddress[1]);
+        }
+
+        final String uri = uriBuilder.buildString();
         console.print(constant.extensionLaunchedOnUrls(currentProject.getName(),
                                                        "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>"));
         notification.setStatus(FINISHED);

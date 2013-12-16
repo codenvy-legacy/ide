@@ -28,16 +28,14 @@ import com.codenvy.api.runner.internal.dto.RunRequest;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.commons.FileUtils;
 import com.codenvy.ide.commons.GwtXmlUtils;
+import com.codenvy.ide.commons.MavenUtils;
 import com.codenvy.ide.commons.ZipUtils;
-import com.google.common.io.CharStreams;
 
 import org.apache.maven.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -51,6 +49,7 @@ import java.util.zip.ZipFile;
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
 public class SDKRunner extends Runner {
+    public static final  String IDE_GWT_XML_FILE_NAME    = "IDEPlatform.gwt.xml";
     public static final  String DEFAULT_SERVER_NAME      = "Tomcat";
     public static final  String DEBUG_TRANSPORT_PROTOCOL = "dt_socket";
     // rel for code server link
@@ -86,7 +85,7 @@ public class SDKRunner extends Runner {
 
         String gwtModuleName = gwtXmlEntry.getName().replace(File.separatorChar, '.');
         gwtModuleName = gwtModuleName.substring(0, gwtModuleName.length() - GwtXmlUtils.GWT_MODULE_XML_SUFFIX.length());
-        final Model pom = Utils.readPom(zipFile.getInputStream(pomEntry));
+        final Model pom = MavenUtils.readPom(zipFile.getInputStream(pomEntry));
         zipFile.close();
         final String groupId = pom.getGroupId() == null ? pom.getParent().getGroupId() : pom.getGroupId();
         final String version = pom.getVersion() == null ? pom.getParent().getVersion() : pom.getVersion();
@@ -207,13 +206,13 @@ public class SDKRunner extends Runner {
             // prepare Codenvy Platform sources
             final Path workDirPath =
                     Files.createTempDirectory(getDeployDirectory().toPath(), ("war_" + getName() + '_'));
-            ZipUtils.unzip(Utils.getCodenvyPlatformBinaryDistribution().openStream(),
+            ZipUtils.unzip(MavenUtils.getCodenvyPlatformBinaryDistribution().openStream(),
                            workDirPath.toFile());
 
             // integrate extension to Codenvy Platform
-            Utils.addDependencyToPom(workDirPath.resolve("pom.xml"), extension.groupId, extension.artifactId,
-                                     extension.version);
-            GwtXmlUtils.inheritGwtModule(Utils.findFile(Utils.IDE_GWT_XML_FILE_NAME, workDirPath),
+            MavenUtils.addDependencyToPom(workDirPath.resolve("pom.xml"), extension.groupId, extension.artifactId,
+                                          extension.version);
+            GwtXmlUtils.inheritGwtModule(MavenUtils.findFile(SDKRunner.IDE_GWT_XML_FILE_NAME, workDirPath),
                                          extension.gwtModuleName);
 
             warPath = buildWebAppAndGetWar(workDirPath);
@@ -224,7 +223,7 @@ public class SDKRunner extends Runner {
     }
 
     private ZipFile buildWebAppAndGetWar(Path appDirPath) throws RunnerException {
-        final String[] command = new String[]{Utils.getMavenExecCommand(), "package"};
+        final String[] command = new String[]{MavenUtils.getMavenExecCommand(), "package"};
 
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(command).directory(appDirPath.toFile());
@@ -235,7 +234,7 @@ public class SDKRunner extends Runner {
             if (process.exitValue() != 0) {
                 throw new RunnerException(consumer.getOutput().toString());
             }
-            return new ZipFile(Utils.findFile("*.war", appDirPath.resolve("target")).toFile());
+            return new ZipFile(MavenUtils.findFile("*.war", appDirPath.resolve("target")).toFile());
         } catch (IOException | InterruptedException e) {
             throw new RunnerException(e);
         }

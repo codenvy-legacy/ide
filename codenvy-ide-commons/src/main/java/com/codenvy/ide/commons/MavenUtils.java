@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.runner.sdk;
+package com.codenvy.ide.commons;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;

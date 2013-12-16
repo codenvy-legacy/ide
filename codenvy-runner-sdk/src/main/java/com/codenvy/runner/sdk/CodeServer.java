@@ -23,6 +23,7 @@ import com.codenvy.api.core.util.SystemInfo;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.commons.lang.NamedThreadFactory;
 import com.codenvy.ide.commons.GwtXmlUtils;
+import com.codenvy.ide.commons.MavenUtils;
 import com.codenvy.ide.commons.ZipUtils;
 
 import org.apache.maven.model.Build;
@@ -62,15 +63,16 @@ public class CodeServer {
             throws RunnerException {
         try {
             final Path warDirPath = workDirPath.resolve("war");
-            ZipUtils.unzip(Utils.getCodenvyPlatformBinaryDistribution().openStream(), warDirPath.toFile());
+            ZipUtils.unzip(MavenUtils.getCodenvyPlatformBinaryDistribution().openStream(), warDirPath.toFile());
 
-            Utils.addDependencyToPom(warDirPath.resolve("pom.xml"), extensionDescriptor.groupId,
-                                     extensionDescriptor.artifactId,
-                                     extensionDescriptor.version);
-            GwtXmlUtils.inheritGwtModule(Utils.findFile(Utils.IDE_GWT_XML_FILE_NAME, warDirPath),
+            MavenUtils.addDependencyToPom(warDirPath.resolve("pom.xml"), extensionDescriptor.groupId,
+                                          extensionDescriptor.artifactId,
+                                          extensionDescriptor.version);
+            GwtXmlUtils.inheritGwtModule(MavenUtils.findFile(SDKRunner.IDE_GWT_XML_FILE_NAME, warDirPath),
                                          extensionDescriptor.gwtModuleName);
 
-            setCodeServerConfiguration(warDirPath.resolve("pom.xml"), workDirPath, null, -1);
+            setCodeServerConfiguration(warDirPath.resolve("pom.xml"), workDirPath, null,
+                                       runnerConfiguration.getCodeServerPort());
 
             final Path extDirPath = Files.createDirectory(workDirPath.resolve("ext"));
             Files.createSymbolicLink(extDirPath.resolve("src"), projectSourcesPath.resolve("src"));
@@ -121,7 +123,7 @@ public class CodeServer {
 
         try {
             Xpp3Dom additionalConfiguration = Xpp3DomBuilder.build(new StringReader(codeServerConf));
-            Model pom = Utils.readPom(pomPath);
+            Model pom = MavenUtils.readPom(pomPath);
             Build build = pom.getBuild();
             Map<String, Plugin> plugins = build.getPluginsAsMap();
             Plugin gwtPlugin = plugins.get("org.codehaus.mojo:gwt-maven-plugin");
@@ -129,7 +131,7 @@ public class CodeServer {
             Xpp3Dom mergedConfiguration = Xpp3DomUtils.mergeXpp3Dom(existingConfiguration, additionalConfiguration);
             gwtPlugin.setConfiguration(mergedConfiguration);
             build.setPlugins(new ArrayList(plugins.values()));
-            Utils.writePom(pom, pomPath);
+            MavenUtils.writePom(pom, pomPath);
         } catch (XmlPullParserException | IOException e) {
             throw new RunnerException(e);
         }
