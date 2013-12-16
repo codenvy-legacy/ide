@@ -70,8 +70,8 @@ public class FileUtils {
      */
     public static boolean deleteRecursive(File fileOrDirectory, boolean followLinks) {
         if (fileOrDirectory.isDirectory()) {
-            // If fileOrDirectory represents a symbolic link to a folder, do not read a target folder content.
-            // Just remove a symbolic link itself.
+            // If fileOrDirectory represents a symbolic link to a folder,
+            // do not read a target folder content. Just remove this symbolic link.
             if (!followLinks && Files.isSymbolicLink(fileOrDirectory.toPath())) {
                 return !fileOrDirectory.exists() || fileOrDirectory.delete();
             }

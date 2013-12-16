@@ -241,10 +241,12 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
                 <version>${gwt.maven.plugin.version}</version>
+                <configuration>
+                    <extraJvmArgs>-Xss512m -Xmx2048m -XX:MaxPermSize=1024m</extraJvmArgs>
+                </configuration>
                 <executions>
                     <execution>
                         <configuration>
-                            <extraJvmArgs>-Xss512m -Xmx2048m -XX:MaxPermSize=1024m</extraJvmArgs>
                             <modules>
                                 <module>com.codenvy.ide.IDEPlatform</module>
                                 <module>com.codenvy.ide.ext.java.JavaParserWorker</module>
@@ -312,4 +314,42 @@
             </plugin>
         </plugins>
     </build>
+
+    <!--
+    Add extension sources to allow GWT code server recompile them
+    It's a recommended (https://groups.google.com/d/msg/codehaus-mojo-gwt-maven-plugin-users/zvJ0IlGN7Fw/RbyteSEKXtoJ)
+    workaround of a known bug of Maven GWT Plugin (https://jira.codehaus.org/browse/MGWT-332).
+    -->
+    <profiles>
+        <profile>
+            <id>customExtensionSources</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <id>add-extension-sources</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>add-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>../ext/src/main/java</source>
+                                        <source>../ext/src/main/resources</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

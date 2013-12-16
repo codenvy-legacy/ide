@@ -41,10 +41,11 @@ import static java.nio.file.FileVisitResult.TERMINATE;
  * @version $Id: Utils.java Jul 31, 2013 11:30:14 AM azatsarynnyy $
  */
 class Utils {
+    public static final String          IDE_GWT_XML_FILE_NAME = "IDEPlatform.gwt.xml";
     /** Maven POM reader. */
-    private static MavenXpp3Reader pomReader = new MavenXpp3Reader();
+    private static      MavenXpp3Reader pomReader             = new MavenXpp3Reader();
     /** Maven POM writer. */
-    private static MavenXpp3Writer pomWriter = new MavenXpp3Writer();
+    private static      MavenXpp3Writer pomWriter             = new MavenXpp3Writer();
 
     private Utils() {
     }

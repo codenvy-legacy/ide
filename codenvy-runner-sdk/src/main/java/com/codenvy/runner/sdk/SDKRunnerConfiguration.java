@@ -17,23 +17,34 @@
  */
 package com.codenvy.runner.sdk;
 
+import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.dto.RunRequest;
 
+import java.util.List;
+
 /**
- * Configuration of Codenvy SDK runner.
+ * Configuration of Web applications runner.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
 public class SDKRunnerConfiguration extends RunnerConfiguration {
+    private final String  server;
     private final boolean suspend;
     private final String  transport;
+    private final int     codeServerPort;
 
-    public SDKRunnerConfiguration(int httpPort, int memory, int debugPort, boolean suspend,
-                                  String transport, RunRequest runRequest) {
-        super(memory, httpPort, debugPort, runRequest);
+    public SDKRunnerConfiguration(String server, int httpPort, int memory, int debugPort, boolean suspend,
+                                  String transport, int codeServerPort, List<Link> links, RunRequest runRequest) {
+        super(memory, httpPort, debugPort, links, runRequest);
+        this.server = server;
         this.suspend = suspend;
         this.transport = transport;
+        this.codeServerPort = codeServerPort;
+    }
+
+    public String getServer() {
+        return server;
     }
 
     public boolean isDebugSuspend() {
@@ -44,14 +55,20 @@ public class SDKRunnerConfiguration extends RunnerConfiguration {
         return transport;
     }
 
+    public int getCodeServerPort() {
+        return codeServerPort;
+    }
+
     @Override
     public String toString() {
         return "RunnerConfiguration{" +
-               "memory=" + getMemory() +
+               "server=" + server +
+               ", memory=" + getMemory() +
                ", port=" + getPort() +
                ", debugPort=" + getDebugPort() +
                ", debugSuspend=" + suspend +
                ", debugTransport=" + transport +
+               ", codeServerPort=" + getCodeServerPort() +
                ", request=" + getRequest() +
                '}';
     }

@@ -228,10 +228,17 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
 
     private void afterApplicationLaunched(ApplicationProcessDescriptor appDescriptor) {
         this.applicationProcessDescriptor = appDescriptor;
-        // TODO applicationProcessDescriptor.getUrl()
+
+        String[] split = getAppLink(appDescriptor, LinkRel.CODE_SERVER).getHref().split(":");
+//        final String codeServerHost = split[0];
+        final String codeServerPort = split[1];
+
         final String uri = new UrlBuilder().setProtocol(Window.Location.getProtocol())
-                                           .setHost(Window.Location.getHost())
-                                           .setPort(appDescriptor.getPort()).buildString();
+                                           .setHost(Window.Location.getHostName())
+                                           .setPort(appDescriptor.getPort())
+                                           .setPath("ide/dev-monit")
+                                           .setParameter("h", Window.Location.getHostName())
+                                           .setParameter("p", codeServerPort).buildString();
         console.print(constant.extensionLaunchedOnUrls(currentProject.getName(),
                                                        "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>"));
         notification.setStatus(FINISHED);
@@ -322,6 +329,7 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
     private static enum LinkRel {
         STOP("stop"),
         VIEW_LOGS("view logs"),
+        CODE_SERVER("code server"),
         STATUS("get status");
         private final String value;
 
