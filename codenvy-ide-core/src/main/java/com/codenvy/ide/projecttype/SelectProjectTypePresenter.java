@@ -18,6 +18,7 @@
 package com.codenvy.ide.projecttype;
 
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
@@ -42,6 +43,8 @@ public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionD
     private CoreLocalizationConstant   localizationConstant;
 
     private Project                    project;
+    
+    private AsyncCallback<Project>     callback;
 
     @Inject
     public SelectProjectTypePresenter(SelectProjectTypeView view, CoreLocalizationConstant localizationConstant) {
@@ -54,6 +57,7 @@ public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionD
 
     private void initTypes() {
         typesMap = Collections.createStringMap();
+        Array<String> emptyArray = Collections.createArray();
 
         // Codenvy Extension properties
         Array<Property> codenvyExtensionProperties = Collections.createArray();
@@ -72,7 +76,7 @@ public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionD
         Array<Property> jarProperties = Collections.createArray();
         jarProperties.add(new Property("nature.primary", Collections.createArray("java")));
         jarProperties.add(new Property("vfs:projectType", Collections.createArray("Jar")));
-        jarProperties.add(new Property("exoide:classpath", Collections.createArray("")));// TODO
+        jarProperties.add(new Property("exoide:classpath", emptyArray));
         jarProperties.add(new Property("nature.mixin", Collections.createArray("Jar")));
         jarProperties.add(new Property("vfs:mimeType", Collections.createArray("text/vnd.ideproject+directory")));
         jarProperties.add(new Property("builder_name", Collections.createArray("maven")));
@@ -83,7 +87,7 @@ public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionD
         // War project properties
         Array<Property> warProperties = Collections.createArray();
         warProperties.add(new Property("nature.primary", Collections.createArray("java")));
-        warProperties.add(new Property("exoide:classpath", Collections.createArray("")));// TODO
+        warProperties.add(new Property("exoide:classpath", emptyArray));
         warProperties.add(new Property("nature.mixin", Collections.createArray("War")));
         warProperties.add(new Property("exoide:target", Collections.createArray("CloudBees", "CloudFoundry", "AWS", "AppFog", "Tier3WF")));
         warProperties.add(new Property("runner_name", Collections.createArray("webapps")));
@@ -97,8 +101,9 @@ public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionD
 
 
     /** Show dialog. */
-    public void showDialog(Project project) {
+    public void showDialog(@NotNull Project project, @NotNull AsyncCallback<Project> callback) {
         this.project = project;
+        this.callback = callback;
         view.setLabel(localizationConstant.selectProjectType(project.getName()));
         view.showDialog();
     }
@@ -118,28 +123,18 @@ public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionD
             }
         }
 
-        project.getProperties().addAll(properties);
         project.flushProjectProperties(new AsyncCallback<Project>() {
 
             @Override
             public void onSuccess(Project result) {
                 view.close();
-                result.refreshTree(new AsyncCallback<Project>() {
-
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        Log.error(SelectProjectTypePresenter.class, "Can not refresh project properties.", caught);
-                    }
-
-                    @Override
-                    public void onSuccess(Project result) {
-                    }
-                });
+                callback.onSuccess(result);
             }
 
             @Override
             public void onFailure(Throwable caught) {
                 Log.error(SelectProjectTypePresenter.class, "Can not save project properties.", caught);
+                callback.onFailure(caught);
             }
         });
     }

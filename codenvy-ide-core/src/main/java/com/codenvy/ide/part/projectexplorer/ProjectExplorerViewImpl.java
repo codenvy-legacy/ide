@@ -116,7 +116,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         tree.replaceSubtree(oldResource, newResource, true);
 
         TreeNodeElement<Resource> nodeElement = tree.getNode(newResource);
-
+        
         if (nodeElement != null) {
             tree.closeNode(nodeElement);
             tree.expandNode(nodeElement);

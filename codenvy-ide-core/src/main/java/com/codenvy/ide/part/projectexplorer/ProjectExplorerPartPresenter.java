@@ -107,10 +107,30 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
-                if (event.getProject() != null){
-                    processUndefinedProjectType(event.getProject());
-                }
                 setContent(event.getProject().getParent());
+                if (event.getProject() != null) {
+                    processUndefinedProjectType(event.getProject(), new AsyncCallback<Project>(){
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            Log.error(ProjectExplorerPartPresenter.class, "Can not change project type.", caught);
+                        }
+
+                        @Override
+                        public void onSuccess(Project result) {
+                            resourceProvider.getProject(result.getName(), new AsyncCallback<Project>() {
+
+                                @Override
+                                public void onFailure(Throwable caught) {
+                                    Log.error(ProjectExplorerPartPresenter.class, "Can not get project.", caught);
+                                }
+
+                                @Override
+                                public void onSuccess(Project result) {
+                                }
+                            });
+                        }});
+                }
             }
 
             @Override
@@ -163,9 +183,8 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     /**
      * Update item in the project explorer.
-     *
-     * @param resource
-     *         the resource that need to be updated
+     * 
+     * @param resource the resource that need to be updated
      */
     private void updateItem(@NotNull Resource resource) {
         Project project = resource.getProject();
@@ -237,6 +256,30 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     /** {@inheritDoc} */
     @Override
     public void onResourceOpened(Resource resource) {
+        final AsyncCallback<Project> callback = new AsyncCallback<Project>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                Log.error(ProjectExplorerPartPresenter.class, "Can not change project type.", caught); 
+            }
+
+            @Override
+            public void onSuccess(Project result) {
+                result.refreshTree(new AsyncCallback<Project>() {
+
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        Log.error(ProjectExplorerPartPresenter.class, "Can not refresh project properties.", caught);
+                    }
+
+                    @Override
+                    public void onSuccess(Project result) {
+                    }
+                });
+
+            }
+        };
+        
         if (resource.getResourceType().equals(Project.TYPE) && ((Project)resource).getProperties().isEmpty()) {
             ((Project)resource).setVFSInfo(resourceProvider.getVfsInfo());
             ((Project)resource).refreshProperties(new AsyncCallback<Project>() {
@@ -248,23 +291,23 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
                 @Override
                 public void onSuccess(Project result) {
-                    processUndefinedProjectType(result);
+                    processUndefinedProjectType(result, callback);
                 }
             });
         } else if (resource.getResourceType().equals(Project.TYPE) && ((Project)resource).getProperties().size() > 0) {
-            processUndefinedProjectType((Project)resource);
+            processUndefinedProjectType((Project)resource, callback);
         }
     }
-    
+
     /**
      * Check, whether project type is "undefined" and call {@link SelectProjectTypePresenter} to set it.
      * 
      * @param project
      */
-    private void processUndefinedProjectType(Project project) {
+    private void processUndefinedProjectType(Project project , AsyncCallback<Project> callback) {
         String projectType = (String)project.getPropertyValue("vfs:projectType");
         if (projectType != null && projectType.equals("undefined")) {
-            selectProjectTypePresenter.showDialog(project);
+            selectProjectTypePresenter.showDialog(project, callback);
         }
     }
 }
