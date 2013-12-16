@@ -42,19 +42,6 @@ public interface BuilderClientService {
     public void build(String projectName, AsyncRequestCallback<String> callback)
             throws RequestException;
 
-//    /**
-//     * Start new build and publish.
-//     *
-//     * @param projectId
-//     *         identifier of project we want to send for build
-//     * @param vfsId
-//     *         identifier of virtual file system
-//     * @param callback
-//     *         callback
-//     * @throws RequestException
-//     */
-//    public void buildAndPublish(String projectId, String vfsId, String projectName, String projectType,
-//                                AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Cancel previously launched build.
@@ -80,11 +67,6 @@ public interface BuilderClientService {
     /**
      * Get build log.
      *
-     * @param buildid
-     *         identifier of build
-     * @param callback
-     *         callback
-     * @throws RequestException
      */
     public void log(Link link, AsyncRequestCallback<String> callback) throws RequestException;
 
@@ -99,14 +81,5 @@ public interface BuilderClientService {
      */
     public void result(String buildid, AsyncRequestCallback<String> callback) throws RequestException;
 
-    /**
-     * Check is URL for download artifact is valid.
-     *
-     * @param url
-     *         URL for checking
-     * @param callback
-     *         callback
-     * @throws RequestException
-     */
-    public void checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException;
+
 }

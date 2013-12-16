@@ -66,9 +66,9 @@ public class CreateEmptyCodenvyExtensionPage extends AbstractTemplatePage {
                                                      new Property(PROPERTY_MIXIN_NATURES, CODENVY_EXTENSION_PROJECT_TYPE),
                                                      new Property(PROPERTY_SOURCE_FOLDERS,
                                                                   createArray("src/main/java", "src/main/resources")),
-                                                     new Property("builder_name", "maven"),
-                                                     new Property("builder_maven_targets", createArray("clean", "install")),
-                                                     new Property("runner_name", "sdk"));
+                                                     new Property("builder.name", "maven"),
+                                                     new Property("builder.maven.targets", createArray("clean", "install")),
+                                                     new Property("runner.name", "sdk"));
         final String projectName = wizardContext.getData(PROJECT_NAME);
 
         resourceProvider.createProject(projectName, properties, new AsyncCallback<Project>() {
