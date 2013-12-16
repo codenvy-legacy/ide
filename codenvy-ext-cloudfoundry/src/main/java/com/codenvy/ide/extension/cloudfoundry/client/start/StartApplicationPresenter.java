@@ -139,7 +139,7 @@ public class StartApplicationPresenter {
         CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
 
         try {
-            service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
+            service.getApplicationInfo(resourceProvider.getVfsInfo().getId(), project.getId(), null, null,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
                                                                                                      checkIsStartedLoggedInHandler,
                                                                                                      null, eventBus, console, constant,
@@ -173,7 +173,7 @@ public class StartApplicationPresenter {
         CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
 
         try {
-            service.startApplication(resourceProvider.getVfsId(), projectId, name, server, paasProvider,
+            service.startApplication(resourceProvider.getVfsInfo().getId(), projectId, name, server, paasProvider,
                                      new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, startLoggedInHandler, null,
                                                                                                    eventBus, console, constant,
                                                                                                    loginPresenter, paasProvider) {
@@ -249,7 +249,7 @@ public class StartApplicationPresenter {
         CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
 
         try {
-            service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
+            service.getApplicationInfo(resourceProvider.getVfsInfo().getId(), project.getId(), null, null,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
                                                                                                      checkIsStoppedLoggedInHandler,
                                                                                                      null, eventBus, console, constant,
@@ -281,7 +281,7 @@ public class StartApplicationPresenter {
                 resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
 
         try {
-            service.stopApplication(resourceProvider.getVfsId(), projectId, name, server, paasProvider,
+            service.stopApplication(resourceProvider.getVfsInfo().getId(), projectId, name, server, paasProvider,
                                     new CloudFoundryAsyncRequestCallback<String>(null, stopLoggedInHandler, null, eventBus, console,
                                                                                  constant, loginPresenter, paasProvider) {
                                         @Override
@@ -289,7 +289,7 @@ public class StartApplicationPresenter {
                                             CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
 
                                             try {
-                                                service.getApplicationInfo(resourceProvider.getVfsId(), projectId, name, null,
+                                                service.getApplicationInfo(resourceProvider.getVfsInfo().getId(), projectId, name, null,
                                                                            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
                                                                                    unmarshaller, null, null, eventBus, console, constant,
                                                                                    loginPresenter, paasProvider) {
@@ -338,7 +338,7 @@ public class StartApplicationPresenter {
         CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
 
         try {
-            service.restartApplication(resourceProvider.getVfsId(), projectId, name, server, paasProvider,
+            service.restartApplication(resourceProvider.getVfsInfo().getId(), projectId, name, server, paasProvider,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, restartLoggedInHandler,
                                                                                                      null, eventBus, console, constant,
                                                                                                      loginPresenter, paasProvider) {

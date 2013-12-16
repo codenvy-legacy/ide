@@ -71,7 +71,7 @@ public class LimitTabPanePresenter implements Presenter, LimitTabPaneView.Action
      *         project that opened in current moment.
      */
     public void init(Project project) {
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
         ResourceLimitsUnmarshaller unmarshaller = new ResourceLimitsUnmarshaller();
 
         try {

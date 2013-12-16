@@ -73,7 +73,7 @@ public class StatusCommandPresenter {
         }
 
         try {
-            service.statusText(resourceProvider.getVfsId(), project.getId(), false, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+            service.statusText(resourceProvider.getVfsInfo().getId(), project.getId(), false, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
                 protected void onSuccess(String result) {
                     console.print(result);

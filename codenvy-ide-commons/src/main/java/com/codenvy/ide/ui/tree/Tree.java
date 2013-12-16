@@ -663,7 +663,6 @@ public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget {
      *         action for the selected node.
      */
     public void autoExpandAndSelectNode(D nodeData, boolean dispatchNodeAction) {
-        Log.info(getClass(), ">" + getModel().dataAdapter.getNodePath(nodeData));
 
         // Expand the tree to the selected element.
         expandPathRecursive(getModel().root, getModel().dataAdapter.getNodePath(nodeData), false);

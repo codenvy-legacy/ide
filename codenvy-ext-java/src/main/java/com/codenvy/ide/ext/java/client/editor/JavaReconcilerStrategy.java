@@ -18,17 +18,17 @@
 package com.codenvy.ide.ext.java.client.editor;
 
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.ext.java.client.editor.outline.OutlineUpdater;
 import com.codenvy.ide.ext.java.jdt.core.IProblemRequestor;
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.annotation.AnnotationModel;
+import com.codenvy.ide.texteditor.api.outline.OutlineModel;
 import com.codenvy.ide.texteditor.api.reconciler.DirtyRegion;
 import com.codenvy.ide.texteditor.api.reconciler.ReconcilingStrategy;
-import com.codenvy.ide.util.ListenerManager;
-import com.codenvy.ide.util.ListenerRegistrar.Remover;
 import com.codenvy.ide.util.loging.Log;
 
 
@@ -36,18 +36,18 @@ import com.codenvy.ide.util.loging.Log;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class JavaReconcilerStrategy implements ReconcilingStrategy, AstProvider, JavaParserWorker.WorkerCallback<IProblem> {
+public class JavaReconcilerStrategy implements ReconcilingStrategy, JavaParserWorker.WorkerCallback<IProblem> {
 
-    private final  TextEditorPartPresenter editor;
-    private        Document                document;
-    private JavaParserWorker worker;
-    private File                         file;
-    private ListenerManager<AstListener> astListeners;
+    private final TextEditorPartPresenter editor;
+    private       Document                document;
+    private       JavaParserWorker        worker;
+    private OutlineModel outlineModel;
+    private File file;
 
-    public JavaReconcilerStrategy(TextEditorPartPresenter editor, JavaParserWorker worker) {
+    public JavaReconcilerStrategy(TextEditorPartPresenter editor, JavaParserWorker worker, OutlineModel outlineModel) {
         this.editor = editor;
         this.worker = worker;
-        astListeners = ListenerManager.create();
+        this.outlineModel = outlineModel;
     }
 
     /** {@inheritDoc} */
@@ -55,6 +55,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, AstProvider,
     public void setDocument(Document document) {
         this.document = document;
         file = editor.getEditorInput().getFile();
+        new OutlineUpdater(file.getId(), outlineModel, worker);
     }
 
     /** {@inheritDoc} */
@@ -67,7 +68,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, AstProvider,
      *
      */
     private void parse() {
-        worker.parse(document.get(), file.getName(), file.getParent().getName(), this);
+        worker.parse(document.get(), file.getName(), file.getId(), file.getParent().getName(), this);
     }
 
     /** {@inheritDoc} */
@@ -81,10 +82,6 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, AstProvider,
         return file;
     }
 
-    public Remover addAstListener(AstListener listener) {
-        return astListeners.add(listener);
-    }
-
     @Override
     public void onResult(Array<IProblem> problems) {
         AnnotationModel annotationModel = editor.getDocumentProvider().getAnnotationModel(editor.getEditorInput());
@@ -96,7 +93,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, AstProvider,
             problemRequestor.beginReporting();
         } else return;
         try {
-            for(IProblem problem : problems.asIterable()){
+            for (IProblem problem : problems.asIterable()) {
                 problemRequestor.acceptProblem(problem);
             }
         } catch (Exception e) {

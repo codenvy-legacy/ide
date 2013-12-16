@@ -40,14 +40,13 @@ import static java.nio.file.FileVisitResult.TERMINATE;
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: Utils.java Jul 31, 2013 11:30:14 AM azatsarynnyy $
  */
-class Utils {
-    public static final String          IDE_GWT_XML_FILE_NAME = "IDEPlatform.gwt.xml";
+public class MavenUtils {
     /** Maven POM reader. */
-    private static      MavenXpp3Reader pomReader             = new MavenXpp3Reader();
+    private static MavenXpp3Reader pomReader = new MavenXpp3Reader();
     /** Maven POM writer. */
-    private static      MavenXpp3Writer pomWriter             = new MavenXpp3Writer();
+    private static MavenXpp3Writer pomWriter = new MavenXpp3Writer();
 
-    private Utils() {
+    private MavenUtils() {
     }
 
     /**
@@ -59,7 +58,7 @@ class Utils {
      * @throws java.io.IOException
      *         error occurred while reading content of file
      */
-    static Model readPom(Path path) throws IOException {
+    public static Model readPom(Path path) throws IOException {
         return readPom(Files.newInputStream(path));
     }
 
@@ -72,7 +71,7 @@ class Utils {
      * @throws java.io.IOException
      *         error occurred while reading content of file
      */
-    static Model readPom(InputStream stream) throws IOException {
+    public static Model readPom(InputStream stream) throws IOException {
         try {
             return pomReader.read(stream, true);
         } catch (XmlPullParserException e) {
@@ -90,7 +89,7 @@ class Utils {
      * @throws java.io.IOException
      *         error occurred while writing content of file
      */
-    static void writePom(Model pom, Path path) throws IOException {
+    public static void writePom(Model pom, Path path) throws IOException {
         pomWriter.write(Files.newOutputStream(path), pom);
     }
 
@@ -104,7 +103,7 @@ class Utils {
      * @throws java.io.IOException
      *         error occurred while reading or writing content of file
      */
-    static void addDependencyToPom(Path path, Model pom) throws IOException {
+    public static void addDependencyToPom(Path path, Model pom) throws IOException {
         addDependencyToPom(path, pom.getGroupId(), pom.getArtifactId(), pom.getVersion());
     }
 
@@ -122,7 +121,7 @@ class Utils {
      * @throws java.io.IOException
      *         error occurred while reading or writing content of file
      */
-    static void addDependencyToPom(Path path, String groupId, String artifactId, String version) throws IOException {
+    public static void addDependencyToPom(Path path, String groupId, String artifactId, String version) throws IOException {
         Dependency dep = new Dependency();
         dep.setGroupId(groupId);
         dep.setArtifactId(artifactId);
@@ -147,7 +146,7 @@ class Utils {
      * @throws IllegalArgumentException
      *         if pom.xml not found
      */
-    static Path findFile(String pattern, Path folder) throws IOException {
+    public static Path findFile(String pattern, Path folder) throws IOException {
         Finder finder = new Finder(pattern);
         Files.walkFileTree(folder, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, finder);
         if (finder.getFirstMatchedFile() == null) {
@@ -157,7 +156,7 @@ class Utils {
     }
 
     /** Returns URL to get Tomcat binary distribution. */
-    static URL getTomcatBinaryDistribution() throws IOException {
+    public static URL getTomcatBinaryDistribution() throws IOException {
         URL tomcatDistributionUrl = Thread.currentThread().getContextClassLoader().getResource("tomcat.zip");
         if (tomcatDistributionUrl == null) {
             throw new IOException("Unable to get Tomcat binary distribution.");
@@ -166,7 +165,7 @@ class Utils {
     }
 
     /** Returns URL to get Codenvy Platform binary distribution. */
-    static URL getCodenvyPlatformBinaryDistribution() throws IOException {
+    public static URL getCodenvyPlatformBinaryDistribution() throws IOException {
         URL codenvyPlatformDistributionUrl =
                 Thread.currentThread().getContextClassLoader().getResource("CodenvyPlatform.zip");
         if (codenvyPlatformDistributionUrl == null) {
@@ -175,7 +174,7 @@ class Utils {
         return codenvyPlatformDistributionUrl;
     }
 
-    static String getMavenExecCommand() {
+    public static String getMavenExecCommand() {
         final File mvnHome = getMavenHome();
         if (mvnHome != null) {
             final String mvn = "bin" + File.separatorChar + "mvn";
@@ -185,7 +184,7 @@ class Utils {
         }
     }
 
-    static File getMavenHome() {
+    public static File getMavenHome() {
         final String m2HomeEnv = System.getenv("M2_HOME");
         if (m2HomeEnv == null) {
             return null;

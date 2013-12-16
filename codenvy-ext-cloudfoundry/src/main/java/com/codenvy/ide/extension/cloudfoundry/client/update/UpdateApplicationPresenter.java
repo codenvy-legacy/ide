@@ -101,14 +101,14 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler {
         final String projectId = resourceProvider.getActiveProject().getId();
 
         try {
-            service.updateApplication(resourceProvider.getVfsId(), projectId, null, null, warUrl,
+            service.updateApplication(resourceProvider.getVfsInfo().getId(), projectId, null, null, warUrl,
                                       new CloudFoundryAsyncRequestCallback<String>(null, loggedInHandler, null, eventBus, console, constant,
                                                                                    loginPresenter, paasProvider) {
                                           @Override
                                           protected void onSuccess(String result) {
                                               CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
                                               try {
-                                                  service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
+                                                  service.getApplicationInfo(resourceProvider.getVfsInfo().getId(), projectId, null, null,
                                                                              new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
                                                                                      unmarshaller, null, null, eventBus, console, constant,
                                                                                      loginPresenter, paasProvider) {
@@ -153,7 +153,7 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler {
         final String projectId = resourceProvider.getActiveProject().getId();
 
         try {
-            service.validateAction("update", null, null, null, null, resourceProvider.getVfsId(), projectId, paasProvider, 0, 0, false,
+            service.validateAction("update", null, null, null, null, resourceProvider.getVfsInfo().getId(), projectId, paasProvider, 0, 0, false,
                                    new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null, eventBus, console, constant,
                                                                                 loginPresenter, paasProvider) {
                                        @Override

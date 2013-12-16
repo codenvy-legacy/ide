@@ -19,7 +19,12 @@ package com.codenvy.ide.api.resources;
 
 import com.codenvy.ide.api.extension.SDK;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.resources.model.*;
+import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.resources.model.ProjectNature;
+import com.codenvy.ide.resources.model.Property;
+import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.resources.model.VirtualFileSystemInfo;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 
@@ -46,6 +51,13 @@ public interface ResourceProvider {
      * @return active project or null if none.
      */
     public Project getActiveProject();
+    
+    /**
+     * Sets the active project.
+     * 
+     * @param project active project
+     */
+    public void setActiveProject(Project project);
 
     /**
      * Reads already stored project. Model Provider will be invoked to deserialized Project Model corresponding to
@@ -71,7 +83,7 @@ public interface ResourceProvider {
      *
      * @param callback
      */
-    public void listProjects(AsyncCallback<Array<String>> callback);
+    public void listProjects(AsyncCallback<String> callback);
 
     /**
      * Reads already stored projects and shows them in project explorer.
@@ -135,11 +147,11 @@ public interface ResourceProvider {
     public FileType getFileType(File file);
 
     /**
-     * Returns vfs id.
-     *
+     * Return virtual file system information.
+     * 
      * @return
      */
-    public String getVfsId();
+    public VirtualFileSystemInfo getVfsInfo();
 
     /**
      * Returns root folder's id.

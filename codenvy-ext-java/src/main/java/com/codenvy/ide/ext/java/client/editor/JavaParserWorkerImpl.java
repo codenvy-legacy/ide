@@ -20,6 +20,9 @@ package com.codenvy.ide.ext.java.client.editor;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.DefaultProblem;
 import com.codenvy.ide.ext.java.messages.CAProposalsComputedMessage;
@@ -29,9 +32,8 @@ import com.codenvy.ide.ext.java.messages.ProposalAppliedMessage;
 import com.codenvy.ide.ext.java.messages.RoutingTypes;
 import com.codenvy.ide.ext.java.messages.WorkerProposal;
 import com.codenvy.ide.ext.java.messages.impl.MessagesImpls;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringMap;
+import com.codenvy.ide.ext.java.messages.impl.OutlineUpdateMessage;
+import com.codenvy.ide.ext.java.messages.impl.WorkerCodeBlock;
 import com.codenvy.ide.util.UUID;
 import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.util.loging.Log;
@@ -51,11 +53,12 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHandler, MessageFilter.MessageRecipient<ProblemsMessage> {
 
-    private final MessageFilter                    messageFilter;
-    private       Worker                           worker;
-    private       ResourceProvider                 resourceProvider;
+    private final MessageFilter                messageFilter;
+    private       Worker                       worker;
+    private       ResourceProvider             resourceProvider;
     private       StringMap<WorkerCallback<?>> callbacks;
-    private       StringMap<ApplyCallback> applyCallback = Collections.createStringMap();
+    private StringMap<ApplyCallback>                       applyCallback    = Collections.createStringMap();
+    private StringMap<WorkerCallback<WorkerCodeBlock>> outlineCallbacks = Collections.createStringMap();
 
     @Inject
     public JavaParserWorkerImpl(ResourceProvider resourceProvider, EventBus eventBus) {
@@ -80,10 +83,25 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
                     }
                 });
 
+        messageFilter
+                .registerMessageRecipient(RoutingTypes.OUTLINE_CODE_BLOCKS, new MessageFilter.MessageRecipient<OutlineUpdateMessage>() {
+                    @Override
+                    public void onMessageReceived(OutlineUpdateMessage message) {
+                        handleUpdateOutline(message);
+                    }
+                });
+
+    }
+
+    private void handleUpdateOutline(OutlineUpdateMessage message) {
+        if (outlineCallbacks.containsKey(message.getFileId())) {
+            WorkerCallback<WorkerCodeBlock> callback = outlineCallbacks.get(message.getFileId());
+            callback.onResult(message.getBlocks());
+        }
     }
 
     private void handleProposalApplied(ProposalAppliedMessage message) {
-        if(applyCallback.containsKey(message.id())){
+        if (applyCallback.containsKey(message.id())) {
             ApplyCallback callback = applyCallback.remove(message.id());
             callback.onApply(message);
         }
@@ -101,7 +119,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
 
     /** {@inheritDoc} */
     @Override
-    public void parse(String content, String fileName, String packageName, WorkerCallback<IProblem> callback) {
+    public void parse(String content, String fileName, String fileId, String packageName, WorkerCallback<IProblem> callback) {
         if (worker == null) {
             return;
         }
@@ -109,7 +127,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         MessagesImpls.ParseMessageImpl parseMessage = MessagesImpls.ParseMessageImpl.make();
         String uuid = UUID.uuid();
         callbacks.put(uuid, callback);
-        parseMessage.setSource(content).setFileName(fileName).setId(uuid).setPackageName(packageName);
+        parseMessage.setSource(content).setFileName(fileName).setFileId(fileId).setId(uuid).setPackageName(packageName);
         worker.postMessage(parseMessage.serialize());
     }
 
@@ -137,6 +155,11 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         message.setId(id);
         applyCallback.put(id, callback);
         worker.postMessage(message.serialize());
+    }
+
+    @Override
+    public void addOutlineUpdateHandler(String fileId, WorkerCallback<WorkerCodeBlock> callback) {
+        outlineCallbacks.put(fileId, callback);
     }
 
     /**
@@ -168,7 +191,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         MessagesImpls.ConfigMessageImpl config = MessagesImpls.ConfigMessageImpl.make();
         config.setProjectId(event.getProject().getId());
         config.setRestContext("/ide/rest");
-        config.setVfsId(resourceProvider.getVfsId());
+        config.setVfsId(resourceProvider.getVfsInfo().getId());
         config.setWsName("/" + Utils.getWorkspaceName());
         config.setProjectName(event.getProject().getName());
         config.setJavaDocContext(//TODO configure doc context

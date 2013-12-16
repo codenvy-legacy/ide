@@ -153,7 +153,7 @@ public class EditConfigurationPresenter implements EditConfigurationView.ActionD
         ConfigurationListUnmarshaller unmarshaller = new ConfigurationListUnmarshaller();
 
         try {
-            service.getEnvironmentConfigurations(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(),
+            service.getEnvironmentConfigurations(resourceProvider.getVfsInfo().getId(), resourceProvider.getActiveProject().getId(),
                                                  configurationRequest, new AsyncRequestCallback<JsonArray<Configuration>>(unmarshaller) {
                 @Override
                 protected void onSuccess(JsonArray<Configuration> result) {

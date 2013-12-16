@@ -114,7 +114,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      */
     private void cloneRepository(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
         try {
-            service.cloneRepositoryWS(resourceProvider.getVfsId(), project, remoteUri, remoteName,
+            service.cloneRepositoryWS(resourceProvider.getVfsInfo().getId(), project, remoteUri, remoteName,
                                       new RequestCallback<String>(new com.codenvy.ide.ext.git.client.marshaller.StringUnmarshaller()) {
                                           @Override
                                           protected void onSuccess(String result) {
@@ -147,7 +147,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      */
     private void cloneRepositoryREST(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
         try {
-            service.cloneRepository(resourceProvider.getVfsId(), project, remoteUri, remoteName,
+            service.cloneRepository(resourceProvider.getVfsInfo().getId(), project, remoteUri, remoteName,
                                     new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                         @Override
                                         protected void onSuccess(String result) {

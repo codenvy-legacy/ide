@@ -30,11 +30,11 @@
     <inherits name="elemental.Elemental"/>
     <inherits name="com.codenvy.ide.Commons"/>
     <inherits name="com.codenvy.ide.Api"/>
+    <inherits name="com.codenvy.api.PlatformAPI"/>
     <inherits name="com.google.gwt.json.JSON"/>
     <inherits name="com.google.gwt.inject.Inject"/>
 
     <source path="" excludes="dto"/>
     <source path="" excludes="server"/>
     <source path="" excludes="everrest"/>
-    <source path="client"/>
 </module>

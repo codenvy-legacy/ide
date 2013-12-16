@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.java.client.core.quickfix;
 
-import com.codenvy.ide.ext.java.client.editor.AstProvider;
 import com.codenvy.ide.ext.java.client.editor.JavaCorrectionProcessor;
 import com.codenvy.ide.ext.java.jdt.codeassistant.api.CompletionProposal;
 import com.codenvy.ide.ext.java.jdt.codeassistant.api.IProblemLocation;
@@ -39,7 +38,6 @@ import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
 
 import org.junit.Assert;
-import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,9 +50,6 @@ import java.util.List;
  */
 @GwtModule("com.codenvy.ide.ext.java.Java")
 public abstract class QuickFixTest extends GwtTestWithMockito {
-
-    @Mock
-    protected AstProvider astProvider;
 
 
     public static AssistContext getCorrectionContext(Document document, int offset, int length, String name) {

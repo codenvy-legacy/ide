@@ -39,6 +39,7 @@ import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.ext.java.shared.BuildStatusBean;
+import com.codenvy.ide.ext.java.shared.JavaType;
 import com.codenvy.ide.ext.java.shared.TypeInfo;
 import com.codenvy.ide.ext.java.shared.TypesList;
 
@@ -149,12 +150,13 @@ public class RestCodeAssistantJava {
                    VirtualFileSystemException {
         if (projectId == null)
             throw new InvalidArgumentException("'projectid' parameter is null.");
-
+        TypesList typesList = DtoFactory.getInstance().createDto(TypesList.class);
         if ("className".equalsIgnoreCase(where)) {
-            return null;//new TypesListBean(codeAssistant.getTypesByNamePrefix(prefix, projectId, vfsId));
+            typesList.setTypes(codeAssistant.getTypesByNamePrefix(prefix, projectId, vfsId));
+            return typesList;
         }
-
-        return null;//new TypesListBean(codeAssistant.getTypesByFqnPrefix(prefix, projectId, vfsId));
+        typesList.setTypes(codeAssistant.getTypesByFqnPrefix(prefix, projectId, vfsId));
+        return typesList;
 
     }
 
@@ -177,7 +179,9 @@ public class RestCodeAssistantJava {
                                                                                                                      VirtualFileSystemException {
         if (projectId == null)
             throw new InvalidArgumentException("'projectid' parameter is null.");
-        return null;//new TypesListBean(codeAssistant.getByType(JavaType.valueOf(type.toUpperCase()), prefix, projectId, vfsId));
+        TypesList typesList = DtoFactory.getInstance().createDto(TypesList.class);
+        typesList.setTypes(codeAssistant.getByType(JavaType.valueOf(type.toUpperCase()), prefix, projectId, vfsId));
+        return typesList;
     }
 
     @GET
@@ -224,7 +228,9 @@ public class RestCodeAssistantJava {
             throws CodeAssistantException, VirtualFileSystemException {
         if (projectId == null)
             throw new InvalidArgumentException("'projectid' parameter is null.");
-        return null; //new TypesListBean(codeAssistant.getClassesFromProject(fileId, projectId, vfsId));
+        TypesList typesList = DtoFactory.getInstance().createDto(TypesList.class);
+        typesList.setTypes(codeAssistant.getClassesFromProject(fileId, projectId, vfsId));
+        return typesList;
     }
 
     /**
@@ -363,7 +369,7 @@ public class RestCodeAssistantJava {
             if (dependencies == null || dependencies.isEmpty() || downloadLink == null)
                 return Collections.emptyList();
 
-            String statusUrl = storageClient.updateDockIndex(jsonDependencies, downloadLink.getHref());
+            String statusUrl = storageClient.updateTypeIndex(jsonDependencies, downloadLink.getHref());
             try {
                 waitStorageTaskFinish(statusUrl);
             } catch (Exception e)// Ignore exception in case add javadoc

@@ -239,7 +239,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         Project project = resourceProvider.getActiveProject();
 
         try {
-            service.validateAction("create", app.server, app.name, app.type, app.url, resourceProvider.getVfsId(), project.getId(),
+            service.validateAction("create", app.server, app.name, app.type, app.url, resourceProvider.getVfsInfo().getId(), project.getId(),
                                    paasProvider, app.instances, app.memory, app.nostart,
                                    new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null, app.server, eventBus, console,
                                                                                 constant, loginPresenter, paasProvider) {
@@ -286,7 +286,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
         try {
             service.createWS(appData.server, appData.name, appData.type, appData.url, appData.instances, appData.memory, appData.nostart,
-                             resourceProvider.getVfsId(), project.getId(), warUrl, paasProvider,
+                             resourceProvider.getVfsInfo().getId(), project.getId(), warUrl, paasProvider,
                              new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
                                                                                              appData.server, eventBus, console, constant,
                                                                                              loginPresenter, paasProvider) {
@@ -332,7 +332,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
         try {
             service.create(appData.server, appData.name, appData.type, appData.url, appData.instances, appData.memory, appData.nostart,
-                           resourceProvider.getVfsId(), project.getId(), warUrl, paasProvider,
+                           resourceProvider.getVfsInfo().getId(), project.getId(), warUrl, paasProvider,
                            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
                                                                                          appData.server, eventBus, console, constant,
                                                                                          loginPresenter, paasProvider) {

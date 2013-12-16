@@ -29,12 +29,15 @@ import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.commons.FileUtils;
 import com.codenvy.ide.commons.GwtXmlUtils;
 import com.codenvy.ide.commons.ZipUtils;
+import com.google.common.io.CharStreams;
 
 import org.apache.maven.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

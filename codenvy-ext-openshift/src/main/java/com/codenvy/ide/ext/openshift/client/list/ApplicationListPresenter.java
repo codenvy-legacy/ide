@@ -176,7 +176,7 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
         };
 
         final String projectId = resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
 
         if (projectId != null && !Window.confirm(constant.deleteApplicationPrompt(application.getName()))) {
             return;

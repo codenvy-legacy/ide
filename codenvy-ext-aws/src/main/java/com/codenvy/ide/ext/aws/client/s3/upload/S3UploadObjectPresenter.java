@@ -190,7 +190,7 @@ public class S3UploadObjectPresenter implements S3UploadObjectView.ActionDelegat
     /** {@inheritDoc} */
     @Override
     public void onUploadButtonClicked() {
-        view.getUploadForm().setAction(restContext + "/" + resourceProvider.getVfsId() + "/aws/s3/objects/upload/" + s3Bucket);
+        view.getUploadForm().setAction(restContext + "/" + resourceProvider.getVfsInfo().getId() + "/aws/s3/objects/upload/" + s3Bucket);
 
         view.setMimeTypeHiddenField(view.getMimeType());
         view.setNameHiddenField(fileName);

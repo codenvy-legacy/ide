@@ -128,7 +128,7 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
         boolean update = view.isUpdated();
 
         try {
-            service.addWS(resourceProvider.getVfsId(), project, update, getFilePatterns(), new RequestCallback<String>() {
+            service.addWS(resourceProvider.getVfsInfo().getId(), project, update, getFilePatterns(), new RequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
@@ -159,7 +159,7 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
     /** Perform adding to index (sends request over HTTP). */
     private void doAddREST(boolean update) {
         try {
-            service.add(resourceProvider.getVfsId(), project, update, getFilePatterns(), new AsyncRequestCallback<String>() {
+            service.add(resourceProvider.getVfsInfo().getId(), project, update, getFilePatterns(), new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {

@@ -282,8 +282,8 @@ public class MavenBuilder extends Builder {
                                 scope = segments[5];
                             }
                             final Dependency dep = DtoFactory.getInstance().createDto(MavenDependency.class)
-                                                             .withGroupId(groupId)
-                                                             .withArtifactId(artifactId)
+                                                             .withGroupID(groupId)
+                                                             .withArtifactID(artifactId)
                                                              .withType(type)
                                                              .withVersion(version)
                                                              .withClassifier(classifier)

@@ -98,14 +98,13 @@
             <artifactId>codenvy-ide-core</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <!-- Server-side VFS -->
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-vfs</artifactId>
-            <scope>runtime</scope>
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
+
+        <!-- Server-side VFS -->
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-websocket</artifactId>

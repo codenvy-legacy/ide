@@ -19,11 +19,20 @@ package com.codenvy.ide.core.inject;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.actions.ActionManagerImpl;
-import com.codenvy.ide.api.editor.*;
+import com.codenvy.ide.api.editor.CodenvyTextEditor;
+import com.codenvy.ide.api.editor.DocumentProvider;
+import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.editor.EditorProvider;
+import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.paas.PaaSAgent;
-import com.codenvy.ide.api.parts.*;
+import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.parts.OutlinePart;
+import com.codenvy.ide.api.parts.PartStackUIResources;
+import com.codenvy.ide.api.parts.ProjectExplorerPart;
+import com.codenvy.ide.api.parts.SearchPart;
+import com.codenvy.ide.api.parts.WelcomePart;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ModelProvider;
@@ -37,6 +46,7 @@ import com.codenvy.ide.api.ui.wizard.DefaultWizard;
 import com.codenvy.ide.api.ui.wizard.DefaultWizardFactory;
 import com.codenvy.ide.api.ui.wizard.WizardDialog;
 import com.codenvy.ide.api.ui.wizard.WizardDialogFactory;
+import com.codenvy.ide.api.ui.wizard.newresource.NewResource;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.api.ui.workspace.EditorPartStack;
 import com.codenvy.ide.api.ui.workspace.PartStack;
@@ -64,8 +74,12 @@ import com.codenvy.ide.openproject.OpenProjectViewImpl;
 import com.codenvy.ide.outline.OutlinePartPresenter;
 import com.codenvy.ide.outline.OutlinePartView;
 import com.codenvy.ide.outline.OutlinePartViewImpl;
-import com.codenvy.ide.part.*;
+import com.codenvy.ide.part.EditorPartStackPresenter;
+import com.codenvy.ide.part.EditorPartStackView;
+import com.codenvy.ide.part.FocusManager;
+import com.codenvy.ide.part.PartStackPresenter;
 import com.codenvy.ide.part.PartStackPresenter.PartStackEventHandler;
+import com.codenvy.ide.part.PartStackViewImpl;
 import com.codenvy.ide.part.console.ConsolePartPresenter;
 import com.codenvy.ide.part.console.ConsolePartView;
 import com.codenvy.ide.part.console.ConsolePartViewImpl;
@@ -76,6 +90,8 @@ import com.codenvy.ide.preferences.PreferencesAgentImpl;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
 import com.codenvy.ide.preferences.PreferencesView;
 import com.codenvy.ide.preferences.PreferencesViewImpl;
+import com.codenvy.ide.projecttype.SelectProjectTypeView;
+import com.codenvy.ide.projecttype.SelectProjectTypeViewImpl;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.resources.model.GenericModelProvider;
@@ -111,11 +127,14 @@ import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageView;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageViewImpl;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePageView;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePageViewImpl;
-import com.codenvy.ide.api.ui.wizard.newresource.NewResource;
 import com.codenvy.ide.wizard.newresource.NewResourceWizardProvider;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePageView;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePageViewImpl;
-import com.codenvy.ide.workspace.*;
+import com.codenvy.ide.workspace.PartStackPresenterFactory;
+import com.codenvy.ide.workspace.PartStackViewFactory;
+import com.codenvy.ide.workspace.WorkspacePresenter;
+import com.codenvy.ide.workspace.WorkspaceView;
+import com.codenvy.ide.workspace.WorkspaceViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.gwt.user.client.Window;
@@ -177,7 +196,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(SearchPart.class).to(SearchPartPresenter.class).in(Singleton.class);
         bind(ProjectExplorerPart.class).to(ProjectExplorerPartPresenter.class).in(Singleton.class);
         bind(ActionManager.class).to(ActionManagerImpl.class).in(Singleton.class);
-
     }
 
     /** Configures binding for Editor API */
@@ -228,6 +246,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(OpenProjectView.class).to(OpenProjectViewImpl.class);
         bind(PreferencesView.class).to(PreferencesViewImpl.class).in(Singleton.class);
         bind(WelcomePartView.class).to(WelcomePartViewImpl.class).in(Singleton.class);
+        bind(SelectProjectTypeView.class).to(SelectProjectTypeViewImpl.class).in(Singleton.class);
 
         bind(ExtensionManagerView.class).to(ExtensionManagerViewImpl.class).in(Singleton.class);
     }

@@ -143,7 +143,7 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
         CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
 
         try {
-            service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
+            service.getApplicationInfo(resourceProvider.getVfsInfo().getId(), projectId, null, null,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, null, null, eventBus,
                                                                                                      console, constant, loginPresenter,
                                                                                                      paasProvider) {
@@ -182,7 +182,7 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
         String projectId = resourceProvider.getActiveProject().getId();
 
         try {
-            service.mapUrl(resourceProvider.getVfsId(), projectId, null, null, url,
+            service.mapUrl(resourceProvider.getVfsInfo().getId(), projectId, null, null, url,
                            new CloudFoundryAsyncRequestCallback<String>(null, mapUrlLoggedInHandler, null, eventBus, console, constant,
                                                                         loginPresenter, paasProvider) {
                                @Override
@@ -234,7 +234,7 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
     private void unregisterUrl(final String url) {
         String projectId = resourceProvider.getActiveProject().getId();
         try {
-            service.unmapUrl(resourceProvider.getVfsId(), projectId, null, null, url,
+            service.unmapUrl(resourceProvider.getVfsInfo().getId(), projectId, null, null, url,
                              new CloudFoundryAsyncRequestCallback<Object>(null, unregisterUrlLoggedInHandler, null, eventBus, console,
                                                                           constant, loginPresenter, paasProvider) {
                                  @Override

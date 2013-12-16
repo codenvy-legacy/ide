@@ -238,7 +238,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         Project project = resourceProvider.getActiveProject();
 
         try {
-            service.validateAction("create", app.server, app.name, app.type, app.url, resourceProvider.getVfsId(), project.getId(),
+            service.validateAction("create", app.server, app.name, app.type, app.url, resourceProvider.getVfsInfo().getId(), project.getId(),
                                    app.instances, app.memory, app.nostart,
                                    new AppfogAsyncRequestCallback<String>(null, validateHandler, null, app.server, eventBus, constant,
                                                                           loginPresenter, notificationManager) {
@@ -288,7 +288,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
         try {
             service.createWS(appData.server, appData.name, appData.type, appData.url, appData.instances, appData.memory, appData.nostart,
-                             resourceProvider.getVfsId(), project.getId(), warUrl, appData.infra,
+                             resourceProvider.getVfsInfo().getId(), project.getId(), warUrl, appData.infra,
                              new AppfogRESTfulRequestCallback<AppfogApplication>(unmarshaller, loggedInHandler, null, appData.server,
                                                                                  eventBus, constant, loginPresenter, notificationManager) {
                                  @Override
@@ -335,7 +335,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
         try {
             service.create(appData.server, appData.name, appData.type, appData.url, appData.instances, appData.memory, appData.nostart,
-                           resourceProvider.getVfsId(), project.getId(), warUrl, appData.infra,
+                           resourceProvider.getVfsInfo().getId(), project.getId(), warUrl, appData.infra,
                            new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, loggedInHandler, null, appData.server, eventBus,
                                                                              constant, loginPresenter, notificationManager) {
                                @Override

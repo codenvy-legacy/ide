@@ -194,7 +194,7 @@ public class CreateDomainPresenter implements CreateDomainView.ActionDelegate {
         final String projectId = resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
 
         try {
-            service.destroyAllApplications(true, resourceProvider.getVfsId(), projectId,
+            service.destroyAllApplications(true, resourceProvider.getVfsInfo().getId(), projectId,
                                            new OpenShiftAsyncRequestCallback<Void>(null, loggedInHandler, null, eventBus, loginPresenter,
                                                                                    notificationManager) {
                                                @Override

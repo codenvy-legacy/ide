@@ -160,7 +160,7 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
     protected void getLogs() {
         try {
             StringUnmarshaller unmarshaller = new StringUnmarshaller();
-            service.getLogs(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(),
+            service.getLogs(resourceProvider.getVfsInfo().getId(), resourceProvider.getActiveProject().getId(),
                             new AsyncRequestCallback<String>(unmarshaller) {
                                 @Override
                                 protected void onSuccess(String result) {
@@ -267,7 +267,7 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
         };
 
         try {
-            service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
+            service.getApplicationInfo(resourceProvider.getVfsInfo().getId(), project.getId(), null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, loggedInHandler, null, eventBus,
                                                                                          constant, loginPresenter, notificationManager) {
                                            @Override

@@ -18,8 +18,9 @@
 package com.codenvy.ide.ext.java.messages;
 
 /**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * Messages marks by this class types
+ *
+ * @author Evgen Vidolob
  */
 public class RoutingTypes {
     public static final int CONFIG                = 1;
@@ -29,5 +30,6 @@ public class RoutingTypes {
     public static final int CA_PROPOSALS_COMPUTED = 5;
     public static final int APPLY_CA_PROPOSAL     = 6;
     public static final int CA_PROPOSAL_APPLIED   = 7;
+    public static final int OUTLINE_CODE_BLOCKS   = 8;
 
 }

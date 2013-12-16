@@ -98,7 +98,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
         final String projectId = project.getId();
 
         try {
-            service.remoteList(resourceProvider.getVfsId(), projectId, null, true,
+            service.remoteList(resourceProvider.getVfsInfo().getId(), projectId, null, true,
                                new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                    @Override
                                    protected void onSuccess(String result) {
@@ -135,7 +135,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
      */
     private void getBranches(@NotNull String projectId, @NotNull final String remoteMode) {
         try {
-            service.branchList(resourceProvider.getVfsId(), projectId, remoteMode,
+            service.branchList(resourceProvider.getVfsInfo().getId(), projectId, remoteMode,
                                new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                    @Override
                                    protected void onSuccess(String result) {
@@ -226,7 +226,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
         final String repository = view.getRepository();
 
         try {
-            service.pushWS(resourceProvider.getVfsId(), project, getRefs(), repository, false, new RequestCallback<String>() {
+            service.pushWS(resourceProvider.getVfsInfo().getId(), project, getRefs(), repository, false, new RequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     Notification notification = new Notification(constant.pushSuccess(repository), INFO);
@@ -251,7 +251,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
     /** Push changes to remote repository (sends request over HTTP). */
     private void doPushREST(@NotNull final String repository) {
         try {
-            service.push(resourceProvider.getVfsId(), project, getRefs(), repository, false, new AsyncRequestCallback<String>() {
+            service.push(resourceProvider.getVfsInfo().getId(), project, getRefs(), repository, false, new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     Notification notification = new Notification(constant.pushSuccess(repository), INFO);

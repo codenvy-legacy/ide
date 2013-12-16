@@ -70,7 +70,7 @@ public class ShowProjectGitReadOnlyUrlPresenter implements ShowProjectGitReadOnl
         String projectId = resourceProvider.getActiveProject().getId();
 
         try {
-            service.getGitReadOnlyUrl(resourceProvider.getVfsId(), projectId, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+            service.getGitReadOnlyUrl(resourceProvider.getVfsInfo().getId(), projectId, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
                 protected void onSuccess(String result) {
                     view.setUrl(result);

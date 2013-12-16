@@ -68,7 +68,7 @@ public class CreateAntProjectClientServiceImpl implements CreateAntProjectClient
             throws RequestException {
         String requestUrl = restContext + CREATE_SPRING_PROJECT;
 
-        String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName;
+        String param = "?vfsid=" + resourceProvider.getVfsInfo().getId() + "&name=" + projectName;
         String url = requestUrl + param;
 
         loader.setMessage("Creating new project...");
@@ -83,7 +83,7 @@ public class CreateAntProjectClientServiceImpl implements CreateAntProjectClient
     public void createJavaProject(String projectName, Array<Property> properties, AsyncRequestCallback<Void> callback)
             throws RequestException {
         String requestUrl = restContext + CREATE_JAVA_PROJECT;
-        String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName;
+        String param = "?vfsid=" + resourceProvider.getVfsInfo().getId() + "&name=" + projectName;
         String url = requestUrl + param;
 
         loader.setMessage("Creating new project...");

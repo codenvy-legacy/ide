@@ -651,7 +651,7 @@ public class Project extends Folder {
                     };
 
             // get JSON for this Project
-            String url = vfsInfo.getUrlTemplates().get((Link.REL_ITEM)).getHref();
+            String url = vfsInfo.getUrlTemplates().get(Link.REL_ITEM).getHref();
             url = URL.decode(url).replace("[id]", id);
             AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(loader).send(internalCallback);
         } catch (RequestException e) {

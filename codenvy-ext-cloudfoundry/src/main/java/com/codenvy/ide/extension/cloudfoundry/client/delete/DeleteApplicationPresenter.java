@@ -131,7 +131,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
         CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
 
         try {
-            service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
+            service.getApplicationInfo(resourceProvider.getVfsInfo().getId(), projectId, null, null,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, appInfoLoggedInHandler,
                                                                                                      null, eventBus, console, constant,
                                                                                                      loginPresenter, paasProvider) {
@@ -183,7 +183,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
         }
 
         try {
-            service.deleteApplication(resourceProvider.getVfsId(), projectId, appName, serverName, paasProvider, isDeleteServices,
+            service.deleteApplication(resourceProvider.getVfsInfo().getId(), projectId, appName, serverName, paasProvider, isDeleteServices,
                                       new CloudFoundryAsyncRequestCallback<String>(null, deleteAppLoggedInHandler, null, eventBus,
                                                                                    console, constant, loginPresenter, paasProvider) {
                                           @Override

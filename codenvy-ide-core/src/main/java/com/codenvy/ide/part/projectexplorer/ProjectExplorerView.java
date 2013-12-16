@@ -60,6 +60,13 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
          *         node
          */
         void onResourceSelected(@NotNull Resource resource);
+        
+        /**
+         * Performs any actions in response to node expanded (opened) action.
+         * 
+         * @param resource
+         */
+        void onResourceOpened(@NotNull Resource resource);
 
         /**
          * Performs any actions in response to some node action.

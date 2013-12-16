@@ -120,7 +120,7 @@ public class MainTabPainPresenter implements Presenter, MainTabPainView.ActionDe
         ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
 
         try {
-            service.getApplicationInfo(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(),
+            service.getApplicationInfo(resourceProvider.getVfsInfo().getId(), resourceProvider.getActiveProject().getId(),
                                        new AwsAsyncRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null, loginPresenter) {
                                            @Override
                                            protected void processFail(Throwable exception) {
@@ -194,7 +194,7 @@ public class MainTabPainPresenter implements Presenter, MainTabPainView.ActionDe
         };
 
         try {
-            service.deleteApplication(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(),
+            service.deleteApplication(resourceProvider.getVfsInfo().getId(), resourceProvider.getActiveProject().getId(),
                                       new AwsAsyncRequestCallback<Object>(null, loggedInHandler, null, loginPresenter) {
                                           @Override
                                           protected void processFail(Throwable exception) {

@@ -77,7 +77,7 @@ public class CronTabPanePresenter implements Presenter, CronTabPaneView.ActionDe
     public void init(Project project) {
         this.project = project;
 
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
         CronListUnmarshaller unmarshaller = new CronListUnmarshaller();
 
         try {
@@ -97,7 +97,7 @@ public class CronTabPanePresenter implements Presenter, CronTabPaneView.ActionDe
     /** {@inheritDoc} */
     @Override
     public void onUpdateButtonClicked() {
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
 
         try {
             service.updateCron(vfsId, project.getId(),

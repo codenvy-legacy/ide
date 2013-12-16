@@ -32,5 +32,7 @@ public interface ParseMessage extends Message {
 
     String id();
 
+    String fileId();
+
     String packageName();
 }
