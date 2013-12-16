@@ -225,7 +225,7 @@ public class GitService {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.clone(request);
-            setGitRepositoryProp();
+            setGitRepositoryProp(projectId);
             determineProjectType();
             addToIndex();
             return DtoFactory.getInstance().createDto(RepoInfo.class).withRemoteUri(request.getRemoteUri());
@@ -238,7 +238,7 @@ public class GitService {
         }
     }
 
-    private void setGitRepositoryProp() throws VirtualFileSystemException {
+    private void setGitRepositoryProp(String projectId) throws VirtualFileSystemException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         Item project = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
         String value = null;
@@ -297,6 +297,8 @@ public class GitService {
                     propertiesList.add(projectTypeProperty);
                     propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("vfs:mimeType")
                                                  .withValue(new ArrayList<String>(Arrays.asList("text/vnd.ideproject+directory"))));
+                    propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("isGitRepository")
+                                       .withValue(new ArrayList<String>(Arrays.asList("true"))));
                     vfs.updateItem(folder.getId(), propertiesList, null);
                     break;
                 }
@@ -383,7 +385,7 @@ public class GitService {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.init(request);
-            setGitRepositoryProp();
+            setGitRepositoryProp(projectId);
         } finally {
             gitConnection.close();
         }
