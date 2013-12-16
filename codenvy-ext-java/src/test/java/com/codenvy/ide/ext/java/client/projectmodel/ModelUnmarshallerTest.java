@@ -137,7 +137,7 @@ public class ModelUnmarshallerTest extends BaseTest {
      * @throws UnmarshallerException
      */
     private List<Resource> parseProject() throws UnmarshallerException {
-        JavaModelUnmarshaller unmarshaller = new JavaModelUnmarshaller(project, project);
+        JavaModelUnmarshaller unmarshaller = new JavaModelUnmarshaller(project, project, null);
         unmarshaller.unmarshal(response);
         ArgumentCaptor<Resource> childrens = ArgumentCaptor.forClass(Resource.class);
         verify(project, times(7)).addChild(childrens.capture());
