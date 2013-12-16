@@ -257,6 +257,11 @@ public class GitService {
         }
     }
     
+    /**
+     * Try to determine project's type by it's structure.
+     * 
+     * @throws VirtualFileSystemException
+     */
     private void determineProjectType() throws VirtualFileSystemException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         ItemList files = vfs.getChildren(projectId, -1, 0, "file", false, PropertyFilter.NONE_FILTER);
@@ -281,13 +286,43 @@ public class GitService {
         }
     }
     
-    private void processMultiModuleMavenProject(VirtualFileSystem vfs, String parentProjectId) throws ItemNotFoundException,
+    /**
+     * @param vfs virtual file system
+     * @param projectId id of the multimodule project
+     * @throws ItemNotFoundException 
+     * @throws InvalidArgumentException
+     * @throws PermissionDeniedException
+     * @throws VirtualFileSystemException
+     */
+    private void processMultiModuleMavenProject(VirtualFileSystem vfs, String projectId) throws ItemNotFoundException,
                                                                                               InvalidArgumentException,
                                                                                               PermissionDeniedException,
                                                                                               VirtualFileSystemException {
         ItemList folders = vfs.getChildren(projectId, -1, 0, "folder", false, PropertyFilter.NONE_FILTER);
+        findPom(vfs, folders);
+    }
+    
+    /**
+     * Recursively find pom.xml in the project's structure. 
+     * 
+     * @param vfs virtual file system
+     * @param folders folders to look for pom.xml
+     * @throws ItemNotFoundException
+     * @throws InvalidArgumentException
+     * @throws PermissionDeniedException
+     * @throws VirtualFileSystemException
+     */
+    private void findPom(VirtualFileSystem vfs, ItemList folders) throws ItemNotFoundException,
+                                                                 InvalidArgumentException,
+                                                                 PermissionDeniedException,
+                                                                 VirtualFileSystemException {
+        if (folders.getItems().isEmpty()) {
+            return;
+        }
+
         for (Item folder : folders.getItems()) {
             ItemList files = vfs.getChildren(folder.getId(), -1, 0, "file", false, PropertyFilter.NONE_FILTER);
+            boolean found = false;
             for (Item file : files.getItems()) {
                 if ("pom.xml".equals(file.getName())) {
                     List<Property> propertiesList = new ArrayList<Property>();
@@ -298,14 +333,25 @@ public class GitService {
                     propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("vfs:mimeType")
                                                  .withValue(new ArrayList<String>(Arrays.asList("text/vnd.ideproject+directory"))));
                     propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("isGitRepository")
-                                       .withValue(new ArrayList<String>(Arrays.asList("true"))));
+                                                 .withValue(new ArrayList<String>(Arrays.asList("true"))));
                     vfs.updateItem(folder.getId(), propertiesList, null);
+                    found = true;
                     break;
                 }
+            }
+            if (!found) {
+                findPom(vfs, vfs.getChildren(folder.getId(), -1, 0, "folder", false, PropertyFilter.NONE_FILTER));
             }
         }
     }
     
+    /**
+     * Checks whether project is multimodule by analyzing packaging in pom.xml. 
+     * Must be <code><packaging>pom</packaging></code>.
+     * 
+     * @param pomContent content of the pom.xml file
+     * @return true if project is multimodule
+     */
     private boolean isMultiModule(ContentStream pomContent){
         Model pomModel;
         try {
