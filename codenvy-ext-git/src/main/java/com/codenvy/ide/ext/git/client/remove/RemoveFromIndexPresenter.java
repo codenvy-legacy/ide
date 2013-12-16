@@ -122,7 +122,7 @@ public class RemoveFromIndexPresenter implements RemoveFromIndexView.ActionDeleg
     @Override
     public void onRemoveClicked() {
         try {
-            service.remove(resourceProvider.getVfsId(), project.getId(), getFilePatterns(), view.isRemoved(),
+            service.remove(resourceProvider.getVfsInfo().getId(), project.getId(), getFilePatterns(), view.isRemoved(),
                            new AsyncRequestCallback<String>() {
                                @Override
                                protected void onSuccess(String result) {

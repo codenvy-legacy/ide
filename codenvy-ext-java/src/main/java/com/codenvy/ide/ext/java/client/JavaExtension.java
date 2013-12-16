@@ -221,7 +221,7 @@ public class JavaExtension {
         Array<Resource> children = project.getChildren();
         if (!children.isEmpty() && hasPomFile(children)) {
             String projectId = project.getId();
-            String vfsId = resourceProvider.getVfsId();
+            String vfsId = resourceProvider.getVfsInfo().getId();
             String url = restContext + '/' + Utils.getWorkspaceName() + "/code-assistant/java/update-dependencies?projectid=" + projectId +
                          "&vfsid=" + vfsId;
 

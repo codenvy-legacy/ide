@@ -100,7 +100,7 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler {
         final String projectId = resourceProvider.getActiveProject().getId();
 
         try {
-            service.updateApplication(resourceProvider.getVfsId(), projectId, null, null, warUrl,
+            service.updateApplication(resourceProvider.getVfsInfo().getId(), projectId, null, null, warUrl,
                                       new AppfogAsyncRequestCallback<String>(null, loggedInHandler, null, eventBus, constant,
                                                                              loginPresenter, notificationManager) {
                                           @Override
@@ -108,7 +108,7 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler {
                                               AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
                                               try {
-                                                  service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
+                                                  service.getApplicationInfo(resourceProvider.getVfsInfo().getId(), projectId, null, null,
                                                                              new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller,
                                                                                                                                null, null,
                                                                                                                                eventBus,
@@ -161,7 +161,7 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler {
         final String projectId = resourceProvider.getActiveProject().getId();
 
         try {
-            service.validateAction("update", null, null, null, null, resourceProvider.getVfsId(), projectId, 0, 0, false,
+            service.validateAction("update", null, null, null, null, resourceProvider.getVfsInfo().getId(), projectId, 0, 0, false,
                                    new AppfogAsyncRequestCallback<String>(null, validateHandler, null, eventBus, constant,
                                                                           loginPresenter, notificationManager) {
                                        @Override

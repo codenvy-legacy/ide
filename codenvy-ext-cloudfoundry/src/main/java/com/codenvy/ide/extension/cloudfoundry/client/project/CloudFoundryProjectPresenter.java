@@ -160,7 +160,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
     protected void getLogs() {
         try {
             StringUnmarshaller unmarshaller = new StringUnmarshaller();
-            service.getLogs(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(),
+            service.getLogs(resourceProvider.getVfsInfo().getId(), resourceProvider.getActiveProject().getId(),
                             new AsyncRequestCallback<String>(unmarshaller) {
                                 @Override
                                 protected void onSuccess(String result) {
@@ -202,7 +202,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
         };
 
         try {
-            service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
+            service.getApplicationInfo(resourceProvider.getVfsInfo().getId(), project.getId(), null, null,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
                                                                                                      eventBus, console, constant,
                                                                                                      loginPresenter, paasProvider) {

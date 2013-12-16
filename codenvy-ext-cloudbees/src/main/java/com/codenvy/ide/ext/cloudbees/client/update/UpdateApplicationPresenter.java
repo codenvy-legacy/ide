@@ -90,7 +90,7 @@ public class UpdateApplicationPresenter {
 
     /** Updates CloudBees application. */
     public void updateApp(String id, String title) {
-        this.project = resourceProvider.getActiveProject();
+        this.project = resourceProvider.getVfsInfo().getId()getActiveProject();
         appId = id;
         appTitle = title;
 
@@ -141,7 +141,7 @@ public class UpdateApplicationPresenter {
         };
 
         try {
-            service.updateApplication(appId, resourceProvider.getVfsId(), projectId, warUrl, updateMessage,
+            service.updateApplication(appId, resourceProvider.getVfsInfo().getId()getVfsId(), projectId, warUrl, updateMessage,
                                       new CloudBeesAsyncRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null, eventBus,
                                                                                          loginPresenter, notificationManager) {
                                           @Override
@@ -169,7 +169,7 @@ public class UpdateApplicationPresenter {
         };
 
         try {
-            service.getApplicationInfo(null, resourceProvider.getVfsId(), projectId,
+            service.getApplicationInfo(null, resourceProvider.getVfsInfo().getId()getVfsId(), projectId,
                                        new CloudBeesAsyncRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null, eventBus,
                                                                                           loginPresenter, notificationManager) {
                                            @Override

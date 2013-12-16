@@ -219,7 +219,7 @@ public class EnvironmentTabPainPresenter implements Presenter, EnvironmentTabPai
     public void getEnvironments() {
         EnvironmentsInfoListUnmarshaller unmarshaller = new EnvironmentsInfoListUnmarshaller();
         try {
-            service.getEnvironments(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(),
+            service.getEnvironments(resourceProvider.getVfsInfo().getId(), resourceProvider.getActiveProject().getId(),
                                     new AsyncRequestCallback<JsonArray<EnvironmentInfo>>(unmarshaller) {
                                         @Override
                                         protected void onSuccess(JsonArray<EnvironmentInfo> result) {

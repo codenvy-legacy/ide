@@ -102,7 +102,7 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
                 }
             };
 
-            service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
+            service.getApplicationInfo(resourceProvider.getVfsInfo().getId(), projectId, null, null,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
                                                                                                      eventBus, console, constant,
                                                                                                      loginPresenter, paasProvider) {

@@ -203,40 +203,18 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     }
 
     public void getFolder(final Folder folder, final AsyncCallback<Folder> callback) {
-        // create internal wrapping Request Callback with proper Unmarshaller
-        AsyncRequestCallback<Folder> internalCallback =
-                new AsyncRequestCallback<Folder>(new FolderUnmarshaller()) {
-                    @Override
-                    protected void onSuccess(Folder result) {
-                        result.setParent(folder.getParent());
-                        result.setProject(folder.getProject());
-                        activeProject.refreshTree(result, new AsyncCallback<Folder>() {
-                            @Override
-                            public void onSuccess(Folder folder) {
-                                eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(folder));
-                                callback.onSuccess(folder);
-                            }
+        activeProject.refreshTree(folder, new AsyncCallback<Folder>() {
+            @Override
+            public void onSuccess(Folder folder) {
+                eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(folder));
+                callback.onSuccess(folder);
+            }
 
-                            @Override
-                            public void onFailure(Throwable exception) {
-                                callback.onFailure(exception);
-                            }
-                        });
-
-                    }
-
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        callback.onFailure(exception);
-                    }
-                };
-
-        try {
-            String url = folder.getLinkByRelation(Link.REL_SELF).getHref();
-            AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(loader).send(internalCallback);
-        } catch (RequestException e) {
-            callback.onFailure(e);
-        }
+            @Override
+            public void onFailure(Throwable exception) {
+                callback.onFailure(exception);
+            }
+        });
     }
 
     /** {@inheritDoc} */
@@ -509,8 +487,8 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
 
     /** {@inheritDoc} */
     @Override
-    public String getVfsId() {
-        return vfsInfo.getId();
+    public VirtualFileSystemInfo getVfsInfo() {
+        return vfsInfo;
     }
 
     /** {@inheritDoc} */
@@ -629,5 +607,11 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 Log.error(ResourceProviderComponent.class, "Can not get list of projects", caught);
             }
         });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setActiveProject(Project project) {
+        this.activeProject = project;
     }
 }

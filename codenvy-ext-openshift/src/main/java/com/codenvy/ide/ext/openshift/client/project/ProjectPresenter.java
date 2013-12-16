@@ -95,7 +95,7 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
         };
 
         final String projectId = resourceProvider.getActiveProject().getId();
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
 
         ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
 
@@ -254,7 +254,7 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
         };
 
         final String projectId = resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
 
         try {
             service.destroyApplication(application.getName(), vfsId, projectId,

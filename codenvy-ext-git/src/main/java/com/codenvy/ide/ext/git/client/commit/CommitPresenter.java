@@ -103,7 +103,7 @@ public class CommitPresenter implements CommitView.ActionDelegate {
         boolean amend = view.isAmend();
 
         try {
-            service.commitWS(resourceProvider.getVfsId(), project, message, all, amend,
+            service.commitWS(resourceProvider.getVfsInfo().getId(), project, message, all, amend,
                              new RequestCallback<String>(new StringUnmarshaller()) {
                                  @Override
                                  protected void onSuccess(String result) {
@@ -131,7 +131,7 @@ public class CommitPresenter implements CommitView.ActionDelegate {
     private void doCommitREST(@NotNull Project project, @NotNull String message, boolean all, boolean amend) {
 
         try {
-            service.commit(resourceProvider.getVfsId(), project, message, all, amend,
+            service.commit(resourceProvider.getVfsInfo().getId(), project, message, all, amend,
                            new AsyncRequestCallback<String>(new com.codenvy.ide.rest.StringUnmarshaller()) {
                                @Override
                                protected void onSuccess(String result) {

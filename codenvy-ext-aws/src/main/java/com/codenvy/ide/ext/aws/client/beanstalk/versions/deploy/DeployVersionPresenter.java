@@ -157,7 +157,7 @@ public class DeployVersionPresenter implements DeployVersionView.ActionDelegate 
         EnvironmentsInfoListUnmarshaller unmarshaller = new EnvironmentsInfoListUnmarshaller();
 
         try {
-            service.getEnvironments(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(),
+            service.getEnvironments(resourceProvider.getVfsInfo().getId(), resourceProvider.getActiveProject().getId(),
                                     new AwsAsyncRequestCallback<JsonArray<EnvironmentInfo>>(unmarshaller, loggedInHandler, null,
                                                                                             loginPresenter) {
                                         @Override

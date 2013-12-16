@@ -82,7 +82,7 @@ public class ResetToCommitPresenter implements ResetToCommitView.ActionDelegate 
         projectId = resourceProvider.getActiveProject().getId();
 
         try {
-            service.log(resourceProvider.getVfsId(), projectId, false, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+            service.log(resourceProvider.getVfsInfo().getId(), projectId, false, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
                 protected void onSuccess(String result) {
                     selectedRevision = null;
@@ -117,7 +117,7 @@ public class ResetToCommitPresenter implements ResetToCommitView.ActionDelegate 
         type = (type == null && view.isMergeMode()) ? ResetRequest.ResetType.MERGE : type;
 
         try {
-            service.reset(resourceProvider.getVfsId(), projectId, selectedRevision.getId(), type, new AsyncRequestCallback<String>() {
+            service.reset(resourceProvider.getVfsInfo().getId(), projectId, selectedRevision.getId(), type, new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     resourceProvider.getActiveProject().refreshTree(new AsyncCallback<Project>() {

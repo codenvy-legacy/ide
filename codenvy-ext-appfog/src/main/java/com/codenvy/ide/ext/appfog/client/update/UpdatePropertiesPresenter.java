@@ -105,7 +105,7 @@ public class UpdatePropertiesPresenter {
         AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
         try {
-            service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
+            service.getApplicationInfo(resourceProvider.getVfsInfo().getId(), projectId, null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, getOldMemoryValueLoggedInHandler,
                                                                                          null, eventBus, constant,
                                                                                          loginPresenter, notificationManager) {
@@ -205,7 +205,7 @@ public class UpdatePropertiesPresenter {
         AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
         try {
-            service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
+            service.getApplicationInfo(resourceProvider.getVfsInfo().getId(), projectId, null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, getOldInstancesValueLoggedInHandler,
                                                                                          null, eventBus, constant, loginPresenter,
                                                                                          notificationManager) {
@@ -270,7 +270,7 @@ public class UpdatePropertiesPresenter {
 
         try {
             StringUnmarshaller unmarshaller = new StringUnmarshaller();
-            service.updateInstances(resourceProvider.getVfsId(), projectId, appName, server, encodedExp,
+            service.updateInstances(resourceProvider.getVfsInfo().getId(), projectId, appName, server, encodedExp,
                                     new AppfogAsyncRequestCallback<String>(unmarshaller, updateInstancesLoggedInHandler, null,
                                                                            eventBus, constant, loginPresenter, notificationManager) {
                                         @Override
@@ -278,7 +278,7 @@ public class UpdatePropertiesPresenter {
                                             AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
                                             try {
-                                                service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null,
+                                                service.getApplicationInfo(resourceProvider.getVfsInfo().getId(), projectId, null,
                                                                            AppFogExtension.DEFAULT_SERVER,
                                                                            new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller,
                                                                                                                              null,

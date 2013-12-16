@@ -81,7 +81,7 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
     public void init(Project project) {
         this.project = project;
 
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
         BackendsUnmarshaller unmarshaller = new BackendsUnmarshaller();
 
         try {
@@ -102,7 +102,7 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
     /** {@inheritDoc} */
     @Override
     public void onConfigureBackendClicked() {
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
         final Backend backend = view.getSelectedBackend();
 
         if (backend == null) {
@@ -129,7 +129,7 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
     /** {@inheritDoc} */
     @Override
     public void onDeleteBackendClicked() {
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
         final Backend backend = view.getSelectedBackend();
 
         if (backend == null) {
@@ -156,7 +156,7 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
     /** {@inheritDoc} */
     @Override
     public void onUpdateBackendClicked() {
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
         final Backend backend = view.getSelectedBackend();
 
         if (backend == null) {
@@ -183,7 +183,7 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
     /** {@inheritDoc} */
     @Override
     public void onRollBackBackendClicked() {
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
         final Backend backend = view.getSelectedBackend();
 
         if (backend == null) {
@@ -210,7 +210,7 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
     /** {@inheritDoc} */
     @Override
     public void onUpdateAllBackendsClicked() {
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
 
         try {
             service.updateAllBackends(vfsId, project.getId(),
@@ -231,7 +231,7 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
     /** {@inheritDoc} */
     @Override
     public void onRollBackAllBackendsClicked() {
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
 
         try {
             service.rollbackAllBackends(vfsId, project.getId(),
@@ -252,7 +252,7 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
     /** {@inheritDoc} */
     @Override
     public void onUpdateBackendState(String backendName, Backend.State backendState) {
-        final String vfsId = resourceProvider.getVfsId();
+        final String vfsId = resourceProvider.getVfsInfo().getId();
 
         try {
             service.setBackendState(vfsId, project.getId(), backendName, backendState.toString(),

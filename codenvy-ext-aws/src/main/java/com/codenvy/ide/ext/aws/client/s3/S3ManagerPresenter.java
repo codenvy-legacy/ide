@@ -194,7 +194,7 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onDownloadObjectClicked(final String bucketId, final String objectId) {
-        String url = restServiceContext + "/" + resourceProvider.getVfsId() + "/aws/s3/objects/" + bucketId + "?s3key=" + objectId;
+        String url = restServiceContext + "/" + resourceProvider.getVfsInfo().getId() + "/aws/s3/objects/" + bucketId + "?s3key=" + objectId;
         Window.open(url, "", "");
     }
 
@@ -221,7 +221,7 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
                 protected void onSuccess(NewS3Object result) {
                     onRefreshObjectsClicked(view.getSelectedBucketId());
                 }
-            }, view.getSelectedBucketId(), view.getSelectedObject().getS3Key(), resourceProvider.getVfsId(), activeProject.getId());
+            }, view.getSelectedBucketId(), view.getSelectedObject().getS3Key(), resourceProvider.getVfsInfo().getId(), activeProject.getId());
         } catch (RequestException e) {
             Notification notification = new Notification(e.getMessage(), ERROR);
             notificationManager.showNotification(notification);

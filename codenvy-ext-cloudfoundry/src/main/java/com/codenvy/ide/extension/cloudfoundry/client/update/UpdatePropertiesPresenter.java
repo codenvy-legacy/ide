@@ -104,7 +104,7 @@ public class UpdatePropertiesPresenter {
         CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
 
         try {
-            service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
+            service.getApplicationInfo(resourceProvider.getVfsInfo().getId(), projectId, null, null,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
                                                                                                      getOldMemoryValueLoggedInHandler, null,
                                                                                                      eventBus, console, constant,
@@ -157,7 +157,7 @@ public class UpdatePropertiesPresenter {
         final String projectId = resourceProvider.getActiveProject().getId();
 
         try {
-            service.updateMemory(resourceProvider.getVfsId(), projectId, null, null, memory,
+            service.updateMemory(resourceProvider.getVfsInfo().getId(), projectId, null, null, memory,
                                  new CloudFoundryAsyncRequestCallback<String>(null, updateMemoryLoggedInHandler, null, eventBus, console,
                                                                               constant, loginPresenter, paasProvider) {
                                      @Override
@@ -200,7 +200,7 @@ public class UpdatePropertiesPresenter {
         CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
 
         try {
-            service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
+            service.getApplicationInfo(resourceProvider.getVfsInfo().getId(), projectId, null, null,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
                                                                                                      getOldInstancesValueLoggedInHandler,
                                                                                                      null, eventBus, console, constant,
@@ -259,14 +259,14 @@ public class UpdatePropertiesPresenter {
         String encodedExp = URL.encodePathSegment(instancesExpression);
 
         try {
-            service.updateInstances(resourceProvider.getVfsId(), projectId, null, null, encodedExp,
+            service.updateInstances(resourceProvider.getVfsInfo().getId(), projectId, null, null, encodedExp,
                                     new CloudFoundryAsyncRequestCallback<String>(null, updateInstancesLoggedInHandler, null, eventBus,
                                                                                  console, constant, loginPresenter, paasProvider) {
                                         @Override
                                         protected void onSuccess(String result) {
                                             CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
                                             try {
-                                                service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
+                                                service.getApplicationInfo(resourceProvider.getVfsInfo().getId(), projectId, null, null,
                                                                            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
                                                                                    unmarshaller, null, null, eventBus, console, constant,
                                                                                    loginPresenter, paasProvider) {

@@ -91,7 +91,7 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
      */
     private void getRemotes() {
         try {
-            service.remoteList(resourceProvider.getVfsId(), projectId, null, true,
+            service.remoteList(resourceProvider.getVfsInfo().getId(), projectId, null, true,
                                new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                    @Override
                                    protected void onSuccess(String result) {
@@ -152,7 +152,7 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
         boolean needToDelete = Window.confirm(constant.deleteRemoteRepositoryQuestion(name));
         if (needToDelete) {
             try {
-                service.remoteDelete(resourceProvider.getVfsId(), projectId, name, new AsyncRequestCallback<String>() {
+                service.remoteDelete(resourceProvider.getVfsInfo().getId(), projectId, name, new AsyncRequestCallback<String>() {
                     @Override
                     protected void onSuccess(String result) {
                         getRemotes();
