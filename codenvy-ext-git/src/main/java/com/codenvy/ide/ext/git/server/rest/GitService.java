@@ -274,7 +274,7 @@ public class GitService {
                     propertiesList.add(projectTypeProperty);
                     propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("nature.primary").withValue(new ArrayList<String>(Arrays.asList("java"))));
                     propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("vfs:mimeType").withValue(new ArrayList<String>(Arrays.asList("text/vnd.ideproject+directory"))));
-                    propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("builder_name").withValue(new ArrayList<String>(Arrays.asList("maven"))));
+                    propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("builder.name").withValue(new ArrayList<String>(Arrays.asList("maven"))));
                     processMultiModuleMavenProject(vfs, projectId);
                 } else {
                     Property projectTypeProperty = DtoFactory.getInstance().createDto(Property.class).withName("vfs:projectType").withValue(new ArrayList<String>(Arrays.asList("undefined")));

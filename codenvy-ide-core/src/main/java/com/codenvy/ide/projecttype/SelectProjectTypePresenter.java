@@ -63,12 +63,12 @@ public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionD
         Array<Property> codenvyExtensionProperties = Collections.createArray();
         codenvyExtensionProperties.add(new Property("nature.mixin", Collections.createArray("CodenvyExtension")));
         codenvyExtensionProperties.add(new Property("exoide:projectDescription", Collections.createArray("Codenvy extension.")));
-        codenvyExtensionProperties.add(new Property("runner_name", Collections.createArray("sdk")));
+        codenvyExtensionProperties.add(new Property("runner.name", Collections.createArray("sdk")));
         codenvyExtensionProperties.add(new Property("vfs:projectType", Collections.createArray("CodenvyExtension")));
         codenvyExtensionProperties.add(new Property("nature.primary", Collections.createArray("java")));
         codenvyExtensionProperties.add(new Property("vfs:mimeType", Collections.createArray("text/vnd.ideproject+directory")));
-        codenvyExtensionProperties.add(new Property("builder_maven_targets", Collections.createArray("clean", "install")));
-        codenvyExtensionProperties.add(new Property("builder_name", Collections.createArray("maven")));
+        codenvyExtensionProperties.add(new Property("builder.maven.targets", Collections.createArray("clean", "install")));
+        codenvyExtensionProperties.add(new Property("builder.name", Collections.createArray("maven")));
         codenvyExtensionProperties.add(new Property("folders.source", Collections.createArray("src/main/java", "src/main/resources")));
         typesMap.put("CodenvyExtension", codenvyExtensionProperties);
 
@@ -79,7 +79,7 @@ public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionD
         jarProperties.add(new Property("exoide:classpath", emptyArray));
         jarProperties.add(new Property("nature.mixin", Collections.createArray("Jar")));
         jarProperties.add(new Property("vfs:mimeType", Collections.createArray("text/vnd.ideproject+directory")));
-        jarProperties.add(new Property("builder_name", Collections.createArray("maven")));
+        jarProperties.add(new Property("builder.name", Collections.createArray("maven")));
         jarProperties.add(new Property("folders.source", Collections.createArray("src/main/java", "src/test/java")));
         jarProperties.add(new Property("exoide:projectDescription", Collections.createArray("Simple JAR project.")));
         typesMap.put("Jar", jarProperties);
@@ -90,11 +90,11 @@ public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionD
         warProperties.add(new Property("exoide:classpath", emptyArray));
         warProperties.add(new Property("nature.mixin", Collections.createArray("War")));
         warProperties.add(new Property("exoide:target", Collections.createArray("CloudBees", "CloudFoundry", "AWS", "AppFog", "Tier3WF")));
-        warProperties.add(new Property("runner_name", Collections.createArray("webapps")));
+        warProperties.add(new Property("runner.name", Collections.createArray("webapps")));
         warProperties.add(new Property("exoide:projectDescription", Collections.createArray("Java Web project.")));
         warProperties.add(new Property("vfs:projectType", Collections.createArray("War")));
         warProperties.add(new Property("vfs:mimeType", Collections.createArray("text/vnd.ideproject+directory")));
-        warProperties.add(new Property("builder_name", Collections.createArray("maven")));
+        warProperties.add(new Property("builder.name", Collections.createArray("maven")));
         warProperties.add(new Property("folders.source", Collections.createArray("src/main/java", "src/main/resources")));
         typesMap.put("War", warProperties);
     }
