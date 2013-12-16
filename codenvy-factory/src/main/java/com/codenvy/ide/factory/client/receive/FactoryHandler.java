@@ -433,7 +433,9 @@ public class FactoryHandler
                                                 });
         } catch (WebSocketException e) {
             IDELoader.getInstance().hide();
-            eventBus.unsubscribe("factory-events", webSocketEventHandler);
+            if (eventBus.isHandlerSubscribed(webSocketEventHandler, "factory-events")) {
+                eventBus.unsubscribe("factory-events", webSocketEventHandler);
+            }
             IDE.fireEvent(new SSHKeyProcessorEvent(factoryUrl.getVcsurl(), false, new SSHKeyProcessor.Callback() {
                 @Override
                 public void onSuccess() {
