@@ -539,12 +539,12 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
 
                 @Override
                 public void onSuccess(Void result) {
-                    if (item instanceof Project) {
+                    if (item instanceof Project && !(parent instanceof Project)) {
                         showListProjects();
                         //TODO onSuccess
                         callback.onSuccess(item.toString());
                     } else if (parent instanceof Project) {
-                        getProject(activeProject.getName(), new AsyncCallback<Project>() {
+                        getProject(parent.getName(), new AsyncCallback<Project>() {
                             @Override
                             public void onSuccess(Project result) {
                                 callback.onSuccess(result.toString());
