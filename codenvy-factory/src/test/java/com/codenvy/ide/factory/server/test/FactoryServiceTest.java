@@ -67,7 +67,7 @@ public class FactoryServiceTest {
 
         Variable variable = new Variable(glob, replacement);
 
-        VariableUtil.performReplacement(root, Collections.singletonList(variable));
+        new VariableUtil(root, Collections.singletonList(variable)).performReplacement();
 
         assertEquals(String.format(templateReplaced, r1, r2), getFileContent(Paths.get(root.toString(), file)));
 
@@ -105,7 +105,7 @@ public class FactoryServiceTest {
 
         Variable variable = new Variable(glob, replacement);
 
-        VariableUtil.performReplacement(root, Collections.singletonList(variable));
+        new VariableUtil(root, Collections.singletonList(variable)).performReplacement();
 
         assertEquals(String.format(templateReplaced, r1, r2), getFileContent(Paths.get(root.toString(), file2)));
         assertEquals(String.format(template, f1, f2), getFileContent(Paths.get(root.toString(), file1)));
@@ -141,7 +141,7 @@ public class FactoryServiceTest {
 
         Variable variable = new Variable(glob, replacement);
 
-        VariableUtil.performReplacement(root, Collections.singletonList(variable));
+        new VariableUtil(root, Collections.singletonList(variable)).performReplacement();
 
         assertEquals(String.format(templateReplaced, r1, r2), getFileContent(Paths.get(child.toString(), file)));
 
@@ -175,7 +175,7 @@ public class FactoryServiceTest {
 
         Variable variable = new Variable(glob, replacement);
 
-        VariableUtil.performReplacement(root, Collections.singletonList(variable));
+        new VariableUtil(root, Collections.singletonList(variable)).performReplacement();
 
         assertEquals(String.format(templateReplaced, r1, r2), getFileContent(Paths.get(child.toString(), file)));
 

@@ -21,16 +21,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * @author <a href="mailto:vzhukovskii@codenvy.com">Vladyslav Zhukovskii</a>
- * @version $Id: 09.12.13 vlad $
- */
+/** Variable util to process variables replacement. */
 public class VariableUtil {
+
+    private final Path projectPath;
+    private final List<Variable> variables;
 
     private static final Logger LOG = LoggerFactory.getLogger(VariableUtil.class);
 
+    public VariableUtil(Path projectPath, List<Variable> variables) {
+        this.projectPath = projectPath;
+        this.variables = variables;
+    }
+
     /** Perform searching in project path files given by variables list and make replacement variables in each file if it found. */
-    public static void performReplacement(Path projectPath, List<Variable> variables) {
+    public void performReplacement() {
         final Map<Path, Set<Variable.Replacement>> replacementMap = new HashMap<>();
 
         for (Variable variable : variables) {
@@ -62,7 +67,7 @@ public class VariableUtil {
     }
 
     /** File visitor */
-    private static class GlobFileVisitor extends SimpleFileVisitor<Path> {
+    private class GlobFileVisitor extends SimpleFileVisitor<Path> {
         /** Generic map which contains specific file and list of replacements for it. */
         private final Map<Path, Set<Variable.Replacement>> replacementMap;
 
@@ -95,7 +100,7 @@ public class VariableUtil {
         /** {@inheritDoc} */
         @Override
         public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-            find(dir);
+            //find(dir);
             return FileVisitResult.CONTINUE;
         }
 

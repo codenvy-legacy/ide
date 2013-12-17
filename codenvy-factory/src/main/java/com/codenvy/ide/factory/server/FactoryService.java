@@ -270,11 +270,15 @@ public class FactoryService {
         Item itemToUpdate = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
 
         ProjectType projectType = ProjectType.DEFAULT;
-        try {
-            String decodedPtype = URLDecoder.decode(factoryUrl.getProjectattributes().get("ptype"), "UTF-8");
-            projectType = ProjectType.fromValue(decodedPtype);
-        } catch (IllegalArgumentException | NullPointerException e) {//
-            LOG.error(e.getLocalizedMessage(), e);
+        String encodedParamType = factoryUrl.getProjectattributes().get("ptype");
+
+        if (encodedParamType != null && !encodedParamType.isEmpty()) {
+            try {
+                projectType = ProjectType.fromValue(URLDecoder.decode(encodedParamType, "UTF-8"));
+            } catch (IllegalArgumentException e) {
+                //if exception, our project type already setted to "default"
+                LOG.error(e.getLocalizedMessage(), e);
+            }
         }
 
         List<Property> props = new ArrayList<>();
@@ -303,7 +307,7 @@ public class FactoryService {
 
         itemToUpdate = vfs.updateItem(itemToUpdate.getId(), props, null);
 
-        if (factoryUrl.getVariables().size() != 0) {
+        if (factoryUrl.getVariables() != null && factoryUrl.getVariables().size() != 0) {
             findAndReplaceFactoryVariables(factoryUrl);
         }
 
@@ -322,7 +326,7 @@ public class FactoryService {
             java.io.File workspace = mountStrategy.getMountPath();
             java.nio.file.Path path = Paths.get(workspace.getAbsolutePath(), factoryUrl.getProjectattributes().get("pname"));
 
-            VariableUtil.performReplacement(path, factoryUrl.getVariables());
+            new VariableUtil(path, factoryUrl.getVariables()).performReplacement();
         } catch (VirtualFileSystemException e) {
             LOG.error(e.getLocalizedMessage(), e);
         }
