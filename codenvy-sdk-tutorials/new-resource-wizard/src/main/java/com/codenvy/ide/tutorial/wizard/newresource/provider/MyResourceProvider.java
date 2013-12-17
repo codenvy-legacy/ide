@@ -29,7 +29,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
 import static com.codenvy.ide.resources.model.Folder.TYPE;
-import static com.codenvy.ide.rest.MimeType.TEXT_XML;
+import static com.codenvy.ide.MimeType.TEXT_XML;
 
 /**
  * Provides creating of a my new resource.

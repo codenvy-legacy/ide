@@ -50,7 +50,7 @@ import com.codenvy.ide.ext.git.shared.RmRequest;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.MimeType;
+import com.codenvy.ide.MimeType;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.websocket.Message;
@@ -69,8 +69,8 @@ import java.util.List;
 
 import static com.codenvy.ide.rest.HTTPHeader.ACCEPT;
 import static com.codenvy.ide.rest.HTTPHeader.CONTENTTYPE;
-import static com.codenvy.ide.rest.MimeType.APPLICATION_JSON;
-import static com.codenvy.ide.rest.MimeType.TEXT_PLAIN;
+import static com.codenvy.ide.MimeType.APPLICATION_JSON;
+import static com.codenvy.ide.MimeType.TEXT_PLAIN;
 import static com.google.gwt.http.client.RequestBuilder.POST;
 
 /**

@@ -16,6 +16,7 @@ package com.codenvy.ide.texteditor.api.parser;
 
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.user.client.Window;
 
 
 /**
@@ -35,6 +36,7 @@ public class CmParser extends JavaScriptObject implements Parser {
     @Override
     public final void parseNext(Stream stream, State state, Array<Token> tokens) {
         String tokenName = token(stream, state);
+//        Window.alert(" sdlfsdf  " + tokenName);
         String tokenValue = updateStreamPosition(stream);
         getTokenFactory().push(getName(state), state, tokenName, tokenValue, tokens);
     }

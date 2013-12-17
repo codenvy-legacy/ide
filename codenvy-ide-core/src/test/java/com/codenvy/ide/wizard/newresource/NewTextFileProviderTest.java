@@ -25,7 +25,7 @@ import org.junit.Before;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import static com.codenvy.ide.rest.MimeType.TEXT_PLAIN;
+import static com.codenvy.ide.MimeType.TEXT_PLAIN;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
