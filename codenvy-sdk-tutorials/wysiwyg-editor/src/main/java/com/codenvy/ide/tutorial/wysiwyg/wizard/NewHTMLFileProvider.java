@@ -23,7 +23,7 @@ import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.rest.MimeType;
+import com.codenvy.ide.MimeType;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 

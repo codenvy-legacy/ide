@@ -42,7 +42,7 @@
                     <fileNamePattern>${org.exoplatform.logreader.logpath}/ide-log-%d{yyyy/MM/dd/HH}.log</fileNamePattern>
                     <Append>true</Append>
                     <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                        <!-- or whenever the file size reaches 20kb -->
+                        <!-- or whenever the css size reaches 20kb -->
                         <maxFileSize>20KB</maxFileSize>
                     </timeBasedFileNamingAndTriggeringPolicy>
                 </rollingPolicy>
