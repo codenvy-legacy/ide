@@ -29,18 +29,35 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
 /**
- * Watch a directory for changes.
+ * Watch a directory for changes and copies the content of another
+ * directory to every directory that matches a path pattern.
+ * <p/>
+ * Used in {@link SDKRunner} to copy <code>javaParserWorker</code> directory
+ * (that contains compiled GWT permutation) to every code server's
+ * working directory (that contains recompiled extension).
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
-public class WatchDir {
+public class WatchDir implements Runnable {
     private final WatchService        watcher;
     private final Map<WatchKey, Path> keys;
     private final Path                baseWatchableDirPath;
     private final Path                dirPathToCopy;
     private final String              globPattern;
 
-    /** Creates a WatchService and registers the given directory */
+    /**
+     * Creates a {@link WatchService} and registers the given <code>baseWatchableDirPath</code> directory.
+     *
+     * @param baseWatchableDirPath
+     *         path to the directory to watch
+     * @param dirPathToCopy
+     *         path to the directory that contains resources to copy
+     * @param globPattern
+     *         relative path pattern (in glob syntax) to the folders
+     *         where <code>dirPathToCopy</code> content will be copied
+     * @throws IOException
+     *         error occurred while register a directory in {@link WatchService}
+     */
     WatchDir(Path baseWatchableDirPath, Path dirPathToCopy, String globPattern) throws IOException {
         this.baseWatchableDirPath = baseWatchableDirPath;
         this.dirPathToCopy = dirPathToCopy;
@@ -51,17 +68,20 @@ public class WatchDir {
     }
 
     @SuppressWarnings("unchecked")
-    static <T> WatchEvent<T> cast(WatchEvent<?> event) {
+    private static <T> WatchEvent<T> cast(WatchEvent<?> event) {
         return (WatchEvent<T>)event;
     }
 
-    /** Register the given directory with the WatchService */
+    /** Register the given directory with the {@link WatchService}. */
     private void register(Path dir) throws IOException {
         WatchKey key = dir.register(watcher, ENTRY_CREATE);
         keys.put(key, dir);
     }
 
-    /** Register the given directory, and all its sub-directories, with the WatchService. */
+    /**
+     * Register the given directory, and all its sub-directories which
+     * path matches the special pattern, with the {@link WatchService}.
+     */
     private void registerAll(final Path path) throws IOException {
         // register directory and sub-directories
         Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
@@ -81,8 +101,13 @@ public class WatchDir {
         });
     }
 
-    /** Process all events for keys queued to the watcher */
-    void processEvents() {
+    @Override
+    public void run() {
+        processEvents();
+    }
+
+    /** Process all events for keys queued to the watcher. */
+    private void processEvents() {
         for (; ; ) {
 
             // wait for key to be signalled

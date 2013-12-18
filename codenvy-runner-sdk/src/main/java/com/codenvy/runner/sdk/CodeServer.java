@@ -123,6 +123,7 @@ public class CodeServer {
      *         code server working directory is the root of the directory tree where the code server will write
      *         compiler output. If not supplied, a system temporary directory will be used
      * @param runnerConfiguration
+     *         {@link SDKRunner} configuration
      * @throws RunnerException
      *         if any error occurred while writing code server's configuration
      */
@@ -193,7 +194,8 @@ public class CodeServer {
         private final String          bindAddress;
         private final int             port;
         private final ExecutorService pidTaskExecutor;
-        private final ExecutorService copyDirExecutor;
+        /** ExecutorService to launch watch service that copies javaParserWorker directory. */
+        private final ExecutorService watchServiceExecutor;
         private final Path            javaParserWorkerPath;
         private final File            startUpScriptFile;
         private final File            workDir;
@@ -206,7 +208,7 @@ public class CodeServer {
             this.startUpScriptFile = startUpScriptFile;
             this.workDir = workDir;
             this.pidTaskExecutor = pidTaskExecutor;
-            copyDirExecutor = Executors.newSingleThreadExecutor(new NamedThreadFactory("CopyDir", true));
+            watchServiceExecutor = Executors.newSingleThreadExecutor(new NamedThreadFactory("WatchService", true));
             this.javaParserWorkerPath = javaParserWorkerPath;
         }
 
@@ -241,18 +243,8 @@ public class CodeServer {
                     }
                 }).get(5, TimeUnit.SECONDS);
 
-                copyDirExecutor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            new WatchDir(workDir.toPath(), javaParserWorkerPath,
-                                         "com.codenvy.ide.IDEPlatform/compile-*/war/_app").processEvents();
-                        } catch (IOException e) {
-                        }
-                    }
-                });
-
-                // TODO: wait for pre-compile or use gwt-maven-plugin 2.6.0-rc1
+                watchServiceExecutor.execute(new WatchDir(workDir.toPath(), javaParserWorkerPath,
+                                                          "com.codenvy.ide.IDEPlatform/compile-*/war/_app"));
 
                 LOG.debug("Start GWT code server at port {}, working directory {}", port, workDir);
             } catch (IOException | InterruptedException | TimeoutException e) {
@@ -271,7 +263,7 @@ public class CodeServer {
             // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
             ProcessUtil.kill(pid);
 
-            copyDirExecutor.shutdownNow();
+            watchServiceExecutor.shutdownNow();
 
             LOG.debug("Stop GWT code server at port {}, working directory {}", port, workDir);
         }
