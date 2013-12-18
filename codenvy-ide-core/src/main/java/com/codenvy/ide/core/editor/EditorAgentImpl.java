@@ -38,6 +38,7 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
@@ -172,6 +173,10 @@ public class EditorAgentImpl implements EditorAgent {
     protected void editorClosed(EditorPartPresenter editor) {
         if (activeEditor == editor) {
             activeEditor = null;
+        }
+        //call close() method
+        if(editor instanceof TextEditorPresenter){
+            ((TextEditorPresenter)editor).close(false);
         }
         Array<String> keys = openedEditors.getKeys();
         for (int i = 0; i < keys.size(); i++) {
