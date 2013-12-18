@@ -404,8 +404,8 @@ public class PopupMenu extends Composite {
 
         int itemIndex = Integer.parseInt(DOM.getElementAttribute(tr, "item-index"));
         Action menuItem = list.get(itemIndex);
-        if (menuItem instanceof ActionGroup && (((ActionGroup)menuItem).canBePerformed() &&
-                                                !Utils.hasVisibleChildren((ActionGroup)menuItem, presentationFactory, actionManager,
+        if (menuItem instanceof ActionGroup && (!((ActionGroup)menuItem).canBePerformed() &&
+                                                Utils.hasVisibleChildren((ActionGroup)menuItem, presentationFactory, actionManager,
                                                                           place))) {
             openSubPopup(tr);
         } else {
@@ -558,6 +558,8 @@ public class PopupMenu extends Composite {
 
                 case Event.ONCLICK:
                     onRowClicked(tr);
+                    event.preventDefault();
+                    event.stopPropagation();
                     break;
             }
 

@@ -93,6 +93,13 @@ public interface DocumentProvider {
     void saveDocumentAs(@Nullable EditorInput input, @NotNull Document document, boolean overwrite);
 
     /**
+     * Tels provider that Document not used.
+     * Editor's must call this method when they closing.
+     * @param document
+     */
+    void documentClosed(@NotNull Document document);
+
+    /**
      * Returns the annotation model for the given input.
      *
      * @param input

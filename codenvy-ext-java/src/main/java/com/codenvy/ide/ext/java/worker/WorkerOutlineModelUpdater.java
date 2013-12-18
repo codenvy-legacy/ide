@@ -201,7 +201,7 @@ public class WorkerOutlineModelUpdater {
         }
 
         private WorkerCodeBlock createCodeBlock(String type, int offset, int length) {
-            return WorkerCodeBlock.make().setType(type).setOffset(offset).setLength(length);
+            return WorkerCodeBlock.make().setType(type).setOffset(offset).setLength(length).setChildren(JsoArray.<WorkerCodeBlock>create());
         }
 
         /**

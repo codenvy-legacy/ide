@@ -138,4 +138,19 @@ public class ResourceDocumentProvider implements DocumentProvider {
             }
         });
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public void documentClosed(@NotNull Document document) {
+        File fileToRemove = null;
+        for (File f : cache.keySet()) {
+            if (cache.get(f).equals(document)) {
+                fileToRemove = f;
+                break;
+            }
+        }
+        if (fileToRemove != null) {
+            cache.remove(fileToRemove);
+        }
+    }
 }
