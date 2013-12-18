@@ -285,8 +285,9 @@ public class TomcatServer implements ApplicationServer {
         final int                debugPort;
         final ExecutorService    pidTaskExecutor;
         final java.io.File       startUpScriptFile;
-        final java.io.File               workDir;
+        final java.io.File       workDir;
         final StopCallback       stopCallback;
+
         int pid = -1;
         TomcatLogger logger;
         Process      process;

@@ -15,36 +15,19 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.runner.docker.json;
+package com.codenvy.builder.ant;
 
-import java.util.Arrays;
+import com.codenvy.api.builder.internal.Builder;
+import com.codenvy.inject.DynaModule;
+import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.Multibinder;
 
 /** @author andrew00x */
-public class ContainerCreated {
-    private String id;
-    private String[] warnings;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String[] getWarnings() {
-        return warnings;
-    }
-
-    public void setWarnings(String[] warnings) {
-        this.warnings = warnings;
-    }
-
+@DynaModule
+public class AntBuilderModule extends AbstractModule {
     @Override
-    public String toString() {
-        return "ContainerCreated{" +
-               "id='" + id + '\'' +
-               ", warnings=" + Arrays.toString(warnings) +
-               '}';
+    protected void configure() {
+        Multibinder<Builder> multiBinder = Multibinder.newSetBinder(binder(), Builder.class);
+        multiBinder.addBinding().to(AntBuilder.class);
     }
 }

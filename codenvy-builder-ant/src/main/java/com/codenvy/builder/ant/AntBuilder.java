@@ -31,11 +31,17 @@ import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.builder.tools.ant.AntBuildListener;
 import com.codenvy.builder.tools.ant.AntMessage;
 import com.codenvy.dto.server.DtoFactory;
+import com.codenvy.inject.ConfigurationParameter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.io.EOFException;
+import java.io.File;
 import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -61,8 +67,9 @@ import java.util.zip.ZipOutputStream;
 /**
  * Builder based on Ant.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author andrew00x
  */
+@Singleton
 public class AntBuilder extends Builder {
     private static final Logger LOG = LoggerFactory.getLogger(AntBuilder.class);
 
@@ -99,9 +106,20 @@ public class AntBuilder extends Builder {
     }
 
     private final Map<Long, AntMessageServer> antMessageServers;
+    private final CustomPortService           portService;
 
-    public AntBuilder() {
-        super();
+    @Inject
+    public AntBuilder(@Named(REPOSITORY) ConfigurationParameter repositoryPath,
+                      @Named(NUMBER_OF_WORKERS) ConfigurationParameter numberOfWorkers,
+                      @Named(INTERNAL_QUEUE_SIZE) ConfigurationParameter queueSize,
+                      @Named(CLEAN_RESULT_DELAY_TIME) ConfigurationParameter cleanBuildResultDelay,
+                      CustomPortService portService) {
+        this(repositoryPath.asFile(), numberOfWorkers.asInt(), queueSize.asInt(), cleanBuildResultDelay.asInt(), portService);
+    }
+
+    public AntBuilder(File rootDirectory, int numberOfWorkers, int queueSize, int cleanBuildResultDelay, CustomPortService portService) {
+        super(rootDirectory, numberOfWorkers, queueSize, cleanBuildResultDelay);
+        this.portService = portService;
         antMessageServers = new ConcurrentHashMap<>();
     }
 
@@ -220,6 +238,7 @@ public class AntBuilder extends Builder {
         throw new BuilderException("Failed to get build result.");
     }
 
+    @PostConstruct
     @Override
     public void start() {
         super.start();
@@ -232,12 +251,12 @@ public class AntBuilder extends Builder {
         // If nobody asked about build results AntMessageServer may be still in the Map.
         final AntMessageServer server = antMessageServers.remove(task.getId());
         if (server != null) {
-            CustomPortService.getInstance().release(server.port);
+            portService.release(server.port);
         }
     }
 
     private int getPort() {
-        final int port = CustomPortService.getInstance().acquire();
+        final int port = portService.acquire();
         if (port < 0) {
             throw new IllegalStateException("Cannot start build process, there are no free ports. ");
         }
@@ -381,7 +400,7 @@ public class AntBuilder extends Builder {
             final AntMessageServer server = antMessageServers.get(task.getId());
             if (server != null) {
                 server.stop = true; // force stop if server is not stopped yet
-                CustomPortService.getInstance().release(server.port);
+                portService.release(server.port);
             }
         }
     }

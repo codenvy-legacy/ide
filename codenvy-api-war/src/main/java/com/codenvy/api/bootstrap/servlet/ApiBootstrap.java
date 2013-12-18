@@ -17,24 +17,24 @@
  */
 package com.codenvy.api.bootstrap.servlet;
 
-import com.codenvy.api.builder.BuildQueue;
-import com.codenvy.api.builder.internal.Builder;
-import com.codenvy.api.builder.internal.BuilderRegistrationPlugin;
-import com.codenvy.api.builder.internal.BuilderRegistry;
-import com.codenvy.api.core.util.ComponentLoader;
-import com.codenvy.api.project.server.ProjectDescriptionFactory;
-import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
-import com.codenvy.api.project.server.ProjectTypeRegistry;
-import com.codenvy.api.runner.RunQueue;
-import com.codenvy.api.runner.internal.Runner;
-import com.codenvy.api.runner.internal.RunnerRegistrationPlugin;
-import com.codenvy.api.runner.internal.RunnerRegistry;
-import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
-import com.codenvy.vfs.impl.fs.EnvironmentContextLocalFSMountStrategy;
-import com.codenvy.vfs.impl.fs.LocalFileSystemProvider;
-
-import javax.servlet.ServletContext;
+//import com.codenvy.api.builder.BuildQueue;
+//import com.codenvy.api.builder.internal.Builder;
+//import com.codenvy.api.builder.internal.BuilderRegistrationPlugin;
+//import com.codenvy.api.builder.internal.BuilderRegistry;
+//import com.codenvy.api.core.util.ComponentLoader;
+//import com.codenvy.api.project.server.ProjectDescriptionFactory;
+//import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
+//import com.codenvy.api.project.server.ProjectTypeRegistry;
+//import com.codenvy.api.runner.RunQueue;
+//import com.codenvy.api.runner.internal.Runner;
+//import com.codenvy.api.runner.internal.RunnerRegistrationPlugin;
+//import com.codenvy.api.runner.internal.RunnerRegistry;
+//import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
+//import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
+//import com.codenvy.vfs.impl.fs.EnvironmentContextLocalFSMountStrategy;
+//import com.codenvy.vfs.impl.fs.LocalFileSystemProvider;
+//
+//import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.lang.ref.WeakReference;
@@ -57,62 +57,62 @@ public final class ApiBootstrap implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        final ServletContext servletContext = sce.getServletContext();
-        final BuilderRegistry builders = new BuilderRegistry();
-        final RunnerRegistry runners = new RunnerRegistry();
-        for (Builder builder : ComponentLoader.all(Builder.class)) {
-            builders.add(builder);
-        }
-
-        for (BuilderRegistrationPlugin plugin : ComponentLoader.all(BuilderRegistrationPlugin.class)) {
-            plugin.registerTo(builders);
-        }
-
-        for (Builder builder : builders.getAll()) {
-            builder.start();
-            lifeCycles.add(new WeakReference<com.codenvy.api.core.Lifecycle>(builder));
-        }
-
-        for (Runner runner : ComponentLoader.all(Runner.class)) {
-            runners.add(runner);
-        }
-
-        for (RunnerRegistrationPlugin plugin : ComponentLoader.all(RunnerRegistrationPlugin.class)) {
-            plugin.registerTo(runners);
-        }
-
-        for (Runner runner : runners.getAll()) {
-            runner.start();
-            lifeCycles.add(new WeakReference<com.codenvy.api.core.Lifecycle>(runner));
-        }
-
-        final BuildQueue buildQueue = new BuildQueue();
-        buildQueue.start();
-        lifeCycles.add(new WeakReference<com.codenvy.api.core.Lifecycle>(buildQueue));
-
-        final RunQueue runQueue = new RunQueue();
-        runQueue.start();
-        lifeCycles.add(new WeakReference<com.codenvy.api.core.Lifecycle>(runQueue));
-
-        // NOTE: Search will not work here
-        final LocalFileSystemProvider vfsProvider = new LocalFileSystemProvider(EnvironmentFilter.WS_NAME,
-                                                                                new EnvironmentContextLocalFSMountStrategy());
-        final VirtualFileSystemRegistry vfsRegistry = new VirtualFileSystemRegistry();
-        try {
-            vfsRegistry.registerProvider(EnvironmentFilter.WS_NAME, vfsProvider);
-        } catch (VirtualFileSystemException e) {
-            throw new RuntimeException(e);
-        }
-
-
-        servletContext.setAttribute(VirtualFileSystemRegistry.class.getName(), vfsRegistry);
-        servletContext.setAttribute(BuilderRegistry.class.getName(), builders);
-        servletContext.setAttribute(BuildQueue.class.getName(), buildQueue);
-        servletContext.setAttribute(RunnerRegistry.class.getName(), runners);
-        servletContext.setAttribute(RunQueue.class.getName(), runQueue);
-        ProjectTypeRegistry tr = new ProjectTypeRegistry();
-        servletContext.setAttribute(ProjectTypeRegistry.class.getName(), tr);
-        servletContext.setAttribute(ProjectDescriptionFactory.class.getName(),  new ProjectDescriptionFactory(tr, new ProjectTypeDescriptionRegistry(tr)));
+//        final ServletContext servletContext = sce.getServletContext();
+//        final BuilderRegistry builders = new BuilderRegistry();
+//        final RunnerRegistry runners = new RunnerRegistry();
+//        for (Builder builder : ComponentLoader.all(Builder.class)) {
+//            builders.add(builder);
+//        }
+//
+//        for (BuilderRegistrationPlugin plugin : ComponentLoader.all(BuilderRegistrationPlugin.class)) {
+//            plugin.registerTo(builders);
+//        }
+//
+//        for (Builder builder : builders.getAll()) {
+//            builder.start();
+//            lifeCycles.add(new WeakReference<com.codenvy.api.core.Lifecycle>(builder));
+//        }
+//
+//        for (Runner runner : ComponentLoader.all(Runner.class)) {
+//            runners.add(runner);
+//        }
+//
+//        for (RunnerRegistrationPlugin plugin : ComponentLoader.all(RunnerRegistrationPlugin.class)) {
+//            plugin.registerTo(runners);
+//        }
+//
+//        for (Runner runner : runners.getAll()) {
+//            runner.start();
+//            lifeCycles.add(new WeakReference<com.codenvy.api.core.Lifecycle>(runner));
+//        }
+//
+//        final BuildQueue buildQueue = new BuildQueue();
+//        buildQueue.start();
+//        lifeCycles.add(new WeakReference<com.codenvy.api.core.Lifecycle>(buildQueue));
+//
+//        final RunQueue runQueue = new RunQueue();
+//        runQueue.start();
+//        lifeCycles.add(new WeakReference<com.codenvy.api.core.Lifecycle>(runQueue));
+//
+//        // NOTE: Search will not work here
+//        final LocalFileSystemProvider vfsProvider = new LocalFileSystemProvider(EnvironmentFilter.WS_NAME,
+//                                                                                new EnvironmentContextLocalFSMountStrategy());
+//        final VirtualFileSystemRegistry vfsRegistry = new VirtualFileSystemRegistry();
+//        try {
+//            vfsRegistry.registerProvider(EnvironmentFilter.WS_NAME, vfsProvider);
+//        } catch (VirtualFileSystemException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//
+//        servletContext.setAttribute(VirtualFileSystemRegistry.class.getName(), vfsRegistry);
+//        servletContext.setAttribute(BuilderRegistry.class.getName(), builders);
+//        servletContext.setAttribute(BuildQueue.class.getName(), buildQueue);
+//        servletContext.setAttribute(RunnerRegistry.class.getName(), runners);
+//        servletContext.setAttribute(RunQueue.class.getName(), runQueue);
+//        ProjectTypeRegistry tr = new ProjectTypeRegistry();
+//        servletContext.setAttribute(ProjectTypeRegistry.class.getName(), tr);
+//        servletContext.setAttribute(ProjectDescriptionFactory.class.getName(),  new ProjectDescriptionFactory(tr, new ProjectTypeDescriptionRegistry(tr)));
     }
 
     @Override

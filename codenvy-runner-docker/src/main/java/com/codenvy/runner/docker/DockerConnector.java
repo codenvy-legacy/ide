@@ -58,7 +58,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPOutputStream;
 
-/** @author <a href="mailto:aparfonov@codenvy.com">Andrey Parfonov</a> */
+/** @author andrew00x */
 public class DockerConnector {
 
     private static class InstanceHolder {

@@ -32,6 +32,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.codenvy.commons</groupId>
+            <artifactId>codenvy-commons-inject</artifactId>
+            <version>${com.codenvy.commons.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-workspace</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
@@ -41,11 +46,11 @@
             <artifactId>codenvy-api-builder</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-runner</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-core</artifactId>
@@ -67,7 +72,7 @@
             <artifactId>codenvy-builder-maven</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-runner-sdk</artifactId>
             <version>${project.version}</version>
@@ -76,17 +81,17 @@
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-runner-webapps</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-vfs-fs</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-runner-docker</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-core</artifactId>

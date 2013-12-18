@@ -15,36 +15,22 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.runner.docker.json;
+package com.codenvy.api.deploy;
 
-import java.util.Arrays;
+import com.codenvy.api.builder.BuilderSelectionStrategy;
+import com.codenvy.api.builder.BuilderService;
+import com.codenvy.api.builder.LastInUseBuilderSelectionStrategy;
+import com.codenvy.api.builder.internal.SlaveBuilderService;
+import com.codenvy.inject.DynaModule;
+import com.google.inject.AbstractModule;
 
 /** @author andrew00x */
-public class ContainerCreated {
-    private String id;
-    private String[] warnings;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String[] getWarnings() {
-        return warnings;
-    }
-
-    public void setWarnings(String[] warnings) {
-        this.warnings = warnings;
-    }
-
+@DynaModule
+public class ApiModule extends AbstractModule {
     @Override
-    public String toString() {
-        return "ContainerCreated{" +
-               "id='" + id + '\'' +
-               ", warnings=" + Arrays.toString(warnings) +
-               '}';
+    protected void configure() {
+        bind(BuilderSelectionStrategy.class).toInstance(new LastInUseBuilderSelectionStrategy());
+        bind(BuilderService.class);
+        bind(SlaveBuilderService.class);
     }
 }

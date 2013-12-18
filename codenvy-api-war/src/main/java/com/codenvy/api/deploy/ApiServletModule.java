@@ -15,19 +15,20 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.runner.webapps;
+package com.codenvy.api.deploy;
 
-import com.codenvy.api.runner.internal.RunnerRegistrationPlugin;
-import com.codenvy.api.runner.internal.RunnerRegistry;
+import com.codenvy.api.bootstrap.servlet.EnvironmentFilter;
+import com.codenvy.inject.DynaModule;
+import com.google.inject.servlet.ServletModule;
 
-/**
- * WebApps runner registration plugin.
- *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- */
-public class WebAppsRunnerRegistrationPlugin implements RunnerRegistrationPlugin {
+import org.everrest.guice.servlet.GuiceEverrestServlet;
+
+/** @author andrew00x */
+@DynaModule
+public class ApiServletModule extends ServletModule {
     @Override
-    public void registerTo(RunnerRegistry registry) {
-        registry.add(new DeployToApplicationServerRunner());
+    protected void configureServlets() {
+        filter("/*").through(EnvironmentFilter.class);
+        serve("/*").with(GuiceEverrestServlet.class);
     }
 }

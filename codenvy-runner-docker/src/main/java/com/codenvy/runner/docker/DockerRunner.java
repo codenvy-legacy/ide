@@ -22,10 +22,12 @@ import com.codenvy.api.runner.internal.ApplicationLogger;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.api.runner.internal.DeploymentSources;
 import com.codenvy.api.runner.internal.Disposer;
+import com.codenvy.api.runner.internal.ResourceAllocators;
 import com.codenvy.api.runner.internal.Runner;
 import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
 import com.codenvy.api.runner.internal.dto.RunRequest;
+import com.codenvy.inject.ConfigurationParameter;
 import com.codenvy.runner.docker.json.ContainerConfig;
 import com.codenvy.runner.docker.json.ContainerCreated;
 import com.codenvy.runner.docker.json.HostConfig;
@@ -36,22 +38,39 @@ import com.google.common.io.CharStreams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-/** @author <a href="mailto:aparfonov@codenvy.com">Andrey Parfonov</a> */
+/** @author andrew00x */
+@Singleton
 public class DockerRunner extends Runner {
     private static final Logger LOG = LoggerFactory.getLogger(DockerRunner.class);
 
     private final Map<String, java.io.File> dockerFileTemplates;
     private final Map<String, ImageUsage>   dockerImageUsage;
 
-    DockerRunner(Map<String, java.io.File> dockerFileTemplates) {
+    @Inject
+    public DockerRunner(@Named(DEPLOY_DIRECTORY) ConfigurationParameter deployDirectoryPath,
+                        @Named(CLEANUP_DELAY_TIME) ConfigurationParameter cleanupDelay,
+                        ResourceAllocators allocators,
+                        Map<String, java.io.File> dockerFileTemplates) {
+        this(deployDirectoryPath.asFile(), cleanupDelay.asInt(), allocators, dockerFileTemplates);
+    }
+
+
+    public DockerRunner(java.io.File deployDirectoryRoot,
+                        int cleanupDelay,
+                        ResourceAllocators allocators,
+                        Map<String, java.io.File> dockerFileTemplates) {
+        super(deployDirectoryRoot, cleanupDelay, allocators);
         this.dockerFileTemplates = new HashMap<>(dockerFileTemplates);
-        dockerImageUsage = new HashMap<>();
+        this.dockerImageUsage = new HashMap<>();
     }
 
     @Override

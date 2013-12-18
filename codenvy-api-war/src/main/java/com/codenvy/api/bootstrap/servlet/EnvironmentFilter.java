@@ -6,6 +6,7 @@ import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.MembershipEntry;
 
+import javax.inject.Singleton;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -24,6 +25,7 @@ import java.util.Set;
  * @author <a href="mailto:aparfonov@codenvy.com">Andrey Parfonov</a>
  */
 // TODO: Find common solution to do this. Avoid have few filters to do the same work.
+@Singleton
 public class EnvironmentFilter implements Filter {
     static final String WS_NAME = "dev-monit";
 

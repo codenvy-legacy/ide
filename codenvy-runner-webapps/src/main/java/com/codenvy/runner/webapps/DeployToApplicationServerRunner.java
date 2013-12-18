@@ -17,34 +17,60 @@
  */
 package com.codenvy.runner.webapps;
 
-import com.codenvy.api.core.util.ComponentLoader;
 import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.api.runner.RunnerException;
-import com.codenvy.api.runner.internal.*;
+import com.codenvy.api.runner.internal.ApplicationProcess;
+import com.codenvy.api.runner.internal.DeploymentSources;
+import com.codenvy.api.runner.internal.Disposer;
+import com.codenvy.api.runner.internal.ResourceAllocators;
+import com.codenvy.api.runner.internal.Runner;
+import com.codenvy.api.runner.internal.RunnerConfiguration;
+import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
 import com.codenvy.api.runner.internal.dto.RunRequest;
 import com.codenvy.commons.lang.IoUtil;
+import com.codenvy.inject.ConfigurationParameter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ServiceLoader;
 
 /**
  * Runner implementation to run Java web applications by deploying it to application server.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
+@Singleton
 public class DeployToApplicationServerRunner extends Runner {
-    public static final  String DEFAULT_SERVER_NAME      = "Tomcat";
-    public static final  String DEBUG_TRANSPORT_PROTOCOL = "dt_socket";
-    private static final Logger LOG                      =
-            LoggerFactory.getLogger(DeployToApplicationServerRunner.class);
-    private final Map<String, ApplicationServer> applicationServers;
+    private static final Logger LOG = LoggerFactory.getLogger(DeployToApplicationServerRunner.class);
 
-    public DeployToApplicationServerRunner() {
+    public static final String DEFAULT_SERVER_NAME      = "Tomcat";
+    public static final String DEBUG_TRANSPORT_PROTOCOL = "dt_socket";
+
+    private final Map<String, ApplicationServer> applicationServers;
+    private final CustomPortService              portService;
+
+    @Inject
+    public DeployToApplicationServerRunner(@Named(DEPLOY_DIRECTORY) ConfigurationParameter deployDirectoryPath,
+                                           @Named(CLEANUP_DELAY_TIME) ConfigurationParameter cleanupDelay,
+                                           ResourceAllocators allocators,
+                                           CustomPortService portService) {
+        this(deployDirectoryPath.asFile(), cleanupDelay.asInt(), allocators, portService);
+    }
+
+    public DeployToApplicationServerRunner(java.io.File deployDirectoryRoot,
+                                           int cleanupDelay,
+                                           ResourceAllocators allocators,
+                                           CustomPortService portService) {
+        super(deployDirectoryRoot, cleanupDelay, allocators);
+        this.portService = portService;
         applicationServers = new HashMap<>();
     }
 
@@ -61,7 +87,7 @@ public class DeployToApplicationServerRunner extends Runner {
     @Override
     public void start() {
         super.start();
-        for (ApplicationServer server : ComponentLoader.all(ApplicationServer.class)) {
+        for (ApplicationServer server : ServiceLoader.load(ApplicationServer.class)) {
             applicationServers.put(server.getName(), server);
         }
     }
@@ -72,9 +98,12 @@ public class DeployToApplicationServerRunner extends Runner {
             @Override
             public RunnerConfiguration createRunnerConfiguration(RunRequest request) throws RunnerException {
                 return new ApplicationServerRunnerConfiguration(DEFAULT_SERVER_NAME,
-                                                                CustomPortService.getInstance().acquire(),
-                                                                request.getMemorySize(), -1, false,
-                                                                DEBUG_TRANSPORT_PROTOCOL, request);
+                                                                portService.acquire(),
+                                                                request.getMemorySize(),
+                                                                -1,
+                                                                false,
+                                                                DEBUG_TRANSPORT_PROTOCOL,
+                                                                request);
             }
         };
     }
@@ -103,10 +132,10 @@ public class DeployToApplicationServerRunner extends Runner {
                 server.deploy(appDir, toDeploy, webAppsRunnerCfg, new ApplicationServer.StopCallback() {
                     @Override
                     public void stopped() {
-                        CustomPortService.getInstance().release(webAppsRunnerCfg.getPort());
+                        portService.release(webAppsRunnerCfg.getPort());
                         final int debugPort = webAppsRunnerCfg.getDebugPort();
                         if (debugPort > 0) {
-                            CustomPortService.getInstance().release(debugPort);
+                            portService.release(debugPort);
                         }
                     }
                 });
