@@ -22,20 +22,18 @@ import java.util.Map;
 import java.util.Set;
 
 /** Variable util to process variables replacement. */
-public class VariableUtil {
+public class VariableReplacer {
 
     private final Path projectPath;
-    private final List<Variable> variables;
 
-    private static final Logger LOG = LoggerFactory.getLogger(VariableUtil.class);
+    private static final Logger LOG = LoggerFactory.getLogger(VariableReplacer.class);
 
-    public VariableUtil(Path projectPath, List<Variable> variables) {
+    public VariableReplacer(Path projectPath) {
         this.projectPath = projectPath;
-        this.variables = variables;
     }
 
     /** Perform searching in project path files given by variables list and make replacement variables in each file if it found. */
-    public void performReplacement() {
+    public void performReplacement(List<Variable> variables) {
         final Map<Path, Set<Variable.Replacement>> replacementMap = new HashMap<>();
 
         for (Variable variable : variables) {
@@ -100,7 +98,6 @@ public class VariableUtil {
         /** {@inheritDoc} */
         @Override
         public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-            //find(dir);
             return FileVisitResult.CONTINUE;
         }
 

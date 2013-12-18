@@ -308,7 +308,14 @@ public class FactoryService {
         itemToUpdate = vfs.updateItem(itemToUpdate.getId(), props, null);
 
         if (factoryUrl.getVariables() != null && factoryUrl.getVariables().size() != 0) {
-            findAndReplaceFactoryVariables(factoryUrl);
+            try {
+                java.io.File workspace = mountStrategy.getMountPath();
+                java.nio.file.Path path = Paths.get(workspace.getAbsolutePath(), factoryUrl.getProjectattributes().get("pname"));
+
+                new VariableReplacer(path).performReplacement(factoryUrl.getVariables());
+            } catch (VirtualFileSystemException e) {
+                LOG.error(e.getLocalizedMessage(), e);
+            }
         }
 
         if (ProjectType.GOOGLE_MBS_ANDROID == projectType) {
@@ -316,21 +323,6 @@ public class FactoryService {
         }
 
         return itemToUpdate;
-    }
-
-    /**
-     * Perform replacement user variables in file list, specified in factory.
-     */
-    private void findAndReplaceFactoryVariables(SimpleFactoryUrl factoryUrl) {
-        try {
-            java.io.File workspace = mountStrategy.getMountPath();
-            java.nio.file.Path path = Paths.get(workspace.getAbsolutePath(), factoryUrl.getProjectattributes().get("pname"));
-
-            new VariableUtil(path, factoryUrl.getVariables()).performReplacement();
-        } catch (VirtualFileSystemException e) {
-            LOG.error(e.getLocalizedMessage(), e);
-        }
-
     }
 
     /**

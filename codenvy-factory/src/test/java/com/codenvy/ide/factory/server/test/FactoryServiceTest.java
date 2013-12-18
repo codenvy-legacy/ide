@@ -1,9 +1,9 @@
 package com.codenvy.ide.factory.server.test;
 
 import com.codenvy.api.factory.Variable;
-import com.codenvy.ide.factory.server.VariableUtil;
+import com.codenvy.ide.factory.server.VariableReplacer;
 
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,8 +19,10 @@ import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-/** Test for {@link com.codenvy.ide.factory.server.VariableUtil}. */
+/** Test for {@link com.codenvy.ide.factory.server.VariableReplacer}. */
 public class FactoryServiceTest {
+
+    private Path root;
 
     private Path createFile(Path parent, String fileName, byte[] content) throws IOException {
         Path newFile = Files.createFile(Paths.get(parent.toString(), fileName), new FileAttribute[]{});
@@ -41,11 +43,19 @@ public class FactoryServiceTest {
         return new String(raw);
     }
 
+    @BeforeMethod
+    public void setUp() throws Exception {
+        root = Files.createTempDirectory("", new FileAttribute[]{});
+    }
+
+    @AfterMethod
+    public void tearDown() throws Exception {
+        deleteRecursive(root.toFile());
+    }
+
 
     @Test(testName = "shouldSimpleReplaceVar")
     public void shouldSimpleReplaceVar() throws Exception {
-        Path root = Files.createTempDirectory("", new FileAttribute[]{});
-
         final String template = "some super content\n with ${%s} and another variable ${%s}";
         final String templateReplaced = "some super content\n with %s and another variable %s";
         final String f1 = "VAR_NUM_1";
@@ -67,17 +77,13 @@ public class FactoryServiceTest {
 
         Variable variable = new Variable(glob, replacement);
 
-        new VariableUtil(root, Collections.singletonList(variable)).performReplacement();
+        new VariableReplacer(root).performReplacement(Collections.singletonList(variable));
 
         assertEquals(String.format(templateReplaced, r1, r2), getFileContent(Paths.get(root.toString(), file)));
-
-        deleteRecursive(root.toFile());
     }
 
     @Test(testName = "shouldSimpleReplaceByExtensionVar")
     public void shouldSimpleReplaceByExtensionVar() throws Exception {
-        Path root = Files.createTempDirectory("", new FileAttribute[]{});
-
         final String template = "some super content\n with ${%s} and another variable ${%s}";
         final String templateReplaced = "some super content\n with %s and another variable %s";
         final String f1 = "VAR_NUM_1";
@@ -105,19 +111,15 @@ public class FactoryServiceTest {
 
         Variable variable = new Variable(glob, replacement);
 
-        new VariableUtil(root, Collections.singletonList(variable)).performReplacement();
+        new VariableReplacer(root).performReplacement(Collections.singletonList(variable));
 
         assertEquals(String.format(templateReplaced, r1, r2), getFileContent(Paths.get(root.toString(), file2)));
         assertEquals(String.format(template, f1, f2), getFileContent(Paths.get(root.toString(), file1)));
         assertEquals(String.format(template, f1, f2), getFileContent(Paths.get(root.toString(), file3)));
-
-        deleteRecursive(root.toFile());
     }
 
     @Test(testName = "shouldSimpleReplaceInChildDirectory")
     public void shouldSimpleReplaceInChildDirectory() throws Exception {
-        Path root = Files.createTempDirectory("", new FileAttribute[]{});
-
         Path child = Files.createDirectories(Paths.get(root.toString(), "some", "another", "dir"), new FileAttribute[]{});
 
         final String template = "some super content\n with ${%s} and another variable ${%s}";
@@ -141,17 +143,13 @@ public class FactoryServiceTest {
 
         Variable variable = new Variable(glob, replacement);
 
-        new VariableUtil(root, Collections.singletonList(variable)).performReplacement();
+        new VariableReplacer(root).performReplacement(Collections.singletonList(variable));
 
         assertEquals(String.format(templateReplaced, r1, r2), getFileContent(Paths.get(child.toString(), file)));
-
-        deleteRecursive(root.toFile());
     }
 
     @Test(testName = "shouldSimpleReplaceInChildDirectoryV2")
     public void shouldSimpleReplaceInChildDirectoryV2() throws Exception {
-        Path root = Files.createTempDirectory("", new FileAttribute[]{});
-
         Path child = Files.createDirectories(Paths.get(root.toString(), "some", "another", "dir"), new FileAttribute[]{});
 
         final String template = "some super content\n with ${%s} and another variable ${%s}";
@@ -175,11 +173,9 @@ public class FactoryServiceTest {
 
         Variable variable = new Variable(glob, replacement);
 
-        new VariableUtil(root, Collections.singletonList(variable)).performReplacement();
+        new VariableReplacer(root).performReplacement(Collections.singletonList(variable));
 
         assertEquals(String.format(templateReplaced, r1, r2), getFileContent(Paths.get(child.toString(), file)));
-
-        deleteRecursive(root.toFile());
     }
 
 }
