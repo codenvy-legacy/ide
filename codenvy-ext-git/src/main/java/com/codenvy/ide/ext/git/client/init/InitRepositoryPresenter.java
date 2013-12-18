@@ -95,7 +95,7 @@ public class InitRepositoryPresenter implements InitRepositoryView.ActionDelegat
         view.close();
 
         try {
-            service.initWS(resourceProvider.getVfsId(), projectId, projectName, bare, new RequestCallback<String>() {
+            service.initWS(resourceProvider.getVfsInfo().getId(), projectId, projectName, bare, new RequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     onInitSuccess();
@@ -114,7 +114,7 @@ public class InitRepositoryPresenter implements InitRepositoryView.ActionDelegat
     /** Initialize of the repository (sends request over HTTP). */
     private void initRepositoryREST(@NotNull String projectId, @NotNull String projectName, boolean bare) {
         try {
-            service.init(resourceProvider.getVfsId(), projectId, projectName, bare, new AsyncRequestCallback<String>() {
+            service.init(resourceProvider.getVfsInfo().getId(), projectId, projectName, bare, new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     onInitSuccess();

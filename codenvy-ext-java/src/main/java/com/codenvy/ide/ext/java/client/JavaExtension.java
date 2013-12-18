@@ -52,7 +52,7 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.MimeType;
+import com.codenvy.ide.MimeType;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.Utils;
 import com.google.gwt.http.client.RequestBuilder;
@@ -221,7 +221,7 @@ public class JavaExtension {
         Array<Resource> children = project.getChildren();
         if (!children.isEmpty() && hasPomFile(children)) {
             String projectId = project.getId();
-            String vfsId = resourceProvider.getVfsId();
+            String vfsId = resourceProvider.getVfsInfo().getId();
             String url = restContext + '/' + Utils.getWorkspaceName() + "/code-assistant/java/update-dependencies?projectid=" + projectId +
                          "&vfsid=" + vfsId;
 

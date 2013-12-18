@@ -31,7 +31,7 @@ import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
-import com.codenvy.ide.rest.MimeType;
+import com.codenvy.ide.MimeType;
 import com.codenvy.ide.runtime.IStatus;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.URL;
@@ -67,14 +67,14 @@ public class JavaProject extends Project {
     public JavaProjectDesctiprion getDescription() {
         return description;
     }
-
+  
     /** {@inheritDoc} */
     @Override
     public void refreshTree(Folder root, final AsyncCallback<Folder> callback) {
         try {
             // create internal wrapping Request Callback with proper Unmarshaller
             AsyncRequestCallback<Folder> internalCallback =
-                    new AsyncRequestCallback<Folder>(new JavaModelUnmarshaller(root, (JavaProject)root.getProject())) {
+                    new AsyncRequestCallback<Folder>(new JavaModelUnmarshaller(root, (JavaProject)root.getProject(), eventBus)) {
                         @Override
                         protected void onSuccess(Folder refreshedRoot) {
                             callback.onSuccess(refreshedRoot);

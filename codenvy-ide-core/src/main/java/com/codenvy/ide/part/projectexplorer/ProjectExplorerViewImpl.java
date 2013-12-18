@@ -91,7 +91,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
             @Override
             public void onNodeExpanded(TreeNodeElement<Resource> node) {
-                delegate.onResourceSelected(node.getData());
+                delegate.onResourceOpened(node.getData());
             }
 
             @Override
@@ -116,7 +116,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         tree.replaceSubtree(oldResource, newResource, true);
 
         TreeNodeElement<Resource> nodeElement = tree.getNode(newResource);
-
+        
         if (nodeElement != null) {
             tree.closeNode(nodeElement);
             tree.expandNode(nodeElement);

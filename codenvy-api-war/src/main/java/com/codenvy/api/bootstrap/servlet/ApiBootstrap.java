@@ -22,6 +22,9 @@ import com.codenvy.api.builder.internal.Builder;
 import com.codenvy.api.builder.internal.BuilderRegistrationPlugin;
 import com.codenvy.api.builder.internal.BuilderRegistry;
 import com.codenvy.api.core.util.ComponentLoader;
+import com.codenvy.api.project.server.ProjectDescriptionFactory;
+import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
+import com.codenvy.api.project.server.ProjectTypeRegistry;
 import com.codenvy.api.runner.RunQueue;
 import com.codenvy.api.runner.internal.Runner;
 import com.codenvy.api.runner.internal.RunnerRegistrationPlugin;
@@ -100,11 +103,16 @@ public final class ApiBootstrap implements ServletContextListener {
         } catch (VirtualFileSystemException e) {
             throw new RuntimeException(e);
         }
+
+
         servletContext.setAttribute(VirtualFileSystemRegistry.class.getName(), vfsRegistry);
         servletContext.setAttribute(BuilderRegistry.class.getName(), builders);
         servletContext.setAttribute(BuildQueue.class.getName(), buildQueue);
         servletContext.setAttribute(RunnerRegistry.class.getName(), runners);
         servletContext.setAttribute(RunQueue.class.getName(), runQueue);
+        ProjectTypeRegistry tr = new ProjectTypeRegistry();
+        servletContext.setAttribute(ProjectTypeRegistry.class.getName(), tr);
+        servletContext.setAttribute(ProjectDescriptionFactory.class.getName(),  new ProjectDescriptionFactory(tr, new ProjectTypeDescriptionRegistry(tr)));
     }
 
     @Override

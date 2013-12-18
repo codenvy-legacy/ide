@@ -1,20 +1,20 @@
 /*
- * CODENVY CONFIDENTIAL
- * __________________
- *
- *  [2012] - [2013] Codenvy, S.A.
- *  All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+* CODENVY CONFIDENTIAL
+* __________________
+*
+* [2012] - [2013] Codenvy, S.A.
+* All Rights Reserved.
+*
+* NOTICE: All information contained herein is, and remains
+* the property of Codenvy S.A. and its suppliers,
+* if any. The intellectual and technical concepts contained
+* herein are proprietary to Codenvy S.A.
+* and its suppliers and may be covered by U.S. and Foreign Patents,
+* patents in process, and are protected by trade secret or copyright law.
+* Dissemination of this information or reproduction of this material
+* is strictly forbidden unless prior written permission is obtained
+* from Codenvy S.A..
+*/
 package com.codenvy.runner.sdk;
 
 import com.codenvy.api.core.util.*;
@@ -24,6 +24,7 @@ import com.codenvy.api.runner.internal.dto.RunRequest;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.commons.lang.NamedThreadFactory;
 import com.codenvy.ide.commons.GwtXmlUtils;
+import com.codenvy.ide.commons.MavenUtils;
 import com.codenvy.ide.commons.ZipUtils;
 import com.google.common.io.CharStreams;
 
@@ -45,38 +46,38 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
- * Runner implementation to test Codenvy plug-ins by launching
- * a separate Codenvy web-application in Tomcat server.
- *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- */
+* Runner implementation to test Codenvy plug-ins by launching
+* a separate Codenvy web-application in Tomcat server.
+*
+* @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+*/
 public class SDKRunner extends Runner {
-    public static final  String IDE_GWT_XML_FILE_NAME     = "IDEPlatform.gwt.xml";
-    public static final  int    DEFAULT_MEM_SIZE          = 256;
-    public static final  String DEBUG_TRANSPORT_PROTOCOL  = "dt_socket";
-    private static final Logger LOG                       = LoggerFactory.getLogger(SDKRunner.class);
+    public static final String IDE_GWT_XML_FILE_NAME = "IDEPlatform.gwt.xml";
+    public static final int DEFAULT_MEM_SIZE = 256;
+    public static final String DEBUG_TRANSPORT_PROTOCOL = "dt_socket";
+    private static final Logger LOG = LoggerFactory.getLogger(SDKRunner.class);
     /** String in JSON format to register builder service. */
     private static final String BUILDER_REGISTRATION_JSON =
             "[{\"builderServiceLocation\":{\"url\":\"http://localhost:${PORT}/api/internal/builder\"}}]";
-    private static final String RUNNER_REGISTRATION_JSON  =
+    private static final String RUNNER_REGISTRATION_JSON =
             "[{\"runnerServiceLocation\":{\"url\":\"http://localhost:${PORT}/api/internal/runner\"}}]";
-    private static final String SERVER_XML                =
+    private static final String SERVER_XML =
             "<?xml version='1.0' encoding='utf-8'?>\n" +
             "<Server port=\"-1\">\n" +
-            "  <Listener className=\"org.apache.catalina.core.AprLifecycleListener\" SSLEngine=\"on\" />\n" +
-            "  <Listener className=\"org.apache.catalina.core.JasperListener\" />\n" +
-            "  <Listener className=\"org.apache.catalina.core.JreMemoryLeakPreventionListener\" />\n" +
-            "  <Listener className=\"org.apache.catalina.mbeans.GlobalResourcesLifecycleListener\" />\n" +
-            "  <Listener className=\"org.apache.catalina.core.ThreadLocalLeakPreventionListener\" />\n" +
-            "  <Service name=\"Catalina\">\n" +
-            "    <Connector port=\"${PORT}\" protocol=\"HTTP/1.1\"\n" +
-            "               connectionTimeout=\"20000\" />\n" +
-            "    <Engine name=\"Catalina\" defaultHost=\"localhost\">\n" +
-            "      <Host name=\"localhost\"  appBase=\"webapps\"\n" +
-            "            unpackWARs=\"true\" autoDeploy=\"true\">\n" +
-            "      </Host>\n" +
-            "    </Engine>\n" +
-            "  </Service>\n" +
+            " <Listener className=\"org.apache.catalina.core.AprLifecycleListener\" SSLEngine=\"on\" />\n" +
+            " <Listener className=\"org.apache.catalina.core.JasperListener\" />\n" +
+            " <Listener className=\"org.apache.catalina.core.JreMemoryLeakPreventionListener\" />\n" +
+            " <Listener className=\"org.apache.catalina.mbeans.GlobalResourcesLifecycleListener\" />\n" +
+            " <Listener className=\"org.apache.catalina.core.ThreadLocalLeakPreventionListener\" />\n" +
+            " <Service name=\"Catalina\">\n" +
+            " <Connector port=\"${PORT}\" protocol=\"HTTP/1.1\"\n" +
+            " connectionTimeout=\"20000\" />\n" +
+            " <Engine name=\"Catalina\" defaultHost=\"localhost\">\n" +
+            " <Host name=\"localhost\" appBase=\"webapps\"\n" +
+            " unpackWARs=\"true\" autoDeploy=\"true\">\n" +
+            " </Host>\n" +
+            " </Engine>\n" +
+            " </Service>\n" +
             "</Server>\n";
 
     @Override
@@ -113,7 +114,7 @@ public class SDKRunner extends Runner {
             appDir = Files.createTempDirectory(getDeployDirectory().toPath(), ("app_" + getName() + '_')).toFile();
 
             final Path tomcatPath = Files.createDirectory(appDir.toPath().resolve("tomcat"));
-            ZipUtils.unzip(Utils.getTomcatBinaryDistribution().openStream(), tomcatPath.toFile());
+            ZipUtils.unzip(MavenUtils.getTomcatBinaryDistribution().openStream(), tomcatPath.toFile());
 
             final Path webappsPath = tomcatPath.resolve("webapps");
             final java.io.File warFile = buildCodenvyWebAppWithExtension(toDeploy.getFile()).toFile();
@@ -151,13 +152,13 @@ public class SDKRunner extends Runner {
             // prepare Codenvy Platform sources
             final Path appDirPath =
                     Files.createTempDirectory(getDeployDirectory().toPath(), ("war_" + getName() + '_'));
-            ZipUtils.unzip(Utils.getCodenvyPlatformBinaryDistribution().openStream(), appDirPath.toFile());
+            ZipUtils.unzip(MavenUtils.getCodenvyPlatformBinaryDistribution().openStream(), appDirPath.toFile());
 
             // integrate extension to Codenvy Platform
             final Extension extension = getExtensionFromJarFile(new ZipFile(extensionJarFile));
-            Utils.addDependencyToPom(appDirPath.resolve("pom.xml"), extension.groupId, extension.artifactId,
+            MavenUtils.addDependencyToPom(appDirPath.resolve("pom.xml"), extension.groupId, extension.artifactId,
                                      extension.version);
-            GwtXmlUtils.inheritGwtModule(Utils.findFile(IDE_GWT_XML_FILE_NAME, appDirPath), extension.gwtModuleName);
+            GwtXmlUtils.inheritGwtModule(MavenUtils.findFile(IDE_GWT_XML_FILE_NAME, appDirPath), extension.gwtModuleName);
 
             // build WAR with Maven
             warPath = buildWebAppAndGetWar(appDirPath);
@@ -189,7 +190,7 @@ public class SDKRunner extends Runner {
 
         String gwtModuleName = gwtXmlEntry.getName().replace(File.separatorChar, '.');
         gwtModuleName = gwtModuleName.substring(0, gwtModuleName.length() - GwtXmlUtils.GWT_MODULE_XML_SUFFIX.length());
-        final Model pom = Utils.readPom(zipFile.getInputStream(pomEntry));
+        final Model pom = MavenUtils.readPom(zipFile.getInputStream(pomEntry));
         zipFile.close();
         final String groupId = pom.getGroupId() == null ? pom.getParent().getGroupId() : pom.getGroupId();
         final String version = pom.getVersion() == null ? pom.getParent().getVersion() : pom.getVersion();
@@ -197,7 +198,7 @@ public class SDKRunner extends Runner {
     }
 
     private Path buildWebAppAndGetWar(Path appDirPath) throws RunnerException {
-        final String[] command = new String[]{Utils.getMavenExecCommand(), "package"};
+        final String[] command = new String[]{MavenUtils.getMavenExecCommand(), "package"};
 
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(command).directory(appDirPath.toFile());
@@ -208,7 +209,7 @@ public class SDKRunner extends Runner {
             if (process.exitValue() != 0) {
                 throw new RunnerException(consumer.getOutput().toString());
             }
-            return Utils.findFile("*.war", appDirPath.resolve("target"));
+            return MavenUtils.findFile("*.war", appDirPath.resolve("target"));
         } catch (IOException | InterruptedException e) {
             throw new RunnerException(e);
         }
@@ -310,9 +311,9 @@ public class SDKRunner extends Runner {
         final StringBuilder export = new StringBuilder();
         export.append(catalinaOpts);
         /*
-        From catalina.sh:
-        -agentlib:jdwp=transport=$JPDA_TRANSPORT,address=$JPDA_ADDRESS,server=y,suspend=$JPDA_SUSPEND
-         */
+From catalina.sh:
+-agentlib:jdwp=transport=$JPDA_TRANSPORT,address=$JPDA_ADDRESS,server=y,suspend=$JPDA_SUSPEND
+*/
         export.append(String.format("export JPDA_ADDRESS=%d%n", debugPort));
         export.append(String.format("export JPDA_TRANSPORT=%s%n", runnerConfiguration.getDebugTransport()));
         export.append(String.format("export JPDA_SUSPEND=%s%n", runnerConfiguration.isDebugSuspend() ? "y" : "n"));
@@ -348,15 +349,15 @@ public class SDKRunner extends Runner {
     }
 
     private static class TomcatProcess extends ApplicationProcess {
-        final int                httpPort;
+        final int httpPort;
         final List<java.io.File> logFiles;
-        final int                debugPort;
-        final ExecutorService    pidTaskExecutor;
-        final java.io.File       startUpScriptFile;
-        final java.io.File       workDir;
+        final int debugPort;
+        final ExecutorService pidTaskExecutor;
+        final java.io.File startUpScriptFile;
+        final java.io.File workDir;
         int pid = -1;
         TomcatLogger logger;
-        Process      process;
+        Process process;
 
         TomcatProcess(int httpPort, List<java.io.File> logFiles, int debugPort, java.io.File startUpScriptFile,
                       java.io.File workDir) {

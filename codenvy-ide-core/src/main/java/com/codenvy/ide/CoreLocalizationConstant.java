@@ -71,4 +71,10 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("chooseResourceType")
     String chooseResourceType();
+
+    @Key("selectProjectType")
+    String selectProjectType(String project);
+
+    @Key("setProjectTypeTitle")
+    String setProjectTypeTitle();
 }

@@ -142,7 +142,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     private void doBuild() {
         statusHandler.requestInProgress(projectToBuild.getName());
         try {
-            service.build(projectToBuild.getName(),
+            service.build(projectToBuild.getPath(),
                           new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                               @Override
                               protected void onSuccess(String result) {

@@ -97,7 +97,7 @@ public class PullPresenter implements PullView.ActionDelegate {
         view.setEnablePullButton(true);
 
         try {
-            service.remoteList(resourceProvider.getVfsId(), projectId, null, true,
+            service.remoteList(resourceProvider.getVfsInfo().getId(), projectId, null, true,
                                new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                    @Override
                                    protected void onSuccess(String result) {
@@ -134,7 +134,7 @@ public class PullPresenter implements PullView.ActionDelegate {
      */
     private void getBranches(@NotNull String projectId, @NotNull final String remoteMode) {
         try {
-            service.branchList(resourceProvider.getVfsId(), projectId, remoteMode,
+            service.branchList(resourceProvider.getVfsInfo().getId(), projectId, remoteMode,
                                new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                    @Override
                                    protected void onSuccess(String result) {
@@ -226,7 +226,7 @@ public class PullPresenter implements PullView.ActionDelegate {
         final String remoteUrl = view.getRepositoryUrl();
 
         try {
-            service.pullWS(resourceProvider.getVfsId(), project, getRefs(), remoteName, new RequestCallback<String>() {
+            service.pullWS(resourceProvider.getVfsInfo().getId(), project, getRefs(), remoteName, new RequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
@@ -260,7 +260,7 @@ public class PullPresenter implements PullView.ActionDelegate {
      */
     private void doPullREST(@NotNull final String remoteUrl, @NotNull String remoteName) {
         try {
-            service.pull(resourceProvider.getVfsId(), project, getRefs(), remoteName, new AsyncRequestCallback<String>() {
+            service.pull(resourceProvider.getVfsInfo().getId(), project, getRefs(), remoteName, new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {

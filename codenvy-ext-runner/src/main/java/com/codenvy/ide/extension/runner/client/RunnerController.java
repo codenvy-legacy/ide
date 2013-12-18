@@ -154,7 +154,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         notificationManager.showNotification(notification);
 
         try {
-            service.run(currentProject.getName(),
+            service.run(currentProject.getPath(),
                         new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                             @Override
                             protected void onSuccess(String result) {

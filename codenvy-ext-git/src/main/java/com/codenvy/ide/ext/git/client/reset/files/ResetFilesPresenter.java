@@ -91,7 +91,7 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
         project = resourceProvider.getActiveProject();
 
         try {
-            service.status(resourceProvider.getVfsId(), project.getId(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+            service.status(resourceProvider.getVfsInfo().getId(), project.getId(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
                 protected void onSuccess(String result) {
                     Status status = dtoFactory.createDtoFromJson(result, Status.class);
@@ -151,7 +151,7 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
         String projectId = project.getId();
 
         try {
-            service.reset(resourceProvider.getVfsId(), projectId, "HEAD", ResetType.MIXED, new AsyncRequestCallback<String>() {
+            service.reset(resourceProvider.getVfsInfo().getId(), projectId, "HEAD", ResetType.MIXED, new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
