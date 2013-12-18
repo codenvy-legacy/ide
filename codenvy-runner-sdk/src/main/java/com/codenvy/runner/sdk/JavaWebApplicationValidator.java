@@ -17,15 +17,29 @@
  */
 package com.codenvy.runner.sdk;
 
+import com.codenvy.api.runner.internal.DeploymentSources;
+
+import java.io.IOException;
 import java.util.zip.ZipFile;
 
 /**
- * Validator checks that {@code DeploymentSources} is a valid Java web application.
+ * Validator checks that {@link ZipFile} or {@link DeploymentSources} is a valid Java web application.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
 public class JavaWebApplicationValidator {
     public static final String WEB_XML = "WEB-INF" + java.io.File.separatorChar + "web.xml";
+
+    public boolean isValid(DeploymentSources deployment) {
+        if (deployment.isArchive()) {
+            try {
+                return isValid(new ZipFile(deployment.getFile()));
+            } catch (IOException e) {
+                return false;
+            }
+        }
+        return new java.io.File(deployment.getFile(), WEB_XML).exists();
+    }
 
     public boolean isValid(ZipFile deployment) {
         return deployment.getEntry(WEB_XML) != null;

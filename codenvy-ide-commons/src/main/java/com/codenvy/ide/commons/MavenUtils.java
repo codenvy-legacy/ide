@@ -23,10 +23,8 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.EnumSet;
@@ -35,7 +33,7 @@ import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.nio.file.FileVisitResult.TERMINATE;
 
 /**
- * Collection of utility methods.
+ * A smattering of useful methods to work with Maven POM.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: Utils.java Jul 31, 2013 11:30:14 AM azatsarynnyy $
@@ -46,6 +44,7 @@ public class MavenUtils {
     /** Maven POM writer. */
     private static MavenXpp3Writer pomWriter = new MavenXpp3Writer();
 
+    /** Not instantiable. */
     private MavenUtils() {
     }
 
@@ -121,7 +120,8 @@ public class MavenUtils {
      * @throws java.io.IOException
      *         error occurred while reading or writing content of file
      */
-    public static void addDependencyToPom(Path path, String groupId, String artifactId, String version) throws IOException {
+    public static void addDependencyToPom(Path path, String groupId, String artifactId, String version)
+            throws IOException {
         Dependency dep = new Dependency();
         dep.setGroupId(groupId);
         dep.setArtifactId(artifactId);
@@ -153,44 +153,6 @@ public class MavenUtils {
             throw new IllegalArgumentException("File not found.");
         }
         return finder.getFirstMatchedFile();
-    }
-
-    /** Returns URL to get Tomcat binary distribution. */
-    public static URL getTomcatBinaryDistribution() throws IOException {
-        URL tomcatDistributionUrl = Thread.currentThread().getContextClassLoader().getResource("tomcat.zip");
-        if (tomcatDistributionUrl == null) {
-            throw new IOException("Unable to get Tomcat binary distribution.");
-        }
-        return tomcatDistributionUrl;
-    }
-
-    /** Returns URL to get Codenvy Platform binary distribution. */
-    public static URL getCodenvyPlatformBinaryDistribution() throws IOException {
-        URL codenvyPlatformDistributionUrl =
-                Thread.currentThread().getContextClassLoader().getResource("CodenvyPlatform.zip");
-        if (codenvyPlatformDistributionUrl == null) {
-            throw new IOException("Unable to get Codenvy Platform binary distribution.");
-        }
-        return codenvyPlatformDistributionUrl;
-    }
-
-    public static String getMavenExecCommand() {
-        final File mvnHome = getMavenHome();
-        if (mvnHome != null) {
-            final String mvn = "bin" + File.separatorChar + "mvn";
-            return new File(mvnHome, mvn).getAbsolutePath(); // use Maven home directory if it's set
-        } else {
-            return "mvn"; // otherwise 'mvn' should be in PATH variable
-        }
-    }
-
-    public static File getMavenHome() {
-        final String m2HomeEnv = System.getenv("M2_HOME");
-        if (m2HomeEnv == null) {
-            return null;
-        }
-        final File m2Home = new File(m2HomeEnv);
-        return m2Home.exists() ? m2Home : null;
     }
 
     /** A {@code FileVisitor} that finds first file that match the specified pattern. */

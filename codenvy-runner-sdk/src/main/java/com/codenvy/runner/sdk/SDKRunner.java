@@ -17,6 +17,7 @@
  */
 package com.codenvy.runner.sdk;
 
+import com.codenvy.api.core.config.Configuration;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.ComponentLoader;
 import com.codenvy.api.core.util.CustomPortService;
@@ -31,20 +32,20 @@ import com.codenvy.ide.commons.GwtXmlUtils;
 import com.codenvy.ide.commons.MavenUtils;
 import com.codenvy.ide.commons.ZipUtils;
 
-import org.apache.maven.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
-import java.util.zip.ZipEntry;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipFile;
 
 /**
- * Runner implementation to run Java web applications by deploying it to application server.
+ * Runner implementation to run Codenvy extensions by deploying it to application server.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
@@ -52,8 +53,15 @@ public class SDKRunner extends Runner {
     public static final  String IDE_GWT_XML_FILE_NAME    = "IDEPlatform.gwt.xml";
     public static final  String DEFAULT_SERVER_NAME      = "Tomcat";
     public static final  String DEBUG_TRANSPORT_PROTOCOL = "dt_socket";
-    // rel for code server link
+    /** Rel for code server link. */
     public static final  String LINK_REL_CODE_SERVER     = "code server";
+    /**
+     * Name of configuration parameter that specifies the domain name or IP address of the code server.
+     * If such parameter is not specified then <code>DEFAULT_BIND_ADDRESS</code> constant value will be used.
+     */
+    public static final  String CODE_SERVER_BIND_ADDRESS = "runner.sdk.code_server_bind_address";
+    /** Specifies the default bind address for the code server. */
+    private static final String DEFAULT_BIND_ADDRESS     = "localhost";
     private static final Logger LOG                      = LoggerFactory.getLogger(SDKRunner.class);
     private final Map<String, ApplicationServer> applicationServers;
     private final Path                           fsMountPointPath;
@@ -63,35 +71,6 @@ public class SDKRunner extends Runner {
         this.fsMountPointPath = fsMountPointPath;
     }
 
-    private static ExtensionDescriptor getExtensionFromJarFile(ZipFile zipFile) throws IOException {
-        Enumeration<? extends ZipEntry> entries = zipFile.entries();
-        ZipEntry gwtXmlEntry = null;
-        ZipEntry pomEntry = null;
-        while (entries.hasMoreElements()) {
-            ZipEntry entry = entries.nextElement();
-            if (!entry.isDirectory()) {
-                if (entry.getName().endsWith(GwtXmlUtils.GWT_MODULE_XML_SUFFIX)) {
-                    gwtXmlEntry = entry;
-                } else if (entry.getName().endsWith("pom.xml")) {
-                    pomEntry = entry;
-                }
-            }
-        }
-
-        // TODO: consider Codenvy extensions validator
-        if (gwtXmlEntry == null || pomEntry == null) {
-            throw new IllegalArgumentException(zipFile.getName() + " is not a valid Codenvy extension");
-        }
-
-        String gwtModuleName = gwtXmlEntry.getName().replace(File.separatorChar, '.');
-        gwtModuleName = gwtModuleName.substring(0, gwtModuleName.length() - GwtXmlUtils.GWT_MODULE_XML_SUFFIX.length());
-        final Model pom = MavenUtils.readPom(zipFile.getInputStream(pomEntry));
-        zipFile.close();
-        final String groupId = pom.getGroupId() == null ? pom.getParent().getGroupId() : pom.getGroupId();
-        final String version = pom.getVersion() == null ? pom.getParent().getVersion() : pom.getVersion();
-        return new ExtensionDescriptor(gwtModuleName, groupId, pom.getArtifactId(), version);
-    }
-
     @Override
     public String getName() {
         return "sdk";
@@ -99,7 +78,7 @@ public class SDKRunner extends Runner {
 
     @Override
     public String getDescription() {
-        return "Codenvy plug-ins runner";
+        return "Codenvy extensions runner";
     }
 
     @Override
@@ -115,15 +94,21 @@ public class SDKRunner extends Runner {
         return new RunnerConfigurationFactory() {
             @Override
             public RunnerConfiguration createRunnerConfiguration(RunRequest request) throws RunnerException {
+                final Configuration myConfiguration = getConfiguration();
+                final String codeServerBindAddress =
+                        myConfiguration.get(CODE_SERVER_BIND_ADDRESS, DEFAULT_BIND_ADDRESS);
+
                 final int codeServerPort = CustomPortService.getInstance().acquire();
                 List<Link> links = new ArrayList<>(1);
                 links.add(DtoFactory.getInstance().createDto(Link.class)
                                     .withRel(LINK_REL_CODE_SERVER)
-                                    .withHref("127.0.0.1:" + codeServerPort));
+                                    .withHref(codeServerBindAddress + ":" + codeServerPort));
+
                 return new SDKRunnerConfiguration(DEFAULT_SERVER_NAME,
                                                   CustomPortService.getInstance().acquire(),
                                                   request.getMemorySize(), -1, false,
-                                                  DEBUG_TRANSPORT_PROTOCOL, codeServerPort, links, request);
+                                                  DEBUG_TRANSPORT_PROTOCOL, codeServerBindAddress, codeServerPort,
+                                                  links, request);
             }
         };
     }
@@ -147,14 +132,14 @@ public class SDKRunner extends Runner {
 
         final java.io.File appDir;
         final Path codeServerWorkDirPath;
-        final ExtensionDescriptor extension;
+        final Utils.ExtensionDescriptor extension;
         try {
             appDir =
                     Files.createTempDirectory(getDeployDirectory().toPath(), (server.getName() + "_" + getName() + '_'))
                          .toFile();
             codeServerWorkDirPath =
                     Files.createTempDirectory(getDeployDirectory().toPath(), ("codeServer_" + getName() + '_'));
-            extension = getExtensionFromJarFile(new ZipFile(toDeploy.getFile()));
+            extension = Utils.getExtensionFromJarFile(new ZipFile(toDeploy.getFile()));
         } catch (IOException e) {
             throw new RunnerException(e);
         }
@@ -163,7 +148,7 @@ public class SDKRunner extends Runner {
 
         final CodeServer codeServer = new CodeServer();
         CodeServer.CodeServerProcess codeServerProcess =
-                codeServer.prepare(codeServerWorkDirPath, sdkRunnerCfg, extension, projectSourcesPath);
+                codeServer.prepare(codeServerWorkDirPath, sdkRunnerCfg, extension, projectSourcesPath, warFile);
 
         final ApplicationProcess process =
                 server.deploy(appDir, warFile, sdkRunnerCfg, codeServerProcess,
@@ -200,14 +185,13 @@ public class SDKRunner extends Runner {
         return process;
     }
 
-    private ZipFile buildCodenvyWebAppWithExtension(ExtensionDescriptor extension) throws RunnerException {
+    private ZipFile buildCodenvyWebAppWithExtension(Utils.ExtensionDescriptor extension) throws RunnerException {
         final ZipFile warPath;
         try {
             // prepare Codenvy Platform sources
             final Path workDirPath =
                     Files.createTempDirectory(getDeployDirectory().toPath(), ("war_" + getName() + '_'));
-            ZipUtils.unzip(MavenUtils.getCodenvyPlatformBinaryDistribution().openStream(),
-                           workDirPath.toFile());
+            ZipUtils.unzip(Utils.getCodenvyPlatformBinaryDistribution().openStream(), workDirPath.toFile());
 
             // integrate extension to Codenvy Platform
             MavenUtils.addDependencyToPom(workDirPath.resolve("pom.xml"), extension.groupId, extension.artifactId,
@@ -223,7 +207,7 @@ public class SDKRunner extends Runner {
     }
 
     private ZipFile buildWebAppAndGetWar(Path appDirPath) throws RunnerException {
-        final String[] command = new String[]{MavenUtils.getMavenExecCommand(), "package"};
+        final String[] command = new String[]{Utils.getMavenExecCommand(), "package"};
 
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(command).directory(appDirPath.toFile());
@@ -237,20 +221,6 @@ public class SDKRunner extends Runner {
             return new ZipFile(MavenUtils.findFile("*.war", appDirPath.resolve("target")).toFile());
         } catch (IOException | InterruptedException e) {
             throw new RunnerException(e);
-        }
-    }
-
-    static class ExtensionDescriptor {
-        String gwtModuleName;
-        String groupId;
-        String artifactId;
-        String version;
-
-        ExtensionDescriptor(String gwtModuleName, String groupId, String artifactId, String version) {
-            this.gwtModuleName = gwtModuleName;
-            this.groupId = groupId;
-            this.artifactId = artifactId;
-            this.version = version;
         }
     }
 

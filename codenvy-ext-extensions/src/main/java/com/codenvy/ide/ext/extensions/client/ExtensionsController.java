@@ -236,8 +236,18 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
 
         final Link codeServerLink = getAppLink(appDescriptor, LinkRel.CODE_SERVER);
         if (codeServerLink != null) {
-            String[] codeServerAddress = codeServerLink.getHref().split(":");
-            uriBuilder.setParameter("h", Window.Location.getHostName()).setParameter("p", codeServerAddress[1]);
+            // Since code server link has been provided it should contains at least host name/address and port.
+            String[] split = codeServerLink.getHref().split(":");
+            String port = null;
+            String host = null;
+            if (split.length == 2) {
+                host = split[0];
+                port = split[1];
+            } else if (split.length == 3) {
+                host = split[0] + ':' + split[1];
+                port = split[2];
+            }
+            uriBuilder.setParameter("h", host).setParameter("p", port);
         }
 
         final String uri = uriBuilder.buildString();

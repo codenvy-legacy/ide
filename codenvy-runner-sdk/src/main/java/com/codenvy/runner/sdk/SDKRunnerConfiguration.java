@@ -24,7 +24,7 @@ import com.codenvy.api.runner.internal.dto.RunRequest;
 import java.util.List;
 
 /**
- * Configuration of Web applications runner.
+ * Configuration of Codenvy extensions runner.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
@@ -32,14 +32,19 @@ public class SDKRunnerConfiguration extends RunnerConfiguration {
     private final String  server;
     private final boolean suspend;
     private final String  transport;
+    /** Specifies the domain name or IP address of the code server. */
+    private final String  codeServerBindAddress;
+    /** Specifies the HTTP port for the code server. */
     private final int     codeServerPort;
 
     public SDKRunnerConfiguration(String server, int httpPort, int memory, int debugPort, boolean suspend,
-                                  String transport, int codeServerPort, List<Link> links, RunRequest runRequest) {
+                                  String transport, String codeServerBindAddress, int codeServerPort, List<Link> links,
+                                  RunRequest runRequest) {
         super(memory, httpPort, debugPort, links, runRequest);
         this.server = server;
         this.suspend = suspend;
         this.transport = transport;
+        this.codeServerBindAddress = codeServerBindAddress;
         this.codeServerPort = codeServerPort;
     }
 
@@ -55,6 +60,10 @@ public class SDKRunnerConfiguration extends RunnerConfiguration {
         return transport;
     }
 
+    public String getCodeServerBindAddress() {
+        return codeServerBindAddress;
+    }
+
     public int getCodeServerPort() {
         return codeServerPort;
     }
@@ -68,6 +77,7 @@ public class SDKRunnerConfiguration extends RunnerConfiguration {
                ", debugPort=" + getDebugPort() +
                ", debugSuspend=" + suspend +
                ", debugTransport=" + transport +
+               ", codeServerBindAddress=" + getCodeServerBindAddress() +
                ", codeServerPort=" + getCodeServerPort() +
                ", request=" + getRequest() +
                '}';

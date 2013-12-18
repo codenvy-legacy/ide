@@ -26,7 +26,6 @@ import com.codenvy.api.runner.internal.ApplicationLogger;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.commons.lang.NamedThreadFactory;
 import com.codenvy.commons.lang.ZipUtils;
-import com.codenvy.ide.commons.MavenUtils;
 import com.google.common.io.CharStreams;
 
 import org.slf4j.Logger;
@@ -44,7 +43,7 @@ import java.util.concurrent.*;
 import java.util.zip.ZipFile;
 
 /**
- * {@code ApplicationServer} implementation to deploy application to Apache Tomcat servlet container.
+ * {@link ApplicationServer} implementation to deploy application to Apache Tomcat servlet container.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
@@ -103,7 +102,7 @@ public class TomcatServer implements ApplicationServer {
         validate(webApp);
         try {
             final Path tomcatPath = Files.createDirectory(appDir.toPath().resolve("tomcat"));
-            ZipUtils.unzip(MavenUtils.getTomcatBinaryDistribution().openStream(), tomcatPath.toFile());
+            ZipUtils.unzip(Utils.getTomcatBinaryDistribution().openStream(), tomcatPath.toFile());
 
             final Path webappsPath = tomcatPath.resolve("webapps");
             ZipUtils.unzip(new File(webApp.getName()), webappsPath.resolve("ide").toFile());
@@ -140,7 +139,7 @@ public class TomcatServer implements ApplicationServer {
         }
     }
 
-    private void configureApiServices(Path webappsPath, SDKRunnerConfiguration runnerCfg)
+    protected void configureApiServices(Path webappsPath, SDKRunnerConfiguration runnerCfg)
             throws RunnerException, IOException {
         final Path apiAppPath = webappsPath.resolve("api");
         ZipUtils.unzip(webappsPath.resolve("api.war").toFile(), apiAppPath.toFile());
@@ -162,7 +161,7 @@ public class TomcatServer implements ApplicationServer {
         }
     }
 
-    private void setEnvVariables(Path tomcatPath, SDKRunnerConfiguration runnerCfg) throws IOException {
+    protected void setEnvVariables(Path tomcatPath, SDKRunnerConfiguration runnerCfg) throws IOException {
         final Path setenvShPath = tomcatPath.resolve("bin/setenv.sh");
         final byte[] bytes = Files.readAllBytes(setenvShPath);
         final String setenvShContent = new String(bytes);
@@ -335,8 +334,12 @@ public class TomcatServer implements ApplicationServer {
                     }
                 }).get(5, TimeUnit.SECONDS);
 
-                // TODO: code server may not starts
-                codeServerProcess.start();
+                if (codeServerProcess != null) {
+                    try {
+                        codeServerProcess.start();
+                    } catch (Exception ignore) {
+                    }
+                }
 
                 logger = new TomcatLogger(logFiles, codeServerProcess);
                 LOG.debug("Start Tomcat at port {}, application {}", httpPort, workDir);
@@ -356,7 +359,10 @@ public class TomcatServer implements ApplicationServer {
             // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
             ProcessUtil.kill(pid);
             if (codeServerProcess != null) {
-                codeServerProcess.stop();
+                try {
+                    codeServerProcess.stop();
+                } catch (Exception ignore) {
+                }
             }
             stopCallback.stopped();
             LOG.debug("Stop Tomcat at port {}, application {}", httpPort, workDir);
@@ -419,7 +425,10 @@ public class TomcatServer implements ApplicationServer {
                 }
 
                 if (codeServerProcess != null) {
-                    codeServerProcess.getLogs(output);
+                    try {
+                        codeServerProcess.getLogs(output);
+                    } catch (Exception ignore) {
+                    }
                 }
             }
 

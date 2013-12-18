@@ -268,7 +268,7 @@
                         <configuration>
                             <tasks>
                                 <move todir="${project.build.directory}/${project.artifactId}-${project.version}/_app/javaParserWorker">
-                                   <fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/javaParserWorker" />
+                                    <fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/javaParserWorker"/>
                                 </move>
                             </tasks>
                         </configuration>
@@ -315,8 +315,8 @@
     </build>
 
     <!--
-    Add extension sources to allow GWT code server recompile them
-    It's a recommended (https://groups.google.com/d/msg/codehaus-mojo-gwt-maven-plugin-users/zvJ0IlGN7Fw/RbyteSEKXtoJ)
+    Add extension sources to allow GWT code server recompile it.
+    This is a recommended (https://groups.google.com/d/msg/codehaus-mojo-gwt-maven-plugin-users/zvJ0IlGN7Fw/RbyteSEKXtoJ)
     workaround of a known bug of Maven GWT Plugin (https://jira.codehaus.org/browse/MGWT-332).
     -->
     <profiles>

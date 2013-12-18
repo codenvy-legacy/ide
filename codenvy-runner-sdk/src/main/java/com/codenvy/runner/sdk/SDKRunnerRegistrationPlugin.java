@@ -24,11 +24,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Codenvy plug-ins runner registration plugin.
+ * Codenvy extensions runner registration plugin.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
-// TODO: temporary solution
+// TODO: it's a temporary solution for standalone version
 public class SDKRunnerRegistrationPlugin implements RunnerRegistrationPlugin {
     private static final String   WS_NAME  = "dev-monit";
     private static final String[] segments = new String[]

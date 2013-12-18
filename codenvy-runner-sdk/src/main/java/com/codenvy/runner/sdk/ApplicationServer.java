@@ -20,7 +20,6 @@ package com.codenvy.runner.sdk;
 import com.codenvy.api.core.config.Configuration;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.ApplicationProcess;
-import com.codenvy.api.runner.internal.DeploymentSources;
 
 import java.util.zip.ZipFile;
 
@@ -44,13 +43,14 @@ public interface ApplicationServer {
      * @param runnerConfiguration
      *         configuration of application server to run application
      * @param codeServerProcess
+     *         may be <code>null</code> if no need to run code server
      * @param stopCallback
      *         an implementation should invoke stopped() method on provided <code>stopCallback</code> when this
      *         application
      *         server stopped
      * @return {@code ApplicationProcess} that represents a deployed app
      * @throws com.codenvy.api.runner.RunnerException
-     *         if an error occurs when try to deploy {@code DeploymentSources} to application server
+     *         if an error occurs when try to deploy app to application server
      */
     ApplicationProcess deploy(java.io.File appDir, ZipFile warFile, SDKRunnerConfiguration runnerConfiguration,
                               CodeServer.CodeServerProcess codeServerProcess, StopCallback stopCallback)

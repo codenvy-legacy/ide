@@ -35,22 +35,32 @@ import org.codehaus.plexus.util.xml.Xpp3DomUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.*;
+import java.util.zip.ZipFile;
 
 /**
- * //
+ * GWT code server. Concrete implementations provide an implementation of methods
+ * thereby controlling how the GWT code server will run, stop, get log files content.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
 public class CodeServer {
     private static final Logger LOG                    = LoggerFactory.getLogger(CodeServer.class);
-    /** Id of Maven profile that used to add (re)sources of custom's extension. */
+    /** Id of Maven POM profile used to add (re)sources of custom extension to code server recompilation process. */
     private static final String ADD_SOURCES_PROFILE_ID = "customExtensionSources";
     protected final ExecutorService pidTaskExecutor;
 
@@ -58,12 +68,13 @@ public class CodeServer {
         pidTaskExecutor = Executors.newCachedThreadPool(new NamedThreadFactory("CodeServer-", true));
     }
 
-    CodeServerProcess prepare(Path workDirPath, SDKRunnerConfiguration runnerConfiguration,
-                              SDKRunner.ExtensionDescriptor extensionDescriptor, Path projectSourcesPath)
-            throws RunnerException {
+    public CodeServerProcess prepare(Path workDirPath, SDKRunnerConfiguration runnerConfiguration,
+                                     Utils.ExtensionDescriptor extensionDescriptor, Path projectSourcesPath,
+                                     ZipFile warFile) throws RunnerException {
+        final Path javaParserWorkerPath;
         try {
             final Path warDirPath = workDirPath.resolve("war");
-            ZipUtils.unzip(MavenUtils.getCodenvyPlatformBinaryDistribution().openStream(), warDirPath.toFile());
+            ZipUtils.unzip(Utils.getCodenvyPlatformBinaryDistribution().openStream(), warDirPath.toFile());
 
             MavenUtils.addDependencyToPom(warDirPath.resolve("pom.xml"), extensionDescriptor.groupId,
                                           extensionDescriptor.artifactId,
@@ -71,32 +82,36 @@ public class CodeServer {
             GwtXmlUtils.inheritGwtModule(MavenUtils.findFile(SDKRunner.IDE_GWT_XML_FILE_NAME, warDirPath),
                                          extensionDescriptor.gwtModuleName);
 
-            setCodeServerConfiguration(warDirPath.resolve("pom.xml"), workDirPath, null,
-                                       runnerConfiguration.getCodeServerPort());
+            setCodeServerConfiguration(warDirPath.resolve("pom.xml"), workDirPath, runnerConfiguration);
 
             final Path extDirPath = Files.createDirectory(workDirPath.resolve("ext"));
             Files.createSymbolicLink(extDirPath.resolve("src"), projectSourcesPath.resolve("src"));
             Files.createSymbolicLink(extDirPath.resolve("pom.xml"), projectSourcesPath.resolve("pom.xml"));
+
+            javaParserWorkerPath = workDirPath.resolve("javaParserWorker");
+            Utils.unzip(new File(warFile.getName()), Paths.get("_app/javaParserWorker"), javaParserWorkerPath.toFile());
         } catch (IOException e) {
             throw new RunnerException(e);
         }
 
         final CodeServerProcess codeServerProcess;
         if (SystemInfo.isUnix()) {
-            codeServerProcess = startUnix(workDirPath.toFile(), runnerConfiguration);
+            codeServerProcess = startUnix(workDirPath.toFile(), runnerConfiguration, javaParserWorkerPath);
         } else {
-            codeServerProcess = startWindows(workDirPath.toFile(), runnerConfiguration);
+            codeServerProcess = startWindows(workDirPath.toFile(), runnerConfiguration, javaParserWorkerPath);
         }
         return codeServerProcess;
     }
 
     // *nix
 
-    private CodeServerProcess startUnix(java.io.File codeServerWorkDir, SDKRunnerConfiguration runnerConfiguration)
+    private CodeServerProcess startUnix(File codeServerWorkDir, SDKRunnerConfiguration runnerConfiguration,
+                                        Path javaParserWorkerPath)
             throws RunnerException {
         java.io.File startUpScriptFile = genStartUpScriptUnix(codeServerWorkDir);
-        return new CodeServerProcess(runnerConfiguration.getCodeServerPort(), startUpScriptFile, codeServerWorkDir,
-                                     pidTaskExecutor);
+        return new CodeServerProcess(runnerConfiguration.getCodeServerBindAddress(),
+                                     runnerConfiguration.getCodeServerPort(), startUpScriptFile, codeServerWorkDir,
+                                     pidTaskExecutor, javaParserWorkerPath);
     }
 
     /**
@@ -107,17 +122,21 @@ public class CodeServer {
      * @param workDir
      *         code server working directory is the root of the directory tree where the code server will write
      *         compiler output. If not supplied, a system temporary directory will be used
-     * @param port
-     *         port on which code server will run. If -1 supplied, a default port will be 9876
+     * @param runnerConfiguration
      * @throws RunnerException
-     *         if any error occurred while writing code server configuration
+     *         if any error occurred while writing code server's configuration
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private void setCodeServerConfiguration(Path pomPath, Path workDir, String bindAddress, int port)
+    private void setCodeServerConfiguration(Path pomPath, Path workDir, SDKRunnerConfiguration runnerConfiguration)
             throws RunnerException {
         final String confWorkDir = workDir == null ? "" : "<codeServerWorkDir>" + workDir + "</codeServerWorkDir>";
+
+        final String bindAddress = runnerConfiguration.getCodeServerBindAddress();
         final String confBindAddress = bindAddress == null ? "" : "<bindAddress>" + bindAddress + "</bindAddress>";
+
+        final int port = runnerConfiguration.getCodeServerPort();
         final String confPort = port == -1 ? "" : "<codeServerPort>" + port + "</codeServerPort>";
+
         final String codeServerConf =
                 String.format("<configuration>%s%s%s</configuration>", confWorkDir, confBindAddress, confPort);
 
@@ -165,26 +184,37 @@ public class CodeServer {
 
     // Windows
 
-    private CodeServerProcess startWindows(java.io.File codeServerWorkDir, SDKRunnerConfiguration runnerConfiguration)
-            throws RunnerException {
+    private CodeServerProcess startWindows(java.io.File codeServerWorkDir, SDKRunnerConfiguration runnerConfiguration,
+                                           Path javaParserWorkerPath) throws RunnerException {
         throw new UnsupportedOperationException();
     }
 
-    static class CodeServerProcess {
-        final int             port;
-        final ExecutorService pidTaskExecutor;
-        final File            startUpScriptFile;
-        final File            workDir;
-        int pid = -1;
+    public static class CodeServerProcess {
+        private final String          bindAddress;
+        private final int             port;
+        private final ExecutorService pidTaskExecutor;
+        private final ExecutorService copyDirExecutor;
+        private final Path            javaParserWorkerPath;
+        private final File            startUpScriptFile;
+        private final File            workDir;
+        private int pid = -1;
 
-        CodeServerProcess(int port, File startUpScriptFile, File workDir, ExecutorService pidTaskExecutor) {
+        protected CodeServerProcess(String bindAddress, int port, File startUpScriptFile, File workDir,
+                                    ExecutorService pidTaskExecutor, Path javaParserWorkerPath) {
+            this.bindAddress = bindAddress;
             this.port = port;
             this.startUpScriptFile = startUpScriptFile;
             this.workDir = workDir;
             this.pidTaskExecutor = pidTaskExecutor;
+            copyDirExecutor = Executors.newSingleThreadExecutor(new NamedThreadFactory("CopyDir", true));
+            this.javaParserWorkerPath = javaParserWorkerPath;
         }
 
-        void start() throws RunnerException {
+        public void start() throws RunnerException {
+            if (pid != -1) {
+                throw new IllegalStateException("Code server process is already started");
+            }
+
             try {
                 Runtime.getRuntime().exec(new CommandLine(startUpScriptFile.getAbsolutePath())
                                                   .toShellCommand(), null, workDir);
@@ -211,6 +241,19 @@ public class CodeServer {
                     }
                 }).get(5, TimeUnit.SECONDS);
 
+                copyDirExecutor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            new WatchDir(workDir.toPath(), javaParserWorkerPath,
+                                         "com.codenvy.ide.IDEPlatform/compile-*/war/_app").processEvents();
+                        } catch (IOException e) {
+                        }
+                    }
+                });
+
+                // TODO: wait for pre-compile or use gwt-maven-plugin 2.6.0-rc1
+
                 LOG.debug("Start GWT code server at port {}, working directory {}", port, workDir);
             } catch (IOException | InterruptedException | TimeoutException e) {
                 throw new RunnerException(e);
@@ -219,20 +262,99 @@ public class CodeServer {
             }
         }
 
-        void stop() {
+        public void stop() {
             if (pid == -1) {
-                throw new IllegalStateException("Process is not started yet");
+                throw new IllegalStateException("Code server process is not started yet");
             }
 
             // Use ProcessUtil.kill(pid) because java.lang.Process.destroy() method doesn't
             // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
             ProcessUtil.kill(pid);
+
+            copyDirExecutor.shutdownNow();
+
             LOG.debug("Stop GWT code server at port {}, working directory {}", port, workDir);
         }
 
-        void getLogs(Appendable output) {
-            // get logs over HTTP request
+        public void getLogs(Appendable output) throws IOException, RunnerException {
+            final String url = bindAddress + ':' + port + "/log/_app";
+            final String logContent = sendGet(new URL(url.startsWith("http://") ? url : "http://" + url));
+            output.append(String.format("%n====> GWT-code-server.log <====%n"));
+            output.append(logContent);
+            output.append(System.lineSeparator());
+        }
+
+        private String sendGet(URL url) throws IOException, RunnerException {
+            HttpURLConnection http = null;
+            try {
+                http = (HttpURLConnection)url.openConnection();
+                http.setRequestMethod("GET");
+                int responseCode = http.getResponseCode();
+                if (responseCode != 200) {
+                    responseFail(http);
+                }
+
+                InputStream data = http.getInputStream();
+                try {
+                    return readBodyTagContent(data);
+                } finally {
+                    data.close();
+                }
+            } finally {
+                if (http != null) {
+                    http.disconnect();
+                }
+            }
+        }
+
+        private String readBodyTagContent(InputStream stream) throws IOException {
+            try {
+                DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder = domFactory.newDocumentBuilder();
+                Document doc = builder.parse(stream);
+                return doc.getElementsByTagName("body").item(0).getTextContent();
+            } catch (ParserConfigurationException | SAXException e) {
+                throw new IllegalStateException(e.getMessage(), e);
+            }
+        }
+
+        private void responseFail(HttpURLConnection http) throws IOException, RunnerException {
+            InputStream errorStream = null;
+            try {
+                int length = http.getContentLength();
+                errorStream = http.getErrorStream();
+                String body = null;
+                if (errorStream != null) {
+                    body = readBody(errorStream, length);
+                }
+                throw new RunnerException("Unable to get code server logs. " + body == null ? "" : body);
+            } finally {
+                if (errorStream != null) {
+                    errorStream.close();
+                }
+            }
+        }
+
+        private String readBody(InputStream input, int contentLength) throws IOException {
+            String body = null;
+            if (contentLength > 0) {
+                byte[] b = new byte[contentLength];
+                int off = 0;
+                int i;
+                while ((i = input.read(b, off, contentLength - off)) > 0) {
+                    off += i;
+                }
+                body = new String(b);
+            } else if (contentLength < 0) {
+                ByteArrayOutputStream bout = new ByteArrayOutputStream();
+                byte[] buf = new byte[1024];
+                int i;
+                while ((i = input.read(buf)) != -1) {
+                    bout.write(buf, 0, i);
+                }
+                body = bout.toString();
+            }
+            return body;
         }
     }
-
 }
