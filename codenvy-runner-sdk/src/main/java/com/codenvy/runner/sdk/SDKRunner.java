@@ -64,11 +64,9 @@ public class SDKRunner extends Runner {
     private static final String DEFAULT_BIND_ADDRESS     = "localhost";
     private static final Logger LOG                      = LoggerFactory.getLogger(SDKRunner.class);
     private final Map<String, ApplicationServer> applicationServers;
-    private final Path                           fsMountPointPath;
 
-    public SDKRunner(Path fsMountPointPath) {
+    public SDKRunner() {
         applicationServers = new HashMap<>();
-        this.fsMountPointPath = fsMountPointPath;
     }
 
     @Override
@@ -124,12 +122,6 @@ public class SDKRunner extends Runner {
             throw new RunnerException(String.format("Server %s not found", sdkRunnerCfg.getServer()));
         }
 
-        Path projectSourcesPath = fsMountPointPath.resolve(sdkRunnerCfg.getRequest().getProject());
-        if (!projectSourcesPath.isAbsolute()) {
-            projectSourcesPath = projectSourcesPath.toAbsolutePath();
-        }
-        projectSourcesPath = projectSourcesPath.normalize();
-
         final java.io.File appDir;
         final Path codeServerWorkDirPath;
         final Utils.ExtensionDescriptor extension;
@@ -144,12 +136,11 @@ public class SDKRunner extends Runner {
             throw new RunnerException(e);
         }
 
+        CodeServer codeServer = new CodeServer();
+        CodeServer.CodeServerProcess codeServerProcess = codeServer.prepare(codeServerWorkDirPath, sdkRunnerCfg,
+                                                                            extension);
+
         final ZipFile warFile = buildCodenvyWebAppWithExtension(extension);
-
-        final CodeServer codeServer = new CodeServer();
-        CodeServer.CodeServerProcess codeServerProcess =
-                codeServer.prepare(codeServerWorkDirPath, sdkRunnerCfg, extension, projectSourcesPath);
-
         final ApplicationProcess process =
                 server.deploy(appDir, warFile, sdkRunnerCfg, codeServerProcess,
                               new ApplicationServer.StopCallback() {

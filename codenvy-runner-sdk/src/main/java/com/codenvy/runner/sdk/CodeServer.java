@@ -67,7 +67,7 @@ public class CodeServer {
     }
 
     public CodeServerProcess prepare(Path workDirPath, SDKRunnerConfiguration runnerConfiguration,
-                                     Utils.ExtensionDescriptor extensionDescriptor, Path projectSourcesPath)
+                                     Utils.ExtensionDescriptor extensionDescriptor)
             throws RunnerException {
         try {
             final Path warDirPath = workDirPath.resolve("war");
@@ -81,7 +81,14 @@ public class CodeServer {
 
             setCodeServerConfiguration(warDirPath.resolve("pom.xml"), workDirPath, runnerConfiguration);
 
+            // Create symbolic links to the project's sources in order
+            // to provide actual sources to code server at any time.
             final Path extDirPath = Files.createDirectory(workDirPath.resolve("ext"));
+            Path projectSourcesPath = Utils.getMountPath().resolve(runnerConfiguration.getRequest().getProject());
+            if (!projectSourcesPath.isAbsolute()) {
+                projectSourcesPath = projectSourcesPath.toAbsolutePath();
+            }
+            projectSourcesPath = projectSourcesPath.normalize();
             Files.createSymbolicLink(extDirPath.resolve("src"), projectSourcesPath.resolve("src"));
             Files.createSymbolicLink(extDirPath.resolve("pom.xml"), projectSourcesPath.resolve("pom.xml"));
         } catch (IOException e) {
