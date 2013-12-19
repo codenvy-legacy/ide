@@ -21,18 +21,22 @@ package org.exoplatform.ide.client.download;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.RootPanel;
 
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.messages.IdeUploadLocalizationConstant;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Link;
 
@@ -90,13 +94,48 @@ public class DownloadHandler implements ItemsSelectedHandler, DownloadItemHandle
 
         Item item = selectedItems.get(0);
 
-        if (item instanceof FileModel) {
-            downloadResource(item.getLinkByRelation(Link.REL_DOWNLOAD_FILE).getHref());
-        } else if (item instanceof FolderModel) {
-            downloadResource(item.getLinkByRelation(Link.REL_DOWNLOAD_ZIP).getHref());
-        } else if (item instanceof ProjectModel) {
-            downloadResource(item.getLinkByRelation(Link.REL_DOWNLOAD_ZIP).getHref());
+        Link downloadLink = getLink(item);
+
+        if (downloadLink == null) {
+            getItemForDownload(item);
         } else {
+            downloadResource(downloadLink.getHref());
+        }
+    }
+
+    /** Try to get download link from item. */
+    private Link getLink(Item item) {
+        if (item instanceof FileModel) {
+            return item.getLinkByRelation(Link.REL_DOWNLOAD_FILE);
+        } else if (item instanceof FolderModel) {
+            return item.getLinkByRelation(Link.REL_DOWNLOAD_ZIP);
+        } else {
+            return null;
+        }
+    }
+
+    /** Try to get item and fetch download link if it not exist. */
+    private void getItemForDownload(Item item) {
+        try {
+            VirtualFileSystem.getInstance()
+                             .getItemById(item.getId(),
+                                          new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper())) {
+                                              @Override
+                                              protected void onSuccess(ItemWrapper result) {
+                                                  Link downloadLink = getLink(result.getItem());
+                                                  if (downloadLink != null) {
+                                                      downloadResource(downloadLink.getHref());
+                                                  } else {
+                                                      Dialogs.getInstance().showError(UPLOAD_LOCALIZATION_CONSTANT.downloadFileError());
+                                                  }
+                                              }
+
+                                              @Override
+                                              protected void onFailure(Throwable exception) {
+                                                  Dialogs.getInstance().showError(UPLOAD_LOCALIZATION_CONSTANT.downloadFileError());
+                                              }
+                                          });
+        } catch (RequestException e) {
             Dialogs.getInstance().showError(UPLOAD_LOCALIZATION_CONSTANT.downloadFileError());
         }
     }
