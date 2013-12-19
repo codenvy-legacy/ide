@@ -152,6 +152,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                                        @Override
                                        public void execute() {
+                                           Integration.setStatus("configuration-received");
                                            checkEntryPoint();
                                        }
                                    });
@@ -182,6 +183,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
             Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                 @Override
                 public void execute() {
+                    Integration.setStatus("changing-vfs " + entryPoint);
                     IDE.fireEvent(new SwitchVFSEvent(entryPoint));
                 }
             });
@@ -189,6 +191,8 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
     }
 
     public void onVfsChanged(VfsChangedEvent event) {
+        Integration.setStatus("vfs-changed " + (event.getVfsInfo() != null ? event.getVfsInfo().getId() : "NULL"));
+        
         IDE.removeHandler(VfsChangedEvent.TYPE, this);
         String projectToOpen = Utils.getProjectToOpen();
         if (projectToOpen != null && !projectToOpen.isEmpty()) {

@@ -65,9 +65,13 @@
 
     <script type="text/javascript" language="javascript" src='<%= staticResourceUrl(request, "greeting.js")%>'></script>
 
+<!-- 
     <link type="text/css" rel="stylesheet" href='<%= staticResourceUrl(request, "top-menu.css")%>' media="all"/>
+ -->
     
+<!-- 
     <link href='<%= staticResourceUrl(request, "css/ide01.css")%>' media="screen" rel="stylesheet" type="text/css"/>
+ -->
     
 </head>
 
@@ -75,6 +79,7 @@
 
 <script type="text/javascript" language="javascript" src='<%= staticResourceUrl(request, "browserNotSupported.js")%>'></script>
 
+<!-- Deprecated -->
 <div id="ide-preloader" style="position: absolute; left:0px; right: 0px; top:0px; bottom: 0px; background-color: #FFFFFF; z-index: 900100;">
 	<div style="position:absolute; width:230px; height:90px; background-image: url('<%= staticResourceUrl(request, "loader-background-element.png")%>'); left:50%; top:50%; margin-left:-115px; margin-top:-45px; text-align: center;">
 		<img src='<%= staticResourceUrl(request, "ajax-loader-new.gif")%>' style="margin-top: 20px; margin-bottom: 10px;" />
@@ -83,19 +88,25 @@
 	</div>
 </div>
 
-<script type="text/javascript" language="javascript" src='<%= staticResourceUrl(request, "_app.nocache.js")%>'></script>
+<script>
+	window["ide-status-changed-listener"] = function(msg) {
+		console.log("ide-status-changed-listener [" + msg + "]");
+		try {
+			if ("load-complete" === msg) {
+				var element = document.getElementById("ide-preloader");
+				element.parentNode.removeChild(element);
+			}		
+		} catch (e) {
+			console.log("Error: " + e.message);
+		}
+	}
+</script>
 
-<div id="ide-menu-additions" align="right" class="ideMenuAdditions">
-    <table cellspacing="0" cellpadding="0" border="0"
-           class="ideMenuAdditionsTable">
-        <tr id="ide-menu-additions-rows">
-        </tr>
-    </table>
-</div>
+<script type="text/javascript" src='<%= staticResourceUrl(request, "_app.nocache.js")%>'></script>
 
-<script type="text/javascript" language="javascript" src='<%= staticResourceUrl(request, "session.js")%>'></script>
+<script type="text/javascript" src='<%= staticResourceUrl(request, "session.js")%>'></script>
 
-<script type="text/javascript" language="javascript" src='<%= staticResourceUrl(request, "cloud_menu.js")%>'></script>
+<script type="text/javascript" src='<%= staticResourceUrl(request, "menu-additions.js")%>'></script>
 
 <script type="text/javascript">
     var uvOptions = {};

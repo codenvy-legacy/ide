@@ -96,12 +96,7 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
         new Timer() {
             @Override
             public void run() {
-                try {
-                    DOM.getElementById("ide-preloader").removeFromParent();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
+                Integration.setStatus("loading-configuration");
                 new Timer() {
                     @Override
                     public void run() {

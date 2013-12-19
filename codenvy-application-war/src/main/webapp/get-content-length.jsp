@@ -1,5 +1,5 @@
-<!--
-
+<%
+/*
     CODENVY CONFIDENTIAL
     __________________
 
@@ -15,21 +15,23 @@
     Dissemination of this information or reproduction of this material
     is strictly forbidden unless prior written permission is obtained
     from Codenvy S.A..
+*/
 
--->
-<module rename-to="_app">
-
-    <inherits name='com.google.gwt.user.User'/>
-
-    <inherits name="org.exoplatform.ide.IDECore"/>
-    <inherits name="org.exoplatform.ide.IDEExtensions"/>
-
-    <entry-point class='org.exoplatform.ide.client.IDEApplication'/>
+try {
+    String _resource = request.getParameter("resource");
     
-    <!--
-    	Cross-site iframe linker is needed to generate compilation-mappings.txt.
-    	The file is used to determine JavaScript file to be loaded.
-    -->
-    <add-linker name="xsiframe"/>
-    
-</module>
+    if (!_resource.startsWith("/ide-resources")) {
+        response.sendError(404, "Resource is not IDE Resource");
+    } else {
+        String res = application.getRealPath("") + _resource.substring("/ide-resources".length());
+        java.io.File f = new java.io.File(res);
+        if (!f.exists()) {
+            response.sendError(404, "Resource " + _resource + " does not exist");
+        } else {
+            out.print("" + f.length());
+        }
+    }
+} catch (Exception e) {
+    response.sendError(500, e.getMessage());
+}
+%>

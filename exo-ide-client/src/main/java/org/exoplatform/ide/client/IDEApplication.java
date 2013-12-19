@@ -22,6 +22,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 
 import org.exoplatform.gwtframework.commons.util.Log;
+import org.exoplatform.ide.client.application.Integration;
 
 /**
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
@@ -29,7 +30,14 @@ import org.exoplatform.gwtframework.commons.util.Log;
  */
 public class IDEApplication implements EntryPoint {
 
+    public static final native void log(String msg) /*-{
+        console.log(msg);
+    }-*/;    
+    
     public void onModuleLoad() {
+        log("IDEApplication.onModuleLoad()");
+        
+        Integration.setStatus("load-complete");        
         GWT.setUncaughtExceptionHandler(new H());
         new IDE();
     }
