@@ -17,23 +17,39 @@
  */
 package com.codenvy.runner.sdk;
 
+import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.dto.RunRequest;
 
+import java.util.List;
+
 /**
- * Configuration of Codenvy SDK runner.
+ * Configuration of Codenvy extensions runner.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
 public class SDKRunnerConfiguration extends RunnerConfiguration {
+    private final String  server;
     private final boolean suspend;
     private final String  transport;
+    /** Specifies the domain name or IP address of the code server. */
+    private final String  codeServerBindAddress;
+    /** Specifies the HTTP port for the code server. */
+    private final int     codeServerPort;
 
-    public SDKRunnerConfiguration(int httpPort, int memory, int debugPort, boolean suspend,
-                                  String transport, RunRequest runRequest) {
-        super(memory, httpPort, debugPort, runRequest);
+    public SDKRunnerConfiguration(String server, int httpPort, int memory, int debugPort, boolean suspend,
+                                  String transport, String codeServerBindAddress, int codeServerPort, List<Link> links,
+                                  RunRequest runRequest) {
+        super(memory, httpPort, debugPort, links, runRequest);
+        this.server = server;
         this.suspend = suspend;
         this.transport = transport;
+        this.codeServerBindAddress = codeServerBindAddress;
+        this.codeServerPort = codeServerPort;
+    }
+
+    public String getServer() {
+        return server;
     }
 
     public boolean isDebugSuspend() {
@@ -44,14 +60,25 @@ public class SDKRunnerConfiguration extends RunnerConfiguration {
         return transport;
     }
 
+    public String getCodeServerBindAddress() {
+        return codeServerBindAddress;
+    }
+
+    public int getCodeServerPort() {
+        return codeServerPort;
+    }
+
     @Override
     public String toString() {
         return "RunnerConfiguration{" +
-               "memory=" + getMemory() +
+               "server=" + server +
+               ", memory=" + getMemory() +
                ", port=" + getPort() +
                ", debugPort=" + getDebugPort() +
                ", debugSuspend=" + suspend +
                ", debugTransport=" + transport +
+               ", codeServerBindAddress=" + getCodeServerBindAddress() +
+               ", codeServerPort=" + getCodeServerPort() +
                ", request=" + getRequest() +
                '}';
     }

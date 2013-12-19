@@ -185,7 +185,7 @@ public class WorkerNameEnvironment implements INameEnvironment {
             WorkerTypeInfoStorage.get().putType(fqn, type);
 
             return new NameEnvironmentAnswer(type, null);
-        } else return null;
+        } else return new NameEnvironmentAnswer((IBinaryType)null, null);
     }
 
     /** {@inheritDoc} */

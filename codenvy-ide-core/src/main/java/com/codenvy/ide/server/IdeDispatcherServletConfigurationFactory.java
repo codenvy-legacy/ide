@@ -130,8 +130,8 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                              })
                                              .priority(300)
                                              .done()
-                                             // Allow specify parameters apps that launched in Codenvy SDK.
-                                             // h - GWT code server's host, p - GWT code server's port
+                                             // Allow to specify GWT code server URL for app launched with SDK runner.
+                                             // h - GWT code server host, p - GWT code server port
                                              .when(new Condition() {
                                                  @Override
                                                  public boolean matches(HttpServletRequest request, HttpServletResponse response) {

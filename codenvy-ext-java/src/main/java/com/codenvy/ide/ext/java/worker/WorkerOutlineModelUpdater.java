@@ -176,7 +176,8 @@ public class WorkerOutlineModelUpdater {
             WorkerCodeBlock m = createCodeBlock(BlockTypes.METHOD.getType(), node.getStartPosition(), node.getLength());
             m.setModifiers(node.getModifiers());
             m.setName(node.getName().getFullyQualifiedName() + getMethodParams(node));
-            m.setJavaType(node.getReturnType2().toString());
+            Type returnType = node.getReturnType2();
+            m.setJavaType(returnType != null ? returnType.toString() : null);
             childrens.add(m);
             addChildrens(node, m);
             return false;

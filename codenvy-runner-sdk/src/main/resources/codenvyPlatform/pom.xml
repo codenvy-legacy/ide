@@ -33,6 +33,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <generated.sources.directory>${project.build.directory}/generated-sources/gen</generated.sources.directory>
+
+        <!-- GWT -->
+        <gwt.version>2.6.0-rc3</gwt.version>
+        <gwt.maven.plugin.version>2.6.0-rc3</gwt.maven.plugin.version>
     </properties>
 
     <!--
@@ -240,10 +244,13 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
                 <version>${gwt.maven.plugin.version}</version>
+                <configuration>
+                    <extraJvmArgs>-Xss512m -Xmx2048m -XX:MaxPermSize=1024m</extraJvmArgs>
+                    <precompile>false</precompile>
+                </configuration>
                 <executions>
                     <execution>
                         <configuration>
-                            <extraJvmArgs>-Xss512m -Xmx2048m -XX:MaxPermSize=1024m</extraJvmArgs>
                             <modules>
                                 <module>com.codenvy.ide.IDEPlatform</module>
                                 <module>com.codenvy.ide.ext.java.JavaParserWorker</module>
@@ -266,7 +273,7 @@
                         <configuration>
                             <tasks>
                                 <move todir="${project.build.directory}/${project.artifactId}-${project.version}/_app/javaParserWorker">
-                                   <fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/javaParserWorker" />
+                                    <fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/javaParserWorker"/>
                                 </move>
                             </tasks>
                         </configuration>
@@ -311,4 +318,42 @@
             </plugin>
         </plugins>
     </build>
+
+    <!--
+    Add extension sources to allow GWT code server recompile it.
+    This is a recommended (https://groups.google.com/d/msg/codehaus-mojo-gwt-maven-plugin-users/zvJ0IlGN7Fw/RbyteSEKXtoJ)
+    workaround of a known bug of Maven GWT Plugin (https://jira.codehaus.org/browse/MGWT-332).
+    -->
+    <profiles>
+        <profile>
+            <id>customExtensionSources</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <id>add-extension-sources</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>add-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>../ext/src/main/java</source>
+                                        <source>../ext/src/main/resources</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
