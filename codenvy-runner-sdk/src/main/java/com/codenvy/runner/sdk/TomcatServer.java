@@ -76,12 +76,10 @@ public class TomcatServer implements ApplicationServer {
             "  </Service>\n" +
             "</Server>\n";
     /** Validator to validate deployment sources. */
-    protected final JavaWebApplicationValidator appValidator;
-    protected final ExecutorService             pidTaskExecutor;
-    private         int                         memSize;
+    protected final ExecutorService pidTaskExecutor;
+    private         int             memSize;
 
     public TomcatServer() {
-        appValidator = new JavaWebApplicationValidator();
         pidTaskExecutor = Executors.newCachedThreadPool(new NamedThreadFactory("TomcatServer-", true));
 
         Configuration configuration = new Configuration();
@@ -99,7 +97,6 @@ public class TomcatServer implements ApplicationServer {
                                      SDKRunnerConfiguration runnerConfiguration,
                                      CodeServer.CodeServerProcess codeServerProcess,
                                      StopCallback stopCallback) throws RunnerException {
-        validate(webApp);
         try {
             final Path tomcatPath = Files.createDirectory(appDir.toPath().resolve("tomcat"));
             ZipUtils.unzip(Utils.getTomcatBinaryDistribution().openStream(), tomcatPath.toFile());
@@ -118,13 +115,6 @@ public class TomcatServer implements ApplicationServer {
             }
         } catch (IOException e) {
             throw new RunnerException(e);
-        }
-    }
-
-    protected void validate(ZipFile toDeploy) throws RunnerException {
-        if (!appValidator.isValid(toDeploy)) {
-            throw new RunnerException(
-                    String.format("Invalid deployment. Cannot deploy this application in %s server", getName()));
         }
     }
 
@@ -334,11 +324,9 @@ public class TomcatServer implements ApplicationServer {
                     }
                 }).get(5, TimeUnit.SECONDS);
 
-                if (codeServerProcess != null) {
-                    try {
-                        codeServerProcess.start();
-                    } catch (Exception ignore) {
-                    }
+                try {
+                    codeServerProcess.start();
+                } catch (Exception ignore) {
                 }
 
                 logger = new TomcatLogger(logFiles, codeServerProcess);
@@ -358,12 +346,12 @@ public class TomcatServer implements ApplicationServer {
             // Use ProcessUtil.kill(pid) because java.lang.Process.destroy() method doesn't
             // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
             ProcessUtil.kill(pid);
-            if (codeServerProcess != null) {
-                try {
-                    codeServerProcess.stop();
-                } catch (Exception ignore) {
-                }
+
+            try {
+                codeServerProcess.stop();
+            } catch (Exception ignore) {
             }
+
             stopCallback.stopped();
             LOG.debug("Stop Tomcat at port {}, application {}", httpPort, workDir);
         }
@@ -424,11 +412,9 @@ public class TomcatServer implements ApplicationServer {
                     output.append(System.lineSeparator());
                 }
 
-                if (codeServerProcess != null) {
-                    try {
-                        codeServerProcess.getLogs(output);
-                    } catch (Exception ignore) {
-                    }
+                try {
+                    codeServerProcess.getLogs(output);
+                } catch (Exception ignore) {
                 }
             }
 

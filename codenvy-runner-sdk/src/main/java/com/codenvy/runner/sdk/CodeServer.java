@@ -107,19 +107,7 @@ public class CodeServer {
                                      pidTaskExecutor);
     }
 
-    /**
-     * Set the GWT code server configuration in the specified pom.xml file.
-     *
-     * @param pomPath
-     *         path to pom.xml that stores code server's configuration
-     * @param workDir
-     *         code server working directory is the root of the directory tree where the code server will write
-     *         compiler output. If not supplied, a system temporary directory will be used
-     * @param runnerConfiguration
-     *         {@link SDKRunner} configuration
-     * @throws RunnerException
-     *         if any error occurred while writing code server's configuration
-     */
+    /** Set the GWT code server configuration in the specified pom.xml file. */
     @SuppressWarnings({"rawtypes", "unchecked"})
     private void setCodeServerConfiguration(Path pomPath, Path workDir, SDKRunnerConfiguration runnerConfiguration)
             throws RunnerException {

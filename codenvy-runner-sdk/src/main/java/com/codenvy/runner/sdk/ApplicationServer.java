@@ -24,7 +24,7 @@ import com.codenvy.api.runner.internal.ApplicationProcess;
 import java.util.zip.ZipFile;
 
 /**
- * Application server to deploy an app.
+ * Application server to deploy a web app.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
