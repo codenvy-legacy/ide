@@ -418,13 +418,16 @@ public class FSMountPoint implements MountPoint {
         try {
             final VirtualFileImpl child =
                     new VirtualFileImpl(new java.io.File(parent.getIoFile(), name), childPath, pathToId(childPath), this);
-            if (hasPermission(child, BasicPermissions.READ, false)) {
-                return child;
+            if (child.exists()) {
+                if (hasPermission(child, BasicPermissions.READ, false)) {
+                    return child;
+                }
+                throw new PermissionDeniedException(String.format("Unable get item '%s'. Operation not permitted. ", child.getPath()));
             }
-            throw new PermissionDeniedException(String.format("Unable get item '%s'. Operation not permitted. ", child.getPath()));
         } finally {
             lock.release();
         }
+        return null;
     }
 
 
@@ -1008,7 +1011,7 @@ public class FSMountPoint implements MountPoint {
             try {
                 final ZipOutputStream zipOut = new ZipOutputStream(out);
 
-                if (virtualFile.isProject()) {
+                if (virtualFile.isProject() && virtualFile.getChild(".project") == null) {
                     zipOut.putNextEntry(new ZipEntry(".project"));
                     zipOut.write(JsonHelper.toJson(virtualFile.getProperties(PropertyFilter.ALL_FILTER)).getBytes());
                 }
@@ -1040,7 +1043,7 @@ public class FSMountPoint implements MountPoint {
                                 zipOut.closeEntry();
                             } else if (current.isFolder()) {
                                 zipOut.putNextEntry(new ZipEntry(zipEntryName + '/'));
-                                if (current.isProject()) {
+                                if (current.isProject() && current.getChild(".project") == null) {
                                     zipOut.putNextEntry(new ZipEntry(zipEntryName + "/.project"));
                                     zipOut.write(JsonHelper.toJson(current.getProperties(PropertyFilter.ALL_FILTER)).getBytes());
                                 }
