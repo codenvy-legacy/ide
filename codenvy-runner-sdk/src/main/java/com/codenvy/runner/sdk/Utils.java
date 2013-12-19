@@ -23,16 +23,11 @@ import com.codenvy.ide.commons.MavenUtils;
 import org.apache.maven.model.Model;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 /**
  * A smattering of useful methods.
@@ -81,47 +76,6 @@ class Utils {
         }
         final File m2Home = new File(m2HomeEnv);
         return m2Home.exists() ? m2Home : null;
-    }
-
-    static void unzip(File zip, Path dirRelPathToUnzip, File targetDir) throws IOException {
-        ZipInputStream zipIn = null;
-        FileInputStream in = new FileInputStream(zip);
-        try {
-            zipIn = new ZipInputStream(in);
-            byte[] b = new byte[8192];
-            ZipEntry zipEntry;
-            while ((zipEntry = zipIn.getNextEntry()) != null) {
-                if (Paths.get(zipEntry.getName()).toString().equals(dirRelPathToUnzip.toString()) ||
-                    !zipEntry.getName().startsWith(dirRelPathToUnzip.toString())) {
-                    continue;
-                }
-                final String relName = zipEntry.getName().substring(dirRelPathToUnzip.toString().length() + 1);
-                File file = new File(targetDir, relName);
-                if (!zipEntry.isDirectory()) {
-                    File parent = file.getParentFile();
-                    if (!parent.exists()) {
-                        parent.mkdirs();
-                    }
-                    FileOutputStream fos = new FileOutputStream(file);
-                    try {
-                        int r;
-                        while ((r = zipIn.read(b)) != -1) {
-                            fos.write(b, 0, r);
-                        }
-                    } finally {
-                        fos.close();
-                    }
-                } else {
-                    file.mkdirs();
-                }
-                zipIn.closeEntry();
-            }
-        } finally {
-            if (zipIn != null) {
-                zipIn.close();
-            }
-            in.close();
-        }
     }
 
     static ExtensionDescriptor getExtensionFromJarFile(ZipFile zipFile) throws IOException {

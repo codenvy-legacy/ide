@@ -46,11 +46,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.*;
-import java.util.zip.ZipFile;
 
 /**
  * GWT code server. Concrete implementations provide an implementation of methods
@@ -69,9 +67,8 @@ public class CodeServer {
     }
 
     public CodeServerProcess prepare(Path workDirPath, SDKRunnerConfiguration runnerConfiguration,
-                                     Utils.ExtensionDescriptor extensionDescriptor, Path projectSourcesPath,
-                                     ZipFile warFile) throws RunnerException {
-        final Path javaParserWorkerPath;
+                                     Utils.ExtensionDescriptor extensionDescriptor, Path projectSourcesPath)
+            throws RunnerException {
         try {
             final Path warDirPath = workDirPath.resolve("war");
             ZipUtils.unzip(Utils.getCodenvyPlatformBinaryDistribution().openStream(), warDirPath.toFile());
@@ -87,31 +84,27 @@ public class CodeServer {
             final Path extDirPath = Files.createDirectory(workDirPath.resolve("ext"));
             Files.createSymbolicLink(extDirPath.resolve("src"), projectSourcesPath.resolve("src"));
             Files.createSymbolicLink(extDirPath.resolve("pom.xml"), projectSourcesPath.resolve("pom.xml"));
-
-            javaParserWorkerPath = workDirPath.resolve("javaParserWorker");
-            Utils.unzip(new File(warFile.getName()), Paths.get("_app/javaParserWorker"), javaParserWorkerPath.toFile());
         } catch (IOException e) {
             throw new RunnerException(e);
         }
 
         final CodeServerProcess codeServerProcess;
         if (SystemInfo.isUnix()) {
-            codeServerProcess = startUnix(workDirPath.toFile(), runnerConfiguration, javaParserWorkerPath);
+            codeServerProcess = startUnix(workDirPath.toFile(), runnerConfiguration);
         } else {
-            codeServerProcess = startWindows(workDirPath.toFile(), runnerConfiguration, javaParserWorkerPath);
+            codeServerProcess = startWindows(workDirPath.toFile(), runnerConfiguration);
         }
         return codeServerProcess;
     }
 
     // *nix
 
-    private CodeServerProcess startUnix(File codeServerWorkDir, SDKRunnerConfiguration runnerConfiguration,
-                                        Path javaParserWorkerPath)
+    private CodeServerProcess startUnix(File codeServerWorkDir, SDKRunnerConfiguration runnerConfiguration)
             throws RunnerException {
         java.io.File startUpScriptFile = genStartUpScriptUnix(codeServerWorkDir);
         return new CodeServerProcess(runnerConfiguration.getCodeServerBindAddress(),
                                      runnerConfiguration.getCodeServerPort(), startUpScriptFile, codeServerWorkDir,
-                                     pidTaskExecutor, javaParserWorkerPath);
+                                     pidTaskExecutor);
     }
 
     /**
@@ -185,8 +178,8 @@ public class CodeServer {
 
     // Windows
 
-    private CodeServerProcess startWindows(java.io.File codeServerWorkDir, SDKRunnerConfiguration runnerConfiguration,
-                                           Path javaParserWorkerPath) throws RunnerException {
+    private CodeServerProcess startWindows(java.io.File codeServerWorkDir, SDKRunnerConfiguration runnerConfiguration)
+            throws RunnerException {
         throw new UnsupportedOperationException();
     }
 
@@ -194,22 +187,17 @@ public class CodeServer {
         private final String          bindAddress;
         private final int             port;
         private final ExecutorService pidTaskExecutor;
-        /** ExecutorService to launch watch service that copies javaParserWorker directory. */
-        private final ExecutorService watchServiceExecutor;
-        private final Path            javaParserWorkerPath;
         private final File            startUpScriptFile;
         private final File            workDir;
         private int pid = -1;
 
         protected CodeServerProcess(String bindAddress, int port, File startUpScriptFile, File workDir,
-                                    ExecutorService pidTaskExecutor, Path javaParserWorkerPath) {
+                                    ExecutorService pidTaskExecutor) {
             this.bindAddress = bindAddress;
             this.port = port;
             this.startUpScriptFile = startUpScriptFile;
             this.workDir = workDir;
             this.pidTaskExecutor = pidTaskExecutor;
-            watchServiceExecutor = Executors.newSingleThreadExecutor(new NamedThreadFactory("WatchService", true));
-            this.javaParserWorkerPath = javaParserWorkerPath;
         }
 
         public void start() throws RunnerException {
@@ -244,9 +232,6 @@ public class CodeServer {
                 }).get(5, TimeUnit.SECONDS);
 
                 LOG.debug("Start GWT code server at port {}, working directory {}", port, workDir);
-
-                watchServiceExecutor.execute(new DirWatcher(workDir.toPath(), javaParserWorkerPath,
-                                                            "com.codenvy.ide.IDEPlatform/compile-*/war/_app"));
             } catch (IOException | InterruptedException | TimeoutException e) {
                 throw new RunnerException(e);
             } catch (ExecutionException e) {
@@ -262,8 +247,6 @@ public class CodeServer {
             // Use ProcessUtil.kill(pid) because java.lang.Process.destroy() method doesn't
             // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
             ProcessUtil.kill(pid);
-
-            watchServiceExecutor.shutdownNow();
 
             LOG.debug("Stop GWT code server at port {}, working directory {}", port, workDir);
         }

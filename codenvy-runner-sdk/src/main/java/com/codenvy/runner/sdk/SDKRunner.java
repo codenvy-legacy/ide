@@ -148,7 +148,7 @@ public class SDKRunner extends Runner {
 
         final CodeServer codeServer = new CodeServer();
         CodeServer.CodeServerProcess codeServerProcess =
-                codeServer.prepare(codeServerWorkDirPath, sdkRunnerCfg, extension, projectSourcesPath, warFile);
+                codeServer.prepare(codeServerWorkDirPath, sdkRunnerCfg, extension, projectSourcesPath);
 
         final ApplicationProcess process =
                 server.deploy(appDir, warFile, sdkRunnerCfg, codeServerProcess,
