@@ -408,10 +408,8 @@ public class TomcatServer implements ApplicationServer {
                     try (FileReader r = new FileReader(logFile)) {
                         CharStreams.copy(r, output);
                     }
-
                     output.append(System.lineSeparator());
                 }
-
                 try {
                     codeServerProcess.getLogs(output);
                 } catch (Exception ignore) {
