@@ -109,7 +109,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             public void onProjectOpened(ProjectActionEvent event) {
                 setContent(event.getProject().getParent());
                 if (event.getProject() != null) {
-                    processUndefinedProjectType(event.getProject(), new AsyncCallback<Project>(){
+                    processProject(event.getProject(), new AsyncCallback<Project>() {
 
                         @Override
                         public void onFailure(Throwable caught) {
@@ -129,7 +129,8 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                                 public void onSuccess(Project result) {
                                 }
                             });
-                        }});
+                        }
+                    });
                 }
             }
 
@@ -291,11 +292,11 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
                 @Override
                 public void onSuccess(Project result) {
-                    processUndefinedProjectType(result, callback);
+                    processProject(result, callback);
                 }
             });
         } else if (resource.getResourceType().equals(Project.TYPE) && ((Project)resource).getProperties().size() > 0) {
-            processUndefinedProjectType((Project)resource, callback);
+            processProject((Project)resource, callback);
         }
     }
 
@@ -304,10 +305,24 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
      * 
      * @param project
      */
-    private void processUndefinedProjectType(Project project , AsyncCallback<Project> callback) {
+    private void processProject(Project project, AsyncCallback<Project> callback) {
         String projectType = (String)project.getPropertyValue("vfs:projectType");
         if (projectType != null && projectType.equals("undefined")) {
             selectProjectTypePresenter.showDialog(project, callback);
+        }
+        else
+        {
+            project.refreshTree(new AsyncCallback<Project>() {
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    Log.error(ProjectExplorerPartPresenter.class, "Can not refresh project properties.", caught);
+                }
+
+                @Override
+                public void onSuccess(Project result) {
+                }
+            });
         }
     }
 }

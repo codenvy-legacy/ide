@@ -1043,7 +1043,7 @@ public class FSMountPoint implements MountPoint {
                                 zipOut.closeEntry();
                             } else if (current.isFolder()) {
                                 zipOut.putNextEntry(new ZipEntry(zipEntryName + '/'));
-                                if (current.isProject()) {
+                                if (current.isProject() && current.getChild(".project") == null) {
                                     zipOut.putNextEntry(new ZipEntry(zipEntryName + "/.project"));
                                     zipOut.write(JsonHelper.toJson(current.getProperties(PropertyFilter.ALL_FILTER)).getBytes());
                                 }

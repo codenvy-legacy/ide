@@ -310,10 +310,10 @@ public class RestCodeAssistantJava {
         url += "/api" + "/" + wsName + "/";
 
         Project project;
-        String projectName;
+        String projectPath;
         if (item.getItemType().equals(ItemType.PROJECT)) {
             project = (Project)item;
-            projectName = project.getName();
+            projectPath= project.getPath();
         } else {
             LOG.warn("Getting item not a project ");
             throw new CodeAssistantException(500, "Getting item not a project");
@@ -324,7 +324,7 @@ public class RestCodeAssistantJava {
             List<MavenDependency> dependencies = null;
             List<String> dependencyString = new ArrayList<>();
 
-            BuildTaskDescriptor buildStatus = getDependencies(url, projectName, "list");
+            BuildTaskDescriptor buildStatus = getDependencies(url, projectPath, "list");
 
             if (buildStatus != null && buildStatus.getStatus() == BuildStatus.SUCCESSFUL) {
                 Link downloadLink = findLink("download result", buildStatus.getLinks());
@@ -358,7 +358,7 @@ public class RestCodeAssistantJava {
                 buildFailed(buildStatus);
             }
 
-            buildStatus = getDependencies(url, projectName, "copy");
+            buildStatus = getDependencies(url, projectPath, "copy");
 
             if (buildStatus.getStatus() == BuildStatus.FAILED) {
                 buildFailed(buildStatus);
