@@ -41,8 +41,11 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -58,19 +61,46 @@ public class DockerRunner extends Runner {
     @Inject
     public DockerRunner(@Named(DEPLOY_DIRECTORY) ConfigurationParameter deployDirectoryPath,
                         @Named(CLEANUP_DELAY_TIME) ConfigurationParameter cleanupDelay,
-                        ResourceAllocators allocators,
-                        Map<String, java.io.File> dockerFileTemplates) {
-        this(deployDirectoryPath.asFile(), cleanupDelay.asInt(), allocators, dockerFileTemplates);
+                        ResourceAllocators allocators) {
+        this(deployDirectoryPath.asFile(), cleanupDelay.asInt(), allocators);
     }
 
-
-    public DockerRunner(java.io.File deployDirectoryRoot,
-                        int cleanupDelay,
-                        ResourceAllocators allocators,
-                        Map<String, java.io.File> dockerFileTemplates) {
+    public DockerRunner(java.io.File deployDirectoryRoot, int cleanupDelay, ResourceAllocators allocators) {
         super(deployDirectoryRoot, cleanupDelay, allocators);
-        this.dockerFileTemplates = new HashMap<>(dockerFileTemplates);
+        this.dockerFileTemplates = new HashMap<>();
         this.dockerImageUsage = new HashMap<>();
+        loadDockerfiles();
+    }
+
+    /** Load Templates of Dockerfiles. */
+    protected void loadDockerfiles() {
+        final URL dockerFilesUrl = Thread.currentThread().getContextClassLoader().getResource("conf/runner/docker");
+        final java.io.File dockerFilesDir;
+        final Map<String, java.io.File> myDockerFileTemplates = new HashMap<>();
+        if (dockerFilesUrl != null) {
+            try {
+                dockerFilesDir = new java.io.File(dockerFilesUrl.toURI());
+            } catch (URISyntaxException e) {
+                throw new IllegalStateException(e);
+            }
+            if (dockerFilesDir.isDirectory()) {
+                final java.io.File[] dockerFiles = dockerFilesDir.listFiles(new FileFilter() {
+                    @Override
+                    public boolean accept(java.io.File file) {
+                        return file.isFile();
+                    }
+                });
+                if (dockerFiles != null) {
+                    for (java.io.File file : dockerFiles) {
+                        final String fName = file.getName();
+                        myDockerFileTemplates.put(fName, file);
+                    }
+                }
+            }
+        }
+        if (!myDockerFileTemplates.isEmpty()) {
+            this.dockerFileTemplates.putAll(myDockerFileTemplates);
+        }
     }
 
     @Override
