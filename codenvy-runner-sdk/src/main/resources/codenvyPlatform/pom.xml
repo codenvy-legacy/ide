@@ -33,8 +33,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <generated.sources.directory>${project.build.directory}/generated-sources/gen</generated.sources.directory>
-        <gwt.version>2.6.0-rc1</gwt.version>
-        <gwt.maven.plugin.version>2.6.0-rc1</gwt.maven.plugin.version>
     </properties>
 
     <!--
@@ -244,7 +242,6 @@
                 <version>${gwt.maven.plugin.version}</version>
                 <configuration>
                     <extraJvmArgs>-Xss512m -Xmx2048m -XX:MaxPermSize=1024m</extraJvmArgs>
-                    <precompile>false</precompile>
                 </configuration>
                 <executions>
                     <execution>

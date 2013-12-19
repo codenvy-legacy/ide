@@ -38,11 +38,18 @@ import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
-public class WatchDir implements Runnable {
+public class DirWatcher implements Runnable {
     private final WatchService        watcher;
+    /** Maps {@link WatchKey} to the directory path. */
     private final Map<WatchKey, Path> keys;
+    /** Directory path to watch. */
     private final Path                baseWatchableDirPath;
+    /** Path to the directory that contains resources to copy. */
     private final Path                dirPathToCopy;
+    /**
+     * Relative path pattern (in glob syntax) to the folders
+     * where <code>dirPathToCopy</code> content will be copied.
+     */
     private final String              globPattern;
 
     /**
@@ -58,7 +65,7 @@ public class WatchDir implements Runnable {
      * @throws IOException
      *         error occurred while register a directory in {@link WatchService}
      */
-    WatchDir(Path baseWatchableDirPath, Path dirPathToCopy, String globPattern) throws IOException {
+    DirWatcher(Path baseWatchableDirPath, Path dirPathToCopy, String globPattern) throws IOException {
         this.baseWatchableDirPath = baseWatchableDirPath;
         this.dirPathToCopy = dirPathToCopy;
         this.globPattern = globPattern;
@@ -87,12 +94,12 @@ public class WatchDir implements Runnable {
         Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                String p = "{com.codenvy.ide.IDEPlatform," +
-                           "com.codenvy.ide.IDEPlatform/compile-*," +
-                           "com.codenvy.ide.IDEPlatform/compile-*/war," +
-                           "com.codenvy.ide.IDEPlatform/compile-*/war/_app}";
-                PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + p);
-                Path relPath = baseWatchableDirPath.relativize(dir);
+                final String pattern = "{com.codenvy.ide.IDEPlatform," +
+                                       "com.codenvy.ide.IDEPlatform/compile-*," +
+                                       "com.codenvy.ide.IDEPlatform/compile-*/war," +
+                                       "com.codenvy.ide.IDEPlatform/compile-*/war/_app}";
+                PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + pattern);
+                final Path relPath = baseWatchableDirPath.relativize(dir);
                 if (matcher.matches(relPath)) {
                     register(dir);
                 }

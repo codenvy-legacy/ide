@@ -218,6 +218,7 @@ public class SDKRunner extends Runner {
             if (process.exitValue() != 0) {
                 throw new RunnerException(consumer.getOutput().toString());
             }
+
             return new ZipFile(MavenUtils.findFile("*.war", appDirPath.resolve("target")).toFile());
         } catch (IOException | InterruptedException e) {
             throw new RunnerException(e);

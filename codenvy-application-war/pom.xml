@@ -138,11 +138,6 @@
         </dependency-->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-demo</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-web</artifactId>
             <version>${project.version}</version>
         </dependency>

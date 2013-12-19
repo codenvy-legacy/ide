@@ -243,10 +243,10 @@ public class CodeServer {
                     }
                 }).get(5, TimeUnit.SECONDS);
 
-                watchServiceExecutor.execute(new WatchDir(workDir.toPath(), javaParserWorkerPath,
-                                                          "com.codenvy.ide.IDEPlatform/compile-*/war/_app"));
-
                 LOG.debug("Start GWT code server at port {}, working directory {}", port, workDir);
+
+                watchServiceExecutor.execute(new DirWatcher(workDir.toPath(), javaParserWorkerPath,
+                                                            "com.codenvy.ide.IDEPlatform/compile-*/war/_app"));
             } catch (IOException | InterruptedException | TimeoutException e) {
                 throw new RunnerException(e);
             } catch (ExecutionException e) {
@@ -349,4 +349,5 @@ public class CodeServer {
             return body;
         }
     }
+
 }
