@@ -122,9 +122,6 @@ public class StandardComponentInitializer {
     private ShowPreferencesAction showPreferencesAction;
 
     @Inject
-    private UpdateExtensionAction updateExtensionAction;
-
-    @Inject
     @MainToolbar
     private ToolbarPresenter toolbarPresenter;
 
@@ -230,10 +227,6 @@ public class StandardComponentInitializer {
         changeResourceGroup.add(deleteResourceAction);
         changeResourceGroup.addSeparator();
         toolbarGroup.add(changeResourceGroup);
-
-        actionManager.registerAction("updateExtension", updateExtensionAction);
-        DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_RUN_MAIN_MENU);
-        runMenuActionGroup.add(updateExtensionAction);
 
         toolbarPresenter.bindMainGroup(toolbarGroup);
 
