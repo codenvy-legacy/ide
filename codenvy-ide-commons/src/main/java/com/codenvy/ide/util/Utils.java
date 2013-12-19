@@ -30,6 +30,7 @@ public class Utils {
         return $wnd.ws;
     }-*/;
 
+    /** @return <code>true</code> if Codenvy launched in SDK runner and <code>false</code> otherwise */
     public static boolean isAppLaunchedInSDKRunner() {
         return Window.Location.getParameter("h") != null && Window.Location.getParameter("p") != null;
     }
