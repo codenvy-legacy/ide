@@ -43,11 +43,7 @@ import org.exoplatform.ide.vfs.shared.Link;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
- */
-
+/** Process download selected in project explorer item. */
 public class DownloadHandler implements ItemsSelectedHandler, DownloadItemHandler {
 
     private static final IdeUploadLocalizationConstant UPLOAD_LOCALIZATION_CONSTANT = GWT
