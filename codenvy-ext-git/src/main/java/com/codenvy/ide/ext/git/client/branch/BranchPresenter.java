@@ -25,7 +25,7 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Branch;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
@@ -101,7 +101,7 @@ public class BranchPresenter implements BranchView.ActionDelegate {
         if (!name.isEmpty()) {
             final String projectId = project.getId();
             try {
-                service.branchRename(resourceProvider.getVfsId(), projectId, currentBranchName, name, new AsyncRequestCallback<String>() {
+                service.branchRename(resourceProvider.getVfsInfo().getId(), projectId, currentBranchName, name, new AsyncRequestCallback<String>() {
                     @Override
                     protected void onSuccess(String result) {
                         getBranches(projectId);
@@ -131,7 +131,7 @@ public class BranchPresenter implements BranchView.ActionDelegate {
         if (needToDelete) {
             final String projectId = project.getId();
             try {
-                service.branchDelete(resourceProvider.getVfsId(), projectId, name, true, new AsyncRequestCallback<String>() {
+                service.branchDelete(resourceProvider.getVfsInfo().getId(), projectId, name, true, new AsyncRequestCallback<String>() {
                     @Override
                     protected void onSuccess(String result) {
                         getBranches(projectId);
@@ -167,7 +167,7 @@ public class BranchPresenter implements BranchView.ActionDelegate {
         }
 
         try {
-            service.branchCheckout(resourceProvider.getVfsId(), projectId, name, startingPoint, remote, new AsyncRequestCallback<String>() {
+            service.branchCheckout(resourceProvider.getVfsInfo().getId(), projectId, name, startingPoint, remote, new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
@@ -205,10 +205,10 @@ public class BranchPresenter implements BranchView.ActionDelegate {
      */
     private void getBranches(@NotNull String projectId) {
         try {
-            service.branchList(resourceProvider.getVfsId(), projectId, LIST_ALL, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+            service.branchList(resourceProvider.getVfsInfo().getId(), projectId, LIST_ALL, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
                 protected void onSuccess(String result) {
-                    JsonArray<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
+                    Array<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
                     view.setBranches(branches);
                 }
 
@@ -234,7 +234,7 @@ public class BranchPresenter implements BranchView.ActionDelegate {
             final String projectId = project.getId();
 
             try {
-                service.branchCreate(resourceProvider.getVfsId(), projectId, name, null, new AsyncRequestCallback<Branch>() {
+                service.branchCreate(resourceProvider.getVfsInfo().getId(), projectId, name, null, new AsyncRequestCallback<Branch>() {
                     @Override
                     protected void onSuccess(Branch result) {
                         getBranches(projectId);

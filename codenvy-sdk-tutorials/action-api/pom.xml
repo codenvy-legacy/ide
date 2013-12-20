@@ -1,43 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.codenvy.ide</groupId>
-    <version>3.0.0-M5-SNAPSHOT</version>
+    <parent>
+        <groupId>com.codenvy.ide</groupId>
+        <artifactId>codenvy-ide-parent</artifactId>
+        <version>3.0.0-M6-SNAPSHOT</version>
+    </parent>
     <artifactId>action-api-tutorial</artifactId>
     <name>Codenvy Tutorial :: Action API</name>
     <packaging>jar</packaging>
-
-    <distributionManagement>
-        <repository>
-            <id>repo.codenvy.private</id>
-            <url>https://maven.codenvycorp.com/content/repositories/codenvy-private-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>repo.codenvy.private</id>
-            <url>https://maven.codenvycorp.com/content/repositories/codenvy-private-snapshots/</url>
-        </snapshotRepository>
-        <site>
-            <id>repo.codenvy.private</id>
-            <url>https://maven.codenvycorp.com/content/groups/codenvy-public-group/</url>
-        </site>
-    </distributionManagement>
 
     <dependencies>
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
-            <version>2.5.1</version>
+            <version>${gwt.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.gwt.inject</groupId>
             <artifactId>gin</artifactId>
-            <version>2.1.2</version>
+            <version>${gin.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-api</artifactId>
-            <version>${project.version}</version>
+            <version>${parent.version}</version>
         </dependency>
     </dependencies>
 

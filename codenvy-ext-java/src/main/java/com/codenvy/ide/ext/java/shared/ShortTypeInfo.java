@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.java.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /**
  * Short information about class or interface. Contain fqn, short name,
@@ -31,5 +31,9 @@ public interface ShortTypeInfo extends Member {
 
     /** return the signature of the class. May be <tt>null</tt>. */
     String getSignature();
+
+    void setType(String type);
+
+    void setSignature(String signature);
 
 }

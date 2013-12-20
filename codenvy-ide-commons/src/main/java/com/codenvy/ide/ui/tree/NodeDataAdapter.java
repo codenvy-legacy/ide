@@ -14,8 +14,8 @@
 
 package com.codenvy.ide.ui.tree;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 
 /**
  * Simple adapter that allows the Tree to traverse (get the children of) some
@@ -35,8 +35,8 @@ import com.codenvy.ide.json.JsonCollections;
 public interface NodeDataAdapter<D> {
 
     static class PathUtils {
-        public static <D> JsonArray<String> getNodePath(NodeDataAdapter<D> adapter, D data) {
-            JsonArray<String> pathArray = JsonCollections.createArray();
+        public static <D> Array<String> getNodePath(NodeDataAdapter<D> adapter, D data) {
+            Array<String> pathArray = Collections.createArray();
             for (D node = data; adapter.getParent(node) != null; node = adapter.getParent(node)) {
                 pathArray.add(adapter.getNodeId(node));
             }
@@ -59,7 +59,7 @@ public interface NodeDataAdapter<D> {
     boolean hasChildren(D data);
 
     /** @return collection of child nodes */
-    JsonArray<D> getChildren(D data);
+    Array<D> getChildren(D data);
 
     /**
      * @return node ID that is unique within its peers in a given level in the
@@ -100,11 +100,11 @@ public interface NodeDataAdapter<D> {
      * Returns an array of Strings representing the node IDs walking from the root
      * of the tree to the specified node data.
      */
-    JsonArray<String> getNodePath(D data);
+    Array<String> getNodePath(D data);
 
     /**
      * Looks up a node underneath the specified root using the specified relative
      * path.
      */
-    D getNodeByPath(D root, JsonArray<String> relativeNodePath);
+    D getNodeByPath(D root, Array<String> relativeNodePath);
 }

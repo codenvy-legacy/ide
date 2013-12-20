@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.resources.model;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.marshal.JSONDeserializer;
 import com.google.gwt.json.client.JSONObject;
 
@@ -33,7 +33,7 @@ public class Folder extends Resource {
 
     public static final String TYPE = "folder";
 
-    private JsonArray<Resource> children = JsonCollections.<Resource>createArray();
+    private Array<Resource> children = Collections.<Resource>createArray();
 
     /**
      * Empty instance of Folder.
@@ -73,7 +73,7 @@ public class Folder extends Resource {
     }
 
     /** @return the children */
-    public JsonArray<Resource> getChildren() {
+    public Array<Resource> getChildren() {
         return children;
     }
 
@@ -81,7 +81,7 @@ public class Folder extends Resource {
      * @param children
      *         the children to set
      */
-    public void setChildren(JsonArray<Resource> children) {
+    public void setChildren(Array<Resource> children) {
         this.children = children;
     }
 
@@ -166,7 +166,6 @@ public class Folder extends Resource {
      */
     public void removeChild(Resource resource) {
         children.remove(resource);
-        resource.setParent(null);
     }
 
     /** {@inheritDoc} */

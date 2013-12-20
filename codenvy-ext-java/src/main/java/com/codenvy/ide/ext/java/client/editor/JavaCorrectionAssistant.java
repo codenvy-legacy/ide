@@ -17,8 +17,6 @@
  */
 package com.codenvy.ide.ext.java.client.editor;
 
-import com.codenvy.ide.ext.java.client.internal.text.correction.JavaCorrectionProcessor;
-
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
@@ -50,9 +48,9 @@ public class JavaCorrectionAssistant extends QuickAssistAssistantImpl {
     private boolean fIsCompletionActive;
 
     /** @param textEditor */
-    public JavaCorrectionAssistant(TextEditorPartPresenter textEditor, AstProvider astProvider) {
+    public JavaCorrectionAssistant(TextEditorPartPresenter textEditor, JavaParserWorker worker) {
         this.textEditor = textEditor;
-        JavaCorrectionProcessor processor = new JavaCorrectionProcessor(this, astProvider);
+        JavaCorrectionProcessor processor = new JavaCorrectionProcessor(this, worker);
         setQuickAssistProcessor(processor);
     }
 

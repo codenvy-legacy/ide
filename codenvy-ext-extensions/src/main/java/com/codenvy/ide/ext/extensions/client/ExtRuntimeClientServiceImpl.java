@@ -18,8 +18,9 @@
 package com.codenvy.ide.ext.extensions.client;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -79,28 +80,14 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void createEmptyCodenvyExtensionProject(String projectName,
-                                                   JsonArray<Property> properties,
-                                                   AsyncRequestCallback<Void> callback) throws RequestException {
-        final String requestUrl = restContext + BASE_URL + CREATE_EMPTY;
-        final String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootid=" +
-                             resourceProvider.getRootId();
-        loader.setMessage("Creating new project...");
-        AsyncRequest.build(POST, requestUrl + param)
-                    .data(PROPERTY_SERIALIZER.fromCollection(properties).toString())
-                    .header(CONTENT_TYPE, "application/json").loader(loader).send(callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void createSampleCodenvyExtensionProject(String projectName,
-                                                    JsonArray<Property> properties,
-                                                    String groupId,
-                                                    String artifactId,
-                                                    String version,
-                                                    AsyncRequestCallback<Void> callback) throws RequestException {
+    public void createSampleCodenvyExtensionProject(@NotNull String projectName,
+                                                    @NotNull Array<Property> properties,
+                                                    @NotNull String groupId,
+                                                    @NotNull String artifactId,
+                                                    @NotNull String version,
+                                                    @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
         final String requestUrl = restContext + BASE_URL + CREATE_SAMPLE;
-        final String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootid=" +
+        final String param = "?vfsid=" + resourceProvider.getVfsInfo().getId() + "&name=" + projectName + "&rootid=" +
                              resourceProvider.getRootId()
                              + "&groupid=" + groupId + "&artifactid=" + artifactId + "&version=" + version;
         loader.setMessage("Creating new project...");
@@ -109,8 +96,9 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
                     .header(CONTENT_TYPE, "application/json").loader(loader).send(callback);
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void launch(String projectName, AsyncRequestCallback<String> callback) throws RequestException {
+    public void launch(@NotNull String projectName, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         final String requestUrl = "/api/" + Utils.getWorkspaceName() + "/runner/run";
 
         String params = "project=" + projectName;
@@ -119,20 +107,20 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void getStatus(Link link, AsyncRequestCallback<String> callback) throws RequestException {
+    public void getStatus(@NotNull Link link, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         AsyncRequest.build(RequestBuilder.GET, link.getHref()).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void getLogs(Link link, AsyncRequestCallback<String> callback) throws RequestException {
+    public void getLogs(@NotNull Link link, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         loader.setMessage("Retrieving logs...");
         AsyncRequest.build(RequestBuilder.GET, link.getHref()).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void stop(Link link, AsyncRequestCallback<String> callback) throws RequestException {
+    public void stop(@NotNull Link link, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         loader.setMessage("Stopping an application...");
         AsyncRequest.build(RequestBuilder.POST, link.getHref()).loader(loader).send(callback);
     }

@@ -72,10 +72,12 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
             @Override
             public void onNodeClosed(TreeNodeElement<Resource> node) {
+                delegate.onResourceSelected(node.getData());
             }
 
             @Override
             public void onNodeContextMenu(int mouseX, int mouseY, TreeNodeElement<Resource> node) {
+                delegate.onResourceSelected(node.getData());
                 delegate.onContextMenu(mouseX, mouseY);
             }
 
@@ -89,6 +91,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
             @Override
             public void onNodeExpanded(TreeNodeElement<Resource> node) {
+                delegate.onResourceOpened(node.getData());
             }
 
             @Override
@@ -105,5 +108,18 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
             public void onRootDragDrop(DragEvent event) {
             }
         });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void updateItem(Resource oldResource, Resource newResource) {
+        tree.replaceSubtree(oldResource, newResource, true);
+
+        TreeNodeElement<Resource> nodeElement = tree.getNode(newResource);
+        
+        if (nodeElement != null) {
+            tree.closeNode(nodeElement);
+            tree.expandNode(nodeElement);
+        }
     }
 }

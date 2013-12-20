@@ -17,196 +17,29 @@
  */
 package com.codenvy.runner.sdk;
 
-import org.apache.maven.model.Dependency;
+import com.codenvy.ide.commons.GwtXmlUtils;
+import com.codenvy.ide.commons.MavenUtils;
+
 import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.EnumSet;
-import java.util.List;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.nio.file.FileVisitResult.CONTINUE;
-import static java.nio.file.FileVisitResult.TERMINATE;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
- * Collection of utility methods.
+ * A smattering of useful methods.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: Utils.java Jul 31, 2013 11:30:14 AM azatsarynnyy $
+ * @version $Id: Utils.java Dec 16, 2013 11:30:14 AM azatsarynnyy $
  */
 class Utils {
-    /** Maven POM reader. */
-    private static MavenXpp3Reader pomReader = new MavenXpp3Reader();
-    /** Maven POM writer. */
-    private static MavenXpp3Writer pomWriter = new MavenXpp3Writer();
-
+    /** Not instantiable. */
     private Utils() {
-    }
-
-    /**
-     * Read pom.xml.
-     *
-     * @param path
-     *         pom.xml path
-     * @return a project object model
-     * @throws java.io.IOException
-     *         error occurred while reading content of file
-     */
-    static Model readPom(Path path) throws IOException {
-        return readPom(Files.newInputStream(path));
-    }
-
-    /**
-     * Read pom.xml.
-     *
-     * @param stream
-     *         input stream that represents a pom.xml
-     * @return a project object model
-     * @throws java.io.IOException
-     *         error occurred while reading content of file
-     */
-    static Model readPom(InputStream stream) throws IOException {
-        try {
-            return pomReader.read(stream, true);
-        } catch (XmlPullParserException e) {
-            throw new IllegalStateException("Error occurred while parsing pom.xml: " + e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Write provided project object model to the specified path.
-     *
-     * @param pom
-     *         a project object model
-     * @param path
-     *         path to pom.xml
-     * @throws java.io.IOException
-     *         error occurred while writing content of file
-     */
-    static void writePom(Model pom, Path path) throws IOException {
-        pomWriter.write(Files.newOutputStream(path), pom);
-    }
-
-    /**
-     * Add dependency to the specified pom.xml.
-     *
-     * @param path
-     *         pom.xml path
-     * @param pom
-     *         POM of artifact to add as dependency
-     * @throws java.io.IOException
-     *         error occurred while reading or writing content of file
-     */
-    static void addDependencyToPom(Path path, Model pom) throws IOException {
-        addDependencyToPom(path, pom.getGroupId(), pom.getArtifactId(), pom.getVersion());
-    }
-
-    /**
-     * Add dependency to the specified pom.xml.
-     *
-     * @param path
-     *         pom.xml path
-     * @param groupId
-     *         groupId
-     * @param artifactId
-     *         artifactId
-     * @param version
-     *         artifact version
-     * @throws java.io.IOException
-     *         error occurred while reading or writing content of file
-     */
-    static void addDependencyToPom(Path path, String groupId, String artifactId, String version) throws IOException {
-        Dependency dep = new Dependency();
-        dep.setGroupId(groupId);
-        dep.setArtifactId(artifactId);
-        dep.setVersion(version);
-
-        Model pom = readPom(path);
-        pom.getDependencies().add(dep);
-
-        writePom(pom, path);
-    }
-
-    /**
-     * Add the specified module name as a dependency to the provided GWT module descriptor.
-     *
-     * @param path
-     *         GWT module descriptor
-     * @param inheritableModuleLogicalName
-     *         logical name of the GWT module to inherit
-     * @throws java.io.IOException
-     *         error occurred while reading or writing content of file
-     */
-    static void inheritGwtModule(Path path, String inheritableModuleLogicalName) throws IOException {
-        final String inheritsString = "    <inherits name='" + inheritableModuleLogicalName + "'/>";
-        List<String> content = Files.readAllLines(path, UTF_8);
-        // insert custom module as last 'inherits' entry
-        int i = 0, lastInheritsLine = 0;
-        for (String str : content) {
-            i++;
-            if (str.contains("<inherits")) {
-                lastInheritsLine = i;
-            }
-        }
-        content.add(lastInheritsLine, inheritsString);
-        Files.write(path, content, UTF_8);
-    }
-
-    /**
-     * Detects and returns GWT module logical name.
-     *
-     * @param folder
-     *         path to folder that contains project sources
-     * @return GWT module logical name
-     * @throws java.io.IOException
-     *         if an I/O error is thrown while finding GWT module descriptor
-     * @throws IllegalArgumentException
-     *         if GWT module descriptor not found
-     */
-    static String detectGwtModuleLogicalName(Path folder) throws IOException {
-        final String fileExtension = ".gwt.xml";
-        final String resourcesDir = folder.toString();
-
-        Finder finder = new Finder("*" + fileExtension);
-        Files.walkFileTree(folder, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, finder);
-        if (finder.getFirstMatchedFile() == null) {
-            throw new IllegalArgumentException("GWT module descriptor (gwt.xml) not found.");
-        }
-
-        String filePath = finder.getFirstMatchedFile().toString();
-        filePath = filePath.substring(filePath.indexOf(resourcesDir) + resourcesDir.length() + 1,
-                                      filePath.length() - fileExtension.length());
-        return filePath.replace(File.separatorChar, '.');
-    }
-
-    /**
-     * Detects and returns {@code Path} to file by name pattern.
-     *
-     * @param pattern
-     *         file name pattern
-     * @param folder
-     *         path to folder that contains project sources
-     * @return pom.xml path
-     * @throws java.io.IOException
-     *         if an I/O error is thrown while finding pom.xml
-     * @throws IllegalArgumentException
-     *         if pom.xml not found
-     */
-    static Path findFile(String pattern, Path folder) throws IOException {
-        Finder finder = new Finder(pattern);
-        Files.walkFileTree(folder, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, finder);
-        if (finder.getFirstMatchedFile() == null) {
-            throw new IllegalArgumentException("File not found.");
-        }
-        return finder.getFirstMatchedFile();
     }
 
     /** Returns URL to get Tomcat binary distribution. */
@@ -247,29 +80,79 @@ class Utils {
         return m2Home.exists() ? m2Home : null;
     }
 
-    /** A {@code FileVisitor} that finds first file that match the specified pattern. */
-    private static class Finder extends SimpleFileVisitor<Path> {
-        private final PathMatcher matcher;
-        private       Path        firstMatchedFile;
+    // TODO: it's a temporary solution for standalone version
+    static Path getMountPath() {
+        final String WS_NAME = "dev-monit";
+        final String[] segments = new String[]
+                {
+                        "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "0a", "0b", "0c", "0d", "0e", "0f",
+                        "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "1a", "1b", "1c", "1d", "1e", "1f",
+                        "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "2a", "2b", "2c", "2d", "2e", "2f",
+                        "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "3a", "3b", "3c", "3d", "3e", "3f",
+                        "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "4a", "4b", "4c", "4d", "4e", "4f",
+                        "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "5a", "5b", "5c", "5d", "5e", "5f",
+                        "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "6a", "6b", "6c", "6d", "6e", "6f",
+                        "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "7a", "7b", "7c", "7d", "7e", "7f",
+                        "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "8a", "8b", "8c", "8d", "8e", "8f",
+                        "90", "91", "92", "93", "94", "95", "96", "97", "98", "99", "9a", "9b", "9c", "9d", "9e", "9f",
+                        "a0", "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8", "a9", "aa", "ab", "ac", "ad", "ae", "af",
+                        "b0", "b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "ba", "bb", "bc", "bd", "be", "bf",
+                        "c0", "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "ca", "cb", "cc", "cd", "ce", "cf",
+                        "d0", "d1", "d2", "d3", "d4", "d5", "d6", "d7", "d8", "d9", "da", "db", "dc", "dd", "de", "df",
+                        "e0", "e1", "e2", "e3", "e4", "e5", "e6", "e7", "e8", "e9", "ea", "eb", "ec", "ed", "ee", "ef",
+                        "f0", "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "fa", "fb", "fc", "fd", "fe", "ff",
+                };
 
-        Finder(String pattern) {
-            matcher = FileSystems.getDefault().getPathMatcher("glob:" + pattern);
-        }
+        final int hash = WS_NAME.hashCode();
+        final String relPath = segments[hash & 0xff] +
+                               java.io.File.separatorChar + segments[(hash >> 8) & 0xff] +
+                               java.io.File.separatorChar + segments[(hash >> 16) & 0xff] +
+                               java.io.File.separatorChar + WS_NAME;
 
-        /** {@inheritDoc} */
-        @Override
-        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-            Path fileName = file.getFileName();
-            if (fileName != null && matcher.matches(fileName)) {
-                firstMatchedFile = file;
-                return TERMINATE;
+        final String vfsRootDir = System.getProperty("com.codenvy.vfs.rootdir", "../temp/fs-root");
+        return Paths.get(Paths.get(vfsRootDir).toString(), relPath);
+    }
+
+    static ExtensionDescriptor getExtensionFromJarFile(ZipFile zipFile) throws IOException {
+        Enumeration<? extends ZipEntry> entries = zipFile.entries();
+        ZipEntry gwtXmlEntry = null;
+        ZipEntry pomEntry = null;
+        while (entries.hasMoreElements()) {
+            ZipEntry entry = entries.nextElement();
+            if (!entry.isDirectory()) {
+                if (entry.getName().endsWith(GwtXmlUtils.GWT_MODULE_XML_SUFFIX)) {
+                    gwtXmlEntry = entry;
+                } else if (entry.getName().endsWith("pom.xml")) {
+                    pomEntry = entry;
+                }
             }
-            return CONTINUE;
         }
 
-        /** Returns the first matched {@link java.nio.file.Path}. */
-        Path getFirstMatchedFile() {
-            return firstMatchedFile;
+        // TODO: consider Codenvy extensions validator
+        if (gwtXmlEntry == null || pomEntry == null) {
+            throw new IllegalArgumentException(zipFile.getName() + " is not a valid Codenvy extension");
+        }
+
+        String gwtModuleName = gwtXmlEntry.getName().replace(File.separatorChar, '.');
+        gwtModuleName = gwtModuleName.substring(0, gwtModuleName.length() - GwtXmlUtils.GWT_MODULE_XML_SUFFIX.length());
+        final Model pom = MavenUtils.readPom(zipFile.getInputStream(pomEntry));
+        zipFile.close();
+        final String groupId = pom.getGroupId() == null ? pom.getParent().getGroupId() : pom.getGroupId();
+        final String version = pom.getVersion() == null ? pom.getParent().getVersion() : pom.getVersion();
+        return new ExtensionDescriptor(gwtModuleName, groupId, pom.getArtifactId(), version);
+    }
+
+    static class ExtensionDescriptor {
+        String gwtModuleName;
+        String groupId;
+        String artifactId;
+        String version;
+
+        ExtensionDescriptor(String gwtModuleName, String groupId, String artifactId, String version) {
+            this.gwtModuleName = gwtModuleName;
+            this.groupId = groupId;
+            this.artifactId = artifactId;
+            this.version = version;
         }
     }
 }

@@ -17,16 +17,21 @@
  */
 package com.codenvy.ide.ext.java.shared;
 
+import com.codenvy.dto.shared.DTO;
+
+import java.util.List;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
+@DTO
 public interface Annotation {
     String getTypeName();
 
-    AnnotationParameter[] getAnnotationParameters();
+    List<AnnotationParameter> getAnnotationParameters();
 
     void setTypeName(String name);
 
-    void setAnnotationParameters(AnnotationParameter[] parameters);
+    void setAnnotationParameters(List<AnnotationParameter> parameters);
 }

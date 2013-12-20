@@ -19,8 +19,8 @@ package com.codenvy.ide.debug;
 
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -35,8 +35,8 @@ import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_
  */
 @Singleton
 public class DebuggerManager {
-    private Debugger                currentDebugger;
-    private JsonStringMap<Debugger> debuggers;
+    private Debugger            currentDebugger;
+    private StringMap<Debugger> debuggers;
 
     /**
      * Create manager.
@@ -45,7 +45,7 @@ public class DebuggerManager {
      */
     @Inject
     protected DebuggerManager(EventBus eventBus) {
-        this.debuggers = JsonCollections.createStringMap();
+        this.debuggers = Collections.createStringMap();
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {

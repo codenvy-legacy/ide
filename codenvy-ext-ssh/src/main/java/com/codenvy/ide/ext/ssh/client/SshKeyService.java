@@ -18,9 +18,9 @@
 package com.codenvy.ide.ext.ssh.client;
 
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.ext.ssh.dto.GenKeyRequest;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
-import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestException;
@@ -37,9 +37,9 @@ public interface SshKeyService {
      /**
       * Get the list of SSH keys providers.
       * 
-     * @return {@link JsonStringMap}
+     * @return {@link com.codenvy.ide.collections.StringMap}
      */
-    JsonStringMap<SshKeyProvider> getSshKeyProviders();
+    StringMap<SshKeyProvider> getSshKeyProviders();
      
      /**
       * Register SSH key provider

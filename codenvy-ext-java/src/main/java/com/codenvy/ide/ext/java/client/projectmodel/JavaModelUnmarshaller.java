@@ -17,12 +17,12 @@
  */
 package com.codenvy.ide.ext.java.client.projectmodel;
 
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringSet;
+import com.codenvy.ide.collections.StringSet.IterationCallback;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.ext.java.client.core.JavaConventions;
-import com.codenvy.ide.ext.java.client.core.JavaCore;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringSet;
-import com.codenvy.ide.json.JsonStringSet.IterationCallback;
+import com.codenvy.ide.ext.java.jdt.core.JavaConventions;
+import com.codenvy.ide.ext.java.jdt.core.JavaCore;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
@@ -31,6 +31,7 @@ import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.runtime.IStatus;
 import com.codenvy.ide.runtime.Status;
 import com.codenvy.ide.util.loging.Log;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -51,18 +52,20 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
     private static final String ID       = "id";
     private static final String PATH     = "path";
     private static final String NAME     = "name";
-    private JavaProject   project;
-    private JsonStringSet sourceFolders;
-    private String        projectPath;
-    private Folder        root;
+    private JavaProject         project;
+    private StringSet           sourceFolders;
+    private String              projectPath;
+    private Folder              root;
+    private EventBus            eventBus;
 
-    public JavaModelUnmarshaller(Folder root, JavaProject project) {
+    public JavaModelUnmarshaller(Folder root, JavaProject project, EventBus eventBus){
         super();
         this.root = root;
         this.root.getChildren().clear();
         this.project = project;
+        this.eventBus = eventBus;
 
-        sourceFolders = JsonCollections.createStringSet();
+        sourceFolders = Collections.createStringSet();
         projectPath = project.getPath();
         project.getDescription().getSourceFolders().iterate(new IterationCallback() {
             @Override
@@ -112,7 +115,29 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
 
             // Project found in JSON Response
             if (Project.TYPE.equalsIgnoreCase(type)) {
-                Log.error(this.getClass(), "Unsupported operation. Unmarshalling a child projects is not supported");
+                Project childProject;
+                Resource existingProject = parentFolder.findChildById(id);
+                if (existingProject == null) {
+                    existingProject = project.findChildById(id);
+                }
+                if (existingProject == null) {
+                    existingProject = parentFolderNonModelItems.findChildById(id);
+                }
+
+                // Make sure found resource is Project
+                if (existingProject != null && existingProject instanceof Project) {
+                    // use existing folder instance as
+                    childProject = (Project)existingProject;
+                    childProject.getChildren().clear();
+                    parseProjectStructure(itemObject.get(CHILDREN), childProject, childProject, childProject);
+                } else {
+                    childProject = new JavaProject(eventBus);
+                    childProject.init(itemObject.get(ITEM).isObject());
+                    parentFolderNonModelItems.addChild(childProject);
+                    childProject.setProject(childProject);
+                    parseProjectStructure(itemObject.get(CHILDREN), childProject, childProject, childProject); 
+                }
+                
             }
             // Folder
             else if (Folder.TYPE.equalsIgnoreCase(type)) {
@@ -212,7 +237,7 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
     /** {@inheritDoc} */
     @Override
     public Folder getPayload() {
-        return project;
+        return root;
     }
 
 }

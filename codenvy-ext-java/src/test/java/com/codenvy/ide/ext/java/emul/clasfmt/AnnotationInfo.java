@@ -11,14 +11,14 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.emul.clasfmt;
 
-import com.codenvy.ide.ext.java.client.internal.compiler.ast.Annotation;
-import com.codenvy.ide.ext.java.client.internal.compiler.env.ClassSignature;
-import com.codenvy.ide.ext.java.client.internal.compiler.env.EnumConstantSignature;
-import com.codenvy.ide.ext.java.client.internal.compiler.env.IBinaryAnnotation;
-import com.codenvy.ide.ext.java.client.internal.compiler.env.IBinaryElementValuePair;
-import com.codenvy.ide.ext.java.client.internal.compiler.impl.*;
-import com.codenvy.ide.ext.java.client.internal.compiler.lookup.TagBits;
-import com.codenvy.ide.ext.java.client.internal.compiler.util.Util;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Annotation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.ClassSignature;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.EnumConstantSignature;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryAnnotation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryElementValuePair;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TagBits;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.util.Util;
 
 import org.eclipse.jdt.core.compiler.CharOperation;
 

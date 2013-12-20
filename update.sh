@@ -1,8 +1,8 @@
 filename=`ls codenvy-packaging-standalone-tomcat/target | grep codenvy`
 SSH_KEY_NAME=idex
-SSH_AS_USER_NAME=admin
-AS_IP=172.19.11.20
-home=/home/admin/tomcat-ide3/
+SSH_AS_USER_NAME=cl-server
+AS_IP=172.19.11.69
+home=/home/cl-server/tomcat-ide3
 
 deleteFileIfExists() {
     if [ -f $1 ]; then
@@ -14,12 +14,14 @@ deleteFileIfExists() {
     echo "upload new tomcat..."
     scp -i ~/.ssh/${SSH_KEY_NAME} codenvy-packaging-standalone-tomcat/target/${filename} ${SSH_AS_USER_NAME}@${AS_IP}:${home}
     echo "stoping tomcat"
-    ssh -i ~/.ssh/${SSH_KEY_NAME} ${SSH_AS_USER_NAME}@${AS_IP} "cd ${home}ide/bin/;if [ -f catalina.sh ]; then ./catalina.sh stop -force; fi"
+    ssh -i ~/.ssh/${SSH_KEY_NAME} ${SSH_AS_USER_NAME}@${AS_IP} "cd ${home}/ide/bin/;if [ -f catalina.sh ]; then ./catalina.sh stop -force; fi"
     echo "clean up"
     ssh -i ~/.ssh/${SSH_KEY_NAME} ${SSH_AS_USER_NAME}@${AS_IP} "rm -rf ${home}/ide/*"
     echo "unpack new tomcat..."
     ssh -i ~/.ssh/${SSH_KEY_NAME} ${SSH_AS_USER_NAME}@${AS_IP} "mv ${home}/${filename} ${home}/ide"
     ssh -i ~/.ssh/${SSH_KEY_NAME} ${SSH_AS_USER_NAME}@${AS_IP} "cd ${home}/ide && unzip ${filename}"
+    echo "install deps..."
+    ssh -i ~/.ssh/${SSH_KEY_NAME} ${SSH_AS_USER_NAME}@${AS_IP} "cd ${home}/ide;./install.sh /home/cl-server/.m2/repository"
     echo "start new tomcat... on ${AS_IP}"
     ssh -i ~/.ssh/${SSH_KEY_NAME} ${SSH_AS_USER_NAME}@${AS_IP} "cd ${home}/ide/bin;./catalina.sh start"
 

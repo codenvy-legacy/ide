@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.client.core.quickfix;
 
-import com.codenvy.ide.ext.java.client.core.JavaCore;
-import com.codenvy.ide.ext.java.client.core.formatter.DefaultCodeFormatterConstants;
-import com.codenvy.ide.ext.java.client.core.formatter.align.Alignment;
+import com.codenvy.ide.ext.java.jdt.core.JavaCore;
+import com.codenvy.ide.ext.java.jdt.core.formatter.DefaultCodeFormatterConstants;
+import com.codenvy.ide.ext.java.jdt.core.formatter.align.Alignment;
 
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -20,7 +20,7 @@ import java.util.Hashtable;
 public class TestOptions {
 
     public static HashMap<String, String> getDefaultOptions() {
-        HashMap<String, String> result = JavaCore.getDefaultOptions();
+        HashMap<String, String> result = new HashMap<>(JavaCore.getDefaultOptions());
         result.put(JavaCore.COMPILER_PB_LOCAL_VARIABLE_HIDING, JavaCore.IGNORE);
         result.put(JavaCore.COMPILER_PB_FIELD_HIDING, JavaCore.IGNORE);
         result.put(JavaCore.COMPILER_PB_UNUSED_PRIVATE_MEMBER, JavaCore.IGNORE);

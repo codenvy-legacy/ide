@@ -10,17 +10,28 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.client.core.rewrite;
 
-import com.codenvy.ide.ext.java.client.core.JavaCore;
-import com.codenvy.ide.ext.java.client.core.dom.*;
-import com.codenvy.ide.ext.java.client.core.dom.rewrite.ASTRewrite;
-import com.codenvy.ide.ext.java.client.core.formatter.DefaultCodeFormatterConstants;
-import com.codenvy.ide.ext.java.client.core.formatter.DefaultCodeFormatterOptions;
-
 import com.codenvy.ide.ext.java.client.BaseTest;
-import com.codenvy.ide.ext.java.client.JavaExtension;
 import com.codenvy.ide.ext.java.client.core.quickfix.StringAsserts;
-import com.codenvy.ide.ext.java.client.internal.compiler.env.ICompilationUnit;
 import com.codenvy.ide.ext.java.emul.FileSystem;
+import com.codenvy.ide.ext.java.jdt.core.JavaCore;
+import com.codenvy.ide.ext.java.jdt.core.dom.AST;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTParser;
+import com.codenvy.ide.ext.java.jdt.core.dom.AbstractTypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.BodyDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.dom.FieldDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.Modifier;
+import com.codenvy.ide.ext.java.jdt.core.dom.PrimitiveType;
+import com.codenvy.ide.ext.java.jdt.core.dom.SingleVariableDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.Type;
+import com.codenvy.ide.ext.java.jdt.core.dom.TypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationFragment;
+import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ASTRewrite;
+import com.codenvy.ide.ext.java.jdt.core.formatter.DefaultCodeFormatterConstants;
+import com.codenvy.ide.ext.java.jdt.core.formatter.DefaultCodeFormatterOptions;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.ICompilationUnit;
+import com.codenvy.ide.ext.java.worker.WorkerMessageHandler;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.edits.TextEdit;
@@ -54,8 +65,8 @@ public abstract class ASTRewritingTest extends BaseTest {
         options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_5);
         options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_5);
         options.putAll(DefaultCodeFormatterOptions.getEclipseDefaultSettings().getMap());
-        new JavaExtension();
-        JavaExtension.get().getOptions().putAll(options);
+        new WorkerMessageHandler(null);
+        WorkerMessageHandler.get().getOptions().putAll(options);
     }
 
     //   protected void setUp() throws Exception {

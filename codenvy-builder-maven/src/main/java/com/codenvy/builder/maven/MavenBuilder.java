@@ -31,6 +31,9 @@ import com.codenvy.builder.tools.maven.MavenProjectModel;
 import com.codenvy.builder.tools.maven.MavenProjectModelFactory;
 import com.codenvy.dto.server.DtoFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -45,6 +48,7 @@ import java.util.regex.Pattern;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  */
 public class MavenBuilder extends Builder {
+    private static final Logger LOG = LoggerFactory.getLogger(MavenBuilder.class);
 
     /** Rules for builder assembly plugin. Use it for create zip of all project dependencies. */
     private static final String assemblyDescriptor       = "<assembly>\n" +
@@ -81,29 +85,35 @@ public class MavenBuilder extends Builder {
     protected CommandLine createCommandLine(BuilderConfiguration config) throws BuilderException {
         final CommandLine commandLine = new CommandLine(mavenExecCommand());
         final List<String> targets = config.getTargets();
-        if (!targets.isEmpty()) {
-            commandLine.add(targets);
-        } else {
-            switch (config.getTaskType()) {
-                case DEFAULT:
+        switch (config.getTaskType()) {
+            case DEFAULT:
+                if (!targets.isEmpty()) {
+                    commandLine.add(targets);
+                } else {
                     commandLine.add("clean", "package");
-                    break;
-                case LIST_DEPS:
-                    commandLine.add("clean", "dependency:list");
-                    break;
-                case COPY_DEPS:
-                    // Prepare file for assembly plugin. Plugin create zip archive of all dependencies.
-                    try {
-                        Files.write(new java.io.File(config.getWorkDir(), ASSEMBLY_DESCRIPTOR_FILE).toPath(),
-                                    assemblyDescriptor.getBytes());
-                    } catch (IOException e) {
-                        throw new BuilderException(e);
-                    }
-                    commandLine.add("clean", "dependency:copy-dependencies", "assembly:single");
-                    commandLine.addPair("-Ddescriptor", ASSEMBLY_DESCRIPTOR_FILE);
-                    commandLine.addPair("-Dmdep.failOnMissingClassifierArtifact", "false");
-                    break;
-            }
+                }
+                break;
+            case LIST_DEPS:
+                if (!targets.isEmpty()) {
+                    LOG.warn("Targets {} ignored when list dependencies", targets);
+                }
+                commandLine.add("clean", "dependency:list");
+                break;
+            case COPY_DEPS:
+                if (!targets.isEmpty()) {
+                    LOG.warn("Targets {} ignored when copy dependencies", targets);
+                }
+                // Prepare file for assembly plugin. Plugin create zip archive of all dependencies.
+                try {
+                    Files.write(new java.io.File(config.getWorkDir(), ASSEMBLY_DESCRIPTOR_FILE).toPath(),
+                                assemblyDescriptor.getBytes());
+                } catch (IOException e) {
+                    throw new BuilderException(e);
+                }
+                commandLine.add("clean", "dependency:copy-dependencies", "assembly:single");
+                commandLine.addPair("-Ddescriptor", ASSEMBLY_DESCRIPTOR_FILE);
+                commandLine.addPair("-Dmdep.failOnMissingClassifierArtifact", "false");
+                break;
         }
         commandLine.add(config.getOptions());
         return commandLine;
@@ -272,8 +282,8 @@ public class MavenBuilder extends Builder {
                                 scope = segments[5];
                             }
                             final Dependency dep = DtoFactory.getInstance().createDto(MavenDependency.class)
-                                                             .withGroupId(groupId)
-                                                             .withArtifactId(artifactId)
+                                                             .withGroupID(groupId)
+                                                             .withArtifactID(artifactId)
                                                              .withType(type)
                                                              .withVersion(version)
                                                              .withClassifier(classifier)

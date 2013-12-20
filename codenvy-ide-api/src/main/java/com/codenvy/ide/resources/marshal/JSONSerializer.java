@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.resources.marshal;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.resources.model.AccessControlEntry;
 import com.codenvy.ide.resources.model.Property;
 import com.google.gwt.json.client.*;
@@ -98,7 +98,7 @@ public abstract class JSONSerializer<O> {
         return target;
     }
 
-    public JSONValue fromCollection(JsonArray<O> source) {
+    public JSONValue fromCollection(Array<O> source) {
         if (source == null) {
             return JSONNull.getInstance();
         }
@@ -109,13 +109,13 @@ public abstract class JSONSerializer<O> {
         return target;
     }
 
-    public JSONValue fromMap(JsonStringMap<O> source) {
+    public JSONValue fromMap(StringMap<O> source) {
         if (source == null) {
             return JSONNull.getInstance();
         }
         JSONObject target = new JSONObject();
 
-        JsonArray<String> keys = source.getKeys();
+        Array<String> keys = source.getKeys();
         for (int i = 0; i < keys.size(); i++) {
             target.put(keys.get(i), fromObject(source.get(keys.get(i))));
         }

@@ -17,8 +17,9 @@
  */
 package com.codenvy.ide.ext.java.shared;
 
-import com.codenvy.ide.dto.DTO;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.dto.shared.DTO;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
@@ -26,5 +27,7 @@ import com.codenvy.ide.json.JsonArray;
  */
 @DTO
 public interface TypesList {
-    JsonArray<ShortTypeInfo> getTypes();
+    List<ShortTypeInfo> getTypes();
+
+    void setTypes(List<ShortTypeInfo> types);
 }

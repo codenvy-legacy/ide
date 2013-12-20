@@ -18,7 +18,7 @@
 package com.codenvy.ide.openproject;
 
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 
 /**
  * The view of {@link OpenProjectPresenter}.
@@ -51,7 +51,7 @@ public interface OpenProjectView extends View<OpenProjectView.ActionDelegate> {
      *
      * @param projects
      */
-    void setProjects(JsonArray<String> projects);
+    void setProjects(Array<String> projects);
 
     /** Close dialog. */
     void close();

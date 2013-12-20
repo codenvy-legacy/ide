@@ -25,8 +25,8 @@ import com.codenvy.ide.api.ui.workspace.PartStack;
 import com.codenvy.ide.api.ui.workspace.PartStackView;
 import com.codenvy.ide.api.ui.workspace.PartStackView.TabItem;
 import com.codenvy.ide.api.ui.workspace.PropertyListener;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.workspace.WorkBenchPartController;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -54,9 +54,9 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 public class PartStackPresenter implements Presenter, PartStackView.ActionDelegate, PartStack {
 
-    private static final int                      DEFAULT_SIZE = 200;
+    private static final int                  DEFAULT_SIZE = 200;
     /** list of parts */
-    protected final      JsonArray<PartPresenter> parts        = JsonCollections.createArray();
+    protected final      Array<PartPresenter> parts        = Collections.createArray();
     /** view implementation */
     protected final PartStackView view;
     private final   EventBus      eventBus;
@@ -76,12 +76,13 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     protected PartPresenter           activePart;
     protected PartStackEventHandler   partStackHandler;
     private   WorkBenchPartController workBenchPartController;
-    private JsonArray<Double> partsSize = JsonCollections.createArray();
+    private Array<Double> partsSize = Collections.createArray();
 
     /** Creates PartStack with given instance of display and resources (CSS and Images) */
     @Inject
     public PartStackPresenter(EventBus eventBus,
-                              PartStackEventHandler partStackEventHandler, @Assisted PartStackView view,
+                              PartStackEventHandler partStackEventHandler,
+                              @Assisted PartStackView view,
                               @Assisted WorkBenchPartController workBenchPartController) {
         this.view = view;
         this.eventBus = eventBus;

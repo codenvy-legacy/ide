@@ -34,13 +34,20 @@ import com.google.common.io.CharStreams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * {@code ApplicationServer} implementation to deploy application to Apache Tomcat servlet container.
@@ -159,15 +166,12 @@ public class TomcatServer implements ApplicationServer {
                                            final ApplicationServerRunnerConfiguration runnerConfiguration,
                                            StopCallback stopCallback) throws RunnerException {
         java.io.File startUpScriptFile = genStartUpScriptUnix(appDir, runnerConfiguration);
-        if (!startUpScriptFile.setExecutable(true, false)) {
-            throw new RunnerException("Unable update attributes of the startup script");
-        }
 
         final java.io.File logsDir = new java.io.File(appDir, "logs");
         if (!logsDir.mkdir()) {
-            throw new RunnerException("Unable create logs directory");
+            throw new RunnerException("Unable to create logs directory");
         }
-        final List<File> logFiles = new ArrayList<>(2);
+        final List<java.io.File> logFiles = new ArrayList<>(2);
         logFiles.add(new java.io.File(logsDir, "stdout.log"));
         logFiles.add(new java.io.File(logsDir, "stderr.log"));
 
@@ -193,7 +197,7 @@ public class TomcatServer implements ApplicationServer {
             throw new RunnerException(e);
         }
         if (!startUpScriptFile.setExecutable(true, false)) {
-            throw new RunnerException("Unable update attributes of the startup script");
+            throw new RunnerException("Unable to update attributes of the startup script");
         }
         return startUpScriptFile;
     }
@@ -230,8 +234,7 @@ public class TomcatServer implements ApplicationServer {
 
     // Windows
 
-    // TODO: implement
-    protected ApplicationProcess startWindows(File appDir,
+    protected ApplicationProcess startWindows(java.io.File appDir,
                                               ApplicationServerRunnerConfiguration runnerConfiguration,
                                               StopCallback stopCallback) {
         throw new UnsupportedOperationException();
@@ -274,18 +277,18 @@ public class TomcatServer implements ApplicationServer {
     }
 
     private static class TomcatProcess extends ApplicationProcess {
-        final int             httpPort;
-        final List<File>      logFiles;
-        final int             debugPort;
-        final ExecutorService pidTaskExecutor;
-        final File            startUpScriptFile;
-        final File            workDir;
-        final StopCallback    stopCallback;
+        final int                httpPort;
+        final List<java.io.File> logFiles;
+        final int                debugPort;
+        final ExecutorService    pidTaskExecutor;
+        final java.io.File       startUpScriptFile;
+        final java.io.File               workDir;
+        final StopCallback       stopCallback;
         int pid = -1;
         TomcatLogger logger;
         Process      process;
 
-        TomcatProcess(int httpPort, List<File> logFiles, int debugPort, File startUpScriptFile, File workDir,
+        TomcatProcess(int httpPort, List<java.io.File> logFiles, int debugPort, java.io.File startUpScriptFile, java.io.File workDir,
                       StopCallback stopCallback, ExecutorService pidTaskExecutor) {
             this.httpPort = httpPort;
             this.logFiles = logFiles;
@@ -298,7 +301,7 @@ public class TomcatServer implements ApplicationServer {
 
         @Override
         public void start() throws RunnerException {
-            if (ProcessUtil.isAlive(pid)) {
+            if (pid != -1) {
                 throw new IllegalStateException("Process is already started");
             }
 
@@ -309,7 +312,7 @@ public class TomcatServer implements ApplicationServer {
                 pid = pidTaskExecutor.submit(new Callable<Integer>() {
                     @Override
                     public Integer call() throws Exception {
-                        final File pidFile = new File(workDir, "run.pid");
+                        final java.io.File pidFile = new java.io.File(workDir, "run.pid");
                         final Path pidPath = pidFile.toPath();
                         synchronized (this) {
                             while (!Files.isReadable(pidPath)) {
@@ -342,6 +345,8 @@ public class TomcatServer implements ApplicationServer {
             if (pid == -1) {
                 throw new IllegalStateException("Process is not started yet");
             }
+            // Use ProcessUtil.kill(pid) because java.lang.Process.destroy() method doesn't
+            // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
             ProcessUtil.kill(pid);
             stopCallback.stopped();
             LOG.debug("Stop Tomcat at port {}, application {}", httpPort, workDir);
@@ -385,17 +390,19 @@ public class TomcatServer implements ApplicationServer {
 
         private static class TomcatLogger implements ApplicationLogger {
 
-            final List<File> logFiles;
+            final List<java.io.File> logFiles;
 
-            TomcatLogger(List<File> logFiles) {
+            TomcatLogger(List<java.io.File> logFiles) {
                 this.logFiles = logFiles;
             }
 
             @Override
             public void getLogs(Appendable output) throws IOException {
-                for (File logFile : logFiles) {
+                for (java.io.File logFile : logFiles) {
                     output.append(String.format("%n====> %1$s <====%n%n", logFile.getName()));
-                    CharStreams.copy(new InputStreamReader(new FileInputStream(logFile)), output);
+                    try (FileReader r = new FileReader(logFile)) {
+                        CharStreams.copy(r, output);
+                    }
                     output.append(System.lineSeparator());
                 }
             }

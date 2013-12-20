@@ -12,19 +12,18 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.client.core.quickfix;
 
-import com.codenvy.ide.ext.java.client.core.JavaCore;
-import com.codenvy.ide.ext.java.client.core.dom.CompilationUnit;
-import com.codenvy.ide.ext.java.client.core.formatter.DefaultCodeFormatterConstants;
-
-import com.codenvy.ide.ext.java.client.JavaExtension;
 import com.codenvy.ide.ext.java.client.editor.JavaCorrectionAssistant;
-import com.codenvy.ide.ext.java.client.editor.JavaReconcilerStrategy;
-import com.codenvy.ide.ext.java.client.internal.corext.codemanipulation.StubUtility;
-import com.codenvy.ide.ext.java.client.internal.text.correction.AssistContext;
-import com.codenvy.ide.ext.java.client.internal.text.correction.JavaCorrectionProcessor;
-import com.codenvy.ide.ext.java.client.internal.text.correction.proposals.CUCorrectionProposal;
-import com.codenvy.ide.ext.java.client.templates.CodeTemplateContextType;
+import com.codenvy.ide.ext.java.client.editor.JavaCorrectionProcessor;
 import com.codenvy.ide.ext.java.emul.FileSystem;
+import com.codenvy.ide.ext.java.jdt.CUVariables;
+import com.codenvy.ide.ext.java.jdt.core.JavaCore;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.formatter.DefaultCodeFormatterConstants;
+import com.codenvy.ide.ext.java.jdt.internal.corext.codemanipulation.StubUtility;
+import com.codenvy.ide.ext.java.jdt.internal.text.correction.AssistContext;
+import com.codenvy.ide.ext.java.jdt.internal.text.correction.proposals.CUCorrectionProposal;
+import com.codenvy.ide.ext.java.jdt.templates.CodeTemplateContextType;
+import com.codenvy.ide.ext.java.worker.WorkerMessageHandler;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.text.Document;
@@ -50,6 +49,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Mock
     private File activeFle;
 
+    @Mock
+    private CUVariables cuVariables;
+
     @Before
     public void setUp() throws Exception {
         HashMap<String, String> options = TestOptions.getDefaultOptions();
@@ -60,18 +62,22 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
         options.put(JavaCore.COMPILER_PB_UNCHECKED_TYPE_OPERATION, JavaCore.IGNORE);
         options.put(JavaCore.COMPILER_PB_MISSING_HASHCODE_METHOD, JavaCore.WARNING);
 
-        new JavaCorrectionProcessor(new JavaCorrectionAssistant(null, astProvider), astProvider);
-        new JavaExtension();
-        new JavaReconcilerStrategy(null, null, null);
-        GwtReflectionUtils.setPrivateFieldValue(JavaReconcilerStrategy.get(), "nameEnvironment", new FileSystem(
+        new JavaCorrectionProcessor(new JavaCorrectionAssistant(null, null), null);
+        new WorkerMessageHandler(null);
+        GwtReflectionUtils.setPrivateFieldValue(WorkerMessageHandler.get(), "nameEnvironment", new FileSystem(
                 new String[]{System.getProperty("java.home") + "/lib/rt.jar"}, null, "UTF-8"));
         when(activeFle.getProject()).thenReturn(project);
         when(activeFle.getName()).thenReturn("TestClass.java");
         when(activeFle.getPath()).thenReturn("/MyProject/src/main/java/my/test/TestClass.java");
         when(project.hasProperty(anyString())).thenReturn(false);
         when(project.getPath()).thenReturn("/MyProject/src/main/java/my/test");
-        GwtReflectionUtils.setPrivateFieldValue(JavaReconcilerStrategy.get(), "file", activeFle);
-        JavaExtension.get().getOptions().putAll(options);
+
+        when(cuVariables.getFileName()).thenReturn("TestClass.java");
+        when(cuVariables.getPackageName()).thenReturn("my.test");
+        when(cuVariables.getProjectName()).thenReturn("MyProject");
+
+        GwtReflectionUtils.setPrivateFieldValue(WorkerMessageHandler.get(), "cuVar", cuVariables);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StubUtility.setCodeTemplate(CodeTemplateContextType.CATCHBLOCK_ID, "");
         StubUtility.setCodeTemplate(CodeTemplateContextType.CONSTRUCTORSTUB_ID, "");
@@ -3088,7 +3094,7 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     public void testUnusedPrivateField() throws Exception {
         HashMap<String, String> hashtable = JavaCore.getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_PRIVATE_MEMBER, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -3131,9 +3137,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testUnusedPrivateField1() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_PRIVATE_MEMBER, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -3177,9 +3183,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testUnusedPrivateField2() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_PRIVATE_MEMBER, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -3228,9 +3234,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testUnusedPrivateField3() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_PRIVATE_MEMBER, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -3288,9 +3294,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testUnusedPrivateFieldBug328481() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_PRIVATE_MEMBER, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -3350,10 +3356,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnusedVariable() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_LOCAL, JavaCore.ERROR);
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_PARAMETER, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -3403,10 +3409,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnusedVariable1() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_LOCAL, JavaCore.ERROR);
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_PARAMETER, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -3452,10 +3458,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnusedVariable2() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_LOCAL, JavaCore.ERROR);
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_PARAMETER, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -3499,11 +3505,11 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnusedVariable4() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_LOCAL, JavaCore.ERROR);
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_PARAMETER, JavaCore.ERROR);
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_PARAMETER_INCLUDE_DOC_COMMENT_REFERENCE, JavaCore.DISABLED);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -3538,10 +3544,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testUnusedVariable5() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_LOCAL, JavaCore.ERROR);
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_PRIVATE_MEMBER, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package pack;\n");
@@ -3581,10 +3587,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testUnusedVariable6() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_LOCAL, JavaCore.ERROR);
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_PRIVATE_MEMBER, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package pack;\n");
@@ -3628,10 +3634,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnusedVariable7() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_LOCAL, JavaCore.ERROR);
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_PARAMETER, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package pack;\n");
@@ -3680,9 +3686,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnusedVariable8() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_LOCAL, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package pack;\n");
@@ -3737,10 +3743,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnusedVariableAsSwitchStatement() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_LOCAL, JavaCore.ERROR);
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_PARAMETER, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package pack;\n");
@@ -3798,10 +3804,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnusedParam() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_LOCAL, JavaCore.ERROR);
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_PARAMETER, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -3854,10 +3860,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnusedParam2() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_LOCAL, JavaCore.ERROR);
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_PARAMETER, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -3905,9 +3911,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnusedPrivateMethod() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_PRIVATE_MEMBER, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -3938,9 +3944,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnusedPrivateConstructor() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_PRIVATE_MEMBER, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -3972,9 +3978,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnusedPrivateType() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_PRIVATE_MEMBER, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -4006,9 +4012,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnnecessaryCast1() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNNECESSARY_TYPE_CHECK, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -4039,9 +4045,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnnecessaryCast2() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNNECESSARY_TYPE_CHECK, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -4072,9 +4078,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnnecessaryCast3() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNNECESSARY_TYPE_CHECK, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -4105,9 +4111,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnnecessaryCastBug335173_1() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNNECESSARY_TYPE_CHECK, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -4138,9 +4144,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnnecessaryCastBug335173_2() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNNECESSARY_TYPE_CHECK, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -4171,9 +4177,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testSuperfluousSemicolon() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_EMPTY_STATEMENT, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -4205,9 +4211,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testIndirectStaticAccess1() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_INDIRECT_STATIC_ACCESS, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package other;\n");
@@ -4253,9 +4259,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testIndirectStaticAccess2() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_INDIRECT_STATIC_ACCESS, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package other;\n");
@@ -4303,9 +4309,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testIndirectStaticAccess_bug307407() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_INDIRECT_STATIC_ACCESS, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -4359,9 +4365,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnnecessaryInstanceof1() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNNECESSARY_TYPE_CHECK, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -4392,9 +4398,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnnecessaryInstanceof2() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNNECESSARY_TYPE_CHECK, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -4429,9 +4435,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnnecessaryThrownException1() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_DECLARED_THROWN_EXCEPTION, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -4484,9 +4490,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnnecessaryThrownException2() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_DECLARED_THROWN_EXCEPTION, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -4549,11 +4555,11 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnnecessaryThrownException3() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_DECLARED_THROWN_EXCEPTION, JavaCore.ERROR);
         hashtable.put(JavaCore.COMPILER_PB_UNUSED_DECLARED_THROWN_EXCEPTION_INCLUDE_DOC_COMMENT_REFERENCE,
                       JavaCore.DISABLED);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -4601,9 +4607,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnqualifiedFieldAccess1() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNQUALIFIED_FIELD_ACCESS, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -4636,9 +4642,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testUnqualifiedFieldAccess2() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNQUALIFIED_FIELD_ACCESS, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf = new StringBuffer();
@@ -4678,10 +4684,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testUnqualifiedFieldAccess3() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNQUALIFIED_FIELD_ACCESS, JavaCore.ERROR);
         hashtable.put(JavaCore.COMPILER_PB_FIELD_HIDING, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf = new StringBuffer();
@@ -4720,10 +4726,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnqualifiedFieldAccess4() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNQUALIFIED_FIELD_ACCESS, JavaCore.ERROR);
         hashtable.put(JavaCore.COMPILER_PB_FIELD_HIDING, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -4764,10 +4770,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testUnqualifiedFieldAccessWithGenerics() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNQUALIFIED_FIELD_ACCESS, JavaCore.ERROR);
         hashtable.put(JavaCore.COMPILER_PB_FIELD_HIDING, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -4812,10 +4818,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testHidingVariable1() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_LOCAL_VARIABLE_HIDING, JavaCore.ERROR);
         hashtable.put(JavaCore.COMPILER_PB_FIELD_HIDING, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -4837,10 +4843,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testHidingVariable2() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_LOCAL_VARIABLE_HIDING, JavaCore.ERROR);
         hashtable.put(JavaCore.COMPILER_PB_FIELD_HIDING, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -4861,10 +4867,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testHidingVariable3() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_LOCAL_VARIABLE_HIDING, JavaCore.ERROR);
         hashtable.put(JavaCore.COMPILER_PB_FIELD_HIDING, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -4887,10 +4893,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testHidingVariable4() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_LOCAL_VARIABLE_HIDING, JavaCore.ERROR);
         hashtable.put(JavaCore.COMPILER_PB_FIELD_HIDING, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -4914,10 +4920,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testHidingVariable5() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_LOCAL_VARIABLE_HIDING, JavaCore.ERROR);
         hashtable.put(JavaCore.COMPILER_PB_FIELD_HIDING, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -4942,10 +4948,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testHidingVariable6() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_LOCAL_VARIABLE_HIDING, JavaCore.ERROR);
         hashtable.put(JavaCore.COMPILER_PB_FIELD_HIDING, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -4968,10 +4974,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testSetParenteses1() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_LOCAL_VARIABLE_HIDING, JavaCore.ERROR);
         hashtable.put(JavaCore.COMPILER_PB_FIELD_HIDING, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -5005,10 +5011,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testSetParenteses2() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_LOCAL_VARIABLE_HIDING, JavaCore.ERROR);
         hashtable.put(JavaCore.COMPILER_PB_FIELD_HIDING, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -5040,9 +5046,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnnecessaryElse1() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNNECESSARY_ELSE, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -5081,9 +5087,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnnecessaryElse2() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNNECESSARY_ELSE, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -5124,9 +5130,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnnecessaryElse3() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNNECESSARY_ELSE, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -5164,9 +5170,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnnecessaryElse4() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNNECESSARY_ELSE, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package p;\n");
@@ -5210,9 +5216,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testUnnecessaryElse5() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNNECESSARY_ELSE, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package p;\n");
@@ -5259,9 +5265,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testInterfaceExtendsClass() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNNECESSARY_ELSE, JavaCore.ERROR);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -5300,9 +5306,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testRemoveUnreachableCodeStmt() throws Exception {
-        HashMap<String, String> hashtable = JavaExtension.get().getOptions();
+        HashMap<String, String> hashtable = WorkerMessageHandler.get().getOptions();
         hashtable.put(JavaCore.COMPILER_PB_UNNECESSARY_ELSE, JavaCore.IGNORE);
-        JavaExtension.get().getOptions().putAll(hashtable);
+        WorkerMessageHandler.get().getOptions().putAll(hashtable);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -5416,10 +5422,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testRemoveDeadCodeIfThen() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_DEAD_CODE, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS, JavaCore.ENABLED);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -5473,10 +5479,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testRemoveDeadCodeIfThen2() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_DEAD_CODE, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS, JavaCore.ENABLED);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -5539,10 +5545,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testRemoveDeadCodeIfThen3() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_DEAD_CODE, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS, JavaCore.ENABLED);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -5606,10 +5612,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testRemoveDeadCodeIfThen4() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_DEAD_CODE, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS, JavaCore.ENABLED);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -5669,10 +5675,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testRemoveDeadCodeIfThen5() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_DEAD_CODE, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS, JavaCore.ENABLED);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -5731,10 +5737,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testRemoveDeadCodeIfThenSwitch() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_DEAD_CODE, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS, JavaCore.ENABLED);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -5817,10 +5823,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testRemoveDeadCodeIfElse() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_DEAD_CODE, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS, JavaCore.ENABLED);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -5874,10 +5880,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testRemoveDeadCodeAfterIf() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_DEAD_CODE, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS, JavaCore.ENABLED);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -5925,10 +5931,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testRemoveDeadCodeConditional() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_DEAD_CODE, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS, JavaCore.ENABLED);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -5974,10 +5980,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testRemoveDeadCodeConditional2() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_DEAD_CODE, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS, JavaCore.ENABLED);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -6009,10 +6015,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testRemoveDeadCodeConditional3() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_DEAD_CODE, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS, JavaCore.ENABLED);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -6042,10 +6048,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testRemoveDeadCodeMultiStatements() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_DEAD_CODE, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS, JavaCore.ENABLED);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -6099,10 +6105,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testRemoveUnreachableCodeMultiStatementsSwitch() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_DEAD_CODE, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS, JavaCore.ENABLED);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -6154,10 +6160,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testUnusedObjectAllocation1() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_UNUSED_OBJECT_ALLOCATION, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS, JavaCore.ENABLED);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -6252,10 +6258,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testUnusedObjectAllocation2() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_UNUSED_OBJECT_ALLOCATION, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS, JavaCore.ENABLED);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package test1;\n");
@@ -6478,9 +6484,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
         buf.append("    }\n");
         buf.append("}\n");
 
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_UNCHECKED_TYPE_OPERATION, JavaCore.WARNING);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         Document cu = new DocumentImpl(buf.toString());
         CompilationUnit astRoot = getASTRoot(cu, "E");
@@ -6520,9 +6526,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
         buf.append("    }\n");
         buf.append("}\n");
 
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_UNCHECKED_TYPE_OPERATION, JavaCore.WARNING);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         Document cu = new DocumentImpl(buf.toString());
         CompilationUnit astRoot = getASTRoot(cu, "E");
@@ -6699,9 +6705,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testTypeParametersToRawTypeReference01() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_RAW_TYPE_REFERENCE, JavaCore.WARNING);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package pack;\n");
@@ -6759,9 +6765,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testTypeParametersToRawTypeReference02() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_RAW_TYPE_REFERENCE, JavaCore.WARNING);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package pack;\n");
@@ -6819,9 +6825,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testTypeParametersToRawTypeReference06() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_RAW_TYPE_REFERENCE, JavaCore.WARNING);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package pack;\n");
@@ -6874,9 +6880,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testTypeParametersToRawTypeReference07() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_RAW_TYPE_REFERENCE, JavaCore.WARNING);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package pack;\n");
@@ -6926,9 +6932,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testTypeParametersToRawTypeReference08() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_UNCHECKED_TYPE_OPERATION, JavaCore.WARNING);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package pack;\n");
@@ -6987,9 +6993,9 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testTypeParametersToRawTypeReference09() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_RAW_TYPE_REFERENCE, JavaCore.WARNING);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package pack;\n");
@@ -7032,10 +7038,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testSwitchCaseFallThrough1() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_FALLTHROUGH_CASE, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS, JavaCore.ENABLED);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package pack;\n");
@@ -7116,10 +7122,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testSwitchCaseFallThrough2() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_FALLTHROUGH_CASE, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS, JavaCore.ENABLED);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package pack;\n");
@@ -7200,10 +7206,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testSwitchCaseFallThrough3() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_FALLTHROUGH_CASE, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS, JavaCore.ENABLED);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package pack;\n");
@@ -7288,7 +7294,7 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testCollectionsFieldMethodReplacement() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_UNCHECKED_TYPE_OPERATION, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_RAW_TYPE_REFERENCE, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_TYPE_PARAMETER_HIDING, JavaCore.WARNING);
@@ -7328,12 +7334,12 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testCollectionsFieldMethodReplacement2() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_UNCHECKED_TYPE_OPERATION, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_RAW_TYPE_REFERENCE, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_TYPE_PARAMETER_HIDING, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS, JavaCore.ENABLED);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package p;\n");
@@ -7376,12 +7382,12 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Test
     @Ignore
     public void testCollectionsFieldMethodReplacement3() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_UNCHECKED_TYPE_OPERATION, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_RAW_TYPE_REFERENCE, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_TYPE_PARAMETER_HIDING, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS, JavaCore.ENABLED);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package p;\n");
@@ -7421,11 +7427,11 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testMissingEnumConstantsInCase1() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_INCOMPLETE_ENUM_SWITCH, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS, JavaCore.DISABLED);
 
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package p;\n");
@@ -7477,10 +7483,10 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
 
     @Test
     public void testMissingEnumConstantsInCase2() throws Exception {
-        HashMap<String, String> options = JavaExtension.get().getOptions();
+        HashMap<String, String> options = WorkerMessageHandler.get().getOptions();
         options.put(JavaCore.COMPILER_PB_INCOMPLETE_ENUM_SWITCH, JavaCore.WARNING);
         options.put(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS, JavaCore.DISABLED);
-        JavaExtension.get().getOptions().putAll(options);
+        WorkerMessageHandler.get().getOptions().putAll(options);
 
         StringBuffer buf = new StringBuffer();
         buf.append("package p;\n");

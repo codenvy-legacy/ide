@@ -17,11 +17,14 @@
  */
 package com.codenvy.ide.ext.java.shared;
 
+import com.codenvy.dto.shared.DTO;
+
 import java.util.List;
 
 /**
  *
  */
+@DTO
 public interface TypeInfo extends ShortTypeInfo {
 
     /** @return the fields */

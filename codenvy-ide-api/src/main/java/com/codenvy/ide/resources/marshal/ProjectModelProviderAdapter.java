@@ -19,7 +19,7 @@ package com.codenvy.ide.resources.marshal;
 
 import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.ProjectDescription;
 import com.codenvy.ide.resources.model.Property;
@@ -50,7 +50,7 @@ public class ProjectModelProviderAdapter {
      * @param props
      * @return
      */
-    public Project init(JsonArray<Property> props) {
+    public Project init(Array<Property> props) {
         // find primary nature
         String primaryNature = null;
         if (props != null) {

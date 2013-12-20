@@ -14,8 +14,8 @@
 
 package com.codenvy.ide.texteditor.renderer;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.executor.Executor;
 
 /**
@@ -24,7 +24,7 @@ import com.codenvy.ide.util.executor.Executor;
  */
 public class RenderTimeExecutor implements Executor {
 
-    private final JsonArray<Runnable> commands = JsonCollections.createArray();
+    private final Array<Runnable> commands = Collections.createArray();
 
     @Override
     public void execute(Runnable command) {

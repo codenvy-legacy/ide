@@ -21,13 +21,13 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.Remote;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
@@ -98,11 +98,11 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
         final String projectId = project.getId();
 
         try {
-            service.remoteList(resourceProvider.getVfsId(), projectId, null, true,
+            service.remoteList(resourceProvider.getVfsInfo().getId(), projectId, null, true,
                                new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                    @Override
                                    protected void onSuccess(String result) {
-                                       JsonArray<Remote> remotes = dtoFactory.createListDtoFromJson(result, Remote.class);
+                                       Array<Remote> remotes = dtoFactory.createListDtoFromJson(result, Remote.class);
                                        getBranches(projectId, LIST_REMOTE);
                                        getBranches(projectId, LIST_LOCAL);
                                        view.setEnablePushButton(!result.isEmpty());
@@ -135,11 +135,11 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
      */
     private void getBranches(@NotNull String projectId, @NotNull final String remoteMode) {
         try {
-            service.branchList(resourceProvider.getVfsId(), projectId, remoteMode,
+            service.branchList(resourceProvider.getVfsInfo().getId(), projectId, remoteMode,
                                new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                    @Override
                                    protected void onSuccess(String result) {
-                                       JsonArray<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
+                                       Array<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
                                        if (LIST_REMOTE.equals(remoteMode)) {
                                            view.setRemoteBranches(getRemoteBranchesToDisplay(view.getRepository(), branches));
                                        } else {
@@ -173,8 +173,8 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
      *         remote branches
      */
     @NotNull
-    private JsonArray<String> getRemoteBranchesToDisplay(@NotNull String remoteName, @NotNull JsonArray<Branch> remoteBranches) {
-        JsonArray<String> branches = JsonCollections.createArray();
+    private Array<String> getRemoteBranchesToDisplay(@NotNull String remoteName, @NotNull Array<Branch> remoteBranches) {
+        Array<String> branches = Collections.createArray();
 
         if (remoteBranches.isEmpty()) {
             branches.add("master");
@@ -202,8 +202,8 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
      *         local branches
      */
     @NotNull
-    private JsonArray<String> getLocalBranchesToDisplay(@NotNull JsonArray<Branch> localBranches) {
-        JsonArray<String> branches = JsonCollections.createArray();
+    private Array<String> getLocalBranchesToDisplay(@NotNull Array<Branch> localBranches) {
+        Array<String> branches = Collections.createArray();
 
         if (localBranches.isEmpty()) {
             branches.add("master");
@@ -226,7 +226,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
         final String repository = view.getRepository();
 
         try {
-            service.pushWS(resourceProvider.getVfsId(), project, getRefs(), repository, false, new RequestCallback<String>() {
+            service.pushWS(resourceProvider.getVfsInfo().getId(), project, getRefs(), repository, false, new RequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     Notification notification = new Notification(constant.pushSuccess(repository), INFO);
@@ -251,7 +251,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
     /** Push changes to remote repository (sends request over HTTP). */
     private void doPushREST(@NotNull final String repository) {
         try {
-            service.push(resourceProvider.getVfsId(), project, getRefs(), repository, false, new AsyncRequestCallback<String>() {
+            service.push(resourceProvider.getVfsInfo().getId(), project, getRefs(), repository, false, new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     Notification notification = new Notification(constant.pushSuccess(repository), INFO);

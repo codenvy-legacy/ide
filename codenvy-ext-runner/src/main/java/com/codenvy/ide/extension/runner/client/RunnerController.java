@@ -91,9 +91,9 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      */
     @Inject
     public RunnerController(ResourceProvider resourceProvider, EventBus eventBus, WorkspaceAgent workspaceAgent,
-                               final ConsolePart console, RunnerClientService service,
-                               RunnerLocalizationConstant constant, NotificationManager notificationManager,
-                               DtoFactory dtoFactory) {
+                            final ConsolePart console, RunnerClientService service,
+                            RunnerLocalizationConstant constant, NotificationManager notificationManager,
+                            DtoFactory dtoFactory) {
         this.resourceProvider = resourceProvider;
         this.workspaceAgent = workspaceAgent;
         this.console = console;
@@ -154,7 +154,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         notificationManager.showNotification(notification);
 
         try {
-            service.run(currentProject.getName(),
+            service.run(currentProject.getPath(),
                         new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                             @Override
                             protected void onSuccess(String result) {

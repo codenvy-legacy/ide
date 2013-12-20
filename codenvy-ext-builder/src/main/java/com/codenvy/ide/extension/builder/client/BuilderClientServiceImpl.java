@@ -21,7 +21,7 @@ import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
-import com.codenvy.ide.rest.MimeType;
+import com.codenvy.ide.MimeType;
 import com.codenvy.ide.ui.loader.EmptyLoader;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.Utils;
@@ -78,18 +78,6 @@ public class BuilderClientServiceImpl implements BuilderClientService {
                     .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 
-//    /** {@inheritDoc} */
-//    @Override
-//    public void buildAndPublish(String projectId, String vfsId, String projectName, String projectType,
-//                                AsyncRequestCallback<String> callback) throws RequestException {
-//        final String requesrUrl = restServiceContext + DEPLOY;
-//
-//        String params = "vfsid=" + vfsId + "&projectid=" + projectId + "&name=" + projectName + "&type=" + projectType;
-//        callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-//        AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params)
-//                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
-//    }
-
     /** {@inheritDoc} */
     @Override
     public void cancel(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
@@ -123,10 +111,4 @@ public class BuilderClientServiceImpl implements BuilderClientService {
                     .send(callback);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException {
-        final String requestUrl = restServiceContext + "/ide/builder/check_download_url?url=" + url;
-        AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(new EmptyLoader()).send(callback);
-    }
 }

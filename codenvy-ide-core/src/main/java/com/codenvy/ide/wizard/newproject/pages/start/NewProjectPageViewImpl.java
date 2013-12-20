@@ -20,8 +20,8 @@ package com.codenvy.ide.wizard.newproject.pages.start;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.paas.PaaS;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.ProjectTypeData;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
@@ -62,8 +62,8 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
     @UiField(provided = true)
     final   CoreLocalizationConstant locale;
     private ActionDelegate           delegate;
-    private JsonArray<ToggleButton>  projectTypeButtons;
-    private JsonArray<ToggleButton>  paasButtons;
+    private Array<ToggleButton>      projectTypeButtons;
+    private Array<ToggleButton>      paasButtons;
 
     /**
      * Create view.
@@ -92,8 +92,8 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
 
     /** {@inheritDoc} */
     @Override
-    public void setProjectTypes(JsonArray<ProjectTypeData> projectTypes) {
-        projectTypeButtons = JsonCollections.createArray();
+    public void setProjectTypes(Array<ProjectTypeData> projectTypes) {
+        projectTypeButtons = Collections.createArray();
         //create table where contains kind of technology
         Grid grid = new Grid(2, projectTypes.size());
         techPanel.setWidget(grid);
@@ -131,8 +131,8 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
 
     /** {@inheritDoc} */
     @Override
-    public void setPaases(JsonArray<PaaS> paases) {
-        paasButtons = JsonCollections.createArray();
+    public void setPaases(Array<PaaS> paases) {
+        paasButtons = Collections.createArray();
 
         Grid grid = new Grid(2, paases.size());
         paasPanel.setWidget(grid);

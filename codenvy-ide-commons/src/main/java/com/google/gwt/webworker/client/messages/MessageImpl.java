@@ -15,7 +15,7 @@
 package com.google.gwt.webworker.client.messages;
 
 
-import com.codenvy.ide.json.js.Jso;
+import com.codenvy.ide.collections.Jso;
 
 /** Client side base class for all DTO payload implementations. */
 public abstract class MessageImpl extends Jso implements Message {

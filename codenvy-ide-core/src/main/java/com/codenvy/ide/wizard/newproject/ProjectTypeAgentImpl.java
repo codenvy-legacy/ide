@@ -19,9 +19,9 @@ package com.codenvy.ide.wizard.newproject;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.codenvy.ide.resources.ProjectTypeData;
 import com.google.gwt.resources.client.ImageResource;
@@ -36,12 +36,12 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ProjectTypeAgentImpl implements ProjectTypeAgent {
-    private final JsonStringMap<ProjectTypeData> projectTypes;
+    private final StringMap<ProjectTypeData> projectTypes;
 
     /** Create agent. */
     @Inject
     protected ProjectTypeAgentImpl() {
-        this.projectTypes = JsonCollections.createStringMap();
+        this.projectTypes = Collections.createStringMap();
     }
 
     /** {@inheritDoc} */
@@ -50,7 +50,7 @@ public class ProjectTypeAgentImpl implements ProjectTypeAgent {
                          @NotNull String title,
                          @Nullable ImageResource icon,
                          @NotNull String primaryNature,
-                         @NotNull JsonArray<String> secondaryNature) {
+                         @NotNull Array<String> secondaryNature) {
         if (projectTypes.containsKey(typeName)) {
             Window.alert("Project type with " + typeName + " name already exists");
             return;
@@ -65,7 +65,7 @@ public class ProjectTypeAgentImpl implements ProjectTypeAgent {
      *
      * @return project types
      */
-    public JsonArray<ProjectTypeData> getProjectTypes() {
+    public Array<ProjectTypeData> getProjectTypes() {
         return projectTypes.getValues();
     }
 }

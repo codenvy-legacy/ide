@@ -20,8 +20,8 @@ package com.codenvy.ide.toolbar;
 
 import com.codenvy.ide.api.ui.action.*;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.input.KeyMapUtil;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -80,7 +80,7 @@ public class PopupMenu extends Composite {
      * This is debug feature.
      */
     private       String                itemIdPrefix;
-    private       JsonArray<Action>     list;
+    private       Array<Action>         list;
     private Timer openSubPopupTimer  = new Timer() {
         @Override
         public void run() {
@@ -117,7 +117,7 @@ public class PopupMenu extends Composite {
         this.keyBindingAgent = keyBindingAgent;
         this.itemIdPrefix = itemIdPrefix;
 
-        list = JsonCollections.createArray();
+        list = Collections.createArray();
         Utils.expandActionGroup(actionGroup, list, presentationFactory, place, actionManager);
 
         this.lockLayer = lockLayer;
@@ -404,8 +404,8 @@ public class PopupMenu extends Composite {
 
         int itemIndex = Integer.parseInt(DOM.getElementAttribute(tr, "item-index"));
         Action menuItem = list.get(itemIndex);
-        if (menuItem instanceof ActionGroup && (((ActionGroup)menuItem).canBePerformed() &&
-                                                !Utils.hasVisibleChildren((ActionGroup)menuItem, presentationFactory, actionManager,
+        if (menuItem instanceof ActionGroup && (!((ActionGroup)menuItem).canBePerformed() &&
+                                                Utils.hasVisibleChildren((ActionGroup)menuItem, presentationFactory, actionManager,
                                                                           place))) {
             openSubPopup(tr);
         } else {
@@ -558,6 +558,8 @@ public class PopupMenu extends Composite {
 
                 case Event.ONCLICK:
                     onRowClicked(tr);
+                    event.preventDefault();
+                    event.stopPropagation();
                     break;
             }
 

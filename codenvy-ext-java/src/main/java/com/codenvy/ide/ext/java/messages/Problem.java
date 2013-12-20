@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.ext.java.messages;
 
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.shared.RoutingType;
-import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.webworker.client.messages.CompactJsonMessage;
 import com.google.gwt.webworker.client.messages.Message;
 import com.google.gwt.webworker.client.messages.SerializationIndex;
@@ -40,7 +40,7 @@ public interface Problem extends Message, CompactJsonMessage {
     int id();
 
     @SerializationIndex(4)
-    JsonArray<String> stringArguments();
+    Array<String> stringArguments();
 
     @SerializationIndex(5)
     int severity();

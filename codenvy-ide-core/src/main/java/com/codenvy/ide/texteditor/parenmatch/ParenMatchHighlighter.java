@@ -14,8 +14,8 @@
 
 package com.codenvy.ide.texteditor.parenmatch;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.Line;
@@ -152,7 +152,7 @@ public class ParenMatchHighlighter {
                     endColumn = cursorColumn - 2;
                 }
                 // first get all matches
-                JsonArray<Integer> matches = JsonCollections.createArray();
+                Array<Integer> matches = Collections.createArray();
                 MatchResult result;
                 while ((result = RegExpUtils.findMatchAfterIndex(regExp, lineText, match)) != null) {
                     match = result.getIndex();

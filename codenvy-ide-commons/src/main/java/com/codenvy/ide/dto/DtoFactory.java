@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.dto;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
 import com.google.inject.Singleton;
@@ -75,10 +75,10 @@ public class DtoFactory {
      * @throws IllegalArgumentException
      *         if can't provide any implementation for specified interface
      */
-    public <T> JsonArray<T> createListDtoFromJson(String json, Class<T> dtoInterface) {
+    public <T> Array<T> createListDtoFromJson(String json, Class<T> dtoInterface) {
         final DtoProvider<T> dtoProvider = getDtoProvider(dtoInterface);
         final JSONArray jsonArray = JSONParser.parseStrict(json).isArray();
-        final JsonArray<T> result = JsonCollections.createArray();
+        final Array<T> result = Collections.createArray();
 
         for (int i = 0; i < jsonArray.size(); i++) {
             String payload = jsonArray.get(i).isObject().toString();

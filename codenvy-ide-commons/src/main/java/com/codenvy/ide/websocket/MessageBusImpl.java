@@ -17,9 +17,9 @@
  */
 package com.codenvy.ide.websocket;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.loging.Log;
@@ -152,10 +152,10 @@ public class MessageBusImpl implements MessageBus {
     /** WebSocket server URL. */
     private String    url;
     /** Map of the message identifier to the {@link ReplyHandler}. */
-    private JsonStringMap<RequestCallback>           requestCallbackMap       = JsonCollections.createStringMap();
-    private JsonStringMap<ReplyHandler>              replyCallbackMap         = JsonCollections.createStringMap();
+    private StringMap<RequestCallback>               requestCallbackMap       = Collections.createStringMap();
+    private StringMap<ReplyHandler>                  replyCallbackMap         = Collections.createStringMap();
     /** Map of the channel to the subscribers. */
-    private JsonStringMap<JsonArray<MessageHandler>> channelToSubscribersMap  = JsonCollections.createStringMap();
+    private StringMap<Array<MessageHandler>>         channelToSubscribersMap  = Collections.createStringMap();
     private ListenerManager<ConnectionOpenedHandler> connectionOpenedHandlers = ListenerManager.create();
     private ListenerManager<ConnectionClosedHandler> connectionClosedHandlers = ListenerManager.create();
     private ListenerManager<ConnectionErrorHandler>  connectionErrorHandlers  = ListenerManager.create();
@@ -229,7 +229,7 @@ public class MessageBusImpl implements MessageBus {
     public void onMessageReceived(MessageReceivedEvent event) {
         Message message = parseMessage(event.getMessage());
 
-        JsonArray<Pair> headers = message.getHeaders();
+        Array<Pair> headers = message.getHeaders();
         for (int i = 0; i < headers.size(); i++) {
             Pair header = headers.get(i);
             if (HTTPHeader.LOCATION.equals(header.getName()) && header.getValue().contains("async/")) {
@@ -262,7 +262,7 @@ public class MessageBusImpl implements MessageBus {
      */
     private void processSubscriptionMessage(Message message) {
         String channel = getChannel(message);
-        JsonArray<MessageHandler> subscribersSet = channelToSubscribersMap.get(channel);
+        Array<MessageHandler> subscribersSet = channelToSubscribersMap.get(channel);
         if (subscribersSet != null) {
             for (int i = 0; i < subscribersSet.size(); i++) {
                 MessageHandler handler = subscribersSet.get(i);
@@ -304,7 +304,7 @@ public class MessageBusImpl implements MessageBus {
      * @return channel identifier or <code>null</code> if message is invalid.
      */
     private String getChannel(Message message) {
-        JsonArray<Pair> headers = message.getHeaders();
+        Array<Pair> headers = message.getHeaders();
 
         for (int i = 0; i < headers.size(); i++) {
             Pair header = headers.get(i);
@@ -475,12 +475,12 @@ public class MessageBusImpl implements MessageBus {
     public void subscribe(String channel, MessageHandler handler) throws WebSocketException {
         checkWebSocketConnectionState();
 
-        JsonArray<MessageHandler> subscribersSet = channelToSubscribersMap.get(channel);
+        Array<MessageHandler> subscribersSet = channelToSubscribersMap.get(channel);
         if (subscribersSet != null) {
             subscribersSet.add(handler);
             return;
         }
-        subscribersSet = JsonCollections.createArray();
+        subscribersSet = Collections.createArray();
         subscribersSet.add(handler);
         channelToSubscribersMap.put(channel, subscribersSet);
         sendSubscribeMessage(channel);
@@ -491,7 +491,7 @@ public class MessageBusImpl implements MessageBus {
     public void unsubscribe(String channel, MessageHandler handler) throws WebSocketException {
         checkWebSocketConnectionState();
 
-        JsonArray<MessageHandler> subscribersSet = channelToSubscribersMap.get(channel);
+        Array<MessageHandler> subscribersSet = channelToSubscribersMap.get(channel);
         if (subscribersSet == null) {
             throw new IllegalArgumentException("Handler not subscribed to any channel.");
         }
@@ -505,7 +505,7 @@ public class MessageBusImpl implements MessageBus {
     /** {@inheritDoc} */
     @Override
     public boolean isHandlerSubscribed(MessageHandler handler, String channel) {
-        JsonArray<MessageHandler> set = channelToSubscribersMap.get(channel);
+        Array<MessageHandler> set = channelToSubscribersMap.get(channel);
         if (set == null) {
             return false;
         }

@@ -103,23 +103,24 @@ public class CommitPresenter implements CommitView.ActionDelegate {
         boolean amend = view.isAmend();
 
         try {
-            service.commitWS(resourceProvider.getVfsId(), project, message, all, amend, new RequestCallback<String>(new StringUnmarshaller()) {
-                @Override
-                protected void onSuccess(String result) {
-                    Revision revision = dtoFactory.createDtoFromJson(result, Revision.class);
-                    if (!revision.isFake()) {
-                        onCommitSuccess(revision);
-                    } else {
-                        Notification notification = new Notification(revision.getMessage(), ERROR);
-                        notificationManager.showNotification(notification);
-                    }
-                }
+            service.commitWS(resourceProvider.getVfsInfo().getId(), project, message, all, amend,
+                             new RequestCallback<String>(new StringUnmarshaller()) {
+                                 @Override
+                                 protected void onSuccess(String result) {
+                                     Revision revision = dtoFactory.createDtoFromJson(result, Revision.class);
+                                     if (!revision.isFake()) {
+                                         onCommitSuccess(revision);
+                                     } else {
+                                         Notification notification = new Notification(revision.getMessage(), ERROR);
+                                         notificationManager.showNotification(notification);
+                                     }
+                                 }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    handleError(exception);
-                }
-            });
+                                 @Override
+                                 protected void onFailure(Throwable exception) {
+                                     handleError(exception);
+                                 }
+                             });
         } catch (WebSocketException e) {
             doCommitREST(project, message, all, amend);
         }
@@ -130,7 +131,7 @@ public class CommitPresenter implements CommitView.ActionDelegate {
     private void doCommitREST(@NotNull Project project, @NotNull String message, boolean all, boolean amend) {
 
         try {
-            service.commit(resourceProvider.getVfsId(), project, message, all, amend,
+            service.commit(resourceProvider.getVfsInfo().getId(), project, message, all, amend,
                            new AsyncRequestCallback<String>(new com.codenvy.ide.rest.StringUnmarshaller()) {
                                @Override
                                protected void onSuccess(String result) {

@@ -17,168 +17,139 @@
  */
 package com.codenvy.ide.ext.java.client.editor.outline;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Jso;
 import com.codenvy.ide.texteditor.api.outline.CodeBlock;
 
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
+ * Java code block implementation
+ *
+ * @author Evgen Vidolob
  */
-public class JavaCodeBlock implements CodeBlock {
+public class JavaCodeBlock extends Jso implements CodeBlock {
 
-    private JsonArray<CodeBlock> children = JsonCollections.createArray();
-
-    private CodeBlock parent;
-
-    private String type;
-
-    private int offset;
-
-    private int length;
-
-    private int modifiers;
-
-    private String name;
-
-    private String javaType;
-
-    /**
-     *
-     */
-    public JavaCodeBlock() {
-
-    }
-
-    /**
-     * @param children
-     * @param parent
-     * @param type
-     * @param offset
-     * @param length
-     */
-    public JavaCodeBlock(CodeBlock parent, String type, int offset, int length) {
-        super();
-        this.parent = parent;
-        this.type = type;
-        this.offset = offset;
-        this.length = length;
+    protected JavaCodeBlock() {
     }
 
     /** {@inheritDoc} */
-    @Override
-    public String getType() {
-        return type;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public int getOffset() {
-        return offset;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public int getLength() {
-        return length;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public JsonArray<CodeBlock> getChildren() {
-        return children;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CodeBlock getParent() {
-        return parent;
-    }
-
-    /**
-     * @param children
-     *         the children to set
-     */
-    public void setChildren(JsonArray<CodeBlock> children) {
-        this.children = children;
-    }
-
-    /**
-     * @param parent
-     *         the parent to set
-     */
-    public void setParent(CodeBlock parent) {
-        this.parent = parent;
-    }
+    public native final String getType()/*-{
+        return this[0];
+    }-*/;
 
     /**
      * @param type
      *         the type to set
      */
-    public void setType(String type) {
-        this.type = type;
-    }
+    public native final JavaCodeBlock setType(String type) /*-{
+        this[0] = type;
+        return this;
+    }-*/;
+
+    /** {@inheritDoc} */
+    public native final int getOffset() /*-{
+        return this[1];
+    }-*/;
 
     /**
      * @param offset
      *         the offset to set
      */
-    public void setOffset(int offset) {
-        this.offset = offset;
-    }
+    public native final JavaCodeBlock setOffset(int offset) /*-{
+        this[1] = offset;
+        return this;
+    }-*/;
+
+    /** {@inheritDoc} */
+    public native final int getLength() /*-{
+        return this[2];
+    }-*/;
 
     /**
      * @param length
      *         the length to set
      */
-    public void setLength(int length) {
-        this.length = length;
-    }
+    public native final JavaCodeBlock setLength(int length) /*-{
+        this[2] = length;
+        return this;
+    }-*/;
 
-    /** @return the modifiers */
-    public int getModifiers() {
-        return modifiers;
-    }
+    /** {@inheritDoc} */
+    public native final Array<CodeBlock> getChildren() /*-{
+        return this[3];
+    }-*/;
 
     /**
-     * @param modifiers
-     *         the modifiers to set
+     * @param children
+     *         the children to set
      */
-    public void setModifiers(int modifiers) {
-        this.modifiers = modifiers;
-    }
+    public native final JavaCodeBlock setChildren(Array<JavaCodeBlock> children) /*-{
+        this[3] = children;
+        return this;
+    }-*/;
+
+    /** {@inheritDoc} */
+    public native final JavaCodeBlock getParent() /*-{
+        return this[4];
+    }-*/;
+
+    /**
+     * @param parent
+     *         the parent to set
+     */
+    public native final JavaCodeBlock setParent(JavaCodeBlock parent) /*-{
+        this[4] = parent;
+        return this;
+    }-*/;
 
     /** @return the name */
-    public String getName() {
-        return name;
-    }
+    public native final String getName() /*-{
+        return this[5];
+    }-*/;
 
     /**
      * @param name
      *         the name to set
      */
-    public void setName(String name) {
-        this.name = name;
-    }
+    public native final JavaCodeBlock setName(String name) /*-{
+        this[5] = name;
+        return this;
+    }-*/;
+
+    /** @return the modifiers */
+    public native final int getModifiers() /*-{
+        return this[6];
+    }-*/;
+
+
+    /**
+     * @param modifiers
+     *         the modifiers to set
+     */
+    public native final JavaCodeBlock setModifiers(int modifiers) /*-{
+        this[6] = modifiers;
+    }-*/;
 
     /** @return the javaType */
-    public String getJavaType() {
-        return javaType;
-    }
+    public native final String getJavaType() /*-{
+        return this[7];
+    }-*/;
 
     /**
      * @param javaType
      *         the javaType to set
      */
-    public void setJavaType(String javaType) {
-        this.javaType = javaType;
-    }
+    public native final JavaCodeBlock setJavaType(String javaType) /*-{
+        this[7] = javaType;
+    }-*/;
 
     /** {@inheritDoc} */
-    @Override
-    public String getId() {
-        return type + name + offset + length;
+    public final String getId() {
+        return getType() + getName() + getOffset() + getLength();
     }
 
+
+    public static native JavaCodeBlock make() /*-{
+        return [];
+    }-*/;
 }

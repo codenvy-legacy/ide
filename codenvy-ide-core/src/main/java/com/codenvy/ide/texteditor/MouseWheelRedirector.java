@@ -19,7 +19,7 @@ import elemental.events.EventListener;
 import elemental.events.MouseWheelEvent;
 import elemental.html.Element;
 
-import com.codenvy.ide.json.js.Jso;
+import com.codenvy.ide.collections.Jso;
 import com.codenvy.ide.texteditor.Buffer.ScrollListener;
 import com.codenvy.ide.util.browser.UserAgent;
 

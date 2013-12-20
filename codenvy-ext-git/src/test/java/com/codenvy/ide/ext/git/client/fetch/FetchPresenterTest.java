@@ -18,11 +18,11 @@
 package com.codenvy.ide.ext.git.client.fetch;
 
 import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.Remote;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
@@ -82,9 +82,9 @@ public class FetchPresenterTest extends BaseTest {
     @Test
     @Ignore
     public void testShowDialogWhenBranchListRequestIsSuccessful() throws Exception {
-        final JsonArray<Remote> remotes = JsonCollections.createArray();
+        final Array<Remote> remotes = Collections.createArray();
         remotes.add(mock(Remote.class));
-        final JsonArray<Branch> branches = JsonCollections.createArray();
+        final Array<Branch> branches = Collections.createArray();
         branches.add(branch);
 
         doAnswer(new Answer() {
@@ -124,18 +124,18 @@ public class FetchPresenterTest extends BaseTest {
         verify(service).remoteList(eq(VFS_ID), eq(PROJECT_ID), anyString(), eq(SHOW_ALL_INFORMATION),
                                    (AsyncRequestCallback<String>)anyObject());
         verify(view).setEnableFetchButton(eq(ENABLE_BUTTON));
-        verify(view).setRepositories((JsonArray<Remote>)anyObject());
+        verify(view).setRepositories((Array<Remote>)anyObject());
         verify(view).setRemoveDeleteRefs(eq(NO_REMOVE_DELETE_REFS));
         verify(view).setFetchAllBranches(eq(FETCH_ALL_BRANCHES));
         verify(view).showDialog();
-        verify(view).setRemoteBranches((JsonArray<String>)anyObject());
-        verify(view).setLocalBranches((JsonArray<String>)anyObject());
+        verify(view).setRemoteBranches((Array<String>)anyObject());
+        verify(view).setLocalBranches((Array<String>)anyObject());
     }
 
     @Test
     @Ignore
     public void testShowDialogWhenBranchListRequestIsFailed() throws Exception {
-        final JsonArray<Remote> remotes = JsonCollections.createArray();
+        final Array<Remote> remotes = Collections.createArray();
         remotes.add(mock(Remote.class));
 
         doAnswer(new Answer() {
@@ -182,7 +182,7 @@ public class FetchPresenterTest extends BaseTest {
     @Test
     @Ignore
     public void testShowDialogWhenBranchListRequestExceptionHappened() throws Exception {
-        final JsonArray<Remote> remotes = JsonCollections.createArray();
+        final Array<Remote> remotes = Collections.createArray();
         remotes.add(mock(Remote.class));
 
         doAnswer(new Answer() {

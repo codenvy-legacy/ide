@@ -17,8 +17,12 @@
  */
 package com.codenvy.ide.openproject;
 
+import com.codenvy.api.vfs.shared.dto.Item;
+import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -32,7 +36,8 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
-    private OpenProjectView  view;
+    private OpenProjectView view;
+    private DtoFactory dtoFactory;
     private ResourceProvider resourceProvider;
     private String selectedProject = null;
 
@@ -43,8 +48,11 @@ public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
      * @param resourceProvider
      */
     @Inject
-    protected OpenProjectPresenter(OpenProjectView view, ResourceProvider resourceProvider) {
+    protected OpenProjectPresenter(OpenProjectView view,
+                                   ResourceProvider resourceProvider,
+                                   DtoFactory dtoFactory) {
         this.view = view;
+        this.dtoFactory = dtoFactory;
         this.view.setDelegate(this);
         this.resourceProvider = resourceProvider;
 
@@ -88,10 +96,15 @@ public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
 
     /** Show dialog. */
     public void showDialog() {
-        resourceProvider.listProjects(new AsyncCallback<JsonArray<String>>() {
+        resourceProvider.listProjects(new AsyncCallback<String>() {
             @Override
-            public void onSuccess(JsonArray<String> result) {
-                view.setProjects(result);
+            public void onSuccess(String result) {
+                Array<String> array = Collections.createArray();
+                ItemList itemList = dtoFactory.createDtoFromJson(result, ItemList.class);
+                for(Item item : itemList.getItems()) {
+                    array.add(item.getName());
+                }
+                view.setProjects(array);
                 view.showDialog();
             }
 

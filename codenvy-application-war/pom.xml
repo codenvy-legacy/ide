@@ -24,7 +24,7 @@
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
-        <version>3.0.0-M5-SNAPSHOT</version>
+        <version>3.0.0-M6-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-application-war</artifactId>
     <packaging>war</packaging>
@@ -93,14 +93,14 @@
             <artifactId>codenvy-ide-core</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <!-- Server-side VFS -->
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-vfs</artifactId>
-            <scope>runtime</scope>
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
+
+        <!-- Server-side VFS -->
+
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-websocket</artifactId>
@@ -138,19 +138,14 @@
         </dependency-->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-demo</artifactId>
+            <artifactId>codenvy-ext-web</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-css</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-      <!--  <dependency>
+      <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-git</artifactId>
             <version>${project.version}</version>
-        </dependency>-->
+        </dependency>
          <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-github</artifactId>

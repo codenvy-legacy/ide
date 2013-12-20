@@ -19,7 +19,7 @@ package com.codenvy.ide.api.template;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
@@ -28,11 +28,11 @@ import com.google.gwt.resources.client.ImageResource;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class Template {
-    private ImageResource     icon;
-    private String            id;
-    private String            title;
-    private String            primaryNature;
-    private JsonArray<String> secondaryNature;
+    private ImageResource icon;
+    private String        id;
+    private String        title;
+    private String        primaryNature;
+    private Array<String> secondaryNature;
 
     /**
      * Create template.
@@ -52,7 +52,7 @@ public class Template {
                     @NotNull String title,
                     @Nullable ImageResource icon,
                     @NotNull String primaryNature,
-                    @NotNull JsonArray<String> secondaryNature) {
+                    @NotNull Array<String> secondaryNature) {
         this.id = id;
         this.icon = icon;
         this.title = title;
@@ -87,7 +87,7 @@ public class Template {
      *         chosen secondary nature
      * @return <code>true</code> if a template is available, and <code>false</code> otherwise
      */
-    public boolean isAvailable(@NotNull String primaryNature, @NotNull JsonArray<String> secondaryNature) {
+    public boolean isAvailable(@NotNull String primaryNature, @NotNull Array<String> secondaryNature) {
         if (this.primaryNature.equals(primaryNature)) {
             for (String nature : secondaryNature.asIterable()) {
                 if (!this.secondaryNature.contains(nature)) {

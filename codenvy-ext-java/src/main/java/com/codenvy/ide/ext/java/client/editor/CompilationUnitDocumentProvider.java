@@ -20,18 +20,17 @@ package com.codenvy.ide.ext.java.client.editor;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.editor.EditorInput;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.core.editor.ResourceDocumentProvider;
-import com.codenvy.ide.ext.java.client.JavaClientBundle;
 import com.codenvy.ide.ext.java.client.JavaCss;
-import com.codenvy.ide.ext.java.client.JavaPartitions;
-import com.codenvy.ide.ext.java.client.core.IProblemRequestor;
-import com.codenvy.ide.ext.java.client.core.compiler.CategorizedProblem;
-import com.codenvy.ide.ext.java.client.core.compiler.IProblem;
-import com.codenvy.ide.ext.java.client.core.dom.CompilationUnit;
-import com.codenvy.ide.ext.java.client.internal.text.correction.JavaCorrectionProcessor;
-import com.codenvy.ide.ext.java.client.internal.ui.text.FastJavaPartitionScanner;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.ext.java.client.JavaResources;
+import com.codenvy.ide.ext.java.jdt.JavaPartitions;
+import com.codenvy.ide.ext.java.jdt.core.IProblemRequestor;
+import com.codenvy.ide.ext.java.jdt.core.compiler.CategorizedProblem;
+import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.internal.ui.text.FastJavaPartitionScanner;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentFactory;
@@ -44,14 +43,16 @@ import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.TextEditorViewImpl.Css;
 import com.codenvy.ide.texteditor.api.quickassist.QuickFixableAnnotation;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Evgen Vidolob
  */
 public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
 
@@ -63,17 +64,18 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
             JavaPartitions.JAVA_STRING,
             JavaPartitions.JAVA_CHARACTER
     };
-    private AnnotationModel        annotationModel;
+
     private TextEditorViewImpl.Css css;
-    private JavaCss                javaCss;
+    private Map<Document, AnnotationModel> modelStringMap = new HashMap<Document, AnnotationModel>();
+    private JavaCss javaCss;
 
     /**
      * @param css
      * @param javaCss
      * @param documentFactory
      */
-    public CompilationUnitDocumentProvider(Css css, JavaCss javaCss, DocumentFactory documentFactory) {
-        super(documentFactory);
+    public CompilationUnitDocumentProvider(Css css, JavaCss javaCss, DocumentFactory documentFactory, EventBus eventBus) {
+        super(documentFactory, eventBus);
         this.css = css;
         this.javaCss = javaCss;
     }
@@ -81,12 +83,17 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
     /** {@inheritDoc} */
     @Override
     public AnnotationModel getAnnotationModel(@Nullable EditorInput input) {
-        if (annotationModel == null) {
-            annotationModel = new JavaAnnotationModel();
-        }
-        return annotationModel;
+        if(cache.containsKey(input.getFile())) {
+            Document document = cache.get(input.getFile());
+            if (!modelStringMap.containsKey(document)) {
+                modelStringMap.put(document, new JavaAnnotationModel());
+            }
+            return modelStringMap.get(document);
+        } else return super.getAnnotationModel(input);
+
     }
 
+    /** {@inheritDoc} */
     @Override
     public void getDocument(@Nullable EditorInput input, @NotNull final DocumentCallback callback) {
         super.getDocument(input, new DocumentCallback() {
@@ -99,6 +106,13 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
                 callback.onDocument(document);
             }
         });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void documentClosed(@NotNull Document document) {
+        super.documentClosed(document);
+        modelStringMap.remove(document);
     }
 
     /** Annotation representing an <code>IProblem</code>. */
@@ -133,12 +147,12 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
         //         else
         //            return IAnnotationAccessExtension.DEFAULT_LAYER + 1;
         //      }
-        private static ImageResource fgQuickFixImage      = JavaClientBundle.INSTANCE.markWarning();
-        private static ImageResource fgQuickFixErrorImage = JavaClientBundle.INSTANCE.markError();
-        private static ImageResource fgTaskImage          = JavaClientBundle.INSTANCE.taskmrk();
-        private static ImageResource fgInfoImage          = JavaClientBundle.INSTANCE.imp_obj();
-        private static ImageResource fgWarningImage       = JavaClientBundle.INSTANCE.markWarning();
-        private static ImageResource fgErrorImage         = JavaClientBundle.INSTANCE.markError();
+        private static ImageResource fgQuickFixImage      = JavaResources.INSTANCE.markWarning();
+        private static ImageResource fgQuickFixErrorImage = JavaResources.INSTANCE.markError();
+        private static ImageResource fgTaskImage          = JavaResources.INSTANCE.taskmrk();
+        private static ImageResource fgInfoImage          = JavaResources.INSTANCE.imp_obj();
+        private static ImageResource fgWarningImage       = JavaResources.INSTANCE.markWarning();
+        private static ImageResource fgErrorImage         = JavaResources.INSTANCE.markError();
         private CompilationUnit      fCompilationUnit;
         private List<JavaAnnotation> fOverlaids;
         private IProblem             fProblem;
@@ -393,8 +407,8 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
 
         /** {@inheritDoc} */
         @Override
-        public JsonStringMap<String> getAnnotationDecorations() {
-            JsonStringMap<String> decorations = JsonCollections.createStringMap();
+        public StringMap<String> getAnnotationDecorations() {
+            StringMap<String> decorations = Collections.createStringMap();
             //TODO configure this
             decorations.put("org.eclipse.jdt.ui.error", css.lineError());
             decorations.put("org.eclipse.jdt.ui.warning", css.lineWarning());
@@ -404,8 +418,8 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
 
         /** {@inheritDoc} */
         @Override
-        public JsonStringMap<String> getAnnotationStyle() {
-            JsonStringMap<String> decorations = JsonCollections.createStringMap();
+        public StringMap<String> getAnnotationStyle() {
+            StringMap<String> decorations = Collections.createStringMap();
 //            //TODO configure this
             decorations.put("org.eclipse.jdt.ui.error", javaCss.overviewMarkError());
             decorations.put("org.eclipse.jdt.ui.warning", javaCss.overviewMarkWarning());

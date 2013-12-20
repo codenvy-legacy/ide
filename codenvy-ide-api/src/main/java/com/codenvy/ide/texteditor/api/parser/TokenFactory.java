@@ -14,7 +14,7 @@
 
 package com.codenvy.ide.texteditor.api.parser;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 
 /**
  * Factory that produces mode-specific {@link Token}s.
@@ -28,5 +28,5 @@ public interface TokenFactory<T extends State> {
      * Creates tokens based on parser, mode and parse results, and appends them to
      * tokens array.
      */
-    void push(String stylePrefix, T state, String tokenType, String tokenValue, JsonArray<Token> tokens);
+    void push(String stylePrefix, T state, String tokenType, String tokenValue, Array<Token> tokens);
 }

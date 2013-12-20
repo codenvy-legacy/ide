@@ -21,7 +21,7 @@ import com.codenvy.api.runner.internal.RunnerRegistrationPlugin;
 import com.codenvy.api.runner.internal.RunnerRegistry;
 
 /**
- * Codenvy plug-ins runner registration plugin.
+ * Codenvy extensions runner registration plugin.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */

@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.resources.model;
 
-import com.codenvy.ide.json.JsonStringSet;
+import com.codenvy.ide.collections.StringSet;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 
@@ -55,7 +55,7 @@ public interface ProjectNature {
      * @return an array of nature ids that this nature requires,
      *         possibly an empty array.
      */
-    JsonStringSet getRequiredNatureIds();
+    StringSet getRequiredNatureIds();
 
     /**
      * Returns the identifiers of the Nature Categories that this nature exclusively belongs to.
@@ -64,7 +64,7 @@ public interface ProjectNature {
      * @return a set of nature categories that this nature belongs to,
      *         possibly an empty array.
      */
-    JsonStringSet getNatureCategories();
+    StringSet getNatureCategories();
 
     /**
      * Configures this nature for its project. This is called by the workspace

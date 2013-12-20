@@ -21,8 +21,8 @@ import elemental.html.DragEvent;
 import elemental.html.Element;
 import elemental.js.html.JsElement;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.mvp.UiComponent;
 import com.codenvy.ide.util.AnimationController;
@@ -663,7 +663,6 @@ public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget {
      *         action for the selected node.
      */
     public void autoExpandAndSelectNode(D nodeData, boolean dispatchNodeAction) {
-        Log.info(getClass(), ">" + getModel().dataAdapter.getNodePath(nodeData));
 
         // Expand the tree to the selected element.
         expandPathRecursive(getModel().root, getModel().dataAdapter.getNodePath(nodeData), false);
@@ -732,7 +731,7 @@ public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget {
         // Ensure that the node's children container is birthed.
         treeNode.ensureChildrenContainer(dataAdapter, getModel().resources.treeCss());
 
-        JsonArray<D> children = dataAdapter.getChildren(treeNode.getData());
+        Array<D> children = dataAdapter.getChildren(treeNode.getData());
 
         // Maybe render it's children if they aren't already rendered.
         if (treeNode.getChildrenContainer().getChildren().getLength() != children.size()) {
@@ -788,8 +787,8 @@ public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget {
      *         whether to dispatch the NodeExpanded event
      * @return array of paths that were not expanded, or were partially expanded
      */
-    public JsonArray<JsonArray<String>> expandPaths(JsonArray<JsonArray<String>> paths, boolean dispatchNodeExpanded) {
-        JsonArray<JsonArray<String>> notExpanded = JsonCollections.createArray();
+    public Array<Array<String>> expandPaths(Array<Array<String>> paths, boolean dispatchNodeExpanded) {
+        Array<Array<String>> notExpanded = Collections.createArray();
         for (int i = 0, n = paths.size(); i < n; i++) {
             if (!expandPathRecursive(getModel().root, paths.get(i), dispatchNodeExpanded)) {
                 notExpanded.add(paths.get(i));
@@ -861,7 +860,7 @@ public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget {
 
         // Root is special in that we don't render a directory for it. Only its
         // children.
-        JsonArray<D> children = getModel().dataAdapter.getChildren(root);
+        Array<D> children = getModel().dataAdapter.getChildren(root);
         for (int i = 0, n = children.size(); i < n; i++) {
             renderRecursive(rootElement, children.get(i), depth);
         }
@@ -885,11 +884,11 @@ public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget {
      *         if true, the subtree will animate open if it is still open
      * @return array paths that could not be expanded in the new subtree
      */
-    public JsonArray<JsonArray<String>> replaceSubtree(D oldSubtreeData, D incomingSubtreeData, boolean shouldAnimate) {
+    public Array<Array<String>> replaceSubtree(D oldSubtreeData, D incomingSubtreeData, boolean shouldAnimate) {
 
         // Gather paths that were expanded in this subtree so that we can restore
         // them later after rendering.
-        JsonArray<JsonArray<String>> expandedPaths = gatherExpandedPaths(oldSubtreeData);
+        Array<Array<String>> expandedPaths = gatherExpandedPaths(oldSubtreeData);
 
         boolean wasRoot = (oldSubtreeData == getModel().root);
         TreeNodeElement<D> oldRenderedNode = null;
@@ -960,7 +959,7 @@ public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget {
 
         // TODO: Be more surgical about restoring the selection model. We
         // are currently recomputing all selected nodes.
-        JsonArray<JsonArray<String>> selectedPaths = getModel().selectionModel.computeSelectedPaths();
+        Array<Array<String>> selectedPaths = getModel().selectionModel.computeSelectedPaths();
         restoreSelectionModel(selectedPaths);
 
         return expandedPaths;
@@ -970,7 +969,7 @@ public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget {
      * Populates the selection model from a list of selected paths iff they
      * resolve to nodes in the data model.
      */
-    private void restoreSelectionModel(JsonArray<JsonArray<String>> selectedPaths) {
+    private void restoreSelectionModel(Array<Array<String>> selectedPaths) {
         getModel().selectionModel.clearSelections();
         for (int i = 0, n = selectedPaths.size(); i < n; i++) {
             D node = getModel().dataAdapter.getNodeByPath(getModel().root, selectedPaths.get(i));
@@ -991,7 +990,7 @@ public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget {
         getModel().externalEventDelegate = externalEventDelegate;
     }
 
-    private boolean expandPathRecursive(D expandedParentNode, JsonArray<String> pathToExpand,
+    private boolean expandPathRecursive(D expandedParentNode, Array<String> pathToExpand,
                                         boolean dispatchNodeExpanded) {
 
         if (expandedParentNode == null) {
@@ -1009,7 +1008,7 @@ public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget {
 
             // The root is already expanded by default. So we really want to recur the
             // child that matches the first component.
-            JsonArray<D> children = getModel().dataAdapter.getChildren(previousParentNode);
+            Array<D> children = getModel().dataAdapter.getChildren(previousParentNode);
             previousParentNode = null;
 
             for (int i = 0, n = children.size(); i < n; ++i) {
@@ -1051,8 +1050,8 @@ public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget {
      * whose children are all leaves, or are all collapsed. That is, nodes whose
      * children all answer false to {@link TreeNodeElement#isOpen()}.
      */
-    private JsonArray<JsonArray<String>> gatherExpandedPaths(D rootData) {
-        final JsonArray<JsonArray<String>> expandedPaths = JsonCollections.createArray();
+    private Array<Array<String>> gatherExpandedPaths(D rootData) {
+        final Array<Array<String>> expandedPaths = Collections.createArray();
 
         // Can't gather the expansion state for a null parent.
         if (rootData == null) {
@@ -1093,14 +1092,14 @@ public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget {
      */
     public static <D> void iterateDfs(D rootData, NodeDataAdapter<D> dataAdapter, Visitor<D> callback) {
 
-        JsonArray<D> nodes = JsonCollections.createArray();
+        Array<D> nodes = Collections.createArray();
         nodes.add(rootData);
 
         // Iterative DFS.
         while (!nodes.isEmpty()) {
             D parentNodeData = nodes.pop();
             boolean willVisitChildren = false;
-            JsonArray<D> children = dataAdapter.getChildren(parentNodeData);
+            Array<D> children = dataAdapter.getChildren(parentNodeData);
 
             for (int i = 0, n = children.size(); i < n; i++) {
                 D child = children.get(i);
@@ -1139,7 +1138,7 @@ public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget {
 
         // Maybe continue the expansion.
         newNode.openNode(dataAdapter, css, getModel().animator, false);
-        JsonArray<D> children = dataAdapter.getChildren(nodeData);
+        Array<D> children = dataAdapter.getChildren(nodeData);
         for (int i = 0, n = children.size(); i < n; i++) {
             renderRecursive(newNode.getChildrenContainer(), children.get(i), depth - 1);
         }
@@ -1160,7 +1159,9 @@ public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget {
     public Widget asWidget() {
         if (widget == null) {
             widget = new HTML();
-            widget.getElement().appendChild((Node)getView().getElement());
+            Element element = getView().getElement();
+            element.getStyle().setOverflow("auto");
+            widget.getElement().appendChild((Node)element);
             widget.getElement().getStyle().setOverflow(Style.Overflow.AUTO);
         }
 

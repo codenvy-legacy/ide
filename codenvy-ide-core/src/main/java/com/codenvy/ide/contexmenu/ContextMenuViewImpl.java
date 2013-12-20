@@ -20,8 +20,8 @@ package com.codenvy.ide.contexmenu;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.action.*;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.toolbar.*;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -93,14 +93,14 @@ public class ContextMenuViewImpl extends Composite implements ContextMenuView, C
     private void updateActions() {
         secondaryActions.removeAll();
 
-        JsonArray<Action> visibleActions = actions();
+        Array<Action> visibleActions = actions();
 
         fillPanel(visibleActions);
     }
 
     /** @return available actions for now */
-    private JsonArray<Action> actions() {
-        JsonArray<Action> newVisibleActions = JsonCollections.createArray();
+    private Array<Action> actions() {
+        Array<Action> newVisibleActions = Collections.createArray();
 
         final ActionGroup mainActionGroup = (ActionGroup)actionManager.getAction(IdeActions.GROUP_MAIN_CONTEXT_MENU);
         if (mainActionGroup == null) {
@@ -127,7 +127,7 @@ public class ContextMenuViewImpl extends Composite implements ContextMenuView, C
      * @param actions
      *         actions which need to show
      */
-    private void fillPanel(JsonArray<Action> actions) {
+    private void fillPanel(Array<Action> actions) {
         for (int i = 0; i < actions.size(); i++) {
             final Action action = actions.get(i);
 

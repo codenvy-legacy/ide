@@ -21,7 +21,7 @@ import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.wizard.newproject.TemplateAgentImpl;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -39,7 +39,7 @@ public class ChooseTemplatePagePresenter extends AbstractWizardPage implements C
     private ChooseTemplatePageView   view;
     private TemplateAgentImpl        templateAgent;
     private CoreLocalizationConstant constant;
-    private JsonArray<Template>      templates;
+    private Array<Template>          templates;
     private boolean                  needToChange;
 
     /**

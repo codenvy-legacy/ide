@@ -20,14 +20,14 @@ package com.codenvy.ide.ext.git.client.reset.files;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.IndexFile;
 import com.codenvy.ide.ext.git.shared.ResetRequest.ResetType;
 import com.codenvy.ide.ext.git.shared.Status;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
@@ -62,7 +62,7 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
     private GitLocalizationConstant constant;
     private NotificationManager     notificationManager;
     private Project                 project;
-    private JsonArray<IndexFile>    indexedFiles;
+    private Array<IndexFile>        indexedFiles;
     private DtoFactory              dtoFactory;
 
     /**
@@ -91,7 +91,7 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
         project = resourceProvider.getActiveProject();
 
         try {
-            service.status(resourceProvider.getVfsId(), project.getId(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+            service.status(resourceProvider.getVfsInfo().getId(), project.getId(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
                 protected void onSuccess(String result) {
                     Status status = dtoFactory.createDtoFromJson(result, Status.class);
@@ -100,14 +100,14 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
                         return;
                     }
 
-                    JsonArray<IndexFile> values = JsonCollections.createArray();
+                    Array<IndexFile> values = Collections.createArray();
                     ArrayList<String> valuesTmp = new ArrayList<String>();
 
                     valuesTmp.addAll(status.getAdded());
                     valuesTmp.addAll(status.getChanged());
                     valuesTmp.addAll(status.getRemoved());
 
-                    for (String value: valuesTmp) {
+                    for (String value : valuesTmp) {
                         IndexFile indexFile = dtoFactory.createDto(IndexFile.class).withPath(value).withIndexed(true);
                         values.add(indexFile);
                     }
@@ -133,7 +133,7 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onResetClicked() {
-        JsonArray<String> files = JsonCollections.createArray();
+        Array<String> files = Collections.createArray();
         for (int i = 0; i < indexedFiles.size(); i++) {
             IndexFile indexFile = indexedFiles.get(i);
             if (!indexFile.isIndexed()) {
@@ -151,7 +151,7 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
         String projectId = project.getId();
 
         try {
-            service.reset(resourceProvider.getVfsId(), projectId, "HEAD", ResetType.MIXED, new AsyncRequestCallback<String>() {
+            service.reset(resourceProvider.getVfsInfo().getId(), projectId, "HEAD", ResetType.MIXED, new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {

@@ -21,13 +21,13 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.Remote;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
@@ -97,11 +97,11 @@ public class PullPresenter implements PullView.ActionDelegate {
         view.setEnablePullButton(true);
 
         try {
-            service.remoteList(resourceProvider.getVfsId(), projectId, null, true,
+            service.remoteList(resourceProvider.getVfsInfo().getId(), projectId, null, true,
                                new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                    @Override
                                    protected void onSuccess(String result) {
-                                       JsonArray<Remote> remotes = dtoFactory.createListDtoFromJson(result, Remote.class);
+                                       Array<Remote> remotes = dtoFactory.createListDtoFromJson(result, Remote.class);
                                        getBranches(projectId, LIST_REMOTE);
                                        getBranches(projectId, LIST_LOCAL);
                                        view.setEnablePullButton(!result.isEmpty());
@@ -134,11 +134,11 @@ public class PullPresenter implements PullView.ActionDelegate {
      */
     private void getBranches(@NotNull String projectId, @NotNull final String remoteMode) {
         try {
-            service.branchList(resourceProvider.getVfsId(), projectId, remoteMode,
+            service.branchList(resourceProvider.getVfsInfo().getId(), projectId, remoteMode,
                                new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                    @Override
                                    protected void onSuccess(String result) {
-                                       JsonArray<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
+                                       Array<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
                                        if (LIST_REMOTE.equals(remoteMode)) {
                                            view.setRemoteBranches(getRemoteBranchesToDisplay(view.getRepositoryName(), branches));
                                        } else {
@@ -172,8 +172,8 @@ public class PullPresenter implements PullView.ActionDelegate {
      *         remote branches
      */
     @NotNull
-    private JsonArray<String> getRemoteBranchesToDisplay(@NotNull String remoteName, @NotNull JsonArray<Branch> remoteBranches) {
-        JsonArray<String> branches = JsonCollections.createArray();
+    private Array<String> getRemoteBranchesToDisplay(@NotNull String remoteName, @NotNull Array<Branch> remoteBranches) {
+        Array<String> branches = Collections.createArray();
 
         if (remoteBranches.isEmpty()) {
             branches.add("master");
@@ -202,8 +202,8 @@ public class PullPresenter implements PullView.ActionDelegate {
      *         local branches
      */
     @NotNull
-    private JsonArray<String> getLocalBranchesToDisplay(@NotNull JsonArray<Branch> localBranches) {
-        JsonArray<String> branches = JsonCollections.createArray();
+    private Array<String> getLocalBranchesToDisplay(@NotNull Array<Branch> localBranches) {
+        Array<String> branches = Collections.createArray();
 
         if (localBranches.isEmpty()) {
             branches.add("master");
@@ -226,7 +226,7 @@ public class PullPresenter implements PullView.ActionDelegate {
         final String remoteUrl = view.getRepositoryUrl();
 
         try {
-            service.pullWS(resourceProvider.getVfsId(), project, getRefs(), remoteName, new RequestCallback<String>() {
+            service.pullWS(resourceProvider.getVfsInfo().getId(), project, getRefs(), remoteName, new RequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
@@ -260,7 +260,7 @@ public class PullPresenter implements PullView.ActionDelegate {
      */
     private void doPullREST(@NotNull final String remoteUrl, @NotNull String remoteName) {
         try {
-            service.pull(resourceProvider.getVfsId(), project, getRefs(), remoteName, new AsyncRequestCallback<String>() {
+            service.pull(resourceProvider.getVfsInfo().getId(), project, getRefs(), remoteName, new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {

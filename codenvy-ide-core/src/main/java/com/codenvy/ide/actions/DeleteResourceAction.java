@@ -18,6 +18,7 @@
 package com.codenvy.ide.actions;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -41,7 +42,9 @@ public class DeleteResourceAction extends Action {
     private NotificationManager notificationManager;
 
     @Inject
-    public DeleteResourceAction(SelectionAgent selectionAgent, ResourceProvider resourceProvider, Resources resources,
+    public DeleteResourceAction(SelectionAgent selectionAgent,
+                                ResourceProvider resourceProvider,
+                                Resources resources,
                                 NotificationManager notificationManager) {
         super("Delete", "Delete resource", resources.delete());
 
@@ -58,6 +61,9 @@ public class DeleteResourceAction extends Action {
         if (activeProject != null && selection != null) {
             Resource resource = selection.getFirstElement();
             e.getPresentation().setEnabled(resource != null);
+        } else if (activeProject == null && selection != null) {
+            Resource resource = selection.getFirstElement();
+            e.getPresentation().setEnabled(resource != null);
         } else {
             e.getPresentation().setEnabled(false);
         }
@@ -66,9 +72,34 @@ public class DeleteResourceAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        Project activeProject = resourceProvider.getActiveProject();
         Selection<Resource> selection = (Selection<Resource>)selectionAgent.getSelection();
         Resource resource = selection.getFirstElement();
+        delete(resource);
+//
+//        if (activeProject != null) {
+//        } else {
+//            resourceProvider.getProject(resource.getName(), new AsyncCallback<Project>() {
+//                @Override
+//                public void onSuccess(Project result) {
+//                    delete(result);
+//                }
+//
+//                @Override
+//                public void onFailure(Throwable caught) {
+//                    showErrorMessage(caught);
+//                }
+//            });
+//        }
+    }
 
+    /**
+     * Delete resource item.
+     *
+     * @param resource
+     *         resource that need to be deleted
+     */
+    private void delete(@NotNull Resource resource) {
         resourceProvider.delete(resource, new AsyncCallback<String>() {
             @Override
             public void onSuccess(String result) {
@@ -77,9 +108,19 @@ public class DeleteResourceAction extends Action {
 
             @Override
             public void onFailure(Throwable caught) {
-                Notification notification = new Notification(caught.getMessage(), ERROR);
-                notificationManager.showNotification(notification);
+                showErrorMessage(caught);
             }
         });
+    }
+
+    /**
+     * Show error message.
+     *
+     * @param throwable
+     *         exception that happened
+     */
+    private void showErrorMessage(@NotNull Throwable throwable) {
+        Notification notification = new Notification(throwable.getMessage(), ERROR);
+        notificationManager.showNotification(notification);
     }
 }

@@ -14,8 +14,8 @@
 
 package com.codenvy.ide.texteditor.documentparser;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.texteditor.api.parser.Token;
@@ -50,7 +50,7 @@ public abstract class AsyncParser<T extends AsyncParser.LineAware> implements Do
      * @param cleanedData
      *         data items that will be deleted
      */
-    protected void onCleanup(JsonArray<T> cleanedData) {
+    protected void onCleanup(Array<T> cleanedData) {
     }
 
     /**
@@ -64,7 +64,7 @@ public abstract class AsyncParser<T extends AsyncParser.LineAware> implements Do
      * @param tokens
      *         tokens collected on the line
      */
-    protected void onParseLine(Line line, int lineNumber, JsonArray<Token> tokens) {
+    protected void onParseLine(Line line, int lineNumber, Array<Token> tokens) {
     }
 
     /**
@@ -76,7 +76,7 @@ public abstract class AsyncParser<T extends AsyncParser.LineAware> implements Do
      *         resulting array of all nodes collected so far for the whole
      *         file
      */
-    protected void onAfterParse(JsonArray<T> nodes) {
+    protected void onAfterParse(Array<T> nodes) {
     }
 
     /** Flag that prevents work after instance was cleaned. */
@@ -90,10 +90,10 @@ public abstract class AsyncParser<T extends AsyncParser.LineAware> implements Do
      * <p/>
      * When new block of lines is parsed, this list is truncated.
      */
-    private JsonArray<T> nodes = JsonCollections.createArray();
+    private Array<T> nodes = Collections.createArray();
 
     @Override
-    public final void onDocumentLineParsed(Line line, int lineNumber, JsonArray<Token> tokens) {
+    public final void onDocumentLineParsed(Line line, int lineNumber, Array<Token> tokens) {
         if (detached) {
             return;
         }
@@ -138,7 +138,7 @@ public abstract class AsyncParser<T extends AsyncParser.LineAware> implements Do
         if (nodes.size() != 0) {
             int cutTailIndex = findCutTailIndex(nodes, lineNumber);
             if (cutTailIndex < nodes.size()) {
-                JsonArray<T> tail = nodes.splice(cutTailIndex, nodes.size() - cutTailIndex);
+                Array<T> tail = nodes.splice(cutTailIndex, nodes.size() - cutTailIndex);
                 onCleanup(tail);
             }
         }
@@ -150,7 +150,7 @@ public abstract class AsyncParser<T extends AsyncParser.LineAware> implements Do
      * <p>We support nodes array sorted by line number.
      * Now we use that property in modified binary search.
      */
-    public static <T extends LineAware> int findCutTailIndex(JsonArray<T> nodes, int lineNumber) {
+    public static <T extends LineAware> int findCutTailIndex(Array<T> nodes, int lineNumber) {
         int low = 0;
         int high = nodes.size() - 1;
 

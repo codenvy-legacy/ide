@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.java.client.projecttemplate.ant;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -64,11 +64,11 @@ public class CreateAntProjectClientServiceImpl implements CreateAntProjectClient
 
     /** {@inheritDoc} */
     @Override
-    public void createSpringProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
+    public void createSpringProject(String projectName, Array<Property> properties, AsyncRequestCallback<Void> callback)
             throws RequestException {
         String requestUrl = restContext + CREATE_SPRING_PROJECT;
 
-        String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName;
+        String param = "?vfsid=" + resourceProvider.getVfsInfo().getId() + "&name=" + projectName;
         String url = requestUrl + param;
 
         loader.setMessage("Creating new project...");
@@ -80,10 +80,10 @@ public class CreateAntProjectClientServiceImpl implements CreateAntProjectClient
 
     /** {@inheritDoc} */
     @Override
-    public void createJavaProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
+    public void createJavaProject(String projectName, Array<Property> properties, AsyncRequestCallback<Void> callback)
             throws RequestException {
         String requestUrl = restContext + CREATE_JAVA_PROJECT;
-        String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName;
+        String param = "?vfsid=" + resourceProvider.getVfsInfo().getId() + "&name=" + projectName;
         String url = requestUrl + param;
 
         loader.setMessage("Creating new project...");

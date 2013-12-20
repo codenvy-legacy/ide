@@ -17,13 +17,14 @@
  */
 package com.codenvy.ide.ext.java.client.editor.outline;
 
-import com.codenvy.ide.ext.java.client.JavaClientBundle;
-import com.codenvy.ide.ext.java.client.JavaCss;
-import com.codenvy.ide.ext.java.client.core.dom.Modifier;
-
 import elemental.html.DivElement;
 import elemental.html.Element;
 import elemental.html.SpanElement;
+
+import com.codenvy.ide.ext.java.client.JavaResources;
+import com.codenvy.ide.ext.java.client.JavaCss;
+import com.codenvy.ide.ext.java.jdt.core.dom.Modifier;
+import com.codenvy.ide.ext.java.messages.BlockTypes;
 
 import com.codenvy.ide.texteditor.api.outline.CodeBlock;
 import com.codenvy.ide.ui.tree.NodeRenderer;
@@ -42,7 +43,7 @@ public class JavaNodeRenderer implements NodeRenderer<CodeBlock> {
     /**
      *
      */
-    public JavaNodeRenderer(JavaClientBundle resources) {
+    public JavaNodeRenderer(JavaResources resources) {
         css = resources.css();
 
     }
@@ -99,7 +100,7 @@ public class JavaNodeRenderer implements NodeRenderer<CodeBlock> {
 
             return root;
         } else {
-            throw new UnsupportedOperationException("This NodeRenderer support only JacaCodeBlock!");
+            throw new UnsupportedOperationException("This NodeRenderer support only JavaCodeBlock!");
         }
     }
 

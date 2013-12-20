@@ -21,13 +21,13 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.Remote;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
@@ -100,11 +100,11 @@ public class FetchPresenter implements FetchView.ActionDelegate {
         final String projectId = project.getId();
 
         try {
-            service.remoteList(resourceProvider.getVfsId(), projectId, null, true,
+            service.remoteList(resourceProvider.getVfsInfo().getId(), projectId, null, true,
                                new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                    @Override
                                    protected void onSuccess(String result) {
-                                       JsonArray<Remote> remotes = dtoFactory.createListDtoFromJson(result, Remote.class);
+                                       Array<Remote> remotes = dtoFactory.createListDtoFromJson(result, Remote.class);
                                        getBranches(projectId, LIST_REMOTE);
                                        getBranches(projectId, LIST_LOCAL);
                                        view.setEnableFetchButton(!result.isEmpty());
@@ -137,11 +137,11 @@ public class FetchPresenter implements FetchView.ActionDelegate {
      */
     private void getBranches(@NotNull String projectId, @NotNull final String remoteMode) {
         try {
-            service.branchList(resourceProvider.getVfsId(), projectId, remoteMode,
+            service.branchList(resourceProvider.getVfsInfo().getId(), projectId, remoteMode,
                                new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                    @Override
                                    protected void onSuccess(String result) {
-                                       JsonArray<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
+                                       Array<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
                                        if (LIST_REMOTE.equals(remoteMode)) {
                                            view.setRemoteBranches(getRemoteBranchesToDisplay(view.getRepositoryName(), branches));
                                        } else {
@@ -175,8 +175,8 @@ public class FetchPresenter implements FetchView.ActionDelegate {
      *         remote branches
      */
     @NotNull
-    private JsonArray<String> getRemoteBranchesToDisplay(@NotNull String remoteName, @NotNull JsonArray<Branch> remoteBranches) {
-        JsonArray<String> branches = JsonCollections.createArray();
+    private Array<String> getRemoteBranchesToDisplay(@NotNull String remoteName, @NotNull Array<Branch> remoteBranches) {
+        Array<String> branches = Collections.createArray();
 
         if (remoteBranches.isEmpty()) {
             branches.add("master");
@@ -205,8 +205,8 @@ public class FetchPresenter implements FetchView.ActionDelegate {
      *         local branches
      */
     @NotNull
-    private JsonArray<String> getLocalBranchesToDisplay(@NotNull JsonArray<Branch> localBranches) {
-        JsonArray<String> branches = JsonCollections.createArray();
+    private Array<String> getLocalBranchesToDisplay(@NotNull Array<Branch> localBranches) {
+        Array<String> branches = Collections.createArray();
 
         if (localBranches.isEmpty()) {
             branches.add("master");
@@ -231,7 +231,7 @@ public class FetchPresenter implements FetchView.ActionDelegate {
         boolean removeDeletedRefs = view.isRemoveDeletedRefs();
         
         try {
-            service.fetchWS(resourceProvider.getVfsId(), project, remoteName, getRefs(), removeDeletedRefs, new RequestCallback<String>() {
+            service.fetchWS(resourceProvider.getVfsInfo().getId(), project, remoteName, getRefs(), removeDeletedRefs, new RequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     Notification notification = new Notification(constant.fetchSuccess(remoteUrl), INFO);
@@ -252,7 +252,7 @@ public class FetchPresenter implements FetchView.ActionDelegate {
     /** Perform fetch from remote repository (sends request over HTTP). */
     private void doFetchREST(@NotNull String remoteName, boolean removeDeletedRefs, @NotNull final String remoteUrl) {
         try {
-            service.fetch(resourceProvider.getVfsId(), project, remoteName, getRefs(), removeDeletedRefs,
+            service.fetch(resourceProvider.getVfsInfo().getId(), project, remoteName, getRefs(), removeDeletedRefs,
                           new AsyncRequestCallback<String>() {
                               @Override
                               protected void onSuccess(String result) {

@@ -17,14 +17,17 @@
  */
 package com.codenvy.ide.wizard.newproject.pages;
 
+import com.codenvy.api.vfs.shared.dto.Item;
+import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.wizard.newproject.PaaSAgentImpl;
 import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
@@ -35,10 +38,13 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+
+import java.util.ArrayList;
 
 import static com.codenvy.ide.api.ui.wizard.Wizard.UpdateDelegate;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
@@ -59,6 +65,12 @@ public class NewProjectPagePresenterTest {
     public static final boolean IS_COMPLETED     = true;
     public static final boolean IS_NOT_COMPLETED = false;
     public static final boolean AVAILABLE        = true;
+
+    public static String items =
+            "{\"numItems\":1,\"hasMoreItems\":false,\"items\":[{\"projectType\":\"War\",\"mimeType\":\"text/vnd.ideproject+directory\"," +
+            "\"creationDate\":-1,\"links\":null,\"vfsId\":null,\"itemType\":\"PROJECT\",\"parentId\":\"ZGV2LW1vbml0OnJvb3Q\"," +
+            "\"name\":\"g1\",\"properties\":null,\"permissions\":null,\"id\":\"ZGV2LW1vbml0Oi9nMQ\",\"path\":\"/g1\"}]}";
+
     @Mock
     private NewProjectPageView       view;
     @Mock
@@ -79,7 +91,11 @@ public class NewProjectPagePresenterTest {
     private PaaS                     paas;
     @Mock
     private UpdateDelegate           delegate;
-    private NewProjectPagePresenter  presenter;
+    @Mock
+    private DtoFactory               dtoFactory;
+
+
+    private NewProjectPagePresenter presenter;
 
     /** Prepare test when project list is come. */
     private void setUpWithProjects() {
@@ -87,25 +103,32 @@ public class NewProjectPagePresenterTest {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 Object[] arguments = invocationOnMock.getArguments();
-                AsyncCallback<JsonArray<String>> callback = (AsyncCallback<JsonArray<String>>)arguments[0];
-                JsonArray<String> projects = JsonCollections.createArray(PROJECT_NAME);
-                callback.onSuccess(projects);
+                AsyncCallback<String> callback = (AsyncCallback<String>)arguments[0];
+                callback.onSuccess(items);
                 return null;
             }
-        }).when(resourceProvider).listProjects((AsyncCallback<JsonArray<String>>)anyObject());
+        }).when(resourceProvider).listProjects((AsyncCallback<String>)anyObject());
 
         setUp();
     }
 
     /** Prepare test when project list is not come. */
     private void setUp() {
-        JsonArray<ProjectTypeData> projectTypes = JsonCollections.createArray(projectType);
+        Item item = mock(Item.class);
+        ItemList itemList = mock(ItemList.class);
+        when(dtoFactory.createDtoFromJson(anyString(), eq(ItemList.class))).thenReturn(itemList);
+        ArrayList<Item> list = new ArrayList<>();
+        list.add(item);
+        when(itemList.getItems()).thenReturn(list);
+        when(item.getName()).thenReturn(PROJECT_NAME);
+
+        Array<ProjectTypeData> projectTypes = Collections.createArray(projectType);
         when(projectTypeAgent.getProjectTypes()).thenReturn(projectTypes);
 
-        JsonArray<PaaS> paases = JsonCollections.createArray(paas);
+        Array<PaaS> paases = Collections.createArray(paas);
         when(paasAgent.getPaaSes()).thenReturn(paases);
 
-        presenter = new NewProjectPagePresenter(view, resources, projectTypeAgent, paasAgent, resourceProvider, constant);
+        presenter = new NewProjectPagePresenter(view, resources, projectTypeAgent, paasAgent, resourceProvider, constant, dtoFactory);
         presenter.setContext(wizardContext);
         presenter.setUpdateDelegate(delegate);
     }
@@ -148,7 +171,7 @@ public class NewProjectPagePresenterTest {
     @Test
     public void testFocusComponent() throws Exception {
         setUp();
-        when(paas.isAvailable(anyString(), (JsonArray<String>)anyObject())).thenReturn(AVAILABLE);
+        when(paas.isAvailable(anyString(), (Array<String>)anyObject())).thenReturn(AVAILABLE);
 
         presenter.focusComponent();
 
@@ -199,7 +222,7 @@ public class NewProjectPagePresenterTest {
 
         presenter.checkProjectName();
 
-        assertEquals(presenter.getNotice(), PROJECT_NAME);
+        assertEquals(PROJECT_NAME, presenter.getNotice());
         verify(constant).createProjectFromTemplateProjectExists(anyString());
     }
 
@@ -260,7 +283,7 @@ public class NewProjectPagePresenterTest {
     @Test
     public void testOnProjectTypeSelected() throws Exception {
         setUp();
-        when(paas.isAvailable(anyString(), (JsonArray<String>)anyObject())).thenReturn(AVAILABLE);
+        when(paas.isAvailable(anyString(), (Array<String>)anyObject())).thenReturn(AVAILABLE);
 
         presenter.focusComponent();
         reset(view);

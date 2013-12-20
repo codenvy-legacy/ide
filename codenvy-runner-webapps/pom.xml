@@ -18,12 +18,13 @@
     from Codenvy S.A..
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
-        <version>3.0.0-M5-SNAPSHOT</version>
+        <version>3.0.0-M6-SNAPSHOT</version>
     </parent>
 
     <artifactId>codenvy-runner-webapps</artifactId>
@@ -84,19 +85,21 @@
                         <configuration>
                             <tasks>
                                 <!-- Unzip Tomcat package -->
-                                <unzip src="${project.build.directory}/classes/tomcat.zip" dest="${project.build.directory}/classes">
+                                <unzip src="${project.build.directory}/classes/tomcat.zip"
+                                       dest="${project.build.directory}/classes">
                                     <patternset>
-                                        <exclude name="**/webapps/**" />
+                                        <exclude name="**/webapps/**"/>
                                     </patternset>
                                 </unzip>
                                 <move todir="${project.build.directory}/classes/tomcat-bundle">
-                                    <fileset dir="${project.build.directory}/classes/apache-tomcat-${tomcat.version}" />
+                                    <fileset dir="${project.build.directory}/classes/apache-tomcat-${tomcat.version}"/>
                                 </move>
-                                <delete file="${project.build.directory}/classes/tomcat.zip" />
+                                <delete file="${project.build.directory}/classes/tomcat.zip"/>
 
                                 <!-- Zip prepared Tomcat binary distribution and remove temporary directory -->
-                                <zip basedir="${project.build.directory}/classes/tomcat-bundle" destfile="${project.build.directory}/classes/tomcat.zip" />
-                                <delete dir="${project.build.directory}/classes/tomcat-bundle" />
+                                <zip basedir="${project.build.directory}/classes/tomcat-bundle"
+                                     destfile="${project.build.directory}/classes/tomcat.zip"/>
+                                <delete dir="${project.build.directory}/classes/tomcat-bundle"/>
                             </tasks>
                         </configuration>
                     </execution>

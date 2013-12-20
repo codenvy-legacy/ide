@@ -20,7 +20,7 @@ import elemental.html.*;
 import elemental.js.html.JsElement;
 import elemental.ranges.Range;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
@@ -247,7 +247,7 @@ public class Elements {
     // TODO: Long term we need a markdown engine :)
     public static void markup(Element e, String text, String linkCssClass) {
         e.setInnerHTML("");
-        JsonArray<String> paragraphs = StringUtils.split(text, "\n\n");
+        Array<String> paragraphs = StringUtils.split(text, "\n\n");
         for (int i = 0; i < paragraphs.size(); i++) {
             markupParagraph(e, paragraphs.get(i), linkCssClass);
         }

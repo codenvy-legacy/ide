@@ -15,7 +15,9 @@
 package com.codenvy.ide.dto;
 
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.dto.shared.DTO;
+
+import java.util.List;
 
 /**
  * Models a document operation for the Collide code editor.
@@ -32,5 +34,7 @@ import com.codenvy.ide.json.JsonArray;
  */
 @DTO
 public interface DocOp {
-    JsonArray<DocOpComponent> getComponents();
+    List<DocOpComponent> getComponents();
+
+    void setComponents(List<DocOpComponent> components);
 }

@@ -14,10 +14,11 @@
 
 package com.codenvy.ide.texteditor.ot;
 
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DocOp;
 import com.codenvy.ide.dto.DocOpComponent;
 import com.codenvy.ide.dto.shared.DocOpFactory;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.runtime.Assert;
 
 import java.util.Iterator;
@@ -577,10 +578,10 @@ public class Composer {
      */
     private DocOp composeImpl(boolean startWithSpecificProcessingAState) {
         int aIndex = 0;
-        JsonArray<DocOpComponent> aComponents = a.getComponents();
+        Array<DocOpComponent> aComponents = Collections.createArray(a.getComponents());
 
         int bIndex = 0;
-        JsonArray<DocOpComponent> bComponents = b.getComponents();
+        Array<DocOpComponent> bComponents = Collections.createArray(b.getComponents());
 
     /*
      * Note the "!= INSERT": There isn't a ProcessingAForBInsert. What that
@@ -655,7 +656,7 @@ public class Composer {
 
             case DocOpComponent.Type.RETAIN:
                 return new ProcessingAForBRetain(((DocOpComponent.Retain)b).getCount(),
-                                                 ((DocOpComponent.Retain)b).hasTrailingNewline());
+                                                 ((DocOpComponent.Retain)b).isTrailingNewline());
 
             case DocOpComponent.Type.RETAIN_LINE:
                 return new ProcessingAForBRetainLine(((DocOpComponent.RetainLine)b).getLineCount());

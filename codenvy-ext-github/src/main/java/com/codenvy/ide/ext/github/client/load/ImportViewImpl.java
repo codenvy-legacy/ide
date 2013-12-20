@@ -18,9 +18,9 @@
 package com.codenvy.ide.ext.github.client.load;
 
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.github.client.GitHubLocalizationConstant;
 import com.codenvy.ide.ext.github.client.GitHubResources;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.ui.Button;
 import com.google.gwt.cell.client.ImageResourceCell;
 import com.google.gwt.cell.client.SafeHtmlCell;
@@ -168,8 +168,8 @@ public class ImportViewImpl extends DialogBox implements ImportView {
 
     /** {@inheritDoc} */
     @Override
-    public void setRepositories(@NotNull JsonArray<ProjectData> repositories) {
-        // Wraps JsonArray in java.util.List
+    public void setRepositories(@NotNull Array<ProjectData> repositories) {
+        // Wraps Array in java.util.List
         List<ProjectData> list = new ArrayList<ProjectData>();
         for (int i = 0; i < repositories.size(); i++) {
             list.add(repositories.get(i));
@@ -193,7 +193,7 @@ public class ImportViewImpl extends DialogBox implements ImportView {
 
     /** {@inheritDoc} */
     @Override
-    public void setAccountNames(@NotNull JsonArray<String> names) {
+    public void setAccountNames(@NotNull Array<String> names) {
         this.accountName.clear();
         for (int i = 0; i < names.size(); i++) {
             String name = names.get(i);

@@ -19,10 +19,6 @@ package com.codenvy.ide.tutorial.wizard.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.ui.wizard.DefaultWizard;
-import com.codenvy.ide.tutorial.wizard.pages.page1.Page1View;
-import com.codenvy.ide.tutorial.wizard.pages.page1.Page1ViewImpl;
-import com.codenvy.ide.tutorial.wizard.part.TutorialHowToView;
-import com.codenvy.ide.tutorial.wizard.part.TutorialHowToViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
@@ -36,8 +32,6 @@ public class WizardTutorialGinModule extends AbstractGinModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
-        bind(Page1View.class).to(Page1ViewImpl.class);
         bind(DefaultWizard.class).annotatedWith(SimpleWizard.class).toProvider(SimpleWizardProvider.class).in(Singleton.class);
-        bind(TutorialHowToView.class).to(TutorialHowToViewImpl.class);
     }
 }

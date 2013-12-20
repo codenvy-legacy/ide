@@ -21,8 +21,8 @@ package com.codenvy.ide.texteditor.renderer;
 import elemental.html.Element;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.texteditor.Buffer;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
@@ -36,7 +36,7 @@ import com.codenvy.ide.util.dom.Elements;
 public class CurrentLineHighlighter {
     private int activeLineNumber;
 
-    private final JsonArray<ListenerRegistrar.Remover> listenerRemovers = JsonCollections.createArray();
+    private final Array<ListenerRegistrar.Remover> listenerRemovers = Collections.createArray();
 
     private final Element lineHighlighter;
 

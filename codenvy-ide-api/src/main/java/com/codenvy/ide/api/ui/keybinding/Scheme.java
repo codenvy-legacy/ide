@@ -19,7 +19,7 @@ package com.codenvy.ide.api.ui.keybinding;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.util.input.CharCodeWithModifiers;
 
 
@@ -60,7 +60,7 @@ public interface Scheme {
      *         such actions then the method returns an empty array.
      */
     @NotNull
-    JsonArray<String> getActionIds(int digest);
+    Array<String> getActionIds(int digest);
 
     /**
      * @return keyboard shortcut for the action with the specified <code>actionId</code>

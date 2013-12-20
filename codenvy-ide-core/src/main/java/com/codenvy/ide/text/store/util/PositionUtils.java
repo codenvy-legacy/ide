@@ -14,8 +14,8 @@
 
 package com.codenvy.ide.text.store.util;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.text.store.Position;
@@ -48,7 +48,7 @@ public final class PositionUtils {
         return new Position[]{b[0], earlierEnd};
     }
 
-    public static JsonArray<Position[]> getDifference(Position[] a, Position[] b) {
+    public static Array<Position[]> getDifference(Position[] a, Position[] b) {
         // Ensure that A starts before B
         int abStartComparison = compare(a[0], b[0]);
         if (abStartComparison > 0) {
@@ -57,10 +57,10 @@ public final class PositionUtils {
 
         if (compare(b[0], a[1]) > 0) {
             // No intersection, so return both
-            return JsonCollections.createArray(a, b);
+            return Collections.createArray(a, b);
         }
 
-        JsonArray<Position[]> difference = JsonCollections.createArray();
+        Array<Position[]> difference = Collections.createArray();
         if (abStartComparison != 0) {
             // Range from the start of A (inclusive) to the start of B (exclusive)
             difference.add(new Position[]{a[0], getPosition(b[0], -1)});

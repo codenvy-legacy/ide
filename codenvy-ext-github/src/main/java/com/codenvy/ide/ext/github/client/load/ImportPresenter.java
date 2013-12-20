@@ -23,6 +23,8 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.user.User;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
@@ -33,9 +35,7 @@ import com.codenvy.ide.ext.github.client.GitHubLocalizationConstant;
 import com.codenvy.ide.ext.github.client.GitHubSshKeyProvider;
 import com.codenvy.ide.ext.github.client.marshaller.AllRepositoriesUnmarshaller;
 import com.codenvy.ide.ext.github.shared.GitHubRepository;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
@@ -63,19 +63,19 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 @Singleton
 public class ImportPresenter implements ImportView.ActionDelegate {
-    private ImportView                                 view;
-    private GitHubClientService                        service;
-    private GitClientService                           gitService;
-    private EventBus                                   eventBus;
-    private JsonStringMap<JsonArray<GitHubRepository>> repositories;
-    private ProjectData                                selectedRepository;
-    private GitHubLocalizationConstant                    constant;
-    private GitLocalizationConstant                    gitConstant;
-    private ResourceProvider                           resourceProvider;
-    private NotificationManager                        notificationManager;
-    private Notification                               notification;
-    private GitHubSshKeyProvider                       gitHubSshKeyProvider;
-    private DtoFactory                                 dtoFactory;
+    private ImportView                         view;
+    private GitHubClientService                service;
+    private GitClientService                   gitService;
+    private EventBus                           eventBus;
+    private StringMap<Array<GitHubRepository>> repositories;
+    private ProjectData                        selectedRepository;
+    private GitHubLocalizationConstant         constant;
+    private GitLocalizationConstant            gitConstant;
+    private ResourceProvider                   resourceProvider;
+    private NotificationManager                notificationManager;
+    private Notification                       notification;
+    private GitHubSshKeyProvider               gitHubSshKeyProvider;
+    private DtoFactory                         dtoFactory;
 
 
     /**
@@ -92,8 +92,10 @@ public class ImportPresenter implements ImportView.ActionDelegate {
      * @param notificationManager
      */
     @Inject
-    public ImportPresenter(ImportView view, GitHubClientService service,GitClientService gitService, EventBus eventBus, @Named("restContext") String restContext,
-                           GitHubLocalizationConstant constant, GitLocalizationConstant gitConstant, ResourceProvider resourceProvider, ConsolePart console,
+    public ImportPresenter(ImportView view, GitHubClientService service, GitClientService gitService, EventBus eventBus,
+                           @Named("restContext") String restContext,
+                           GitHubLocalizationConstant constant, GitLocalizationConstant gitConstant, ResourceProvider resourceProvider,
+                           ConsolePart console,
                            NotificationManager notificationManager, GitHubSshKeyProvider gitHubSshKeyProvider, DtoFactory dtoFactory) {
         this.view = view;
         this.view.setDelegate(this);
@@ -127,24 +129,25 @@ public class ImportPresenter implements ImportView.ActionDelegate {
     /** Get the list of all authorized user's repositories. */
     private void getUserRepos() {
         try {
-            service.getAllRepositories(new AsyncRequestCallback<JsonStringMap<JsonArray<GitHubRepository>>>(new AllRepositoriesUnmarshaller(dtoFactory)) {
-                @Override
-                protected void onSuccess(JsonStringMap<JsonArray<GitHubRepository>> result) {
-                    onListLoaded(result);
-                }
+            service.getAllRepositories(
+                    new AsyncRequestCallback<StringMap<Array<GitHubRepository>>>(new AllRepositoriesUnmarshaller(dtoFactory)) {
+                        @Override
+                        protected void onSuccess(StringMap<Array<GitHubRepository>> result) {
+                            onListLoaded(result);
+                        }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    if (exception.getMessage().contains("Bad credentials")) {
-                        Window.alert("Looks like a problem with your SSH key.  Delete a GitHub key at Window > Preferences > " +
-                                     "SSH Keys, and try importing your GitHub projects again.");
-                    } else {
-                        eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                        Notification notification = new Notification(exception.getMessage(), ERROR);
-                        notificationManager.showNotification(notification);
-                    }
-                }
-            });
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            if (exception.getMessage().contains("Bad credentials")) {
+                                Window.alert("Looks like a problem with your SSH key.  Delete a GitHub key at Window > Preferences > " +
+                                             "SSH Keys, and try importing your GitHub projects again.");
+                            } else {
+                                eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                                Notification notification = new Notification(exception.getMessage(), ERROR);
+                                notificationManager.showNotification(notification);
+                            }
+                        }
+                    });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             Notification notification = new Notification(e.getMessage(), ERROR);
@@ -158,7 +161,7 @@ public class ImportPresenter implements ImportView.ActionDelegate {
      * @param repositories
      *         loaded list of repositories
      */
-    private void onListLoaded(@NotNull JsonStringMap<JsonArray<GitHubRepository>> repositories) {
+    private void onListLoaded(@NotNull StringMap<Array<GitHubRepository>> repositories) {
         this.repositories = repositories;
 
         view.setAccountNames(repositories.getKeys());
@@ -171,10 +174,10 @@ public class ImportPresenter implements ImportView.ActionDelegate {
 
     /** Refresh project list on view. */
     private void refreshProjectList() {
-        JsonArray<ProjectData> projectsData = JsonCollections.createArray();
+        Array<ProjectData> projectsData = Collections.createArray();
 
         String accountName = view.getAccountName();
-        JsonArray<GitHubRepository> repo = repositories.get(accountName);
+        Array<GitHubRepository> repo = repositories.get(accountName);
 
         for (GitHubRepository repository : repo.asIterable()) {
             ProjectData projectData = new ProjectData(repository.getName(), repository.getDescription(), null, null, repository.getSshUrl(),
@@ -217,7 +220,7 @@ public class ImportPresenter implements ImportView.ActionDelegate {
                 notificationManager.showNotification(notification);
 
                 final String finalRemoteUri = remoteUri;
-                resourceProvider.createProject(projectName, JsonCollections.<Property>createArray(), new AsyncCallback<Project>() {
+                resourceProvider.createProject(projectName, Collections.<Property>createArray(), new AsyncCallback<Project>() {
                     @Override
                     public void onSuccess(Project result) {
                         cloneRepository(finalRemoteUri, projectName, result);
@@ -249,7 +252,7 @@ public class ImportPresenter implements ImportView.ActionDelegate {
      */
     private void cloneRepository(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
       try {
-            gitService.cloneRepositoryWS(resourceProvider.getVfsId(), project, remoteUri, remoteName,
+            gitService.cloneRepositoryWS(resourceProvider.getVfsInfo().getId(), project, remoteUri, remoteName,
                                          new RequestCallback<String>(new com.codenvy.ide.ext.git.client.marshaller.StringUnmarshaller()) {
                                              @Override
                                              protected void onSuccess(String result) {
@@ -281,7 +284,7 @@ public class ImportPresenter implements ImportView.ActionDelegate {
      */
     private void cloneRepositoryREST(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
        try {
-            gitService.cloneRepository(resourceProvider.getVfsId(), project, remoteUri, remoteName,
+            gitService.cloneRepository(resourceProvider.getVfsInfo().getId(), project, remoteUri, remoteName,
                                        new AsyncRequestCallback<String>(new com.codenvy.ide.rest.StringUnmarshaller()) {
                                            @Override
                                            protected void onSuccess(String result) {

@@ -17,8 +17,10 @@
  */
 package com.codenvy.ide.api.user;
 
-import com.codenvy.ide.dto.DTO;
-import com.codenvy.ide.json.JsonStringMap;
+
+import com.codenvy.dto.shared.DTO;
+
+import java.util.Map;
 
 /**
  * Represent information about User.
@@ -39,5 +41,16 @@ public interface User {
      *
      * @return profile's attributes
      */
-    JsonStringMap<String> getProfileAttributes();
+    Map<String,String> getProfileAttributes();
+
+
+    /**
+     * set user's id.
+     */
+    void setUserId(String id);
+
+    /**
+     * set profile's attributes.
+     */
+    void setProfileAttributes(Map<String,String> attributes);
 }

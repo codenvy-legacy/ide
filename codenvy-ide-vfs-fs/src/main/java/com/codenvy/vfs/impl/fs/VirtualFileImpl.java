@@ -17,6 +17,7 @@
  */
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.util.ContentTypeGuesser;
 import com.codenvy.api.core.util.Pair;
 import com.codenvy.api.vfs.server.ContentStream;
 import com.codenvy.api.vfs.server.LazyIterator;
@@ -26,7 +27,6 @@ import com.codenvy.api.vfs.server.VirtualFileFilter;
 import com.codenvy.api.vfs.server.VirtualFileVisitor;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemRuntimeException;
-import com.codenvy.api.vfs.server.util.MediaTypes;
 import com.codenvy.api.vfs.shared.PropertyFilter;
 import com.codenvy.api.vfs.shared.dto.AccessControlEntry;
 import com.codenvy.api.vfs.shared.dto.Folder;
@@ -136,7 +136,7 @@ public class VirtualFileImpl implements VirtualFile {
         String mediaType = mountPoint.getPropertyValue(this, "vfs:mimeType");
         if (mediaType == null) {
             // If media type is not set then item may be file or regular folder and cannot be a project.
-            mediaType = isFile() ? MediaTypes.INSTANCE.getMediaType(path.getName()) : Folder.FOLDER_MIME_TYPE;
+            mediaType = isFile() ? ContentTypeGuesser.guessContentType(ioFile) : Folder.FOLDER_MIME_TYPE;
         }
         return mediaType;
     }

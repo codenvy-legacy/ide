@@ -20,7 +20,7 @@ package com.codenvy.ide.ext.git.client.remote;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.ext.git.shared.Remote;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 
 /**
  * The view of {@link RemotePresenter}.
@@ -54,7 +54,7 @@ public interface RemoteView extends View<RemoteView.ActionDelegate> {
      * @param remotes
      *         list of available remote repositories.
      */
-    void setRemotes(@NotNull JsonArray<Remote> remotes);
+    void setRemotes(@NotNull Array<Remote> remotes);
 
     /**
      * Change the enable state of the delete button.

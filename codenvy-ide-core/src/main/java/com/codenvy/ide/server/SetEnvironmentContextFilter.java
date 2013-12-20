@@ -54,7 +54,7 @@ public class SetEnvironmentContextFilter implements Filter {
                 }
                 if (workspaceManager != null) {
                     try {
-                        workspaceManager.getWorkspaceByName(ws);//check ws on existing
+//                        workspaceManager.getWorkspaceByName(ws);//check ws on existing
                         EnvironmentContext environment = EnvironmentContext.getCurrent();
                         for (Map.Entry<String, Object> entry : env.entrySet()) {
                             environment.setVariable(entry.getKey(), entry.getValue());
@@ -62,7 +62,7 @@ public class SetEnvironmentContextFilter implements Filter {
                         environment.setVariable(EnvironmentContext.WORKSPACE_NAME, ws);
                         environment.setVariable(EnvironmentContext.WORKSPACE_ID, ws);
                         chain.doFilter(request, response);
-                    } catch (OrganizationServiceException e) {
+                    } catch (Exception e) {
                         HttpServletResponse httpResponse = (HttpServletResponse)response;
                         httpResponse.setStatus(404);
                         httpResponse.setHeader("JAXRS-Body-Provided", "Error-Message");

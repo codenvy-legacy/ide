@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.java.client.projecttemplate.ant;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
@@ -37,7 +37,7 @@ public interface CreateAntProjectClientService {
      * @param callback
      * @throws com.google.gwt.http.client.RequestException
      */
-    void createSpringProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
+    void createSpringProject(String projectName, Array<Property> properties, AsyncRequestCallback<Void> callback)
             throws RequestException;
 
     /**
@@ -48,5 +48,5 @@ public interface CreateAntProjectClientService {
      * @param callback
      * @throws com.google.gwt.http.client.RequestException
      */
-    void createJavaProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback) throws RequestException;
+    void createJavaProject(String projectName, Array<Property> properties, AsyncRequestCallback<Void> callback) throws RequestException;
 }

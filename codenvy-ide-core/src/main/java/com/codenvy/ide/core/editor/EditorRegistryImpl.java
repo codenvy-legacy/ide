@@ -22,8 +22,8 @@ import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.SDK;
 import com.codenvy.ide.api.resources.FileType;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonIntegerMap;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.IntegerMap;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
@@ -37,13 +37,13 @@ import com.google.inject.name.Named;
 @SDK(title = "ide.api.editorRegistry")
 public class EditorRegistryImpl implements EditorRegistry {
 
-    private JsonIntegerMap<EditorProvider> registry;
+    private IntegerMap<EditorProvider> registry;
 
     @Inject
     public EditorRegistryImpl(@Named("defaultEditor") EditorProvider defaultProvider,
                               @Named("defaultFileType") FileType defaultFile) {
         super();
-        registry = JsonCollections.createIntegerMap();
+        registry = Collections.createIntegerMap();
         register(defaultFile, defaultProvider);
     }
 

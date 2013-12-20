@@ -20,7 +20,7 @@ package com.codenvy.ide.wizard.newresource.page;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 
 /**
  * Interface of new resource view.
@@ -60,7 +60,7 @@ public interface NewResourcePageView extends View<NewResourcePageView.ActionDele
      * @param resourceWizards
      *         list of resources
      */
-    void setResourceWizard(@NotNull JsonArray<NewResourceProvider> resourceWizards);
+    void setResourceWizard(@NotNull Array<NewResourceProvider> resourceWizards);
 
     /** Focus resource name field on view. */
     void focusResourceName();

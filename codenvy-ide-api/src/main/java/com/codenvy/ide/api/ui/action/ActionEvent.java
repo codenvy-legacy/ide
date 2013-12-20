@@ -18,8 +18,8 @@
 package com.codenvy.ide.api.ui.action;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.util.StringUtils;
 
 /**
@@ -31,8 +31,8 @@ import com.codenvy.ide.util.StringUtils;
  * @see Action#update(ActionEvent)
  */
 public class ActionEvent {
-    private static final String                ourInjectedPrefix = "$injected$.";
-    private static final JsonStringMap<String> ourInjectedIds    = JsonCollections.createStringMap();
+    private static final String            ourInjectedPrefix = "$injected$.";
+    private static final StringMap<String> ourInjectedIds    = Collections.createStringMap();
     private final ActionManager myActionManager;
     private final String        myPlace;
     private final Presentation  myPresentation;

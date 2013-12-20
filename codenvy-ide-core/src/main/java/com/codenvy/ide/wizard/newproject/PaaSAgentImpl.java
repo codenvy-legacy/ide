@@ -23,9 +23,9 @@ import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -44,24 +44,24 @@ public class PaaSAgentImpl implements PaaSAgent {
 
     private class NonePaaS extends PaaS {
         public NonePaaS(@NotNull String id, @NotNull String title, @Nullable ImageResource image) {
-            super(id, title, image, JsonCollections.<JsonArray<String>>createStringMap(), false);
+            super(id, title, image, Collections.<Array<String>>createStringMap(), false);
         }
 
         /** {@inheritDoc} */
         @Override
-        public boolean isAvailable(@NotNull String primaryNature, @NotNull JsonArray<String> secondaryNature) {
+        public boolean isAvailable(@NotNull String primaryNature, @NotNull Array<String> secondaryNature) {
             return true;
         }
     }
 
-    private       NewProjectWizard    newProjectWizard;
-    private final JsonStringMap<PaaS> registeredPaaS;
+    private       NewProjectWizard newProjectWizard;
+    private final StringMap<PaaS>  registeredPaaS;
 
     /** Create agent. */
     @Inject
     protected PaaSAgentImpl(NewProjectWizard newProjectWizard) {
         this.newProjectWizard = newProjectWizard;
-        this.registeredPaaS = JsonCollections.createStringMap();
+        this.registeredPaaS = Collections.createStringMap();
         registeredPaaS.put(NONE_PAAS_ID, new NonePaaS(NONE_PAAS_ID, NONE_PAAS_ID, null));
     }
 
@@ -70,8 +70,8 @@ public class PaaSAgentImpl implements PaaSAgent {
     public void register(@NotNull String id,
                          @NotNull String title,
                          @Nullable ImageResource image,
-                         @NotNull JsonStringMap<JsonArray<String>> natures,
-                         @NotNull JsonArray<Provider<? extends AbstractPaasPage>> wizardPages,
+                         @NotNull StringMap<Array<String>> natures,
+                         @NotNull Array<Provider<? extends AbstractPaasPage>> wizardPages,
                          boolean provideTemplate) {
         if (registeredPaaS.containsKey(id)) {
             Window.alert("PaaS with " + id + " id already exists");
@@ -86,7 +86,7 @@ public class PaaSAgentImpl implements PaaSAgent {
     }
 
     /** @return all available PaaSes. */
-    public JsonArray<PaaS> getPaaSes() {
+    public Array<PaaS> getPaaSes() {
         return registeredPaaS.getValues();
     }
 }

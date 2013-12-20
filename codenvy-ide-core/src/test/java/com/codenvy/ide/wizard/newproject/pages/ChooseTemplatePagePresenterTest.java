@@ -22,8 +22,8 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.Wizard;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.wizard.newproject.TemplateAgentImpl;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
@@ -73,8 +73,8 @@ public class ChooseTemplatePagePresenterTest {
 
     @Before
     public void setUp() {
-        template = new Template("id", "title", null, "primaryNature", JsonCollections.createArray("secondaryNature"));
-        projectType = new ProjectTypeData("typeName", "title", null, "primaryNature", JsonCollections.createArray("secondaryNature"));
+        template = new Template("id", "title", null, "primaryNature", Collections.createArray("secondaryNature"));
+        projectType = new ProjectTypeData("typeName", "title", null, "primaryNature", Collections.createArray("secondaryNature"));
 
         page = new ChooseTemplatePagePresenter(view, resources, templateAgent, constant);
         page.setContext(wizardContext);
@@ -95,32 +95,32 @@ public class ChooseTemplatePagePresenterTest {
     @Test
     public void testCanSkip() throws Exception {
         when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectType);
-        when(templateAgent.getTemplatesForProjectType(anyString(), (JsonArray<String>)anyObject()))
-                .thenReturn(JsonCollections.createArray(template));
+        when(templateAgent.getTemplatesForProjectType(anyString(), (Array<String>)anyObject()))
+                .thenReturn(Collections.createArray(template));
 
         assertEquals(page.canSkip(), CAN_SKIP);
 
-        verify(view).setTemplates((JsonArray<Template>)anyObject());
+        verify(view).setTemplates((Array<Template>)anyObject());
         verify(wizardContext).putData(eq(TEMPLATE), eq(template));
     }
 
     @Test
     public void testCanNotSkip() throws Exception {
         when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectType);
-        when(templateAgent.getTemplatesForProjectType(anyString(), (JsonArray<String>)anyObject()))
-                .thenReturn(JsonCollections.createArray(template, template));
+        when(templateAgent.getTemplatesForProjectType(anyString(), (Array<String>)anyObject()))
+                .thenReturn(Collections.createArray(template, template));
 
         assertEquals(page.canSkip(), CAN_NOT_SKIP);
 
-        verify(view).setTemplates((JsonArray<Template>)anyObject());
+        verify(view).setTemplates((Array<Template>)anyObject());
         verify(wizardContext).putData(eq(TEMPLATE), eq(template));
     }
 
     @Test
     public void testFocusComponent() throws Exception {
         when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectType);
-        when(templateAgent.getTemplatesForProjectType(anyString(), (JsonArray<String>)anyObject()))
-                .thenReturn(JsonCollections.createArray(template));
+        when(templateAgent.getTemplatesForProjectType(anyString(), (Array<String>)anyObject()))
+                .thenReturn(Collections.createArray(template));
 
         page.canSkip();
         reset(wizardContext);
@@ -156,13 +156,13 @@ public class ChooseTemplatePagePresenterTest {
     @Test
     public void testGo() throws Exception {
         when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectType);
-        when(templateAgent.getTemplatesForProjectType(anyString(), (JsonArray<String>)anyObject()))
-                .thenReturn(JsonCollections.createArray(template, template));
+        when(templateAgent.getTemplatesForProjectType(anyString(), (Array<String>)anyObject()))
+                .thenReturn(Collections.createArray(template, template));
         AcceptsOneWidget container = mock(AcceptsOneWidget.class);
 
         page.go(container);
 
-        verify(view).setTemplates((JsonArray<Template>)anyObject());
+        verify(view).setTemplates((Array<Template>)anyObject());
         verify(wizardContext).putData(eq(TEMPLATE), eq(template));
         verify(container).setWidget(eq(view));
     }

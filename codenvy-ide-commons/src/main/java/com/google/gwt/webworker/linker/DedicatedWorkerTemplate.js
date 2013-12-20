@@ -18,11 +18,13 @@ $stats = function() {
 };
 $self = self;
 $sessionId = null;
-
+$wnd=this;
 function __MODULE_FUNC__() {
   // TODO(zundel): Add slot for property providers.
   var strongName;
   var softPermutationId = 0;
+//  __MODULE_FUNC__.__gwtInstallCode = function() {};
+
   try {
     // __PERMUTATIONS_BEGIN__
     // Permutation logic
@@ -39,6 +41,10 @@ function __MODULE_FUNC__() {
     softPermutationId = Number(strongName.substring(idx + 1));
     strongName = strongName.substring(0, idx);
   }
+  __gwtStartLoadingFragment = function(frag) {
+       importScripts('deferredjs/'  + strongName + '/' + frag + '.cache.js');
+       return null;
+   };
   importScripts(strongName + ".cache.js");
   gwtOnLoad(undefined, '__MODULE_NAME__', '', softPermutationId);
 }

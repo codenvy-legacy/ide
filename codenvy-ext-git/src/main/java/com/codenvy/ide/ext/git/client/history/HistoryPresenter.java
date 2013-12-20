@@ -28,14 +28,14 @@ import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.shared.LogResponse;
 import com.codenvy.ide.ext.git.shared.Revision;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -79,11 +79,11 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
     private boolean                 showChangesInProject;
     private DiffWith                diffType;
     private boolean isViewClosed = true;
-    private JsonArray<Revision> revisions;
+    private Array<Revision>     revisions;
     private Revision            selectedRevision;
     private SelectionAgent      selectionAgent;
     private NotificationManager notificationManager;
-    private DtoFactory              dtoFactory;
+    private DtoFactory          dtoFactory;
 
     /**
      * Create presenter.
@@ -143,11 +143,11 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
     /** Get the log of the commits. If successfully received, then display in revision grid, otherwise - show error in output panel. */
     private void getCommitsLog(@NotNull String projectId) {
         try {
-            service.log(resourceProvider.getVfsId(), projectId, false, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+            service.log(resourceProvider.getVfsInfo().getId(), projectId, false, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
                 protected void onSuccess(String result) {
                     LogResponse logResponse = dtoFactory.createDtoFromJson(result, LogResponse.class);
-                    revisions = JsonCollections.createArray(logResponse.getCommits());
+                    revisions = Collections.createArray(logResponse.getCommits());
                     view.setRevisions(revisions);
                 }
 
@@ -347,7 +347,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
         String projectId = resourceProvider.getActiveProject().getId();
 
         try {
-            service.diff(resourceProvider.getVfsId(), projectId, filePatterns, RAW, false, 0, revision.getId(), isCached,
+            service.diff(resourceProvider.getVfsInfo().getId(), projectId, filePatterns, RAW, false, 0, revision.getId(), isCached,
                          new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                              @Override
                              protected void onSuccess(String result) {
@@ -391,7 +391,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
             final Revision revisionA = revisions.get(index + 1);
             String projectId = resourceProvider.getActiveProject().getId();
             try {
-                service.diff(resourceProvider.getVfsId(), projectId, filePatterns, RAW, false, 0, revisionA.getId(), revisionB.getId(),
+                service.diff(resourceProvider.getVfsInfo().getId(), projectId, filePatterns, RAW, false, 0, revisionA.getId(), revisionB.getId(),
                              new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                  @Override
                                  protected void onSuccess(String result) {

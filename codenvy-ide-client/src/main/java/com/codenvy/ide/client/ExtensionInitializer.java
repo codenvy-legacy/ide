@@ -18,11 +18,11 @@
 package com.codenvy.ide.client;
 
 import com.codenvy.ide.api.preferences.PreferencesManager;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.extension.ExtensionDescription;
 import com.codenvy.ide.extension.ExtensionRegistry;
-import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.json.JsonStringMap.IterationCallback;
-import com.codenvy.ide.json.js.Jso;
+import com.codenvy.ide.collections.StringMap.IterationCallback;
+import com.codenvy.ide.collections.Jso;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -72,7 +72,7 @@ public class ExtensionInitializer {
     }
 
     /** {@inheritDoc} */
-    public JsonStringMap<ExtensionDescription> getExtensionDescriptions() {
+    public StringMap<ExtensionDescription> getExtensionDescriptions() {
         return extensionRegistry.getExtensionDescriptions();
     }
 

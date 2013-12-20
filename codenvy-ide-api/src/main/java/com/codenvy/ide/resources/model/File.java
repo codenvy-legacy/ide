@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.resources.model;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.marshal.JSONDeserializer;
 import com.google.gwt.json.client.JSONObject;
 
@@ -49,7 +49,7 @@ public class File extends Resource {
 
     private boolean contentChanged = false;
 
-    private JsonArray<File> versionHistory = JsonCollections.<File>createArray();
+    private Array<File> versionHistory = Collections.<File>createArray();
 
     private Lock lock = null;
 
@@ -167,7 +167,7 @@ public class File extends Resource {
     }
 
     /** @return the history */
-    public JsonArray<File> getVersionHistory() {
+    public Array<File> getVersionHistory() {
         return versionHistory;
     }
 
@@ -175,13 +175,13 @@ public class File extends Resource {
      * @param versionHistory
      *         set history
      */
-    public void setVersionHistory(JsonArray<File> versionHistory) {
+    public void setVersionHistory(Array<File> versionHistory) {
         this.versionHistory = versionHistory;
     }
 
     /** Clear history */
     public void clearVersionHistory() {
-        this.versionHistory = JsonCollections.createArray();
+        this.versionHistory = Collections.createArray();
     }
 
     /** @return lock object */

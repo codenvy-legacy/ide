@@ -14,8 +14,8 @@
 
 package com.codenvy.ide.texteditor.syntaxhighlighter;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
@@ -56,7 +56,7 @@ public class SyntaxHighlighter implements DocumentParser.Listener, Renderer.Comp
 
     private final ViewportModel viewport;
 
-    private final JsonArray<Line> linesWithCachedTokens;
+    private final Array<Line> linesWithCachedTokens;
 
     private final DocumentParser documentParser;
 
@@ -70,7 +70,7 @@ public class SyntaxHighlighter implements DocumentParser.Listener, Renderer.Comp
         this.viewport = viewport;
         this.documentParser = documentParser;
         this.removerManager = removerManager;
-        this.linesWithCachedTokens = JsonCollections.createArray();
+        this.linesWithCachedTokens = Collections.createArray();
         this.lineRenderer = new SyntaxHighlighterRenderer(this, selection, editorCss);
     }
 
@@ -89,7 +89,7 @@ public class SyntaxHighlighter implements DocumentParser.Listener, Renderer.Comp
     }
 
     @Override
-    public void onDocumentLineParsed(Line line, int lineNumber, JsonArray<Token> tokens) {
+    public void onDocumentLineParsed(Line line, int lineNumber, Array<Token> tokens) {
         if (!viewport.isLineInViewport(line)) {
             return;
         }
@@ -119,8 +119,8 @@ public class SyntaxHighlighter implements DocumentParser.Listener, Renderer.Comp
      * Returns the tokens for the given line, or null if the tokens could not be
      * retrieved synchronously
      */
-    JsonArray<Token> getTokens(Line line) {
-        JsonArray<Token> tokens = line.getTag(LINE_TAG_CACHED_TOKENS);
+    Array<Token> getTokens(Line line) {
+        Array<Token> tokens = line.getTag(LINE_TAG_CACHED_TOKENS);
       /*
        * If we haven't gotten a callback from the parser (hence no cached tokens),
        * try to synchronously parse the line

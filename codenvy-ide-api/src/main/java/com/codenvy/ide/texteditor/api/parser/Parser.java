@@ -14,7 +14,7 @@
 
 package com.codenvy.ide.texteditor.api.parser;
 
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 
 /** Interface that represents parser. */
 public interface Parser {
@@ -38,7 +38,7 @@ public interface Parser {
      * Consumes characters from input, updates state
      * and pushes recognized token to output.
      */
-    void parseNext(Stream stream, State parserState, JsonArray<Token> tokens);
+    void parseNext(Stream stream, State parserState, Array<Token> tokens);
 
     /** Wraps text in JS object used by native parser. */
     Stream createStream(String text);

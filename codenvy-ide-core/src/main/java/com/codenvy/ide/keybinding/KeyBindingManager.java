@@ -28,7 +28,7 @@ import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.keybinding.Scheme;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.toolbar.PresentationFactory;
 import com.codenvy.ide.util.browser.UserAgent;
 import com.codenvy.ide.util.dom.Elements;
@@ -56,7 +56,7 @@ public class KeyBindingManager implements KeyBindingAgent {
             //handle event in active scheme
 
             int digest = CharCodeWithModifiers.computeKeyDigest(signalEvent);
-            JsonArray<String> actionIds = activeScheme.getActionIds(digest);
+            Array<String> actionIds = activeScheme.getActionIds(digest);
             if (!actionIds.isEmpty()) {
                 runActions(actionIds);
                 event.preventDefault();
@@ -97,7 +97,7 @@ public class KeyBindingManager implements KeyBindingAgent {
         }
     }
 
-    private void runActions(JsonArray<String> actionIds) {
+    private void runActions(Array<String> actionIds) {
         for (String actionId : actionIds.asIterable()) {
             Action action = actionManager.getAction(actionId);
             ActionEvent e = new ActionEvent("", presentationFactory.getPresentation(action), actionManager, 0);

@@ -19,15 +19,19 @@ package com.codenvy.ide.ext.java.client.projectmodel;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
-import com.codenvy.ide.ext.java.client.core.JavaConventions;
-import com.codenvy.ide.ext.java.client.core.JavaCore;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.resources.model.*;
+import com.codenvy.ide.ext.java.jdt.core.JavaConventions;
+import com.codenvy.ide.ext.java.jdt.core.JavaCore;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.resources.model.Folder;
+import com.codenvy.ide.resources.model.Link;
+import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
-import com.codenvy.ide.rest.MimeType;
+import com.codenvy.ide.MimeType;
 import com.codenvy.ide.runtime.IStatus;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.URL;
@@ -63,14 +67,14 @@ public class JavaProject extends Project {
     public JavaProjectDesctiprion getDescription() {
         return description;
     }
-
+  
     /** {@inheritDoc} */
     @Override
-    protected void refreshTree(Folder root, final AsyncCallback<Folder> callback) {
+    public void refreshTree(Folder root, final AsyncCallback<Folder> callback) {
         try {
             // create internal wrapping Request Callback with proper Unmarshaller
             AsyncRequestCallback<Folder> internalCallback =
-                    new AsyncRequestCallback<Folder>(new JavaModelUnmarshaller(root, (JavaProject)root.getProject())) {
+                    new AsyncRequestCallback<Folder>(new JavaModelUnmarshaller(root, (JavaProject)root.getProject(), eventBus)) {
                         @Override
                         protected void onSuccess(Folder refreshedRoot) {
                             callback.onSuccess(refreshedRoot);
@@ -416,8 +420,8 @@ public class JavaProject extends Project {
      *
      * @return the array of source folders
      */
-    public JsonArray<SourceFolder> getSourceFolders() {
-        JsonArray<SourceFolder> sourceFolders = JsonCollections.createArray();
+    public Array<SourceFolder> getSourceFolders() {
+        Array<SourceFolder> sourceFolders = Collections.createArray();
         for (Resource r : getChildren().asIterable()) {
             if (r instanceof SourceFolder) {
                 sourceFolders.add((SourceFolder)r);
