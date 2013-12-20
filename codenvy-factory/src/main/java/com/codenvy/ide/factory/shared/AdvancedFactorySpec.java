@@ -31,4 +31,5 @@ public interface AdvancedFactorySpec extends FactorySpec10 {
     String CONTACT_MAIL = "contactmail";
     String AUTHOR       = "author";
     String LINKS        = "links";
+    String VARIABLES    = "variables";
 }

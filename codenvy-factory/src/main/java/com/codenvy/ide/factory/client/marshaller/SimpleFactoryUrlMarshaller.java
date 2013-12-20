@@ -19,7 +19,9 @@
 package com.codenvy.ide.factory.client.marshaller;
 
 import com.codenvy.api.factory.SimpleFactoryUrl;
+import com.codenvy.api.factory.Variable;
 import com.codenvy.ide.factory.shared.FactorySpec10;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
@@ -60,6 +62,35 @@ public class SimpleFactoryUrlMarshaller implements Marshallable, FactorySpec10 {
         projectAttributes.put(PROJECT_TYPE, new JSONString(valueOrEmpty(factory.getProjectattributes().get(PROJECT_TYPE))));
         projectAttributes.put(PROJECT_NAME, new JSONString(valueOrEmpty(factory.getProjectattributes().get(PROJECT_NAME))));
         factoryObj.put(PROFILE_ATTRIBUTES, projectAttributes);
+
+        JSONArray variables = new JSONArray();
+
+        for (int i = 0; i < factory.getVariables().size(); i++) {
+            JSONArray glob = new JSONArray();
+            JSONArray replacements = new JSONArray();
+            JSONObject variable = new JSONObject();
+
+            Variable var = factory.getVariables().get(i);
+
+            for (int j = 0; j < var.getFiles().size(); j++) {
+                glob.set(i, new JSONString(var.getFiles().get(j)));
+            }
+
+            for (int j = 0; j < var.getEntries().size(); j++) {
+                JSONObject replacement = new JSONObject();
+                replacement.put("find", new JSONString(var.getEntries().get(j).getFind()));
+                replacement.put("replace", new JSONString(var.getEntries().get(j).getReplace()));
+
+                replacements.set(j, replacement);
+            }
+
+            variable.put("files", glob);
+            variable.put("entries", replacements);
+
+            variables.set(i, variable);
+        }
+
+        factoryObj.put("variables", variables);
 
         return factoryObj.toString();
     }

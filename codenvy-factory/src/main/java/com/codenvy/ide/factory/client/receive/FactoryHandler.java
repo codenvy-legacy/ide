@@ -152,7 +152,8 @@ public class FactoryHandler
                                           getParamValue(ORG_ID, parameterMap),
                                           getParamValue(AFFILIATE_ID, parameterMap),
                                           getParamValue(VCS_BRANCH, parameterMap),
-                                          projectAttributes);
+                                          projectAttributes,
+                                          AdvancedFactoryUrlUnmarshaller.getVariables(getParamValue(VARIABLES, parameterMap)));
 
         //For back compatibility we check if user pass through factory url old version of commit id parameter.
         if (factoryUrl.getCommitid() == null && getParamValue("idcommit", parameterMap) != null) {
@@ -411,7 +412,9 @@ public class FactoryHandler
                                                     @Override
                                                     protected void onSuccess(StringBuilder clonedItem) {
                                                         IDELoader.getInstance().hide();
-                                                        eventBus.unsubscribe("factory-events", webSocketEventHandler);
+                                                        if (eventBus.isHandlerSubscribed(webSocketEventHandler, "factory-events")) {
+                                                            eventBus.unsubscribe("factory-events", webSocketEventHandler);
+                                                        }
 
                                                         onCloneSuccess(clonedItem.toString());
                                                     }
@@ -419,7 +422,9 @@ public class FactoryHandler
                                                     @Override
                                                     protected void onFailure(Throwable e) {
                                                         IDELoader.getInstance().hide();
-                                                        eventBus.unsubscribe("factory-events", webSocketEventHandler);
+                                                        if (eventBus.isHandlerSubscribed(webSocketEventHandler, "factory-events")) {
+                                                            eventBus.unsubscribe("factory-events", webSocketEventHandler);
+                                                        }
 
                                                         if (e instanceof org.exoplatform.ide.client.framework.websocket.rest.exceptions
                                                                 .UnauthorizedException
@@ -433,7 +438,9 @@ public class FactoryHandler
                                                 });
         } catch (WebSocketException e) {
             IDELoader.getInstance().hide();
-            eventBus.unsubscribe("factory-events", webSocketEventHandler);
+            if (eventBus.isHandlerSubscribed(webSocketEventHandler, "factory-events")) {
+                eventBus.unsubscribe("factory-events", webSocketEventHandler);
+            }
             IDE.fireEvent(new SSHKeyProcessorEvent(factoryUrl.getVcsurl(), false, new SSHKeyProcessor.Callback() {
                 @Override
                 public void onSuccess() {

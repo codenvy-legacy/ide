@@ -19,8 +19,10 @@
 package com.codenvy.ide.factory.client.marshaller;
 
 import com.codenvy.api.factory.AdvancedFactoryUrl;
+import com.codenvy.api.factory.Variable;
 import com.codenvy.ide.factory.shared.AdvancedFactorySpec;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
@@ -28,7 +30,10 @@ import com.google.gwt.json.client.JSONValue;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -61,6 +66,13 @@ public class AdvancedFactoryUrlUnmarshaller implements Unmarshallable<AdvancedFa
         advancedFactoryUrl.setDescription(getValue(DESCRIPTION, factoryObject));
         advancedFactoryUrl.setContactmail(getValue(CONTACT_MAIL, factoryObject));
         advancedFactoryUrl.setAuthor(getValue(AUTHOR, factoryObject));
+
+        if (!(factoryObject.containsKey(VARIABLES) && factoryObject.get(VARIABLES).isArray() != null)) {
+            advancedFactoryUrl.setVariables(Collections.<Variable>emptyList());
+        } else {
+            advancedFactoryUrl.setVariables(getVariables(factoryObject.get(VARIABLES).isArray().toString()));
+        }
+
         //TODO set links advancedFactoryUrl.setLinks(...); //not necessary for server side
 
         //v 1.0
@@ -103,6 +115,44 @@ public class AdvancedFactoryUrlUnmarshaller implements Unmarshallable<AdvancedFa
         }
 
         return null;
+    }
+
+    public static List<Variable> getVariables(String json) {
+        List<Variable> variables = new ArrayList<Variable>();
+
+        if (json == null) {
+            return variables;
+        }
+
+        JSONArray vars = JSONParser.parseStrict(json).isArray();
+        if (vars != null) {
+            List<String> files = new ArrayList<String>();
+            List<Variable.Replacement> variableEntries = new ArrayList<Variable.Replacement>();
+            for (int i = 0; i < vars.size(); i++) {
+                JSONObject variableObject = vars.get(i).isObject();
+
+                files.clear();
+                variableEntries.clear();
+
+                JSONArray jsonFiles = variableObject.get("files").isArray();
+                for (int j = 0; j < jsonFiles.size(); j++) {
+                    files.add(jsonFiles.get(j).isString().stringValue());
+                }
+
+                JSONArray jsonEntries = variableObject.get("entries").isArray();
+                for (int j = 0; j < jsonEntries.size(); j++) {
+                    JSONObject entryObject = jsonEntries.get(j).isObject();
+                    String find = entryObject.get("find").isString().stringValue();
+                    String replace = entryObject.get("replace").isString().stringValue();
+
+                    variableEntries.add(new Variable.Replacement(find, replace));
+                }
+
+                variables.add(new Variable(files, variableEntries));
+            }
+        }
+
+        return variables;
     }
 
     /** {@inheritDoc} */
