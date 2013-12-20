@@ -82,6 +82,52 @@ After launching, Codenvy Platform SDK application will be available on http://lo
 
 On *nix:
       ./catalina.sh stop
+      
+=========================================================
+How to configure oAuth with GitHub and SSH key management
+=========================================================
+
+* Go to GitHub.com and login to your account
+
+* In account Settings, find Applications menu on the left
+
+* Click register a new application (if you don't have any)
+
+* Enter application name
+
+* Homepage URL should be
+
+=====================
+http://localhost:8080
+=====================
+
+* Authorization callback URL should be
+
+=======================================================
+http://localhost:8080/ide/rest/oauth/ide/oauth/callback
+=======================================================
+
+* Having registered or updated the app, you will have Client ID and Client Secret in the top right corner of the application page on GitHub
+
+* Copy those values to a file located in conf folder of the SDK Tomcat package - /conf/github_client_secrets.json
+
+* By default, values for Client ID and Client Secret are filled with "***". You need to replace those with real values obtained from GitHub application settings
+
+=====================
+Save SSH Keys Locally
+=====================
+
+User's SSH keys are stored in JSON format on file system in folder with the current user's id. To set the SSH keys location - use codenvy.sshkeystore.location system property. To change location of SSH keys, head to .profile file and add -Dcodenvy.sshkeystore=[path to a folder where you want to store SSH keys]. Here's an example how to do it through JAVA_OPTS:
+
+JAVA_OPTS="-Dcodenvy.sshkeystore.location=/home/codenvy/SSH_keys"
+
+======================
+Change VFS Root Folder
+======================
+
+By default, VFS root folder is ${CATALINA_HOME}/temp/fs-root directory. In order to use another location, one should change the value of the com.codenvy.vfs.rootdir system property. This is an example how it can be done in .profile file.
+
+JAVA_OPTS="-Dcom.codenvy.vfs.rootdir=/home/codenvy/SDK_projects"
 
 
 ===============================================
@@ -99,10 +145,18 @@ On *nix:
 
 1.3. Restart Codenvy IDE if it is currently running.
 
+=================
+Update Extensions
+=================
+
+1. Launch extension ar Run > Launch Codenvy Extension
+2. Click extension URL in the Output console
+3. Click Update Extension button in the runner instance
+4. The extension will be recompiled which may take around 1 minute
 
 ===============================
 Codenvy Platform SDK Resources
 ===============================
 
-Main Documentations Page:       http://docs.codenvy.com/sdk/
+SDK Docs: http://docs.codenvy.com/sdk/
 Codenvy Platform API Reference: http://docs.codenvy.com/ide/site/apidocs/
