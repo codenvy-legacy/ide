@@ -17,7 +17,6 @@
  */
 package com.codenvy.runner.webapps;
 
-import com.codenvy.api.core.config.Configuration;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.api.core.util.ProcessUtil;
 import com.codenvy.api.core.util.SystemInfo;
@@ -29,11 +28,14 @@ import com.codenvy.api.runner.internal.DeploymentSourcesValidator;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.commons.lang.NamedThreadFactory;
 import com.codenvy.commons.lang.ZipUtils;
+import com.codenvy.inject.ConfigurationParameter;
 import com.google.common.io.CharStreams;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -52,12 +54,11 @@ import java.util.concurrent.TimeoutException;
 /**
  * {@code ApplicationServer} implementation to deploy application to Apache Tomcat servlet container.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @author Artem Zatsarynnyy
  */
 public class TomcatServer implements ApplicationServer {
     public static final  String TOMCAT_HOME_PARAMETER       = "runner.tomcat.tomcat_home";
     public static final  String MEM_SIZE_PARAMETER          = "runner.tomcat.memory";
-    public static final  int    DEFAULT_MEM_SIZE            = 256;
     private static final Logger LOG                         = LoggerFactory.getLogger(TomcatServer.class);
     private static final String SERVER_XML                  =
             "<?xml version='1.0' encoding='utf-8'?>\n" +
@@ -81,24 +82,29 @@ public class TomcatServer implements ApplicationServer {
     /** Validator to validate deployment sources. */
     protected final DeploymentSourcesValidator appValidator;
     protected final ExecutorService            pidTaskExecutor;
+    private final   int                        memSize;
     private         java.io.File               tomcatHome;
-    private         int                        memSize;
 
-    public TomcatServer() {
+    @Inject
+    public TomcatServer(@Named(MEM_SIZE_PARAMETER) ConfigurationParameter memSize,
+                        @Named(TOMCAT_HOME_PARAMETER) ConfigurationParameter tomcatHome) {
+        this(memSize.asInt(), tomcatHome.asFile());
+    }
+
+    public TomcatServer(int memSize, java.io.File tomcatHome) {
+        this.memSize = memSize;
+        this.tomcatHome = tomcatHome;
         appValidator = new JavaWebApplicationValidator();
         pidTaskExecutor = Executors.newCachedThreadPool(new NamedThreadFactory("TomcatServer-", true));
-
-        Configuration configuration = new Configuration();
         final String tomcatHomeDir = System.getProperty(TOMCAT_HOME_SYSTEM_PROPERTY);
         if (tomcatHomeDir != null) {
-            configuration.setFile(TomcatServer.TOMCAT_HOME_PARAMETER, new java.io.File(tomcatHomeDir));
+            this.tomcatHome = new java.io.File(tomcatHomeDir);
         } else {
             final Path tomcatDirPath = Paths.get("../tomcat");
             if (Files.exists(tomcatDirPath)) {
-                configuration.setFile(TomcatServer.TOMCAT_HOME_PARAMETER, tomcatDirPath.toFile());
+                this.tomcatHome = tomcatDirPath.toFile();
             }
         }
-        setConfiguration(configuration);
     }
 
     @Override
@@ -249,29 +255,6 @@ public class TomcatServer implements ApplicationServer {
 
     public int getMemSize() {
         return memSize;
-    }
-
-    @Override
-    public Configuration getDefaultConfiguration() {
-        final Configuration defaultConfiguration = new Configuration();
-        defaultConfiguration.setInt(MEM_SIZE_PARAMETER, DEFAULT_MEM_SIZE);
-        return defaultConfiguration;
-    }
-
-    @Override
-    public Configuration getConfiguration() {
-        final Configuration configuration = new Configuration();
-        configuration.setInt(MEM_SIZE_PARAMETER, getMemSize());
-        if (tomcatHome != null) {
-            configuration.setFile(TOMCAT_HOME_PARAMETER, tomcatHome);
-        }
-        return configuration;
-    }
-
-    @Override
-    public void setConfiguration(Configuration configuration) {
-        memSize = configuration.getInt(MEM_SIZE_PARAMETER, DEFAULT_MEM_SIZE);
-        tomcatHome = configuration.getFile(TOMCAT_HOME_PARAMETER, null);
     }
 
     @Override
