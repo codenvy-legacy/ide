@@ -24,7 +24,7 @@
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
-        <version>3.0.0-M5-SNAPSHOT</version>
+        <version>3.0.0-M6-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ide-client</artifactId>
     <packaging>jar</packaging>
@@ -121,11 +121,6 @@
             <artifactId>codenvy-ext-java-runtime</artifactId>
             <version>${project.version}</version>
         </dependency>-->
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-demo</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-web</artifactId>

@@ -266,6 +266,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
             @Override
             public void onSuccess(Project result) {
+                result.setVFSInfo(resourceProvider.getVfsInfo());
                 result.refreshTree(new AsyncCallback<Project>() {
 
                     @Override
@@ -306,6 +307,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
      * @param project
      */
     private void processProject(Project project, AsyncCallback<Project> callback) {
+        project.setVFSInfo(resourceProvider.getVfsInfo());
         String projectType = (String)project.getPropertyValue("vfs:projectType");
         if (projectType != null && projectType.equals("undefined")) {
             selectProjectTypePresenter.showDialog(project, callback);

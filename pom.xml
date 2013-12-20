@@ -27,7 +27,7 @@
     </parent>
     <groupId>com.codenvy.ide</groupId>
     <artifactId>codenvy-ide-parent</artifactId>
-    <version>3.0.0-M5-SNAPSHOT</version>
+    <version>3.0.0-M6-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Codenvy :: Parent</name>
     <scm>
@@ -40,9 +40,9 @@
         <exo.product.name>codenvy-ide</exo.product.name>
 
         <!-- Codenvy -->
-        <com.codenvy.commons.version>0.11.0-SNAPSHOT</com.codenvy.commons.version>
-        <com.codenvy.organization.version>0.9.1</com.codenvy.organization.version>
-        <com.codenvy.platform-api.version>0.5.0-SNAPSHOT</com.codenvy.platform-api.version>
+        <com.codenvy.commons.version>0.11.0</com.codenvy.commons.version>
+        <com.codenvy.organization.version>0.9.2</com.codenvy.organization.version>
+        <com.codenvy.platform-api.version>0.5.0</com.codenvy.platform-api.version>
 
         <!-- eXo -->
         <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>
@@ -54,7 +54,7 @@
         <codenvy.ide-codeassistant-index.version>20120627</codenvy.ide-codeassistant-index.version>
 
         <!-- EverREST -->
-        <everrest.version>1.1.6-SNAPSHOT</everrest.version>
+        <everrest.version>1.1.6</everrest.version>
 
         <!-- javax -->
         <javax.annotation.version>1.0</javax.annotation.version>

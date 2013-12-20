@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
-        <version>3.0.0-M5-SNAPSHOT</version>
+        <version>3.0.0-M6-SNAPSHOT</version>
     </parent>
     <artifactId>wizard-api-tutorial</artifactId>
     <name>Codenvy Tutorial :: Wizard API</name>
