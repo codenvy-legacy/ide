@@ -17,12 +17,14 @@
  */
 package com.codenvy.api.deploy;
 
+import com.codenvy.api.builder.BuilderAdminService;
 import com.codenvy.api.builder.BuilderSelectionStrategy;
 import com.codenvy.api.builder.BuilderService;
 import com.codenvy.api.builder.LastInUseBuilderSelectionStrategy;
 import com.codenvy.api.builder.internal.SlaveBuilderService;
 import com.codenvy.api.core.rest.ApiExceptionMapper;
 import com.codenvy.api.runner.LastInUseRunnerSelectionStrategy;
+import com.codenvy.api.runner.RunnerAdminService;
 import com.codenvy.api.runner.RunnerSelectionStrategy;
 import com.codenvy.api.runner.RunnerService;
 import com.codenvy.api.runner.internal.SlaveRunnerService;
@@ -77,9 +79,11 @@ public class ApiModule extends AbstractModule {
         bind(ApiExceptionMapper.class).toInstance(new ApiExceptionMapper());
         bind(BuilderSelectionStrategy.class).toInstance(new LastInUseBuilderSelectionStrategy());
         bind(BuilderService.class);
+        bind(BuilderAdminService.class);
         bind(SlaveBuilderService.class);
         bind(RunnerSelectionStrategy.class).toInstance(new LastInUseRunnerSelectionStrategy());
         bind(RunnerService.class);
+        bind(RunnerAdminService.class);
         bind(SlaveRunnerService.class);
     }
 }
