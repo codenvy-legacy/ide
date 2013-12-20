@@ -6,6 +6,7 @@
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
         <version>3.0.0-M6-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>gin-tutorial</artifactId>
     <name>Codenvy Tutorial :: GIN</name>
