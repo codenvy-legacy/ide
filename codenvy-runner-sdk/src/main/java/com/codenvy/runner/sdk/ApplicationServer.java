@@ -17,7 +17,6 @@
  */
 package com.codenvy.runner.sdk;
 
-import com.codenvy.api.core.config.Configuration;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 
@@ -26,7 +25,7 @@ import java.util.zip.ZipFile;
 /**
  * Application server to deploy a web app.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @author Artem Zatsarynnyy
  */
 public interface ApplicationServer {
 
@@ -55,28 +54,6 @@ public interface ApplicationServer {
     ApplicationProcess deploy(java.io.File appDir, ZipFile warFile, SDKRunnerConfiguration runnerConfiguration,
                               CodeServer.CodeServerProcess codeServerProcess, StopCallback stopCallback)
             throws RunnerException;
-
-    /**
-     * Returns the default configuration of application server.
-     *
-     * @return default {@code Configuration} of this application server
-     */
-    Configuration getDefaultConfiguration();
-
-    /**
-     * Returns the application server configuration.
-     *
-     * @return {@code Configuration} of this application server
-     */
-    Configuration getConfiguration();
-
-    /**
-     * Set the application server configuration.
-     *
-     * @param configuration
-     *         application server {@code Configuration} to set
-     */
-    void setConfiguration(Configuration configuration);
 
     /** Will be notified when {@code ApplicationServer} stopped. */
     public interface StopCallback {

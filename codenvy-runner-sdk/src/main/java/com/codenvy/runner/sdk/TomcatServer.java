@@ -17,7 +17,6 @@
  */
 package com.codenvy.runner.sdk;
 
-import com.codenvy.api.core.config.Configuration;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.api.core.util.ProcessUtil;
 import com.codenvy.api.core.util.SystemInfo;
@@ -26,11 +25,15 @@ import com.codenvy.api.runner.internal.ApplicationLogger;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.commons.lang.NamedThreadFactory;
 import com.codenvy.commons.lang.ZipUtils;
+import com.codenvy.inject.ConfigurationParameter;
 import com.google.common.io.CharStreams;
+import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -39,17 +42,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.zip.ZipFile;
 
 /**
  * {@link ApplicationServer} implementation to deploy application to Apache Tomcat servlet container.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @author Artem Zatsarynnyy
+ * @author Eugene Voevodin
  */
+@Singleton
 public class TomcatServer implements ApplicationServer {
     public static final  String MEM_SIZE_PARAMETER        = "runner.tomcat.memory";
-    public static final  int    DEFAULT_MEM_SIZE          = 256;
     private static final Logger LOG                       = LoggerFactory.getLogger(TomcatServer.class);
     /** String in JSON format to register builder service. */
     private static final String BUILDER_REGISTRATION_JSON =
@@ -77,13 +86,17 @@ public class TomcatServer implements ApplicationServer {
             "</Server>\n";
     /** Validator to validate deployment sources. */
     protected final ExecutorService pidTaskExecutor;
-    private         int             memSize;
 
-    public TomcatServer() {
+    private int memSize;
+
+    @Inject
+    public TomcatServer(@Named(MEM_SIZE_PARAMETER) ConfigurationParameter memSize) {
+        this(memSize.asInt());
+    }
+
+    public TomcatServer(int memSize) {
+        this.memSize = memSize;
         pidTaskExecutor = Executors.newCachedThreadPool(new NamedThreadFactory("TomcatServer-", true));
-
-        Configuration configuration = new Configuration();
-        setConfiguration(configuration);
     }
 
     @Override
@@ -240,25 +253,6 @@ public class TomcatServer implements ApplicationServer {
 
     public int getMemSize() {
         return memSize;
-    }
-
-    @Override
-    public Configuration getDefaultConfiguration() {
-        final Configuration defaultConfiguration = new Configuration();
-        defaultConfiguration.setInt(MEM_SIZE_PARAMETER, DEFAULT_MEM_SIZE);
-        return defaultConfiguration;
-    }
-
-    @Override
-    public Configuration getConfiguration() {
-        final Configuration configuration = new Configuration();
-        configuration.setInt(MEM_SIZE_PARAMETER, getMemSize());
-        return configuration;
-    }
-
-    @Override
-    public void setConfiguration(Configuration configuration) {
-        memSize = configuration.getInt(MEM_SIZE_PARAMETER, DEFAULT_MEM_SIZE);
     }
 
     @Override

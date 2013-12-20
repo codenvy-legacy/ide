@@ -30,6 +30,7 @@ import com.codenvy.commons.lang.NamedThreadFactory;
 import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.inject.ConfigurationParameter;
 import com.google.common.io.CharStreams;
+import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -56,6 +56,7 @@ import java.util.concurrent.TimeoutException;
  *
  * @author Artem Zatsarynnyy
  */
+@Singleton
 public class TomcatServer implements ApplicationServer {
     public static final  String TOMCAT_HOME_PARAMETER       = "runner.tomcat.tomcat_home";
     public static final  String MEM_SIZE_PARAMETER          = "runner.tomcat.memory";
@@ -99,11 +100,6 @@ public class TomcatServer implements ApplicationServer {
         final String tomcatHomeDir = System.getProperty(TOMCAT_HOME_SYSTEM_PROPERTY);
         if (tomcatHomeDir != null) {
             this.tomcatHome = new java.io.File(tomcatHomeDir);
-        } else {
-            final Path tomcatDirPath = Paths.get("../tomcat");
-            if (Files.exists(tomcatDirPath)) {
-                this.tomcatHome = tomcatDirPath.toFile();
-            }
         }
     }
 

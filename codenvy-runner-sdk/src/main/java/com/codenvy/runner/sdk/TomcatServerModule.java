@@ -17,17 +17,19 @@
  */
 package com.codenvy.runner.sdk;
 
-import com.codenvy.api.runner.internal.RunnerRegistrationPlugin;
-import com.codenvy.api.runner.internal.RunnerRegistry;
+import com.codenvy.inject.DynaModule;
+import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.Multibinder;
 
 /**
- * Codenvy extensions runner registration plugin.
- *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @author Eugene Voevodin
  */
-public class SDKRunnerRegistrationPlugin implements RunnerRegistrationPlugin {
+@DynaModule
+public class TomcatServerModule extends AbstractModule {
+
     @Override
-    public void registerTo(RunnerRegistry registry) {
-        registry.add(new SDKRunner());
+    protected void configure() {
+        Multibinder<ApplicationServer> multiBinder = Multibinder.newSetBinder(binder(), ApplicationServer.class);
+        multiBinder.addBinding().to(TomcatServer.class);
     }
 }
