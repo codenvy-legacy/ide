@@ -1,0 +1,59 @@
+[
+    {
+        "runnerServiceDescriptor": {
+            "links": [
+                {
+                    "rel": "runners state",
+                    "produces": "application/json",
+                    "requestBody": null,
+                    "href": "http://localhost:8080/api/internal/runner/state",
+                    "consumes": null,
+                    "method": "GET",
+                    "parameters": [
+                        {
+                            "required": true,
+                            "valid": [],
+                            "name": "runner",
+                            "type": "String",
+                            "defaultValue": null,
+                            "description": "Name of the runner"
+                        }
+                    ]
+                },
+                {
+                    "rel": "available runners",
+                    "produces": "application/json",
+                    "requestBody": null,
+                    "href": "http://localhost:8080/api/internal/runner/available",
+                    "consumes": null,
+                    "method": "GET",
+                    "parameters": []
+                },
+                {
+                    "rel": "run",
+                    "produces": "application/json",
+                    "requestBody": {
+                        "description": "Parameters for run task in JSON format"
+                    },
+                    "href": "http://localhost:8080/api/internal/runner/run",
+                    "consumes": "application/json",
+                    "method": "POST",
+                    "parameters": []
+                }
+            ],
+            "href": "http://localhost:8080/api/internal/runner",
+            "description": null,
+            "version": "1.0"
+        },
+        "runnerDescriptors": [
+            {
+                "name": "webapps",
+                "description": "Java Web Applications Runner"
+            },
+            {
+                "name": "sdk",
+                "description": "Codenvy plug-ins runner"
+            }
+        ]
+    }
+]
