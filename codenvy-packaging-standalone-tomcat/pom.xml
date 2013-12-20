@@ -18,14 +18,13 @@
     from Codenvy S.A..
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
-        <version>3.0.0-M6-SNAPSHOT</version>
+        <version>3.0.0-M7-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-packaging-standalone-tomcat</artifactId>
     <packaging>pom</packaging>
@@ -470,57 +469,49 @@
                             <target>
                                 <unzip src="${project.build.directory}/packager-conf/zip/tomcat.zip" dest="${project.build.directory}">
                                     <patternset>
-                                        <exclude name="**/ROOT/**"/>
-                                        <exclude name="**/docs/**"/>
-                                        <exclude name="**/examples/**"/>
-                                        <exclude name="**/manager/**"/>
-                                        <exclude name="**/host-manager/**"/>
+                                        <exclude name="**/ROOT/**" />
+                                        <exclude name="**/docs/**" />
+                                        <exclude name="**/examples/**" />
+                                        <exclude name="**/manager/**" />
+                                        <exclude name="**/host-manager/**" />
                                     </patternset>
                                 </unzip>
-                                <move file="${project.build.directory}/apache-tomcat-${tomcat.version}"
-                                      tofile="${project.build.directory}/tomcat-ide"/>
+                                <move file="${project.build.directory}/apache-tomcat-${tomcat.version}" tofile="${project.build.directory}/tomcat-ide" />
                                 <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
-                                    <fileset dir="${basedir}/src/main/resources/tomcat"/>
+                                    <fileset dir="${basedir}/src/main/resources/tomcat" />
                                 </copy>
-                                <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x" includes="**/*.sh"/>
+                                <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x" includes="**/*.sh" />
 
                                 <!-- Copy resources to re-build Codenvy IDE with 3rd-party extensions. -->
                                 <copy todir="${project.build.directory}/tomcat-ide/sdk-resources" overwrite="true">
-                                    <fileset dir="${project.build.directory}/../../codenvy-application-war" includes="src/**, pom.xml"/>
+                                    <fileset dir="${project.build.directory}/../../codenvy-application-war" includes="src/**, pom.xml" />
                                 </copy>
 
-                                <unwar src="${project.build.directory}/packager-conf/war/codenvy-application-war-${project.version}.war"
-                                       dest="${project.build.directory}/packager-conf/war/ide">
+                                <unwar src="${project.build.directory}/packager-conf/war/codenvy-application-war-${project.version}.war" dest="${project.build.directory}/packager-conf/war/ide">
                                 </unwar>
 
                                 <move todir="${project.build.directory}/packager-conf/war/ide/_app">
-                                    <fileset dir="${project.build.directory}/packager-conf/war/ide/_app/"/>
+                                    <fileset dir="${project.build.directory}/packager-conf/war/ide/_app/" />
                                 </move>
 
                                 <move todir="${project.build.directory}/tomcat-ide/tutorials">
-                                    <fileset dir="${project.build.directory}/packager-conf/zip/tutorials"/>
+                                    <fileset dir="${project.build.directory}/packager-conf/zip/tutorials" />
                                 </move>
 
                                 <war destfile="${project.build.directory}/tomcat-ide/webapps/ide.war" needxmlfile="false">
-                                    <fileset dir="${project.build.directory}/packager-conf/war/ide"/>
+                                    <fileset dir="${project.build.directory}/packager-conf/war/ide" />
                                 </war>
 
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${org.exoplatform.ide.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/codenvy-api-war-${project.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/api.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-${project.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${org.exoplatform.ide.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true"/>
-                                <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"
-                                       dest="${project.build.directory}/tomcat-ide"/>
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${org.exoplatform.ide.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true" />
+                                <copy file="${project.build.directory}/packager-conf/war/codenvy-api-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/api.war" overwrite="true" />
+                                <copy file="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true" />
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${org.exoplatform.ide.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true" />
+                                <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true" />
+                                <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip" dest="${project.build.directory}/tomcat-ide" />
 
-                                <unzip src="${project.build.directory}/repo.zip" dest="${project.build.directory}/tomcat-ide"/>
+                                <unzip src="${project.build.directory}/repo.zip" dest="${project.build.directory}/tomcat-ide" />
 
-                                <chmod dir="${project.build.directory}/tomcat-ide" perm="+x" includes="*.sh"/>
+                                <chmod dir="${project.build.directory}/tomcat-ide" perm="+x" includes="*.sh" />
                             </target>
                         </configuration>
                         <goals>
