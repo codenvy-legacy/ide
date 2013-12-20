@@ -77,7 +77,7 @@ public class Project extends Folder {
         creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
         properties = JSONDeserializer.PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
         links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
-        //projectType = (itemObject.get("projectType") != null) ? itemObject.get("projectType").isString().stringValue() : null;
+//        projectType = (itemObject.get("projectType") != null) ? itemObject.get("projectType").isString().stringValue() : null;
         // TODO Unmarshall children
     }
 
