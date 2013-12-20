@@ -9,7 +9,7 @@
     </parent>
     <artifactId>gist-extension</artifactId>
     <packaging>jar</packaging>
-    <name>Codenvy Extension :: DEMO</name>
+    <name>Codenvy Extension :: Gist</name>
 
     <dependencies>
         <dependency>

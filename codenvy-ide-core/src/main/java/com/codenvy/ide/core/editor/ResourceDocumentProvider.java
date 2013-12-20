@@ -46,7 +46,7 @@ import java.util.Map;
 public class ResourceDocumentProvider implements DocumentProvider {
     private DocumentFactory documentFactory;
     private EventBus        eventBus;
-    private Map<File, Document> cache = new HashMap<File, Document>();
+    protected Map<File, Document> cache = new HashMap<File, Document>();
 
     @Inject
     public ResourceDocumentProvider(DocumentFactory documentFactory, EventBus eventBus) {
@@ -137,5 +137,20 @@ public class ResourceDocumentProvider implements DocumentProvider {
                 Log.error(ResourceDocumentProvider.class, caught);
             }
         });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void documentClosed(@NotNull Document document) {
+        File fileToRemove = null;
+        for (File f : cache.keySet()) {
+            if (cache.get(f).equals(document)) {
+                fileToRemove = f;
+                break;
+            }
+        }
+        if (fileToRemove != null) {
+            cache.remove(fileToRemove);
+        }
     }
 }

@@ -20,17 +20,17 @@ package com.codenvy.ide.ext.java.client.editor;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.editor.EditorInput;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.core.editor.ResourceDocumentProvider;
-import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.client.JavaCss;
+import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.jdt.JavaPartitions;
 import com.codenvy.ide.ext.java.jdt.core.IProblemRequestor;
 import com.codenvy.ide.ext.java.jdt.core.compiler.CategorizedProblem;
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
 import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
 import com.codenvy.ide.ext.java.jdt.internal.ui.text.FastJavaPartitionScanner;
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentFactory;
@@ -46,12 +46,13 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Evgen Vidolob
  */
 public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
 
@@ -63,9 +64,10 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
             JavaPartitions.JAVA_STRING,
             JavaPartitions.JAVA_CHARACTER
     };
-    private AnnotationModel        annotationModel;
+
     private TextEditorViewImpl.Css css;
-    private JavaCss                javaCss;
+    private Map<Document, AnnotationModel> modelStringMap = new HashMap<Document, AnnotationModel>();
+    private JavaCss javaCss;
 
     /**
      * @param css
@@ -81,12 +83,17 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
     /** {@inheritDoc} */
     @Override
     public AnnotationModel getAnnotationModel(@Nullable EditorInput input) {
-        if (annotationModel == null) {
-            annotationModel = new JavaAnnotationModel();
-        }
-        return annotationModel;
+        if(cache.containsKey(input.getFile())) {
+            Document document = cache.get(input.getFile());
+            if (!modelStringMap.containsKey(document)) {
+                modelStringMap.put(document, new JavaAnnotationModel());
+            }
+            return modelStringMap.get(document);
+        } else return super.getAnnotationModel(input);
+
     }
 
+    /** {@inheritDoc} */
     @Override
     public void getDocument(@Nullable EditorInput input, @NotNull final DocumentCallback callback) {
         super.getDocument(input, new DocumentCallback() {
@@ -99,6 +106,13 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
                 callback.onDocument(document);
             }
         });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void documentClosed(@NotNull Document document) {
+        super.documentClosed(document);
+        modelStringMap.remove(document);
     }
 
     /** Annotation representing an <code>IProblem</code>. */

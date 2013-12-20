@@ -17,8 +17,10 @@
  */
 package com.codenvy.ide.util;
 
+import com.google.gwt.user.client.Window;
+
 /**
- * The class for getting some params from jsp page.
+ * A smattering of useful methods.
  *
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  */
@@ -27,4 +29,9 @@ public class Utils {
     public static native String getWorkspaceName() /*-{
         return $wnd.ws;
     }-*/;
+
+    /** @return <code>true</code> if Codenvy launched in SDK runner and <code>false</code> otherwise */
+    public static boolean isAppLaunchedInSDKRunner() {
+        return Window.Location.getParameter("h") != null && Window.Location.getParameter("p") != null;
+    }
 }

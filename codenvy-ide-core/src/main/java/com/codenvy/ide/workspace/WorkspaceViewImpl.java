@@ -48,6 +48,8 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView {
     Button      btnLogin;
     @UiField
     Button      btnLogout;
+    @UiField
+    Button      btnUpdate;
     ActionDelegate delegate;
 
     /** Create view. */
@@ -98,8 +100,19 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView {
         btnLogout.setVisible(visible);
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void setUpdateButtonVisibility(boolean visible) {
+        btnUpdate.setVisible(visible);
+    }
+
     @UiHandler("btnLogin")
     public void onLoginClicked(ClickEvent event) {
         delegate.onLoginClicked();
+    }
+
+    @UiHandler("btnUpdate")
+    public void onUpdateClicked(ClickEvent event) {
+        delegate.onUpdateClicked();
     }
 }

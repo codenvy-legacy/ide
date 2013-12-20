@@ -112,7 +112,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
     /** {@inheritDoc} */
     @Override
     public void close(boolean save) {
-        // do nothing
+        documentProvider.documentClosed(document);
     }
 
     /** {@inheritDoc} */

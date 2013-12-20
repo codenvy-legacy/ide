@@ -26,6 +26,7 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
+import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.workspace.WorkspacePresenter;
 import com.google.gwt.core.client.Callback;
@@ -106,6 +107,8 @@ public class BootstrapController {
                             SimplePanel mainPanel = new SimplePanel();
                             RootLayoutPanel.get().add(mainPanel);
                             WorkspacePresenter workspacePresenter = workspaceProvider.get();
+
+                            workspacePresenter.setUpdateButtonVisibility(Utils.isAppLaunchedInSDKRunner());
 
                             String userId = user.getUserId();
                             if (userId.equals("__anonim")) {

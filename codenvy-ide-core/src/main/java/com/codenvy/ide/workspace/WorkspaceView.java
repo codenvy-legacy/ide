@@ -32,6 +32,9 @@ public interface WorkspaceView extends View<WorkspaceView.ActionDelegate> {
     public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having pressed the Login button */
         void onLoginClicked();
+
+        /** Performs any actions in response to click on Update button */
+        void onUpdateClicked();
     }
 
     /** @return central panel */
@@ -61,4 +64,12 @@ public interface WorkspaceView extends View<WorkspaceView.ActionDelegate> {
      *         <code>true</code> to visible the button, <code>false</code> to disable it
      */
     void setVisibleLogoutButton(boolean visible);
+
+    /**
+     * Sets whether 'Update extension' button is visible.
+     *
+     * @param visible
+     *         <code>true</code> to show the button, <code>false</code> to hide it
+     */
+    void setUpdateButtonVisibility(boolean visible);
 }
