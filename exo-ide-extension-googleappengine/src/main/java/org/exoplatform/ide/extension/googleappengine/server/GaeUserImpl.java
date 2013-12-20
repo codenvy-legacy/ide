@@ -56,6 +56,17 @@ public class GaeUserImpl implements GaeUser {
     }
 
     @Override
+    public String getName() {
+        // Not need name in this case.
+        return null;
+    }
+
+    @Override
+    public void setName(String name) {
+        // Not need name in this case.
+    }
+
+    @Override
     public Token getToken() {
         return token;
     }
