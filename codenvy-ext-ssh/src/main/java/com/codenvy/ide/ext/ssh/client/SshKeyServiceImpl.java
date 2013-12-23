@@ -32,8 +32,6 @@ import com.codenvy.ide.util.Utils;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.jsonp.client.JsonpRequestBuilder;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -69,11 +67,10 @@ public class SshKeyServiceImpl implements SshKeyService {
 
     /** {@inheritDoc} */
     @Override
-    public void getAllKeys(@NotNull AsyncCallback<JavaScriptObject> callback) {
-        JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
+    public void getAllKeys(@NotNull AsyncRequestCallback<JavaScriptObject> callback) throws RequestException {
         loader.setMessage("Getting SSH keys....");
         loader.show();
-        jsonp.requestObject(restContext + wsName + "/ssh-keys/all", callback);
+        AsyncRequest.build(RequestBuilder.GET, restContext + wsName + "/ssh-keys/all").send(callback);
     }
 
     /** {@inheritDoc} */
@@ -90,20 +87,18 @@ public class SshKeyServiceImpl implements SshKeyService {
 
     /** {@inheritDoc} */
     @Override
-    public void getPublicKey(@NotNull KeyItem keyItem, @NotNull AsyncCallback<JavaScriptObject> callback) {
-        JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
+    public void getPublicKey(@NotNull KeyItem keyItem, @NotNull AsyncRequestCallback<JavaScriptObject> callback) throws RequestException {
         loader.setMessage("Getting public SSH key for " + keyItem.getHost());
         loader.show();
-        jsonp.requestObject(keyItem.getPublicKeyUrl(), callback);
+        AsyncRequest.build(RequestBuilder.GET, keyItem.getPublicKeyUrl()).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void deleteKey(@NotNull KeyItem keyItem, @NotNull AsyncCallback<Void> callback) {
-        JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
+    public void deleteKey(@NotNull KeyItem keyItem, @NotNull AsyncRequestCallback<Void> callback)  throws RequestException {
         loader.setMessage("Deleting SSH keys for " + keyItem.getHost());
         loader.show();
-        jsonp.send(keyItem.getRemoteKeyUrl(), callback);
+        AsyncRequest.build(RequestBuilder.GET, keyItem.getRemoteKeyUrl()).send(callback);
     }
 
     /** {@inheritDoc} */
