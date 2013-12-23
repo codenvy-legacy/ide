@@ -27,7 +27,6 @@ import com.codenvy.api.runner.internal.Runner;
 import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
 import com.codenvy.api.runner.internal.dto.RunRequest;
-import com.codenvy.inject.ConfigurationParameter;
 import com.codenvy.runner.docker.json.ContainerConfig;
 import com.codenvy.runner.docker.json.ContainerCreated;
 import com.codenvy.runner.docker.json.HostConfig;
@@ -59,13 +58,9 @@ public class DockerRunner extends Runner {
     private final Map<String, ImageUsage>   dockerImageUsage;
 
     @Inject
-    public DockerRunner(@Named(DEPLOY_DIRECTORY) ConfigurationParameter deployDirectoryPath,
-                        @Named(CLEANUP_DELAY_TIME) ConfigurationParameter cleanupDelay,
+    public DockerRunner(@Named(DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
+                        @Named(CLEANUP_DELAY_TIME) int cleanupDelay,
                         ResourceAllocators allocators) {
-        this(deployDirectoryPath.asFile(), cleanupDelay.asInt(), allocators);
-    }
-
-    public DockerRunner(java.io.File deployDirectoryRoot, int cleanupDelay, ResourceAllocators allocators) {
         super(deployDirectoryRoot, cleanupDelay, allocators);
         this.dockerFileTemplates = new HashMap<>();
         this.dockerImageUsage = new HashMap<>();

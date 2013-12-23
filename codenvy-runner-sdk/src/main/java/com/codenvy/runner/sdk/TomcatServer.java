@@ -25,7 +25,6 @@ import com.codenvy.api.runner.internal.ApplicationLogger;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.commons.lang.NamedThreadFactory;
 import com.codenvy.commons.lang.ZipUtils;
-import com.codenvy.inject.ConfigurationParameter;
 import com.google.common.io.CharStreams;
 import com.google.inject.Singleton;
 
@@ -90,11 +89,7 @@ public class TomcatServer implements ApplicationServer {
     private int memSize;
 
     @Inject
-    public TomcatServer(@Named(MEM_SIZE_PARAMETER) ConfigurationParameter memSize) {
-        this(memSize.asInt());
-    }
-
-    public TomcatServer(int memSize) {
+    public TomcatServer(@Named(MEM_SIZE_PARAMETER) int memSize) {
         this.memSize = memSize;
         pidTaskExecutor = Executors.newCachedThreadPool(new NamedThreadFactory("TomcatServer-", true));
     }

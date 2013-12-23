@@ -28,7 +28,6 @@ import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
 import com.codenvy.api.runner.internal.dto.RunRequest;
 import com.codenvy.commons.lang.IoUtil;
-import com.codenvy.inject.ConfigurationParameter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,15 +57,8 @@ public class DeployToApplicationServerRunner extends Runner {
     private final CustomPortService              portService;
 
     @Inject
-    public DeployToApplicationServerRunner(@Named(DEPLOY_DIRECTORY) ConfigurationParameter deployDirectoryPath,
-                                           @Named(CLEANUP_DELAY_TIME) ConfigurationParameter cleanupDelay,
-                                           ResourceAllocators allocators,
-                                           CustomPortService portService) {
-        this(deployDirectoryPath.asFile(), cleanupDelay.asInt(), allocators, portService);
-    }
-
-    public DeployToApplicationServerRunner(java.io.File deployDirectoryRoot,
-                                           int cleanupDelay,
+    public DeployToApplicationServerRunner(@Named(DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
+                                           @Named(CLEANUP_DELAY_TIME) int cleanupDelay,
                                            ResourceAllocators allocators,
                                            CustomPortService portService) {
         super(deployDirectoryRoot, cleanupDelay, allocators);
