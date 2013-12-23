@@ -8,7 +8,10 @@ import com.codenvy.ide.tutorial.parts.part.MyPartFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import static com.codenvy.ide.api.ui.workspace.PartStackType.*;
+import static com.codenvy.ide.api.ui.workspace.PartStackType.EDITING;
+import static com.codenvy.ide.api.ui.workspace.PartStackType.INFORMATION;
+import static com.codenvy.ide.api.ui.workspace.PartStackType.NAVIGATION;
+import static com.codenvy.ide.api.ui.workspace.PartStackType.TOOLING;
 
 /** Extension used to demonstrate the parts feature. */
 @Singleton

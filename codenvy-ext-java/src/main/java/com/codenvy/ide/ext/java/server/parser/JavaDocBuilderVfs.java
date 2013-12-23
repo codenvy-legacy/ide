@@ -27,8 +27,8 @@ import com.thoughtworks.qdox.JavaDocBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaSource;
 
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -47,7 +47,7 @@ public class JavaDocBuilderVfs extends JavaDocBuilder {
     private VirtualFileSystem vfs;
 
     /** Logger. */
-    private static final Log LOG = ExoLogger.getLogger(JavaDocBuilderVfs.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JavaDocBuilderVfs.class);
 
     /** @param vfs */
     public JavaDocBuilderVfs(VirtualFileSystem vfs, VfsClassLibrary library) {
@@ -71,7 +71,7 @@ public class JavaDocBuilderVfs extends JavaDocBuilder {
                 }
                 return source.getNestedClassByName(name);
             } catch (IndexOutOfBoundsException e) {
-                LOG.error(e);
+                LOG.error(e.getMessage(), e);
             }
         }
         return null;
@@ -86,7 +86,7 @@ public class JavaDocBuilderVfs extends JavaDocBuilder {
                 addSource(new InputStreamReader(vfs.getContent(i.getId()).getStream()), i.getId());
             } catch (Exception e) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug(e);
+                    LOG.debug(e.getMessage(), e);
                 }
             }
         }

@@ -11,7 +11,6 @@
 package com.codenvy.ide.ext.java.jdt.codeassistant;
 
 import com.codenvy.ide.ext.java.jdt.codeassistant.api.JavaCompletionProposal;
-
 import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 
 import java.util.Comparator;

@@ -20,8 +20,13 @@ package com.codenvy.ide.rest;
 
 import com.codenvy.ide.commons.exception.JobNotFoundException;
 import com.codenvy.ide.commons.exception.ServerException;
-import com.google.gwt.http.client.*;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestBuilder.Method;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window.Location;
 

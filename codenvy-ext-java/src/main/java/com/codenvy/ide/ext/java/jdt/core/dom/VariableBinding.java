@@ -17,7 +17,11 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.AbstractMethodDeclarat
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Initializer;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.Constant;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.ReferenceContext;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.BlockScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.FieldBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.LocalVariableBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TagBits;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeIds;
 
 /** Internal implementation of variable bindings. */
 class VariableBinding implements IVariableBinding {

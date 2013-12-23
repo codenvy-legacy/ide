@@ -31,7 +31,6 @@ import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.builder.tools.ant.AntBuildListener;
 import com.codenvy.builder.tools.ant.AntMessage;
 import com.codenvy.dto.server.DtoFactory;
-import com.codenvy.inject.ConfigurationParameter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +40,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.EOFException;
-import java.io.File;
 import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -109,15 +107,11 @@ public class AntBuilder extends Builder {
     private final CustomPortService           portService;
 
     @Inject
-    public AntBuilder(@Named(REPOSITORY) ConfigurationParameter repositoryPath,
-                      @Named(NUMBER_OF_WORKERS) ConfigurationParameter numberOfWorkers,
-                      @Named(INTERNAL_QUEUE_SIZE) ConfigurationParameter queueSize,
-                      @Named(CLEAN_RESULT_DELAY_TIME) ConfigurationParameter cleanBuildResultDelay,
+    public AntBuilder(@Named(REPOSITORY) java.io.File rootDirectory,
+                      @Named(NUMBER_OF_WORKERS) int numberOfWorkers,
+                      @Named(INTERNAL_QUEUE_SIZE) int queueSize,
+                      @Named(CLEAN_RESULT_DELAY_TIME) int cleanBuildResultDelay,
                       CustomPortService portService) {
-        this(repositoryPath.asFile(), numberOfWorkers.asInt(), queueSize.asInt(), cleanBuildResultDelay.asInt(), portService);
-    }
-
-    public AntBuilder(File rootDirectory, int numberOfWorkers, int queueSize, int cleanBuildResultDelay, CustomPortService portService) {
         super(rootDirectory, numberOfWorkers, queueSize, cleanBuildResultDelay);
         this.portService = portService;
         antMessageServers = new ConcurrentHashMap<>();

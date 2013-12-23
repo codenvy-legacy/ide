@@ -57,8 +57,8 @@ import com.sun.jdi.request.StepRequest;
 
 import org.everrest.websockets.WSConnectionContext;
 import org.everrest.websockets.message.ChannelBroadcastMessage;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -79,11 +79,10 @@ import static com.codenvy.commons.json.JsonHelper.toJson;
  * DebuggerException. Typically such exception caused by errors in underlying JDI (Java Debug Interface), e.g.
  * connection errors. Instance of Debugger is not thread-safe.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * @author andrew00x
  */
 public class Debugger implements EventsHandler {
-    private static final Log                             LOG                  = ExoLogger.getLogger(Debugger.class);
+    private static final Logger                          LOG                  = LoggerFactory.getLogger(Debugger.class);
     private static final AtomicLong                      counter              = new AtomicLong(1);
     private static final ConcurrentMap<String, Debugger> instances            = new ConcurrentHashMap<String, Debugger>();
     private static final String                          EVENTS_CHANNEL       = "debugger:events:";

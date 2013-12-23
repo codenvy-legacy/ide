@@ -21,11 +21,6 @@ import com.codenvy.organization.client.WorkspaceManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
 import com.codenvy.organization.model.Workspace;
 
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.services.security.Identity;
-import org.exoplatform.services.security.IdentityRegistry;
-import org.exoplatform.services.security.MembershipEntry;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -34,19 +29,14 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
 
 /**
  * Provide login redirection to SSO server on client side. Filter also wraps original request and delegate Principal request to the
  * Principal what comes from SSO server.
  */
 public class LoginFilter implements Filter {
-
     private static WorkspaceManager workspaceManager;
 
     @Override
@@ -54,39 +44,26 @@ public class LoginFilter implements Filter {
         try {
             workspaceManager = new WorkspaceManager();
         } catch (OrganizationServiceException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new ServletException(e);
         }
     }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        final HttpServletResponse httpResp = (HttpServletResponse)response;
-
-        IdentityRegistry identityRegistry =
-                (IdentityRegistry)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(IdentityRegistry.class);
-        List<String> roles = Arrays.asList("admin", "developer");
-        identityRegistry.register((new Identity("tmp-user125",
-                                                new HashSet<MembershipEntry>(), roles)));
-
         try {
             if (isTempUser((HttpServletRequest)request)) {
                 chain.doFilter(new RequestWrapper((HttpServletRequest)request), response);
-            } else
+            } else {
                 chain.doFilter(request, response);
+            }
         } catch (OrganizationServiceException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new ServletException(e);
         }
     }
 
     static class RequestWrapper extends HttpServletRequestWrapper {
-
-        private HttpServletRequest request;
-
         public RequestWrapper(HttpServletRequest request) {
             super(request);
-            this.request = request;
         }
 
         @Override
@@ -115,12 +92,12 @@ public class LoginFilter implements Filter {
         String url = request.getRequestURI();
         String[] split = url.split("/");
         String ws = split[3];
-        if (ws.equals("ide") || ws.equals("oauth"))
+        if (ws.equals("ide") || ws.equals("oauth")) {
             return false;
+        }
         Workspace workspace = workspaceManager.getWorkspaceByName(ws);
         if (workspace.isTemporary()) {
-            HttpServletRequest request2 = (HttpServletRequest)request;
-            if (request2.getUserPrincipal() == null) {
+            if (request.getUserPrincipal() == null) {
                 return true;
             }
         }

@@ -80,7 +80,6 @@ public class EventsTest extends LocalFileSystemTest {
 
         @Override
         public void handleEvent(ChangeEvent event) throws VirtualFileSystemException {
-            log.info(event);
             events.add(event);
         }
     }

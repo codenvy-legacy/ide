@@ -11,7 +11,6 @@
 package com.codenvy.ide.ext.java.jdt.internal.corext.fix;
 
 import com.codenvy.ide.ext.java.jdt.core.JavaCore;
-
 import com.codenvy.ide.runtime.Assert;
 
 import java.util.Map;

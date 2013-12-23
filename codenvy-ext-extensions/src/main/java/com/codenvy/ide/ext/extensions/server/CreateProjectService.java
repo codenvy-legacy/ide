@@ -25,23 +25,27 @@ import com.codenvy.api.vfs.server.exceptions.InvalidArgumentException;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.shared.PropertyFilter;
 import com.codenvy.api.vfs.shared.dto.Property;
-import com.codenvy.ide.annotations.NotNull;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
-
-import static com.codenvy.ide.ext.extensions.server.CreateProjectApplication.BASE_URL;
 
 /**
  * Service for creating Codenvy extension projects.
@@ -51,9 +55,13 @@ import static com.codenvy.ide.ext.extensions.server.CreateProjectApplication.BAS
  */
 @Path("{ws-name}/extension/create")
 public class CreateProjectService {
-    private static final Log LOG = ExoLogger.getLogger(CreateProjectService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CreateProjectService.class);
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
+
+    @Inject
+    @Named("extension-url") // TODO(GUICE): better name ??
+    private String baseUrl;
 
     /**
      * Create sample Codenvy extension project.
@@ -84,7 +92,7 @@ public class CreateProjectService {
                                                     @QueryParam("artifactid") String artifactId,
                                                     @QueryParam("version") String version)
             throws VirtualFileSystemException, IOException {
-        createProject(vfsId, name, properties, BASE_URL + "/gist-extension.zip");
+        createProject(vfsId, name, properties, baseUrl + "/gist-extension.zip");
 
         MavenXpp3Reader pomReader = new MavenXpp3Reader();
         MavenXpp3Writer pomWriter = new MavenXpp3Writer();

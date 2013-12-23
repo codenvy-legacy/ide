@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.java.worker;
 
+import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.ext.java.jdt.CUVariables;
 import com.codenvy.ide.ext.java.jdt.codeassistant.ContentAssistHistory;
 import com.codenvy.ide.ext.java.jdt.codeassistant.TemplateCompletionProposalComputer;
@@ -51,7 +52,6 @@ import com.codenvy.ide.ext.java.messages.ParseMessage;
 import com.codenvy.ide.ext.java.messages.Problem;
 import com.codenvy.ide.ext.java.messages.RoutingTypes;
 import com.codenvy.ide.ext.java.messages.impl.MessagesImpls;
-import com.codenvy.ide.collections.js.JsoArray;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.webworker.client.MessageEvent;

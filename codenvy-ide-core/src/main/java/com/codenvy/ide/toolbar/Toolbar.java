@@ -17,11 +17,12 @@
  */
 package com.codenvy.ide.toolbar;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * Toolbar is visual component, represents IDE toolbar.

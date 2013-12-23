@@ -12,7 +12,41 @@ package com.codenvy.ide.ext.java.jdt.internal.corext.fix;
 
 import com.codenvy.ide.ext.java.jdt.codeassistant.api.IProblemLocation;
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTVisitor;
+import com.codenvy.ide.ext.java.jdt.core.dom.Assignment;
+import com.codenvy.ide.ext.java.jdt.core.dom.Block;
+import com.codenvy.ide.ext.java.jdt.core.dom.CastExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.ClassInstanceCreation;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.dom.EnhancedForStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.Expression;
+import com.codenvy.ide.ext.java.jdt.core.dom.ExpressionStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.FieldAccess;
+import com.codenvy.ide.ext.java.jdt.core.dom.FieldDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.IBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.IMethodBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.ITypeBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.IVariableBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.ImportDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.Javadoc;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodInvocation;
+import com.codenvy.ide.ext.java.jdt.core.dom.NodeFinder;
+import com.codenvy.ide.ext.java.jdt.core.dom.ParenthesizedExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.PostfixExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.PrefixExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.QualifiedName;
+import com.codenvy.ide.ext.java.jdt.core.dom.SimpleName;
+import com.codenvy.ide.ext.java.jdt.core.dom.SingleVariableDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.SuperMethodInvocation;
+import com.codenvy.ide.ext.java.jdt.core.dom.SwitchStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.TagElement;
+import com.codenvy.ide.ext.java.jdt.core.dom.Type;
+import com.codenvy.ide.ext.java.jdt.core.dom.TypeDeclarationStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationFragment;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationStatement;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ListRewrite;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.ASTNodes;
@@ -21,13 +55,18 @@ import com.codenvy.ide.ext.java.jdt.internal.corext.dom.NecessaryParenthesesChec
 import com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.structure.CompilationUnitRewrite;
 import com.codenvy.ide.ext.java.jdt.internal.text.correction.JavadocTagsSubProcessor;
 import com.codenvy.ide.ext.java.jdt.internal.text.correction.ProblemLocation;
-
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.edits.TextEditGroup;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 
 /** Fix which removes unused code. */
 public class UnusedCodeFix extends CompilationUnitRewriteOperationsFix {

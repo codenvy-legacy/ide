@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.sdk.tools;
 
-import com.codenvy.ide.commons.FileUtils;
+import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.ide.commons.GwtXmlUtils;
 
 import org.apache.maven.model.Model;
@@ -68,9 +68,9 @@ public class InstallExtension {
                 final String tempDirName = "temp";
                 extResourcesWorkDirPath = extResourcesDirPath.resolve(tempDirName);
                 // delete working directory from previous build if it exist
-                FileUtils.deleteRecursive(extResourcesWorkDirPath.toFile());
+                IoUtil.deleteRecursive(extResourcesWorkDirPath.toFile());
                 Files.createDirectory(extResourcesWorkDirPath);
-                FileUtils.copy(extResourcesDirPath.toFile(), extResourcesWorkDirPath.toFile(), new FilenameFilter() {
+                IoUtil.copy(extResourcesDirPath.toFile(), extResourcesWorkDirPath.toFile(), new FilenameFilter() {
                     @Override
                     public boolean accept(File dir, String name) {
                         return !(tempDirName.equals(name));

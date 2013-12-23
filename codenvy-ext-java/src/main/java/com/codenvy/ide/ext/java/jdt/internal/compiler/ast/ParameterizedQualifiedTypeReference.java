@@ -16,7 +16,16 @@ import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ASTVisitor;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ClassFileConstants;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.Constant;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.Binding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.BlockScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ClassScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.PackageBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ParameterizedTypeBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ProblemReasons;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ReferenceBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.Scope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeVariableBinding;
 
 /**
  * Syntactic representation of a reference to a generic type.

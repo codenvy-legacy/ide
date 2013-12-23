@@ -3,7 +3,6 @@
 package com.codenvy.ide.ext.java.jdi.server.expression;
 
 
-import org.antlr.runtime.*;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.TreeNodeStream;
 import org.antlr.runtime.tree.TreeParser;

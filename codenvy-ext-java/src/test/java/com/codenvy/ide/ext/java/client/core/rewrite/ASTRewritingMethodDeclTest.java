@@ -10,10 +10,40 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.client.core.rewrite;
 
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.AST;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.AnnotationTypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.AnnotationTypeMemberDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.AnonymousClassDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.Block;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.dom.EnumConstantDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.EnumDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.ExpressionStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.FieldDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.Initializer;
+import com.codenvy.ide.ext.java.jdt.core.dom.Javadoc;
+import com.codenvy.ide.ext.java.jdt.core.dom.MarkerAnnotation;
+import com.codenvy.ide.ext.java.jdt.core.dom.MemberValuePair;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodInvocation;
+import com.codenvy.ide.ext.java.jdt.core.dom.Modifier;
+import com.codenvy.ide.ext.java.jdt.core.dom.Name;
+import com.codenvy.ide.ext.java.jdt.core.dom.NormalAnnotation;
+import com.codenvy.ide.ext.java.jdt.core.dom.PrimitiveType;
+import com.codenvy.ide.ext.java.jdt.core.dom.SimpleName;
+import com.codenvy.ide.ext.java.jdt.core.dom.SingleMemberAnnotation;
+import com.codenvy.ide.ext.java.jdt.core.dom.SingleVariableDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.TagElement;
+import com.codenvy.ide.ext.java.jdt.core.dom.TextElement;
+import com.codenvy.ide.ext.java.jdt.core.dom.TryStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.Type;
+import com.codenvy.ide.ext.java.jdt.core.dom.TypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.TypeParameter;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationFragment;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ListRewrite;
-
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.ICompilationUnit;
 
 import org.junit.Test;
@@ -22,7 +52,11 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class ASTRewritingMethodDeclTest extends ASTRewritingTest {
 

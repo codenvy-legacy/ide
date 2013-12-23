@@ -20,8 +20,7 @@ package com.codenvy.ide.ext.ssh.server;
 /**
  * SSH key.
  *
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: $
+ * @author andrew00x
  */
 public class SshKey {
     private final String identifier;

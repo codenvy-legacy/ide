@@ -17,16 +17,17 @@
  */
 package com.codenvy.ide.ext.web.html;
 
-import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.ext.web.WebExtensionResource;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.MimeType;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+
+import javax.validation.constraints.NotNull;
 
 
 /**

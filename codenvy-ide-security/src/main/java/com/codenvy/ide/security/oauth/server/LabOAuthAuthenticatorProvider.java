@@ -25,7 +25,6 @@ import com.google.api.client.auth.oauth2.MemoryCredentialStore;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.json.jackson.JacksonFactory;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

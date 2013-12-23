@@ -25,11 +25,8 @@ import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationFragment;
 import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationStatement;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ListRewrite;
-
-import com.codenvy.ide.text.edits.TextEditGroup;
-
 import com.codenvy.ide.runtime.Assert;
-
+import com.codenvy.ide.text.edits.TextEditGroup;
 
 import java.util.Arrays;
 import java.util.HashMap;

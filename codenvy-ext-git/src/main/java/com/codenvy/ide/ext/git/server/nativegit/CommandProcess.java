@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Executes GitCommand.
  *
- * @author <a href="mailto:evoevodin@codenvy.com">Eugene Voevodin</a>
+ * @author Eugene Voevodin
  */
 public class CommandProcess {
 
@@ -66,7 +66,7 @@ public class CommandProcess {
         }
         String[] env = new String[environment.size()];
         environment.toArray(env);
-        String[] line = ShellFactory.getInstance().getShell().createShellCommand(command.getCommandLine());
+        String[] line = ShellFactory.getShell().createShellCommand(command.getCommandLine());
         LOG.debug("Executing " + command);
         Process process;
         try {

@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.ext.java.worker;
 
+import com.codenvy.ide.collections.js.JsoArray;
+import com.codenvy.ide.collections.js.JsoStringMap;
 import com.codenvy.ide.ext.java.jdt.codeassistant.AbstractJavaCompletionProposal;
 import com.codenvy.ide.ext.java.jdt.codeassistant.CompletionProposalCollector;
 import com.codenvy.ide.ext.java.jdt.codeassistant.FillArgumentNamesCompletionProposalCollector;
@@ -37,8 +39,6 @@ import com.codenvy.ide.ext.java.messages.ComputeCAProposalsMessage;
 import com.codenvy.ide.ext.java.messages.RoutingTypes;
 import com.codenvy.ide.ext.java.messages.WorkerProposal;
 import com.codenvy.ide.ext.java.messages.impl.MessagesImpls;
-import com.codenvy.ide.collections.js.JsoArray;
-import com.codenvy.ide.collections.js.JsoStringMap;
 import com.codenvy.ide.runtime.AssertionFailedException;
 import com.codenvy.ide.text.DocumentEvent;
 import com.codenvy.ide.text.DocumentListener;

@@ -15,10 +15,19 @@ import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
 import com.codenvy.ide.ext.java.jdt.core.dom.Block;
 import com.codenvy.ide.ext.java.jdt.core.dom.StructuralPropertyDescriptor;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.TargetSourceRangeComputer;
-
 import com.codenvy.ide.text.edits.TextEditGroup;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 
 /** Stores all rewrite events, descriptions of events and knows which nodes are copy or move sources or tracked. */
 public final class RewriteEventStore {

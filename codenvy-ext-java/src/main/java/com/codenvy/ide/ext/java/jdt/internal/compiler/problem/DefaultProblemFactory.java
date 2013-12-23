@@ -16,7 +16,6 @@ import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.IProblemFactory;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.util.HashtableOfInt;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.util.Util;
-
 import com.google.gwt.core.client.GWT;
 
 

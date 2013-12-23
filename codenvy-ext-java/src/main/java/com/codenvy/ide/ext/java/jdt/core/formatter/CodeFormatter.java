@@ -11,7 +11,6 @@
 package com.codenvy.ide.ext.java.jdt.core.formatter;
 
 import com.codenvy.ide.ext.java.jdt.internal.compiler.util.Util;
-
 import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.edits.TextEdit;
 

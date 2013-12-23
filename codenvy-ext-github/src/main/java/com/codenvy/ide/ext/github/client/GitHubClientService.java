@@ -17,16 +17,16 @@
  */
 package com.codenvy.ide.ext.github.client;
 
-import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.ext.github.shared.Collaborators;
 import com.codenvy.ide.ext.github.shared.GitHubRepository;
 import com.codenvy.ide.ext.github.shared.GitHubRepositoryList;
 import com.codenvy.ide.ext.github.shared.GitHubUser;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**

@@ -24,7 +24,7 @@
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
-        <version>3.0.0-M5-SNAPSHOT</version>
+        <version>3.0.0-M7-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ide-client</artifactId>
     <packaging>jar</packaging>
@@ -96,20 +96,6 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>${org.slf4j.version}</version>
         </dependency>
-
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-websocket</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>ch.qos.logback</groupId>
-                    <artifactId>logback-classic</artifactId>
-                </exclusion>
-            </exclusions>
-            <version>${org.exoplatform.ide.version}</version>
-        </dependency>
-
         <!-- Extensions -->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
@@ -121,11 +107,6 @@
             <artifactId>codenvy-ext-java-runtime</artifactId>
             <version>${project.version}</version>
         </dependency>-->
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-demo</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-web</artifactId>

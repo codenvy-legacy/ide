@@ -27,7 +27,9 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
-import static com.codenvy.ide.resources.marshal.JSONDeserializer.*;
+import static com.codenvy.ide.resources.marshal.JSONDeserializer.BOOLEAN_DESERIALIZER;
+import static com.codenvy.ide.resources.marshal.JSONDeserializer.LINK_DESERIALIZER;
+import static com.codenvy.ide.resources.marshal.JSONDeserializer.STRING_DESERIALIZER;
 
 
 /**

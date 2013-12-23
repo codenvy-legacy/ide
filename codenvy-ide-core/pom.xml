@@ -24,7 +24,7 @@
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
-        <version>3.0.0-M5-SNAPSHOT</version>
+        <version>3.0.0-M7-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ide-core</artifactId>
     <packaging>jar</packaging>
@@ -87,6 +87,11 @@
             <version>${com.codenvy.commons.version}</version>
         </dependency>
         <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>${javax.validation.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-core</artifactId>
             <exclusions>
@@ -98,11 +103,6 @@
             <version>${everrest.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.everrest</groupId>
-            <artifactId>everrest-integration-exo</artifactId>
-            <version>${everrest.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-api</artifactId>
             <version>${project.version}</version>
@@ -111,17 +111,6 @@
             <groupId>com.codenvy.organization</groupId>
             <artifactId>codenvy-organization-api-java-client</artifactId>
             <version>${com.codenvy.organization.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.core</groupId>
-            <artifactId>exo.core.component.security.core</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>servlet-api</artifactId>
-                </exclusion>
-            </exclusions>
-            <version>${org.exoplatform.core.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -168,13 +157,7 @@
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
-            <version>1.0.0.GA</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>1.0.0.GA</version>
+            <version>${javax.validation.version}</version>
             <classifier>sources</classifier>
             <scope>test</scope>
         </dependency>

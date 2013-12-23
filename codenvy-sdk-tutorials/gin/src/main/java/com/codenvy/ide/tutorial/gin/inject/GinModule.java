@@ -2,7 +2,11 @@ package com.codenvy.ide.tutorial.gin.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.parts.ConsolePart;
-import com.codenvy.ide.tutorial.gin.annotation.*;
+import com.codenvy.ide.tutorial.gin.annotation.MyString;
+import com.codenvy.ide.tutorial.gin.annotation.MyStringProvider;
+import com.codenvy.ide.tutorial.gin.annotation.SimpleClass;
+import com.codenvy.ide.tutorial.gin.annotation.SimpleImplementation;
+import com.codenvy.ide.tutorial.gin.annotation.SimpleInterface;
 import com.codenvy.ide.tutorial.gin.factory.MyFactory;
 import com.codenvy.ide.tutorial.gin.factory.assited.SomeImplementationWithAssistedParam;
 import com.codenvy.ide.tutorial.gin.factory.assited.SomeInterface;

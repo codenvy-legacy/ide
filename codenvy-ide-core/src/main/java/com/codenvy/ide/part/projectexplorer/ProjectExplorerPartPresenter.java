@@ -19,7 +19,6 @@ package com.codenvy.ide.part.projectexplorer;
 
 import com.codenvy.api.vfs.shared.ItemType;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
@@ -42,6 +41,8 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
+
+import javax.validation.constraints.NotNull;
 
 
 /**
@@ -266,6 +267,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
             @Override
             public void onSuccess(Project result) {
+                result.setVFSInfo(resourceProvider.getVfsInfo());
                 result.refreshTree(new AsyncCallback<Project>() {
 
                     @Override
@@ -306,6 +308,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
      * @param project
      */
     private void processProject(Project project, AsyncCallback<Project> callback) {
+        project.setVFSInfo(resourceProvider.getVfsInfo());
         String projectType = (String)project.getPropertyValue("vfs:projectType");
         if (projectType != null && projectType.equals("undefined")) {
             selectProjectTypePresenter.showDialog(project, callback);

@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.ssh.client;
 
-import com.google.gwt.i18n.client.Constants.DefaultStringValue;
 import com.google.gwt.i18n.client.Messages;
 
 /**

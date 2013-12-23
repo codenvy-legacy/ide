@@ -17,11 +17,11 @@
  */
 package com.codenvy.ide.ext.git.server.nativegit;
 
+import com.codenvy.api.core.user.UserState;
 import com.codenvy.commons.security.oauth.OAuthTokenProvider;
 import com.codenvy.commons.security.shared.Token;
 import com.codenvy.ide.ext.git.server.GitException;
 
-import org.exoplatform.services.security.ConversationState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +54,7 @@ public class OAuthCredentialsProvider implements CredentialsProvider {
         }
         Token token;
         try {
-            token = tokenProvider.getToken("wso2", ConversationState.getCurrent().getIdentity().getUserId());
+            token = tokenProvider.getToken("wso2", UserState.get().getUser().getName());
         } catch (IOException e) {
             LOG.error("Can't get token", e);
             return false;

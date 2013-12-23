@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.tutorial.parts.part;
 
-import com.codenvy.ide.annotations.NotNull;
+import javax.validation.constraints.NotNull;
 
 /**
  * The factory for creating a part.

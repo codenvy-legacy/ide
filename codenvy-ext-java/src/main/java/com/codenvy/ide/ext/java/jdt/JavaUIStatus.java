@@ -11,7 +11,6 @@
 package com.codenvy.ide.ext.java.jdt;
 
 import com.codenvy.ide.ext.java.jdt.core.JavaCore;
-
 import com.codenvy.ide.runtime.IStatus;
 import com.codenvy.ide.runtime.Status;
 

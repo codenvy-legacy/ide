@@ -38,7 +38,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -48,8 +47,7 @@ import java.util.Set;
 /**
  * REST interface to SshKeyProvider.
  * 
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: $
+ * @author andrew00x
  */
 @Path("{ws-name}/ssh-keys")
 public class KeyService {

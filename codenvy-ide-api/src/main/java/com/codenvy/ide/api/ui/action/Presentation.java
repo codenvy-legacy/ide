@@ -17,13 +17,14 @@
  */
 package com.codenvy.ide.api.ui.action;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.UIUtil;
 import com.google.gwt.resources.client.ImageResource;
+
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 /**
  * The presentation of an action in a specific place in the user interface.

@@ -18,7 +18,6 @@ import com.codenvy.ide.ext.java.jdt.templates.api.GlobalTemplateVariables;
 import com.codenvy.ide.ext.java.jdt.templates.api.TemplateContext;
 import com.codenvy.ide.ext.java.jdt.templates.api.TemplateVariable;
 import com.codenvy.ide.ext.java.jdt.templates.api.TemplateVariableResolver;
-
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Position;
 

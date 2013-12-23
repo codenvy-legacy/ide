@@ -11,7 +11,11 @@
 package com.codenvy.ide.ext.java.jdt.internal.compiler.ast;
 
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ASTVisitor;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.BlockScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ClassScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.LocalVariableBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.MethodScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TagBits;
 
 public class JavadocSingleNameReference extends SingleNameReference {
 

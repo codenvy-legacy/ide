@@ -28,7 +28,6 @@ import com.codenvy.api.runner.internal.DeploymentSourcesValidator;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.commons.lang.NamedThreadFactory;
 import com.codenvy.commons.lang.ZipUtils;
-import com.codenvy.inject.ConfigurationParameter;
 import com.google.common.io.CharStreams;
 import com.google.inject.Singleton;
 
@@ -87,12 +86,8 @@ public class TomcatServer implements ApplicationServer {
     private         java.io.File               tomcatHome;
 
     @Inject
-    public TomcatServer(@Named(MEM_SIZE_PARAMETER) ConfigurationParameter memSize,
-                        @Named(TOMCAT_HOME_PARAMETER) ConfigurationParameter tomcatHome) {
-        this(memSize.asInt(), tomcatHome.asFile());
-    }
-
-    public TomcatServer(int memSize, java.io.File tomcatHome) {
+    public TomcatServer(@Named(MEM_SIZE_PARAMETER) int memSize,
+                        @Named(TOMCAT_HOME_PARAMETER) java.io.File tomcatHome) {
         this.memSize = memSize;
         this.tomcatHome = tomcatHome;
         appValidator = new JavaWebApplicationValidator();

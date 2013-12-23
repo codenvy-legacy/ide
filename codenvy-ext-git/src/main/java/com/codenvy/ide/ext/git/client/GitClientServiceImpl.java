@@ -17,8 +17,7 @@
  */
 package com.codenvy.ide.ext.git.client;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
+import com.codenvy.ide.MimeType;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.add.AddRequestHandler;
 import com.codenvy.ide.ext.git.client.clone.CloneRequestStatusHandler;
@@ -50,7 +49,6 @@ import com.codenvy.ide.ext.git.shared.RmRequest;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.MimeType;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.websocket.Message;
@@ -65,12 +63,14 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
-import static com.codenvy.ide.rest.HTTPHeader.ACCEPT;
-import static com.codenvy.ide.rest.HTTPHeader.CONTENTTYPE;
 import static com.codenvy.ide.MimeType.APPLICATION_JSON;
 import static com.codenvy.ide.MimeType.TEXT_PLAIN;
+import static com.codenvy.ide.rest.HTTPHeader.ACCEPT;
+import static com.codenvy.ide.rest.HTTPHeader.CONTENTTYPE;
 import static com.google.gwt.http.client.RequestBuilder.POST;
 
 /**

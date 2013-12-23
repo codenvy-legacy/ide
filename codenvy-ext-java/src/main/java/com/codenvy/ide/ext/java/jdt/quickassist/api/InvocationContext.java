@@ -12,7 +12,6 @@ package com.codenvy.ide.ext.java.jdt.quickassist.api;
 
 import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
 import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
-
 import com.codenvy.ide.text.Document;
 
 

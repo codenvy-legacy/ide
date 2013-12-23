@@ -15,7 +15,12 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.CompilationResult;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.flow.ExceptionHandlingFlowContext;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.flow.FlowInfo;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.flow.InitializationFlowContext;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.Binding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ClassScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.FieldBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.MethodScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.SourceTypeBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeConstants;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.parser.Parser;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.AbortMethod;
 

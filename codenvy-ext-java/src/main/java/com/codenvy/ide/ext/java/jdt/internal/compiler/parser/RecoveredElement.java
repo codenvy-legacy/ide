@@ -14,7 +14,14 @@ package com.codenvy.ide.ext.java.jdt.internal.compiler.parser;
  * Internal structure for parsing recovery
  */
 
-import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ASTNode;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.AbstractMethodDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Block;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.FieldDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ImportReference;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.LocalDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Statement;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TypeDeclaration;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.util.Util;
 
 public class RecoveredElement {

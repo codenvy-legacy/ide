@@ -31,7 +31,6 @@ import com.codenvy.ide.util.dom.Elements;
 import com.codenvy.ide.util.dom.MouseGestureListener;
 import com.codenvy.ide.util.input.SignalEvent;
 import com.codenvy.ide.util.input.SignalEventImpl;
-import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -1159,7 +1158,9 @@ public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget {
     public Widget asWidget() {
         if (widget == null) {
             widget = new HTML();
-            widget.getElement().appendChild((Node)getView().getElement());
+            Element element = getView().getElement();
+            element.getStyle().setOverflow("auto");
+            widget.getElement().appendChild((Node)element);
             widget.getElement().getStyle().setOverflow(Style.Overflow.AUTO);
         }
 

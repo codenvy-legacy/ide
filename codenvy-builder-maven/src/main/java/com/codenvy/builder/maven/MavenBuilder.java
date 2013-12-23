@@ -30,7 +30,6 @@ import com.codenvy.builder.maven.dto.MavenDependency;
 import com.codenvy.builder.tools.maven.MavenProjectModel;
 import com.codenvy.builder.tools.maven.MavenProjectModelFactory;
 import com.codenvy.dto.server.DtoFactory;
-import com.codenvy.inject.ConfigurationParameter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,14 +72,10 @@ public class MavenBuilder extends Builder {
     private static final String ASSEMBLY_DESCRIPTOR_FILE = "dependencies-zip-assembly-descriptor.xml";
 
     @Inject
-    public MavenBuilder(@Named(REPOSITORY) ConfigurationParameter repositoryPath,
-                        @Named(NUMBER_OF_WORKERS) ConfigurationParameter numberOfWorkers,
-                        @Named(INTERNAL_QUEUE_SIZE) ConfigurationParameter queueSize,
-                        @Named(CLEAN_RESULT_DELAY_TIME) ConfigurationParameter cleanBuildResultDelay) {
-        this(repositoryPath.asFile(), numberOfWorkers.asInt(), queueSize.asInt(), cleanBuildResultDelay.asInt());
-    }
-
-    public MavenBuilder(java.io.File rootDirectory, int numberOfWorkers, int queueSize, int cleanBuildResultDelay) {
+    public MavenBuilder(@Named(REPOSITORY) java.io.File rootDirectory,
+                        @Named(NUMBER_OF_WORKERS) int numberOfWorkers,
+                        @Named(INTERNAL_QUEUE_SIZE) int queueSize,
+                        @Named(CLEAN_RESULT_DELAY_TIME) int cleanBuildResultDelay) {
         super(rootDirectory, numberOfWorkers, queueSize, cleanBuildResultDelay);
     }
 

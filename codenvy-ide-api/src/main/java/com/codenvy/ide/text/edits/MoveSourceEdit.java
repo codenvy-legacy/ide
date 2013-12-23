@@ -22,7 +22,12 @@ import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.RegionImpl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A move source edit denotes the source of a move operation. Move source edits are only valid inside an edit tree if they have a

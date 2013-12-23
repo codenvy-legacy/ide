@@ -17,8 +17,9 @@
  */
 package com.codenvy.ide.api.editor;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.resources.FileType;
+
+import javax.validation.constraints.NotNull;
 
 
 /**

@@ -17,9 +17,8 @@
  */
 package com.codenvy.ide.ext.java.client.core;
 
-import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
-
 import com.codenvy.ide.ext.java.client.BaseTest;
+import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
 
 import org.junit.Ignore;
 import org.junit.Test;

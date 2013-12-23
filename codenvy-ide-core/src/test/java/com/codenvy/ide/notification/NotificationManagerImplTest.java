@@ -32,10 +32,16 @@ import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 import static com.codenvy.ide.notification.NotificationContainer.HEIGHT;
 import static com.codenvy.ide.notification.NotificationContainer.WIDTH;
-import static com.codenvy.ide.notification.NotificationManagerView.Status.*;
+import static com.codenvy.ide.notification.NotificationManagerView.Status.EMPTY;
+import static com.codenvy.ide.notification.NotificationManagerView.Status.HAS_UNREAD;
+import static com.codenvy.ide.notification.NotificationManagerView.Status.IN_PROGRESS;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.anyObject;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
 
 /**
  * Testing {@link NotificationManagerImpl} functionality

@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.ssh.client;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.ext.ssh.dto.GenKeyRequest;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
@@ -25,6 +24,8 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The client service for working with ssh key.

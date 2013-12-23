@@ -37,8 +37,8 @@ import com.codenvy.ide.ext.java.jdt.core.dom.TypeDeclaration;
 import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationFragment;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.ASTNodes;
 import com.codenvy.ide.ext.java.messages.BlockTypes;
-import com.codenvy.ide.ext.java.messages.impl.WorkerCodeBlock;
 import com.codenvy.ide.ext.java.messages.impl.OutlineUpdateMessage;
+import com.codenvy.ide.ext.java.messages.impl.WorkerCodeBlock;
 
 import java.util.Iterator;
 

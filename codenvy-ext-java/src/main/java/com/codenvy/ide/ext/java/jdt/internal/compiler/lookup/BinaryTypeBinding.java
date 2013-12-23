@@ -12,7 +12,14 @@ package com.codenvy.ide.ext.java.jdt.internal.compiler.lookup;
 
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ClassFileConstants;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.env.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.ClassSignature;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.EnumConstantSignature;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryAnnotation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryElementValuePair;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryField;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryMethod;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryNestedType;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryType;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.Constant;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.AbortCompilation;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.util.SimpleLookupTable;
