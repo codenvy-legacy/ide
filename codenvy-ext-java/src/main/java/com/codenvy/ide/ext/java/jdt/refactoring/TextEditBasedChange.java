@@ -23,7 +23,6 @@ import com.codenvy.ide.text.edits.TextEdit;
 import com.codenvy.ide.text.edits.TextEditCopier;
 import com.codenvy.ide.text.edits.TextEditGroup;
 import com.codenvy.ide.text.edits.TextEditProcessor;
-import com.codenvy.ide.util.loging.Log;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -239,7 +238,7 @@ public abstract class TextEditBasedChange extends Change {
                 return document.get(region.getOffset(), region.getLength());
             }
         } catch (BadLocationException e) {
-            Log.error(getClass(), e);
+//            Log.error(getClass(), e);
             throw new CoreException(new Status(IStatus.ERROR, "", e.getMessage()));
             //throw Changes.asCoreException(e);
         }

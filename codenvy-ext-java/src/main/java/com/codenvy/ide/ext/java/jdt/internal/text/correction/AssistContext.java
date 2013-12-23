@@ -15,20 +15,13 @@ import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
 import com.codenvy.ide.ext.java.jdt.core.dom.NodeFinder;
 import com.codenvy.ide.ext.java.jdt.internal.corext.codemanipulation.ASTResolving;
 import com.codenvy.ide.ext.java.jdt.quickassist.api.InvocationContext;
-
+import com.codenvy.ide.ext.java.jdt.quickassist.api.TextInvocationContext;
 import com.codenvy.ide.text.Document;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.codeassistant.TextInvocationContext;
 
 
 public class AssistContext extends TextInvocationContext implements InvocationContext {
 
-    //	private final ICompilationUnit fCompilationUnit;
-    //	private final IEditorPart fEditor;
-
     private CompilationUnit fASTRoot;
-
-    //	private final SharedASTProvider.WAIT_FLAG fWaitFlag;
 
     private int fOffset;
 
@@ -39,80 +32,26 @@ public class AssistContext extends TextInvocationContext implements InvocationCo
 
     private final Document document;
 
-    //TODO
-    //	/*
-    //	 * @since 3.5
-    //	 */
-    //	private AssistContext(ICompilationUnit cu, ISourceViewer sourceViewer, IEditorPart editor, int offset, int length,
-    // SharedASTProvider.WAIT_FLAG waitFlag) {
-    //		super(sourceViewer, offset, length);
-    //		Assert.isLegal(cu != null);
-    //		Assert.isLegal(waitFlag != null);
-    //		fCompilationUnit= cu;
-    //		fEditor= editor;
-    //		fWaitFlag= waitFlag;
-    //	}
-    //
-    //	/*
-    //	 * @since 3.5
-    //	 */
-    //	public AssistContext(ICompilationUnit cu, ISourceViewer sourceViewer, int offset, int length,
-    // SharedASTProvider.WAIT_FLAG waitFlag) {
-    //		this(cu, sourceViewer, null, offset, length, waitFlag);
-    //	}
-    //
-    //	/*
-    //	 * @since 3.5
-    //	 */
-    //	public AssistContext(ICompilationUnit cu, ISourceViewer sourceViewer, IEditorPart editor, int offset, int length) {
-    //		this(cu, sourceViewer, editor, offset, length, SharedASTProvider.WAIT_YES);
-    //	}
-    //
-    //	/*
-    //	 * Constructor for CorrectionContext.
-    //	 * @since 3.4
-    //	 */
-    //	public AssistContext(ICompilationUnit cu, ISourceViewer sourceViewer, int offset, int length) {
-    //		this(cu, sourceViewer, null, offset, length);
-    //	}
-    //
-   /*
-    * Constructor for CorrectionContext.
+
+   /**
+    * Constructor for AssistContext.
     */
-    public AssistContext(TextEditorPartView textView, Document document, int offset, int length) {
-        super(textView, offset, length);
+    public AssistContext(Document document, int offset, int length) {
+        super(offset, length);
         this.document = document;
         fOffset = offset;
         fLength = length;
     }
 
-    //	/**
-    //	 * Returns the compilation unit.
-    //	 * @return an <code>ICompilationUnit</code>
-    //	 */
-    //	public ICompilationUnit getCompilationUnit() {
-    //		return fCompilationUnit;
-    //	}
-
-    //	/**
-    //	 * Returns the editor or <code>null</code> if none.
-    //	 * @return an <code>IEditorPart</code> or <code>null</code> if none
-    //	 * @since 3.5
-    //	 */
-    //	public IEditorPart getEditor() {
-    //		return fEditor;
-    //	}
-
     /**
-     * @param textView
      * @param document
      * @param documentOffset
      * @param length
      * @param cu
      */
-    public AssistContext(TextEditorPartView textView, Document document, int documentOffset, int length,
+    public AssistContext(Document document, int documentOffset, int length,
                          CompilationUnit cu) {
-        this(textView, document, documentOffset, length);
+        this(document, documentOffset, length);
         fASTRoot = cu;
     }
 
@@ -136,6 +75,7 @@ public class AssistContext extends TextInvocationContext implements InvocationCo
         return getOffset();
     }
 
+    /** {@inheritDoc} */
     @Override
     public CompilationUnit getASTRoot() {
         if (fASTRoot == null) {
@@ -150,16 +90,14 @@ public class AssistContext extends TextInvocationContext implements InvocationCo
         return fASTRoot;
     }
 
-    /*
-     * @see org.eclipse.jface.text.quickassist.IQuickAssistInvocationContext#getOffset()
-     */
+
+    /** {@inheritDoc} */
     public int getOffset() {
         return fOffset;
     }
 
-    /*
-     * @see org.eclipse.jface.text.quickassist.IQuickAssistInvocationContext#getLength()
-     */
+
+    /** {@inheritDoc} */
     public int getLength() {
         return fLength;
     }
@@ -172,9 +110,8 @@ public class AssistContext extends TextInvocationContext implements InvocationCo
         fASTRoot = root;
     }
 
-    /*(non-Javadoc)
-     * @see org.eclipse.jdt.ui.text.java.IInvocationContext#getCoveringNode()
-     */
+
+    /** {@inheritDoc} */
     @Override
     public ASTNode getCoveringNode() {
         if (fNodeFinder == null) {
@@ -183,9 +120,8 @@ public class AssistContext extends TextInvocationContext implements InvocationCo
         return fNodeFinder.getCoveringNode();
     }
 
-    /*(non-Javadoc)
-     * @see org.eclipse.jdt.ui.text.java.IInvocationContext#getCoveredNode()
-     */
+
+    /** {@inheritDoc} */
     @Override
     public ASTNode getCoveredNode() {
         if (fNodeFinder == null) {
@@ -194,7 +130,7 @@ public class AssistContext extends TextInvocationContext implements InvocationCo
         return fNodeFinder.getCoveredNode();
     }
 
-    /** @see com.codenvy.ide.java.client.codeassistant.api.InvocationContext#getDocument() */
+    /** {@inheritDoc} */
     @Override
     public Document getDocument() {
         return document;
