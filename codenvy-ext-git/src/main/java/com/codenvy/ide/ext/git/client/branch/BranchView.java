@@ -17,10 +17,11 @@
  */
 package com.codenvy.ide.ext.git.client.branch;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.ext.git.shared.Branch;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The view of {@link BranchPresenter}.

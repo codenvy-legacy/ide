@@ -19,9 +19,24 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.CompilationResult;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.flow.FlowInfo;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.flow.InitializationFlowContext;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.ReferenceContext;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.AnnotationBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.Binding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ClassScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ExtraCompilerModifiers;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.LocalVariableBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.MethodBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.MethodScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ReferenceBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TagBits;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeIds;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.parser.Parser;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.AbortCompilation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.AbortCompilationUnit;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.AbortMethod;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.AbortType;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.ProblemReporter;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.ProblemSeverities;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.util.Util;
 
 public abstract class AbstractMethodDeclaration extends ASTNode implements ProblemSeverities, ReferenceContext {

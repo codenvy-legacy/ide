@@ -12,14 +12,20 @@ package com.codenvy.ide.ext.java.jdt.internal.core.util;
 
 import com.codenvy.ide.ext.java.jdt.core.Signature;
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.ArrayType;
+import com.codenvy.ide.ext.java.jdt.core.dom.ParameterizedType;
+import com.codenvy.ide.ext.java.jdt.core.dom.PrimitiveType;
+import com.codenvy.ide.ext.java.jdt.core.dom.QualifiedType;
+import com.codenvy.ide.ext.java.jdt.core.dom.SimpleType;
+import com.codenvy.ide.ext.java.jdt.core.dom.Type;
+import com.codenvy.ide.ext.java.jdt.core.dom.WildcardType;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.AbstractMethodDeclaration;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Argument;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TypeReference;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.UnionTypeReference;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.parser.ScannerHelper;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.util.SuffixConstants;
-
 import com.codenvy.ide.runtime.Assert;
 
 import java.util.Arrays;

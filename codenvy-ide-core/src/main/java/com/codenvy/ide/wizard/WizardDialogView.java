@@ -17,11 +17,12 @@
  */
 package com.codenvy.ide.wizard;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.mvp.View;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 
 /**

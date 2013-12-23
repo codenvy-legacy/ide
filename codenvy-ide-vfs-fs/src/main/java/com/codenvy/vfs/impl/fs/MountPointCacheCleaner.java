@@ -19,8 +19,8 @@ package com.codenvy.vfs.impl.fs;
 
 import com.codenvy.commons.lang.NamedThreadFactory;
 
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -33,10 +33,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * Helps to reset data cached in {@code MountPoint}.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author andrew00x
  */
 class MountPointCacheCleaner {
-    private static final Log LOG = ExoLogger.getLogger(MountPointCacheCleaner.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MountPointCacheCleaner.class);
 
     private static final String CACHE_RESET_PATH =
             FSMountPoint.SERVICE_DIR + java.io.File.separatorChar + "cache" + java.io.File.separatorChar + "reset";
@@ -80,7 +80,7 @@ class MountPointCacheCleaner {
     }
 
     private static class Entry {
-        final FSMountPoint         mountPoint;
+        final FSMountPoint       mountPoint;
         final java.nio.file.Path resetFilePath;
 
         Entry(FSMountPoint mountPoint, java.nio.file.Path resetFilePath) {

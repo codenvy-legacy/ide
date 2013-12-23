@@ -10,7 +10,38 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.code;
 
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.AST;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.AbstractTypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.AnonymousClassDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.ArrayCreation;
+import com.codenvy.ide.ext.java.jdt.core.dom.ArrayInitializer;
+import com.codenvy.ide.ext.java.jdt.core.dom.ArrayType;
+import com.codenvy.ide.ext.java.jdt.core.dom.Assignment;
+import com.codenvy.ide.ext.java.jdt.core.dom.Block;
+import com.codenvy.ide.ext.java.jdt.core.dom.BodyDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.CatchClause;
+import com.codenvy.ide.ext.java.jdt.core.dom.ChildListPropertyDescriptor;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.dom.ConstructorInvocation;
+import com.codenvy.ide.ext.java.jdt.core.dom.Expression;
+import com.codenvy.ide.ext.java.jdt.core.dom.FieldDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.IBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.IExtendedModifier;
+import com.codenvy.ide.ext.java.jdt.core.dom.IMethodBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.ITypeBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.IVariableBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.Javadoc;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.Modifier;
+import com.codenvy.ide.ext.java.jdt.core.dom.SimpleName;
+import com.codenvy.ide.ext.java.jdt.core.dom.Statement;
+import com.codenvy.ide.ext.java.jdt.core.dom.SwitchStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.Type;
+import com.codenvy.ide.ext.java.jdt.core.dom.TypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationFragment;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationStatement;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ListRewrite;
 import com.codenvy.ide.ext.java.jdt.internal.corext.codemanipulation.StubUtility;
@@ -26,7 +57,6 @@ import com.codenvy.ide.ext.java.jdt.internal.ui.JavaElementLabels;
 import com.codenvy.ide.ext.java.jdt.refactoring.Change;
 import com.codenvy.ide.ext.java.jdt.refactoring.Refactoring;
 import com.codenvy.ide.ext.java.jdt.refactoring.RefactoringStatus;
-
 import com.codenvy.ide.ext.java.worker.WorkerMessageHandler;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.runtime.CoreException;

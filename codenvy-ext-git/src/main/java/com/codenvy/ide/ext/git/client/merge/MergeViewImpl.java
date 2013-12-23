@@ -19,7 +19,6 @@ package com.codenvy.ide.ext.git.client.merge;
 
 import elemental.html.DragEvent;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
@@ -37,6 +36,8 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.ext.git.client.merge.MergePresenter.LOCAL_BRANCHES_TITLE;
 import static com.codenvy.ide.ext.git.client.merge.MergePresenter.REMOTE_BRANCHES_TITLE;

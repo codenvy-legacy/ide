@@ -13,7 +13,15 @@ package com.codenvy.ide.ext.java.jdt.internal.compiler.ast;
 
 import com.codenvy.ide.ext.java.jdt.internal.compiler.flow.FlowContext;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.flow.FlowInfo;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.BlockScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ExtraCompilerModifiers;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.FieldBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.LocalVariableBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.MethodBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.MethodScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.Scope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeIds;
 
 public abstract class Reference extends Expression {
     /** BaseLevelReference constructor comment. */

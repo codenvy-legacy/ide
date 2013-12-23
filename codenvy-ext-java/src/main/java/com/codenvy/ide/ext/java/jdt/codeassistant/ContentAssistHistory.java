@@ -10,10 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.codeassistant;
 
-import com.codenvy.ide.ext.java.worker.Preferences;
 import com.codenvy.ide.ext.java.jdt.core.Flags;
 import com.codenvy.ide.ext.java.jdt.core.IType;
-
+import com.codenvy.ide.ext.java.worker.Preferences;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.runtime.CoreException;
 import com.google.gwt.json.client.JSONArray;
@@ -21,8 +20,17 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 /** An LRU cache for code assist. */
 public final class ContentAssistHistory {

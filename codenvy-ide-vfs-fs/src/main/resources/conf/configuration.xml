@@ -24,7 +24,7 @@
 
     <component>
         <key>com.codenvy.api.vfs.server.LocalPathResolver</key>
-        <type>com.codenvy.vfs.impl.fs.LocalPathResolverImpl</type>
+        <type>com.codenvy.vfs.impl.fs.LocalPathResolver</type>
     </component>
 
     <component>

@@ -12,7 +12,15 @@ package com.codenvy.ide.ext.java.jdt.internal.compiler.lookup;
 
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ClassFileConstants;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ASTNode;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.AbstractMethodDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.CaseStatement;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.CompilationUnitDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ImportReference;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TypeParameter;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TypeReference;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Wildcard;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.CompilerOptions;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.ReferenceContext;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.AbortCompilation;
@@ -22,7 +30,13 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.util.ObjectVector;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.util.SimpleLookupTable;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.util.SimpleSet;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class Scope {
 

@@ -129,13 +129,12 @@
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
-            <version>1.0.0.GA</version>
-            <scope>test</scope>
+            <version>${javax.validation.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
-            <version>1.0.0.GA</version>
+            <version>${javax.validation.version}</version>
             <classifier>sources</classifier>
             <scope>test</scope>
         </dependency>

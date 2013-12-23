@@ -12,7 +12,11 @@ package com.codenvy.ide.ext.java.jdt.internal.compiler.ast;
 
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ASTVisitor;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.BlockScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ClassScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.LookupEnvironment;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.Scope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeBinding;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.AbortCompilation;
 
 public class ArrayQualifiedTypeReference extends QualifiedTypeReference {

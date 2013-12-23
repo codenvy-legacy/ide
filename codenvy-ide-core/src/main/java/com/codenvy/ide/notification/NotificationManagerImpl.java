@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.notification;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.collections.Array;
@@ -27,10 +26,14 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.validation.constraints.NotNull;
+
 import static com.codenvy.ide.api.notification.Notification.State.READ;
 import static com.codenvy.ide.notification.NotificationContainer.HEIGHT;
 import static com.codenvy.ide.notification.NotificationContainer.WIDTH;
-import static com.codenvy.ide.notification.NotificationManagerView.Status.*;
+import static com.codenvy.ide.notification.NotificationManagerView.Status.EMPTY;
+import static com.codenvy.ide.notification.NotificationManagerView.Status.HAS_UNREAD;
+import static com.codenvy.ide.notification.NotificationManagerView.Status.IN_PROGRESS;
 
 /**
  * The implementation of {@link NotificationManager}.

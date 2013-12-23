@@ -13,10 +13,15 @@ package com.codenvy.ide.ext.java.jdt.internal.core.dom.rewrite;
 import com.codenvy.ide.ext.java.jdt.core.JavaCore;
 import com.codenvy.ide.ext.java.jdt.core.Signature;
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.AbstractTypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.Comment;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.dom.ImportDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.LineComment;
+import com.codenvy.ide.ext.java.jdt.core.dom.PackageDeclaration;
 import com.codenvy.ide.ext.java.jdt.core.formatter.DefaultCodeFormatterConstants;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.ICompilationUnit;
-
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
@@ -25,7 +30,13 @@ import com.codenvy.ide.text.edits.DeleteEdit;
 import com.codenvy.ide.text.edits.InsertEdit;
 import com.codenvy.ide.text.edits.MultiTextEdit;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public final class ImportRewriteAnalyzer {
 

@@ -18,12 +18,13 @@
 package com.codenvy.ide.xml.editor;
 
 import com.codenvy.ide.MimeType;
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.parser.BasicTokenFactory;
 import com.codenvy.ide.texteditor.api.parser.CmParser;
 import com.codenvy.ide.texteditor.api.parser.Parser;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The XML file type editor configuration.

@@ -17,10 +17,11 @@
  */
 package com.codenvy.ide.ext.ssh.client.manage;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The view of {@link SshKeyManagerPresenter}.

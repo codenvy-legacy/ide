@@ -10,10 +10,39 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.internal.corext.codemanipulation;
 
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.AST;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.ArrayType;
+import com.codenvy.ide.ext.java.jdt.core.dom.ClassInstanceCreation;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.dom.Expression;
+import com.codenvy.ide.ext.java.jdt.core.dom.FieldAccess;
+import com.codenvy.ide.ext.java.jdt.core.dom.IBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.IMethodBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.ITypeBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.IVariableBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.ImportDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.MarkerAnnotation;
+import com.codenvy.ide.ext.java.jdt.core.dom.MemberRef;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodInvocation;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodRef;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodRefParameter;
+import com.codenvy.ide.ext.java.jdt.core.dom.Modifier;
+import com.codenvy.ide.ext.java.jdt.core.dom.Name;
+import com.codenvy.ide.ext.java.jdt.core.dom.NormalAnnotation;
+import com.codenvy.ide.ext.java.jdt.core.dom.PackageDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.QualifiedName;
+import com.codenvy.ide.ext.java.jdt.core.dom.QualifiedType;
+import com.codenvy.ide.ext.java.jdt.core.dom.SimpleName;
+import com.codenvy.ide.ext.java.jdt.core.dom.SimpleType;
+import com.codenvy.ide.ext.java.jdt.core.dom.SingleMemberAnnotation;
+import com.codenvy.ide.ext.java.jdt.core.dom.SuperConstructorInvocation;
+import com.codenvy.ide.ext.java.jdt.core.dom.TagElement;
+import com.codenvy.ide.ext.java.jdt.core.dom.ThisExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.TypeDeclaration;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.GenericVisitor;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.ScopeAnalyzer;
-
 import com.codenvy.ide.text.Region;
 
 import java.util.Collection;

@@ -22,9 +22,9 @@ import com.codenvy.api.core.util.ProcessUtil;
 import com.codenvy.api.core.util.SystemInfo;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.commons.lang.NamedThreadFactory;
+import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.ide.commons.GwtXmlUtils;
 import com.codenvy.ide.commons.MavenUtils;
-import com.codenvy.ide.commons.ZipUtils;
 
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
@@ -41,14 +41,25 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * GWT code server. Concrete implementations provide an implementation of methods

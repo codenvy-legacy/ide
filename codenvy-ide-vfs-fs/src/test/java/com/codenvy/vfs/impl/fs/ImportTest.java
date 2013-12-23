@@ -284,7 +284,6 @@ public class ImportTest extends LocalFileSystemTest {
         ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, b, null, null);
         // Exception must be thrown.
         assertEquals(500, response.getStatus());
-        log.info(response.getEntity());
     }
 
     public void testIndexWhenImport() throws Exception {

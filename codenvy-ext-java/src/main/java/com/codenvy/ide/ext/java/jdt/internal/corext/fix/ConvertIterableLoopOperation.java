@@ -10,7 +10,30 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.internal.corext.fix;
 
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.AST;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTVisitor;
+import com.codenvy.ide.ext.java.jdt.core.dom.Assignment;
+import com.codenvy.ide.ext.java.jdt.core.dom.Block;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.dom.EnhancedForStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.Expression;
+import com.codenvy.ide.ext.java.jdt.core.dom.FieldAccess;
+import com.codenvy.ide.ext.java.jdt.core.dom.ForStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.IBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.IMethodBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.ITypeBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.IVariableBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodInvocation;
+import com.codenvy.ide.ext.java.jdt.core.dom.Modifier;
+import com.codenvy.ide.ext.java.jdt.core.dom.Name;
+import com.codenvy.ide.ext.java.jdt.core.dom.NullLiteral;
+import com.codenvy.ide.ext.java.jdt.core.dom.SimpleName;
+import com.codenvy.ide.ext.java.jdt.core.dom.SingleVariableDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.Statement;
+import com.codenvy.ide.ext.java.jdt.core.dom.ThisExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationFragment;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ImportRewrite;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ListRewrite;
@@ -20,7 +43,6 @@ import com.codenvy.ide.ext.java.jdt.internal.corext.dom.ModifierRewrite;
 import com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.structure.CompilationUnitRewrite;
 import com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.structure.ImportRemover;
 import com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.util.TightSourceRangeComputer;
-
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.runtime.IStatus;
 import com.codenvy.ide.runtime.Status;

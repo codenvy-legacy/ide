@@ -12,7 +12,6 @@ package com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.code;
 
 import com.codenvy.ide.ext.java.jdt.refactoring.ChangeDescriptor;
 import com.codenvy.ide.ext.java.jdt.refactoring.TextFileChange;
-
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.text.Document;
 

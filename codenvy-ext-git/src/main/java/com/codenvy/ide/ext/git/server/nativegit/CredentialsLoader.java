@@ -17,45 +17,53 @@
  */
 package com.codenvy.ide.ext.git.server.nativegit;
 
+import com.codenvy.api.core.user.UserState;
 import com.codenvy.ide.ext.git.server.GitException;
 
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.services.security.ConversationState;
-import org.picocontainer.Startable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Load credentials
  *
- * @author <a href="mailto:evoevodin@codenvy.com">Eugene Voevodin</a>
+ * @author Eugene Voevodin
  */
-public class CredentialsLoader implements Startable {
+public class CredentialsLoader {
 
     private static final Logger LOG                          = LoggerFactory.getLogger(CredentialsLoader.class);
     private static final String GIT_ASK_PASS_SCRIPT_TEMPLATE = "META-INF/NativeGitAskPassTemplate";
     private static final String GIT_ASK_PASS_SCRIPT          = "ask_pass";
-    private static String                    gitAskPassTemplate;
-    private static List<CredentialsProvider> instances;
+
+    private String                   gitAskPassTemplate;
+    private Set<CredentialsProvider> credentialsProviders;
+
+    @Inject
+    public CredentialsLoader(Set<CredentialsProvider> credentialsProviders) {
+        this.credentialsProviders = credentialsProviders;
+    }
 
     /**
      * Searches for available CredentialsProviders in container and stores it if any exists
      *
-     * @param username user name that will be stored
-     * @param password password that will be stored
+     * @param username
+     *         user name that will be stored
+     * @param password
+     *         password that will be stored
      * @return stored script
      */
     public File createGitAskPassScript(CredentialItem.Username username, CredentialItem.Password password)
             throws GitException {
         File askScriptDirectory = new File(System.getProperty("java.io.tmpdir")
-                                           + "/" + ConversationState.getCurrent().getIdentity().getUserId());
+                                           + "/" + UserState.get().getUser().getName());
         if (!askScriptDirectory.exists()) {
             askScriptDirectory.mkdirs();
         }
@@ -81,44 +89,42 @@ public class CredentialsLoader implements Startable {
      * Searches for CredentialsProvider instances and if needed instance exists, it stores
      * given credentials
      *
-     * @param url given URL
+     * @param url
+     *         given URL
      * @return stored script
-     * @throws GitException when it is not possible to store credentials
+     * @throws GitException
+     *         when it is not possible to store credentials
      */
     public File findCredentialsAndCreateGitAskPassScript(String url) throws GitException {
         CredentialItem.Username username = new CredentialItem.Username();
         CredentialItem.Password password = new CredentialItem.Password();
-        boolean flag = false;
-        for (int i = 0, size = instances.size(); i < size && !flag; i++) {
-            flag = instances.get(i).get(url, username, password);
+        boolean b = false;
+        for (CredentialsProvider cp : credentialsProviders) {
+           if (b = cp.get(url, username, password)) {
+               break;
+           }
         }
         //if not available providers exist
-        if (!flag) {
+        if (!b) {
             username.setValue("");
             password.setValue("");
         }
         return createGitAskPassScript(username, password);
     }
 
-    @Override
-    public void start() {
-        instances = ExoContainerContext.getCurrentContainer().getComponentInstancesOfType(CredentialsProvider.class);
+    @PostConstruct
+    public void init() {
         try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(Thread.currentThread().getContextClassLoader()
-                                            .getResourceAsStream(GIT_ASK_PASS_SCRIPT_TEMPLATE)))) {
-            gitAskPassTemplate = "";
+                new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream(GIT_ASK_PASS_SCRIPT_TEMPLATE)))) {
+            StringBuilder sb = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                gitAskPassTemplate = gitAskPassTemplate.concat(line);
+                sb.append(line);
             }
+            gitAskPassTemplate = sb.toString();
         } catch (Exception e) {
             LOG.error("Can't load template " + GIT_ASK_PASS_SCRIPT_TEMPLATE);
         }
-    }
-
-    @Override
-    public void stop() {
-        //nothing to do
     }
 }
 

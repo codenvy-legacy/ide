@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.ssh.server;
 
+import com.codenvy.api.core.user.UserState;
 import com.codenvy.commons.lang.cache.Cache;
 import com.codenvy.commons.lang.cache.SLRUCache;
 import com.codenvy.organization.client.UserManager;
@@ -25,8 +26,6 @@ import com.codenvy.organization.model.User;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.KeyPair;
-
-import org.exoplatform.services.security.ConversationState;
 
 import java.io.ByteArrayOutputStream;
 import java.util.HashSet;
@@ -37,10 +36,7 @@ import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-/**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
- */
+/** @author andrew00x */
 public class UserProfileSshKeyStore implements SshKeyStore {
     private static final int    PRIVATE                      = 0;
     private static final int    PUBLIC                       = 1;
@@ -106,8 +102,9 @@ public class UserProfileSshKeyStore implements SshKeyStore {
                 if (keyAsString == null) {
                     // Try to find key for parent domain. This is required for openshift integration but may be useful for others also.
                     final String attributePrefix = i == PRIVATE ? PRIVATE_KEY_ATTRIBUTE_PREFIX : PUBLIC_KEY_ATTRIBUTE_PREFIX;
-                    for (Iterator<Map.Entry<String, String>> iterator = myUser.getProfile().getAttributes().entrySet().iterator(); iterator.hasNext()
-                                                                                                                                   && keyAsString == null;) {
+                    for (Iterator<Map.Entry<String, String>> iterator = myUser.getProfile().getAttributes().entrySet().iterator();
+                         iterator.hasNext()
+                         && keyAsString == null; ) {
                         Map.Entry<String, String> entry = iterator.next();
                         String attributeName = entry.getKey();
                         if (attributeName.startsWith(attributePrefix)) {
@@ -239,7 +236,7 @@ public class UserProfileSshKeyStore implements SshKeyStore {
     }
 
     private String getUserId() {
-        return ConversationState.getCurrent().getIdentity().getUserId();
+        return UserState.get().getUser().getName();
     }
 
     private String cacheKey(String user, String host, int i) {
@@ -249,9 +246,11 @@ public class UserProfileSshKeyStore implements SshKeyStore {
 
     /**
      * Name of attribute of user profile to store SSH key.
-     * 
-     * @param host host name
-     * @param i <code>0</code> if key is private and <code>1</code> if key is public
+     *
+     * @param host
+     *         host name
+     * @param i
+     *         <code>0</code> if key is private and <code>1</code> if key is public
      * @return user's profile attribute name
      */
     private String sshKeyAttributeName(String host, int i) {

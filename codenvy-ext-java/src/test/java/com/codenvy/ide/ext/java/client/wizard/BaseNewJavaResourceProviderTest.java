@@ -33,7 +33,9 @@ import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * The base test for testing new java resource providers.

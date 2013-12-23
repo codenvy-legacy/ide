@@ -12,7 +12,12 @@ package com.codenvy.ide.ext.java.jdt.internal.compiler.ast;
 
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ASTVisitor;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.Constant;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ArrayBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.BlockScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ClassScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ProblemReasons;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.Scope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeBinding;
 
 public class JavadocImplicitTypeReference extends TypeReference {
 

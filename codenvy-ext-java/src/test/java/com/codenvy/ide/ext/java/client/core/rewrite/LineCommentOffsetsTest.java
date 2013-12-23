@@ -10,10 +10,26 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.client.core.rewrite;
 
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.AST;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.Block;
+import com.codenvy.ide.ext.java.jdt.core.dom.CatchClause;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.dom.Expression;
+import com.codenvy.ide.ext.java.jdt.core.dom.ExpressionStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.IfStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.InfixExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodInvocation;
+import com.codenvy.ide.ext.java.jdt.core.dom.ParenthesizedExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.SimpleType;
+import com.codenvy.ide.ext.java.jdt.core.dom.SingleVariableDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.Statement;
+import com.codenvy.ide.ext.java.jdt.core.dom.TryStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.TypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.TypeParameter;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ListRewrite;
-
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.ICompilationUnit;
 import com.codenvy.ide.ext.java.jdt.internal.core.dom.rewrite.LineCommentEndOffsets;
 
@@ -22,7 +38,9 @@ import org.junit.Test;
 import java.util.HashSet;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  *

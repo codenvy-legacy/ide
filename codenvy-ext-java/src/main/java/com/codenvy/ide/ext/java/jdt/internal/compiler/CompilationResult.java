@@ -18,7 +18,13 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.ReferenceContext;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.parser.RecoveryScannerData;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.util.Util;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A compilation result consists of all information returned by the compiler for

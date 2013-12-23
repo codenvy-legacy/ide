@@ -32,22 +32,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.exoplatform.core</groupId>
-            <artifactId>exo.core.component.security.core</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>xstream</artifactId>
-                    <groupId>xstream</groupId>
-                </exclusion>
-            </exclusions>
-            <version>${org.exoplatform.core.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-security</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-security</artifactId>
             <version>${project.version}</version>

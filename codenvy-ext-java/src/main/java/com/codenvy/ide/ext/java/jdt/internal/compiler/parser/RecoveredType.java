@@ -11,7 +11,18 @@
 package com.codenvy.ide.ext.java.jdt.internal.compiler.parser;
 
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ClassFileConstants;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ASTNode;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.AbstractMethodDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.AbstractVariableDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Annotation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Block;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.FieldDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Initializer;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.QualifiedAllocationExpression;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Statement;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TypeParameter;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TypeReference;
 
 import java.util.HashSet;
 import java.util.Set;

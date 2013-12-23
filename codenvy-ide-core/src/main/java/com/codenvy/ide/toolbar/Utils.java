@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.toolbar;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.ui.action.ActionGroup;
@@ -26,6 +25,8 @@ import com.codenvy.ide.api.ui.action.Presentation;
 import com.codenvy.ide.api.ui.action.Separator;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.util.loging.Log;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>

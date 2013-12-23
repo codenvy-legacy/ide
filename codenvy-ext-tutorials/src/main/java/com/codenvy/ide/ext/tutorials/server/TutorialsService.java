@@ -24,9 +24,10 @@ import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.shared.PropertyFilter;
 import com.codenvy.api.vfs.shared.dto.Property;
-import com.codenvy.ide.annotations.NotNull;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
@@ -34,8 +35,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-
-import static com.codenvy.ide.ext.tutorials.server.TutorialsApplication.BASE_URL;
 
 /**
  * RESTful service for creating 'Tutorial' projects.
@@ -47,6 +46,10 @@ import static com.codenvy.ide.ext.tutorials.server.TutorialsApplication.BASE_URL
 public class TutorialsService {
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
+
+    @Inject
+    @Named("tutorials-url") // TODO(GUICE): better name ??
+    private String baseUrl;
 
     /**
      * Create 'Notification tutorial' project.
@@ -67,7 +70,7 @@ public class TutorialsService {
     public void createNotificationTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
                                                   List<Property> properties)
             throws VirtualFileSystemException, IOException {
-        createProject(vfsId, BASE_URL + "/notification-api-tutorial.zip", name, properties);
+        createProject(vfsId, baseUrl + "/notification-api-tutorial.zip", name, properties);
     }
 
     /**
@@ -89,7 +92,7 @@ public class TutorialsService {
     public void createActionTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
                                             List<Property> properties)
             throws VirtualFileSystemException, IOException {
-        createProject(vfsId, BASE_URL + "/action-api-tutorial.zip", name, properties);
+        createProject(vfsId, baseUrl + "/action-api-tutorial.zip", name, properties);
     }
 
     /**
@@ -111,7 +114,7 @@ public class TutorialsService {
     public void createWizardTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
                                             List<Property> properties)
             throws VirtualFileSystemException, IOException {
-        createProject(vfsId, BASE_URL + "/wizard-api-tutorial.zip", name, properties);
+        createProject(vfsId, baseUrl + "/wizard-api-tutorial.zip", name, properties);
     }
 
     /**
@@ -134,7 +137,7 @@ public class TutorialsService {
                                                       @QueryParam("name") String name,
                                                       List<Property> properties)
             throws VirtualFileSystemException, IOException {
-        createProject(vfsId, BASE_URL + "/new-project-wizard-tutorial.zip", name, properties);
+        createProject(vfsId, baseUrl + "/new-project-wizard-tutorial.zip", name, properties);
     }
 
     /**
@@ -157,7 +160,7 @@ public class TutorialsService {
                                                        @QueryParam("name") String name,
                                                        List<Property> properties)
             throws VirtualFileSystemException, IOException {
-        createProject(vfsId, BASE_URL + "/new-resource-wizard-tutorial.zip", name, properties);
+        createProject(vfsId, baseUrl + "/new-resource-wizard-tutorial.zip", name, properties);
     }
 
     /**
@@ -179,7 +182,7 @@ public class TutorialsService {
     public void createPartsTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
                                            List<Property> properties)
             throws VirtualFileSystemException, IOException {
-        createProject(vfsId, BASE_URL + "/parts-api-tutorial.zip", name, properties);
+        createProject(vfsId, baseUrl + "/parts-api-tutorial.zip", name, properties);
     }
 
     /**
@@ -201,7 +204,7 @@ public class TutorialsService {
     public void createEditorTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
                                             List<Property> properties)
             throws VirtualFileSystemException, IOException {
-        createProject(vfsId, BASE_URL + "/editor-api-tutorial.zip", name, properties);
+        createProject(vfsId, baseUrl + "/editor-api-tutorial.zip", name, properties);
     }
         /**
      * Create 'Editor tutorial' project.
@@ -222,7 +225,7 @@ public class TutorialsService {
     public void createWysiwygEditorTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
                                             List<Property> properties)
             throws VirtualFileSystemException, IOException {
-        createProject(vfsId, BASE_URL + "/wysiwyg-editor-tutorial.zip", name, properties);
+        createProject(vfsId, baseUrl + "/wysiwyg-editor-tutorial.zip", name, properties);
     }
 
     /**
@@ -243,7 +246,7 @@ public class TutorialsService {
     @POST
     public void createGinTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name, List<Property> properties)
             throws VirtualFileSystemException, IOException {
-        createProject(vfsId, BASE_URL + "/gin-tutorial.zip", name, properties);
+        createProject(vfsId, baseUrl + "/gin-tutorial.zip", name, properties);
     }
 
     private void createProject(@NotNull String vfsId, @NotNull String tutorialPath, @NotNull String name,

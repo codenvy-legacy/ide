@@ -17,9 +17,10 @@
  */
 package com.codenvy.ide.ext.github.client.load;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.collections.Array;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The view of {@link ImportPresenter}.

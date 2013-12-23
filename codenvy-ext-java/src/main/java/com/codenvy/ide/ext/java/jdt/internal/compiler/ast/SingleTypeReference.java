@@ -12,7 +12,11 @@ package com.codenvy.ide.ext.java.jdt.internal.compiler.ast;
 
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ASTVisitor;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.CompilerOptions;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.BlockScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ClassScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ReferenceBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.Scope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeBinding;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.ProblemSeverities;
 
 public class SingleTypeReference extends TypeReference {

@@ -17,14 +17,12 @@
  */
 package com.codenvy.ide.ext.git.server.nativegit;
 
-import com.codenvy.ide.commons.ContainerUtils;
+import com.codenvy.api.core.user.UserState;
 import com.codenvy.ide.ext.git.server.GitException;
 import com.codenvy.ide.ext.ssh.server.SshKey;
 import com.codenvy.ide.ext.ssh.server.SshKeyStore;
 import com.codenvy.ide.ext.ssh.server.SshKeyStoreException;
 
-import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.services.security.ConversationState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,23 +43,18 @@ public class SshKeysManager {
                                                                               ")(:|/)[^\\\\@:]+");
     private static final String  DEFAULT_KEY_DIRECTORY_PATH = System.getProperty("java.io.tmpdir");
     private static final String  DEFAULT_KEY_NAME           = "identity";
-    private static String      keyDirectoryPath;
+
+    private static String      keyDirectoryPath; // TODO(GUICE): initialize
     private final  SshKeyStore keyProvider;
-    private        String      host;
 
     public SshKeysManager(SshKeyStore keyProvider) {
         this.keyProvider = keyProvider;
     }
 
-    public SshKeysManager(InitParams initParams, SshKeyStore keyProvider) {
-        this(keyProvider);
-        this.keyDirectoryPath = ContainerUtils.readValueParam(initParams, "keyDirectoryPath");
-    }
-
     public static String getKeyDirectoryPath() throws GitException {
         return (keyDirectoryPath == null ? DEFAULT_KEY_DIRECTORY_PATH : keyDirectoryPath)
                + '/'
-               + ConversationState.getCurrent().getIdentity().getUserId();
+               + UserState.get().getUser().getName();
     }
 
     /**
@@ -73,6 +66,7 @@ public class SshKeysManager {
      * @throws GitException
      */
     public String storeKeyIfNeed(String uri) throws GitException {
+        String host;
         if ((host = getHost(uri)) == null)
             return null;
         //create directories if need
@@ -130,7 +124,7 @@ public class SshKeysManager {
                  */
                 int endPoint = url.lastIndexOf(":") != start ?
                                url.lastIndexOf(":") : url.indexOf("/", start + 3);
-                int startPoint = url.indexOf("@") == -1 ?
+                int startPoint = !url.contains("@") ?
                                  start + 3 : url.indexOf("@") + 1;
                 return url.substring(startPoint, endPoint);
             } else {

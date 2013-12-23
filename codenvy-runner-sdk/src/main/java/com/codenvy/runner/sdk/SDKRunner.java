@@ -22,13 +22,19 @@ import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.api.core.util.LineConsumer;
 import com.codenvy.api.core.util.ProcessUtil;
 import com.codenvy.api.runner.RunnerException;
-import com.codenvy.api.runner.internal.*;
+import com.codenvy.api.runner.internal.ApplicationProcess;
+import com.codenvy.api.runner.internal.DeploymentSources;
+import com.codenvy.api.runner.internal.Disposer;
+import com.codenvy.api.runner.internal.ResourceAllocators;
+import com.codenvy.api.runner.internal.Runner;
+import com.codenvy.api.runner.internal.RunnerConfiguration;
+import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
 import com.codenvy.api.runner.internal.dto.RunRequest;
+import com.codenvy.commons.lang.IoUtil;
+import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.dto.server.DtoFactory;
-import com.codenvy.ide.commons.FileUtils;
 import com.codenvy.ide.commons.GwtXmlUtils;
 import com.codenvy.ide.commons.MavenUtils;
-import com.codenvy.ide.commons.ZipUtils;
 import com.codenvy.inject.ConfigurationParameter;
 
 import org.slf4j.Logger;
@@ -179,11 +185,11 @@ public class SDKRunner extends Runner {
         registerDisposer(process, new Disposer() {
             @Override
             public void dispose() {
-                if (!FileUtils.deleteRecursive(appDir)) {
+                if (!IoUtil.deleteRecursive(appDir)) {
                     LOG.error("Unable to remove app: {}", appDir);
                 }
 
-                if (!FileUtils.deleteRecursive(codeServerWorkDirPath.toFile(), false)) {
+                if (!IoUtil.deleteRecursive(codeServerWorkDirPath.toFile(), false)) {
                     LOG.error("Unable to remove code server working directory: {}", codeServerWorkDirPath);
                 }
             }

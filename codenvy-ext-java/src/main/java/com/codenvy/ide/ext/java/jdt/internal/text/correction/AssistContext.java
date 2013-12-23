@@ -15,7 +15,6 @@ import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
 import com.codenvy.ide.ext.java.jdt.core.dom.NodeFinder;
 import com.codenvy.ide.ext.java.jdt.internal.corext.codemanipulation.ASTResolving;
 import com.codenvy.ide.ext.java.jdt.quickassist.api.InvocationContext;
-
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.codeassistant.TextInvocationContext;

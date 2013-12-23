@@ -20,18 +20,18 @@ package com.codenvy.ide.ext.ssh.dto;
 import com.codenvy.dto.shared.DTO;
 
 
-/** @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a> */
+/** @author andrew00x */
 @DTO
 public interface PublicKey {
     String getHost();
-    
+
     void setHost(String host);
-    
+
     PublicKey withHost(String host);
-    
+
     String getKey();
-    
+
     void setKey(String key);
-    
+
     PublicKey withKey(String key);
 }

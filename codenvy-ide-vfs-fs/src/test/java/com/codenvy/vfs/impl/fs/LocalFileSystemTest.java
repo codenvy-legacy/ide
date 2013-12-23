@@ -19,6 +19,9 @@ package com.codenvy.vfs.impl.fs;
 
 import junit.framework.TestCase;
 
+import com.codenvy.api.core.user.User;
+import com.codenvy.api.core.user.UserImpl;
+import com.codenvy.api.core.user.UserState;
 import com.codenvy.api.vfs.server.URLHandlerFactorySetup;
 import com.codenvy.api.vfs.server.VirtualFileSystemApplication;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
@@ -49,10 +52,8 @@ import org.everrest.core.impl.ResourceBinderImpl;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.everrest.core.tools.DependencySupplierImpl;
 import org.everrest.core.tools.ResourceLauncher;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.services.security.ConversationState;
-import org.exoplatform.services.security.Identity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
@@ -111,7 +112,7 @@ public abstract class LocalFileSystemTest extends TestCase {
     protected final String DEFAULT_CONTENT       = "__TEST__";
     protected final byte[] DEFAULT_CONTENT_BYTES = DEFAULT_CONTENT.getBytes();
 
-    protected Log log = ExoLogger.getExoLogger(getClass());
+    protected Logger log = LoggerFactory.getLogger(getClass());
 
     protected String                  testRootPath;
     protected ResourceLauncher        launcher;
@@ -156,11 +157,8 @@ public abstract class LocalFileSystemTest extends TestCase {
         deployer.publish(new VirtualFileSystemApplication());
 
         // RUNTIME VARIABLES
-        Identity identity = new Identity("admin");
-        identity.setRoles(Arrays.asList("developer"));
-        ConversationState user = new ConversationState(identity);
-        ConversationState.setCurrent(user);
-
+        User user = new UserImpl("admin", Arrays.asList("developer"));
+        UserState.set(new UserState(user));
         EnvironmentContext env = EnvironmentContext.getCurrent();
         env.setVariable(EnvironmentContext.VFS_ROOT_DIR, root);
         env.setVariable(EnvironmentContext.WORKSPACE_ID, MY_WORKSPACE_ID);

@@ -17,18 +17,57 @@
 package com.codenvy.ide.ext.java.jdt.internal.corext.dom;
 
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTVisitor;
+import com.codenvy.ide.ext.java.jdt.core.dom.AbstractTypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.AnonymousClassDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.ArrayType;
+import com.codenvy.ide.ext.java.jdt.core.dom.Assignment;
+import com.codenvy.ide.ext.java.jdt.core.dom.BodyDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.ChildListPropertyDescriptor;
+import com.codenvy.ide.ext.java.jdt.core.dom.ClassInstanceCreation;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.dom.DoStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.EnhancedForStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.Expression;
+import com.codenvy.ide.ext.java.jdt.core.dom.FieldAccess;
+import com.codenvy.ide.ext.java.jdt.core.dom.FieldDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.ForStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.IBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.IExtendedModifier;
+import com.codenvy.ide.ext.java.jdt.core.dom.IMethodBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.ITypeBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.IVariableBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.IfStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.InfixExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.Message;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodInvocation;
+import com.codenvy.ide.ext.java.jdt.core.dom.Modifier;
+import com.codenvy.ide.ext.java.jdt.core.dom.Name;
+import com.codenvy.ide.ext.java.jdt.core.dom.ParameterizedType;
+import com.codenvy.ide.ext.java.jdt.core.dom.ParenthesizedExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.PrimitiveType;
+import com.codenvy.ide.ext.java.jdt.core.dom.QualifiedName;
+import com.codenvy.ide.ext.java.jdt.core.dom.QualifiedType;
+import com.codenvy.ide.ext.java.jdt.core.dom.SimpleName;
+import com.codenvy.ide.ext.java.jdt.core.dom.SimpleType;
+import com.codenvy.ide.ext.java.jdt.core.dom.SingleVariableDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.StructuralPropertyDescriptor;
+import com.codenvy.ide.ext.java.jdt.core.dom.Type;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationFragment;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.WhileStatement;
 import com.codenvy.ide.ext.java.jdt.internal.corext.codemanipulation.ASTResolving;
 import com.codenvy.ide.ext.java.jdt.internal.corext.util.CodeFormatterUtil;
 import com.codenvy.ide.ext.java.jdt.internal.ui.MembersOrderPreferenceCache;
-
 import com.codenvy.ide.ext.java.worker.WorkerDocument;
+import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.edits.TextEdit;
-
-import com.codenvy.ide.runtime.Assert;
-
 
 import java.util.ArrayList;
 import java.util.List;

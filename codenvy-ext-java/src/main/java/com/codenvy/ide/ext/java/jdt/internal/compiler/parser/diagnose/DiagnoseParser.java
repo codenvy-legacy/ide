@@ -12,7 +12,11 @@ package com.codenvy.ide.ext.java.jdt.internal.compiler.parser.diagnose;
 
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.CompilerOptions;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.parser.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.parser.Parser;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.parser.ParserBasicInformation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.parser.RecoveryScanner;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.parser.ScannerHelper;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.parser.TerminalTokens;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.ProblemReporter;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.util.Util;
 

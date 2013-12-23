@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.debug.expression;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
 import com.codenvy.ide.ui.Button;
@@ -32,6 +31,8 @@ import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The implementation of {@link EvaluateExpressionView}.

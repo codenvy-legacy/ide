@@ -10,8 +10,19 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.code;
 
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.ArrayAccess;
+import com.codenvy.ide.ext.java.jdt.core.dom.Assignment;
+import com.codenvy.ide.ext.java.jdt.core.dom.CastExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.ClassInstanceCreation;
+import com.codenvy.ide.ext.java.jdt.core.dom.ConditionalExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.Expression;
+import com.codenvy.ide.ext.java.jdt.core.dom.FieldAccess;
+import com.codenvy.ide.ext.java.jdt.core.dom.InfixExpression;
 import com.codenvy.ide.ext.java.jdt.core.dom.InfixExpression.Operator;
+import com.codenvy.ide.ext.java.jdt.core.dom.InstanceofExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodInvocation;
+import com.codenvy.ide.ext.java.jdt.core.dom.PostfixExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.PrefixExpression;
 
 public class OperatorPrecedence {
 

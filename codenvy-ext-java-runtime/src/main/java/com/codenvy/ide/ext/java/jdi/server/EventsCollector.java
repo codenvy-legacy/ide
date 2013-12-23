@@ -20,15 +20,14 @@ package com.codenvy.ide.ext.java.jdi.server;
 import com.sun.jdi.VMDisconnectedException;
 import com.sun.jdi.event.EventQueue;
 
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * @author andrew00x
  */
 final class EventsCollector implements Runnable {
-    private static final Log LOG = ExoLogger.getLogger(EventsCollector.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EventsCollector.class);
 
     private final EventsHandler handler;
     private final EventQueue    queue;

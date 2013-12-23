@@ -14,7 +14,6 @@ import com.codenvy.ide.ext.java.jdt.refactoring.CategorizedTextEditGroup;
 import com.codenvy.ide.ext.java.jdt.refactoring.GroupCategorySet;
 import com.codenvy.ide.ext.java.jdt.refactoring.TextChange;
 import com.codenvy.ide.ext.java.jdt.refactoring.TextEditChangeGroup;
-
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.edits.MalformedTreeException;
 import com.codenvy.ide.text.edits.MultiTextEdit;

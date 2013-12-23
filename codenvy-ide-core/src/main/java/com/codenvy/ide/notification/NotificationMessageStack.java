@@ -18,7 +18,6 @@
 package com.codenvy.ide.notification;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -26,6 +25,7 @@ import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 

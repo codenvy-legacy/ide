@@ -17,9 +17,10 @@
  */
 package com.codenvy.ide.api.editor;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.resources.model.File;
 import com.google.gwt.resources.client.ImageResource;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * <code>EditorInput</code> is a light weight descriptor of editor input, like a file name but more abstract. It is not a model. It is a

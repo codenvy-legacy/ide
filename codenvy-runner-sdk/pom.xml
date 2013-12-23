@@ -33,6 +33,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.codenvy.commons</groupId>
+            <artifactId>codenvy-commons-lang</artifactId>
+            <version>${com.codenvy.commons.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-runner</artifactId>
             <version>${com.codenvy.platform-api.version}</version>

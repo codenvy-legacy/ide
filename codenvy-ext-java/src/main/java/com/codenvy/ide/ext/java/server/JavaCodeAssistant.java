@@ -45,7 +45,6 @@ import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
 
-
 import java.util.ArrayList;
 import java.util.List;
 

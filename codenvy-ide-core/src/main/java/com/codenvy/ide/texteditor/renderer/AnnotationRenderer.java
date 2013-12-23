@@ -19,9 +19,9 @@ package com.codenvy.ide.texteditor.renderer;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.dto.client.ClientDocOpFactory;
-import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.Position;

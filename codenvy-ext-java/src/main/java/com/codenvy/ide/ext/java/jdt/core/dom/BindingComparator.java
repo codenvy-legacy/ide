@@ -12,8 +12,16 @@ package com.codenvy.ide.ext.java.jdt.core.dom;
 
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ClassFileConstants;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.Binding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.CaptureBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ExtraCompilerModifiers;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.FieldBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ImportBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ParameterizedTypeBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ReferenceBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeVariableBinding;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.VariableBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.WildcardBinding;
 
 import java.util.HashSet;
 

@@ -34,8 +34,11 @@ import com.codenvy.ide.ext.java.shared.TypeInfo;
 
 import org.everrest.core.impl.provider.json.JsonParser;
 
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Base class for JVM based programming languages(Java, Groovy) codeassitant.

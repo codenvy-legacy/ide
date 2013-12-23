@@ -2,10 +2,6 @@ package com.codenvy.api.bootstrap.servlet;
 
 import com.codenvy.commons.env.EnvironmentContext;
 
-import org.exoplatform.services.security.ConversationState;
-import org.exoplatform.services.security.Identity;
-import org.exoplatform.services.security.MembershipEntry;
-
 import javax.inject.Singleton;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -15,14 +11,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Set up environment variable for API.
  *
- * @author <a href="mailto:aparfonov@codenvy.com">Andrey Parfonov</a>
+ * @author andrew00x
  */
 // TODO: Find common solution to do this. Avoid have few filters to do the same work.
 @Singleton
@@ -43,14 +36,6 @@ public class EnvironmentFilter implements Filter {
         final String vfsRootDir = System.getProperty("com.codenvy.vfs.rootdir", "../temp/fs-root");
         env.setVariable(EnvironmentContext.VFS_ROOT_DIR, new File(vfsRootDir));
         env.setVariable(EnvironmentContext.VFS_INDEX_DIR, new File("../temp/fs-index-root"));
-        Set<MembershipEntry> e = new HashSet<>();
-        ConversationState.setCurrent(new ConversationState(new Identity("user", e, new HashSet<>(Arrays.asList("developer")))));
-        try {
-            chain.doFilter(request, response);
-        } finally {
-            ConversationState.setCurrent(null);
-            EnvironmentContext.reset();
-        }
     }
 
     @Override

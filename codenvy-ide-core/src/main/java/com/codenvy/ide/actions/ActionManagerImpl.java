@@ -18,11 +18,22 @@
 package com.codenvy.ide.actions;
 
 
-import com.codenvy.ide.api.ui.action.*;
+import com.codenvy.ide.api.ui.action.Action;
+import com.codenvy.ide.api.ui.action.ActionGroup;
+import com.codenvy.ide.api.ui.action.ActionManager;
+import com.codenvy.ide.api.ui.action.Anchor;
+import com.codenvy.ide.api.ui.action.Constraints;
+import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.api.ui.action.IdeActions;
 import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>

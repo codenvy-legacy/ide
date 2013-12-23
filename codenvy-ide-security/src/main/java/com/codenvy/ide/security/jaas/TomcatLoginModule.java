@@ -15,14 +15,9 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.security.login;
+package com.codenvy.ide.security.jaas;
 
 import com.codenvy.organization.client.UserManager;
-import com.sun.security.auth.UserPrincipal;
-
-import org.exoplatform.services.security.UsernameCredential;
-import org.exoplatform.services.security.jaas.RolePrincipal;
-import org.exoplatform.services.security.Identity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,37 +30,30 @@ import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 import java.security.Principal;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * @author <a href="mailto:vparfonov@codenvy.com">Vitaly Parfonov</a>
- * @version $Id: TomcatLoginModule.java Mar 22, 2013 vetal $
- */
+/** @author Vitaly Parfonov */
 public class TomcatLoginModule implements LoginModule {
 
     /** The name of the option to use in order to specify the name of the realm */
     private static final String OPTION_REALM_NAME  = "realmName";
     private static final Logger LOG                = LoggerFactory.getLogger(TomcatLoginModule.class);
-    private static final String DEFAULT_REALM_NAME = new String("exo-domain");
+    private static final String DEFAULT_REALM_NAME = "codenvy-domain";
+
     private Subject         subject;
     private CallbackHandler callbackHandler;
     private Map<String, ?>  sharedState;
     private Map<String, ?>  options;
-    private Object          realmName;
-    private Identity        identity;
+    private String          realmName;
+    private String          user;
 
     /** {@inheritDoc} */
     @Override
     public boolean commit() throws LoginException {
         Set<Principal> principals = subject.getPrincipals();
+        principals.add(new UserPrincipal(user));
         principals.add(new RolePrincipal("developer"));
-
-        Set<String> roles = new HashSet<>(1);
-        roles.add("developer");
-        identity.setRoles(roles);
-        principals.add(new UserPrincipal(identity.getUserId()));
         return true;
     }
 
@@ -99,10 +87,10 @@ public class TomcatLoginModule implements LoginModule {
         if (LOG.isDebugEnabled()) {
             LOG.debug("In login of TomcatLoginModule.");
         }
-
         try {
-            if (LOG.isDebugEnabled())
+            if (LOG.isDebugEnabled()) {
                 LOG.debug("Try create identity");
+            }
             Callback[] callbacks = new Callback[2];
             callbacks[0] = new NameCallback("Username");
             callbacks[1] = new PasswordCallback("Password", false);
@@ -111,7 +99,7 @@ public class TomcatLoginModule implements LoginModule {
             String username = ((NameCallback)callbacks[0]).getName();
             String password = new String(((PasswordCallback)callbacks[1]).getPassword());
             ((PasswordCallback)callbacks[1]).clearPassword();
-            if (username == null || password == null) {
+            if (username == null || password.isEmpty()) {
                 return false;
             }
             UserManager userManager = new UserManager();
@@ -119,8 +107,8 @@ public class TomcatLoginModule implements LoginModule {
                 return false;
             }
             subject.getPrivateCredentials().add(password);
-            subject.getPublicCredentials().add(new UsernameCredential(username));
-            identity = new Identity(username);
+            subject.getPublicCredentials().add(username);
+            user = username;
             return true;
         } catch (final Exception e) {
             LOG.error(e.getMessage(), e);
@@ -131,8 +119,9 @@ public class TomcatLoginModule implements LoginModule {
     /** {@inheritDoc} */
     @Override
     public boolean abort() throws LoginException {
-        if (LOG.isDebugEnabled())
+        if (LOG.isDebugEnabled()) {
             LOG.debug("In abort of TomcatLoginModule.");
+        }
         return true;
     }
 
@@ -144,5 +133,4 @@ public class TomcatLoginModule implements LoginModule {
 
         return true;
     }
-
 }

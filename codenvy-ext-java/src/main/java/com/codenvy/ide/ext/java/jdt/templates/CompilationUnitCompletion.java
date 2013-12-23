@@ -16,7 +16,11 @@ import com.codenvy.ide.ext.java.jdt.core.Signature;
 import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
 import com.codenvy.ide.ext.java.jdt.internal.corext.util.SignatureUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 
 /**
  * A completion requester to collect informations on local variables. This class is used for guessing variable names like arrays,

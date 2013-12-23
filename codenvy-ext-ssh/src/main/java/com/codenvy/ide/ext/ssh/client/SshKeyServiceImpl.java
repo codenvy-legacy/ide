@@ -17,16 +17,15 @@
  */
 package com.codenvy.ide.ext.ssh.client;
 
-import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.MimeType;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.ssh.dto.GenKeyRequest;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
-import com.codenvy.ide.MimeType;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.Utils;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -37,6 +36,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The implementation of {@link SshKeyService}.

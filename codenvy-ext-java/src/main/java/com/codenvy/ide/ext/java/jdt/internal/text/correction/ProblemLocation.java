@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.internal.text.correction;
 
+import com.codenvy.ide.ext.java.client.editor.CompilationUnitDocumentProvider;
+import com.codenvy.ide.ext.java.client.editor.JavaAnnotation;
 import com.codenvy.ide.ext.java.jdt.codeassistant.api.IProblemLocation;
 import com.codenvy.ide.ext.java.jdt.core.IJavaModelMarker;
 import com.codenvy.ide.ext.java.jdt.core.compiler.CategorizedProblem;
@@ -17,8 +19,6 @@ import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
 import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
 import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
 import com.codenvy.ide.ext.java.jdt.core.dom.NodeFinder;
-import com.codenvy.ide.ext.java.client.editor.CompilationUnitDocumentProvider;
-import com.codenvy.ide.ext.java.client.editor.JavaAnnotation;
 
 /**
  *

@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.git.client.reset.commit;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.shared.Revision;
@@ -40,6 +39,7 @@ import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

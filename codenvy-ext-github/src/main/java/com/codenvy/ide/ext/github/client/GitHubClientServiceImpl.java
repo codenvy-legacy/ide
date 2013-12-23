@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.github.client;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.ext.github.shared.Collaborators;
@@ -34,6 +33,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**

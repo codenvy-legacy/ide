@@ -14,7 +14,13 @@ package com.codenvy.ide.ext.java.jdt.internal.compiler.parser;
  * Internal local variable structure for parsing recovery
  */
 
-import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ASTNode;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Annotation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ArrayQualifiedTypeReference;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ArrayTypeReference;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Expression;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.LocalDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Statement;
 
 import java.util.HashSet;
 import java.util.Set;

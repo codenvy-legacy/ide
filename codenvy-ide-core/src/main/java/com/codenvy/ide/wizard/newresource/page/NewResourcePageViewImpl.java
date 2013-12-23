@@ -22,7 +22,6 @@ import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.list.SimpleList;
@@ -40,6 +39,8 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+
+import javax.validation.constraints.NotNull;
 
 
 /**

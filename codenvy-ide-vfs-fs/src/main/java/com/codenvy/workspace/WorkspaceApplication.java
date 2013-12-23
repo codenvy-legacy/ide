@@ -19,18 +19,17 @@ package com.codenvy.workspace;
 
 import com.codenvy.api.core.rest.ApiExceptionMapper;
 import com.codenvy.api.vfs.server.ContentStreamWriter;
-import com.codenvy.api.vfs.server.RequestContextResolver;
 import com.codenvy.api.vfs.server.exceptions.ConstraintExceptionMapper;
-import com.codenvy.api.vfs.server.exceptions.GitUrlResolveExceptionMapper;
 import com.codenvy.api.vfs.server.exceptions.InvalidArgumentExceptionMapper;
 import com.codenvy.api.vfs.server.exceptions.ItemAlreadyExistExceptionMapper;
 import com.codenvy.api.vfs.server.exceptions.ItemNotFoundExceptionMapper;
-import com.codenvy.api.vfs.server.exceptions.LocalPathResolveExceptionMapper;
 import com.codenvy.api.vfs.server.exceptions.LockExceptionMapper;
 import com.codenvy.api.vfs.server.exceptions.NotSupportedExceptionMapper;
 import com.codenvy.api.vfs.server.exceptions.PermissionDeniedExceptionMapper;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemRuntimeExceptionMapper;
 import com.codenvy.api.workspace.server.WorkspaceService;
+import com.codenvy.vfs.impl.fs.exceptions.GitUrlResolveExceptionMapper;
+import com.codenvy.vfs.impl.fs.exceptions.LocalPathResolveExceptionMapper;
 
 import javax.ws.rs.core.Application;
 import java.util.HashSet;
@@ -40,19 +39,13 @@ import java.util.Set;
  * @author Vitaly Parfonov
  */
 public class WorkspaceApplication extends Application {
-
-
     private final Set<Class<?>> classes;
-
     private final Set<Object> singletons;
 
     public WorkspaceApplication() {
         classes = new HashSet<>();
         singletons = new HashSet<>();
-
-        classes.add(RequestContextResolver.class);
         classes.add(WorkspaceService.class);
-
         singletons.add(new ApiExceptionMapper());
         singletons.add(new ContentStreamWriter());
         singletons.add(new ConstraintExceptionMapper());

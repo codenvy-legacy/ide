@@ -13,12 +13,12 @@ package com.codenvy.ide.ext.java.jdt.core.dom;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ASTVisitor;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ConstructorDeclaration;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.FieldDeclaration;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TypeDeclaration;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Initializer;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.MethodDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TypeDeclaration;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ClassScope;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.CompilationUnitScope;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.MethodScope;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.MethodDeclaration;
 
 class NodeSearcher extends ASTVisitor {
     public com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ASTNode found;

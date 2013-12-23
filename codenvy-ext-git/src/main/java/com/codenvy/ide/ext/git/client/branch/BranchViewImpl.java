@@ -22,7 +22,6 @@ import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
@@ -41,6 +40,8 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The implementation of {@link BranchView}.

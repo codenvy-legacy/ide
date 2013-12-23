@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.client.core.rewrite;
 
+import com.codenvy.ide.ext.java.client.BaseTest;
+import com.codenvy.ide.ext.java.client.core.quickfix.StringAsserts;
 import com.codenvy.ide.ext.java.jdt.core.JavaCore;
 import com.codenvy.ide.ext.java.jdt.core.dom.AST;
 import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
@@ -17,9 +19,6 @@ import com.codenvy.ide.ext.java.jdt.core.dom.ASTParser;
 import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ImportRewrite;
 import com.codenvy.ide.ext.java.jdt.core.formatter.DefaultCodeFormatterConstants;
-
-import com.codenvy.ide.ext.java.client.BaseTest;
-import com.codenvy.ide.ext.java.client.core.quickfix.StringAsserts;
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;

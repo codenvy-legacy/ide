@@ -17,10 +17,10 @@ package com.codenvy.ide.texteditor.renderer;
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.js.JsoIntegerMap;
+import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.texteditor.Buffer;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;

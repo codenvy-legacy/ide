@@ -17,12 +17,13 @@
  */
 package com.codenvy.ide.tutorial.editor.editor;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.parser.BasicTokenFactory;
 import com.codenvy.ide.texteditor.api.parser.CmParser;
 import com.codenvy.ide.texteditor.api.parser.Parser;
+
+import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.tutorial.editor.EditorTutorialExtension.GROOVY_MIME_TYPE;
 

@@ -37,7 +37,9 @@ import static com.codenvy.ide.MimeType.TEXT_CSS;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 /**
  * Testing {@link com.codenvy.ide.ext.web.css.CssFileProvider} functionality.

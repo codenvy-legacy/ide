@@ -17,14 +17,17 @@
  */
 package com.codenvy.vfs.impl.fs;
 
-import com.codenvy.api.vfs.server.LocalPathResolver;
 import com.codenvy.api.vfs.server.VirtualFile;
-import com.codenvy.api.vfs.server.exceptions.LocalPathResolveException;
+import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
+import com.codenvy.vfs.impl.fs.exceptions.LocalPathResolveException;
 
-/** @author <a href="mailto:vparfonov@codenvy.com">Vitaly Parfonov</a> */
-public class LocalPathResolverImpl implements LocalPathResolver {
-    @Override
-    public String resolve(VirtualFile virtualFile) throws LocalPathResolveException {
+/**
+ * Resolves location of virtual filesystem item on local filesystem.
+ *
+ * @author Vitaly Parfonov
+ */
+public class LocalPathResolver {
+    public String resolve(VirtualFile virtualFile) throws VirtualFileSystemException {
         if (!(virtualFile instanceof VirtualFileImpl)) {
             throw new LocalPathResolveException(String.format("Cannot resolve path on the local filesystem for %s", virtualFile));
         }

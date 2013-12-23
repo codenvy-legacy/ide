@@ -16,7 +16,11 @@ package com.codenvy.ide.texteditor.renderer;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.text.store.*;
+import com.codenvy.ide.text.store.DocumentModel;
+import com.codenvy.ide.text.store.Line;
+import com.codenvy.ide.text.store.LineInfo;
+import com.codenvy.ide.text.store.Position;
+import com.codenvy.ide.text.store.TextChange;
 import com.codenvy.ide.text.store.util.LineUtils;
 import com.codenvy.ide.text.store.util.LineUtils.LineVisitor;
 import com.codenvy.ide.text.store.util.PositionUtils;

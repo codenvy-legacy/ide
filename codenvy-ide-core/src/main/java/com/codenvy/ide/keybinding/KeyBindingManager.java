@@ -21,8 +21,6 @@ import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.html.Element;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.ui.action.ActionManager;
@@ -36,6 +34,9 @@ import com.codenvy.ide.util.input.CharCodeWithModifiers;
 import com.codenvy.ide.util.input.SignalEvent;
 import com.codenvy.ide.util.input.SignalEventUtils;
 import com.google.inject.Inject;
+
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 /**
  * Implementation of the {@link KeyBindingAgent}.

@@ -17,12 +17,10 @@
  */
 package com.codenvy.ide.ext.java.jdt.core.search;
 
-import com.codenvy.ide.ext.java.shared.ShortTypeInfo;
-import com.codenvy.ide.ext.java.shared.TypesList;
-
 import com.codenvy.ide.ext.java.jdt.core.IPackageFragment;
 import com.codenvy.ide.ext.java.jdt.core.dom.Modifier;
-
+import com.codenvy.ide.ext.java.shared.ShortTypeInfo;
+import com.codenvy.ide.ext.java.shared.TypesList;
 
 import java.util.ArrayList;
 

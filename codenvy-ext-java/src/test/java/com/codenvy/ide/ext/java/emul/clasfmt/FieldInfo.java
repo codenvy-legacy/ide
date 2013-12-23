@@ -13,7 +13,16 @@ package com.codenvy.ide.ext.java.emul.clasfmt;
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryAnnotation;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryField;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.BooleanConstant;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.ByteConstant;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.CharConstant;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.Constant;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.DoubleConstant;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.FloatConstant;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.IntConstant;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.LongConstant;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.ShortConstant;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.StringConstant;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeIds;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.util.Util;
 

@@ -12,7 +12,6 @@ package com.codenvy.ide.ext.java.jdt.templates;
 
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
 import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
-
 import com.codenvy.ide.ext.java.jdt.templates.api.Template;
 import com.codenvy.ide.ext.java.jdt.templates.api.TemplateBuffer;
 import com.codenvy.ide.ext.java.jdt.templates.api.TemplateContextType;

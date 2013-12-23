@@ -12,14 +12,21 @@ package com.codenvy.ide.ext.java.jdt.internal.corext.fix;
 
 import com.codenvy.ide.ext.java.jdt.codeassistant.api.IProblemLocation;
 import com.codenvy.ide.ext.java.jdt.core.JavaCore;
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.AST;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.AbstractTypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.AnonymousClassDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.ClassInstanceCreation;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.dom.EnumConstantDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.Modifier;
+import com.codenvy.ide.ext.java.jdt.core.dom.TypeDeclaration;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.code.CompilationUnitChange;
 import com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.structure.CompilationUnitRewrite;
 import com.codenvy.ide.ext.java.jdt.internal.text.correction.CorrectionMessages;
 import com.codenvy.ide.ext.java.jdt.refactoring.Change;
 import com.codenvy.ide.ext.java.jdt.refactoring.NullChange;
-
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.runtime.IStatus;

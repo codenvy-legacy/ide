@@ -17,10 +17,11 @@
  */
 package com.codenvy.ide.api.ui.action;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.util.StringUtils;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * Container for the information necessary to execute or update an {@link Action}.

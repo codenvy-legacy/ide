@@ -20,7 +20,6 @@ package com.codenvy.ide.ext.git.shared;
 import com.codenvy.dto.shared.DTO;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author <a href="mailto:dvishinskiy@codenvy.com">Dmitriy Vyshinskiy</a>
