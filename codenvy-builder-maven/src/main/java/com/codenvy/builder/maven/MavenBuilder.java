@@ -45,10 +45,28 @@ import java.util.regex.Pattern;
 /**
  * Builder based on Maven.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author andrew00x
+ * @author Eugene Voevodin
  */
 public class MavenBuilder extends Builder {
     private static final Logger LOG = LoggerFactory.getLogger(MavenBuilder.class);
+
+    /** Rules for builder assembly plugin. Use it for create jar with included dependencies */
+    private static final String ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES      = "<assembly>\n" +
+                                                                                     "  <id>jar-with-dependencies</id>\n" +
+                                                                                     "  <formats>\n" +
+                                                                                     "    <format>jar</format>\n" +
+                                                                                     "  </formats>\n" +
+                                                                                     "  <includeBaseDirectory>true</includeBaseDirectory>\n" +
+                                                                                     "  <dependencySets>\n" +
+                                                                                     "    <dependencySet>\n" +
+                                                                                     "      <outputDirectory>/</outputDirectory>\n" +
+                                                                                     "      <unpack>true</unpack>\n" +
+                                                                                     "      <scope>runtime</scope>\n" +
+                                                                                     "    </dependencySet>\n" +
+                                                                                     "  </dependencySets>\n" +
+                                                                                     "</assembly>\n";
+    private static final String ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES_FILE = "jar-with-dependencies-assembly-descriptor.xml";
 
     /** Rules for builder assembly plugin. Use it for create zip of all project dependencies. */
     private static final String assemblyDescriptor       = "<assembly>\n" +
@@ -91,6 +109,16 @@ public class MavenBuilder extends Builder {
                     commandLine.add(targets);
                 } else {
                     commandLine.add("clean", "package");
+                }
+                if (config.getRequest().isDeployJarWithDependencies()) {
+                    try {
+                        Files.write(new java.io.File(config.getWorkDir(), ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES_FILE).toPath(),
+                                    ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES.getBytes());
+                    } catch (IOException e) {
+                        throw new BuilderException(e);
+                    }
+                    commandLine.add("assembly:single");
+                    commandLine.addPair("-Ddescriptor", ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES_FILE);
                 }
                 break;
             case LIST_DEPS:
