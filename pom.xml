@@ -23,11 +23,11 @@
     <parent>
         <groupId>com.codenvy</groupId>
         <artifactId>maven-parent-pom</artifactId>
-        <version>2.0.1</version>
+        <version>3.0.1</version>
     </parent>
     <groupId>com.codenvy.ide</groupId>
     <artifactId>codenvy-ide-parent</artifactId>
-    <version>3.0.0-M5-SNAPSHOT</version>
+    <version>3.0.0-M7-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Codenvy :: Parent</name>
     <scm>
@@ -45,13 +45,16 @@
         <com.codenvy.platform-api.version>0.5.0-SNAPSHOT</com.codenvy.platform-api.version>
 
         <!-- eXo -->
+        <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>
+        <org.exoplatform.core.version>2.4.9-GA</org.exoplatform.core.version>
+
         <org.exoplatform.ide.version>2.8.1</org.exoplatform.ide.version>
 
         <!-- CodeAssistant DataBase -->
         <codenvy.ide-codeassistant-index.version>20120627</codenvy.ide-codeassistant-index.version>
 
         <!-- EverREST -->
-        <everrest.version>1.1.6-SNAPSHOT</everrest.version>
+        <everrest.version>1.1.6</everrest.version>
 
         <!-- javax -->
         <javax.annotation.version>1.0</javax.annotation.version>
@@ -102,6 +105,8 @@
 
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.releases.repo.url>https://maven.codenvycorp.com/content/repositories/codenvy-private-releases/</maven.releases.repo.url>
+        <maven.snapshots.repo.url>https://maven.codenvycorp.com/content/repositories/codenvy-private-snapshots/</maven.snapshots.repo.url>
         <maven.build.timestamp.format>dd.MM.yy HH:mm</maven.build.timestamp.format>
         <buildNumber>${maven.build.timestamp}</buildNumber>
     </properties>

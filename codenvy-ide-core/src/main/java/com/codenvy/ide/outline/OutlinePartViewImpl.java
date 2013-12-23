@@ -45,12 +45,6 @@ public class OutlinePartViewImpl extends BaseView<OutlinePartView.ActionDelegate
         super.container.add(container);
     }
 
-//    /** {@inheritDoc} */
-//    @Override
-//    public Widget asWidget() {
-//        return container;
-//    }
-
     /** {@inheritDoc} */
     @Override
     public void showNoOutline() {
