@@ -34,6 +34,10 @@ public class VariableReplacer {
 
     /** Perform searching in project path files given by variables list and make replacement variables in each file if it found. */
     public void performReplacement(List<Variable> variables) {
+        if (variables.size() == 0) {
+            return;
+        }
+
         final Map<Path, Set<Variable.Replacement>> replacementMap = new HashMap<>();
 
         for (Variable variable : variables) {
@@ -46,20 +50,42 @@ public class VariableReplacer {
             }
         }
 
-        for (Map.Entry<Path, Set<Variable.Replacement>> entry : replacementMap.entrySet()) {
-            try {
-                Map<String, String> props = new HashMap<>(entry.getValue().size());
-                for (Variable.Replacement prop : entry.getValue()) {
-                    props.put(prop.getFind(), prop.getReplace());
-                }
+        if (replacementMap.size() > 0) {
+            Map<String, String> variableProps = new HashMap<>();
+            Map<String, String> textProps = new HashMap<>();
+            for (Map.Entry<Path, Set<Variable.Replacement>> entry : replacementMap.entrySet()) {
+                try {
+                    variableProps.clear();
+                    textProps.clear();
 
-                String content = new String(Files.readAllBytes(entry.getKey()));
-                String modified = Deserializer.resolveVariables(content, props, false);
-                if (!content.equals(modified)) {
-                    Files.write(entry.getKey(), modified.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
+                    for (Variable.Replacement prop : entry.getValue()) {
+                        switch (prop.getReplacemode()) {
+                            case "variable_singlepass" :
+                                variableProps.put(prop.getFind(), prop.getReplace());
+                                break;
+                            case "text_multipass" :
+                                textProps.put(prop.getFind(), prop.getReplace());
+                                break;
+                        }
+                    }
+
+                    if (variableProps.size() > 0 || textProps.size() > 0) {
+                        String content = new String(Files.readAllBytes(entry.getKey()));
+
+                        String modified = Deserializer.resolveVariables(content, variableProps, false);
+                        for (Map.Entry<String, String> replacement : textProps.entrySet()) {
+                            if (modified.indexOf(replacement.getKey()) > 0) {
+                                modified = modified.replace(replacement.getKey(), replacement.getValue());
+                            }
+                        }
+
+                        if (!content.equals(modified)) {
+                            Files.write(entry.getKey(), modified.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
+                        }
+                    }
+                } catch (IOException e) {
+                    LOG.error(e.getLocalizedMessage(), e);
                 }
-            } catch (IOException e) {
-                LOG.error(e.getLocalizedMessage(), e);
             }
         }
     }
