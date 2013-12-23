@@ -29,7 +29,6 @@ import com.codenvy.ide.ext.java.jdt.JavaPartitions;
 import com.codenvy.ide.ext.java.jdt.core.IProblemRequestor;
 import com.codenvy.ide.ext.java.jdt.core.compiler.CategorizedProblem;
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
-import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
 import com.codenvy.ide.ext.java.jdt.internal.ui.text.FastJavaPartitionScanner;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.Document;
@@ -139,21 +138,12 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
             ERROR_LAYER = 3;
         }
 
-        //      private static int computeLayer(String annotationType, AnnotationPreferenceLookup lookup) {
-        //         Annotation annotation= new Annotation(annotationType, false, null);
-        //         AnnotationPreference preference= lookup.getAnnotationPreference(annotation);
-        //         if (preference != null)
-        //            return preference.getPresentationLayer() + 1;
-        //         else
-        //            return IAnnotationAccessExtension.DEFAULT_LAYER + 1;
-        //      }
         private static ImageResource fgQuickFixImage      = JavaResources.INSTANCE.markWarning();
         private static ImageResource fgQuickFixErrorImage = JavaResources.INSTANCE.markError();
         private static ImageResource fgTaskImage          = JavaResources.INSTANCE.taskmrk();
         private static ImageResource fgInfoImage          = JavaResources.INSTANCE.imp_obj();
         private static ImageResource fgWarningImage       = JavaResources.INSTANCE.markWarning();
         private static ImageResource fgErrorImage         = JavaResources.INSTANCE.markError();
-        private CompilationUnit      fCompilationUnit;
         private List<JavaAnnotation> fOverlaids;
         private IProblem             fProblem;
         private ImageResource        fImage;
@@ -162,10 +152,9 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
         private boolean fIsQuickFixable;
         private boolean fIsQuickFixableStateSet = false;
 
-        public ProblemAnnotation(IProblem problem, CompilationUnit cu) {
+        public ProblemAnnotation(IProblem problem) {
 
             fProblem = problem;
-            fCompilationUnit = cu;
 
             if (IProblem.Task == fProblem.getID()) {
                 setType(TASK_ANNOTATION_TYPE);
@@ -264,11 +253,6 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
             if (fOverlaids != null)
                 return fOverlaids.iterator();
             return null;
-        }
-
-        /** {@inheritDoc} */
-        public CompilationUnit getCompilationUnit() {
-            return fCompilationUnit;
         }
 
         /** {@inheritDoc} */
@@ -374,24 +358,14 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
                     Position position = createPositionFromProblem(problem);
                     if (position != null) {
 
-                        //                  try
-                        //                  {
-                        ProblemAnnotation annotation = new ProblemAnnotation(problem, null);
-                        //                     overlayMarkers(position, annotation);
+                        ProblemAnnotation annotation = new ProblemAnnotation(problem);
                         addAnnotation(annotation, position, false);
                         fGeneratedAnnotations.add(annotation);
 
                         temporaryProblemsChanged = true;
-                        //                  }
-                        //                  catch (BadLocationException x)
-                        //                  {
-                        //                     // ignore invalid position
-                        //                  }
                     }
                 }
 
-                //            removeMarkerOverlays();
-                //            fPreviouslyOverlaid = null;
             }
 
             if (temporaryProblemsChanged)

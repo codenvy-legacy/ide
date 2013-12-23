@@ -17,20 +17,25 @@
  */
 package com.codenvy.ide.ext.java.messages;
 
-/**
- * Messages marks by this class types
- *
- * @author Evgen Vidolob
- */
-public class RoutingTypes {
-    public static final int CONFIG                = 1;
-    public static final int PARSE                 = 2;
-    public static final int PROBLEMS              = 3;
-    public static final int CA_COMPUTE_PROPOSALS  = 4;
-    public static final int CA_PROPOSALS_COMPUTED = 5;
-    public static final int APPLY_CA_PROPOSAL     = 6;
-    public static final int CA_PROPOSAL_APPLIED   = 7;
-    public static final int OUTLINE_CODE_BLOCKS   = 8;
-    public static final int COMPUTE_CORRECTION    = 9;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.dto.shared.RoutingType;
+import com.google.gwt.webworker.client.messages.Message;
 
+/**
+ * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
+ * @version $Id:
+ */
+@RoutingType(type = RoutingTypes.COMPUTE_CORRECTION)
+public interface ComputeCorrMessage extends Message{
+    String id();
+
+    String documentContent();
+
+    int documentOffset();
+
+    int documentSelectionLength();
+
+    boolean updatedOffset();
+
+    Array<ProblemLocationMessage> problemLocations();
 }

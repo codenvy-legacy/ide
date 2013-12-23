@@ -126,8 +126,8 @@ public class TextEditProcessor {
      * Checks if the processor can execute all its edits.
      *
      * @return <code>true</code> if the edits can be executed. Return <code>false
-     *         </code>otherwise. One major reason why edits cannot be executed are wrong offset or length values of edits. Calling perform
-     *         in this case will very likely end in a <code>BadLocationException</code>.
+     * </code>otherwise. One major reason why edits cannot be executed are wrong offset or length values of edits. Calling perform
+     * in this case will very likely end in a <code>BadLocationException</code>.
      */
     public boolean canPerformEdits() {
         try {
@@ -194,15 +194,15 @@ public class TextEditProcessor {
     UndoEdit executeDo() throws BadLocationException {
         UndoCollector collector = new UndoCollector(fRoot);
         try {
-            // if (createUndo())
-            // collector.connect(fDocument);
+            if (createUndo())
+                collector.connect(fDocument);
             computeSources();
             fRoot.traverseDocumentUpdating(this, fDocument);
             if (updateRegions()) {
                 fRoot.traverseRegionUpdating(this, fDocument, 0, false);
             }
         } finally {
-            // collector.disconnect(fDocument);
+            collector.disconnect(fDocument);
         }
         return collector.undo;
     }
@@ -222,14 +222,14 @@ public class TextEditProcessor {
     UndoEdit executeUndo() throws BadLocationException {
         UndoCollector collector = new UndoCollector(fRoot);
         try {
-            // if (createUndo())
-            // collector.connect(fDocument);
+            if (createUndo())
+                collector.connect(fDocument);
             TextEdit[] edits = fRoot.getChildren();
             for (int i = edits.length - 1; i >= 0; i--) {
                 edits[i].performDocumentUpdating(fDocument);
             }
         } finally {
-            // collector.disconnect(fDocument);
+            collector.disconnect(fDocument);
         }
         return collector.undo;
     }

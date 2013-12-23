@@ -55,8 +55,8 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor {
                                           CompletionProposal[] proposals = new CompletionProposal[problems.size()];
                                           for (int i = 0; i < problems.size(); i++) {
                                               WorkerProposal proposal = problems.get(i);
-                                              proposals[i] = new CompletionProposalImpl(proposal.id(), insertStyle(proposal.displayText()),
-                                                                                        getImage(proposal.image()),
+                                              proposals[i] = new CompletionProposalImpl(proposal.id(), insertStyle(javaResources, proposal.displayText()),
+                                                                                        getImage(javaResources, proposal.image()),
                                                                                         proposal.autoInsertable(), worker);
                                           }
 
@@ -65,7 +65,7 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor {
                                   });
     }
 
-    private String insertStyle(String display) {
+    public  static String insertStyle(JavaResources javaResources, String display) {
         if (display.contains("#FQN#"))
             return display.replace("#FQN#", javaResources.css().fqnStyle());
         else if (display.contains("#COUNTER#"))
@@ -73,7 +73,7 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor {
         else return display;
     }
 
-    private Image getImage(String image) {
+    public static Image getImage(JavaResources javaResources, String image) {
         if (image == null) {
             return null;
         }

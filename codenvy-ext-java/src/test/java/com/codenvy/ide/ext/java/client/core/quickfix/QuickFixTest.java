@@ -29,6 +29,7 @@ import com.codenvy.ide.ext.java.jdt.internal.text.correction.ICommandAccess;
 import com.codenvy.ide.ext.java.jdt.internal.text.correction.ProblemLocation;
 import com.codenvy.ide.ext.java.jdt.internal.text.correction.proposals.CUCorrectionProposal;
 import com.codenvy.ide.ext.java.jdt.quickassist.api.InvocationContext;
+import com.codenvy.ide.ext.java.worker.WorkerCorrectionProcessor;
 import com.codenvy.ide.ext.java.worker.WorkerMessageHandler;
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.runtime.IStatus;
@@ -170,11 +171,11 @@ public abstract class QuickFixTest extends GwtTestWithMockito {
     protected static final ArrayList collectAssists(InvocationContext context, Class[] filteredTypes)
             throws CoreException {
         ArrayList proposals = new ArrayList();
-        IStatus status = JavaCorrectionProcessor.collectAssists(context, new IProblemLocation[0], proposals);
+        IStatus status = WorkerCorrectionProcessor.collectAssists(context, new IProblemLocation[0], proposals);
         assertStatusOk(status);
 
         if (!proposals.isEmpty()) {
-            Assert.assertTrue("should be marked as 'has assist'", JavaCorrectionProcessor.hasAssists(context));
+            Assert.assertTrue("should be marked as 'has assist'", WorkerCorrectionProcessor.hasAssists(context));
         }
 
         if (filteredTypes != null && filteredTypes.length > 0) {
@@ -267,7 +268,7 @@ public abstract class QuickFixTest extends GwtTestWithMockito {
     protected static ArrayList collectCorrections(InvocationContext context, IProblemLocation problem)
             throws CoreException {
         ArrayList proposals = new ArrayList();
-        IStatus status = JavaCorrectionProcessor.collectCorrections(context, new IProblemLocation[]{problem}, proposals);
+        IStatus status = WorkerCorrectionProcessor.collectCorrections(context, new IProblemLocation[]{problem}, proposals);
         assertStatusOk(status);
         return proposals;
     }

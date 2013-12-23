@@ -15,7 +15,6 @@ import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.rules.CharacterScanner;
-import com.codenvy.ide.util.loging.Log;
 
 
 /**
@@ -132,7 +131,7 @@ public final class BufferedDocumentScanner implements CharacterScanner {
             buf.append(fRangeOffset);
             buf.append("\n\tfRangeLength= "); //$NON-NLS-1$
             buf.append(fRangeLength);
-            Log.error(BufferedDocumentScanner.class, buf.toString());
+//            Log.error(BufferedDocumentScanner.class, buf.toString());
             throw ex;
         }
     }
