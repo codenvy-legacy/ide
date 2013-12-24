@@ -41,18 +41,30 @@ public class VariableReplacer {
         final Map<Path, Set<Variable.Replacement>> replacementMap = new HashMap<>();
 
         for (final Variable variable : variables) {
-            for (String glob : variable.getFiles()) {
+            for (final String glob : variable.getFiles()) {
                 try {
-                    Files.walkFileTree(projectPath, new GlobFileVisitor(glob, new VisitorHandler() {
+                    Files.walkFileTree(projectPath, new SimpleFileVisitor<Path>() {
                         @Override
-                        public void onPathMatched(Path file) {
-                            if (replacementMap.containsKey(file)) {
-                                replacementMap.get(file).addAll(variable.getEntries());
-                            } else {
-                                replacementMap.put(file, new HashSet<>(variable.getEntries()));
+                        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                            PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:**" + glob);
+
+                            if (matcher.matches(file) && file.toFile().isFile()) {
+                                if (replacementMap.containsKey(file)) {
+                                    replacementMap.get(file).addAll(variable.getEntries());
+                                } else {
+                                    replacementMap.put(file, new HashSet<>(variable.getEntries()));
+                                }
                             }
+
+                            return FileVisitResult.CONTINUE;
                         }
-                    }));
+
+                        @Override
+                        public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                            //need to continue work instead of exception
+                            return FileVisitResult.CONTINUE;
+                        }
+                    });
                 } catch (IOException e) {
                     LOG.error(e.getLocalizedMessage(), e);
                 }
@@ -96,44 +108,6 @@ public class VariableReplacer {
                     LOG.error(e.getLocalizedMessage(), e);
                 }
             }
-        }
-    }
-
-    /** Handle path matches. */
-    public interface VisitorHandler {
-        void onPathMatched(Path file);
-    }
-
-    /** File visitor */
-    public final class GlobFileVisitor extends SimpleFileVisitor<Path> {
-
-        /** Glob pattern to match specific file. */
-        private final PathMatcher matcher;
-
-        /** Handler which will be invoked on path matched. */
-        private final VisitorHandler handler;
-
-        /** Create constructor */
-        GlobFileVisitor(final String pattern, VisitorHandler handler) {
-            this.handler = handler;
-            this.matcher = FileSystems.getDefault().getPathMatcher("glob:**" + pattern);
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-            if (matcher.matches(file) && file.toFile().isFile()) {
-                handler.onPathMatched(file);
-            }
-
-            return FileVisitResult.CONTINUE;
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-            //need to continue work instead of exception
-            return FileVisitResult.CONTINUE;
         }
     }
 }
