@@ -100,7 +100,7 @@
         <commons-lang.version>2.6</commons-lang.version>
         <crash.version>1.0.0-beta21</crash.version>
         <easymock.version>3.1</easymock.version>
-        <everrest.assured>0.14</everrest.assured>
+        <everrest.assured>0.15</everrest.assured>
         <everrest.version>1.1.6</everrest.version>
         <fest-assert.version>1.4</fest-assert.version>
         <gdata.version>1.47.1</gdata.version>
