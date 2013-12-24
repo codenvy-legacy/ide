@@ -17,10 +17,10 @@
  */
 package com.codenvy.ide.sdk.tools;
 
+import com.codenvy.builder.tools.maven.MavenProjectModel;
+import com.codenvy.builder.tools.maven.MavenUtils;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.ide.commons.GwtXmlUtils;
-
-import org.apache.maven.model.Model;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -84,9 +84,12 @@ public class InstallExtension {
 
         List<Extension> extensions = findExtensionsByPath(extDirPath);
         for (Extension extension : extensions) {
-            Utils.addDependencyToPom(extResourcesWorkDirPath.resolve("pom.xml"),
-                                     extension.groupId, extension.artifactId, extension.artifactVersion);
-            final Path ideGwtXmlPath = Utils.findFile(IDE_GWT_XML_FILE_NAME, extResourcesWorkDirPath);
+            MavenUtils.addDependency(extResourcesWorkDirPath.resolve("pom.xml").toFile(),
+                                     extension.groupId,
+                                     extension.artifactId,
+                                     extension.artifactVersion,
+                                     null);
+            final Path ideGwtXmlPath = IoUtil.findFile(IDE_GWT_XML_FILE_NAME, extResourcesWorkDirPath.toFile()).toPath();
             GwtXmlUtils.inheritGwtModule(ideGwtXmlPath, extension.gwtModuleName);
         }
     }
@@ -110,33 +113,36 @@ public class InstallExtension {
     }
 
     private static Extension getExtensionFromFile(Path zipPath) throws IOException {
-        ZipFile zipFile = new ZipFile(zipPath.toString());
-        Enumeration<? extends ZipEntry> entries = zipFile.entries();
-        ZipEntry gwtXmlEntry = null;
-        ZipEntry pomEntry = null;
-        while (entries.hasMoreElements()) {
-            ZipEntry entry = entries.nextElement();
-            if (!entry.isDirectory()) {
-                if (entry.getName().endsWith(GwtXmlUtils.GWT_MODULE_XML_SUFFIX)) {
-                    gwtXmlEntry = entry;
-                } else if (entry.getName().endsWith("pom.xml")) {
-                    pomEntry = entry;
+        try (ZipFile zipFile = new ZipFile(zipPath.toString())) {
+            Enumeration<? extends ZipEntry> entries = zipFile.entries();
+            ZipEntry gwtXmlEntry = null;
+            ZipEntry pomEntry = null;
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = entries.nextElement();
+                if (!entry.isDirectory()) {
+                    if (entry.getName().endsWith(GwtXmlUtils.GWT_MODULE_XML_SUFFIX)) {
+                        gwtXmlEntry = entry;
+                    } else if (entry.getName().endsWith("pom.xml")) {
+                        pomEntry = entry;
+                    }
+                }
+                // have both entries
+                if (pomEntry != null && gwtXmlEntry != null) {
+                    break;
                 }
             }
-        }
 
-        // TODO consider Codenvy extension validator
-        if (gwtXmlEntry == null || pomEntry == null) {
-            throw new IllegalArgumentException(zipPath.toString() + " is not a valid Codenvy extension");
-        }
+            // TODO consider Codenvy extension validator
+            if (gwtXmlEntry == null || pomEntry == null) {
+                throw new IllegalArgumentException(String.format("%s is not a valid Codenvy extension", zipPath.toString()));
+            }
 
-        String gwtModuleName = gwtXmlEntry.getName().replace(File.separatorChar, '.');
-        gwtModuleName = gwtModuleName.substring(0, gwtModuleName.length() - GwtXmlUtils.GWT_MODULE_XML_SUFFIX.length());
-        final Model pom = Utils.readPom(zipFile.getInputStream(pomEntry));
-        zipFile.close();
-        final String groupId = pom.getGroupId() == null ? pom.getParent().getGroupId() : pom.getGroupId();
-        final String version = pom.getVersion() == null ? pom.getParent().getVersion() : pom.getVersion();
-        return new Extension(gwtModuleName, groupId, pom.getArtifactId(), version);
+            String gwtModuleName = gwtXmlEntry.getName().replace(File.separatorChar, '.');
+            gwtModuleName = gwtModuleName.substring(0, gwtModuleName.length() - GwtXmlUtils.GWT_MODULE_XML_SUFFIX.length());
+            zipFile.close();
+            MavenProjectModel pom = MavenUtils.readModel(zipFile.getInputStream(pomEntry));
+            return new Extension(gwtModuleName, pom.getGroupId(), pom.getArtifactId(), pom.getVersion());
+        }
     }
 
     private static class Extension {

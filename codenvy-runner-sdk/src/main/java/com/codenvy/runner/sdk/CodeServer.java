@@ -21,14 +21,17 @@ import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.api.core.util.ProcessUtil;
 import com.codenvy.api.core.util.SystemInfo;
 import com.codenvy.api.runner.RunnerException;
+import com.codenvy.builder.tools.maven.MavenUtils;
+import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.commons.lang.NamedThreadFactory;
 import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.ide.commons.GwtXmlUtils;
-import com.codenvy.ide.commons.MavenUtils;
 
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 import org.codehaus.plexus.util.xml.Xpp3DomUtils;
@@ -43,13 +46,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.io.StringReader;
+import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -65,7 +70,7 @@ import java.util.concurrent.TimeoutException;
  * GWT code server. Concrete implementations provide an implementation of methods
  * thereby controlling how the GWT code server will run, stop, get log files content.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @author Artem Zatsarynnyy
  */
 public class CodeServer {
     private static final Logger LOG                    = LoggerFactory.getLogger(CodeServer.class);
@@ -78,16 +83,16 @@ public class CodeServer {
     }
 
     public CodeServerProcess prepare(Path workDirPath, SDKRunnerConfiguration runnerConfiguration,
-                                     Utils.ExtensionDescriptor extensionDescriptor)
-            throws RunnerException {
+                                     Utils.ExtensionDescriptor extensionDescriptor) throws RunnerException {
         try {
             final Path warDirPath = workDirPath.resolve("war");
             ZipUtils.unzip(Utils.getCodenvyPlatformBinaryDistribution().openStream(), warDirPath.toFile());
 
-            MavenUtils.addDependencyToPom(warDirPath.resolve("pom.xml"), extensionDescriptor.groupId,
-                                          extensionDescriptor.artifactId,
-                                          extensionDescriptor.version);
-            GwtXmlUtils.inheritGwtModule(MavenUtils.findFile(SDKRunner.IDE_GWT_XML_FILE_NAME, warDirPath),
+            MavenUtils.addDependency(warDirPath.resolve("pom.xml").toFile(), extensionDescriptor.groupId,
+                                     extensionDescriptor.artifactId,
+                                     extensionDescriptor.version,
+                                     null);
+            GwtXmlUtils.inheritGwtModule(IoUtil.findFile(SDKRunner.IDE_GWT_XML_FILE_NAME, warDirPath.toFile()).toPath(),
                                          extensionDescriptor.gwtModuleName);
 
             setCodeServerConfiguration(warDirPath.resolve("pom.xml"), workDirPath, runnerConfiguration);
@@ -117,7 +122,7 @@ public class CodeServer {
 
     // *nix
 
-    private CodeServerProcess startUnix(File codeServerWorkDir, SDKRunnerConfiguration runnerConfiguration)
+    private CodeServerProcess startUnix(java.io.File codeServerWorkDir, SDKRunnerConfiguration runnerConfiguration)
             throws RunnerException {
         java.io.File startUpScriptFile = genStartUpScriptUnix(codeServerWorkDir);
         return new CodeServerProcess(runnerConfiguration.getCodeServerBindAddress(),
@@ -137,21 +142,32 @@ public class CodeServer {
         final int port = runnerConfiguration.getCodeServerPort();
         final String confPort = port == -1 ? "" : "<codeServerPort>" + port + "</codeServerPort>";
 
-        final String codeServerConf =
-                String.format("<configuration>%s%s%s</configuration>", confWorkDir, confBindAddress, confPort);
+        final String codeServerConf = String.format("<configuration>%s%s%s</configuration>", confWorkDir, confBindAddress, confPort);
 
         try {
-            Xpp3Dom additionalConfiguration = Xpp3DomBuilder.build(new StringReader(codeServerConf));
-            Model pom = MavenUtils.readPom(pomPath);
+            Model pom;
+            try (Reader reader = Files.newBufferedReader(pomPath, Charset.forName("UTF-8"))) {
+                pom = new MavenXpp3Reader().read(reader, true);
+            } catch (XmlPullParserException e) {
+                throw new RunnerException(String.format("Error occurred while parsing pom.xml: %s", e.getMessage()), e);
+            }
             Build build = pom.getBuild();
             Map<String, Plugin> plugins = build.getPluginsAsMap();
             Plugin gwtPlugin = plugins.get("org.codehaus.mojo:gwt-maven-plugin");
             Xpp3Dom existingConfiguration = (Xpp3Dom)gwtPlugin.getConfiguration();
+            Xpp3Dom additionalConfiguration;
+            try {
+                additionalConfiguration = Xpp3DomBuilder.build(new StringReader(codeServerConf));
+            } catch (XmlPullParserException e) {
+                throw new RunnerException(e);
+            }
             Xpp3Dom mergedConfiguration = Xpp3DomUtils.mergeXpp3Dom(existingConfiguration, additionalConfiguration);
             gwtPlugin.setConfiguration(mergedConfiguration);
             build.setPlugins(new ArrayList(plugins.values()));
-            MavenUtils.writePom(pom, pomPath);
-        } catch (XmlPullParserException | IOException e) {
+            try (Writer writer = Files.newBufferedWriter(pomPath, Charset.forName("UTF-8"))) {
+                new MavenXpp3Writer().write(writer, pom);
+            }
+        } catch (IOException e) {
             throw new RunnerException(e);
         }
     }
@@ -177,8 +193,7 @@ public class CodeServer {
 
     private String codeServerUnix() {
         return String
-                .format("mvn clean generate-sources gwt:run-codeserver -Dgwt.module=com.codenvy.ide.IDEPlatform -P%s " +
-                        "> stdout.log &\n",
+                .format("mvn clean generate-sources gwt:run-codeserver -Dgwt.module=com.codenvy.ide.IDEPlatform -P%s > stdout.log &\n",
                         ADD_SOURCES_PROFILE_ID);
     }
 
@@ -193,11 +208,11 @@ public class CodeServer {
         private final String          bindAddress;
         private final int             port;
         private final ExecutorService pidTaskExecutor;
-        private final File            startUpScriptFile;
-        private final File            workDir;
+        private final java.io.File    startUpScriptFile;
+        private final java.io.File    workDir;
         private int pid = -1;
 
-        protected CodeServerProcess(String bindAddress, int port, File startUpScriptFile, File workDir,
+        protected CodeServerProcess(String bindAddress, int port, java.io.File startUpScriptFile, java.io.File workDir,
                                     ExecutorService pidTaskExecutor) {
             this.bindAddress = bindAddress;
             this.port = port;
@@ -212,9 +227,7 @@ public class CodeServer {
             }
 
             try {
-                Runtime.getRuntime().exec(new CommandLine(startUpScriptFile.getAbsolutePath())
-                                                  .toShellCommand(), null, workDir);
-
+                Runtime.getRuntime().exec(new CommandLine(startUpScriptFile.getAbsolutePath()).toShellCommand(), null, workDir);
                 pid = pidTaskExecutor.submit(new Callable<Integer>() {
                     @Override
                     public Integer call() throws Exception {
@@ -275,11 +288,8 @@ public class CodeServer {
                     responseFail(http);
                 }
 
-                InputStream data = http.getInputStream();
-                try {
+                try (InputStream data = http.getInputStream()) {
                     return readBodyTagContent(data);
-                } finally {
-                    data.close();
                 }
             } finally {
                 if (http != null) {
@@ -308,7 +318,7 @@ public class CodeServer {
                 if (errorStream != null) {
                     body = readBody(errorStream, length);
                 }
-                throw new RunnerException("Unable to get code server logs. " + body == null ? "" : body);
+                throw new RunnerException(String.format("Unable to get code server logs. %s", body == null ? "" : body));
             } finally {
                 if (errorStream != null) {
                     errorStream.close();
@@ -338,5 +348,4 @@ public class CodeServer {
             return body;
         }
     }
-
 }
