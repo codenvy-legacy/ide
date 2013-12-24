@@ -166,13 +166,10 @@ public class TomcatServer implements ApplicationServer {
                                            final ApplicationServerRunnerConfiguration runnerConfiguration,
                                            StopCallback stopCallback) throws RunnerException {
         java.io.File startUpScriptFile = genStartUpScriptUnix(appDir, runnerConfiguration);
-        if (!startUpScriptFile.setExecutable(true, false)) {
-            throw new RunnerException("Unable update attributes of the startup script");
-        }
 
         final java.io.File logsDir = new java.io.File(appDir, "logs");
         if (!logsDir.mkdir()) {
-            throw new RunnerException("Unable create logs directory");
+            throw new RunnerException("Unable to create logs directory");
         }
         final List<java.io.File> logFiles = new ArrayList<>(2);
         logFiles.add(new java.io.File(logsDir, "stdout.log"));
@@ -200,7 +197,7 @@ public class TomcatServer implements ApplicationServer {
             throw new RunnerException(e);
         }
         if (!startUpScriptFile.setExecutable(true, false)) {
-            throw new RunnerException("Unable update attributes of the startup script");
+            throw new RunnerException("Unable to update attributes of the startup script");
         }
         return startUpScriptFile;
     }
@@ -348,6 +345,8 @@ public class TomcatServer implements ApplicationServer {
             if (pid == -1) {
                 throw new IllegalStateException("Process is not started yet");
             }
+            // Use ProcessUtil.kill(pid) because java.lang.Process.destroy() method doesn't
+            // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
             ProcessUtil.kill(pid);
             stopCallback.stopped();
             LOG.debug("Stop Tomcat at port {}, application {}", httpPort, workDir);

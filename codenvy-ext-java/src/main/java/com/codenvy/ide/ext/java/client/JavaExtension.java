@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.java.client;
 
-import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
@@ -31,6 +31,7 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.java.client.editor.JavaEditorProvider;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProjectModelProvider;
@@ -44,15 +45,10 @@ import com.codenvy.ide.ext.java.client.wizard.NewClassProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewEnumProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewInterfaceProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewPackageProvider;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.ProjectTypeAgent;
-import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.Utils;
 import com.google.gwt.http.client.RequestBuilder;
@@ -65,8 +61,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 import static com.codenvy.ide.collections.Collections.createArray;
+import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -88,9 +84,9 @@ public class JavaExtension {
     public static final String ANT_SPRING_PROJECT_ID           = "Ant_Spring";
     public static final String ANT_JAR_PROJECT_ID              = "Ant_Jar";
 
-    private ResourceProvider        resourceProvider;
-    private NotificationManager     notificationManager;
-    private String                  restContext;
+    private ResourceProvider    resourceProvider;
+    private NotificationManager notificationManager;
+    private String              restContext;
 
     /**
      *
@@ -218,46 +214,43 @@ public class JavaExtension {
 
     public void updateDependencies() {
         Project project = resourceProvider.getActiveProject();
-        Array<Resource> children = project.getChildren();
-        if (!children.isEmpty() && hasPomFile(children)) {
-            String projectId = project.getId();
-            String vfsId = resourceProvider.getVfsInfo().getId();
-            String url = restContext + '/' + Utils.getWorkspaceName() + "/code-assistant/java/update-dependencies?projectid=" + projectId +
-                         "&vfsid=" + vfsId;
+        String projectId = project.getId();
+        String vfsId = resourceProvider.getVfsInfo().getId();
+        String url = restContext + '/' + Utils.getWorkspaceName() + "/code-assistant/java/update-dependencies?projectid=" + projectId +
+                     "&vfsid=" + vfsId;
 
-            final Notification notification = new Notification("Updating dependencies...", PROGRESS);
-            notificationManager.showNotification(notification);
+        final Notification notification = new Notification("Updating dependencies...", PROGRESS);
+        notificationManager.showNotification(notification);
 
-            StringUnmarshaller unmarshaller = new StringUnmarshaller();
-            try {
-                AsyncRequest.build(RequestBuilder.GET, url, true).send(new AsyncRequestCallback<String>(unmarshaller) {
-                    @Override
-                    protected void onSuccess(String result) {
-                        notification.setMessage("Dependencies successfully updated ");
-                        notification.setStatus(FINISHED);
-                    }
+        StringUnmarshaller unmarshaller = new StringUnmarshaller();
+        try {
+            AsyncRequest.build(RequestBuilder.GET, url, true).send(new AsyncRequestCallback<String>(unmarshaller) {
+                @Override
+                protected void onSuccess(String result) {
+                    notification.setMessage("Dependencies successfully updated ");
+                    notification.setStatus(FINISHED);
+                }
 
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        notification.setMessage(exception.getMessage());
-                        notification.setType(ERROR);
-                        notification.setStatus(FINISHED);
-                    }
-                });
-            } catch (RequestException e) {
-                notification.setMessage(e.getMessage());
-                notification.setType(ERROR);
-                notification.setStatus(FINISHED);
-            }
+                @Override
+                protected void onFailure(Throwable exception) {
+                    notification.setMessage(exception.getMessage());
+                    notification.setType(ERROR);
+                    notification.setStatus(FINISHED);
+                }
+            });
+        } catch (RequestException e) {
+            notification.setMessage(e.getMessage());
+            notification.setType(ERROR);
+            notification.setStatus(FINISHED);
         }
     }
 
-    private boolean hasPomFile(@NotNull Array<Resource> children) {
-        for (Resource child : children.asIterable()) {
-            if (child instanceof File && "pom.xml".equals(child.getName())) {
-                return true;
-            }
-        }
-        return false;
-    }
+//    private boolean hasPomFile(@NotNull Array<Resource> children) {
+//        for (Resource child : children.asIterable()) {
+//            if (child instanceof File && "pom.xml".equals(child.getName())) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 }

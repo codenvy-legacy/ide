@@ -24,7 +24,7 @@
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
-        <version>3.0.0-M5-SNAPSHOT</version>
+        <version>3.0.0-M7-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ide-vfs-fs</artifactId>
     <packaging>jar</packaging>
@@ -44,6 +44,11 @@
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-vfs</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-workspace</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
@@ -86,5 +91,6 @@
             <scope>test</scope>
             <version>${org.slf4j.version}</version>
         </dependency>
+
     </dependencies>
 </project>

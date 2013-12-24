@@ -48,6 +48,7 @@ import com.codenvy.ide.util.executor.UserActivityManager;
 
 /**
  * Java specific configuration of the editor
+ *
  * @author Evgen Vidolob
  */
 public class JavaEditorConfiguration extends TextEditorConfiguration {
@@ -59,8 +60,8 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
     private OutlineModel            outlineModel;
     private String                  documentPartitioning;
     private JavaParserWorker        worker;
-    private JavaResources javaResources;
-    private JavaProject project;
+    private JavaResources           javaResources;
+    private JavaProject             project;
 
 
     public JavaEditorConfiguration(UserActivityManager manager, JavaResources resources, TextEditorPartPresenter javaEditor,
@@ -112,7 +113,7 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
     /** {@inheritDoc} */
     @Override
     public QuickAssistProcessor getQuickAssistAssistant(TextEditorPartView view) {
-        JavaCorrectionAssistant assistant = new JavaCorrectionAssistant(javaEditor, worker);
+        JavaCorrectionAssistant assistant = new JavaCorrectionAssistant(javaEditor, worker, javaResources);
         assistant.install(view);
         ((TextEditorViewImpl)view).setQuickAssistAssistant(assistant);
         return null;

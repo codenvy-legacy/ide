@@ -29,7 +29,7 @@ import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.nio.file.FileVisitResult.TERMINATE;
 
 /**
- * Collection of utility methods to work with gwt.xml descriptor files.
+ * A smattering of useful methods to work with GWT module descriptor (*.gwt.xml) files.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: GwtXmlUtils.java Jul 31, 2013 11:30:14 AM azatsarynnyy $
@@ -83,7 +83,7 @@ public class GwtXmlUtils {
         Finder finder = new Finder("*" + GWT_MODULE_XML_SUFFIX);
         Files.walkFileTree(folder, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, finder);
         if (finder.getFirstMatchedFile() == null) {
-            throw new IllegalArgumentException("GWT module descriptor (gwt.xml) not found.");
+            throw new IllegalArgumentException("GWT module descriptor (*.gwt.xml) not found.");
         }
 
         String filePath = finder.getFirstMatchedFile().toString();

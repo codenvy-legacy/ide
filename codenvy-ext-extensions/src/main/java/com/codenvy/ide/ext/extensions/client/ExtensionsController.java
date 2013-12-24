@@ -228,10 +228,29 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
 
     private void afterApplicationLaunched(ApplicationProcessDescriptor appDescriptor) {
         this.applicationProcessDescriptor = appDescriptor;
-        // TODO applicationProcessDescriptor.getUrl()
-        final String uri = new UrlBuilder().setProtocol(Window.Location.getProtocol())
-                                           .setHost(Window.Location.getHost())
-                                           .setPort(appDescriptor.getPort()).buildString();
+
+        UrlBuilder uriBuilder = new UrlBuilder().setProtocol(Window.Location.getProtocol())
+                                                .setHost(Window.Location.getHostName())
+                                                .setPort(appDescriptor.getPort())
+                                                .setPath("ide/dev-monit");
+
+        final Link codeServerLink = getAppLink(appDescriptor, LinkRel.CODE_SERVER);
+        if (codeServerLink != null) {
+            // Since code server link has been provided it should contains at least host name/address and port.
+            String[] split = codeServerLink.getHref().split(":");
+            String port = null;
+            String host = null;
+            if (split.length == 2) {
+                host = split[0];
+                port = split[1];
+            } else if (split.length == 3) {
+                host = split[0] + ':' + split[1];
+                port = split[2];
+            }
+            uriBuilder.setParameter("h", host).setParameter("p", port);
+        }
+
+        final String uri = uriBuilder.buildString();
         console.print(constant.extensionLaunchedOnUrls(currentProject.getName(),
                                                        "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>"));
         notification.setStatus(FINISHED);
@@ -322,6 +341,7 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
     private static enum LinkRel {
         STOP("stop"),
         VIEW_LOGS("view logs"),
+        CODE_SERVER("code server"),
         STATUS("get status");
         private final String value;
 

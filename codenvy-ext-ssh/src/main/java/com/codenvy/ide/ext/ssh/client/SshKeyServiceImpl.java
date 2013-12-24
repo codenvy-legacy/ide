@@ -26,7 +26,7 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
-import com.codenvy.ide.rest.MimeType;
+import com.codenvy.ide.MimeType;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.Utils;
 import com.google.gwt.core.client.JavaScriptObject;

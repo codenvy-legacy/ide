@@ -25,7 +25,7 @@ import com.codenvy.ide.resources.marshal.*;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
-import com.codenvy.ide.rest.MimeType;
+import com.codenvy.ide.MimeType;
 import com.codenvy.ide.ui.loader.EmptyLoader;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.loging.Log;
@@ -77,7 +77,7 @@ public class Project extends Folder {
         creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
         properties = JSONDeserializer.PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
         links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
-        //projectType = (itemObject.get("projectType") != null) ? itemObject.get("projectType").isString().stringValue() : null;
+//        projectType = (itemObject.get("projectType") != null) ? itemObject.get("projectType").isString().stringValue() : null;
         // TODO Unmarshall children
     }
 

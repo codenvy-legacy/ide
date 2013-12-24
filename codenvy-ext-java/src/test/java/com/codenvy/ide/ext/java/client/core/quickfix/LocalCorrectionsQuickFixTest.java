@@ -62,7 +62,7 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
         options.put(JavaCore.COMPILER_PB_UNCHECKED_TYPE_OPERATION, JavaCore.IGNORE);
         options.put(JavaCore.COMPILER_PB_MISSING_HASHCODE_METHOD, JavaCore.WARNING);
 
-        new JavaCorrectionProcessor(new JavaCorrectionAssistant(null, null), null);
+        new JavaCorrectionProcessor(new JavaCorrectionAssistant(null, null, null), null, null);
         new WorkerMessageHandler(null);
         GwtReflectionUtils.setPrivateFieldValue(WorkerMessageHandler.get(), "nameEnvironment", new FileSystem(
                 new String[]{System.getProperty("java.home") + "/lib/rt.jar"}, null, "UTF-8"));

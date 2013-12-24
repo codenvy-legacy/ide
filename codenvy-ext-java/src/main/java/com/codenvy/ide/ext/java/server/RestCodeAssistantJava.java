@@ -28,10 +28,13 @@ import com.codenvy.api.vfs.server.VirtualFileSystem;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.dto.DtoServerImpls;
 import com.codenvy.api.vfs.server.exceptions.InvalidArgumentException;
+import com.codenvy.api.vfs.server.exceptions.ItemNotFoundException;
+import com.codenvy.api.vfs.server.exceptions.PermissionDeniedException;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.shared.ItemType;
 import com.codenvy.api.vfs.shared.PropertyFilter;
 import com.codenvy.api.vfs.shared.dto.Item;
+import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.api.vfs.shared.dto.Project;
 import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.builder.maven.dto.MavenDependency;
@@ -301,6 +304,22 @@ public class RestCodeAssistantJava {
 
         final VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         Item item = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
+
+        Project project;
+        String projectPath;
+        if (item.getItemType().equals(ItemType.PROJECT)) {
+            project = (Project)item;
+            projectPath= project.getPath();
+        } else {
+            LOG.warn("Getting item not a project ");
+            throw new CodeAssistantException(500, "Getting item not a project");
+        }
+
+        if (!hasPom(vfs, projectId)){
+            LOG.warn("Don't has pom.xml in the child");
+            throw new CodeAssistantException(500, "Don't has pom.xml in the child");
+        }
+
         URI uri = uriInfo.getBaseUri();
         String url = uri.getScheme() + "://" + uri.getHost();
         int port = uri.getPort();
@@ -308,23 +327,12 @@ public class RestCodeAssistantJava {
             url += ":" + port;
         }
         url += "/api" + "/" + wsName + "/";
-
-        Project project;
-        String projectName;
-        if (item.getItemType().equals(ItemType.PROJECT)) {
-            project = (Project)item;
-            projectName = project.getName();
-        } else {
-            LOG.warn("Getting item not a project ");
-            throw new CodeAssistantException(500, "Getting item not a project");
-        }
-
         try {
             String jsonDependencies = null;
             List<MavenDependency> dependencies = null;
             List<String> dependencyString = new ArrayList<>();
 
-            BuildTaskDescriptor buildStatus = getDependencies(url, projectName, "list");
+            BuildTaskDescriptor buildStatus = getDependencies(url, projectPath, "list");
 
             if (buildStatus != null && buildStatus.getStatus() == BuildStatus.SUCCESSFUL) {
                 Link downloadLink = findLink("download result", buildStatus.getLinks());
@@ -358,7 +366,7 @@ public class RestCodeAssistantJava {
                 buildFailed(buildStatus);
             }
 
-            buildStatus = getDependencies(url, projectName, "copy");
+            buildStatus = getDependencies(url, projectPath, "copy");
 
             if (buildStatus.getStatus() == BuildStatus.FAILED) {
                 buildFailed(buildStatus);
@@ -381,6 +389,18 @@ public class RestCodeAssistantJava {
         }
 
         return codeAssistant.getAllPackages(project, vfs);
+    }
+
+
+    private boolean hasPom(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException {
+        ItemList children = vfs.getChildren(projectId, -1, 0, "file", false);
+        List<Item> items = children.getItems();
+        for (int i = 0; i < items.size(); i++) {
+            Item f = items.get(i);
+            if ("pom.xml".equals(f.getName()))
+                return true;
+        }
+        return false;
     }
 
     @NotNull

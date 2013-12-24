@@ -110,4 +110,7 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
 
     @Source("texteditor/save-all.png")
     ImageResource saveAll();
+
+    @Source("xml/xml_file.png")
+    ImageResource xmlFile();
 }

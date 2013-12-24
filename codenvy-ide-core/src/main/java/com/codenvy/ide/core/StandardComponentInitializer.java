@@ -17,18 +17,13 @@
  */
 package com.codenvy.ide.core;
 
+import com.codenvy.ide.MimeType;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.actions.CloseProjectAction;
-import com.codenvy.ide.actions.DeleteResourceAction;
-import com.codenvy.ide.actions.NewProjectAction;
-import com.codenvy.ide.actions.NewResourceAction;
-import com.codenvy.ide.actions.OpenProjectAction;
-import com.codenvy.ide.actions.SaveAction;
-import com.codenvy.ide.actions.SaveAllAction;
-import com.codenvy.ide.actions.ShowPreferencesAction;
-import com.codenvy.ide.actions.ShowProjectPropertiesAction;
-import com.codenvy.ide.actions.UpdateExtensionAction;
+import com.codenvy.ide.actions.*;
+import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.parts.WelcomePart;
+import com.codenvy.ide.api.resources.FileType;
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
@@ -53,6 +48,8 @@ import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresen
 import com.codenvy.ide.wizard.newresource.NewFolderProvider;
 import com.codenvy.ide.wizard.newresource.NewTextFileProvider;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePagePresenter;
+import com.codenvy.ide.xml.XmlFileProvider;
+import com.codenvy.ide.xml.editor.XmlEditorProvider;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -74,13 +71,25 @@ public class StandardComponentInitializer {
     private Provider<NewResourcePagePresenter> chooseResourcePage;
 
     @Inject
-    private NewFolderProvider newFolderProvider;
+    private EditorRegistry editorRegistry;
 
     @Inject
-    private NewTextFileProvider newTextFileProvider;
+    private ResourceProvider resourceProvider;
 
     @Inject
-    private NewResourceAgentImpl newResourceWizardAgent;
+    private NewFolderProvider folderProvider;
+
+    @Inject
+    private NewTextFileProvider textFileProvider;
+
+    @Inject
+    private XmlFileProvider xmlFileProvider;
+
+    @Inject
+    private XmlEditorProvider xmlEditorProvider;
+
+    @Inject
+    private NewResourceAgentImpl newResourceAgent;
 
     @Inject
     private Resources resources;
@@ -114,9 +123,6 @@ public class StandardComponentInitializer {
     
     @Inject
     private ShowProjectPropertiesAction showProjectPropertiesAction;
-
-    @Inject
-    private UpdateExtensionAction updateExtensionAction;
 
     @Inject
     @MainToolbar
@@ -169,8 +175,14 @@ public class StandardComponentInitializer {
     public void initialize() {
         newResourceWizard.addPage(chooseResourcePage);
 
-        newResourceWizardAgent.register(newFolderProvider);
-        newResourceWizardAgent.register(newTextFileProvider);
+        newResourceAgent.register(folderProvider);
+        newResourceAgent.register(textFileProvider);
+
+
+        FileType xmlFile = new FileType(null, MimeType.TEXT_XML, "xml");
+        resourceProvider.registerFileType(xmlFile);
+        newResourceAgent.register(xmlFileProvider);
+        editorRegistry.register(xmlFile, xmlEditorProvider);
 
         preferencesAgent.addPage(extensionManagerPresenter);
 
@@ -223,10 +235,6 @@ public class StandardComponentInitializer {
         changeResourceGroup.add(deleteResourceAction);
         changeResourceGroup.addSeparator();
         toolbarGroup.add(changeResourceGroup);
-
-        actionManager.registerAction("updateExtension", updateExtensionAction);
-        DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_RUN_MAIN_MENU);
-        runMenuActionGroup.add(updateExtensionAction);
 
         toolbarPresenter.bindMainGroup(toolbarGroup);
 

@@ -24,7 +24,7 @@
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
-        <version>3.0.0-M5-SNAPSHOT</version>
+        <version>3.0.0-M7-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ide-site-war</artifactId>
     <packaging>war</packaging>
@@ -46,6 +46,16 @@
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-security</artifactId>
             <version>${org.exoplatform.ide.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.codenvy.organization</groupId>
+                    <artifactId>codenvy-organization-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.codenvy.organization</groupId>
+                    <artifactId>codenvy-organization-api-java-client</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>

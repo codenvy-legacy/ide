@@ -31,5 +31,6 @@ public class RoutingTypes {
     public static final int APPLY_CA_PROPOSAL     = 6;
     public static final int CA_PROPOSAL_APPLIED   = 7;
     public static final int OUTLINE_CODE_BLOCKS   = 8;
+    public static final int COMPUTE_CORRECTION    = 9;
 
 }

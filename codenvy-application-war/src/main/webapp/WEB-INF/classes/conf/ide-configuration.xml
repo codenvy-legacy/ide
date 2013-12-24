@@ -50,6 +50,24 @@
     <component>
        <type>com.codenvy.api.vfs.server.VirtualFileSystemApplication</type>
     </component>
+    
+    <component>
+       <type>com.codenvy.workspace.WorkspaceApplication</type>
+    </component>
+    
+    
+    <component>
+      <type>com.codenvy.api.project.server.ProjectTypeRegistry</type>
+    </component>
+    
+    <component>
+      <type>com.codenvy.api.project.server.ProjectDescriptionFactory</type>
+    </component>
+    
+    
+    <component>
+      <type>com.codenvy.api.project.server.ProjectTypeDescriptionRegistry</type>
+    </component>
 
     <!-- End VirtualFileSystem -->
 

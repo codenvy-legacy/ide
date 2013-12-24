@@ -176,7 +176,8 @@ public class WorkerOutlineModelUpdater {
             WorkerCodeBlock m = createCodeBlock(BlockTypes.METHOD.getType(), node.getStartPosition(), node.getLength());
             m.setModifiers(node.getModifiers());
             m.setName(node.getName().getFullyQualifiedName() + getMethodParams(node));
-            m.setJavaType(node.getReturnType2().toString());
+            Type returnType = node.getReturnType2();
+            m.setJavaType(returnType != null ? returnType.toString() : null);
             childrens.add(m);
             addChildrens(node, m);
             return false;
@@ -201,7 +202,7 @@ public class WorkerOutlineModelUpdater {
         }
 
         private WorkerCodeBlock createCodeBlock(String type, int offset, int length) {
-            return WorkerCodeBlock.make().setType(type).setOffset(offset).setLength(length);
+            return WorkerCodeBlock.make().setType(type).setOffset(offset).setLength(length).setChildren(JsoArray.<WorkerCodeBlock>create());
         }
 
         /**
