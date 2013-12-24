@@ -105,13 +105,6 @@ public interface JavaAnnotation {
     boolean isProblem();
 
     /**
-     * Returns the compilation unit corresponding to the document on which the annotation.
-     *
-     * @return the compilation unit or <code>null</code> if no corresponding compilation unit exists
-     */
-    CompilationUnit getCompilationUnit();
-
-    /**
      * Returns the problem arguments or <code>null</code> if no problem arguments can be evaluated.
      *
      * @return returns the problem arguments or <code>null</code> if no problem

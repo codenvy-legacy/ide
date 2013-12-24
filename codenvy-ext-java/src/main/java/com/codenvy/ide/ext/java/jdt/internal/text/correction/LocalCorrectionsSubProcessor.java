@@ -119,7 +119,6 @@ import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.edits.InsertEdit;
 import com.codenvy.ide.text.edits.TextEdit;
-import com.codenvy.ide.util.loging.Log;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -1111,7 +1110,7 @@ public class LocalCorrectionsSubProcessor {
             addRemoveProposal(context, rewrite, label, proposals);
 
             AssistContext assistContext =
-                    new AssistContext(null, context.getDocument(), infixExpression.getRightOperand().getStartPosition() - 1, 0);
+                    new AssistContext(context.getDocument(), infixExpression.getRightOperand().getStartPosition() - 1, 0);
             assistContext.setASTRoot(root);
             AdvancedQuickAssistProcessor.getSplitAndConditionProposals(assistContext, infixExpression, proposals);
             AdvancedQuickAssistProcessor.getSplitOrConditionProposals(assistContext, infixExpression, proposals);
@@ -1856,7 +1855,8 @@ public class LocalCorrectionsSubProcessor {
             //         proposal2.setEndPosition(rewrite.track(hashCode));
 
         } catch (CoreException e) {
-            Log.error(LocalCorrectionsSubProcessor.class, e);
+            //TODO log error
+//            Log.error(LocalCorrectionsSubProcessor.class, e);
         }
 
         proposals.add(proposal2);

@@ -15,22 +15,26 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.messages;
+package com.codenvy.ide.ext.java.jdt.quickassist.api;
 
 /**
- * Messages marks by this class types
- *
- * @author Evgen Vidolob
+ * Context information for quick fix and quick assist processors.
+ * <p>
+ * This interface can be implemented by clients.</p>
  */
-public class RoutingTypes {
-    public static final int CONFIG                = 1;
-    public static final int PARSE                 = 2;
-    public static final int PROBLEMS              = 3;
-    public static final int CA_COMPUTE_PROPOSALS  = 4;
-    public static final int CA_PROPOSALS_COMPUTED = 5;
-    public static final int APPLY_CA_PROPOSAL     = 6;
-    public static final int CA_PROPOSAL_APPLIED   = 7;
-    public static final int OUTLINE_CODE_BLOCKS   = 8;
-    public static final int COMPUTE_CORRECTION    = 9;
+public interface QuickAssistInvocationContext {
 
+    /**
+     * Returns the offset where quick assist was invoked.
+     *
+     * @return the invocation offset or <code>-1</code> if unknown
+     */
+    int getOffset();
+
+    /**
+     * Returns the length of the selection at the invocation offset.
+     *
+     * @return the length of the current selection or <code>-1</code> if none or unknown
+     */
+    int getLength();
 }
