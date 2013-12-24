@@ -45,10 +45,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * UI for project's properties listing and edititng.
+ * UI for project's properties listing and editing.
  * 
- * @author <a href="mailto:ashumilova@codenvy.com">Ann Shumilova</a>
- * @version $Id:
+ * @author Ann Shumilova
  */
 public class ProjectPropertiesViewImpl extends DialogBox implements ProjectPropertiesView {
     interface ProjectPropertiesViewImplUiBinder extends UiBinder<Widget, ProjectPropertiesViewImpl> {

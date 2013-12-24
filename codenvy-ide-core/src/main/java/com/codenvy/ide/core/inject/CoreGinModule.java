@@ -149,7 +149,7 @@ import com.google.inject.name.Names;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
-/** @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> */
+/** @author Nikolay Zamosenchuk*/
 @ExtensionGinModule
 public class CoreGinModule extends AbstractGinModule {
 

@@ -20,8 +20,7 @@ package com.codenvy.ide.project.properties;
 /**
  * Util for displaying human readable property name.
  * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author Vitaliy Gulyy
  */
 public class PropertyUtil {
     

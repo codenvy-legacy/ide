@@ -36,8 +36,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 /**
  * Presenter for managing project's properties (view, delete, edit).
  * 
- * @author <a href="mailto:ashumilova@codenvy.com">Ann Shumilova</a>
- * @version $Id:
+ * @author Ann Shumilova
  */
 @Singleton
 public class ProjectPropertiesPresenter implements ProjectPropertiesView.ActionDelegate {

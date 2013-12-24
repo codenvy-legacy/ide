@@ -24,9 +24,7 @@ import com.codenvy.ide.resources.model.Property;
 /**
  * View for listing and editing project's properties.
  * 
- * @author <a href="mailto:ashumilova@codenvy.com">Ann Shumilova</a>
- * @version $Id:
- *
+ * @author Ann Shumilova
  */
 public interface ProjectPropertiesView extends View<ProjectPropertiesView.ActionDelegate> {
     

@@ -22,8 +22,7 @@ import com.google.gwt.i18n.client.Messages;
 /**
  * Localization for project properties.
  * 
- * @author <a href="mailto:ashumilova@codenvy.com">Ann Shumilova</a>
- * @version $Id:
+ * @author Ann Shumilova
  */
 public interface ProjectPropertiesLocalizationConstant extends Messages {
 

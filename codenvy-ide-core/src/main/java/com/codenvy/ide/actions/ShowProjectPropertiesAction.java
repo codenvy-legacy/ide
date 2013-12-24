@@ -29,8 +29,7 @@ import com.google.inject.Singleton;
 /**
  * Action for displaying project's properties.
  * 
- * @author <a href="mailto:ashumilova@codenvy.com">Ann Shumilova</a>
- * @version $Id:
+ * @author Ann Shumilova
  */
 @Singleton
 public class ShowProjectPropertiesAction extends Action {

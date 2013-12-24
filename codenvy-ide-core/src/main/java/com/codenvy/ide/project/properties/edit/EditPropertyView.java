@@ -22,9 +22,7 @@ import com.codenvy.ide.api.mvp.View;
 /**
  * View for editing property's value.
  * 
- * @author <a href="mailto:ashumilova@codenvy.com">Ann Shumilova</a>
- * @version $Id:
- *
+ * @author Ann Shumilova
  */
 public interface EditPropertyView extends View<EditPropertyView.ActionDelegate>{
    

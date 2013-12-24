@@ -58,7 +58,7 @@ import com.google.web.bindery.event.shared.EventBus;
 /**
  * Initializer for standard component i.e. some basic menu commands (Save, Save As etc)
  *
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @author Evgen Vidolob
  */
 @Singleton
 public class StandardComponentInitializer {

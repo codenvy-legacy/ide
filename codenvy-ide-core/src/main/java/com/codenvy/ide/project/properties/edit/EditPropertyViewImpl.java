@@ -35,9 +35,7 @@ import com.google.inject.Singleton;
 /**
  * UI for editing property's value.
  * 
- * @author <a href="mailto:ashumilova@codenvy.com">Ann Shumilova</a>
- * @version $Id:
- *
+ * @author Ann Shumilova
  */
 @Singleton
 public class EditPropertyViewImpl extends DialogBox implements EditPropertyView {

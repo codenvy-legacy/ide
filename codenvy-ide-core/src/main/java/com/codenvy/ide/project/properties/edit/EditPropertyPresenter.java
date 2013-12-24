@@ -31,8 +31,7 @@ import java.util.Arrays;
  * Presenter for changing the properties value.
  * The values are separated by ",".
  * 
- * @author <a href="mailto:ashumilova@codenvy.com">Ann Shumilova</a>
- * @version $Id:
+ * @author Ann Shumilova
  */
 @Singleton
 public class EditPropertyPresenter implements EditPropertyView.ActionDelegate {
