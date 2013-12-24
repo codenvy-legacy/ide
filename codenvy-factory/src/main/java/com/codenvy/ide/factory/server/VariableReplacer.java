@@ -40,10 +40,19 @@ public class VariableReplacer {
 
         final Map<Path, Set<Variable.Replacement>> replacementMap = new HashMap<>();
 
-        for (Variable variable : variables) {
+        for (final Variable variable : variables) {
             for (String glob : variable.getFiles()) {
                 try {
-                    Files.walkFileTree(projectPath, new GlobFileVisitor(glob, variable.getEntries(), replacementMap));
+                    Files.walkFileTree(projectPath, new GlobFileVisitor(glob, new VisitorHandler() {
+                        @Override
+                        public void onPathMatched(Path file) {
+                            if (replacementMap.containsKey(file)) {
+                                replacementMap.get(file).addAll(variable.getEntries());
+                            } else {
+                                replacementMap.put(file, new HashSet<>(variable.getEntries()));
+                            }
+                        }
+                    }));
                 } catch (IOException e) {
                     LOG.error(e.getLocalizedMessage(), e);
                 }
@@ -90,53 +99,40 @@ public class VariableReplacer {
         }
     }
 
+    /** Handle path matches. */
+    public interface VisitorHandler {
+        void onPathMatched(Path file);
+    }
+
     /** File visitor */
-    private class GlobFileVisitor extends SimpleFileVisitor<Path> {
-        /** Generic map which contains specific file and list of replacements for it. */
-        private final Map<Path, Set<Variable.Replacement>> replacementMap;
+    public final class GlobFileVisitor extends SimpleFileVisitor<Path> {
 
         /** Glob pattern to match specific file. */
         private final PathMatcher matcher;
 
-        /** Replacement list which contains what we should find and then replace in specific files which is given by matcher. */
-        private final List<Variable.Replacement> replacements;
+        /** Handler which will be invoked on path matched. */
+        private final VisitorHandler handler;
 
         /** Create constructor */
-        GlobFileVisitor(final String pattern,
-                        final List<Variable.Replacement> replacements,
-                        Map<Path, Set<Variable.Replacement>> replacementMap) {
-            this.replacementMap = replacementMap;
+        GlobFileVisitor(final String pattern, VisitorHandler handler) {
+            this.handler = handler;
             this.matcher = FileSystems.getDefault().getPathMatcher("glob:**" + pattern);
-            this.replacements = replacements;
-        }
-
-        /** View file and put it into replacement map, which will be proceed in feature. */
-        private void find(Path file) {
-            if (matcher.matches(file) && file.toFile().isFile()) {
-                if (replacementMap.containsKey(file)) {
-                    replacementMap.get(file).addAll(replacements);
-                } else {
-                    replacementMap.put(file, new HashSet<>(replacements));
-                }
-            }
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-            return FileVisitResult.CONTINUE;
         }
 
         /** {@inheritDoc} */
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-            find(file);
+            if (matcher.matches(file) && file.toFile().isFile()) {
+                handler.onPathMatched(file);
+            }
+
             return FileVisitResult.CONTINUE;
         }
 
         /** {@inheritDoc} */
         @Override
         public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+            //need to continue work instead of exception
             return FileVisitResult.CONTINUE;
         }
     }
