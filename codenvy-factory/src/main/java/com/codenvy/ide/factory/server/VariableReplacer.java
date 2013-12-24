@@ -16,10 +16,8 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /** Variable util to process variables replacement. */
 public class VariableReplacer {
@@ -38,7 +36,7 @@ public class VariableReplacer {
             return;
         }
 
-        final Map<Path, Set<Variable.Replacement>> replacementMap = new HashMap<>();
+        final Map<Path, ReplacementContainer> replacementMap = new HashMap<>();
 
         for (final Variable variable : variables) {
             for (final String glob : variable.getFiles()) {
@@ -49,10 +47,25 @@ public class VariableReplacer {
                             PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:**" + glob);
 
                             if (matcher.matches(file) && file.toFile().isFile()) {
+
+                                ReplacementContainer container = new ReplacementContainer();
+                                for (Variable.Replacement replacement : variable.getEntries()) {
+
+                                    switch (replacement.getReplacemode()) {
+                                        case "variable_singlepass":
+                                            container.getVariableProps().put(replacement.getFind(), replacement.getReplace());
+                                            break;
+                                        case "text_multipass":
+                                            container.getTextProps().put(replacement.getFind(), replacement.getReplace());
+                                            break;
+                                    }
+                                }
+
                                 if (replacementMap.containsKey(file)) {
-                                    replacementMap.get(file).addAll(variable.getEntries());
+                                    replacementMap.get(file).getVariableProps().putAll(container.getVariableProps());
+                                    replacementMap.get(file).getTextProps().putAll(container.getTextProps());
                                 } else {
-                                    replacementMap.put(file, new HashSet<>(variable.getEntries()));
+                                    replacementMap.put(file, container);
                                 }
                             }
 
@@ -72,29 +85,13 @@ public class VariableReplacer {
         }
 
         if (replacementMap.size() > 0) {
-            Map<String, String> variableProps = new HashMap<>();
-            Map<String, String> textProps = new HashMap<>();
-            for (Map.Entry<Path, Set<Variable.Replacement>> entry : replacementMap.entrySet()) {
+            for (Map.Entry<Path, ReplacementContainer> entry : replacementMap.entrySet()) {
                 try {
-                    variableProps.clear();
-                    textProps.clear();
-
-                    for (Variable.Replacement prop : entry.getValue()) {
-                        switch (prop.getReplacemode()) {
-                            case "variable_singlepass" :
-                                variableProps.put(prop.getFind(), prop.getReplace());
-                                break;
-                            case "text_multipass" :
-                                textProps.put(prop.getFind(), prop.getReplace());
-                                break;
-                        }
-                    }
-
-                    if (variableProps.size() > 0 || textProps.size() > 0) {
+                    if (entry.getValue().getVariableProps().size() > 0 || entry.getValue().getTextProps().size() > 0) {
                         String content = new String(Files.readAllBytes(entry.getKey()));
 
-                        String modified = Deserializer.resolveVariables(content, variableProps, false);
-                        for (Map.Entry<String, String> replacement : textProps.entrySet()) {
+                        String modified = Deserializer.resolveVariables(content, entry.getValue().getVariableProps(), false);
+                        for (Map.Entry<String, String> replacement : entry.getValue().getTextProps().entrySet()) {
                             if (modified.indexOf(replacement.getKey()) > 0) {
                                 modified = modified.replace(replacement.getKey(), replacement.getValue());
                             }
@@ -108,6 +105,23 @@ public class VariableReplacer {
                     LOG.error(e.getLocalizedMessage(), e);
                 }
             }
+        }
+    }
+
+    /** Inner wrapper on Variables lists. */
+    private class ReplacementContainer {
+        private Map<String, String> variableProps = new HashMap<>();
+        private Map<String, String> textProps     = new HashMap<>();
+
+        private ReplacementContainer() {
+        }
+
+        public Map<String, String> getVariableProps() {
+            return variableProps;
+        }
+
+        public Map<String, String> getTextProps() {
+            return textProps;
         }
     }
 }
