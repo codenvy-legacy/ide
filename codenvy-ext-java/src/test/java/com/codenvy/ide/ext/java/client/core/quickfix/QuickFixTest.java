@@ -54,7 +54,7 @@ public abstract class QuickFixTest extends GwtTestWithMockito {
 
 
     public static AssistContext getCorrectionContext(Document document, int offset, int length, String name) {
-        AssistContext context = new AssistContext(null, document, offset, length);
+        AssistContext context = new AssistContext(document, offset, length);
         context.setASTRoot(getASTRoot(document, name));
         return context;
     }
@@ -292,7 +292,7 @@ public abstract class QuickFixTest extends GwtTestWithMockito {
         int offset = curr.getSourceStart();
         int length = curr.getSourceEnd() + 1 - offset;
         if (context == null) {
-            context = new AssistContext(null, cu, offset, length);
+            context = new AssistContext(cu, offset, length);
         }
 
         ProblemLocation problem = new ProblemLocation(curr);

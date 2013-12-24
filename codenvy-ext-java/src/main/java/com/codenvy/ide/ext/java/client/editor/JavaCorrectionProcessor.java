@@ -21,6 +21,7 @@ import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.ext.java.client.JavaResources;
+import com.codenvy.ide.ext.java.jdt.codeassistant.api.IProblemLocation;
 import com.codenvy.ide.ext.java.jdt.core.IJavaModelMarker;
 import com.codenvy.ide.ext.java.messages.ProblemLocationMessage;
 import com.codenvy.ide.ext.java.messages.WorkerProposal;
@@ -53,13 +54,13 @@ public class JavaCorrectionProcessor implements com.codenvy.ide.texteditor.api.q
         this.javaResources = javaResources;
     }
 
-//    /**
-//     * @param annot
-//     * @return
-//     */
-//    public static boolean hasCorrections(IProblemLocation annot) {
-//        return QuickFixResolver.hasCorrections(annot.getProblemId());
-//    }
+    /**
+     * @param annot
+     * @return
+     */
+    public static boolean hasCorrections(IProblemLocation annot) {
+        return QuickFixResolver.hasCorrections(annot.getProblemId());
+    }
 
     public static boolean hasCorrections(Annotation annotation) {
         if (annotation instanceof JavaAnnotation) {
