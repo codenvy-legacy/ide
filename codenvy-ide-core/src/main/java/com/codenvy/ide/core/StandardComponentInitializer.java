@@ -18,7 +18,16 @@
 package com.codenvy.ide.core;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.actions.*;
+import com.codenvy.ide.actions.CloseProjectAction;
+import com.codenvy.ide.actions.DeleteResourceAction;
+import com.codenvy.ide.actions.NewProjectAction;
+import com.codenvy.ide.actions.NewResourceAction;
+import com.codenvy.ide.actions.OpenProjectAction;
+import com.codenvy.ide.actions.SaveAction;
+import com.codenvy.ide.actions.SaveAllAction;
+import com.codenvy.ide.actions.ShowPreferencesAction;
+import com.codenvy.ide.actions.ShowProjectPropertiesAction;
+import com.codenvy.ide.actions.UpdateExtensionAction;
 import com.codenvy.ide.api.parts.WelcomePart;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.Constraints;
@@ -29,6 +38,7 @@ import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
 import com.codenvy.ide.api.ui.wizard.DefaultWizard;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
+import com.codenvy.ide.api.ui.wizard.newresource.NewResource;
 import com.codenvy.ide.extension.ExtensionManagerPresenter;
 import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
@@ -41,7 +51,6 @@ import com.codenvy.ide.wizard.NewResourceAgentImpl;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
 import com.codenvy.ide.wizard.newresource.NewFolderProvider;
-import com.codenvy.ide.api.ui.wizard.newresource.NewResource;
 import com.codenvy.ide.wizard.newresource.NewTextFileProvider;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePagePresenter;
 import com.google.inject.Inject;
@@ -102,6 +111,9 @@ public class StandardComponentInitializer {
 
     @Inject
     private ShowPreferencesAction showPreferencesAction;
+    
+    @Inject
+    private ShowProjectPropertiesAction showProjectPropertiesAction;
 
     @Inject
     private UpdateExtensionAction updateExtensionAction;
@@ -165,6 +177,11 @@ public class StandardComponentInitializer {
         DefaultActionGroup window = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_WINDOW);
         actionManager.registerAction("showPreferences", showPreferencesAction);
         window.add(showPreferencesAction);
+        
+        DefaultActionGroup project = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_PROJECT);
+        actionManager.registerAction("showProjectProperties", showProjectPropertiesAction);
+        project.add(showProjectPropertiesAction);
+        
         DefaultActionGroup fileGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_FILE);
 
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('s').build(), "save");
