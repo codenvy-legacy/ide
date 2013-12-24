@@ -11,7 +11,6 @@
 package com.codenvy.ide.ext.java.jdt.codeassistant;
 
 import com.codenvy.ide.ext.java.jdt.codeassistant.api.JavaCompletionProposal;
-import com.codenvy.ide.ext.java.jdt.templates.TemplateProposal;
 import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 
 import java.util.Comparator;
@@ -70,10 +69,6 @@ public final class CompletionProposalComparator implements Comparator<Completion
         if (obj instanceof JavaCompletionProposal) {
             JavaCompletionProposal jcp = (JavaCompletionProposal)obj;
             return jcp.getRelevance();
-        }
-        else if (obj instanceof TemplateProposal) {
-        TemplateProposal tp= (TemplateProposal) obj;
-        return tp.getRelevance();
         }
         // catch all
         return 0;

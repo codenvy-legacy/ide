@@ -188,7 +188,7 @@ public class InternalCompletionProposal extends CompletionProposal {
         } else {
             NameEnvironmentAnswer answer =
                     this.nameLookup.findType(declaringTypeName, CharOperation.splitOn('.', declaringTypePackageName));
-            if (answer.getBinaryType() != null) {
+            if (answer != null && answer.getBinaryType() != null) {
                 type = answer.getBinaryType();
                 this.completionEngine.typeCache.put(tName, type);
             } else {
@@ -372,7 +372,6 @@ public class InternalCompletionProposal extends CompletionProposal {
      * parameter to <code>ICodeAssist.codeComplete</code> minus one).
      *
      * @return character index in source file buffer
-     * @see ICodeAssist#codeComplete(int, CompletionRequestor)
      */
     // TODO (david) https://bugs.eclipse.org/bugs/show_bug.cgi?id=132558
     public int getCompletionLocation() {
@@ -609,8 +608,6 @@ public class InternalCompletionProposal extends CompletionProposal {
      * </p>
      *
      * @return a key, or <code>null</code> if none
-     * @see org.eclipse.jdt.core.dom.ASTParser#createASTs(ICompilationUnit[], String[], org.eclipse.jdt.core.dom.ASTRequestor,
-     *      IProgressMonitor)
      * @since 3.1
      */
     public char[] getDeclarationKey() {
@@ -741,8 +738,6 @@ public class InternalCompletionProposal extends CompletionProposal {
      * </p>
      *
      * @return the key, or <code>null</code> if none
-     * @see org.eclipse.jdt.core.dom.ASTParser#createASTs(ICompilationUnit[], String[], org.eclipse.jdt.core.dom.ASTRequestor,
-     *      IProgressMonitor)
      * @since 3.1
      */
     public char[] getKey() {

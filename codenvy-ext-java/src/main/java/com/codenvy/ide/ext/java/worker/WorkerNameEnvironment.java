@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Implementation of {@link com.codenvy.ide.ext.java.worker.internal.compiler.env.INameEnvironment} interface, use JavaCodeAssistantService
+ * Implementation of {@link com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment} interface, use JavaCodeAssistantService
  * for receiving data and SessionStorage for
  * cache Java type data in browser
  *
@@ -185,7 +185,7 @@ public class WorkerNameEnvironment implements INameEnvironment {
             WorkerTypeInfoStorage.get().putType(fqn, type);
 
             return new NameEnvironmentAnswer(type, null);
-        } else return new NameEnvironmentAnswer((IBinaryType)null, null);
+        } else return null;
     }
 
     /** {@inheritDoc} */
