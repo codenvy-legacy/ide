@@ -69,6 +69,7 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
 
     private static WorkerMessageHandler      instance;
     private final  WorkerOutlineModelUpdater outlineModelUpdater;
+    private        WorkerCorrectionProcessor correctionProcessor;
     private        INameEnvironment          nameEnvironment;
     private HashMap<String, String> options = new HashMap<String, String>();
     private MessageFilter                      messageFilter;
@@ -93,10 +94,12 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
                 nameEnvironment =
                         new WorkerNameEnvironment(config.projectId(), config.restContext(), config.vfsId(), config.wsName());
                 projectName = config.projectName();
+                WorkerProposalApplier applier = new WorkerProposalApplier(WorkerMessageHandler.this.worker, messageFilter);
                 workerCodeAssist =
-                        new WorkerCodeAssist(WorkerMessageHandler.this.worker, messageFilter, nameEnvironment,
+                        new WorkerCodeAssist(WorkerMessageHandler.this.worker, messageFilter, applier, nameEnvironment,
                                              templateCompletionProposalComputer, config.projectId(),
-                                             config.javaDocContext());
+                                             config.javaDocContext(), config.vfsId());
+                correctionProcessor = new WorkerCorrectionProcessor(WorkerMessageHandler.this.worker, messageFilter, applier);
             }
         };
         messageFilter.registerMessageRecipient(RoutingTypes.CONFIG, configMessageRecipient);
@@ -158,7 +161,8 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
                 parser.setNameEnvironment(nameEnvironment);
                 ASTNode ast = parser.createAST();
                 CompilationUnit unit = (CompilationUnit)ast;
-                workerCodeAssist.setUnit(unit);
+                workerCodeAssist.setCu(unit);
+                correctionProcessor.setCu(unit);
                 IProblem[] problems = unit.getProblems();
                 MessagesImpls.ProblemsMessageImpl problemsMessage = MessagesImpls.ProblemsMessageImpl.make();
                 JsoArray<Problem> problemsArray = JsoArray.create();

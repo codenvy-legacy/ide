@@ -10,8 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.internal.text.correction;
 
-import com.codenvy.ide.ext.java.client.editor.CompilationUnitDocumentProvider;
-import com.codenvy.ide.ext.java.client.editor.JavaAnnotation;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.java.jdt.codeassistant.api.IProblemLocation;
 import com.codenvy.ide.ext.java.jdt.core.IJavaModelMarker;
 import com.codenvy.ide.ext.java.jdt.core.compiler.CategorizedProblem;
@@ -19,6 +18,7 @@ import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
 import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
 import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
 import com.codenvy.ide.ext.java.jdt.core.dom.NodeFinder;
+import com.codenvy.ide.ext.java.messages.ProblemLocationMessage;
 
 /**
  *
@@ -37,17 +37,17 @@ public class ProblemLocation implements IProblemLocation {
 
     private final String fMarkerType;
 
-    public ProblemLocation(int offset, int length, JavaAnnotation annotation) {
-        fId = annotation.getId();
-        String[] arguments = annotation.getArguments();
-        fArguments = arguments != null ? arguments : new String[0];
-        fOffset = offset;
-        fLength = length;
-        fIsError = CompilationUnitDocumentProvider.ProblemAnnotation.ERROR_ANNOTATION_TYPE.equals(annotation.getType());
-
-        String markerType = annotation.getMarkerType();
-        fMarkerType = markerType != null ? markerType : IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER;
-    }
+//    public ProblemLocation(int offset, int length, JavaAnnotation annotation) {
+//        fId = annotation.getId();
+//        String[] arguments = annotation.getArguments();
+//        fArguments = arguments != null ? arguments : new String[0];
+//        fOffset = offset;
+//        fLength = length;
+//        fIsError = CompilationUnitDocumentProvider.ProblemAnnotation.ERROR_ANNOTATION_TYPE.equals(annotation.getType());
+//
+//        String markerType = annotation.getMarkerType();
+//        fMarkerType = markerType != null ? markerType : IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER;
+//    }
 
     //
     //	public ProblemLocation(int offset, int length, int id, String[] arguments, boolean isError, String markerType) {
@@ -68,6 +68,23 @@ public class ProblemLocation implements IProblemLocation {
         fMarkerType =
                 problem instanceof CategorizedProblem ? ((CategorizedProblem)problem).getMarkerType()
                                                       : IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER;
+    }
+
+    public ProblemLocation(ProblemLocationMessage locationMessage) {
+        fId = locationMessage.getProblemId();
+        Array<String> arguments = locationMessage.getProblemArguments();
+        if (arguments != null) {
+            fArguments = new String[arguments.size()];
+            for (int i = 0; i < arguments.size(); i++) {
+                fArguments[i] = arguments.get(i);
+            }
+        }
+        else fArguments = new String[0];
+
+        fOffset = locationMessage.getOffset();
+        fLength = locationMessage.getLength();
+        fIsError = locationMessage.isError();
+        fMarkerType = locationMessage.getMarkerType();
     }
 
     /* (non-Javadoc)

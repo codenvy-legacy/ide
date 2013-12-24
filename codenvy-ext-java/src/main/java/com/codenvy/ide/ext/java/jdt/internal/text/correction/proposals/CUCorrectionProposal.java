@@ -31,7 +31,6 @@ import com.codenvy.ide.text.edits.MultiTextEdit;
 import com.codenvy.ide.text.edits.ReplaceEdit;
 import com.codenvy.ide.text.edits.TextEdit;
 import com.codenvy.ide.text.edits.TextEditVisitor;
-import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.ui.Image;
 
 
@@ -208,7 +207,8 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
             // Final pre-existing region
             ea.unchangedUntil(previewContent.getLength());
         } catch (CoreException e) {
-            Log.error(getClass(), e);
+            //TODO log error
+//            Log.error(getClass(), e);
         }
         return buf.toString();
     }
@@ -307,7 +307,8 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
             //         }
             performChange(document);
         } catch (CoreException e) {
-            Log.error(getClass(), e);
+            //TODO log error
+//            Log.error(getClass(), e);
         }
     }
 

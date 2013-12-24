@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.texteditor.api.quickassist;
 
-import com.codenvy.ide.text.annotation.Annotation;
 import com.codenvy.ide.texteditor.api.CodeAssistCallback;
 
 /**
@@ -52,26 +51,26 @@ public interface QuickAssistProcessor {
      */
     String getErrorMessage();
 
-    /**
-     * Tells whether this processor has a fix for the given annotation.
-     * <p>
-     * <strong>Note:</strong> This test must be fast and optimistic i.e. it is OK to return
-     * <code>true</code> even though there might be no quick fix.
-     * </p>
-     *
-     * @param annotation
-     *         the annotation
-     * @return <code>true</code> if the assistant has a fix for the given annotation
-     */
-    boolean canFix(Annotation annotation);
+//    /**
+//     * Tells whether this processor has a fix for the given annotation.
+//     * <p>
+//     * <strong>Note:</strong> This test must be fast and optimistic i.e. it is OK to return
+//     * <code>true</code> even though there might be no quick fix.
+//     * </p>
+//     *
+//     * @param annotation
+//     *         the annotation
+//     * @return <code>true</code> if the assistant has a fix for the given annotation
+//     */
+//    boolean canFix(Annotation annotation);
 
-    /**
-     * Tells whether this assistant has assists for the given invocation context.
-     *
-     * @param invocationContext
-     *         the invocation context
-     * @return <code>true</code> if the assistant has a fix for the given annotation
-     */
-    boolean canAssist(QuickAssistInvocationContext invocationContext);
+//    /**
+//     * Tells whether this assistant has assists for the given invocation context.
+//     *
+//     * @param invocationContext
+//     *         the invocation context
+//     * @return <code>true</code> if the assistant has a fix for the given annotation
+//     */
+//    boolean canAssist(QuickAssistInvocationContext invocationContext);
 
 }
