@@ -30,11 +30,11 @@ import com.codenvy.api.runner.internal.Runner;
 import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
 import com.codenvy.api.runner.internal.dto.RunRequest;
+import com.codenvy.builder.tools.maven.MavenUtils;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.commons.GwtXmlUtils;
-import com.codenvy.ide.commons.MavenUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,7 +76,6 @@ public class SDKRunner extends Runner {
 
     private final String            codeServerBindAddress;
     private final CustomPortService customPortService;
-
 
     @Inject
     public SDKRunner(@Named(DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
@@ -141,19 +140,15 @@ public class SDKRunner extends Runner {
         final Path codeServerWorkDirPath;
         final Utils.ExtensionDescriptor extension;
         try {
-            appDir =
-                    Files.createTempDirectory(getDeployDirectory().toPath(), (server.getName() + "_" + getName() + '_'))
-                         .toFile();
-            codeServerWorkDirPath =
-                    Files.createTempDirectory(getDeployDirectory().toPath(), ("codeServer_" + getName() + '_'));
+            appDir = Files.createTempDirectory(getDeployDirectory().toPath(), (server.getName() + "_" + getName() + '_')).toFile();
+            codeServerWorkDirPath = Files.createTempDirectory(getDeployDirectory().toPath(), ("codeServer_" + getName() + '_'));
             extension = Utils.getExtensionFromJarFile(new ZipFile(toDeploy.getFile()));
         } catch (IOException e) {
             throw new RunnerException(e);
         }
 
         CodeServer codeServer = new CodeServer();
-        CodeServer.CodeServerProcess codeServerProcess = codeServer.prepare(codeServerWorkDirPath, sdkRunnerCfg,
-                                                                            extension);
+        CodeServer.CodeServerProcess codeServerProcess = codeServer.prepare(codeServerWorkDirPath, sdkRunnerCfg, extension);
 
         final ZipFile warFile = buildCodenvyWebAppWithExtension(extension);
         final ApplicationProcess process =
@@ -195,14 +190,16 @@ public class SDKRunner extends Runner {
         final ZipFile warPath;
         try {
             // prepare Codenvy Platform sources
-            final Path workDirPath =
-                    Files.createTempDirectory(getDeployDirectory().toPath(), ("war_" + getName() + '_'));
+            final Path workDirPath = Files.createTempDirectory(getDeployDirectory().toPath(), ("war_" + getName() + '_'));
             ZipUtils.unzip(Utils.getCodenvyPlatformBinaryDistribution().openStream(), workDirPath.toFile());
 
             // integrate extension to Codenvy Platform
-            MavenUtils.addDependencyToPom(workDirPath.resolve("pom.xml"), extension.groupId, extension.artifactId,
-                                          extension.version);
-            GwtXmlUtils.inheritGwtModule(MavenUtils.findFile(SDKRunner.IDE_GWT_XML_FILE_NAME, workDirPath),
+            MavenUtils.addDependency(workDirPath.resolve("pom.xml").toFile(),
+                                     extension.groupId,
+                                     extension.artifactId,
+                                     extension.version,
+                                     null);
+            GwtXmlUtils.inheritGwtModule(IoUtil.findFile(SDKRunner.IDE_GWT_XML_FILE_NAME, workDirPath.toFile()).toPath(),
                                          extension.gwtModuleName);
 
             warPath = buildWebAppAndGetWar(workDirPath);
@@ -213,8 +210,7 @@ public class SDKRunner extends Runner {
     }
 
     private ZipFile buildWebAppAndGetWar(Path appDirPath) throws RunnerException {
-        final String[] command = new String[]{Utils.getMavenExecCommand(), "package"};
-
+        final String[] command = new String[]{MavenUtils.getMavenExecCommand(), "package"};
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(command).directory(appDirPath.toFile());
             Process process = processBuilder.start();
@@ -224,8 +220,7 @@ public class SDKRunner extends Runner {
             if (process.exitValue() != 0) {
                 throw new RunnerException(consumer.getOutput().toString());
             }
-
-            return new ZipFile(MavenUtils.findFile("*.war", appDirPath.resolve("target")).toFile());
+            return new ZipFile(IoUtil.findFile("*.war", appDirPath.resolve("target").toFile()));
         } catch (IOException | InterruptedException e) {
             throw new RunnerException(e);
         }

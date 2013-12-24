@@ -32,8 +32,9 @@ import com.codenvy.api.vfs.shared.PropertyFilter;
 import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.api.vfs.shared.dto.Property;
+import com.codenvy.builder.tools.maven.MavenProjectModel;
+import com.codenvy.builder.tools.maven.MavenUtils;
 import com.codenvy.dto.server.DtoFactory;
-import com.codenvy.ide.commons.MavenUtils;
 import com.codenvy.ide.ext.git.server.GitConnection;
 import com.codenvy.ide.ext.git.server.GitConnectionFactory;
 import com.codenvy.ide.ext.git.server.GitException;
@@ -77,7 +78,6 @@ import com.codenvy.organization.model.User;
 import com.codenvy.vfs.impl.fs.GitUrlResolver;
 import com.codenvy.vfs.impl.fs.LocalPathResolver;
 
-import org.apache.maven.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,8 +93,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -337,18 +339,17 @@ public class GitService {
     }
 
     /**
-     * Checks whether project is multimodule by analyzing packaging in pom.xml.
-     * Must be <code><packaging>pom</packaging></code>.
+     * Checks whether project is multi-module by analyzing packaging in pom.xml.
+     * Must be {@code &lt;packaging&gt;pom&lt;/packaging&gt;}.
      *
      * @param pomContent
      *         content of the pom.xml file
-     * @return true if project is multimodule
+     * @return {@code true} if project is multi-module
      */
     private boolean isMultiModule(ContentStream pomContent) {
-        Model pomModel;
-        try {
-            pomModel = MavenUtils.readPom(pomContent.getStream());
-            return (pomModel.getPackaging() != null && pomModel.getPackaging().equals("pom"));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(pomContent.getStream()))){
+            final MavenProjectModel projectModel = MavenUtils.readModel(reader);
+            return ("pom".equals(projectModel.getPackaging()));
         } catch (IOException e) {
             LOG.error("Can't read pom.xml to determine project's type.", e);
         }

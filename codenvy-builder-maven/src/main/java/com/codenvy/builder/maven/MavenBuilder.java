@@ -28,7 +28,7 @@ import com.codenvy.api.builder.internal.DependencyCollector;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.builder.maven.dto.MavenDependency;
 import com.codenvy.builder.tools.maven.MavenProjectModel;
-import com.codenvy.builder.tools.maven.MavenProjectModelFactory;
+import com.codenvy.builder.tools.maven.MavenUtils;
 import com.codenvy.dto.server.DtoFactory;
 
 import org.slf4j.Logger;
@@ -184,8 +184,12 @@ public class MavenBuilder extends Builder {
         java.io.File[] files = null;
         switch (config.getTaskType()) {
             case DEFAULT:
-                final MavenProjectModelFactory factory = MavenProjectModelFactory.getInstance();
-                final MavenProjectModel mavenProjectModel = factory.getMavenProjectModel(workDir);
+                final MavenProjectModel mavenProjectModel;
+                try {
+                    mavenProjectModel = MavenUtils.getModel(workDir);
+                } catch (IOException e) {
+                    throw new BuilderException(e);
+                }
                 final String packaging = mavenProjectModel.getPackaging();
                 final String fileExt = packaging != null ? '.' + packaging : ".jar";
                 files = new java.io.File(workDir, "target").listFiles(new FilenameFilter() {
