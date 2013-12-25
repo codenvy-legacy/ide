@@ -160,7 +160,9 @@ public class ProjectPropertiesViewImpl extends DialogBox implements ProjectPrope
         // Wraps Array in java.util.List
         List<Property> list = new ArrayList<Property>();
         for (Property property : properties.asIterable()) {
-            list.add(property);
+            if (property.getValue() != null) {
+                list.add(property);
+            }
         }
         this.propertiesTable.setRowData(list);
     }
