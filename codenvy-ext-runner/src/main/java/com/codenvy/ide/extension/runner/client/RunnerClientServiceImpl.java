@@ -26,6 +26,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 /**
  * Implementation of {@link RunnerClientService} service.
@@ -35,8 +36,9 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class RunnerClientServiceImpl implements RunnerClientService {
+    private final String baseUrl;
     /** Loader to be displayed. */
-    private Loader loader;
+    private       Loader loader;
 
     /**
      * Create service.
@@ -45,14 +47,16 @@ public class RunnerClientServiceImpl implements RunnerClientService {
      *         loader to show on server request
      */
     @Inject
-    protected RunnerClientServiceImpl(Loader loader) {
+    protected RunnerClientServiceImpl(@Named("restContext") String restContext,
+                                      Loader loader) {
         this.loader = loader;
+        this.baseUrl = restContext + "/" + Utils.getWorkspaceName();
     }
 
     /** {@inheritDoc} */
     @Override
     public void run(String projectName, AsyncRequestCallback<String> callback) throws RequestException {
-        final String requestUrl = "/api/" + Utils.getWorkspaceName() + "/runner/run";
+        final String requestUrl = baseUrl + "/runner/run";
 
         String params = "project=" + projectName;
         AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params).send(callback);
