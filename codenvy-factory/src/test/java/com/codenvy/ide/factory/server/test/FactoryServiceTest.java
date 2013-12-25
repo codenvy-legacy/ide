@@ -178,7 +178,7 @@ public class FactoryServiceTest {
         assertEquals(String.format(templateReplaced, r1, r2), getFileContent(Paths.get(child.toString(), file)));
     }
 
-    @Test(testName = "shouldSimpleReplaceVar")
+    @Test(testName = "shouldSimpleReplaceMultipassVar")
     public void shouldSimpleReplaceMultipassVar() throws Exception {
         final String template = "some super content\n with ${%s} and another variable %s";
         final String templateReplaced = "some super content\n with %s and another variable %s";

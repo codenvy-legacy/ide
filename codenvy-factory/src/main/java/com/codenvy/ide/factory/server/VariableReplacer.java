@@ -119,7 +119,7 @@ public class VariableReplacer {
         }
 
         public boolean hasReplacements() {
-            return getVariableProps().size() > 0 && getTextProps().size() > 0;
+            return getVariableProps().size() > 0 || getTextProps().size() > 0;
         }
     }
 }
