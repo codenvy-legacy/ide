@@ -335,7 +335,7 @@ public class RestCodeAssistantJava {
         if (port != 0 && port != 80) {
             url += ":" + port;
         }
-        url += "/api" + "/" + wsName + "/";
+        url += "/api/rest" + "/" + wsName + "/"; //TODO: remove hardcode "api/rest"
         try {
             String jsonDependencies = null;
             List<MavenDependency> dependencies = null;
