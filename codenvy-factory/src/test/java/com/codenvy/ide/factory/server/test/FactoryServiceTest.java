@@ -178,4 +178,32 @@ public class FactoryServiceTest {
         assertEquals(String.format(templateReplaced, r1, r2), getFileContent(Paths.get(child.toString(), file)));
     }
 
+    @Test(testName = "shouldSimpleReplaceVar")
+    public void shouldSimpleReplaceMultipassVar() throws Exception {
+        final String template = "some super content\n with ${%s} and another variable %s";
+        final String templateReplaced = "some super content\n with %s and another variable %s";
+        final String f1 = "VAR_NUM_1";
+        final String f2 = "VAR_NUM_2";
+        final String r1 = "value1";
+        final String r2 = "value2";
+        final String file = "test_file.txt";
+
+        createFile(root, file, String.format(template, f1, f2).getBytes());
+
+        assertEquals(String.format(template, f1, f2), getFileContent(Paths.get(root.toString(), file)));
+
+        List<Variable.Replacement> replacement = new ArrayList<>(2);
+        replacement.add(new Variable.Replacement(f1, r1));
+        replacement.add(new Variable.Replacement(f2, r2, "text_multipass"));
+
+        List<String> glob = new ArrayList<>(1);
+        glob.add("**test_file.txt");
+
+        Variable variable = new Variable(glob, replacement);
+
+        new VariableReplacer(root).performReplacement(Collections.singletonList(variable));
+
+        assertEquals(String.format(templateReplaced, r1, r2), getFileContent(Paths.get(root.toString(), file)));
+    }
+
 }

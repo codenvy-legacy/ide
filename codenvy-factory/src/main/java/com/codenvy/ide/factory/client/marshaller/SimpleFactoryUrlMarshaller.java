@@ -80,6 +80,7 @@ public class SimpleFactoryUrlMarshaller implements Marshallable, FactorySpec10 {
                 JSONObject replacement = new JSONObject();
                 replacement.put("find", new JSONString(var.getEntries().get(j).getFind()));
                 replacement.put("replace", new JSONString(var.getEntries().get(j).getReplace()));
+                replacement.put("replacemode", new JSONString(var.getEntries().get(j).getReplacemode()));
 
                 replacements.set(j, replacement);
             }

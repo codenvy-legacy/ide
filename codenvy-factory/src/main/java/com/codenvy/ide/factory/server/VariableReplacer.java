@@ -16,10 +16,8 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /** Variable util to process variables replacement. */
 public class VariableReplacer {
@@ -34,29 +32,69 @@ public class VariableReplacer {
 
     /** Perform searching in project path files given by variables list and make replacement variables in each file if it found. */
     public void performReplacement(List<Variable> variables) {
-        final Map<Path, Set<Variable.Replacement>> replacementMap = new HashMap<>();
+        if (variables.size() == 0) {
+            return;
+        }
 
-        for (Variable variable : variables) {
-            for (String glob : variable.getFiles()) {
+        final Map<Path, ReplacementContainer> replacementMap = new HashMap<>();
+
+        for (final Variable variable : variables) {
+            for (final String glob : variable.getFiles()) {
                 try {
-                    Files.walkFileTree(projectPath, new GlobFileVisitor(glob, variable.getEntries(), replacementMap));
+                    Files.walkFileTree(projectPath, new SimpleFileVisitor<Path>() {
+                        @Override
+                        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                            PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:**" + glob);
+
+                            if (matcher.matches(file) && file.toFile().isFile()) {
+                                ReplacementContainer container = replacementMap.get(file);
+                                if (container == null) {
+                                    container = new ReplacementContainer();
+                                    replacementMap.put(file, container);
+                                }
+
+                                for (Variable.Replacement replacement : variable.getEntries()) {
+                                    switch (replacement.getReplacemode()) {
+                                        case "variable_singlepass":
+                                            container.getVariableProps().put(replacement.getFind(), replacement.getReplace());
+                                            break;
+                                        case "text_multipass":
+                                            container.getTextProps().put(replacement.getFind(), replacement.getReplace());
+                                            break;
+                                    }
+                                }
+                            }
+
+                            return FileVisitResult.CONTINUE;
+                        }
+
+                        @Override
+                        public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                            //need to continue work instead of exception
+                            return FileVisitResult.CONTINUE;
+                        }
+                    });
                 } catch (IOException e) {
                     LOG.error(e.getLocalizedMessage(), e);
                 }
             }
         }
 
-        for (Map.Entry<Path, Set<Variable.Replacement>> entry : replacementMap.entrySet()) {
+        for (Map.Entry<Path, ReplacementContainer> entry : replacementMap.entrySet()) {
             try {
-                Map<String, String> props = new HashMap<>(entry.getValue().size());
-                for (Variable.Replacement prop : entry.getValue()) {
-                    props.put(prop.getFind(), prop.getReplace());
-                }
+                if (entry.getValue().hasReplacements()) {
+                    String content = new String(Files.readAllBytes(entry.getKey()));
 
-                String content = new String(Files.readAllBytes(entry.getKey()));
-                String modified = Deserializer.resolveVariables(content, props, false);
-                if (!content.equals(modified)) {
-                    Files.write(entry.getKey(), modified.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
+                    String modified = Deserializer.resolveVariables(content, entry.getValue().getVariableProps(), false);
+                    for (Map.Entry<String, String> replacement : entry.getValue().getTextProps().entrySet()) {
+                        if (modified.indexOf(replacement.getKey()) > 0) {
+                            modified = modified.replace(replacement.getKey(), replacement.getValue());
+                        }
+                    }
+
+                    if (!content.equals(modified)) {
+                        Files.write(entry.getKey(), modified.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
+                    }
                 }
             } catch (IOException e) {
                 LOG.error(e.getLocalizedMessage(), e);
@@ -64,54 +102,24 @@ public class VariableReplacer {
         }
     }
 
-    /** File visitor */
-    private class GlobFileVisitor extends SimpleFileVisitor<Path> {
-        /** Generic map which contains specific file and list of replacements for it. */
-        private final Map<Path, Set<Variable.Replacement>> replacementMap;
+    /** Inner wrapper on Variables lists. */
+    private class ReplacementContainer {
+        private Map<String, String> variableProps = new HashMap<>();
+        private Map<String, String> textProps     = new HashMap<>();
 
-        /** Glob pattern to match specific file. */
-        private final PathMatcher matcher;
-
-        /** Replacement list which contains what we should find and then replace in specific files which is given by matcher. */
-        private final List<Variable.Replacement> replacements;
-
-        /** Create constructor */
-        GlobFileVisitor(final String pattern,
-                        final List<Variable.Replacement> replacements,
-                        Map<Path, Set<Variable.Replacement>> replacementMap) {
-            this.replacementMap = replacementMap;
-            this.matcher = FileSystems.getDefault().getPathMatcher("glob:**" + pattern);
-            this.replacements = replacements;
+        private ReplacementContainer() {
         }
 
-        /** View file and put it into replacement map, which will be proceed in feature. */
-        private void find(Path file) {
-            if (matcher.matches(file) && file.toFile().isFile()) {
-                if (replacementMap.containsKey(file)) {
-                    replacementMap.get(file).addAll(replacements);
-                } else {
-                    replacementMap.put(file, new HashSet<>(replacements));
-                }
-            }
+        public Map<String, String> getVariableProps() {
+            return variableProps;
         }
 
-        /** {@inheritDoc} */
-        @Override
-        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-            return FileVisitResult.CONTINUE;
+        public Map<String, String> getTextProps() {
+            return textProps;
         }
 
-        /** {@inheritDoc} */
-        @Override
-        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-            find(file);
-            return FileVisitResult.CONTINUE;
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-            return FileVisitResult.CONTINUE;
+        public boolean hasReplacements() {
+            return getVariableProps().size() > 0 && getTextProps().size() > 0;
         }
     }
 }

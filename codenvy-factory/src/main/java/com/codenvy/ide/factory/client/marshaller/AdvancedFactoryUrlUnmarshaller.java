@@ -145,7 +145,12 @@ public class AdvancedFactoryUrlUnmarshaller implements Unmarshallable<AdvancedFa
                     String find = entryObject.get("find").isString().stringValue();
                     String replace = entryObject.get("replace").isString().stringValue();
 
-                    variableEntries.add(new Variable.Replacement(find, replace));
+                    if (entryObject.get("replacemode") != null && entryObject.get("replacemode").isString() != null) {
+                        String replaceMode = entryObject.get("replacemode").isString().stringValue();
+                        variableEntries.add(new Variable.Replacement(find, replace, replaceMode));
+                    } else {
+                        variableEntries.add(new Variable.Replacement(find, replace));
+                    }
                 }
 
                 variables.add(new Variable(files, variableEntries));
