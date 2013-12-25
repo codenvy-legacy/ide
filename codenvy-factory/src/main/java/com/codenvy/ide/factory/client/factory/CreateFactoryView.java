@@ -182,7 +182,8 @@ public class CreateFactoryView extends ViewImpl
         listenParametersChanges(descriptionField, emailField, authorField, companyIdField, affiliateIdField);
         
         handleFileUploadEvents();
-        
+
+        snippetWebsites.getElement().setAttribute("readonly", "readonly");
         snippetWebsites.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -190,13 +191,15 @@ public class CreateFactoryView extends ViewImpl
             }
         });
 
+        snippetGitHub.getElement().setAttribute("readonly", "readonly");
         snippetGitHub.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 snippetGitHub.selectAll();
             }
         });
-        
+
+        snippetGitHub.getElement().setAttribute("readonly", "readonly");
         snippetDirectSharing.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
