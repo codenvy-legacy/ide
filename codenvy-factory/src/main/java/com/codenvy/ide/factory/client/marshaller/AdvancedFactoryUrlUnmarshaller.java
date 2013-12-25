@@ -126,13 +126,11 @@ public class AdvancedFactoryUrlUnmarshaller implements Unmarshallable<AdvancedFa
 
         JSONArray vars = JSONParser.parseStrict(json).isArray();
         if (vars != null) {
-            List<String> files = new ArrayList<String>();
-            List<Variable.Replacement> variableEntries = new ArrayList<Variable.Replacement>();
             for (int i = 0; i < vars.size(); i++) {
                 JSONObject variableObject = vars.get(i).isObject();
 
-                files.clear();
-                variableEntries.clear();
+                List<String> files = new ArrayList<String>();
+                List<Variable.Replacement> variableEntries = new ArrayList<Variable.Replacement>();
 
                 JSONArray jsonFiles = variableObject.get("files").isArray();
                 for (int j = 0; j < jsonFiles.size(); j++) {
