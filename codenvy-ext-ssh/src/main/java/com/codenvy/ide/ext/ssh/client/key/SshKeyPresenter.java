@@ -22,8 +22,10 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.ssh.client.SshKeyService;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
+import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.ui.loader.Loader;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -69,24 +71,28 @@ public class SshKeyPresenter implements SshKeyView.ActionDelegate {
     public void showDialog(@NotNull KeyItem keyItem) {
         view.addHostToTitle(keyItem.getHost());
 
-        service.getPublicKey(keyItem, new AsyncCallback<JavaScriptObject>() {
-            @Override
-            public void onSuccess(JavaScriptObject result) {
-                loader.hide();
-                JSONObject jso = new JSONObject(result);
-                String key = jso.get("key").isString().stringValue();
-                view.setKey(key);
-                view.showDialog();
-            }
+        try {
+            service.getPublicKey(keyItem, new AsyncRequestCallback<JavaScriptObject>() {
+                @Override
+                public void onSuccess(JavaScriptObject result) {
+                    loader.hide();
+                    JSONObject jso = new JSONObject(result);
+                    String key = jso.get("key").isString().stringValue();
+                    view.setKey(key);
+                    view.showDialog();
+                }
 
-            @Override
-            public void onFailure(Throwable exception) {
-                loader.hide();
-                Notification notification = new Notification(exception.getMessage(), ERROR);
-                notificationManager.showNotification(notification);
-                eventBus.fireEvent(new ExceptionThrownEvent(exception));
-            }
-        });
+                @Override
+                public void onFailure(Throwable exception) {
+                    loader.hide();
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
+                    eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                }
+            });
+        } catch (RequestException e) {
+            e.printStackTrace();
+        }
     }
 
     /** {@inheritDoc} */

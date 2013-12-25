@@ -23,7 +23,7 @@
 
     <%!
         public String genIdeStaticResourceUrl(HttpServletRequest request, String name) {
-            return request.getContextPath() + "/" + request.getAttribute("ws") + "/_app/" + name;
+            return request.getContextPath() + "/_app/" + name;
         }
     %>
 
@@ -33,12 +33,9 @@
             "websocketContext": "/ide/websocket/"
         }
         var hiddenFiles = ".*";
-        var ws = "<%= request.getAttribute("ws")%>";
+        var ws = "dev-monit";
         var project = <%= request.getAttribute("project") != null ? "\"" + request.getAttribute("project")  + "\"" : null%>;
         var path = <%= request.getAttribute("path") != null ? "\"" + request.getAttribute("path")  + "\"" : null%>;
-        var authorizationContext = "ide/rest";
-        var authorizationErrorPageURL = "/ide/ide/error_oauth.html";
-        var securityCheckURL = "/ide/j_security_check";
     </script>
 
     <link rel="shortcut icon" href="ide/_app/favicon.ico"/>
