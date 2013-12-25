@@ -17,19 +17,19 @@
  */
 package com.codenvy.runner.sdk;
 
+import com.codenvy.api.runner.internal.Runner;
 import com.codenvy.inject.DynaModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
 
-/**
- * @author Eugene Voevodin
- */
+/** @author Eugene Voevodin */
 @DynaModule
-public class TomcatServerModule extends AbstractModule {
-
+public class SDKRunnerModule extends AbstractModule {
     @Override
     protected void configure() {
-        Multibinder<ApplicationServer> multiBinder = Multibinder.newSetBinder(binder(), ApplicationServer.class);
-        multiBinder.addBinding().to(TomcatServer.class);
+        Multibinder<Runner> multiBinderRunners = Multibinder.newSetBinder(binder(), Runner.class);
+        multiBinderRunners.addBinding().to(SDKRunner.class);
+        Multibinder<ApplicationServer> multiBinderServers = Multibinder.newSetBinder(binder(), ApplicationServer.class);
+        multiBinderServers.addBinding().to(TomcatServer.class);
     }
 }

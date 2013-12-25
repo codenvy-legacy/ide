@@ -1,4 +1,4 @@
-package com.codenvy.api.bootstrap.servlet;
+package com.codenvy.api.servlet;
 
 import com.codenvy.commons.env.EnvironmentContext;
 
@@ -36,6 +36,11 @@ public class EnvironmentFilter implements Filter {
         final String vfsRootDir = System.getProperty("com.codenvy.vfs.rootdir", "../temp/fs-root");
         env.setVariable(EnvironmentContext.VFS_ROOT_DIR, new File(vfsRootDir));
         env.setVariable(EnvironmentContext.VFS_INDEX_DIR, new File("../temp/fs-index-root"));
+        try {
+            chain.doFilter(request, response);
+        } finally {
+            EnvironmentContext.reset();
+        }
     }
 
     @Override

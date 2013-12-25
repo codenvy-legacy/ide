@@ -17,10 +17,11 @@
  */
 package com.codenvy.runner.sdk;
 
-import com.codenvy.builder.tools.maven.MavenProjectModel;
-import com.codenvy.builder.tools.maven.MavenUtils;
 import com.codenvy.ide.commons.GwtXmlUtils;
+import com.codenvy.ide.maven.tools.MavenUtils;
 import com.codenvy.vfs.impl.fs.EnvironmentContextLocalFSMountStrategy;
+
+import org.apache.maven.model.Model;
 
 import java.io.IOException;
 import java.net.URL;
@@ -90,8 +91,8 @@ class Utils {
 
             String gwtModuleName = gwtXmlEntry.getName().replace(java.io.File.separatorChar, '.');
             gwtModuleName = gwtModuleName.substring(0, gwtModuleName.length() - GwtXmlUtils.GWT_MODULE_XML_SUFFIX.length());
-            MavenProjectModel pom = MavenUtils.readModel(zipFile.getInputStream(pomEntry));
-            return new ExtensionDescriptor(gwtModuleName, pom.getGroupId(), pom.getArtifactId(), pom.getVersion());
+            Model pom = MavenUtils.readModel(zipFile.getInputStream(pomEntry));
+            return new ExtensionDescriptor(gwtModuleName, MavenUtils.getGroupId(pom), pom.getArtifactId(), MavenUtils.getVersion(pom));
         } finally {
             zipFile.close();
         }

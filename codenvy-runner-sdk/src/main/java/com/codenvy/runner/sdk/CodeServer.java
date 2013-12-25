@@ -21,17 +21,15 @@ import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.api.core.util.ProcessUtil;
 import com.codenvy.api.core.util.SystemInfo;
 import com.codenvy.api.runner.RunnerException;
-import com.codenvy.builder.tools.maven.MavenUtils;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.commons.lang.NamedThreadFactory;
 import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.ide.commons.GwtXmlUtils;
+import com.codenvy.ide.maven.tools.MavenUtils;
 
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 import org.codehaus.plexus.util.xml.Xpp3DomUtils;
@@ -147,8 +145,8 @@ public class CodeServer {
         try {
             Model pom;
             try (Reader reader = Files.newBufferedReader(pomPath, Charset.forName("UTF-8"))) {
-                pom = new MavenXpp3Reader().read(reader, true);
-            } catch (XmlPullParserException e) {
+                pom = MavenUtils.readModel(reader);
+            } catch (IOException e) {
                 throw new RunnerException(String.format("Error occurred while parsing pom.xml: %s", e.getMessage()), e);
             }
             Build build = pom.getBuild();
@@ -165,7 +163,7 @@ public class CodeServer {
             gwtPlugin.setConfiguration(mergedConfiguration);
             build.setPlugins(new ArrayList(plugins.values()));
             try (Writer writer = Files.newBufferedWriter(pomPath, Charset.forName("UTF-8"))) {
-                new MavenXpp3Writer().write(writer, pom);
+                MavenUtils.writeModel(pom, writer);
             }
         } catch (IOException e) {
             throw new RunnerException(e);

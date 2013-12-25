@@ -32,8 +32,6 @@ import com.codenvy.api.vfs.shared.PropertyFilter;
 import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.api.vfs.shared.dto.Property;
-import com.codenvy.builder.tools.maven.MavenProjectModel;
-import com.codenvy.builder.tools.maven.MavenUtils;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.ext.git.server.GitConnection;
 import com.codenvy.ide.ext.git.server.GitConnectionFactory;
@@ -72,12 +70,14 @@ import com.codenvy.ide.ext.git.shared.Tag;
 import com.codenvy.ide.ext.git.shared.TagCreateRequest;
 import com.codenvy.ide.ext.git.shared.TagDeleteRequest;
 import com.codenvy.ide.ext.git.shared.TagListRequest;
+import com.codenvy.ide.maven.tools.MavenUtils;
 import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
 import com.codenvy.organization.model.User;
 import com.codenvy.vfs.impl.fs.GitUrlResolver;
 import com.codenvy.vfs.impl.fs.LocalPathResolver;
 
+import org.apache.maven.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -348,8 +348,8 @@ public class GitService {
      */
     private boolean isMultiModule(ContentStream pomContent) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(pomContent.getStream()))){
-            final MavenProjectModel projectModel = MavenUtils.readModel(reader);
-            return ("pom".equals(projectModel.getPackaging()));
+            final Model pom = MavenUtils.readModel(reader);
+            return ("pom".equals(pom.getPackaging()));
         } catch (IOException e) {
             LOG.error("Can't read pom.xml to determine project's type.", e);
         }

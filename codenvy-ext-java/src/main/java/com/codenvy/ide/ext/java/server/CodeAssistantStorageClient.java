@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.MediaType;
 import java.io.ByteArrayOutputStream;
@@ -54,6 +55,7 @@ import java.util.Set;
  *
  * @author Evgen Vidolob
  */
+@Singleton
 public class CodeAssistantStorageClient implements CodeAssistantStorage {
     private static final Logger LOG              = LoggerFactory.getLogger(CodeAssistantStorageClient.class);
     private static final String STORAGE_BASE     = "/storage/get";

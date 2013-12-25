@@ -25,11 +25,9 @@ import com.codenvy.api.vfs.server.exceptions.InvalidArgumentException;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.shared.PropertyFilter;
 import com.codenvy.api.vfs.shared.dto.Property;
+import com.codenvy.ide.maven.tools.MavenUtils;
 
 import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,27 +91,19 @@ public class CreateProjectService {
                                                     @QueryParam("version") String version)
             throws VirtualFileSystemException, IOException {
         createProject(vfsId, name, properties, baseUrl + "/gist-extension.zip");
-
-        MavenXpp3Reader pomReader = new MavenXpp3Reader();
-        MavenXpp3Writer pomWriter = new MavenXpp3Writer();
-
         VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(vfsId);
         MountPoint mountPoint = vfsProvider.getMountPoint(false);
         VirtualFile pomFile = mountPoint.getVirtualFile(name + "/pom.xml");
-        InputStream pomContent = pomFile.getContent().getStream();
-
-        try {
-            Model pom = pomReader.read(pomContent, false);
-            pom.setGroupId(groupId);
-            pom.setArtifactId(artifactId);
-            pom.setVersion(version);
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            pomWriter.write(stream, pom);
-            pomFile.updateContent(pomFile.getMediaType(), new ByteArrayInputStream(stream.toByteArray()), null);
-        } catch (XmlPullParserException e) {
-            LOG.warn("Error occurred while setting project coordinates.", e);
-            throw new IllegalStateException(e.getMessage(), e);
+        Model pom;
+        try (InputStream pomContent = pomFile.getContent().getStream()) {
+            pom = MavenUtils.readModel(pomContent);
         }
+        pom.setGroupId(groupId);
+        pom.setArtifactId(artifactId);
+        pom.setVersion(version);
+        ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+        MavenUtils.writeModel(pom, bOut);
+        pomFile.updateContent(pomFile.getMediaType(), new ByteArrayInputStream(bOut.toByteArray()), null);
     }
 
     private void createProject(@NotNull String vfsId,

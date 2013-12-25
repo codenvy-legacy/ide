@@ -269,7 +269,7 @@ public class CoreGinModule extends AbstractGinModule {
     @Named("restContext")
     @Singleton
     protected String provideDefaultRestContext() {
-        return "/api";
+        return "/api/rest";
     }
 
     @Provides
@@ -277,6 +277,6 @@ public class CoreGinModule extends AbstractGinModule {
     @Singleton
     protected String provideDefaultWebsocketUrl() {
         boolean isSecureConnection = Window.Location.getProtocol().equals("https:");
-        return (isSecureConnection ? "wss://" : "ws://") + Window.Location.getHost() + "/api/" + Utils.getWorkspaceName();
+        return (isSecureConnection ? "wss://" : "ws://") + Window.Location.getHost() + "/api/ws/" + Utils.getWorkspaceName();
     }
 }

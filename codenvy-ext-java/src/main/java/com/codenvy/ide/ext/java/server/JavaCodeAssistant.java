@@ -28,7 +28,6 @@ import com.codenvy.api.vfs.shared.PropertyFilter;
 import com.codenvy.api.vfs.shared.dto.File;
 import com.codenvy.api.vfs.shared.dto.Folder;
 import com.codenvy.api.vfs.shared.dto.Item;
-import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.api.vfs.shared.dto.Project;
 import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.ide.ext.java.server.parser.JavaDocBuilderErrorHandler;
@@ -45,6 +44,8 @@ import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,24 +53,21 @@ import java.util.List;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Nov 22, 2011 4:53:15 PM evgen $
  */
+@Singleton
 public class JavaCodeAssistant extends CodeAssistant {
 
     /** Default Maven 'sourceDirectory' value */
     public static final String DEFAULT_SOURCE_FOLDER = "src/main/java";
 
+    @Inject
     public JavaCodeAssistant(CodeAssistantStorageClient storage, VirtualFileSystemRegistry vfsRegistry) {
         super(storage, vfsRegistry);
     }
 
-    private JavaDocBuilderVfs parseProject(String projectId,
-                                           String vfsId)
-            throws VirtualFileSystemException, CodeAssistantException {
+    private JavaDocBuilderVfs parseProject(String projectId, String vfsId) throws VirtualFileSystemException, CodeAssistantException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-
         Project project = getProject(projectId, vfs);
-
         Folder sourceFolder = getSourceFolder(vfs, project);
-
         JavaDocBuilderVfs builder = new JavaDocBuilderVfs(vfs, new VfsClassLibrary(vfs));
         builder.getClassLibrary().addClassLoader(ClassLoader.getSystemClassLoader());
         builder.setErrorHandler(new JavaDocBuilderErrorHandler());
@@ -86,15 +84,12 @@ public class JavaCodeAssistant extends CodeAssistant {
      * @throws VirtualFileSystemException
      * @throws CodeAssistantException
      */
-    private Folder getSourceFolder(VirtualFileSystem vfs,
-                                   Project project)
-            throws VirtualFileSystemException, CodeAssistantException {
+    private Folder getSourceFolder(VirtualFileSystem vfs, Project project) throws VirtualFileSystemException, CodeAssistantException {
         String sourcePath = null;
         List<Property> properties = project.getProperties();
         for (int i = 0; i < properties.size(); i++) {
             Property property = properties.get(i);
-            if (property.getName().equalsIgnoreCase("sourceFolder"))
-            {
+            if (property.getName().equalsIgnoreCase("sourceFolder")) {
                 sourcePath = property.getValue().get(0);
             }
         }
@@ -112,8 +107,8 @@ public class JavaCodeAssistant extends CodeAssistant {
 
 
     @Override
-    protected String getClassJavaDocFromProject(String fqn, String projectId,
-                                                String vfsId) throws CodeAssistantException, VirtualFileSystemException {
+    protected String getClassJavaDocFromProject(String fqn, String projectId, String vfsId)
+            throws CodeAssistantException, VirtualFileSystemException {
 
         JavaDocBuilderVfs project = parseProject(projectId, vfsId);
         JavaClass clazz = project.getClassByName(fqn);
@@ -129,28 +124,29 @@ public class JavaCodeAssistant extends CodeAssistant {
         if (fileName != null) {
             return fileName.substring(0, fileName.indexOf("."));
         }
-
         return null;
     }
 
     /** Find classes in package */
-    private List<ShortTypeInfo> findClassesInPackage(File file, Project project,
-                                                     VirtualFileSystem vfs) throws CodeAssistantException, VirtualFileSystemException {
-        List<ShortTypeInfo> classes = new ArrayList<ShortTypeInfo>();
-        ItemList children = vfs.getChildren(file.getParentId(), -1, 0, "file", false, PropertyFilter.ALL_FILTER);
-        for (Item i : children.getItems()) {
-            if (i.getName().endsWith(".java")) {
-                if (!file.getId().equals(i.getId())) {
-                    //classes.add(new ShortTypeInfoBean(getClassNameOnFileName(i.getName()), 0, "CLASS", null));
-                }
-            }
-        }
-        return classes;
+    private List<ShortTypeInfo> findClassesInPackage(File file, Project project, VirtualFileSystem vfs)
+            throws CodeAssistantException, VirtualFileSystemException {
+// TODO: fix or remove
+//        List<ShortTypeInfo> classes = new ArrayList<ShortTypeInfo>();
+//        ItemList children = vfs.getChildren(file.getParentId(), -1, 0, "file", false, PropertyFilter.ALL_FILTER);
+//        for (Item i : children.getItems()) {
+//            if (i.getName().endsWith(".java")) {
+//                if (!file.getId().equals(i.getId())) {
+//                    classes.add(new ShortTypeInfoBean(getClassNameOnFileName(i.getName()), 0, "CLASS", null));
+//                }
+//            }
+//        }
+//        return classes;
+        return java.util.Collections.emptyList();
     }
 
     @Override
-    protected TypeInfo getClassByFqnFromProject(String fqn, String projectId,
-                                                String vfsId) throws VirtualFileSystemException, CodeAssistantException {
+    protected TypeInfo getClassByFqnFromProject(String fqn, String projectId, String vfsId)
+            throws VirtualFileSystemException, CodeAssistantException {
         JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
         JavaClass clazz = null;
         if (fqn.contains("$")) {
@@ -179,8 +175,8 @@ public class JavaCodeAssistant extends CodeAssistant {
     }
 
     @Override
-    protected List<ShortTypeInfo> getTypesByNamePrefixFromProject(String className, String projectId,
-                                                                  String vfsId) throws CodeAssistantException, VirtualFileSystemException {
+    protected List<ShortTypeInfo> getTypesByNamePrefixFromProject(String className, String projectId, String vfsId)
+            throws CodeAssistantException, VirtualFileSystemException {
         JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
         List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
         JavaTypeToTypeInfoConverter converter = new JavaTypeToTypeInfoConverter(storage,
@@ -194,12 +190,11 @@ public class JavaCodeAssistant extends CodeAssistant {
     }
 
     @Override
-    protected List<ShortTypeInfo> getTypesByFqnPrefixInProject(String prefix, String projectId,
-                                                               String vfsId) throws CodeAssistantException, VirtualFileSystemException {
+    protected List<ShortTypeInfo> getTypesByFqnPrefixInProject(String prefix, String projectId, String vfsId)
+            throws CodeAssistantException, VirtualFileSystemException {
         JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
         List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
-        JavaTypeToTypeInfoConverter converter = new JavaTypeToTypeInfoConverter(storage,
-                                                                                getProjectDependencys(projectId, vfsId));
+        JavaTypeToTypeInfoConverter converter = new JavaTypeToTypeInfoConverter(storage, getProjectDependencys(projectId, vfsId));
         for (JavaClass clazz : builder.getClasses()) {
             if (clazz.getFullyQualifiedName().startsWith(prefix)) {
                 types.add(converter.toShortTypeInfo(clazz));
@@ -209,12 +204,11 @@ public class JavaCodeAssistant extends CodeAssistant {
     }
 
     @Override
-    protected List<ShortTypeInfo> getByTypeFromProject(JavaType type, String prefix, String projectId,
-                                                       String vfsId) throws CodeAssistantException, VirtualFileSystemException {
+    protected List<ShortTypeInfo> getByTypeFromProject(JavaType type, String prefix, String projectId, String vfsId)
+            throws CodeAssistantException, VirtualFileSystemException {
         JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
         List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
-        JavaTypeToTypeInfoConverter converter = new JavaTypeToTypeInfoConverter(storage,
-                                                                                getProjectDependencys(projectId, vfsId));
+        JavaTypeToTypeInfoConverter converter = new JavaTypeToTypeInfoConverter(storage, getProjectDependencys(projectId, vfsId));
         if (prefix == null || prefix.isEmpty()) {
             for (JavaClass clazz : builder.getClasses()) {
                 if (type == JavaTypeToTypeInfoConverter.getType(clazz)) {
@@ -232,32 +226,23 @@ public class JavaCodeAssistant extends CodeAssistant {
     }
 
     @Override
-    public List<ShortTypeInfo> getClassesFromProject(String fileId, String projectId,
-                                                     String vfsId) throws VirtualFileSystemException, CodeAssistantException {
-        List<ShortTypeInfo> classNames = null;
+    public List<ShortTypeInfo> getClassesFromProject(String fileId, String projectId, String vfsId)
+            throws VirtualFileSystemException, CodeAssistantException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         Item item = vfs.getItem(fileId, false, PropertyFilter.ALL_FILTER);
         if (item.getItemType() != ItemType.FILE) {
             throw new InvalidArgumentException("Unable find Classes. Item " + item.getName() + " is not a file. ");
         }
-
-        Item p = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
-
-        Project project = null;
-        if (p instanceof Project) {
-            project = (Project)p;
-        } else {
-            throw new InvalidArgumentException("Unable find Classes. Item " + p.getName() + " is not a project. ");
+        Item project = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
+        if (!(project instanceof Project)) {
+            throw new InvalidArgumentException("Unable find Classes. Item " + project.getName() + " is not a project. ");
         }
-
-        classNames = findClassesInPackage((File)item, project, vfs);
-
-        return classNames;
+        return findClassesInPackage((File)item, (Project)project, vfs);
     }
 
     @Override
-    protected String getMemberJavaDocFromProject(String fqn, String projectId,
-                                                 String vfsId) throws CodeAssistantException, VirtualFileSystemException {
+    protected String getMemberJavaDocFromProject(String fqn, String projectId, String vfsId)
+            throws CodeAssistantException, VirtualFileSystemException {
         JavaDocBuilderVfs project = parseProject(projectId, vfsId);
         String classFqn = fqn.substring(0, fqn.lastIndexOf('.'));
         String memberFqn = fqn.substring(fqn.lastIndexOf('.') + 1);
@@ -322,16 +307,16 @@ public class JavaCodeAssistant extends CodeAssistant {
         FolderScanner scanner = new FolderScanner(sourceFolder, vfs);
         scanner.addFilter(new FolderFilter());
         List<Item> list = scanner.scan();
-        List<String> pakages = new ArrayList<String>();
+        List<String> packages = new ArrayList<String>();
         String sourcePath = sourceFolder.getPath();
         for (Item i : list) {
             String substring = i.getPath().substring(sourcePath.length() + 1);
             substring = substring.replaceAll("/", ".");
             if (substring.startsWith(prefix)) {
-                pakages.add(substring);
+                packages.add(substring);
             }
         }
-        return pakages;
+        return packages;
     }
 
     @Override
@@ -341,13 +326,13 @@ public class JavaCodeAssistant extends CodeAssistant {
         FolderScanner scanner = new FolderScanner(sourceFolder, vfs);
         scanner.addFilter(new FolderFilter());
         List<Item> list = scanner.scan();
-        List<String> pakages = new ArrayList<String>();
+        List<String> packages = new ArrayList<String>();
         String sourcePath = sourceFolder.getPath();
         for (Item i : list) {
             String substring = i.getPath().substring(sourcePath.length() + 1);
-            pakages.add(substring.replaceAll("/", "."));
+            packages.add(substring.replaceAll("/", "."));
         }
-        return pakages;
+        return packages;
     }
 
     @Override

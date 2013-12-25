@@ -28,9 +28,10 @@ import com.codenvy.api.builder.internal.BuilderTaskType;
 import com.codenvy.api.builder.internal.DependencyCollector;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.api.core.util.CustomPortService;
-import com.codenvy.builder.tools.ant.AntBuildListener;
-import com.codenvy.builder.tools.ant.AntMessage;
 import com.codenvy.dto.server.DtoFactory;
+import com.codenvy.ide.ant.tools.AntBuildListener;
+import com.codenvy.ide.ant.tools.AntMessage;
+import com.codenvy.ide.ant.tools.AntUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -129,7 +130,7 @@ public class AntBuilder extends Builder {
 
     @Override
     protected CommandLine createCommandLine(BuilderConfiguration config) {
-        final CommandLine commandLine = new CommandLine(antExecCommand());
+        final CommandLine commandLine = new CommandLine(AntUtils.getAntExecCommand());
         commandLine.add(config.getTargets());
         switch (config.getTaskType()) {
             case LIST_DEPS:
@@ -140,16 +141,6 @@ public class AntBuilder extends Builder {
         commandLine.add("-listener", BUILD_LISTENER_CLASS, "-lib", BUILD_LISTENER_CLASS_PATH);
         commandLine.add(config.getOptions());
         return commandLine;
-    }
-
-    private String antExecCommand() {
-        final java.io.File antHome = getAntHome();
-        if (antHome != null) {
-            final String ant = "bin" + java.io.File.separatorChar + "ant";
-            return new java.io.File(antHome, ant).getAbsolutePath(); // If ant home directory set use it
-        } else {
-            return "ant"; // otherwise 'ant' should be in PATH variable
-        }
     }
 
     @Override
@@ -257,15 +248,6 @@ public class AntBuilder extends Builder {
         return port;
     }
 
-    private java.io.File getAntHome() {
-        final String antHomeEnv = System.getenv("ANT_HOME");
-        if (antHomeEnv == null) {
-            return null;
-        }
-        java.io.File antHome = new java.io.File(antHomeEnv);
-        return antHome.exists() ? antHome : null;
-    }
-
     /* Ant may add two tools.jar in classpath. It uses two JavaHome locations. One from java system property and one from OS environment
     variable. Ant sources: org.apache.tools.ant.launch.Locator.getToolsJar */
 
@@ -307,7 +289,7 @@ public class AntBuilder extends Builder {
     /* ~ */
 
     private FileFilter newSystemFileFilter() {
-        final java.io.File antHome = getAntHome();
+        final java.io.File antHome = AntUtils.getAntHome();
         final java.io.File javaHome = getJavaHome();
         final java.io.File javaHome2 = getJavaHome2();
         final Path antHomePath = antHome == null ? null : antHome.toPath();

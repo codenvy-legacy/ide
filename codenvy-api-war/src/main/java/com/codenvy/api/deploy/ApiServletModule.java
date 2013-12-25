@@ -17,11 +17,13 @@
  */
 package com.codenvy.api.deploy;
 
-import com.codenvy.api.bootstrap.servlet.EnvironmentFilter;
+import com.codenvy.api.core.user.UserStateFilter;
+import com.codenvy.api.servlet.EnvironmentFilter;
 import com.codenvy.inject.DynaModule;
 import com.google.inject.servlet.ServletModule;
 
 import org.everrest.guice.servlet.GuiceEverrestServlet;
+import org.everrest.websockets.EverrestWebSocketServlet;
 
 /** @author andrew00x */
 @DynaModule
@@ -29,6 +31,9 @@ public class ApiServletModule extends ServletModule {
     @Override
     protected void configureServlets() {
         filter("/*").through(EnvironmentFilter.class);
-        serve("/*").with(GuiceEverrestServlet.class);
+        filter("/*").through(UserStateFilter.class);
+        serve("/rest/*").with(GuiceEverrestServlet.class);
+        bind(EverrestWebSocketServlet.class).asEagerSingleton();
+        serve("/ws/*").with(EverrestWebSocketServlet.class);
     }
 }

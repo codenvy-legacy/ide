@@ -27,10 +27,10 @@ import com.codenvy.api.builder.internal.DelegateBuildLogger;
 import com.codenvy.api.builder.internal.DependencyCollector;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.builder.maven.dto.MavenDependency;
-import com.codenvy.builder.tools.maven.MavenProjectModel;
-import com.codenvy.builder.tools.maven.MavenUtils;
 import com.codenvy.dto.server.DtoFactory;
+import com.codenvy.ide.maven.tools.MavenUtils;
 
+import org.apache.maven.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,7 +91,7 @@ public class MavenBuilder extends Builder {
 
     @Override
     protected CommandLine createCommandLine(BuilderConfiguration config) throws BuilderException {
-        final CommandLine commandLine = new CommandLine(mavenExecCommand());
+        final CommandLine commandLine = new CommandLine(MavenUtils.getMavenExecCommand());
         final List<String> targets = config.getTargets();
         switch (config.getTaskType()) {
             case DEFAULT:
@@ -125,25 +125,6 @@ public class MavenBuilder extends Builder {
         }
         commandLine.add(config.getOptions());
         return commandLine;
-    }
-
-    private String mavenExecCommand() {
-        final java.io.File mvnHome = getMavenHome();
-        if (mvnHome != null) {
-            final String mvn = "bin" + java.io.File.separatorChar + "mvn";
-            return new java.io.File(mvnHome, mvn).getAbsolutePath(); // If builder home directory set use it
-        } else {
-            return "mvn"; // otherwise 'mvn' should be in PATH variable
-        }
-    }
-
-    private java.io.File getMavenHome() {
-        final String m2HomeEnv = System.getenv("M2_HOME");
-        if (m2HomeEnv == null) {
-            return null;
-        }
-        java.io.File m2Home = new java.io.File(m2HomeEnv);
-        return m2Home.exists() ? m2Home : null;
     }
 
     @Override
@@ -184,13 +165,13 @@ public class MavenBuilder extends Builder {
         java.io.File[] files = null;
         switch (config.getTaskType()) {
             case DEFAULT:
-                final MavenProjectModel mavenProjectModel;
+                final Model mavenModel;
                 try {
-                    mavenProjectModel = MavenUtils.getModel(workDir);
+                    mavenModel = MavenUtils.getModel(workDir);
                 } catch (IOException e) {
                     throw new BuilderException(e);
                 }
-                final String packaging = mavenProjectModel.getPackaging();
+                final String packaging = mavenModel.getPackaging();
                 final String fileExt = packaging != null ? '.' + packaging : ".jar";
                 files = new java.io.File(workDir, "target").listFiles(new FilenameFilter() {
                     @Override

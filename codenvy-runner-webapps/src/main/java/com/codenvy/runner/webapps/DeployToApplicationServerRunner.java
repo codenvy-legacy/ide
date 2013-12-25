@@ -39,12 +39,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ServiceLoader;
+import java.util.Set;
 
 /**
  * Runner implementation to run Java web applications by deploying it to application server.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 public class DeployToApplicationServerRunner extends Runner {
@@ -53,17 +53,21 @@ public class DeployToApplicationServerRunner extends Runner {
     public static final String DEFAULT_SERVER_NAME      = "Tomcat";
     public static final String DEBUG_TRANSPORT_PROTOCOL = "dt_socket";
 
-    private final Map<String, ApplicationServer> applicationServers;
+    private final Map<String, ApplicationServer> servers;
     private final CustomPortService              portService;
 
     @Inject
     public DeployToApplicationServerRunner(@Named(DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
                                            @Named(CLEANUP_DELAY_TIME) int cleanupDelay,
                                            ResourceAllocators allocators,
-                                           CustomPortService portService) {
+                                           CustomPortService portService,
+                                           Set<ApplicationServer> serverSet) {
         super(deployDirectoryRoot, cleanupDelay, allocators);
         this.portService = portService;
-        applicationServers = new HashMap<>();
+        this.servers = new HashMap<>();
+        for (ApplicationServer server : serverSet) {
+           this.servers.put(server.getName(), server);
+        }
     }
 
     @Override
@@ -73,15 +77,7 @@ public class DeployToApplicationServerRunner extends Runner {
 
     @Override
     public String getDescription() {
-        return "Java Web Applications Runner";
-    }
-
-    @Override
-    public void start() {
-        super.start();
-        for (ApplicationServer server : ServiceLoader.load(ApplicationServer.class)) {
-            applicationServers.put(server.getName(), server);
-        }
+        return "Deploy to application server runner";
     }
 
     @Override
@@ -106,7 +102,7 @@ public class DeployToApplicationServerRunner extends Runner {
         // It always should be ApplicationServerRunnerConfiguration.
         final ApplicationServerRunnerConfiguration webAppsRunnerCfg =
                 (ApplicationServerRunnerConfiguration)configuration;
-        final ApplicationServer server = applicationServers.get(webAppsRunnerCfg.getServer());
+        final ApplicationServer server = servers.get(webAppsRunnerCfg.getServer());
         if (server == null) {
             throw new RunnerException(String.format("Server %s not found", webAppsRunnerCfg.getServer()));
         }
