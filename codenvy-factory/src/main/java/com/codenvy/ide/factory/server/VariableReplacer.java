@@ -87,7 +87,7 @@ public class VariableReplacer {
 
                     String modified = Deserializer.resolveVariables(content, entry.getValue().getVariableProps(), false);
                     for (Map.Entry<String, String> replacement : entry.getValue().getTextProps().entrySet()) {
-                        if (modified.indexOf(replacement.getKey()) > 0) {
+                        if (modified.contains(replacement.getKey())) {
                             modified = modified.replace(replacement.getKey(), replacement.getValue());
                         }
                     }
