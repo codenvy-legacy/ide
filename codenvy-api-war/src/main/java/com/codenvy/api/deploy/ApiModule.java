@@ -22,7 +22,6 @@ import com.codenvy.api.builder.BuilderSelectionStrategy;
 import com.codenvy.api.builder.BuilderService;
 import com.codenvy.api.builder.LastInUseBuilderSelectionStrategy;
 import com.codenvy.api.builder.internal.SlaveBuilderService;
-import com.codenvy.api.core.concurrent.ThreadLocalPropagateContext;
 import com.codenvy.api.core.rest.ApiExceptionMapper;
 import com.codenvy.api.runner.LastInUseRunnerSelectionStrategy;
 import com.codenvy.api.runner.RunnerAdminService;
@@ -41,8 +40,8 @@ import com.codenvy.api.vfs.server.exceptions.LockExceptionMapper;
 import com.codenvy.api.vfs.server.exceptions.NotSupportedExceptionMapper;
 import com.codenvy.api.vfs.server.exceptions.PermissionDeniedExceptionMapper;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemRuntimeExceptionMapper;
+import com.codenvy.api.vfs.server.observation.EventListenerList;
 import com.codenvy.api.workspace.server.WorkspaceService;
-import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.ide.everrest.CodenvyAsynchronousJobPool;
 import com.codenvy.ide.everrest.CodenvyAsynchronousJobService;
 import com.codenvy.ide.ext.java.server.CreateMavenProjectService;
@@ -61,23 +60,11 @@ import com.google.inject.util.Providers;
 
 import org.everrest.core.impl.async.AsynchronousJobPool;
 
-import javax.swing.event.EventListenerList;
-import java.lang.reflect.Field;
-
 /** @author andrew00x */
 @DynaModule
 public class ApiModule extends AbstractModule {
     @Override
     protected void configure() {
-        // Add propagation of ThreadLocal variable.
-        // Need rework this!!!
-        try {
-            Field field = EnvironmentContext.class.getDeclaredField("current");
-            field.setAccessible(true);
-            ThreadLocalPropagateContext.addThreadLocal((ThreadLocal)field.get(null));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         bind(WorkspaceService.class);
         Multibinder<VirtualFileSystemProvider> vfsBindings = Multibinder.newSetBinder(binder(), VirtualFileSystemProvider.class);
         vfsBindings.addBinding().toInstance(new LocalFileSystemProvider("dev-monit", new EnvironmentContextLocalFSMountStrategy()));
