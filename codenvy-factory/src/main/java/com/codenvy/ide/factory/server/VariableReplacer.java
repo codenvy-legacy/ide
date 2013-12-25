@@ -47,10 +47,13 @@ public class VariableReplacer {
                             PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:**" + glob);
 
                             if (matcher.matches(file) && file.toFile().isFile()) {
+                                ReplacementContainer container = replacementMap.get(file);
+                                if (container == null) {
+                                    container = new ReplacementContainer();
+                                    replacementMap.put(file, container);
+                                }
 
-                                ReplacementContainer container = new ReplacementContainer();
                                 for (Variable.Replacement replacement : variable.getEntries()) {
-
                                     switch (replacement.getReplacemode()) {
                                         case "variable_singlepass":
                                             container.getVariableProps().put(replacement.getFind(), replacement.getReplace());
@@ -59,13 +62,6 @@ public class VariableReplacer {
                                             container.getTextProps().put(replacement.getFind(), replacement.getReplace());
                                             break;
                                     }
-                                }
-
-                                if (replacementMap.containsKey(file)) {
-                                    replacementMap.get(file).getVariableProps().putAll(container.getVariableProps());
-                                    replacementMap.get(file).getTextProps().putAll(container.getTextProps());
-                                } else {
-                                    replacementMap.put(file, container);
                                 }
                             }
 
@@ -84,26 +80,24 @@ public class VariableReplacer {
             }
         }
 
-        if (replacementMap.size() > 0) {
-            for (Map.Entry<Path, ReplacementContainer> entry : replacementMap.entrySet()) {
-                try {
-                    if (entry.getValue().getVariableProps().size() > 0 || entry.getValue().getTextProps().size() > 0) {
-                        String content = new String(Files.readAllBytes(entry.getKey()));
+        for (Map.Entry<Path, ReplacementContainer> entry : replacementMap.entrySet()) {
+            try {
+                if (entry.getValue().hasReplacements()) {
+                    String content = new String(Files.readAllBytes(entry.getKey()));
 
-                        String modified = Deserializer.resolveVariables(content, entry.getValue().getVariableProps(), false);
-                        for (Map.Entry<String, String> replacement : entry.getValue().getTextProps().entrySet()) {
-                            if (modified.indexOf(replacement.getKey()) > 0) {
-                                modified = modified.replace(replacement.getKey(), replacement.getValue());
-                            }
-                        }
-
-                        if (!content.equals(modified)) {
-                            Files.write(entry.getKey(), modified.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
+                    String modified = Deserializer.resolveVariables(content, entry.getValue().getVariableProps(), false);
+                    for (Map.Entry<String, String> replacement : entry.getValue().getTextProps().entrySet()) {
+                        if (modified.indexOf(replacement.getKey()) > 0) {
+                            modified = modified.replace(replacement.getKey(), replacement.getValue());
                         }
                     }
-                } catch (IOException e) {
-                    LOG.error(e.getLocalizedMessage(), e);
+
+                    if (!content.equals(modified)) {
+                        Files.write(entry.getKey(), modified.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
+                    }
                 }
+            } catch (IOException e) {
+                LOG.error(e.getLocalizedMessage(), e);
             }
         }
     }
@@ -122,6 +116,10 @@ public class VariableReplacer {
 
         public Map<String, String> getTextProps() {
             return textProps;
+        }
+
+        public boolean hasReplacements() {
+            return getVariableProps().size() > 0 && getTextProps().size() > 0;
         }
     }
 }
