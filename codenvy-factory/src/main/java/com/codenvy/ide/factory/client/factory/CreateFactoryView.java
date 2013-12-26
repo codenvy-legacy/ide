@@ -199,7 +199,7 @@ public class CreateFactoryView extends ViewImpl
             }
         });
 
-        snippetGitHub.getElement().setAttribute("readonly", "readonly");
+        snippetDirectSharing.getElement().setAttribute("readonly", "readonly");
         snippetDirectSharing.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
