@@ -128,6 +128,8 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE {
     private UserSession userSession;
 
     public IDE() {
+        notifyStatusChanged("load-complete");        
+        
         // Remember browser's window.alert(...) function
         Alert.init();
 

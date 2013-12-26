@@ -65,9 +65,13 @@
 
     <script type="text/javascript" language="javascript" src='<%= staticResourceUrl(request, "greeting.js")%>'></script>
 
+<!-- 
     <link type="text/css" rel="stylesheet" href='<%= staticResourceUrl(request, "top-menu.css")%>' media="all"/>
+ -->
     
+<!-- 
     <link href='<%= staticResourceUrl(request, "css/ide01.css")%>' media="screen" rel="stylesheet" type="text/css"/>
+ -->
     
 </head>
 
@@ -75,6 +79,7 @@
 
 <script type="text/javascript" language="javascript" src='<%= staticResourceUrl(request, "browserNotSupported.js")%>'></script>
 
+<!-- Deprecated -->
 <div id="ide-preloader" style="position: absolute; left:0px; right: 0px; top:0px; bottom: 0px; background-color: #FFFFFF; z-index: 900100;">
 	<div style="position:absolute; width:230px; height:90px; background-image: url('<%= staticResourceUrl(request, "loader-background-element.png")%>'); left:50%; top:50%; margin-left:-115px; margin-top:-45px; text-align: center;">
 		<img src='<%= staticResourceUrl(request, "ajax-loader-new.gif")%>' style="margin-top: 20px; margin-bottom: 10px;" />
@@ -83,48 +88,27 @@
 	</div>
 </div>
 
-<script type="text/javascript" language="javascript" src='<%= staticResourceUrl(request, "_app.nocache.js")%>'></script>
-
-<div id="ide-menu-additions" align="right" class="ideMenuAdditions">
-    <table cellspacing="0" cellpadding="0" border="0"
-           class="ideMenuAdditionsTable">
-        <tr id="ide-menu-additions-rows">
-        </tr>
-    </table>
-</div>
-
-<script type="text/javascript" language="javascript" src='<%= staticResourceUrl(request, "session.js")%>'></script>
-
-<script type="text/javascript" language="javascript" src='<%= staticResourceUrl(request, "cloud_menu.js")%>'></script>
-
-<script type="text/javascript">
-    var uvOptions = {};
-    (function () {
-        var uv = document.createElement('script');
-        uv.type = 'text/javascript';
-        uv.async = true;
-        uv.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'widget.uservoice.com/jWE2fqGrmh1pa5tszJtZQA.js';
-        var s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(uv, s);
-    })();
-</script>
-
-<!-- Google Analytics: -->
 <script>
-  var _gaq = _gaq || [];
-  if (window.location.hostname == 'localhost')
-    {//patch for tracking localhost in chrome
-    _gaq.push(['_setDomainName', 'none']); }
-    _gaq.push(
-      ['_setAccount', "UA-37306001-1"], // codenvy account
-      ['_trackPageview'],
-      ['exo._setAccount', "UA-1292368-18"], // eXo account
-      ['exo._trackPageview']
-  );
-   (function(d,t)
-    {var g=d.createElement(t),s=d.getElementsByTagName(t)[0]; g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js'; s.parentNode.insertBefore(g,s)}
-    (document,'script'));
+	window["ide-status-changed-listener"] = function(msg) {
+		console.log("ide-status-changed-listener [" + msg + "]");
+		try {
+			if ("load-complete" === msg) {
+				var element = document.getElementById("ide-preloader");
+				element.parentNode.removeChild(element);
+			}		
+		} catch (e) {
+			console.log("Error: " + e.message);
+		}
+	}
 </script>
+
+<script type="text/javascript" src='<%= staticResourceUrl(request, "_app.nocache.js")%>'></script>
+
+<script type="text/javascript" src='<%= staticResourceUrl(request, "session.js")%>'></script>
+
+<script type="text/javascript" src='<%= staticResourceUrl(request, "menu-additions.js")%>'></script>
+
+<script type="text/javascript" src='<%= staticResourceUrl(request, "statistic.js")%>'></script>
 
 </body>
 
