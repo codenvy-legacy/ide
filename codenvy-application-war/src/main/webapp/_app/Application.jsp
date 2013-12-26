@@ -53,7 +53,7 @@
         var project = <%= request.getAttribute("project") != null ? "\"" + request.getAttribute("project")  + "\"" : null%>;
         var path = <%= request.getAttribute("path") != null ? "\"" + request.getAttribute("path")  + "\"" : null%>;
         var startUpParams = <%= request.getAttribute("startUpParams") != null ? "\"?" + request.getAttribute("startUpParams")  + "\"" : null%>;
-        var authorizationContext = "/site/rest";
+        var authorizationContext = "/api";
         
         var authorizationErrorPageURL = "/ide/ide/error_oauth.html";
         
