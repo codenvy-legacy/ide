@@ -81,7 +81,7 @@ public class JsPopUpOAuthWindow {
 
     public void login() {
         StringBuilder urlBuilder = new StringBuilder(Utils.getAuthorizationContext());
-        urlBuilder.append("/ide/oauth/authenticate").append('?');
+        urlBuilder.append("/oauth/authenticate").append('?');
         urlBuilder.append("oauth_provider=").append(oauthProvider);
         urlBuilder.append("&userId=").append(IDE.user.getUserId());
         urlBuilder.append("&redirect_after_login=").append("/ide/").append(Utils.getWorkspaceName());
