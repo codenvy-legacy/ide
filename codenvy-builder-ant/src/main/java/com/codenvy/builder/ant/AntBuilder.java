@@ -30,8 +30,10 @@ import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.builder.tools.ant.AntBuildListener;
 import com.codenvy.builder.tools.ant.AntMessage;
+import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.dto.server.DtoFactory;
 
+import org.apache.tools.ant.BuildException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +48,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -71,8 +74,9 @@ public class AntBuilder extends Builder {
     private static final String BUILD_LISTENER_CLASS;
     private static final String BUILD_LISTENER_CLASS_PORT;
     private static final String BUILD_LISTENER_CLASS_PATH;
-    private static final String LINE_SEPARATOR      = System.getProperty("line.separator");
-    private static final String CLASSPATH_SEPARATOR = System.getProperty("path.separator");
+    private static final String LINE_SEPARATOR                     = System.getProperty("line.separator");
+    private static final String CLASSPATH_SEPARATOR                = System.getProperty("path.separator");
+    private static final String DEFAULT_JAR_WITH_DEPENDENCIES_NAME = "jar-with-dependencies.jar";
 
     private static interface AntEventFilter {
         boolean accept(AntEvent event);
@@ -178,6 +182,23 @@ public class AntBuilder extends Builder {
                         if (file.exists()) {
                             result.getResults().add(file);
                         }
+                    }
+                }
+                if (config.getRequest().isDeployJarWithDependencies()) {
+                    //get all needed dependencies from classpath
+                    Set<java.io.File> archives = new LinkedHashSet<>();
+                    for (AntEvent event : server.receiver.events) {
+                        if (event.isPack()) {
+                            archives.add(event.getPack());
+                        } else if (event.isClasspath()) {
+                            archives.addAll(Arrays.asList(event.getClasspath()));
+                        }
+                    }
+                    java.io.File jarWithDependencies = new java.io.File(workDir, DEFAULT_JAR_WITH_DEPENDENCIES_NAME);
+                    try {
+                        ZipUtils.mergeArchives(archives, jarWithDependencies, workDir);
+                    } catch (IOException e) {
+                        throw new BuildException("It is not possible to create jar with dependencies", e);
                     }
                 }
                 return result;
