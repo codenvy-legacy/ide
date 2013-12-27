@@ -28,7 +28,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URL;
 
-/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+/**
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @deprecated remove
+ */
 public class IdeDispatcherServletConfigurationFactory extends DispatcherServletConfigurationFactory {
     @Override
     public DispatcherServletConfiguration newDispatcherServletConfiguration() {
@@ -129,131 +132,128 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                                  }
                                              })
                                              .priority(300)
-                                             .done()
-                                             // Allow to specify GWT code server URL for app launched with SDK runner.
-                                             // h - GWT code server host, p - GWT code server port
-                                             .when(new Condition() {
-                                                 @Override
-                                                 public boolean matches(HttpServletRequest request, HttpServletResponse response) {
-                                                     final String host = request.getParameter("h");
-                                                     final String port = request.getParameter("p");
-                                                     return host != null && port != null;
-                                                     
-                                                 }
-                                             })
-                                             .execute(new Action() {
-                                                 @Override
-                                                 public void perform(HttpServletRequest request, HttpServletResponse response)
-                                                     throws ServletException,
-                                                     IOException {
-                                                     request.getRequestDispatcher("/_app/main").forward(request, response);
-                                                 }
-                                             })
-                                             .priority(350)
-                                             .done()
-                                             .when(Condition.MATCH)
-                                             .execute(new Action() {
-                                                 @Override
-                                                 public void perform(HttpServletRequest request, HttpServletResponse response)
-                                                         throws ServletException,
-                                                                IOException {
-                                                     final String workspace = (String)request.getAttribute("ws");
-                                                     final String requestPath = request.getPathInfo();
+                .done()
+                        // Allow to specify GWT code server URL for app launched with SDK runner.
+                        // h - GWT code server host, p - GWT code server port
+                .when(new Condition() {
+                    @Override
+                    public boolean matches(HttpServletRequest request, HttpServletResponse response) {
+                        final String host = request.getParameter("h");
+                        final String port = request.getParameter("p");
+                        return host != null && port != null;
+
+                    }
+                })
+                .execute(new Action() {
+                    @Override
+                    public void perform(HttpServletRequest request, HttpServletResponse response)
+                            throws ServletException,
+                                   IOException {
+                        request.getRequestDispatcher("/_app/main").forward(request, response);
+                    }
+                })
+                .priority(350)
+                .done()
+                .when(Condition.MATCH)
+                .execute(new Action() {
+                    @Override
+                    public void perform(HttpServletRequest request, HttpServletResponse response)
+                            throws ServletException,
+                                   IOException {
+                        final String workspace = (String)request.getAttribute("ws");
+                        final String requestPath = request.getPathInfo();
 
 
 //TODO need improve this code
-                                                     String project = null;
-                                                     String filePath = null;
-                                                     //checking for attribute openProjectOperation need to prevent parsing referer again
-                                                     //after browser refreshing or pressing F5. when servlet change user location,
-                                                     //addition attribute is setted in session to indicate that we need to parse
-                                                     //referer to get project name and file path.
-                                                     if (request.getSession().getAttribute("openProjectOperation") != null
-                                                         && request.getQueryString() == null
-                                                         && request.getHeader("Referer") != null && !request.getHeader("Referer").isEmpty()
-                                                         && request.getHeader("Referer").contains("/ide/")
-                                                         && !request.getHeader("Referer").contains("_app")) {
+                        String project = null;
+                        String filePath = null;
+                        //checking for attribute openProjectOperation need to prevent parsing referer again
+                        //after browser refreshing or pressing F5. when servlet change user location,
+                        //addition attribute is setted in session to indicate that we need to parse
+                        //referer to get project name and file path.
+                        if (request.getSession().getAttribute("openProjectOperation") != null
+                            && request.getQueryString() == null
+                            && request.getHeader("Referer") != null && !request.getHeader("Referer").isEmpty()
+                            && request.getHeader("Referer").contains("/ide/")
+                            && !request.getHeader("Referer").contains("_app")) {
 
-                                                         String originalUrl = request.getHeader("Referer");
-
-
+                            String originalUrl = request.getHeader("Referer");
 
 
-                                                         URL url = new URL(originalUrl);
-                                                         String myPath1 = url.getPath().substring(("/ide/" + workspace).length());
+                            URL url = new URL(originalUrl);
+                            String myPath1 = url.getPath().substring(("/ide/" + workspace).length());
 
-                                                         if (myPath1.startsWith("/"))
-                                                             myPath1 = myPath1.substring(1);
+                            if (myPath1.startsWith("/"))
+                                myPath1 = myPath1.substring(1);
 
-                                                         if (myPath1.contains("/")) {
-                                                             project = myPath1.substring(0, myPath1.indexOf("/"));
-                                                             filePath = myPath1.substring(myPath1.indexOf("/"));
-                                                         }
-                                                         else
-                                                             project = myPath1;
+                            if (myPath1.contains("/")) {
+                                project = myPath1.substring(0, myPath1.indexOf("/"));
+                                filePath = myPath1.substring(myPath1.indexOf("/"));
+                            } else
+                                project = myPath1;
 
-                                                         request.setAttribute("project", project);
-                                                         request.setAttribute("path", filePath);
-                                                         if (url.getQuery() != null && !url.getQuery().isEmpty())
-                                                            request.setAttribute("startUpParams", url.getQuery().contains("gwt.codesvr") ? null : url.getQuery());
-                                                         request.getSession().removeAttribute("openProjectOperation");
-                                                         final String myPath = "/_app/main";
-                                                         request.getRequestDispatcher(myPath).forward(request, response);
-                                                         return;
-                                                     } else {
-                                                         final int length = requestPath.length();
-                                                         int p = workspace.length();
-                                                         int n = requestPath.indexOf('/', p);
-                                                         if (n < 0) {
-                                                             n = length;
-                                                         }
+                            request.setAttribute("project", project);
+                            request.setAttribute("path", filePath);
+                            if (url.getQuery() != null && !url.getQuery().isEmpty())
+                                request.setAttribute("startUpParams", url.getQuery().contains("gwt.codesvr") ? null : url.getQuery());
+                            request.getSession().removeAttribute("openProjectOperation");
+                            final String myPath = "/_app/main";
+                            request.getRequestDispatcher(myPath).forward(request, response);
+                            return;
+                        } else {
+                            final int length = requestPath.length();
+                            int p = workspace.length();
+                            int n = requestPath.indexOf('/', p);
+                            if (n < 0) {
+                                n = length;
+                            }
 
-                                                         String tmp;
-                                                         if (n < length) {
-                                                             p = n + 1;
-                                                             n = requestPath.indexOf('/', p);
-                                                             if (n < 0) {
-                                                                 n = length;
-                                                             }
-                                                             tmp = requestPath.substring(p, n);
-                                                             if (!tmp.isEmpty()) {
-                                                                 project = tmp;
-                                                             }
-                                                             if (n < length) {
-                                                                 p = n;
-                                                                 n = length;
-                                                                 tmp = requestPath.substring(p, n);
-                                                                 if (!tmp.isEmpty()) {
-                                                                     filePath = tmp;
-                                                                 }
-                                                             }
-                                                         }
-                                                     }
-                                                     int trim = -1;
-                                                     if (project != null)
-                                                         trim = project.length();
-                                                     if (filePath != null)
-                                                         trim += filePath.length();
-                                                     if (request.getQueryString() != null  && !request.getQueryString().contains("gwt.codesvr"))
-                                                         trim = 0;
+                            String tmp;
+                            if (n < length) {
+                                p = n + 1;
+                                n = requestPath.indexOf('/', p);
+                                if (n < 0) {
+                                    n = length;
+                                }
+                                tmp = requestPath.substring(p, n);
+                                if (!tmp.isEmpty()) {
+                                    project = tmp;
+                                }
+                                if (n < length) {
+                                    p = n;
+                                    n = length;
+                                    tmp = requestPath.substring(p, n);
+                                    if (!tmp.isEmpty()) {
+                                        filePath = tmp;
+                                    }
+                                }
+                            }
+                        }
+                        int trim = -1;
+                        if (project != null)
+                            trim = project.length();
+                        if (filePath != null)
+                            trim += filePath.length();
+                        if (request.getQueryString() != null && !request.getQueryString().contains("gwt.codesvr"))
+                            trim = 0;
 
-                                                     if (trim >= 0) {
-                                                         String wsUri = request.getRequestURL().toString();
-                                                         wsUri = wsUri.substring(0, wsUri.length() - trim);
-                                                         response.setContentType("text/html;charset=UTF-8");
-                                                         response.setCharacterEncoding("UTF-8");
-                                                         request.getSession().setAttribute("openProjectOperation", "1");
-                                                         response.getWriter().write("<script>window.location.replace(\"" + wsUri
-                                                                                    + "\");</script>");
-                                                         return;
-                                                     }
-                                                     request.setAttribute("project", project);
-                                                     request.setAttribute("path", filePath);
-                                                     final String myPath = "/_app/main";
-                                                     request.getRequestDispatcher(myPath).forward(request, response);
-                                                 }
-                                             })
-                                             .priority(400)
-                                             .done();
+                        if (trim >= 0) {
+                            String wsUri = request.getRequestURL().toString();
+                            wsUri = wsUri.substring(0, wsUri.length() - trim);
+                            response.setContentType("text/html;charset=UTF-8");
+                            response.setCharacterEncoding("UTF-8");
+                            request.getSession().setAttribute("openProjectOperation", "1");
+                            response.getWriter().write("<script>window.location.replace(\"" + wsUri
+                                                       + "\");</script>");
+                            return;
+                        }
+                        request.setAttribute("project", project);
+                        request.setAttribute("path", filePath);
+                        final String myPath = "/_app/main";
+                        request.getRequestDispatcher(myPath).forward(request, response);
+                    }
+                })
+                .priority(400)
+                .done();
     }
 }
