@@ -123,7 +123,7 @@ public class ProjectPropertiesPresenter implements ProjectPropertiesView.ActionD
 
         if (isDelete) {
             view.setSaveButtonEnabled(true);
-            properties.remove(selectedProperty);
+            selectedProperty.setValue(null);
             view.setProperties(properties);
         }
     }
