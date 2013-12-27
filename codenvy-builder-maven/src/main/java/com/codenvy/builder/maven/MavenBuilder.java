@@ -27,8 +27,8 @@ import com.codenvy.api.builder.internal.DelegateBuildLogger;
 import com.codenvy.api.builder.internal.DependencyCollector;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.builder.maven.dto.MavenDependency;
-import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.maven.tools.MavenUtils;
+import com.codenvy.dto.server.DtoFactory;
 
 import org.apache.maven.model.Model;
 import org.slf4j.Logger;
@@ -36,7 +36,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.FilenameFilter;
@@ -110,7 +109,7 @@ public class MavenBuilder extends Builder {
 
     @Override
     protected CommandLine createCommandLine(BuilderConfiguration config) throws BuilderException {
-        final CommandLine commandLine = new CommandLine(mavenExecCommand());
+        final CommandLine commandLine = new CommandLine(MavenUtils.getMavenExecCommand());
         final List<String> targets = config.getTargets();
         switch (config.getTaskType()) {
             case DEFAULT:

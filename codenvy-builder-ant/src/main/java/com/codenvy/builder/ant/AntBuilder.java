@@ -28,8 +28,6 @@ import com.codenvy.api.builder.internal.BuilderTaskType;
 import com.codenvy.api.builder.internal.DependencyCollector;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.api.core.util.CustomPortService;
-import com.codenvy.builder.tools.ant.AntBuildListener;
-import com.codenvy.builder.tools.ant.AntMessage;
 import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.ant.tools.AntBuildListener;
@@ -54,6 +52,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -199,7 +198,7 @@ public class AntBuilder extends Builder {
                     }
                     java.io.File jarWithDependencies = new java.io.File(workDir, DEFAULT_JAR_WITH_DEPENDENCIES_NAME);
                     try {
-                        ZipUtils.mergeArchives(jarWithDependencies, workDir, classpath.toArray(new File[classpath.size()]));
+                        ZipUtils.mergeArchives(jarWithDependencies, workDir, classpath.toArray(new java.io.File[classpath.size()]));
                     } catch (IOException e) {
                         throw new BuilderException("It is not possible to create jar with dependencies", e);
                     }
