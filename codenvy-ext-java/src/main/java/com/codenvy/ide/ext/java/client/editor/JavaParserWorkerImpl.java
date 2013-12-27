@@ -119,6 +119,13 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         callback.onResult(message.proposals());
     }
 
+    @Override
+    public void removeFanFromCache(String fqn) {
+        MessagesImpls.RemoveFqnMessageImpl mesage = MessagesImpls.RemoveFqnMessageImpl.make();
+        mesage.setFqn(fqn);
+        worker.postMessage(mesage.serialize());
+    }
+
     /** {@inheritDoc} */
     @Override
     public void parse(String content, String fileName, String fileId, String packageName, WorkerCallback<IProblem> callback) {

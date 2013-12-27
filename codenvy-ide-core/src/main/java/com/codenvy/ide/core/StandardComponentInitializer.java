@@ -65,7 +65,7 @@ import com.google.web.bindery.event.shared.EventBus;
 /**
  * Initializer for standard component i.e. some basic menu commands (Save, Save As etc)
  *
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @author Evgen Vidolob
  */
 @Singleton
 public class StandardComponentInitializer {
@@ -127,6 +127,9 @@ public class StandardComponentInitializer {
 
     @Inject
     private ShowPreferencesAction showPreferencesAction;
+    
+    @Inject
+    private ShowProjectPropertiesAction showProjectPropertiesAction;
 
     @Inject
     @MainToolbar
@@ -193,6 +196,11 @@ public class StandardComponentInitializer {
         DefaultActionGroup window = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_WINDOW);
         actionManager.registerAction("showPreferences", showPreferencesAction);
         window.add(showPreferencesAction);
+        
+        DefaultActionGroup project = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_PROJECT);
+        actionManager.registerAction("showProjectProperties", showProjectPropertiesAction);
+        project.add(showProjectPropertiesAction);
+        
         DefaultActionGroup fileGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_FILE);
 
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('s').build(), "save");
