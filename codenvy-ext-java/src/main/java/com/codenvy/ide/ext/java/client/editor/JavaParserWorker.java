@@ -26,8 +26,7 @@ import com.codenvy.ide.ext.java.messages.WorkerProposal;
 import com.codenvy.ide.ext.java.messages.impl.WorkerCodeBlock;
 
 /**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Evgen Vidolob
  */
 public interface JavaParserWorker {
 
@@ -47,6 +46,9 @@ public interface JavaParserWorker {
 
     void addOutlineUpdateHandler(String fileId, WorkerCallback<WorkerCodeBlock> callback);
 
-    void computeQAProposals(String content, int offset, int selectionLength, boolean updatedContent, JsoArray<ProblemLocationMessage> problems,
+    void computeQAProposals(String content, int offset, int selectionLength, boolean updatedContent,
+                            JsoArray<ProblemLocationMessage> problems,
                             WorkerCallback<WorkerProposal> callback);
+
+    void removeFanFromCache(String fqn);
 }

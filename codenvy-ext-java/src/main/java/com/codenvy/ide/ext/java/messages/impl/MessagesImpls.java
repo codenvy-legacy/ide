@@ -21,14 +21,13 @@
 package com.codenvy.ide.ext.java.messages.impl;
 
 
-import com.codenvy.ide.ext.java.messages.ProblemLocationMessage;
 
 @SuppressWarnings({"unchecked", "cast"})
 public class MessagesImpls {
 
   private  MessagesImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "36fc7fc8f0683fe09a288c252d9dd5ad50a00f10";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "b8532d8fa6d2b0b06a7818baa3f1cc02b83266a4";
 
 
   public static class ApplyProposalMessageImpl extends com.google.gwt.webworker.client.messages.MessageImpl implements com.codenvy.ide.ext.java.messages.ApplyProposalMessage {
@@ -213,20 +212,6 @@ public class MessagesImpls {
     protected ComputeCorrMessageImpl() {}
 
     @Override
-    public final native com.codenvy.ide.collections.Array<ProblemLocationMessage> problemLocations() /*-{
-      return this["problemLocations"];
-    }-*/;
-
-    public final native ComputeCorrMessageImpl setProblemLocations(com.codenvy.ide.collections.js.JsoArray<ProblemLocationMessage> problemLocations) /*-{
-      this["problemLocations"] = problemLocations;
-      return this;
-    }-*/;
-
-    public final native boolean hasProblemLocations() /*-{
-      return this.hasOwnProperty("problemLocations");
-    }-*/;
-
-    @Override
     public final native boolean updatedOffset() /*-{
       return this["updatedOffset"];
     }-*/;
@@ -238,6 +223,20 @@ public class MessagesImpls {
 
     public final native boolean hasUpdatedOffset() /*-{
       return this.hasOwnProperty("updatedOffset");
+    }-*/;
+
+    @Override
+    public final native com.codenvy.ide.collections.Array<com.codenvy.ide.ext.java.messages.ProblemLocationMessage> problemLocations() /*-{
+      return this["problemLocations"];
+    }-*/;
+
+    public final native ComputeCorrMessageImpl setProblemLocations(com.codenvy.ide.collections.js.JsoArray<com.codenvy.ide.ext.java.messages.ProblemLocationMessage> problemLocations) /*-{
+      this["problemLocations"] = problemLocations;
+      return this;
+    }-*/;
+
+    public final native boolean hasProblemLocations() /*-{
+      return this.hasOwnProperty("problemLocations");
     }-*/;
 
     @Override
@@ -335,20 +334,6 @@ public class MessagesImpls {
     }-*/;
 
     @Override
-    public final native java.lang.String restContext() /*-{
-      return this["restContext"];
-    }-*/;
-
-    public final native ConfigMessageImpl setRestContext(java.lang.String restContext) /*-{
-      this["restContext"] = restContext;
-      return this;
-    }-*/;
-
-    public final native boolean hasRestContext() /*-{
-      return this.hasOwnProperty("restContext");
-    }-*/;
-
-    @Override
     public final native java.lang.String javaDocContext() /*-{
       return this["javaDocContext"];
     }-*/;
@@ -360,6 +345,20 @@ public class MessagesImpls {
 
     public final native boolean hasJavaDocContext() /*-{
       return this.hasOwnProperty("javaDocContext");
+    }-*/;
+
+    @Override
+    public final native java.lang.String restContext() /*-{
+      return this["restContext"];
+    }-*/;
+
+    public final native ConfigMessageImpl setRestContext(java.lang.String restContext) /*-{
+      this["restContext"] = restContext;
+      return this;
+    }-*/;
+
+    public final native boolean hasRestContext() /*-{
+      return this.hasOwnProperty("restContext");
     }-*/;
 
     @Override
@@ -611,8 +610,7 @@ public class MessagesImpls {
     }-*/;  }
 
 
-  public static class ProblemLocationMessageImpl extends com.google.gwt.webworker.client.messages.MessageImpl implements
-                                                                                                              ProblemLocationMessage {
+  public static class ProblemLocationMessageImpl extends com.google.gwt.webworker.client.messages.MessageImpl implements com.codenvy.ide.ext.java.messages.ProblemLocationMessage {
     protected ProblemLocationMessageImpl() {}
 
     @Override
@@ -830,6 +828,30 @@ public class MessagesImpls {
     public static native RegionImpl make() /*-{
       return {
 
+      };
+    }-*/;  }
+
+
+  public static class RemoveFqnMessageImpl extends com.google.gwt.webworker.client.messages.MessageImpl implements com.codenvy.ide.ext.java.messages.RemoveFqnMessage {
+    protected RemoveFqnMessageImpl() {}
+
+    @Override
+    public final native java.lang.String fqn() /*-{
+      return this["fqn"];
+    }-*/;
+
+    public final native RemoveFqnMessageImpl setFqn(java.lang.String fqn) /*-{
+      this["fqn"] = fqn;
+      return this;
+    }-*/;
+
+    public final native boolean hasFqn() /*-{
+      return this.hasOwnProperty("fqn");
+    }-*/;
+
+    public static native RemoveFqnMessageImpl make() /*-{
+      return {
+        _type: 10
       };
     }-*/;  }
 
