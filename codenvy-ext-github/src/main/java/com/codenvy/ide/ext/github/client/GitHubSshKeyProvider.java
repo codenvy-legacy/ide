@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.github.client;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
@@ -35,6 +34,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
+
+import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.security.oauth.OAuthStatus.LOGGED_IN;
@@ -107,7 +108,7 @@ public class GitHubSshKeyProvider implements SshKeyProvider, OAuthCallback {
     private void oAuthLoginStart(@NotNull String user) {
         boolean permitToRedirect = Window.confirm(constant.loginOAuthLabel());
         if (permitToRedirect) {
-            String authUrl = "rest/ide/oauth/authenticate?oauth_provider=github"
+            String authUrl = restContext + "/oauth/authenticate?oauth_provider=github"
                              + "&scope=user&userId=" + user + "&scope=repo&redirect_after_login=/ide/" + Utils.getWorkspaceName();
             JsOAuthWindow authWindow = new JsOAuthWindow(authUrl, "error.url", 500, 980, this);
             authWindow.loginWithOAuth();

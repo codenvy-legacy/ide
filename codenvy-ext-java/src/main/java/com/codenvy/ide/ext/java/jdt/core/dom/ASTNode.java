@@ -13,7 +13,13 @@ package com.codenvy.ide.ext.java.jdt.core.dom;
 
 import com.codenvy.ide.ext.java.jdt.internal.core.dom.NaiveASTFlattener;
 
-import java.util.*;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Abstract superclass of all Abstract Syntax Tree (AST) node types.

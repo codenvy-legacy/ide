@@ -17,12 +17,13 @@
  */
 package com.codenvy.ide.wizard;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.wizard.Wizard;
 import com.codenvy.ide.api.ui.wizard.WizardDialog;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The implementation of {@link WizardDialog}.

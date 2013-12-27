@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.commons;
 
-/** @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a> */
+/** @author andrew00x */
 @SuppressWarnings("serial")
 public class ParsingResponseException extends Exception {
     public ParsingResponseException(String message, Throwable cause) {

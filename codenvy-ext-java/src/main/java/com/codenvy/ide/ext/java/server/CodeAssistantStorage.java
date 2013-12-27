@@ -18,11 +18,11 @@
 package com.codenvy.ide.ext.java.server;
 
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.ext.java.shared.ShortTypeInfo;
 import com.codenvy.ide.ext.java.shared.TypeInfo;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
 

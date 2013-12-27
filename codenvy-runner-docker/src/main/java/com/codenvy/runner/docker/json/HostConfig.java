@@ -19,7 +19,7 @@ package com.codenvy.runner.docker.json;
 
 import java.util.Arrays;
 
-/** @author <a href="mailto:aparfonov@codenvy.com">Andrey Parfonov</a> */
+/** @author andrew00x */
 public class HostConfig {
     private String[]       binds;
     private LxcConfParam[] lxcConf;

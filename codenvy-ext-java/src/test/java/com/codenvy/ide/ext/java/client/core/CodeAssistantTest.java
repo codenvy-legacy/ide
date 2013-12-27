@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.java.client.core;
 
-import com.codenvy.ide.ext.java.client.core.ParserBaseTest;
 import com.codenvy.ide.ext.java.emul.FileSystem;
 import com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit;
 import com.codenvy.ide.ext.java.jdt.core.CompletionProposal;

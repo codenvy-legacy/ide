@@ -31,12 +31,12 @@ import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.runtime.IStatus;
 import com.codenvy.ide.runtime.Status;
 import com.codenvy.ide.util.loging.Log;
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+import com.google.web.bindery.event.shared.EventBus;
 
 
 /**

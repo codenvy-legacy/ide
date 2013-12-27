@@ -18,7 +18,6 @@
 package com.codenvy.ide.welcome;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.parts.WelcomeItemAction;
 import com.codenvy.ide.api.parts.WelcomePart;
 import com.codenvy.ide.api.ui.workspace.AbstractPartPresenter;
@@ -28,6 +27,8 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import javax.validation.constraints.NotNull;
 
 
 /**

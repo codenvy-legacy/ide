@@ -19,7 +19,12 @@ package com.codenvy.ide.text;
 
 import com.codenvy.ide.runtime.Assert;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Abstract default implementation of <code>IDocument</code> and its extension interfaces

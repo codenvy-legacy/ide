@@ -17,10 +17,11 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.debug;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.java.jdi.shared.*;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The client service for debug java application.

@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.git.client.commit;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -39,6 +38,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;

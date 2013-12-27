@@ -17,9 +17,10 @@
  */
 package com.codenvy.ide.toolbar;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.ui.action.ActionGroup;
+
+import javax.validation.constraints.NotNull;
 
 
 /**

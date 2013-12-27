@@ -10,8 +10,16 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.code;
 
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTVisitor;
+import com.codenvy.ide.ext.java.jdt.core.dom.Assignment;
+import com.codenvy.ide.ext.java.jdt.core.dom.IVariableBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.Name;
+import com.codenvy.ide.ext.java.jdt.core.dom.PostfixExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.PrefixExpression;
 import com.codenvy.ide.ext.java.jdt.core.dom.PrefixExpression.Operator;
+import com.codenvy.ide.ext.java.jdt.core.dom.SimpleName;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclaration;
 
 public class TempAssignmentFinder extends ASTVisitor {
     private ASTNode fFirstAssignment;

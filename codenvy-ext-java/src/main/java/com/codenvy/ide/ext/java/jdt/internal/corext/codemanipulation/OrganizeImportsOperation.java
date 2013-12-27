@@ -15,20 +15,35 @@ import com.codenvy.ide.ext.java.jdt.core.IPackageFragment;
 import com.codenvy.ide.ext.java.jdt.core.ISourceRange;
 import com.codenvy.ide.ext.java.jdt.core.SourceRange;
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.AbstractTypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.dom.IBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.ITypeBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.ImportDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.Modifier;
+import com.codenvy.ide.ext.java.jdt.core.dom.Name;
+import com.codenvy.ide.ext.java.jdt.core.dom.SimpleName;
+import com.codenvy.ide.ext.java.jdt.core.dom.Type;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ImportRewrite;
 import com.codenvy.ide.ext.java.jdt.core.search.SearchEngine;
-import com.codenvy.ide.ext.java.jdt.core.search.TypeNameMatch;
 import com.codenvy.ide.ext.java.jdt.core.search.SearchEngine.SearchCallback;
+import com.codenvy.ide.ext.java.jdt.core.search.TypeNameMatch;
 import com.codenvy.ide.ext.java.jdt.env.PackageFragment;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.ASTNodes;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.Bindings;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.ScopeAnalyzer;
-
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.edits.TextEdit;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class OrganizeImportsOperation {
     public static interface IChooseImportQuery {

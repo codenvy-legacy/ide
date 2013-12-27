@@ -11,7 +11,6 @@
 package com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.types;
 
 import com.codenvy.ide.ext.java.jdt.core.dom.ITypeBinding;
-
 import com.codenvy.ide.runtime.Assert;
 
 import java.util.ArrayList;

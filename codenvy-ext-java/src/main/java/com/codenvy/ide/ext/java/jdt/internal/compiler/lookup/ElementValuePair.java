@@ -11,7 +11,13 @@
 package com.codenvy.ide.ext.java.jdt.internal.compiler.lookup;
 
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ClassFileConstants;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Annotation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ArrayInitializer;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ClassLiteralAccess;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Expression;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.FieldReference;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.NameReference;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Reference;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.Constant;
 
 public class ElementValuePair {

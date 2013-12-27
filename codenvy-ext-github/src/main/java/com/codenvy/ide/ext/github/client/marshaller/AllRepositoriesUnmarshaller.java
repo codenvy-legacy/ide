@@ -18,11 +18,11 @@
 package com.codenvy.ide.ext.github.client.marshaller;
 
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.github.shared.GitHubRepository;
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;

@@ -17,10 +17,7 @@
  */
 package com.codenvy.ide.ext.ssh.server;
 
-/**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
- */
+/** @author andrew00x */
 @SuppressWarnings("serial")
 public final class SshKeyStoreException extends Exception {
     /**

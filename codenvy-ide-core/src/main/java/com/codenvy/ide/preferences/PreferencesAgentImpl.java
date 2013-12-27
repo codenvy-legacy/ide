@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.preferences;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.collections.Array;
@@ -25,6 +24,8 @@ import com.codenvy.ide.collections.Collections;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+
+import javax.validation.constraints.NotNull;
 
 
 /**

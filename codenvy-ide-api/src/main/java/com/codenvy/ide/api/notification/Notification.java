@@ -17,17 +17,19 @@
  */
 package com.codenvy.ide.api.notification;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 import static com.codenvy.ide.api.notification.Notification.State.READ;
 import static com.codenvy.ide.api.notification.Notification.State.UNREAD;
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
-import static com.codenvy.ide.api.notification.Notification.Type.*;
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
 
 /**
  * Presents an entity that reflects the state of a notification.

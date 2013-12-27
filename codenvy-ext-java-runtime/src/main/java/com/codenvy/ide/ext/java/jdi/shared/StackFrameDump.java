@@ -18,7 +18,6 @@
 package com.codenvy.ide.ext.java.jdi.shared;
 
 import com.codenvy.ide.dto.DTO;
-import com.codenvy.ide.json.JsonArray;
 
 import java.util.List;
 

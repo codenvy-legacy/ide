@@ -17,10 +17,11 @@
  */
 package com.codenvy.ide.part.projectexplorer;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.parts.base.BaseActionDelegate;
 import com.codenvy.ide.resources.model.Resource;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * Interface of project tree view.

@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.core.editor;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.SDK;
@@ -26,6 +25,8 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.IntegerMap;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+
+import javax.validation.constraints.NotNull;
 
 
 /**

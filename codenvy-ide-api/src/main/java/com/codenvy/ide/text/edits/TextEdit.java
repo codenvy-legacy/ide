@@ -22,7 +22,11 @@ import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.RegionImpl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A text edit describes an elementary text manipulation operation. Edits are executed by applying them to a document (e.g. an

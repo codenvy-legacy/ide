@@ -17,7 +17,24 @@ import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ASTVisitor;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ClassFileConstants;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.AccessRestriction;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.AnnotationBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ArrayBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.Binding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.BlockScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ExtraCompilerModifiers;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.FieldBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.InvocationSite;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.LocalVariableBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.MethodBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.PackageBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ParameterizedGenericMethodBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ReferenceBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.Scope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TagBits;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeConstants;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeIds;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.WildcardBinding;
 
 public abstract class ASTNode implements TypeConstants, TypeIds {
 

@@ -18,7 +18,6 @@
 package com.codenvy.ide.dto.definitions;
 
 import com.codenvy.dto.shared.DTO;
-import com.codenvy.ide.dto.definitions.SimpleDto;
 
 import java.util.List;
 import java.util.Map;

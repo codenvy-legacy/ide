@@ -17,8 +17,9 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.fqn;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.resources.model.File;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

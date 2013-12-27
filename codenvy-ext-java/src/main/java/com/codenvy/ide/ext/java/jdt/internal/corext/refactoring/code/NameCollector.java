@@ -10,7 +10,12 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.code;
 
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.SimpleName;
+import com.codenvy.ide.ext.java.jdt.core.dom.SingleVariableDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.TypeDeclarationStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationFragment;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationStatement;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.GenericVisitor;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.Selection;
 

@@ -17,7 +17,11 @@
  */
 package com.codenvy.ide.texteditor.api;
 
-import com.codenvy.ide.text.*;
+import com.codenvy.ide.text.BadLocationException;
+import com.codenvy.ide.text.Document;
+import com.codenvy.ide.text.DocumentCommand;
+import com.codenvy.ide.text.Region;
+import com.codenvy.ide.text.TextUtilities;
 
 /**
  * This strategy always copies the indentation of the previous line.

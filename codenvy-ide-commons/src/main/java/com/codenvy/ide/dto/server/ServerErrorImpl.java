@@ -19,9 +19,13 @@ package com.codenvy.ide.dto.server;
 
 import com.codenvy.ide.dto.shared.RoutableDto;
 import com.codenvy.ide.dto.shared.ServerError;
-import com.codenvy.ide.dto.shared.RoutableDto;
-import com.codenvy.ide.dto.shared.ServerError;
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>

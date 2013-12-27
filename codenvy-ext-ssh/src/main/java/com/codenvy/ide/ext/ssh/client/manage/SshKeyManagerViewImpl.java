@@ -17,11 +17,10 @@
  */
 package com.codenvy.ide.ext.ssh.client.manage;
 
-import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.ssh.client.SshLocalizationConstant;
 import com.codenvy.ide.ext.ssh.client.SshResources;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.TextCell;
@@ -38,6 +37,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 

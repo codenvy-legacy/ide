@@ -17,12 +17,13 @@
  */
 package com.codenvy.ide.ext.git.client.init;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.job.Job;
 import com.codenvy.ide.job.JobChangeEvent;
 import com.codenvy.ide.rest.RequestStatusHandler;
 import com.google.web.bindery.event.shared.EventBus;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

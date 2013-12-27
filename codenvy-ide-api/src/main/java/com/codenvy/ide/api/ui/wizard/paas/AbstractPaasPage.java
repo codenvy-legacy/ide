@@ -17,11 +17,12 @@
  */
 package com.codenvy.ide.api.ui.wizard.paas;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.google.gwt.resources.client.ImageResource;
+
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
 

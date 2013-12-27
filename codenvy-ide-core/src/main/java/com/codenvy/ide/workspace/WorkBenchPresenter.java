@@ -18,8 +18,16 @@
 package com.codenvy.ide.workspace;
 
 import com.codenvy.ide.api.mvp.Presenter;
-import com.codenvy.ide.api.parts.*;
-import com.codenvy.ide.api.ui.workspace.*;
+import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.parts.OutlinePart;
+import com.codenvy.ide.api.parts.ProjectExplorerPart;
+import com.codenvy.ide.api.parts.SearchPart;
+import com.codenvy.ide.api.parts.WelcomePart;
+import com.codenvy.ide.api.ui.workspace.EditorPartStack;
+import com.codenvy.ide.api.ui.workspace.PartPresenter;
+import com.codenvy.ide.api.ui.workspace.PartStack;
+import com.codenvy.ide.api.ui.workspace.PartStackType;
+import com.codenvy.ide.api.ui.workspace.PartStackView;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;

@@ -18,7 +18,6 @@
 package com.codenvy.ide.projecttype;
 
 import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
@@ -28,6 +27,8 @@ import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @author <a href="mailto:ashumilova@codenvy.com">Ann Shumilova</a>

@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.api.parts.base;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.google.gwt.dom.client.Style;
@@ -27,6 +26,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * Base view for part that mast contains toolbar, this class provide one default button: "minimize" or hide part view and

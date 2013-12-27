@@ -17,14 +17,15 @@
  */
 package com.codenvy.ide.keybinding;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.ui.keybinding.Scheme;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.IntegerMap;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.util.input.CharCodeWithModifiers;
+
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 
 /**

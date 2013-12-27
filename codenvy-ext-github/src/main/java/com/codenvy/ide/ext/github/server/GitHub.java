@@ -17,13 +17,13 @@
  */
 package com.codenvy.ide.ext.github.server;
 
+import com.codenvy.api.core.user.UserState;
 import com.codenvy.commons.json.JsonHelper;
 import com.codenvy.commons.json.JsonNameConventions;
 import com.codenvy.commons.json.JsonParseException;
 import com.codenvy.commons.security.oauth.OAuthTokenProvider;
 import com.codenvy.commons.security.shared.Token;
 import com.codenvy.dto.server.DtoFactory;
-import com.codenvy.ide.commons.ContainerUtils;
 import com.codenvy.ide.commons.ParsingResponseException;
 import com.codenvy.ide.ext.github.shared.Collaborators;
 import com.codenvy.ide.ext.github.shared.GitHubRepository;
@@ -34,9 +34,10 @@ import com.codenvy.ide.ext.ssh.server.SshKeyStore;
 import com.codenvy.ide.ext.ssh.server.SshKeyStoreException;
 
 import org.everrest.core.impl.provider.json.JsonValue;
-import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.services.security.ConversationState;
 
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -56,9 +57,8 @@ import java.util.regex.Pattern;
 
 /**
  * Contains methods for retrieving data from GitHub and processing it before sending to client side.
- * 
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: Github.java Sep 5, 2011 12:08:04 PM vereshchaka $
+ *
+ * @author Oksana Vereshchaka
  */
 public class GitHub {
 
@@ -67,49 +67,30 @@ public class GitHub {
     private final SshKeyStore        sshKeyStore;
     private final OAuthTokenProvider oauthTokenProvider;
 
-    /**
-     * Pattern to parse Link header from GitHub response.
-     */
-    private final Pattern            linkPattern = Pattern.compile("<(.+)>;\\srel=\"(\\w+)\"");
+    /** Pattern to parse Link header from GitHub response. */
+    private final Pattern linkPattern = Pattern.compile("<(.+)>;\\srel=\"(\\w+)\"");
 
-    /**
-     * Links' delimeter.
-     */
-    private static final String      DELIM_LINKS = ",";
+    /** Links' delimiter. */
+    private static final String DELIM_LINKS = ",";
 
-    /**
-     * Name of the Link header from GitHub response.
-     */
-    private static final String      HEADER_LINK = "Link";
+    /** Name of the Link header from GitHub response. */
+    private static final String HEADER_LINK = "Link";
 
-    /**
-     * Name of the link for the first page.
-     */
-    private static final String      META_FIRST  = "first";
+    /** Name of the link for the first page. */
+    private static final String META_FIRST = "first";
 
-    /**
-     * Name of the link for the last page.
-     */
-    private static final String      META_LAST   = "last";
+    /** Name of the link for the last page. */
+    private static final String META_LAST = "last";
 
-    /**
-     * Name of the link for the previous page.
-     */
-    private static final String      META_PREV   = "prev";
+    /** Name of the link for the previous page. */
+    private static final String META_PREV = "prev";
 
-    /**
-     * Name of the link for the next page.
-     */
-    private static final String      META_NEXT   = "next";
+    /** Name of the link for the next page. */
+    private static final String META_NEXT = "next";
 
-
-    public GitHub(InitParams initParams,
-                  OAuthTokenProvider oauthTokenProvider,
-                  SshKeyStore sshKeyStore) {
-        this(ContainerUtils.readValueParam(initParams, "github-user"), oauthTokenProvider, sshKeyStore);
-    }
-
-    public GitHub(String myGitHubUser,
+    // TODO(GUICE): better name for property "github-user" ??
+    @Inject
+    public GitHub(@Nullable @Named("github-user") String myGitHubUser,
                   OAuthTokenProvider oauthTokenProvider,
                   SshKeyStore sshKeyStore) {
         this.myGitHubUser = myGitHubUser;
@@ -119,12 +100,16 @@ public class GitHub {
 
     /**
      * Get the list of public repositories by user's name.
-     * 
-     * @param user name of user
+     *
+     * @param user
+     *         name of user
      * @return {@link GitHubRepositoryList} list of GitHub repositories
-     * @throws IOException if any i/o errors occurs
-     * @throws GitHubException if GitHub server return unexpected or error status for request
-     * @throws com.codenvy.ide.commons.server.ParsingResponseException if any error occurs when parse response body
+     * @throws IOException
+     *         if any i/o errors occurs
+     * @throws GitHubException
+     *         if GitHub server return unexpected or error status for request
+     * @throws ParsingResponseException
+     *         if any error occurs when parse response body
      */
     public GitHubRepositoryList listUserPublicRepositories(String user) throws IOException, GitHubException, ParsingResponseException {
         user = (user == null || user.isEmpty()) ? myGitHubUser : user;
@@ -142,16 +127,20 @@ public class GitHub {
 
     /**
      * Get the list of all repositories by organization name.
-     * 
-     * @param organization name of user
+     *
+     * @param organization
+     *         name of user
      * @return {@link GitHubRepositoryList} list of GitHub repositories
-     * @throws IOException if any i/o errors occurs
-     * @throws GitHubException if GitHub server return unexpected or error status for request
-     * @throws com.codenvy.ide.commons.server.ParsingResponseException if any error occurs when parse response body
+     * @throws IOException
+     *         if any i/o errors occurs
+     * @throws GitHubException
+     *         if GitHub server return unexpected or error status for request
+     * @throws ParsingResponseException
+     *         if any error occurs when parse response body
      */
     public GitHubRepositoryList listAllOrganizationRepositories(String organization) throws IOException,
-                                                                                    GitHubException,
-                                                                                    ParsingResponseException {
+                                                                                            GitHubException,
+                                                                                            ParsingResponseException {
         final String oauthToken = getToken(getUserId());
         final String url = "https://api.github.com/orgs/" + organization + "/repos?access_token=" + oauthToken;
         final String method = "GET";
@@ -164,16 +153,20 @@ public class GitHub {
 
     /**
      * Get the page of GitHub repositories by it's link.
-     * 
-     * @param url location of the page with repositories
+     *
+     * @param url
+     *         location of the page with repositories
      * @return {@link GitHubRepositoryList} list of GitHub repositories
-     * @throws IOException if any i/o errors occurs
-     * @throws GitHubException if GitHub server return unexpected or error status for request
-     * @throws ParsingResponseException if any error occurs when parse response body
+     * @throws IOException
+     *         if any i/o errors occurs
+     * @throws GitHubException
+     *         if GitHub server return unexpected or error status for request
+     * @throws ParsingResponseException
+     *         if any error occurs when parse response body
      */
     public GitHubRepositoryList getPage(String url) throws IOException,
-                                                   GitHubException,
-                                                   ParsingResponseException {
+                                                           GitHubException,
+                                                           ParsingResponseException {
         final String oauthToken = getToken(getUserId());
         final String method = "GET";
         url += "&access_token=" + oauthToken;
@@ -186,11 +179,14 @@ public class GitHub {
 
     /**
      * Get the list of the repositories of the current authorized user.
-     * 
+     *
      * @return {@link GitHubRepositoryList} list of GitHub repositories
-     * @throws IOException if any i/o errors occurs
-     * @throws GitHubException if GitHub server return unexpected or error status for request
-     * @throws com.codenvy.ide.commons.server.ParsingResponseException if any error occurs when parse response body
+     * @throws IOException
+     *         if any i/o errors occurs
+     * @throws GitHubException
+     *         if GitHub server return unexpected or error status for request
+     * @throws ParsingResponseException
+     *         if any error occurs when parse response body
      */
     public GitHubRepositoryList listCurrentUserRepositories() throws IOException, GitHubException, ParsingResponseException {
         final String oauthToken = getToken(getUserId());
@@ -205,14 +201,17 @@ public class GitHub {
 
     /**
      * Get the Map which contains available repositories in format Map<Organization name, List<Available repositories>>.
-     * 
+     *
      * @return ap which contains available repositories in format Map<Organization name, List<Available repositories>>
-     * @throws IOException if any i/o errors occurs
-     * @throws GitHubException if GitHub server return unexpected or error status for request
-     * @throws com.codenvy.ide.commons.server.ParsingResponseException if any error occurs when parse response body
+     * @throws IOException
+     *         if any i/o errors occurs
+     * @throws GitHubException
+     *         if GitHub server return unexpected or error status for request
+     * @throws ParsingResponseException
+     *         if any error occurs when parse response body
      */
     public Map<String, List<GitHubRepository>> availableRepositoriesList() throws IOException, GitHubException,
-                                                                          ParsingResponseException {
+                                                                                  ParsingResponseException {
         Map<String, List<GitHubRepository>> repoList = new HashMap<String, List<GitHubRepository>>();
         repoList.put(getGithubUser().getLogin(), listCurrentUserRepositories().getRepositories());
         for (String organizationId : this.listOrganizations()) {
@@ -223,11 +222,14 @@ public class GitHub {
 
     /**
      * Get the array of the organizations of the authorized user.
-     * 
+     *
      * @return list of organizations
-     * @throws IOException if any i/o errors occurs
-     * @throws GitHubException if GitHub server return unexpected or error status for request
-     * @throws com.codenvy.ide.commons.server.ParsingResponseException if any error occurs when parse response body
+     * @throws IOException
+     *         if any i/o errors occurs
+     * @throws GitHubException
+     *         if GitHub server return unexpected or error status for request
+     * @throws ParsingResponseException
+     *         if any error occurs when parse response body
      */
     public List<String> listOrganizations() throws IOException, GitHubException, ParsingResponseException {
         final String oauthToken = getToken(getUserId());
@@ -252,29 +254,29 @@ public class GitHub {
 
     /**
      * Get authorized user's information.
-     * 
+     *
      * @return {@link GitHubUser} user information
-     * @throws IOException if any i/o errors occurs
-     * @throws GitHubException if GitHub server return unexpected or error status for request
-     * @throws ParsingResponseException if any error occurs when parse
+     * @throws IOException
+     *         if any i/o errors occurs
+     * @throws GitHubException
+     *         if GitHub server return unexpected or error status for request
+     * @throws ParsingResponseException
+     *         if any error occurs when parse
      */
     public GitHubUser getGithubUser() throws IOException, GitHubException, ParsingResponseException {
         final String oauthToken = getToken(getUserId());
         final String url = "https://api.github.com/user?access_token=" + oauthToken;
         final String method = "GET";
         final String response = doJsonRequest(url, method, 200);
-        GitHubUser gitHubUser = parseJsonResponse(response, GitHubUser.class, null);
-        return gitHubUser;
+        return parseJsonResponse(response, GitHubUser.class, null);
     }
 
     public Collaborators getCollaborators(String user, String repository)
-                                                                         throws IOException, ParsingResponseException, GitHubException {
+            throws IOException, ParsingResponseException, GitHubException {
         final String oauthToken = getToken(getUserId());
         final Collaborators myCollaborators = DtoFactory.getInstance().createDto(Collaborators.class);
         if (oauthToken != null && oauthToken.length() != 0) {
-            final String url =
-                               "https://api.github.com/repos/" + user + '/' + repository + "/collaborators?access_token=" +
-                                   oauthToken;
+            final String url = "https://api.github.com/repos/" + user + '/' + repository + "/collaborators?access_token=" + oauthToken;
             final String method = "GET";
             String response = doJsonRequest(url, method, 200);
             // It seems that collaborators response does not contains all required fields.
@@ -292,7 +294,7 @@ public class GitHub {
         }
         return myCollaborators;
     }
-    
+
 
     private boolean isAlreadyInvited(String collaborator) throws GitHubException {
         /*
@@ -306,7 +308,7 @@ public class GitHub {
 
 
     public void generateGitHubSshKey()
-                                      throws IOException, SshKeyStoreException, GitHubException, ParsingResponseException {
+            throws IOException, SshKeyStoreException, GitHubException, ParsingResponseException {
         final String oauthToken = getToken(getUserId());
         final String url = "https://api.github.com/user/keys?access_token=" + oauthToken;
 
@@ -322,7 +324,7 @@ public class GitHub {
 
         String jsonRequest = JsonHelper.toJson(params);
 
-        doJsonRequest(url, "POST", 200, jsonRequest);
+        doJsonRequest(url, "POST", 201, jsonRequest);
     }
 
     public String getToken(String user) throws GitHubException, IOException {
@@ -337,40 +339,57 @@ public class GitHub {
 
     /**
      * Do json request (without authorization!)
-     * 
-     * @param url the request url
-     * @param method the request method
-     * @param success expected success code of request
+     *
+     * @param url
+     *         the request url
+     * @param method
+     *         the request method
+     * @param success
+     *         expected success code of request
      * @return {@link String} response
-     * @throws IOException if any i/o errors occurs
-     * @throws GitHubException if GitHub server return unexpected or error status for request
+     * @throws IOException
+     *         if any i/o errors occurs
+     * @throws GitHubException
+     *         if GitHub server return unexpected or error status for request
      */
     private String doJsonRequest(String url, String method, int success) throws IOException, GitHubException {
         return doJsonRequest(url, method, success, null, null);
     }
 
     /**
-     * @param url the request url
-     * @param method the request method
-     * @param success expected success code of request
-     * @param gitHubRepositoryList bean to fill pages info, if exists
+     * @param url
+     *         the request url
+     * @param method
+     *         the request method
+     * @param success
+     *         expected success code of request
+     * @param gitHubRepositoryList
+     *         bean to fill pages info, if exists
      * @return {@link String} response
-     * @throws IOException if any i/o errors occurs
-     * @throws GitHubException if GitHub server return unexpected or error status for request
+     * @throws IOException
+     *         if any i/o errors occurs
+     * @throws GitHubException
+     *         if GitHub server return unexpected or error status for request
      */
     private String doJsonRequest(String url, String method, int success, GitHubRepositoryList gitHubRepositoryList) throws IOException,
-                                                                                                                   GitHubException {
+                                                                                                                           GitHubException {
         return doJsonRequest(url, method, success, null, gitHubRepositoryList);
     }
 
     /**
-     * @param url the request url
-     * @param method the request method
-     * @param success expected success code of request
-     * @param postData post data represented by json string
+     * @param url
+     *         the request url
+     * @param method
+     *         the request method
+     * @param success
+     *         expected success code of request
+     * @param postData
+     *         post data represented by json string
      * @return {@link String} response
-     * @throws IOException if any i/o errors occurs
-     * @throws GitHubException if GitHub server return unexpected or error status for request
+     * @throws IOException
+     *         if any i/o errors occurs
+     * @throws GitHubException
+     *         if GitHub server return unexpected or error status for request
      */
     private String doJsonRequest(String url, String method, int success, String postData) throws IOException, GitHubException {
         return doJsonRequest(url, method, success, postData, null);
@@ -378,18 +397,25 @@ public class GitHub {
 
     /**
      * Do json request (without authorization!)
-     * 
-     * @param url the request url
-     * @param method the request method
-     * @param success expected success code of request
-     * @param postData post data represented by json string
-     * @param gitHubRepositoryList bean to fill pages info, if exists
+     *
+     * @param url
+     *         the request url
+     * @param method
+     *         the request method
+     * @param success
+     *         expected success code of request
+     * @param postData
+     *         post data represented by json string
+     * @param gitHubRepositoryList
+     *         bean to fill pages info, if exists
      * @return {@link String} response
-     * @throws IOException if any i/o errors occurs
-     * @throws GitHubException if GitHub server return unexpected or error status for request
+     * @throws IOException
+     *         if any i/o errors occurs
+     * @throws GitHubException
+     *         if GitHub server return unexpected or error status for request
      */
-    private String doJsonRequest(String url, String method, int success, String postData, GitHubRepositoryList gitHubRepositoryList) throws IOException,
-                                                                                                                                    GitHubException {
+    private String doJsonRequest(String url, String method, int success, String postData, GitHubRepositoryList gitHubRepositoryList)
+            throws IOException, GitHubException {
         HttpURLConnection http = null;
         try {
             http = (HttpURLConnection)new URL(url).openConnection();
@@ -415,16 +441,12 @@ public class GitHub {
                 throw fault(http);
             }
 
-            InputStream input = http.getInputStream();
             String result;
-            try {
+            try (InputStream input = http.getInputStream()) {
                 result = readBody(input, http.getContentLength());
-                
                 if (gitHubRepositoryList != null) {
                     parseLinkHeader(gitHubRepositoryList, http.getHeaderField(HEADER_LINK));
                 }
-            } finally {
-                input.close();
             }
             return result;
         } finally {
@@ -433,11 +455,13 @@ public class GitHub {
             }
         }
     }
-    
+
     /**
-     * @param json json to parse
-     * @param clazz class described in JSON
-     * @param type 
+     * @param json
+     *         json to parse
+     * @param clazz
+     *         class described in JSON
+     * @param type
      * @return
      * @throws ParsingResponseException
      */
@@ -448,17 +472,18 @@ public class GitHub {
             throw new ParsingResponseException(e.getMessage(), e);
         }
     }
-    
+
     /**
      * Parse Link header to retrieve page location. Example of link header:
      * <code><https://api.github.com/organizations/259384/repos?page=3&access_token=123>; rel="next",
-     *  <https://api.github.com/organizations/259384/repos?page=3&access_token=123>; rel="last",
-     *  <https://api.github.com/organizations/259384/repos?page=1&access_token=123>; rel="first",
-     *  <https://api.github.com/organizations/259384/repos?page=1&access_token=123>; rel="prev"
+     * <https://api.github.com/organizations/259384/repos?page=3&access_token=123>; rel="last",
+     * <https://api.github.com/organizations/259384/repos?page=1&access_token=123>; rel="first",
+     * <https://api.github.com/organizations/259384/repos?page=1&access_token=123>; rel="prev"
      * </code>
-     * 
+     *
      * @param repositoryList
-     * @param linkHeader the value of link header
+     * @param linkHeader
+     *         the value of link header
      */
     private void parseLinkHeader(GitHubRepositoryList repositoryList, String linkHeader) {
         if (linkHeader == null || linkHeader.isEmpty()) {
@@ -492,6 +517,9 @@ public class GitHub {
         try {
             int responseCode = http.getResponseCode();
             errorStream = http.getErrorStream();
+            if (errorStream == null) {
+                errorStream = http.getInputStream();
+            }
             if (errorStream == null) {
                 return new GitHubException(responseCode, null, null);
             }
@@ -539,6 +567,6 @@ public class GitHub {
 
 
     private String getUserId() {
-        return ConversationState.getCurrent().getIdentity().getUserId();
+        return UserState.get().getUser().getName();
     }
 }

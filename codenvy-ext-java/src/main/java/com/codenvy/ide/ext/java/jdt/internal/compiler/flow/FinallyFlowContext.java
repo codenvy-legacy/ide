@@ -13,7 +13,12 @@ package com.codenvy.ide.ext.java.jdt.internal.compiler.flow;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ASTNode;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Expression;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Reference;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.BlockScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.FieldBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.LocalVariableBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.Scope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeIds;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.VariableBinding;
 
 /** Reflects the context of code analysis, keeping track of enclosing try statements, exception handlers, etc... */
 public class FinallyFlowContext extends FlowContext {

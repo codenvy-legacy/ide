@@ -10,7 +10,16 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.internal.compiler.parser;
 
-import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ASTNode;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Annotation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Expression;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.MarkerAnnotation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.MemberValuePair;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.NormalAnnotation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.SingleMemberAnnotation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.SingleNameReference;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TypeReference;
 
 public class RecoveredAnnotation extends RecoveredElement {
     public static final int MARKER = 0;

@@ -27,7 +27,11 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.ProblemReporter;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.util.HashtableOfPackage;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.util.SimpleLookupTable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class LookupEnvironment implements ProblemReasons, TypeConstants {
 

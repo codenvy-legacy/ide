@@ -20,7 +20,11 @@ package com.codenvy.ide.text;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.util.loging.Log;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 
 /**
  * A collection of text functions.

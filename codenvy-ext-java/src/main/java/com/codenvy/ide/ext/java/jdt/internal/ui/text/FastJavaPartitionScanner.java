@@ -12,7 +12,6 @@ package com.codenvy.ide.ext.java.jdt.internal.ui.text;
 
 
 import com.codenvy.ide.ext.java.jdt.JavaPartitions;
-
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.rules.CharacterScanner;
 import com.codenvy.ide.text.rules.PartitionTokenScanner;

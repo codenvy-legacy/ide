@@ -1,8 +1,9 @@
 package com.codenvy.ide.extension.demo.createGist;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
+
+import javax.validation.constraints.NotNull;
 
 /** The view of {@link CreateGistPresenter}. */
 @ImplementedBy(CreateGistViewImpl.class)

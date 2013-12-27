@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.api.ui.wizard.newproject;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.template.Template;
@@ -30,6 +29,8 @@ import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The wizard for creating new project. A user pre-defines behavior of the wizard already from the start page by choosing a technology and

@@ -17,7 +17,11 @@
  */
 package com.codenvy.ide.text.edits;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Copies a tree of text edits. A text edit copier keeps a map between original and new text edits. It can be used to map a copy

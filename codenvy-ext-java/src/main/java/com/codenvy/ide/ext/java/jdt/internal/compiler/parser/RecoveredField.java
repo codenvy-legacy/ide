@@ -14,7 +14,15 @@ package com.codenvy.ide.ext.java.jdt.internal.compiler.parser;
  * Internal field structure for parsing recovery
  */
 
-import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ASTNode;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.AbstractVariableDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Annotation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ArrayQualifiedTypeReference;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ArrayTypeReference;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Expression;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.FieldDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Statement;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TypeDeclaration;
 
 import java.util.HashSet;
 import java.util.Set;

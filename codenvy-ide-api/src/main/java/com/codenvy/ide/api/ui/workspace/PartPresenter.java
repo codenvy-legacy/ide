@@ -17,11 +17,12 @@
  */
 package com.codenvy.ide.api.ui.workspace;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.selection.Selection;
 import com.google.gwt.resources.client.ImageResource;
+
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 /**
  * Part is a main UI block of the IDE.

@@ -43,6 +43,7 @@ public class JavaEditorProvider implements EditorProvider {
     private final NotificationManager         notificationManager;
     private       Provider<CodenvyTextEditor> editorProvider;
     private       JavaParserWorker            worker;
+    private FileSaveWatcher watcher;
 
     /**
      * @param resources
@@ -55,11 +56,13 @@ public class JavaEditorProvider implements EditorProvider {
                               DocumentFactory documentFactory,
                               NotificationManager notificationManager,
                               JavaParserWorker worker,
-                              EventBus eventBus) {
+                              EventBus eventBus,
+                              FileSaveWatcher watcher) {
         super();
         this.activityManager = activityManager;
         this.editorProvider = editorProvider;
         this.worker = worker;
+        this.watcher = watcher;
         this.documentProvider =
                 new CompilationUnitDocumentProvider(resources.workspaceEditorCss(), JavaResources.INSTANCE.css(), documentFactory,
                                                     eventBus);
@@ -76,6 +79,7 @@ public class JavaEditorProvider implements EditorProvider {
                                             worker);
 
         textEditor.initialize(configuration, documentProvider, notificationManager);
+        watcher.editorOpened(textEditor);
         return textEditor;
     }
 

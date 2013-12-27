@@ -32,7 +32,7 @@ import org.everrest.test.mock.MockHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -104,10 +104,7 @@ public class ImportTest extends LocalFileSystemTest {
         java.io.File srcIoDir = getIoFile(srcFolderPath);
         java.io.File zipped = getIoFile(createFile(testRootPath, "__file__.zip", null));
         zipDir(srcIoDir.getAbsolutePath(), srcIoDir, zipped, null);
-        FileInputStream in = new FileInputStream(zipped);
-        zipFolder = new byte[(int)zipped.length()];
-        in.read(zipFolder);
-        in.close();
+        zipFolder = Files.readAllBytes(zipped.toPath());
         zipped.delete();
 
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
@@ -284,7 +281,6 @@ public class ImportTest extends LocalFileSystemTest {
         ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, b, null, null);
         // Exception must be thrown.
         assertEquals(500, response.getStatus());
-        log.info(response.getEntity());
     }
 
     public void testIndexWhenImport() throws Exception {

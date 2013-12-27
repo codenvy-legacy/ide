@@ -27,16 +27,18 @@ import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.wizard.newproject.PaaSAgentImpl;
 import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
 import com.codenvy.ide.util.loging.Log;
+import com.codenvy.ide.wizard.newproject.PaaSAgentImpl;
 import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
-import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.*;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_TYPE;
 
 /**
  * Provides selecting kind of project which user wish to create.

@@ -12,7 +12,17 @@ package com.codenvy.ide.ext.java.jdt.internal.compiler.ast;
 
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ASTVisitor;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.Binding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.BlockScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ClassScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.LookupEnvironment;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.PackageBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ProblemReasons;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ProblemReferenceBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ReferenceBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.Scope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeVariableBinding;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.AbortCompilation;
 
 public class QualifiedTypeReference extends TypeReference {

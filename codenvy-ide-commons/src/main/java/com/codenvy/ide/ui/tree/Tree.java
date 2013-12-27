@@ -31,7 +31,6 @@ import com.codenvy.ide.util.dom.Elements;
 import com.codenvy.ide.util.dom.MouseGestureListener;
 import com.codenvy.ide.util.input.SignalEvent;
 import com.codenvy.ide.util.input.SignalEventImpl;
-import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;

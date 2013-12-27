@@ -23,10 +23,12 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
+import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.DefaultProblem;
 import com.codenvy.ide.ext.java.messages.CAProposalsComputedMessage;
 import com.codenvy.ide.ext.java.messages.Problem;
+import com.codenvy.ide.ext.java.messages.ProblemLocationMessage;
 import com.codenvy.ide.ext.java.messages.ProblemsMessage;
 import com.codenvy.ide.ext.java.messages.ProposalAppliedMessage;
 import com.codenvy.ide.ext.java.messages.RoutingTypes;
@@ -57,7 +59,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
     private       Worker                       worker;
     private       ResourceProvider             resourceProvider;
     private       StringMap<WorkerCallback<?>> callbacks;
-    private StringMap<ApplyCallback>                       applyCallback    = Collections.createStringMap();
+    private StringMap<ApplyCallback>                   applyCallback    = Collections.createStringMap();
     private StringMap<WorkerCallback<WorkerCodeBlock>> outlineCallbacks = Collections.createStringMap();
 
     @Inject
@@ -117,6 +119,13 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         callback.onResult(message.proposals());
     }
 
+    @Override
+    public void removeFanFromCache(String fqn) {
+        MessagesImpls.RemoveFqnMessageImpl mesage = MessagesImpls.RemoveFqnMessageImpl.make();
+        mesage.setFqn(fqn);
+        worker.postMessage(mesage.serialize());
+    }
+
     /** {@inheritDoc} */
     @Override
     public void parse(String content, String fileName, String fileId, String packageName, WorkerCallback<IProblem> callback) {
@@ -162,6 +171,18 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         outlineCallbacks.put(fileId, callback);
     }
 
+    @Override
+    public void computeQAProposals(String content, int offset, int selectionLength, boolean updatedContent,
+                                   JsoArray<ProblemLocationMessage> problems, WorkerCallback<WorkerProposal> callback) {
+        MessagesImpls.ComputeCorrMessageImpl corrMessage = MessagesImpls.ComputeCorrMessageImpl.make();
+        corrMessage.setDocumentContent(content).setDocumentOffset(offset).setDocumentSelectionLength(selectionLength)
+                   .setUpdatedOffset(updatedContent).setProblemLocations(problems);
+        String uuid = UUID.uuid();
+        callbacks.put(uuid, callback);
+        corrMessage.setId(uuid);
+        worker.postMessage(corrMessage.serialize());
+    }
+
     /**
      * Project opened
      *
@@ -174,7 +195,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         }
         //TODO check project type, create worker only if project is Java
 //        worker = Worker.create("./javaParserWorker/javaParserWorker.nocache.js");
-        worker = Worker.create("/ide/" +Utils.getWorkspaceName() + "/_app/javaParserWorker/javaParserWorker.nocache.js");
+        worker = Worker.create("/ide/" + Utils.getWorkspaceName() + "/_app/javaParserWorker/javaParserWorker.nocache.js");
         worker.setOnMessage(new MessageHandler() {
             @Override
             public void onMessage(MessageEvent event) {

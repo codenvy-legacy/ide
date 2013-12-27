@@ -17,8 +17,9 @@
  */
 package com.codenvy.ide.api.editor;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * An editor is a visual component.

@@ -13,14 +13,24 @@ package com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.util;
 import com.codenvy.ide.ext.java.jdt.core.ISourceRange;
 import com.codenvy.ide.ext.java.jdt.core.SourceRange;
 import com.codenvy.ide.ext.java.jdt.core.compiler.IScanner;
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.CatchClause;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.dom.DoStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.Expression;
+import com.codenvy.ide.ext.java.jdt.core.dom.ForStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.Statement;
+import com.codenvy.ide.ext.java.jdt.core.dom.SwitchCase;
+import com.codenvy.ide.ext.java.jdt.core.dom.SwitchStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.SynchronizedStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.TryStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.WhileStatement;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.ASTNodes;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.Selection;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.SelectionAnalyzer;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.TokenScanner;
 import com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.RefactoringCoreMessages;
 import com.codenvy.ide.ext.java.jdt.refactoring.RefactoringStatus;
-
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.text.Document;
 

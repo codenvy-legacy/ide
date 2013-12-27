@@ -18,7 +18,6 @@
 package com.codenvy.ide.ext.github.server.rest;
 
 import javax.ws.rs.core.Application;
-
 import java.util.HashSet;
 import java.util.Set;
 
