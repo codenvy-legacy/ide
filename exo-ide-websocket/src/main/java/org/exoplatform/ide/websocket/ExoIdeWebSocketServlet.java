@@ -32,13 +32,14 @@ import org.everrest.websockets.message.MessageConversionException;
 import org.everrest.websockets.message.MessageConverter;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.ext.ContextResolver;
+import java.lang.reflect.Method;
 
 /**
  * Servlet used for processing requests to Everrest over WebSocket connections.
@@ -48,9 +49,19 @@ import javax.ws.rs.ext.ContextResolver;
  */
 @SuppressWarnings("serial")
 public class ExoIdeWebSocketServlet extends EverrestWebSocketServlet {
-    private static final Log    LOG                                       = ExoLogger.getLogger(ExoIdeWebSocketServlet.class);
     static final         String CONVERSATION_STATE_SESSION_ATTRIBUTE_NAME = "ide.websocket." + ConversationState.class.getName();
     static final         String ENVIRONMENT_SESSION_ATTRIBUTE_NAME        = "ide.websocket." + EnvironmentContext.class.getName();
+    static final         String MDC_CONTEXT_ATTRIBUTE_NAME                = "ide.websocket.slf4j.mdc.context";
+    private static final Logger LOG                                       = LoggerFactory.getLogger(ExoIdeWebSocketServlet.class);
+    private static Method mdc_getCopyOfContextMap;
+
+    static {
+        try {
+            Class<?> c = Thread.currentThread().getContextClassLoader().loadClass("org.slf4j.MDC");
+            mdc_getCopyOfContextMap = c.getDeclaredMethod("getCopyOfContextMap");
+        } catch (Exception ignore) {
+        }
+    }
 
     @Override
     protected EverrestProcessor getEverrestProcessor() {
@@ -107,6 +118,13 @@ public class ExoIdeWebSocketServlet extends EverrestWebSocketServlet {
         wsConnection.getHttpSession().setAttribute(CONVERSATION_STATE_SESSION_ATTRIBUTE_NAME, conversationState);
         EnvironmentContext environmentContext = EnvironmentContext.getCurrent();
         wsConnection.getHttpSession().setAttribute(ENVIRONMENT_SESSION_ATTRIBUTE_NAME, environmentContext);
+        if (mdc_getCopyOfContextMap!=null) {
+            try {
+                wsConnection.getHttpSession().setAttribute(MDC_CONTEXT_ATTRIBUTE_NAME, mdc_getCopyOfContextMap.invoke(null));
+            } catch (Throwable t) {
+                LOG.error(t.getMessage(), t);
+            }
+        }
         return wsConnection;
     }
 }
