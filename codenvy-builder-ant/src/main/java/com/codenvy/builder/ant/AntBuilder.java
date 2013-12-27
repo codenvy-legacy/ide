@@ -33,11 +33,11 @@ import com.codenvy.builder.tools.ant.AntMessage;
 import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.dto.server.DtoFactory;
 
-import org.apache.tools.ant.BuildException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.EOFException;
+import java.io.File;
 import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -48,7 +48,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -186,19 +186,19 @@ public class AntBuilder extends Builder {
                 }
                 if (config.getRequest().isDeployJarWithDependencies()) {
                     //get all needed dependencies from classpath
-                    Set<java.io.File> archives = new LinkedHashSet<>();
+                    final Set<java.io.File> classpath = new LinkedHashSet<>();
                     for (AntEvent event : server.receiver.events) {
                         if (event.isPack()) {
-                            archives.add(event.getPack());
+                            classpath.add(event.getPack());
                         } else if (event.isClasspath()) {
-                            archives.addAll(Arrays.asList(event.getClasspath()));
+                            Collections.addAll(classpath, event.getClasspath());
                         }
                     }
                     java.io.File jarWithDependencies = new java.io.File(workDir, DEFAULT_JAR_WITH_DEPENDENCIES_NAME);
                     try {
-                        ZipUtils.mergeArchives(archives, jarWithDependencies, workDir);
+                        ZipUtils.mergeArchives(jarWithDependencies, workDir, classpath.toArray(new File[classpath.size()]));
                     } catch (IOException e) {
-                        throw new BuildException("It is not possible to create jar with dependencies", e);
+                        throw new BuilderException("It is not possible to create jar with dependencies", e);
                     }
                 }
                 return result;
