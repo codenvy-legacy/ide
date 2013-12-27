@@ -104,7 +104,7 @@ http://localhost:8080
 * Authorization callback URL should be
 
 =======================================================
-http://localhost:8080/ide/rest/oauth/ide/oauth/callback
+http://localhost:8080/api/rest/oauth/callback
 =======================================================
 
 * Having registered or updated the app, you will have Client ID and Client Secret in the top right corner of the application page on GitHub

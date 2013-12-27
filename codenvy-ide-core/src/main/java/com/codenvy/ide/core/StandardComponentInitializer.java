@@ -27,6 +27,7 @@ import com.codenvy.ide.actions.OpenProjectAction;
 import com.codenvy.ide.actions.SaveAction;
 import com.codenvy.ide.actions.SaveAllAction;
 import com.codenvy.ide.actions.ShowPreferencesAction;
+import com.codenvy.ide.actions.ShowProjectPropertiesAction;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.parts.WelcomePart;
 import com.codenvy.ide.api.resources.FileType;
@@ -127,7 +128,7 @@ public class StandardComponentInitializer {
 
     @Inject
     private ShowPreferencesAction showPreferencesAction;
-    
+
     @Inject
     private ShowProjectPropertiesAction showProjectPropertiesAction;
 
@@ -196,11 +197,11 @@ public class StandardComponentInitializer {
         DefaultActionGroup window = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_WINDOW);
         actionManager.registerAction("showPreferences", showPreferencesAction);
         window.add(showPreferencesAction);
-        
+
         DefaultActionGroup project = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_PROJECT);
         actionManager.registerAction("showProjectProperties", showProjectPropertiesAction);
         project.add(showProjectPropertiesAction);
-        
+
         DefaultActionGroup fileGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_FILE);
 
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('s').build(), "save");

@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.project.properties.edit;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.project.properties.PropertyUtil;
 import com.codenvy.ide.resources.model.Property;
@@ -25,6 +24,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 
 /**
