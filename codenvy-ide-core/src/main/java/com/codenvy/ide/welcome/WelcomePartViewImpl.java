@@ -77,8 +77,8 @@ public class WelcomePartViewImpl extends Composite implements WelcomePartView {
 
         initWidget(ourUiBinder.createAndBindUi(this));
 
-        fbFrame.setUrl(UriUtils.fromString("/ide/" + Utils.getWorkspaceName() + "/_app/fblike.html"));
-        googleFrame.setUrl(UriUtils.fromString("/ide/" + Utils.getWorkspaceName() + "/_app/googleone.html"));
+        fbFrame.setUrl(UriUtils.fromString("/ide/_app/fblike.html"));
+        googleFrame.setUrl(UriUtils.fromString("/ide/_app/googleone.html"));
         googleFrame.getElement().setAttribute("scrolling", "no");
     }
 

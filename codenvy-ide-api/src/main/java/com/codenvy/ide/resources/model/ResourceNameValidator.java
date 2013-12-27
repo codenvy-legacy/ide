@@ -29,11 +29,13 @@ import com.google.gwt.regexp.shared.RegExp;
  */
 public class ResourceNameValidator {
 
-    private static final RegExp PROJECT_VALIDATOR = RegExp.compile("^[A-Za-z0-9_]*$");
 
-    private static final RegExp FOLDER_VALIDATOR = RegExp.compile("^[A-Za-z0-9_/.]*$");
+    //TODO : need specify rules for resource names for now make same as for project name
+    private static final RegExp PROJECT_VALIDATOR = RegExp.compile("^[A-Za-z0-9_][A-Za-z0-9_\\-\\.]*$");
 
-    private static final RegExp FILE_VALIDATOR = RegExp.compile("^[A-Za-z0-9_.]*$");
+    private static final RegExp FOLDER_VALIDATOR = RegExp.compile("^[A-Za-z0-9_][A-Za-z0-9_\\-\\.]*$");
+
+    private static final RegExp FILE_VALIDATOR = RegExp.compile("^[A-Za-z0-9_][A-Za-z0-9_\\-\\.]*$");
 
     public static boolean isFileNameValid(String name) {
         return FILE_VALIDATOR.test(name);
