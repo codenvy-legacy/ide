@@ -62,7 +62,7 @@ public class CommandProcess {
         }
         String[] env = new String[environment.size()];
         environment.toArray(env);
-        String[] line = ShellFactory.getInstance().getShell().createShellCommand(command.getCommandLine());
+        String[] line = ShellFactory.getShell().createShellCommand(command.getCommandLine());
         LOG.debug("Executing " + command);
         Process process;
         try {
