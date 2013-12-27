@@ -276,9 +276,7 @@ public class GitHub {
         final String oauthToken = getToken(getUserId());
         final Collaborators myCollaborators = DtoFactory.getInstance().createDto(Collaborators.class);
         if (oauthToken != null && oauthToken.length() != 0) {
-            final String url =
-                    "https://api.github.com/repos/" + user + '/' + repository + "/collaborators?access_token=" +
-                    oauthToken;
+            final String url = "https://api.github.com/repos/" + user + '/' + repository + "/collaborators?access_token=" + oauthToken;
             final String method = "GET";
             String response = doJsonRequest(url, method, 200);
             // It seems that collaborators response does not contains all required fields.
@@ -326,7 +324,7 @@ public class GitHub {
 
         String jsonRequest = JsonHelper.toJson(params);
 
-        doJsonRequest(url, "POST", 200, jsonRequest);
+        doJsonRequest(url, "POST", 201, jsonRequest);
     }
 
     public String getToken(String user) throws GitHubException, IOException {
@@ -417,8 +415,7 @@ public class GitHub {
      *         if GitHub server return unexpected or error status for request
      */
     private String doJsonRequest(String url, String method, int success, String postData, GitHubRepositoryList gitHubRepositoryList)
-            throws IOException,
-                   GitHubException {
+            throws IOException, GitHubException {
         HttpURLConnection http = null;
         try {
             http = (HttpURLConnection)new URL(url).openConnection();
@@ -444,16 +441,12 @@ public class GitHub {
                 throw fault(http);
             }
 
-            InputStream input = http.getInputStream();
             String result;
-            try {
+            try (InputStream input = http.getInputStream()) {
                 result = readBody(input, http.getContentLength());
-
                 if (gitHubRepositoryList != null) {
                     parseLinkHeader(gitHubRepositoryList, http.getHeaderField(HEADER_LINK));
                 }
-            } finally {
-                input.close();
             }
             return result;
         } finally {
@@ -524,6 +517,9 @@ public class GitHub {
         try {
             int responseCode = http.getResponseCode();
             errorStream = http.getErrorStream();
+            if (errorStream == null) {
+                errorStream = http.getInputStream();
+            }
             if (errorStream == null) {
                 return new GitHubException(responseCode, null, null);
             }

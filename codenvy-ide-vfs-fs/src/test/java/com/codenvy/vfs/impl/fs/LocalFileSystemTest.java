@@ -69,6 +69,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -207,18 +208,11 @@ public abstract class LocalFileSystemTest extends TestCase {
     }
 
     protected byte[] readFile(String vfsPath) throws IOException {
-        java.io.File f = getIoFile(vfsPath);
-        FileInputStream fIn = new FileInputStream(f);
-        byte[] bytes = new byte[(int)f.length()];
-        fIn.read(bytes); // ok for local files
-        fIn.close();
-        return bytes;
+        return Files.readAllBytes(getIoFile(vfsPath).toPath());
     }
 
     protected void writeFile(String vfsPath, byte[] content) throws IOException {
-        FileOutputStream fOut = new FileOutputStream(getIoFile(vfsPath));
-        fOut.write(content);
-        fOut.close();
+        Files.write(getIoFile(vfsPath).toPath(), content);
     }
 
     protected String createFile(String parent, String name, byte[] content) throws IOException {
@@ -371,9 +365,9 @@ public abstract class LocalFileSystemTest extends TestCase {
         }
 
         java.io.File propsFile = new java.io.File(propsDir, file.getName() + FSMountPoint.PROPERTIES_FILE_SUFFIX);
-        DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(propsFile)));
-        propertiesSerializer.write(dos, properties);
-        dos.close();
+        try (DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(propsFile)))) {
+            propertiesSerializer.write(dos, properties);
+        }
 
         return propsFile;
     }
@@ -388,10 +382,9 @@ public abstract class LocalFileSystemTest extends TestCase {
         } catch (FileNotFoundException e) {
             return null;
         }
-        DataInputStream dis = new DataInputStream(new BufferedInputStream(fIn));
-        Map<String, String[]> props = propertiesSerializer.read(dis);
-        dis.close();
-        return props;
+        try (DataInputStream dis = new DataInputStream(new BufferedInputStream(fIn))) {
+            return propertiesSerializer.read(dis);
+        }
     }
 
     protected void validateProperties(String vfsPath, Map<String, String[]> expectedProperties, boolean recursively)
@@ -440,9 +433,9 @@ public abstract class LocalFileSystemTest extends TestCase {
                 }
             }
         } else {
-            DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(aclFile)));
-            accessControlList.write(dos);
-            dos.close();
+            try (DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(aclFile)))) {
+                accessControlList.write(dos);
+            }
         }
         return aclFile;
     }
@@ -457,10 +450,9 @@ public abstract class LocalFileSystemTest extends TestCase {
         } catch (FileNotFoundException e) {
             return null;
         }
-        DataInputStream dis = new DataInputStream(new BufferedInputStream(fIn));
-        Map<Principal, Set<BasicPermissions>> accessList = AccessControlList.read(dis).getPermissionMap();
-        dis.close();
-        return accessList;
+        try (DataInputStream dis = new DataInputStream(new BufferedInputStream(fIn))) {
+            return AccessControlList.read(dis).getPermissionMap();
+        }
     }
 
     private FileLockSerializer lockSerializer = new FileLockSerializer();
@@ -474,9 +466,9 @@ public abstract class LocalFileSystemTest extends TestCase {
             }
 
             java.io.File lockFile = new java.io.File(locksDir, file.getName() + FSMountPoint.LOCK_FILE_SUFFIX);
-            DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(lockFile)));
-            lockSerializer.write(dos, new FileLock(lockToken, timeout));
-            dos.close();
+            try (DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(lockFile)))) {
+                lockSerializer.write(dos, new FileLock(lockToken, timeout));
+            }
             return true;
         }
         // If not a file.
@@ -493,10 +485,9 @@ public abstract class LocalFileSystemTest extends TestCase {
         } catch (FileNotFoundException e) {
             return null;
         }
-        DataInputStream dis = new DataInputStream(new BufferedInputStream(fIn));
-        FileLock lockToken = lockSerializer.read(dis);
-        dis.close();
-        return lockToken;
+        try (DataInputStream dis = new DataInputStream(new BufferedInputStream(fIn))) {
+            return lockSerializer.read(dis);
+        }
     }
 
     protected boolean exists(String vfsPath) {

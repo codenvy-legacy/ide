@@ -15,15 +15,21 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.git.server.nativegit;
+package com.codenvy.ide.everrest;
 
-import com.codenvy.ide.ext.git.server.GitException;
+import org.everrest.core.impl.method.MethodInvokerDecorator;
+import org.everrest.core.impl.method.MethodInvokerDecoratorFactory;
+import org.everrest.core.method.MethodInvoker;
 
 /**
- * Provides credentials to use with git commands that need it
+ * Create new instance of WebSocketMethodInvokerDecorator.
  *
- * @author Eugene Voevodin
+ * @author andrew00x
+ * @see WebSocketMethodInvokerDecorator
  */
-public interface CredentialsProvider {
-    public boolean get(String url, CredentialItem... items) throws GitException;
+public class WebSocketMethodInvokerDecoratorFactory implements MethodInvokerDecoratorFactory {
+    @Override
+    public MethodInvokerDecorator makeDecorator(MethodInvoker invoker) {
+        return new WebSocketMethodInvokerDecorator(invoker);
+    }
 }

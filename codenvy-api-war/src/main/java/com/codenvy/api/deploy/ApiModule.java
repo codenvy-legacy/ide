@@ -42,10 +42,23 @@ import com.codenvy.api.vfs.server.exceptions.PermissionDeniedExceptionMapper;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemRuntimeExceptionMapper;
 import com.codenvy.api.vfs.server.observation.EventListenerList;
 import com.codenvy.api.workspace.server.WorkspaceService;
+import com.codenvy.commons.security.oauth.OAuthAuthenticationService;
+import com.codenvy.commons.security.oauth.OAuthAuthenticatorProvider;
+import com.codenvy.commons.security.oauth.OAuthAuthenticatorTokenProvider;
+import com.codenvy.commons.security.oauth.OAuthTokenProvider;
 import com.codenvy.ide.everrest.CodenvyAsynchronousJobPool;
 import com.codenvy.ide.everrest.CodenvyAsynchronousJobService;
+import com.codenvy.ide.ext.extensions.server.CreateProjectService;
+import com.codenvy.ide.ext.git.server.GitConnectionFactory;
+import com.codenvy.ide.ext.git.server.nativegit.NativeGitConnectionFactory;
+import com.codenvy.ide.ext.git.server.rest.GitService;
+import com.codenvy.ide.ext.github.server.rest.GitHubService;
 import com.codenvy.ide.ext.java.server.CreateMavenProjectService;
 import com.codenvy.ide.ext.java.server.RestCodeAssistantJava;
+import com.codenvy.ide.ext.ssh.server.DummySshKeyStore;
+import com.codenvy.ide.ext.ssh.server.KeyService;
+import com.codenvy.ide.ext.ssh.server.SshKeyStore;
+import com.codenvy.ide.security.oauth.server.LabOAuthAuthenticatorProvider;
 import com.codenvy.ide.server.UserService;
 import com.codenvy.inject.DynaModule;
 import com.codenvy.runner.sdk.SDKRunner;
@@ -98,5 +111,14 @@ public class ApiModule extends AbstractModule {
         bind(RestCodeAssistantJava.class);
         bind(AsynchronousJobPool.class).toInstance(new CodenvyAsynchronousJobPool(null)); // asynchronous job with default configuration
         bind(CodenvyAsynchronousJobService.class);
+        bind(CreateProjectService.class);
+        bind(GitService.class);
+        bind(GitHubService.class);
+        bind(GitConnectionFactory.class).to(NativeGitConnectionFactory.class);
+        bind(KeyService.class);
+        bind(OAuthAuthenticationService.class);
+        bind(OAuthTokenProvider.class).to(OAuthAuthenticatorTokenProvider.class);
+        bind(OAuthAuthenticatorProvider.class).to(LabOAuthAuthenticatorProvider.class);
+        bind(SshKeyStore.class).to(DummySshKeyStore.class);
     }
 }

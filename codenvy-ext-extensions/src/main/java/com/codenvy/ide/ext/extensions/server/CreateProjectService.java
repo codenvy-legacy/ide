@@ -28,8 +28,6 @@ import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.ide.maven.tools.MavenUtils;
 
 import org.apache.maven.model.Model;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -48,12 +46,10 @@ import java.util.List;
 /**
  * Service for creating Codenvy extension projects.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: CreateProjectService.java Jul 3, 2013 3:21:23 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 @Path("{ws-name}/extension/create")
 public class CreateProjectService {
-    private static final Logger LOG = LoggerFactory.getLogger(CreateProjectService.class);
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
 
@@ -113,13 +109,13 @@ public class CreateProjectService {
         if (templatePath == null || templatePath.isEmpty()) {
             throw new InvalidArgumentException("Can't find project template.");
         }
-
         VirtualFileSystemProvider provider = vfsRegistry.getProvider(vfsId);
         MountPoint mountPoint = provider.getMountPoint(false);
         VirtualFile root = mountPoint.getRoot();
         VirtualFile projectFolder = root.createFolder(name);
-        InputStream templateStream = new FileInputStream(new File(templatePath));
-        projectFolder.unzip(templateStream, true);
+        try (InputStream templateStream = new FileInputStream(new File(templatePath))) {
+            projectFolder.unzip(templateStream, true);
+        }
         updateProperties(properties, projectFolder);
     }
 

@@ -31,14 +31,13 @@ import com.google.inject.name.Named;
 /**
  * Implementation of {@link RunnerClientService} service.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: RunnerClientServiceImpl.java Jul 3, 2013 12:50:30 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 public class RunnerClientServiceImpl implements RunnerClientService {
     private final String baseUrl;
     /** Loader to be displayed. */
-    private       Loader loader;
+    private final Loader loader;
 
     /**
      * Create service.
@@ -47,17 +46,15 @@ public class RunnerClientServiceImpl implements RunnerClientService {
      *         loader to show on server request
      */
     @Inject
-    protected RunnerClientServiceImpl(@Named("restContext") String restContext,
-                                      Loader loader) {
+    protected RunnerClientServiceImpl(@Named("restContext") String baseUrl, Loader loader) {
         this.loader = loader;
-        this.baseUrl = restContext + "/" + Utils.getWorkspaceName();
+        this.baseUrl = baseUrl;
     }
 
     /** {@inheritDoc} */
     @Override
     public void run(String projectName, AsyncRequestCallback<String> callback) throws RequestException {
-        final String requestUrl = baseUrl + "/runner/run";
-
+        final String requestUrl = baseUrl +  "/" + Utils.getWorkspaceName() + "/runner/run";
         String params = "project=" + projectName;
         AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params).send(callback);
     }

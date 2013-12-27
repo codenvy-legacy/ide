@@ -22,6 +22,8 @@ import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.vfs.impl.fs.exceptions.GitUrlResolveException;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
@@ -30,9 +32,11 @@ import java.net.URI;
  *
  * @author Vitaly Parfonov
  */
+@Singleton
 public class GitUrlResolver {
     private final LocalPathResolver pathResolver;
 
+    @Inject
     public GitUrlResolver(LocalPathResolver pathResolver) {
         this.pathResolver = pathResolver;
     }

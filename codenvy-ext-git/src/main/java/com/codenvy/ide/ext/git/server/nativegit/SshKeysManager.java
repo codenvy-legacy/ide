@@ -26,6 +26,8 @@ import com.codenvy.ide.ext.ssh.server.SshKeyStoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.regex.Pattern;
@@ -33,8 +35,9 @@ import java.util.regex.Pattern;
 /**
  * Loads ssh keys into filesystem.
  *
- * @author <a href="mailto:evoevodin@codenvy.com">Eugene Voevodin</a>
+ * @author Eugene Voevodin
  */
+@Singleton
 public class SshKeysManager {
 
     private static final Logger  LOG                        = LoggerFactory.getLogger(SshKeysManager.class);
@@ -47,14 +50,13 @@ public class SshKeysManager {
     private static String      keyDirectoryPath; // TODO(GUICE): initialize
     private final  SshKeyStore keyProvider;
 
+    @Inject
     public SshKeysManager(SshKeyStore keyProvider) {
         this.keyProvider = keyProvider;
     }
 
     public static String getKeyDirectoryPath() throws GitException {
-        return (keyDirectoryPath == null ? DEFAULT_KEY_DIRECTORY_PATH : keyDirectoryPath)
-               + '/'
-               + UserState.get().getUser().getName();
+        return (keyDirectoryPath == null ? DEFAULT_KEY_DIRECTORY_PATH : keyDirectoryPath) + '/' + UserState.get().getUser().getName();
     }
 
     /**
@@ -122,10 +124,8 @@ public class SshKeysManager {
                     can be with port
                     ssh://host.com:port/some/path
                  */
-                int endPoint = url.lastIndexOf(":") != start ?
-                               url.lastIndexOf(":") : url.indexOf("/", start + 3);
-                int startPoint = !url.contains("@") ?
-                                 start + 3 : url.indexOf("@") + 1;
+                int endPoint = url.lastIndexOf(":") != start ? url.lastIndexOf(":") : url.indexOf("/", start + 3);
+                int startPoint = !url.contains("@") ? start + 3 : url.indexOf("@") + 1;
                 return url.substring(startPoint, endPoint);
             } else {
                 /*

@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,6 +38,7 @@ import java.util.Set;
  *
  * @author Eugene Voevodin
  */
+@Singleton
 public class CredentialsLoader {
 
     private static final Logger LOG                          = LoggerFactory.getLogger(CredentialsLoader.class);

@@ -56,7 +56,7 @@
         <codenvy.ide-codeassistant-index.version>20120627</codenvy.ide-codeassistant-index.version>
 
         <!-- EverREST -->
-        <everrest.version>1.1.6</everrest.version>
+        <everrest.version>1.1.7-SNAPSHOT</everrest.version>
 
         <!-- javax -->
         <javax.annotation.version>1.0</javax.annotation.version>

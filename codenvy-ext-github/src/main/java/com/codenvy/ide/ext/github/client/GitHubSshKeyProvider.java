@@ -108,7 +108,7 @@ public class GitHubSshKeyProvider implements SshKeyProvider, OAuthCallback {
     private void oAuthLoginStart(@NotNull String user) {
         boolean permitToRedirect = Window.confirm(constant.loginOAuthLabel());
         if (permitToRedirect) {
-            String authUrl = "rest/ide/oauth/authenticate?oauth_provider=github"
+            String authUrl = restContext + "/ide/oauth/authenticate?oauth_provider=github"
                              + "&scope=user&userId=" + user + "&scope=repo&redirect_after_login=/ide/" + Utils.getWorkspaceName();
             JsOAuthWindow authWindow = new JsOAuthWindow(authUrl, "error.url", 500, 980, this);
             authWindow.loginWithOAuth();

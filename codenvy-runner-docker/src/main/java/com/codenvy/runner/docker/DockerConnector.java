@@ -528,15 +528,15 @@ public class DockerConnector {
 
 
     private void createTarGzArchive(java.io.File tar, java.io.File... files) throws IOException {
-        final FileOutputStream fOut = new FileOutputStream(tar);
-        final GZIPOutputStream gzipOut = new GZIPOutputStream(fOut);
-        final TarArchiveOutputStream tarOut = new TarArchiveOutputStream(gzipOut);
-        for (java.io.File file : files) {
-            if (file.isFile()) {
-                addFile(tarOut, file, "");
+        try (final FileOutputStream fOut = new FileOutputStream(tar);
+             final GZIPOutputStream gzipOut = new GZIPOutputStream(fOut);
+             final TarArchiveOutputStream tarOut = new TarArchiveOutputStream(gzipOut)) {
+            for (java.io.File file : files) {
+                if (file.isFile()) {
+                    addFile(tarOut, file, "");
+                }
             }
         }
-        tarOut.close();
     }
 
 

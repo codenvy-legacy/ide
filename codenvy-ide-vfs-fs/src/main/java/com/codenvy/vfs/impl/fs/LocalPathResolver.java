@@ -21,11 +21,14 @@ import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.vfs.impl.fs.exceptions.LocalPathResolveException;
 
+import javax.inject.Singleton;
+
 /**
  * Resolves location of virtual filesystem item on local filesystem.
  *
  * @author Vitaly Parfonov
  */
+@Singleton
 public class LocalPathResolver {
     public String resolve(VirtualFile virtualFile) throws VirtualFileSystemException {
         if (!(virtualFile instanceof VirtualFileImpl)) {

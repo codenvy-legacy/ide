@@ -56,7 +56,6 @@ public class VfsClassLibrary extends ClassLibrary {
         String mainClassName = className.split("\\$")[0];
         String path = mainClassName.replace('.', '/') + ".java";
         for (Folder f : sourceFolders) {
-
             try {
                 Item i = vfs.getItemByPath(f + "/" + path, null, false, PropertyFilter.NONE_FILTER);
                 if (i instanceof File) {
@@ -69,7 +68,6 @@ public class VfsClassLibrary extends ClassLibrary {
                 if (LOG.isWarnEnabled())
                     LOG.warn(e.getMessage(), e);
             }
-
         }
         return null;
     }

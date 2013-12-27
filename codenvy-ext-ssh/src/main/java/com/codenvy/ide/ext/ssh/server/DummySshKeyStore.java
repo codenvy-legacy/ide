@@ -16,11 +16,11 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+@Singleton
 public class DummySshKeyStore implements SshKeyStore {
     private static final Logger LOG = LoggerFactory.getLogger(DummySshKeyStore.class);
 
@@ -184,27 +185,17 @@ public class DummySshKeyStore implements SshKeyStore {
             Map<String, SshKey> map = new HashMap<>();
             File sshKeysStorage = new File(storageFile);
             if (sshKeysStorage.exists()) {
-                FileInputStream input = null;
-                try {
-                    input = new FileInputStream(sshKeysStorage);
+                try (FileInputStream input = new FileInputStream(sshKeysStorage)) {
                     Map<String, SshKeyEntry> savedKeys = DtoFactory.getInstance().createMapDtoFromJson(input, SshKeyEntry.class);
-
                     for (String key : savedKeys.keySet()) {
                         SshKeyEntry sshKeyEntry = savedKeys.get(key);
                         map.put(key, new SshKey(sshKeyEntry.getIdentifier(), sshKeyEntry.getBytes().getBytes()));
                     }
-                } catch (IOException e) {
-                    LOG.error("Cannot load SSH keys from local storage.", e);
-                } finally {
-                    if (input != null) {
-                        try {
-                            input.close();
-                        } catch (IOException ignored) {
-                        }
-                    }
                 }
             }
             store.putAll(map);
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
         } finally {
             lock.unlock();
         }
@@ -222,26 +213,15 @@ public class DummySshKeyStore implements SshKeyStore {
                                                     .withBytes(new String(sshKey.getBytes()));// Expected keys already encoded with Base64
                 keysToSave.put(key, sshKeyEntry);
             }
-
-            FileOutputStream outputStream = null;
-            try {
-                File sshKeysStorage = new File(storageFile);
-                if (!sshKeysStorage.exists()) {
-                    sshKeysStorage.getParentFile().mkdirs();
-                }
-                outputStream = new FileOutputStream(sshKeysStorage);
-                outputStream.write(DtoFactory.getInstance().toJson(keysToSave).getBytes());
-            } catch (IOException e) {
-                throw new SshKeyStoreException("Can't save SSH keys to local storage.", e);
-            } finally {
-                if (outputStream != null) {
-                    try {
-                        outputStream.close();
-                    } catch (IOException ignored) {
-                    }
-                }
+            File sshKeysStorage = new File(storageFile);
+            if (!sshKeysStorage.exists()) {
+                // be sure parent directories exist
+                sshKeysStorage.getParentFile().mkdirs();
             }
-        } catch (SshKeyStoreException e) {
+            try (FileOutputStream outputStream = new FileOutputStream(sshKeysStorage)) {
+                outputStream.write(DtoFactory.getInstance().toJson(keysToSave).getBytes());
+            }
+        } catch (Exception e) {
             LOG.error(e.getMessage(), e);
         } finally {
             lock.unlock();

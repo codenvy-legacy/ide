@@ -19,10 +19,9 @@ package com.codenvy.util;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 
 /**
  * This is prototype (PoC) utility, that properly registers and Extension in Codenvy Project build.
@@ -110,16 +109,8 @@ public class SetupPomAndGWTModule {
         }
     }
 
-    /**
-     * @param mavenGroupId
-     * @param mavenArtifactId
-     * @param mavenModuleVersion
-     * @param gwtModuleFQN
-     * @param extensionClassFQN
-     * @param projectRoot
-     */
-    public SetupPomAndGWTModule(String mavenGroupId, String mavenArtifactId, String mavenModuleVersion,
-                                String gwtModuleFQN, File projectRoot) {
+    public SetupPomAndGWTModule(String mavenGroupId, String mavenArtifactId, String mavenModuleVersion, String gwtModuleFQN,
+                                File projectRoot) {
         super();
         this.mavenGroupId = mavenGroupId;
         this.mavenArtifactId = mavenArtifactId;
@@ -195,7 +186,7 @@ public class SetupPomAndGWTModule {
                                 mavenGroupId, mavenArtifactId) + GEN_END;
 
         // assert
-        if (pomContent.indexOf(DEP_END_TAG) < 0) {
+        if (!pomContent.contains(DEP_END_TAG)) {
             throw new IOException(String.format("File '%s' doesn't contain '%s'. Can't process file.", CLIENT_POM,
                                                 DEP_END_TAG));
         }
@@ -219,7 +210,7 @@ public class SetupPomAndGWTModule {
         String inheritsString = GEN_START + String.format("<inherits name='%s' />%n", gwtModuleFQN) + GEN_END;
 
         // assert
-        if (gwtModuleContent.indexOf(IDE_GWT_ENTRY_TAG) < 0) {
+        if (!gwtModuleContent.contains(IDE_GWT_ENTRY_TAG)) {
             throw new IOException(String.format("File '%s' doesn't contain '%s'. Can't process file.", IDE_GWT_MODULE,
                                                 IDE_GWT_ENTRY_TAG));
         }
@@ -231,42 +222,16 @@ public class SetupPomAndGWTModule {
 
     // =======================================================================================================
 
-    /**
-     * Read file
-     *
-     * @param file
-     * @return
-     * @throws IOException
-     */
+    /** Read file. */
     public static String readFileContent(File file) throws IOException {
-        InputStream in = new FileInputStream(file);
-        byte[] b = new byte[(int)file.length()];
-        int len = b.length;
-        int total = 0;
-
-        while (total < len) {
-            int result = in.read(b, total, len - total);
-            if (result == -1) {
-                break;
-            }
-            total += result;
-        }
-
+        byte[] b = Files.readAllBytes(file.toPath());
         return new String(b, "UTF-8");
     }
 
-    /**
-     * Update file content
-     *
-     * @param text
-     * @param file
-     * @throws IOException
-     */
+    /** Update file content */
     public static void writeFileContent(String text, File file) throws IOException {
-        BufferedWriter out = new BufferedWriter(new FileWriter(file, false));
-        out.write(text);
-        out.close();
-        return;
+        try (BufferedWriter out = Files.newBufferedWriter(file.toPath(), Charset.forName("UTF-8"))) {
+            out.write(text);
+        }
     }
-
 }
