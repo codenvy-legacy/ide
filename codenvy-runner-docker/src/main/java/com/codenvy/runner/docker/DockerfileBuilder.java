@@ -66,7 +66,7 @@ import java.util.regex.Pattern;
  * CMD /bin/bash -cl "java -classpath /tmp/hello.jar test.helloworld.Main"
  * </pre>
  *
- * @author <a href="mailto:aparfonov@codenvy.com">Andrey Parfonov</a>
+ * @author andrew00x
  */
 public class DockerfileBuilder {
     private final static Pattern TEMPLATE_PATTERN = Pattern.compile("\\$[^\\$^\\$]+\\$");

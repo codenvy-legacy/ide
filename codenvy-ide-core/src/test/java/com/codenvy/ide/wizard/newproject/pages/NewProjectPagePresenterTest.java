@@ -28,8 +28,8 @@ import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.wizard.newproject.PaaSAgentImpl;
 import com.codenvy.ide.resources.ProjectTypeData;
+import com.codenvy.ide.wizard.newproject.PaaSAgentImpl;
 import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageView;
@@ -38,7 +38,6 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -52,7 +51,14 @@ import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing {@link com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter} functionality.

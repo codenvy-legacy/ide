@@ -17,22 +17,25 @@
  */
 package com.codenvy.ide.ext.git.server.nativegit;
 
+import com.codenvy.api.core.user.UserState;
 import com.codenvy.commons.security.oauth.OAuthTokenProvider;
 import com.codenvy.commons.security.shared.Token;
 import com.codenvy.ide.ext.git.server.GitException;
 
-import org.exoplatform.services.security.ConversationState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
 /**
  * Used to store credentials when given url is WSO2.
  *
- * @author <a href="mailto:evoevodin@codenvy.com">Eugene Voevodin</a>
+ * @author Eugene Voevodin
  */
+@Singleton
 public class OAuthCredentialsProvider implements CredentialsProvider {
     public static final String WSO_2_URL_STRING =
         "(http|https)://((([0-9a-fA-F]{32}(:x-oauth-basic)?)|([0-9a-zA-Z-_.]+))@)?git\\.cloudpreview\\.wso2\\.com" +
@@ -43,6 +46,7 @@ public class OAuthCredentialsProvider implements CredentialsProvider {
     private static final Logger LOG = LoggerFactory.getLogger(OAuthCredentialsProvider.class);
     private final OAuthTokenProvider tokenProvider;
 
+    @Inject
     public OAuthCredentialsProvider(OAuthTokenProvider tokenProvider) {
         this.tokenProvider = tokenProvider;
     }
@@ -54,7 +58,7 @@ public class OAuthCredentialsProvider implements CredentialsProvider {
         }
         Token token;
         try {
-            token = tokenProvider.getToken("wso2", ConversationState.getCurrent().getIdentity().getUserId());
+            token = tokenProvider.getToken("wso2", UserState.get().getUser().getName());
         } catch (IOException e) {
             LOG.error("Can't get token", e);
             return false;
@@ -67,7 +71,6 @@ public class OAuthCredentialsProvider implements CredentialsProvider {
                 }
                 if (item instanceof CredentialItem.Username) {
                     ((CredentialItem.Username)item).setValue(token.getToken());
-                    continue;
                 }
             }
         } else {

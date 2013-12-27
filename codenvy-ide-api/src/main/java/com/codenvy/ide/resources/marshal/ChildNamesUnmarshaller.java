@@ -18,8 +18,8 @@
 package com.codenvy.ide.resources.marshal;
 
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;

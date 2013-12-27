@@ -17,11 +17,12 @@
  */
 package com.codenvy.ide.api.editor;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.annotation.AnnotationModel;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 
 /**

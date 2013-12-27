@@ -13,7 +13,6 @@ package com.codenvy.ide.ext.java.jdt.internal.corext.fix;
 import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
 import com.codenvy.ide.ext.java.jdt.core.dom.Expression;
 import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationFragment;
-
 import com.codenvy.ide.runtime.Assert;
 
 

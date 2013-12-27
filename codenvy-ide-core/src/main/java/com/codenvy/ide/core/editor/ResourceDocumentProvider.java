@@ -17,8 +17,6 @@
  */
 package com.codenvy.ide.core.editor;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.resources.FileEvent;
@@ -33,6 +31,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 

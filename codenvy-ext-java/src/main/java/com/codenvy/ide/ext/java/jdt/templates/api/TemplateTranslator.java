@@ -10,7 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.templates.api;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The template translator translates a string into a template buffer. Regions marked as variables are translated into

@@ -40,7 +40,7 @@ public class SDKRunnerConfiguration extends RunnerConfiguration {
     public SDKRunnerConfiguration(String server, int httpPort, int memory, int debugPort, boolean suspend,
                                   String transport, String codeServerBindAddress, int codeServerPort, List<Link> links,
                                   RunRequest runRequest) {
-        super(memory, httpPort, debugPort, links, runRequest);
+        super(memory, httpPort, debugPort, runRequest);
         this.server = server;
         this.suspend = suspend;
         this.transport = transport;

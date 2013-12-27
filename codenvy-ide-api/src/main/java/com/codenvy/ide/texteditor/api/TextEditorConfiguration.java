@@ -17,8 +17,6 @@
  */
 package com.codenvy.ide.texteditor.api;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
@@ -27,6 +25,9 @@ import com.codenvy.ide.texteditor.api.parser.CmParser;
 import com.codenvy.ide.texteditor.api.parser.Parser;
 import com.codenvy.ide.texteditor.api.quickassist.QuickAssistProcessor;
 import com.codenvy.ide.texteditor.api.reconciler.Reconciler;
+
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 /**
  * This class bundles the configuration space of a editor view. Instances of this class are passed to the <code>configure</code> method of

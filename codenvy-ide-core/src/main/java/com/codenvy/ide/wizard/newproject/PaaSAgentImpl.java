@@ -17,8 +17,6 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
@@ -31,6 +29,9 @@ import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 
 /**

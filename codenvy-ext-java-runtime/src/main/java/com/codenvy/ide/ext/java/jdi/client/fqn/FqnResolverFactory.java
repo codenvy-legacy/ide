@@ -17,12 +17,13 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.fqn;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

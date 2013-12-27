@@ -17,10 +17,9 @@
  */
 package com.codenvy.ide.ext.java.client.projectmodel;
 
-import com.codenvy.ide.ext.java.client.BaseTest;
-
-import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.ext.java.client.BaseTest;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Resource;
@@ -41,7 +40,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

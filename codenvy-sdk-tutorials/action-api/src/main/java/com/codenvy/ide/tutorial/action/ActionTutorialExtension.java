@@ -11,7 +11,9 @@ import com.codenvy.ide.tutorial.action.part.TutorialHowToPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import static com.codenvy.ide.api.ui.action.IdeActions.*;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_CONTEXT_MENU;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_MENU;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_TOOLBAR;
 import static com.codenvy.ide.api.ui.workspace.PartStackType.EDITING;
 
 /** Extension used to demonstrate the Action feature. */

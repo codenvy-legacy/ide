@@ -10,13 +10,17 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.core.dom.rewrite;
 
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.Block;
+import com.codenvy.ide.ext.java.jdt.core.dom.ChildListPropertyDescriptor;
+import com.codenvy.ide.ext.java.jdt.core.dom.FieldDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.Statement;
+import com.codenvy.ide.ext.java.jdt.core.dom.StructuralPropertyDescriptor;
 import com.codenvy.ide.ext.java.jdt.internal.core.dom.rewrite.ListRewriteEvent;
 import com.codenvy.ide.ext.java.jdt.internal.core.dom.rewrite.NodeInfoStore;
 import com.codenvy.ide.ext.java.jdt.internal.core.dom.rewrite.RewriteEvent;
 import com.codenvy.ide.ext.java.jdt.internal.core.dom.rewrite.RewriteEventStore;
 import com.codenvy.ide.ext.java.jdt.internal.core.dom.rewrite.RewriteEventStore.CopySourceInfo;
-
 import com.codenvy.ide.text.edits.TextEditGroup;
 
 import java.util.Collections;

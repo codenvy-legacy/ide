@@ -14,7 +14,6 @@ import com.codenvy.ide.ext.java.jdt.core.JavaCore;
 import com.codenvy.ide.ext.java.jdt.core.compiler.InvalidInputException;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.parser.Scanner;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.parser.TerminalTokens;
-
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.runtime.IStatus;
 import com.codenvy.ide.runtime.Status;

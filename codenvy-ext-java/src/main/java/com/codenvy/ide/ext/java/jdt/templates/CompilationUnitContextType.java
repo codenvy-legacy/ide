@@ -12,7 +12,6 @@ package com.codenvy.ide.ext.java.jdt.templates;
 
 import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
 import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
-
 import com.codenvy.ide.ext.java.jdt.templates.api.GlobalTemplateVariables;
 import com.codenvy.ide.ext.java.jdt.templates.api.TemplateContext;
 import com.codenvy.ide.ext.java.jdt.templates.api.TemplateContextType;

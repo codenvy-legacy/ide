@@ -27,11 +27,13 @@ import com.thoughtworks.qdox.JavaDocBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaSource;
 
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.List;
 
 /**
@@ -47,7 +49,7 @@ public class JavaDocBuilderVfs extends JavaDocBuilder {
     private VirtualFileSystem vfs;
 
     /** Logger. */
-    private static final Log LOG = ExoLogger.getLogger(JavaDocBuilderVfs.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JavaDocBuilderVfs.class);
 
     /** @param vfs */
     public JavaDocBuilderVfs(VirtualFileSystem vfs, VfsClassLibrary library) {
@@ -59,10 +61,8 @@ public class JavaDocBuilderVfs extends JavaDocBuilder {
     protected JavaClass createSourceClass(String name) {
         InputStream sourceFile = ((VfsClassLibrary)getClassLibrary()).getSourceFileContent(name);
         if (sourceFile != null) {
-            try {
-
-
-                JavaSource source = addSource(new InputStreamReader(sourceFile), name);
+            try (Reader reader = new BufferedReader(new InputStreamReader(sourceFile))) {
+                JavaSource source = addSource(reader, name);
                 for (int index = 0; index < source.getClasses().length; index++) {
                     JavaClass clazz = source.getClasses()[index];
                     if (name.equals(clazz.getFullyQualifiedName())) {
@@ -70,8 +70,8 @@ public class JavaDocBuilderVfs extends JavaDocBuilder {
                     }
                 }
                 return source.getNestedClassByName(name);
-            } catch (IndexOutOfBoundsException e) {
-                LOG.error(e);
+            } catch (Exception e) {
+                LOG.error(e.getMessage(), e);
             }
         }
         return null;
@@ -82,11 +82,11 @@ public class JavaDocBuilderVfs extends JavaDocBuilder {
         scanner.addFilter(new FileSuffixFilter(".java"));
         List<Item> list = scanner.scan();
         for (Item i : list) {
-            try {
-                addSource(new InputStreamReader(vfs.getContent(i.getId()).getStream()), i.getId());
+            try (Reader reader = new BufferedReader(new InputStreamReader(vfs.getContent(i.getId()).getStream()))) {
+                addSource(reader, i.getId());
             } catch (Exception e) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug(e);
+                    LOG.debug(e.getMessage(), e);
                 }
             }
         }

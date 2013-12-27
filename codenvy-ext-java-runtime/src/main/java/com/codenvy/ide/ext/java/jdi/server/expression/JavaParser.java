@@ -2,9 +2,6 @@
 
 package com.codenvy.ide.ext.java.jdi.server.expression;
 
-import org.antlr.runtime.*;
-import org.antlr.runtime.tree.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

@@ -19,7 +19,14 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.ASTVisitor;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.flow.FlowContext;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.flow.FlowInfo;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.Constant;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.Binding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.BlockScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.FieldBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.LocalVariableBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TagBits;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeIds;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.WildcardBinding;
 
 public class Assignment extends Expression {
 

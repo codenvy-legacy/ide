@@ -11,7 +11,11 @@
 package com.codenvy.ide.ext.java.jdt.internal.corext.codemanipulation;
 
 import com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit;
-import com.codenvy.ide.ext.java.jdt.core.*;
+import com.codenvy.ide.ext.java.jdt.core.CompletionProposal;
+import com.codenvy.ide.ext.java.jdt.core.CompletionRequestor;
+import com.codenvy.ide.ext.java.jdt.core.Flags;
+import com.codenvy.ide.ext.java.jdt.core.JavaCore;
+import com.codenvy.ide.ext.java.jdt.core.Signature;
 import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
 import com.codenvy.ide.ext.java.jdt.core.dom.Javadoc;
 import com.codenvy.ide.ext.java.jdt.core.dom.Name;
@@ -19,7 +23,6 @@ import com.codenvy.ide.ext.java.jdt.core.dom.QualifiedName;
 import com.codenvy.ide.ext.java.jdt.internal.codeassist.CompletionEngine;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.ASTNodes;
 import com.codenvy.ide.ext.java.jdt.internal.text.correction.NameMatcher;
-
 import com.codenvy.ide.ext.java.worker.WorkerMessageHandler;
 import com.codenvy.ide.text.Document;
 

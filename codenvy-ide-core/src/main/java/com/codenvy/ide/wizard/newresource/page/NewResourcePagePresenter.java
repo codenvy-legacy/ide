@@ -19,7 +19,6 @@ package com.codenvy.ide.wizard.newresource.page;
 
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
@@ -27,14 +26,23 @@ import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.resources.model.*;
+import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.resources.model.Folder;
+import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.resources.model.ResourceNameValidator;
 import com.codenvy.ide.wizard.NewResourceAgentImpl;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePageView.ActionDelegate;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
-import static com.codenvy.ide.api.ui.wizard.newresource.NewResourceWizardKeys.*;
+import javax.validation.constraints.NotNull;
+
+import static com.codenvy.ide.api.ui.wizard.newresource.NewResourceWizardKeys.NEW_RESOURCE_PROVIDER;
+import static com.codenvy.ide.api.ui.wizard.newresource.NewResourceWizardKeys.PARENT;
+import static com.codenvy.ide.api.ui.wizard.newresource.NewResourceWizardKeys.PROJECT;
+import static com.codenvy.ide.api.ui.wizard.newresource.NewResourceWizardKeys.RESOURCE_NAME;
 
 /**
  * Provides selecting kind of file which user wish to create and create resource of the chosen type with given name.

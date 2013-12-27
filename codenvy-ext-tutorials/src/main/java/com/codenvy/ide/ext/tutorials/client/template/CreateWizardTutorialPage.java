@@ -17,11 +17,10 @@
  */
 package com.codenvy.ide.ext.tutorials.client.template;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
-import com.codenvy.ide.ext.tutorials.client.TutorialsClientService;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.ext.tutorials.client.TutorialsClientService;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -29,14 +28,16 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
+import javax.validation.constraints.NotNull;
+
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
+import static com.codenvy.ide.collections.Collections.createArray;
 import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS;
 import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.TUTORIAL_PROJECT_TYPE;
 import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.WIZARD_TUTORIAL_ID;
-import static com.codenvy.ide.collections.Collections.createArray;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 

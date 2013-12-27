@@ -26,7 +26,15 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Frame;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -69,8 +77,8 @@ public class WelcomePartViewImpl extends Composite implements WelcomePartView {
 
         initWidget(ourUiBinder.createAndBindUi(this));
 
-        fbFrame.setUrl(UriUtils.fromString("/ide/" + Utils.getWorkspaceName() + "/_app/fblike.html"));
-        googleFrame.setUrl(UriUtils.fromString("/ide/" + Utils.getWorkspaceName() + "/_app/googleone.html"));
+        fbFrame.setUrl(UriUtils.fromString("/ide/_app/fblike.html"));
+        googleFrame.setUrl(UriUtils.fromString("/ide/_app/googleone.html"));
         googleFrame.getElement().setAttribute("scrolling", "no");
     }
 

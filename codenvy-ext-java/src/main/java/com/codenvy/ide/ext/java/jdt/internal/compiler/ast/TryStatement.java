@@ -16,9 +16,24 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.ASTVisitor;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ClassFileConstants;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.codegen.BranchLabel;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.codegen.ConstantPool;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.flow.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.flow.ExceptionHandlingFlowContext;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.flow.FinallyFlowContext;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.flow.FlowContext;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.flow.FlowInfo;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.flow.InsideSubRoutineFlowContext;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.flow.NullInfoRegistry;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.flow.UnconditionalFlowInfo;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.Constant;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.BlockScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.LocalVariableBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.MethodBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.MethodScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ProblemReasons;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ProblemReferenceBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ReferenceBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TagBits;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeIds;
 
 public class TryStatement extends SubRoutineStatement {
 

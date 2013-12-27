@@ -10,12 +10,18 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.internal.corext.fix;
 
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.AST;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTVisitor;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.dom.Expression;
+import com.codenvy.ide.ext.java.jdt.core.dom.InfixExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.InstanceofExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.ParenthesizedExpression;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.NecessaryParenthesesChecker;
 import com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.structure.CompilationUnitRewrite;
 import com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.util.NoCommentSourceRangeComputer;
-
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.edits.TextEditGroup;

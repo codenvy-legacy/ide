@@ -17,10 +17,11 @@
  */
 package com.codenvy.ide.api.ui.keybinding;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.util.input.CharCodeWithModifiers;
+
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 
 /**

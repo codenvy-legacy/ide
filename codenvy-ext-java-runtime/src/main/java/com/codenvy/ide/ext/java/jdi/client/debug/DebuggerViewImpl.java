@@ -23,7 +23,6 @@ import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.debug.Breakpoint;
@@ -50,6 +49,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**

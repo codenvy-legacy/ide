@@ -17,6 +17,9 @@
  */
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.user.User;
+import com.codenvy.api.core.user.UserImpl;
+import com.codenvy.api.core.user.UserState;
 import com.codenvy.api.vfs.shared.ItemType;
 import com.codenvy.api.vfs.shared.dto.Folder;
 import com.codenvy.api.vfs.shared.dto.Item;
@@ -26,8 +29,6 @@ import com.codenvy.dto.server.DtoFactory;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
-import org.exoplatform.services.security.ConversationState;
-import org.exoplatform.services.security.Identity;
 
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -166,10 +167,10 @@ public class UpdateTest extends LocalFileSystemTest {
         Map<String, List<String>> h = new HashMap<>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-        // File is protected and default principal 'admin' has not write permission.
+        // File is protected and default principal 'andrew' has not write permission.
         // Replace default principal by principal who has write permission.
-        ConversationState user = new ConversationState(new Identity("andrew"));
-        ConversationState.setCurrent(user);
+        User user = new UserImpl("andrew");
+        UserState.set(new UserState(user));
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, properties.getBytes(), writer, null);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
 

@@ -17,9 +17,8 @@
  */
 package com.codenvy.ide.ext.git.client.clone;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
+import com.codenvy.ide.ext.git.client.GitResources;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -31,6 +30,8 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The implementation of {@link CloneRepositoryView}.

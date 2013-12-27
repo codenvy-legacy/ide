@@ -19,7 +19,6 @@ package com.codenvy.ide.ext.java.jdt.internal.corext.util;
 
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
 import com.codenvy.ide.ext.java.jdt.core.formatter.IndentManipulation;
-
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.DefaultLineTracker;

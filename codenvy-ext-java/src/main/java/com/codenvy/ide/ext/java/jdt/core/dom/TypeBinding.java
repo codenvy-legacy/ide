@@ -15,9 +15,22 @@ import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ClassFileConstants;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.StringLiteral;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Wildcard;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ArrayBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.BaseTypeBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.Binding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.CaptureBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.FieldBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.LocalTypeBinding;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.MethodBinding;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.PackageBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ParameterizedTypeBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.RawTypeBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ReferenceBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.Scope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TagBits;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeConstants;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeVariableBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.WildcardBinding;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.AbortCompilation;
 
 /** Internal implementation of type bindings. */

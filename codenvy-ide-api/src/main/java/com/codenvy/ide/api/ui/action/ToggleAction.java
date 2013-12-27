@@ -17,8 +17,9 @@
  */
 package com.codenvy.ide.api.ui.action;
 
-import com.codenvy.ide.annotations.Nullable;
 import com.google.gwt.resources.client.ImageResource;
+
+import javax.annotation.Nullable;
 
 /**
  * An action which has a selected state, and which toggles its selected state when performed.

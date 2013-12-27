@@ -17,7 +17,12 @@
  */
 package com.codenvy.ide.websocket;
 
-import com.codenvy.ide.websocket.events.*;
+import com.codenvy.ide.websocket.events.ConnectionClosedHandler;
+import com.codenvy.ide.websocket.events.ConnectionErrorHandler;
+import com.codenvy.ide.websocket.events.ConnectionOpenedHandler;
+import com.codenvy.ide.websocket.events.MessageHandler;
+import com.codenvy.ide.websocket.events.MessageReceivedHandler;
+import com.codenvy.ide.websocket.events.ReplyHandler;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 
 /**

@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.debug;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.java.jdi.shared.*;
 import com.codenvy.ide.rest.AsyncRequest;
@@ -29,6 +28,8 @@ import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+
+import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.rest.HTTPHeader.*;
 import static com.codenvy.ide.rest.MimeType.APPLICATION_JSON;

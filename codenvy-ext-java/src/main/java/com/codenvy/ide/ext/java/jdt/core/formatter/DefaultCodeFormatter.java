@@ -23,7 +23,6 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.parser.Scanner;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.parser.TerminalTokens;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.util.Util;
 import com.codenvy.ide.ext.java.jdt.internal.core.util.CodeSnippetParsingUtil;
-
 import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.RegionImpl;
 import com.codenvy.ide.text.edits.TextEdit;

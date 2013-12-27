@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.tutorials.client;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Property;
@@ -29,6 +28,8 @@ import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+
+import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.resources.marshal.JSONSerializer.PROPERTY_SERIALIZER;
 import static com.codenvy.ide.rest.HTTPHeader.CONTENT_TYPE;

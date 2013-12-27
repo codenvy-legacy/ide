@@ -35,8 +35,8 @@ import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Structure;
 
-import org.apache.tools.tar.TarEntry;
-import org.apache.tools.tar.TarOutputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +58,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPOutputStream;
 
-/** @author <a href="mailto:aparfonov@codenvy.com">Andrey Parfonov</a> */
+/** @author andrew00x */
 public class DockerConnector {
 
     private static class InstanceHolder {
@@ -528,24 +528,24 @@ public class DockerConnector {
 
 
     private void createTarGzArchive(java.io.File tar, java.io.File... files) throws IOException {
-        final FileOutputStream fOut = new FileOutputStream(tar);
-        final GZIPOutputStream gzipOut = new GZIPOutputStream(fOut);
-        final TarOutputStream tarOut = new TarOutputStream(gzipOut);
-        for (java.io.File file : files) {
-            if (file.isFile()) {
-                addFile(tarOut, file, "");
+        try (final FileOutputStream fOut = new FileOutputStream(tar);
+             final GZIPOutputStream gzipOut = new GZIPOutputStream(fOut);
+             final TarArchiveOutputStream tarOut = new TarArchiveOutputStream(gzipOut)) {
+            for (java.io.File file : files) {
+                if (file.isFile()) {
+                    addFile(tarOut, file, "");
+                }
             }
         }
-        tarOut.close();
     }
 
 
-    private void addFile(TarOutputStream tarOut, java.io.File file, String base) throws IOException {
+    private void addFile(TarArchiveOutputStream tarOut, java.io.File file, String base) throws IOException {
         final String entryName = base + file.getName();
-        tarOut.putNextEntry(new TarEntry(file, entryName));
+        tarOut.putArchiveEntry(new TarArchiveEntry(file, entryName));
         if (file.isFile()) {
             Files.copy(file.toPath(), tarOut);
-            tarOut.closeEntry();
+            tarOut.closeArchiveEntry();
         } else {
             java.io.File[] children = file.listFiles();
             if (children != null) {

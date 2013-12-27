@@ -14,8 +14,8 @@
 
 package com.codenvy.ide.collections.js;
 
-import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.collections.Jso;
+import com.codenvy.ide.collections.StringMap;
 import com.google.gwt.core.client.JavaScriptObject;
 
 

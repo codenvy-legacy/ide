@@ -17,7 +17,6 @@
  */
 package com.codenvy.vfs.impl.fs;
 
-import com.codenvy.api.vfs.server.RequestContext;
 import com.codenvy.api.vfs.server.VirtualFileSystem;
 import com.codenvy.api.vfs.server.VirtualFileSystemProvider;
 import com.codenvy.api.vfs.server.VirtualFileSystemUserContext;
@@ -94,14 +93,11 @@ public class LocalFileSystemProvider extends VirtualFileSystemProvider {
         this.mountRef = new MountPointRef();
     }
 
-    /**
-     * Get new instance of LocalFileSystem. If virtual file system is not mounted yet if mounted automatically when used
-     * first time.
-     */
+    /** Get new instance of LocalFileSystem. If virtual file system is not mounted yet if mounted automatically when used first time. */
     @Override
-    public VirtualFileSystem newInstance(RequestContext requestContext, EventListenerList listeners) throws VirtualFileSystemException {
+    public VirtualFileSystem newInstance(URI baseUri, EventListenerList listeners) throws VirtualFileSystemException {
         return new LocalFileSystem(workspaceId,
-                                   requestContext != null ? requestContext.getUriInfo().getBaseUri() : URI.create(""),
+                                   baseUri == null ? URI.create("") : baseUri,
                                    listeners,
                                    userContext,
                                    getMountPoint(true),

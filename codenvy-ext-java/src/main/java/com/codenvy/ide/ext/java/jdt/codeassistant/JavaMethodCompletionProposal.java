@@ -16,7 +16,6 @@ import com.codenvy.ide.ext.java.jdt.core.CompletionProposal;
 import com.codenvy.ide.ext.java.jdt.core.Signature;
 import com.codenvy.ide.ext.java.jdt.core.formatter.CodeFormatter;
 import com.codenvy.ide.ext.java.jdt.internal.corext.util.CodeFormatterUtil;
-
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.TextUtilities;

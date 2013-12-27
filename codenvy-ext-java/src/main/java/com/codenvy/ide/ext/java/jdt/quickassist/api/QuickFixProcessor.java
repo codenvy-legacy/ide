@@ -13,7 +13,6 @@ package com.codenvy.ide.ext.java.jdt.quickassist.api;
 
 import com.codenvy.ide.ext.java.jdt.codeassistant.api.IProblemLocation;
 import com.codenvy.ide.ext.java.jdt.codeassistant.api.JavaCompletionProposal;
-
 import com.codenvy.ide.runtime.CoreException;
 
 

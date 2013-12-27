@@ -18,7 +18,6 @@
 package com.codenvy.ide.projecttype;
 
 import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -31,6 +30,8 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @author <a href="mailto:ashumilova@codenvy.com">Ann Shumilova</a>

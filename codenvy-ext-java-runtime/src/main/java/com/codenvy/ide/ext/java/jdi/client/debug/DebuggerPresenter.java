@@ -17,8 +17,6 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.debug;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -56,7 +54,6 @@ import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
-import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
 import com.codenvy.ide.websocket.rest.exceptions.ServerException;
 import com.google.gwt.http.client.RequestException;
@@ -72,6 +69,8 @@ import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

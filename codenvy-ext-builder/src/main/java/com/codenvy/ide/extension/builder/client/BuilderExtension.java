@@ -44,11 +44,9 @@ public class BuilderExtension {
     /**
      * Create extension.
      *
-     * @param buildProjectPresenter
      */
     @Inject
-    public BuilderExtension(BuildProjectPresenter buildProjectPresenter,
-                            BuilderLocalizationConstant localizationConstants,
+    public BuilderExtension(BuilderLocalizationConstant localizationConstants,
                             ActionManager actionManager,
                             BuildAction buildAction) {
         // register actions

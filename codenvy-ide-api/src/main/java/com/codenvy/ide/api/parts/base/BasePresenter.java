@@ -17,9 +17,10 @@
  */
 package com.codenvy.ide.api.parts.base;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.workspace.AbstractPartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStack;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * Base presenter for parts that support minimizing by part toolbar button.

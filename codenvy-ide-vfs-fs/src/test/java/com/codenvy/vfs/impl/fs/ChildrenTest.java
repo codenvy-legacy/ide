@@ -17,6 +17,9 @@
  */
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.user.User;
+import com.codenvy.api.core.user.UserImpl;
+import com.codenvy.api.core.user.UserState;
 import com.codenvy.api.vfs.shared.ItemType;
 import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.api.vfs.shared.dto.ItemList;
@@ -25,8 +28,6 @@ import com.codenvy.dto.server.DtoFactory;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
-import org.exoplatform.services.security.ConversationState;
-import org.exoplatform.services.security.Identity;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -117,8 +118,8 @@ public class ChildrenTest extends LocalFileSystemTest {
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String requestPath = SERVICE_URI + "children/" + protectedFolderId;
         // Replace default principal by principal who has read permission.
-        ConversationState user = new ConversationState(new Identity("andrew"));
-        ConversationState.setCurrent(user);
+        User user = new UserImpl("andrew");
+        UserState.set(new UserState(user));
         // ---
         ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());

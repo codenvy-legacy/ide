@@ -13,15 +13,27 @@ package com.codenvy.ide.ext.java.jdt.internal.core.dom.rewrite;
 
 import com.codenvy.ide.ext.java.jdt.core.JavaCore;
 import com.codenvy.ide.ext.java.jdt.core.ToolFactory;
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.Annotation;
+import com.codenvy.ide.ext.java.jdt.core.dom.Block;
+import com.codenvy.ide.ext.java.jdt.core.dom.BodyDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.Expression;
+import com.codenvy.ide.ext.java.jdt.core.dom.Statement;
 import com.codenvy.ide.ext.java.jdt.core.formatter.CodeFormatter;
 import com.codenvy.ide.ext.java.jdt.core.formatter.DefaultCodeFormatterConstants;
 import com.codenvy.ide.ext.java.jdt.core.formatter.IndentManipulation;
-
 import com.codenvy.ide.ext.java.worker.WorkerDocument;
 import com.codenvy.ide.runtime.Assert;
-import com.codenvy.ide.text.*;
-import com.codenvy.ide.text.edits.*;
+import com.codenvy.ide.text.BadLocationException;
+import com.codenvy.ide.text.BadPositionCategoryException;
+import com.codenvy.ide.text.DefaultPositionUpdater;
+import com.codenvy.ide.text.Document;
+import com.codenvy.ide.text.Position;
+import com.codenvy.ide.text.edits.DeleteEdit;
+import com.codenvy.ide.text.edits.InsertEdit;
+import com.codenvy.ide.text.edits.MultiTextEdit;
+import com.codenvy.ide.text.edits.ReplaceEdit;
+import com.codenvy.ide.text.edits.TextEdit;
 
 import java.util.ArrayList;
 import java.util.Collection;

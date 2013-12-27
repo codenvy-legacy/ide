@@ -11,9 +11,18 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.internal.codeassist;
 
-import com.codenvy.ide.ext.java.jdt.core.*;
+import com.codenvy.ide.ext.java.jdt.core.CompletionContext;
+import com.codenvy.ide.ext.java.jdt.core.CompletionFlags;
+import com.codenvy.ide.ext.java.jdt.core.CompletionProposal;
+import com.codenvy.ide.ext.java.jdt.core.CompletionRequestor;
+import com.codenvy.ide.ext.java.jdt.core.Flags;
+import com.codenvy.ide.ext.java.jdt.core.Signature;
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.env.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryMethod;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryType;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.ICompilationUnit;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.NameEnvironmentAnswer;
 
 import java.util.Arrays;
 

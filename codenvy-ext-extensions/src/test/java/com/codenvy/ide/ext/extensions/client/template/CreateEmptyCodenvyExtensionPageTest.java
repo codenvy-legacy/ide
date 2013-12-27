@@ -24,8 +24,8 @@ import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
-import com.codenvy.ide.ext.extensions.client.ExtRuntimeClientService;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.ext.extensions.client.ExtRuntimeClientService;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -38,13 +38,17 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
-import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.*;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.TEMPLATE;
 import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.EMPTY_EXTENSION_ID;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing {@link com.codenvy.ide.ext.extensions.client.template.CreateEmptyCodenvyExtensionPage} functionality.

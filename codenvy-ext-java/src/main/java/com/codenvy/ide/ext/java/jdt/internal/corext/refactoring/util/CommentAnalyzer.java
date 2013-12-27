@@ -17,7 +17,6 @@ import com.codenvy.ide.ext.java.jdt.core.compiler.InvalidInputException;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.Selection;
 import com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.RefactoringCoreMessages;
 import com.codenvy.ide.ext.java.jdt.refactoring.RefactoringStatus;
-
 import com.codenvy.ide.runtime.Assert;
 
 

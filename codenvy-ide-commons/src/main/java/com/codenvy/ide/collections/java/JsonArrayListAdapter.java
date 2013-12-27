@@ -17,7 +17,11 @@ package com.codenvy.ide.collections.java;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.ArrayIterator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 
 /** Wraps a {@link java.util.List} for use on the server. */
 public class JsonArrayListAdapter<T> implements Array<T> {

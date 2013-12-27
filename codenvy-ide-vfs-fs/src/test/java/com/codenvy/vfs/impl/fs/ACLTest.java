@@ -17,14 +17,15 @@
  */
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.user.User;
+import com.codenvy.api.core.user.UserImpl;
+import com.codenvy.api.core.user.UserState;
 import com.codenvy.api.vfs.shared.dto.AccessControlEntry;
 import com.codenvy.api.vfs.shared.dto.Principal;
 import com.codenvy.dto.server.DtoFactory;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
-import org.exoplatform.services.security.ConversationState;
-import org.exoplatform.services.security.Identity;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -112,7 +113,6 @@ public class ACLTest extends LocalFileSystemTest {
         permissions.get(principal).add(BasicPermissions.WRITE);
         // check backend
         Map<? extends Principal, Set<BasicPermissions>> updatedAccessList = readPermissions(filePath);
-        log.info(updatedAccessList);
         assertEquals(permissions, updatedAccessList);
 
         // check API
@@ -137,7 +137,6 @@ public class ACLTest extends LocalFileSystemTest {
 
         // check backend
         Map<Principal, Set<BasicPermissions>> updatedAccessList = readPermissions(filePath);
-        log.info(updatedAccessList);
         assertEquals(permissions, updatedAccessList);
 
         // check API
@@ -178,10 +177,10 @@ public class ACLTest extends LocalFileSystemTest {
         String acl = "[{\"principal\":{\"name\":\"admin\",\"type\":\"USER\"},\"permissions\":[\"read\", \"write\"]}]";
         Map<String, List<String>> h = new HashMap<>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
-        // File is protected and default principal 'admin' has not update_acl permission.
+        // File is protected and default principal 'andrew' has not update_acl permission.
         // Replace default principal by principal who has write permission.
-        ConversationState user = new ConversationState(new Identity("andrew"));
-        ConversationState.setCurrent(user);
+        User user = new UserImpl("andrew");
+        UserState.set(new UserState(user));
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, acl.getBytes(), null);
         assertEquals(204, response.getStatus());
 
@@ -189,7 +188,6 @@ public class ACLTest extends LocalFileSystemTest {
         permissions.get(principal).add(BasicPermissions.WRITE);
         // check backend
         Map<Principal, Set<BasicPermissions>> updatedAccessList = readPermissions(filePath);
-        log.info(updatedAccessList);
         assertEquals(permissions, updatedAccessList);
 
         // check API
@@ -218,7 +216,6 @@ public class ACLTest extends LocalFileSystemTest {
         // ACL must not be changed.
         // check backend
         Map<Principal, Set<BasicPermissions>> updatedAccessList = readPermissions(filePath);
-        log.info(updatedAccessList);
         assertEquals(permissions, updatedAccessList);
 
         // check API
@@ -247,7 +244,6 @@ public class ACLTest extends LocalFileSystemTest {
 
         // check backend
         Map<Principal, Set<BasicPermissions>> updatedAccessList = readPermissions(lockedFilePath);
-        log.info(updatedAccessList);
         assertEquals(thisTestAccessList, updatedAccessList);
 
         // check API

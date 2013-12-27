@@ -15,7 +15,6 @@
 package com.codenvy.ide.dto.server;
 
 import com.codenvy.ide.dto.shared.RoutableDto;
-import com.codenvy.ide.dto.shared.RoutableDto;
 
 /** Server side base class for all DTO implementations. */
 public abstract class RoutableDtoServerImpl implements RoutableDto {

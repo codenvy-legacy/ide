@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.api.editor;
 
-import com.codenvy.ide.annotations.NotNull;
+import javax.validation.constraints.NotNull;
 
 /**
  * Provider interface for creating new instance of {@link EditorPartPresenter}.

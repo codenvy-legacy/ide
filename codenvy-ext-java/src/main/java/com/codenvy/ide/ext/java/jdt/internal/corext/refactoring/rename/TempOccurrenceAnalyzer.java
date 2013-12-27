@@ -11,9 +11,14 @@
 
 package com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.rename;
 
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTVisitor;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.dom.IBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.Javadoc;
+import com.codenvy.ide.ext.java.jdt.core.dom.SimpleName;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclaration;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.ASTNodes;
-
 import com.codenvy.ide.runtime.Assert;
 
 import java.util.HashSet;

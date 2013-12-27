@@ -33,6 +33,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.codenvy.commons</groupId>
+            <artifactId>codenvy-commons-lang</artifactId>
+            <version>${com.codenvy.commons.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-runner</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
@@ -43,9 +48,14 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-model</artifactId>
-            <version>${maven-model.version}</version>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-vfs-fs</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-maven-tools</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

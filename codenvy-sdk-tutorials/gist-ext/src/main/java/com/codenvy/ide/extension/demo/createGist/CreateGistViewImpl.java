@@ -1,6 +1,5 @@
 package com.codenvy.ide.extension.demo.createGist;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.extension.demo.GistExtensionLocalizationConstant;
 import com.codenvy.ide.extension.demo.GistExtensionResources;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -13,6 +12,8 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+
+import javax.validation.constraints.NotNull;
 
 /** The implementation of {@link CreateGistView}. */
 public class CreateGistViewImpl extends DialogBox implements CreateGistView {

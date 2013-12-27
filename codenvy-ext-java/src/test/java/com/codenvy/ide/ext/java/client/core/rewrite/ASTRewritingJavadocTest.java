@@ -10,10 +10,23 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.client.core.rewrite;
 
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.AST;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.dom.FieldDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.Initializer;
+import com.codenvy.ide.ext.java.jdt.core.dom.Javadoc;
+import com.codenvy.ide.ext.java.jdt.core.dom.MemberRef;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodRef;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodRefParameter;
+import com.codenvy.ide.ext.java.jdt.core.dom.PrimitiveType;
+import com.codenvy.ide.ext.java.jdt.core.dom.SimpleName;
+import com.codenvy.ide.ext.java.jdt.core.dom.TagElement;
+import com.codenvy.ide.ext.java.jdt.core.dom.TextElement;
+import com.codenvy.ide.ext.java.jdt.core.dom.TypeDeclaration;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ListRewrite;
-
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.ICompilationUnit;
 
 import org.junit.Test;

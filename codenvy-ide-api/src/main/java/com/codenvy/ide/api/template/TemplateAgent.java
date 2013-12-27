@@ -17,12 +17,13 @@
  */
 package com.codenvy.ide.api.template;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Provider;
+
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 /**
  * Provides a way to register a new template for creating a project.

@@ -17,12 +17,11 @@
  */
 package com.codenvy.ide.ext.extensions.client.template.sample;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.extensions.client.ExtRuntimeClientService;
 import com.codenvy.ide.ext.extensions.client.ExtRuntimeResources;
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -32,13 +31,15 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.validation.constraints.NotNull;
+
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
+import static com.codenvy.ide.collections.Collections.createArray;
 import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE;
 import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.SAMPLE_EXTENSION_ID;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS;
-import static com.codenvy.ide.collections.Collections.createArray;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 

@@ -12,7 +12,6 @@ package com.codenvy.ide.ext.java.jdt.internal.core.dom.rewrite;
 
 
 import com.codenvy.ide.ext.java.jdt.core.formatter.IndentManipulation;
-
 import com.codenvy.ide.text.edits.ReplaceEdit;
 import com.codenvy.ide.text.edits.SourceModifier;
 

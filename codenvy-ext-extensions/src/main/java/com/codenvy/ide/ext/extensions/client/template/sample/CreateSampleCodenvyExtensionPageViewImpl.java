@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.extensions.client.template.sample;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.extensions.client.ExtRuntimeResources;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -29,6 +28,8 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The implementation of {@link CreateSampleCodenvyExtensionPageView}.
