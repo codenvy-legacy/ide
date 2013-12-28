@@ -256,7 +256,7 @@ public abstract class LocalFileSystemTest extends TestCase {
             }
 
             if (f.isDirectory()) {
-                num += createTree(newPath, numberItemsEachLevel, depth - 1, properties);
+                num += createTree(newPath, numberItemsEachLevel, depth - 1, properties, suffix);
             }
         }
         return num;

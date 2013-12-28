@@ -1,7 +1,8 @@
-package com.codenvy.api.bootstrap.servlet;
+package com.codenvy.api.servlet;
 
 import com.codenvy.commons.env.EnvironmentContext;
 
+import javax.inject.Singleton;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -17,6 +18,7 @@ import java.io.IOException;
  * @author andrew00x
  */
 // TODO: Find common solution to do this. Avoid have few filters to do the same work.
+@Singleton
 public class EnvironmentFilter implements Filter {
     static final String WS_NAME = "dev-monit";
 
@@ -34,6 +36,11 @@ public class EnvironmentFilter implements Filter {
         final String vfsRootDir = System.getProperty("com.codenvy.vfs.rootdir", "../temp/fs-root");
         env.setVariable(EnvironmentContext.VFS_ROOT_DIR, new File(vfsRootDir));
         env.setVariable(EnvironmentContext.VFS_INDEX_DIR, new File("../temp/fs-index-root"));
+        try {
+            chain.doFilter(request, response);
+        } finally {
+            EnvironmentContext.reset();
+        }
     }
 
     @Override

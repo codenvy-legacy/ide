@@ -1,0 +1,70 @@
+[
+    {
+        "builderServiceDescriptor": {
+            "links": [
+                {
+                    "rel": "builder state",
+                    "produces": "application/json",
+                    "requestBody": null,
+                    "href": "http://localhost:{PORT}/api/rest/internal/builder/state",
+                    "consumes": null,
+                    "method": "GET",
+                    "parameters": [
+                        {
+                            "required": true,
+                            "valid": [],
+                            "name": "builder",
+                            "type": "String",
+                            "defaultValue": null,
+                            "description": "Name of the builder"
+                        }
+                    ]
+                },
+                {
+                    "rel": "available builders",
+                    "produces": "application/json",
+                    "requestBody": null,
+                    "href": "http://localhost:{PORT}/api/rest/internal/builder/available",
+                    "consumes": null,
+                    "method": "GET",
+                    "parameters": []
+                },
+                {
+                    "rel": "analyze dependencies",
+                    "produces": "application/json",
+                    "requestBody": {
+                        "description": "Parameters for analyze dependencies in JSON format"
+                    },
+                    "href": "http://localhost:{PORT}/api/rest/internal/builder/dependencies",
+                    "consumes": "application/json",
+                    "method": "POST",
+                    "parameters": []
+                },
+                {
+                    "rel": "build",
+                    "produces": "application/json",
+                    "requestBody": {
+                        "description": "Parameters for build task in JSON format"
+                    },
+                    "href": "http://localhost:{PORT}/api/rest/internal/builder/build",
+                    "consumes": "application/json",
+                    "method": "POST",
+                    "parameters": []
+                }
+            ],
+            "href": "http://localhost:{PORT}/api/rest/internal/builder",
+            "description": null,
+            "version": "1.0"
+        },
+        "builderDescriptors": [
+            {
+                "name": "maven",
+                "description": "Apache Maven based builder implementation"
+            },
+            {
+                "name": "ant",
+                "description": "Apache Ant based builder implementation"
+            }
+        ]
+    }
+]
