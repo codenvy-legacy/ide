@@ -172,7 +172,7 @@ public class SearcherTest extends LocalFileSystemTest {
         TopDocs topDocs = luceneSearcher.search(new PrefixQuery(new Term("path", searchTestPath)), 10);
         assertEquals(3, topDocs.totalHits);
         searcher.releaseLuceneSearcher(luceneSearcher);
-        mountPoint.getVirtualFile(searchTestPath).createFile("new_file", null, new ByteArrayInputStream(DEFAULT_CONTENT_BYTES));
+        mountPoint.getVirtualFile(searchTestPath).createFile("new_file.txt", null, new ByteArrayInputStream(DEFAULT_CONTENT_BYTES));
 
         luceneSearcher = searcher.getLuceneSearcher();
         topDocs = luceneSearcher.search(new PrefixQuery(new Term("path", searchTestPath)), 10);

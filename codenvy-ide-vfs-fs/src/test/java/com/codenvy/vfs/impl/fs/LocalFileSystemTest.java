@@ -231,7 +231,7 @@ public abstract class LocalFileSystemTest extends TestCase {
         return newPath;
     }
 
-    protected int createTree(String parent, int numberItemsEachLevel, int depth, Map<String, String[]> properties)
+    protected int createTree(String parent, int numberItemsEachLevel, int depth, Map<String, String[]> properties, String suffix)
             throws Exception {
         if (depth == 0) {
             return 0;
@@ -239,6 +239,9 @@ public abstract class LocalFileSystemTest extends TestCase {
         int num = 0;
         for (int i = 0; i < numberItemsEachLevel; i++, num++) {
             String newName = generate(null, 8);
+            if (suffix != null) {
+                newName += suffix;
+            }
             String newPath = parent + '/' + newName;
             java.io.File f = getIoFile(newPath);
 
@@ -257,6 +260,10 @@ public abstract class LocalFileSystemTest extends TestCase {
             }
         }
         return num;
+    }
+
+    protected int createTree(String parent, int numberItemsEachLevel, int depth, Map<String, String[]> properties) throws Exception {
+        return createTree(parent, numberItemsEachLevel, depth, properties, null);
     }
 
     protected void compareDirectories(String a, String b, boolean checkServiceDirs) throws IOException {
