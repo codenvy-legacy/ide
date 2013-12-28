@@ -297,6 +297,7 @@ public class ImportTest extends LocalFileSystemTest {
         QueryExpression q = new QueryExpression();
         q.setText(DEFAULT_CONTENT);
         q.setPath(folderPath + '/');
+        q.setMediaType("text/plain");
         List<String> result = new ArrayList<>();
         java.util.Collections.addAll(result, searcher.search(q));
 
