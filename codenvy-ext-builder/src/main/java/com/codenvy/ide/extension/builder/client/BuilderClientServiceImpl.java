@@ -18,11 +18,10 @@
 package com.codenvy.ide.extension.builder.client;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
+import com.codenvy.ide.MimeType;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
-import com.codenvy.ide.MimeType;
-import com.codenvy.ide.ui.loader.EmptyLoader;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.Utils;
 import com.google.gwt.http.client.RequestBuilder;
@@ -50,7 +49,7 @@ public class BuilderClientServiceImpl implements BuilderClientService {
     /** Get result of build method's path. */
     private static final String RESULT   = BASE_URL + "/result";
     /** REST-service context. */
-    private String restServiceContext;
+    private String baseUrl;
     /** Loader to be displayed. */
     private Loader loader;
 
@@ -61,16 +60,17 @@ public class BuilderClientServiceImpl implements BuilderClientService {
      *         loader to show on server request
      */
     @Inject
-    public BuilderClientServiceImpl(Loader loader) {
+    public BuilderClientServiceImpl(@Named("restContext") String restContext,
+                                    Loader loader) {
         this.loader = loader;
-        this.restServiceContext = "/api/";
+        this.baseUrl = restContext + "/" + Utils.getWorkspaceName();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void build(String projectName,AsyncRequestCallback<String> callback)
+    public void build(String projectName, AsyncRequestCallback<String> callback)
             throws RequestException {
-        final String requestUrl = restServiceContext + BUILD;
+        final String requestUrl = baseUrl + BUILD;
 
         String params = "project=" + projectName;
         callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
@@ -81,7 +81,7 @@ public class BuilderClientServiceImpl implements BuilderClientService {
     /** {@inheritDoc} */
     @Override
     public void cancel(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
-        final String requestUrl = restServiceContext + CANCEL + "/" + buildid;
+        final String requestUrl = baseUrl + CANCEL + "/" + buildid;
 
         AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(loader)
                     .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
@@ -105,7 +105,7 @@ public class BuilderClientServiceImpl implements BuilderClientService {
     /** {@inheritDoc} */
     @Override
     public void result(String buildid, AsyncRequestCallback<String> callback) throws RequestException {
-        final String requestUrl = restServiceContext + RESULT + "/" + buildid;
+        final String requestUrl = baseUrl + RESULT + "/" + buildid;
         callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
         AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
                     .send(callback);

@@ -2,7 +2,12 @@ package com.codenvy.ide.extension.demo.createGist;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.extension.demo.GistExtensionLocalizationConstant;
-import com.google.gwt.http.client.*;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;

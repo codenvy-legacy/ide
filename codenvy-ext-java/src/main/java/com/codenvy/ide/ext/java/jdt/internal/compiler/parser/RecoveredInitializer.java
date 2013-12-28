@@ -12,7 +12,13 @@ package com.codenvy.ide.ext.java.jdt.internal.compiler.parser;
 
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ClassFileConstants;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ASTNode;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Block;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.FieldDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Initializer;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.LocalDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Statement;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TypeDeclaration;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeBinding;
 
 import java.util.Set;

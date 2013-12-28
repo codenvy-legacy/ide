@@ -17,10 +17,11 @@
  */
 package com.codenvy.ide.api.editor;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.resources.model.File;
+
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 /**
  * Editor Agent manages Editors, it allows to open a new editor with given file, retrieve current active editor and find all the opened

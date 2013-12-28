@@ -17,15 +17,22 @@
  */
 package com.codenvy.ide.resources.model;
 
+import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.resources.marshal.*;
+import com.codenvy.ide.resources.marshal.FileContentUnmarshaller;
+import com.codenvy.ide.resources.marshal.FileUnmarshaller;
+import com.codenvy.ide.resources.marshal.FolderTreeUnmarshaller;
+import com.codenvy.ide.resources.marshal.FolderUnmarshaller;
+import com.codenvy.ide.resources.marshal.JSONDeserializer;
+import com.codenvy.ide.resources.marshal.JSONSerializer;
+import com.codenvy.ide.resources.marshal.PropertyUnmarshaller;
+import com.codenvy.ide.resources.marshal.StringUnmarshaller;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
-import com.codenvy.ide.MimeType;
 import com.codenvy.ide.ui.loader.EmptyLoader;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.loging.Log;

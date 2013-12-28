@@ -12,7 +12,6 @@ package com.codenvy.ide.ext.java.jdt.core.formatter.align;
 
 import com.codenvy.ide.ext.java.jdt.core.formatter.Location;
 import com.codenvy.ide.ext.java.jdt.core.formatter.Scribe;
-
 import com.codenvy.ide.runtime.Assert;
 
 

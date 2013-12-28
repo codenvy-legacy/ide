@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.toolbar;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionGroup;
 import com.codenvy.ide.api.ui.action.ActionManager;
@@ -32,6 +31,8 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+
+import javax.validation.constraints.NotNull;
 
 
 /**

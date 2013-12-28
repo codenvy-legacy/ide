@@ -17,8 +17,11 @@
  */
 package com.codenvy.ide.tutorial.wizard.newresource.page;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.editor.*;
+import com.codenvy.ide.api.editor.DocumentProvider;
+import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.editor.EditorInput;
+import com.codenvy.ide.api.editor.EditorPartPresenter;
+import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
@@ -32,6 +35,8 @@ import com.codenvy.ide.text.edits.ReplaceEdit;
 import com.codenvy.ide.tutorial.wizard.newresource.provider.MyResourceProvider;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+
+import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.api.editor.EditorPartPresenter.PROP_INPUT;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;

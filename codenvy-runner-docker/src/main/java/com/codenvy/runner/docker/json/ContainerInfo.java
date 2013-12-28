@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-/** @author <a href="mailto:aparfonov@codenvy.com">Andrey Parfonov</a> */
+/** @author andrew00x */
 public class ContainerInfo {
     private String          id;
     // Date format: yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX

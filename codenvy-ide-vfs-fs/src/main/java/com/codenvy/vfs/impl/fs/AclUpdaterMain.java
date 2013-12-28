@@ -51,9 +51,9 @@ public class AclUpdaterMain {
             }
 
             java.io.File aclFile = new java.io.File(aclDir, FSMountPoint.ACL_FILE_SUFFIX);
-            DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(aclFile)));
-            getACL().write(dos);
-            dos.close();
+            try (DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(aclFile)))) {
+                getACL().write(dos);
+            }
             java.io.File cacheResetDir = new java.io.File(vfsRoot, FSMountPoint.SERVICE_DIR + java.io.File.separatorChar + "cache");
             if (!(cacheResetDir.exists() || cacheResetDir.mkdirs())) {
                 System.out.println("Cannot create directory.");

@@ -17,10 +17,10 @@
  */
 package com.codenvy.ide.toolbar;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.Presentation;
 
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 
 /**

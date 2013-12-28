@@ -20,27 +20,24 @@ package com.codenvy.ide.ext.ssh.dto;
 import com.codenvy.dto.shared.DTO;
 
 
-/**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: $
- */
+/** @author andrew00x */
 @DTO
 public interface KeyItem {
     String getHost();
-    
+
     void setHost(String host);
-    
+
     KeyItem withHost(String host);
 
     String getPublicKeyUrl();
-    
+
     void setPublicKeyUrl(String publicKey);
-    
+
     KeyItem withPublicKeyUrl(String publicKeyUrl);
 
     String getRemoteKeyUrl();
-    
+
     void setRemoteKeyUrl(String remoteKeyUrl);
-    
+
     KeyItem withRemoteKeyUrl(String remoteKeyURL);
 }

@@ -22,6 +22,7 @@ import com.codenvy.api.runner.internal.ApplicationLogger;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.api.runner.internal.DeploymentSources;
 import com.codenvy.api.runner.internal.Disposer;
+import com.codenvy.api.runner.internal.ResourceAllocators;
 import com.codenvy.api.runner.internal.Runner;
 import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
@@ -36,22 +37,65 @@ import com.google.common.io.CharStreams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-/** @author <a href="mailto:aparfonov@codenvy.com">Andrey Parfonov</a> */
+/** @author andrew00x */
+@Singleton
 public class DockerRunner extends Runner {
     private static final Logger LOG = LoggerFactory.getLogger(DockerRunner.class);
 
     private final Map<String, java.io.File> dockerFileTemplates;
     private final Map<String, ImageUsage>   dockerImageUsage;
 
-    DockerRunner(Map<String, java.io.File> dockerFileTemplates) {
-        this.dockerFileTemplates = new HashMap<>(dockerFileTemplates);
-        dockerImageUsage = new HashMap<>();
+    @Inject
+    public DockerRunner(@Named(DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
+                        @Named(CLEANUP_DELAY_TIME) int cleanupDelay,
+                        ResourceAllocators allocators) {
+        super(deployDirectoryRoot, cleanupDelay, allocators);
+        this.dockerFileTemplates = new HashMap<>();
+        this.dockerImageUsage = new HashMap<>();
+        loadDockerfiles();
+    }
+
+    /** Load Templates of Dockerfiles. */
+    protected void loadDockerfiles() {
+        final URL dockerFilesUrl = Thread.currentThread().getContextClassLoader().getResource("conf/runner/docker");
+        final java.io.File dockerFilesDir;
+        final Map<String, java.io.File> myDockerFileTemplates = new HashMap<>();
+        if (dockerFilesUrl != null) {
+            try {
+                dockerFilesDir = new java.io.File(dockerFilesUrl.toURI());
+            } catch (URISyntaxException e) {
+                throw new IllegalStateException(e);
+            }
+            if (dockerFilesDir.isDirectory()) {
+                final java.io.File[] dockerFiles = dockerFilesDir.listFiles(new FileFilter() {
+                    @Override
+                    public boolean accept(java.io.File file) {
+                        return file.isFile();
+                    }
+                });
+                if (dockerFiles != null) {
+                    for (java.io.File file : dockerFiles) {
+                        final String fName = file.getName();
+                        myDockerFileTemplates.put(fName, file);
+                    }
+                }
+            }
+        }
+        if (!myDockerFileTemplates.isEmpty()) {
+            this.dockerFileTemplates.putAll(myDockerFileTemplates);
+        }
     }
 
     @Override

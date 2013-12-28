@@ -18,7 +18,25 @@ import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
 import com.codenvy.ide.ext.java.jdt.core.compiler.InvalidInputException;
 import com.codenvy.ide.ext.java.jdt.core.dom.Modifier.ModifierKeyword;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ClassFileConstants;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.AbstractMethodDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.AbstractVariableDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Argument;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ForeachStatement;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.JavadocArgumentExpression;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.JavadocFieldReference;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.JavadocMessageSend;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.LocalDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.MessageSend;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.OperatorIds;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ParameterizedQualifiedTypeReference;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ParameterizedSingleTypeReference;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.QualifiedAllocationExpression;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.QualifiedTypeReference;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.SingleNameReference;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.SingleTypeReference;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.StringLiteralConcatenation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TypeReference;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Wildcard;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.CompilerOptions;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.BlockScope;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ExtraCompilerModifiers;
@@ -28,7 +46,11 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.parser.Scanner;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.parser.TerminalTokens;
 import com.codenvy.ide.ext.java.jdt.internal.core.util.Util;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /** Internal class for converting internal compiler ASTs into public ASTs. */
 class ASTConverter {

@@ -12,7 +12,12 @@ package com.codenvy.ide.ext.java.jdt.internal.compiler.lookup;
 
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ClassFileConstants;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ASTNode;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.AbstractMethodDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Argument;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.MethodDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TypeParameter;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TypeReference;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.CompilerOptions;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.ProblemSeverities;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.util.HashtableOfObject;

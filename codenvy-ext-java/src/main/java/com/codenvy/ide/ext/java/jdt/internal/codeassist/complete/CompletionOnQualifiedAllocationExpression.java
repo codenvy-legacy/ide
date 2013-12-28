@@ -34,8 +34,16 @@ package com.codenvy.ide.ext.java.jdt.internal.codeassist.complete;
  * before the cursor.
  */
 
-import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.*;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ASTNode;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.AllocationExpression;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.QualifiedAllocationExpression;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.SingleTypeReference;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TypeReference;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.Binding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.BlockScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ParameterizedTypeBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ReferenceBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeBinding;
 
 public class CompletionOnQualifiedAllocationExpression extends QualifiedAllocationExpression {
     public TypeBinding resolveType(BlockScope scope) {

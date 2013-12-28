@@ -17,24 +17,31 @@
  */
 package com.codenvy.runner.sdk;
 
-import com.codenvy.api.core.config.Configuration;
 import com.codenvy.api.core.rest.shared.dto.Link;
-import com.codenvy.api.core.util.ComponentLoader;
 import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.api.core.util.LineConsumer;
 import com.codenvy.api.core.util.ProcessUtil;
 import com.codenvy.api.runner.RunnerException;
-import com.codenvy.api.runner.internal.*;
+import com.codenvy.api.runner.internal.ApplicationProcess;
+import com.codenvy.api.runner.internal.DeploymentSources;
+import com.codenvy.api.runner.internal.Disposer;
+import com.codenvy.api.runner.internal.ResourceAllocators;
+import com.codenvy.api.runner.internal.Runner;
+import com.codenvy.api.runner.internal.RunnerConfiguration;
+import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
 import com.codenvy.api.runner.internal.dto.RunRequest;
+import com.codenvy.commons.lang.IoUtil;
+import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.dto.server.DtoFactory;
-import com.codenvy.ide.commons.FileUtils;
 import com.codenvy.ide.commons.GwtXmlUtils;
-import com.codenvy.ide.commons.MavenUtils;
-import com.codenvy.ide.commons.ZipUtils;
+import com.codenvy.ide.maven.tools.MavenUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -42,13 +49,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipFile;
 
 /**
  * Runner implementation to run Codenvy extensions by deploying it to application server.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @author Artem Zatsarynnyy
+ * @author Eugene Voevodin
  */
+@Singleton
 public class SDKRunner extends Runner {
     public static final  String IDE_GWT_XML_FILE_NAME    = "IDEPlatform.gwt.xml";
     public static final  String DEFAULT_SERVER_NAME      = "Tomcat";
@@ -61,12 +71,27 @@ public class SDKRunner extends Runner {
      */
     public static final  String CODE_SERVER_BIND_ADDRESS = "runner.sdk.code_server_bind_address";
     /** Specifies the default bind address for the code server. */
-    private static final String DEFAULT_BIND_ADDRESS     = "localhost";
     private static final Logger LOG                      = LoggerFactory.getLogger(SDKRunner.class);
     private final Map<String, ApplicationServer> applicationServers;
 
-    public SDKRunner() {
+    private final String            codeServerBindAddress;
+    private final CustomPortService customPortService;
+
+    @Inject
+    public SDKRunner(@Named(DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
+                     @Named(CLEANUP_DELAY_TIME) int cleanupDelay,
+                     @Named(CODE_SERVER_BIND_ADDRESS) String codeServerBindAddress,
+                     CustomPortService customPortService,
+                     Set<ApplicationServer> appServers,
+                     ResourceAllocators allocators) {
+        super(deployDirectoryRoot, cleanupDelay, allocators);
+        this.codeServerBindAddress = codeServerBindAddress;
+        this.customPortService = customPortService;
         applicationServers = new HashMap<>();
+        //available application servers should be already injected
+        for (ApplicationServer appServer : appServers) {
+            applicationServers.put(appServer.getName(), appServer);
+        }
     }
 
     @Override
@@ -80,30 +105,19 @@ public class SDKRunner extends Runner {
     }
 
     @Override
-    public void start() {
-        super.start();
-        for (ApplicationServer server : ComponentLoader.all(ApplicationServer.class)) {
-            applicationServers.put(server.getName(), server);
-        }
-    }
-
-    @Override
     public RunnerConfigurationFactory getRunnerConfigurationFactory() {
         return new RunnerConfigurationFactory() {
             @Override
             public RunnerConfiguration createRunnerConfiguration(RunRequest request) throws RunnerException {
-                final Configuration myConfiguration = getConfiguration();
-                final String codeServerBindAddress =
-                        myConfiguration.get(CODE_SERVER_BIND_ADDRESS, DEFAULT_BIND_ADDRESS);
 
-                final int codeServerPort = CustomPortService.getInstance().acquire();
+                final int codeServerPort = customPortService.acquire();
                 List<Link> links = new ArrayList<>(1);
                 links.add(DtoFactory.getInstance().createDto(Link.class)
                                     .withRel(LINK_REL_CODE_SERVER)
                                     .withHref(codeServerBindAddress + ":" + codeServerPort));
 
                 return new SDKRunnerConfiguration(DEFAULT_SERVER_NAME,
-                                                  CustomPortService.getInstance().acquire(),
+                                                  customPortService.acquire(),
                                                   request.getMemorySize(), -1, false,
                                                   DEBUG_TRANSPORT_PROTOCOL, codeServerBindAddress, codeServerPort,
                                                   links, request);
@@ -126,19 +140,15 @@ public class SDKRunner extends Runner {
         final Path codeServerWorkDirPath;
         final Utils.ExtensionDescriptor extension;
         try {
-            appDir =
-                    Files.createTempDirectory(getDeployDirectory().toPath(), (server.getName() + "_" + getName() + '_'))
-                         .toFile();
-            codeServerWorkDirPath =
-                    Files.createTempDirectory(getDeployDirectory().toPath(), ("codeServer_" + getName() + '_'));
+            appDir = Files.createTempDirectory(getDeployDirectory().toPath(), (server.getName() + "_" + getName() + '_')).toFile();
+            codeServerWorkDirPath = Files.createTempDirectory(getDeployDirectory().toPath(), ("codeServer_" + getName() + '_'));
             extension = Utils.getExtensionFromJarFile(new ZipFile(toDeploy.getFile()));
         } catch (IOException e) {
             throw new RunnerException(e);
         }
 
         CodeServer codeServer = new CodeServer();
-        CodeServer.CodeServerProcess codeServerProcess = codeServer.prepare(codeServerWorkDirPath, sdkRunnerCfg,
-                                                                            extension);
+        CodeServer.CodeServerProcess codeServerProcess = codeServer.prepare(codeServerWorkDirPath, sdkRunnerCfg, extension);
 
         final ZipFile warFile = buildCodenvyWebAppWithExtension(extension);
         final ApplicationProcess process =
@@ -146,16 +156,16 @@ public class SDKRunner extends Runner {
                               new ApplicationServer.StopCallback() {
                                   @Override
                                   public void stopped() {
-                                      CustomPortService.getInstance().release(sdkRunnerCfg.getPort());
+                                      customPortService.release(sdkRunnerCfg.getPort());
 
                                       final int debugPort = sdkRunnerCfg.getDebugPort();
                                       if (debugPort > 0) {
-                                          CustomPortService.getInstance().release(debugPort);
+                                          customPortService.release(debugPort);
                                       }
 
                                       final int codeServerPort = sdkRunnerCfg.getCodeServerPort();
                                       if (codeServerPort > 0) {
-                                          CustomPortService.getInstance().release(codeServerPort);
+                                          customPortService.release(codeServerPort);
                                       }
                                   }
                               });
@@ -163,11 +173,11 @@ public class SDKRunner extends Runner {
         registerDisposer(process, new Disposer() {
             @Override
             public void dispose() {
-                if (!FileUtils.deleteRecursive(appDir)) {
+                if (!IoUtil.deleteRecursive(appDir)) {
                     LOG.error("Unable to remove app: {}", appDir);
                 }
 
-                if (!FileUtils.deleteRecursive(codeServerWorkDirPath.toFile(), false)) {
+                if (!IoUtil.deleteRecursive(codeServerWorkDirPath.toFile(), false)) {
                     LOG.error("Unable to remove code server working directory: {}", codeServerWorkDirPath);
                 }
             }
@@ -180,14 +190,16 @@ public class SDKRunner extends Runner {
         final ZipFile warPath;
         try {
             // prepare Codenvy Platform sources
-            final Path workDirPath =
-                    Files.createTempDirectory(getDeployDirectory().toPath(), ("war_" + getName() + '_'));
+            final Path workDirPath = Files.createTempDirectory(getDeployDirectory().toPath(), ("war_" + getName() + '_'));
             ZipUtils.unzip(Utils.getCodenvyPlatformBinaryDistribution().openStream(), workDirPath.toFile());
 
             // integrate extension to Codenvy Platform
-            MavenUtils.addDependencyToPom(workDirPath.resolve("pom.xml"), extension.groupId, extension.artifactId,
-                                          extension.version);
-            GwtXmlUtils.inheritGwtModule(MavenUtils.findFile(SDKRunner.IDE_GWT_XML_FILE_NAME, workDirPath),
+            MavenUtils.addDependency(workDirPath.resolve("pom.xml").toFile(),
+                                     extension.groupId,
+                                     extension.artifactId,
+                                     extension.version,
+                                     null);
+            GwtXmlUtils.inheritGwtModule(IoUtil.findFile(SDKRunner.IDE_GWT_XML_FILE_NAME, workDirPath.toFile()).toPath(),
                                          extension.gwtModuleName);
 
             warPath = buildWebAppAndGetWar(workDirPath);
@@ -198,8 +210,7 @@ public class SDKRunner extends Runner {
     }
 
     private ZipFile buildWebAppAndGetWar(Path appDirPath) throws RunnerException {
-        final String[] command = new String[]{Utils.getMavenExecCommand(), "package"};
-
+        final String[] command = new String[]{MavenUtils.getMavenExecCommand(), "package"};
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(command).directory(appDirPath.toFile());
             Process process = processBuilder.start();
@@ -209,8 +220,7 @@ public class SDKRunner extends Runner {
             if (process.exitValue() != 0) {
                 throw new RunnerException(consumer.getOutput().toString());
             }
-
-            return new ZipFile(MavenUtils.findFile("*.war", appDirPath.resolve("target")).toFile());
+            return new ZipFile(IoUtil.findFile("*.war", appDirPath.resolve("target").toFile()));
         } catch (IOException | InterruptedException e) {
             throw new RunnerException(e);
         }

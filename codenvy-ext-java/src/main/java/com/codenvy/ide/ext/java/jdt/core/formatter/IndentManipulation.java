@@ -13,7 +13,6 @@ package com.codenvy.ide.ext.java.jdt.core.formatter;
 
 import com.codenvy.ide.ext.java.jdt.internal.compiler.parser.ScannerHelper;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.util.Util;
-
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.DefaultLineTracker;
 import com.codenvy.ide.text.LineTracker;

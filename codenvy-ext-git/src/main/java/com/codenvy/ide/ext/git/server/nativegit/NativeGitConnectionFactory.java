@@ -22,37 +22,27 @@ import com.codenvy.ide.ext.git.server.GitConnectionFactory;
 import com.codenvy.ide.ext.git.server.GitException;
 import com.codenvy.ide.ext.git.shared.GitUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 
 /**
  * Native implementation for GitConnectionFactory
  *
- * @author <a href="mailto:evoevodin@codenvy.com">Eugene Voevodin</a>
+ * @author Eugene Voevodin
  */
+@Singleton
 public class NativeGitConnectionFactory extends GitConnectionFactory {
+    private final SshKeysManager    keysManager;
+    private final CredentialsLoader credentialsLoader;
 
-    private static final Logger LOG = LoggerFactory.getLogger(NativeGitConnectionFactory.class);
-    private final SshKeysManager keysManager;
-    private CredentialsLoader credentialsLoader;
-
+    @Inject
     public NativeGitConnectionFactory(SshKeysManager keysManager, CredentialsLoader credentialsLoader) {
         this.keysManager = keysManager;
         this.credentialsLoader = credentialsLoader;
     }
 
-    public NativeGitConnectionFactory(SshKeysManager keysManager) {
-        this.keysManager = keysManager;
-        LOG.debug("No instance of OAuthTokenProvider was found.");
-    }
-
-    /**
-     * @see org.exoplatform.ide.git.server.GitConnectionFactory#getConnection(java.io.File, com.codenvy.ide.ext.git.shared_.GitUser)
-     */
     public GitConnection getConnection(File workDir, GitUser user) throws GitException {
         return new NativeGitConnection(workDir, user, keysManager, credentialsLoader);
     }
-
 }

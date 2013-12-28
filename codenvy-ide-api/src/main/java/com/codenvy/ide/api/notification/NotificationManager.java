@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.api.notification;
 
-import com.codenvy.ide.annotations.NotNull;
+import javax.validation.constraints.NotNull;
 
 /**
  * The manager for notifications. Used to show notifications and change their states.

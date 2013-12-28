@@ -10,9 +10,22 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.internal.compiler.flow;
 
-import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ASTNode;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.AbstractMethodDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.Argument;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.SubRoutineStatement;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TryStatement;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TypeReference;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.UnionTypeReference;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.codegen.ObjectCache;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.BlockScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.CatchParameterBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ExtraCompilerModifiers;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.MethodScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ReferenceBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.Scope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeIds;
 
 import java.util.ArrayList;
 

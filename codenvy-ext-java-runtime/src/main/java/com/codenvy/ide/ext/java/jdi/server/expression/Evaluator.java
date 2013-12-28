@@ -19,8 +19,8 @@ package com.codenvy.ide.ext.java.jdi.server.expression;
 
 import com.sun.jdi.*;
 
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -29,11 +29,10 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * @author andrew00x
  */
 public class Evaluator {
-    private static final Log LOG = ExoLogger.getLogger(Evaluator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Evaluator.class);
 
     private final VirtualMachine vm;
 

@@ -22,9 +22,8 @@ import com.codenvy.ide.ext.git.server.GitException;
 /**
  * Provides credentials to use with git commands that need it
  *
- * @author <a href="mailto:evoevodin@codenvy.com">Eugene Voevodin</a>
+ * @author Eugene Voevodin
  */
 public interface CredentialsProvider {
-
     public boolean get(String url, CredentialItem... items) throws GitException;
 }

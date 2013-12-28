@@ -11,8 +11,14 @@
 package com.codenvy.ide.ext.java.jdt.internal.corext.util;
 
 import com.codenvy.ide.ext.java.jdt.core.Flags;
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
-
+import com.codenvy.ide.ext.java.jdt.core.dom.AnnotationTypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.BodyDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.IBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.IMethodBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.ITypeBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.IVariableBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.Modifier;
+import com.codenvy.ide.ext.java.jdt.core.dom.TypeDeclaration;
 import com.codenvy.ide.runtime.Assert;
 
 

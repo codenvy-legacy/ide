@@ -11,7 +11,6 @@
 package com.codenvy.ide.ext.java.jdt.internal.corext.fix;
 
 import com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.code.CompilationUnitChange;
-
 import com.codenvy.ide.runtime.CoreException;
 
 

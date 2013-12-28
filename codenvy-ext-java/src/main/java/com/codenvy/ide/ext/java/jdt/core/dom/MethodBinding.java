@@ -11,8 +11,13 @@
 
 package com.codenvy.ide.ext.java.jdt.core.dom;
 
-import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ExtraCompilerModifiers;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.LookupEnvironment;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ParameterizedGenericMethodBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.RawTypeBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ReferenceBinding;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeVariableBinding;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.AbortCompilation;
 import com.codenvy.ide.ext.java.jdt.internal.core.util.Util;
 

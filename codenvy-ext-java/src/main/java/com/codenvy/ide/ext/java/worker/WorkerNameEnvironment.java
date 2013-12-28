@@ -17,21 +17,21 @@
  */
 package com.codenvy.ide.ext.java.worker;
 
-import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
-import com.codenvy.ide.ext.java.jdt.env.TypesListImpl;
-import com.codenvy.ide.ext.java.jdt.internal.codeassist.ISearchRequestor;
-import com.codenvy.ide.ext.java.shared.JavaType;
-import com.codenvy.ide.ext.java.shared.ShortTypeInfo;
+import com.codenvy.ide.collections.Jso;
 import com.codenvy.ide.ext.java.jdt.core.Flags;
 import com.codenvy.ide.ext.java.jdt.core.Signature;
+import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
 import com.codenvy.ide.ext.java.jdt.core.search.IJavaSearchConstants;
 import com.codenvy.ide.ext.java.jdt.env.BinaryTypeImpl;
+import com.codenvy.ide.ext.java.jdt.env.TypesListImpl;
+import com.codenvy.ide.ext.java.jdt.internal.codeassist.ISearchRequestor;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.AccessRestriction;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryMethod;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryType;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.NameEnvironmentAnswer;
-import com.codenvy.ide.collections.Jso;
+import com.codenvy.ide.ext.java.shared.JavaType;
+import com.codenvy.ide.ext.java.shared.ShortTypeInfo;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;

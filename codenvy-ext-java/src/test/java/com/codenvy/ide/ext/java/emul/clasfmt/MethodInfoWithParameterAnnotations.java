@@ -12,7 +12,6 @@
 package com.codenvy.ide.ext.java.emul.clasfmt;
 
 import com.codenvy.ide.ext.java.emul.Util;
-
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryAnnotation;
 
 

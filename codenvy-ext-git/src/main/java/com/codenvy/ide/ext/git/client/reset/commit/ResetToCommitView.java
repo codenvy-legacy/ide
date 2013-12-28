@@ -17,10 +17,10 @@
  */
 package com.codenvy.ide.ext.git.client.reset.commit;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.ext.git.shared.Revision;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**

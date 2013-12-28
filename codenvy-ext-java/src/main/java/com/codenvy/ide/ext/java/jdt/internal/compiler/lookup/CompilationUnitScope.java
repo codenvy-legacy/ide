@@ -19,7 +19,11 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ImportReference;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TypeDeclaration;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.AccessRestriction;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.ProblemReporter;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.util.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.util.CompoundNameVector;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.util.HashtableOfObject;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.util.HashtableOfType;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.util.ObjectVector;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.util.SimpleNameVector;
 
 public class CompilationUnitScope extends Scope {
 

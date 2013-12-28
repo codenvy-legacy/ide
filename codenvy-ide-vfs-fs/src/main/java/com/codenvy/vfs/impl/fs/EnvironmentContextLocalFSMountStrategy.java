@@ -23,7 +23,7 @@ import com.codenvy.commons.env.EnvironmentContext;
 /**
  * Implementation of LocalFSMountStrategy that uses EnvironmentContext to determine mount point for virtual filesystem.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author andrew00x
  * @see FSMountPoint
  * @see LocalFileSystem
  */

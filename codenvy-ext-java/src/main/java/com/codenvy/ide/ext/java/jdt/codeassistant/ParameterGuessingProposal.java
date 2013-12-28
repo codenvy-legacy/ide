@@ -15,8 +15,12 @@ import com.codenvy.ide.ext.java.jdt.core.CompletionContext;
 import com.codenvy.ide.ext.java.jdt.core.CompletionProposal;
 import com.codenvy.ide.ext.java.jdt.core.Signature;
 import com.codenvy.ide.ext.java.jdt.internal.corext.util.SignatureUtil;
-
-import com.codenvy.ide.text.*;
+import com.codenvy.ide.text.BadPositionCategoryException;
+import com.codenvy.ide.text.Document;
+import com.codenvy.ide.text.Position;
+import com.codenvy.ide.text.PositionUpdater;
+import com.codenvy.ide.text.Region;
+import com.codenvy.ide.text.RegionImpl;
 
 
 /** This is a which includes templates that represent the best guess completion for each parameter of a method. */

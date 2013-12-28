@@ -19,6 +19,7 @@ import com.codenvy.ide.ext.java.jdt.core.dom.Expression;
 import com.codenvy.ide.ext.java.jdt.core.dom.IExtendedModifier;
 import com.codenvy.ide.ext.java.jdt.core.dom.ITypeBinding;
 import com.codenvy.ide.ext.java.jdt.core.dom.InfixExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.InfixExpression.Operator;
 import com.codenvy.ide.ext.java.jdt.core.dom.MethodDeclaration;
 import com.codenvy.ide.ext.java.jdt.core.dom.Modifier;
 import com.codenvy.ide.ext.java.jdt.core.dom.Name;
@@ -30,7 +31,6 @@ import com.codenvy.ide.ext.java.jdt.core.dom.TypeDeclaration;
 import com.codenvy.ide.ext.java.jdt.core.dom.TypeParameter;
 import com.codenvy.ide.ext.java.jdt.core.dom.UnionType;
 import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclaration;
-import com.codenvy.ide.ext.java.jdt.core.dom.InfixExpression.Operator;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ImportRewrite;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ImportRewrite.ImportRewriteContext;
 

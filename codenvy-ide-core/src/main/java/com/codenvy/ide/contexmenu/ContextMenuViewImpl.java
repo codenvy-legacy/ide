@@ -17,17 +17,35 @@
  */
 package com.codenvy.ide.contexmenu;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.ui.action.*;
+import com.codenvy.ide.api.ui.action.Action;
+import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.api.ui.action.ActionGroup;
+import com.codenvy.ide.api.ui.action.ActionManager;
+import com.codenvy.ide.api.ui.action.ActionPlaces;
+import com.codenvy.ide.api.ui.action.CustomComponentAction;
+import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.api.ui.action.IdeActions;
+import com.codenvy.ide.api.ui.action.Presentation;
+import com.codenvy.ide.api.ui.action.Separator;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.toolbar.*;
+import com.codenvy.ide.toolbar.ActionButton;
+import com.codenvy.ide.toolbar.ActionPopupButton;
+import com.codenvy.ide.toolbar.ActionSelectedHandler;
+import com.codenvy.ide.toolbar.CloseMenuHandler;
+import com.codenvy.ide.toolbar.DelimiterItem;
+import com.codenvy.ide.toolbar.MenuLockLayer;
+import com.codenvy.ide.toolbar.PopupMenu;
+import com.codenvy.ide.toolbar.PresentationFactory;
+import com.codenvy.ide.toolbar.ToolbarView;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The implementation of {@link ToolbarView}

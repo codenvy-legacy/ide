@@ -17,9 +17,10 @@
  */
 package com.codenvy.ide.api.ui.preferences;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.extension.SDK;
 import com.google.inject.Provider;
+
+import javax.validation.constraints.NotNull;
 
 
 /**

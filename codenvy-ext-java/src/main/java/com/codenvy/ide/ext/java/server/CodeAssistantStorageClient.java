@@ -17,20 +17,31 @@
  */
 package com.codenvy.ide.ext.java.server;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
+import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.ide.ext.java.shared.ShortTypeInfo;
 import com.codenvy.ide.ext.java.shared.TypeInfo;
+import com.google.inject.name.Named;
 
-import org.apache.commons.io.IOUtils;
-import org.everrest.core.impl.provider.json.*;
-import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.container.xml.ValueParam;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonGenerator;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonValue;
+import org.everrest.core.impl.provider.json.JsonWriter;
+import org.everrest.core.impl.provider.json.ObjectBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.MediaType;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -42,36 +53,24 @@ import java.util.Set;
 /**
  * Rest client for Codeassistant storage
  *
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Evgen Vidolob
  */
+@Singleton
 public class CodeAssistantStorageClient implements CodeAssistantStorage {
-    private static final Log    LOG              = ExoLogger.getLogger(CodeAssistantStorageClient.class);
-    private static final String STOGAGE_BASE     = "/storage/get";
+    private static final Logger LOG              = LoggerFactory.getLogger(CodeAssistantStorageClient.class);
+    private static final String STORAGE_BASE     = "/storage/get";
+    // TODO(GUICE) :  rename
     public static final  String STORAGE_BASE_URL = "exo.ide.codeassistan.storage-base-url";
     private final String baseURL;
 
-    /**
-     *
-     */
-    public CodeAssistantStorageClient(InitParams initParams) {
-        this(readValueParam(initParams, "codeassistant-storage-base-url", System.getProperty(STORAGE_BASE_URL)));
-    }
-
-    /** @param baseURL */
-    protected CodeAssistantStorageClient(String baseURL) {
-        super();
-        this.baseURL = baseURL;
-    }
-
-    private static String readValueParam(InitParams initParams, String paramName, String defaultValue) {
-        if (initParams != null) {
-            ValueParam vp = initParams.getValueParam(paramName);
-            if (vp != null) {
-                return vp.getValue();
-            }
+    // TODO(GUICE): better name for "codeassistant-storage-base-url" property ??
+    @Inject
+    public CodeAssistantStorageClient(@Nullable @Named("codeassistant-storage-base-url") String baseURL) {
+        if (baseURL == null) {
+            this.baseURL = System.getProperty(STORAGE_BASE_URL);
+        } else {
+            this.baseURL = baseURL;
         }
-        return defaultValue;
     }
 
     public String updateTypeIndex(String dependencyList, String zipUrl) throws IOException {
@@ -92,7 +91,7 @@ public class CodeAssistantStorageClient implements CodeAssistantStorage {
             http.setRequestMethod("GET");
             int responseCode = http.getResponseCode();
             if (responseCode != 200) {
-                LOG.error("Can't dowload dependency list from: " + statusUrl);
+                LOG.error("Can't download dependency list from: " + statusUrl);
             }
             InputStream data = http.getInputStream();
             response = readBody(data, http.getContentLength());
@@ -109,16 +108,8 @@ public class CodeAssistantStorageClient implements CodeAssistantStorage {
 
     }
 
-    /**
-     * @param dependencyList
-     * @param zipUrl
-     * @throws IOException
-     */
     private String sendRequest(URL url, String dependencyList, String zipUrl) throws IOException {
-
-        HttpURLConnection http = null;
-
-        http = (HttpURLConnection)url.openConnection();
+        HttpURLConnection http = (HttpURLConnection)url.openConnection();
         http.setRequestMethod("POST");
         http.setRequestProperty("content-type", "application/json");
         http.setDoOutput(true);
@@ -139,11 +130,11 @@ public class CodeAssistantStorageClient implements CodeAssistantStorage {
         return getShortTypeInfo("/annotations?prefix=" + prefix, dependencies);
     }
 
-    private List<ShortTypeInfo> getShortTypeInfo(String urlPart, Set<String> dependencys) throws CodeAssistantException {
+    private List<ShortTypeInfo> getShortTypeInfo(String urlPart, Set<String> dependencies) throws CodeAssistantException {
         HttpURLConnection in = null;
         try {
-            URL url = new URL(baseURL + STOGAGE_BASE + urlPart);
-            in = run(url, dependencys);
+            URL url = new URL(baseURL + STORAGE_BASE + urlPart);
+            in = run(url, dependencies);
             if (in == null)
                 return null;
             JsonParser parser = new JsonParser();
@@ -194,14 +185,14 @@ public class CodeAssistantStorageClient implements CodeAssistantStorage {
         }
     }
 
-    private String getJavadoc(String urlPart, Set<String> dependencys) throws CodeAssistantException {
+    private String getJavadoc(String urlPart, Set<String> dependencies) throws CodeAssistantException {
         HttpURLConnection in = null;
         try {
-            URL url = new URL(baseURL + STOGAGE_BASE + urlPart);
-            in = run(url, dependencys);
+            URL url = new URL(baseURL + STORAGE_BASE + urlPart);
+            in = run(url, dependencies);
             if (in == null)
                 return null;
-            return IOUtils.toString(in.getInputStream());
+            return IoUtil.readAndCloseQuietly(in.getInputStream());
         } catch (IOException e) {
             if (LOG.isDebugEnabled())
                 LOG.error("Invalid url", e);
@@ -217,7 +208,7 @@ public class CodeAssistantStorageClient implements CodeAssistantStorage {
     public TypeInfo getTypeByFqn(@NotNull String fqn, @NotNull Set<String> dependencies) throws CodeAssistantException {
         HttpURLConnection in = null;
         try {
-            URL url = new URL(baseURL + STOGAGE_BASE + "/type-by-fqn?fqn=" + fqn);
+            URL url = new URL(baseURL + STORAGE_BASE + "/type-by-fqn?fqn=" + fqn);
             JsonParser p = new JsonParser();
             in = run(url, dependencies);
             if (in == null)
@@ -257,7 +248,7 @@ public class CodeAssistantStorageClient implements CodeAssistantStorage {
             throws CodeAssistantException {
         HttpURLConnection in = null;
         try {
-            URL url = new URL(baseURL + STOGAGE_BASE + "/types-info-by-name-prefix?prefix=" + namePrefix);
+            URL url = new URL(baseURL + STORAGE_BASE + "/types-info-by-name-prefix?prefix=" + namePrefix);
             in = run(url, dependencies);
             if (in == null)
                 return null;
@@ -284,7 +275,7 @@ public class CodeAssistantStorageClient implements CodeAssistantStorage {
     public List<String> getPackages(@NotNull String packagePrefix, @NotNull Set<String> dependencies) throws CodeAssistantException {
         HttpURLConnection in = null;
         try {
-            URL url = new URL(baseURL + STOGAGE_BASE + "/find-packages?package=" + packagePrefix);
+            URL url = new URL(baseURL + STORAGE_BASE + "/find-packages?package=" + packagePrefix);
             in = run(url, dependencies);
             if (in == null)
                 return null;
@@ -311,7 +302,7 @@ public class CodeAssistantStorageClient implements CodeAssistantStorage {
     public List<String> getAllPackages(@NotNull Set<String> dependencies) throws CodeAssistantException {
         HttpURLConnection in = null;
         try {
-            URL url = new URL(baseURL + STOGAGE_BASE + "/get-packages");
+            URL url = new URL(baseURL + STORAGE_BASE + "/get-packages");
             in = run(url, dependencies);
             if (in == null)
                 return null;
@@ -333,21 +324,20 @@ public class CodeAssistantStorageClient implements CodeAssistantStorage {
         return null;
     }
 
-    private HttpURLConnection run(URL url, Set<String> dependencys) throws IOException, CodeAssistantException {
-        HttpURLConnection http = null;
-        http = (HttpURLConnection)url.openConnection();
+    private HttpURLConnection run(URL url, Set<String> dependencies) throws IOException, CodeAssistantException {
+        HttpURLConnection http = (HttpURLConnection)url.openConnection();
         http.setRequestMethod("POST");
         http.setRequestProperty("content-type", MediaType.APPLICATION_JSON);
         http.setDoOutput(true);
         OutputStream out = null;
         try {
-            JsonValue jsonArray = JsonGenerator.createJsonArray(dependencys);
+            JsonValue jsonArray = JsonGenerator.createJsonArray(dependencies);
             out = http.getOutputStream();
             JsonWriter writer = new JsonWriter(out);
             jsonArray.writeTo(writer);
             writer.flush();
         } catch (JsonException e) {
-            String message = "Can't conwert dependencys to JSON";
+            String message = "Can't convert dependencies to JSON";
             LOG.error(message, e);
             throw new CodeAssistantException(500, message);
         } finally {

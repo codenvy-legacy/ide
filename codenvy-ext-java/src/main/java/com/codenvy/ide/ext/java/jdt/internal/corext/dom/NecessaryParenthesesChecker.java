@@ -23,6 +23,7 @@ import com.codenvy.ide.ext.java.jdt.core.dom.ForStatement;
 import com.codenvy.ide.ext.java.jdt.core.dom.ITypeBinding;
 import com.codenvy.ide.ext.java.jdt.core.dom.IfStatement;
 import com.codenvy.ide.ext.java.jdt.core.dom.InfixExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.InfixExpression.Operator;
 import com.codenvy.ide.ext.java.jdt.core.dom.ParenthesizedExpression;
 import com.codenvy.ide.ext.java.jdt.core.dom.ReturnStatement;
 import com.codenvy.ide.ext.java.jdt.core.dom.SingleVariableDeclaration;
@@ -33,7 +34,6 @@ import com.codenvy.ide.ext.java.jdt.core.dom.SynchronizedStatement;
 import com.codenvy.ide.ext.java.jdt.core.dom.ThrowStatement;
 import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationFragment;
 import com.codenvy.ide.ext.java.jdt.core.dom.WhileStatement;
-import com.codenvy.ide.ext.java.jdt.core.dom.InfixExpression.Operator;
 import com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.code.OperatorPrecedence;
 
 import java.util.Iterator;

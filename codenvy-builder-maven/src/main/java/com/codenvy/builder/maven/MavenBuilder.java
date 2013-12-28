@@ -27,13 +27,16 @@ import com.codenvy.api.builder.internal.DelegateBuildLogger;
 import com.codenvy.api.builder.internal.DependencyCollector;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.builder.maven.dto.MavenDependency;
-import com.codenvy.builder.tools.maven.MavenProjectModel;
-import com.codenvy.builder.tools.maven.MavenProjectModelFactory;
+import com.codenvy.ide.maven.tools.MavenUtils;
 import com.codenvy.dto.server.DtoFactory;
 
+import org.apache.maven.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -45,10 +48,29 @@ import java.util.regex.Pattern;
 /**
  * Builder based on Maven.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author andrew00x
+ * @author Eugene Voevodin
  */
+@Singleton
 public class MavenBuilder extends Builder {
     private static final Logger LOG = LoggerFactory.getLogger(MavenBuilder.class);
+
+    /** Rules for builder assembly plugin. Use it for create jar with included dependencies */
+    private static final String ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES      = "<assembly>\n" +
+                                                                                     "  <id>jar-with-dependencies</id>\n" +
+                                                                                     "  <formats>\n" +
+                                                                                     "    <format>jar</format>\n" +
+                                                                                     "  </formats>\n" +
+                                                                                     "  <includeBaseDirectory>true</includeBaseDirectory>\n" +
+                                                                                     "  <dependencySets>\n" +
+                                                                                     "    <dependencySet>\n" +
+                                                                                     "      <outputDirectory>/</outputDirectory>\n" +
+                                                                                     "      <unpack>true</unpack>\n" +
+                                                                                     "      <scope>runtime</scope>\n" +
+                                                                                     "    </dependencySet>\n" +
+                                                                                     "  </dependencySets>\n" +
+                                                                                     "</assembly>\n";
+    private static final String ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES_FILE = "jar-with-dependencies-assembly-descriptor.xml";
 
     /** Rules for builder assembly plugin. Use it for create zip of all project dependencies. */
     private static final String assemblyDescriptor       = "<assembly>\n" +
@@ -67,8 +89,12 @@ public class MavenBuilder extends Builder {
     private static final String DEPENDENCIES_JSON_FILE   = "dependencies.json";
     private static final String ASSEMBLY_DESCRIPTOR_FILE = "dependencies-zip-assembly-descriptor.xml";
 
-    public MavenBuilder() {
-        super();
+    @Inject
+    public MavenBuilder(@Named(REPOSITORY) java.io.File rootDirectory,
+                        @Named(NUMBER_OF_WORKERS) int numberOfWorkers,
+                        @Named(INTERNAL_QUEUE_SIZE) int queueSize,
+                        @Named(CLEAN_RESULT_DELAY_TIME) int cleanBuildResultDelay) {
+        super(rootDirectory, numberOfWorkers, queueSize, cleanBuildResultDelay);
     }
 
     @Override
@@ -83,7 +109,7 @@ public class MavenBuilder extends Builder {
 
     @Override
     protected CommandLine createCommandLine(BuilderConfiguration config) throws BuilderException {
-        final CommandLine commandLine = new CommandLine(mavenExecCommand());
+        final CommandLine commandLine = new CommandLine(MavenUtils.getMavenExecCommand());
         final List<String> targets = config.getTargets();
         switch (config.getTaskType()) {
             case DEFAULT:
@@ -91,6 +117,16 @@ public class MavenBuilder extends Builder {
                     commandLine.add(targets);
                 } else {
                     commandLine.add("clean", "package");
+                }
+                if (config.getRequest().isDeployJarWithDependencies()) {
+                    try {
+                        Files.write(new java.io.File(config.getWorkDir(), ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES_FILE).toPath(),
+                                    ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES.getBytes());
+                    } catch (IOException e) {
+                        throw new BuilderException(e);
+                    }
+                    commandLine.add("assembly:single");
+                    commandLine.addPair("-Ddescriptor", ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES_FILE);
                 }
                 break;
             case LIST_DEPS:
@@ -117,25 +153,6 @@ public class MavenBuilder extends Builder {
         }
         commandLine.add(config.getOptions());
         return commandLine;
-    }
-
-    private String mavenExecCommand() {
-        final java.io.File mvnHome = getMavenHome();
-        if (mvnHome != null) {
-            final String mvn = "bin" + java.io.File.separatorChar + "mvn";
-            return new java.io.File(mvnHome, mvn).getAbsolutePath(); // If builder home directory set use it
-        } else {
-            return "mvn"; // otherwise 'mvn' should be in PATH variable
-        }
-    }
-
-    private java.io.File getMavenHome() {
-        final String m2HomeEnv = System.getenv("M2_HOME");
-        if (m2HomeEnv == null) {
-            return null;
-        }
-        java.io.File m2Home = new java.io.File(m2HomeEnv);
-        return m2Home.exists() ? m2Home : null;
     }
 
     @Override
@@ -176,9 +193,13 @@ public class MavenBuilder extends Builder {
         java.io.File[] files = null;
         switch (config.getTaskType()) {
             case DEFAULT:
-                final MavenProjectModelFactory factory = MavenProjectModelFactory.getInstance();
-                final MavenProjectModel mavenProjectModel = factory.getMavenProjectModel(workDir);
-                final String packaging = mavenProjectModel.getPackaging();
+                final Model mavenModel;
+                try {
+                    mavenModel = MavenUtils.getModel(workDir);
+                } catch (IOException e) {
+                    throw new BuilderException(e);
+                }
+                final String packaging = mavenModel.getPackaging();
                 final String fileExt = packaging != null ? '.' + packaging : ".jar";
                 files = new java.io.File(workDir, "target").listFiles(new FilenameFilter() {
                     @Override

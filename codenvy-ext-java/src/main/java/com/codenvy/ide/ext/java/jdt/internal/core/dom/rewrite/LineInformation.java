@@ -12,7 +12,6 @@
 package com.codenvy.ide.ext.java.jdt.internal.core.dom.rewrite;
 
 import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
-
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 

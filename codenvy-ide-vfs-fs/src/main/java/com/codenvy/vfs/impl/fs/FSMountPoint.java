@@ -95,7 +95,7 @@ import static com.codenvy.commons.lang.IoUtil.nioCopy;
 /**
  * Local filesystem implementation of MountPoint.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author andrew00x
  */
 public class FSMountPoint implements MountPoint {
     private static final Logger LOG = LoggerFactory.getLogger(FSMountPoint.class);

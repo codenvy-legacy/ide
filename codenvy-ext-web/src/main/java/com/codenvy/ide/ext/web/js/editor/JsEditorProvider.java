@@ -22,7 +22,6 @@ import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.ext.web.css.editor.CssResources;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 

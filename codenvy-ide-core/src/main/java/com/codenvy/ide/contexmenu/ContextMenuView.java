@@ -17,8 +17,9 @@
  */
 package com.codenvy.ide.contexmenu;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The view of {@link ContextMenuPresenter}.

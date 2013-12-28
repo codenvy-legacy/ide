@@ -14,17 +14,17 @@
 
 package com.codenvy.ide.collections;
 
-import com.codenvy.ide.annotations.Nullable;
-import com.codenvy.ide.collections.java.JsonIntegerMapAdapter;
-import com.codenvy.ide.collections.js.JsoStringSet;
 import com.codenvy.ide.collections.java.JsonArrayListAdapter;
+import com.codenvy.ide.collections.java.JsonIntegerMapAdapter;
 import com.codenvy.ide.collections.java.JsonStringMapAdapter;
 import com.codenvy.ide.collections.java.JsonStringSetAdapter;
 import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.collections.js.JsoIntegerMap;
 import com.codenvy.ide.collections.js.JsoStringMap;
+import com.codenvy.ide.collections.js.JsoStringSet;
 import com.google.gwt.core.client.GWT;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;

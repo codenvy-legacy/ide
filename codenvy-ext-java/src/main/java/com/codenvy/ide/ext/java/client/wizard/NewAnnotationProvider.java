@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.java.client.wizard;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.resources.model.Folder;
@@ -25,6 +24,8 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * Provides creating of a java annotation.

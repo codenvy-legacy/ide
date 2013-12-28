@@ -17,13 +17,12 @@
  */
 package com.codenvy.ide.ext.java.jdt.core.search;
 
-import com.codenvy.ide.ext.java.shared.ShortTypeInfo;
-
 import com.codenvy.ide.ext.java.jdt.core.IJavaElement;
 import com.codenvy.ide.ext.java.jdt.core.IPackageFragment;
 import com.codenvy.ide.ext.java.jdt.core.IType;
 import com.codenvy.ide.ext.java.jdt.core.Signature;
 import com.codenvy.ide.ext.java.jdt.env.PackageFragment;
+import com.codenvy.ide.ext.java.shared.ShortTypeInfo;
 
 
 /**

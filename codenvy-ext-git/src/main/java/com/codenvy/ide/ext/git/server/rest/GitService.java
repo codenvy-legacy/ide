@@ -17,17 +17,14 @@
  */
 package com.codenvy.ide.ext.git.server.rest;
 
+import com.codenvy.api.core.user.UserState;
 import com.codenvy.api.vfs.server.ContentStream;
-import com.codenvy.api.vfs.server.GitUrlResolver;
-import com.codenvy.api.vfs.server.LocalPathResolver;
 import com.codenvy.api.vfs.server.MountPoint;
 import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.api.vfs.server.VirtualFileSystem;
-import com.codenvy.api.vfs.server.VirtualFileSystemImpl;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.exceptions.InvalidArgumentException;
 import com.codenvy.api.vfs.server.exceptions.ItemNotFoundException;
-import com.codenvy.api.vfs.server.exceptions.LocalPathResolveException;
 import com.codenvy.api.vfs.server.exceptions.PermissionDeniedException;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.shared.ItemType;
@@ -36,7 +33,6 @@ import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.dto.server.DtoFactory;
-import com.codenvy.ide.commons.MavenUtils;
 import com.codenvy.ide.ext.git.server.GitConnection;
 import com.codenvy.ide.ext.git.server.GitConnectionFactory;
 import com.codenvy.ide.ext.git.server.GitException;
@@ -74,14 +70,16 @@ import com.codenvy.ide.ext.git.shared.Tag;
 import com.codenvy.ide.ext.git.shared.TagCreateRequest;
 import com.codenvy.ide.ext.git.shared.TagDeleteRequest;
 import com.codenvy.ide.ext.git.shared.TagListRequest;
+import com.codenvy.ide.maven.tools.MavenUtils;
 import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
 import com.codenvy.organization.model.User;
+import com.codenvy.vfs.impl.fs.GitUrlResolver;
+import com.codenvy.vfs.impl.fs.LocalPathResolver;
 
 import org.apache.maven.model.Model;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.services.security.ConversationState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -95,22 +93,20 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
-
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: GitService.java 22811 2011-03-22 07:28:35Z andrew00x $
- */
+/** @author andrew00x */
 @Path("{ws-name}/git")
 public class GitService {
-    private static final Log LOG = ExoLogger.getLogger(GitService.class);
-    
+    private static final Logger LOG = LoggerFactory.getLogger(GitService.class);
+
     @Inject
     private LocalPathResolver localPathResolver;
 
@@ -135,7 +131,7 @@ public class GitService {
     @Path("add")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void add(AddRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException {
+    public void add(AddRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.add(request);
@@ -147,8 +143,7 @@ public class GitService {
     @Path("branch-checkout")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void branchCheckout(BranchCheckoutRequest request) throws GitException, LocalPathResolveException,
-                                                                     VirtualFileSystemException {
+    public void branchCheckout(BranchCheckoutRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.branchCheckout(request);
@@ -161,8 +156,7 @@ public class GitService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Branch branchCreate(BranchCreateRequest request) throws GitException, LocalPathResolveException,
-                                                                   VirtualFileSystemException {
+    public Branch branchCreate(BranchCreateRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             return gitConnection.branchCreate(request);
@@ -174,8 +168,7 @@ public class GitService {
     @Path("branch-delete")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void branchDelete(BranchDeleteRequest request) throws GitException, LocalPathResolveException,
-                                                                 VirtualFileSystemException {
+    public void branchDelete(BranchDeleteRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.branchDelete(request);
@@ -200,9 +193,7 @@ public class GitService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public GenericEntity<List<Branch>> branchList(BranchListRequest request) throws GitException,
-                                                                                    LocalPathResolveException,
-                                                                                    VirtualFileSystemException {
+    public GenericEntity<List<Branch>> branchList(BranchListRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             return new GenericEntity<List<Branch>>(gitConnection.branchList(request)) {
@@ -216,8 +207,7 @@ public class GitService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public RepoInfo clone(final CloneRequest request) throws URISyntaxException, GitException,
-                                                             LocalPathResolveException, VirtualFileSystemException {
+    public RepoInfo clone(final CloneRequest request) throws URISyntaxException, GitException, VirtualFileSystemException {
         long start = System.currentTimeMillis();
         // On-the-fly resolving of repository's working directory.
         request.setWorkingDir(resolveLocalPath(request.getWorkingDir()));
@@ -227,7 +217,6 @@ public class GitService {
             gitConnection.clone(request);
             setGitRepositoryProp(projectId);
             determineProjectType();
-            addToIndex();
             return DtoFactory.getInstance().createDto(RepoInfo.class).withRemoteUri(request.getRemoteUri());
         } finally {
             long end = System.currentTimeMillis();
@@ -242,42 +231,48 @@ public class GitService {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         Item project = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
         String value = null;
-        for (Property property : project.getProperties()){
-            if ("isGitRepository".equals(property.getName())){
+        for (Property property : project.getProperties()) {
+            if ("isGitRepository".equals(property.getName())) {
                 value = (property.getValue() != null && property.getValue().size() > 0) ? property.getValue().get(0) : null;
                 break;
             }
         }
-        
+
         if (value == null || !value.equals("true")) {
-            Property isGitRepositoryProperty = DtoFactory.getInstance().createDto(Property.class).withName("isGitRepository").withValue(new ArrayList<String>(Arrays.asList("true")));
+            Property isGitRepositoryProperty = DtoFactory.getInstance().createDto(Property.class).withName("isGitRepository")
+                                                         .withValue(new ArrayList<String>(Arrays.asList("true")));
             List<Property> propertiesList = new ArrayList<Property>(1);
             propertiesList.add(isGitRepositoryProperty);
             vfs.updateItem(projectId, propertiesList, null);
         }
     }
-    
+
     /**
      * Try to determine project's type by it's structure.
-     * 
+     *
      * @throws VirtualFileSystemException
      */
     private void determineProjectType() throws VirtualFileSystemException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         ItemList files = vfs.getChildren(projectId, -1, 0, "file", false, PropertyFilter.NONE_FILTER);
-        for (Item file : files.getItems()){
-            if ("pom.xml".equals(file.getName())){
+        for (Item file : files.getItems()) {
+            if ("pom.xml".equals(file.getName())) {
                 boolean isMultiModule = isMultiModule(vfs.getContent(file.getId()));
                 List<Property> propertiesList = new ArrayList<Property>();
-                if (isMultiModule){
-                    Property projectTypeProperty = DtoFactory.getInstance().createDto(Property.class).withName("vfs:projectType").withValue(new ArrayList<String>(Arrays.asList("Multiple Module Project")));
+                if (isMultiModule) {
+                    Property projectTypeProperty = DtoFactory.getInstance().createDto(Property.class).withName("vfs:projectType")
+                                                             .withValue(new ArrayList<String>(Arrays.asList("Multiple Module Project")));
                     propertiesList.add(projectTypeProperty);
-                    propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("nature.primary").withValue(new ArrayList<String>(Arrays.asList("java"))));
-                    propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("vfs:mimeType").withValue(new ArrayList<String>(Arrays.asList("text/vnd.ideproject+directory"))));
-                    propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("builder.name").withValue(new ArrayList<String>(Arrays.asList("maven"))));
+                    propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("nature.primary")
+                                                 .withValue(new ArrayList<String>(Arrays.asList("java"))));
+                    propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("vfs:mimeType")
+                                                 .withValue(new ArrayList<String>(Arrays.asList("text/vnd.ideproject+directory"))));
+                    propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("builder.name")
+                                                 .withValue(new ArrayList<String>(Arrays.asList("maven"))));
                     processMultiModuleMavenProject(vfs, projectId);
                 } else {
-                    Property projectTypeProperty = DtoFactory.getInstance().createDto(Property.class).withName("vfs:projectType").withValue(new ArrayList<String>(Arrays.asList("undefined")));
+                    Property projectTypeProperty = DtoFactory.getInstance().createDto(Property.class).withName("vfs:projectType")
+                                                             .withValue(new ArrayList<String>(Arrays.asList("undefined")));
                     propertiesList.add(projectTypeProperty);
                 }
                 vfs.updateItem(projectId, propertiesList, null);
@@ -285,37 +280,35 @@ public class GitService {
             }
         }
     }
-    
+
     /**
-     * @param vfs virtual file system
-     * @param projectId id of the multimodule project
-     * @throws ItemNotFoundException 
-     * @throws InvalidArgumentException
-     * @throws PermissionDeniedException
-     * @throws VirtualFileSystemException
-     */
-    private void processMultiModuleMavenProject(VirtualFileSystem vfs, String projectId) throws ItemNotFoundException,
-                                                                                              InvalidArgumentException,
-                                                                                              PermissionDeniedException,
-                                                                                              VirtualFileSystemException {
-        ItemList folders = vfs.getChildren(projectId, -1, 0, "folder", false, PropertyFilter.NONE_FILTER);
-        findPom(vfs, folders);
-    }
-    
-    /**
-     * Recursively find pom.xml in the project's structure. 
-     * 
-     * @param vfs virtual file system
-     * @param folders folders to look for pom.xml
+     * @param vfs
+     *         virtual file system
+     * @param projectId
+     *         id of the multimodule project
      * @throws ItemNotFoundException
      * @throws InvalidArgumentException
      * @throws PermissionDeniedException
      * @throws VirtualFileSystemException
      */
-    private void findPom(VirtualFileSystem vfs, ItemList folders) throws ItemNotFoundException,
-                                                                 InvalidArgumentException,
-                                                                 PermissionDeniedException,
-                                                                 VirtualFileSystemException {
+    private void processMultiModuleMavenProject(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException {
+        ItemList folders = vfs.getChildren(projectId, -1, 0, "folder", false, PropertyFilter.NONE_FILTER);
+        findPom(vfs, folders);
+    }
+
+    /**
+     * Recursively find pom.xml in the project's structure.
+     *
+     * @param vfs
+     *         virtual file system
+     * @param folders
+     *         folders to look for pom.xml
+     * @throws ItemNotFoundException
+     * @throws InvalidArgumentException
+     * @throws PermissionDeniedException
+     * @throws VirtualFileSystemException
+     */
+    private void findPom(VirtualFileSystem vfs, ItemList folders) throws VirtualFileSystemException {
         if (folders.getItems().isEmpty()) {
             return;
         }
@@ -327,8 +320,8 @@ public class GitService {
                 if ("pom.xml".equals(file.getName())) {
                     List<Property> propertiesList = new ArrayList<Property>();
                     Property projectTypeProperty =
-                                                   DtoFactory.getInstance().createDto(Property.class).withName("vfs:projectType")
-                                                             .withValue(new ArrayList<String>(Arrays.asList("undefined")));
+                            DtoFactory.getInstance().createDto(Property.class).withName("vfs:projectType")
+                                      .withValue(new ArrayList<String>(Arrays.asList("undefined")));
                     propertiesList.add(projectTypeProperty);
                     propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("vfs:mimeType")
                                                  .withValue(new ArrayList<String>(Arrays.asList("text/vnd.ideproject+directory"))));
@@ -344,38 +337,30 @@ public class GitService {
             }
         }
     }
-    
+
     /**
-     * Checks whether project is multimodule by analyzing packaging in pom.xml. 
-     * Must be <code><packaging>pom</packaging></code>.
-     * 
-     * @param pomContent content of the pom.xml file
-     * @return true if project is multimodule
+     * Checks whether project is multi-module by analyzing packaging in pom.xml.
+     * Must be {@code &lt;packaging&gt;pom&lt;/packaging&gt;}.
+     *
+     * @param pomContent
+     *         content of the pom.xml file
+     * @return {@code true} if project is multi-module
      */
-    private boolean isMultiModule(ContentStream pomContent){
-        Model pomModel;
-        try {
-            pomModel = MavenUtils.readPom(pomContent.getStream());
-            return (pomModel.getPackaging() != null && pomModel.getPackaging().equals("pom"));
+    private boolean isMultiModule(ContentStream pomContent) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(pomContent.getStream()))){
+            final Model pom = MavenUtils.readModel(reader);
+            return ("pom".equals(pom.getPackaging()));
         } catch (IOException e) {
             LOG.error("Can't read pom.xml to determine project's type.", e);
         }
         return false;
     }
 
-    private void addToIndex() throws VirtualFileSystemException {
-      /* TODO VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        if (vfs instanceof LocalFileSystem) {
-            ((LocalFileSystem)vfs).addToIndex(projectId);
-        }*/
-    }
-
     @Path("commit")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public Revision commit(CommitRequest request) throws GitException, LocalPathResolveException,
-                                                         VirtualFileSystemException {
+    public Revision commit(CommitRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         Revision revision = gitConnection.commit(request);
         try {
@@ -400,8 +385,7 @@ public class GitService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public InfoPage diff(DiffRequest request)
-            throws GitException, LocalPathResolveException, VirtualFileSystemException {
+    public InfoPage diff(DiffRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             return gitConnection.diff(request);
@@ -413,7 +397,7 @@ public class GitService {
     @Path("fetch")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void fetch(FetchRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException {
+    public void fetch(FetchRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.fetch(request);
@@ -425,8 +409,7 @@ public class GitService {
     @Path("init")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void init(final InitRequest request) throws GitException, LocalPathResolveException,
-                                                       VirtualFileSystemException {
+    public void init(final InitRequest request) throws GitException, VirtualFileSystemException {
         request.setWorkingDir(resolveLocalPath(projectId));
         GitConnection gitConnection = getGitConnection();
         try {
@@ -441,7 +424,7 @@ public class GitService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public LogPage log(LogRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException {
+    public LogPage log(LogRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             return gitConnection.log(request);
@@ -454,8 +437,7 @@ public class GitService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public MergeResult merge(MergeRequest request) throws GitException, LocalPathResolveException,
-                                                          VirtualFileSystemException {
+    public MergeResult merge(MergeRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             return gitConnection.merge(request);
@@ -467,7 +449,7 @@ public class GitService {
     @Path("mv")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void mv(MoveRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException {
+    public void mv(MoveRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.mv(request);
@@ -479,11 +461,10 @@ public class GitService {
     @Path("pull")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void pull(PullRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException {
+    public void pull(PullRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.pull(request);
-            addToIndex();
         } finally {
             gitConnection.close();
         }
@@ -492,7 +473,7 @@ public class GitService {
     @Path("push")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void push(PushRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException {
+    public void push(PushRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.push(request);
@@ -504,8 +485,7 @@ public class GitService {
     @Path("remote-add")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void remoteAdd(RemoteAddRequest request) throws GitException, LocalPathResolveException,
-                                                           VirtualFileSystemException {
+    public void remoteAdd(RemoteAddRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.remoteAdd(request);
@@ -516,8 +496,7 @@ public class GitService {
 
     @Path("remote-delete/{name}")
     @POST
-    public void remoteDelete(@PathParam("name") String name) throws GitException, LocalPathResolveException,
-                                                                    VirtualFileSystemException {
+    public void remoteDelete(@PathParam("name") String name) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.remoteDelete(name);
@@ -530,9 +509,7 @@ public class GitService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public GenericEntity<List<Remote>> remoteList(RemoteListRequest request) throws GitException,
-                                                                                    LocalPathResolveException,
-                                                                                    VirtualFileSystemException {
+    public GenericEntity<List<Remote>> remoteList(RemoteListRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             return new GenericEntity<List<Remote>>(gitConnection.remoteList(request)) {
@@ -545,8 +522,7 @@ public class GitService {
     @Path("remote-update")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void remoteUpdate(RemoteUpdateRequest request) throws GitException, LocalPathResolveException,
-                                                                 VirtualFileSystemException {
+    public void remoteUpdate(RemoteUpdateRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.remoteUpdate(request);
@@ -558,7 +534,7 @@ public class GitService {
     @Path("reset")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void reset(ResetRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException {
+    public void reset(ResetRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.reset(request);
@@ -570,7 +546,7 @@ public class GitService {
     @Path("rm")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void rm(RmRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException {
+    public void rm(RmRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.rm(request);
@@ -582,9 +558,7 @@ public class GitService {
     @Path("status")
     @POST
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public Status status(@QueryParam("short") boolean shortFormat) throws GitException,
-                                                                          LocalPathResolveException,
-                                                                          VirtualFileSystemException {
+    public Status status(@QueryParam("short") boolean shortFormat) throws GitException, VirtualFileSystemException {
         if (!isGitRepository()) {
             throw new GitException("Not a git repository.");
         }
@@ -600,8 +574,7 @@ public class GitService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Tag tagCreate(TagCreateRequest request)
-            throws GitException, LocalPathResolveException, VirtualFileSystemException {
+    public Tag tagCreate(TagCreateRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             return gitConnection.tagCreate(request);
@@ -613,8 +586,7 @@ public class GitService {
     @Path("tag-delete")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void tagDelete(TagDeleteRequest request)
-            throws GitException, LocalPathResolveException, VirtualFileSystemException {
+    public void tagDelete(TagDeleteRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.tagDelete(request);
@@ -627,8 +599,7 @@ public class GitService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public GenericEntity<List<Tag>> tagList(TagListRequest request) throws GitException, LocalPathResolveException,
-                                                                           VirtualFileSystemException {
+    public GenericEntity<List<Tag>> tagList(TagListRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             return new GenericEntity<List<Tag>>(gitConnection.tagList(request)) {
@@ -690,49 +661,46 @@ public class GitService {
         Item project = getGitProject(vfs, projectId);
 
         String value = null;
-        for (Property property : project.getProperties()){
-            if ("isGitRepository".equals(property.getName())){
+        for (Property property : project.getProperties()) {
+            if ("isGitRepository".equals(property.getName())) {
                 value = (property.getValue() != null && property.getValue().size() > 0) ? property.getValue().get(0) : null;
                 break;
             }
         }
-        
+
         return value != null && value.equals("true");
     }
 
-    protected String resolveLocalPath(String projId) throws LocalPathResolveException, VirtualFileSystemException {
+    protected String resolveLocalPath(String projId) throws VirtualFileSystemException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         if (vfs == null) {
             throw new VirtualFileSystemException(
                     "Can't resolve path on the Local File System : Virtual file system not initialized");
         }
         Item gitProject = getGitProject(vfs, projectId);
-        final MountPoint mountPoint = ((VirtualFileSystemImpl)vfs).getMountPoint();
+        final MountPoint mountPoint = vfs.getMountPoint();
         final VirtualFile virtualFile = mountPoint.getVirtualFileById(gitProject.getId());
         return localPathResolver.resolve(virtualFile);
     }
 
-    protected GitConnection getGitConnection()
-            throws GitException, LocalPathResolveException, VirtualFileSystemException {
+    protected GitConnection getGitConnection() throws GitException, VirtualFileSystemException {
         GitUser gituser = null;
-        ConversationState userState = ConversationState.getCurrent();
         try {
-            if (userState != null) {
-                User user = userManager.getUserByAlias(userState.getIdentity().getUserId());
-                String firstName = user.getProfile().getAttribute("firstName");
-                String lastName = user.getProfile().getAttribute("lastName");
-                String username = "";
-                if (firstName != null && firstName.length() != 0) {
-                    username += firstName.concat(" ");
-                }
-                if (lastName != null && lastName.length() != 0) {
-                    username += lastName;
-                }
-                if (username.length() != 0) {
-                    gituser = DtoFactory.getInstance().createDto(GitUser.class).withName(username).withEmail(userState.getIdentity().getUserId());
-                } else {
-                    gituser = DtoFactory.getInstance().createDto(GitUser.class).withName(userState.getIdentity().getUserId());
-                }
+            final String name = UserState.get().getUser().getName();
+            User user = userManager.getUserByAlias(name);
+            String firstName = user.getProfile().getAttribute("firstName");
+            String lastName = user.getProfile().getAttribute("lastName");
+            String username = "";
+            if (firstName != null && firstName.length() != 0) {
+                username += firstName.concat(" ");
+            }
+            if (lastName != null && lastName.length() != 0) {
+                username += lastName;
+            }
+            if (username.length() != 0) {
+                gituser = DtoFactory.getInstance().createDto(GitUser.class).withName(username).withEmail(name);
+            } else {
+                gituser = DtoFactory.getInstance().createDto(GitUser.class).withName(name);
             }
         } catch (OrganizationServiceException e) {
             LOG.error("It is not possible to get user", e);

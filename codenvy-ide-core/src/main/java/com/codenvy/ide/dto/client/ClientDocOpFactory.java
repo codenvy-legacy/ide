@@ -17,7 +17,6 @@ package com.codenvy.ide.dto.client;
 
 // TODO: These should be moved to an Editor2-specific package
 
-import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.dto.DocOp;
 import com.codenvy.ide.dto.DocOpComponent;
 import com.codenvy.ide.dto.DtoFactory;

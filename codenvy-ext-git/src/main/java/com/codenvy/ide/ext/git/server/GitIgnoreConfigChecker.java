@@ -17,10 +17,10 @@
  */
 package com.codenvy.ide.ext.git.server;
 
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.picocontainer.Startable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -31,27 +31,20 @@ import java.io.IOException;
 /**
  * Checks for the presence of a global .gitignore file and adds some rules to it. Adds this file to Git cross-repository configuration.
  * 
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: GitIgnoreConfigChecker.java Apr 10, 2013 12:03:18 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
-public class GitIgnoreConfigChecker implements Startable {
+public class GitIgnoreConfigChecker {
 
-    private static final Log    LOG                         = ExoLogger.getExoLogger(GitIgnoreConfigChecker.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GitIgnoreConfigChecker.class);
 
     private static final String GIT_GLOBAL_CONFIG_FILE_NAME = "/.gitconfig";
 
     private static final String GIT_IGNORE_GLOBAL_FILE_NAME = "/.gitignore_global";
 
-    /** @see org.picocontainer.Startable#start() */
-    @Override
-    public void start() {
+    @PostConstruct
+    public void init() {
         checkGitIgnoreConfiguration();
         checkGitGlobalConfiguration();
-    }
-
-    /** @see org.picocontainer.Startable#stop() */
-    @Override
-    public void stop() {
     }
 
     /** Checks for the presence of a global .gitignore file and adds rules to it. */

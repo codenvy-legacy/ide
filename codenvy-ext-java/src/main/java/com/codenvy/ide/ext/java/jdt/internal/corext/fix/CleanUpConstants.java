@@ -12,7 +12,6 @@
 package com.codenvy.ide.ext.java.jdt.internal.corext.fix;
 
 import com.codenvy.ide.ext.java.jdt.core.formatter.DefaultCodeFormatterConstants;
-
 import com.codenvy.ide.runtime.Assert;
 
 

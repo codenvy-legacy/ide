@@ -17,7 +17,6 @@
  */
 package com.codenvy.runner.webapps;
 
-import com.codenvy.api.core.config.Configuration;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.api.runner.internal.DeploymentSources;
@@ -51,28 +50,6 @@ public interface ApplicationServer {
     ApplicationProcess deploy(java.io.File appDir, DeploymentSources toDeploy,
                               ApplicationServerRunnerConfiguration runnerConfiguration, StopCallback stopCallback)
             throws RunnerException;
-
-    /**
-     * Returns the default configuration of application server.
-     *
-     * @return default {@code Configuration} of this application server
-     */
-    Configuration getDefaultConfiguration();
-
-    /**
-     * Returns the application server configuration.
-     *
-     * @return {@code Configuration} of this application server
-     */
-    Configuration getConfiguration();
-
-    /**
-     * Set the application server configuration.
-     *
-     * @param configuration
-     *         application server {@code Configuration} to set
-     */
-    void setConfiguration(Configuration configuration);
 
     /** Will be notified when {@code ApplicationServer} stopped. */
     public interface StopCallback {

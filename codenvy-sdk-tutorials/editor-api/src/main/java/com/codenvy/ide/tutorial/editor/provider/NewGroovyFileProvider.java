@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.tutorial.editor.provider;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
@@ -26,6 +25,8 @@ import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.tutorial.editor.EditorTutorialResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+
+import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.tutorial.editor.EditorTutorialExtension.GROOVY_MIME_TYPE;
 

@@ -28,8 +28,6 @@ import com.codenvy.api.vfs.server.VirtualFileSystem;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.dto.DtoServerImpls;
 import com.codenvy.api.vfs.server.exceptions.InvalidArgumentException;
-import com.codenvy.api.vfs.server.exceptions.ItemNotFoundException;
-import com.codenvy.api.vfs.server.exceptions.PermissionDeniedException;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.shared.ItemType;
 import com.codenvy.api.vfs.shared.PropertyFilter;
@@ -39,8 +37,6 @@ import com.codenvy.api.vfs.shared.dto.Project;
 import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.builder.maven.dto.MavenDependency;
 import com.codenvy.dto.server.DtoFactory;
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.ext.java.shared.BuildStatusBean;
 import com.codenvy.ide.ext.java.shared.JavaType;
 import com.codenvy.ide.ext.java.shared.TypeInfo;
@@ -49,15 +45,28 @@ import com.codenvy.ide.ext.java.shared.TypesList;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
@@ -88,7 +97,7 @@ public class RestCodeAssistantJava {
     private CodeAssistantStorageClient storageClient;
 
     /** Logger. */
-    private static final Log LOG = ExoLogger.getLogger(RestCodeAssistantJava.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RestCodeAssistantJava.class);
 
     /**
      * Returns the Class object associated with the class or interface with the given string name.
@@ -326,7 +335,7 @@ public class RestCodeAssistantJava {
         if (port != 0 && port != 80) {
             url += ":" + port;
         }
-        url += "/api" + "/" + wsName + "/";
+        url += "/api/rest" + "/" + wsName + "/"; //TODO: remove hardcode "api/rest"
         try {
             String jsonDependencies = null;
             List<MavenDependency> dependencies = null;

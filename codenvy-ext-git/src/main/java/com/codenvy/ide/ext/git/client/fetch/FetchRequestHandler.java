@@ -17,13 +17,13 @@
  */
 package com.codenvy.ide.ext.git.client.fetch;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.job.Job;
 import com.codenvy.ide.job.JobChangeEvent;
 import com.codenvy.ide.job.RequestStatusHandlerBase;
 import com.google.web.bindery.event.shared.EventBus;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**

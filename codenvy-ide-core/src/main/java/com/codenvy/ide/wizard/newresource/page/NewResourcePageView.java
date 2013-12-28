@@ -17,10 +17,11 @@
  */
 package com.codenvy.ide.wizard.newresource.page;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.collections.Array;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * Interface of new resource view.

@@ -19,7 +19,6 @@ import com.codenvy.ide.ext.java.jdt.internal.text.correction.proposals.ReplaceCo
 import com.codenvy.ide.ext.java.jdt.internal.text.correction.proposals.TaskMarkerProposal;
 import com.codenvy.ide.ext.java.jdt.quickassist.api.InvocationContext;
 import com.codenvy.ide.ext.java.jdt.quickassist.api.QuickFixProcessor;
-
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
