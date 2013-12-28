@@ -114,34 +114,34 @@ public class CodenvyDispatcherServletConfigurationFactory extends DispatcherServ
                                                          redirectUrl = redirectUrlBuilder.toString();
                                                      }
                                                      writer.write("<html>\n");
-                                                     writer.write("<head>\n");
+                                                     writer.write("  <head>\n");
                                                      if (redirectUrl != null) {
-                                                         writer.write(String.format("  <script>window.location.replace(\"%s\");</script>\n",
+                                                         writer.write(String.format("    <script>window.location.replace(\"%s\");</script>\n",
                                                                                     redirectUrl));
                                                      }
-                                                     writer.write("  <script type=\"text/javascript\" language=\"javascript\">\n");
-                                                     writer.write("    var hiddenFiles = \".*\";\n");
-                                                     writer.write(String.format("    var ws = \"%s\";\n", ws));
+                                                     writer.write("    <script type=\"text/javascript\" language=\"javascript\">\n");
+                                                     writer.write("      var hiddenFiles = \".*\";\n");
+                                                     writer.write(String.format("      var ws = \"%s\";\n", ws));
                                                      if (project != null) {
-                                                         writer.write(String.format("    var project = \"%s\";\n", project));
+                                                         writer.write(String.format("      var project = \"%s\";\n", project));
                                                      } else {
-                                                         writer.write("    var project = null;\n");
+                                                         writer.write("      var project = null;\n");
                                                      }
                                                      if (filePath != null) {
-                                                         writer.write(String.format("    var path = \"%s\";\n", filePath));
+                                                         writer.write(String.format("      var path = \"%s\";\n", filePath));
                                                      } else {
-                                                         writer.write("    var path = null;\n");
+                                                         writer.write("      var path = null;\n");
                                                      }
-                                                     writer.write("  </script>\n");
-                                                     writer.write("  <link rel=\"shortcut icon\" href=\"_app/favicon.ico\"/>\n");
-                                                     writer.write("</head>\n");
-                                                     writer.write("<body>\n");
+                                                     writer.write("    </script>\n");
+                                                     writer.write("    <link rel=\"shortcut icon\" href=\"_app/favicon.ico\"/>\n");
+                                                     writer.write("  </head>\n");
+                                                     writer.write("  <body>\n");
                                                      writer.write(
-                                                             "  <script type=\"text/javascript\" language=\"javascript\" src=\"_app/browserNotSupported.js\"></script>\n");
+                                                             "    <script type=\"text/javascript\" language=\"javascript\" src=\"_app/browserNotSupported.js\"></script>\n");
                                                      writer.write(
-                                                             "  <script type=\"text/javascript\" language=\"javascript\" src=\"_app/_app.nocache.js\"></script>\n");
-                                                     writer.write("<body>\n");
-                                                     writer.write("</html>");
+                                                             "    <script type=\"text/javascript\" language=\"javascript\" src=\"_app/_app.nocache.js\"></script>\n");
+                                                     writer.write("  </body>\n");
+                                                     writer.write("</html>\n");
                                                  }
                                              })
                                              .priority(300)

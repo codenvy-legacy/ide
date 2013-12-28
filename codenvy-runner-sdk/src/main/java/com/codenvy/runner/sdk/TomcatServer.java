@@ -57,15 +57,9 @@ import java.util.zip.ZipFile;
  */
 @Singleton
 public class TomcatServer implements ApplicationServer {
-    public static final  String MEM_SIZE_PARAMETER        = "runner.tomcat.memory";
-    private static final Logger LOG                       = LoggerFactory.getLogger(TomcatServer.class);
-    /** String in JSON format to register builder service. */
-    private static final String BUILDER_REGISTRATION_JSON =
-            "[{\"builderServiceLocation\":{\"url\":\"http://localhost:${PORT}/api/internal/builder\"}}]";
-    /** String in JSON format to register runner service. */
-    private static final String RUNNER_REGISTRATION_JSON  =
-            "[{\"runnerServiceLocation\":{\"url\":\"http://localhost:${PORT}/api/internal/runner\"}}]";
-    private static final String SERVER_XML                =
+    public static final  String MEM_SIZE_PARAMETER = "runner.tomcat.memory";
+    private static final Logger LOG                = LoggerFactory.getLogger(TomcatServer.class);
+    private static final String SERVER_XML         =
             "<?xml version='1.0' encoding='utf-8'?>\n" +
             "<Server port=\"-1\">\n" +
             "  <Listener className=\"org.apache.catalina.core.AprLifecycleListener\" SSLEngine=\"on\" />\n" +
@@ -137,26 +131,26 @@ public class TomcatServer implements ApplicationServer {
         }
     }
 
-    protected void configureApiServices(Path webappsPath, SDKRunnerConfiguration runnerCfg)
-            throws RunnerException, IOException {
-        final Path apiAppPath = webappsPath.resolve("api");
-        ZipUtils.unzip(webappsPath.resolve("api.war").toFile(), apiAppPath.toFile());
-
-        final String builderServiceCfg =
-                BUILDER_REGISTRATION_JSON.replace("${PORT}", Integer.toString(runnerCfg.getPort()));
-        final Path builderRegistrationJsonPath =
-                apiAppPath.resolve("WEB-INF/classes/conf/builder_service_registrations.json");
-
-        final String runnerServiceCfg =
-                RUNNER_REGISTRATION_JSON.replace("${PORT}", Integer.toString(runnerCfg.getPort()));
-        final Path runnerRegistrationJsonPath =
-                apiAppPath.resolve("WEB-INF/classes/conf/runner_service_registrations.json");
-        try {
-            Files.write(builderRegistrationJsonPath, builderServiceCfg.getBytes());
-            Files.write(runnerRegistrationJsonPath, runnerServiceCfg.getBytes());
-        } catch (IOException e) {
-            throw new RunnerException(e);
-        }
+    protected void configureApiServices(Path webappsPath, SDKRunnerConfiguration runnerCfg) throws RunnerException, IOException {
+// TODO: use new type of configuration, see builders.json, runners.json
+//        final Path apiAppPath = webappsPath.resolve("api");
+//        ZipUtils.unzip(webappsPath.resolve("api.war").toFile(), apiAppPath.toFile());
+//
+//        final String builderServiceCfg =
+//                BUILDER_REGISTRATION_JSON.replace("${PORT}", Integer.toString(runnerCfg.getPort()));
+//        final Path builderRegistrationJsonPath =
+//                apiAppPath.resolve("WEB-INF/classes/codenvy/builder_service_registrations.json");
+//
+//        final String runnerServiceCfg =
+//                RUNNER_REGISTRATION_JSON.replace("${PORT}", Integer.toString(runnerCfg.getPort()));
+//        final Path runnerRegistrationJsonPath =
+//                apiAppPath.resolve("WEB-INF/classes/codenvy/runner_service_registrations.json");
+//        try {
+//            Files.write(builderRegistrationJsonPath, builderServiceCfg.getBytes());
+//            Files.write(runnerRegistrationJsonPath, runnerServiceCfg.getBytes());
+//        } catch (IOException e) {
+//            throw new RunnerException(e);
+//        }
     }
 
     protected void setEnvVariables(Path tomcatPath, SDKRunnerConfiguration runnerCfg) throws IOException {

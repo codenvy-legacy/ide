@@ -69,7 +69,7 @@ public class DockerRunner extends Runner {
 
     /** Load Templates of Dockerfiles. */
     protected void loadDockerfiles() {
-        final URL dockerFilesUrl = Thread.currentThread().getContextClassLoader().getResource("conf/runner/docker");
+        final URL dockerFilesUrl = Thread.currentThread().getContextClassLoader().getResource("codenvy/runner/docker");
         final java.io.File dockerFilesDir;
         final Map<String, java.io.File> myDockerFileTemplates = new HashMap<>();
         if (dockerFilesUrl != null) {
