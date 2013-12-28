@@ -53,9 +53,9 @@ public class ContentTest extends LocalFileSystemTest {
     protected void setUp() throws Exception {
         super.setUp();
 
-        filePath = createFile(testRootPath, "ContentTest_File", content);
-        lockedFilePath = createFile(testRootPath, "ContentTest_LockedFile", content);
-        protectedFilePath = createFile(testRootPath, "ContentTest_ProtectedFile", content);
+        filePath = createFile(testRootPath, "ContentTest_File.txt", content);
+        lockedFilePath = createFile(testRootPath, "ContentTest_LockedFile.txt", content);
+        protectedFilePath = createFile(testRootPath, "ContentTest_ProtectedFile.txt", content);
         String folderPath = createDirectory(testRootPath, "ContentTest_Folder");
 
         createLock(lockedFilePath, lockToken, Long.MAX_VALUE);
@@ -89,7 +89,7 @@ public class ContentTest extends LocalFileSystemTest {
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
         assertTrue(Arrays.equals(content, writer.getBody()));
         assertEquals("text/plain", writer.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE));
-        assertEquals(String.format("attachment; filename=\"%s\"", "ContentTest_File"),
+        assertEquals(String.format("attachment; filename=\"%s\"", "ContentTest_File.txt"),
                      writer.getHeaders().getFirst("Content-Disposition"));
     }
 
