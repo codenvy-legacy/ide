@@ -58,15 +58,15 @@ public class SearcherTest extends LocalFileSystemTest {
 
         searchTestPath = createDirectory(testRootPath, "SearcherTest_Folder");
 
-        file1 = createFile(searchTestPath, "SearcherTest_File01", "to be or not to be".getBytes());
+        file1 = createFile(searchTestPath, "SearcherTest_File01.xml", "to be or not to be".getBytes());
         writeProperties(file1, Collections
                 .singletonMap("vfs:mimeType", new String[]{"text/xml"})); // text/xml just for test, it is not xml content
 
-        file2 = createFile(searchTestPath, "SearcherTest_File02", "to be or not to be".getBytes());
+        file2 = createFile(searchTestPath, "SearcherTest_File02.txt", "to be or not to be".getBytes());
         writeProperties(file2, Collections.singletonMap("vfs:mimeType", new String[]{"text/plain"}));
 
         String folder1 = createDirectory(searchTestPath, "folder01");
-        file3 = createFile(folder1, "SearcherTest_File03", "to be or not to be".getBytes());
+        file3 = createFile(folder1, "SearcherTest_File03.txt", "to be or not to be".getBytes());
         writeProperties(file3, Collections.singletonMap("vfs:mimeType", new String[]{"text/plain"}));
 
         queryToResult = new Pair[10];
@@ -77,7 +77,7 @@ public class SearcherTest extends LocalFileSystemTest {
         queryToResult[2] = new Pair<>(new String[]{file2, file3}, "text=to%20be%20or&mediaType=text/plain");
         queryToResult[3] = new Pair<>(new String[]{file1}, "text=to%20be%20or&mediaType=text/xml");
         // text + name
-        queryToResult[4] = new Pair<>(new String[]{file2}, "text=to%20be%20or&name=*File02");
+        queryToResult[4] = new Pair<>(new String[]{file2}, "text=to%20be%20or&name=*File02.txt");
         queryToResult[5] = new Pair<>(new String[]{file1, file2, file3}, "text=to%20be%20or&name=SearcherTest*");
         // text + path
         queryToResult[6] = new Pair<>(new String[]{file3}, "text=to%20be%20or&path=" + folder1);
@@ -182,8 +182,7 @@ public class SearcherTest extends LocalFileSystemTest {
 
     public void testUpdate() throws Exception {
         IndexSearcher luceneSearcher = searcher.getLuceneSearcher();
-        TopDocs topDocs = luceneSearcher.search(
-                new QueryParser(Version.LUCENE_29, "text", new SimpleAnalyzer()).parse("updated"), 10);
+        TopDocs topDocs = luceneSearcher.search(new QueryParser(Version.LUCENE_29, "text", new SimpleAnalyzer()).parse("updated"), 10);
         assertEquals(0, topDocs.totalHits);
         searcher.releaseLuceneSearcher(luceneSearcher);
         mountPoint.getVirtualFile(file2).updateContent(null, new ByteArrayInputStream("updated content".getBytes()), null);
