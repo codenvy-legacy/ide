@@ -70,11 +70,12 @@ public class JavaProject extends Project {
   
     /** {@inheritDoc} */
     @Override
-    public void refreshTree(Folder root, final AsyncCallback<Folder> callback) {
+    public void refreshTree(final Folder root, final AsyncCallback<Folder> callback) {
+        Folder folderToRefresh = (root instanceof Package && root.getParent() != null) ? root.getParent() : root;
         try {
             // create internal wrapping Request Callback with proper Unmarshaller
             AsyncRequestCallback<Folder> internalCallback =
-                    new AsyncRequestCallback<Folder>(new JavaModelUnmarshaller(root, (JavaProject)root.getProject(), eventBus)) {
+                    new AsyncRequestCallback<Folder>(new JavaModelUnmarshaller(folderToRefresh, (JavaProject)folderToRefresh.getProject(), eventBus)) {
                         @Override
                         protected void onSuccess(Folder refreshedRoot) {
                             callback.onSuccess(refreshedRoot);
@@ -87,7 +88,7 @@ public class JavaProject extends Project {
                     };
 
             String url = vfsInfo.getUrlTemplates().get(Link.REL_TREE).getHref();
-            url = URL.decode(url).replace("[id]", root.getId());
+            url = URL.decode(url).replace("[id]", folderToRefresh.getId());
             AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(loader).send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);
@@ -112,14 +113,10 @@ public class JavaProject extends Project {
                 callback.onFailure(new JavaModelException("Package name not valid"));
                 return;
             }
-            Folder folderParent = findFolderParent(parent, name);
-            String packagePartName;
-            if (folderParent == null) {
-                folderParent = parent;
-                packagePartName = name;
-            } else {
-                packagePartName = name.substring(folderParent.getName().length() + 1);
-            }
+            Folder foundParent = findFolderParent(parent, name);
+            final Folder folderParent = foundParent == null ? parent : foundParent;
+            String packagePartName = (foundParent == null) ? name : name.substring(folderParent.getName().length() + 1);
+
             final String path = packagePartName.replaceAll("\\.", "/");
             // create internal wrapping Request Callback with proper Unmarshaller
             AsyncRequestCallback<Package> internalCallback = new AsyncRequestCallback<Package>(new PackageUnmarshaller()) {
@@ -131,15 +128,20 @@ public class JavaProject extends Project {
                     // TODO workaround for a unified view for packages
                     SourceFolder sourceFolder = getSourceFolder(pack);
                     // refresh tree, cause additional hierarchy folders my have been created
-                    refreshTree(sourceFolder, new AsyncCallback<Folder>() {
+                    refreshTree(folderParent, new AsyncCallback<Folder>() {
                         @Override
                         public void onSuccess(Folder result) {
-                            eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(pack));
+                            eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(result));
+                            Resource folder = result.findChildById(folderParent.getId());
+                            if (folder != null) {
+                                eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(folder));
+                            }
                             callback.onSuccess(pack);
                         }
 
                         @Override
                         public void onFailure(Throwable exception) {
+                            exception.printStackTrace();
                             callback.onFailure(exception);
                         }
                     });
@@ -150,7 +152,6 @@ public class JavaProject extends Project {
                     callback.onFailure(exception);
                 }
             };
-
             String url = folderParent.getLinkByRelation(Link.REL_CREATE_FOLDER).getHref();
             String urlString = URL.decode(url).replace("[name]", path);
             urlString = URL.encode(urlString);
