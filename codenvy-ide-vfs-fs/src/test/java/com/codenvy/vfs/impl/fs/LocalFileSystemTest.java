@@ -239,15 +239,15 @@ public abstract class LocalFileSystemTest extends TestCase {
         int num = 0;
         for (int i = 0; i < numberItemsEachLevel; i++, num++) {
             String newName = generate(null, 8);
-            if (suffix != null) {
-                newName += suffix;
-            }
             String newPath = parent + '/' + newName;
             java.io.File f = getIoFile(newPath);
 
             if (i % 2 == 0) {
                 assertTrue(String.format("Failed create %s", newPath), f.mkdirs());
             } else {
+                if (suffix != null) {
+                    newPath += suffix;
+                }
                 writeFile(newPath, DEFAULT_CONTENT_BYTES);
             }
 
