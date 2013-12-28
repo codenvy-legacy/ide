@@ -40,7 +40,7 @@ public class StorageBootstrap implements ServletContextListener {
 
     public static final String  STORAGE_PATH_NAME         = "storage-path";
 
-    public static final String  SYSPROP_STORAGE_PATH_NAME = "codeassitant.storage-path";
+    public static final String  SYSPROP_STORAGE_PATH_NAME = "codeassistant.storage-path";
 
     private LuceneInfoStorage   luceneStorageWriter;
 
@@ -51,7 +51,7 @@ public class StorageBootstrap implements ServletContextListener {
     /** @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent) */
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        Map<String, Object> options = new HashMap<String, Object>();
+        Map<String, Object> options = new HashMap<>();
         ServletContext ctx = sce.getServletContext();
         storagePath = (System.getProperty(SYSPROP_STORAGE_PATH_NAME) != null) ?
                        System.getProperty(SYSPROP_STORAGE_PATH_NAME) :
