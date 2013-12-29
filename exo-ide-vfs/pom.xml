@@ -57,6 +57,11 @@
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
+            <artifactId>codenvy-exocontainer-commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-commons</artifactId>
             <version>${project.version}</version>
         </dependency>

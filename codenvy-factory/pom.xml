@@ -11,14 +11,14 @@
     <name>Codenvy IDE :: Factory</name>
     <dependencies>
         <dependency>
-            <groupId>com.codenvy.factory</groupId>
-            <artifactId>codenvy-factory-services</artifactId>
-            <version>${codenvy.factory.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-lang</artifactId>
             <version>${codenvy.commons.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.factory</groupId>
+            <artifactId>codenvy-factory-services</artifactId>
+            <version>${codenvy.factory.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>

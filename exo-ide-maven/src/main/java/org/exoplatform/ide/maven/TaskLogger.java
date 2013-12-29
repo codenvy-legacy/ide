@@ -18,8 +18,9 @@
 package org.exoplatform.ide.maven;
 
 import org.apache.maven.shared.invoker.InvocationOutputHandler;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import java.io.*;
 
@@ -30,7 +31,8 @@ import java.io.*;
  * @version $Id: $
  */
 public final class TaskLogger implements InvocationOutputHandler {
-    private static final Log LOG = ExoLogger.getLogger(TaskLogger.class);
+
+    private static final Logger LOG = LoggerFactory.getLogger(TaskLogger.class);
 
     /** Log file. */
     private final File   file;

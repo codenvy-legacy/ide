@@ -13,6 +13,7 @@
     <name>Codenvy IDE :: Parent</name>
     <modules>
         <module>exo-ide-commons</module>
+        <module>codenvy-exocontainer-commons</module>
         <module>codenvy-gwtframework-commons</module>
         <module>codenvy-gwtframework-ui</module>
         <module>exo-ide-vfs</module>
