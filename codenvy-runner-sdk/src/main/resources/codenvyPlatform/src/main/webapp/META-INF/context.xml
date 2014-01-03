@@ -21,8 +21,8 @@
             prefix='localhost_portal_log.' suffix='.txt' timestamp='true'/>
     <Manager className='org.apache.catalina.session.PersistentManager' saveOnRestart='false'/>
     <Realm className='org.apache.catalina.realm.JAASRealm'
-           appName='exo-domain'
-           userClassNames="org.exoplatform.services.security.jaas.UserPrincipal"
-           roleClassNames="org.exoplatform.services.security.jaas.RolePrincipal"
+           appName='codenvy-domain'
+           userClassNames="com.codenvy.ide.security.jaas.UserPrincipal"
+           roleClassNames="com.codenvy.ide.security.jaas.RolePrincipal"
            debug='0' cache='false'/>
 </Context>

@@ -73,6 +73,11 @@
             <version>${gwt-test-utils.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.codenvy.commons</groupId>
+            <artifactId>codenvy-commons-servlet</artifactId>
+            <version>${com.codenvy.commons.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-client</artifactId>
             <scope>provided</scope>
@@ -235,7 +240,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
-                    <packagingExcludes>WEB-INF/lib/, WEB-INF/deploy/, WEB-INF/classes/, **/*junit_symbolMaps/**</packagingExcludes>
+                    <packagingIncludes>
+                        WEB-INF/lib/codenvy-commons-servlet-${com.codenvy.commons.version}.jar, WEB-INF/classes/com/codenvy/ide/servlet/*, WEB-INF/classes/META-INF/, _app/*
+                    </packagingIncludes>
                 </configuration>
             </plugin>
             <plugin>

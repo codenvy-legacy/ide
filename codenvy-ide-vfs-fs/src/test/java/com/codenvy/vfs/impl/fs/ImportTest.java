@@ -82,7 +82,7 @@ public class ImportTest extends LocalFileSystemTest {
         writePermissions(protectedFolderPath, permissions);
 
         srcFolderPath = createDirectory(testRootPath, "ImportTestFolderSource");
-        createTree(srcFolderPath, 6, 4, null);
+        createTree(srcFolderPath, 6, 4, null, ".txt");
 
         // Destination folder for import contains file with name which cause conflict with imported structure.
         List<String> l = flattenDirectory(srcFolderPath);

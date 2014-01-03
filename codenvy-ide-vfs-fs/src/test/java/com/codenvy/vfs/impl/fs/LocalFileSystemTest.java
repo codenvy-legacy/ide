@@ -231,7 +231,7 @@ public abstract class LocalFileSystemTest extends TestCase {
         return newPath;
     }
 
-    protected int createTree(String parent, int numberItemsEachLevel, int depth, Map<String, String[]> properties)
+    protected int createTree(String parent, int numberItemsEachLevel, int depth, Map<String, String[]> properties, String suffix)
             throws Exception {
         if (depth == 0) {
             return 0;
@@ -245,6 +245,9 @@ public abstract class LocalFileSystemTest extends TestCase {
             if (i % 2 == 0) {
                 assertTrue(String.format("Failed create %s", newPath), f.mkdirs());
             } else {
+                if (suffix != null) {
+                    newPath += suffix;
+                }
                 writeFile(newPath, DEFAULT_CONTENT_BYTES);
             }
 
@@ -253,10 +256,14 @@ public abstract class LocalFileSystemTest extends TestCase {
             }
 
             if (f.isDirectory()) {
-                num += createTree(newPath, numberItemsEachLevel, depth - 1, properties);
+                num += createTree(newPath, numberItemsEachLevel, depth - 1, properties, suffix);
             }
         }
         return num;
+    }
+
+    protected int createTree(String parent, int numberItemsEachLevel, int depth, Map<String, String[]> properties) throws Exception {
+        return createTree(parent, numberItemsEachLevel, depth, properties, null);
     }
 
     protected void compareDirectories(String a, String b, boolean checkServiceDirs) throws IOException {
