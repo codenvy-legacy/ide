@@ -241,7 +241,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
                     <packagingIncludes>
-                        WEB-INF/lib/codenvy-commons-servlet-${com.codenvy.commons.version}.jar, WEB-INF/classes/com/codenvy/ide/servlet/*, WEB-INF/classes/META-INF/, _app/*
+                        WEB-INF/lib/codenvy-commons-servlet-${com.codenvy.commons.version}.jar, WEB-INF/classes/com/codenvy/ide/servlet/*, WEB-INF/classes/META-INF/, _app/**
                     </packagingIncludes>
                 </configuration>
             </plugin>

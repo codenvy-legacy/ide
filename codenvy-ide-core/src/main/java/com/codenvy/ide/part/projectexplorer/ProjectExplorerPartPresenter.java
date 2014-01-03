@@ -32,6 +32,7 @@ import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.contexmenu.ContextMenuPresenter;
 import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
 import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.util.loging.Log;
@@ -182,7 +183,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             }
         });
     }
-
+    
     /**
      * Update item in the project explorer.
      * 
@@ -195,7 +196,6 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             oldResource = project;
         } else {
             oldResource = project.findResourceById(resource.getId());
-
         }
         view.updateItem(oldResource, resource);
     }

@@ -47,6 +47,7 @@ import com.google.gwt.webworker.client.Worker;
 import com.google.gwt.webworker.client.messages.MessageFilter;
 import com.google.gwt.webworker.client.messages.MessageImpl;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -55,16 +56,18 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHandler, MessageFilter.MessageRecipient<ProblemsMessage> {
 
-    private final MessageFilter                messageFilter;
-    private       Worker                       worker;
-    private       ResourceProvider             resourceProvider;
-    private       StringMap<WorkerCallback<?>> callbacks;
+    private final MessageFilter    messageFilter;
+    private       Worker           worker;
+    private       ResourceProvider resourceProvider;
+    private String restContext;
+    private StringMap<WorkerCallback<?>> callbacks;
     private StringMap<ApplyCallback>                   applyCallback    = Collections.createStringMap();
     private StringMap<WorkerCallback<WorkerCodeBlock>> outlineCallbacks = Collections.createStringMap();
 
     @Inject
-    public JavaParserWorkerImpl(ResourceProvider resourceProvider, EventBus eventBus) {
+    public JavaParserWorkerImpl(ResourceProvider resourceProvider, EventBus eventBus, @Named("restContext") String restContext) {
         this.resourceProvider = resourceProvider;
+        this.restContext = restContext;
         eventBus.addHandler(ProjectActionEvent.TYPE, this);
         messageFilter = new MessageFilter();
         callbacks = Collections.createStringMap();
@@ -195,7 +198,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         }
         //TODO check project type, create worker only if project is Java
 //        worker = Worker.create("./javaParserWorker/javaParserWorker.nocache.js");
-        worker = Worker.create("/ide/" + Utils.getWorkspaceName() + "/_app/javaParserWorker/javaParserWorker.nocache.js");
+        worker = Worker.create("/ide/_app/javaParserWorker/javaParserWorker.nocache.js");
         worker.setOnMessage(new MessageHandler() {
             @Override
             public void onMessage(MessageEvent event) {
@@ -212,7 +215,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
 
         MessagesImpls.ConfigMessageImpl config = MessagesImpls.ConfigMessageImpl.make();
         config.setProjectId(event.getProject().getId());
-        config.setRestContext("/ide/rest");
+        config.setRestContext(restContext);
         config.setVfsId(resourceProvider.getVfsInfo().getId());
         config.setWsName("/" + Utils.getWorkspaceName());
         config.setProjectName(event.getProject().getName());

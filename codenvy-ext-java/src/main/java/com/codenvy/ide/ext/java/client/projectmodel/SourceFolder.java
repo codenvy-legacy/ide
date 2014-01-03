@@ -58,7 +58,6 @@ public class SourceFolder extends Folder {
 
     public void init(JSONObject object, String projectPath) {
         init(object);
-        String path = object.get("path").isString().stringValue();
-        sourceFolderName = path.substring(projectPath.length() + 1);
+        sourceFolderName = object.get("name").isString().stringValue();
     }
 }

@@ -78,6 +78,8 @@ public class JavaTypeToTypeInfoConverter {
 
     private static final int AccEnum = 0x4000;
 
+    public static final int AccAnnotation = 0x2000;
+
     private static final Logger LOG = LoggerFactory.getLogger(JavaTypeToTypeInfoConverter.class);
 
     private CodeAssistantStorage storage;
@@ -233,7 +235,11 @@ public class JavaTypeToTypeInfoConverter {
             for (int i = 0; i < type.getDimensions(); i++)
                 signature.append('[');
         }
-        signature.append(SignatureCreator.createByteCodeTypeSignature(type.getFullyQualifiedName()));
+        //indus style :(, but with qdox we cant determine if type is generics
+        if (type.getFullyQualifiedName().length() == 1) {
+            signature.append("T").append(type.getGenericValue()).append(';');
+        } else
+            signature.append(SignatureCreator.createByteCodeTypeSignature(type.getFullyQualifiedName()));
         if (type.getActualTypeArguments() != null) {
             // remove trailing ';'
             signature.setLength(signature.length() - 1);
@@ -297,7 +303,15 @@ public class JavaTypeToTypeInfoConverter {
         }
         if (clazz.isEnum())
             return JavaType.ENUM;
-
+        try {
+            Field field = clazz.getClass().getDeclaredField("isAnnotation");
+            field.setAccessible(true);
+            if ((Boolean)field.get(clazz)) {
+                return JavaType.ANNOTATION;
+            }
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            // ignore
+        }
         return JavaType.CLASS;
     }
 
@@ -455,6 +469,17 @@ public class JavaTypeToTypeInfoConverter {
             i |= AccInterface;
         else if (type.isEnum())
             i |= AccEnum;
+        else{
+        try {
+            Field field = type.getClass().getDeclaredField("isAnnotation");
+            field.setAccessible(true);
+            if ((Boolean)field.get(type)) {
+                i |= AccAnnotation;
+            }
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            // ignore
+        }
+        }
         return i;
     }
 

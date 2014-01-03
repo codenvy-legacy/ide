@@ -204,9 +204,12 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     public void getFolder(final Folder folder, final AsyncCallback<Folder> callback) {
         activeProject.refreshTree(folder, new AsyncCallback<Folder>() {
             @Override
-            public void onSuccess(Folder folder) {
-                eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(folder));
-                callback.onSuccess(folder);
+            public void onSuccess(Folder result) {
+                eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(result));
+                Resource f = result.findChildById(folder.getId());
+                if (f != null && !f.getId().equals(result.getId())) {
+                    eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(f));
+                }
             }
 
             @Override
