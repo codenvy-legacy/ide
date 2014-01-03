@@ -41,7 +41,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Recursively traverses the JSON Response to build Java project model
- *
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  */
 public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
@@ -58,7 +58,7 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
     private Folder              root;
     private EventBus            eventBus;
 
-    public JavaModelUnmarshaller(Folder root, JavaProject project, EventBus eventBus){
+    public JavaModelUnmarshaller(Folder root, JavaProject project, EventBus eventBus) {
         super();
         this.root = root;
         this.root.getChildren().clear();
@@ -81,7 +81,6 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
         try {
             JSONObject object = JSONParser.parseLenient(response.getText()).isObject();
             parseProjectStructure(object.get(CHILDREN), root, root, project);
-
         } catch (Exception exc) {
             String message = "Can't parse response " + response.getText();
             throw new UnmarshallerException(message, exc);
@@ -90,15 +89,11 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
 
     /**
      * Parse project structure and build Java project model
-     *
-     * @param children
-     *         the json array to parse
-     * @param parentFolder
-     *         the folder to add children's that part of java model
-     * @param parentFolderNonModelItems
-     *         the folder to add children's that not part of java model
-     * @param project
-     *         the project for that building java model
+     * 
+     * @param children the json array to parse
+     * @param parentFolder the folder to add children's that part of java model
+     * @param parentFolderNonModelItems the folder to add children's that not part of java model
+     * @param project the project for that building java model
      */
     private void parseProjectStructure(JSONValue children, Folder parentFolder, Folder parentFolderNonModelItems, Project project) {
         JSONArray itemsArray = children.isArray();
@@ -135,9 +130,9 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
                     childProject.init(itemObject.get(ITEM).isObject());
                     parentFolderNonModelItems.addChild(childProject);
                     childProject.setProject(childProject);
-                    parseProjectStructure(itemObject.get(CHILDREN), childProject, childProject, childProject); 
+                    parseProjectStructure(itemObject.get(CHILDREN), childProject, childProject, childProject);
                 }
-                
+
             }
             // Folder
             else if (Folder.TYPE.equalsIgnoreCase(type)) {
@@ -162,24 +157,37 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
                     }
                 } else {
                     String path = item.get(PATH).isString().stringValue();
-                    //create new source folder
+                    String name = item.get(NAME).isString().stringValue();
+                    // create new source folder
                     if (sourceFolders.contains(path)) {
-                        folder = new SourceFolder(item, path.substring(projectPath.length() + 1));
-                        project.addChild(folder);
+                        folder = new SourceFolder(item, name);
+                        parentFolder.addChild(folder);
                         folder.setProject(project);
                         sourceFolders.remove(path);
                         parseProjectStructure(itemObject.get(CHILDREN), folder, folder, project);
                     }
-                    //add package or regular folder
+                    // add package or regular folder
                     else {
-                        String packageName = path.substring(parentFolder.getPath().length() + 1).replaceAll("/", ".");
-                        //filter folders with invalid names for java packages
-                        if (parentFolder instanceof SourceFolder && isPackageNameValid(packageName)) {
+                        String packageName = name;
+                        // filter folders with invalid names for java packages
+                        if ((parentFolder instanceof SourceFolder || parentFolder instanceof Package) && isPackageNameValid(packageName)) {
+                            if (parentFolder instanceof SourceFolder) {
+                                sourceFolders.remove(path);
+                            }
+                            packageName = path.replace(parentFolder.getPath(), "").replaceAll("/", ".");
+                            packageName = packageName.startsWith(".") ? packageName.replaceFirst(".", "") : packageName;
                             folder = new Package(item, packageName);
-                            parentFolder.addChild(folder);
-                            folder.setProject(project);
-                            sourceFolders.remove(path);
-                            parseProjectStructure(itemObject.get(CHILDREN), parentFolder, folder, project);
+
+                            if (itemObject.get(CHILDREN).isArray().size() == 1
+                                && itemObject.get(CHILDREN).isArray().get(0).isObject().get(ITEM).isObject().get(TYPE).isString()
+                                             .stringValue().equalsIgnoreCase(Folder.TYPE)) {
+                                parseProjectStructure(itemObject.get(CHILDREN), parentFolder, folder, project);
+                            } else {
+                                System.out.println("JavaModelUnmarshaller.parseProjectStructure()Adding..." + packageName);
+                                parentFolder.addChild(folder);
+                                folder.setProject(project);
+                                parseProjectStructure(itemObject.get(CHILDREN), folder, folder, project);
+                            }
                         } else {
                             folder = new Folder(item);
                             parentFolderNonModelItems.addChild(folder);
@@ -192,8 +200,8 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
             // File
             else if (File.TYPE.equalsIgnoreCase(type)) {
                 File file;
-                //check if parent of this file is package and file has valid java name,
-                //then add as compilation unit else as regular file
+                // check if parent of this file is package and file has valid java name,
+                // then add as compilation unit else as regular file
                 if (parentFolderNonModelItems instanceof Package
                     && isCompilationUnitName(item.get(NAME).isString().stringValue())) {
                     file = new CompilationUnit(item);
@@ -210,8 +218,8 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
 
     private boolean isPackageNameValid(String name) {
         IStatus status =
-                JavaConventions.validatePackageName(name, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
-                                                    JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
+                         JavaConventions.validatePackageName(name, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
+                                                             JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
         switch (status.getSeverity()) {
             case Status.WARNING:
             case Status.OK:
@@ -223,8 +231,8 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
 
     private boolean isCompilationUnitName(String name) {
         IStatus status =
-                JavaConventions.validateCompilationUnitName(name, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
-                                                            JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
+                         JavaConventions.validateCompilationUnitName(name, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
+                                                                     JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
         switch (status.getSeverity()) {
             case Status.WARNING:
             case Status.OK:
