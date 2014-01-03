@@ -183,8 +183,8 @@ public abstract class CodeAssistant {
      */
     public TypeInfo getClassByFQN(String fqn, String projectId, String vfsId) throws CodeAssistantException,
                                                                                      VirtualFileSystemException {
-        Set<String> dependencys = getProjectDependencys(projectId, vfsId);
-        TypeInfo clazz = storage.getTypeByFqn(fqn, dependencys);
+        Set<String> dependencies = getProjectDependencys(projectId, vfsId);
+        TypeInfo clazz = storage.getTypeByFqn(fqn, dependencies);
         if (clazz != null) {
             return clazz;
         } else {
@@ -202,22 +202,6 @@ public abstract class CodeAssistant {
             }
         }
     }
-
-    /**
-     * Find all nested Java types for fileId file
-     *
-     * @param fileId
-     *         Id of the file
-     * @param projectId
-     *         Id of project
-     * @param vfsId
-     *         {@link VirtualFileSystem} Id
-     * @return List of nested Java types for file
-     * @throws VirtualFileSystemException
-     * @throws CodeAssistantException
-     */
-    public abstract List<ShortTypeInfo> getClassesFromProject(String fileId, String projectId, String vfsId)
-            throws VirtualFileSystemException, CodeAssistantException;
 
     /**
      * Find JavaDoc for FQN
@@ -413,24 +397,6 @@ public abstract class CodeAssistant {
 
         }
         return result;
-    }
-
-    /**
-     * Return sets of Strings, associated with the package names
-     *
-     * @param projectId
-     *         Id of current project
-     * @param vfsId
-     *         Id of current project
-     * @return {@link List} of package names
-     * @throws CodeAssistantException
-     * @throws VirtualFileSystemException
-     */
-    public List<String> getAllPackages(String projectId, String vfsId) throws CodeAssistantException,
-                                                                              VirtualFileSystemException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        Project project = getProject(projectId, vfs);
-        return getAllPackages(project, vfs);
     }
 
     /**

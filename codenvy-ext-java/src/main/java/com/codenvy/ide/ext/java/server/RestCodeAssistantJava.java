@@ -51,10 +51,8 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -221,57 +219,6 @@ public class RestCodeAssistantJava {
     }
 
     /**
-     * Find all classes in package
-     *
-     * @param fileId
-     *         current file id (editing class)
-     * @param vfsId
-     *         id of virtual file system
-     * @param projectId
-     * @return
-     * @throws CodeAssistantException
-     * @throws VirtualFileSystemException
-     */
-    @GET
-    @Path("/find-in-package")
-    @Produces(MediaType.APPLICATION_JSON)
-    public TypesList findClassesInPackage(@QueryParam("fileid") String fileId, @QueryParam("vfsid") String vfsId,
-                                          @QueryParam("projectid") String projectId)
-            throws CodeAssistantException, VirtualFileSystemException {
-        if (projectId == null)
-            throw new InvalidArgumentException("'projectid' parameter is null.");
-        TypesList typesList = DtoFactory.getInstance().createDto(TypesList.class);
-        typesList.setTypes(codeAssistant.getClassesFromProject(fileId, projectId, vfsId));
-        return typesList;
-    }
-
-    /**
-     * Get List of Type info by array of FQNs
-     *
-     * @param vfsId
-     * @param projectId
-     * @param fqns
-     *         for types
-     * @return List of types info
-     * @throws CodeAssistantException
-     * @throws VirtualFileSystemException
-     */
-    @POST
-    @Path("/types-by-fqns")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public List<TypeInfo> getTypesDescriptionsList(@QueryParam("vfsid") String vfsId,
-                                                   @QueryParam("projectid") String projectId, String[] fqns) throws CodeAssistantException,
-                                                                                                                    VirtualFileSystemException {
-        List<TypeInfo> types = new ArrayList<TypeInfo>();
-        for (String fqn : fqns) {
-            types.add(codeAssistant.getClassByFQN(fqn, projectId, vfsId));
-        }
-
-        return types;
-    }
-
-    /**
      * Get list of package names
      *
      * @param vfsId
@@ -289,17 +236,6 @@ public class RestCodeAssistantJava {
         if (projectId == null)
             throw new InvalidArgumentException("'projectid' parameter is null.");
         return codeAssistant.getPackagesByPrefix(packagePrefix, projectId, vfsId);
-    }
-
-    /** Get list of all package names in project */
-    @GET
-    @Path("/get-packages")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<String> getAllPackages(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId)
-            throws CodeAssistantException, VirtualFileSystemException {
-        if (projectId == null)
-            throw new InvalidArgumentException("'projectid' parameter is null.");
-        return codeAssistant.getAllPackages(projectId, vfsId);
     }
 
     /** Get list of all package names in project */
