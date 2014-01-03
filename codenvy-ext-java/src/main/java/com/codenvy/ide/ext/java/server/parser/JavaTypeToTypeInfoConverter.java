@@ -78,6 +78,8 @@ public class JavaTypeToTypeInfoConverter {
 
     private static final int AccEnum = 0x4000;
 
+    public static final int AccAnnotation = 0x2000;
+
     private static final Logger LOG = LoggerFactory.getLogger(JavaTypeToTypeInfoConverter.class);
 
     private CodeAssistantStorage storage;
@@ -467,6 +469,17 @@ public class JavaTypeToTypeInfoConverter {
             i |= AccInterface;
         else if (type.isEnum())
             i |= AccEnum;
+        else{
+        try {
+            Field field = type.getClass().getDeclaredField("isAnnotation");
+            field.setAccessible(true);
+            if ((Boolean)field.get(type)) {
+                i |= AccAnnotation;
+            }
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            // ignore
+        }
+        }
         return i;
     }
 

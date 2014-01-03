@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.java.server.signatures;
 
+import com.codenvy.ide.ext.java.jdt.core.Flags;
 import com.codenvy.ide.ext.java.shared.JavaType;
 import com.codenvy.ide.ext.java.shared.TypeInfo;
 import com.thoughtworks.qdox.model.JavaClass;
@@ -265,7 +266,6 @@ public class TypeSignatureTest extends SignatureBase {
         when(type.getType()).thenReturn(JavaType.ANNOTATION.toString());
         when(storage.getTypeByFqn(anyString(), anySet())).thenReturn(type);
         TypeInfo typeInfo = getTypeInfo(b, "test.DTO");
-        System.out.println(typeInfo.getModifiers());
-        System.out.println(typeInfo.getType());
+        assertThat((typeInfo.getModifiers() & Flags.AccAnnotation) != 0);
     }
 }
