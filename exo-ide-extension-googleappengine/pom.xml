@@ -83,7 +83,6 @@
             <groupId>com.google.appengine</groupId>
             <artifactId>appengine-tools-sdk</artifactId>
             <version>${appengine.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
