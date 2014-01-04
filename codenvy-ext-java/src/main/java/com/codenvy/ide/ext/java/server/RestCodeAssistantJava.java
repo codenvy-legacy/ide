@@ -126,8 +126,7 @@ public class RestCodeAssistantJava {
     @Produces(MediaType.APPLICATION_JSON)
     public List<TypeInfo> getTypesByNamePrefix(@QueryParam("prefix") String namePrefix,
                                                @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId)
-            throws CodeAssistantException,
-                   VirtualFileSystemException {
+            throws CodeAssistantException, VirtualFileSystemException {
         List<TypeInfo> infos = codeAssistant.getTypeInfoByNamePrefix(namePrefix, projectId, vfsId);
 
         if (infos != null)
@@ -155,8 +154,7 @@ public class RestCodeAssistantJava {
     @Produces(MediaType.APPLICATION_JSON)
     public TypesList findFQNsByPrefix(@PathParam("prefix") String prefix, @QueryParam("where") String where,
                                       @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId)
-            throws CodeAssistantException,
-                   VirtualFileSystemException {
+            throws CodeAssistantException, VirtualFileSystemException {
         if (projectId == null)
             throw new InvalidArgumentException("'projectid' parameter is null.");
         TypesList typesList = DtoFactory.getInstance().createDto(TypesList.class);
@@ -184,8 +182,8 @@ public class RestCodeAssistantJava {
     @Path("/find-by-type/{type}")
     @Produces(MediaType.APPLICATION_JSON)
     public TypesList findByType(@PathParam("type") String type, @QueryParam("prefix") String prefix,
-                                @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId) throws CodeAssistantException,
-                                                                                                                     VirtualFileSystemException {
+                                @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId)
+            throws CodeAssistantException, VirtualFileSystemException {
         if (projectId == null)
             throw new InvalidArgumentException("'projectid' parameter is null.");
         TypesList typesList = DtoFactory.getInstance().createDto(TypesList.class);
@@ -255,19 +253,19 @@ public class RestCodeAssistantJava {
             project = (Project)item;
             projectPath= project.getPath();
         } else {
-            LOG.warn("Getting item not a project ");
-            throw new CodeAssistantException(500, "Getting item not a project");
+            LOG.warn("Item not a project ");
+            throw new CodeAssistantException(500, "Item not a project");
         }
 
         if (!hasPom(vfs, projectId)){
-            LOG.warn("Don't has pom.xml in the child");
-            throw new CodeAssistantException(500, "Don't has pom.xml in the child");
+            LOG.warn("Doesn't have pom.xml file");
+            throw new CodeAssistantException(500, "Doesn't have pom.xml file");
         }
 
         URI uri = uriInfo.getBaseUri();
         String url = uri.getScheme() + "://" + uri.getHost();
         int port = uri.getPort();
-        if (port != 0 && port != 80) {
+        if (port > 0 && port != 80) {
             url += ":" + port;
         }
         url += "/api/rest/builder/" + wsName + "/dependencies"; //TODO: remove hardcode "api/rest"
