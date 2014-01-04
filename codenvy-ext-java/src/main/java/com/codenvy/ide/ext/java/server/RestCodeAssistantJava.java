@@ -79,10 +79,9 @@ import java.util.List;
  * greatly simplified by the regular structure of the programming languages. At current moment implemented the search class FQN,
  * by Simple Class Name and a prefix (the lead characters in the name of the package or class).
  *
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: RestCodeAssistantJava Mar 30, 2011 10:40:38 AM evgen $
+ * @author Evgen Vidolob
  */
-@Path("{ws-name}/code-assistant/java")
+@Path("code-assistant-java/{ws-name}")
 public class RestCodeAssistantJava {
 
     @PathParam("ws-name")
@@ -271,7 +270,7 @@ public class RestCodeAssistantJava {
         if (port != 0 && port != 80) {
             url += ":" + port;
         }
-        url += "/api/rest" + "/" + wsName + "/"; //TODO: remove hardcode "api/rest"
+        url += "/api/rest/builder/" + wsName + "/dependencies"; //TODO: remove hardcode "api/rest"
         try {
             String jsonDependencies = null;
             List<MavenDependency> dependencies = null;
@@ -366,12 +365,7 @@ public class RestCodeAssistantJava {
         try {
             Pair<String, String> projectParam = Pair.of("project", projectName);
             Pair<String, String> typeParam = Pair.of("type", analyzeType);
-            buildStatus = HttpJsonHelper.request(BuildTaskDescriptor.class,
-                                                 url + "builder/dependencies",
-                                                 "POST",
-                                                 null,
-                                                 projectParam,
-                                                 typeParam);
+            buildStatus = HttpJsonHelper.request(BuildTaskDescriptor.class, url, "POST", null, projectParam, typeParam);
             buildStatus = waitTaskFinish(buildStatus);
         } catch (RemoteException | IOException e) {
             LOG.error("Error", e);

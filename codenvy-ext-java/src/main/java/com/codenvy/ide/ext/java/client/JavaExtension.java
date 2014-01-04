@@ -65,8 +65,7 @@ import static com.codenvy.ide.collections.Collections.createArray;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Evgen Vidolob
  */
 @Extension(title = "Java Support : syntax highlighting and autocomplete.", version = "3.0.0")
 public class JavaExtension {
@@ -216,7 +215,7 @@ public class JavaExtension {
         Project project = resourceProvider.getActiveProject();
         String projectId = project.getId();
         String vfsId = resourceProvider.getVfsInfo().getId();
-        String url = restContext + '/' + Utils.getWorkspaceName() + "/code-assistant/java/update-dependencies?projectid=" + projectId +
+        String url = restContext + "/code-assistant-java/" + Utils.getWorkspaceName() + "/update-dependencies?projectid=" + projectId +
                      "&vfsid=" + vfsId;
 
         final Notification notification = new Notification("Updating dependencies...", PROGRESS);

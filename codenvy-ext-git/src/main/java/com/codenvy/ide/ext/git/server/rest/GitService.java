@@ -103,7 +103,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /** @author andrew00x */
-@Path("{ws-name}/git")
+@Path("git/{ws-name}")
 public class GitService {
     private static final Logger LOG = LoggerFactory.getLogger(GitService.class);
 

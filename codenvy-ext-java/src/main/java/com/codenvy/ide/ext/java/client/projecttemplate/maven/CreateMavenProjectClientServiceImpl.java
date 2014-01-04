@@ -36,11 +36,11 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
 /**
  * The implementation of {@link CreateMavenProjectClientService}.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
 @Singleton
 public class CreateMavenProjectClientServiceImpl implements CreateMavenProjectClientService {
-    private static final String BASE_URL              = '/' + Utils.getWorkspaceName() + "/maven/create";
+    private static final String BASE_URL              = "/create-maven/" + Utils.getWorkspaceName();
     private static final String CREATE_WAR_PROJECT    = BASE_URL + "/project/war";
     private static final String CREATE_JAVA_PROJECT   = BASE_URL + "/project/java";
     private static final String CREATE_SPRING_PROJECT = BASE_URL + "/project/spring";
@@ -48,13 +48,6 @@ public class CreateMavenProjectClientServiceImpl implements CreateMavenProjectCl
     private Loader           loader;
     private ResourceProvider resourceProvider;
 
-    /**
-     * Create service.
-     *
-     * @param restContext
-     * @param loader
-     * @param resourceProvider
-     */
     @Inject
     protected CreateMavenProjectClientServiceImpl(@Named("restContext") String restContext, Loader loader,
                                                   ResourceProvider resourceProvider) {

@@ -34,25 +34,18 @@ import java.util.Map;
 /**
  * The implementation of {@link com.codenvy.ide.api.user.UserClientService}.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
 @Singleton
 public class UserClientServiceImpl implements UserClientService {
-    private static final String BASE_URL               = '/' + Utils.getWorkspaceName() + "/user";
+    private static final String BASE_URL               = "/user/" + Utils.getWorkspaceName();
     private static final String GET_USER               = BASE_URL + "/get";
     private static final String UPDATE_USER_ATTRIBUTES = BASE_URL + "/update";
     private String restContext;
     private Loader loader;
 
-    /**
-     * Create service.
-     *
-     * @param restContext
-     * @param loader
-     */
     @Inject
-    protected UserClientServiceImpl(@Named("restContext") String restContext,
-                                    Loader loader) {
+    protected UserClientServiceImpl(@Named("restContext") String restContext, Loader loader) {
         this.restContext = restContext;
         this.loader = loader;
     }

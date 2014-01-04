@@ -40,28 +40,19 @@ import javax.validation.constraints.NotNull;
 /**
  * The implementation of {@link SshKeyService}.
  *
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: SshService May 18, 2011 4:49:49 PM evgen $
+ * @author Evgen Vidolob
  */
 @Singleton
 public class SshKeyServiceImpl implements SshKeyService {
     private final String                    restContext;
     private final Loader                    loader;
-    private final String                    wsName;
     private final DtoFactory                dtoFactory;
-    private       StringMap<SshKeyProvider> sshKeyProviders;
+    private final StringMap<SshKeyProvider> sshKeyProviders;
 
-    /**
-     * Create service.
-     *
-     * @param restContext
-     * @param loader
-     */
     @Inject
     protected SshKeyServiceImpl(@Named("restContext") String restContext, Loader loader, DtoFactory dtoFactory) {
         this.restContext = restContext;
         this.loader = loader;
-        this.wsName = '/' + Utils.getWorkspaceName();
         this.dtoFactory = dtoFactory;
         this.sshKeyProviders = Collections.createStringMap();
     }
@@ -71,13 +62,13 @@ public class SshKeyServiceImpl implements SshKeyService {
     public void getAllKeys(@NotNull AsyncRequestCallback<JavaScriptObject> callback) throws RequestException {
         loader.setMessage("Getting SSH keys....");
         loader.show();
-        AsyncRequest.build(RequestBuilder.GET, restContext + wsName + "/ssh-keys/all").send(callback);
+        AsyncRequest.build(RequestBuilder.GET, restContext + "/ssh-keys/" + Utils.getWorkspaceName() + "/all").send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
     public void generateKey(@NotNull String host, @NotNull AsyncRequestCallback<GenKeyRequest> callback) throws RequestException {
-        String url = restContext + wsName + "/ssh-keys/gen";
+        String url = restContext + "/ssh-keys/" + Utils.getWorkspaceName() + "/gen";
 
         GenKeyRequest keyRequest = dtoFactory.createDto(GenKeyRequest.class).withHost(host);
 

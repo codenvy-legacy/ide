@@ -48,7 +48,7 @@ import java.util.List;
  *
  * @author Artem Zatsarynnyy
  */
-@Path("{ws-name}/extension/create")
+@Path("create-extension/{ws-name}")
 public class CreateProjectService {
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
