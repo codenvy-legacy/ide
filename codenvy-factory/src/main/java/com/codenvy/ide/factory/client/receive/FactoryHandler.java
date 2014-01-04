@@ -426,10 +426,7 @@ public class FactoryHandler
                                                             eventBus.unsubscribe("factory-events", webSocketEventHandler);
                                                         }
 
-                                                        if (e instanceof org.exoplatform.ide.client.framework.websocket.rest.exceptions
-                                                                .UnauthorizedException
-                                                            || (e instanceof org.exoplatform.ide.client.framework.websocket.rest.exceptions
-                                                                .ServerException)) {
+                                                        if (GitExtension.needAuth(e.getMessage())) {
                                                             openOauthPopupWindow(authCallback, factoryUrl.getVcsurl());
                                                         } else {
                                                             handleError(e);
@@ -498,9 +495,7 @@ public class FactoryHandler
                                                   protected void onFailure(Throwable e) {
                                                       IDELoader.getInstance().hide();
 
-                                                      if (e instanceof org.exoplatform.gwtframework.commons.exception
-                                                              .UnauthorizedException ||
-                                                          (e instanceof org.exoplatform.gwtframework.commons.exception.ServerException)) {
+                                                      if (GitExtension.needAuth(e.getMessage())) {
                                                           openOauthPopupWindow(authCallback, factoryUrl.getVcsurl());
                                                       } else {
                                                           handleError(e);

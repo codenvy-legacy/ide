@@ -218,4 +218,10 @@ public class GitExtension extends Extension implements InitializeServicesHandler
                               exception.getMessage() : GitExtension.MESSAGES.cloneFailed(remoteUri);
         IDE.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.GIT));
     }
+
+    /** Check message to find sequence of strings to detect that error had authorization type. */
+    public static boolean needAuth(String message) {
+        return message.toLowerCase().contains("authentication failed")
+               || message.toLowerCase().contains("please make sure you have the correct access rights");
+    }
 }
