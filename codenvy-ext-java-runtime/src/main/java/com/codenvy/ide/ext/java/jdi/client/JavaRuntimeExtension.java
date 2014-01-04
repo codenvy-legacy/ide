@@ -21,10 +21,11 @@ import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.debug.DebuggerManager;
+import com.codenvy.ide.ext.java.client.JavaExtension;
 import com.codenvy.ide.ext.java.jdi.client.actions.DebugAction;
-import com.codenvy.ide.ext.java.jdi.client.actions.LogsAction;
-import com.codenvy.ide.ext.java.jdi.client.actions.RunAction;
-import com.codenvy.ide.ext.java.jdi.client.actions.StopAction;
+//import com.codenvy.ide.ext.java.jdi.client.actions.LogsAction;
+//import com.codenvy.ide.ext.java.jdi.client.actions.RunAction;
+//import com.codenvy.ide.ext.java.jdi.client.actions.StopAction;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
 import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolverFactory;
 import com.codenvy.ide.ext.java.jdi.client.fqn.JavaFqnResolver;
@@ -32,7 +33,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import static com.codenvy.ide.api.ui.action.IdeActions.*;
-import static com.codenvy.ide.rest.MimeType.APPLICATION_JAVA;
+import static com.codenvy.ide.MimeType.APPLICATION_JAVA;
+import static com.codenvy.ide.ext.java.client.JavaExtension.SPRING_APPLICATION_PROJECT_TYPE;
 
 /**
  * Extension add Java Runtime support to the IDE Application.
@@ -52,23 +54,23 @@ public class JavaRuntimeExtension {
     public static final String APPLICATION_STOP_CHANNEL = "runner:application-stopped:";
 
     @Inject
-    public JavaRuntimeExtension(ActionManager actionManager, RunAction runAction, DebugAction debugAction, DebuggerManager debuggerManager,
-                                DebuggerPresenter debuggerPresenter, FqnResolverFactory resolverFactory, JavaFqnResolver javaFqnResolver,
-                                StopAction stopAction, LogsAction logsAction) {
-        actionManager.registerAction("runJavaProject", runAction);
+    public JavaRuntimeExtension(ActionManager actionManager/*, RunAction runAction*/, DebugAction debugAction, DebuggerManager debuggerManager,
+                                DebuggerPresenter debuggerPresenter, FqnResolverFactory resolverFactory, JavaFqnResolver javaFqnResolver/*,
+                                StopAction stopAction, LogsAction logsAction*/) {
+//        actionManager.registerAction("runJavaProject", runAction);
         actionManager.registerAction("debugJavaProject", debugAction);
-        actionManager.registerAction("stopJavaProject", stopAction);
-        actionManager.registerAction("logsJavaProject", logsAction);
+//        actionManager.registerAction("stopJavaProject", stopAction);
+//        actionManager.registerAction("logsJavaProject", logsAction);
         DefaultActionGroup run = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
-        run.add(runAction);
+//        run.add(runAction);
         run.add(debugAction);
-        run.add(stopAction);
-        run.add(logsAction);
+//        run.add(stopAction);
+//        run.add(logsAction);
 
         DefaultActionGroup mainToolbarGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_TOOLBAR);
         DefaultActionGroup runGroup = new DefaultActionGroup(GROUP_RUN_TOOLBAR, false, actionManager);
         actionManager.registerAction(GROUP_RUN_TOOLBAR, runGroup);
-        runGroup.add(runAction);
+//        runGroup.add(runAction);
         runGroup.add(debugAction);
         mainToolbarGroup.add(runGroup);
 
@@ -78,14 +80,14 @@ public class JavaRuntimeExtension {
         actionManager.registerAction(GROUP_RUN_CONTEXT_MENU, runContextGroup);
 
         runContextGroup.addSeparator();
-        runContextGroup.add(runAction);
+//        runContextGroup.add(runAction);
         runContextGroup.add(debugAction);
-        runContextGroup.add(stopAction);
-        runContextGroup.add(logsAction);
+//        runContextGroup.add(stopAction);
+//        runContextGroup.add(logsAction);
 
         contextMenuGroup.add(runContextGroup);
 
-        debuggerManager.registeredDebugger("SPRING_APPLICATION_PROJECT_TYPE", debuggerPresenter);
+        debuggerManager.registeredDebugger(SPRING_APPLICATION_PROJECT_TYPE, debuggerPresenter);
 
         resolverFactory.addResolver(APPLICATION_JAVA, javaFqnResolver);
     }

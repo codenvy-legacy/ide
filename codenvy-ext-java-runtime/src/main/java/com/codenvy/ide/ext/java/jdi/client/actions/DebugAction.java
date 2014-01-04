@@ -47,6 +47,7 @@ public class DebugAction extends Action {
     @Override
     public void actionPerformed(ActionEvent e) {
 //        presenter.debugApplication();
+        presenter.connectDebugger("127.0.0.1", 8008);
     }
 
     /** {@inheritDoc} */

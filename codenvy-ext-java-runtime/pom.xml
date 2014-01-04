@@ -24,13 +24,11 @@
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
-        <version>3.0.0-M4-SNAPSHOT</version>
+        <version>3.0.0-M7-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ext-java-runtime</artifactId>
     <packaging>jar</packaging>
     <name>Codenvy Extension :: Java :: Runtime</name>
-
-
 
     <properties>
         <dto-generator-out-directory>${project.build.directory}/generated-sources/dto/</dto-generator-out-directory>
@@ -71,7 +69,6 @@
         </dependency>
 
         <!-- Server libraries -->
-
         <dependency>
             <groupId>sun.jdt</groupId>
             <artifactId>tools</artifactId>
@@ -84,7 +81,6 @@
             <artifactId>antlr</artifactId>
             <version>${antlr.version}</version>
         </dependency>
-
 
         <!-- Testing libraries -->
         <dependency>
@@ -188,7 +184,7 @@
                                 <package>com.codenvy.ide.ext.java.jdi.shared</package>
                             </dtoPackages>
                             <outputDirectory>${dto-generator-out-directory}</outputDirectory>
-                            <genClassName>com.codenvy.ide.ext.java.jdi.server.client.dto.DtoClientImpls</genClassName>
+                            <genClassName>com.codenvy.ide.ext.java.jdi.client.dto.DtoClientImpls</genClassName>
                             <impl>client</impl>
                         </configuration>
                     </execution>
@@ -226,7 +222,7 @@
                 <directory>src/main/resources</directory>
             </resource>
             <resource>
-                <directory>${generated.sources.directory}</directory>
+                <directory>${dto-generator-out-directory}</directory>
             </resource>
         </resources>
         <sourceDirectory>src/main/java</sourceDirectory>

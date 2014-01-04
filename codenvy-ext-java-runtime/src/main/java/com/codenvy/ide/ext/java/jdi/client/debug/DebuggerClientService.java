@@ -77,7 +77,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void getBreakPoints(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void getAllBreakPoints(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Checks event.

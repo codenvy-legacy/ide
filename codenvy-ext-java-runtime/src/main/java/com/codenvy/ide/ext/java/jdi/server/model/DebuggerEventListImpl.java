@@ -39,7 +39,7 @@ public class DebuggerEventListImpl implements DebuggerEventList {
     @Override
     public List<DebuggerEvent> getEvents() {
         if (events == null) {
-            events = new ArrayList<DebuggerEvent>();
+            events = new ArrayList<>();
         }
         return events;
     }

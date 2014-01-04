@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.java.jdi.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /**
  * Description of debug break point.
@@ -28,13 +28,14 @@ import com.codenvy.ide.dto.DTO;
 public interface BreakPoint {
     Location getLocation();
 
-    boolean isEnabled();
+    void setLocation(Location location);
 
-    String getCondition();
+    boolean isEnabled();
 
     void setEnabled(boolean enabled);
 
-    void setExpression(String expression);
+    String getCondition();
 
-    void setLocation(Location location);
+    void setCondition(String condition);
+
 }

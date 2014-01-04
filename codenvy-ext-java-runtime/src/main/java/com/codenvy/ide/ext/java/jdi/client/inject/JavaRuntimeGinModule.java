@@ -28,8 +28,8 @@ import com.codenvy.ide.ext.java.jdi.client.debug.expression.EvaluateExpressionVi
 import com.codenvy.ide.ext.java.jdi.client.debug.expression.EvaluateExpressionViewImpl;
 import com.codenvy.ide.ext.java.jdi.client.debug.relaunch.ReLaunchDebuggerView;
 import com.codenvy.ide.ext.java.jdi.client.debug.relaunch.ReLaunchDebuggerViewImpl;
-import com.codenvy.ide.ext.java.jdi.client.run.ApplicationRunnerClientService;
-import com.codenvy.ide.ext.java.jdi.client.run.ApplicationRunnerClientServiceImpl;
+//import com.codenvy.ide.ext.java.jdi.client.run.ApplicationRunnerClientService;
+//import com.codenvy.ide.ext.java.jdi.client.run.ApplicationRunnerClientServiceImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
@@ -39,7 +39,7 @@ public class JavaRuntimeGinModule extends AbstractGinModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
-        bind(ApplicationRunnerClientService.class).to(ApplicationRunnerClientServiceImpl.class).in(Singleton.class);
+//        bind(ApplicationRunnerClientService.class).to(ApplicationRunnerClientServiceImpl.class).in(Singleton.class);
         bind(DebuggerClientService.class).to(DebuggerClientServiceImpl.class).in(Singleton.class);
         bind(DebuggerView.class).to(DebuggerViewImpl.class).in(Singleton.class);
         bind(ReLaunchDebuggerView.class).to(ReLaunchDebuggerViewImpl.class).in(Singleton.class);

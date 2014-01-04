@@ -29,6 +29,8 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.debug.Breakpoint;
 import com.codenvy.ide.debug.BreakpointGutterManager;
@@ -42,10 +44,18 @@ import com.codenvy.ide.ext.java.jdi.client.debug.expression.EvaluateExpressionPr
 import com.codenvy.ide.ext.java.jdi.client.debug.relaunch.ReLaunchDebuggerPresenter;
 import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolver;
 import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolverFactory;
-import com.codenvy.ide.ext.java.jdi.client.marshaller.*;
-import com.codenvy.ide.ext.java.jdi.shared.*;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.ext.java.jdi.client.marshaller.DebuggerEventListUnmarshallerWS;
+import com.codenvy.ide.ext.java.jdi.shared.ApplicationInstance;
+import com.codenvy.ide.ext.java.jdi.shared.BreakPoint;
+import com.codenvy.ide.ext.java.jdi.shared.BreakPointEvent;
+import com.codenvy.ide.ext.java.jdi.shared.DebuggerEvent;
+import com.codenvy.ide.ext.java.jdi.shared.DebuggerEventList;
+import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
+import com.codenvy.ide.ext.java.jdi.shared.Location;
+import com.codenvy.ide.ext.java.jdi.shared.StackFrameDump;
+import com.codenvy.ide.ext.java.jdi.shared.StepEvent;
+import com.codenvy.ide.ext.java.jdi.shared.Value;
+import com.codenvy.ide.ext.java.jdi.shared.Variable;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -65,14 +75,12 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
@@ -85,24 +93,25 @@ import static com.codenvy.ide.ext.java.jdi.shared.DebuggerEvent.STEP;
 /**
  * The presenter provides debug java application.
  *
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @author Vitaly Parfonov
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 public class DebuggerPresenter extends BasePresenter implements DebuggerView.ActionDelegate, Debugger {
-    private static final String TITLE                    = "Debug";
+    private static final String TITLE                = "Debug";
     /** Default time (in milliseconds) to prolong application expiration time. */
-    private static final long   DEFAULT_PROLONG_TIME     = 10 * 60 * 1000; // 10 minutes
+    private static final long   DEFAULT_PROLONG_TIME = 10 * 60 * 1000; // 10 minutes
     /** Name of 'JRebel' project property. */
     /** Channel identifier to receive events from debugger over WebSocket. */
-    private String                                 debuggerEventsChannel;
+    private String       debuggerEventsChannel;
     /** Channel identifier to receive event when debugger will disconnected. */
-    private String                                 debuggerDisconnectedChannel;
+    private String       debuggerDisconnectedChannel;
     /** Channel identifier to receive events when application expiration time will left. */
-    private String                                 expireSoonAppChannel;
+    private String       expireSoonAppChannel;
     /** Used to check if events from debugger receiving over WebSocket or over HTTP. */
-    private boolean                                isCheckEventsTimerRunned;
-    private DebuggerView                           view;
-    private DtoFactory                             dtoFactory;
+    private boolean      isCheckEventsTimerRunned;
+    private DebuggerView view;
+    private DtoFactory   dtoFactory;
     private DebuggerClientService                  service;
     private JavaRuntimeResources                   resources;
     private EventBus                               eventBus;
@@ -118,28 +127,24 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private FqnResolverFactory                     resolverFactory;
     private EditorAgent                            editorAgent;
     private Variable                               selectedVariable;
-    private boolean                                updateApp;
-    private String                                 restContext;
     private HandlerRegistration                    projectBuildHandler;
     private ReLaunchDebuggerPresenter              reLaunchDebuggerPresenter;
     private EvaluateExpressionPresenter            evaluateExpressionPresenter;
     private ChangeValuePresenter                   changeValuePresenter;
     private NotificationManager                    notificationManager;
-    private JsonStringMap<File>                    fileWithBreakPoints;
+    private StringMap<File>                        fileWithBreakPoints;
     /** Handler for processing events which is received from debugger over WebSocket connection. */
     private SubscriptionHandler<DebuggerEventList> debuggerEventsHandler;
     /** Handler for processing received application name which will be stopped soon. */
     private SubscriptionHandler<Object>            expireSoonAppsHandler;
     /** Handler for processing debugger disconnected event. */
     private SubscriptionHandler<Object>            debuggerDisconnectedHandler;
-    private List<Variable>                    variables;
+    private List<Variable>                         variables;
     private Notification                           notification;
     /** A timer for checking events */
     private Timer checkEventsTimer = new Timer() {
         @Override
         public void run() {
-
-
             try {
                 service.checkEvents(debuggerInfo.getId(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                     @Override
@@ -207,7 +212,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                                 ResourceProvider resourceProvider,
                                 WorkspaceAgent workspaceAgent,
 //                                ApplicationRunnerClientService applicationRunnerClientService,
-                                @Named("restContext") String restContext,
                                 BreakpointGutterManager gutterManager,
                                 FqnResolverFactory resolverFactory,
                                 EditorAgent editorAgent,
@@ -215,7 +219,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                                 EvaluateExpressionPresenter evaluateExpressionPresenter,
                                 ChangeValuePresenter changeValuePresenter,
                                 NotificationManager notificationManager,
-                                DtoFactory dtoFactory) {
+                                final DtoFactory dtoFactory) {
         this.view = view;
         this.dtoFactory = dtoFactory;
         this.view.setDelegate(this);
@@ -228,11 +232,10 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         this.constant = constant;
         this.resourceProvider = resourceProvider;
         this.workspaceAgent = workspaceAgent;
-        this.restContext = restContext;
         this.gutterManager = gutterManager;
         this.resolverFactory = resolverFactory;
-        this.fileWithBreakPoints = JsonCollections.createStringMap();
-        this.variables = new ArrayList<>();
+        this.fileWithBreakPoints = Collections.createStringMap();
+        this.variables = new ArrayList<Variable>();
         this.editorAgent = editorAgent;
         this.reLaunchDebuggerPresenter = reLaunchDebuggerPresenter;
         this.evaluateExpressionPresenter = evaluateExpressionPresenter;
@@ -267,42 +270,43 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
             }
         };
 
-        DebuggerEventListUnmarshallerWS unmarshallerWS = new DebuggerEventListUnmarshallerWS();
-        this.debuggerEventsHandler = new SubscriptionHandler<DebuggerEventList>(unmarshallerWS) {
-            @Override
-            public void onMessageReceived(DebuggerEventList result) {
-                onEventListReceived(result);
-            }
+        DebuggerEventListUnmarshallerWS unmarshaller = new DebuggerEventListUnmarshallerWS(dtoFactory);
+        this.debuggerEventsHandler = new
+                SubscriptionHandler<DebuggerEventList>(unmarshaller) {
+                    @Override
+                    public void onMessageReceived(DebuggerEventList result) {
+                        onEventListReceived(result);
+                    }
 
-            @Override
-            public void onErrorReceived(Throwable exception) {
-                try {
-                    DebuggerPresenter.this.messageBus.unsubscribe(debuggerEventsChannel, this);
-                    DebuggerPresenter.this.messageBus.unsubscribe(expireSoonAppChannel, expireSoonAppsHandler);
-                } catch (WebSocketException e) {
-                    // nothing to do
-                }
+                    @Override
+                    public void onErrorReceived(Throwable exception) {
+                        try {
+                            DebuggerPresenter.this.messageBus.unsubscribe(debuggerEventsChannel, this);
+                            DebuggerPresenter.this.messageBus.unsubscribe(expireSoonAppChannel, expireSoonAppsHandler);
+                        } catch (WebSocketException e) {
+                            // nothing to do
+                        }
 
-                closeDialog();
+                        closeDialog();
 
-                if (runningApp != null) {
-                    if (exception instanceof ServerException) {
-                        ServerException serverException = (ServerException)exception;
-                        if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus() && serverException.getMessage() != null
-                            && serverException.getMessage().contains("not found")) {
-                            DebuggerPresenter.this.console.print(DebuggerPresenter.this.constant.debuggerDisconnected());
-                            debuggerDisconnected();
-                            appStopped(runningApp.getName());
+                        if (runningApp != null) {
+                            if (exception instanceof ServerException) {
+                                ServerException serverException = (ServerException)exception;
+                                if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus() && serverException.getMessage() != null
+                                    && serverException.getMessage().contains("not found")) {
+                                    DebuggerPresenter.this.console.print(DebuggerPresenter.this.constant.debuggerDisconnected());
+                                    debuggerDisconnected();
+                                    appStopped(runningApp.getName());
 
-                            return;
+                                    return;
+                                }
+                            }
+                            DebuggerPresenter.this.eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                            Notification notification = new Notification(exception.getMessage(), ERROR);
+                            DebuggerPresenter.this.notificationManager.showNotification(notification);
                         }
                     }
-                    DebuggerPresenter.this.eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    Notification notification = new Notification(exception.getMessage(), ERROR);
-                    DebuggerPresenter.this.notificationManager.showNotification(notification);
-                }
-            }
-        };
+                };
 
         this.debuggerDisconnectedHandler = new SubscriptionHandler<Object>() {
             @Override
@@ -409,10 +413,17 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      */
     @NotNull
     private String resolveFilePath(@NotNull Location location) {
-        String sourcePath =
-                project.hasProperty(PROPERTY_SOURCE_FOLDERS) ? (String)project.getPropertyValue(PROPERTY_SOURCE_FOLDERS)
+        File file = getFileWithBreakPoints(location.getClassName());
+        Project fileProject = file.getProject();
+        String sourcePath = fileProject.hasProperty(PROPERTY_SOURCE_FOLDERS) ? (String)fileProject.getPropertyValue(PROPERTY_SOURCE_FOLDERS)
                                                              : "src/main/java";
-        return project.getPath() + "/" + sourcePath + "/" + location.getClassName().replace(".", "/") + ".java";
+        return fileProject.getPath() + "/" + sourcePath + "/" + location.getClassName().replace(".", "/") + ".java";
+
+        // TODO: provide project
+//        String sourcePath =
+//                project.hasProperty(PROPERTY_SOURCE_FOLDERS) ? (String)project.getPropertyValue(PROPERTY_SOURCE_FOLDERS)
+//                                                             : "src/main/java";
+//        return project.getPath() + "/" + sourcePath + "/" + location.getClassName().replace(".", "/") + ".java";
     }
 
     @Nullable
@@ -433,7 +444,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 @Override
                 protected void onSuccess(String result) {
                     StackFrameDump dump = dtoFactory.createDtoFromJson(result, StackFrameDump.class);
-                    List<Variable> variables = new ArrayList<>();
+                    List<Variable> variables = new ArrayList<Variable>();
                     variables.addAll(dump.getFields());
                     variables.addAll(dump.getLocalVariables());
 
@@ -547,7 +558,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 @Override
                 protected void onSuccess(String result) {
                     gutterManager.removeAllBreakPoints();
-                    view.setBreakPoints(Collections.<Breakpoint>emptyList());
+                    view.setBreakPoints(Collections.<Breakpoint>createArray());
                 }
 
                 @Override
@@ -868,11 +879,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         }
     }
 
-
-
-
-
-
     /**
      * Creates application's url in HTML format.
      *
@@ -888,7 +894,43 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         return appUris;
     }
 
-
+//    /**
+//     * Run application in debug mode by sending request over WebSocket or HTTP.
+//     *
+//     * @param warUrl
+//     *         location of .war file
+//     */
+//    private void debugApplication(@NotNull String warUrl) {
+//        ApplicationInstanceUnmarshallerWS unmarshaller = new ApplicationInstanceUnmarshallerWS();
+//
+//        try {
+//            applicationRunnerClientService
+//                    .debugApplicationWS(project.getName(), warUrl, isUseJRebel(), new RequestCallback<ApplicationInstance>(unmarshaller) {
+//                        @Override
+//                        protected void onSuccess(ApplicationInstance result) {
+//                            // Need this temporary fix because with using
+//                            // websocket we get stopURL like:
+//                            // ide/java/runner/stop?name=app-zcuz5b5wawcn5u23
+//                            // but it must be like:
+//                            // http://127.0.0.1:8080/IDE/rest/private/ide/java/runner/stop?name=app-8gkiomg9q4qrhkxz
+//                            if (!result.getStopURL().matches("http[s]?://.+/ide/rest/.*/stop\\?name=.+")) {
+//                                String fixedStopURL = Window.Location.getProtocol() + "//" + Window.Location.getHost() + restContext + "/" +
+//                                                      result.getStopURL();
+//                                ((DtoClientImpls.ApplicationInstanceImpl)result).setStopURL(fixedStopURL);
+//                            }
+//
+//                            onDebugStarted(result);
+//                        }
+//
+//                        @Override
+//                        protected void onFailure(Throwable exception) {
+//                            onApplicationStartFailure(exception);
+//                        }
+//                    });
+//        } catch (WebSocketException e) {
+//            debugApplicationREST(warUrl);
+//        }
+//    }
 
     /**
      * Perform some action when debug is started.
@@ -898,8 +940,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      */
     private void onDebugStarted(@NotNull ApplicationInstance app) {
         String msg = constant.applicationStarted(app.getName());
-        msg += "<br>"
-               + constant.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
+        msg += "<br>" + constant.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
         console.print(msg);
         notification.setStatus(FINISHED);
         notification.setMessage(msg);
@@ -934,6 +975,28 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                                 @Override
                                 protected void onFailure(Throwable exception) {
                                     reconnectDebugger(debugApplicationInstance);
+                                }
+                            });
+        } catch (RequestException e) {
+            eventBus.fireEvent(new ExceptionThrownEvent(e));
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
+        }
+    }
+
+    public void connectDebugger(@NotNull final String debugHost, @NotNull final int debugPort) {
+        try {
+            service.connect(debugHost, debugPort,
+                            new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                                @Override
+                                public void onSuccess(String result) {
+                                    DebuggerPresenter.this.debuggerInfo = dtoFactory.createDtoFromJson(result, DebuggerInfo.class);
+                                    showDialog(DebuggerPresenter.this.debuggerInfo);
+                                }
+
+                                @Override
+                                protected void onFailure(Throwable exception) {
+//                                    reconnectDebugger(debugApplicationInstance);
                                 }
                             });
         } catch (RequestException e) {
@@ -996,7 +1059,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
             doStopApp();
         }
     }
-
 
     /**
      * Show dialog.

@@ -88,7 +88,7 @@ public class DeployToApplicationServerRunner extends Runner {
                 return new ApplicationServerRunnerConfiguration(DEFAULT_SERVER_NAME,
                                                                 portService.acquire(),
                                                                 request.getMemorySize(),
-                                                                -1,
+                                                                8008,
                                                                 false,
                                                                 DEBUG_TRANSPORT_PROTOCOL,
                                                                 request);

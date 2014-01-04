@@ -84,7 +84,7 @@ import static com.codenvy.commons.json.JsonHelper.toJson;
 public class Debugger implements EventsHandler {
     private static final Logger                          LOG                  = LoggerFactory.getLogger(Debugger.class);
     private static final AtomicLong                      counter              = new AtomicLong(1);
-    private static final ConcurrentMap<String, Debugger> instances            = new ConcurrentHashMap<String, Debugger>();
+    private static final ConcurrentMap<String, Debugger> instances            = new ConcurrentHashMap<>();
     private static final String                          EVENTS_CHANNEL       = "debugger:events:";
     private static final String                          DISCONNECTED_CHANNEL = "debugger:disconnected:";
 
@@ -105,7 +105,7 @@ public class Debugger implements EventsHandler {
     final String id = Long.toString(counter.getAndIncrement());
     private final String host;
     private final int    port;
-    private final List<DebuggerEvent> events = new ArrayList<DebuggerEvent>();
+    private final List<DebuggerEvent> events = new ArrayList<>();
 
     /** Target Java VM representation. */
     private VirtualMachine  vm;

@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.java.jdi.server;
 
 /**
- * Instance of class member in debuggee JVM.
+ * Instance of class member in debugger JVM.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $

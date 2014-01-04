@@ -17,9 +17,9 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.debug;
 
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.ui.tree.NodeDataAdapter;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 
@@ -61,9 +61,9 @@ public class VariableTreeNodeDataAdapter implements NodeDataAdapter<Variable> {
 
     /** {@inheritDoc} */
     @Override
-    public JsonArray<Variable> getChildren(Variable data) {
+    public Array<Variable> getChildren(Variable data) {
         List<Variable> variables = data.getVariables();
-        return variables != null ? JsonCollections.<Variable>createArray(variables) : JsonCollections.<Variable>createArray();
+        return variables != null ? Collections.<Variable>createArray(variables) : Collections.<Variable>createArray();
     }
 
     /** {@inheritDoc} */
@@ -110,18 +110,18 @@ public class VariableTreeNodeDataAdapter implements NodeDataAdapter<Variable> {
 
     /** {@inheritDoc} */
     @Override
-    public JsonArray<String> getNodePath(Variable data) {
-        return JsonCollections.<String>createArray(data.getVariablePath().getPath());
+    public Array<String> getNodePath(Variable data) {
+        return Collections.<String>createArray(data.getVariablePath().getPath());
     }
 
     /** {@inheritDoc} */
     @Override
-    public Variable getNodeByPath(Variable root, JsonArray<String> relativeNodePath) {
+    public Variable getNodeByPath(Variable root, Array<String> relativeNodePath) {
         Variable localRoot = root;
         for (int i = 0; i < relativeNodePath.size(); i++) {
             String path = relativeNodePath.get(i);
             if (localRoot != null) {
-                JsonArray<Variable> variables = JsonCollections.<Variable>createArray(localRoot.getVariables());
+                Array<Variable> variables = Collections.<Variable>createArray(localRoot.getVariables());
                 localRoot = null;
                 for (int j = 0; j < variables.size(); j++) {
                     Variable variable = variables.get(i);

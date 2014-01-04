@@ -25,6 +25,7 @@ import elemental.html.TableElement;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.debug.Breakpoint;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
@@ -229,7 +230,7 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
 
     /** {@inheritDoc} */
     @Override
-    public void setBreakPoints(@NotNull List<Breakpoint> breakPoints) {
+    public void setBreakPoints(@NotNull Array<Breakpoint> breakPoints) {
         this.breakPoints.render(breakPoints);
     }
 

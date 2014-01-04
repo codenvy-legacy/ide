@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.java.jdi.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
 @DTO
@@ -26,4 +26,6 @@ public interface DebuggerEvent {
     int STEP       = 2;
 
     int getType();
+
+    void setType(int type);
 }
