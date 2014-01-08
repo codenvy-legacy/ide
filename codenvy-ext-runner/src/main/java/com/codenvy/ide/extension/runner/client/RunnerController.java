@@ -137,7 +137,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     /** Run application. */
-    public void run() {
+    public void runActiveProject() {
         currentProject = resourceProvider.getActiveProject();
         if (currentProject == null) {
             Window.alert("Project is not opened.");

@@ -55,7 +55,7 @@ public class RunAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        controller.run();
+        controller.runActiveProject();
     }
 
     /** {@inheritDoc} */
