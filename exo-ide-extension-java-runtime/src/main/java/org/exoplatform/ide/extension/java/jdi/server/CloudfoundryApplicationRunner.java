@@ -72,9 +72,7 @@ import static com.codenvy.commons.lang.ZipUtils.zipDir;
 
 /**
  * ApplicationRunner for deploy Java applications at Cloud Foundry PaaS.
- *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * @author Andrey Parfonov
  */
 public class CloudfoundryApplicationRunner implements ApplicationRunner, Startable {
     /** Default application lifetime (in minutes). After this time application may be stopped automatically. */
