@@ -21,7 +21,7 @@ import org.everrest.core.impl.async.AsynchronousJobService;
 
 import javax.ws.rs.Path;
 
-@Path("{ws-name}/async")
+@Path("async/{ws-name}")
 public class CodenvyAsynchronousJobService extends AsynchronousJobService {
     
 }

@@ -79,10 +79,9 @@ import java.util.List;
  * greatly simplified by the regular structure of the programming languages. At current moment implemented the search class FQN,
  * by Simple Class Name and a prefix (the lead characters in the name of the package or class).
  *
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: RestCodeAssistantJava Mar 30, 2011 10:40:38 AM evgen $
+ * @author Evgen Vidolob
  */
-@Path("{ws-name}/code-assistant/java")
+@Path("code-assistant-java/{ws-name}")
 public class RestCodeAssistantJava {
 
     @PathParam("ws-name")
@@ -127,8 +126,7 @@ public class RestCodeAssistantJava {
     @Produces(MediaType.APPLICATION_JSON)
     public List<TypeInfo> getTypesByNamePrefix(@QueryParam("prefix") String namePrefix,
                                                @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId)
-            throws CodeAssistantException,
-                   VirtualFileSystemException {
+            throws CodeAssistantException, VirtualFileSystemException {
         List<TypeInfo> infos = codeAssistant.getTypeInfoByNamePrefix(namePrefix, projectId, vfsId);
 
         if (infos != null)
@@ -156,8 +154,7 @@ public class RestCodeAssistantJava {
     @Produces(MediaType.APPLICATION_JSON)
     public TypesList findFQNsByPrefix(@PathParam("prefix") String prefix, @QueryParam("where") String where,
                                       @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId)
-            throws CodeAssistantException,
-                   VirtualFileSystemException {
+            throws CodeAssistantException, VirtualFileSystemException {
         if (projectId == null)
             throw new InvalidArgumentException("'projectid' parameter is null.");
         TypesList typesList = DtoFactory.getInstance().createDto(TypesList.class);
@@ -185,8 +182,8 @@ public class RestCodeAssistantJava {
     @Path("/find-by-type/{type}")
     @Produces(MediaType.APPLICATION_JSON)
     public TypesList findByType(@PathParam("type") String type, @QueryParam("prefix") String prefix,
-                                @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId) throws CodeAssistantException,
-                                                                                                                     VirtualFileSystemException {
+                                @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId)
+            throws CodeAssistantException, VirtualFileSystemException {
         if (projectId == null)
             throw new InvalidArgumentException("'projectid' parameter is null.");
         TypesList typesList = DtoFactory.getInstance().createDto(TypesList.class);
@@ -256,22 +253,22 @@ public class RestCodeAssistantJava {
             project = (Project)item;
             projectPath= project.getPath();
         } else {
-            LOG.warn("Getting item not a project ");
-            throw new CodeAssistantException(500, "Getting item not a project");
+            LOG.warn("Item not a project ");
+            throw new CodeAssistantException(500, "Item not a project");
         }
 
         if (!hasPom(vfs, projectId)){
-            LOG.warn("Don't has pom.xml in the child");
-            throw new CodeAssistantException(500, "Don't has pom.xml in the child");
+            LOG.warn("Doesn't have pom.xml file");
+            throw new CodeAssistantException(500, "Doesn't have pom.xml file");
         }
 
         URI uri = uriInfo.getBaseUri();
         String url = uri.getScheme() + "://" + uri.getHost();
         int port = uri.getPort();
-        if (port != 0 && port != 80) {
+        if (port > 0 && port != 80) {
             url += ":" + port;
         }
-        url += "/api/rest" + "/" + wsName + "/"; //TODO: remove hardcode "api/rest"
+        url += "/api/rest/builder/" + wsName + "/dependencies"; //TODO: remove hardcode "api/rest"
         try {
             String jsonDependencies = null;
             List<MavenDependency> dependencies = null;
@@ -366,12 +363,7 @@ public class RestCodeAssistantJava {
         try {
             Pair<String, String> projectParam = Pair.of("project", projectName);
             Pair<String, String> typeParam = Pair.of("type", analyzeType);
-            buildStatus = HttpJsonHelper.request(BuildTaskDescriptor.class,
-                                                 url + "builder/dependencies",
-                                                 "POST",
-                                                 null,
-                                                 projectParam,
-                                                 typeParam);
+            buildStatus = HttpJsonHelper.request(BuildTaskDescriptor.class, url, "POST", null, projectParam, typeParam);
             buildStatus = waitTaskFinish(buildStatus);
         } catch (RemoteException | IOException e) {
             LOG.error("Error", e);

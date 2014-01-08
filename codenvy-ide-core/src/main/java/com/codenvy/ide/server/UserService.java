@@ -37,9 +37,9 @@ import java.util.Set;
 /**
  * Server service for manage information of user.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
-@Path("{ws-name}/user")
+@Path("user/{ws-name}")
 public class UserService {
     @Inject
     UserManager userManager;

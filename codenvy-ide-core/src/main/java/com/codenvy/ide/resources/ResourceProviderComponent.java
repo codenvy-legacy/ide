@@ -71,7 +71,7 @@ import com.google.web.bindery.event.shared.EventBus;
 /**
  * Implementation of Resource Provider
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 @Singleton
 public class ResourceProviderComponent implements ResourceProvider, Component {
@@ -95,8 +95,6 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     /**
      * Resources API for client application.
      * It deals with VFS to retrieve the content of  the files
-     *
-     * @throws ResourceException
      */
     @Inject
     public ResourceProviderComponent(ModelProvider genericModelProvider,
@@ -110,7 +108,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         this.eventBus = eventBus;
         this.defaultFile = defaultFile;
         this.dtoFactory = dtoFactory;
-        this.workspaceURL = restContext + '/' + Utils.getWorkspaceName() + "/vfs/v2";
+        this.workspaceURL = restContext + "/vfs/" + Utils.getWorkspaceName() + "/v2";
         this.modelProviders = Collections.<ModelProvider>createStringMap();
         this.natures = Collections.<ProjectNature>createStringMap();
         this.fileTypes = Collections.createIntegerMap();

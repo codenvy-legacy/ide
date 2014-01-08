@@ -237,12 +237,7 @@ public class MavenUtils {
      *         if an i/o error occurs
      */
     public static void addDependency(java.io.File pom, String groupId, String artifactId, String version, String scope) throws IOException {
-        final Dependency dependency = new Dependency();
-        dependency.setGroupId(groupId);
-        dependency.setArtifactId(artifactId);
-        dependency.setVersion(version);
-        dependency.setScope(scope);
-        addDependency(pom, dependency);
+        addDependency(pom, newDependency(groupId, artifactId, version, scope));
     }
 
     /**
@@ -298,6 +293,36 @@ public class MavenUtils {
             }
         }
         return version;
+    }
+
+    /** Creates new {@link Dependency} instance. */
+    public static Dependency newDependency(String groupId, String artifactId, String version, String scope) {
+        final Dependency dependency = new Dependency();
+        dependency.setGroupId(groupId);
+        dependency.setArtifactId(artifactId);
+        dependency.setVersion(version);
+        dependency.setScope(scope);
+        return dependency;
+    }
+
+    /** Creates new {@link Model} instance. */
+    public static Model newModel(Parent parent, String groupId, String artifactId, String version, String packaging) {
+        final Model model = new Model();
+        model.setParent(parent);
+        model.setGroupId(groupId);
+        model.setArtifactId(artifactId);
+        model.setVersion(version);
+        model.setPackaging(packaging);
+        return model;
+    }
+
+    /** Creates new {@link Parent} instance. */
+    public static Parent newParent(String groupId, String artifactId, String version) {
+        final Parent parent = new Parent();
+        parent.setGroupId(groupId);
+        parent.setArtifactId(artifactId);
+        parent.setVersion(version);
+        return parent;
     }
 
     private static Model doReadModel(java.io.File pom) throws IOException {

@@ -42,10 +42,9 @@ import java.util.Map;
 /**
  * REST service to get the list of repositories from GitHub (where sample projects are located).
  * 
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: GithubSamplesService.java Aug 29, 2011 9:59:02 AM vereshchaka $
+ * @author Oksana Vereshchaka
  */
-@Path("{ws-name}/github")
+@Path("github/{ws-name}")
 public class GitHubService {
     @Inject
     OAuthTokenProvider oauthTokenProvider;
