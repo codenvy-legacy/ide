@@ -40,6 +40,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -138,9 +139,10 @@ public class BuilderClient {
                                                                                                         VirtualFileSystemException {
         URL url = new URL(baseURL + "/builder/maven/build");
         String buildId = run(url, vfs.exportZip(projectId));
-        LOG.info("EVENT#build-started# PROJECT#" + projectName + "# TYPE#" + projectType + "#");
+        final String sessionId = UUID.randomUUID().toString();
+        LOG.info("EVENT#build-started# PROJECT#" + projectName + "# TYPE#" + projectType + "# ID#" + sessionId + "#");
         LOG.info("EVENT#project-built# PROJECT#" + projectName + "# TYPE#" + projectType + "#");
-        startCheckingBuildStatus(buildId, projectName, projectType);
+        startCheckingBuildStatus(buildId, projectName, projectType, sessionId);
         return buildId;
     }
 
@@ -160,9 +162,10 @@ public class BuilderClient {
                                                                                                          VirtualFileSystemException {
         URL url = new URL(baseURL + "/builder/maven/deploy");
         String buildId = run(url, vfs.exportZip(projectId));
-        LOG.info("EVENT#build-started# PROJECT#" + projectName + "# TYPE#" + projectType + "#");
+        final String sessionId = UUID.randomUUID().toString();
+        LOG.info("EVENT#build-started# PROJECT#" + projectName + "# TYPE#" + projectType + "# ID#" + sessionId + "#");
         LOG.info("EVENT#project-deployed# PROJECT#" + projectName + "# TYPE#" + projectType + "# PAAS#LOCAL#");
-        startCheckingBuildStatus(buildId, projectName, projectType);
+        startCheckingBuildStatus(buildId, projectName, projectType, sessionId);
         return buildId;
     }
 
@@ -425,7 +428,8 @@ public class BuilderClient {
      * 
      * @param buildId identifier of the build job to check status
      */
-    private void startCheckingBuildStatus(final String buildId, final String projectName, final String projectType) {
+    private void startCheckingBuildStatus(final String buildId, final String projectName, final String projectType,
+                                          final String sessionId) {
         final String ws = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString();
         final String userId = ConversationState.getCurrent().getIdentity().getUserId();
         TimerTask task = new TimerTask() {
@@ -437,7 +441,7 @@ public class BuilderClient {
                         checkStatusTasks.remove(buildId);
                         cancel();
                         LOG.info("EVENT#build-finished# WS#" + ws + "# USER#" + userId + "# PROJECT#" + projectName + "# TYPE#"
-                                 + projectType + "#");
+                                 + projectType + "# ID#" + sessionId + "#");
                         publishWebSocketMessage(status, BUILD_STATUS_CHANNEL + buildId, null);
                     }
                 } catch (Exception e) {
