@@ -16,7 +16,7 @@
 	var links = head.getElementsByTagName('link');
 	
 	for (i = 0; i < links.length; i++) {
-		if ("menu-additions.css" == links[i].href) {
+		if ("_app/menu-additions.css" == links[i].href) {
 			return;
 		}
 	}
@@ -24,7 +24,7 @@
 	var link = document.createElement('link');
 	link.rel = "stylesheet";
 	link.type = "text/css";
-	link.href = "menu-additions.css";
+	link.href = "_app/menu-additions.css";
 	head.appendChild(link);
 })();
 
