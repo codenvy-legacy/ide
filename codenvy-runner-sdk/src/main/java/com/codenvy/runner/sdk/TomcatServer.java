@@ -116,7 +116,7 @@ public class TomcatServer implements ApplicationServer {
     }
 
     protected void generateServerXml(java.io.File tomcatDir, SDKRunnerConfiguration runnerConfiguration) throws IOException {
-        String cfg = SERVER_XML.replace("${PORT}", Integer.toString(runnerConfiguration.getPort()));
+        String cfg = SERVER_XML.replace("${PORT}", Integer.toString(runnerConfiguration.getHttpPort()));
         final java.io.File serverXmlFile = new java.io.File(new java.io.File(tomcatDir, "conf"), "server.xml");
         Files.write(serverXmlFile.toPath(), cfg.getBytes());
     }
@@ -126,10 +126,10 @@ public class TomcatServer implements ApplicationServer {
         ZipUtils.unzip(new java.io.File(webapps, "api.war"), api);
         final Path buildersCfgPath = api.toPath().resolve("WEB-INF/classes/codenvy/builders.json");
         final String builders = new String(Files.readAllBytes(buildersCfgPath), Charset.forName("UTF-8"))
-                .replace("${PORT}", Integer.toString(runnerConfiguration.getPort()));
+                .replace("${PORT}", Integer.toString(runnerConfiguration.getHttpPort()));
         final Path runnersCfgPath = api.toPath().resolve("WEB-INF/classes/codenvy/runners.json");
         final String runners = new String(Files.readAllBytes(runnersCfgPath), Charset.forName("UTF-8"))
-                .replace("${PORT}", Integer.toString(runnerConfiguration.getPort()));
+                .replace("${PORT}", Integer.toString(runnerConfiguration.getHttpPort()));
         Files.write(buildersCfgPath, builders.getBytes());
         Files.write(runnersCfgPath, runners.getBytes());
     }
@@ -160,7 +160,7 @@ public class TomcatServer implements ApplicationServer {
         final List<java.io.File> logFiles = new ArrayList<>(2);
         logFiles.add(new java.io.File(logsDir, "stdout.log"));
         logFiles.add(new java.io.File(logsDir, "stderr.log"));
-        return new TomcatProcess(runnerCfg.getPort(), logFiles, runnerCfg.getDebugPort(),
+        return new TomcatProcess(runnerCfg.getHttpPort(), logFiles, runnerCfg.getDebugPort(),
                                  startUpScriptFile, appDir, codeServerProcess, stopCallback, pidTaskExecutor);
     }
 
@@ -184,7 +184,7 @@ public class TomcatServer implements ApplicationServer {
     private void updateSetenvFileUnix(java.io.File tomcatDir, SDKRunnerConfiguration runnerCfg) throws IOException {
         final Path setenvShPath = tomcatDir.toPath().resolve("tomcat/bin/setenv.sh");
         final String setenvShContent =
-                new String(Files.readAllBytes(setenvShPath)).replace("${PORT}", Integer.toString(runnerCfg.getPort()));
+                new String(Files.readAllBytes(setenvShPath)).replace("${PORT}", Integer.toString(runnerCfg.getHttpPort()));
         Files.write(setenvShPath, setenvShContent.getBytes());
     }
 
