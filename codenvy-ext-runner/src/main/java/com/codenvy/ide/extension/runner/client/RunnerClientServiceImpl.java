@@ -54,7 +54,7 @@ public class RunnerClientServiceImpl implements RunnerClientService {
     /** {@inheritDoc} */
     @Override
     public void run(String projectName, AsyncRequestCallback<String> callback) throws RequestException {
-        final String requestUrl = baseUrl +  "/" + Utils.getWorkspaceName() + "/runner/run";
+        final String requestUrl = baseUrl + "/runner/" + Utils.getWorkspaceName() + "/run";
         String params = "project=" + projectName;
         AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params).send(callback);
     }

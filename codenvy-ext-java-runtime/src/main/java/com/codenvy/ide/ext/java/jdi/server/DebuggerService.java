@@ -41,10 +41,9 @@ import javax.ws.rs.core.MediaType;
 /**
  * Provide access to {@link Debugger} through HTTP.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * @author andrew00x
  */
-@Path("{ws-name}/java/debug")
+@Path("debug-java/{ws-name}")
 public class DebuggerService {
     @GET
     @Path("connect")

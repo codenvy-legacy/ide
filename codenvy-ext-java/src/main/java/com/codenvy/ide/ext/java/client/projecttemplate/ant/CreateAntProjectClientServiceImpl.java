@@ -36,11 +36,11 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
 /**
  * The implementation of {@link CreateAntProjectClientService}.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
 @Singleton
 public class CreateAntProjectClientServiceImpl implements CreateAntProjectClientService {
-    private static final String BASE_URL              = '/' + Utils.getWorkspaceName() + "/ant/create";
+    private static final String BASE_URL              = "/create-ant/" + Utils.getWorkspaceName();
     private static final String CREATE_JAVA_PROJECT   = BASE_URL + "/project/java";
     private static final String CREATE_SPRING_PROJECT = BASE_URL + "/project/spring";
     private String           restContext;

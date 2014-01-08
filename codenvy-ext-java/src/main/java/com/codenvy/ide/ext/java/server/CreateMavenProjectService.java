@@ -41,9 +41,9 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 /**
  * Server service for creating projects.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
-@Path("{ws-name}/maven/create")
+@Path("create-maven/{ws-name}")
 public class CreateMavenProjectService {
     @Inject
     VirtualFileSystemRegistry registry;
@@ -52,7 +52,7 @@ public class CreateMavenProjectService {
     @POST
     @Produces(APPLICATION_JSON)
     public void createJavaProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
-                                  List<Property> properties) throws VirtualFileSystemException {
+                                  List<Property> properties) throws VirtualFileSystemException, IOException {
         createProject(vfsId, name, properties, "conf/Simple_jar.zip");
     }
 
@@ -60,8 +60,7 @@ public class CreateMavenProjectService {
     @POST
     @Produces(APPLICATION_JSON)
     public void createWarProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
-                                 List<Property> properties) throws VirtualFileSystemException {
-
+                                 List<Property> properties) throws VirtualFileSystemException, IOException {
         createProject(vfsId, name, properties, "conf/Simple_war.zip");
     }
 
@@ -69,7 +68,7 @@ public class CreateMavenProjectService {
     @POST
     @Produces(APPLICATION_JSON)
     public void createSpringProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
-                                    List<Property> properties) throws VirtualFileSystemException {
+                                    List<Property> properties) throws VirtualFileSystemException, IOException {
         createProject(vfsId, name, properties, "conf/Simple_spring.zip");
     }
 
@@ -77,12 +76,12 @@ public class CreateMavenProjectService {
     @POST
     @Produces(APPLICATION_JSON)
     public void createEmptyProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
-                                   List<Property> properties) throws VirtualFileSystemException {
-
+                                   List<Property> properties) throws VirtualFileSystemException, IOException {
         createProject(vfsId, name, properties, "conf/Simple_empty.zip");
     }
 
-    private void createProject(String vfsId, String name, List<Property> properties, String templatePath) throws VirtualFileSystemException {
+    private void createProject(String vfsId, String name, List<Property> properties, String templatePath)
+            throws VirtualFileSystemException, IOException {
         VirtualFileSystemProvider provider = registry.getProvider(vfsId);
         MountPoint mountPoint = provider.getMountPoint(false);
         VirtualFile root = mountPoint.getRoot();
@@ -91,12 +90,8 @@ public class CreateMavenProjectService {
         if (templateStream == null) {
             throw new InvalidArgumentException("Can't find " + templatePath);
         }
-        try {
-            projectFolder.unzip(templateStream, true);
-            updateProperties(properties, projectFolder);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        projectFolder.unzip(templateStream, true);
+        updateProperties(properties, projectFolder);
     }
 
     private void updateProperties(List<Property> properties, VirtualFile projectFolder)
@@ -105,6 +100,4 @@ public class CreateMavenProjectService {
         propertyList.addAll(properties);
         projectFolder.updateProperties(propertyList, null);
     }
-
-
 }

@@ -69,41 +69,26 @@ public class NativeGitMergeResult implements MergeResult {
         this.head = head;
     }
 
-    /**
-     * @see com.codenvy.ide.ext.git.shared_.MergeResult#getNewHead()
-     */
     @Override
     public String getNewHead() {
         return head;
     }
 
-    /**
-     * @see com.codenvy.ide.ext.git.shared_.MergeResult#getMergeStatus()
-     */
     @Override
     public MergeStatus getMergeStatus() {
         return status;
     }
 
-    /**
-     * @see com.codenvy.ide.ext.git.shared_.MergeResult#getMergedCommits()
-     */
     @Override
     public List<String> getMergedCommits() {
         return mergedCommits;
     }
 
-    /**
-     * @see com.codenvy.ide.ext.git.shared_.MergeResult#getConflicts()
-     */
     @Override
     public List<String> getConflicts() {
         return conflicts;
     }
 
-    /**
-     * @see com.codenvy.ide.ext.git.shared_.MergeResult#getFailed()
-     */
     @Override
     public List<String> getFailed() {
         return failed;

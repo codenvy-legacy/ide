@@ -52,8 +52,7 @@ public interface ApplicationServer {
      *         if an error occurs when try to deploy app to application server
      */
     ApplicationProcess deploy(java.io.File appDir, ZipFile warFile, SDKRunnerConfiguration runnerConfiguration,
-                              CodeServer.CodeServerProcess codeServerProcess, StopCallback stopCallback)
-            throws RunnerException;
+                              CodeServer.CodeServerProcess codeServerProcess, StopCallback stopCallback) throws RunnerException;
 
     /** Will be notified when {@code ApplicationServer} stopped. */
     public interface StopCallback {

@@ -50,7 +50,7 @@ import java.util.Set;
  *
  * @author andrew00x
  */
-@Path("{ws-name}/ssh-keys")
+@Path("ssh-keys/{ws-name}")
 public class KeyService {
     private final SshKeyStore keyStore;
 

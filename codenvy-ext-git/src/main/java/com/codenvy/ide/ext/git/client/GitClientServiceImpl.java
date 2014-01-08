@@ -76,12 +76,11 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
 /**
  * Implementation of the {@link GitClientService}.
  *
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Mar 23, 2011 11:52:24 AM anya $
+ * @author Ann Zhuleva
  */
 @Singleton
 public class GitClientServiceImpl implements GitClientService {
-    private static final String BASE_URL          = "/git";
+    private static final String BASE_URL          = "/git/" + Utils.getWorkspaceName();
     public static final  String ADD               = BASE_URL + "/add";
     public static final  String BRANCH_LIST       = BASE_URL + "/branch-list";
     public static final  String BRANCH_CHECKOUT   = BASE_URL + "/branch-checkout";
@@ -106,7 +105,6 @@ public class GitClientServiceImpl implements GitClientService {
     public static final  String RESET             = BASE_URL + "/reset";
     public static final  String COMMITERS         = BASE_URL + "/commiters";
     public static final  String DELETE_REPOSITORY = BASE_URL + "/delete-repository";
-    private String                  wsName;
     /** REST service context. */
     private String                  restServiceContext;
     /** Loader to be displayed. */
@@ -126,8 +124,7 @@ public class GitClientServiceImpl implements GitClientService {
     protected GitClientServiceImpl(@Named("restContext") String restContext, Loader loader, MessageBus wsMessageBus, EventBus eventBus,
                                    GitLocalizationConstant constant, DtoFactory dtoFactory) {
         this.loader = loader;
-        this.wsName = '/' + Utils.getWorkspaceName();
-        this.restServiceContext = restContext + wsName;
+        this.restServiceContext = restContext;
         this.wsMessageBus = wsMessageBus;
         this.eventBus = eventBus;
         this.constant = constant;
@@ -160,7 +157,7 @@ public class GitClientServiceImpl implements GitClientService {
 
         callback.setStatusHandler(new InitRequestStatusHandler(projectName, eventBus, constant));
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
-        String url = wsName + INIT + params;
+        String url = INIT + params;
 
         MessageBuilder builder = new MessageBuilder(POST, url);
         builder.data(dtoFactory.toJson(initRequest)).header(CONTENTTYPE, APPLICATION_JSON);
@@ -196,7 +193,7 @@ public class GitClientServiceImpl implements GitClientService {
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
         callback.setStatusHandler(new CloneRequestStatusHandler(project.getName(), remoteUri, eventBus, constant));
 
-        String url = wsName + CLONE + params;
+        String url = CLONE + params;
 
         MessageBuilder builder = new MessageBuilder(POST, url);
         builder.data(dtoFactory.toJson(cloneRequest))
@@ -251,7 +248,7 @@ public class GitClientServiceImpl implements GitClientService {
 
         callback.setStatusHandler(new AddRequestHandler(project.getName(), eventBus, constant));
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
-        String url = wsName + ADD + params;
+        String url = ADD + params;
 
         MessageBuilder builder = new MessageBuilder(POST, url);
         builder.data(dtoFactory.toJson(addRequest))
@@ -282,7 +279,7 @@ public class GitClientServiceImpl implements GitClientService {
         CommitRequest commitRequest = dtoFactory.createDto(CommitRequest.class).withMessage(message).withAmend(amend).withAll(all);
         callback.setStatusHandler(new CommitRequestHandler(project.getName(), message, eventBus, constant));
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
-        String url = wsName + COMMIT + params;
+        String url = COMMIT + params;
 
         MessageBuilder builder = new MessageBuilder(POST, url);
         builder.data(dtoFactory.toJson(commitRequest))
@@ -314,7 +311,7 @@ public class GitClientServiceImpl implements GitClientService {
 
         callback.setStatusHandler(new PushRequestHandler(project.getName(), refSpec, eventBus, constant));
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
-        String url = wsName + PUSH + params;
+        String url = PUSH + params;
 
         MessageBuilder builder = new MessageBuilder(POST, url);
         builder.data(dtoFactory.toJson(pushRequest))
@@ -510,7 +507,7 @@ public class GitClientServiceImpl implements GitClientService {
 
         callback.setStatusHandler(new FetchRequestHandler(project.getName(), refspec, eventBus, constant));
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
-        String url = wsName + FETCH + params;
+        String url = FETCH + params;
 
         MessageBuilder builder = new MessageBuilder(POST, url);
         builder.data(dtoFactory.toJson(fetchRequest))
@@ -542,7 +539,7 @@ public class GitClientServiceImpl implements GitClientService {
 
         callback.setStatusHandler(new PullRequestHandler(project.getName(), refSpec, eventBus, constant));
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
-        String url = wsName + PULL + params;
+        String url = PULL + params;
 
         MessageBuilder builder = new MessageBuilder(POST, url);
         builder.data(dtoFactory.toJson(pullRequest))
