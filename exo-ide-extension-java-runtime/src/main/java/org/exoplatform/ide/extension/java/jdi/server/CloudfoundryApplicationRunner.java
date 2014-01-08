@@ -203,7 +203,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             applications.put(name, application);
             LOG.debug("Start application {} at CF server {}", name, target);
             LOG.info("EVENT#run-started# WS#" + wsName + "# USER#" + userId + "# PROJECT#" + params.get("projectName") + "# TYPE#War# ID#" +
-                     application.getSessionId() + "#");
+                     application.getUniqueAppID() + "#");
             LOG.info("EVENT#project-deployed# WS#" + wsName + "# USER#" + userId + "# PROJECT#" + params.get("projectName")
                      + "# TYPE#War# PAAS#LOCAL#");
             return new ApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime);
@@ -245,7 +245,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             applications.put(name, application);
             LOG.debug("Start application {} under debug at CF server {}", name, target);
             LOG.info("EVENT#debug-started# WS#" + wsName + "# USER#" + userId + "# PROJECT#" + params.get("projectName") +
-                     "# TYPE#War# ID#" + application.getSessionId() + "#");
+                     "# TYPE#War# ID#" + application.getUniqueAppID() + "#");
             LOG.info("EVENT#project-deployed# WS#" + wsName + "# USER#" + userId + "# PROJECT#" + params.get("projectName")
                      + "# TYPE#War# PAAS#LOCAL#");
             return new ApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime,
@@ -349,10 +349,10 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             LOG.debug("Stop application {}.", name);
             if (app.type == 0) {
                 LOG.info("EVENT#run-finished# WS#" + app.wsName + "# USER#" + app.userId + "# PROJECT#" + app.projectName
-                         + "# TYPE#War# ID#" + app.getSessionId() + "#");
+                         + "# TYPE#War# ID#" + app.getUniqueAppID() + "#");
             } else if (app.type == 1) {
                 LOG.info("EVENT#debug-finished# WS#" + app.wsName + "# USER#" + app.userId + "# PROJECT#" + app.projectName
-                         + "# TYPE#War# ID#" + app.getSessionId() + "#");
+                         + "# TYPE#War# ID#" + app.getUniqueAppID() + "#");
             }
             applications.remove(name);
         } catch (Exception e) {
@@ -645,7 +645,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
         final String userId;
         // 0 - normal run, 1- debug mode
         final int    type;
-        final String sessionId = UUID.randomUUID().toString();
+        final String uniqueAppID = UUID.randomUUID().toString();
 
         Application(String name, String server, long expirationTime, String projectName, String wsName, String userId, int type) {
             this.name = name;
@@ -665,8 +665,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             return expirationTime - System.currentTimeMillis() <= delay;
         }
 
-        String getSessionId() {
-            return sessionId;
+        String getUniqueAppID() {
+            return uniqueAppID;
         }
     }
 
