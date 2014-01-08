@@ -29,7 +29,7 @@ import com.google.inject.Singleton;
 /**
  * Action to build current project and get resulting artifact coordinates.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 public class BuildAndPublishAction extends Action {
@@ -49,7 +49,7 @@ public class BuildAndPublishAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        presenter.buildProject(resourceProvider.getActiveProject());
+        presenter.buildActiveProject();
     }
 
     /** {@inheritDoc} */

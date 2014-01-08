@@ -43,14 +43,14 @@ public class BreakPointEventImpl implements BreakPointEvent {
     }
 
     @Override
+    public final int getType() {
+        return BREAKPOINT;
+    }
+
+    @Override
     public String toString() {
         return "BreakPointEventImpl{" +
                "breakPoint=" + breakPoint +
                '}';
-    }
-
-    @Override
-    public final int getType() {
-        return BREAKPOINT;
     }
 }

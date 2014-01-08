@@ -17,37 +17,51 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.actions;
 
+import com.codenvy.api.builder.BuildStatus;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
+import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
+import com.codenvy.ide.extension.builder.client.build.ProjectBuiltCallback;
 import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * Action to debug current project.
+ *
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 public class DebugAction extends Action {
 
-    private DebuggerPresenter presenter;
-    private ResourceProvider  resourceProvider;
+    private BuildProjectPresenter buildProjectPresenter;
+    private DebuggerPresenter     debuggerPresenter;
+    private ResourceProvider      resourceProvider;
 
     @Inject
-    public DebugAction(DebuggerPresenter presenter, JavaRuntimeResources resources, ResourceProvider resourceProvider) {
+    public DebugAction(BuildProjectPresenter buildProjectPresenter, DebuggerPresenter debuggerPresenter, JavaRuntimeResources resources,
+                       ResourceProvider resourceProvider) {
         super("Debug Application", "Debug Application", resources.debugApp());
-        this.presenter = presenter;
+        this.buildProjectPresenter = buildProjectPresenter;
+        this.debuggerPresenter = debuggerPresenter;
         this.resourceProvider = resourceProvider;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-//        presenter.debugApplication();
-        presenter.connectDebugger("127.0.0.1", 8008);
+        buildProjectPresenter.buildActiveProject(new ProjectBuiltCallback() {
+            @Override
+            public void onBuilt(BuildStatus status) {
+                if (status == BuildStatus.SUCCESSFUL) {
+                    // TODO
+                    debuggerPresenter.connectDebugger("127.0.0.1", 8008);
+                }
+            }
+        });
     }
 
     /** {@inheritDoc} */

@@ -59,9 +59,8 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 
 @Singleton
 public class BuildProjectPresenter implements Notification.OpenNotificationHandler {
-    private final static String TITLE = "Output";
     /** Delay in millisecond between requests for build job status. */
-    private static final int    delay = 3000;
+    private static final int delay = 3000;
     /** Handler for processing Maven build status which is received over WebSocket connection. */
 //    private final SubscriptionHandler<String> buildStatusHandler;
     private final DtoFactory dtoFactory;
@@ -82,6 +81,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     //    private       MessageBus                  messageBus;
     private       NotificationManager         notificationManager;
     private       Notification                notification;
+    private       ProjectBuiltCallback        projectBuiltCallback;
 
     /**
      * Create presenter.
@@ -116,24 +116,25 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         this.dtoFactory = dtoFactory;
     }
 
+    /** Performs building of current project. */
+    public void buildActiveProject() {
+        buildActiveProject(null);
+    }
+
     /**
-     * Performs building of project.
+     * Performs building of current project.
      *
-     * @param project
-     *         project to build. If <code>null</code> - active project will build.
+     * @param projectBuiltCallback callback that will be called after project is built
      */
-    public void buildProject(Project project) {
+    public void buildActiveProject(ProjectBuiltCallback projectBuiltCallback) {
         if (isBuildInProgress) {
             String message = constant.buildInProgress(projectToBuild.getPath().substring(1));
             Notification notification = new Notification(message, ERROR);
             notificationManager.showNotification(notification);
             return;
         }
-        if (project == null) {
-            projectToBuild = resourceProvider.getActiveProject();
-        } else {
-            projectToBuild = project;
-        }
+        projectToBuild = resourceProvider.getActiveProject();
+        this.projectBuiltCallback = projectBuiltCallback;
         statusHandler = new BuildRequestStatusHandler(projectToBuild.getName(), eventBus, constant);
         doBuild();
     }
@@ -231,6 +232,11 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
 //        } catch (Exception e) {
 //            // nothing to do
 //        }
+
+        if (projectBuiltCallback != null) {
+            projectBuiltCallback.onBuilt(descriptor.getStatus());
+        }
+
         setBuildInProgress(false);
         String message = constant.buildFinished(projectToBuild.getName());
         notification.setStatus(FINISHED);
@@ -283,7 +289,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                 }
             });
         } catch (RequestException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
     }
 
@@ -303,7 +309,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         public RefreshBuildStatusTimer(BuildTaskDescriptor buildTaskDescriptor) {
             this.buildTaskDescriptor = buildTaskDescriptor;
         }
-
 
         @Override
         public void run() {

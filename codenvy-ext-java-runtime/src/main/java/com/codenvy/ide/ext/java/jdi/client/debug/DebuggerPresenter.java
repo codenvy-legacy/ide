@@ -141,6 +141,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private SubscriptionHandler<Object>            debuggerDisconnectedHandler;
     private List<Variable>                         variables;
     private Notification                           notification;
+
     /** A timer for checking events */
     private Timer checkEventsTimer = new Timer() {
         @Override
@@ -192,7 +193,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      * @param constant
      * @param resourceProvider
      * @param workspaceAgent
-     * @param restContext
      * @param gutterManager
      * @param resolverFactory
      * @param editorAgent

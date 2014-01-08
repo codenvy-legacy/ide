@@ -2,8 +2,8 @@
  * CODENVY CONFIDENTIAL
  * __________________
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
+ *  [2012] - [2014] Codenvy, S.A.
+ *  All Rights Reserved.
  *
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
@@ -15,15 +15,15 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.jdi.shared;
+package com.codenvy.ide.extension.builder.client.build;
 
-import com.codenvy.dto.shared.DTO;
+import com.codenvy.api.builder.BuildStatus;
 
-/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
-@DTO
-public interface DebuggerEvent {
-    int BREAKPOINT = 1;
-    int STEP       = 2;
-
-    int getType();
+/**
+ * //
+ *
+ * @author Artem Zatsarynnyy
+ */
+public interface ProjectBuiltCallback {
+    void onBuilt(BuildStatus status);
 }
