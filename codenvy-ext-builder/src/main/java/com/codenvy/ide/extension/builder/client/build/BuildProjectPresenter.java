@@ -25,8 +25,6 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
-import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.builder.client.BuilderClientService;
 import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
@@ -151,9 +149,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                                   notification.setStatus(FINISHED);
                                   notification.setType(ERROR);
                                   notification.setMessage(exception.getMessage());
-                                  if (!(exception instanceof ServerException)) {
-                                      eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                  }
                               }
                           });
         } catch (RequestException e) {
@@ -328,8 +323,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                         notification.setMessage(exception.getMessage());
                         notification.setType(ERROR);
 
-                        eventBus.fireEvent(new ExceptionThrownEvent(exception));
-
                     }
                 });
             } catch (RequestException e) {
@@ -337,7 +330,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                 notification.setStatus(FINISHED);
                 notification.setMessage(e.getMessage());
                 notification.setType(ERROR);
-                eventBus.fireEvent(new ExceptionThrownEvent(e));
             }
         }
 

@@ -106,7 +106,7 @@ public interface JavaRuntimeLocalizationConstant extends com.google.gwt.i18n.cli
     String debuggerConnected(String address);
 
     @Key("debugger.disconnected")
-    String debuggerDisconnected();
+    String debuggerDisconnected(String address);
 
     /**
      * **********************************************************************

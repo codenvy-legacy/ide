@@ -30,6 +30,8 @@ import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE;
+
 /**
  * Action to debug current project.
  *
@@ -66,14 +68,11 @@ public class DebugAction extends Action {
     @Override
     public void update(ActionEvent e) {
         Project activeProject = resourceProvider.getActiveProject();
-        boolean isEnabled = false;
         if (activeProject != null) {
-            if (activeProject.getDescription().getNatures().contains("CodenvyExtension")) {
-                e.getPresentation().setVisible(false);
-            } else {
-                isEnabled = true;
-            }
+            e.getPresentation().setVisible(!activeProject.getDescription().getNatures().contains(CODENVY_EXTENSION_PROJECT_TYPE));
+            e.getPresentation().setEnabled(!runnerController.isAnyAppLaunched());
+        } else {
+            e.getPresentation().setEnabledAndVisible(false);
         }
-        e.getPresentation().setEnabled(isEnabled);
     }
 }

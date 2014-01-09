@@ -19,7 +19,6 @@ package com.codenvy.ide.ext.java.jdi.client.debug.expression;
 
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerClientService;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
@@ -37,8 +36,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 /**
  * Presenter for evaluate expression.
  *
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: EvaluateExpressionPresenter.java May 7, 2012 13:29:01 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 public class EvaluateExpressionPresenter implements EvaluateExpressionView.ActionDelegate {
@@ -46,7 +44,6 @@ public class EvaluateExpressionPresenter implements EvaluateExpressionView.Actio
     private DebuggerClientService           service;
     private DebuggerInfo                    debuggerInfo;
     private JavaRuntimeLocalizationConstant constant;
-    private EventBus                        eventBus;
     private NotificationManager             notificationManager;
 
     /**
@@ -55,7 +52,6 @@ public class EvaluateExpressionPresenter implements EvaluateExpressionView.Actio
      * @param view
      * @param service
      * @param constant
-     * @param eventBus
      * @param notificationManager
      */
     @Inject
@@ -66,7 +62,6 @@ public class EvaluateExpressionPresenter implements EvaluateExpressionView.Actio
         this.view.setDelegate(this);
         this.service = service;
         this.constant = constant;
-        this.eventBus = eventBus;
         this.notificationManager = notificationManager;
     }
 
@@ -97,22 +92,22 @@ public class EvaluateExpressionPresenter implements EvaluateExpressionView.Actio
     public void onEvaluateClicked() {
         view.setEnableEvaluateButton(false);
         try {
-            service.evaluateExpression(debuggerInfo.getId(), view.getExpression(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                @Override
-                protected void onSuccess(String result) {
-                    view.setResult(result);
-                    view.setEnableEvaluateButton(true);
-                }
+            service.evaluateExpression(debuggerInfo.getId(), view.getExpression(),
+                                       new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                                           @Override
+                                           protected void onSuccess(String result) {
+                                               view.setResult(result);
+                                               view.setEnableEvaluateButton(true);
+                                           }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    String errorMessage = constant.evaluateExpressionFailed(exception.getMessage());
-                    view.setResult(errorMessage);
-                    view.setEnableEvaluateButton(true);
-                }
-            });
+                                           @Override
+                                           protected void onFailure(Throwable exception) {
+                                               String errorMessage = constant.evaluateExpressionFailed(exception.getMessage());
+                                               view.setResult(errorMessage);
+                                               view.setEnableEvaluateButton(true);
+                                           }
+                                       });
         } catch (RequestException e) {
-            eventBus.fireEvent(new ExceptionThrownEvent(e));
             Notification notification = new Notification(e.getMessage(), ERROR);
             notificationManager.showNotification(notification);
             view.setEnableEvaluateButton(true);

@@ -112,7 +112,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             public void onProjectClosed(ProjectActionEvent event) {
                 isLaunchingInProgress = false;
                 if (isAnyAppLaunched()) {
-                    stop();
+                    stopActiveProject();
                     console.clear();
                 }
                 currentProject = null;
@@ -211,7 +211,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     /** Stop the currently launched application. */
-    public void stop() {
+    public void stopActiveProject() {
         final Link stopLink = getAppLink(applicationProcessDescriptor, "stop");
         if (stopLink == null) {
             onFail(constant.stopApplicationFailed(currentProject.getName()), null);

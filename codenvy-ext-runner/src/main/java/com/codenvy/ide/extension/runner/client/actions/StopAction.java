@@ -53,7 +53,7 @@ public class StopAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        controller.stop();
+        controller.stopActiveProject();
     }
 
     /** {@inheritDoc} */

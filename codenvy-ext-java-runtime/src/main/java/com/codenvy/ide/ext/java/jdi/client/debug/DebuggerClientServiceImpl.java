@@ -82,7 +82,7 @@ public class DebuggerClientServiceImpl implements DebuggerClientService {
     @Override
     public void disconnect(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         final String requestUrl = baseUrl + "/debug-java/" + Utils.getWorkspaceName() + "/disconnect/" + id;
-        loader.setMessage("Disconnection... ");
+        loader.setMessage("Disconnecting... ");
         AsyncRequest.build(GET, requestUrl).loader(loader).send(callback);
     }
 
@@ -144,7 +144,7 @@ public class DebuggerClientServiceImpl implements DebuggerClientService {
     public void getValue(@NotNull String id, @NotNull Variable var, @NotNull AsyncRequestCallback<String> callback)
             throws RequestException {
         final String requestUrl = baseUrl + "/debug-java/" + Utils.getWorkspaceName() + "/value/get/" + id;
-        final String json = dtoFactory.toJson(var);
+        final String json = dtoFactory.toJson(var.getVariablePath());
         AsyncRequest.build(POST, requestUrl).data(json).header(CONTENT_TYPE, APPLICATION_JSON).loader(loader).send(callback);
     }
 

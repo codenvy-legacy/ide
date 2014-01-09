@@ -215,7 +215,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      * @param e
      *         exception what happened
      * @param remoteUri
-     *         rempote uri
+     *         remote uri
      */
     private void handleError(@NotNull Throwable e, @NotNull String remoteUri) {
         String errorMessage =

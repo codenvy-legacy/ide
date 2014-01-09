@@ -63,8 +63,7 @@ public class RunAction extends Action {
     public void update(ActionEvent e) {
         Project activeProject = resourceProvider.getActiveProject();
         if (activeProject != null) {
-            e.getPresentation()
-             .setVisible(!activeProject.getDescription().getNatures().contains(CODENVY_EXTENSION_PROJECT_TYPE));
+            e.getPresentation().setVisible(!activeProject.getDescription().getNatures().contains(CODENVY_EXTENSION_PROJECT_TYPE));
             e.getPresentation().setEnabled(!controller.isAnyAppLaunched());
         } else {
             e.getPresentation().setEnabledAndVisible(false);
