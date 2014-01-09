@@ -46,7 +46,7 @@ import static com.codenvy.ide.api.ui.wizard.newresource.NewResourceWizardKeys.RE
 
 /**
  * Provides selecting kind of file which user wish to create and create resource of the chosen type with given name.
- *
+ * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public class NewResourcePagePresenter extends AbstractWizardPage implements ActionDelegate {
@@ -61,7 +61,7 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
 
     /**
      * Create presenter.
-     *
+     * 
      * @param resources
      * @param view
      */
@@ -97,7 +97,7 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
 
         project = resourceProvider.getActiveProject();
 
-        Selection<?> selection = selectionAgent.getSelection();
+        Selection< ? > selection = selectionAgent.getSelection();
         if (selection != null) {
             if (selectionAgent.getSelection().getFirstElement() instanceof Resource) {
                 Resource resource = (Resource)selectionAgent.getSelection().getFirstElement();
@@ -156,6 +156,31 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
+        Array<String> paths = Collections.createArray();
+        view.setPackages(getPackages(paths, project.getChildren()));
+        view.selectPackage(paths.indexOf(getDisplayPath(parent.getPath())));
+    }
+
+    private Array<String> getPackages(Array<String> paths, Array<Resource> children) {
+        for (Resource resource : children.asIterable()) {
+            if (resource instanceof Folder) {
+                paths.add(getDisplayPath(resource.getPath()));
+                getPackages(paths, ((Folder)resource).getChildren());
+            }
+        }
+        return paths;
+    }
+
+    /**
+     * Get path to display.
+     * 
+     * @param path item's path
+     * @return {@link String} path to display
+     */
+    private String getDisplayPath(String path) {
+        String displayPath = path.replaceFirst(project.getPath(), "");
+        displayPath = displayPath.startsWith("/") ? displayPath.replaceFirst("/", "") : displayPath;
+        return displayPath;
     }
 
     /** {@inheritDoc} */
@@ -171,6 +196,13 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
     /** {@inheritDoc} */
     @Override
     public void onResourceNameChanged() {
+       checkEnteredData();
+    }
+    
+    /**
+     * Check the data on the view.
+     */
+    private void checkEnteredData(){
         String resourceName = view.getResourceName();
         isResourceNameValid = ResourceNameValidator.isFolderNameValid(resourceName);
 
@@ -213,5 +245,21 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
                 callback.onFailure(caught);
             }
         });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onResourceParentChanged() {
+        String[] names = view.getPackageName().split("/");
+        parent = project;
+        for (String name : names) {
+            for (Resource child : parent.getChildren().asIterable()) {
+                if (child instanceof Folder && child.getName().equals(name)) {
+                    parent = (Folder)child;
+                    break;
+                }
+            }
+        }
+        checkEnteredData();
     }
 }

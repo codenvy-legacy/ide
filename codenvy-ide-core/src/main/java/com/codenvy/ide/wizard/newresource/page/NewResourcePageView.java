@@ -41,11 +41,18 @@ public interface NewResourcePageView extends View<NewResourcePageView.ActionDele
 
         /** Performs some actions in response to a user's changing a resource name. */
         void onResourceNameChanged();
+        
+        /** Performs some actions in response to a user's changing a resource parent. */
+        void onResourceParentChanged();
     }
 
     /** @return resource name */
     @NotNull
     String getResourceName();
+    
+    /** @return package name */
+    @NotNull
+    String getPackageName();
 
     /**
      * Set resource name in place on view.
@@ -54,6 +61,22 @@ public interface NewResourcePageView extends View<NewResourcePageView.ActionDele
      *         name that need to be set
      */
     void setResourceName(@NotNull String name);
+    
+    /**
+     * Set the list of packages in place on view.
+     *
+     * @param packages
+     *         packages that need to be set
+     */
+    void setPackages(@NotNull Array<String> packages);
+    
+    /**
+     * Select package by index in packages list.
+     * 
+     * @param index package's index to select
+     */
+    void selectPackage(@NotNull int index);
+    
 
     /**
      * Sets available resource wizards.
