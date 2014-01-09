@@ -48,6 +48,7 @@ import com.codenvy.commons.security.oauth.OAuthAuthenticatorTokenProvider;
 import com.codenvy.commons.security.oauth.OAuthTokenProvider;
 import com.codenvy.ide.everrest.CodenvyAsynchronousJobPool;
 import com.codenvy.ide.everrest.CodenvyAsynchronousJobService;
+import com.codenvy.ide.ext.datasource.server.DatasourceService;
 import com.codenvy.ide.ext.extensions.server.CreateProjectService;
 import com.codenvy.ide.ext.git.server.GitConnectionFactory;
 import com.codenvy.ide.ext.git.server.nativegit.NativeGitConnectionFactory;
@@ -116,6 +117,7 @@ public class ApiModule extends AbstractModule {
         bind(GitHubService.class);
         bind(GitConnectionFactory.class).to(NativeGitConnectionFactory.class);
         bind(KeyService.class);
+        bind(DatasourceService.class);
         bind(OAuthAuthenticationService.class);
         bind(OAuthTokenProvider.class).to(OAuthAuthenticatorTokenProvider.class);
         bind(OAuthAuthenticatorProvider.class).to(LabOAuthAuthenticatorProvider.class);
