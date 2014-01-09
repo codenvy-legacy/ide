@@ -20,20 +20,19 @@ package org.exoplatform.ide.extension.ssh.client.keymanager.event;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
- * @version $Id: $
+ * Event to refresh keys list.
  */
 public class RefreshKeysEvent extends GwtEvent<RefreshKeysHandler> {
 
     public static final Type<RefreshKeysHandler> TYPE = new Type<RefreshKeysHandler>();
 
-    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    /** {@inheritDoc} */
     @Override
     public Type<RefreshKeysHandler> getAssociatedType() {
         return TYPE;
     }
 
-    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    /** {@inheritDoc} */
     @Override
     protected void dispatch(RefreshKeysHandler handler) {
         handler.onRefreshKeys(this);

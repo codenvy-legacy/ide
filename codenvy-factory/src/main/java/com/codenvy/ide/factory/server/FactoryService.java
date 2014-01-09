@@ -39,6 +39,7 @@ import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.project.ProjectPrepare;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.impl.fs.LocalFSMountStrategy;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -80,6 +81,7 @@ import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -108,8 +110,11 @@ public class FactoryService {
     private UserManager               userManager;
     @Inject
     private WorkspaceManager          workspaceManager;
+    @Inject
+    private LocalFSMountStrategy      mountStrategy;
+
     @PathParam("ws-name")
-    private String                    workspaceName;
+    private String workspaceName;
 
     private static final Pattern PATTERN        = Pattern.compile("public static final String PROJECT_ID = .*");
     private static final Pattern PATTERN_NUMBER = Pattern.compile("public static final String PROJECT_NUMBER = .*");
@@ -185,21 +190,8 @@ public class FactoryService {
             } else if (factoryUrl.getVcsbranch() != null && !factoryUrl.getVcsbranch().trim().isEmpty()) {
                 //Try to checkout to specified branch. For first we need to list all cloned local branches to
                 //find if specified branch already exist, if its true, we check if this this branch is active
-                List<Branch> branches = gitConnection.branchList(new BranchListRequest(null));
-
-                Branch chkBranch = null;
-
-                for (Branch branch : branches) {
-                    if (branch.getDisplayName().equals(factoryUrl.getVcsbranch())) {
-                        chkBranch = branch;
-                        break;
-                    }
-                }
-
-                if (chkBranch == null) {
+                if (!branchCheckouted(gitConnection, factoryUrl)) {
                     publishWebsocketMessage(String.format(BRANCH_NOT_FOUND, factoryUrl.getVcsbranch()));
-                } else {
-                    publishWebsocketMessage(String.format(SWITCHING_TO_BRANCH, factoryUrl.getVcsbranch()));
                 }
             }
         } catch (GitException e) {
@@ -218,6 +210,30 @@ public class FactoryService {
         }
 
         return convertToProject(factoryUrl, vfsId, projectId);
+    }
+
+    /**
+     * Returns true if checkout was successful, otherwise false;
+     */
+    private boolean branchCheckouted(GitConnection gitConnection, SimpleFactoryUrl factoryUrl) throws GitException {
+        List<Branch> branches = gitConnection.branchList(new BranchListRequest(BranchListRequest.LIST_ALL));
+
+        String branchName;
+        for (Branch branch : branches) {
+            branchName = branch.getDisplayName();
+            if (branchName.contains("origin")) {
+                String[] temp = branch.getDisplayName().split("/");
+                branchName = temp[temp.length - 1];
+            }
+
+            if (branchName.equals(factoryUrl.getVcsbranch())) {
+                gitConnection.branchCheckout(new BranchCheckoutRequest(branch.getDisplayName(), branch.getName(), branch.isRemote()));
+                publishWebsocketMessage(String.format(SWITCHING_TO_BRANCH, factoryUrl.getVcsbranch()));
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -254,10 +270,15 @@ public class FactoryService {
         Item itemToUpdate = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
 
         ProjectType projectType = ProjectType.DEFAULT;
-        try {
-            String decodedPtype = URLDecoder.decode(factoryUrl.getProjectattributes().get("ptype"), "UTF-8");
-            projectType = ProjectType.fromValue(decodedPtype);
-        } catch (IllegalArgumentException | NullPointerException e) {//
+        String encodedParamType = factoryUrl.getProjectattributes().get("ptype");
+
+        if (encodedParamType != null && !encodedParamType.isEmpty()) {
+            try {
+                projectType = ProjectType.fromValue(URLDecoder.decode(encodedParamType, "UTF-8"));
+            } catch (IllegalArgumentException e) {
+                //if exception, our project type already setted to "default"
+                LOG.error(e.getLocalizedMessage(), e);
+            }
         }
 
         List<Property> props = new ArrayList<>();
@@ -286,6 +307,17 @@ public class FactoryService {
 
         itemToUpdate = vfs.updateItem(itemToUpdate.getId(), props, null);
 
+        if (factoryUrl.getVariables() != null && factoryUrl.getVariables().size() != 0) {
+            try {
+                java.io.File workspace = mountStrategy.getMountPath();
+                java.nio.file.Path path = Paths.get(workspace.getAbsolutePath(), factoryUrl.getProjectattributes().get("pname"));
+
+                new VariableReplacer(path).performReplacement(factoryUrl.getVariables());
+            } catch (VirtualFileSystemException e) {
+                LOG.error(e.getLocalizedMessage(), e);
+            }
+        }
+
         if (ProjectType.GOOGLE_MBS_ANDROID == projectType) {
             prepareAndroidProject(factoryUrl, vfs, itemToUpdate);
         }
@@ -295,6 +327,7 @@ public class FactoryService {
 
     /**
      * Prepare Consts.java file for Android projects.
+     * NOTE Deprecated since 2.9.3 and will be removed from IDE after 2.10.x.
      *
      * @param factoryUrl
      *         gitConnectionFactory instance
@@ -303,8 +336,9 @@ public class FactoryService {
      * @param item
      *         {@link ProjectModel} instance
      */
+    @Deprecated
     private void prepareAndroidProject(SimpleFactoryUrl factoryUrl, VirtualFileSystem vfs, Item item) {
-        final String path = item.getPath() + "/src/com/google/cloud/backend/core/Consts.java";
+        final String path = item.getPath() + "/src/com/google/cloud/backend/android/Consts.java";
 
         try {
             final File constJava = (File)vfs.getItemByPath(path, null, false, PropertyFilter.NONE_FILTER);

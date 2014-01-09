@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.extension.html.server;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.ide.extension.html.shared.ApplicationInstance;
 
 import org.exoplatform.container.xml.InitParams;
@@ -27,6 +28,7 @@ import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,9 +43,7 @@ import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
 
 /**
  * {@link ApplicationRunner} for running HTML applications.
- * 
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: HtmlApplicationRunner.java Jun 26, 2013 1:12:02 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 public class HtmlApplicationRunner implements ApplicationRunner {
     /** Default application lifetime (in minutes). After this time application may be stopped automatically. */
@@ -102,9 +102,12 @@ public class HtmlApplicationRunner implements ApplicationRunner {
 
         final String name = generate("app-", 16);
         final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
+        final String wsName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString();
+        final String userId = ConversationState.getCurrent().getIdentity().getUserId();
 
         applications.put(name, new RunnedApplication(name, expired, project.getName(), wsMountPath + project.getPath()));
         LOG.info("EVENT#run-started# PROJECT#" + project.getName() + "# TYPE#HTML#");
+        LOG.info("EVENT#project-deployed# WS#" + wsName + "# USER#" + userId + "# PROJECT#" + project.getName() + "# TYPE#HTML# PAAS#LOCAL#");
 
         return new ApplicationInstanceImpl(name, applicationLifetime, applicationURL);
     }

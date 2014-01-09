@@ -21,7 +21,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
@@ -37,6 +36,9 @@ import org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.ssh.client.SshKeyExtension;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.RefreshKeysEvent;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowUploadFormEvent;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowUploadFormHandler;
 import org.exoplatform.ide.extension.ssh.client.keymanager.ui.UploadSshKeyView;
 
 /**
@@ -45,7 +47,7 @@ import org.exoplatform.ide.extension.ssh.client.keymanager.ui.UploadSshKeyView;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHandler {
+public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHandler, ShowUploadFormHandler {
     public interface Display extends IsView {
 
         /**
@@ -56,7 +58,7 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
         HasValue<String> getHostField();
 
         /** @return {@link HasClickHandlers} instance for Cancel button */
-        HasClickHandlers getCancelButon();
+        HasClickHandlers getCancelButton();
 
         /** @return {@link HasClickHandlers} instance for Upload button */
         HasClickHandlers getUploadButton();
@@ -92,29 +94,23 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
     /** Instance of display */
     private Display display;
 
-    /** Registration of {@link ViewClosedEvent} handler */
-    private HandlerRegistration viewClosedHandler;
-
-    /** IDE REST Context URL */
-    private String restContext = Utils.getRestContext();
-
-    /**
-     * @param restContext
-     *         part of URL to IDE REST Context
-     */
     public UploadSshKeyPresenter() {
         IDE.addHandler(ViewClosedEvent.TYPE, this);
-        display = GWT.create(Display.class);
+        IDE.addHandler(ShowUploadFormEvent.TYPE, this);
+    }
 
-        bind();
+    @Override
+    public void onShowSshKeyUploadForm(ShowUploadFormEvent event) {
+        if (display == null) {
+            display = GWT.create(Display.class);
+        }
 
-        IDE.getInstance().openView(display.asView());
-        viewClosedHandler = IDE.addHandler(ViewClosedEvent.TYPE, this);
+        bindDisplay();
     }
 
     /** Add all handlers to controls. */
-    private void bind() {
-        display.getCancelButon().addClickHandler(new ClickHandler() {
+    private void bindDisplay() {
+        display.getCancelButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 IDE.getInstance().closeView(display.asView().getId());
@@ -133,6 +129,7 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
             public void onSubmitComplete(SubmitCompleteEvent event) {
                 String result = event.getResults();
                 if (result.isEmpty()) {
+                    IDE.fireEvent(new RefreshKeysEvent());
                     IDE.getInstance().closeView(display.asView().getId());
                 } else {
                     Dialogs.getInstance().showInfo(result);
@@ -141,6 +138,8 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
         });
 
         display.getFileUploadInput().addFileSelectedHandler(this);
+
+        IDE.getInstance().openView(display.asView());
     }
 
     /** Validate <b>host</b> parameter and do submit action. If <b>host</b> parameter is null or empty string, show error message. */
@@ -152,22 +151,19 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
         }
 
         display.getFormPanel().setEncoding(FormPanel.ENCODING_MULTIPART);
-        display.getFormPanel().setAction(restContext + Utils.getWorkspaceName() + "/ssh-keys/add?host=" + host);
+        display.getFormPanel().setAction(Utils.getRestContext() + Utils.getWorkspaceName() + "/ssh-keys/add?host=" + host);
         display.getFormPanel().submit();
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent) */
+    /** {@inheritDoc} */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
             display = null;
-            viewClosedHandler.removeHandler();
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler#onFileSelected(org.exoplatform.ide.client.framework.ui
-     * .upload.FileSelectedEvent) */
+    /** {@inheritDoc} */
     @Override
     public void onFileSelected(FileSelectedEvent event) {
         String file = event.getFileName();

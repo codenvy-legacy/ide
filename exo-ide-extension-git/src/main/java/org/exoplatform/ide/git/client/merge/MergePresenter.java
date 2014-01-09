@@ -28,6 +28,11 @@ import com.google.gwt.http.client.RequestException;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -38,6 +43,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.git.client.editor.UpdateOpenedFilesEvent;
 import org.exoplatform.ide.git.client.marshaller.BranchListUnmarshaller;
 import org.exoplatform.ide.git.client.marshaller.Merge;
 import org.exoplatform.ide.git.client.marshaller.MergeUnmarshaller;
@@ -45,9 +51,12 @@ import org.exoplatform.ide.git.client.merge.Reference.RefType;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.BranchListRequest;
 import org.exoplatform.ide.git.shared.MergeResult;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Presenter to perform merge reference with current HEAD commit.
@@ -55,7 +64,8 @@ import java.util.List;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 20, 2011 12:38:39 PM anya $
  */
-public class MergePresenter extends GitPresenter implements MergeHandler, ViewClosedHandler {
+public class MergePresenter extends GitPresenter implements MergeHandler, ViewClosedHandler, EditorFileOpenedHandler,
+                                                            EditorFileClosedHandler {
 
     interface Display extends IsView {
         HasClickHandlers getMergeButton();
@@ -71,12 +81,26 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
 
     private Display display;
 
+    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
+
     /**
      *
      */
     public MergePresenter() {
         IDE.addHandler(MergeEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+        IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+    }
+
+    @Override
+    public void onEditorFileClosed(EditorFileClosedEvent event) {
+        this.openedFiles = event.getOpenedFiles();
+    }
+
+    @Override
+    public void onEditorFileOpened(EditorFileOpenedEvent event) {
+        this.openedFiles = event.getOpenedFiles();
     }
 
     /** Bind display with presenter. */
@@ -91,6 +115,13 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
         display.getMergeButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
+                for (Map.Entry<String, FileModel> openedFile : openedFiles.entrySet()) {
+                    if (openedFile.getValue().isContentChanged()) {
+                        Dialogs.getInstance().showInfo(GitExtension.MESSAGES.fileUnsaved(openedFile.getValue().getName()));
+                        return;
+                    }
+                }
+
                 doMerge();
             }
         });
@@ -121,7 +152,7 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
                 GitClientService.getInstance()
                                 .branchList(vfs.getId(), projectId, BranchListRequest.LIST_LOCAL,
                                             new AsyncRequestCallback<List<Branch>>(
-                                                                                   new BranchListUnmarshaller(new ArrayList<Branch>())) {
+                                                    new BranchListUnmarshaller(new ArrayList<Branch>())) {
 
                                                 @Override
                                                 protected void onSuccess(List<Branch> result) {
@@ -143,7 +174,7 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
                 GitClientService.getInstance()
                                 .branchList(vfs.getId(), projectId, BranchListRequest.LIST_REMOTE,
                                             new AsyncRequestCallback<List<Branch>>(
-                                                                                   new BranchListUnmarshaller(new ArrayList<Branch>())) {
+                                                    new BranchListUnmarshaller(new ArrayList<Branch>())) {
 
                                                 @Override
                                                 protected void onSuccess(List<Branch> result) {
@@ -212,6 +243,7 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
                                                          IDE.fireEvent(new OutputEvent(formMergeMessage(result), Type.GIT));
                                                          IDE.getInstance().closeView(display.asView().getId());
                                                          IDE.fireEvent(new RefreshBrowserEvent());
+                                                         IDE.fireEvent(new UpdateOpenedFilesEvent());
                                                      }
 
                                                      @Override

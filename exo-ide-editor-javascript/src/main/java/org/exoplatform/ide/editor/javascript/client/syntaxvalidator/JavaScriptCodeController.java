@@ -19,11 +19,15 @@ package org.exoplatform.ide.editor.javascript.client.syntaxvalidator;
 
 import com.codenvy.ide.client.util.ScheduledCommandExecutor;
 import com.codenvy.ide.json.client.JsoArray;
+import com.google.collide.client.disable.DisableEnableCollaborationEvent;
+import com.google.collide.client.disable.DisableEnableCollaborationHandler;
 import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.util.Log;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
@@ -49,50 +53,75 @@ import java.util.Map;
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: JavaScriptCodeController.java Sep 18, 2012 12:14:48 PM azatsarynnyy $
  */
-public class JavaScriptCodeController implements EditorFileContentChangedHandler, EditorFileOpenedHandler,
-                                     EditorFileClosedHandler {
+public class JavaScriptCodeController implements 
+    EditorFileContentChangedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
+    EditorActiveFileChangedHandler,
+    DisableEnableCollaborationHandler {
 
-    /** Mapping opened files to editors. */
+    /**
+     * Mapping opened files to editors.
+     */
     private Map<String, Markable> editors = new HashMap<String, Markable>();
 
-    /** Executor of a parse command. */
+    /**
+     * Executor of a parse command.
+     */
     private ParseCommand parseCommandExecutor = new ParseCommand();
+    
+    /**
+     * Active file.
+     */
+    private FileModel activeFile;    
 
+    /**
+     * Creates a new instance of this {@link JavaScriptCodeController}
+     */
     public JavaScriptCodeController() {
         IDE.addHandler(EditorFileContentChangedEvent.TYPE, this);
         IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
         IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+        
+        IDE.addHandler(DisableEnableCollaborationEvent.TYPE, this);
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
     }
 
     /**
-     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
-     *      .ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler#onEditorFileContentChanged(org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent)
      */
     @Override
     public void onEditorFileContentChanged(final EditorFileContentChangedEvent event) {
-        if (event.getFile() == null) {
+        parseFile(event.getFile());
+    }
+    
+    /**
+     * Parses file
+     * 
+     * @param file file to parse
+     */
+    private void parseFile(final FileModel file) {
+        if (file == null) {
             return;
         }
-        final String mimeType = event.getFile().getMimeType();
+        
+        final String mimeType = file.getMimeType();
         if (!mimeType.equals(MimeType.APPLICATION_JAVASCRIPT) && !mimeType.equals(MimeType.APPLICATION_X_JAVASCRIPT)
             && !mimeType.equals(MimeType.TEXT_JAVASCRIPT)) {
             return;
         }
 
-        if (editors.containsKey(event.getFile().getId())) {
+        if (editors.containsKey(file.getId())) {
             Timer timer = new Timer() {
                 @Override
                 public void run() {
-                    parseCommandExecutor.scheduleParse(event.getFile());
+                    parseCommandExecutor.scheduleParse(file);
                 }
             };
             timer.schedule(1000);
         }
     }
-
+    
     /**
-     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client
-     *      .framework.editor.event.EditorFileOpenedEvent)
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent)
      */
     @Override
     public void onEditorFileOpened(final EditorFileOpenedEvent event) {
@@ -117,8 +146,7 @@ public class JavaScriptCodeController implements EditorFileContentChangedHandler
     }
 
     /**
-     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client
-     *      .framework.editor.event.EditorFileClosedEvent)
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent)
      */
     @Override
     public void onEditorFileClosed(EditorFileClosedEvent event) {
@@ -190,12 +218,19 @@ public class JavaScriptCodeController implements EditorFileContentChangedHandler
         }
     }
 
-    /** Executor of a parse command. */
+    /**
+     * Executor of a parse command.
+     */
     private class ParseCommand extends ScheduledCommandExecutor {
-        /** File to parse. */
+        
+        /**
+         * File to parse.
+         */
         private FileModel file;
 
-        /** @see com.codenvy.ide.client.util.ScheduledCommandExecutor#execute() */
+        /**
+         * @see com.codenvy.ide.client.util.ScheduledCommandExecutor#execute()
+         */
         @Override
         protected void execute() {
             if (file != null) {
@@ -203,6 +238,9 @@ public class JavaScriptCodeController implements EditorFileContentChangedHandler
             }
         }
 
+        /**
+         * @param file
+         */
         public void scheduleParse(FileModel file) {
             if (file != null) {
                 this.file = file;
@@ -210,4 +248,21 @@ public class JavaScriptCodeController implements EditorFileContentChangedHandler
             }
         }
     }
+
+    /**
+     * @see com.google.collide.client.disable.DisableEnableCollaborationHandler#onDisableEnableCollaboration(com.google.collide.client.disable.DisableEnableCollaborationEvent)
+     */
+    @Override
+    public void onDisableEnableCollaboration(DisableEnableCollaborationEvent event) {
+        parseFile(activeFile);
+    }
+    
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+     */
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        activeFile = event.getFile();
+    }
+    
 }

@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.util.Utils;
+import org.exoplatform.ide.vfs.shared.ItemType;
 
 /**
  * This class updates link to working directory which uses by Shell.
@@ -45,7 +46,11 @@ public class ShellLinkUpdater implements ItemsSelectedHandler {
             return;
         }
 
-        String path = event.getSelectedItems().get(0).getId();
+        String path = event.getSelectedItems().get(0).getItemType().value().equals(ItemType.FILE.value()) ? event.getSelectedItems().get(0)
+                                                                                                                 .getParentId()
+                                                                                                          : event.getSelectedItems().get(0)
+                                                                                                                 .getId();
+
         Element ae = DOM.getElementById("shell-link");
         if (ae == null) {
             return;

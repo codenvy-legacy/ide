@@ -4,12 +4,22 @@
     <parent>
         <artifactId>exo-ide-parent</artifactId>
         <groupId>org.exoplatform.ide</groupId>
-        <version>2.9.1-SNAPSHOT</version>
+        <version>2.10.0-SNAPSHOT</version>
     </parent>
     <groupId>org.exoplatform.ide</groupId>
     <artifactId>exo-ide-extension-openshift</artifactId>
     <name>Codenvy IDE :: Extension :: OpenShift</name>
     <dependencies>
+        <dependency>
+            <groupId>com.openshift</groupId>
+            <artifactId>openshift-java-client</artifactId>
+            <version>${openshift-java-client.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-git</artifactId>
@@ -31,15 +41,12 @@
             <artifactId>exo-ide-server</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- CLIENT SIDE -->
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>${javax.ws.rs.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.openshift</groupId>
-            <artifactId>openshift-java-client</artifactId>
-            <version>${openshift-java-client.version}</version>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.gwt</groupId>
@@ -57,13 +64,6 @@
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-framework-client</artifactId>
             <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- CLIENT SIDE -->
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

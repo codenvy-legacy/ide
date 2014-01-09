@@ -29,19 +29,28 @@ import com.google.gwt.user.client.ui.HasValue;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.project.api.TreeRefreshedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.git.client.editor.UpdateOpenedFilesEvent;
 import org.exoplatform.ide.git.client.marshaller.LogResponse;
 import org.exoplatform.ide.git.client.marshaller.LogResponseUnmarshaller;
 import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 import org.exoplatform.ide.git.shared.Revision;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Presenter for view for reseting head to commit. The view must be pointed in Views.gwt.xml.
@@ -49,7 +58,7 @@ import org.exoplatform.ide.git.shared.Revision;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 15, 2011 10:31:25 AM anya $
  */
-public class ResetToCommitPresenter extends GitPresenter implements ResetToCommitHandler {
+public class ResetToCommitPresenter extends GitPresenter implements ResetToCommitHandler, EditorFileOpenedHandler, EditorFileClosedHandler {
 
     interface Display extends IsView {
         /**
@@ -126,11 +135,25 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
     /** Presenter' display. */
     private Display display;
 
+    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
+
     /**
      * @param eventBus event handlers
      */
     public ResetToCommitPresenter() {
         IDE.addHandler(ResetToCommitEvent.TYPE, this);
+        IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+        IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+    }
+
+    @Override
+    public void onEditorFileClosed(EditorFileClosedEvent event) {
+        this.openedFiles = event.getOpenedFiles();
+    }
+
+    @Override
+    public void onEditorFileOpened(EditorFileOpenedEvent event) {
+        this.openedFiles = event.getOpenedFiles();
     }
 
     public void bindDisplay(Display d) {
@@ -145,9 +168,15 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
         });
 
         display.getResetButton().addClickHandler(new ClickHandler() {
-
             @Override
             public void onClick(ClickEvent event) {
+                for (Map.Entry<String, FileModel> openedFile : openedFiles.entrySet()) {
+                    if (openedFile.getValue().isContentChanged()) {
+                        Dialogs.getInstance().showInfo(GitExtension.MESSAGES.fileUnsaved(openedFile.getValue().getName()));
+                        return;
+                    }
+                }
+
                 doReset();
             }
         });
@@ -180,7 +209,7 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
             GitClientService.getInstance()
                             .log(vfs.getId(), projectId, false,
                                  new AsyncRequestCallback<LogResponse>(
-                                                                       new LogResponseUnmarshaller(new LogResponse(), false)) {
+                                         new LogResponseUnmarshaller(new LogResponse(), false)) {
 
                                      @Override
                                      protected void onSuccess(LogResponse result) {
@@ -195,8 +224,8 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
                                      @Override
                                      protected void onFailure(Throwable exception) {
                                          String errorMessage =
-                                                               (exception.getMessage() != null) ? exception.getMessage()
-                                                                   : GitExtension.MESSAGES.logFailed();
+                                                 (exception.getMessage() != null) ? exception.getMessage()
+                                                                                  : GitExtension.MESSAGES.logFailed();
                                          IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
                                      }
                                  });
@@ -215,24 +244,15 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
         type = (type == null && display.getKeepMode().getValue()) ? ResetType.KEEP : type;
         type = (type == null && display.getMergeMode().getValue()) ? ResetType.MERGE : type;
 
-        // Needed for onSuccess callback to detect which type of event to throw
-        final ResetType resetType = type;
-
-        String projectId = getSelectedProject().getId();
-
         try {
-            GitClientService.getInstance().reset(vfs.getId(), projectId, revision.getId(), type,
+            GitClientService.getInstance().reset(vfs.getId(), getSelectedProject().getId(), revision.getId(), type,
                                                  new AsyncRequestCallback<String>() {
 
                                                      @Override
                                                      protected void onSuccess(String result) {
                                                          IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetSuccessfully(), Type.GIT));
-                                                         if (ResetType.HARD.equals(resetType)) {
-                                                             IDE.fireEvent(new RefreshBrowserEvent());
-                                                         }
-                                                         else {
-                                                             IDE.fireEvent(new TreeRefreshedEvent(getSelectedProject()));
-                                                         }
+                                                         IDE.fireEvent(new RefreshBrowserEvent());
+                                                         IDE.fireEvent(new UpdateOpenedFilesEvent());
                                                          IDE.getInstance().closeView(display.asView().getId());
                                                      }
 

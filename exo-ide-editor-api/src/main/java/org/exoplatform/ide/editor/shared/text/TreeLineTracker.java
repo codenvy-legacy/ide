@@ -1250,7 +1250,7 @@ abstract class TreeLineTracker implements ILineTracker {
                 }
                 Node last = node;
                 // Inline nodeByLine end
-                if (last.length > 0)
+                if (last.length >= 0)
                     return new Region(offset + last.length, 0);
             }
             throw x;

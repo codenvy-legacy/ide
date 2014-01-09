@@ -18,49 +18,14 @@
 package org.exoplatform.ide.extension.ssh.shared;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: $
+ * POJO model for SSH key item.
  */
-public class KeyItem {
-    /** Host name. */
-    private String host;
+public interface KeyItem {
+    String getHost();
 
-    /** URL for download public key. May be <code>null</code> if public key no available. */
-    private String publicKeyURL;
+    void setHost(String host);
 
-    /** URL for remove key. */
-    private String removeKeyURL;
+    boolean isHasPublicKey();
 
-    public KeyItem(String host, String publicKeyURL, String removeKeyURL) {
-        this.host = host;
-        this.publicKeyURL = publicKeyURL;
-        this.removeKeyURL = removeKeyURL;
-    }
-
-    public KeyItem() {
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public String getPublicKeyURL() {
-        return publicKeyURL;
-    }
-
-    public void setPublicKeyURL(String publicKeyURL) {
-        this.publicKeyURL = publicKeyURL;
-    }
-
-    public void setRemoveKeyURL(String removeKeyURL) {
-        this.removeKeyURL = removeKeyURL;
-    }
-
-    public String getRemoveKeyURL() {
-        return removeKeyURL;
-    }
+    void setHasPublicKey(boolean hasPublicKey);
 }

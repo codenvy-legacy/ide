@@ -693,10 +693,7 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
 
                                            @Override
                                            protected void onFailure(Throwable e) {
-                                               if (e instanceof org.exoplatform.ide.client.framework.websocket.rest.exceptions
-                                                       .UnauthorizedException
-                                                   || (e instanceof org.exoplatform.ide.client.framework.websocket.rest.exceptions
-                                                       .ServerException)) {
+                                               if (GitExtension.needAuth(e.getMessage())) {
                                                    askUserToLogin(authCallback, folder);
                                                } else {
                                                    GitExtension.deleteFolder(folder);
@@ -752,8 +749,7 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
 
                                          @Override
                                          protected void onFailure(Throwable e) {
-                                             if (e instanceof org.exoplatform.gwtframework.commons.exception.UnauthorizedException ||
-                                                 (e instanceof org.exoplatform.gwtframework.commons.exception.ServerException)) {
+                                             if (GitExtension.needAuth(e.getMessage())) {
                                                  askUserToLogin(authCallback, folder);
                                              } else {
                                                  GitExtension.deleteFolder(folder);

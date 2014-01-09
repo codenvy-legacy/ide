@@ -28,12 +28,17 @@ import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.ssh.client.SshClientBundle;
-import org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerPresenter.Display;
+import org.exoplatform.ide.extension.ssh.client.keymanager.KeyManagerPresenter.Display;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 
+/**
+ * View for SSH key manager.
+ */
 public class SshKeyManagerView extends ViewImpl implements Display {
 
     private static SshKeyManagerViewUiBinder uiBinder = GWT.create(SshKeyManagerViewUiBinder.class);
+
+    private static final String ID = "ideSshKeyManagerView";
 
     interface SshKeyManagerViewUiBinder extends UiBinder<Widget, SshKeyManagerView> {
     }
@@ -57,24 +62,25 @@ public class SshKeyManagerView extends ViewImpl implements Display {
         generateGithubKeyButton.setImage(new Image(SshClientBundle.INSTANCE.sshKeyGithubGenerate()));
     }
 
-    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerPresenter.Display#getKeyItemGrid() */
+    /** {@inheritDoc} */
     @Override
     public HasSshGrid<KeyItem> getKeyItemGrid() {
         return keysGrid;
     }
 
-    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerPresenter.Display#getGenerateButton() */
+    /** {@inheritDoc} */
     @Override
     public HasClickHandlers getGenerateButton() {
         return generateButton;
     }
 
-    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerPresenter.Display#getUploadButton() */
+    /** {@inheritDoc} */
     @Override
     public HasClickHandlers getUploadButton() {
         return uploadButton;
     }
 
+    /** {@inheritDoc} */
     @Override
     public HasClickHandlers getGenerateGithubKeyButton() {
         return generateGithubKeyButton;

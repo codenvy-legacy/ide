@@ -31,10 +31,7 @@ import com.google.gwt.user.cellview.client.Column;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 
-/**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: SshKeysGrid May 18, 2011 12:20:34 PM evgen $
- */
+/** Grid for displaying SSH keys. */
 public class SshKeysGrid extends ListGrid<KeyItem> implements HasSshGrid<KeyItem> {
 
     private Column<KeyItem, String> hostColumn;
@@ -43,9 +40,6 @@ public class SshKeysGrid extends ListGrid<KeyItem> implements HasSshGrid<KeyItem
 
     private Column<KeyItem, String> deleteKeyColumn;
 
-    /**
-     *
-     */
     public SshKeysGrid() {
         TextCell hostCell = new TextCell();
         hostColumn = new Column<KeyItem, String>(hostCell) {
@@ -58,7 +52,7 @@ public class SshKeysGrid extends ListGrid<KeyItem> implements HasSshGrid<KeyItem
 
             @Override
             public String getValue(KeyItem object) {
-                if (object.getPublicKeyURL() != null)
+                if (object.isHasPublicKey())
                     return "View";
                 else
                     return "";
@@ -89,8 +83,7 @@ public class SshKeysGrid extends ListGrid<KeyItem> implements HasSshGrid<KeyItem
         getCellTable().setColumnWidth(deleteKeyColumn, 30, Unit.PX);
     }
 
-    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.HasSshGrid#addViewButtonSelectionHandler(com.google.gwt.event.logical
-     * .shared.SelectionHandler) */
+    /** {@inheritDoc} */
     @Override
     public HandlerRegistration addViewButtonSelectionHandler(final SelectionHandler<KeyItem> handler) {
         publicKeyColumn.setFieldUpdater(new FieldUpdater<KeyItem, String>() {
@@ -104,8 +97,7 @@ public class SshKeysGrid extends ListGrid<KeyItem> implements HasSshGrid<KeyItem
         return null;
     }
 
-    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.HasSshGrid#addDeleteButtonSelectionHandler(com.google.gwt.event.logical
-     * .shared.SelectionHandler) */
+    /** {@inheritDoc} */
     @Override
     public HandlerRegistration addDeleteButtonSelectionHandler(final SelectionHandler<KeyItem> handler) {
         deleteKeyColumn.setFieldUpdater(new FieldUpdater<KeyItem, String>() {
@@ -124,14 +116,10 @@ public class SshKeysGrid extends ListGrid<KeyItem> implements HasSshGrid<KeyItem
         protected SelectionEventImpl(KeyItem selectedItem) {
             super(selectedItem);
         }
-
     }
 
     private class Link extends ClickableTextCell {
-        /**
-         * @see com.google.gwt.cell.client.ClickableTextCell#render(com.google.gwt.cell.client.Cell.Context,
-         *      com.google.gwt.safehtml.shared.SafeHtml, com.google.gwt.safehtml.shared.SafeHtmlBuilder)
-         */
+        /** {@inheritDoc} */
         @Override
         protected void render(com.google.gwt.cell.client.Cell.Context context, final SafeHtml value, SafeHtmlBuilder sb) {
             SafeHtml s = new SafeHtml() {

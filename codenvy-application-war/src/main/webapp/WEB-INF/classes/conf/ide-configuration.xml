@@ -140,44 +140,23 @@
     -->
 
     <component>
-
         <type>org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool</type>
-
         <init-params>
-
             <object-param>
-
                 <name>CF0</name>
-
                 <object type="org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryServerConfiguration">
-
                     <field name="target">
-
-                        <string>http://api.javarun4.exoplatform.com</string>
-
-
+                        <string>http://api.apprun.codenvy-dev.com</string>
                     </field>
-
                     <field name="user">
-
                         <string>exoidedev@exoplatform.com</string>
-
-
                     </field>
-
                     <field name="password">
-
                         <string>1234qwer</string>
-
                     </field>
-
                 </object>
-
             </object-param>
-
-
         </init-params>
-
     </component>
     <!-- End CloudFoundry -->
 

@@ -46,7 +46,7 @@ public class RemoveTest extends BaseTest {
         request.setFiles(new String[]{"README.txt"});
         request.setCached(true);
         getDefaultConnection().rm(request);
-        assertFalse(new File(getDefaultRepository(), "README.txt").exists());
+        assertTrue(new File(getDefaultRepository(), "README.txt").exists());
         checkNotCached(getDefaultRepository(), "README.txt");
     }
 }

@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -46,6 +47,7 @@ import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
+import org.exoplatform.ide.git.client.editor.UpdateOpenedFilesEvent;
 import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.BranchListRequest;
@@ -164,6 +166,13 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler, 
 
             @Override
             public void onClick(ClickEvent event) {
+                for (Map.Entry<FileModel, Editor> openedFile : openedEditor.entrySet()) {
+                    if (openedFile.getKey().isContentChanged()) {
+                        Dialogs.getInstance().showInfo(GitExtension.MESSAGES.fileUnsaved(openedFile.getKey().getName()));
+                        return;
+                    }
+                }
+
                 doPull();
             }
         });
@@ -262,6 +271,7 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler, 
                                                           IDE.fireEvent(
                                                                   new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.GIT));
                                                           IDE.fireEvent(new RefreshBrowserEvent());
+                                                          IDE.fireEvent(new UpdateOpenedFilesEvent());
                                                       }
 
                                                       @Override

@@ -909,7 +909,7 @@
 		<div class="{style.wizard-footer}">
             <f:ImageButton ui:field="buttonCancel" addStyleNames="{style.button-center}" text="Cancel" imageName="cancel"></f:ImageButton>
             <f:ImageButton ui:field="buttonBack" addStyleNames="{style.button-center}" text="Back" imageName="back" visible="false"></f:ImageButton>
-            <f:ImageButton ui:field="buttonCreate" addStyleNames="{style.button-right}" text="Create" imageName="next"></f:ImageButton>
+            <f:ImageButton ui:field="buttonCreate" addStyleNames="{style.button-right}" text="Next" imageName="next"></f:ImageButton>
             <f:ImageButton ui:field="buttonFinish" addStyleNames="{style.button-right}" text="Finish" imageName="ok" visible="false"></f:ImageButton>
 		</div>		
 

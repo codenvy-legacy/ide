@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.factory.server;
 
+import com.codenvy.api.core.user.UserState;
 import com.codenvy.commons.env.EnvironmentContext;
 
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -24,28 +25,24 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.Project;
-import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.*;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 
 import javax.inject.Inject;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
-
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
- */
+/** Service which perform copying projects that passed through "Copy to my workspace" action. */
 @Path("{ws-name}/copy")
 public class CopyProjectService {
     private static final Log LOG = ExoLogger.getLogger(CopyProjectService.class);
@@ -58,21 +55,28 @@ public class CopyProjectService {
 
     /**
      * Copy specified projects to a current workspace.
-     *
-     * @param baseDownloadUrl base URL to download project
-     * @param projectIds identifiers and names of projects to copy. String should be in the following format:
-     *            <p/>
-     *
-     *            <pre>
-     *            project1_id:project1_name;
-     *            project2_id:project2_name;
      * </pre>
-     * @throws VirtualFileSystemException if any error occurred on vfs
-     * @throws IOException if any error occurred while sending request
+     *
+     * @return List of copied projects to client.
+     * @param baseDownloadUrl
+     *         base URL to download project
+     * @param projects
+     *         identifiers and names of projects to copy. String should be in the following format:
+     *         <p/>
+     *         <p/>
+     *         <pre>
+     *                                            project1_id:project1_name;
+     *                                            project2_id:project2_name;
+     *                                 </pre>
+     * @throws VirtualFileSystemException
+     *         if any error occurred on vfs
+     * @throws IOException
+     *         if any error occurred while sending request
      */
     @POST
     @Path("projects")
-    public void copyProjects(@QueryParam("downloadurl") String baseDownloadUrl, List<String> projects)
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Item> copyProjects(@QueryParam("downloadurl") String baseDownloadUrl, List<String> projects)
             throws VirtualFileSystemException,
                    IOException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID)
@@ -80,6 +84,14 @@ public class CopyProjectService {
 
         String tmpWorkspace = baseDownloadUrl.substring(baseDownloadUrl.indexOf("tmp")).substring(0, baseDownloadUrl
                 .substring(baseDownloadUrl.indexOf("tmp")).indexOf("/"));
+
+        String authToken = null;
+        UserState userState = UserState.get();
+        if (userState != null) {
+            authToken = (String)userState.getAttribute("token");
+        }
+
+        List<Item> importedProjects = new ArrayList<>();
 
         for (String projectInfo : projects) {
             String[] projectIdAndName = projectInfo.split(":");
@@ -92,7 +104,11 @@ public class CopyProjectService {
             HttpURLConnection connection = null;
             InputStream inputStream = null;
             try {
-                URL url = new URL(projectUrl);
+                UriBuilder ub = UriBuilder.fromUri(projectUrl);
+                if (authToken != null) {
+                    ub.queryParam("token", authToken);
+                }
+                URL url = ub.build().toURL();
                 connection = (HttpURLConnection)url.openConnection();
                 connection.setRequestProperty("Referer", projectUrl);
                 connection.setAllowUserInteraction(false);
@@ -104,6 +120,7 @@ public class CopyProjectService {
                 LOG.info("EVENT#factory-project-imported# WS#" + tmpWorkspace + "# USER#" +
                          ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + project.getName() + "# TYPE#" +
                          project.getProjectType() + "#");
+                importedProjects.add(project);
             } finally {
                 if (connection != null) {
                     connection.disconnect();
@@ -117,12 +134,14 @@ public class CopyProjectService {
                 }
             }
         }
+
+        return importedProjects;
     }
 
     private String getNextItemName(VirtualFileSystem vfs, String itemName) throws VirtualFileSystemException {
         String itemNameWithSuffix = itemName;
         try {
-            for (int suffix = 1;; suffix++) {
+            for (int suffix = 1; ; suffix++) {
                 vfs.getItemByPath(itemNameWithSuffix, null, false, PropertyFilter.NONE_FILTER);
                 itemNameWithSuffix = itemName + "_" + suffix;
             }

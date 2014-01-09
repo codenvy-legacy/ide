@@ -152,6 +152,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                                        @Override
                                        public void execute() {
+                                           IDE.notifyStatusChanged("configuration-received");
                                            checkEntryPoint();
                                        }
                                    });
@@ -182,6 +183,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
             Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                 @Override
                 public void execute() {
+                    IDE.notifyStatusChanged("changing-vfs " + entryPoint);
                     IDE.fireEvent(new SwitchVFSEvent(entryPoint));
                 }
             });
@@ -189,6 +191,8 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
     }
 
     public void onVfsChanged(VfsChangedEvent event) {
+        IDE.notifyStatusChanged("vfs-changed " + (event.getVfsInfo() != null ? event.getVfsInfo().getId() : "NULL"));
+        
         IDE.removeHandler(VfsChangedEvent.TYPE, this);
         String projectToOpen = Utils.getProjectToOpen();
         if (projectToOpen != null && !projectToOpen.isEmpty()) {
@@ -237,10 +241,20 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
             Map<String, List<String>> parameterMap = buildListParamMap(Utils.getStartUpParams());
             if (parameterMap != null && (parameterMap.get(FactorySpec10.FACTORY_VERSION) != null || parameterMap.get(AdvancedFactorySpec.ID) != null)) {
                 IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
+                
+                
+                
             } else if (parameterMap != null && parameterMap.get(CopySpec10.DOWNLOAD_URL) != null
                        && parameterMap.get(CopySpec10.PROJECT_ID) != null) {
                 IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
+                
+                
+                
             } else {
+                
+                
+                
+                
                 new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject, initialOpenedFiles, initialActiveFile);
             }
         }
