@@ -201,7 +201,7 @@ public class Project extends Folder {
                     refreshTree(parent, new AsyncCallback<Folder>() {
                         @Override
                         public void onSuccess(Folder result) {
-                            File file = (File)parent.findChildById(newFile.getId());
+                            File file = (File)result.findResourceById(newFile.getId());
                             eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(file));
                             callback.onSuccess(file);
                         }
@@ -249,7 +249,7 @@ public class Project extends Folder {
                     refreshTree(parent, new AsyncCallback<Folder>() {
                         @Override
                         public void onSuccess(Folder result) {
-                            Folder folder = (Folder)parent.findChildById(newFolder.getId());
+                            Folder folder = (Folder)result.findResourceById(newFolder.getId());
                             eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(folder));
                             callback.onSuccess(folder);
                         }
