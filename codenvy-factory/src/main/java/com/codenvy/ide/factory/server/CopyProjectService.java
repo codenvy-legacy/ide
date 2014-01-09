@@ -24,6 +24,8 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.*;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -31,17 +33,16 @@ import org.exoplatform.services.security.ConversationState;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
- */
+/** Service which perform copying projects that passed through "Copy to my workspace" action. */
 @Path("{ws-name}/copy")
 public class CopyProjectService {
     private static final Log LOG = ExoLogger.getLogger(CopyProjectService.class);
@@ -54,7 +55,9 @@ public class CopyProjectService {
 
     /**
      * Copy specified projects to a current workspace.
+     * </pre>
      *
+     * @return List of copied projects to client.
      * @param baseDownloadUrl
      *         base URL to download project
      * @param projects
@@ -72,7 +75,8 @@ public class CopyProjectService {
      */
     @POST
     @Path("projects")
-    public void copyProjects(@QueryParam("downloadurl") String baseDownloadUrl, List<String> projects)
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Item> copyProjects(@QueryParam("downloadurl") String baseDownloadUrl, List<String> projects)
             throws VirtualFileSystemException,
                    IOException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID)
@@ -86,6 +90,8 @@ public class CopyProjectService {
         if (userState != null) {
             authToken = (String)userState.getAttribute("token");
         }
+
+        List<Item> importedProjects = new ArrayList<>();
 
         for (String projectInfo : projects) {
             String[] projectIdAndName = projectInfo.split(":");
@@ -114,6 +120,7 @@ public class CopyProjectService {
                 LOG.info("EVENT#factory-project-imported# WS#" + tmpWorkspace + "# USER#" +
                          ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + project.getName() + "# TYPE#" +
                          project.getProjectType() + "#");
+                importedProjects.add(project);
             } finally {
                 if (connection != null) {
                     connection.disconnect();
@@ -127,6 +134,8 @@ public class CopyProjectService {
                 }
             }
         }
+
+        return importedProjects;
     }
 
     private String getNextItemName(VirtualFileSystem vfs, String itemName) throws VirtualFileSystemException {
