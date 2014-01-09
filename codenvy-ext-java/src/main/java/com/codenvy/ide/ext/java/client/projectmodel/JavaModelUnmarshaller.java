@@ -183,7 +183,6 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
                                              .stringValue().equalsIgnoreCase(Folder.TYPE)) {
                                 parseProjectStructure(itemObject.get(CHILDREN), parentFolder, folder, project);
                             } else {
-                                System.out.println("JavaModelUnmarshaller.parseProjectStructure()Adding..." + packageName);
                                 parentFolder.addChild(folder);
                                 folder.setProject(project);
                                 parseProjectStructure(itemObject.get(CHILDREN), folder, folder, project);

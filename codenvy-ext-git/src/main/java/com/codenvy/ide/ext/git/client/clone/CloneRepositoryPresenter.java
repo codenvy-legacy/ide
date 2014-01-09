@@ -21,7 +21,6 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
@@ -125,7 +124,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
 
                                           @Override
                                           protected void onFailure(Throwable exception) {
-                                              deleteFolder(project);
+                                              resourceProvider.showListProjects();
                                               handleError(exception, remoteUri);
 
                                           }
@@ -158,12 +157,12 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
 
                                         @Override
                                         protected void onFailure(Throwable exception) {
-                                            deleteFolder(project);
+                                            resourceProvider.showListProjects();
                                             handleError(exception, remoteUri);
                                         }
                                     });
         } catch (RequestException e) {
-            deleteFolder(project);
+            resourceProvider.showListProjects();
             handleError(e, remoteUri);
         }
     }
@@ -185,26 +184,6 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
             @Override
             public void onFailure(Throwable caught) {
                 Log.error(CloneRepositoryPresenter.class, "can not get project " + project.getName());
-            }
-        });
-    }
-
-    /**
-     * Delete project.
-     *
-     * @param path
-     *         the path where project exist
-     */
-    private void deleteFolder(@NotNull Project path) {
-        resourceProvider.delete(path, new AsyncCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
-                // do nothing
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                eventBus.fireEvent(new ExceptionThrownEvent(caught, "Exception during project removing"));
             }
         });
     }
