@@ -29,6 +29,7 @@ import com.codenvy.api.runner.internal.ResourceAllocators;
 import com.codenvy.api.runner.internal.Runner;
 import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
+import com.codenvy.api.runner.internal.dto.DebugMode;
 import com.codenvy.api.runner.internal.dto.RunRequest;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.commons.lang.ZipUtils;
@@ -45,9 +46,7 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipFile;
@@ -60,33 +59,33 @@ import java.util.zip.ZipFile;
  */
 @Singleton
 public class SDKRunner extends Runner {
-    public static final  String IDE_GWT_XML_FILE_NAME    = "IDEPlatform.gwt.xml";
-    public static final  String DEFAULT_SERVER_NAME      = "Tomcat";
-    public static final  String DEBUG_TRANSPORT_PROTOCOL = "dt_socket";
-    /** Rel for code server link. */
-    public static final  String LINK_REL_CODE_SERVER     = "code server";
-    /**
-     * Name of configuration parameter that specifies the domain name or IP address of the code server.
-     * If such parameter is not specified then <code>DEFAULT_BIND_ADDRESS</code> constant value will be used.
-     */
-    public static final  String CODE_SERVER_BIND_ADDRESS = "runner.sdk.code_server_bind_address";
-    /** Specifies the default bind address for the code server. */
-    private static final Logger LOG                      = LoggerFactory.getLogger(SDKRunner.class);
-    private final Map<String, ApplicationServer> applicationServers;
+    private static final Logger LOG = LoggerFactory.getLogger(SDKRunner.class);
 
-    private final String            codeServerBindAddress;
-    private final CustomPortService customPortService;
+    public static final String IDE_GWT_XML_FILE_NAME    = "IDEPlatform.gwt.xml";
+    public static final String DEFAULT_SERVER_NAME      = "Tomcat";
+    public static final String DEBUG_TRANSPORT_PROTOCOL = "dt_socket";
+    /** Rel for code server link. */
+    public static final String LINK_REL_CODE_SERVER     = "code server";
+    /** Name of configuration parameter that specifies the domain name or IP address of the code server. */
+    public static final String CODE_SERVER_BIND_ADDRESS = "runner.sdk.code_server_bind_address";
+
+    private final Map<String, ApplicationServer> applicationServers;
+    private final String                         codeServerBindAddress;
+    private final String                         hostName;
+    private final CustomPortService              portService;
 
     @Inject
     public SDKRunner(@Named(DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
                      @Named(CLEANUP_DELAY_TIME) int cleanupDelay,
                      @Named(CODE_SERVER_BIND_ADDRESS) String codeServerBindAddress,
-                     CustomPortService customPortService,
+                     @Named("runner.sdk.host_name") String hostName,
+                     CustomPortService portService,
                      Set<ApplicationServer> appServers,
                      ResourceAllocators allocators) {
         super(deployDirectoryRoot, cleanupDelay, allocators);
         this.codeServerBindAddress = codeServerBindAddress;
-        this.customPortService = customPortService;
+        this.hostName = hostName;
+        this.portService = portService;
         applicationServers = new HashMap<>();
         //available application servers should be already injected
         for (ApplicationServer appServer : appServers) {
@@ -109,18 +108,27 @@ public class SDKRunner extends Runner {
         return new RunnerConfigurationFactory() {
             @Override
             public RunnerConfiguration createRunnerConfiguration(RunRequest request) throws RunnerException {
-
-                final int codeServerPort = customPortService.acquire();
-                List<Link> links = new ArrayList<>(1);
-                links.add(DtoFactory.getInstance().createDto(Link.class)
-                                    .withRel(LINK_REL_CODE_SERVER)
-                                    .withHref(codeServerBindAddress + ":" + codeServerPort));
-
-                return new SDKRunnerConfiguration(DEFAULT_SERVER_NAME,
-                                                  customPortService.acquire(),
-                                                  request.getMemorySize(), -1, false,
-                                                  DEBUG_TRANSPORT_PROTOCOL, codeServerBindAddress, codeServerPort,
-                                                  links, request);
+                final int httpPort = portService.acquire();
+                final int codeServerPort = portService.acquire();
+                final SDKRunnerConfiguration configuration = new SDKRunnerConfiguration(DEFAULT_SERVER_NAME,
+                                                                                        request.getMemorySize(),
+                                                                                        httpPort,
+                                                                                        codeServerBindAddress,
+                                                                                        codeServerPort,
+                                                                                        request);
+                configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class).withRel("web url")
+                                                       .withHref(String.format("http://%s:%d", hostName, httpPort)));
+                configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class)
+                                                       .withRel(LINK_REL_CODE_SERVER)
+                                                       .withHref(String.format("%s:%d", codeServerBindAddress, codeServerPort)));
+                final DebugMode debugMode = request.getDebugMode();
+                if (debugMode != null) {
+                    configuration.setDebugHost(hostName);
+                    configuration.setDebugPort(portService.acquire());
+                    configuration.setDebugTransport(DEBUG_TRANSPORT_PROTOCOL);
+                    configuration.setDebugSuspend("suspend".equals(debugMode.getMode()));
+                }
+                return configuration;
             }
         };
     }
@@ -140,7 +148,7 @@ public class SDKRunner extends Runner {
         final Path codeServerWorkDirPath;
         final Utils.ExtensionDescriptor extension;
         try {
-            appDir = Files.createTempDirectory(getDeployDirectory().toPath(), (server.getName() + "_" + getName() + '_')).toFile();
+            appDir = Files.createTempDirectory(getDeployDirectory().toPath(), (server.getName() + '_' + getName() + '_')).toFile();
             codeServerWorkDirPath = Files.createTempDirectory(getDeployDirectory().toPath(), ("codeServer_" + getName() + '_'));
             extension = Utils.getExtensionFromJarFile(new ZipFile(toDeploy.getFile()));
         } catch (IOException e) {
@@ -156,16 +164,16 @@ public class SDKRunner extends Runner {
                               new ApplicationServer.StopCallback() {
                                   @Override
                                   public void stopped() {
-                                      customPortService.release(sdkRunnerCfg.getPort());
+                                      portService.release(sdkRunnerCfg.getHttpPort());
 
                                       final int debugPort = sdkRunnerCfg.getDebugPort();
                                       if (debugPort > 0) {
-                                          customPortService.release(debugPort);
+                                          portService.release(debugPort);
                                       }
 
                                       final int codeServerPort = sdkRunnerCfg.getCodeServerPort();
                                       if (codeServerPort > 0) {
-                                          customPortService.release(codeServerPort);
+                                          portService.release(codeServerPort);
                                       }
                                   }
                               });

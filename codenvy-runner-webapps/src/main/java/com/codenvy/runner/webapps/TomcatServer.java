@@ -138,7 +138,7 @@ public class TomcatServer implements ApplicationServer {
     }
 
     protected void generateServerXml(java.io.File tomcatDir, ApplicationServerRunnerConfiguration runnerConfiguration) throws IOException {
-        final String cfg = SERVER_XML.replace("${PORT}", Integer.toString(runnerConfiguration.getPort()));
+        final String cfg = SERVER_XML.replace("${PORT}", Integer.toString(runnerConfiguration.getHttpPort()));
         final java.io.File serverXmlFile = new java.io.File(new java.io.File(tomcatDir, "conf"), "server.xml");
         Files.write(serverXmlFile.toPath(), cfg.getBytes());
     }
@@ -173,7 +173,7 @@ public class TomcatServer implements ApplicationServer {
         logFiles.add(new java.io.File(logsDir, "stdout.log"));
         logFiles.add(new java.io.File(logsDir, "stderr.log"));
 
-        return new TomcatProcess(runnerConfiguration.getPort(), logFiles, runnerConfiguration.getDebugPort(),
+        return new TomcatProcess(runnerConfiguration.getHttpPort(), logFiles, runnerConfiguration.getDebugPort(),
                                  startUpScriptFile, appDir, stopCallback, pidTaskExecutor);
     }
 
