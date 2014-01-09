@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.everrest;
 
+import com.codenvy.api.core.user.UserState;
 import com.codenvy.commons.env.EnvironmentContext;
 
 import org.everrest.core.impl.EverrestConfiguration;
@@ -24,9 +25,7 @@ import org.everrest.core.impl.async.AsynchronousJob;
 import org.everrest.core.impl.async.AsynchronousJobPool;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.security.ConversationState;
-import org.exoplatform.services.security.Identity;
-import org.exoplatform.services.security.IdentityConstants;
+import org.exoplatform.services.security.*;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.ext.ContextResolver;
@@ -79,13 +78,15 @@ public class CodenvyAsynchronousJobPool extends AsynchronousJobPool implements C
 
     private static class CallableWrapper implements Callable<Object> {
         private final EnvironmentContext envContext;
-        private final ConversationState  state;
+        private final ConversationState  conversationState;
+        private final UserState          userState;
         private final Callable<Object>   callable;
         private       Object             loggerContext;
 
         public CallableWrapper(Callable<Object> callable) {
             this.callable = callable;
-            state = ConversationState.getCurrent();
+            conversationState = ConversationState.getCurrent();
+            userState = UserState.get();
             envContext = EnvironmentContext.getCurrent();
             if (setUpLogger) {
                 try {
@@ -98,8 +99,9 @@ public class CodenvyAsynchronousJobPool extends AsynchronousJobPool implements C
 
         @Override
         public Object call() throws Exception {
-            ConversationState.setCurrent(state == null
-                                         ? new ConversationState(new Identity(IdentityConstants.ANONIM)) : state);
+            ConversationState.setCurrent(conversationState == null
+                                         ? new ConversationState(new Identity(IdentityConstants.ANONIM)) : conversationState);
+            UserState.set(userState == null ? UserState.get() : userState);
             EnvironmentContext.setCurrent(envContext);
             if (loggerContext != null) {
                 try {
@@ -112,6 +114,7 @@ public class CodenvyAsynchronousJobPool extends AsynchronousJobPool implements C
                 return callable.call();
             } finally {
                 EnvironmentContext.reset();
+                UserState.reset();
                 ConversationState.setCurrent(null);
                 if (loggerContext != null) {
                     try {

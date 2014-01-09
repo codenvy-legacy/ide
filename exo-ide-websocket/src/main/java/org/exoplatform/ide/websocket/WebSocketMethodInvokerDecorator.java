@@ -17,6 +17,8 @@
  */
 package org.exoplatform.ide.websocket;
 
+import com.codenvy.api.core.user.UserState;
+
 import org.everrest.core.ApplicationContext;
 import org.everrest.core.impl.method.MethodInvokerDecorator;
 import org.everrest.core.method.MethodInvoker;
@@ -67,6 +69,8 @@ public class WebSocketMethodInvokerDecorator extends MethodInvokerDecorator {
                     (com.codenvy.commons.env.EnvironmentContext)wsConnection.getHttpSession().getAttribute(
                             ExoIdeWebSocketServlet.ENVIRONMENT_SESSION_ATTRIBUTE_NAME));
 
+            UserState.set((UserState)wsConnection.getHttpSession().getAttribute(ExoIdeWebSocketServlet.USERSTATE_SESSION_ATTRIBUTE_NAME));
+
             Object loggerContext = wsConnection.getHttpSession().getAttribute(ExoIdeWebSocketServlet.MDC_CONTEXT_ATTRIBUTE_NAME);
             if (setUpLogger && loggerContext != null) {
                 try {
@@ -79,6 +83,7 @@ public class WebSocketMethodInvokerDecorator extends MethodInvokerDecorator {
                 return super.invokeMethod(resource, genericMethodResource, context);
             } finally {
                 ConversationState.setCurrent(null);
+                UserState.reset();
                 com.codenvy.commons.env.EnvironmentContext.reset();
                 if (loggerContext != null) {
                     try {

@@ -17,25 +17,21 @@
  */
 package com.codenvy.ide.factory.server;
 
+import com.codenvy.api.core.user.UserState;
 import com.codenvy.commons.env.EnvironmentContext;
 
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.Project;
-import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.*;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 
 import javax.inject.Inject;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
-
+import javax.ws.rs.*;
+import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -59,16 +55,20 @@ public class CopyProjectService {
     /**
      * Copy specified projects to a current workspace.
      *
-     * @param baseDownloadUrl base URL to download project
-     * @param projectIds identifiers and names of projects to copy. String should be in the following format:
-     *            <p/>
-     *
-     *            <pre>
-     *            project1_id:project1_name;
-     *            project2_id:project2_name;
-     * </pre>
-     * @throws VirtualFileSystemException if any error occurred on vfs
-     * @throws IOException if any error occurred while sending request
+     * @param baseDownloadUrl
+     *         base URL to download project
+     * @param projects
+     *         identifiers and names of projects to copy. String should be in the following format:
+     *         <p/>
+     *         <p/>
+     *         <pre>
+     *                                            project1_id:project1_name;
+     *                                            project2_id:project2_name;
+     *                                 </pre>
+     * @throws VirtualFileSystemException
+     *         if any error occurred on vfs
+     * @throws IOException
+     *         if any error occurred while sending request
      */
     @POST
     @Path("projects")
@@ -81,6 +81,12 @@ public class CopyProjectService {
         String tmpWorkspace = baseDownloadUrl.substring(baseDownloadUrl.indexOf("tmp")).substring(0, baseDownloadUrl
                 .substring(baseDownloadUrl.indexOf("tmp")).indexOf("/"));
 
+        String authToken = null;
+        UserState userState = UserState.get();
+        if (userState != null) {
+            authToken = (String)userState.getAttribute("token");
+        }
+
         for (String projectInfo : projects) {
             String[] projectIdAndName = projectInfo.split(":");
             final String projectId = projectIdAndName[0];
@@ -92,7 +98,11 @@ public class CopyProjectService {
             HttpURLConnection connection = null;
             InputStream inputStream = null;
             try {
-                URL url = new URL(projectUrl);
+                UriBuilder ub = UriBuilder.fromUri(projectUrl);
+                if (authToken != null) {
+                    ub.queryParam("token", authToken);
+                }
+                URL url = ub.build().toURL();
                 connection = (HttpURLConnection)url.openConnection();
                 connection.setRequestProperty("Referer", projectUrl);
                 connection.setAllowUserInteraction(false);
@@ -122,7 +132,7 @@ public class CopyProjectService {
     private String getNextItemName(VirtualFileSystem vfs, String itemName) throws VirtualFileSystemException {
         String itemNameWithSuffix = itemName;
         try {
-            for (int suffix = 1;; suffix++) {
+            for (int suffix = 1; ; suffix++) {
                 vfs.getItemByPath(itemNameWithSuffix, null, false, PropertyFilter.NONE_FILTER);
                 itemNameWithSuffix = itemName + "_" + suffix;
             }
