@@ -17,11 +17,11 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.debug.relaunch;
 
+import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerClientService;
-import com.codenvy.ide.ext.java.jdi.shared.ApplicationInstance;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
@@ -38,16 +38,17 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 /**
  * Provides relaunch debugger process.
  *
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @author Vitaly Parfonov
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 public class ReLaunchDebuggerPresenter implements ReLaunchDebuggerView.ActionDelegate {
-    private ReLaunchDebuggerView view;
-    private DtoFactory dtoFactory;
-    private DebuggerClientService       service;
-    private ApplicationInstance         instance;
-    private NotificationManager         notificationManager;
-    private AsyncCallback<DebuggerInfo> callback;
+    private ReLaunchDebuggerView         view;
+    private DtoFactory                   dtoFactory;
+    private DebuggerClientService        service;
+    private ApplicationProcessDescriptor appDescriptor;
+    private NotificationManager          notificationManager;
+    private AsyncCallback<DebuggerInfo>  callback;
     /** A timer for checking events. */
     private Timer tryConnectDebugger = new Timer() {
         @Override
@@ -62,6 +63,7 @@ public class ReLaunchDebuggerPresenter implements ReLaunchDebuggerView.ActionDel
      * @param view
      * @param service
      * @param notificationManager
+     * @param dtoFactory
      */
     @Inject
     protected ReLaunchDebuggerPresenter(ReLaunchDebuggerView view,
@@ -84,17 +86,17 @@ public class ReLaunchDebuggerPresenter implements ReLaunchDebuggerView.ActionDel
     }
 
     /** Shows dialog. */
-    public void showDialog(@NotNull ApplicationInstance instance, @NotNull AsyncCallback<DebuggerInfo> callback) {
-        this.instance = instance;
+    public void showDialog(@NotNull ApplicationProcessDescriptor appDescriptor, @NotNull AsyncCallback<DebuggerInfo> callback) {
+        this.appDescriptor = appDescriptor;
         this.callback = callback;
         this.view.showDialog();
     }
 
     /** Connect to debugger. */
     protected void connectDebugger() {
-
+        final String debugHost = appDescriptor.getDebugHost() == null ? "127.0.0.1" : appDescriptor.getDebugHost();
         try {
-            service.connect(instance.getDebugHost(), instance.getDebugPort(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+            service.connect(debugHost, appDescriptor.getDebugPort(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
                 public void onSuccess(String result) {
                     tryConnectDebugger.cancel();

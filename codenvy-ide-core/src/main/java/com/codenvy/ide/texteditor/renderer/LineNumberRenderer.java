@@ -249,7 +249,7 @@ public class LineNumberRenderer {
             element.getStyle().setTop(buffer.convertLineNumberToY(lineNumber) + 2, CSSStyleDeclaration.Unit.PX);
             element.getStyle().setLeft(9, CSSStyleDeclaration.Unit.PX);
             element.getStyle().setCursor(CSSStyleDeclaration.Cursor.POINTER);
-            element.setId("breakpoit-toggle-" + (lineNumber + 1));
+            element.setId("breakpoint-toggle-" + (lineNumber + 1));
         } else {
             if (!breakpointGutterManager.isBreakPointExist(lineNumber)) {
                 element = Elements.createDivElement(css.lineNumber());
@@ -268,7 +268,7 @@ public class LineNumberRenderer {
                 element.getStyle().setTop(buffer.convertLineNumberToY(lineNumber), CSSStyleDeclaration.Unit.PX);
                 element.getStyle().setLeft(7, CSSStyleDeclaration.Unit.PX);
                 element.getStyle().setCursor(CSSStyleDeclaration.Cursor.POINTER);
-                element.setId("breakpoit-toggle-" + (lineNumber + 1));
+                element.setId("breakpoint-toggle-" + (lineNumber + 1));
             }
         }
         return element;

@@ -17,7 +17,10 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.debug;
 
-import com.codenvy.ide.ext.java.jdi.shared.*;
+import com.codenvy.ide.ext.java.jdi.shared.BreakPoint;
+import com.codenvy.ide.ext.java.jdi.shared.DebuggerEventList;
+import com.codenvy.ide.ext.java.jdi.shared.UpdateVariableRequest;
+import com.codenvy.ide.ext.java.jdi.shared.Variable;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 
@@ -86,16 +89,16 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void checkEvents(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void checkEvents(@NotNull String id, @NotNull AsyncRequestCallback<DebuggerEventList> callback) throws RequestException;
 
     /**
-     * Creates dump.
+     * Get dump of fields and local variable of current stack frame.
      *
      * @param id
      * @param callback
      * @throws RequestException
      */
-    void dump(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void getStackFrameDump(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Resume process.
@@ -153,15 +156,6 @@ public interface DebuggerClientService {
      * @throws RequestException
      */
     void stepReturn(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
-
-    /**
-     * Stops application.
-     *
-     * @param runningApp
-     * @param callback
-     * @throws RequestException
-     */
-    void stopApplication(@NotNull ApplicationInstance runningApp, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Remove all breakpoint.

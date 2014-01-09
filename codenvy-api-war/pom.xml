@@ -116,6 +116,12 @@
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-java-runtime</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>sun.jdt</groupId>
+                    <artifactId>tools</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.everrest</groupId>

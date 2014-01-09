@@ -65,7 +65,7 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
 
     private static DebuggerViewImplUiBinder ourUiBinder = GWT.create(DebuggerViewImplUiBinder.class);
 
-    private SimpleList<Breakpoint> breakPoints;
+    private SimpleList<Breakpoint> breakpoints;
     private Tree<Variable>         variables;
     @UiField
     Button                          btnResume;
@@ -88,7 +88,7 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
     @UiField
     ScrollPanel                     variablesPanel;
     @UiField
-    ScrollPanel                     breakPointsPanel;
+    ScrollPanel                     breakpointsPanel;
     @UiField(provided = true)
     JavaRuntimeLocalizationConstant locale;
     @UiField(provided = true)
@@ -125,7 +125,7 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
         breakPointsElement.setAttribute("style", "width: 100%");
         SimpleList.ListEventDelegate<Breakpoint> listBreakPointsDelegate = new SimpleList.ListEventDelegate<Breakpoint>() {
             public void onListItemClicked(Element itemElement, Breakpoint itemData) {
-                breakPoints.getSelectionModel().setSelectedItem(itemData);
+                breakpoints.getSelectionModel().setSelectedItem(itemData);
             }
 
             public void onListItemDoubleClicked(Element listItemBase, Breakpoint itemData) {
@@ -160,10 +160,10 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
                 return Elements.createTRElement();
             }
         };
-        breakPoints = SimpleList.create((SimpleList.View)breakPointsElement, coreRes.defaultSimpleListCss(),
+        breakpoints = SimpleList.create((SimpleList.View)breakPointsElement, coreRes.defaultSimpleListCss(),
                                         listBreakPointsRenderer,
                                         listBreakPointsDelegate);
-        this.breakPointsPanel.add(breakPoints);
+        this.breakpointsPanel.add(breakpoints);
         this.variables = Tree.create(rendererResources, new VariableTreeNodeDataAdapter(), new VariableTreeNodeRenderer(rendererResources));
         this.variables.setTreeEventHandler(new Tree.Listener<Variable>() {
             @Override
@@ -230,8 +230,8 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
 
     /** {@inheritDoc} */
     @Override
-    public void setBreakPoints(@NotNull Array<Breakpoint> breakPoints) {
-        this.breakPoints.render(breakPoints);
+    public void setBreakpoints(@NotNull Array<Breakpoint> breakpoints) {
+        this.breakpoints.render(breakpoints);
     }
 
     /** {@inheritDoc} */

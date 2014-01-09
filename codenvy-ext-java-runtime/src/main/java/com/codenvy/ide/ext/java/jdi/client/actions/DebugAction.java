@@ -17,14 +17,15 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.actions;
 
-import com.codenvy.api.builder.BuildStatus;
+import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
-import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
-import com.codenvy.ide.extension.builder.client.build.ProjectBuiltCallback;
+import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
+import com.codenvy.ide.extension.runner.client.RunnerController;
 import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -37,15 +38,15 @@ import com.google.inject.Singleton;
 @Singleton
 public class DebugAction extends Action {
 
-    private BuildProjectPresenter buildProjectPresenter;
-    private DebuggerPresenter     debuggerPresenter;
-    private ResourceProvider      resourceProvider;
+    private RunnerController  runnerController;
+    private DebuggerPresenter debuggerPresenter;
+    private ResourceProvider  resourceProvider;
 
     @Inject
-    public DebugAction(BuildProjectPresenter buildProjectPresenter, DebuggerPresenter debuggerPresenter, JavaRuntimeResources resources,
-                       ResourceProvider resourceProvider) {
-        super("Debug Application", "Debug Application", resources.debugApp());
-        this.buildProjectPresenter = buildProjectPresenter;
+    public DebugAction(RunnerController runnerController, DebuggerPresenter debuggerPresenter, JavaRuntimeResources resources,
+                       ResourceProvider resourceProvider, JavaRuntimeLocalizationConstant localizationConstants) {
+        super(localizationConstants.debugAppActionText(), localizationConstants.debugAppActionDescription(), resources.debugApp());
+        this.runnerController = runnerController;
         this.debuggerPresenter = debuggerPresenter;
         this.resourceProvider = resourceProvider;
     }
@@ -53,13 +54,10 @@ public class DebugAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        buildProjectPresenter.buildActiveProject(new ProjectBuiltCallback() {
+        runnerController.runActiveProject(new ProjectRunCallback() {
             @Override
-            public void onBuilt(BuildStatus status) {
-                if (status == BuildStatus.SUCCESSFUL) {
-                    // TODO
-                    debuggerPresenter.connectDebugger("127.0.0.1", 8008);
-                }
+            public void onRun(ApplicationProcessDescriptor appDescriptor) {
+                debuggerPresenter.connectDebugger(appDescriptor);
             }
         });
     }

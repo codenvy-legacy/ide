@@ -64,7 +64,7 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-builder</artifactId>
+            <artifactId>codenvy-ext-runner</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

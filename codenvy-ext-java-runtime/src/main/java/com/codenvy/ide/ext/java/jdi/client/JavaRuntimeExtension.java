@@ -21,58 +21,50 @@ import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.debug.DebuggerManager;
-import com.codenvy.ide.ext.java.client.JavaExtension;
 import com.codenvy.ide.ext.java.jdi.client.actions.DebugAction;
-//import com.codenvy.ide.ext.java.jdi.client.actions.LogsAction;
-//import com.codenvy.ide.ext.java.jdi.client.actions.RunAction;
-//import com.codenvy.ide.ext.java.jdi.client.actions.StopAction;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
 import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolverFactory;
 import com.codenvy.ide.ext.java.jdi.client.fqn.JavaFqnResolver;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import static com.codenvy.ide.api.ui.action.IdeActions.*;
 import static com.codenvy.ide.MimeType.APPLICATION_JAVA;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_CONTEXT_MENU;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_TOOLBAR;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_CONTEXT_MENU;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_MAIN_MENU;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_TOOLBAR;
 import static com.codenvy.ide.ext.java.client.JavaExtension.SPRING_APPLICATION_PROJECT_TYPE;
 
 /**
- * Extension add Java Runtime support to the IDE Application.
+ * Extension allows debug Java web applications.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
+ * @author Artem Zatsarynnyy
  */
 @Singleton
-@Extension(title = "Java Runtime Support.", version = "3.0.0")
+@Extension(title = "Java Debugger.", version = "3.0.0")
 public class JavaRuntimeExtension {
     /** Channel for the messages containing debugger events. */
-    public static final String EVENTS_CHANNEL           = "debugger:events:";
-    /** Channel for the messages containing the application names which may be stopped soon. */
-    public static final String EXPIRE_SOON_APP_CHANNEL  = "debugger:expireSoonApp:";
+    public static final String EVENTS_CHANNEL     = "debugger:events:";
     /** Channel for the messages containing message which informs about debugger is disconnected. */
-    public static final String DISCONNECT_CHANNEL       = "debugger:disconnected:";
-    /** Channel for the messages containing message which informs about application is stopped. */
-    public static final String APPLICATION_STOP_CHANNEL = "runner:application-stopped:";
+    public static final String DISCONNECT_CHANNEL = "debugger:disconnected:";
 
     @Inject
-    public JavaRuntimeExtension(ActionManager actionManager/*, RunAction runAction*/, DebugAction debugAction, DebuggerManager debuggerManager,
-                                DebuggerPresenter debuggerPresenter, FqnResolverFactory resolverFactory, JavaFqnResolver javaFqnResolver/*,
-                                StopAction stopAction, LogsAction logsAction*/) {
-//        actionManager.registerAction("runJavaProject", runAction);
-        actionManager.registerAction("debugJavaProject", debugAction);
-//        actionManager.registerAction("stopJavaProject", stopAction);
-//        actionManager.registerAction("logsJavaProject", logsAction);
-        DefaultActionGroup run = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
-//        run.add(runAction);
-        run.add(debugAction);
-//        run.add(stopAction);
-//        run.add(logsAction);
+    public JavaRuntimeExtension(ActionManager actionManager, DebugAction debugAction, DebuggerManager debuggerManager,
+                                DebuggerPresenter debuggerPresenter, FqnResolverFactory resolverFactory, JavaFqnResolver javaFqnResolver,
+                                JavaRuntimeLocalizationConstant localizationConstant) {
+        // register actions
+        actionManager.registerAction(localizationConstant.debugAppActionId(), debugAction);
+
+        DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
+        runMenuActionGroup.add(debugAction);
 
         DefaultActionGroup mainToolbarGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_TOOLBAR);
-        DefaultActionGroup runGroup = new DefaultActionGroup(GROUP_RUN_TOOLBAR, false, actionManager);
-        actionManager.registerAction(GROUP_RUN_TOOLBAR, runGroup);
-//        runGroup.add(runAction);
-        runGroup.add(debugAction);
-        mainToolbarGroup.add(runGroup);
+        DefaultActionGroup runToolbarGroup = new DefaultActionGroup(GROUP_RUN_TOOLBAR, false, actionManager);
+        actionManager.registerAction(GROUP_RUN_TOOLBAR, runToolbarGroup);
+        runToolbarGroup.add(debugAction);
+        mainToolbarGroup.add(runToolbarGroup);
 
         DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
 
@@ -80,10 +72,7 @@ public class JavaRuntimeExtension {
         actionManager.registerAction(GROUP_RUN_CONTEXT_MENU, runContextGroup);
 
         runContextGroup.addSeparator();
-//        runContextGroup.add(runAction);
         runContextGroup.add(debugAction);
-//        runContextGroup.add(stopAction);
-//        runContextGroup.add(logsAction);
 
         contextMenuGroup.add(runContextGroup);
 

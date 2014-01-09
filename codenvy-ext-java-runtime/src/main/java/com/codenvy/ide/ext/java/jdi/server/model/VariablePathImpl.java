@@ -40,7 +40,7 @@ public class VariablePathImpl implements VariablePath {
     @Override
     public List<String> getPath() {
         if (path == null) {
-            path = new ArrayList<String>();
+            path = new ArrayList<>();
         }
         return path;
     }

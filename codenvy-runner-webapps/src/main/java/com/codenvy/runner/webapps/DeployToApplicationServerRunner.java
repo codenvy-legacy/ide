@@ -26,6 +26,7 @@ import com.codenvy.api.runner.internal.ResourceAllocators;
 import com.codenvy.api.runner.internal.Runner;
 import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
+import com.codenvy.api.runner.internal.dto.DebugMode;
 import com.codenvy.api.runner.internal.dto.RunRequest;
 import com.codenvy.commons.lang.IoUtil;
 
@@ -85,10 +86,11 @@ public class DeployToApplicationServerRunner extends Runner {
         return new RunnerConfigurationFactory() {
             @Override
             public RunnerConfiguration createRunnerConfiguration(RunRequest request) throws RunnerException {
+//                DebugMode debugMode = request.getDebugMode();
                 return new ApplicationServerRunnerConfiguration(DEFAULT_SERVER_NAME,
                                                                 portService.acquire(),
                                                                 request.getMemorySize(),
-                                                                8008,
+                                                                /*debugMode == null ? -1 : */portService.acquire(),
                                                                 false,
                                                                 DEBUG_TRANSPORT_PROTOCOL,
                                                                 request);

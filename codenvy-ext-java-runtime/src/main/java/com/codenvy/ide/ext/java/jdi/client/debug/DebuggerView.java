@@ -84,7 +84,7 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
      * @param breakPoints
      *         available breakpoints
      */
-    void setBreakPoints(@NotNull Array<Breakpoint> breakPoints);
+    void setBreakpoints(@NotNull Array<Breakpoint> breakPoints);
 
     /**
      * Sets java virtual machine name and version.

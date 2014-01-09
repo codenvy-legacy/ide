@@ -26,7 +26,6 @@ import java.util.Comparator;
  * Helps to order breakpoints by name of location and line number.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
  */
 final class BreakPointComparator implements Comparator<BreakPoint> {
     @Override

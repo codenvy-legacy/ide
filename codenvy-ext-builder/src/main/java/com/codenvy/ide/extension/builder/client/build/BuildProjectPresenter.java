@@ -81,7 +81,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     //    private       MessageBus                  messageBus;
     private       NotificationManager         notificationManager;
     private       Notification                notification;
-    private       ProjectBuiltCallback        projectBuiltCallback;
 
     /**
      * Create presenter.
@@ -118,15 +117,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
 
     /** Performs building of current project. */
     public void buildActiveProject() {
-        buildActiveProject(null);
-    }
-
-    /**
-     * Performs building of current project.
-     *
-     * @param projectBuiltCallback callback that will be called after project is built
-     */
-    public void buildActiveProject(ProjectBuiltCallback projectBuiltCallback) {
         if (isBuildInProgress) {
             String message = constant.buildInProgress(projectToBuild.getPath().substring(1));
             Notification notification = new Notification(message, ERROR);
@@ -134,7 +124,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
             return;
         }
         projectToBuild = resourceProvider.getActiveProject();
-        this.projectBuiltCallback = projectBuiltCallback;
         statusHandler = new BuildRequestStatusHandler(projectToBuild.getName(), eventBus, constant);
         doBuild();
     }
@@ -232,10 +221,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
 //        } catch (Exception e) {
 //            // nothing to do
 //        }
-
-        if (projectBuiltCallback != null) {
-            projectBuiltCallback.onBuilt(descriptor.getStatus());
-        }
 
         setBuildInProgress(false);
         String message = constant.buildFinished(projectToBuild.getName());

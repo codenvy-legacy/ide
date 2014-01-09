@@ -31,8 +31,7 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_MAIN_MENU;
 /**
  * Runner extension entry point.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: RunnerExtension.java Jul 2, 2013 4:14:56 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 @Extension(title = "Running project support.", version = "3.0.0")

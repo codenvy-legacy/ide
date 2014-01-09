@@ -68,6 +68,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private ApplicationProcessDescriptor applicationProcessDescriptor;
     /** Is launching of any application in progress? */
     private boolean                      isLaunchingInProgress;
+    private ProjectRunCallback           runCallback;
 
     /**
      * Create controller.
@@ -136,8 +137,17 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         return applicationProcessDescriptor != null && !isLaunchingInProgress;
     }
 
-    /** Run application. */
+    /** Run current project. */
     public void runActiveProject() {
+        runActiveProject(null);
+    }
+
+    /**
+     * Run current project.
+     *
+     * @param runCallback callback that will be called when project will run
+     */
+    public void runActiveProject(ProjectRunCallback runCallback) {
         currentProject = resourceProvider.getActiveProject();
         if (currentProject == null) {
             Window.alert("Project is not opened.");
@@ -149,6 +159,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             return;
         }
 
+        this.runCallback = runCallback;
         isLaunchingInProgress = true;
         notification = new Notification(constant.applicationStarting(currentProject.getName()), PROGRESS, this);
         notificationManager.showNotification(notification);
@@ -228,6 +239,11 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     private void afterApplicationLaunched(ApplicationProcessDescriptor appDescriptor) {
         this.applicationProcessDescriptor = appDescriptor;
+
+        if (runCallback != null) {
+            runCallback.onRun(appDescriptor);
+        }
+
         // TODO applicationProcessDescriptor.getUrl()
         final String uri = new UrlBuilder().setProtocol(Window.Location.getProtocol())
                                            .setHost(Window.Location.getHost())
