@@ -47,9 +47,7 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * Client to remote build server.
- * 
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * @author Andrey Parfonov
  */
 public class BuilderClient {
     public static final String                     BUILD_SERVER_BASE_URL     = "exo.ide.builder.build-server-base-url";
@@ -89,7 +87,7 @@ public class BuilderClient {
 
     /**
      * Send request to start collect list of dependencies. Process may be started immediately or add in queue.
-     * 
+     *
      * @param vfs virtual file system
      * @param projectId identifier of project we want to send for collect dependencies
      * @return ID of build task. It may be used as parameter for method {@link #status(String)} .
@@ -105,7 +103,7 @@ public class BuilderClient {
 
     /**
      * Send request to start collect project dependencies and add them in zip archive. Process may be started immediately or add in queue.
-     * 
+     *
      * @param vfs virtual file system
      * @param projectId identifier of project we want to send for collect dependencies
      * @param classifier classifier to look for, e.g. : sources. May be <code>null</code>.
@@ -126,7 +124,7 @@ public class BuilderClient {
 
     /**
      * Send request to start new build at remote build server. Build may be started immediately or add in queue.
-     * 
+     *
      * @param vfs virtual file system
      * @param projectId identifier of project we want to send for build
      * @return ID of build task. It may be used as parameter for method {@link #status(String)}.
@@ -148,7 +146,7 @@ public class BuilderClient {
 
     /**
      * Send request to start new build and deploy artifact. Build may be started immediately or add in queue.
-     * 
+     *
      * @param vfs virtual file system
      * @param projectId identifier of project we want to send for build
      * @return ID of build task. It may be used as parameter for method {@link #status(String)} .
@@ -163,8 +161,10 @@ public class BuilderClient {
         URL url = new URL(baseURL + "/builder/maven/deploy");
         String buildId = run(url, vfs.exportZip(projectId));
         final String uniqueBuildID = UUID.randomUUID().toString();
+        final String wsName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString();
+        final String userId = ConversationState.getCurrent().getIdentity().getUserId();
         LOG.info("EVENT#build-started# PROJECT#" + projectName + "# TYPE#" + projectType + "# ID#" + uniqueBuildID + "#");
-        LOG.info("EVENT#project-deployed# PROJECT#" + projectName + "# TYPE#" + projectType + "# PAAS#LOCAL#");
+        LOG.info("EVENT#artifact-deployed# WS#" + wsName + "# USER#" + userId + "# PROJECT#" + projectName + "# TYPE#" + projectType + "# PAAS#LOCAL#");
         startCheckingBuildStatus(buildId, projectName, projectType, uniqueBuildID);
         return buildId;
     }
@@ -212,7 +212,7 @@ public class BuilderClient {
 
     /**
      * Get result of build.
-     * 
+     *
      * @param buildID ID of build need to check
      * @return string that contains description of current status of build in JSON format. Do nothing with such string just re-send result
      *         to client
@@ -246,7 +246,7 @@ public class BuilderClient {
 
     /**
      * Check status of build.
-     * 
+     *
      * @param buildID ID of build need to check
      * @return string that contains description of current status of build in JSON format. Do nothing with such string just re-send result
      *         to client
@@ -280,7 +280,7 @@ public class BuilderClient {
 
     /**
      * Cancel build.
-     * 
+     *
      * @param buildID ID of build to be canceled
      * @param projectName name of project which build will be interrupted
      * @param projectType type of project which build will be interrupted
@@ -310,7 +310,7 @@ public class BuilderClient {
 
     /**
      * Read log of build.
-     * 
+     *
      * @param buildID ID of build
      * @return stream that contains build log
      * @throws IOException if any i/o errors occur
@@ -349,7 +349,7 @@ public class BuilderClient {
     /**
      * Check is URL for download artifact is valid. Artifact may be removed by timeout but GWT client not able to check it because to
      * cross-domain restriction for ajax requests.
-     * 
+     *
      * @param url URL for checking
      * @throws IOException if any i/o errors occur
      * @throws BuilderException URL is not valid or any other errors related to build server internal state
@@ -375,7 +375,7 @@ public class BuilderClient {
 
     /**
      * Add authentication info to the request. By default do nothing. May be reimplemented for particular authentication scheme.
-     * 
+     *
      * @param http HTTP connection to add authentication info, e.g. Basic authentication headers.
      * @throws IOException if any i/o errors occur
      */
@@ -425,7 +425,7 @@ public class BuilderClient {
     /**
      * Periodically checks status of the previously launched job and sends the status to WebSocket connection when job status will be
      * changed.
-     * 
+     *
      * @param buildId identifier of the build job to check status
      */
     private void startCheckingBuildStatus(final String buildId, final String projectName, final String projectType,
@@ -457,7 +457,7 @@ public class BuilderClient {
 
     /**
      * Publishes the message over WebSocket connection.
-     * 
+     *
      * @param data the data to be sent to the client
      * @param channelID channel identifier
      * @param e exception which has occurred or <code>null</code> if no exception
