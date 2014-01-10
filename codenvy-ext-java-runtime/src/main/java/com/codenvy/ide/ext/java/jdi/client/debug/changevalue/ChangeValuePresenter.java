@@ -63,7 +63,7 @@ public class ChangeValuePresenter implements ChangeValueView.ActionDelegate {
      * @param notificationManager
      */
     @Inject
-    protected ChangeValuePresenter(ChangeValueView view,
+    public ChangeValuePresenter(ChangeValueView view,
                                    DebuggerClientService service,
                                    JavaRuntimeLocalizationConstant constant,
                                    NotificationManager notificationManager,

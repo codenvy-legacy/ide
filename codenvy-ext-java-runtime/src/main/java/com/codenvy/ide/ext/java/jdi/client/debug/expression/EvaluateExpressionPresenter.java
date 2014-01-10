@@ -27,7 +27,6 @@ import com.codenvy.ide.rest.StringUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
 
 import javax.validation.constraints.NotNull;
 
@@ -55,9 +54,8 @@ public class EvaluateExpressionPresenter implements EvaluateExpressionView.Actio
      * @param notificationManager
      */
     @Inject
-    protected EvaluateExpressionPresenter(EvaluateExpressionView view, DebuggerClientService service,
-                                          JavaRuntimeLocalizationConstant constant, EventBus eventBus,
-                                          NotificationManager notificationManager) {
+    public EvaluateExpressionPresenter(EvaluateExpressionView view, DebuggerClientService service, JavaRuntimeLocalizationConstant constant,
+                                       NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
