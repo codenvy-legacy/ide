@@ -11,6 +11,7 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.resources.ProjectTypeAgent;
+import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.tutorial.wizard.newproject.pages.paas.PaasPageProvider;
 import com.codenvy.ide.tutorial.wizard.newproject.pages.page.PageProvider;
 import com.codenvy.ide.tutorial.wizard.newproject.pages.template.TemplatePageProvider;
@@ -40,11 +41,23 @@ public class NewProjectWizardTutorialExtension {
                                              TutorialHowToPresenter howToPresenter) {
         workspaceAgent.openPart(howToPresenter, EDITING);
 
+        Array<Property> codenvyTutorialProperties = Collections.createArray();
+        codenvyTutorialProperties.add(new Property("nature.mixin", Collections.createArray("CodenvyTutorial")));
+        codenvyTutorialProperties.add(new Property("exoide:projectDescription", Collections.createArray("Codenvy tutorial.")));
+        codenvyTutorialProperties.add(new Property("runner.name", Collections.createArray("sdk")));
+        codenvyTutorialProperties.add(new Property("vfs:projectType", Collections.createArray("CodenvyTutorial")));
+        codenvyTutorialProperties.add(new Property("nature.primary", Collections.createArray("java")));
+        codenvyTutorialProperties.add(new Property("vfs:mimeType", Collections.createArray("text/vnd.ideproject+directory")));
+        codenvyTutorialProperties.add(new Property("builder.maven.targets", Collections.createArray("clean", "install")));
+        codenvyTutorialProperties.add(new Property("builder.name", Collections.createArray("maven")));
+        codenvyTutorialProperties.add(new Property("folders.source", Collections.createArray("src/main/java", "src/main/resources")));
+
         projectTypeAgent.register(MY_PROJECT_TYPE,
                                   MY_PROJECT_TYPE,
                                   null,
                                   MY_PROJECT_TYPE,
-                                  Collections.<String>createArray());
+                                  Collections.<String>createArray(),
+                                  codenvyTutorialProperties);
 
         templateAgent.register(MY_TEMPLATE_1,
                                MY_TEMPLATE_1,

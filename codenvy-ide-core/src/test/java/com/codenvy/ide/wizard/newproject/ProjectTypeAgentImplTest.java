@@ -17,7 +17,9 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.resources.model.Property;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
 
@@ -34,17 +36,23 @@ import static junit.framework.Assert.assertEquals;
 @GwtModule("com.codenvy.ide.Core")
 public class ProjectTypeAgentImplTest extends GwtTestWithMockito {
     private ProjectTypeAgentImpl agent;
+    private Array<Property> projectProperties;
 
     @Before
     public void setUp() {
         agent = new ProjectTypeAgentImpl();
+        projectProperties = Collections.createArray();
+        projectProperties.add(new Property("propertieName", "propertieValue"));
     }
 
     @Test
     public void testRegister() throws Exception {
         assertEquals(agent.getProjectTypes().size(), 0);
 
-        agent.register("type", "title", null, "primaryNature", Collections.createArray("secondaryNature"));
+        Array<Property> projectProperties = Collections.createArray();
+        projectProperties.add(new Property("propertieName", "propertieValue"));
+
+        agent.register("type", "title", null, "primaryNature", Collections.createArray("secondaryNature"), projectProperties);
 
         assertEquals(agent.getProjectTypes().size(), 1);
     }
@@ -53,11 +61,11 @@ public class ProjectTypeAgentImplTest extends GwtTestWithMockito {
     public void testRegisterWhenProjectTypeIsExist() throws Exception {
         assertEquals(agent.getProjectTypes().size(), 0);
 
-        agent.register("type", "title", null, "primaryNature", Collections.createArray("secondaryNature"));
+        agent.register("type", "title", null, "primaryNature", Collections.createArray("secondaryNature"), projectProperties);
 
         assertEquals(agent.getProjectTypes().size(), 1);
 
-        agent.register("type", "title", null, "primaryNature", Collections.createArray("secondaryNature"));
+        agent.register("type", "title", null, "primaryNature", Collections.createArray("secondaryNature"), projectProperties);
 
         assertEquals(agent.getProjectTypes().size(), 1);
     }
