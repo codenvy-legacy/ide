@@ -48,9 +48,12 @@ public interface SelectProjectTypeView extends View<SelectProjectTypeView.Action
     /**
      * Sets project types.
      *
-     * @param projects
+     * @param types
      */
     void setTypes(@NotNull Array<String> types);
+
+    /** Clear project types. */
+    void clearTypes();
 
     /**
      * Returns chosen project's type.

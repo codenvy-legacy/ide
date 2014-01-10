@@ -78,6 +78,11 @@ public class SelectProjectTypeViewImpl extends DialogBox implements SelectProjec
         }
     }
 
+    @Override
+    public void clearTypes() {
+        projectTypeField.clear();
+    }
+
     /** {@inheritDoc} */
     @Override
     public void close() {

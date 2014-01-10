@@ -78,7 +78,7 @@ public class ChooseTemplatePagePresenterTest {
     @Before
     public void setUp() {
         template = new Template("id", "title", null, "primaryNature", Collections.createArray("secondaryNature"));
-        projectType = new ProjectTypeData("typeName", "title", null, "primaryNature", Collections.createArray("secondaryNature"));
+        projectType = new ProjectTypeData("typeName", "title", null, "primaryNature", Collections.createArray("secondaryNature"), null);
 
         page = new ChooseTemplatePagePresenter(view, resources, templateAgent, constant);
         page.setContext(wizardContext);
