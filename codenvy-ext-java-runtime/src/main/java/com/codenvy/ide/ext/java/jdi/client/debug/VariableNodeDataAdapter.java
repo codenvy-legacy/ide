@@ -31,7 +31,7 @@ import java.util.List;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class VariableTreeNodeDataAdapter implements NodeDataAdapter<Variable> {
+public class VariableNodeDataAdapter implements NodeDataAdapter<Variable> {
     private HashMap<Variable, TreeNodeElement<Variable>> treeNodeElements = new HashMap<Variable, TreeNodeElement<Variable>>();
 
     /** {@inheritDoc} */

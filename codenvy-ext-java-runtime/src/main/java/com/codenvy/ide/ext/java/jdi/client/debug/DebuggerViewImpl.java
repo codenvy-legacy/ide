@@ -123,15 +123,17 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
 
         TableElement breakPointsElement = Elements.createTableElement();
         breakPointsElement.setAttribute("style", "width: 100%");
-        SimpleList.ListEventDelegate<Breakpoint> listBreakPointsDelegate = new SimpleList.ListEventDelegate<Breakpoint>() {
+        SimpleList.ListEventDelegate<Breakpoint> breakpointListEventDelegate = new SimpleList.ListEventDelegate<Breakpoint>() {
             public void onListItemClicked(Element itemElement, Breakpoint itemData) {
                 breakpoints.getSelectionModel().setSelectedItem(itemData);
             }
 
             public void onListItemDoubleClicked(Element listItemBase, Breakpoint itemData) {
+                // TODO: implement got to breakpoint source feature
             }
         };
-        SimpleList.ListItemRenderer<Breakpoint> listBreakPointsRenderer = new SimpleList.ListItemRenderer<Breakpoint>() {
+
+        SimpleList.ListItemRenderer<Breakpoint> breakpointListItemRenderer = new SimpleList.ListItemRenderer<Breakpoint>() {
             @Override
             public void render(Element itemElement, Breakpoint itemData) {
                 TableCellElement label = Elements.createTDElement();
@@ -160,11 +162,11 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
                 return Elements.createTRElement();
             }
         };
-        breakpoints = SimpleList.create((SimpleList.View)breakPointsElement, coreRes.defaultSimpleListCss(),
-                                        listBreakPointsRenderer,
-                                        listBreakPointsDelegate);
+
+        breakpoints = SimpleList.create((SimpleList.View)breakPointsElement, coreRes.defaultSimpleListCss(), breakpointListItemRenderer,
+                                        breakpointListEventDelegate);
         this.breakpointsPanel.add(breakpoints);
-        this.variables = Tree.create(rendererResources, new VariableTreeNodeDataAdapter(), new VariableTreeNodeRenderer(rendererResources));
+        this.variables = Tree.create(rendererResources, new VariableNodeDataAdapter(), new VariableTreeNodeRenderer(rendererResources));
         this.variables.setTreeEventHandler(new Tree.Listener<Variable>() {
             @Override
             public void onNodeAction(TreeNodeElement<Variable> node) {

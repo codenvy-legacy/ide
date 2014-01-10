@@ -28,14 +28,18 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -135,17 +139,25 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         return applicationProcessDescriptor != null && !isLaunchingInProgress;
     }
 
-    /** Run current project. */
-    public void runActiveProject() {
-        runActiveProject(null);
+    /**
+     * Run current project.
+     *
+     * @param debug
+     *         if <code>true</code> - run in debug mode
+     */
+    public void runActiveProject(boolean debug) {
+        runActiveProject(debug, null);
     }
 
     /**
      * Run current project.
      *
-     * @param runCallback callback that will be called when project will run
+     * @param debug
+     *         if <code>true</code> - run in debug mode
+     * @param callback
+     *         callback that will be notified when project run
      */
-    public void runActiveProject(ProjectRunCallback runCallback) {
+    public void runActiveProject(boolean debug, final ProjectRunCallback callback) {
         currentProject = resourceProvider.getActiveProject();
         if (currentProject == null) {
             Window.alert("Project is not opened.");
@@ -153,15 +165,64 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
 
         if (isLaunchingInProgress) {
-            Window.alert("Launching of another application is in progress now.");
+            Window.alert("Launching of another project is in progress now.");
             return;
         }
 
-        this.runCallback = runCallback;
+        runCallback = callback;
         isLaunchingInProgress = true;
-        notification = new Notification(constant.applicationStarting(currentProject.getName()), PROGRESS, this);
+        notification = new Notification(constant.applicationStarting(currentProject.getName()), PROGRESS, RunnerController.this);
         notificationManager.showNotification(notification);
 
+        writeProperties(debug, new AsyncCallback<Project>() {
+            @Override
+            public void onSuccess(Project result) {
+                runActiveProject();
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                isLaunchingInProgress = false;
+                onFail(constant.startApplicationFailed(currentProject.getName()), caught);
+            }
+        });
+    }
+
+    private void writeProperties(boolean debug, final AsyncCallback<Project> callback) {
+        Project activeProject = resourceProvider.getActiveProject();
+        final String runnerName = (String)activeProject.getPropertyValue("runner.name");
+        if (runnerName != null) {
+            final String debugModePropertyName = "runner." + runnerName + ".debugmode";
+
+            Array<Property> projectProperties = Collections.createArray(activeProject.getProperties().asIterable());
+            Property property = activeProject.getProperty(debugModePropertyName);
+            if (property == null) {
+                property = new Property();
+                property.setName(debugModePropertyName);
+                projectProperties.add(property);
+            }
+
+            property.setValue(debug ? Collections.<String>createArray("default") : null);
+
+            activeProject.getProperties().clear();
+            activeProject.getProperties().addAll(projectProperties);
+            activeProject.flushProjectProperties(new AsyncCallback<Project>() {
+                @Override
+                public void onSuccess(Project result) {
+                    callback.onSuccess(result);
+                }
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    callback.onFailure(caught);
+                }
+            });
+        } else {
+            callback.onSuccess(null);
+        }
+    }
+
+    private void runActiveProject() {
         try {
             service.run(currentProject.getPath(),
                         new AsyncRequestCallback<String>(new StringUnmarshaller()) {
