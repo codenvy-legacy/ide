@@ -18,6 +18,7 @@
 package com.codenvy.ide.resources;
 
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.resources.model.Property;
 import com.google.gwt.resources.client.ImageResource;
 
 import javax.annotation.Nullable;
@@ -29,11 +30,12 @@ import javax.validation.constraints.NotNull;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class ProjectTypeData {
-    private String        typeName;
-    private String        title;
-    private ImageResource icon;
-    private String        primaryNature;
-    private Array<String> secondaryNature;
+    private String          typeName;
+    private String          title;
+    private ImageResource   icon;
+    private String          primaryNature;
+    private Array<String>   secondaryNature;
+    private Array<Property> properties;
 
     /**
      * Create a project type.
@@ -48,17 +50,21 @@ public class ProjectTypeData {
      *         primary nature that this project type supports
      * @param secondaryNature
      *         secondary nature which this project type supports
+     * @param properties
+     *         project properties
      */
     public ProjectTypeData(@NotNull String typeName,
                            @NotNull String title,
                            @Nullable ImageResource icon,
                            @NotNull String primaryNature,
-                           @NotNull Array<String> secondaryNature) {
+                           @NotNull Array<String> secondaryNature,
+                           @NotNull Array<Property> properties) {
         this.typeName = typeName;
         this.title = title;
         this.icon = icon;
         this.primaryNature = primaryNature;
         this.secondaryNature = secondaryNature;
+        this.properties = properties;
     }
 
     /** @return the project type's name */
@@ -89,5 +95,11 @@ public class ProjectTypeData {
     @NotNull
     public Array<String> getSecondaryNature() {
         return secondaryNature;
+    }
+
+    /** @return project properties */
+    @NotNull
+    public Array<Property> getProperties() {
+        return properties;
     }
 }

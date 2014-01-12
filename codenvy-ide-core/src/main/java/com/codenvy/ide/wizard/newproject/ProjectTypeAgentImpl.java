@@ -22,6 +22,7 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.codenvy.ide.resources.ProjectTypeData;
+import com.codenvy.ide.resources.model.Property;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -51,13 +52,14 @@ public class ProjectTypeAgentImpl implements ProjectTypeAgent {
                          @NotNull String title,
                          @Nullable ImageResource icon,
                          @NotNull String primaryNature,
-                         @NotNull Array<String> secondaryNature) {
+                         @NotNull Array<String> secondaryNature,
+                         @NotNull Array<Property> projectProperties) {
         if (projectTypes.containsKey(typeName)) {
             Window.alert("Project type with " + typeName + " name already exists");
             return;
         }
 
-        ProjectTypeData projectType = new ProjectTypeData(typeName, title, icon, primaryNature, secondaryNature);
+        ProjectTypeData projectType = new ProjectTypeData(typeName, title, icon, primaryNature, secondaryNature, projectProperties);
         projectTypes.put(typeName, projectType);
     }
 
