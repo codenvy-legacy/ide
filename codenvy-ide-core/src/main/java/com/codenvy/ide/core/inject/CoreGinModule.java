@@ -66,6 +66,8 @@ import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.keybinding.KeyBindingManager;
 import com.codenvy.ide.menu.MainMenuView;
 import com.codenvy.ide.menu.MainMenuViewImpl;
+import com.codenvy.ide.navigation.NavigateToFileView;
+import com.codenvy.ide.navigation.NavigateToFileViewImpl;
 import com.codenvy.ide.notification.NotificationManagerImpl;
 import com.codenvy.ide.notification.NotificationManagerView;
 import com.codenvy.ide.notification.NotificationManagerViewImpl;
@@ -253,6 +255,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(PreferencesView.class).to(PreferencesViewImpl.class).in(Singleton.class);
         bind(WelcomePartView.class).to(WelcomePartViewImpl.class).in(Singleton.class);
         bind(SelectProjectTypeView.class).to(SelectProjectTypeViewImpl.class).in(Singleton.class);
+        bind(NavigateToFileView.class).to(NavigateToFileViewImpl.class).in(Singleton.class);
 
         bind(ExtensionManagerView.class).to(ExtensionManagerViewImpl.class).in(Singleton.class);
     }
