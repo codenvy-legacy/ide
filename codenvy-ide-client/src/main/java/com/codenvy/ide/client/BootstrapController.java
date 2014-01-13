@@ -18,8 +18,6 @@
 package com.codenvy.ide.client;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.theme.Style;
-import com.codenvy.ide.api.ui.theme.ThemeAgent;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.core.ComponentException;
@@ -64,18 +62,17 @@ public class BootstrapController {
      * @param dtoRegistrar
      */
     @Inject
-    public BootstrapController(final Provider<ComponentRegistry> componentRegistry,
+    public BootstrapController(final ComponentRegistry componentRegistry,
                                final Provider<WorkspacePresenter> workspaceProvider,
-                               final StyleInjector styleInjector,
+                               StyleInjector styleInjector,
                                final ExtensionInitializer extensionInitializer,
                                final PreferencesManagerImpl preferencesManager,
                                UserClientService userService,
                                final ResourceProvider resourceProvider,
                                DtoRegistrar dtoRegistrar,
-                               final DtoFactory dtoFactory,
-                               final ThemeAgent themeAgent) {
+                               final DtoFactory dtoFactory) {
         this.dtoFactory = dtoFactory;
-
+        styleInjector.inject();
         ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW)
                       .setCallback(new Callback<Void, Exception>() {
                           @Override
@@ -99,18 +96,9 @@ public class BootstrapController {
                     final User user = dtoFactory.createDtoFromJson(result, User.class);
                     Map<String,String> attributes = user.getProfileAttributes();
                     preferencesManager.load(attributes);
-                    String theme = preferencesManager.getValue("Theme");
-                    if(theme != null){
-                       Style.setTheme(themeAgent.getTheme(theme));
-                       themeAgent.setCurrentThemeId(theme);
-                    }
-                    else{
-                        Style.setTheme(themeAgent.getDefault());
-                        themeAgent.setCurrentThemeId(themeAgent.getDefault().getId());
-                    }
-                    styleInjector.inject();
+
                     // initialize components
-                    componentRegistry.get().start(new Callback<Void, ComponentException>() {
+                    componentRegistry.start(new Callback<Void, ComponentException>() {
                         @Override
                         public void onSuccess(Void result) {
                             // instantiate extensions
