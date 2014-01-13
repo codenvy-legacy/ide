@@ -26,9 +26,7 @@ import java.util.Set;
 
 /**
  * JAX-RS application for Codenvy Factory feature.
- * 
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: FactoryApplication.java Jun 25, 2013 10:18:14 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 public class FactoryApplication extends Application {
 
@@ -37,6 +35,7 @@ public class FactoryApplication extends Application {
         Set<Class<?>> classes = new HashSet<>();
         classes.add(FactoryService.class);
         classes.add(CopyProjectService.class);
+        classes.add(WorkspacePrivacyService.class);
         classes.add(RequestContextResolver.class);
         return classes;
     }
