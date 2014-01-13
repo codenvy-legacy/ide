@@ -51,22 +51,18 @@ import java.util.Set;
  */
 public class WorkerNameEnvironment implements INameEnvironment {
 
-    private static final String      GET_CLASS_URL        = "/code-assistant/java/class-description?fqn=";
-    private static final String      FIND_CLASS_BY_PREFIX = "/code-assistant/java/find-by-prefix/";
-    private static       Set<String> packages             = new HashSet<String>();
+    private static Set<String> packages = new HashSet<String>();
     protected String restServiceContext;
     private   String vfsId;
     private   String projectId;
-    private   String wsName;
 
     /**
      *
      */
     public WorkerNameEnvironment(String projectId, String restContext, String vfsId, String wsName) {
         this.projectId = projectId;
-        restServiceContext = restContext;
+        restServiceContext = restContext + "/code-assistant-java" + wsName;
         this.vfsId = vfsId;
-        this.wsName = wsName;
     }
 
 //    /**
@@ -170,12 +166,12 @@ public class WorkerNameEnvironment implements INameEnvironment {
      *         project
      */
     public NameEnvironmentAnswer loadTypeInfo(final String fqn, String projectId) {
-        if(packages.contains(fqn)){
+        if (packages.contains(fqn)) {
             return null;
         }
         String url =
-                restServiceContext + wsName + GET_CLASS_URL + fqn + "&projectid=" + projectId + "&vfsid="
-                + vfsId;
+                restServiceContext + "/class-description?fqn=" + fqn + "&projectid=" + projectId +
+                "&vfsid=" + vfsId;
         String result = runSyncReques(url);
         if (result != null) {
 
@@ -230,7 +226,7 @@ public class WorkerNameEnvironment implements INameEnvironment {
                 return true;
             }
             String url =
-                    restServiceContext + wsName + "/code-assistant/java/find-packages" + "?package=" + p.toString()
+                    restServiceContext + "/find-packages" + "?package=" + p.toString()
                     + "&projectid=" + projectId + "&vfsid=" + vfsId;
             String findPackage = runSyncReques(url);
             if (findPackage != null) {
@@ -282,7 +278,7 @@ public class WorkerNameEnvironment implements INameEnvironment {
             }
         }
         String url =
-                restServiceContext + wsName + "/code-assistant/java/classes-by-prefix" + "?prefix=" + new String(simpleName)
+                restServiceContext + "/classes-by-prefix" + "?prefix=" + new String(simpleName)
                 + "&projectid=" + projectId + "&vfsid=" + vfsId;
         try {
             List<IBinaryType> typesByNamePrefix =
@@ -405,11 +401,11 @@ public class WorkerNameEnvironment implements INameEnvironment {
                 typeSearch = "fqn";
             }
             url =
-                    restServiceContext + wsName + "/code-assistant/java/find-by-prefix/" + new String(qualifiedName) + "?where="
+                    restServiceContext + "/find-by-prefix/" + new String(qualifiedName) + "?where="
                     + typeSearch + "&projectid=" + projectId + "&vfsid=" + vfsId;
         } else {
             url =
-                    restServiceContext + wsName + "/code-assistant/java/find-by-type/" + searchType + "?prefix="
+                    restServiceContext + "/find-by-type/" + searchType + "?prefix="
                     + new String(qualifiedName) + "&projectid=" + projectId + "&vfsid="
                     + vfsId;
         }
