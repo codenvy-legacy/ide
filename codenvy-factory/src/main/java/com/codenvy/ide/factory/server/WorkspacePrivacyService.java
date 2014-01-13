@@ -20,22 +20,16 @@ import javax.ws.rs.core.Response;
 @Path("{ws-name}/workspace")
 public class WorkspacePrivacyService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(WorkspacePrivacyService.class);
-
     @GET
     @Path("private")
     @Produces(MimeType.TEXT_PLAIN)
     public Response getWorkspacePrivacy() {
-        EnvironmentContext context = EnvironmentContext.getCurrent();
-        Boolean access = false;
-        if (context != null) {
-            access = EnvironmentContext.getCurrent().getVariable("WORKSPACE_IS_PRIVATE") != null
-                     && (Boolean)EnvironmentContext.getCurrent().getVariable("WORKSPACE_IS_PRIVATE");
-            LOG.info("Workspace {} private: {}", context.getVariable(EnvironmentContext.WORKSPACE_NAME), access);
-        } else {
-            LOG.error("Failed to obtain environment context.");
+        Object access = EnvironmentContext.getCurrent().getVariable("WORKSPACE_IS_PRIVATE");
+
+        if (access != null && access instanceof Boolean) {
+            return Response.ok().entity(access.toString()).header(HTTPHeader.CONTENT_TYPE, MimeType.TEXT_PLAIN).build();
         }
 
-        return Response.ok().entity(access.toString()).header(HTTPHeader.CONTENT_TYPE, MimeType.TEXT_PLAIN).build();
+        return Response.ok().entity(false).header(HTTPHeader.CONTENT_TYPE, MimeType.TEXT_PLAIN).build();
     }
 }
