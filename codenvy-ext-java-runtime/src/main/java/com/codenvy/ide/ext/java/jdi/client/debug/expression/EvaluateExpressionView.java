@@ -36,7 +36,7 @@ public interface EvaluateExpressionView extends View<EvaluateExpressionView.Acti
         void onEvaluateClicked();
 
         /** Performs any actions appropriate in response to the user having changed expression. */
-        void onValueExpressionChanged();
+        void onExpressionValueChanged();
     }
 
     /**

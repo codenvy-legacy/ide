@@ -26,7 +26,11 @@ import com.codenvy.ide.extension.runner.client.actions.StopAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_CONTEXT_MENU;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_TOOLBAR;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_CONTEXT_MENU;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_MAIN_MENU;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_TOOLBAR;
 
 /**
  * Runner extension entry point.
@@ -34,25 +38,36 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_MAIN_MENU;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-@Extension(title = "Running project support.", version = "3.0.0")
+@Extension(title = "Runner extension.", version = "3.0.0")
 public class RunnerExtension {
 
     @Inject
-    public RunnerExtension(RunnerLocalizationConstant localizationConstants,
-                           ActionManager actionManager,
-                           RunAction runAction,
-                           GetLogsAction getLogsAction,
-                           StopAction stopAction) {
+    public RunnerExtension(RunnerLocalizationConstant localizationConstants, ActionManager actionManager, RunAction runAction,
+                           GetLogsAction getLogsAction, StopAction stopAction) {
         // register actions
-        DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
-
         actionManager.registerAction(localizationConstants.runAppActionId(), runAction);
-        runMenuActionGroup.add(runAction);
-
         actionManager.registerAction(localizationConstants.getAppLogsActionId(), getLogsAction);
-        runMenuActionGroup.add(getLogsAction);
-
         actionManager.registerAction(localizationConstants.stopAppActionId(), stopAction);
+
+        // add actions in main menu
+        DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
+        runMenuActionGroup.add(runAction);
+        runMenuActionGroup.add(getLogsAction);
         runMenuActionGroup.add(stopAction);
+
+        // add actions on main toolbar
+        DefaultActionGroup mainToolbarGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_TOOLBAR);
+        DefaultActionGroup runToolbarGroup = new DefaultActionGroup(GROUP_RUN_TOOLBAR, false, actionManager);
+        actionManager.registerAction(GROUP_RUN_TOOLBAR, runToolbarGroup);
+        runToolbarGroup.add(runAction);
+        mainToolbarGroup.add(runToolbarGroup);
+
+        // add actions in context menu
+        DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
+        DefaultActionGroup runContextGroup = new DefaultActionGroup(GROUP_RUN_CONTEXT_MENU, false, actionManager);
+        actionManager.registerAction(GROUP_RUN_CONTEXT_MENU, runContextGroup);
+        runContextGroup.addSeparator();
+        runContextGroup.add(runAction);
+        contextMenuGroup.add(runContextGroup);
     }
 }

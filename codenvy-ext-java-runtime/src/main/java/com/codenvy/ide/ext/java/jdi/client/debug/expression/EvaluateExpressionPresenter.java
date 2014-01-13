@@ -33,7 +33,7 @@ import javax.validation.constraints.NotNull;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
- * Presenter for evaluate expression.
+ * Presenter for evaluating an expression.
  *
  * @author Artem Zatsarynnyy
  */
@@ -45,14 +45,7 @@ public class EvaluateExpressionPresenter implements EvaluateExpressionView.Actio
     private JavaRuntimeLocalizationConstant constant;
     private NotificationManager             notificationManager;
 
-    /**
-     * Create presenter.
-     *
-     * @param view
-     * @param service
-     * @param constant
-     * @param notificationManager
-     */
+    /** Create presenter. */
     @Inject
     public EvaluateExpressionPresenter(EvaluateExpressionView view, DebuggerClientService service, JavaRuntimeLocalizationConstant constant,
                                        NotificationManager notificationManager) {
@@ -100,8 +93,7 @@ public class EvaluateExpressionPresenter implements EvaluateExpressionView.Actio
 
                                            @Override
                                            protected void onFailure(Throwable exception) {
-                                               String errorMessage = constant.evaluateExpressionFailed(exception.getMessage());
-                                               view.setResult(errorMessage);
+                                               view.setResult(constant.evaluateExpressionFailed(exception.getMessage()));
                                                view.setEnableEvaluateButton(true);
                                            }
                                        });
@@ -114,8 +106,8 @@ public class EvaluateExpressionPresenter implements EvaluateExpressionView.Actio
 
     /** {@inheritDoc} */
     @Override
-    public void onValueExpressionChanged() {
-        String expression = view.getExpression();
+    public void onExpressionValueChanged() {
+        final String expression = view.getExpression();
         boolean isExpressionFieldNotEmpty = !expression.trim().isEmpty();
         view.setEnableEvaluateButton(isExpressionFieldNotEmpty);
     }

@@ -57,7 +57,7 @@
                                 <g:Label text="{locale.evaluateExpressionViewExpressionFieldTitle}" addStyleNames="{style.alignLeft}"/>
                             </g:north>
                             <g:center>
-                                <g:TextArea ui:field="expression"/>
+                                <g:TextBox ui:field="expression" height="16px"/>
                             </g:center>
                         </g:DockLayoutPanel>
                     </g:FlowPanel>

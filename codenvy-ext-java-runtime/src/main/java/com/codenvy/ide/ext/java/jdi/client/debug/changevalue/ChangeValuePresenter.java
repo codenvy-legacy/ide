@@ -36,16 +36,15 @@ import javax.validation.constraints.NotNull;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
- * Presenter for change value in debug process.
+ * Presenter for changing variables value.
  *
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: ChangeValuePresenter.java Apr 28, 2012 9:47:01 AM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 public class ChangeValuePresenter implements ChangeValueView.ActionDelegate {
     private ChangeValueView                 view;
     private DtoFactory                      dtoFactory;
-    /** Variable whose value need to change. */
+    /** Variable to change its value. */
     private Variable                        variable;
     /** Connected debugger information. */
     private DebuggerInfo                    debuggerInfo;
@@ -54,20 +53,10 @@ public class ChangeValuePresenter implements ChangeValueView.ActionDelegate {
     private NotificationManager             notificationManager;
     private AsyncCallback<String>           callback;
 
-    /**
-     * Create presenter.
-     *
-     * @param view
-     * @param service
-     * @param constant
-     * @param notificationManager
-     */
+    /** Create presenter. */
     @Inject
-    public ChangeValuePresenter(ChangeValueView view,
-                                   DebuggerClientService service,
-                                   JavaRuntimeLocalizationConstant constant,
-                                   NotificationManager notificationManager,
-                                   DtoFactory dtoFactory) {
+    public ChangeValuePresenter(ChangeValueView view, DebuggerClientService service, JavaRuntimeLocalizationConstant constant,
+                                NotificationManager notificationManager, DtoFactory dtoFactory) {
         this.view = view;
         this.dtoFactory = dtoFactory;
         this.view.setDelegate(this);
@@ -76,13 +65,7 @@ public class ChangeValuePresenter implements ChangeValueView.ActionDelegate {
         this.notificationManager = notificationManager;
     }
 
-    /**
-     * Show dialog.
-     *
-     * @param debuggerInfo
-     * @param variable
-     * @param callback
-     */
+    /** Show dialog. */
     public void showDialog(@NotNull DebuggerInfo debuggerInfo, @NotNull Variable variable, @NotNull AsyncCallback<String> callback) {
         this.debuggerInfo = debuggerInfo;
         this.variable = variable;
@@ -111,9 +94,9 @@ public class ChangeValuePresenter implements ChangeValueView.ActionDelegate {
         updateVariableRequest.setExpression(newValue);
 
         try {
-            service.setValue(debuggerInfo.getId(), updateVariableRequest, new AsyncRequestCallback<String>() {
+            service.setValue(debuggerInfo.getId(), updateVariableRequest, new AsyncRequestCallback<Void>() {
                 @Override
-                protected void onSuccess(String result) {
+                protected void onSuccess(Void result) {
                     callback.onSuccess(newValue);
                 }
 
@@ -135,8 +118,8 @@ public class ChangeValuePresenter implements ChangeValueView.ActionDelegate {
 
     /** {@inheritDoc} */
     @Override
-    public void onValueChanged() {
-        String value = view.getValue();
+    public void onVariableValueChanged() {
+        final String value = view.getValue();
         boolean isExpressionFieldNotEmpty = !value.trim().isEmpty();
         view.setEnableChangeButton(isExpressionFieldNotEmpty);
     }

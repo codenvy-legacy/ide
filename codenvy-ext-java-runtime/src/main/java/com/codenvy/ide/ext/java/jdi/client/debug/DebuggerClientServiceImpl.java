@@ -150,7 +150,7 @@ public class DebuggerClientServiceImpl implements DebuggerClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void setValue(@NotNull String id, @NotNull UpdateVariableRequest request, @NotNull AsyncRequestCallback<String> callback)
+    public void setValue(@NotNull String id, @NotNull UpdateVariableRequest request, @NotNull AsyncRequestCallback<Void> callback)
             throws RequestException {
         final String requestUrl = baseUrl + "/debug-java/" + Utils.getWorkspaceName() + "/value/set/" + id;
         final String json = dtoFactory.toJson(request);

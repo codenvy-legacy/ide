@@ -31,6 +31,7 @@ import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
+import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.debug.Breakpoint;
 import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.debug.Debugger;
@@ -64,7 +65,6 @@ import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
-import com.codenvy.ide.websocket.rest.exceptions.ServerException;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Timer;
@@ -213,8 +213,9 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 }
                 closeView();
 
-                if (exception instanceof ServerException) {
-                    ServerException serverException = (ServerException)exception;
+                if (exception instanceof com.codenvy.ide.websocket.rest.exceptions.ServerException) {
+                    com.codenvy.ide.websocket.rest.exceptions.ServerException serverException =
+                            (com.codenvy.ide.websocket.rest.exceptions.ServerException)exception;
                     if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus() && serverException.getMessage() != null
                         && serverException.getMessage().contains("not found")) {
                         onDebuggerDisconnected();

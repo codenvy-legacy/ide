@@ -57,9 +57,6 @@ public interface JavaRuntimeLocalizationConstant extends com.google.gwt.i18n.cli
     @Key("disconnectButton")
     String disconnectButton();
 
-    @Key("helpButton")
-    String helpButton();
-
     @Key("host")
     String host();
 
@@ -149,14 +146,6 @@ public interface JavaRuntimeLocalizationConstant extends com.google.gwt.i18n.cli
 
     @Key("evaluateExpressionFailed")
     String evaluateExpressionFailed(String reason);
-
-    /**
-     * **********************************************************************
-     * Re-launch debugger view
-     * **********************************************************************
-     */
-    @Key("notStartedYet")
-    String notStartedYet();
 
     /**
      * **********************************************************************

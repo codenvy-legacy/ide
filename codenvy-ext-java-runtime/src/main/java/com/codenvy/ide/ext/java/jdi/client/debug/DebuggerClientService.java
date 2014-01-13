@@ -127,7 +127,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void setValue(@NotNull String id, @NotNull UpdateVariableRequest request, @NotNull AsyncRequestCallback<String> callback)
+    void setValue(@NotNull String id, @NotNull UpdateVariableRequest request, @NotNull AsyncRequestCallback<Void> callback)
             throws RequestException;
 
     /**

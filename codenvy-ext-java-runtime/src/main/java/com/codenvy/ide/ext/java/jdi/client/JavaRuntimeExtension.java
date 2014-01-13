@@ -19,21 +19,23 @@ package com.codenvy.ide.ext.java.jdi.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.action.ActionManager;
+import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.debug.DebuggerManager;
 import com.codenvy.ide.ext.java.jdi.client.actions.DebugAction;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
 import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolverFactory;
 import com.codenvy.ide.ext.java.jdi.client.fqn.JavaFqnResolver;
+import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import static com.codenvy.ide.MimeType.APPLICATION_JAVA;
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_CONTEXT_MENU;
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_TOOLBAR;
+import static com.codenvy.ide.api.ui.action.Anchor.AFTER;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_CONTEXT_MENU;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_MAIN_MENU;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_TOOLBAR;
+import static com.codenvy.ide.ext.java.client.JavaExtension.JAVA_WEB_APPLICATION_PROJECT_TYPE;
 import static com.codenvy.ide.ext.java.client.JavaExtension.SPRING_APPLICATION_PROJECT_TYPE;
 
 /**
@@ -53,31 +55,25 @@ public class JavaRuntimeExtension {
     @Inject
     public JavaRuntimeExtension(ActionManager actionManager, DebugAction debugAction, DebuggerManager debuggerManager,
                                 DebuggerPresenter debuggerPresenter, FqnResolverFactory resolverFactory, JavaFqnResolver javaFqnResolver,
-                                JavaRuntimeLocalizationConstant localizationConstant) {
+                                JavaRuntimeLocalizationConstant localizationConstant,
+                                RunnerLocalizationConstant runnerLocalizationConstants) {
         // register actions
         actionManager.registerAction(localizationConstant.debugAppActionId(), debugAction);
 
+        // add actions in main menu
         DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
-        runMenuActionGroup.add(debugAction);
+        runMenuActionGroup.add(debugAction, new Constraints(AFTER, runnerLocalizationConstants.runAppActionId()));
 
-        DefaultActionGroup mainToolbarGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_TOOLBAR);
-        DefaultActionGroup runToolbarGroup = new DefaultActionGroup(GROUP_RUN_TOOLBAR, false, actionManager);
-        actionManager.registerAction(GROUP_RUN_TOOLBAR, runToolbarGroup);
+        // add actions on main toolbar
+        DefaultActionGroup runToolbarGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_TOOLBAR);
         runToolbarGroup.add(debugAction);
-        mainToolbarGroup.add(runToolbarGroup);
 
-        DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
-
-        DefaultActionGroup runContextGroup = new DefaultActionGroup(GROUP_RUN_CONTEXT_MENU, false, actionManager);
-        actionManager.registerAction(GROUP_RUN_CONTEXT_MENU, runContextGroup);
-
-        runContextGroup.addSeparator();
+        // add actions in context menu
+        DefaultActionGroup runContextGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_CONTEXT_MENU);
         runContextGroup.add(debugAction);
 
-        contextMenuGroup.add(runContextGroup);
-
         debuggerManager.registeredDebugger(SPRING_APPLICATION_PROJECT_TYPE, debuggerPresenter);
-
+        debuggerManager.registeredDebugger(JAVA_WEB_APPLICATION_PROJECT_TYPE, debuggerPresenter);
         resolverFactory.addResolver(APPLICATION_JAVA, javaFqnResolver);
     }
 }

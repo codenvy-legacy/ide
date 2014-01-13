@@ -28,6 +28,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -51,7 +52,7 @@ public class EvaluateExpressionViewImpl extends DialogBox implements EvaluateExp
     @UiField
     Button                          btnCancel;
     @UiField
-    TextArea                        expression;
+    TextBox                         expression;
     @UiField
     TextArea                        result;
     @UiField(provided = true)
@@ -139,6 +140,6 @@ public class EvaluateExpressionViewImpl extends DialogBox implements EvaluateExp
 
     @UiHandler("expression")
     public void handleKeyUp(KeyUpEvent event) {
-        delegate.onValueExpressionChanged();
+        delegate.onExpressionValueChanged();
     }
 }
