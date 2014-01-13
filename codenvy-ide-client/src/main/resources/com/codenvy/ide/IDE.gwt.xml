@@ -57,5 +57,5 @@
     <!-- Specify the paths for translatable code                    -->
     <source path='client'/>
     <source path='shared'/>
-
+    <set-configuration-property name="CssResource.style" value="pretty"/>
 </module>
