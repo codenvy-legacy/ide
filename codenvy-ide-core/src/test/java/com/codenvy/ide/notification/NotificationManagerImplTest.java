@@ -30,8 +30,8 @@ import static com.codenvy.ide.api.notification.Notification.State.READ;
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
-import static com.codenvy.ide.notification.NotificationContainer.HEIGHT;
-import static com.codenvy.ide.notification.NotificationContainer.WIDTH;
+import static com.codenvy.ide.notification.NotificationPartPresenter.HEIGHT;
+import static com.codenvy.ide.notification.NotificationPartPresenter.WIDTH;
 import static com.codenvy.ide.notification.NotificationManagerView.Status.EMPTY;
 import static com.codenvy.ide.notification.NotificationManagerView.Status.HAS_UNREAD;
 import static com.codenvy.ide.notification.NotificationManagerView.Status.IN_PROGRESS;
@@ -51,12 +51,12 @@ import static org.mockito.Mockito.verify;
 @GwtModule("com.codenvy.ide.Core")
 public class NotificationManagerImplTest extends GwtTestWithMockito {
     @Mock
-    private NotificationManagerView  view;
+    private NotificationManagerView   view;
     @Mock
-    private NotificationContainer    notificationContainer;
+    private NotificationPartPresenter notificationContainer;
     @Mock
-    private NotificationMessageStack notificationMessageStack;
-    private NotificationManagerImpl  manager;
+    private NotificationMessageStack  notificationMessageStack;
+    private NotificationManagerImpl   manager;
 
     @Before
     public void disarm() {

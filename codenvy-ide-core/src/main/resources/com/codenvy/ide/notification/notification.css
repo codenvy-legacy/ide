@@ -17,8 +17,8 @@
      */
 
     .notificationItem {
-        border: 1px solid rgba(0, 0, 0, 0.2);
-        margin: 2px;
+        /*border: 1px solid rgba(0, 0, 0, 0.2);*/
+        /*margin: 2px;*/
     }
 
     .notificationPanel {
@@ -29,12 +29,16 @@
         float: left;
     }
 
+    .top1px {
+        top: 1px !important;
+    }
+
     .error {
-        background: #F6CECE;
+        color: #bf3a37;
     }
 
     .warning {
-        background: #F6E3CE;
+        color: #cb772f;
     }
 
     .unread {

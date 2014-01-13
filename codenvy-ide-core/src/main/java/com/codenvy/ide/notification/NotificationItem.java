@@ -51,7 +51,7 @@ public class NotificationItem extends Composite implements Notification.Notifica
         void onCloseItemClicked(@NotNull Notification notification);
     }
 
-    private static final DateTimeFormat DATA_FORMAT = DateTimeFormat.getFormat("h:mm:ss a");
+    private static final DateTimeFormat DATA_FORMAT = DateTimeFormat.getFormat("hh:mm:ss");
     private DockLayoutPanel mainPanel;
     private HTML            title;
     private Label           time;
@@ -61,7 +61,7 @@ public class NotificationItem extends Composite implements Notification.Notifica
     private Notification    notification;
     private ActionDelegate  delegate;
 
-    /**
+        /**
      * Create notification item.
      *
      * @param resources
@@ -76,8 +76,8 @@ public class NotificationItem extends Composite implements Notification.Notifica
         notification.addObserver(this);
 
         mainPanel = new DockLayoutPanel(PX);
-        mainPanel.setHeight("25px");
-        mainPanel.setWidth("380px");
+        mainPanel.setHeight("16px");
+//        mainPanel.setWidth("100%");
         mainPanel.addStyleName(resources.notificationCss().notificationItem());
 
         if (!notification.isRead()) {
@@ -107,7 +107,8 @@ public class NotificationItem extends Composite implements Notification.Notifica
             changeImage(resources.info());
         }
 
-        Image closeIcon = new Image(resources.close());
+        Label closeIcon = new Label("X");
+        closeIcon.addStyleName(resources.notificationCss().top1px());
         closeIcon.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -117,9 +118,11 @@ public class NotificationItem extends Composite implements Notification.Notifica
         mainPanel.addEast(closeIcon, 25);
 
         time = new Label(DATA_FORMAT.format(notification.getTime()));
-        mainPanel.addWest(time, 70);
+        time.addStyleName(resources.notificationCss().top1px());
+        mainPanel.addWest(time, 55);
 
         title = new HTML(notification.getMessage());
+        title.addStyleName(resources.notificationCss().top1px());
         mainPanel.add(title);
 
         initWidget(mainPanel);

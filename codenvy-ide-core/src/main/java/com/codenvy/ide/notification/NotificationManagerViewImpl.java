@@ -17,6 +17,10 @@
  */
 package com.codenvy.ide.notification;
 
+import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.parts.PartStackUIResources;
+import com.codenvy.ide.api.parts.base.BaseView;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -42,7 +46,7 @@ import static com.codenvy.ide.notification.NotificationManagerView.Status.IN_PRO
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class NotificationManagerViewImpl extends Composite implements NotificationManagerView {
+public class NotificationManagerViewImpl extends BaseView<NotificationManagerView.ActionDelegate> implements NotificationManagerView {
     interface NotificationManagerViewImplUiBinder extends UiBinder<Widget, NotificationManagerViewImpl> {
     }
 
@@ -55,7 +59,7 @@ public class NotificationManagerViewImpl extends Composite implements Notificati
     @UiField
     SimplePanel iconPanel;
     @UiField(provided = true)
-    final   NotificationResources res;
+    final   Resources res;
     private ActionDelegate        delegate;
 
     /**
@@ -64,22 +68,13 @@ public class NotificationManagerViewImpl extends Composite implements Notificati
      * @param resources
      */
     @Inject
-    public NotificationManagerViewImpl(NotificationResources resources) {
+    public NotificationManagerViewImpl(PartStackUIResources partStackUIResources,
+                                       Resources resources) {
+        super(partStackUIResources);
         this.res = resources;
-        initWidget(ourUiBinder.createAndBindUi(this));
-        mainPanel.addDomHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                delegate.onClicked(event.getClientX(), event.getClientY());
-            }
-        }, ClickEvent.getType());
+        container.add(ourUiBinder.createAndBindUi(this));
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void setDelegate(ActionDelegate delegate) {
-        this.delegate = delegate;
-    }
 
     /** {@inheritDoc} */
     @Override
@@ -113,4 +108,11 @@ public class NotificationManagerViewImpl extends Composite implements Notificati
         String text = count > 0 ? String.valueOf(count) : "";
         this.count.setText(text);
     }
+
+    @Override
+    public void setContainer(NotificationContainer container) {
+        mainPanel.add(container);
+    }
+
+
 }

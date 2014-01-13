@@ -30,6 +30,8 @@ public interface NotificationResources extends ClientBundle {
 
         String floatLeft();
 
+        String top1px();
+
         String error();
 
         String unread();
