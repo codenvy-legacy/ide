@@ -23,43 +23,46 @@ import com.codenvy.api.runner.internal.dto.RunRequest;
 /**
  * Configuration of Web applications runner.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @author Artem Zatsarynnyy
  */
 public class ApplicationServerRunnerConfiguration extends RunnerConfiguration {
-    private final String  server;
-    private final boolean suspend;
-    private final String  transport;
+    private final String server;
+    private final int    httpPort;
 
-    public ApplicationServerRunnerConfiguration(String server, int httpPort, int memory, int debugPort, boolean suspend,
-                                                String transport, RunRequest runRequest) {
-        super(memory, httpPort, debugPort, runRequest);
+    private String debugTransport;
+
+    public ApplicationServerRunnerConfiguration(String server, int memory, int httpPort, RunRequest runRequest) {
+        super(memory, runRequest);
         this.server = server;
-        this.suspend = suspend;
-        this.transport = transport;
+        this.httpPort = httpPort;
     }
 
     public String getServer() {
         return server;
     }
 
-    public boolean isDebugSuspend() {
-        return suspend;
+    public int getHttpPort() {
+        return httpPort;
     }
 
     public String getDebugTransport() {
-        return transport;
+        return debugTransport;
+    }
+
+    public void setDebugTransport(String debugTransport) {
+        this.debugTransport = debugTransport;
     }
 
     @Override
     public String toString() {
-        return "RunnerConfiguration{" +
-               "server=" + server +
-               ", memory=" + getMemory() +
-               ", port=" + getPort() +
-               ", debugPort=" + getDebugPort() +
-               ", debugSuspend=" + suspend +
-               ", debugTransport=" + transport +
+        return "ApplicationServerRunnerConfiguration{" +
+               "memory=" + getMemory() +
+               ", links=" + getLinks() +
                ", request=" + getRequest() +
+               ", debugHost='" + getDebugHost() + '\'' +
+               ", debugPort=" + getDebugPort() +
+               ", debugSuspend=" + isDebugSuspend() +
+               ", server='" + server + '\'' +
                '}';
     }
 }

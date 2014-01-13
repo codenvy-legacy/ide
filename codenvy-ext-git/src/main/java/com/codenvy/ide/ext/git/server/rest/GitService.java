@@ -349,7 +349,7 @@ public class GitService {
     private boolean isMultiModule(ContentStream pomContent) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(pomContent.getStream()))){
             final Model pom = MavenUtils.readModel(reader);
-            return ("pom".equals(pom.getPackaging()));
+            return (pom.getModules().size() > 0);
         } catch (IOException e) {
             LOG.error("Can't read pom.xml to determine project's type.", e);
         }

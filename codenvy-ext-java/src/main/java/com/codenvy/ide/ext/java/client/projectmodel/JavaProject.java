@@ -127,7 +127,7 @@ public class JavaProject extends Project {
                     pack.setProject(JavaProject.this);
                     parent.addChild(pack);
                     // TODO workaround for a unified view for packages
-                    SourceFolder sourceFolder = getSourceFolder(pack);
+                   // SourceFolder sourceFolder = getSourceFolder(pack);
                     // refresh tree, cause additional hierarchy folders my have been created
                     refreshTree(folderParent, new AsyncCallback<Folder>() {
                         @Override

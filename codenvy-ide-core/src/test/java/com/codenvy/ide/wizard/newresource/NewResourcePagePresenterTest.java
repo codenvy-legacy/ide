@@ -110,6 +110,7 @@ public class NewResourcePagePresenterTest {
         Resource child = mock(Resource.class);
         when(child.getName()).thenReturn(RESOURCE_NAME);
         when(project.getChildren()).thenReturn(Collections.createArray(child));
+        when(project.getPath()).thenReturn("/TestProject");
 
         when(file.isFile()).thenReturn(true);
         when(folder.isFile()).thenReturn(false);

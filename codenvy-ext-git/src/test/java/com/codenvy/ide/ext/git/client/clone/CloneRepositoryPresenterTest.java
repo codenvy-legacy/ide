@@ -148,7 +148,6 @@ public class CloneRepositoryPresenterTest extends BaseTest {
         verify(view).getRemoteName();
         verify(view).getRemoteUri();
         verify(resourceProvider).createProject(eq(PROJECT_NAME), (Array<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
-        verify(resourceProvider).delete(eq(project), (AsyncCallback<String>)anyObject());
         verify(service).cloneRepositoryWS(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME), (RequestCallback<String>)anyObject());
         verify(service, never()).cloneRepository(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME),
                                                  (AsyncRequestCallback<String>)anyObject());
@@ -239,7 +238,6 @@ public class CloneRepositoryPresenterTest extends BaseTest {
         verify(service).cloneRepository(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME),
                                         (AsyncRequestCallback<String>)anyObject());
         verify(resourceProvider).createProject(eq(PROJECT_NAME), (Array<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
-        verify(resourceProvider).delete(eq(project), (AsyncCallback<String>)anyObject());
         verify(constant).cloneFailed(eq(REMOTE_URI));
     }
 
@@ -269,7 +267,6 @@ public class CloneRepositoryPresenterTest extends BaseTest {
         verify(service).cloneRepository(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME),
                                         (AsyncRequestCallback<String>)anyObject());
         verify(resourceProvider).createProject(eq(PROJECT_NAME), (Array<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
-        verify(resourceProvider).delete(eq(project), (AsyncCallback<String>)anyObject());
         verify(constant).cloneFailed(eq(REMOTE_URI));
     }
 

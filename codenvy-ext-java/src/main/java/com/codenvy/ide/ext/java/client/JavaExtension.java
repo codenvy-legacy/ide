@@ -31,6 +31,7 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.java.client.editor.JavaEditorProvider;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
@@ -47,6 +48,7 @@ import com.codenvy.ide.ext.java.client.wizard.NewInterfaceProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewPackageProvider;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
@@ -64,9 +66,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.collections.Collections.createArray;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 
-/**
- * @author Evgen Vidolob
- */
+/** @author Evgen Vidolob */
 @Extension(title = "Java Support : syntax highlighting and autocomplete.", version = "3.0.0")
 public class JavaExtension {
     private static final String JAVA_PERSPECTIVE                  = "Java";
@@ -122,23 +122,52 @@ public class JavaExtension {
         resourceProvider.registerModelProvider(JavaProject.PRIMARY_NATURE, new JavaProjectModelProvider(eventBus));
         JavaResources.INSTANCE.css().ensureInjected();
 
-        projectTypeAgent.register(JavaProject.PRIMARY_NATURE,
+        Array<String> emptyArray = Collections.createArray();
+
+        // Jar project properties
+        Array<Property> jarProperties = Collections.createArray();
+        jarProperties.add(new Property("nature.primary", Collections.createArray("java")));
+        jarProperties.add(new Property("vfs:projectType", Collections.createArray("Jar")));
+        jarProperties.add(new Property("exoide:classpath", emptyArray));
+        jarProperties.add(new Property("nature.mixin", Collections.createArray("Jar")));
+        jarProperties.add(new Property("vfs:mimeType", Collections.createArray("text/vnd.ideproject+directory")));
+        jarProperties.add(new Property("builder.name", Collections.createArray("maven")));
+        jarProperties.add(new Property("folders.source", Collections.createArray("src/main/java", "src/test/java")));
+        jarProperties.add(new Property("exoide:projectDescription", Collections.createArray("Simple JAR project.")));
+
+        // War project properties
+        Array<Property> warProperties = Collections.createArray();
+        warProperties.add(new Property("nature.primary", Collections.createArray("java")));
+        warProperties.add(new Property("exoide:classpath", emptyArray));
+        warProperties.add(new Property("nature.mixin", Collections.createArray("War")));
+        warProperties.add(new Property("exoide:target", Collections.createArray("CloudBees", "CloudFoundry", "AWS", "AppFog", "Tier3WF")));
+        warProperties.add(new Property("runner.name", Collections.createArray("webapps")));
+        warProperties.add(new Property("exoide:projectDescription", Collections.createArray("Java Web project.")));
+        warProperties.add(new Property("vfs:projectType", Collections.createArray("War")));
+        warProperties.add(new Property("vfs:mimeType", Collections.createArray("text/vnd.ideproject+directory")));
+        warProperties.add(new Property("builder.name", Collections.createArray("maven")));
+        warProperties.add(new Property("folders.source", Collections.createArray("src/main/java", "src/main/resources")));
+
+        projectTypeAgent.register(JAVA_APPLICATION_PROJECT_TYPE,
                                   "Java application",
                                   JavaResources.INSTANCE.newJavaProject(),
                                   PRIMARY_NATURE,
-                                  createArray(JAVA_APPLICATION_PROJECT_TYPE));
+                                  createArray(JAVA_APPLICATION_PROJECT_TYPE),
+                                  jarProperties);
 
         projectTypeAgent.register(JAVA_WEB_APPLICATION_PROJECT_TYPE,
                                   "Java web application",
                                   JavaResources.INSTANCE.newJavaProject(),
                                   PRIMARY_NATURE,
-                                  createArray(JAVA_WEB_APPLICATION_PROJECT_TYPE));
+                                  createArray(JAVA_WEB_APPLICATION_PROJECT_TYPE),
+                                  warProperties);
 
         projectTypeAgent.register(SPRING_APPLICATION_PROJECT_TYPE,
                                   "Spring application",
                                   JavaResources.INSTANCE.newJavaProject(),
                                   PRIMARY_NATURE,
-                                  createArray(SPRING_APPLICATION_PROJECT_TYPE));
+                                  createArray(SPRING_APPLICATION_PROJECT_TYPE),
+                                  warProperties);
 
         newResourceAgent.register(newClassHandler);
         newResourceAgent.register(newInterfaceHandler);

@@ -29,20 +29,27 @@
             margin-top: 6px;
             margin-bottom: 6px;
         }
+
+		.label {
+			line-height: 20px;
+		}
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="100%" height="100%">
-        <g:north size="32.0">
+        <g:north size="60.0">
             <g:FlowPanel width="100%" height="100%" addStyleNames="{style.space}">
-                <g:Label text="Resource name:" addStyleNames="{style.alignLeft}"/>
-                <g:TextBox width="85%" height="16px" alignment="LEFT" ui:field="resourceName" textAlignment="ALIGN_LEFT"
+                <g:Label text="Resource name:" width="100px" addStyleNames="{style.alignLeft} {style.label}"/>
+                <g:TextBox width="85%" height="20px" alignment="LEFT" ui:field="resourceName" textAlignment="ALIGN_LEFT"
                            addStyleNames="{style.alignLeft}"/>
+                <g:FlowPanel width="100%" height="5px" addStyleNames="{style.alignLeft}"></g:FlowPanel>
+                <g:Label width="100px" text="Parent folder:" addStyleNames="{style.alignLeft} {style.label}"/>
+                <g:ListBox width="85%" height="22px" ui:field="parent" addStyleNames="{style.alignLeft}"/>
             </g:FlowPanel>
         </g:north>
         <g:north size="20.0">
             <g:Label text="Choose a resource type:" addStyleNames="{res.coreCss.mainText}"/>
         </g:north>
         <g:center>
-            <g:ScrollPanel ui:field="resources" addStyleNames="{res.coreCss.simpleListContainer}"/>
+            <g:ScrollPanel height="95%" ui:field="resources" addStyleNames="{res.coreCss.simpleListContainer}"/>
         </g:center>
     </g:DockLayoutPanel>
 </ui:UiBinder>
