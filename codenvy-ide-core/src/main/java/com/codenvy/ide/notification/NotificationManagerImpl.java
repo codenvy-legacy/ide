@@ -49,7 +49,6 @@ public class NotificationManagerImpl extends BasePresenter
         implements NotificationManager, NotificationItem.ActionDelegate, Notification.NotificationObserver,
                    NotificationManagerView.ActionDelegate, NotificationMessageStack.ActionDelegate {
     private static final String TITEL = "Events";
-    private Resources                resources;
     private NotificationManagerView  view;
     private NotificationContainer    notificationContainer;
     private NotificationMessageStack notificationMessageStack;
@@ -62,11 +61,9 @@ public class NotificationManagerImpl extends BasePresenter
      * @param notificationMessageStack
      */
     @Inject
-    public NotificationManagerImpl(Resources resources,
-                                   NotificationManagerView view,
+    public NotificationManagerImpl(NotificationManagerView view,
                                    NotificationContainer notificationContainer,
                                    NotificationMessageStack notificationMessageStack) {
-        this.resources = resources;
         this.view = view;
         this.notificationContainer = notificationContainer;
         this.view.setDelegate(this);

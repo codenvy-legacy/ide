@@ -17,7 +17,9 @@
  */
 package com.codenvy.ide.notification;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.notification.Notification;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
@@ -30,8 +32,8 @@ import static com.codenvy.ide.api.notification.Notification.State.READ;
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
-import static com.codenvy.ide.notification.NotificationPartPresenter.HEIGHT;
-import static com.codenvy.ide.notification.NotificationPartPresenter.WIDTH;
+import static com.codenvy.ide.notification.NotificationContainer.HEIGHT;
+import static com.codenvy.ide.notification.NotificationContainer.WIDTH;
 import static com.codenvy.ide.notification.NotificationManagerView.Status.EMPTY;
 import static com.codenvy.ide.notification.NotificationManagerView.Status.HAS_UNREAD;
 import static com.codenvy.ide.notification.NotificationManagerView.Status.IN_PROGRESS;
@@ -53,9 +55,10 @@ public class NotificationManagerImplTest extends GwtTestWithMockito {
     @Mock
     private NotificationManagerView   view;
     @Mock
-    private NotificationPartPresenter notificationContainer;
+    private NotificationContainer notificationContainer;
     @Mock
     private NotificationMessageStack  notificationMessageStack;
+
     private NotificationManagerImpl   manager;
 
     @Before
@@ -165,22 +168,22 @@ public class NotificationManagerImplTest extends GwtTestWithMockito {
         verify(view).setStatus(eq(EMPTY));
     }
 
-    @Test
-    public void testOnClicked() throws Exception {
-        int left = 200;
-        int top = 100;
-
-        manager.onClicked(left, top);
-
-        verify(notificationContainer).show(eq(left - WIDTH), eq(top - HEIGHT - 50));
-    }
+//    @Test
+//    public void testOnClicked() throws Exception {
+//        int left = 200;
+//        int top = 100;
+//
+//        manager.onClicked(left, top);
+//
+//        verify(notificationContainer).show(eq(left - WIDTH), eq(top - HEIGHT - 50));
+//    }
 
     @Test
     public void testGo() throws Exception {
-        FlowPanel container = mock(FlowPanel.class);
+        AcceptsOneWidget container = mock(AcceptsOneWidget.class);
 
         manager.go(container);
 
-        verify(container).add(eq(view));
+        verify(container).setWidget(eq(view));
     }
 }

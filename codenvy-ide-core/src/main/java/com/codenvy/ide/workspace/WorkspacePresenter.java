@@ -56,7 +56,8 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
      * @param genericPerspectiveProvider
      */
     @Inject
-    protected WorkspacePresenter(WorkspaceView view, MainMenuPresenter menu,
+    protected WorkspacePresenter(WorkspaceView view,
+                                 MainMenuPresenter menu,
                                  @MainToolbar ToolbarPresenter toolbarPresenter,
                                  Provider<WorkBenchPresenter> genericPerspectiveProvider) {
         super();

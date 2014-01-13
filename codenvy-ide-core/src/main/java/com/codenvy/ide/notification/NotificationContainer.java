@@ -35,6 +35,8 @@ import java.util.Map;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
+
+//TODO need remove this class, rework functionality
 @Singleton
 public class NotificationContainer extends FlowPanel implements View<NotificationItem.ActionDelegate> {
     public static final int WIDTH  = 400;
