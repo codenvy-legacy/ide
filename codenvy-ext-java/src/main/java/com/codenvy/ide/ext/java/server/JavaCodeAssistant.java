@@ -179,7 +179,7 @@ public class JavaCodeAssistant extends CodeAssistant {
             return null;
         }
 
-        return new JavaTypeToTypeInfoConverter(storage, getProjectDependencys(projectId, vfsId)).convert(clazz);
+        return new JavaTypeToTypeInfoConverter(storage, getProjectDependencies(projectId, vfsId)).convert(clazz);
     }
 
     @Override
@@ -188,7 +188,7 @@ public class JavaCodeAssistant extends CodeAssistant {
         JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
         List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
         JavaTypeToTypeInfoConverter converter = new JavaTypeToTypeInfoConverter(storage,
-                                                                                getProjectDependencys(projectId, vfsId));
+                                                                                getProjectDependencies(projectId, vfsId));
         for (JavaClass clazz : builder.getClasses()) {
             if (clazz.getName().startsWith(className)) {
                 types.add(converter.toShortTypeInfo(clazz));
@@ -202,7 +202,7 @@ public class JavaCodeAssistant extends CodeAssistant {
             throws CodeAssistantException, VirtualFileSystemException {
         JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
         List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
-        JavaTypeToTypeInfoConverter converter = new JavaTypeToTypeInfoConverter(storage, getProjectDependencys(projectId, vfsId));
+        JavaTypeToTypeInfoConverter converter = new JavaTypeToTypeInfoConverter(storage, getProjectDependencies(projectId, vfsId));
         for (JavaClass clazz : builder.getClasses()) {
             if (clazz.getFullyQualifiedName().startsWith(prefix)) {
                 types.add(converter.toShortTypeInfo(clazz));
@@ -216,7 +216,7 @@ public class JavaCodeAssistant extends CodeAssistant {
             throws CodeAssistantException, VirtualFileSystemException {
         JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
         List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
-        JavaTypeToTypeInfoConverter converter = new JavaTypeToTypeInfoConverter(storage, getProjectDependencys(projectId, vfsId));
+        JavaTypeToTypeInfoConverter converter = new JavaTypeToTypeInfoConverter(storage, getProjectDependencies(projectId, vfsId));
         if (prefix == null || prefix.isEmpty()) {
             for (JavaClass clazz : builder.getClasses()) {
                 if (type == JavaTypeToTypeInfoConverter.getType(clazz)) {
@@ -281,7 +281,7 @@ public class JavaCodeAssistant extends CodeAssistant {
         JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
         List<TypeInfo> typeInfos = new ArrayList<>();
         JavaTypeToTypeInfoConverter converter = new JavaTypeToTypeInfoConverter(storage,
-                                                                                getProjectDependencys(projectId, vfsId));
+                                                                                getProjectDependencies(projectId, vfsId));
         for (JavaClass clazz : builder.getClasses()) {
             if (clazz.getName().startsWith(namePrefix)) {
                 typeInfos.add(converter.convert(clazz));

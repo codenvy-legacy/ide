@@ -38,7 +38,7 @@ import java.util.List;
 
 
 /** A simple list widget for displaying flat collections of things. */
-// TODO: When we hit a place where a componenet wants to ditch all of
+// TODO: When we hit a place where a component wants to ditch all of
 // the default simple list styles, figure out a way to make that easy.
 public class SimpleList<M> extends UiComponent<SimpleList.View> implements IsWidget {
 

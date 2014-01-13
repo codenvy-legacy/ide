@@ -21,7 +21,6 @@ package com.codenvy.ide.ext.java.jdi.server;
  * State of method invocation.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
  */
 public interface JdiStackFrame {
     /**

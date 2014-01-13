@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.java.jdi.server;
 
-
 import com.codenvy.ide.ext.java.jdi.server.expression.Evaluator;
 import com.codenvy.ide.ext.java.jdi.server.expression.ExpressionParser;
 import com.codenvy.ide.ext.java.jdi.server.model.BreakPointEventImpl;
@@ -73,18 +72,18 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static com.codenvy.commons.json.JsonHelper.toJson;
 
-
 /**
  * Connects to JVM over Java Debug Wire Protocol handle its events. All methods of this class may throws
  * DebuggerException. Typically such exception caused by errors in underlying JDI (Java Debug Interface), e.g.
  * connection errors. Instance of Debugger is not thread-safe.
  *
  * @author andrew00x
+ * @author Artem Zatsarynnyy
  */
 public class Debugger implements EventsHandler {
     private static final Logger                          LOG                  = LoggerFactory.getLogger(Debugger.class);
     private static final AtomicLong                      counter              = new AtomicLong(1);
-    private static final ConcurrentMap<String, Debugger> instances            = new ConcurrentHashMap<String, Debugger>();
+    private static final ConcurrentMap<String, Debugger> instances            = new ConcurrentHashMap<>();
     private static final String                          EVENTS_CHANNEL       = "debugger:events:";
     private static final String                          DISCONNECTED_CHANNEL = "debugger:disconnected:";
 
@@ -105,7 +104,7 @@ public class Debugger implements EventsHandler {
     final String id = Long.toString(counter.getAndIncrement());
     private final String host;
     private final int    port;
-    private final List<DebuggerEvent> events = new ArrayList<DebuggerEvent>();
+    private final List<DebuggerEvent> events = new ArrayList<>();
 
     /** Target Java VM representation. */
     private VirtualMachine  vm;
@@ -150,9 +149,7 @@ public class Debugger implements EventsHandler {
         try {
             vm = connector.attach(arguments);
             eventsCollector = new EventsCollector(vm.eventQueue(), this);
-        } catch (IOException ioe) {
-            throw new VMConnectException(ioe.getMessage(), ioe);
-        } catch (IllegalConnectorArgumentsException e) {
+        } catch (IOException | IllegalConnectorArgumentsException e) {
             throw new VMConnectException(e.getMessage(), e);
         }
         LOG.debug("Connect {}:{}", host, port);
@@ -201,9 +198,7 @@ public class Debugger implements EventsHandler {
         List<com.sun.jdi.Location> locations;
         try {
             locations = clazz.locationsOfLine(lineNumber);
-        } catch (AbsentInformationException e) {
-            throw new DebuggerException(e.getMessage(), e);
-        } catch (ClassNotPreparedException e) {
+        } catch (AbsentInformationException | ClassNotPreparedException e) {
             throw new DebuggerException(e.getMessage(), e);
         }
 
@@ -235,11 +230,7 @@ public class Debugger implements EventsHandler {
                 breakPointRequest.putProperty("org.exoplatform.ide.java.debug.condition.expression.parser", parser);
             }
             breakPointRequest.setEnabled(true);
-        } catch (NativeMethodException e) {
-            throw new DebuggerException(e.getMessage(), e);
-        } catch (InvalidRequestStateException e) {
-            throw new DebuggerException(e.getMessage(), e);
-        } catch (IllegalThreadStateException e) {
+        } catch (NativeMethodException | IllegalThreadStateException | InvalidRequestStateException e) {
             throw new DebuggerException(e.getMessage(), e);
         }
         LOG.debug("Add breakpoint: {}", location);
@@ -264,7 +255,7 @@ public class Debugger implements EventsHandler {
             }
             throw e;
         }
-        List<BreakPoint> breakPoints = new ArrayList<BreakPoint>(breakpointRequests.size());
+        List<BreakPoint> breakPoints = new ArrayList<>(breakpointRequests.size());
         for (BreakpointRequest breakpointRequest : breakpointRequests) {
             com.sun.jdi.Location location = breakpointRequest.location();
             breakPoints.add(new BreakPointImpl(new LocationImpl(location.declaringType().name(), location.lineNumber())));
@@ -287,7 +278,7 @@ public class Debugger implements EventsHandler {
         final String className = breakPoint.getLocation().getClassName();
         final int lineNumber = breakPoint.getLocation().getLineNumber();
         EventRequestManager requestManager = getEventManager();
-        List<BreakpointRequest> snapshot = new ArrayList<BreakpointRequest>(requestManager.breakpointRequests());
+        List<BreakpointRequest> snapshot = new ArrayList<>(requestManager.breakpointRequests());
         for (BreakpointRequest breakpointRequest : snapshot) {
             com.sun.jdi.Location location = breakpointRequest.location();
             if (location.declaringType().name().equals(className) && location.lineNumber() == lineNumber) {
@@ -308,7 +299,7 @@ public class Debugger implements EventsHandler {
     }
 
     /**
-     * Get next set of debugger events.
+     * Get next list of debugger events.
      *
      * @return set of the debugger's events which occurred after last visit this method
      * @throws DebuggerException
@@ -317,7 +308,7 @@ public class Debugger implements EventsHandler {
     public List<DebuggerEvent> getEvents() throws DebuggerException {
         List<DebuggerEvent> eventsSnapshot;
         synchronized (events) {
-            eventsSnapshot = new ArrayList<DebuggerEvent>(events);
+            eventsSnapshot = new ArrayList<>(events);
             events.clear();
         }
         return eventsSnapshot;
@@ -449,7 +440,7 @@ public class Debugger implements EventsHandler {
         ValueImpl value = new ValueImpl();
         value.setValue(variable.getValue().getAsString());
         for (JdiVariable ch : variable.getValue().getVariables()) {
-            VariablePath chPath = new VariablePathImpl(new ArrayList<String>(path));
+            VariablePath chPath = new VariablePathImpl(new ArrayList<>(path));
             chPath.getPath().add(ch.getName());
             if (ch instanceof JdiField) {
                 JdiField f = (JdiField)ch;
@@ -577,7 +568,7 @@ public class Debugger implements EventsHandler {
                 events.add(breakPointEvent);
             }
 
-            List<DebuggerEvent> eventsList = new ArrayList<DebuggerEvent>();
+            List<DebuggerEvent> eventsList = new ArrayList<>();
             eventsList.add(breakPointEvent);
             publishWebSocketMessage(new DebuggerEventListImpl(eventsList), EVENTS_CHANNEL + id);
         }
@@ -596,7 +587,7 @@ public class Debugger implements EventsHandler {
             events.add(stepEvent);
         }
 
-        List<DebuggerEvent> eventsList = new ArrayList<DebuggerEvent>();
+        List<DebuggerEvent> eventsList = new ArrayList<>();
         eventsList.add(stepEvent);
         publishWebSocketMessage(new DebuggerEventListImpl(eventsList), EVENTS_CHANNEL + id);
 
@@ -656,7 +647,7 @@ public class Debugger implements EventsHandler {
     }
 
     private void clearSteps() throws DebuggerException {
-        List<StepRequest> snapshot = new ArrayList<StepRequest>(getEventManager().stepRequests());
+        List<StepRequest> snapshot = new ArrayList<>(getEventManager().stepRequests());
         for (StepRequest stepRequest : snapshot) {
             if (stepRequest.thread().equals(getCurrentThread())) {
                 getEventManager().deleteEventRequest(stepRequest);

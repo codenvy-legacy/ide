@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.fqn;
 
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -31,12 +31,12 @@ import javax.validation.constraints.NotNull;
  */
 @Singleton
 public class FqnResolverFactory {
-    private JsonStringMap<FqnResolver> resolvers;
+    private StringMap<FqnResolver> resolvers;
 
     /** Create factory. */
     @Inject
     protected FqnResolverFactory() {
-        this.resolvers = JsonCollections.createStringMap();
+        this.resolvers = Collections.createStringMap();
     }
 
     public void addResolver(@NotNull String mimeType, @NotNull FqnResolver resolver) {

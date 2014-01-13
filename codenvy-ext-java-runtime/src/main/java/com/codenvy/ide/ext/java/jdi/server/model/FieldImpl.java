@@ -51,43 +51,43 @@ public class FieldImpl extends VariableImpl implements Field {
     }
 
     @Override
-    public boolean isFinal() {
+    public boolean isIsFinal() {
         return isFinal;
     }
 
     @Override
-    public boolean isStatic() {
+    public boolean isIsStatic() {
         return isStatic;
     }
 
 
     @Override
-    public boolean isTransient() {
+    public boolean isIsTransient() {
         return isTransient;
     }
 
     @Override
-    public boolean isVolatile() {
+    public boolean isIsVolatile() {
         return isVolatile;
     }
 
     @Override
-    public void setFinal(boolean value) {
+    public void setIsFinal(boolean value) {
         this.isFinal = value;
     }
 
     @Override
-    public void setStatic(boolean value) {
+    public void setIsStatic(boolean value) {
         this.isStatic = value;
     }
 
     @Override
-    public void setVolatile(boolean value) {
+    public void setIsVolatile(boolean value) {
         this.isVolatile = value;
     }
 
     @Override
-    public void setTransient(boolean value) {
+    public void setIsTransient(boolean value) {
         this.isTransient = value;
     }
 

@@ -46,14 +46,14 @@ public class StepEventImpl implements StepEvent {
     }
 
     @Override
+    public final int getType() {
+        return STEP;
+    }
+
+    @Override
     public String toString() {
         return "StepEventImpl{" +
                "location=" + location +
                '}';
-    }
-
-    @Override
-    public final int getType() {
-        return STEP;
     }
 }

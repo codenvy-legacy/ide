@@ -2,8 +2,8 @@
  * CODENVY CONFIDENTIAL
  * __________________
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
+ *  [2012] - [2014] Codenvy, S.A.
+ *  All Rights Reserved.
  *
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
@@ -15,30 +15,15 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.jdi.server;
+package com.codenvy.ide.extension.runner.client;
 
-import javax.ws.rs.core.Application;
-import java.util.HashSet;
-import java.util.Set;
+import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * //
+ *
+ * @author Artem Zatsarynnyy
  */
-public class DebuggerApplication extends Application {
-    private final Set<Class<?>> classes;
-
-
-    public DebuggerApplication() {
-        classes = new HashSet<Class<?>>(1);
-        classes.add(DebuggerService.class);
-
-    }
-
-    @Override
-    public Set<Class<?>> getClasses() {
-        return classes;
-    }
-
-
+public interface ProjectRunCallback {
+    void onRun(ApplicationProcessDescriptor appDescriptor);
 }

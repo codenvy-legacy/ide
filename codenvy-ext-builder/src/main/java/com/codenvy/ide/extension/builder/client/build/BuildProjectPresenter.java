@@ -25,8 +25,6 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
-import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.builder.client.BuilderClientService;
 import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
@@ -59,9 +57,8 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 
 @Singleton
 public class BuildProjectPresenter implements Notification.OpenNotificationHandler {
-    private final static String TITLE = "Output";
     /** Delay in millisecond between requests for build job status. */
-    private static final int    delay = 3000;
+    private static final int delay = 3000;
     /** Handler for processing Maven build status which is received over WebSocket connection. */
 //    private final SubscriptionHandler<String> buildStatusHandler;
     private final DtoFactory dtoFactory;
@@ -116,24 +113,15 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         this.dtoFactory = dtoFactory;
     }
 
-    /**
-     * Performs building of project.
-     *
-     * @param project
-     *         project to build. If <code>null</code> - active project will build.
-     */
-    public void buildProject(Project project) {
+    /** Performs building of current project. */
+    public void buildActiveProject() {
         if (isBuildInProgress) {
             String message = constant.buildInProgress(projectToBuild.getPath().substring(1));
             Notification notification = new Notification(message, ERROR);
             notificationManager.showNotification(notification);
             return;
         }
-        if (project == null) {
-            projectToBuild = resourceProvider.getActiveProject();
-        } else {
-            projectToBuild = project;
-        }
+        projectToBuild = resourceProvider.getActiveProject();
         statusHandler = new BuildRequestStatusHandler(projectToBuild.getName(), eventBus, constant);
         doBuild();
     }
@@ -161,9 +149,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                                   notification.setStatus(FINISHED);
                                   notification.setType(ERROR);
                                   notification.setMessage(exception.getMessage());
-                                  if (!(exception instanceof ServerException)) {
-                                      eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                  }
                               }
                           });
         } catch (RequestException e) {
@@ -231,6 +216,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
 //        } catch (Exception e) {
 //            // nothing to do
 //        }
+
         setBuildInProgress(false);
         String message = constant.buildFinished(projectToBuild.getName());
         notification.setStatus(FINISHED);
@@ -283,7 +269,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                 }
             });
         } catch (RequestException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
     }
 
@@ -303,7 +289,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         public RefreshBuildStatusTimer(BuildTaskDescriptor buildTaskDescriptor) {
             this.buildTaskDescriptor = buildTaskDescriptor;
         }
-
 
         @Override
         public void run() {
@@ -338,8 +323,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                         notification.setMessage(exception.getMessage());
                         notification.setType(ERROR);
 
-                        eventBus.fireEvent(new ExceptionThrownEvent(exception));
-
                     }
                 });
             } catch (RequestException e) {
@@ -347,7 +330,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                 notification.setStatus(FINISHED);
                 notification.setMessage(e.getMessage());
                 notification.setType(ERROR);
-                eventBus.fireEvent(new ExceptionThrownEvent(e));
             }
         }
 

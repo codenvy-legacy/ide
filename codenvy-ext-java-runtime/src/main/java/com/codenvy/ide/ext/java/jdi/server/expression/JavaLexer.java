@@ -3,6 +3,8 @@
 package com.codenvy.ide.ext.java.jdi.server.expression;
 
 
+import org.antlr.runtime.*;
+
 public class JavaLexer extends Lexer {
     public static final int EOF                           = -1;
     public static final int AND                           = 4;

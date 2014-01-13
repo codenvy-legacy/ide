@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- *
- * [2012] - [2013] Codenvy, S.A.
+ * 
+ * [2012] - [$today.year] Codenvy, S.A. 
  * All Rights Reserved.
- *
+ * 
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -15,20 +15,28 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.extension.builder.client.event;
-
-import com.google.gwt.event.shared.EventHandler;
+package com.codenvy.ide.websocket.rest;
 
 /**
- * Class, that implements this handler, will listen when project has built.
+ * String unmarshaller for websocket messages.
  *
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: ProjectBuiltHandler.java Apr 3, 2012 12:23:21 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
-public interface ProjectBuiltHandler extends EventHandler {
-    /**
-     * @param event
-     *         event generated when project is built
-     */
-    void onProjectBuilt(ProjectBuiltEvent event);
+import com.codenvy.ide.websocket.Message;
+
+/** Deserializer for responses body. */
+public class StringUnmarshallerWS implements Unmarshallable<String> {
+    protected String builder;
+
+    /** {@inheritDoc} */
+    @Override
+    public void unmarshal(Message message) {
+        builder = message.getBody();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getPayload() {
+        return builder;
+    }
 }

@@ -52,7 +52,6 @@ public class VariableTreeNodeRenderer implements NodeRenderer<Variable> {
 
         @Source("local.png")
         ImageResource local();
-
     }
 
     private final Css css;

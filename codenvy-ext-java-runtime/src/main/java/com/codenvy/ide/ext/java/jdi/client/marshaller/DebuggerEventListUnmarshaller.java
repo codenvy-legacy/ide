@@ -23,8 +23,8 @@ import com.codenvy.ide.ext.java.jdi.shared.BreakPointEvent;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerEvent;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerEventList;
 import com.codenvy.ide.ext.java.jdi.shared.StepEvent;
-import com.codenvy.ide.websocket.Message;
-import com.codenvy.ide.websocket.rest.Unmarshallable;
+import com.codenvy.ide.rest.Unmarshallable;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -32,15 +32,15 @@ import com.google.gwt.json.client.JSONParser;
 import java.util.ArrayList;
 
 /**
- * Unmarshaller for deserializing debugger event list, which is received over WebSocket connection.
+ * Unmarshaller for deserializing debugger event list.
  *
  * @author Artem Zatsarynnyy
  */
-public class DebuggerEventListUnmarshallerWS implements Unmarshallable<DebuggerEventList> {
+public class DebuggerEventListUnmarshaller implements Unmarshallable<DebuggerEventList> {
     private DtoFactory        dtoFactory;
     private DebuggerEventList events;
 
-    public DebuggerEventListUnmarshallerWS(DtoFactory dtoFactory) {
+    public DebuggerEventListUnmarshaller(DtoFactory dtoFactory) {
         this.dtoFactory = dtoFactory;
         this.events = dtoFactory.createDto(DebuggerEventList.class);
         this.events.setEvents(new ArrayList<DebuggerEvent>());
@@ -48,8 +48,8 @@ public class DebuggerEventListUnmarshallerWS implements Unmarshallable<DebuggerE
 
     /** {@inheritDoc} */
     @Override
-    public void unmarshal(Message response) throws UnmarshallerException {
-        JSONObject jsonObject = JSONParser.parseStrict(response.getBody()).isObject();
+    public void unmarshal(Response response) throws UnmarshallerException {
+        JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();
         if (jsonObject == null) {
             return;
         }

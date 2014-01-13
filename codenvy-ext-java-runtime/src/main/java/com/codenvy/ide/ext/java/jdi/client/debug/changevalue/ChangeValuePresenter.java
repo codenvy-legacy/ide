@@ -19,7 +19,6 @@ package com.codenvy.ide.ext.java.jdi.client.debug.changevalue;
 
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerClientService;
@@ -31,64 +30,42 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
 
 import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
- * Presenter for change value in debug process.
+ * Presenter for changing variables value.
  *
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: ChangeValuePresenter.java Apr 28, 2012 9:47:01 AM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 public class ChangeValuePresenter implements ChangeValueView.ActionDelegate {
-    private ChangeValueView view;
-    private DtoFactory dtoFactory;
-    /** Variable whose value need to change. */
+    private ChangeValueView                 view;
+    private DtoFactory                      dtoFactory;
+    /** Variable to change its value. */
     private Variable                        variable;
     /** Connected debugger information. */
     private DebuggerInfo                    debuggerInfo;
     private DebuggerClientService           service;
-    private EventBus                        eventBus;
     private JavaRuntimeLocalizationConstant constant;
     private NotificationManager             notificationManager;
     private AsyncCallback<String>           callback;
 
-    /**
-     * Create presenter.
-     *
-     * @param view
-     * @param service
-     * @param eventBus
-     * @param constant
-     * @param notificationManager
-     */
+    /** Create presenter. */
     @Inject
-    protected ChangeValuePresenter(ChangeValueView view,
-                                   DebuggerClientService service,
-                                   EventBus eventBus,
-                                   JavaRuntimeLocalizationConstant constant,
-                                   NotificationManager notificationManager,
-                                   DtoFactory dtoFactory) {
+    public ChangeValuePresenter(ChangeValueView view, DebuggerClientService service, JavaRuntimeLocalizationConstant constant,
+                                NotificationManager notificationManager, DtoFactory dtoFactory) {
         this.view = view;
         this.dtoFactory = dtoFactory;
         this.view.setDelegate(this);
         this.service = service;
-        this.eventBus = eventBus;
         this.constant = constant;
         this.notificationManager = notificationManager;
     }
 
-    /**
-     * Show dialog.
-     *
-     * @param debuggerInfo
-     * @param variable
-     * @param callback
-     */
+    /** Show dialog. */
     public void showDialog(@NotNull DebuggerInfo debuggerInfo, @NotNull Variable variable, @NotNull AsyncCallback<String> callback) {
         this.debuggerInfo = debuggerInfo;
         this.variable = variable;
@@ -117,22 +94,20 @@ public class ChangeValuePresenter implements ChangeValueView.ActionDelegate {
         updateVariableRequest.setExpression(newValue);
 
         try {
-            service.setValue(debuggerInfo.getId(), updateVariableRequest, new AsyncRequestCallback<String>() {
+            service.setValue(debuggerInfo.getId(), updateVariableRequest, new AsyncRequestCallback<Void>() {
                 @Override
-                protected void onSuccess(String result) {
+                protected void onSuccess(Void result) {
                     callback.onSuccess(newValue);
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    eventBus.fireEvent(new ExceptionThrownEvent(exception));
                     Notification notification = new Notification(exception.getMessage(), ERROR);
                     notificationManager.showNotification(notification);
                     callback.onFailure(exception);
                 }
             });
         } catch (RequestException e) {
-            eventBus.fireEvent(new ExceptionThrownEvent(e));
             Notification notification = new Notification(e.getMessage(), ERROR);
             notificationManager.showNotification(notification);
             callback.onFailure(e);
@@ -143,8 +118,8 @@ public class ChangeValuePresenter implements ChangeValueView.ActionDelegate {
 
     /** {@inheritDoc} */
     @Override
-    public void onValueChanged() {
-        String value = view.getValue();
+    public void onVariableValueChanged() {
+        final String value = view.getValue();
         boolean isExpressionFieldNotEmpty = !value.trim().isEmpty();
         view.setEnableChangeButton(isExpressionFieldNotEmpty);
     }

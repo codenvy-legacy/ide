@@ -146,6 +146,6 @@ public class ChangeValueViewImpl extends DialogBox implements ChangeValueView {
 
     @UiHandler("value")
     public void onValueChanged(KeyUpEvent event) {
-        delegate.onValueChanged();
+        delegate.onVariableValueChanged();
     }
 }

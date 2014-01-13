@@ -17,24 +17,24 @@
  */
 package com.codenvy.ide.ext.java.jdi.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
 @DTO
 public interface Field extends Variable {
-    boolean isFinal();
+    boolean isIsFinal();
 
-    boolean isStatic();
+    boolean isIsStatic();
 
-    boolean isTransient();
+    boolean isIsTransient();
 
-    boolean isVolatile();
+    boolean isIsVolatile();
 
-    void setFinal(boolean value);
+    void setIsFinal(boolean value);
 
-    void setStatic(boolean value);
+    void setIsStatic(boolean value);
 
-    void setVolatile(boolean value);
+    void setIsVolatile(boolean value);
 
-    void setTransient(boolean value);
+    void setIsTransient(boolean value);
 }

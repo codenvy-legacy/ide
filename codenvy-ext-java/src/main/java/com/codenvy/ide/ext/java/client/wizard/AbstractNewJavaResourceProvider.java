@@ -20,6 +20,7 @@ package com.codenvy.ide.ext.java.client.wizard;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.java.client.projectmodel.CompilationUnit;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.client.projectmodel.SourceFolder;
@@ -93,27 +94,21 @@ public abstract class AbstractNewJavaResourceProvider extends NewResourceProvide
     }
 
     /** @return package name */
-    protected String getPackage(@NotNull Folder parent) {
+    protected String getPackage(@NotNull Folder parent, @NotNull Array<SourceFolder> sourceFolders) {
         if (parent instanceof SourceFolder) {
             return "\n";
         }
-        return "package " + getPackageName(parent) + ";\n\n";
-    }
-
-    /** @return full package name */
-    private String getPackageName(@NotNull Folder parent) {
-        if (parent instanceof SourceFolder) {
-            return "";
+        for (SourceFolder sourceFolder : sourceFolders.asIterable()) {
+            if (parent.getPath().startsWith(sourceFolder.getPath())) {
+                String packageName = parent.getPath().replaceFirst(sourceFolder.getPath(), "");
+                packageName = packageName.startsWith("/") ? packageName.replaceFirst("/", "").replaceAll("/", ".") : packageName.replaceAll("/", ".");
+                return "package " + packageName + ";\n\n";  
+            }
         }
-
-        String parentPackage = getPackageName(parent.getParent());
-        if (parentPackage.isEmpty()) {
-            return parent.getName();
-        }
-
-        return parentPackage + '.' + parent.getName();
+        
+        return "";
     }
-
+    
     /** {@inheritDoc} */
     @Override
     public boolean inContext() {

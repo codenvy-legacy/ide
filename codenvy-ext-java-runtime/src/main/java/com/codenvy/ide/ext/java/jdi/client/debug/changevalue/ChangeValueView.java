@@ -36,7 +36,7 @@ public interface ChangeValueView extends View<ChangeValueView.ActionDelegate> {
         void onChangeClicked();
 
         /** Performs any actions appropriate in response to the user having changed value. */
-        void onValueChanged();
+        void onVariableValueChanged();
     }
 
     /** @return changed value */

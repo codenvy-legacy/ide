@@ -59,8 +59,8 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("appStarting")
     String applicationStarting(String name);
 
-    @Key("appStarted.uris")
-    String applicationStartedOnUrls(String name, String uris);
+    @Key("appStarted.url")
+    String applicationStartedOnUrl(String name, String uris);
 
     @Key("startAppFailed")
     String startApplicationFailed(String name);
