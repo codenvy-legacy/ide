@@ -22,6 +22,7 @@ import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.tutorials.client.action.ShowTutorialGuideAction;
 import com.codenvy.ide.ext.tutorials.client.template.CreateActionTutorialPage;
@@ -34,6 +35,7 @@ import com.codenvy.ide.ext.tutorials.client.template.CreatePartsTutorialPage;
 import com.codenvy.ide.ext.tutorials.client.template.CreateWizardTutorialPage;
 import com.codenvy.ide.ext.tutorials.client.template.CreateWysiwygTutorialPage;
 import com.codenvy.ide.resources.ProjectTypeAgent;
+import com.codenvy.ide.resources.model.Property;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -62,7 +64,7 @@ public class TutorialsExtension {
     public static final String PARTS_TUTORIAL_ID               = "PartsTutorial";
     public static final String EDITOR_TUTORIAL_ID              = "EditorTutorial";
     public static final String GIN_TUTORIAL_ID                 = "GinTutorial";
-    public static final String WYSIWIG_EDITOR_TUTORIAL_ID                 = "WysiwygEditorTutorial";
+    public static final String WYSIWIG_EDITOR_TUTORIAL_ID      = "WysiwygEditorTutorial";
 
     @Inject
     public TutorialsExtension(TemplateAgent templateAgent,
@@ -88,12 +90,24 @@ public class TutorialsExtension {
         actionManager.registerAction(localizationConstants.showTutorialGuideActionId(), showAction);
         windowMenuActionGroup.add(showAction);
 
+        Array<Property> codenvyTutorialProperties = Collections.createArray();
+        codenvyTutorialProperties.add(new Property("nature.mixin", Collections.createArray("CodenvyTutorial")));
+        codenvyTutorialProperties.add(new Property("exoide:projectDescription", Collections.createArray("Codenvy tutorial.")));
+        codenvyTutorialProperties.add(new Property("runner.name", Collections.createArray("sdk")));
+        codenvyTutorialProperties.add(new Property("vfs:projectType", Collections.createArray("CodenvyTutorial")));
+        codenvyTutorialProperties.add(new Property("nature.primary", Collections.createArray("java")));
+        codenvyTutorialProperties.add(new Property("vfs:mimeType", Collections.createArray("text/vnd.ideproject+directory")));
+        codenvyTutorialProperties.add(new Property("builder.maven.targets", Collections.createArray("clean", "install")));
+        codenvyTutorialProperties.add(new Property("builder.name", Collections.createArray("maven")));
+        codenvyTutorialProperties.add(new Property("folders.source", Collections.createArray("src/main/java", "src/main/resources")));
+
         // register project type
         projectTypeAgent.register(TUTORIAL_PROJECT_TYPE,
                                   "Codenvy tutorial",
                                   resources.codenvyTutorialProject(),
                                   PRIMARY_NATURE,
-                                  Collections.<String>createArray(TUTORIAL_PROJECT_TYPE));
+                                  Collections.<String>createArray(TUTORIAL_PROJECT_TYPE),
+                                  codenvyTutorialProperties);
 
         // register templates
         templateAgent.register(NOTIFICATION_TUTORIAL_ID,
