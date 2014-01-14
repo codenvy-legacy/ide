@@ -30,7 +30,7 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-@Extension(title = "Ssh Support.", version = "3.0.0")
+@Extension(title = "Ssh", version = "3.0.0")
 public class SshExtension {
     @Inject
     public SshExtension(PreferencesAgent preferencesAgent, Provider<SshKeyManagerPresenter> managerPresenter) {

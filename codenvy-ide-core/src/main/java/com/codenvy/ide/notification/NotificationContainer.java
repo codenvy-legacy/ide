@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- * 
- * [2012] - [2013] Codenvy, S.A. 
+ *
+ * [2012] - [2013] Codenvy, S.A.
  * All Rights Reserved.
- * 
+ *
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -35,8 +35,10 @@ import java.util.Map;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
+
+//TODO need remove this class, rework functionality
 @Singleton
-public class NotificationContainer extends PopupPanel implements View<NotificationItem.ActionDelegate> {
+public class NotificationContainer extends FlowPanel implements View<NotificationItem.ActionDelegate> {
     public static final int WIDTH  = 400;
     public static final int HEIGHT = 200;
     private FlowPanel                           panel;
@@ -51,32 +53,19 @@ public class NotificationContainer extends PopupPanel implements View<Notificati
      */
     @Inject
     public NotificationContainer(Resources resources) {
-        super(true);
-
         this.resources = resources;
         this.notificationWidget = new HashMap<Notification, NotificationItem>();
 
         ScrollPanel scrollpanel = new ScrollPanel();
-        setWidget(scrollpanel);
+        add(scrollpanel);
 
         panel = new FlowPanel();
-        panel.setWidth(WIDTH + "px");
-        panel.setHeight(HEIGHT + "px");
+        panel.setWidth("100%");
+        panel.setHeight("100%");
         scrollpanel.add(panel);
     }
 
-    /**
-     * Show container in specified position.
-     *
-     * @param left
-     *         the x-position on the browser window's client area.
-     * @param top
-     *         the y-position on the browser window's client area.
-     */
-    public void show(int left, int top) {
-        setPopupPosition(left, top);
-        show();
-    }
+
 
     /**
      * Show notification in container.

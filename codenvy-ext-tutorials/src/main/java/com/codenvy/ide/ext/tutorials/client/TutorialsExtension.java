@@ -50,7 +50,7 @@ import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_N
  * @version $Id: TutorialsExtension.java Sep 13, 2013 4:14:56 PM azatsarynnyy $
  */
 @Singleton
-@Extension(title = "Codenvy tutorial projects support.", version = "3.0.0")
+@Extension(title = "Codenvy tutorial projects", version = "3.0.0")
 public class TutorialsExtension {
     /** Default name of the tutorial project type. */
     public static final String TUTORIAL_PROJECT_TYPE           = "CodenvyTutorial";

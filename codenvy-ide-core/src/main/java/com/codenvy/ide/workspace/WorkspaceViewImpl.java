@@ -48,7 +48,7 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView {
     @UiField
     SimplePanel toolbarPanel;
     @UiField
-    FlowPanel   statusPanel;
+    SimplePanel  statusPanel;
     @UiField
     Button      btnLogin;
     @UiField
@@ -89,8 +89,7 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView {
 
     /** {@inheritDoc} */
     @Override
-    public FlowPanel getStatusPanel() {
-        return statusPanel;
+    public AcceptsOneWidget getStatusPanel() { return statusPanel;
     }
 
     /** {@inheritDoc} */

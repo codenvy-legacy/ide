@@ -45,7 +45,7 @@ import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_N
  * @version $Id: ExtRuntimeExtension.java Jul 2, 2013 4:14:56 PM azatsarynnyy $
  */
 @Singleton
-@Extension(title = "Codenvy extensions support.", version = "3.0.0")
+@Extension(title = "Codenvy extensions", version = "3.0.0")
 public class ExtRuntimeExtension {
     public static final String CODENVY_EXTENSION_PROJECT_TYPE = "CodenvyExtension";
     public static final String EMPTY_EXTENSION_ID             = "EmptyCodenvyExtension";

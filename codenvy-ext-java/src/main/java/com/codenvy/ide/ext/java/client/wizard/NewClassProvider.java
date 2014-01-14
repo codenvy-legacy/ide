@@ -19,6 +19,7 @@ package com.codenvy.ide.ext.java.client.wizard;
 
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.ext.java.client.JavaResources;
+import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
@@ -43,7 +44,7 @@ public class NewClassProvider extends AbstractNewJavaResourceProvider {
     @Override
     public void create(@NotNull String name, @NotNull Folder parent, @NotNull Project project,
                        @NotNull final AsyncCallback<Resource> callback) {
-        StringBuilder content = new StringBuilder(getPackage(parent));
+        StringBuilder content = new StringBuilder(getPackage(parent, ((JavaProject)project).getSourceFolders()));
         content.append("public class ").append(name).append(TYPE_CONTENT);
 
         createFile(name, parent, project, callback, content.toString());

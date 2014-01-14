@@ -18,6 +18,8 @@
 package com.codenvy.ide.notification;
 
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.parts.base.BaseActionDelegate;
 
 import javax.validation.constraints.NotNull;
 
@@ -28,16 +30,9 @@ import javax.validation.constraints.NotNull;
  */
 public interface NotificationManagerView extends View<NotificationManagerView.ActionDelegate> {
     /** Required for delegating some functions in view. */
-    public interface ActionDelegate {
-        /**
-         * Performs some actions in response to a user's clicking a view
-         *
-         * @param left
-         *         the x-position on the browser window's client area.
-         * @param top
-         *         the y-position on the browser window's client area.
-         */
-        void onClicked(int left, int top);
+    public interface ActionDelegate extends BaseActionDelegate {
+
+        void onClicked();//TODO need improve it
     }
 
     /**
@@ -63,4 +58,14 @@ public interface NotificationManagerView extends View<NotificationManagerView.Ac
      *         count of unread notification
      */
     void setNotificationCount(int count);
+
+    void setContainer(NotificationContainer container);
+
+    /**
+     * Set title of event log part.
+     *
+     * @param title title that need to be set
+     */
+    void setTitle(String title);
+
 }

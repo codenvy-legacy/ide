@@ -46,7 +46,6 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
     private final WorkspaceView           view;
     private final MainMenuPresenter       menu;
     private final ToolbarPresenter        toolbarPresenter;
-    private final NotificationManagerImpl notificationManager;
     private       WorkBenchPresenter      workBenchPresenter;
 
     /**
@@ -57,17 +56,15 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
      * @param genericPerspectiveProvider
      */
     @Inject
-    protected WorkspacePresenter(WorkspaceView view, MainMenuPresenter menu,
+    protected WorkspacePresenter(WorkspaceView view,
+                                 MainMenuPresenter menu,
                                  @MainToolbar ToolbarPresenter toolbarPresenter,
-                                 Provider<WorkBenchPresenter> genericPerspectiveProvider,
-                                 NotificationManagerImpl notificationManager) {
+                                 Provider<WorkBenchPresenter> genericPerspectiveProvider) {
         super();
         this.view = view;
         this.view.setDelegate(this);
         this.toolbarPresenter = toolbarPresenter;
         this.menu = menu;
-        this.notificationManager = notificationManager;
-
         this.workBenchPresenter = genericPerspectiveProvider.get();
     }
 
@@ -78,7 +75,6 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
         menu.go(view.getMenuPanel());
         toolbarPresenter.go(view.getToolbarPanel());
         workBenchPresenter.go(view.getPerspectivePanel());
-        notificationManager.go(view.getStatusPanel());
         container.setWidget(view);
     }
 

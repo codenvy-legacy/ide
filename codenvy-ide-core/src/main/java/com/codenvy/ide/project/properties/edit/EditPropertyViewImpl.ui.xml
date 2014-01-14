@@ -58,7 +58,7 @@
                     <g:Label height="16px" ui:field="name" addStyleNames="{style.name}"/>
                 </g:north>
                 <g:north size="30.0">
-                    <g:TextBox width="338px" height="16px" ui:field="value"/>
+                    <g:TextBox width="338px" ui:field="value"/>
                 </g:north>
             </g:DockLayoutPanel>
         </g:center>

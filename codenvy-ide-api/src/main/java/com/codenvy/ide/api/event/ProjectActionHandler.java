@@ -34,7 +34,7 @@ public interface ProjectActionHandler extends EventHandler {
     void onProjectOpened(ProjectActionEvent event);
 
     /**
-     * Project opened
+     * Project closed
      *
      * @param event
      */

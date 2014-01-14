@@ -47,7 +47,7 @@ public interface WorkspaceView extends View<WorkspaceView.ActionDelegate> {
     AcceptsOneWidget getToolbarPanel();
 
     /** @return status panel */
-    FlowPanel getStatusPanel();
+    AcceptsOneWidget getStatusPanel();
 
     /**
      * Sets whether Login button is visible.

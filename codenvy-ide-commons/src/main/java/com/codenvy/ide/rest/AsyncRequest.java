@@ -190,7 +190,7 @@ public class AsyncRequest {
             if (handler != null)
                 handler.requestInProgress(requestStatusUrl);
 
-            requesTimer.schedule(delay);
+            requestTimer.schedule(delay);
         }
 
         @Override
@@ -202,7 +202,7 @@ public class AsyncRequest {
         }
     };
 
-    private Timer requesTimer = new Timer() {
+    private Timer requestTimer = new Timer() {
 
         @Override
         public void run() {
@@ -218,7 +218,7 @@ public class AsyncRequest {
                     } else if (response.getStatusCode() != Response.SC_ACCEPTED) {
                         callback.onResponseReceived(request, response);
                         if (handler != null) {
-                            // check is response successfull, for correct handling failed responses
+                            // check is response successful, for correct handling failed responses
                             if (callback.isSuccessful(response))
                                 handler.requestFinished(requestStatusUrl);
                             else
@@ -228,7 +228,7 @@ public class AsyncRequest {
                         if (handler != null)
                             handler.requestInProgress(requestStatusUrl);
 
-                        requesTimer.schedule(delay);
+                        requestTimer.schedule(delay);
                     }
                 }
 

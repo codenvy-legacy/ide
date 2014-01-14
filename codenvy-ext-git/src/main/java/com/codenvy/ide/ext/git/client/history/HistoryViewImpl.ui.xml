@@ -86,7 +86,7 @@
                                 <g:center>
                                     <g:FlowPanel addStyleNames="{style.spaceRight}">
                                         <g:SimplePanel>
-                                            <g:TextBox width="100%" height="16px" ui:field="commitARevision" readOnly="true"
+                                            <g:TextBox width="100%" ui:field="commitARevision" readOnly="true"
                                                        addStyleNames="{res.gitCSS.textFont} {style.withoutPadding}"/>
                                         </g:SimplePanel>
                                     </g:FlowPanel>
@@ -101,7 +101,7 @@
                                 <g:center>
                                     <g:FlowPanel addStyleNames="{style.spaceRight}">
                                         <g:SimplePanel>
-                                            <g:TextBox width="100%" height="16px" ui:field="commitADate" readOnly="true"
+                                            <g:TextBox width="100%" ui:field="commitADate" readOnly="true"
                                                        addStyleNames="{res.gitCSS.textFont} {style.withoutPadding}"/>
                                         </g:SimplePanel>
                                     </g:FlowPanel>
@@ -116,7 +116,7 @@
                                 <g:center>
                                     <g:FlowPanel addStyleNames="{style.spaceRight}">
                                         <g:SimplePanel>
-                                            <g:TextBox width="100%" height="16px" ui:field="commitBRevision" readOnly="true"
+                                            <g:TextBox width="100%" ui:field="commitBRevision" readOnly="true"
                                                        addStyleNames="{res.gitCSS.textFont} {style.withoutPadding}"/>
                                         </g:SimplePanel>
                                     </g:FlowPanel>
@@ -131,7 +131,7 @@
                                 <g:center>
                                     <g:FlowPanel addStyleNames="{style.spaceRight}">
                                         <g:SimplePanel>
-                                            <g:TextBox width="100%" height="16px" ui:field="commitBDate" readOnly="true"
+                                            <g:TextBox width="100%" ui:field="commitBDate" readOnly="true"
                                                        addStyleNames="{res.gitCSS.textFont} {style.withoutPadding}"/>
                                         </g:SimplePanel>
                                     </g:FlowPanel>

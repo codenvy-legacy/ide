@@ -54,7 +54,7 @@
                     <g:Label text="{locale.createWorkdirFieldTitle}" addStyleNames="{res.gitCSS.textFont}"/>
                 </g:north>
                 <g:center>
-                    <g:TextBox width="368px" height="16px" ui:field="workdir" addStyleNames="{res.gitCSS.textFont}"/>
+                    <g:TextBox width="368px" ui:field="workdir" addStyleNames="{res.gitCSS.textFont}"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>

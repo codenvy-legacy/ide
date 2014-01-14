@@ -77,4 +77,10 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("setProjectTypeTitle")
     String setProjectTypeTitle();
+    
+    @Key("navigateToFile.view.title")
+    String navigateToFileViewTitle();
+    
+    @Key("navigateToFile.view.file.field.title")
+    String navigateToFileViewFileFieldTitle();
 }

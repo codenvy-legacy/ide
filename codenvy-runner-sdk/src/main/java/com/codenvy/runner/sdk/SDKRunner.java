@@ -117,7 +117,7 @@ public class SDKRunner extends Runner {
                                                                                         codeServerPort,
                                                                                         request);
                 configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class).withRel("web url")
-                                                       .withHref(String.format("http://%s:%d", hostName, httpPort)));
+                                                       .withHref(String.format("http://%s:%d/%s", hostName, httpPort, "ide/dev-monit")));
                 configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class)
                                                        .withRel(LINK_REL_CODE_SERVER)
                                                        .withHref(String.format("%s:%d", codeServerBindAddress, codeServerPort)));

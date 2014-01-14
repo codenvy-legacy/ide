@@ -20,6 +20,7 @@ package com.codenvy.ide.extension.runner.client.actions;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.collections.StringSet;
 import com.codenvy.ide.extension.runner.client.RunnerController;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
@@ -27,35 +28,32 @@ import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE;
+import static com.codenvy.ide.ext.java.client.JavaExtension.JAVA_WEB_APPLICATION_PROJECT_TYPE;
+import static com.codenvy.ide.ext.java.client.JavaExtension.SPRING_APPLICATION_PROJECT_TYPE;
 
 /**
- * Action to run app on application server.
+ * Action to run project on runner.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: RunAction.java Jul 3, 2013 1:58:47 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 public class RunAction extends Action {
 
     private final ResourceProvider resourceProvider;
-    private       RunnerController controller;
+    private       RunnerController runnerController;
 
     @Inject
-    public RunAction(RunnerController controller,
-                     RunnerResources resources,
-                     ResourceProvider resourceProvider,
+    public RunAction(RunnerController runnerController, RunnerResources resources, ResourceProvider resourceProvider,
                      RunnerLocalizationConstant localizationConstants) {
-        super(localizationConstants.runAppActionText(),
-              localizationConstants.runAppActionDescription(), resources.launchApp());
-        this.controller = controller;
+        super(localizationConstants.runAppActionText(), localizationConstants.runAppActionDescription(), resources.launchApp());
+        this.runnerController = runnerController;
         this.resourceProvider = resourceProvider;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        controller.run();
+        runnerController.runActiveProject(false);
     }
 
     /** {@inheritDoc} */
@@ -63,9 +61,10 @@ public class RunAction extends Action {
     public void update(ActionEvent e) {
         Project activeProject = resourceProvider.getActiveProject();
         if (activeProject != null) {
-            e.getPresentation()
-             .setVisible(!activeProject.getDescription().getNatures().contains(CODENVY_EXTENSION_PROJECT_TYPE));
-            e.getPresentation().setEnabled(!controller.isAnyAppLaunched());
+            StringSet natures = activeProject.getDescription().getNatures();
+            e.getPresentation().setVisible(natures.contains(SPRING_APPLICATION_PROJECT_TYPE)
+                                           || natures.contains(JAVA_WEB_APPLICATION_PROJECT_TYPE));
+            e.getPresentation().setEnabled(!runnerController.isAnyAppLaunched());
         } else {
             e.getPresentation().setEnabledAndVisible(false);
         }
