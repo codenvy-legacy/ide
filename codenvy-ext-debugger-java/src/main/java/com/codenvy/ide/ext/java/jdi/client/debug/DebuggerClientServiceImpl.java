@@ -80,7 +80,7 @@ public class DebuggerClientServiceImpl implements DebuggerClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void disconnect(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+    public void disconnect(@NotNull String id, @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
         final String requestUrl = baseUrl + "/debug-java/" + Utils.getWorkspaceName() + "/disconnect/" + id;
         loader.setMessage("Disconnecting... ");
         AsyncRequest.build(GET, requestUrl).loader(loader).send(callback);
@@ -113,7 +113,7 @@ public class DebuggerClientServiceImpl implements DebuggerClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void deleteAllBreakPoint(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+    public void deleteAllBreakpoints(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         final String requestUrl = baseUrl + "/debug-java/" + Utils.getWorkspaceName() + "/breakpoints/delete_all/" + id;
         AsyncRequest.build(GET, requestUrl).loader(loader).send(callback);
     }
@@ -159,21 +159,21 @@ public class DebuggerClientServiceImpl implements DebuggerClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void stepInto(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+    public void stepInto(@NotNull String id, @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
         final String requestUrl = baseUrl + "/debug-java/" + Utils.getWorkspaceName() + "/step/into/" + id;
         AsyncRequest.build(GET, requestUrl).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void stepOver(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+    public void stepOver(@NotNull String id, @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
         final String requestUrl = baseUrl + "/debug-java/" + Utils.getWorkspaceName() + "/step/over/" + id;
         AsyncRequest.build(GET, requestUrl).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void stepReturn(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+    public void stepReturn(@NotNull String id, @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
         final String requestUrl = baseUrl + "/debug-java/" + Utils.getWorkspaceName() + "/step/out/" + id;
         AsyncRequest.build(GET, requestUrl).loader(loader).send(callback);
     }

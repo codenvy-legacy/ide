@@ -419,7 +419,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     @Override
     public void onRemoveAllBreakpointsButtonClicked() {
         try {
-            service.deleteAllBreakPoint(debuggerInfo.getId(), new AsyncRequestCallback<String>() {
+            service.deleteAllBreakpoints(debuggerInfo.getId(), new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     gutterManager.removeAllBreakPoints();
@@ -450,9 +450,9 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     public void onStepIntoButtonClicked() {
         changeButtonsEnableState(false);
         try {
-            service.stepInto(debuggerInfo.getId(), new AsyncRequestCallback<String>() {
+            service.stepInto(debuggerInfo.getId(), new AsyncRequestCallback<Void>() {
                 @Override
-                protected void onSuccess(String result) {
+                protected void onSuccess(Void result) {
                     resetStates();
                 }
 
@@ -474,9 +474,9 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     public void onStepOverButtonClicked() {
         changeButtonsEnableState(false);
         try {
-            service.stepOver(debuggerInfo.getId(), new AsyncRequestCallback<String>() {
+            service.stepOver(debuggerInfo.getId(), new AsyncRequestCallback<Void>() {
                 @Override
-                protected void onSuccess(String result) {
+                protected void onSuccess(Void result) {
                     resetStates();
                 }
 
@@ -498,9 +498,9 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     public void onStepReturnButtonClicked() {
         changeButtonsEnableState(false);
         try {
-            service.stepReturn(debuggerInfo.getId(), new AsyncRequestCallback<String>() {
+            service.stepReturn(debuggerInfo.getId(), new AsyncRequestCallback<Void>() {
                 @Override
-                protected void onSuccess(String result) {
+                protected void onSuccess(Void result) {
                     resetStates();
                 }
 
@@ -644,9 +644,9 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         if (debuggerInfo != null) {
             stopCheckingEvents();
             try {
-                service.disconnect(debuggerInfo.getId(), new AsyncRequestCallback<String>() {
+                service.disconnect(debuggerInfo.getId(), new AsyncRequestCallback<Void>() {
                     @Override
-                    protected void onSuccess(String result) {
+                    protected void onSuccess(Void result) {
                         changeButtonsEnableState(false);
                         runnerController.stopActiveProject();
                         onDebuggerDisconnected();
@@ -709,8 +709,9 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private void stopCheckingEvents() {
         checkEventsTimer.cancel();
         try {
-            if (messageBus.isHandlerSubscribed(debuggerEventsHandler, debuggerEventsChannel))
+            if (messageBus.isHandlerSubscribed(debuggerEventsHandler, debuggerEventsChannel)) {
                 messageBus.unsubscribe(debuggerEventsChannel, debuggerEventsHandler);
+            }
         } catch (WebSocketException ignore) {
         }
     }
