@@ -30,6 +30,6 @@ public class WorkspacePrivacyService {
             return Response.ok().entity(access.toString()).header(HTTPHeader.CONTENT_TYPE, MimeType.TEXT_PLAIN).build();
         }
 
-        return Response.ok().entity(false).header(HTTPHeader.CONTENT_TYPE, MimeType.TEXT_PLAIN).build();
+        return Response.ok().entity("false").header(HTTPHeader.CONTENT_TYPE, MimeType.TEXT_PLAIN).build();
     }
 }
