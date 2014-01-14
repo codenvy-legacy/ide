@@ -17,14 +17,12 @@
  */
 package com.codenvy.api.deploy;
 
-import com.codenvy.api.core.user.UserStateFilter;
 import com.codenvy.api.servlet.EnvironmentFilter;
 import com.codenvy.ide.everrest.CodenvyEverrestWebSocketServlet;
 import com.codenvy.inject.DynaModule;
 import com.google.inject.servlet.ServletModule;
 
 import org.everrest.guice.servlet.GuiceEverrestServlet;
-import org.everrest.websockets.EverrestWebSocketServlet;
 import org.everrest.websockets.WSConnectionTracker;
 
 /** @author andrew00x */
@@ -34,7 +32,7 @@ public class ApiServletModule extends ServletModule {
     protected void configureServlets() {
         getServletContext().addListener(new WSConnectionTracker());
         filter("/*").through(EnvironmentFilter.class);
-        filter("/*").through(UserStateFilter.class);
+        filter("/*").through(SetIdeUserFilter.class);
         serve("/rest/*").with(GuiceEverrestServlet.class);
         serve("/ws/*").with(CodenvyEverrestWebSocketServlet.class);
     }
