@@ -45,6 +45,7 @@ import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
+import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -340,7 +341,12 @@ public class AppEngineClient {
 
     private GenericApplication createApplication(VirtualFileSystem vfs,
                                                  String projectId, String userId) throws VirtualFileSystemException, IOException {
-        Project project = (Project)vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
+        String itemId = projectId;
+        while (!vfs.getItem(itemId, false, PropertyFilter.ALL_FILTER).getItemType().value().equals(ItemType.PROJECT.value())){
+            Folder folder = (Folder)vfs.getItem(itemId, false, PropertyFilter.ALL_FILTER);
+            itemId = folder.getParentId();
+        }
+        Project project = (Project)vfs.getItem(itemId, false, PropertyFilter.ALL_FILTER);
         ProjectType type = getApplicationType(vfs, project);
         switch (type) {
             case JAVA: {

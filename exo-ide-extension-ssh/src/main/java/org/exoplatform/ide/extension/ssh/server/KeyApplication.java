@@ -32,8 +32,9 @@ public class KeyApplication extends Application {
     public KeyApplication() {
         classes = new HashSet<Class<?>>(1);
         classes.add(KeyService.class);
-        singletons = new HashSet<Object>(1);
+        singletons = new HashSet<Object>(2);
         singletons.add(new JsonpEntityProvider());
+        singletons.add(new SshKeyStoreExceptionMapper());
     }
 
     /** @see javax.ws.rs.core.Application#getClasses() */

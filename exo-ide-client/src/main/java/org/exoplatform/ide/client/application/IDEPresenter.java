@@ -21,7 +21,6 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.ui.client.command.ui.ToolbarBuilder;
@@ -96,12 +95,7 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
         new Timer() {
             @Override
             public void run() {
-                try {
-                    DOM.getElementById("ide-preloader").removeFromParent();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
+                IDE.notifyStatusChanged("loading-configuration");
                 new Timer() {
                     @Override
                     public void run() {

@@ -141,9 +141,8 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
                     fireEvent(new EditorFocusReceivedEvent(CollabEditor.this));
             }
         });
-
     }
-
+    
     /**
      * Updates the specified document range with the given <code>text</code>.
      *
@@ -227,6 +226,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
     @Override
     public void setFile(final FileModel file) {
         this.file = file;
+        
         if (CollaborationPropertiesUtil.isCollaborationEnabled(file.getProject()) && !file.getMimeType().equals(MimeType.TEXT_HTML)) {
 
             PathUtil pathUtil = new PathUtil(file.getPath());
@@ -234,6 +234,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
             CollabEditorExtension.get().getManager().getDocument(pathUtil, new DocumentManager.GetDocumentCallback() {
                 @Override
                 public void onDocumentReceived(Document document) {
+                    file.setContent(document.asText());
                     setDocument(document);
                 }
 
@@ -287,6 +288,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
                 document.putTag("IDocument", CollabEditor.this.document);
                 TextListenerImpl textListener = new TextListenerImpl();
                 document.getTextListenerRegistrar().add(textListener);
+                
                 editorBundle.setDocument(document, mimeType, DocumentMetadata.getFileEditSessionKey(document));
                 documentAdaptor.setDocument(document, editor.getEditorDocumentMutator(), textListener, CollabEditor.this);
 

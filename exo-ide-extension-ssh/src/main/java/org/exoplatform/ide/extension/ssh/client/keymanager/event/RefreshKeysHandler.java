@@ -20,8 +20,7 @@ package org.exoplatform.ide.extension.ssh.client.keymanager.event;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
- * @version $Id: $
+ * Handler for event refresh keys.
  */
 public interface RefreshKeysHandler extends EventHandler {
 

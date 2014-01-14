@@ -25,5 +25,11 @@
     <inherits name="org.exoplatform.ide.IDEExtensions"/>
 
     <entry-point class='org.exoplatform.ide.client.IDEApplication'/>
-    <source path="client" excludes="IDEGadget.java"/>
+    
+    <!--
+    	Cross-site iframe linker is needed to generate compilation-mappings.txt.
+    	The file is used to determine JavaScript file to be loaded.
+    -->
+    <add-linker name="xsiframe"/>
+    
 </module>

@@ -39,6 +39,7 @@ import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.project.ProjectPrepare;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.impl.fs.LocalFSMountStrategy;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -80,6 +81,7 @@ import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -108,8 +110,11 @@ public class FactoryService {
     private UserManager               userManager;
     @Inject
     private WorkspaceManager          workspaceManager;
+    @Inject
+    private LocalFSMountStrategy      mountStrategy;
+
     @PathParam("ws-name")
-    private String                    workspaceName;
+    private String workspaceName;
 
     private static final Pattern PATTERN        = Pattern.compile("public static final String PROJECT_ID = .*");
     private static final Pattern PATTERN_NUMBER = Pattern.compile("public static final String PROJECT_NUMBER = .*");
@@ -265,10 +270,15 @@ public class FactoryService {
         Item itemToUpdate = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
 
         ProjectType projectType = ProjectType.DEFAULT;
-        try {
-            String decodedPtype = URLDecoder.decode(factoryUrl.getProjectattributes().get("ptype"), "UTF-8");
-            projectType = ProjectType.fromValue(decodedPtype);
-        } catch (IllegalArgumentException | NullPointerException e) {//
+        String encodedParamType = factoryUrl.getProjectattributes().get("ptype");
+
+        if (encodedParamType != null && !encodedParamType.isEmpty()) {
+            try {
+                projectType = ProjectType.fromValue(URLDecoder.decode(encodedParamType, "UTF-8"));
+            } catch (IllegalArgumentException e) {
+                //if exception, our project type already setted to "default"
+                LOG.error(e.getLocalizedMessage(), e);
+            }
         }
 
         List<Property> props = new ArrayList<>();
@@ -297,6 +307,17 @@ public class FactoryService {
 
         itemToUpdate = vfs.updateItem(itemToUpdate.getId(), props, null);
 
+        if (factoryUrl.getVariables() != null && factoryUrl.getVariables().size() != 0) {
+            try {
+                java.io.File workspace = mountStrategy.getMountPath();
+                java.nio.file.Path path = Paths.get(workspace.getAbsolutePath(), factoryUrl.getProjectattributes().get("pname"));
+
+                new VariableReplacer(path).performReplacement(factoryUrl.getVariables());
+            } catch (VirtualFileSystemException e) {
+                LOG.error(e.getLocalizedMessage(), e);
+            }
+        }
+
         if (ProjectType.GOOGLE_MBS_ANDROID == projectType) {
             prepareAndroidProject(factoryUrl, vfs, itemToUpdate);
         }
@@ -306,6 +327,7 @@ public class FactoryService {
 
     /**
      * Prepare Consts.java file for Android projects.
+     * NOTE Deprecated since 2.9.3 and will be removed from IDE after 2.10.x.
      *
      * @param factoryUrl
      *         gitConnectionFactory instance
@@ -314,6 +336,7 @@ public class FactoryService {
      * @param item
      *         {@link ProjectModel} instance
      */
+    @Deprecated
     private void prepareAndroidProject(SimpleFactoryUrl factoryUrl, VirtualFileSystem vfs, Item item) {
         final String path = item.getPath() + "/src/com/google/cloud/backend/android/Consts.java";
 

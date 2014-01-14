@@ -52,6 +52,7 @@ import org.exoplatform.ide.git.client.control.ShowHistoryControl;
 import org.exoplatform.ide.git.client.control.ShowProjectGitReadOnlyUrl;
 import org.exoplatform.ide.git.client.control.ShowStatusControl;
 import org.exoplatform.ide.git.client.delete.DeleteRepositoryCommandHandler;
+import org.exoplatform.ide.git.client.editor.UpdateOpenedFilesPresenter;
 import org.exoplatform.ide.git.client.fetch.FetchPresenter;
 import org.exoplatform.ide.git.client.github.gitimport.ImportFromGithubControl;
 import org.exoplatform.ide.git.client.github.gitimport.ImportFromGithubPresenter;
@@ -138,6 +139,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
 
         new ImportFromGithubPresenter();
         new SSHKeyProcessor();
+        new UpdateOpenedFilesPresenter();
 
     }
 
@@ -215,5 +217,11 @@ public class GitExtension extends Extension implements InitializeServicesHandler
         String errorMessage = (exception.getMessage() != null && !exception.getMessage().isEmpty()) ?
                               exception.getMessage() : GitExtension.MESSAGES.cloneFailed(remoteUri);
         IDE.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.GIT));
+    }
+
+    /** Check message to find sequence of strings to detect that error had authorization type. */
+    public static boolean needAuth(String message) {
+        return message.toLowerCase().contains("authentication failed")
+               || message.toLowerCase().contains("please make sure you have the correct access rights");
     }
 }

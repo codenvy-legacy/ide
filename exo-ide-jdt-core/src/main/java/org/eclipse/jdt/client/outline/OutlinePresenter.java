@@ -53,6 +53,7 @@ import java.util.List;
 public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler, EditorCursorActivityHandler,
                                          EditorActiveFileChangedHandler, ShowOutlineHandler, EditorFileClosedHandler,
                                          ApplicationSettingsReceivedHandler {
+    
     interface Display extends OutlineDisplay {
         /**
          * Update the Outline values.

@@ -22,6 +22,7 @@ import com.codenvy.api.factory.AdvancedFactoryUrl;
 import com.codenvy.api.factory.SimpleFactoryUrl;
 import com.codenvy.ide.factory.client.FactoryClientService;
 import com.codenvy.ide.factory.client.FactoryExtension;
+import com.codenvy.ide.factory.client.marshaller.ChildrenUnmarshallerWS;
 import com.codenvy.ide.factory.shared.AdvancedFactorySpec;
 import com.codenvy.ide.factory.shared.CopySpec10;
 import com.codenvy.ide.factory.client.marshaller.AdvancedFactoryUrlUnmarshaller;
@@ -70,12 +71,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.File;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemType;
-import org.exoplatform.ide.vfs.shared.Property;
-import org.exoplatform.ide.vfs.shared.PropertyImpl;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.ide.vfs.shared.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -152,7 +148,13 @@ public class FactoryHandler
                                           getParamValue(ORG_ID, parameterMap),
                                           getParamValue(AFFILIATE_ID, parameterMap),
                                           getParamValue(VCS_BRANCH, parameterMap),
-                                          projectAttributes);
+                                          projectAttributes,
+                                          AdvancedFactoryUrlUnmarshaller.getVariables(getParamValue(VARIABLES, parameterMap)));
+
+        //For back compatibility we check if user pass through factory url old version of commit id parameter.
+        if (factoryUrl.getCommitid() == null && getParamValue("idcommit", parameterMap) != null) {
+            factoryUrl.setCommitid(getParamValue("idcommit", parameterMap));
+        }
 
         //For back compatibility we check if user pass through factory url old version of commit id parameter.
         if (factoryUrl.getCommitid() == null && getParamValue("idcommit", parameterMap) != null) {
@@ -206,56 +208,31 @@ public class FactoryHandler
         final List<String> projects = parameterMap.get(PROJECT_ID);
 
         try {
-            FactoryClientService.getInstance().copyProjects(downloadUrl, projects, new RequestCallback<Void>() {
-                @Override
-                protected void onSuccess(Void result) {
-                    if (projects.size() == 1) {
-                        openCopiedProject(projects.get(0).split(":")[0]);
-                    } else {
-                        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                            @Override
-                            public void execute() {
-                                IDE.fireEvent(new IDELoadCompleteEvent());
-                            }
-                        });
-                    }
-                }
+            FactoryClientService.getInstance()
+                                .copyProjects(downloadUrl, projects,
+                                              new RequestCallback<List<Item>>(new ChildrenUnmarshallerWS(new ArrayList<Item>())) {
+                                                  @Override
+                                                  protected void onSuccess(List<Item> result) {
+                                                      if (result.size() == 1) {
+                                                          IDE.fireEvent(new OpenProjectEvent((ProjectModel)result.get(0)));
+                                                      } else {
+                                                          Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                                                              @Override
+                                                              public void execute() {
+                                                                  IDE.fireEvent(new IDELoadCompleteEvent());
+                                                              }
+                                                          });
+                                                      }
+                                                  }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    handleError(exception);
-                }
-            });
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      handleError(exception);
+                                                  }
+                                              });
         } catch (WebSocketException e) {
             handleError(e);
         }
-    }
-
-    private void openCopiedProject(final String projectId) {
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-            @Override
-            public void execute() {
-                try {
-                    VirtualFileSystem.getInstance()
-                                     .getItemById(projectId,
-                                                  new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper())) {
-                                                      @Override
-                                                      protected void onSuccess(ItemWrapper result) {
-                                                          if (result.getItem() instanceof ProjectModel) {
-                                                              IDE.fireEvent(new OpenProjectEvent((ProjectModel)result.getItem()));
-                                                          }
-                                                      }
-
-                                                      @Override
-                                                      protected void onFailure(Throwable e) {
-                                                          handleError(e);
-                                                      }
-                                                  });
-                } catch (RequestException e) {
-                    handleError(e);
-                }
-            }
-        });
     }
 
     /**
@@ -411,7 +388,9 @@ public class FactoryHandler
                                                     @Override
                                                     protected void onSuccess(StringBuilder clonedItem) {
                                                         IDELoader.getInstance().hide();
-                                                        eventBus.unsubscribe("factory-events", webSocketEventHandler);
+                                                        if (eventBus.isHandlerSubscribed(webSocketEventHandler, "factory-events")) {
+                                                            eventBus.unsubscribe("factory-events", webSocketEventHandler);
+                                                        }
 
                                                         onCloneSuccess(clonedItem.toString());
                                                     }
@@ -419,12 +398,11 @@ public class FactoryHandler
                                                     @Override
                                                     protected void onFailure(Throwable e) {
                                                         IDELoader.getInstance().hide();
-                                                        eventBus.unsubscribe("factory-events", webSocketEventHandler);
+                                                        if (eventBus.isHandlerSubscribed(webSocketEventHandler, "factory-events")) {
+                                                            eventBus.unsubscribe("factory-events", webSocketEventHandler);
+                                                        }
 
-                                                        if (e instanceof org.exoplatform.ide.client.framework.websocket.rest.exceptions
-                                                                .UnauthorizedException
-                                                            || (e instanceof org.exoplatform.ide.client.framework.websocket.rest.exceptions
-                                                                .ServerException)) {
+                                                        if (GitExtension.needAuth(e.getMessage())) {
                                                             openOauthPopupWindow(authCallback, factoryUrl.getVcsurl());
                                                         } else {
                                                             handleError(e);
@@ -433,7 +411,9 @@ public class FactoryHandler
                                                 });
         } catch (WebSocketException e) {
             IDELoader.getInstance().hide();
-            eventBus.unsubscribe("factory-events", webSocketEventHandler);
+            if (eventBus.isHandlerSubscribed(webSocketEventHandler, "factory-events")) {
+                eventBus.unsubscribe("factory-events", webSocketEventHandler);
+            }
             IDE.fireEvent(new SSHKeyProcessorEvent(factoryUrl.getVcsurl(), false, new SSHKeyProcessor.Callback() {
                 @Override
                 public void onSuccess() {
@@ -491,9 +471,7 @@ public class FactoryHandler
                                                   protected void onFailure(Throwable e) {
                                                       IDELoader.getInstance().hide();
 
-                                                      if (e instanceof org.exoplatform.gwtframework.commons.exception
-                                                              .UnauthorizedException ||
-                                                          (e instanceof org.exoplatform.gwtframework.commons.exception.ServerException)) {
+                                                      if (GitExtension.needAuth(e.getMessage())) {
                                                           openOauthPopupWindow(authCallback, factoryUrl.getVcsurl());
                                                       } else {
                                                           handleError(e);

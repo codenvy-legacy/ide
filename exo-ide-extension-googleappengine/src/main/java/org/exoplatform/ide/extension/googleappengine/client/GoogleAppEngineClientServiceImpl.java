@@ -52,9 +52,9 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     /** Loader to be displayed. */
     private Loader loader;
     
-    private final String AUTH_URL = "/ide/oauth/authenticate";
+    private final String AUTH_URL = "/oauth/authenticate";
 
-    private final String LOGOUT =  "/ide/oauth/invalidate";
+    private final String LOGOUT =  "/oauth/invalidate";
 
     private final String APP_ENGINE = "/appengine/";
 

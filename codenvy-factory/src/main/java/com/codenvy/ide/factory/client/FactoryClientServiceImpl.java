@@ -39,6 +39,7 @@ import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.git.client.clone.CloneRequestStatusHandler;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
 
@@ -142,7 +143,7 @@ public class FactoryClientServiceImpl extends FactoryClientService implements Co
 
     /** {@inheritDoc} */
     @Override
-    public void copyProjects(String downloadUrl, List<String> projects, RequestCallback<Void> callback) throws WebSocketException {
+    public void copyProjects(String downloadUrl, List<String> projects, RequestCallback<List<Item>> callback) throws WebSocketException {
         final String uri = COPY;
         final String params = DOWNLOAD_URL + "=" + downloadUrl;
 

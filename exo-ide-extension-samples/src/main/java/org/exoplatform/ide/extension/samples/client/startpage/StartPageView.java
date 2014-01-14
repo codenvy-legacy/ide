@@ -22,6 +22,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Image;
@@ -66,7 +67,7 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
     Anchor supportLink;
     
     @UiField
-    Frame fbFrame;
+    Frame facebookFrame;
     
     @UiField
     Frame googleFrame;
@@ -77,10 +78,38 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
     public StartPageView() {
         super(ID, "editor", TITLE, new Image(SamplesClientBundle.INSTANCE.welcome()));
         add(uiBinder.createAndBindUi(this));
-        fbFrame.setUrl(UriUtils.fromString("/ide/" + Utils.getWorkspaceName() +"/_app/fblike.html"));
-        googleFrame.setUrl(UriUtils.fromString("/ide/" + Utils.getWorkspaceName() +"/_app/googleone.html"));
-        googleFrame.getElement().setAttribute("scrolling", "no");
+        
+        if (facebookLikeURL() == null) {
+            facebookFrame.setVisible(false);
+        } else {
+            facebookFrame.setUrl(UriUtils.fromString(facebookLikeURL()));            
+        }
+        
+        if (googleLikeURL() == null) {
+            googleFrame.setVisible(false);
+        } else {
+            googleFrame.setUrl(UriUtils.fromString(googleLikeURL()));
+            googleFrame.getElement().setAttribute("scrolling", "no");            
+        }
     }
+    
+    /**
+     * Returns URL to
+     * 
+     * @return
+     */
+    private static native String facebookLikeURL() /*-{
+        return $wnd["facebook_like_url"];
+    }-*/;    
+
+    /**
+     * Returns URL to
+     * 
+     * @return
+     */
+    private static native String googleLikeURL() /*-{
+        return $wnd["google_like_url"];
+    }-*/;
 
     /** @see org.exoplatform.ide.client.StartPagePresenter.WelcomePresenter.Display#getCloneLink() */
     @Override

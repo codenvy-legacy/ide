@@ -133,7 +133,7 @@
 			<div class="{style.floatLeft}">
 				<g:Label text="{locale.aboutIde}" styleName="{resource.css.welcomeHeaderText}"></g:Label>
 				<g:Frame ui:field="googleFrame"  styleName="{style.googleOnePanel}" ></g:Frame>
-				<g:Frame ui:field="fbFrame"  styleName="{style.fbLikePanel}" ></g:Frame>
+				<g:Frame ui:field="facebookFrame"  styleName="{style.fbLikePanel}" ></g:Frame>
 			</div>
 		</div>
 

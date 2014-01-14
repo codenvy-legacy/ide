@@ -241,4 +241,18 @@ public abstract class IDE {
         return fullName;
     }
     
+    /*
+     * Send message to special status changed listener.
+     * Uses for communication IDE with other JavaScript objects on a page.
+     */
+    public static native void notifyStatusChanged(String message) /*-{
+        try {
+            if ($wnd["ide-status-changed-listener"]) {
+                $wnd["ide-status-changed-listener"](message);
+            }
+        } catch (e) {
+            console.log(e.message);
+        }
+    }-*/;
+    
 }

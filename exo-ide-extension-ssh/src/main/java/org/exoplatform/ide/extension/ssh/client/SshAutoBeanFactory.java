@@ -21,6 +21,8 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
 import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
+import org.exoplatform.ide.extension.ssh.shared.ListKeyItem;
+import org.exoplatform.ide.extension.ssh.shared.PublicKey;
 
 /**
  * The interface for the AutoBean generator.
@@ -35,4 +37,18 @@ public interface SshAutoBeanFactory extends AutoBeanFactory {
      * @return an {@link AutoBean} of type {@link GenKeyRequest}
      */
     AutoBean<GenKeyRequest> genKeyRequest();
+
+    /**
+     * A factory method for a keys list.
+     *
+     * @return an {@link AutoBean} of type {@link ListKeyItem}
+     */
+    AutoBean<ListKeyItem> keyItems();
+
+    /**
+     * A factory method for a public key.
+     *
+     * @return an {@link AutoBean} of type {@link PublicKey}
+     */
+    AutoBean<PublicKey> publicKey();
 }

@@ -21,9 +21,11 @@ import com.codenvy.api.factory.AdvancedFactoryUrl;
 import com.codenvy.api.factory.SimpleFactoryUrl;
 import com.google.gwt.http.client.RequestException;
 
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
 
@@ -116,5 +118,6 @@ public abstract class FactoryClientService {
      *         callback
      * @throws WebSocketException
      */
-    public abstract void copyProjects(String downloadUrl, List<String> projects, RequestCallback<Void> callback) throws WebSocketException;
+    public abstract void copyProjects(String downloadUrl, List<String> projects, RequestCallback<List<Item>> callback)
+            throws WebSocketException;
 }

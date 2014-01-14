@@ -20,7 +20,6 @@ package org.exoplatform.ide.client.outline;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -47,8 +46,14 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
 
     public static final String PROMPT_HIDE = IDE.IDE_LOCALIZATION_CONSTANT.outlinePromptHideControl();
 
-    private boolean outlineViewOpened = false;
+    /**
+     * Count of opened Outline panels.
+     */
+    private int openedOutlinePanels = 0;
 
+    /**
+     * Creates instance of this {@link ShowOutlineControl}
+     */
     public ShowOutlineControl() {
         super(ID);
         setTitle(TITLE);
@@ -77,7 +82,6 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
         }
 
         boolean visible = event.getEditor().isCapable(EditorCapability.OUTLINE);
-
         setVisible(visible);
         if (visible) {
             update();
@@ -85,14 +89,15 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
     }
 
     /**
-     *
+     * Updates the visibility and enabling state of this control.
      */
     private void update() {
-        setSelected(outlineViewOpened);
-        if (outlineViewOpened) {
+        if (openedOutlinePanels > 0) {
+            setSelected(true);
             setPrompt(PROMPT_HIDE);
             setEvent(new ShowOutlineEvent(false));
         } else {
+            setSelected(false);
             setPrompt(PROMPT_SHOW);
             setEvent(new ShowOutlineEvent(true));
         }
@@ -103,7 +108,7 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
     @Override
     public void onViewOpened(ViewOpenedEvent event) {
         if (event.getView() instanceof OutlineDisplay) {
-            outlineViewOpened = true;
+            openedOutlinePanels++;
             update();
         }
     }
@@ -113,7 +118,7 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof OutlineDisplay) {
-            outlineViewOpened = false;
+            openedOutlinePanels--;
             update();
         }
     }

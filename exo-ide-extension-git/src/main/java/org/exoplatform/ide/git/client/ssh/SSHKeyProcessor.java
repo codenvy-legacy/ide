@@ -1,33 +1,32 @@
 package org.exoplatform.ide.git.client.ssh;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow;
 import org.exoplatform.ide.client.framework.util.Utils;
-import org.exoplatform.ide.extension.ssh.client.JsonpAsyncCallback;
+import org.exoplatform.ide.extension.ssh.client.SshKeyExtension;
 import org.exoplatform.ide.extension.ssh.client.SshKeyService;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.GenerateGitHubKeyEvent;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.GenerateGitHubKeyHandler;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.RefreshKeysEvent;
-import org.exoplatform.ide.extension.ssh.client.marshaller.SshKeysUnmarshaller;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
+import org.exoplatform.ide.extension.ssh.shared.ListKeyItem;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.marshaller.GitUrlInfoUnmarshaller;
 import org.exoplatform.ide.git.shared.GitUrlVendorInfo;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Processor, that perform check if we have private key for specific Git service, url of which we received.
@@ -83,17 +82,14 @@ public class SSHKeyProcessor implements SSHKeyProcessorHandler, GenerateGitHubKe
      *         {@link org.exoplatform.ide.git.shared.GitUrlVendorInfo}
      */
     private void getPublicKey(final GitUrlVendorInfo info) {
-        SshKeyService.get().getAllKeys(new JsonpAsyncCallback<JavaScriptObject>() {
-            @Override
-            public void onFailure(Throwable e) {
-                IDE.fireEvent(new ExceptionThrownEvent(e));
-            }
+        AutoBean<ListKeyItem> keysAutobean = SshKeyExtension.AUTO_BEAN_FACTORY.keyItems();
+        AutoBeanUnmarshaller<ListKeyItem> unmarshaller = new AutoBeanUnmarshaller<ListKeyItem>(keysAutobean);
 
-            @Override
-            public void onSuccess(JavaScriptObject result) {
-                try {
-                    List<KeyItem> keys = SshKeysUnmarshaller.unmarshal(result);
-                    for (KeyItem key : keys) {
+        try {
+            SshKeyService.get().getAllKeys(new AsyncRequestCallback<ListKeyItem>(unmarshaller) {
+                @Override
+                protected void onSuccess(ListKeyItem result) {
+                    for (KeyItem key : result.getKeys()) {
                         if (key.getHost().equals(info.getVendorBaseHost())) {
                             callback.onSuccess();
                             return;
@@ -102,11 +98,16 @@ public class SSHKeyProcessor implements SSHKeyProcessorHandler, GenerateGitHubKe
 
                     //key not found, lets generate it
                     generateNewKeyPair(info);
-                } catch (UnmarshallerException e) {
-                    IDE.fireEvent(new ExceptionThrownEvent(e));
                 }
-            }
-        });
+
+                @Override
+                protected void onFailure(Throwable e) {
+                    Dialogs.getInstance().showError(e.getLocalizedMessage());
+                }
+            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
     }
 
     /**

@@ -1,11 +1,13 @@
 package org.exoplatform.ide.extension.ssh.server;
 
+import com.codenvy.commons.json.JsonHelper;
+import com.codenvy.commons.json.JsonNameConventions;
+import com.jayway.restassured.response.Response;
+
 import org.everrest.assured.EverrestJetty;
 import org.everrest.assured.JettyHttpServer;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
-import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
-import org.exoplatform.ide.extension.ssh.shared.KeyItem;
-import org.exoplatform.ide.extension.ssh.shared.PublicKey;
+import org.exoplatform.ide.extension.ssh.shared.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.testng.MockitoTestNGListener;
@@ -28,7 +30,6 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
 /** Tests for {@link org.exoplatform.ide.extension.ssh.server.KeyService} */
 @Listeners(value = {EverrestJetty.class, MockitoTestNGListener.class})
@@ -57,7 +58,7 @@ public class KeyServiceTest {
         given().auth().basic(JettyHttpServer.ADMIN_USER_NAME, JettyHttpServer.ADMIN_USER_PASSWORD)
                 .contentType(MediaType.APPLICATION_JSON).body(body)
                 .pathParam("ws-name", "dev-monit")
-                .expect().statusCode(200)
+                .expect().statusCode(204)
                 .when().post("/private/{ws-name}/ssh-keys/gen");
     }
 
@@ -85,11 +86,21 @@ public class KeyServiceTest {
     }
 
     @Test
+    public void shouldThrowExceptionWhenUploadPrivateKeyWithPassphrase() throws Exception {
+        Path path = Paths.get(Thread.currentThread().getContextClassLoader().getResource("www_example_com.keywithpassphrase").toURI());
+        given().auth().basic(JettyHttpServer.ADMIN_USER_NAME, JettyHttpServer.ADMIN_USER_PASSWORD)
+                .multiPart(path.toFile())
+                .pathParam("ws-name", "dev-monit")
+                .expect().statusCode(500).body(equalTo("SSH key with passphrase is not supported"))
+                .when().post("/private/{ws-name}/ssh-keys/add");
+    }
+
+    @Test
     public void shouldThrowExceptionFileNotFoundWhenUploadPrivateKey() throws Exception {
         given().auth().basic(JettyHttpServer.ADMIN_USER_NAME, JettyHttpServer.ADMIN_USER_PASSWORD)
                 .multiPart("param", "nonexistvalue")
                 .pathParam("ws-name", "dev-monit")
-                .expect().statusCode(400).contentType(equalTo(MediaType.TEXT_HTML)).body(equalTo("Can't find input file."))
+                .expect().statusCode(500).body(equalTo("Can't find input file."))
                 .when().post("/private/{ws-name}/ssh-keys/add");
     }
 
@@ -102,7 +113,7 @@ public class KeyServiceTest {
         given().auth().basic(JettyHttpServer.ADMIN_USER_NAME, JettyHttpServer.ADMIN_USER_PASSWORD)
                 .multiPart(path.toFile())
                 .pathParam("ws-name", "dev-monit")
-                .expect().statusCode(500).contentType(equalTo(MediaType.TEXT_HTML)).body(equalTo("message"))
+                .expect().statusCode(500).body(equalTo("message"))
                 .when().post("/private/{ws-name}/ssh-keys/add");
     }
 
@@ -113,7 +124,7 @@ public class KeyServiceTest {
         given().auth().basic(JettyHttpServer.ADMIN_USER_NAME, JettyHttpServer.ADMIN_USER_PASSWORD)
                 .multiPart(path.toFile())
                 .pathParam("ws-name", "dev-monit")
-                .expect().statusCode(400).contentType(equalTo(MediaType.TEXT_HTML)).body(equalTo("File is to large to proceed."))
+                .expect().statusCode(500).body(equalTo("File is to large to proceed."))
                 .when().post("/private/{ws-name}/ssh-keys/add");
     }
 
@@ -121,10 +132,10 @@ public class KeyServiceTest {
     public void shouldGetPublicKey() throws Exception {
         when(keyStore.getPublicKey(anyString())).thenReturn(new SshKey("host.com", "key content".getBytes()));
 
-        PublicKey key = given().auth().basic(JettyHttpServer.ADMIN_USER_NAME, JettyHttpServer.ADMIN_USER_PASSWORD)
+        PublicKeyImpl key = given().auth().basic(JettyHttpServer.ADMIN_USER_NAME, JettyHttpServer.ADMIN_USER_PASSWORD)
                 .pathParam("ws-name", "dev-monit").queryParam("host", "host.com").header(HTTPHeader.ACCEPT, MediaType.APPLICATION_JSON)
                 .expect().statusCode(200).contentType(equalTo(MediaType.APPLICATION_JSON))
-                .when().get("/private/{ws-name}/ssh-keys").as(PublicKey.class);
+                .when().get("/private/{ws-name}/ssh-keys").as(PublicKeyImpl.class);
 
         assertEquals(key.getKey(), "key content");
         assertEquals(key.getHost(), "host.com");
@@ -137,7 +148,7 @@ public class KeyServiceTest {
         given().auth().basic(JettyHttpServer.ADMIN_USER_NAME, JettyHttpServer.ADMIN_USER_PASSWORD)
                 .pathParam("ws-name", "dev-monit").queryParam("host", "host.com").header(HTTPHeader.ACCEPT, MediaType.APPLICATION_JSON)
                 .expect()
-                .statusCode(404).contentType(equalTo(MediaType.TEXT_PLAIN)).body(equalTo("Public key for host host.com not found."))
+                .statusCode(500).body(equalTo("Public key for host host.com not found."))
                 .when().get("/private/{ws-name}/ssh-keys");
     }
 
@@ -148,7 +159,7 @@ public class KeyServiceTest {
         given().auth().basic(JettyHttpServer.ADMIN_USER_NAME, JettyHttpServer.ADMIN_USER_PASSWORD)
                 .pathParam("ws-name", "dev-monit").queryParam("host", "host.com").header(HTTPHeader.ACCEPT, MediaType.APPLICATION_JSON)
                 .expect()
-                .statusCode(500).contentType(equalTo(MediaType.TEXT_PLAIN)).body(equalTo("message"))
+                .statusCode(500).body(equalTo("message"))
                 .when().get("/private/{ws-name}/ssh-keys");
     }
 
@@ -158,11 +169,10 @@ public class KeyServiceTest {
 
         given().auth().basic(JettyHttpServer.ADMIN_USER_NAME, JettyHttpServer.ADMIN_USER_PASSWORD)
                 .pathParam("ws-name", "dev-monit")
-                .queryParam("host", "host.com")
-                .queryParam("callback", "test")
+                .formParam("host", "host.com")
                 .expect()
-                .statusCode(200).body(equalTo("test();"))
-                .when().get("/private/{ws-name}/ssh-keys/remove");
+                .statusCode(204)
+                .when().post("/private/{ws-name}/ssh-keys/remove");
     }
 
     @Test
@@ -171,11 +181,10 @@ public class KeyServiceTest {
 
         given().auth().basic(JettyHttpServer.ADMIN_USER_NAME, JettyHttpServer.ADMIN_USER_PASSWORD)
                 .pathParam("ws-name", "dev-monit")
-                .queryParam("host", "host.com")
-                .queryParam("callback", "test")
+                .formParam("host", "host.com")
                 .expect()
                 .statusCode(500).body(equalTo("message"))
-                .when().get("/private/{ws-name}/ssh-keys/remove");
+                .when().post("/private/{ws-name}/ssh-keys/remove");
     }
 
     @Test
@@ -186,7 +195,7 @@ public class KeyServiceTest {
                 .pathParam("ws-name", "dev-monit")
                 .header(HTTPHeader.ACCEPT, MediaType.APPLICATION_JSON)
                 .expect()
-                .statusCode(200).body(equalTo("[]"))
+                .statusCode(200).body(equalTo("{\"keys\":[]}"))
                 .when().get("/private/{ws-name}/ssh-keys/all");
     }
 
@@ -195,17 +204,18 @@ public class KeyServiceTest {
         when(keyStore.getAll()).thenReturn(Collections.singleton("host.com"));
         when(keyStore.getPublicKey(anyString())).thenReturn(new SshKey(null, null));
 
-        KeyItem[] keys = given().auth().basic(JettyHttpServer.ADMIN_USER_NAME, JettyHttpServer.ADMIN_USER_PASSWORD)
+        Response response = given().auth().basic(JettyHttpServer.ADMIN_USER_NAME, JettyHttpServer.ADMIN_USER_PASSWORD)
                 .pathParam("ws-name", "dev-monit")
                 .header(HTTPHeader.ACCEPT, MediaType.APPLICATION_JSON)
                 .expect()
                 .statusCode(200)
-                .when().get("/private/{ws-name}/ssh-keys/all").as(KeyItem[].class);
+                .when().get("/private/{ws-name}/ssh-keys/all");
 
-        assertEquals(keys.length, 1);
-        assertEquals(keys[0].getHost(), "host.com");
-        assertTrue(keys[0].getPublicKeyURL().endsWith("/private/dev-monit/ssh-keys?host=host.com"));
-        assertTrue(keys[0].getRemoveKeyURL().endsWith("/private/dev-monit/ssh-keys/remove?host=host.com"));
+        ListKeyItem keys = JsonHelper.fromJson(response.asString(), ListKeyItem.class, null, JsonNameConventions.DEFAULT);
+
+        assertEquals(keys.getKeys().size(), 1);
+        assertEquals(keys.getKeys().get(0).getHost(), "host.com");
+        assertEquals(keys.getKeys().get(0).isHasPublicKey(), true);
     }
 
     @Test
@@ -215,7 +225,14 @@ public class KeyServiceTest {
         given().auth().basic(JettyHttpServer.ADMIN_USER_NAME, JettyHttpServer.ADMIN_USER_PASSWORD)
                 .pathParam("ws-name", "dev-monit")
                 .header(HTTPHeader.ACCEPT, MediaType.APPLICATION_JSON)
-                .expect().statusCode(500).contentType(equalTo(MediaType.TEXT_PLAIN)).body(equalTo("message"))
+                .expect().statusCode(500).body(equalTo("message"))
+                .when().get("/private/{ws-name}/ssh-keys/all");
+    }
+
+    @Test
+    public void shouldDisallowToExecuteMethodForNotAuthorizeUser() throws Exception {
+        given().header(HTTPHeader.ACCEPT, MediaType.APPLICATION_JSON).pathParam("ws-name", "dev-monit")
+                .expect().statusCode(401)
                 .when().get("/private/{ws-name}/ssh-keys/all");
     }
 }

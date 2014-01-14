@@ -407,7 +407,7 @@ public class NativeGitConnection implements GitConnection {
     /** @see org.exoplatform.ide.git.server.GitConnection#rm(org.exoplatform.ide.git.shared.RmRequest) */
     @Override
     public void rm(RmRequest request) throws GitException {
-        nativeGit.createRemoveCommand().setListOfFiles(request.getFiles()).execute();
+        nativeGit.createRemoveCommand().setListOfFiles(request.getFiles()).setCached(request.getCached()).execute();
     }
 
     /** @see org.exoplatform.ide.git.server.GitConnection#status(boolean) */
@@ -524,26 +524,8 @@ public class NativeGitConnection implements GitConnection {
                     if (!nativeGit.getRepository().exists()) {
                         nativeGit.getRepository().mkdirs();
                     }
-                    //if not authorized again make runtime exception
-                    if (inner.getMessage().toLowerCase().startsWith("fatal: authentication failed")) {
-                        throw new NotAuthorizedException("not authorized");
-                    } else {
-                        throw inner;
-                    }
+                    throw inner;
                 }
-            } else if (e.getMessage().toLowerCase().contains("please make sure you have the correct access rights")) {
-                //in case that user tries to clone repository via ssh and he doesn't have ssh key
-                String operation = "This";
-                if (command instanceof CloneCommand) {
-                    operation = "Cloning";
-                } else if (command instanceof FetchCommand) {
-                    operation = "Fetching";
-                } else if (command instanceof PullCommand) {
-                    operation = "Pulling";
-                } else if (command instanceof PushCommand) {
-                    operation = "Pushing";
-                }
-                throw new GitException(operation + " operation need access authorization to the repository");
             } else {
                 throw e;
             }

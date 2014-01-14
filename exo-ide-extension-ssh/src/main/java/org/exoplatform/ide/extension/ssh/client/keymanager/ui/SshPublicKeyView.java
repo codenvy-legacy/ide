@@ -23,17 +23,18 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter.Display;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: SshPublicKeyView May 19, 2011 12:40:06 PM evgen $
+ * View for showing contents of public key.
  */
 public class SshPublicKeyView extends ViewImpl implements Display {
 
@@ -47,31 +48,31 @@ public class SshPublicKeyView extends ViewImpl implements Display {
     }
 
     @UiField
-    TextArea publicSshKeyField;
+    TextBox publicSshKeyField;
 
     @UiField
     ImageButton closeButton;
 
     public SshPublicKeyView() {
-        super(ID, ViewType.MODAL, TITLE, null, 400, 350, false);
+        super(ID, ViewType.MODAL, TITLE, null, 380, 105, false);
         add(uiBinder.createAndBindUi(this));
         UIHelper.setAsReadOnly("exoSshPublicKeyField");
     }
 
 
-    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter.Display#getCloseButton() */
+    /** {@inheritDoc} */
     @Override
     public HasClickHandlers getCloseButton() {
         return closeButton;
     }
 
-    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter.Display#getKeyField() */
+    /** {@inheritDoc} */
     @Override
     public HasValue<String> getKeyField() {
         return publicSshKeyField;
     }
 
-    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter.Display#addHostToTitle(java.lang.String) */
+    /** {@inheritDoc} */
     @Override
     public void addHostToTitle(String host) {
         setTitle(TITLE + host);

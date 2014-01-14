@@ -66,6 +66,7 @@ import org.exoplatform.ide.client.messages.IdeVersionsLocalizationConstant;
 import org.exoplatform.ide.client.navigation.NavigationModule;
 import org.exoplatform.ide.client.outline.OutlineItemCreatorFactory;
 import org.exoplatform.ide.client.outline.OutlinePresenter;
+import org.exoplatform.ide.client.outline.OutlineStateListener;
 import org.exoplatform.ide.client.output.OutputPresenter;
 import org.exoplatform.ide.client.preferences.PreferencesModule;
 import org.exoplatform.ide.client.preview.PreviewHTMLPresenter;
@@ -127,6 +128,8 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE {
     private UserSession userSession;
 
     public IDE() {
+        notifyStatusChanged("load-complete");        
+        
         // Remember browser's window.alert(...) function
         Alert.init();
 
@@ -172,7 +175,10 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE {
 
         new PropertiesPresenter();
         new OutputPresenter();
+        
         new OutlinePresenter();
+        new OutlineStateListener();
+        
         new PreviewHTMLPresenter();
         new DocumentationPresenter();
 

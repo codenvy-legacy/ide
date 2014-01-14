@@ -17,12 +17,17 @@
  */
 package org.exoplatform.ide.websocket;
 
+import com.codenvy.api.core.user.UserState;
+
 import org.everrest.core.ApplicationContext;
 import org.everrest.core.impl.method.MethodInvokerDecorator;
 import org.everrest.core.method.MethodInvoker;
 import org.everrest.core.resource.GenericMethodResource;
 import org.everrest.websockets.WSConnection;
 import org.exoplatform.services.security.ConversationState;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Intended to prepare environment to invoke resource method when request received through web socket connection.
@@ -31,6 +36,21 @@ import org.exoplatform.services.security.ConversationState;
  * @version $Id: $
  */
 public class WebSocketMethodInvokerDecorator extends MethodInvokerDecorator {
+
+    private static Method  mdc_setContextMap;
+    private static Method  mdc_clear;
+    private static boolean setUpLogger;
+
+    static {
+        try {
+            Class<?> c = Thread.currentThread().getContextClassLoader().loadClass("org.slf4j.MDC");
+            mdc_setContextMap = c.getDeclaredMethod("setContextMap", java.util.Map.class);
+            mdc_clear = c.getDeclaredMethod("clear");
+            setUpLogger = mdc_setContextMap != null && mdc_clear != null;
+        } catch (Exception ignore) {
+        }
+    }
+
     /**
      * @param decoratedInvoker
      *         decorated MethodInvoker
@@ -48,11 +68,29 @@ public class WebSocketMethodInvokerDecorator extends MethodInvokerDecorator {
             com.codenvy.commons.env.EnvironmentContext.setCurrent(
                     (com.codenvy.commons.env.EnvironmentContext)wsConnection.getHttpSession().getAttribute(
                             ExoIdeWebSocketServlet.ENVIRONMENT_SESSION_ATTRIBUTE_NAME));
+
+            UserState.set((UserState)wsConnection.getHttpSession().getAttribute(ExoIdeWebSocketServlet.USERSTATE_SESSION_ATTRIBUTE_NAME));
+
+            Object loggerContext = wsConnection.getHttpSession().getAttribute(ExoIdeWebSocketServlet.MDC_CONTEXT_ATTRIBUTE_NAME);
+            if (setUpLogger && loggerContext != null) {
+                try {
+                    mdc_setContextMap.invoke(null, loggerContext);
+                } catch (Throwable t) {
+                }
+            }
+
             try {
                 return super.invokeMethod(resource, genericMethodResource, context);
             } finally {
                 ConversationState.setCurrent(null);
+                UserState.reset();
                 com.codenvy.commons.env.EnvironmentContext.reset();
+                if (loggerContext != null) {
+                    try {
+                        mdc_clear.invoke(null);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                    }
+                }
             }
         }
         return super.invokeMethod(resource, genericMethodResource, context);

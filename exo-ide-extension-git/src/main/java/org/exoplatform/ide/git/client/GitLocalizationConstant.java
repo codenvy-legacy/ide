@@ -218,6 +218,9 @@ public interface GitLocalizationConstant extends Messages {
     @Key("messages.use.ssh.protocol")
     String useSshProtocol();
 
+    @Key("messages.file.unsaved")
+    String fileUnsaved(String file);
+
     // Unmarshaller Errors
     @Key("merge.unmarshal.failed")
     String mergeUnmarshallerFailed();

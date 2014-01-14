@@ -17,10 +17,8 @@
  */
 package org.exoplatform.ide.extension.ssh.client;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
@@ -32,22 +30,22 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
+import org.exoplatform.ide.extension.ssh.shared.ListKeyItem;
+import org.exoplatform.ide.extension.ssh.shared.PublicKey;
+
+import java.util.List;
 
 /**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: SshService May 18, 2011 4:49:49 PM evgen $
+ * Client service for SSH key service.
  */
 public class SshKeyService {
 
     private static SshKeyService instance;
 
-    private final String         restContext;
+    private final String restContext;
 
-    private final Loader         loader;
+    private final Loader loader;
 
-    /**
-     *
-     */
     public SshKeyService(String restContext, Loader loader) {
         this.restContext = restContext;
         this.loader = loader;
@@ -58,24 +56,16 @@ public class SshKeyService {
         return instance;
     }
 
-    /**
-     * Receive all ssh key, stored on server
-     * 
-     * @param callback
-     */
-    public void getAllKeys(JsonpAsyncCallback<JavaScriptObject> callback) {
-        JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
-        jsonp.requestObject(restContext + Utils.getWorkspaceName() + "/ssh-keys/all", callback);
+    /** Receive all ssh key, stored on server. */
+    public void getAllKeys(AsyncRequestCallback<ListKeyItem> callback) throws RequestException {
+        String url = restContext + Utils.getWorkspaceName() + "/ssh-keys/all";
+
+        loader.setMessage("Fetching SSH keys...");
+        AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
     }
 
-    /**
-     * Generate new ssh key pare
-     * 
-     * @param host for ssh key
-     * @param callback
-     * @throws RequestException
-     */
-    public void generateKey(String host, AsyncRequestCallback<GenKeyRequest> callback) throws RequestException {
+    /** Generate new ssh key pare. */
+    public void generateKey(String host, AsyncRequestCallback<Void> callback) throws RequestException {
         String url = restContext + Utils.getWorkspaceName() + "/ssh-keys/gen";
 
         GenKeyRequest genKeyRequestBean = SshKeyExtension.AUTO_BEAN_FACTORY.genKeyRequest().as();
@@ -88,32 +78,21 @@ public class SshKeyService {
                     .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 
-    /**
-     * Get public ssh key
-     * 
-     * @param keyItem to get public key
-     * @param callback
-     */
-    public void getPublicKey(KeyItem keyItem, JsonpAsyncCallback<JavaScriptObject> callback) {
-        JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
-        loader.setMessage("Getting public SSH key for " + keyItem.getHost());
-        loader.show();
-        callback.setLoader(loader);
-        jsonp.requestObject(keyItem.getPublicKeyURL(), callback);
+    /** Get public ssh key. */
+    public void getPublicKey(KeyItem keyItem, AsyncRequestCallback<PublicKey> callback) throws RequestException {
+        String url = restContext + Utils.getWorkspaceName() + "/ssh-keys?host=" + keyItem.getHost();
+
+        loader.setMessage("Fetching SSH keys...");
+        AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
     }
 
-    /**
-     * Delete ssh key
-     * 
-     * @param keyItem to delete
-     * @param callback
-     */
-    public void deleteKey(KeyItem keyItem, JsonpAsyncCallback<Void> callback) {
-        JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
-        loader.setMessage("Deleting SSH keys for " + keyItem.getHost());
-        loader.show();
-        callback.setLoader(loader);
-        jsonp.send(keyItem.getRemoveKeyURL(), callback);
+    /** Delete ssh key. */
+    public void deleteKey(KeyItem keyItem, AsyncRequestCallback<Void> callback) throws RequestException {
+        String url = restContext + Utils.getWorkspaceName() + "/ssh-keys/remove";
+
+        loader.setMessage("Remove key for " + keyItem.getHost());
+        AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_FORM_URLENCODED)
+                    .loader(loader).data("host=" + keyItem.getHost()).send(callback);
     }
 
 }

@@ -1,3 +1,35 @@
+var isTargetWindow = false;
+var uuid;
+var buildMenu = function () {
+};
+
+window.onload = function () {
+    buildMenu();
+    uuid = generate();
+    sendSessionStatus("ide", uuid, "start");
+}
+
+window.onbeforeunload = function () {
+    sendSessionStatus("ide", uuid, "stop");
+}
+
+window.onfocus = function () {
+    if (isTargetWindow == true) {
+        isTargetWindow = false;
+        uuid = generate();
+        sendSessionStatus("ide", uuid, "start");
+    }
+    return false;
+}
+
+window.onblur = function () {
+    if (isTargetWindow == false) {
+        isTargetWindow = true;
+        sendSessionStatus("ide", uuid, "stop");
+    }
+    return false;
+}
+
 //var url = (('https:' == window.location.protocol) ? 'wss:' : 'ws:') + '//' + window.location.host + '/ide/websocket/' + ws;
 //var websocket = new WebSocket(url);
 //window["ide_websoket"] = websocket;
@@ -47,17 +79,6 @@ function sendSessionStatus(appName, sessionId, status) {
     var mes = {body: JSON.stringify({sessionId: sessionId, browserInfo: browserInfo}), method: "POST", path: url, uuid: generate(), "headers": [
         {name: "content-type", value: "application/json"}
     ]};
-
-//    if (websocket.readyState == WebSocket.OPEN) {
-//        if (messages.length > 0) {
-//            for (var message in messages)
-//                sendMessage(message);
-//            messages = [];
-//        }
-//        sendMessage(mes);
-//    } else {
-//        messages[messages.length] = mes;
-//    }
 }
 
 function sendMessage(message) {

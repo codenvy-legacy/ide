@@ -26,44 +26,35 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.preference.Preferences;
 import org.exoplatform.ide.client.framework.util.Utils;
-import org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerPresenter;
+import org.exoplatform.ide.extension.ssh.client.keymanager.KeyManagerPresenter;
 import org.exoplatform.ide.extension.ssh.client.keymanager.SshPreferenceItem;
 import org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter;
-import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowPublicSshKeyEvent;
-import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowPublicSshKeyHandler;
+import org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter;
 
 /**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: SshExtension May 17, 2011 5:00:33 PM evgen $
+ * SSH support extension for IDE.
  */
-public class SshKeyExtension extends Extension implements InitializeServicesHandler, ShowPublicSshKeyHandler {
+public class SshKeyExtension extends Extension implements InitializeServicesHandler {
 
     /** The generator of an {@link AutoBean}. */
     public static final SshAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(SshAutoBeanFactory.class);
 
+    /** Localization constants. */
     public static final SshLocalizationConstant CONSTANTS = GWT.create(SshLocalizationConstant.class);
 
-    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
+    /** {@inheritDoc} */
     @Override
     public void initialize() {
-        //TODO IDE.getInstance().addControl(new SshKeyManagerControl());
-        Preferences.get().addPreferenceItem(new SshPreferenceItem(new SshKeyManagerPresenter()));
+        Preferences.get().addPreferenceItem(new SshPreferenceItem(new KeyManagerPresenter()));
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
-        IDE.addHandler(ShowPublicSshKeyEvent.TYPE, this);
+
+        new SshPublicKeyPresenter();
+        new UploadSshKeyPresenter();
     }
 
-    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
-     * .client.framework.application.event.InitializeServicesEvent) */
+    /** {@inheritDoc} */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
         new SshKeyService(Utils.getRestContext(), event.getLoader());
     }
-
-    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowPublicSshKeyHandler#onShowPublicSshKey(org.exoplatform.ide
-     * .extension.ssh.client.keymanager.event.ShowPublicSshKeyEvent) */
-    @Override
-    public void onShowPublicSshKey(ShowPublicSshKeyEvent event) {
-        new SshPublicKeyPresenter(event.getKeyItem());
-    }
-
 }
