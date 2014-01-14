@@ -215,7 +215,7 @@ public class StandardComponentInitializer {
         actionManager.registerAction("openProject", openProjectAction);
         
         actionManager.registerAction("navigateToFile", navigateToFileAction);
-        keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('N').build(), "navigateToFile");
+        keyBinding.getGlobal().addKey(new KeyBuilder().action().alt().charCode('n').build(), "navigateToFile");
         
         DefaultActionGroup toolbarGroup = new DefaultActionGroup(actionManager);
         toolbarGroup.addSeparator();
