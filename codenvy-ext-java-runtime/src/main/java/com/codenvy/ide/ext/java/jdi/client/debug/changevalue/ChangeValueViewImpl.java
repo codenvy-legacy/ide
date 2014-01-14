@@ -112,7 +112,7 @@ public class ChangeValueViewImpl extends DialogBox implements ChangeValueView {
     /** {@inheritDoc} */
     @Override
     public void setValueTitle(@NotNull String title) {
-        changeValueLabel.setText(title);
+        changeValueLabel.getElement().setInnerHTML(title);
     }
 
     /** {@inheritDoc} */

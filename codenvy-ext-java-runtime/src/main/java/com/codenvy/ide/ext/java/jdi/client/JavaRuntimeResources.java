@@ -46,20 +46,8 @@ public interface JavaRuntimeResources extends ClientBundle {
     @Source("debugApp.png")
     ImageResource debugApp();
 
-    @Source("stopApp.png")
-    ImageResource stopApp();
-
-    @Source("runApp.png")
-    ImageResource runApp();
-
-    @Source("updateApp.png")
-    ImageResource updateApp();
-
-    @Source("logs.png")
-    ImageResource logs();
-
-    @Source("variable.png")
-    ImageResource variable();
+    @Source("changeVariableValue.png")
+    ImageResource changeVariableValue();
 
     @Source("evaluate.png")
     ImageResource evaluate();
@@ -67,15 +55,9 @@ public interface JavaRuntimeResources extends ClientBundle {
     @Source("breakpoint.png")
     ImageResource breakpoint();
 
-    @Source("breakpoint_properties.png")
-    ImageResource breakpointProperties();
-
     @Source("remove_all_breakpoints.gif")
     ImageResource removeAllBreakpointsButton();
 
     @Source("breakpoints.png")
     ImageResource breakPointsIcon();
-
-    @Source("ajax-loader.gif")
-    ImageResource loader();
 }

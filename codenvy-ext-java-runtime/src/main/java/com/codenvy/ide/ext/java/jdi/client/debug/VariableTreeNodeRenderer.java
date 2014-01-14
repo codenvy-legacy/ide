@@ -50,8 +50,8 @@ public class VariableTreeNodeRenderer implements NodeRenderer<Variable> {
         @Source("Debug.css")
         Css variableCss();
 
-        @Source("local.png")
-        ImageResource local();
+        @Source("localVariable.png")
+        ImageResource localVariable();
     }
 
     private final Css css;

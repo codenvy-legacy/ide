@@ -33,15 +33,7 @@ public interface JavaRuntimeLocalizationConstant extends com.google.gwt.i18n.cli
     @Key("control.debugApp.description")
     String debugAppActionDescription();
 
-    @Key("control.showBreakpointProperties.id")
-    String showBreakpointPropertiesControlId();
-
-    @Key("control.showBreakpointProperties.title")
-    String showBreakpointPropertiesControlTitle();
-
-    @Key("control.showBreakpointProperties.prompt")
-    String showBreakpointPropertiesControlPrompt();
-
+    /* Buttons */
     @Key("breakpoints")
     String breakpoints();
 
@@ -105,12 +97,7 @@ public interface JavaRuntimeLocalizationConstant extends com.google.gwt.i18n.cli
     @Key("debugger.disconnected")
     String debuggerDisconnected(String address);
 
-    /**
-     * **********************************************************************
-     * Change value view
-     * **********************************************************************
-     */
-
+    /* ChangeValueView */
     @Key("view.changeValue.title")
     String changeValueViewTitle();
 
@@ -123,12 +110,7 @@ public interface JavaRuntimeLocalizationConstant extends com.google.gwt.i18n.cli
     @Key("view.changeValue.cancelButton.title")
     String changeValueViewCancelButtonTitle();
 
-    /**
-     * **********************************************************************
-     * Evaluate expression view
-     * **********************************************************************
-     */
-
+    /* EvaluateExpressionView */
     @Key("view.evaluateExpression.title")
     String evaluateExpressionViewTitle();
 
@@ -146,22 +128,4 @@ public interface JavaRuntimeLocalizationConstant extends com.google.gwt.i18n.cli
 
     @Key("evaluateExpressionFailed")
     String evaluateExpressionFailed(String reason);
-
-    /**
-     * **********************************************************************
-     * Breakpoint properties view
-     * **********************************************************************
-     */
-
-    @Key("view.breakpointProperties.title")
-    String breakpointPropertiesViewTitle();
-
-    @Key("view.breakpointProperties.conditionField.title")
-    String breakpointPropertiesViewConditionFieldTitle();
-
-    @Key("view.breakpointProperties.OKButton.title")
-    String breakpointPropertiesViewOKButtonTitle();
-
-    @Key("view.breakpointProperties.cancelButton.title")
-    String breakpointPropertiesViewCancelButtonTitle();
 }

@@ -67,7 +67,7 @@
                     <c:Button ui:field="btnRemoveAllBreakpoints" title="{locale.removeBreakpointsButton}"
                               icon="{res.removeAllBreakpointsButton}" width="18px" height="16px" size="SMALL"
                               addStyleNames="{style.alignLeft} {style.withoutPadding}"/>
-                    <c:Button ui:field="btnChangeValue" title="{locale.changeValue}" icon="{res.variable}" width="18px" height="16px"
+                    <c:Button ui:field="btnChangeValue" title="{locale.changeValue}" icon="{res.changeVariableValue}" width="18px" height="16px"
                               size="SMALL" addStyleNames="{style.alignLeft} {style.withoutPadding}"/>
                     <c:Button ui:field="btnEvaluateExpression" title="{locale.evaluateExpression}" icon="{res.evaluate}" width="18px"
                               height="16px" size="SMALL" addStyleNames="{style.alignLeft} {style.withoutPadding}"/>
