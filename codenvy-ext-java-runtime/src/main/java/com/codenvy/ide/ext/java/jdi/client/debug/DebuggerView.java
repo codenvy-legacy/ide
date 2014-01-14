@@ -58,16 +58,16 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
         /** Performs any actions appropriate in response to the user having pressed the Evaluate expression button. */
         void onEvaluateExpressionButtonClicked();
 
-        /** Performs any actions appropriate in response to the user having pressed the expand tree button. */
-        void onExpandTreeClicked();
+        /** Performs any actions appropriate in response to the user having pressed the expand button in variables tree. */
+        void onExpandVariablesTree();
 
         /**
-         * Return selected variable.
+         * Performs any actions appropriate in response to the user having selected variable in variables tree.
          *
-         * @param selectedVariable
-         *         variable what is selected
+         * @param variable
+         *         variable that is selected
          */
-        void onSelectedTreeElementClicked(@NotNull Variable selectedVariable);
+        void onSelectedVariableElement(@NotNull Variable variable);
     }
 
     /**

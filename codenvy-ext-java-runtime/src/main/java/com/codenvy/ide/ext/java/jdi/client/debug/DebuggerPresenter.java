@@ -128,7 +128,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
 
     /** Create presenter. */
     @Inject
-    protected DebuggerPresenter(DebuggerView view,
+    public DebuggerPresenter(DebuggerView view,
                                 JavaRuntimeResources resources,
                                 final DebuggerClientService service,
                                 final EventBus eventBus,
@@ -143,7 +143,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                                 ChangeValuePresenter changeValuePresenter,
                                 final NotificationManager notificationManager,
                                 final DtoFactory dtoFactory,
-                                RunnerController runnerController) {
+                                final RunnerController runnerController) {
         this.view = view;
         this.dtoFactory = dtoFactory;
         this.runnerController = runnerController;
@@ -185,6 +185,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                                                     if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus() &&
                                                         serverException.getMessage() != null
                                                         && serverException.getMessage().contains("not found")) {
+                                                        runnerController.stopActiveProject();
                                                         onDebuggerDisconnected();
                                                         return;
                                                     }
@@ -218,6 +219,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                             (com.codenvy.ide.websocket.rest.exceptions.ServerException)exception;
                     if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus() && serverException.getMessage() != null
                         && serverException.getMessage().contains("not found")) {
+                        runnerController.stopActiveProject();
                         onDebuggerDisconnected();
                         return;
                     }
@@ -570,7 +572,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
 
     /** {@inheritDoc} */
     @Override
-    public void onExpandTreeClicked() {
+    public void onExpandVariablesTree() {
         List<Variable> rootVariables = selectedVariable.getVariables();
         if (rootVariables.size() == 0) {
             try {
@@ -598,8 +600,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
 
     /** {@inheritDoc} */
     @Override
-    public void onSelectedTreeElementClicked(@NotNull Variable selectedVariable) {
-        this.selectedVariable = selectedVariable;
+    public void onSelectedVariableElement(@NotNull Variable variable) {
+        this.selectedVariable = variable;
         updateChangeValueButtonEnableState();
     }
 
@@ -617,8 +619,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     }
 
     private void showDialog(@NotNull DebuggerInfo debuggerInfo) {
-        final String vmName = debuggerInfo.getVmName() + " " + debuggerInfo.getVmVersion();
-        view.setVMName(vmName);
+        view.setVMName(debuggerInfo.getVmName() + " " + debuggerInfo.getVmVersion());
         selectedVariable = null;
         updateChangeValueButtonEnableState();
         changeButtonsEnableState(false);
@@ -629,7 +630,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
             partStack.setActivePart(this);
         }
 
-        debuggerConnected(debuggerInfo);
         startCheckingEvents();
     }
 
@@ -673,9 +673,9 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                     @Override
                     protected void onSuccess(String result) {
                         changeButtonsEnableState(false);
+                        runnerController.stopActiveProject();
                         onDebuggerDisconnected();
                         closeView();
-                        runnerController.stopActiveProject();
                     }
 
                     @Override
@@ -716,10 +716,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 messageBus.unsubscribe(debuggerEventsChannel, debuggerEventsHandler);
         } catch (WebSocketException ignore) {
         }
-    }
-
-    private void debuggerConnected(@NotNull DebuggerInfo debuggerInfo) {
-        this.debuggerInfo = debuggerInfo;
     }
 
     /** Perform some action after disconnecting a debugger. */

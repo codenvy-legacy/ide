@@ -21,6 +21,7 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerClientService;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
+import com.google.web.bindery.event.shared.EventBus;
 
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -46,6 +47,8 @@ public abstract class BaseTest {
     protected JavaRuntimeLocalizationConstant constants;
     @Mock
     protected NotificationManager             notificationManager;
+    @Mock
+    protected EventBus                        eventBus;
     @Mock
     protected DtoFactory                      dtoFactory;
 

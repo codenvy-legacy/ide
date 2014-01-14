@@ -195,14 +195,14 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
             @Override
             public void onNodeExpanded(final TreeNodeElement<Variable> node) {
                 selectedVariable = node;
-                delegate.onSelectedTreeElementClicked(selectedVariable.getData());
-                delegate.onExpandTreeClicked();
+                delegate.onSelectedVariableElement(selectedVariable.getData());
+                delegate.onExpandVariablesTree();
             }
 
             @Override
             public void onNodeSelected(TreeNodeElement<Variable> node, SignalEvent event) {
                 selectedVariable = node;
-                delegate.onSelectedTreeElementClicked(selectedVariable.getData());
+                delegate.onSelectedVariableElement(selectedVariable.getData());
             }
 
             @Override
@@ -215,7 +215,9 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
                 //do nothing
             }
         });
-        this.variablesPanel.add(variables.asWidget());
+        Widget widget = variables.asWidget();
+        widget.setHeight("100%");
+        this.variablesPanel.add(widget);
     }
 
     /** {@inheritDoc} */
