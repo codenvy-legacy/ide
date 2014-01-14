@@ -817,11 +817,11 @@
 					</div>
 					
 					
-					<div class="{style.label}" style="position: absolute; left:408px; top:90px;">Organisation ID:</div>					
+					<div class="{style.label}" style="position: absolute; left:408px; top:90px;">Organization ID:</div>
 					<input ui:field="companyIdField" type="text" class="{style.textField}" style="position: absolute; left:528px; top:90px;"></input>
 					<div class="{style.tooltip}" style="position: absolute; right:0px; top:90px;">
 						?
-						<span style="margin-top: -26px;"><div></div>Specify the Organisation ID<br/>that we provide you to include this factory<br/>in reports we generate for you</span>	
+						<span style="margin-top: -26px;"><div></div>Specify the Organization ID<br/>that we provide you to include this factory<br/>in reports we generate for you</span>
 					</div>
 					
 					<div class="{style.label}" style="position: absolute; left:408px; top:120px;">Affiliate ID:</div>
