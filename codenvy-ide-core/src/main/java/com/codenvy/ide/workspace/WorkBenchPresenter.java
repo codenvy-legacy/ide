@@ -18,6 +18,7 @@
 package com.codenvy.ide.workspace;
 
 import com.codenvy.ide.api.mvp.Presenter;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.parts.OutlinePart;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
@@ -66,7 +67,8 @@ public class WorkBenchPresenter implements Presenter {
                               ConsolePart consolePart,
                               ProjectExplorerPart projectExplorerPart,
                               WelcomePart welcomePart,
-                              SearchPart searchPart) {
+                              SearchPart searchPart,
+                              NotificationManager notificationManager) {
         this.view = view;
 
         partStacks.put(PartStackType.EDITING.toString(), editorPartStackPresenter);
@@ -93,6 +95,7 @@ public class WorkBenchPresenter implements Presenter {
         openPart(projectExplorerPart, PartStackType.NAVIGATION);
         openPart(consolePart, PartStackType.INFORMATION);
         openPart(searchPart, PartStackType.INFORMATION);
+        openPart(notificationManager, PartStackType.INFORMATION);
         setActivePart(projectExplorerPart);
     }
 

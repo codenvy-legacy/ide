@@ -17,6 +17,11 @@
  */
 package com.codenvy.ide.notification;
 
+import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.parts.PartStackUIResources;
+import com.codenvy.ide.api.parts.base.BaseView;
+import com.codenvy.ide.workspace.WorkspaceView;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -42,21 +47,24 @@ import static com.codenvy.ide.notification.NotificationManagerView.Status.IN_PRO
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class NotificationManagerViewImpl extends Composite implements NotificationManagerView {
+public class NotificationManagerViewImpl extends BaseView<NotificationManagerView.ActionDelegate> implements NotificationManagerView {
     interface NotificationManagerViewImplUiBinder extends UiBinder<Widget, NotificationManagerViewImpl> {
     }
 
     private static NotificationManagerViewImplUiBinder ourUiBinder = GWT.create(NotificationManagerViewImplUiBinder.class);
 
     @UiField
-    FlowPanel   mainPanel;
-    @UiField
-    Label       count;
-    @UiField
+    FlowPanel mainPanel;
+    //    @UiField
+    Label     count = new Label();
+    FlowPanel panel = new FlowPanel();
+
     SimplePanel iconPanel;
+
+
     @UiField(provided = true)
-    final   NotificationResources res;
-    private ActionDelegate        delegate;
+    final   Resources      res;
+    private ActionDelegate delegate;
 
     /**
      * Create view.
@@ -64,28 +72,41 @@ public class NotificationManagerViewImpl extends Composite implements Notificati
      * @param resources
      */
     @Inject
-    public NotificationManagerViewImpl(NotificationResources resources) {
-        this.res = resources;
-        initWidget(ourUiBinder.createAndBindUi(this));
-        mainPanel.addDomHandler(new ClickHandler() {
+    public NotificationManagerViewImpl(WorkspaceView workspaceView,
+                                       PartStackUIResources partStackUIResources,
+                                       Resources resources) {
+        super(partStackUIResources);
+        //TODO:need improve this
+        iconPanel = new SimplePanel();
+        iconPanel.addStyleName(resources.notificationCss().floatRight());
+        count.addStyleName(resources.notificationCss().floatRight());
+        panel.add(iconPanel);
+        panel.add(count);
+
+        workspaceView.getStatusPanel().setWidget(panel);
+        iconPanel.addDomHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                delegate.onClicked(event.getClientX(), event.getClientY());
+                delegate.onClicked();
             }
         }, ClickEvent.getType());
+
+        this.res = resources;
+        container.add(ourUiBinder.createAndBindUi(this));
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void setDelegate(ActionDelegate delegate) {
-        this.delegate = delegate;
-    }
 
     /** {@inheritDoc} */
     @Override
     public void setStatus(@NotNull Status status) {
         Image icon = createImage(status);
         iconPanel.setWidget(icon);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setDelegate(ActionDelegate delegate) {
+        this.delegate = delegate;
     }
 
     /**
@@ -113,4 +134,11 @@ public class NotificationManagerViewImpl extends Composite implements Notificati
         String text = count > 0 ? String.valueOf(count) : "";
         this.count.setText(text);
     }
+
+    @Override
+    public void setContainer(NotificationContainer container) {
+        mainPanel.add(container);
+    }
+
+
 }

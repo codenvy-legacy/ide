@@ -54,7 +54,7 @@
                     <g:Label text="{locale.cloneRemoteUriFieldTitle}" addStyleNames="{res.gitCSS.textFont}"/>
                 </g:north>
                 <g:center>
-                    <g:TextBox width="368px" height="16px" ui:field="remoteUri" addStyleNames="{res.gitCSS.textFont}"/>
+                    <g:TextBox width="368px" ui:field="remoteUri" addStyleNames="{res.gitCSS.textFont}"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>
@@ -64,7 +64,7 @@
                     <g:Label text="{locale.projectNameFieldTitle}" addStyleNames="{res.gitCSS.textFont}"/>
                 </g:north>
                 <g:center>
-                    <g:TextBox width="368px" height="16px" ui:field="projectName" addStyleNames="{res.gitCSS.textFont}"/>
+                    <g:TextBox width="368px" ui:field="projectName" addStyleNames="{res.gitCSS.textFont}"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>
@@ -74,7 +74,7 @@
                     <g:Label text="{locale.cloneRemoteNameFieldTitle}" addStyleNames="{res.gitCSS.textFont}"/>
                 </g:north>
                 <g:center>
-                    <g:TextBox width="368px" height="16px" ui:field="remoteName" addStyleNames="{res.gitCSS.textFont}"/>
+                    <g:TextBox width="368px" ui:field="remoteName" addStyleNames="{res.gitCSS.textFont}"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>
