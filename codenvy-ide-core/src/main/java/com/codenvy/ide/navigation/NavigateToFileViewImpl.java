@@ -108,7 +108,6 @@ public class NavigateToFileViewImpl extends DialogBox implements NavigateToFileV
     @Override
     public void setFiles(Array<String> files) {
         FilesSuggestOracle oracle = ((FilesSuggestOracle)this.files.getSuggestOracle());
-        System.out.println("NavigateToFileViewImpl.setFiles()oracle.isDisplayStringHTML()="+oracle.isDisplayStringHTML());
         oracle.clear();
         for (String file : files.asIterable()) {
             oracle.add(file);
@@ -138,6 +137,21 @@ public class NavigateToFileViewImpl extends DialogBox implements NavigateToFileV
         @Override
         public boolean isDisplayStringHTML() {
             return true;
+        }
+        
+        /** {@inheritDoc} */
+        @Override
+        protected MultiWordSuggestion createSuggestion(String replacementString, String displayString) {
+            String[] parts = displayString.split(" ");
+            if (parts.length > 1) {
+                displayString = parts[0];
+                displayString += " <span style=\"color: #989898;\">";
+                for (int i=1; i < parts.length; i++) {
+                    displayString += parts[i];
+                }
+                displayString += "</span>";
+            } 
+            return super.createSuggestion(replacementString, displayString);
         }
     }
 }
