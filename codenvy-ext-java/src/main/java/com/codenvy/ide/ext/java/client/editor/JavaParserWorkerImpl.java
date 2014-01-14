@@ -131,7 +131,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
 
     /** {@inheritDoc} */
     @Override
-    public void parse(String content, String fileName, String fileId, String packageName, WorkerCallback<IProblem> callback) {
+    public void parse(String content, String fileName, String fileId, String packageName,String projectId, WorkerCallback<IProblem> callback) {
         if (worker == null) {
             return;
         }
@@ -139,13 +139,13 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         MessagesImpls.ParseMessageImpl parseMessage = MessagesImpls.ParseMessageImpl.make();
         String uuid = UUID.uuid();
         callbacks.put(uuid, callback);
-        parseMessage.setSource(content).setFileName(fileName).setFileId(fileId).setId(uuid).setPackageName(packageName);
+        parseMessage.setSource(content).setFileName(fileName).setFileId(fileId).setId(uuid).setPackageName(packageName).setProjectId(projectId);
         worker.postMessage(parseMessage.serialize());
     }
 
     /** {@inheritDoc} */
     @Override
-    public void computeCAProposals(String content, int offset, String fileName, WorkerCallback<WorkerProposal> callback) {
+    public void computeCAProposals(String content, int offset, String fileName,String projectId, WorkerCallback<WorkerProposal> callback) {
         if (worker == null) {
             return;
         }
@@ -153,7 +153,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         MessagesImpls.ComputeCAProposalsMessageImpl computeMessage = MessagesImpls.ComputeCAProposalsMessageImpl.make();
         String uuid = UUID.uuid();
         callbacks.put(uuid, callback);
-        computeMessage.setDocContent(content).setOffset(offset).setFileName(fileName).setId(uuid);
+        computeMessage.setDocContent(content).setOffset(offset).setFileName(fileName).setId(uuid).setProjectId(projectId);
         worker.postMessage(computeMessage.serialize());
     }
 
@@ -214,7 +214,6 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         });
 
         MessagesImpls.ConfigMessageImpl config = MessagesImpls.ConfigMessageImpl.make();
-        config.setProjectId(event.getProject().getId());
         config.setRestContext(restContext);
         config.setVfsId(resourceProvider.getVfsInfo().getId());
         config.setWsName("/" + Utils.getWorkspaceName());

@@ -71,7 +71,7 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
     private static WorkerMessageHandler      instance;
     private final  WorkerOutlineModelUpdater outlineModelUpdater;
     private        WorkerCorrectionProcessor correctionProcessor;
-    private        INameEnvironment          nameEnvironment;
+    private        WorkerNameEnvironment          nameEnvironment;
     private HashMap<String, String> options = new HashMap<String, String>();
     private MessageFilter                      messageFilter;
     private JavaParserWorker                   worker;
@@ -93,12 +93,12 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
             @Override
             public void onMessageReceived(ConfigMessage config) {
                 nameEnvironment =
-                        new WorkerNameEnvironment(config.projectId(), config.restContext(), config.vfsId(), config.wsName());
+                        new WorkerNameEnvironment(config.restContext(), config.vfsId(), config.wsName());
                 projectName = config.projectName();
                 WorkerProposalApplier applier = new WorkerProposalApplier(WorkerMessageHandler.this.worker, messageFilter);
                 workerCodeAssist =
                         new WorkerCodeAssist(WorkerMessageHandler.this.worker, messageFilter, applier, nameEnvironment,
-                                             templateCompletionProposalComputer, config.projectId(),
+                                             templateCompletionProposalComputer,
                                              config.javaDocContext(), config.vfsId());
                 correctionProcessor = new WorkerCorrectionProcessor(WorkerMessageHandler.this.worker, messageFilter, applier);
             }
@@ -158,6 +158,7 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
 
             @Override
             public void onSuccess() {
+                nameEnvironment.setProjectId(message.projectId());
                 cuVar = new CUVariables(message.fileName(), message.packageName(), projectName);
 
                 ASTParser parser = ASTParser.newParser(AST.JLS3);

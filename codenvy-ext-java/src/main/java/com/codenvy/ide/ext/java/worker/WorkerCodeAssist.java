@@ -32,7 +32,6 @@ import com.codenvy.ide.ext.java.jdt.core.JavaCore;
 import com.codenvy.ide.ext.java.jdt.core.Signature;
 import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
 import com.codenvy.ide.ext.java.jdt.internal.codeassist.CompletionEngine;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment;
 import com.codenvy.ide.ext.java.messages.ComputeCAProposalsMessage;
 import com.codenvy.ide.ext.java.messages.RoutingTypes;
 import com.codenvy.ide.ext.java.messages.WorkerProposal;
@@ -73,7 +72,7 @@ public class WorkerCodeAssist {
         }
     };
     private JavaParserWorker                   worker;
-    private INameEnvironment                   nameEnvironment;
+    private WorkerNameEnvironment                   nameEnvironment;
     private TemplateCompletionProposalComputer templateCompletionProposalComputer;
     private String                             projectId;
     private String                             docContext;
@@ -83,14 +82,13 @@ public class WorkerCodeAssist {
     private WorkerDocument document;
 
     public WorkerCodeAssist(JavaParserWorker worker, MessageFilter messageFilter, WorkerProposalApplier workerProposalApplier,
-                            INameEnvironment nameEnvironment,
-                            TemplateCompletionProposalComputer templateCompletionProposalComputer, String projectId, String docContext,
+                            WorkerNameEnvironment nameEnvironment,
+                            TemplateCompletionProposalComputer templateCompletionProposalComputer, String docContext,
                             String vfsId) {
         this.worker = worker;
         this.workerProposalApplier = workerProposalApplier;
         this.nameEnvironment = nameEnvironment;
         this.templateCompletionProposalComputer = templateCompletionProposalComputer;
-        this.projectId = projectId;
         this.docContext = docContext;
         this.vfsId = vfsId;
         messageFilter.registerMessageRecipient(RoutingTypes.CA_COMPUTE_PROPOSALS,
@@ -113,7 +111,13 @@ public class WorkerCodeAssist {
                                                });
     }
 
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
     private void handleCAMessage(ComputeCAProposalsMessage message) {
+        setProjectId(message.projectId());
+        nameEnvironment.setProjectId(message.projectId());
         JsoStringMap<JavaCompletionProposal> proposalMap = JsoStringMap.create();
         documentContent = message.docContent();
         JavaCompletionProposal[] proposals =
