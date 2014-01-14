@@ -27,13 +27,13 @@
     </parent>
     <groupId>com.codenvy.ide</groupId>
     <artifactId>codenvy-ide-parent</artifactId>
-    <version>3.0.0-M7-SNAPSHOT</version>
+    <version>3.0.0-M7</version>
     <packaging>pom</packaging>
     <name>Codenvy :: Parent</name>
     <scm>
         <connection>scm:git:git@github.com:codenvy/ide2.git</connection>
         <developerConnection>scm:git:git@github.com:codenvy/ide2.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>3.0.0-M7</tag>
     </scm>
 
     <properties>
