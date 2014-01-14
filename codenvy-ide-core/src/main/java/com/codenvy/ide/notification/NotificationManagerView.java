@@ -31,15 +31,8 @@ import javax.validation.constraints.NotNull;
 public interface NotificationManagerView extends View<NotificationManagerView.ActionDelegate> {
     /** Required for delegating some functions in view. */
     public interface ActionDelegate extends BaseActionDelegate {
-        /**
-         * Performs some actions in response to a user's clicking a view
-         *
-         * @param left
-         *         the x-position on the browser window's client area.
-         * @param top
-         *         the y-position on the browser window's client area.
-         */
-        void onClicked(int left, int top);
+
+        void onClicked();//TODO need improve it
     }
 
     /**

@@ -21,6 +21,7 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
+import com.codenvy.ide.workspace.WorkspaceView;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -53,14 +54,17 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
     private static NotificationManagerViewImplUiBinder ourUiBinder = GWT.create(NotificationManagerViewImplUiBinder.class);
 
     @UiField
-    FlowPanel   mainPanel;
-    @UiField
-    Label       count;
-    @UiField
+    FlowPanel mainPanel;
+    //    @UiField
+    Label     count = new Label();
+    FlowPanel panel = new FlowPanel();
+
     SimplePanel iconPanel;
+
+
     @UiField(provided = true)
-    final   Resources res;
-    private ActionDelegate        delegate;
+    final   Resources      res;
+    private ActionDelegate delegate;
 
     /**
      * Create view.
@@ -68,9 +72,25 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
      * @param resources
      */
     @Inject
-    public NotificationManagerViewImpl(PartStackUIResources partStackUIResources,
+    public NotificationManagerViewImpl(WorkspaceView workspaceView,
+                                       PartStackUIResources partStackUIResources,
                                        Resources resources) {
         super(partStackUIResources);
+        //TODO:need improve this
+        iconPanel = new SimplePanel();
+        iconPanel.addStyleName(resources.notificationCss().floatRight());
+        count.addStyleName(resources.notificationCss().floatRight());
+        panel.add(iconPanel);
+        panel.add(count);
+
+        workspaceView.getStatusPanel().setWidget(panel);
+        iconPanel.addDomHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onClicked();
+            }
+        }, ClickEvent.getType());
+
         this.res = resources;
         container.add(ourUiBinder.createAndBindUi(this));
     }
@@ -81,6 +101,12 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
     public void setStatus(@NotNull Status status) {
         Image icon = createImage(status);
         iconPanel.setWidget(icon);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setDelegate(ActionDelegate delegate) {
+        this.delegate = delegate;
     }
 
     /**

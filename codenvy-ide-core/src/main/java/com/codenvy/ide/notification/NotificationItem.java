@@ -144,7 +144,7 @@ public class NotificationItem extends Composite implements Notification.Notifica
     public void onValueChanged() {
         if (!prevState.equals(notification)) {
             if (!prevState.getMessage().equals(notification.getMessage())) {
-                title.setText(notification.getMessage());
+                title.setHTML(notification.getMessage());
             }
 
             if (!notification.isFinished()) {

@@ -405,7 +405,7 @@ public class RestCodeAssistantJava {
         if (buildStatus != null) {
             Link logLink = findLink("view build log", buildStatus.getLinks());
             LOG.error("Build failed see more detail here: " + logLink.getHref());
-            throw new BuilderException("Build failed see more detail here: " + logLink.getHref());
+            throw new BuilderException("Build failed see more detail here: <a href=\"" + logLink.getHref() +"\" target=\"_blank\">" + logLink.getHref() + "</a>");
         }
         throw new BuilderException("Build failed");
     }

@@ -25,6 +25,7 @@ import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.workspace.WorkspacePresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -49,7 +50,8 @@ public class NotificationManagerImpl extends BasePresenter
         implements NotificationManager, NotificationItem.ActionDelegate, Notification.NotificationObserver,
                    NotificationManagerView.ActionDelegate, NotificationMessageStack.ActionDelegate {
     private static final String TITEL = "Events";
-    private NotificationManagerView  view;
+    private WorkspacePresenter workspacePresenter;
+    private NotificationManagerView view;
     private NotificationContainer    notificationContainer;
     private NotificationMessageStack notificationMessageStack;
     private Array<Notification>      notifications;
@@ -186,7 +188,7 @@ public class NotificationManagerImpl extends BasePresenter
 
     /** {@inheritDoc} */
     @Override
-    public void onClicked(int left, int top) {
+    public void onClicked() {
        partStack.setActivePart(this);
     }
 

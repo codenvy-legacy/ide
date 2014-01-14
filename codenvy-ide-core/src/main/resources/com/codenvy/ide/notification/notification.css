@@ -29,18 +29,22 @@
         float: left;
     }
 
+    .floatRight {
+        float: right;
+    }
+
     .top1px {
         top: 1px !important;
     }
 
     .error {
-        color: #bf3a37;
+        color: #bf3a37 !important;
     }
 
     .warning {
-        color: #cb772f;
+        color: #cb772f !important;
     }
 
     .unread {
-        opacity: 0.7;
+        /*opacity: 0.7;*/
     }
