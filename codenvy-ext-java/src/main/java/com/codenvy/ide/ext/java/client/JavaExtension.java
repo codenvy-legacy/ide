@@ -70,7 +70,7 @@ import static com.codenvy.ide.collections.Collections.createArray;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 
 /** @author Evgen Vidolob */
-@Extension(title = "Java Support : syntax highlighting and autocomplete.", version = "3.0.0")
+@Extension(title = "Java syntax highlighting and autocomplete.", version = "3.0.0")
 public class JavaExtension {
     private static final String JAVA_PERSPECTIVE                  = "Java";
     public static final  String JAVA_APPLICATION_PROJECT_TYPE     = "Jar";
