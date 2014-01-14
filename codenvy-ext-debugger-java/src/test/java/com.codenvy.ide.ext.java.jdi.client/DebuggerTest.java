@@ -18,9 +18,10 @@
 package com.codenvy.ide.ext.java.jdi.client;
 
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
+import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerView;
-import com.codenvy.ide.ext.java.jdi.shared.DebuggerEventList;
+import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
@@ -50,9 +51,11 @@ import static org.mockito.Mockito.when;
  */
 public class DebuggerTest extends BaseTest {
 
-    private static final String HOST      = "localhost";
-    private static final int    PORT      = 8000;
-    private static final String TEST_JSON = "test_json";
+    private static final String DEBUG_HOST = "localhost";
+    private static final int    DEBUG_PORT = 8000;
+    private static final String TEST_JSON  = "test_json";
+    private static final String VM_NAME    = "vm_name";
+    private static final String VM_VERSION = "vm_version";
     @Mock
     private DebuggerView                 view;
     @InjectMocks
@@ -63,10 +66,15 @@ public class DebuggerTest extends BaseTest {
     @Before
     public void setUp() {
         super.setUp();
-        when(dtoFactory.createDto(DebuggerEventList.class)).thenReturn(mock(DebuggerEventList.class));
+        when(applicationProcessDescriptor.getDebugHost()).thenReturn(DEBUG_HOST);
+        when(applicationProcessDescriptor.getDebugPort()).thenReturn(DEBUG_PORT);
+
+        DebuggerInfo debuggerInfoMock = mock(DebuggerInfo.class);
+        when(dtoFactory.createDtoFromJson(TEST_JSON, DebuggerInfo.class)).thenReturn(debuggerInfoMock);
+        when(debuggerInfoMock.getVmName()).thenReturn(VM_NAME);
+        when(debuggerInfoMock.getVmVersion()).thenReturn(VM_VERSION);
     }
 
-    @Ignore
     @Test
     public void shouldConnectDebugger() throws Exception {
         doAnswer(new Answer() {
@@ -80,9 +88,19 @@ public class DebuggerTest extends BaseTest {
             }
         }).when(service).connect(anyString(), anyInt(), (AsyncRequestCallback<String>)anyObject());
 
-        presenter.connectDebugger(applicationProcessDescriptor);
+        presenter.attachDebugger(applicationProcessDescriptor);
 
-        verify(service).connect(eq(HOST), eq(PORT), (AsyncRequestCallback<String>)anyObject());
+        verify(service).connect(eq(DEBUG_HOST), eq(DEBUG_PORT), (AsyncRequestCallback<String>)anyObject());
+        verify(console).print(constants.debuggerConnected(anyString()));
+
+        verify(view).setEnableResumeButton(eq(DISABLE_BUTTON));
+        verify(view).setEnableStepIntoButton(eq(DISABLE_BUTTON));
+        verify(view).setEnableStepOverButton(eq(DISABLE_BUTTON));
+        verify(view).setEnableStepReturnButton(eq(DISABLE_BUTTON));
+        verify(view).setEnableChangeValueButtonEnable(eq(DISABLE_BUTTON));
+        verify(view).setEnableEvaluateExpressionButtonEnable(eq(DISABLE_BUTTON));
+
+        verify(workspaceAgent).openPart(presenter, PartStackType.INFORMATION);
     }
 
     @Ignore

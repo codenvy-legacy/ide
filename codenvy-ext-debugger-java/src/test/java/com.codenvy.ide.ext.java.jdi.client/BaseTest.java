@@ -18,15 +18,19 @@
 package com.codenvy.ide.ext.java.jdi.client;
 
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.ui.workspace.PartStack;
+import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerClientService;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
+import com.codenvy.ide.websocket.MessageBus;
 import com.google.web.bindery.event.shared.EventBus;
+import com.googlecode.gwt.test.GwtModule;
+import com.googlecode.gwt.test.GwtTestWithMockito;
 
 import org.junit.Before;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.when;
 
@@ -35,8 +39,8 @@ import static org.mockito.Mockito.when;
  *
  * @author Artem Zatsarynnyy
  */
-@RunWith(MockitoJUnitRunner.class)
-public abstract class BaseTest {
+@GwtModule("com.codenvy.ide.ext.java.jdi.JavaRuntimeExtension")
+public abstract class BaseTest extends GwtTestWithMockito {
     public static final String  DEBUGGER_ID    = "debugger_id";
     public static final boolean DISABLE_BUTTON = false;
     @Mock
@@ -50,7 +54,15 @@ public abstract class BaseTest {
     @Mock
     protected EventBus                        eventBus;
     @Mock
+    protected MessageBus                      messageBus;
+    @Mock
+    protected ConsolePart                     console;
+    @Mock
     protected DtoFactory                      dtoFactory;
+    @Mock
+    protected WorkspaceAgent                  workspaceAgent;
+    @Mock
+    protected PartStack                       partStack;
 
     @Before
     public void setUp() {

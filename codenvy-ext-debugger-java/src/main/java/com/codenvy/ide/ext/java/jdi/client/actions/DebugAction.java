@@ -61,7 +61,7 @@ public class DebugAction extends Action {
         runnerController.runActiveProject(true, new ProjectRunCallback() {
             @Override
             public void onRun(ApplicationProcessDescriptor appDescriptor) {
-                debuggerPresenter.connectDebugger(appDescriptor);
+                debuggerPresenter.attachDebugger(appDescriptor);
             }
         });
     }

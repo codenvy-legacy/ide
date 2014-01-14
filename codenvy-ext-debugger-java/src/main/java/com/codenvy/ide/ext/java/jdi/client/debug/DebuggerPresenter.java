@@ -121,29 +121,27 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private Timer                                  checkEventsTimer;
     /** Handler for processing events which is received from debugger over WebSocket connection. */
     private SubscriptionHandler<DebuggerEventList> debuggerEventsHandler;
-    /** Handler for processing debugger disconnected event. */
-    private SubscriptionHandler<Object>            debuggerDisconnectedHandler;
     private List<Variable>                         variables;
     private ApplicationProcessDescriptor           appDescriptor;
 
     /** Create presenter. */
     @Inject
     public DebuggerPresenter(DebuggerView view,
-                                JavaRuntimeResources resources,
-                                final DebuggerClientService service,
-                                final EventBus eventBus,
-                                final ConsolePart console,
-                                final MessageBus messageBus,
-                                final JavaRuntimeLocalizationConstant constant,
-                                WorkspaceAgent workspaceAgent,
-                                BreakpointGutterManager gutterManager,
-                                FqnResolverFactory resolverFactory,
-                                EditorAgent editorAgent,
-                                final EvaluateExpressionPresenter evaluateExpressionPresenter,
-                                ChangeValuePresenter changeValuePresenter,
-                                final NotificationManager notificationManager,
-                                final DtoFactory dtoFactory,
-                                final RunnerController runnerController) {
+                             JavaRuntimeResources resources,
+                             final DebuggerClientService service,
+                             final EventBus eventBus,
+                             final ConsolePart console,
+                             final MessageBus messageBus,
+                             final JavaRuntimeLocalizationConstant constant,
+                             WorkspaceAgent workspaceAgent,
+                             BreakpointGutterManager gutterManager,
+                             FqnResolverFactory resolverFactory,
+                             EditorAgent editorAgent,
+                             final EvaluateExpressionPresenter evaluateExpressionPresenter,
+                             ChangeValuePresenter changeValuePresenter,
+                             final NotificationManager notificationManager,
+                             final DtoFactory dtoFactory,
+                             final RunnerController runnerController) {
         this.view = view;
         this.dtoFactory = dtoFactory;
         this.runnerController = runnerController;
@@ -226,29 +224,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 }
                 Notification notification = new Notification(exception.getMessage(), ERROR);
                 notificationManager.showNotification(notification);
-            }
-        };
-
-        this.debuggerDisconnectedHandler = new SubscriptionHandler<Object>() {
-            @Override
-            protected void onMessageReceived(Object result) {
-                try {
-                    messageBus.unsubscribe(debuggerDisconnectedChannel, this);
-                } catch (WebSocketException e) {
-                    // nothing to do
-                }
-
-                evaluateExpressionPresenter.closeDialog();
-                closeView();
-                onDebuggerDisconnected();
-            }
-
-            @Override
-            protected void onErrorReceived(Throwable exception) {
-                try {
-                    messageBus.unsubscribe(debuggerDisconnectedChannel, this);
-                } catch (WebSocketException ignore) {
-                }
             }
         };
 
@@ -640,16 +615,16 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     }
 
     /** Connect to the debugger. */
-    public void connectDebugger(@NotNull final ApplicationProcessDescriptor appDescriptor) {
+    public void attachDebugger(@NotNull final ApplicationProcessDescriptor appDescriptor) {
         this.appDescriptor = appDescriptor;
         try {
             service.connect(appDescriptor.getDebugHost(), appDescriptor.getDebugPort(),
                             new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                 @Override
                                 public void onSuccess(String result) {
+                                    debuggerInfo = dtoFactory.createDtoFromJson(result, DebuggerInfo.class);
                                     console.print(
                                             constant.debuggerConnected(appDescriptor.getDebugHost() + ':' + appDescriptor.getDebugPort()));
-                                    debuggerInfo = dtoFactory.createDtoFromJson(result, DebuggerInfo.class);
                                     showDialog(debuggerInfo);
                                 }
 
@@ -702,9 +677,31 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         } catch (WebSocketException e) {
             checkEventsTimer.scheduleRepeating(CHECK_EVENTS_PERIOD_MS);
         }
+
         try {
             debuggerDisconnectedChannel = JavaRuntimeExtension.DISCONNECT_CHANNEL + debuggerInfo.getId();
-            messageBus.subscribe(debuggerDisconnectedChannel, debuggerDisconnectedHandler);
+            messageBus.subscribe(debuggerDisconnectedChannel, new SubscriptionHandler<Object>() {
+                @Override
+                protected void onMessageReceived(Object result) {
+                    try {
+                        messageBus.unsubscribe(debuggerDisconnectedChannel, this);
+                    } catch (WebSocketException e) {
+                        // nothing to do
+                    }
+
+                    evaluateExpressionPresenter.closeDialog();
+                    closeView();
+                    onDebuggerDisconnected();
+                }
+
+                @Override
+                protected void onErrorReceived(Throwable exception) {
+                    try {
+                        messageBus.unsubscribe(debuggerDisconnectedChannel, this);
+                    } catch (WebSocketException ignore) {
+                    }
+                }
+            });
         } catch (WebSocketException ignore) {
         }
     }

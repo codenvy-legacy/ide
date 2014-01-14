@@ -43,12 +43,13 @@ public class DebuggerEventListUnmarshallerWS implements Unmarshallable<DebuggerE
     public DebuggerEventListUnmarshallerWS(DtoFactory dtoFactory) {
         this.dtoFactory = dtoFactory;
         this.events = dtoFactory.createDto(DebuggerEventList.class);
-        this.events.setEvents(new ArrayList<DebuggerEvent>());
     }
 
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Message response) throws UnmarshallerException {
+        this.events.setEvents(new ArrayList<DebuggerEvent>());
+
         JSONObject jsonObject = JSONParser.parseStrict(response.getBody()).isObject();
         if (jsonObject == null) {
             return;
