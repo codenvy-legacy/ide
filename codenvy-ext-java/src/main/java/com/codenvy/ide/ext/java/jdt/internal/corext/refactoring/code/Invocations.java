@@ -13,7 +13,19 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.code;
 
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.ChildListPropertyDescriptor;
+import com.codenvy.ide.ext.java.jdt.core.dom.ClassInstanceCreation;
+import com.codenvy.ide.ext.java.jdt.core.dom.ConstructorInvocation;
+import com.codenvy.ide.ext.java.jdt.core.dom.EnumConstantDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.Expression;
+import com.codenvy.ide.ext.java.jdt.core.dom.IMethodBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.ITypeBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodInvocation;
+import com.codenvy.ide.ext.java.jdt.core.dom.ParameterizedType;
+import com.codenvy.ide.ext.java.jdt.core.dom.SuperConstructorInvocation;
+import com.codenvy.ide.ext.java.jdt.core.dom.SuperMethodInvocation;
+import com.codenvy.ide.ext.java.jdt.core.dom.Type;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ListRewrite;
 

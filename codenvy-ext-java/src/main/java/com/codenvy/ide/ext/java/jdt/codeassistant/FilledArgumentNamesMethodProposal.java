@@ -11,7 +11,6 @@
 package com.codenvy.ide.ext.java.jdt.codeassistant;
 
 import com.codenvy.ide.ext.java.jdt.core.CompletionProposal;
-
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.RegionImpl;

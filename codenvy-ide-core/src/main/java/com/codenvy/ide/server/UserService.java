@@ -17,14 +17,12 @@
  */
 package com.codenvy.ide.server;
 
+import com.codenvy.api.core.user.UserState;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.api.user.User;
-import com.codenvy.ide.collections.StringMap;
 import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
 import com.codenvy.organization.model.Profile;
-
-import org.exoplatform.services.security.ConversationState;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -39,9 +37,9 @@ import java.util.Set;
 /**
  * Server service for manage information of user.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
-@Path("{ws-name}/user")
+@Path("user/{ws-name}")
 public class UserService {
     @Inject
     UserManager userManager;
@@ -55,7 +53,7 @@ public class UserService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getUser() {
-        String userId = ConversationState.getCurrent().getIdentity().getUserId();
+        String userId = UserState.get().getUser().getName();
         User user = DtoFactory.getInstance().createDto(User.class);
         user.setUserId(userId); //userId - "user alias" e.g. email
 
@@ -79,7 +77,7 @@ public class UserService {
     @POST
     public void updateUserAttributes(HashMap<String, String> map) {
         try {
-            String userId = ConversationState.getCurrent().getIdentity().getUserId();
+            String userId = UserState.get().getUser().getName();
             com.codenvy.organization.model.User user = userManager.getUserByAlias(userId);
             final Profile profile = user.getProfile();
             Set<String> keys = map.keySet();

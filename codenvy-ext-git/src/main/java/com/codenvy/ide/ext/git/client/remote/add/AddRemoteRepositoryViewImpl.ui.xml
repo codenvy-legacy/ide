@@ -54,13 +54,13 @@
                     <g:Label text="{locale.remoteNameField}" addStyleNames="{res.gitCSS.textFont}"/>
                 </g:north>
                 <g:north size="30.0">
-                    <g:TextBox width="338px" height="16px" ui:field="name" addStyleNames="{res.gitCSS.textFont}"/>
+                    <g:TextBox width="338px" ui:field="name" addStyleNames="{res.gitCSS.textFont}"/>
                 </g:north>
                 <g:north size="20.0">
                     <g:Label text="{locale.remoteLocationField}" addStyleNames="{res.gitCSS.textFont}"/>
                 </g:north>
                 <g:north size="30.0">
-                    <g:TextBox width="338px" height="16px" ui:field="url" addStyleNames="{res.gitCSS.textFont}"/>
+                    <g:TextBox width="338px" ui:field="url" addStyleNames="{res.gitCSS.textFont}"/>
                 </g:north>
             </g:DockLayoutPanel>
         </g:center>

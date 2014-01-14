@@ -14,11 +14,20 @@
 package com.codenvy.ide.ext.java.jdt.internal.corext.fix;
 
 import com.codenvy.ide.ext.java.jdt.JavaPreferencesSettings;
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.AbstractTypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.AnonymousClassDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.dom.EnumConstantDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.EnumDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.IMethodBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.ITypeBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.IVariableBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodDeclaration;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ImportRewrite;
-import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ListRewrite;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ImportRewrite.ImportRewriteContext;
+import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ListRewrite;
 import com.codenvy.ide.ext.java.jdt.internal.corext.codemanipulation.CodeGenerationSettings;
 import com.codenvy.ide.ext.java.jdt.internal.corext.codemanipulation.ContextSensitiveImportRewriteContext;
 import com.codenvy.ide.ext.java.jdt.internal.corext.codemanipulation.StubUtility2;
@@ -26,7 +35,6 @@ import com.codenvy.ide.ext.java.jdt.internal.corext.fix.CompilationUnitRewriteOp
 import com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.structure.CompilationUnitRewrite;
 import com.codenvy.ide.ext.java.jdt.internal.corext.util.MethodsSourcePositionComparator;
 import com.codenvy.ide.ext.java.jdt.internal.text.correction.CorrectionMessages;
-
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.runtime.CoreException;
 

@@ -21,7 +21,11 @@ import com.codenvy.ide.text.store.Position;
 import com.codenvy.ide.text.store.TaggableLine;
 import com.codenvy.ide.text.store.anchor.Anchor;
 import com.codenvy.ide.text.store.anchor.AnchorManager;
-import com.codenvy.ide.texteditor.api.parser.*;
+import com.codenvy.ide.texteditor.api.parser.Parser;
+import com.codenvy.ide.texteditor.api.parser.State;
+import com.codenvy.ide.texteditor.api.parser.Stream;
+import com.codenvy.ide.texteditor.api.parser.Token;
+import com.codenvy.ide.texteditor.api.parser.TokenType;
 import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.loging.Log;
 

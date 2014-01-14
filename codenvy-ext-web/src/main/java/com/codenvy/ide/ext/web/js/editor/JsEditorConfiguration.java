@@ -18,19 +18,13 @@
 package com.codenvy.ide.ext.web.js.editor;
 
 import com.codenvy.ide.MimeType;
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringMap;
-import com.codenvy.ide.ext.web.css.editor.CssCodeAssistantProcessor;
-import com.codenvy.ide.ext.web.css.editor.CssResources;
-import com.codenvy.ide.ext.web.css.editor.CssTokenFactory;
-import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.texteditor.api.parser.BasicTokenFactory;
 import com.codenvy.ide.texteditor.api.parser.CmParser;
 import com.codenvy.ide.texteditor.api.parser.Parser;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The css css type editor configuration.

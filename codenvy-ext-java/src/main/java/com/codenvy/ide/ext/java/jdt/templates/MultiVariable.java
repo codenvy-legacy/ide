@@ -12,7 +12,6 @@ package com.codenvy.ide.ext.java.jdt.templates;
 
 import com.codenvy.ide.ext.java.jdt.templates.api.TemplateVariable;
 import com.codenvy.ide.ext.java.jdt.templates.api.TemplateVariableType;
-
 import com.codenvy.ide.runtime.Assert;
 
 import java.util.Arrays;

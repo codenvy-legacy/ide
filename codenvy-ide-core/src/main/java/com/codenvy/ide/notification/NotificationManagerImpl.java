@@ -17,20 +17,28 @@
  */
 package com.codenvy.ide.notification;
 
-import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.parts.base.BasePresenter;
+import com.codenvy.ide.api.ui.workspace.PartPresenter;
+import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.workspace.WorkspacePresenter;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
+
 import static com.codenvy.ide.api.notification.Notification.State.READ;
-import static com.codenvy.ide.notification.NotificationContainer.HEIGHT;
-import static com.codenvy.ide.notification.NotificationContainer.WIDTH;
-import static com.codenvy.ide.notification.NotificationManagerView.Status.*;
+import static com.codenvy.ide.notification.NotificationManagerView.Status.EMPTY;
+import static com.codenvy.ide.notification.NotificationManagerView.Status.HAS_UNREAD;
+import static com.codenvy.ide.notification.NotificationManagerView.Status.IN_PROGRESS;
 
 /**
  * The implementation of {@link NotificationManager}.
@@ -38,9 +46,14 @@ import static com.codenvy.ide.notification.NotificationManagerView.Status.*;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class NotificationManagerImpl implements NotificationManager, NotificationItem.ActionDelegate, Notification.NotificationObserver,
-                                                NotificationManagerView.ActionDelegate, NotificationMessageStack.ActionDelegate {
-    private NotificationManagerView  view;
+public class NotificationManagerImpl extends BasePresenter   implements NotificationManager,
+                                                                        NotificationItem.ActionDelegate,
+                                                                        Notification.NotificationObserver,
+                                                                        NotificationManagerView.ActionDelegate,
+                                                                        NotificationMessageStack.ActionDelegate {
+    private static final String TITEL = "Events";
+    private WorkspacePresenter workspacePresenter;
+    private NotificationManagerView view;
     private NotificationContainer    notificationContainer;
     private NotificationMessageStack notificationMessageStack;
     private Array<Notification>      notifications;
@@ -49,20 +62,23 @@ public class NotificationManagerImpl implements NotificationManager, Notificatio
      * Create manager.
      *
      * @param view
-     * @param notificationContainer
      * @param notificationMessageStack
      */
     @Inject
-    public NotificationManagerImpl(NotificationManagerView view, NotificationContainer notificationContainer,
+    public NotificationManagerImpl(NotificationManagerView view,
+                                   NotificationContainer notificationContainer,
                                    NotificationMessageStack notificationMessageStack) {
         this.view = view;
+        this.notificationContainer = notificationContainer;
         this.view.setDelegate(this);
         this.view.setStatus(EMPTY);
-        this.notificationContainer = notificationContainer;
+        this.view.setContainer(notificationContainer);
+        this.view.setTitle(TITEL);
         this.notificationContainer.setDelegate(this);
         this.notificationMessageStack = notificationMessageStack;
         this.notificationMessageStack.setDelegate(this);
         this.notifications = Collections.createArray();
+
     }
 
     /** {@inheritDoc} */
@@ -89,6 +105,8 @@ public class NotificationManagerImpl implements NotificationManager, Notificatio
         } else {
             view.setStatus(HAS_UNREAD);
         }
+
+        minimize();
     }
 
     /** {@inheritDoc} */
@@ -100,6 +118,7 @@ public class NotificationManagerImpl implements NotificationManager, Notificatio
         notificationContainer.addNotification(notification);
         onValueChanged();
     }
+
 
     /**
      * Remove notification.
@@ -173,17 +192,30 @@ public class NotificationManagerImpl implements NotificationManager, Notificatio
 
     /** {@inheritDoc} */
     @Override
-    public void onClicked(int left, int top) {
-        notificationContainer.show(left - WIDTH, top - HEIGHT - 50);
+    public void onClicked() {
+       partStack.setActivePart(this);
     }
 
-    /**
-     * Allows presenter to expose it's view to the container.
-     *
-     * @param container
-     *         container view
-     */
-    public void go(@NotNull FlowPanel container) {
-        container.add(view);
+
+    @Override
+    public String getTitle() {
+        return TITEL;
+    }
+
+    @Nullable
+    @Override
+    public ImageResource getTitleImage() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public String getTitleToolTip() {
+        return "Log Events";
+    }
+
+    @Override
+    public void go(AcceptsOneWidget container) {
+        container.setWidget(view);
     }
 }

@@ -34,7 +34,13 @@ package com.codenvy.ide.ext.java.jdt.internal.codeassist.complete;
  */
 
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.QualifiedNameReference;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.BlockScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.FieldBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.MissingTypeBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ProblemFieldBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ProblemReasons;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ProblemReferenceBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeBinding;
 
 public class CompletionOnQualifiedNameReference extends QualifiedNameReference {
     public char[] completionIdentifier;

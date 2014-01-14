@@ -14,7 +14,6 @@ import com.codenvy.ide.ext.java.jdt.codeassistant.api.JavaCompletionProposal;
 import com.codenvy.ide.ext.java.jdt.core.CompletionProposal;
 import com.codenvy.ide.ext.java.jdt.core.Signature;
 import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
-
 import com.codenvy.ide.text.Document;
 
 

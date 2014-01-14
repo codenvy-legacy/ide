@@ -43,7 +43,11 @@ import static junit.framework.Assert.assertNull;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing {@link com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter} functionality.
@@ -74,7 +78,7 @@ public class ChooseTemplatePagePresenterTest {
     @Before
     public void setUp() {
         template = new Template("id", "title", null, "primaryNature", Collections.createArray("secondaryNature"));
-        projectType = new ProjectTypeData("typeName", "title", null, "primaryNature", Collections.createArray("secondaryNature"));
+        projectType = new ProjectTypeData("typeName", "title", null, "primaryNature", Collections.createArray("secondaryNature"), null);
 
         page = new ChooseTemplatePagePresenter(view, resources, templateAgent, constant);
         page.setContext(wizardContext);

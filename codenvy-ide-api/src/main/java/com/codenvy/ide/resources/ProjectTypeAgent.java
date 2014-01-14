@@ -17,10 +17,12 @@
  */
 package com.codenvy.ide.resources;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.resources.model.Property;
 import com.google.gwt.resources.client.ImageResource;
+
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 /**
  * Provides a way to register a new project type.
@@ -41,10 +43,13 @@ public interface ProjectTypeAgent {
      *         primary nature which supports the project type
      * @param secondaryNature
      *         secondary natures which supports the project type
+     * @param projectProperties
+     *         properties of a project
      */
     void register(@NotNull String typeName,
                   @NotNull String title,
                   @Nullable ImageResource icon,
                   @NotNull String primaryNature,
-                  @NotNull Array<String> secondaryNature);
+                  @NotNull Array<String> secondaryNature,
+                  @NotNull Array<Property> projectProperties);
 }

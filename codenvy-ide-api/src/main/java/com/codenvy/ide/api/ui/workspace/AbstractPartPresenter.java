@@ -17,10 +17,11 @@
  */
 package com.codenvy.ide.api.ui.workspace;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
+
+import javax.validation.constraints.NotNull;
 
 
 /**

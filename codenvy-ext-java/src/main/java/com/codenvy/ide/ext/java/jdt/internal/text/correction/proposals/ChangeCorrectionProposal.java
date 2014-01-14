@@ -23,10 +23,6 @@ import com.codenvy.ide.runtime.IStatus;
 import com.codenvy.ide.runtime.Status;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
-import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Widget;
 
 
 /**
@@ -80,7 +76,8 @@ public class ChangeCorrectionProposal implements JavaCompletionProposal, IComman
         try {
             performChange(document);
         } catch (CoreException e) {
-            Log.error(getClass(), e);
+            //todo log error
+//            Log.error(getClass(), e);
         }
     }
 
@@ -177,13 +174,13 @@ public class ChangeCorrectionProposal implements JavaCompletionProposal, IComman
     }
 
     /*
-     * @see ICompletionProposal#getAdditionalProposalInfo()
-     */
-    public Widget getAdditionalProposalInfo() {
-        Object info = getAdditionalInfo();
-        return info == null ? null : new HTML(info.toString());
-//      return null;
-    }
+//     * @see ICompletionProposal#getAdditionalProposalInfo()
+//     */
+//    public Widget getAdditionalProposalInfo() {
+//        Object info = getAdditionalInfo();
+//        return info == null ? null : new HTML(info.toString());
+////      return null;
+//    }
 
     public Object getAdditionalInfo() {
         StringBuffer buf = new StringBuffer();

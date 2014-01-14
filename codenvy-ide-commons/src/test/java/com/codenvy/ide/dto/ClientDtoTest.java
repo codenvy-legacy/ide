@@ -17,10 +17,14 @@
  */
 package com.codenvy.ide.dto;
 
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.definitions.ComplicatedDto;
 import com.codenvy.ide.dto.definitions.SimpleDto;
-import com.codenvy.ide.collections.Array;
-import com.google.gwt.json.client.*;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONNumber;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTest;
 

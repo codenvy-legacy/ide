@@ -19,7 +19,6 @@ package com.codenvy.ide.part.projectexplorer;
 
 import com.codenvy.api.vfs.shared.ItemType;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
@@ -42,6 +41,8 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
+
+import javax.validation.constraints.NotNull;
 
 
 /**
@@ -181,7 +182,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             }
         });
     }
-
+    
     /**
      * Update item in the project explorer.
      * 
@@ -194,7 +195,6 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             oldResource = project;
         } else {
             oldResource = project.findResourceById(resource.getId());
-
         }
         view.updateItem(oldResource, resource);
     }

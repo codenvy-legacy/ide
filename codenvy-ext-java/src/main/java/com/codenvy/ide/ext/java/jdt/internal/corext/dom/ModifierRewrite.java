@@ -28,9 +28,7 @@ import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationStatement;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ITrackedNodePosition;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ListRewrite;
-
 import com.codenvy.ide.text.edits.TextEditGroup;
-
 
 import java.util.ArrayList;
 import java.util.Iterator;

@@ -11,7 +11,6 @@
 package com.codenvy.ide.ext.java.jdt.codeassistant;
 
 import com.codenvy.ide.ext.java.jdt.core.CompletionProposal;
-
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.Document;
 

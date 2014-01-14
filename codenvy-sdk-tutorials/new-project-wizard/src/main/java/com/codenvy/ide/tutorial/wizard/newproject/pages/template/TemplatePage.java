@@ -17,12 +17,13 @@
  */
 package com.codenvy.ide.tutorial.wizard.newproject.pages.template;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
+
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 /**
  * The example template wizard page.

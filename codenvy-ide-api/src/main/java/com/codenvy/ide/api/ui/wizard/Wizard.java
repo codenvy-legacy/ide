@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.api.ui.wizard;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 /**
  * The wizard contains wizard pages. It has info on the next or previous page. The wizard can disable a page if it is possible. It can

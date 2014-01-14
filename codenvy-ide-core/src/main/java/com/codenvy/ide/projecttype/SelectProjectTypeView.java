@@ -17,17 +17,18 @@
  */
 package com.codenvy.ide.projecttype;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.collections.Array;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Interface for project type selection view.
- * 
+ *
  * @author <a href="mailto:ashumilova@codenvy.com">Ann Shumilova</a>
  * @version $Id:
  */
-public interface SelectProjectTypeView extends View<SelectProjectTypeView.ActionDelegate>{
+public interface SelectProjectTypeView extends View<SelectProjectTypeView.ActionDelegate> {
     /** Needs for delegate some function into SelectProjectType view. */
     public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having pressed the Ok button. */
@@ -36,24 +37,27 @@ public interface SelectProjectTypeView extends View<SelectProjectTypeView.Action
         /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
         void onCancelClicked();
     }
-    
+
     /**
      * Sets the value of the project's type field label.
-     * 
+     *
      * @param label
      */
     void setLabel(@NotNull String label);
-    
+
     /**
      * Sets project types.
-     * 
-     * @param projects
+     *
+     * @param types
      */
     void setTypes(@NotNull Array<String> types);
-    
+
+    /** Clear project types. */
+    void clearTypes();
+
     /**
-     * Returns chosen project's type. 
-     * 
+     * Returns chosen project's type.
+     *
      * @return {@link String} project's type
      */
     String getProjectType();

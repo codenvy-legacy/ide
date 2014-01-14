@@ -17,10 +17,10 @@
  */
 package com.codenvy.ide.api.ui.wizard;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.google.inject.Inject;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 

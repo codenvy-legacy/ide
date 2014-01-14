@@ -20,10 +20,8 @@ package com.codenvy.ide.ext.github.client.inject;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.ext.github.client.GitHubClientService;
 import com.codenvy.ide.ext.github.client.GitHubClientServiceImpl;
-import com.codenvy.ide.ext.github.client.GitHubSshKeyProvider;
 import com.codenvy.ide.ext.github.client.load.ImportView;
 import com.codenvy.ide.ext.github.client.load.ImportViewImpl;
-import com.codenvy.ide.ext.ssh.client.SshKeyProvider;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 

@@ -10,12 +10,21 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.internal.corext.fix;
 
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.AST;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.AbstractTypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.AnonymousClassDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.ClassInstanceCreation;
+import com.codenvy.ide.ext.java.jdt.core.dom.FieldDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.Javadoc;
+import com.codenvy.ide.ext.java.jdt.core.dom.Modifier;
+import com.codenvy.ide.ext.java.jdt.core.dom.ParameterizedType;
+import com.codenvy.ide.ext.java.jdt.core.dom.PrimitiveType;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationFragment;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.ext.java.jdt.internal.corext.codemanipulation.StubUtility;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.ASTNodeFactory;
 import com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.structure.CompilationUnitRewrite;
-
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.text.edits.TextEditGroup;

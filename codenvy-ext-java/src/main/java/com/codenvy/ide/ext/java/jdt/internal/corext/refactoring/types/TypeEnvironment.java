@@ -13,8 +13,8 @@ package com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.types;
 import com.codenvy.ide.ext.java.jdt.core.BindingKey;
 import com.codenvy.ide.ext.java.jdt.core.dom.ASTParser;
 import com.codenvy.ide.ext.java.jdt.core.dom.DefaultBindingResolver;
-import com.codenvy.ide.ext.java.jdt.core.dom.ITypeBinding;
 import com.codenvy.ide.ext.java.jdt.core.dom.DefaultBindingResolver.BindingTables;
+import com.codenvy.ide.ext.java.jdt.core.dom.ITypeBinding;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.CompilationResult;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.IErrorHandlingPolicy;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.CompilationUnitDeclaration;
@@ -24,14 +24,23 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.env.ICompilationUnit;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.ISourceType;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.CompilerOptions;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.ITypeRequestor;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.LookupEnvironment;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.PackageBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.Scope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TagBits;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeConstants;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.DefaultProblemFactory;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.ProblemReporter;
-
 import com.codenvy.ide.ext.java.worker.WorkerMessageHandler;
 import com.codenvy.ide.runtime.Assert;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A type environment comprises a set of {@link TType}s that stand for Java {@link ITypeBinding}s.

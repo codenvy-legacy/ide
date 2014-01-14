@@ -29,8 +29,11 @@ import com.codenvy.ide.api.resources.FileEventHandler;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.TemplateAgent;
+import com.codenvy.ide.api.ui.action.ActionManager;
+import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.java.client.editor.JavaEditorProvider;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
@@ -47,12 +50,15 @@ import com.codenvy.ide.ext.java.client.wizard.NewInterfaceProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewPackageProvider;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.Utils;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
@@ -61,14 +67,13 @@ import com.google.web.bindery.event.shared.EventBus;
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_CONTEXT_MENU;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
 import static com.codenvy.ide.collections.Collections.createArray;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 
-/**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
- */
-@Extension(title = "Java Support : syntax highlighting and autocomplete.", version = "3.0.0")
+/** @author Evgen Vidolob */
+@Extension(title = "Java syntax highlighting and autocomplete.", version = "3.0.0")
 public class JavaExtension {
     private static final String JAVA_PERSPECTIVE                  = "Java";
     public static final  String JAVA_APPLICATION_PROJECT_TYPE     = "Jar";
@@ -110,7 +115,7 @@ public class JavaExtension {
                          Provider<CreateMavenWarProjectPage> createMavenWarProjectPage,
                          Provider<CreateMavenSpringProjectPage> createMavenSpringProjectPage,
                          Provider<CreateAntJavaProjectPage> createAntJavaProjectPage,
-                         Provider<CreateAntSpringProjectPage> createAntSpringProjectPage) {
+                         Provider<CreateAntSpringProjectPage> createAntSpringProjectPage,ActionManager actionManager) {
 
         this();
         FileType javaFile = new FileType(JavaResources.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
@@ -123,23 +128,62 @@ public class JavaExtension {
         resourceProvider.registerModelProvider(JavaProject.PRIMARY_NATURE, new JavaProjectModelProvider(eventBus));
         JavaResources.INSTANCE.css().ensureInjected();
 
-        projectTypeAgent.register(JavaProject.PRIMARY_NATURE,
+        // add actions in context menu
+        DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
+        contextMenuGroup.addSeparator();
+        UpdateDependencyAction dependencyAction = new UpdateDependencyAction(this, resourceProvider);
+        actionManager.registerAction("updateDependency", dependencyAction);
+        contextMenuGroup.addAction(dependencyAction);
+
+        DefaultActionGroup projectMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_PROJECT);
+        projectMenuActionGroup.add(dependencyAction);
+
+        Array<String> emptyArray = Collections.createArray();
+
+        // Jar project properties
+        Array<Property> jarProperties = Collections.createArray();
+        jarProperties.add(new Property("nature.primary", Collections.createArray("java")));
+        jarProperties.add(new Property("vfs:projectType", Collections.createArray("Jar")));
+        jarProperties.add(new Property("exoide:classpath", emptyArray));
+        jarProperties.add(new Property("nature.mixin", Collections.createArray("Jar")));
+        jarProperties.add(new Property("vfs:mimeType", Collections.createArray("text/vnd.ideproject+directory")));
+        jarProperties.add(new Property("builder.name", Collections.createArray("maven")));
+        jarProperties.add(new Property("folders.source", Collections.createArray("src/main/java", "src/test/java")));
+        jarProperties.add(new Property("exoide:projectDescription", Collections.createArray("Simple JAR project.")));
+
+        // War project properties
+        Array<Property> warProperties = Collections.createArray();
+        warProperties.add(new Property("nature.primary", Collections.createArray("java")));
+        warProperties.add(new Property("exoide:classpath", emptyArray));
+        warProperties.add(new Property("nature.mixin", Collections.createArray("War")));
+        warProperties.add(new Property("exoide:target", Collections.createArray("CloudBees", "CloudFoundry", "AWS", "AppFog", "Tier3WF")));
+        warProperties.add(new Property("runner.name", Collections.createArray("webapps")));
+        warProperties.add(new Property("exoide:projectDescription", Collections.createArray("Java Web project.")));
+        warProperties.add(new Property("vfs:projectType", Collections.createArray("War")));
+        warProperties.add(new Property("vfs:mimeType", Collections.createArray("text/vnd.ideproject+directory")));
+        warProperties.add(new Property("builder.name", Collections.createArray("maven")));
+        warProperties.add(new Property("folders.source", Collections.createArray("src/main/java", "src/main/resources")));
+
+        projectTypeAgent.register(JAVA_APPLICATION_PROJECT_TYPE,
                                   "Java application",
                                   JavaResources.INSTANCE.newJavaProject(),
                                   PRIMARY_NATURE,
-                                  createArray(JAVA_APPLICATION_PROJECT_TYPE));
+                                  createArray(JAVA_APPLICATION_PROJECT_TYPE),
+                                  jarProperties);
 
         projectTypeAgent.register(JAVA_WEB_APPLICATION_PROJECT_TYPE,
                                   "Java web application",
                                   JavaResources.INSTANCE.newJavaProject(),
                                   PRIMARY_NATURE,
-                                  createArray(JAVA_WEB_APPLICATION_PROJECT_TYPE));
+                                  createArray(JAVA_WEB_APPLICATION_PROJECT_TYPE),
+                                  warProperties);
 
         projectTypeAgent.register(SPRING_APPLICATION_PROJECT_TYPE,
                                   "Spring application",
                                   JavaResources.INSTANCE.newJavaProject(),
                                   PRIMARY_NATURE,
-                                  createArray(SPRING_APPLICATION_PROJECT_TYPE));
+                                  createArray(SPRING_APPLICATION_PROJECT_TYPE),
+                                  warProperties);
 
         newResourceAgent.register(newClassHandler);
         newResourceAgent.register(newInterfaceHandler);
@@ -216,7 +260,7 @@ public class JavaExtension {
         Project project = resourceProvider.getActiveProject();
         String projectId = project.getId();
         String vfsId = resourceProvider.getVfsInfo().getId();
-        String url = restContext + '/' + Utils.getWorkspaceName() + "/code-assistant/java/update-dependencies?projectid=" + projectId +
+        String url = restContext + "/code-assistant-java/" + Utils.getWorkspaceName() + "/update-dependencies?projectid=" + projectId +
                      "&vfsid=" + vfsId;
 
         final Notification notification = new Notification("Updating dependencies...", PROGRESS);
@@ -233,7 +277,11 @@ public class JavaExtension {
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    notification.setMessage(exception.getMessage());
+                    JSONObject object = JSONParser.parseLenient(exception.getMessage()).isObject();
+                    if (object.containsKey("message"))
+                        notification.setMessage(object.get("message").isString().stringValue());
+                    else
+                        notification.setMessage("Update dependencies fail");
                     notification.setType(ERROR);
                     notification.setStatus(FINISHED);
                 }

@@ -11,7 +11,11 @@
 package com.codenvy.ide.ext.java.jdt.internal.compiler.lookup;
 
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.ASTNode;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.AbstractMethodDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.CaseStatement;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.ast.TypeReference;
 
 public final class LocalTypeBinding extends NestedTypeBinding {
     final static char[] LocalTypePrefix = {'$', 'L', 'o', 'c', 'a', 'l', '$'};

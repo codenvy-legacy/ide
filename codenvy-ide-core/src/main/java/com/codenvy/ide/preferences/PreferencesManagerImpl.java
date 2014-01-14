@@ -18,9 +18,9 @@
 package com.codenvy.ide.preferences;
 
 import com.codenvy.ide.api.preferences.PreferencesManager;
+import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;

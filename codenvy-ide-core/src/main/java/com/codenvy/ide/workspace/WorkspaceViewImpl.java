@@ -22,7 +22,12 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 /**
@@ -43,7 +48,7 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView {
     @UiField
     SimplePanel toolbarPanel;
     @UiField
-    FlowPanel   statusPanel;
+    SimplePanel  statusPanel;
     @UiField
     Button      btnLogin;
     @UiField
@@ -84,8 +89,7 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView {
 
     /** {@inheritDoc} */
     @Override
-    public FlowPanel getStatusPanel() {
-        return statusPanel;
+    public AcceptsOneWidget getStatusPanel() { return statusPanel;
     }
 
     /** {@inheritDoc} */

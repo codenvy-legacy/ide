@@ -12,7 +12,6 @@ package com.codenvy.ide.ext.java.jdt.internal.ui.text;
 
 import com.codenvy.ide.ext.java.jdt.JavaPartitions;
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
-
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;

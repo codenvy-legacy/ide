@@ -19,10 +19,10 @@ package com.codenvy.util;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.extension.SDK;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.extension.ExtensionRegistry;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;

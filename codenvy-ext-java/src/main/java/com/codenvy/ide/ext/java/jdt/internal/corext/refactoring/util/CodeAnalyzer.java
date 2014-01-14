@@ -15,7 +15,6 @@ import com.codenvy.ide.ext.java.jdt.core.dom.ArrayInitializer;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.Selection;
 import com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.RefactoringCoreMessages;
 import com.codenvy.ide.ext.java.jdt.refactoring.RefactoringStatus;
-
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.text.Document;
 

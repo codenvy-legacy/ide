@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.java.worker;
 
+import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.ext.java.jdt.core.IType;
 import com.codenvy.ide.ext.java.jdt.core.Signature;
 import com.codenvy.ide.ext.java.jdt.env.BinaryTypeImpl;
@@ -92,5 +93,18 @@ public class WorkerTypeInfoStorage {
 
     public String getShortTypesInfo() {
         return shortTypesInfo;
+    }
+
+    public void removeFqn(String fqn) {
+        JsoArray<String> fqnToRemove = JsoArray.create();
+        for (String key : storage.keySet()) {
+            if (key.startsWith(fqn)) {
+                fqnToRemove.add(key);
+            }
+        }
+
+        for (String key : fqnToRemove.asIterable()) {
+            storage.remove(key);
+        }
     }
 }

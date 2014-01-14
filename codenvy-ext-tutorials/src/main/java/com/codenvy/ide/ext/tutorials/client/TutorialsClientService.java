@@ -17,11 +17,12 @@
  */
 package com.codenvy.ide.ext.tutorials.client;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * Client service to create 'Tutorial' projects.

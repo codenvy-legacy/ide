@@ -15,9 +15,9 @@
 package com.codenvy.ide.texteditor.ot;
 
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DocOp;
 import com.codenvy.ide.dto.shared.DocOpFactory;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.LineNumberAndColumn;
 import com.codenvy.ide.text.store.TextChange;

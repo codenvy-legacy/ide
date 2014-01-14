@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.java.worker;
 
+import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.ext.java.jdt.CUVariables;
 import com.codenvy.ide.ext.java.jdt.codeassistant.ContentAssistHistory;
 import com.codenvy.ide.ext.java.jdt.codeassistant.TemplateCompletionProposalComputer;
@@ -49,9 +50,9 @@ import com.codenvy.ide.ext.java.jdt.templates.VarResolver;
 import com.codenvy.ide.ext.java.messages.ConfigMessage;
 import com.codenvy.ide.ext.java.messages.ParseMessage;
 import com.codenvy.ide.ext.java.messages.Problem;
+import com.codenvy.ide.ext.java.messages.RemoveFqnMessage;
 import com.codenvy.ide.ext.java.messages.RoutingTypes;
 import com.codenvy.ide.ext.java.messages.impl.MessagesImpls;
-import com.codenvy.ide.collections.js.JsoArray;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.webworker.client.MessageEvent;
@@ -69,7 +70,8 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
 
     private static WorkerMessageHandler      instance;
     private final  WorkerOutlineModelUpdater outlineModelUpdater;
-    private        INameEnvironment          nameEnvironment;
+    private        WorkerCorrectionProcessor correctionProcessor;
+    private        WorkerNameEnvironment          nameEnvironment;
     private HashMap<String, String> options = new HashMap<String, String>();
     private MessageFilter                      messageFilter;
     private JavaParserWorker                   worker;
@@ -91,18 +93,26 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
             @Override
             public void onMessageReceived(ConfigMessage config) {
                 nameEnvironment =
-                        new WorkerNameEnvironment(config.projectId(), config.restContext(), config.vfsId(), config.wsName());
+                        new WorkerNameEnvironment(config.restContext(), config.vfsId(), config.wsName());
                 projectName = config.projectName();
+                WorkerProposalApplier applier = new WorkerProposalApplier(WorkerMessageHandler.this.worker, messageFilter);
                 workerCodeAssist =
-                        new WorkerCodeAssist(WorkerMessageHandler.this.worker, messageFilter, nameEnvironment,
-                                             templateCompletionProposalComputer, config.projectId(),
-                                             config.javaDocContext());
+                        new WorkerCodeAssist(WorkerMessageHandler.this.worker, messageFilter, applier, nameEnvironment,
+                                             templateCompletionProposalComputer,
+                                             config.javaDocContext(), config.vfsId());
+                correctionProcessor = new WorkerCorrectionProcessor(WorkerMessageHandler.this.worker, messageFilter, applier);
             }
         };
         messageFilter.registerMessageRecipient(RoutingTypes.CONFIG, configMessageRecipient);
         messageFilter.registerMessageRecipient(RoutingTypes.PARSE, this);
         templateCompletionProposalComputer = new TemplateCompletionProposalComputer(getTemplateContextRegistry());
         outlineModelUpdater = new WorkerOutlineModelUpdater(worker);
+        messageFilter.registerMessageRecipient(RoutingTypes.REMOVE_FQN, new MessageFilter.MessageRecipient<RemoveFqnMessage>() {
+            @Override
+            public void onMessageReceived(RemoveFqnMessage message) {
+                WorkerTypeInfoStorage.get().removeFqn(message.fqn());
+            }
+        });
     }
 
     public static WorkerMessageHandler get() {
@@ -110,10 +120,10 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
     }
 
     private void initOptions() {
-        options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
+        options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_7);
         options.put(JavaCore.CORE_ENCODING, "UTF-8");
-        options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
-        options.put(CompilerOptions.OPTION_TargetPlatform, JavaCore.VERSION_1_6);
+        options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
+        options.put(CompilerOptions.OPTION_TargetPlatform, JavaCore.VERSION_1_7);
         options.put(AssistOptions.OPTION_PerformVisibilityCheck, AssistOptions.ENABLED);
         options.put(CompilerOptions.OPTION_ReportUnusedLocal, CompilerOptions.WARNING);
         options.put(CompilerOptions.OPTION_TaskTags, CompilerOptions.WARNING);
@@ -148,6 +158,7 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
 
             @Override
             public void onSuccess() {
+                nameEnvironment.setProjectId(message.projectId());
                 cuVar = new CUVariables(message.fileName(), message.packageName(), projectName);
 
                 ASTParser parser = ASTParser.newParser(AST.JLS3);
@@ -158,7 +169,8 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
                 parser.setNameEnvironment(nameEnvironment);
                 ASTNode ast = parser.createAST();
                 CompilationUnit unit = (CompilationUnit)ast;
-                workerCodeAssist.setUnit(unit);
+                workerCodeAssist.setCu(unit);
+                correctionProcessor.setCu(unit);
                 IProblem[] problems = unit.getProblems();
                 MessagesImpls.ProblemsMessageImpl problemsMessage = MessagesImpls.ProblemsMessageImpl.make();
                 JsoArray<Problem> problemsArray = JsoArray.create();

@@ -17,15 +17,26 @@
  */
 package com.codenvy.ide.notification;
 
-import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.parts.PartStackUIResources;
+import com.codenvy.ide.api.parts.base.BaseView;
+import com.codenvy.ide.workspace.WorkspaceView;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.notification.NotificationManagerView.Status.EMPTY;
 import static com.codenvy.ide.notification.NotificationManagerView.Status.IN_PROGRESS;
@@ -36,21 +47,24 @@ import static com.codenvy.ide.notification.NotificationManagerView.Status.IN_PRO
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class NotificationManagerViewImpl extends Composite implements NotificationManagerView {
+public class NotificationManagerViewImpl extends BaseView<NotificationManagerView.ActionDelegate> implements NotificationManagerView {
     interface NotificationManagerViewImplUiBinder extends UiBinder<Widget, NotificationManagerViewImpl> {
     }
 
     private static NotificationManagerViewImplUiBinder ourUiBinder = GWT.create(NotificationManagerViewImplUiBinder.class);
 
     @UiField
-    FlowPanel   mainPanel;
-    @UiField
-    Label       count;
-    @UiField
+    FlowPanel mainPanel;
+    //    @UiField
+    Label     count = new Label();
+    FlowPanel panel = new FlowPanel();
+
     SimplePanel iconPanel;
+
+
     @UiField(provided = true)
-    final   NotificationResources res;
-    private ActionDelegate        delegate;
+    final   Resources      res;
+//    private ActionDelegate delegate;
 
     /**
      * Create view.
@@ -58,22 +72,29 @@ public class NotificationManagerViewImpl extends Composite implements Notificati
      * @param resources
      */
     @Inject
-    public NotificationManagerViewImpl(NotificationResources resources) {
-        this.res = resources;
-        initWidget(ourUiBinder.createAndBindUi(this));
-        mainPanel.addDomHandler(new ClickHandler() {
+    public NotificationManagerViewImpl(WorkspaceView workspaceView,
+                                       PartStackUIResources partStackUIResources,
+                                       Resources resources) {
+        super(partStackUIResources);
+        //TODO:need improve this
+        iconPanel = new SimplePanel();
+        iconPanel.addStyleName(resources.notificationCss().floatRight());
+        count.addStyleName(resources.notificationCss().floatRight());
+        panel.add(iconPanel);
+        panel.add(count);
+
+        workspaceView.getStatusPanel().setWidget(panel);
+        iconPanel.addDomHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                delegate.onClicked(event.getClientX(), event.getClientY());
+                delegate.onClicked();
             }
         }, ClickEvent.getType());
+
+        this.res = resources;
+        container.add(ourUiBinder.createAndBindUi(this));
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void setDelegate(ActionDelegate delegate) {
-        this.delegate = delegate;
-    }
 
     /** {@inheritDoc} */
     @Override
@@ -82,6 +103,7 @@ public class NotificationManagerViewImpl extends Composite implements Notificati
         iconPanel.setWidget(icon);
     }
 
+    
     /**
      * Return image for status
      *
@@ -107,4 +129,11 @@ public class NotificationManagerViewImpl extends Composite implements Notificati
         String text = count > 0 ? String.valueOf(count) : "";
         this.count.setText(text);
     }
+
+    @Override
+    public void setContainer(NotificationContainer container) {
+        mainPanel.add(container);
+    }
+
+
 }

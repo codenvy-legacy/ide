@@ -17,8 +17,9 @@
  */
 package com.codenvy.ide.api.ui.wizard.newresource;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.extension.SDK;
+
+import javax.validation.constraints.NotNull;
 
 
 /**

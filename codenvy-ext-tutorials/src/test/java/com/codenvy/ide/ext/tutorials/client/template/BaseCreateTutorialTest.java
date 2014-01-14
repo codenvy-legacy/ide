@@ -36,12 +36,16 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import static com.codenvy.ide.api.ui.wizard.WizardPage.CommitCallback;
-import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.*;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.TEMPLATE;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Base test for creating tutorial project page.

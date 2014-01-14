@@ -19,7 +19,14 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.flow.FlowInfo;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.flow.SwitchFlowContext;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.CompilerOptions;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.Constant;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.BlockScope;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.FieldBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.LocalVariableBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ReferenceBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.SourceTypeBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.SyntheticMethodBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeIds;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.ProblemSeverities;
 
 import java.util.Arrays;

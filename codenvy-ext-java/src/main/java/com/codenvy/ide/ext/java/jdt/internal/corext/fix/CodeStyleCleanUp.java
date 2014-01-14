@@ -14,7 +14,6 @@ import com.codenvy.ide.ext.java.jdt.codeassistant.api.IProblemLocation;
 import com.codenvy.ide.ext.java.jdt.core.JavaCore;
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
 import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
-
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.text.Document;
 

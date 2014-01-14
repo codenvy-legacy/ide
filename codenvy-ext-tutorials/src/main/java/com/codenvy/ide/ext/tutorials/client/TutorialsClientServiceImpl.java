@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.tutorials.client;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Property;
@@ -30,6 +29,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
+import javax.validation.constraints.NotNull;
+
 import static com.codenvy.ide.resources.marshal.JSONSerializer.PROPERTY_SERIALIZER;
 import static com.codenvy.ide.rest.HTTPHeader.CONTENT_TYPE;
 import static com.google.gwt.http.client.RequestBuilder.POST;
@@ -37,13 +38,12 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
 /**
  * Implementation of {@link TutorialsClientService}.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: TutorialsClientServiceImpl.java Jul 3, 2013 12:50:30 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 public class TutorialsClientServiceImpl implements TutorialsClientService {
     /** Base url. */
-    private static final String BASE_URL                            = '/' + Utils.getWorkspaceName() + "/tutorials";
+    private static final String BASE_URL                            = "/tutorials/" + Utils.getWorkspaceName();
     /** Create sample project method's path. */
     private static final String CREATE_DTO_TUTORIAL                 = "/dto";
     private static final String CREATE_NOTIFICATION_TUTORIAL        = "/notification";
@@ -54,7 +54,7 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
     private static final String CREATE_PARTS_TUTORIAL               = "/parts";
     private static final String CREATE_EDITOR_TUTORIAL              = "/editor";
     private static final String CREATE_GIN_TUTORIAL                 = "/gin";
-    private static final String CREATE_WYSIWYG_TUTORIAL                 = "/wysiwyg";
+    private static final String CREATE_WYSIWYG_TUTORIAL             = "/wysiwyg";
     /** REST-service context. */
     private String           restContext;
     /** Loader to be displayed. */

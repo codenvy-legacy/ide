@@ -18,7 +18,6 @@
 package com.codenvy.ide.ext.java.jdt.internal.ui.text;
 
 import com.codenvy.ide.ext.java.jdt.JavaPartitions;
-
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentCommand;
@@ -28,7 +27,6 @@ import com.codenvy.ide.text.TextUtilities;
 import com.codenvy.ide.text.TypedRegion;
 import com.codenvy.ide.texteditor.api.AutoEditStrategy;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.util.loging.Log;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
@@ -184,7 +182,8 @@ public class BracketInserter implements AutoEditStrategy {
             command.doit = false;
 
         } catch (BadLocationException e) {
-            Log.error(BracketInserter.class, e);
+            //TODO log error
+//            Log.error(BracketInserter.class, e);
         }
     }
 

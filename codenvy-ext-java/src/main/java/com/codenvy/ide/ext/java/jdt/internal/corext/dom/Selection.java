@@ -11,10 +11,8 @@
 package com.codenvy.ide.ext.java.jdt.internal.corext.dom;
 
 import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
-
-import com.codenvy.ide.text.Region;
-
 import com.codenvy.ide.runtime.Assert;
+import com.codenvy.ide.text.Region;
 
 
 public class Selection {

@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.wizard;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.collections.Array;
@@ -27,6 +26,7 @@ import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 
 import javax.inject.Singleton;
+import javax.validation.constraints.NotNull;
 
 /**
  * The implementation of {@link NewResourceAgent}. Also returning all registered resources.

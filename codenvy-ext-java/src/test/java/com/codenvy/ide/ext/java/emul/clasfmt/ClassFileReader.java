@@ -13,12 +13,15 @@ package com.codenvy.ide.ext.java.emul.clasfmt;
 import com.codenvy.ide.ext.java.emul.ClassFormatException;
 import com.codenvy.ide.ext.java.emul.TagBits;
 import com.codenvy.ide.ext.java.emul.Util;
-
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.env.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryAnnotation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryElementValuePair;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryField;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryMethod;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryNestedType;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryType;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.Constant;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeIds;
-
 
 import java.io.File;
 import java.io.IOException;

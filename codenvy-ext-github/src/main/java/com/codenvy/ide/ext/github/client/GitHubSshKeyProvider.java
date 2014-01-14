@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.github.client;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
@@ -36,49 +35,50 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
+import javax.validation.constraints.NotNull;
+
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.security.oauth.OAuthStatus.LOGGED_IN;
 import static com.google.gwt.http.client.RequestBuilder.POST;
 
 /**
  * Provides SSH keys for github.com and deploys it.
- * 
+ *
  * @author <a href="mailto:ashumilova@codenvy.com">Ann Shumilova</a>
  * @version $Id:
- *
  */
 @Singleton
 public class GitHubSshKeyProvider implements SshKeyProvider, OAuthCallback {
-    
+
     private GitHubClientService gitHubService;
-    
+
     private EventBus eventBus;
-    
+
     private NotificationManager notificationManager;
-    
+
     private String restContext;
-    
+
     private GitHubLocalizationConstant constant;
-    
+
     private AsyncRequestCallback<Void> callback;
-    
+
     @Inject
     public GitHubSshKeyProvider(GitHubClientService gitHubService, EventBus eventBus, @Named("restContext") String restContext,
-                                GitHubLocalizationConstant constant, NotificationManager notificationManager){
+                                GitHubLocalizationConstant constant, NotificationManager notificationManager) {
         this.gitHubService = gitHubService;
         this.eventBus = eventBus;
         this.notificationManager = notificationManager;
         this.restContext = restContext;
         this.constant = constant;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void generateKey(String userId, AsyncRequestCallback<Void> callback) {
         this.callback = callback;
         getToken(userId);
     }
-    
+
     private void getToken(final String user) {
         try {
             gitHubService.getUserToken(user, new AsyncRequestCallback<String>(new com.codenvy.ide.rest.StringUnmarshaller()) {
@@ -102,18 +102,18 @@ public class GitHubSshKeyProvider implements SshKeyProvider, OAuthCallback {
             notificationManager.showNotification(notification);
         }
     }
-    
+
     /** Log in  github */
     private void oAuthLoginStart(@NotNull String user) {
         boolean permitToRedirect = Window.confirm(constant.loginOAuthLabel());
         if (permitToRedirect) {
-            String authUrl = "rest/ide/oauth/authenticate?oauth_provider=github"
+            String authUrl = restContext + "/oauth/authenticate?oauth_provider=github"
                              + "&scope=user&userId=" + user + "&scope=repo&redirect_after_login=/ide/" + Utils.getWorkspaceName();
             JsOAuthWindow authWindow = new JsOAuthWindow(authUrl, "error.url", 500, 980, this);
             authWindow.loginWithOAuth();
         }
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onAuthenticated(OAuthStatus authStatus) {
@@ -121,11 +121,11 @@ public class GitHubSshKeyProvider implements SshKeyProvider, OAuthCallback {
             generateGitHubKey();
         }
     }
-    
+
     /** Generate github key. */
     public void generateGitHubKey() {
         try {
-            String url = restContext + '/' + Utils.getWorkspaceName() + "/github/ssh/generate";
+            String url = restContext + "/github/" + Utils.getWorkspaceName() + "/ssh/generate";
             AsyncRequest.build(POST, url).loader(new EmptyLoader()).send(callback);
         } catch (RequestException e) {
             Window.alert("Upload key to github failed.");

@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.ext.java.worker;
 
+import com.codenvy.ide.collections.js.JsoArray;
+import com.codenvy.ide.collections.js.JsoStringMap;
 import com.codenvy.ide.ext.java.jdt.codeassistant.AbstractJavaCompletionProposal;
 import com.codenvy.ide.ext.java.jdt.codeassistant.CompletionProposalCollector;
 import com.codenvy.ide.ext.java.jdt.codeassistant.FillArgumentNamesCompletionProposalCollector;
@@ -30,19 +32,11 @@ import com.codenvy.ide.ext.java.jdt.core.JavaCore;
 import com.codenvy.ide.ext.java.jdt.core.Signature;
 import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
 import com.codenvy.ide.ext.java.jdt.internal.codeassist.CompletionEngine;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment;
-import com.codenvy.ide.ext.java.messages.ApplyProposalMessage;
-import com.codenvy.ide.ext.java.messages.Change;
 import com.codenvy.ide.ext.java.messages.ComputeCAProposalsMessage;
 import com.codenvy.ide.ext.java.messages.RoutingTypes;
 import com.codenvy.ide.ext.java.messages.WorkerProposal;
 import com.codenvy.ide.ext.java.messages.impl.MessagesImpls;
-import com.codenvy.ide.collections.js.JsoArray;
-import com.codenvy.ide.collections.js.JsoStringMap;
 import com.codenvy.ide.runtime.AssertionFailedException;
-import com.codenvy.ide.text.DocumentEvent;
-import com.codenvy.ide.text.DocumentListener;
-import com.codenvy.ide.text.Region;
 import com.codenvy.ide.util.UUID;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
@@ -63,6 +57,7 @@ import java.util.Set;
 public class WorkerCodeAssist {
 
 
+    private final WorkerProposalApplier workerProposalApplier;
     private Comparator<JavaCompletionProposal> comparator = new Comparator<JavaCompletionProposal>() {
 
         @Override
@@ -77,21 +72,25 @@ public class WorkerCodeAssist {
         }
     };
     private JavaParserWorker                   worker;
-    private INameEnvironment                   nameEnvironment;
+    private WorkerNameEnvironment                   nameEnvironment;
     private TemplateCompletionProposalComputer templateCompletionProposalComputer;
     private String                             projectId;
     private String                             docContext;
+    private String                             vfsId;
     private CompilationUnit                    unit;
-    private JsoStringMap<JavaCompletionProposal> proposalMap = JsoStringMap.create();
-    private String documentContent;
+    private String                             documentContent;
+    private WorkerDocument document;
 
-    public WorkerCodeAssist(JavaParserWorker worker, MessageFilter messageFilter, INameEnvironment nameEnvironment,
-                            TemplateCompletionProposalComputer templateCompletionProposalComputer, String projectId, String docContext) {
+    public WorkerCodeAssist(JavaParserWorker worker, MessageFilter messageFilter, WorkerProposalApplier workerProposalApplier,
+                            WorkerNameEnvironment nameEnvironment,
+                            TemplateCompletionProposalComputer templateCompletionProposalComputer, String docContext,
+                            String vfsId) {
         this.worker = worker;
+        this.workerProposalApplier = workerProposalApplier;
         this.nameEnvironment = nameEnvironment;
         this.templateCompletionProposalComputer = templateCompletionProposalComputer;
-        this.projectId = projectId;
         this.docContext = docContext;
+        this.vfsId = vfsId;
         messageFilter.registerMessageRecipient(RoutingTypes.CA_COMPUTE_PROPOSALS,
                                                new MessageFilter.MessageRecipient<ComputeCAProposalsMessage>() {
                                                    @Override
@@ -110,49 +109,16 @@ public class WorkerCodeAssist {
                                                        });
                                                    }
                                                });
-        messageFilter.registerMessageRecipient(RoutingTypes.APPLY_CA_PROPOSAL, new MessageFilter.MessageRecipient<ApplyProposalMessage>() {
-            @Override
-            public void onMessageReceived(ApplyProposalMessage message) {
-                handleApply(message.id());
-            }
-        });
     }
 
-    private void handleApply(String id) {
-        if (!proposalMap.containsKey(id)) {
-            return;
-        }
-
-        JavaCompletionProposal proposal = proposalMap.get(id);
-        WorkerDocument document = new WorkerDocument(documentContent);
-        final JsoArray<Change> changes = JsoArray.create();
-        document.addDocumentListener(new DocumentListener() {
-            @Override
-            public void documentAboutToBeChanged(DocumentEvent event) {
-            }
-
-            @Override
-            public void documentChanged(DocumentEvent event) {
-                MessagesImpls.ChangeImpl change = MessagesImpls.ChangeImpl.make();
-                change.setOffset(event.getOffset()).setLength(event.getLength()).setText(event.getText());
-                changes.add(change);
-            }
-        });
-        proposal.apply(document);
-        MessagesImpls.ProposalAppliedMessageImpl message = MessagesImpls.ProposalAppliedMessageImpl.make();
-        message.setChanges(changes);
-        Region selection = proposal.getSelection(document);
-        if (selection != null) {
-            MessagesImpls.RegionImpl region = MessagesImpls.RegionImpl.make();
-            region.setLength(selection.getLength()).setOffset(selection.getOffset());
-            message.setSelectionRegion(region);
-        }
-        message.setId(id);
-        worker.sendMessage(message.serialize());
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 
     private void handleCAMessage(ComputeCAProposalsMessage message) {
-        proposalMap = JsoStringMap.create();
+        setProjectId(message.projectId());
+        nameEnvironment.setProjectId(message.projectId());
+        JsoStringMap<JavaCompletionProposal> proposalMap = JsoStringMap.create();
         documentContent = message.docContent();
         JavaCompletionProposal[] proposals =
                 computeCompletionProposals(unit, message.offset(), documentContent, message.fileName());
@@ -169,7 +135,8 @@ public class WorkerCodeAssist {
             proposalMap.put(uuid, proposal);
             workerProposals.add(prop);
         }
-
+        workerProposalApplier.setCaDocument(document);
+        workerProposalApplier.setCaProposalMap(proposalMap);
         caComputedMessage.setProposals(workerProposals);
         worker.sendMessage(caComputedMessage.serialize());
     }
@@ -179,11 +146,10 @@ public class WorkerCodeAssist {
         if (unit == null) {
             return null;
         }
-        WorkerDocument document = new WorkerDocument(documentContent);
+        document = new WorkerDocument(documentContent);
         CompletionProposalCollector collector =
                 //TODO receive vfs id
-                new FillArgumentNamesCompletionProposalCollector(unit, document, offset, projectId, docContext,
-                                                                 "dev-monit");
+                new FillArgumentNamesCompletionProposalCollector(unit, document, offset, projectId, docContext, vfsId);
         CompletionEngine e = new CompletionEngine(nameEnvironment, collector, JavaCore.getOptions());
         try {
             e.complete(new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(
@@ -274,7 +240,7 @@ public class WorkerCodeAssist {
 
     }
 
-    public void setUnit(CompilationUnit unit) {
+    public void setCu(CompilationUnit unit) {
         this.unit = unit;
     }
 }

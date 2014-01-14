@@ -20,8 +20,13 @@ package com.codenvy.ide.rest;
 
 import com.codenvy.ide.commons.exception.JobNotFoundException;
 import com.codenvy.ide.commons.exception.ServerException;
-import com.google.gwt.http.client.*;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestBuilder.Method;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window.Location;
 
@@ -185,7 +190,7 @@ public class AsyncRequest {
             if (handler != null)
                 handler.requestInProgress(requestStatusUrl);
 
-            requesTimer.schedule(delay);
+            requestTimer.schedule(delay);
         }
 
         @Override
@@ -197,7 +202,7 @@ public class AsyncRequest {
         }
     };
 
-    private Timer requesTimer = new Timer() {
+    private Timer requestTimer = new Timer() {
 
         @Override
         public void run() {
@@ -213,7 +218,7 @@ public class AsyncRequest {
                     } else if (response.getStatusCode() != Response.SC_ACCEPTED) {
                         callback.onResponseReceived(request, response);
                         if (handler != null) {
-                            // check is response successfull, for correct handling failed responses
+                            // check is response successful, for correct handling failed responses
                             if (callback.isSuccessful(response))
                                 handler.requestFinished(requestStatusUrl);
                             else
@@ -223,7 +228,7 @@ public class AsyncRequest {
                         if (handler != null)
                             handler.requestInProgress(requestStatusUrl);
 
-                        requesTimer.schedule(delay);
+                        requestTimer.schedule(delay);
                     }
                 }
 

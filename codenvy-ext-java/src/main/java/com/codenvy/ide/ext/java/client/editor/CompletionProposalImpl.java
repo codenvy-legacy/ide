@@ -17,9 +17,9 @@
  */
 package com.codenvy.ide.ext.java.client.editor;
 
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.java.messages.Change;
 import com.codenvy.ide.ext.java.messages.ProposalAppliedMessage;
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;

@@ -41,9 +41,7 @@ import com.codenvy.ide.ext.java.jdt.core.dom.SimpleName;
 import com.codenvy.ide.ext.java.jdt.core.dom.StructuralPropertyDescriptor;
 import com.codenvy.ide.ext.java.jdt.core.dom.SuperFieldAccess;
 import com.codenvy.ide.ext.java.jdt.core.dom.SuperMethodInvocation;
-
 import com.codenvy.ide.runtime.Assert;
-
 
 import java.util.ArrayList;
 import java.util.Collections;

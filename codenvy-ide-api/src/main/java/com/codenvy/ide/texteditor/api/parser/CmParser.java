@@ -16,7 +16,6 @@ package com.codenvy.ide.texteditor.api.parser;
 
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.user.client.Window;
 
 
 /**

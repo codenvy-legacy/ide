@@ -34,7 +34,6 @@ import com.codenvy.ide.collections.StringSet;
 import com.codenvy.ide.core.Component;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.resources.marshal.FolderUnmarshaller;
 import com.codenvy.ide.resources.marshal.JSONSerializer;
 import com.codenvy.ide.resources.marshal.ProjectModelProviderAdapter;
 import com.codenvy.ide.resources.marshal.ProjectModelUnmarshaller;
@@ -72,7 +71,7 @@ import com.google.web.bindery.event.shared.EventBus;
 /**
  * Implementation of Resource Provider
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 @Singleton
 public class ResourceProviderComponent implements ResourceProvider, Component {
@@ -96,8 +95,6 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     /**
      * Resources API for client application.
      * It deals with VFS to retrieve the content of  the files
-     *
-     * @throws ResourceException
      */
     @Inject
     public ResourceProviderComponent(ModelProvider genericModelProvider,
@@ -111,7 +108,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         this.eventBus = eventBus;
         this.defaultFile = defaultFile;
         this.dtoFactory = dtoFactory;
-        this.workspaceURL = restContext + '/' + Utils.getWorkspaceName() + "/vfs/v2";
+        this.workspaceURL = restContext + "/vfs/" + Utils.getWorkspaceName() + "/v2";
         this.modelProviders = Collections.<ModelProvider>createStringMap();
         this.natures = Collections.<ProjectNature>createStringMap();
         this.fileTypes = Collections.createIntegerMap();
@@ -205,9 +202,12 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     public void getFolder(final Folder folder, final AsyncCallback<Folder> callback) {
         activeProject.refreshTree(folder, new AsyncCallback<Folder>() {
             @Override
-            public void onSuccess(Folder folder) {
-                eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(folder));
-                callback.onSuccess(folder);
+            public void onSuccess(Folder result) {
+                eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(result));
+                Resource f = result.findChildById(folder.getId());
+                if (f != null && !f.getId().equals(result.getId())) {
+                    eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(f));
+                }
             }
 
             @Override

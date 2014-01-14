@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.api.ui.wizard;
 
-import com.codenvy.ide.annotations.NotNull;
+import javax.validation.constraints.NotNull;
 
 /**
  * The factory for creating an instance of default wizard.

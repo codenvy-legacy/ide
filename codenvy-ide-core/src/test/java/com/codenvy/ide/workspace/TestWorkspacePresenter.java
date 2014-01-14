@@ -31,7 +31,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing {@link WorkspacePresenter} functionality.
@@ -70,7 +72,7 @@ public class TestWorkspacePresenter {
         when(partStackProvider.get()).thenReturn(partStack);
         when(activePerspectiveProvider.get()).thenReturn(activePerspective);
 
-        presenter = new WorkspacePresenter(view, null, null, activePerspectiveProvider, null);
+        presenter = new WorkspacePresenter(view, null, null, activePerspectiveProvider);
     }
 
     @After

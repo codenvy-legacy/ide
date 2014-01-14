@@ -16,7 +16,15 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.env.ClassSignature;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.EnumConstantSignature;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryAnnotation;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryElementValuePair;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.BooleanConstant;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.ByteConstant;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.CharConstant;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.DoubleConstant;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.FloatConstant;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.IntConstant;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.LongConstant;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.ShortConstant;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.StringConstant;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TagBits;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.util.Util;
 

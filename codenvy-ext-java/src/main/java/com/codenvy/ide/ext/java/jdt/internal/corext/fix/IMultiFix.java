@@ -12,7 +12,6 @@ package com.codenvy.ide.ext.java.jdt.internal.corext.fix;
 
 import com.codenvy.ide.ext.java.jdt.codeassistant.api.IProblemLocation;
 import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
-
 import com.codenvy.ide.text.Document;
 
 

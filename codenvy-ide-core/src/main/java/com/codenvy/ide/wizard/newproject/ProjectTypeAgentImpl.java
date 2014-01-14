@@ -17,17 +17,19 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.codenvy.ide.resources.ProjectTypeData;
+import com.codenvy.ide.resources.model.Property;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 /**
  * The implementation of {@link ProjectTypeAgent}.
@@ -50,13 +52,14 @@ public class ProjectTypeAgentImpl implements ProjectTypeAgent {
                          @NotNull String title,
                          @Nullable ImageResource icon,
                          @NotNull String primaryNature,
-                         @NotNull Array<String> secondaryNature) {
+                         @NotNull Array<String> secondaryNature,
+                         @NotNull Array<Property> projectProperties) {
         if (projectTypes.containsKey(typeName)) {
             Window.alert("Project type with " + typeName + " name already exists");
             return;
         }
 
-        ProjectTypeData projectType = new ProjectTypeData(typeName, title, icon, primaryNature, secondaryNature);
+        ProjectTypeData projectType = new ProjectTypeData(typeName, title, icon, primaryNature, secondaryNature, projectProperties);
         projectTypes.put(typeName, projectType);
     }
 

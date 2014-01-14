@@ -12,7 +12,6 @@ package com.codenvy.ide.ext.java.jdt.internal.text.correction;
 
 import com.codenvy.ide.ext.java.jdt.codeassistant.api.IProblemLocation;
 import com.codenvy.ide.ext.java.jdt.quickassist.api.InvocationContext;
-
 import com.codenvy.ide.runtime.Assert;
 
 import java.util.Collection;

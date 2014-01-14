@@ -21,9 +21,10 @@ fi
 cp -Rv $fileRepo/* $mvnLocalRepo
 
 # Download and unpack Apache Tomcat for Runner
-tomcatName="apache-tomcat-7.0.47"
-wget http://apache-mirror.telesys.org.ua/tomcat/tomcat-7/v7.0.47/bin/${tomcatName}.zip
-unzip $tomcatName
-rm ${tomcatName}.zip
-mv $tomcatName tomcat
-rm -rf $tomcatName
+tomcatVersion="7.0.50"
+tomcatDir="apache-tomcat-"${tomcatVersion}
+curl http://apache-mirror.telesys.org.ua/tomcat/tomcat-7/v${tomcatVersion}/bin/apache-tomcat-${tomcatVersion}.zip > $tomcatDir.zip
+unzip $tomcatDir
+rm apache-tomcat-${tomcatVersion}.zip
+mv $tomcatDir tomcat
+rm -rf $tomcatDir

@@ -17,10 +17,10 @@ package com.codenvy.ide.texteditor.renderer;
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.js.JsoIntegerMap;
+import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.texteditor.Buffer;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
@@ -248,7 +248,8 @@ public class LineNumberRenderer {
             element.getStyle().setPosition("absolute");
             element.getStyle().setTop(buffer.convertLineNumberToY(lineNumber) + 2, CSSStyleDeclaration.Unit.PX);
             element.getStyle().setLeft(9, CSSStyleDeclaration.Unit.PX);
-            element.setId("breakpoit-toggle-" + (lineNumber + 1));
+            element.getStyle().setCursor(CSSStyleDeclaration.Cursor.POINTER);
+            element.setId("breakpoint-toggle-" + (lineNumber + 1));
         } else {
             if (!breakpointGutterManager.isBreakPointExist(lineNumber)) {
                 element = Elements.createDivElement(css.lineNumber());
@@ -266,7 +267,8 @@ public class LineNumberRenderer {
                 element.getStyle().setPosition("absolute");
                 element.getStyle().setTop(buffer.convertLineNumberToY(lineNumber), CSSStyleDeclaration.Unit.PX);
                 element.getStyle().setLeft(7, CSSStyleDeclaration.Unit.PX);
-                element.setId("breakpoit-toggle-" + (lineNumber + 1));
+                element.getStyle().setCursor(CSSStyleDeclaration.Cursor.POINTER);
+                element.setId("breakpoint-toggle-" + (lineNumber + 1));
             }
         }
         return element;

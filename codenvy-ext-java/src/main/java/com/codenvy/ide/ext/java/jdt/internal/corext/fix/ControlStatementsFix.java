@@ -10,11 +10,21 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.internal.corext.fix;
 
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.Block;
+import com.codenvy.ide.ext.java.jdt.core.dom.ChildPropertyDescriptor;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.dom.DoStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.EnhancedForStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.ForStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.IfStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.ReturnStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.Statement;
+import com.codenvy.ide.ext.java.jdt.core.dom.ThrowStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.WhileStatement;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.GenericVisitor;
 import com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.structure.CompilationUnitRewrite;
-
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.edits.TextEditGroup;

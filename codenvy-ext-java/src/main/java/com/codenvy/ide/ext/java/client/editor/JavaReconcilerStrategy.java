@@ -68,7 +68,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, JavaParserWo
      *
      */
     private void parse() {
-        worker.parse(document.get(), file.getName(), file.getId(), file.getParent().getName(), this);
+        worker.parse(document.get(), file.getName(), file.getId(), file.getParent().getName(),file.getProject().getId(), this);
     }
 
     /** {@inheritDoc} */
@@ -94,7 +94,9 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, JavaParserWo
         } else return;
         try {
             for (IProblem problem : problems.asIterable()) {
-                problemRequestor.acceptProblem(problem);
+                //TODO since we use qdox on server, we cant parse annotations, so skip errors, when we remove qdox, also remove this if
+                if(problem.getID() != IProblem.MissingValueForAnnotationMember)
+                  problemRequestor.acceptProblem(problem);
             }
         } catch (Exception e) {
             Log.error(getClass(), e);

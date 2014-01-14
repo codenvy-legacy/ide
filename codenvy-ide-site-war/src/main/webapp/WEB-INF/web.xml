@@ -25,16 +25,6 @@
 
     <display-name>site</display-name>
 
-    <servlet>
-        <servlet-name>EverrestServlet</servlet-name>
-        <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>EverrestServlet</servlet-name>
-        <url-pattern>/rest/*</url-pattern>
-    </servlet-mapping>
-
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>site</web-resource-name>
@@ -50,7 +40,7 @@
 
     <login-config>
         <auth-method>FORM</auth-method>
-        <realm-name>exo-domain</realm-name>
+        <realm-name>codenvy</realm-name>
         <form-login-config>
             <form-login-page>/login.jsp</form-login-page>
             <form-error-page>/error.jsp</form-error-page>

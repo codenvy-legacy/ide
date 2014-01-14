@@ -45,9 +45,6 @@ public class NativeGitDiffPage extends DiffPage {
         this.nativeGit = nativeGit;
     }
 
-    /**
-     * @see org.exoplatform.ide.git.server.DiffPage#writeTo(java.io.OutputStream)
-     */
     @Override
     public void writeTo(OutputStream out) throws IOException {
         try (PrintWriter outWriter = new PrintWriter(out);){

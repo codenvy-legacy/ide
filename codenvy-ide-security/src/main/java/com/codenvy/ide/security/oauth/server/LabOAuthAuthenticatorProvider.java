@@ -25,10 +25,10 @@ import com.google.api.client.auth.oauth2.MemoryCredentialStore;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.json.jackson.JacksonFactory;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /** Grub all implementations of OAuthAuthenticator from eXo container. */
+@Singleton
 public class LabOAuthAuthenticatorProvider implements OAuthAuthenticatorProvider {
 
     private static final Logger LOG = LoggerFactory.getLogger(LabOAuthAuthenticatorProvider.class);
@@ -55,8 +56,6 @@ public class LabOAuthAuthenticatorProvider implements OAuthAuthenticatorProvider
 
         authenticators.put(gitHubOAuthAuthenticator.getOAuthProvider(), gitHubOAuthAuthenticator);
         authenticators.put(googleOAuthAuthenticator.getOAuthProvider(), googleOAuthAuthenticator);
-
-
     }
 
     @Override

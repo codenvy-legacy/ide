@@ -35,7 +35,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -43,10 +42,9 @@ import java.util.Map;
 /**
  * REST service to get the list of repositories from GitHub (where sample projects are located).
  * 
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: GithubSamplesService.java Aug 29, 2011 9:59:02 AM vereshchaka $
+ * @author Oksana Vereshchaka
  */
-@Path("{ws-name}/github")
+@Path("github/{ws-name}")
 public class GitHubService {
     @Inject
     OAuthTokenProvider oauthTokenProvider;

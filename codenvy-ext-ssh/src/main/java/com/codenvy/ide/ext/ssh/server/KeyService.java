@@ -25,6 +25,7 @@ import com.codenvy.ide.ext.ssh.dto.PublicKey;
 import org.apache.commons.fileupload.FileItem;
 
 import javax.annotation.security.RolesAllowed;
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -38,7 +39,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -47,17 +47,17 @@ import java.util.Set;
 
 /**
  * REST interface to SshKeyProvider.
- * 
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: $
+ *
+ * @author andrew00x
  */
-@Path("{ws-name}/ssh-keys")
+@Path("ssh-keys/{ws-name}")
 public class KeyService {
     private final SshKeyStore keyStore;
-    
-    @PathParam("ws-name")
-    private String wsName; 
 
+    @PathParam("ws-name")
+    private String wsName;
+
+    @Inject
     public KeyService(SshKeyStore keyStore) {
         this.keyStore = keyStore;
     }
@@ -100,22 +100,20 @@ public class KeyService {
         }
         // Return error response in <pre> HTML tag.
         if (key == null) {
-            throw new WebApplicationException(Response.ok("<pre>Can't find input file.</pre>", MediaType.TEXT_HTML)
-                                                      .build());
+            throw new WebApplicationException(Response.ok("<pre>Can't find input file.</pre>", MediaType.TEXT_HTML).build());
         }
 
         try {
             keyStore.addPrivateKey(host, key);
         } catch (SshKeyStoreException e) {
-            throw new WebApplicationException(Response.ok("<pre>" + e.getMessage() + "</pre>", MediaType.TEXT_HTML)
-                                                      .build());
+            throw new WebApplicationException(Response.ok("<pre>" + e.getMessage() + "</pre>", MediaType.TEXT_HTML).build());
         }
         return Response.ok("", MediaType.TEXT_HTML).build();
     }
 
     /**
      * Get public key.
-     * 
+     *
      * @see {@link SshKeyStore#genKeyPair(String, String, String)}
      * @see {@link SshKeyStore#getPublicKey(String)}
      */
@@ -144,8 +142,9 @@ public class KeyService {
                                                       .type(MediaType.TEXT_PLAIN) //
                                                       .build());
         }
-        
-        return Response.ok(DtoFactory.getInstance().createDto(PublicKey.class).withHost(host).withKey(new String(publicKey.getBytes())), MediaType.APPLICATION_JSON).build();
+
+        return Response.ok(DtoFactory.getInstance().createDto(PublicKey.class).withHost(host).withKey(new String(publicKey.getBytes())),
+                           MediaType.APPLICATION_JSON).build();
     }
 
     /** Remove SSH keys. */
@@ -178,13 +177,13 @@ public class KeyService {
                     String getPublicKeyUrl = null;
                     if (publicKeyExists) {
                         getPublicKeyUrl =
-                                          uriInfo.getBaseUriBuilder().path(getClass()).queryParam("host", host).build(wsName).toString();
+                                uriInfo.getBaseUriBuilder().path(getClass()).queryParam("host", host).build(wsName).toString();
                     }
                     String removeKeysUrl =
                             uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "removeKeys").queryParam("host", host)
                                    .build(wsName).toString();
-                    ;
-                    result.add(DtoFactory.getInstance().createDto(KeyItem.class).withHost(host).withPublicKeyUrl(getPublicKeyUrl).withRemoteKeyUrl(removeKeysUrl));
+                    result.add(DtoFactory.getInstance().createDto(KeyItem.class).withHost(host).withPublicKeyUrl(getPublicKeyUrl)
+                                         .withRemoteKeyUrl(removeKeysUrl));
                 }
                 return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
             }

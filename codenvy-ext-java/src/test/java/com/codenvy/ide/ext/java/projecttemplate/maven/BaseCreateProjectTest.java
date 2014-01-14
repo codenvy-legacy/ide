@@ -25,7 +25,6 @@ import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenProjectClientService;
-import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenProjectClientService;
 import com.codenvy.ide.resources.model.Project;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 

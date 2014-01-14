@@ -22,7 +22,23 @@ import com.codenvy.ide.api.parts.WelcomePart;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.ext.git.client.action.*;
+import com.codenvy.ide.ext.git.client.action.AddToIndexAction;
+import com.codenvy.ide.ext.git.client.action.CloneRepositoryAction;
+import com.codenvy.ide.ext.git.client.action.CommitAction;
+import com.codenvy.ide.ext.git.client.action.DeleteRepositoryAction;
+import com.codenvy.ide.ext.git.client.action.FetchAction;
+import com.codenvy.ide.ext.git.client.action.HistoryAction;
+import com.codenvy.ide.ext.git.client.action.InitRepositoryAction;
+import com.codenvy.ide.ext.git.client.action.PullAction;
+import com.codenvy.ide.ext.git.client.action.PushAction;
+import com.codenvy.ide.ext.git.client.action.RemoveFromIndexAction;
+import com.codenvy.ide.ext.git.client.action.ResetFilesAction;
+import com.codenvy.ide.ext.git.client.action.ResetToCommitAction;
+import com.codenvy.ide.ext.git.client.action.ShowBranchesAction;
+import com.codenvy.ide.ext.git.client.action.ShowGitUrlAction;
+import com.codenvy.ide.ext.git.client.action.ShowMergeAction;
+import com.codenvy.ide.ext.git.client.action.ShowRemoteAction;
+import com.codenvy.ide.ext.git.client.action.ShowStatusAction;
 import com.codenvy.ide.ext.git.client.welcome.CloneProjectAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -37,7 +53,7 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_WINDOW;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-@Extension(title = "Git Support.", version = "3.0.0")
+@Extension(title = "Git", version = "3.0.0")
 public class GitExtension {
     public static final String GIT_REPOSITORY_PROP        = "isGitRepository";
     public static final String GIT_GROUP_MAIN_MENU        = "Git";

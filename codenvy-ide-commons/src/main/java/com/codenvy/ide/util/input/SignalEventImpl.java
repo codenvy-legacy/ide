@@ -17,8 +17,8 @@
 package com.codenvy.ide.util.input;
 
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringSet;
 import com.codenvy.ide.collections.Jso;
+import com.codenvy.ide.collections.StringSet;
 import com.codenvy.ide.util.browser.QuirksConstants;
 import com.codenvy.ide.util.browser.UserAgent;
 import com.codenvy.ide.util.input.SignalKeyLogic.OperatingSystem;

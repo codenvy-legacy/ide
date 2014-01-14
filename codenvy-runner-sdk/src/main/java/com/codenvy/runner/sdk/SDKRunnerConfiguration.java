@@ -17,33 +17,33 @@
  */
 package com.codenvy.runner.sdk;
 
-import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.dto.RunRequest;
-
-import java.util.List;
 
 /**
  * Configuration of Codenvy extensions runner.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @author Artem Zatsarynnyy
  */
 public class SDKRunnerConfiguration extends RunnerConfiguration {
-    private final String  server;
-    private final boolean suspend;
-    private final String  transport;
+    private final String server;
     /** Specifies the domain name or IP address of the code server. */
-    private final String  codeServerBindAddress;
+    private final String codeServerBindAddress;
     /** Specifies the HTTP port for the code server. */
-    private final int     codeServerPort;
+    private final int    codeServerPort;
+    private final int    httpPort;
 
-    public SDKRunnerConfiguration(String server, int httpPort, int memory, int debugPort, boolean suspend,
-                                  String transport, String codeServerBindAddress, int codeServerPort, List<Link> links,
+    private String debugTransport;
+
+    public SDKRunnerConfiguration(String server,
+                                  int memory,
+                                  int httpPort,
+                                  String codeServerBindAddress,
+                                  int codeServerPort,
                                   RunRequest runRequest) {
-        super(memory, httpPort, debugPort, links, runRequest);
+        super(memory, runRequest);
         this.server = server;
-        this.suspend = suspend;
-        this.transport = transport;
+        this.httpPort = httpPort;
         this.codeServerBindAddress = codeServerBindAddress;
         this.codeServerPort = codeServerPort;
     }
@@ -52,12 +52,8 @@ public class SDKRunnerConfiguration extends RunnerConfiguration {
         return server;
     }
 
-    public boolean isDebugSuspend() {
-        return suspend;
-    }
-
-    public String getDebugTransport() {
-        return transport;
+    public int getHttpPort() {
+        return httpPort;
     }
 
     public String getCodeServerBindAddress() {
@@ -68,18 +64,26 @@ public class SDKRunnerConfiguration extends RunnerConfiguration {
         return codeServerPort;
     }
 
+    public String getDebugTransport() {
+        return debugTransport;
+    }
+
+    public void setDebugTransport(String debugTransport) {
+        this.debugTransport = debugTransport;
+    }
+
     @Override
     public String toString() {
-        return "RunnerConfiguration{" +
-               "server=" + server +
-               ", memory=" + getMemory() +
-               ", port=" + getPort() +
-               ", debugPort=" + getDebugPort() +
-               ", debugSuspend=" + suspend +
-               ", debugTransport=" + transport +
-               ", codeServerBindAddress=" + getCodeServerBindAddress() +
-               ", codeServerPort=" + getCodeServerPort() +
+        return "SDKRunnerConfiguration{" +
+               "memory=" + getMemory() +
+               ", codeServerPort=" + codeServerPort +
+               ", codeServerBindAddress='" + codeServerBindAddress + '\'' +
+               ", links=" + getLinks() +
                ", request=" + getRequest() +
+               ", debugHost='" + getDebugHost() + '\'' +
+               ", debugPort=" + getDebugPort() +
+               ", debugSuspend=" + isDebugSuspend() +
+               ", server='" + server + '\'' +
                '}';
     }
 }

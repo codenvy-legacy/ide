@@ -17,35 +17,63 @@
  */
 package com.codenvy.runner.webapps;
 
-import com.codenvy.api.core.util.ComponentLoader;
+import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.api.runner.RunnerException;
-import com.codenvy.api.runner.internal.*;
+import com.codenvy.api.runner.internal.ApplicationProcess;
+import com.codenvy.api.runner.internal.DeploymentSources;
+import com.codenvy.api.runner.internal.Disposer;
+import com.codenvy.api.runner.internal.ResourceAllocators;
+import com.codenvy.api.runner.internal.Runner;
+import com.codenvy.api.runner.internal.RunnerConfiguration;
+import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
+import com.codenvy.api.runner.internal.dto.DebugMode;
 import com.codenvy.api.runner.internal.dto.RunRequest;
 import com.codenvy.commons.lang.IoUtil;
+import com.codenvy.dto.server.DtoFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Runner implementation to run Java web applications by deploying it to application server.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @author Artem Zatsarynnyy
  */
+@Singleton
 public class DeployToApplicationServerRunner extends Runner {
-    public static final  String DEFAULT_SERVER_NAME      = "Tomcat";
-    public static final  String DEBUG_TRANSPORT_PROTOCOL = "dt_socket";
-    private static final Logger LOG                      =
-            LoggerFactory.getLogger(DeployToApplicationServerRunner.class);
-    private final Map<String, ApplicationServer> applicationServers;
+    private static final Logger LOG = LoggerFactory.getLogger(DeployToApplicationServerRunner.class);
 
-    public DeployToApplicationServerRunner() {
-        applicationServers = new HashMap<>();
+    public static final String DEFAULT_SERVER_NAME      = "Tomcat";
+    public static final String DEBUG_TRANSPORT_PROTOCOL = "dt_socket";
+
+    private final Map<String, ApplicationServer> servers;
+    private final String                         hostName;
+    private final CustomPortService              portService;
+
+    @Inject
+    public DeployToApplicationServerRunner(@Named(DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
+                                           @Named(CLEANUP_DELAY_TIME) int cleanupDelay,
+                                           @Named("runner.java_webapp.host_name") String hostName,
+                                           ResourceAllocators allocators,
+                                           CustomPortService portService,
+                                           Set<ApplicationServer> serverSet) {
+        super(deployDirectoryRoot, cleanupDelay, allocators);
+        this.hostName = hostName;
+        this.portService = portService;
+        this.servers = new HashMap<>();
+        for (ApplicationServer server : serverSet) {
+            this.servers.put(server.getName(), server);
+        }
     }
 
     @Override
@@ -55,15 +83,7 @@ public class DeployToApplicationServerRunner extends Runner {
 
     @Override
     public String getDescription() {
-        return "Java Web Applications Runner";
-    }
-
-    @Override
-    public void start() {
-        super.start();
-        for (ApplicationServer server : ComponentLoader.all(ApplicationServer.class)) {
-            applicationServers.put(server.getName(), server);
-        }
+        return "Deploy to application server runner";
     }
 
     @Override
@@ -71,10 +91,19 @@ public class DeployToApplicationServerRunner extends Runner {
         return new RunnerConfigurationFactory() {
             @Override
             public RunnerConfiguration createRunnerConfiguration(RunRequest request) throws RunnerException {
-                return new ApplicationServerRunnerConfiguration(DEFAULT_SERVER_NAME,
-                                                                CustomPortService.getInstance().acquire(),
-                                                                request.getMemorySize(), -1, false,
-                                                                DEBUG_TRANSPORT_PROTOCOL, request);
+                final int httpPort = portService.acquire();
+                final ApplicationServerRunnerConfiguration configuration =
+                        new ApplicationServerRunnerConfiguration(DEFAULT_SERVER_NAME, request.getMemorySize(), httpPort, request);
+                configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class).withRel("web url")
+                                                       .withHref(String.format("http://%s:%d", hostName, httpPort)));
+                final DebugMode debugMode = request.getDebugMode();
+                if (debugMode != null) {
+                    configuration.setDebugHost(hostName);
+                    configuration.setDebugPort(portService.acquire());
+                    configuration.setDebugTransport(DEBUG_TRANSPORT_PROTOCOL);
+                    configuration.setDebugSuspend("suspend".equals(debugMode.getMode()));
+                }
+                return configuration;
             }
         };
     }
@@ -83,18 +112,15 @@ public class DeployToApplicationServerRunner extends Runner {
     protected ApplicationProcess newApplicationProcess(final DeploymentSources toDeploy,
                                                        final RunnerConfiguration configuration) throws RunnerException {
         // It always should be ApplicationServerRunnerConfiguration.
-        final ApplicationServerRunnerConfiguration webAppsRunnerCfg =
-                (ApplicationServerRunnerConfiguration)configuration;
-        final ApplicationServer server = applicationServers.get(webAppsRunnerCfg.getServer());
+        final ApplicationServerRunnerConfiguration webAppsRunnerCfg = (ApplicationServerRunnerConfiguration)configuration;
+        final ApplicationServer server = servers.get(webAppsRunnerCfg.getServer());
         if (server == null) {
             throw new RunnerException(String.format("Server %s not found", webAppsRunnerCfg.getServer()));
         }
 
         final java.io.File appDir;
         try {
-            appDir =
-                    Files.createTempDirectory(getDeployDirectory().toPath(), (server.getName() + "_" + getName() + '_'))
-                         .toFile();
+            appDir = Files.createTempDirectory(getDeployDirectory().toPath(), (server.getName() + '_' + getName() + '_')).toFile();
         } catch (IOException e) {
             throw new RunnerException(e);
         }
@@ -103,10 +129,10 @@ public class DeployToApplicationServerRunner extends Runner {
                 server.deploy(appDir, toDeploy, webAppsRunnerCfg, new ApplicationServer.StopCallback() {
                     @Override
                     public void stopped() {
-                        CustomPortService.getInstance().release(webAppsRunnerCfg.getPort());
+                        portService.release(webAppsRunnerCfg.getHttpPort());
                         final int debugPort = webAppsRunnerCfg.getDebugPort();
                         if (debugPort > 0) {
-                            CustomPortService.getInstance().release(debugPort);
+                            portService.release(debugPort);
                         }
                     }
                 });

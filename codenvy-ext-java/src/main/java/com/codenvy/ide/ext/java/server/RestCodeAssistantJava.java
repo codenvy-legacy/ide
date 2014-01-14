@@ -28,8 +28,6 @@ import com.codenvy.api.vfs.server.VirtualFileSystem;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.dto.DtoServerImpls;
 import com.codenvy.api.vfs.server.exceptions.InvalidArgumentException;
-import com.codenvy.api.vfs.server.exceptions.ItemNotFoundException;
-import com.codenvy.api.vfs.server.exceptions.PermissionDeniedException;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.shared.ItemType;
 import com.codenvy.api.vfs.shared.PropertyFilter;
@@ -39,8 +37,6 @@ import com.codenvy.api.vfs.shared.dto.Project;
 import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.builder.maven.dto.MavenDependency;
 import com.codenvy.dto.server.DtoFactory;
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.ext.java.shared.BuildStatusBean;
 import com.codenvy.ide.ext.java.shared.JavaType;
 import com.codenvy.ide.ext.java.shared.TypeInfo;
@@ -49,15 +45,26 @@ import com.codenvy.ide.ext.java.shared.TypesList;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
@@ -72,10 +79,9 @@ import java.util.List;
  * greatly simplified by the regular structure of the programming languages. At current moment implemented the search class FQN,
  * by Simple Class Name and a prefix (the lead characters in the name of the package or class).
  *
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: RestCodeAssistantJava Mar 30, 2011 10:40:38 AM evgen $
+ * @author Evgen Vidolob
  */
-@Path("{ws-name}/code-assistant/java")
+@Path("code-assistant-java/{ws-name}")
 public class RestCodeAssistantJava {
 
     @PathParam("ws-name")
@@ -88,7 +94,7 @@ public class RestCodeAssistantJava {
     private CodeAssistantStorageClient storageClient;
 
     /** Logger. */
-    private static final Log LOG = ExoLogger.getLogger(RestCodeAssistantJava.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RestCodeAssistantJava.class);
 
     /**
      * Returns the Class object associated with the class or interface with the given string name.
@@ -120,8 +126,7 @@ public class RestCodeAssistantJava {
     @Produces(MediaType.APPLICATION_JSON)
     public List<TypeInfo> getTypesByNamePrefix(@QueryParam("prefix") String namePrefix,
                                                @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId)
-            throws CodeAssistantException,
-                   VirtualFileSystemException {
+            throws CodeAssistantException, VirtualFileSystemException {
         List<TypeInfo> infos = codeAssistant.getTypeInfoByNamePrefix(namePrefix, projectId, vfsId);
 
         if (infos != null)
@@ -149,8 +154,7 @@ public class RestCodeAssistantJava {
     @Produces(MediaType.APPLICATION_JSON)
     public TypesList findFQNsByPrefix(@PathParam("prefix") String prefix, @QueryParam("where") String where,
                                       @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId)
-            throws CodeAssistantException,
-                   VirtualFileSystemException {
+            throws CodeAssistantException, VirtualFileSystemException {
         if (projectId == null)
             throw new InvalidArgumentException("'projectid' parameter is null.");
         TypesList typesList = DtoFactory.getInstance().createDto(TypesList.class);
@@ -178,8 +182,8 @@ public class RestCodeAssistantJava {
     @Path("/find-by-type/{type}")
     @Produces(MediaType.APPLICATION_JSON)
     public TypesList findByType(@PathParam("type") String type, @QueryParam("prefix") String prefix,
-                                @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId) throws CodeAssistantException,
-                                                                                                                     VirtualFileSystemException {
+                                @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId)
+            throws CodeAssistantException, VirtualFileSystemException {
         if (projectId == null)
             throw new InvalidArgumentException("'projectid' parameter is null.");
         TypesList typesList = DtoFactory.getInstance().createDto(TypesList.class);
@@ -212,57 +216,6 @@ public class RestCodeAssistantJava {
     }
 
     /**
-     * Find all classes in package
-     *
-     * @param fileId
-     *         current file id (editing class)
-     * @param vfsId
-     *         id of virtual file system
-     * @param projectId
-     * @return
-     * @throws CodeAssistantException
-     * @throws VirtualFileSystemException
-     */
-    @GET
-    @Path("/find-in-package")
-    @Produces(MediaType.APPLICATION_JSON)
-    public TypesList findClassesInPackage(@QueryParam("fileid") String fileId, @QueryParam("vfsid") String vfsId,
-                                          @QueryParam("projectid") String projectId)
-            throws CodeAssistantException, VirtualFileSystemException {
-        if (projectId == null)
-            throw new InvalidArgumentException("'projectid' parameter is null.");
-        TypesList typesList = DtoFactory.getInstance().createDto(TypesList.class);
-        typesList.setTypes(codeAssistant.getClassesFromProject(fileId, projectId, vfsId));
-        return typesList;
-    }
-
-    /**
-     * Get List of Type info by array of FQNs
-     *
-     * @param vfsId
-     * @param projectId
-     * @param fqns
-     *         for types
-     * @return List of types info
-     * @throws CodeAssistantException
-     * @throws VirtualFileSystemException
-     */
-    @POST
-    @Path("/types-by-fqns")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public List<TypeInfo> getTypesDescriptionsList(@QueryParam("vfsid") String vfsId,
-                                                   @QueryParam("projectid") String projectId, String[] fqns) throws CodeAssistantException,
-                                                                                                                    VirtualFileSystemException {
-        List<TypeInfo> types = new ArrayList<TypeInfo>();
-        for (String fqn : fqns) {
-            types.add(codeAssistant.getClassByFQN(fqn, projectId, vfsId));
-        }
-
-        return types;
-    }
-
-    /**
      * Get list of package names
      *
      * @param vfsId
@@ -284,17 +237,6 @@ public class RestCodeAssistantJava {
 
     /** Get list of all package names in project */
     @GET
-    @Path("/get-packages")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<String> getAllPackages(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId)
-            throws CodeAssistantException, VirtualFileSystemException {
-        if (projectId == null)
-            throw new InvalidArgumentException("'projectid' parameter is null.");
-        return codeAssistant.getAllPackages(projectId, vfsId);
-    }
-
-    /** Get list of all package names in project */
-    @GET
     @Path("/update-dependencies")
     @Produces(MediaType.APPLICATION_JSON)
     public List<String> updateDependency(@QueryParam("vfsid") String vfsId,
@@ -311,22 +253,22 @@ public class RestCodeAssistantJava {
             project = (Project)item;
             projectPath= project.getPath();
         } else {
-            LOG.warn("Getting item not a project ");
-            throw new CodeAssistantException(500, "Getting item not a project");
+            LOG.warn("Item not a project ");
+            throw new CodeAssistantException(500, "Item not a project");
         }
 
         if (!hasPom(vfs, projectId)){
-            LOG.warn("Don't has pom.xml in the child");
-            throw new CodeAssistantException(500, "Don't has pom.xml in the child");
+            LOG.warn("Doesn't have pom.xml file");
+            throw new CodeAssistantException(500, "Doesn't have pom.xml file");
         }
 
         URI uri = uriInfo.getBaseUri();
         String url = uri.getScheme() + "://" + uri.getHost();
         int port = uri.getPort();
-        if (port != 0 && port != 80) {
+        if (port > 0 && port != 80) {
             url += ":" + port;
         }
-        url += "/api" + "/" + wsName + "/";
+        url += "/api/rest/builder/" + wsName + "/dependencies"; //TODO: remove hardcode "api/rest"
         try {
             String jsonDependencies = null;
             List<MavenDependency> dependencies = null;
@@ -421,12 +363,7 @@ public class RestCodeAssistantJava {
         try {
             Pair<String, String> projectParam = Pair.of("project", projectName);
             Pair<String, String> typeParam = Pair.of("type", analyzeType);
-            buildStatus = HttpJsonHelper.request(BuildTaskDescriptor.class,
-                                                 url + "builder/dependencies",
-                                                 "POST",
-                                                 null,
-                                                 projectParam,
-                                                 typeParam);
+            buildStatus = HttpJsonHelper.request(BuildTaskDescriptor.class, url, "POST", null, projectParam, typeParam);
             buildStatus = waitTaskFinish(buildStatus);
         } catch (RemoteException | IOException e) {
             LOG.error("Error", e);
@@ -468,7 +405,7 @@ public class RestCodeAssistantJava {
         if (buildStatus != null) {
             Link logLink = findLink("view build log", buildStatus.getLinks());
             LOG.error("Build failed see more detail here: " + logLink.getHref());
-            throw new BuilderException("Build failed see more detail here: " + logLink.getHref());
+            throw new BuilderException("Build failed see more detail here: <a href=\"" + logLink.getHref() +"\" target=\"_blank\">" + logLink.getHref() + "</a>");
         }
         throw new BuilderException("Build failed");
     }

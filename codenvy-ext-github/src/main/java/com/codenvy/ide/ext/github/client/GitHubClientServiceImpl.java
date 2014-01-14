@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.github.client;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.ext.github.shared.Collaborators;
@@ -34,19 +33,19 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
  * Implementation for {@link GitHubClientService}.
  *
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: SamplesClientServiceImpl.java Sep 2, 2011 12:34:27 PM vereshchaka $
+ * @author Oksana Vereshchaka
  */
 @Singleton
 public class GitHubClientServiceImpl implements GitHubClientService {
-    private static final String BASE_URL      = '/' + Utils.getWorkspaceName() + "/github";
+    private static final String BASE_URL      = "/github/" + Utils.getWorkspaceName();
     private static final String LIST          = BASE_URL + "/list";
-    private static final String LIST_ACOUNT   = BASE_URL + "/list/account";
+    private static final String LIST_ACCOUNT  = BASE_URL + "/list/account";
     private static final String LIST_ORG      = BASE_URL + "/list/org";
     private static final String LIST_USER     = BASE_URL + "/list/user";
     private static final String LIST_ALL      = BASE_URL + "/list/available";
@@ -140,7 +139,7 @@ public class GitHubClientServiceImpl implements GitHubClientService {
     @Override
     public void getRepositoriesByAccount(String account, AsyncRequestCallback<GitHubRepositoryList> callback) throws RequestException {
         String params = (account != null) ? "?account=" + account : "";
-        String url = restServiceContext + LIST_ACOUNT;
+        String url = restServiceContext + LIST_ACCOUNT;
         AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader).send(callback);
     }
 

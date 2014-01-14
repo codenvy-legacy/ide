@@ -33,11 +33,13 @@ import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.wizard.NewResourceAgentImpl;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePagePresenter;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePageView;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.web.bindery.event.shared.EventBus;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,11 +48,21 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
-import static com.codenvy.ide.api.ui.wizard.newresource.NewResourceWizardKeys.*;
+import static com.codenvy.ide.api.ui.wizard.newresource.NewResourceWizardKeys.NEW_RESOURCE_PROVIDER;
+import static com.codenvy.ide.api.ui.wizard.newresource.NewResourceWizardKeys.PARENT;
+import static com.codenvy.ide.api.ui.wizard.newresource.NewResourceWizardKeys.PROJECT;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing {@link NewResourcePagePresenter} functionality.
@@ -84,6 +96,10 @@ public class NewResourcePagePresenterTest {
     @Mock
     private File                                           file;
     @Mock
+    private Loader                                         loader;
+    @Mock
+    private EventBus                                       eventBus;
+    @Mock
     private NewResourceProvider                            selectedResource;
     @Mock
     private WizardContext                                  wizardContext;
@@ -100,6 +116,7 @@ public class NewResourcePagePresenterTest {
         Resource child = mock(Resource.class);
         when(child.getName()).thenReturn(RESOURCE_NAME);
         when(project.getChildren()).thenReturn(Collections.createArray(child));
+        when(project.getPath()).thenReturn("/TestProject");
 
         when(file.isFile()).thenReturn(true);
         when(folder.isFile()).thenReturn(false);
@@ -110,7 +127,7 @@ public class NewResourcePagePresenterTest {
         when(resourceProvider.getActiveProject()).thenReturn(project);
 
         presenter =
-                new NewResourcePagePresenter(resources, constant, view, newResourceAgent, resourceProvider, selectionAgent, editorAgent);
+                new NewResourcePagePresenter(resources, constant, view, newResourceAgent, resourceProvider, selectionAgent, editorAgent, loader, eventBus);
         presenter.setContext(wizardContext);
         presenter.setUpdateDelegate(delegate);
     }

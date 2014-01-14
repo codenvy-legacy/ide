@@ -34,7 +34,7 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
  * @version $Id: BuilderExtension.java Feb 21, 2012 1:53:48 PM azatsarynnyy $
  */
 @Singleton
-@Extension(title = "Building project support.", version = "3.0.0")
+@Extension(title = "Building project", version = "3.0.0")
 public class BuilderExtension {
     public static final String PROJECT_BUILD_GROUP_MAIN_MENU   = "ProjectBuildGroup";
     /** Channel for the messages containing status of the Maven build job. */
@@ -44,11 +44,9 @@ public class BuilderExtension {
     /**
      * Create extension.
      *
-     * @param buildProjectPresenter
      */
     @Inject
-    public BuilderExtension(BuildProjectPresenter buildProjectPresenter,
-                            BuilderLocalizationConstant localizationConstants,
+    public BuilderExtension(BuilderLocalizationConstant localizationConstants,
                             ActionManager actionManager,
                             BuildAction buildAction) {
         // register actions

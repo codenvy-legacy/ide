@@ -53,7 +53,7 @@
                     <g:Label text="{locale.hostFieldTitle}"/>
                 </g:north>
                 <g:center>
-                    <g:TextBox width="342px" height="16px" ui:field="host"/>
+                    <g:TextBox width="342px" ui:field="host"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>

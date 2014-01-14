@@ -17,12 +17,10 @@
  */
 package com.codenvy.ide.ext.git.client.clone;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
@@ -39,6 +37,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
+
+import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
@@ -124,7 +124,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
 
                                           @Override
                                           protected void onFailure(Throwable exception) {
-                                              deleteFolder(project);
+                                              resourceProvider.showListProjects();
                                               handleError(exception, remoteUri);
 
                                           }
@@ -157,12 +157,12 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
 
                                         @Override
                                         protected void onFailure(Throwable exception) {
-                                            deleteFolder(project);
+                                            resourceProvider.showListProjects();
                                             handleError(exception, remoteUri);
                                         }
                                     });
         } catch (RequestException e) {
-            deleteFolder(project);
+            resourceProvider.showListProjects();
             handleError(e, remoteUri);
         }
     }
@@ -189,32 +189,12 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
     }
 
     /**
-     * Delete project.
-     *
-     * @param path
-     *         the path where project exist
-     */
-    private void deleteFolder(@NotNull Project path) {
-        resourceProvider.delete(path, new AsyncCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
-                // do nothing
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                eventBus.fireEvent(new ExceptionThrownEvent(caught, "Exception during project removing"));
-            }
-        });
-    }
-
-    /**
      * Handler some action whether some exception happened.
      *
      * @param e
      *         exception what happened
      * @param remoteUri
-     *         rempote uri
+     *         remote uri
      */
     private void handleError(@NotNull Throwable e, @NotNull String remoteUri) {
         String errorMessage =

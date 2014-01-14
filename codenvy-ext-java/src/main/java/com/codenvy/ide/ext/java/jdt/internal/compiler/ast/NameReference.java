@@ -10,7 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.internal.compiler.ast;
 
-import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.Binding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.FieldBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.InvocationSite;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.ReferenceBinding;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeBinding;
 
 public abstract class NameReference extends Reference implements InvocationSite {
 

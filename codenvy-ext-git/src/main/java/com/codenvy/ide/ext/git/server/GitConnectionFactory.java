@@ -22,18 +22,18 @@ import com.codenvy.ide.ext.git.shared.GitUser;
 
 import java.io.File;
 
-/**
- * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: GitConnectionFactory.java 22811 2011-03-22 07:28:35Z andrew00x $
- */
+/** @author andrew00x */
 public abstract class GitConnectionFactory {
     /**
      * Get connection to Git repository located in <code>workDir</code>.
      *
-     * @param workDir repository directory
-     * @param user user
+     * @param workDir
+     *         repository directory
+     * @param user
+     *         user
      * @return connection to Git repository
-     * @throws GitException if can't initialize connection
+     * @throws GitException
+     *         if can't initialize connection
      */
     public final GitConnection getConnection(String workDir, GitUser user) throws GitException {
         return getConnection(new File(workDir), user);
@@ -42,10 +42,13 @@ public abstract class GitConnectionFactory {
     /**
      * Get connection to Git repository located in <code>workDir</code>.
      *
-     * @param workDir repository directory
-     * @param user user
+     * @param workDir
+     *         repository directory
+     * @param user
+     *         user
      * @return connection to Git repository
-     * @throws GitException if can't initialize connection
+     * @throws GitException
+     *         if can't initialize connection
      */
     public abstract GitConnection getConnection(File workDir, GitUser user) throws GitException;
 }

@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.web.css.editor;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.text.Document;
@@ -26,6 +25,8 @@ import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.texteditor.api.parser.CmParser;
 import com.codenvy.ide.texteditor.api.parser.Parser;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The css css type editor configuration.

@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.ext.java.projecttemplate.maven;
 
-import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenWarProjectPage;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenWarProjectPage;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;

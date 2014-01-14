@@ -17,9 +17,10 @@
  */
 package com.codenvy.ide.api.editor;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * CodenvyTextEditor is an embedded default fully featured Text Editor

@@ -17,8 +17,6 @@
  */
 package com.codenvy.ide.ext.git.client;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.Commiters;
 import com.codenvy.ide.ext.git.shared.DiffRequest;
@@ -30,6 +28,8 @@ import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**

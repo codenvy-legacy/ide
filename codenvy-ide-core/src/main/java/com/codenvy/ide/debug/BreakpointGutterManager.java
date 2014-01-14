@@ -206,13 +206,13 @@ public class BreakpointGutterManager {
     }
 
     /** @return all breakpoints. */
-    public List<Breakpoint> getBreakPoints() {
-        final List<Breakpoint> points = new ArrayList<Breakpoint>(breakPoints.size());
+    public Array<Breakpoint> getBreakPoints() {
+        final Array<Breakpoint> points = Collections.<Breakpoint>createArray();
 
         breakPoints.iterate(new StringMap.IterationCallback<Array<Breakpoint>>() {
             @Override
             public void onIteration(String key, Array<Breakpoint> value) {
-                points.addAll((Collection<? extends Breakpoint>)value);
+                points.addAll(value);
             }
         });
 

@@ -23,8 +23,6 @@ import com.codenvy.ide.ext.java.client.editor.JavaParserWorkerImpl;
 import com.codenvy.ide.ext.java.client.projecttemplate.ant.CreateAntProjectClientService;
 import com.codenvy.ide.ext.java.client.projecttemplate.ant.CreateAntProjectClientServiceImpl;
 import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenProjectClientService;
-import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenProjectClientService;
-import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenProjectClientServiceImpl;
 import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenProjectClientServiceImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;

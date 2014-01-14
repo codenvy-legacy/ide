@@ -18,14 +18,15 @@
 package com.codenvy.ide.ext.java.client.editor;
 
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
+import com.codenvy.ide.ext.java.messages.ProblemLocationMessage;
 import com.codenvy.ide.ext.java.messages.ProposalAppliedMessage;
 import com.codenvy.ide.ext.java.messages.WorkerProposal;
 import com.codenvy.ide.ext.java.messages.impl.WorkerCodeBlock;
 
 /**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Evgen Vidolob
  */
 public interface JavaParserWorker {
 
@@ -37,11 +38,17 @@ public interface JavaParserWorker {
         void onApply(ProposalAppliedMessage message);
     }
 
-    void parse(String content, String fileName, String fileId, String packageName, WorkerCallback<IProblem> callback);
+    void parse(String content, String fileName, String fileId, String packageName, String projectId, WorkerCallback<IProblem> callback);
 
-    void computeCAProposals(String content, int offset, String fileName, WorkerCallback<WorkerProposal> callback);
+    void computeCAProposals(String content, int offset, String fileName,String projectId, WorkerCallback<WorkerProposal> callback);
 
     void applyCAProposal(String id, ApplyCallback callback);
 
     void addOutlineUpdateHandler(String fileId, WorkerCallback<WorkerCodeBlock> callback);
+
+    void computeQAProposals(String content, int offset, int selectionLength, boolean updatedContent,
+                            JsoArray<ProblemLocationMessage> problems,
+                            WorkerCallback<WorkerProposal> callback);
+
+    void removeFanFromCache(String fqn);
 }

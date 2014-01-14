@@ -17,69 +17,58 @@
  */
 package com.codenvy.ide.ext.ssh.client;
 
-import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.MimeType;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.ssh.dto.GenKeyRequest;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
-import com.codenvy.ide.MimeType;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.Utils;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.jsonp.client.JsonpRequestBuilder;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * The implementation of {@link SshKeyService}.
  *
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: SshService May 18, 2011 4:49:49 PM evgen $
+ * @author Evgen Vidolob
  */
 @Singleton
 public class SshKeyServiceImpl implements SshKeyService {
     private final String                    restContext;
     private final Loader                    loader;
-    private final String                    wsName;
     private final DtoFactory                dtoFactory;
-    private       StringMap<SshKeyProvider> sshKeyProviders;
+    private final StringMap<SshKeyProvider> sshKeyProviders;
 
-    /**
-     * Create service.
-     *
-     * @param restContext
-     * @param loader
-     */
     @Inject
     protected SshKeyServiceImpl(@Named("restContext") String restContext, Loader loader, DtoFactory dtoFactory) {
         this.restContext = restContext;
         this.loader = loader;
-        this.wsName = '/' + Utils.getWorkspaceName();
         this.dtoFactory = dtoFactory;
         this.sshKeyProviders = Collections.createStringMap();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void getAllKeys(@NotNull AsyncCallback<JavaScriptObject> callback) {
-        JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
+    public void getAllKeys(@NotNull AsyncRequestCallback<JavaScriptObject> callback) throws RequestException {
         loader.setMessage("Getting SSH keys....");
         loader.show();
-        jsonp.requestObject(restContext + wsName + "/ssh-keys/all", callback);
+        AsyncRequest.build(RequestBuilder.GET, restContext + "/ssh-keys/" + Utils.getWorkspaceName() + "/all").send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
     public void generateKey(@NotNull String host, @NotNull AsyncRequestCallback<GenKeyRequest> callback) throws RequestException {
-        String url = restContext + wsName + "/ssh-keys/gen";
+        String url = restContext + "/ssh-keys/" + Utils.getWorkspaceName() + "/gen";
 
         GenKeyRequest keyRequest = dtoFactory.createDto(GenKeyRequest.class).withHost(host);
 
@@ -90,20 +79,18 @@ public class SshKeyServiceImpl implements SshKeyService {
 
     /** {@inheritDoc} */
     @Override
-    public void getPublicKey(@NotNull KeyItem keyItem, @NotNull AsyncCallback<JavaScriptObject> callback) {
-        JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
+    public void getPublicKey(@NotNull KeyItem keyItem, @NotNull AsyncRequestCallback<JavaScriptObject> callback) throws RequestException {
         loader.setMessage("Getting public SSH key for " + keyItem.getHost());
         loader.show();
-        jsonp.requestObject(keyItem.getPublicKeyUrl(), callback);
+        AsyncRequest.build(RequestBuilder.GET, keyItem.getPublicKeyUrl()).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void deleteKey(@NotNull KeyItem keyItem, @NotNull AsyncCallback<Void> callback) {
-        JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
+    public void deleteKey(@NotNull KeyItem keyItem, @NotNull AsyncRequestCallback<Void> callback)  throws RequestException {
         loader.setMessage("Deleting SSH keys for " + keyItem.getHost());
         loader.show();
-        jsonp.send(keyItem.getRemoteKeyUrl(), callback);
+        AsyncRequest.build(RequestBuilder.GET, keyItem.getRemoteKeyUrl()).send(callback);
     }
 
     /** {@inheritDoc} */

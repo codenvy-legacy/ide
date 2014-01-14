@@ -25,35 +25,37 @@ import com.codenvy.api.vfs.server.exceptions.InvalidArgumentException;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.shared.PropertyFilter;
 import com.codenvy.api.vfs.shared.dto.Property;
-import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.maven.tools.MavenUtils;
 
 import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
-
-import static com.codenvy.ide.ext.extensions.server.CreateProjectApplication.BASE_URL;
 
 /**
  * Service for creating Codenvy extension projects.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: CreateProjectService.java Jul 3, 2013 3:21:23 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
-@Path("{ws-name}/extension/create")
+@Path("create-extension/{ws-name}")
 public class CreateProjectService {
-    private static final Log LOG = ExoLogger.getLogger(CreateProjectService.class);
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
+
+    @Inject
+    @Named("extension-url") // TODO(GUICE): better name ??
+    private String baseUrl;
 
     /**
      * Create sample Codenvy extension project.
@@ -84,28 +86,20 @@ public class CreateProjectService {
                                                     @QueryParam("artifactid") String artifactId,
                                                     @QueryParam("version") String version)
             throws VirtualFileSystemException, IOException {
-        createProject(vfsId, name, properties, BASE_URL + "/gist-extension.zip");
-
-        MavenXpp3Reader pomReader = new MavenXpp3Reader();
-        MavenXpp3Writer pomWriter = new MavenXpp3Writer();
-
+        createProject(vfsId, name, properties, baseUrl + "/gist-extension.zip");
         VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(vfsId);
         MountPoint mountPoint = vfsProvider.getMountPoint(false);
         VirtualFile pomFile = mountPoint.getVirtualFile(name + "/pom.xml");
-        InputStream pomContent = pomFile.getContent().getStream();
-
-        try {
-            Model pom = pomReader.read(pomContent, false);
-            pom.setGroupId(groupId);
-            pom.setArtifactId(artifactId);
-            pom.setVersion(version);
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            pomWriter.write(stream, pom);
-            pomFile.updateContent(pomFile.getMediaType(), new ByteArrayInputStream(stream.toByteArray()), null);
-        } catch (XmlPullParserException e) {
-            LOG.warn("Error occurred while setting project coordinates.", e);
-            throw new IllegalStateException(e.getMessage(), e);
+        Model pom;
+        try (InputStream pomContent = pomFile.getContent().getStream()) {
+            pom = MavenUtils.readModel(pomContent);
         }
+        pom.setGroupId(groupId);
+        pom.setArtifactId(artifactId);
+        pom.setVersion(version);
+        ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+        MavenUtils.writeModel(pom, bOut);
+        pomFile.updateContent(pomFile.getMediaType(), new ByteArrayInputStream(bOut.toByteArray()), null);
     }
 
     private void createProject(@NotNull String vfsId,
@@ -115,13 +109,13 @@ public class CreateProjectService {
         if (templatePath == null || templatePath.isEmpty()) {
             throw new InvalidArgumentException("Can't find project template.");
         }
-
         VirtualFileSystemProvider provider = vfsRegistry.getProvider(vfsId);
         MountPoint mountPoint = provider.getMountPoint(false);
         VirtualFile root = mountPoint.getRoot();
         VirtualFile projectFolder = root.createFolder(name);
-        InputStream templateStream = new FileInputStream(new File(templatePath));
-        projectFolder.unzip(templateStream, true);
+        try (InputStream templateStream = new FileInputStream(new File(templatePath))) {
+            projectFolder.unzip(templateStream, true);
+        }
         updateProperties(properties, projectFolder);
     }
 

@@ -114,7 +114,6 @@ public class NativeGitConnection implements GitConnection {
         nativeGit = new NativeGit(repository);
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#add(com.codenvy.ide.ext.git.shared_.AddRequest) */
     @Override
     public void add(AddRequest request) throws GitException {
         AddCommand command = nativeGit.createAddCommand();
@@ -125,7 +124,6 @@ public class NativeGitConnection implements GitConnection {
         command.execute();
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#branchCheckout(com.codenvy.ide.ext.git.shared_.BranchCheckoutRequest) */
     @Override
     public void branchCheckout(BranchCheckoutRequest request) throws GitException {
         BranchCheckoutCommand command = nativeGit.createBranchCheckoutCommand();
@@ -149,7 +147,6 @@ public class NativeGitConnection implements GitConnection {
         command.setBranchName(request.getName()).execute();
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#branchCreate(com.codenvy.ide.ext.git.shared_.BranchCreateRequest) */
     @Override
     public Branch branchCreate(BranchCreateRequest request) throws GitException {
         BranchCreateCommand branchCreateCommand = nativeGit.createBranchCreateCommand();
@@ -159,7 +156,6 @@ public class NativeGitConnection implements GitConnection {
         return DtoFactory.getInstance().createDto(Branch.class).withName(getBranchRef(request.getName())).withActive(false).withDisplayName(request.getName()).withRemote(false);
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#branchDelete(com.codenvy.ide.ext.git.shared_.BranchDeleteRequest) */
     @Override
     public void branchDelete(BranchDeleteRequest request) throws GitException {
         //convert ref name to displayed name
@@ -173,13 +169,11 @@ public class NativeGitConnection implements GitConnection {
                            .execute();
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#branchRename(String oldName, String newName) */
     @Override
     public void branchRename(String oldName, String newName) throws GitException {
         nativeGit.createBranchRenameCommand().setNames(oldName, newName).execute();
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#branchList(com.codenvy.ide.ext.git.shared_.BranchListRequest) */
     @Override
     public List<Branch> branchList(BranchListRequest request) throws GitException {
         String listMode = request.getListMode();
@@ -200,7 +194,6 @@ public class NativeGitConnection implements GitConnection {
         return branches;
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#clone(com.codenvy.ide.ext.git.shared_.CloneRequest) */
     @Override
     public GitConnection clone(CloneRequest request) throws URISyntaxException, GitException {
         if (request.getWorkingDir() != null) {
@@ -230,7 +223,6 @@ public class NativeGitConnection implements GitConnection {
         return new NativeGitConnection(repository, user, keysManager, credentialsLoader);
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#commit(com.codenvy.ide.ext.git.shared_.CommitRequest) */
     @Override
     public Revision commit(CommitRequest request) throws GitException {
         nativeGit.createConfig().setUser(user).saveUser();
@@ -253,13 +245,11 @@ public class NativeGitConnection implements GitConnection {
         return revision;
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#diff(com.codenvy.ide.ext.git.shared_.DiffRequest) */
     @Override
     public DiffPage diff(DiffRequest request) throws GitException {
         return new NativeGitDiffPage(request, nativeGit);
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#fetch(com.codenvy.ide.ext.git.shared_.FetchRequest) */
     @Override
     public void fetch(FetchRequest request) throws GitException {
         FetchCommand fetchCommand;
@@ -288,7 +278,6 @@ public class NativeGitConnection implements GitConnection {
         executeWithCredentials(fetchCommand, url);
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#init(com.codenvy.ide.ext.git.shared_.InitRequest) */
     @Override
     public GitConnection init(InitRequest request) throws GitException {
         if (request.getWorkingDir() != null) {
@@ -324,13 +313,11 @@ public class NativeGitConnection implements GitConnection {
         return new NativeGitConnection(nativeGit.getRepository(), user, keysManager, credentialsLoader);
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#log(com.codenvy.ide.ext.git.shared_.LogRequest) */
     @Override
     public LogPage log(LogRequest request) throws GitException {
         return new LogPage(nativeGit.createLogCommand().execute());
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#merge(com.codenvy.ide.ext.git.shared_.MergeRequest) */
     @Override
     public MergeResult merge(MergeRequest request) throws GitException {
         if (getBranchRef(request.getCommit()) == null) {
@@ -339,7 +326,6 @@ public class NativeGitConnection implements GitConnection {
         return nativeGit.createMergeCommand().setCommit(request.getCommit()).execute();
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#mv(com.codenvy.ide.ext.git.shared_.MoveRequest) */
     @Override
     public void mv(MoveRequest request) throws GitException {
         nativeGit.createMoveCommand()
@@ -348,7 +334,6 @@ public class NativeGitConnection implements GitConnection {
                  .execute();
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#pull(com.codenvy.ide.ext.git.shared_.PullRequest) */
     @Override
     public void pull(PullRequest request) throws GitException {
         PullCommand pullCommand;
@@ -379,7 +364,6 @@ public class NativeGitConnection implements GitConnection {
         }
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#push(com.codenvy.ide.ext.git.shared_.PushRequest) */
     @Override
     public void push(PushRequest request) throws GitException {
         PushCommand pushCommand;
@@ -410,7 +394,6 @@ public class NativeGitConnection implements GitConnection {
         }
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#remoteAdd(com.codenvy.ide.ext.git.shared_.RemoteAddRequest) */
     @Override
     public void remoteAdd(RemoteAddRequest request) throws GitException {
         nativeGit.createRemoteAddCommand()
@@ -420,20 +403,17 @@ public class NativeGitConnection implements GitConnection {
                  .execute();
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#remoteDelete(java.lang.String) */
     @Override
     public void remoteDelete(String name) throws GitException {
         nativeGit.createRemoteDeleteCommand().setName(name).execute();
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#remoteList(com.codenvy.ide.ext.git.shared_.RemoteListRequest) */
     @Override
     public List<Remote> remoteList(RemoteListRequest request) throws GitException {
         RemoteListCommand remoteListCommand = nativeGit.createRemoteListCommand();
         return remoteListCommand.setRemoteName(request.getRemote()).execute();
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#remoteUpdate(com.codenvy.ide.ext.git.shared_.RemoteUpdateRequest) */
     @Override
     public void remoteUpdate(RemoteUpdateRequest request) throws GitException {
         nativeGit.createRemoteUpdateCommand()
@@ -447,7 +427,6 @@ public class NativeGitConnection implements GitConnection {
                  .execute();
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#reset(com.codenvy.ide.ext.git.shared_.ResetRequest) */
     @Override
     public void reset(ResetRequest request) throws GitException {
         nativeGit.createResetCommand()
@@ -456,19 +435,16 @@ public class NativeGitConnection implements GitConnection {
                  .execute();
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#rm(com.codenvy.ide.ext.git.shared_.RmRequest) */
     @Override
     public void rm(RmRequest request) throws GitException {
         nativeGit.createRemoveCommand().setListOfFiles(request.getFiles()).execute();
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#status(boolean) */
     @Override
     public Status status(boolean shortFormat) throws GitException {
         return new NativeGitStatusImpl(getCurrentBranch(), nativeGit, shortFormat);
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#tagCreate(com.codenvy.ide.ext.git.shared_.TagCreateRequest) */
     @Override
     public Tag tagCreate(TagCreateRequest request) throws GitException {
         return nativeGit.createTagCreateCommand().setName(request.getName())
@@ -478,25 +454,21 @@ public class NativeGitConnection implements GitConnection {
                         .execute();
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#tagDelete(com.codenvy.ide.ext.git.shared_.TagDeleteRequest) */
     @Override
     public void tagDelete(TagDeleteRequest request) throws GitException {
         nativeGit.createTagDeleteCommand().setName(request.getName()).execute();
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#tagList(com.codenvy.ide.ext.git.shared_.TagListRequest) */
     @Override
     public List<Tag> tagList(TagListRequest request) throws GitException {
         return nativeGit.createTagListCommand().setPattern(request.getPattern()).execute();
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#getUser() */
     @Override
     public GitUser getUser() {
         return user;
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#getCommiters() */
     @Override
     public List<GitUser> getCommiters() throws GitException {
         List<GitUser> users = new LinkedList<>();
@@ -507,7 +479,6 @@ public class NativeGitConnection implements GitConnection {
         return users;
     }
 
-    /** @see org.exoplatform.ide.git.server.GitConnection#close() */
     @Override
     public void close() {
         //do not need to do anything

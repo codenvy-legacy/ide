@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.ssh.client.upload;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
@@ -30,12 +29,14 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
+import javax.validation.constraints.NotNull;
+
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
  * Main appointment of this class is upload private SSH key to the server.
  *
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @author Evgen Vidolob
  */
 @Singleton
 public class UploadSshKeyPresenter implements UploadSshKeyView.ActionDelegate {
@@ -46,15 +47,6 @@ public class UploadSshKeyPresenter implements UploadSshKeyView.ActionDelegate {
     private ConsolePart             console;
     private NotificationManager     notificationManager;
 
-    /**
-     * Create presenter.
-     *
-     * @param view
-     * @param constant
-     * @param restContext
-     * @param eventBus
-     * @param notificationManager
-     */
     @Inject
     public UploadSshKeyPresenter(UploadSshKeyView view, SshLocalizationConstant constant, @Named("restContext") String restContext,
                                  EventBus eventBus, ConsolePart console, NotificationManager notificationManager) {
@@ -90,7 +82,7 @@ public class UploadSshKeyPresenter implements UploadSshKeyView.ActionDelegate {
             return;
         }
         view.setEncoding(FormPanel.ENCODING_MULTIPART);
-        view.setAction(restContext + '/' + Utils.getWorkspaceName() + "/ssh-keys/add?host=" + host);
+        view.setAction(restContext + "/ssh-keys/" + Utils.getWorkspaceName() + "/add?host=" + host);
         view.submit();
     }
 
@@ -101,7 +93,7 @@ public class UploadSshKeyPresenter implements UploadSshKeyView.ActionDelegate {
             UploadSshKeyPresenter.this.view.close();
         } else {
             if (result.startsWith("<pre>") && result.endsWith("</pre>")) {
-                result.substring(5, (result.length() - 6));
+                result = result.substring(5, (result.length() - 6));
             }
             eventBus.fireEvent(new ExceptionThrownEvent(result));
             console.print(result);

@@ -11,12 +11,22 @@
 package com.codenvy.ide.ext.java.jdt.core.dom.rewrite;
 
 import com.codenvy.ide.ext.java.jdt.core.JavaCore;
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.AST;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.Block;
+import com.codenvy.ide.ext.java.jdt.core.dom.ChildListPropertyDescriptor;
+import com.codenvy.ide.ext.java.jdt.core.dom.Comment;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.dom.StructuralPropertyDescriptor;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.parser.RecoveryScannerData;
-import com.codenvy.ide.ext.java.jdt.internal.core.dom.rewrite.*;
+import com.codenvy.ide.ext.java.jdt.internal.core.dom.rewrite.ASTRewriteAnalyzer;
+import com.codenvy.ide.ext.java.jdt.internal.core.dom.rewrite.LineInformation;
+import com.codenvy.ide.ext.java.jdt.internal.core.dom.rewrite.NodeInfoStore;
+import com.codenvy.ide.ext.java.jdt.internal.core.dom.rewrite.NodeRewriteEvent;
+import com.codenvy.ide.ext.java.jdt.internal.core.dom.rewrite.RewriteEventStore;
 import com.codenvy.ide.ext.java.jdt.internal.core.dom.rewrite.RewriteEventStore.CopySourceInfo;
 import com.codenvy.ide.ext.java.jdt.internal.core.dom.rewrite.RewriteEventStore.PropertyLocation;
-
+import com.codenvy.ide.ext.java.jdt.internal.core.dom.rewrite.TrackedNodePosition;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.TextUtilities;
 import com.codenvy.ide.text.edits.MultiTextEdit;

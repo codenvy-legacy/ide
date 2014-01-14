@@ -11,9 +11,18 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.internal.codeassist;
 
-import com.codenvy.ide.ext.java.jdt.core.*;
+import com.codenvy.ide.ext.java.jdt.core.CompletionContext;
+import com.codenvy.ide.ext.java.jdt.core.CompletionFlags;
+import com.codenvy.ide.ext.java.jdt.core.CompletionProposal;
+import com.codenvy.ide.ext.java.jdt.core.CompletionRequestor;
+import com.codenvy.ide.ext.java.jdt.core.Flags;
+import com.codenvy.ide.ext.java.jdt.core.Signature;
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.env.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryMethod;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryType;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.ICompilationUnit;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.NameEnvironmentAnswer;
 
 import java.util.Arrays;
 
@@ -188,7 +197,7 @@ public class InternalCompletionProposal extends CompletionProposal {
         } else {
             NameEnvironmentAnswer answer =
                     this.nameLookup.findType(declaringTypeName, CharOperation.splitOn('.', declaringTypePackageName));
-            if (answer.getBinaryType() != null) {
+            if (answer != null && answer.getBinaryType() != null) {
                 type = answer.getBinaryType();
                 this.completionEngine.typeCache.put(tName, type);
             } else {
@@ -372,7 +381,6 @@ public class InternalCompletionProposal extends CompletionProposal {
      * parameter to <code>ICodeAssist.codeComplete</code> minus one).
      *
      * @return character index in source file buffer
-     * @see ICodeAssist#codeComplete(int, CompletionRequestor)
      */
     // TODO (david) https://bugs.eclipse.org/bugs/show_bug.cgi?id=132558
     public int getCompletionLocation() {
@@ -609,8 +617,6 @@ public class InternalCompletionProposal extends CompletionProposal {
      * </p>
      *
      * @return a key, or <code>null</code> if none
-     * @see org.eclipse.jdt.core.dom.ASTParser#createASTs(ICompilationUnit[], String[], org.eclipse.jdt.core.dom.ASTRequestor,
-     *      IProgressMonitor)
      * @since 3.1
      */
     public char[] getDeclarationKey() {
@@ -741,8 +747,6 @@ public class InternalCompletionProposal extends CompletionProposal {
      * </p>
      *
      * @return the key, or <code>null</code> if none
-     * @see org.eclipse.jdt.core.dom.ASTParser#createASTs(ICompilationUnit[], String[], org.eclipse.jdt.core.dom.ASTRequestor,
-     *      IProgressMonitor)
      * @since 3.1
      */
     public char[] getKey() {

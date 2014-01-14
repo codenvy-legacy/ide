@@ -17,14 +17,16 @@
  */
 package com.codenvy.ide.api.notification;
 
-import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.api.ui.workspace.PartPresenter;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The manager for notifications. Used to show notifications and change their states.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public interface NotificationManager {
+public interface NotificationManager  extends PartPresenter{
     /**
      * Show notification.
      *

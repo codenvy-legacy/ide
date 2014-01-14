@@ -28,13 +28,19 @@ import com.codenvy.api.builder.internal.BuilderTaskType;
 import com.codenvy.api.builder.internal.DependencyCollector;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.api.core.util.CustomPortService;
-import com.codenvy.builder.tools.ant.AntBuildListener;
-import com.codenvy.builder.tools.ant.AntMessage;
+import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.dto.server.DtoFactory;
+import com.codenvy.ide.ant.tools.AntBuildListener;
+import com.codenvy.ide.ant.tools.AntMessage;
+import com.codenvy.ide.ant.tools.AntUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.io.EOFException;
 import java.io.FileFilter;
 import java.io.FileOutputStream;
@@ -46,6 +52,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -61,8 +68,9 @@ import java.util.zip.ZipOutputStream;
 /**
  * Builder based on Ant.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author andrew00x
  */
+@Singleton
 public class AntBuilder extends Builder {
     private static final Logger LOG = LoggerFactory.getLogger(AntBuilder.class);
 
@@ -71,8 +79,9 @@ public class AntBuilder extends Builder {
     private static final String BUILD_LISTENER_CLASS;
     private static final String BUILD_LISTENER_CLASS_PORT;
     private static final String BUILD_LISTENER_CLASS_PATH;
-    private static final String LINE_SEPARATOR      = System.getProperty("line.separator");
-    private static final String CLASSPATH_SEPARATOR = System.getProperty("path.separator");
+    private static final String LINE_SEPARATOR                     = System.getProperty("line.separator");
+    private static final String CLASSPATH_SEPARATOR                = System.getProperty("path.separator");
+    private static final String DEFAULT_JAR_WITH_DEPENDENCIES_NAME = "jar-with-dependencies.jar";
 
     private static interface AntEventFilter {
         boolean accept(AntEvent event);
@@ -99,9 +108,16 @@ public class AntBuilder extends Builder {
     }
 
     private final Map<Long, AntMessageServer> antMessageServers;
+    private final CustomPortService           portService;
 
-    public AntBuilder() {
-        super();
+    @Inject
+    public AntBuilder(@Named(REPOSITORY) java.io.File rootDirectory,
+                      @Named(NUMBER_OF_WORKERS) int numberOfWorkers,
+                      @Named(INTERNAL_QUEUE_SIZE) int queueSize,
+                      @Named(CLEAN_RESULT_DELAY_TIME) int cleanBuildResultDelay,
+                      CustomPortService portService) {
+        super(rootDirectory, numberOfWorkers, queueSize, cleanBuildResultDelay);
+        this.portService = portService;
         antMessageServers = new ConcurrentHashMap<>();
     }
 
@@ -117,7 +133,7 @@ public class AntBuilder extends Builder {
 
     @Override
     protected CommandLine createCommandLine(BuilderConfiguration config) {
-        final CommandLine commandLine = new CommandLine(antExecCommand());
+        final CommandLine commandLine = new CommandLine(AntUtils.getAntExecCommand());
         commandLine.add(config.getTargets());
         switch (config.getTaskType()) {
             case LIST_DEPS:
@@ -128,16 +144,6 @@ public class AntBuilder extends Builder {
         commandLine.add("-listener", BUILD_LISTENER_CLASS, "-lib", BUILD_LISTENER_CLASS_PATH);
         commandLine.add(config.getOptions());
         return commandLine;
-    }
-
-    private String antExecCommand() {
-        final java.io.File antHome = getAntHome();
-        if (antHome != null) {
-            final String ant = "bin" + java.io.File.separatorChar + "ant";
-            return new java.io.File(antHome, ant).getAbsolutePath(); // If ant home directory set use it
-        } else {
-            return "ant"; // otherwise 'ant' should be in PATH variable
-        }
     }
 
     @Override
@@ -180,6 +186,23 @@ public class AntBuilder extends Builder {
                         }
                     }
                 }
+                if (config.getRequest().isDeployJarWithDependencies()) {
+                    //get all needed dependencies from classpath
+                    final Set<java.io.File> classpath = new LinkedHashSet<>();
+                    for (AntEvent event : server.receiver.events) {
+                        if (event.isPack()) {
+                            classpath.add(event.getPack());
+                        } else if (event.isClasspath()) {
+                            Collections.addAll(classpath, event.getClasspath());
+                        }
+                    }
+                    java.io.File jarWithDependencies = new java.io.File(workDir, DEFAULT_JAR_WITH_DEPENDENCIES_NAME);
+                    try {
+                        ZipUtils.mergeArchives(jarWithDependencies, workDir, classpath.toArray(new java.io.File[classpath.size()]));
+                    } catch (IOException e) {
+                        throw new BuilderException("It is not possible to create jar with dependencies", e);
+                    }
+                }
                 return result;
             } else if (config.getTaskType() == BuilderTaskType.LIST_DEPS
                        || config.getTaskType() == BuilderTaskType.COPY_DEPS) {
@@ -220,6 +243,7 @@ public class AntBuilder extends Builder {
         throw new BuilderException("Failed to get build result.");
     }
 
+    @PostConstruct
     @Override
     public void start() {
         super.start();
@@ -232,25 +256,16 @@ public class AntBuilder extends Builder {
         // If nobody asked about build results AntMessageServer may be still in the Map.
         final AntMessageServer server = antMessageServers.remove(task.getId());
         if (server != null) {
-            CustomPortService.getInstance().release(server.port);
+            portService.release(server.port);
         }
     }
 
     private int getPort() {
-        final int port = CustomPortService.getInstance().acquire();
+        final int port = portService.acquire();
         if (port < 0) {
             throw new IllegalStateException("Cannot start build process, there are no free ports. ");
         }
         return port;
-    }
-
-    private java.io.File getAntHome() {
-        final String antHomeEnv = System.getenv("ANT_HOME");
-        if (antHomeEnv == null) {
-            return null;
-        }
-        java.io.File antHome = new java.io.File(antHomeEnv);
-        return antHome.exists() ? antHome : null;
     }
 
     /* Ant may add two tools.jar in classpath. It uses two JavaHome locations. One from java system property and one from OS environment
@@ -294,7 +309,7 @@ public class AntBuilder extends Builder {
     /* ~ */
 
     private FileFilter newSystemFileFilter() {
-        final java.io.File antHome = getAntHome();
+        final java.io.File antHome = AntUtils.getAntHome();
         final java.io.File javaHome = getJavaHome();
         final java.io.File javaHome2 = getJavaHome2();
         final Path antHomePath = antHome == null ? null : antHome.toPath();
@@ -381,7 +396,7 @@ public class AntBuilder extends Builder {
             final AntMessageServer server = antMessageServers.get(task.getId());
             if (server != null) {
                 server.stop = true; // force stop if server is not stopped yet
-                CustomPortService.getInstance().release(server.port);
+                portService.release(server.port);
             }
         }
     }

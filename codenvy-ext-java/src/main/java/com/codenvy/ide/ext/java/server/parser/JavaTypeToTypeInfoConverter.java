@@ -36,8 +36,8 @@ import com.thoughtworks.qdox.model.Type;
 import com.thoughtworks.qdox.model.TypeVariable;
 import com.thoughtworks.qdox.model.WildcardType;
 
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -45,10 +45,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}: Nov 29, 2011 9:54:16 AM evgen $
- */
+/** @author Evgen Vidolob */
 public class JavaTypeToTypeInfoConverter {
 
     public enum Modifier {
@@ -58,13 +55,13 @@ public class JavaTypeToTypeInfoConverter {
         PUBLIC(0x00000001),
         PROTECTED(0x00000004),
         ABSTRACT(
-            0x00000400),
+                0x00000400),
         STRICTFP(0x00000800),
         SYNCHRONIZED(0x00000020),
         THREADSAFE(0),
         TRANSIENT(0x00000080),
         VOLATILE(
-            0x00000040),
+                0x00000040),
         NATIVE(0x00000100);
         private final int mod;
 
@@ -81,7 +78,9 @@ public class JavaTypeToTypeInfoConverter {
 
     private static final int AccEnum = 0x4000;
 
-    private static final Log LOG = ExoLogger.getLogger(JavaTypeToTypeInfoConverter.class);
+    public static final int AccAnnotation = 0x2000;
+
+    private static final Logger LOG = LoggerFactory.getLogger(JavaTypeToTypeInfoConverter.class);
 
     private CodeAssistantStorage storage;
 
@@ -161,9 +160,7 @@ public class JavaTypeToTypeInfoConverter {
         return signature.length() == 0 ? null : signature.toString();
     }
 
-    /**
-     * @param typeVariables
-     */
+    /** @param typeVariables */
     private String createTypeParameters(TypeVariable[] typeVariables) {
         StringBuilder signature = new StringBuilder("<");
 
@@ -221,27 +218,28 @@ public class JavaTypeToTypeInfoConverter {
         for (Type t : clazz.getImplements()) {
             signature.append(createSignatureForType(t));
         }
-        
+
     }
 
-    /**
-     * @return
-     */
+    /** @return  */
     private static String createSignatureForType(Type type) {
         StringBuilder signature = new StringBuilder();
-        if (type == null)
-        {
+        if (type == null) {
             signature.append("Ljava/lang/Object;");
             return signature.toString();
         }
-        
+
         if (type instanceof WildcardType)
             signature.append(getWildcards((WildcardType)type));
         if (type.isArray()) {
             for (int i = 0; i < type.getDimensions(); i++)
                 signature.append('[');
         }
-        signature.append(SignatureCreator.createByteCodeTypeSignature(type.getFullyQualifiedName()));
+        //indus style :(, but with qdox we cant determine if type is generics
+        if (type.getFullyQualifiedName().length() == 1) {
+            signature.append("T").append(type.getGenericValue()).append(';');
+        } else
+            signature.append(SignatureCreator.createByteCodeTypeSignature(type.getFullyQualifiedName()));
         if (type.getActualTypeArguments() != null) {
             // remove trailing ';'
             signature.setLength(signature.length() - 1);
@@ -281,9 +279,7 @@ public class JavaTypeToTypeInfoConverter {
         return signature.toString();
     }
 
-    /**
-     * @return
-     */
+    /** @return  */
     private static char getWildcards(WildcardType wildcardType) {
         try {
             Field field = WildcardType.class.getDeclaredField("wildcardExpressionType");
@@ -307,7 +303,15 @@ public class JavaTypeToTypeInfoConverter {
         }
         if (clazz.isEnum())
             return JavaType.ENUM;
-
+        try {
+            Field field = clazz.getClass().getDeclaredField("isAnnotation");
+            field.setAccessible(true);
+            if ((Boolean)field.get(clazz)) {
+                return JavaType.ANNOTATION;
+            }
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            // ignore
+        }
         return JavaType.CLASS;
     }
 
@@ -406,9 +410,7 @@ public class JavaTypeToTypeInfoConverter {
         return params;
     }
 
-    /**
-     * @return
-     */
+    /** @return  */
     private static List<FieldInfo> toFieldInfo(JavaClass clazz) {
         JavaField[] fields = clazz.getFields();
         List<FieldInfo> fi = new ArrayList<FieldInfo>();
@@ -460,15 +462,24 @@ public class JavaTypeToTypeInfoConverter {
         return i;
     }
 
-    /**
-     * @return
-     */
+    /** @return  */
     private static Integer typeModifierToInt(JavaClass type) {
         int i = modifiersToInteger(type.getModifiers());
         if (type.isInterface())
             i |= AccInterface;
         else if (type.isEnum())
             i |= AccEnum;
+        else{
+        try {
+            Field field = type.getClass().getDeclaredField("isAnnotation");
+            field.setAccessible(true);
+            if ((Boolean)field.get(type)) {
+                i |= AccAnnotation;
+            }
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            // ignore
+        }
+        }
         return i;
     }
 

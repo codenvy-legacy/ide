@@ -22,21 +22,19 @@ import com.codenvy.dto.shared.DTO;
 /**
  * SSH key.
  *
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: $
+ * @author andrew00x
  */
 @DTO
 public interface SshKeyEntry {
-
-    /**
+        /**
      * Identifier of SSH key, e.g. path to file where key stored, etc.
      *
      * @return identifier of key file
      */
     String getIdentifier();
-    
+
     void setIdentifier(String identifier);
-    
+
     SshKeyEntry withIdentifier(String identifier);
 
     /**
@@ -45,8 +43,8 @@ public interface SshKeyEntry {
      * @return SSH key as byte array
      */
     String getBytes();
-    
+
     void setBytes(String bytes);
-    
+
     SshKeyEntry withBytes(String bytes);
 }

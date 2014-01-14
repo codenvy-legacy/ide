@@ -66,6 +66,8 @@ import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.keybinding.KeyBindingManager;
 import com.codenvy.ide.menu.MainMenuView;
 import com.codenvy.ide.menu.MainMenuViewImpl;
+import com.codenvy.ide.navigation.NavigateToFileView;
+import com.codenvy.ide.navigation.NavigateToFileViewImpl;
 import com.codenvy.ide.notification.NotificationManagerImpl;
 import com.codenvy.ide.notification.NotificationManagerView;
 import com.codenvy.ide.notification.NotificationManagerViewImpl;
@@ -90,6 +92,10 @@ import com.codenvy.ide.preferences.PreferencesAgentImpl;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
 import com.codenvy.ide.preferences.PreferencesView;
 import com.codenvy.ide.preferences.PreferencesViewImpl;
+import com.codenvy.ide.project.properties.ProjectPropertiesView;
+import com.codenvy.ide.project.properties.ProjectPropertiesViewImpl;
+import com.codenvy.ide.project.properties.edit.EditPropertyView;
+import com.codenvy.ide.project.properties.edit.EditPropertyViewImpl;
 import com.codenvy.ide.projecttype.SelectProjectTypeView;
 import com.codenvy.ide.projecttype.SelectProjectTypeViewImpl;
 import com.codenvy.ide.resources.ProjectTypeAgent;
@@ -145,7 +151,7 @@ import com.google.inject.name.Names;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
-/** @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> */
+/** @author Nikolay Zamosenchuk*/
 @ExtensionGinModule
 public class CoreGinModule extends AbstractGinModule {
 
@@ -244,9 +250,12 @@ public class CoreGinModule extends AbstractGinModule {
         bind(NewResourcePageView.class).to(NewResourcePageViewImpl.class);
         bind(NewProjectPageView.class).to(NewProjectPageViewImpl.class);
         bind(OpenProjectView.class).to(OpenProjectViewImpl.class);
+        bind(ProjectPropertiesView.class).to(ProjectPropertiesViewImpl.class);
+        bind(EditPropertyView.class).to(EditPropertyViewImpl.class).in(Singleton.class);
         bind(PreferencesView.class).to(PreferencesViewImpl.class).in(Singleton.class);
         bind(WelcomePartView.class).to(WelcomePartViewImpl.class).in(Singleton.class);
         bind(SelectProjectTypeView.class).to(SelectProjectTypeViewImpl.class).in(Singleton.class);
+        bind(NavigateToFileView.class).to(NavigateToFileViewImpl.class).in(Singleton.class);
 
         bind(ExtensionManagerView.class).to(ExtensionManagerViewImpl.class).in(Singleton.class);
     }
@@ -269,7 +278,7 @@ public class CoreGinModule extends AbstractGinModule {
     @Named("restContext")
     @Singleton
     protected String provideDefaultRestContext() {
-        return "/ide/rest";
+        return "/api/rest";
     }
 
     @Provides
@@ -277,6 +286,6 @@ public class CoreGinModule extends AbstractGinModule {
     @Singleton
     protected String provideDefaultWebsocketUrl() {
         boolean isSecureConnection = Window.Location.getProtocol().equals("https:");
-        return (isSecureConnection ? "wss://" : "ws://") + Window.Location.getHost() + "/ide/websocket/" + Utils.getWorkspaceName();
+        return (isSecureConnection ? "wss://" : "ws://") + Window.Location.getHost() + "/api/ws/" + Utils.getWorkspaceName();
     }
 }

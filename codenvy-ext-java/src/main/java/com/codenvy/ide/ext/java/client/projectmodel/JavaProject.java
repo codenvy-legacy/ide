@@ -17,12 +17,13 @@
  */
 package com.codenvy.ide.ext.java.client.projectmodel;
 
-import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
-import com.codenvy.ide.ext.java.jdt.core.JavaConventions;
-import com.codenvy.ide.ext.java.jdt.core.JavaCore;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
+import com.codenvy.ide.ext.java.jdt.core.JavaConventions;
+import com.codenvy.ide.ext.java.jdt.core.JavaCore;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Link;
@@ -31,12 +32,13 @@ import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
-import com.codenvy.ide.MimeType;
 import com.codenvy.ide.runtime.IStatus;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * A Java project represents a view of a project resource in terms of Java
@@ -70,11 +72,12 @@ public class JavaProject extends Project {
   
     /** {@inheritDoc} */
     @Override
-    public void refreshTree(Folder root, final AsyncCallback<Folder> callback) {
+    public void refreshTree(final Folder root, final AsyncCallback<Folder> callback) {
+        Folder folderToRefresh = (root instanceof Package && root.getParent() != null) ? root.getParent() : root;
         try {
             // create internal wrapping Request Callback with proper Unmarshaller
             AsyncRequestCallback<Folder> internalCallback =
-                    new AsyncRequestCallback<Folder>(new JavaModelUnmarshaller(root, (JavaProject)root.getProject(), eventBus)) {
+                    new AsyncRequestCallback<Folder>(new JavaModelUnmarshaller(folderToRefresh, (JavaProject)folderToRefresh.getProject(), eventBus)) {
                         @Override
                         protected void onSuccess(Folder refreshedRoot) {
                             callback.onSuccess(refreshedRoot);
@@ -87,7 +90,7 @@ public class JavaProject extends Project {
                     };
 
             String url = vfsInfo.getUrlTemplates().get(Link.REL_TREE).getHref();
-            url = URL.decode(url).replace("[id]", root.getId());
+            url = URL.decode(url).replace("[id]", folderToRefresh.getId());
             AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(loader).send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);
@@ -108,38 +111,40 @@ public class JavaProject extends Project {
     public void createPackage(@NotNull final Folder parent, String name, final AsyncCallback<Package> callback) {
         try {
             checkItemValid(parent);
+            final Folder checkedParent = checkParent(parent);
             if (!checkPackageName(name)) {
                 callback.onFailure(new JavaModelException("Package name not valid"));
                 return;
             }
-            Folder folderParent = findFolderParent(parent, name);
-            String packagePartName;
-            if (folderParent == null) {
-                folderParent = parent;
-                packagePartName = name;
-            } else {
-                packagePartName = name.substring(folderParent.getName().length() + 1);
-            }
+            Folder foundParent = findFolderParent(checkedParent, name);
+            final Folder folderParent = foundParent == null ? checkedParent : foundParent;
+            String packagePartName = (foundParent == null) ? name : name.substring(folderParent.getName().length() + 1);
+
             final String path = packagePartName.replaceAll("\\.", "/");
             // create internal wrapping Request Callback with proper Unmarshaller
             AsyncRequestCallback<Package> internalCallback = new AsyncRequestCallback<Package>(new PackageUnmarshaller()) {
                 @Override
                 protected void onSuccess(final Package pack) {
-                    pack.setParent(parent);
+                    pack.setParent(checkedParent);
                     pack.setProject(JavaProject.this);
-                    parent.addChild(pack);
+                    checkedParent.addChild(pack);
                     // TODO workaround for a unified view for packages
-                    SourceFolder sourceFolder = getSourceFolder(pack);
+                   // SourceFolder sourceFolder = getSourceFolder(pack);
                     // refresh tree, cause additional hierarchy folders my have been created
-                    refreshTree(sourceFolder, new AsyncCallback<Folder>() {
+                    refreshTree(folderParent, new AsyncCallback<Folder>() {
                         @Override
                         public void onSuccess(Folder result) {
-                            eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(pack));
+                            eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(result));
+                            Resource folder = result.findChildById(folderParent.getId());
+                            if (folder != null) {
+                                eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(folder));
+                            }
                             callback.onSuccess(pack);
                         }
 
                         @Override
                         public void onFailure(Throwable exception) {
+                            exception.printStackTrace();
                             callback.onFailure(exception);
                         }
                     });
@@ -150,7 +155,6 @@ public class JavaProject extends Project {
                     callback.onFailure(exception);
                 }
             };
-
             String url = folderParent.getLinkByRelation(Link.REL_CREATE_FOLDER).getHref();
             String urlString = URL.decode(url).replace("[name]", path);
             urlString = URL.encode(urlString);
@@ -188,31 +192,33 @@ public class JavaProject extends Project {
      *         the content of compilation unit
      * @param callback
      */
-    public void createCompilationUnit(final Folder parent, String name, String content, final AsyncCallback<CompilationUnit> callback) {
+    public void createCompilationUnit(Folder parent, String name, String content, final AsyncCallback<CompilationUnit> callback) {
         try {
             checkItemValid(parent);
-            checkCompilationUnitParent(parent);
+            final Folder checkedParent = checkParent(parent);
             checkCompilationUnitName(name);
             // create internal wrapping Request Callback with proper Unmarshaller
             AsyncRequestCallback<CompilationUnit> internalCallback =
                     new AsyncRequestCallback<CompilationUnit>(new CompilationUnitUnmarshaller()) {
                         @Override
                         protected void onSuccess(final CompilationUnit newCU) {
-                            newCU.setParent(parent);
+                            newCU.setParent(checkedParent);
                             newCU.setProject(JavaProject.this);
-                            parent.addChild(newCU);
+                            checkedParent.addChild(newCU);
                             // TODO workaround for a unified view for packages
                             SourceFolder sourceFolder = getSourceFolder(newCU.getParent());
                             // refresh tree, cause additional hierarchy folders my have been created
-                            refreshTree(sourceFolder, new AsyncCallback<Folder>() {
+                            refreshTree(checkedParent, new AsyncCallback<Folder>() {
                                 @Override
                                 public void onSuccess(Folder result) {
+                                    eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(result));
                                     eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(newCU));
                                     callback.onSuccess(newCU);
                                 }
 
                                 @Override
                                 public void onFailure(Throwable exception) {
+                                    exception.printStackTrace();
                                     callback.onFailure(exception);
                                 }
                             });
@@ -220,6 +226,7 @@ public class JavaProject extends Project {
 
                         @Override
                         protected void onFailure(Throwable exception) {
+                            exception.printStackTrace();
                             callback.onFailure(exception);
                         }
                     };
@@ -367,10 +374,30 @@ public class JavaProject extends Project {
      * @param parent
      * @throws JavaModelException
      */
-    protected void checkCompilationUnitParent(Folder parent) throws JavaModelException {
+    protected Folder checkParent(Folder parent) throws JavaModelException {
         if (!(parent instanceof Package) && !(parent instanceof SourceFolder)) {
-            throw new JavaModelException("CompilationUnit must be child of 'Package' or 'SourceFolder'");
+            for (SourceFolder sourceFolder : getSourceFolders().asIterable()) {
+                if (parent.getPath().equals(sourceFolder.getPath()))
+                {
+                    return sourceFolder;
+                }
+                else if (parent.getPath().startsWith(sourceFolder.getPath())) {
+                    String id = parent.getId();
+                    String name = parent.getPath().replaceFirst(sourceFolder.getPath(), "");
+                    name = (name.startsWith("/")) ? name.replaceFirst("/", "").replaceAll("/", ".") : name.replaceAll("/", ".");
+                    StringMap<Link> links = parent.getLinks();
+                    parent = new Package();
+                    parent.setId(id);
+                    parent.setName(name);
+                    parent.setParent(sourceFolder);
+                    parent.setProject(this);
+                    parent.getLinks().putAll(links);
+                    return parent;
+                }
+            }
+            throw new JavaModelException("CompilationUnit or Package must be child of 'Package' or 'SourceFolder'");
         }
+        return parent;
     }
 
     /**
@@ -422,11 +449,19 @@ public class JavaProject extends Project {
      */
     public Array<SourceFolder> getSourceFolders() {
         Array<SourceFolder> sourceFolders = Collections.createArray();
-        for (Resource r : getChildren().asIterable()) {
-            if (r instanceof SourceFolder) {
-                sourceFolders.add((SourceFolder)r);
-            }
-        }
+        getSourceFolders(sourceFolders, getChildren());
         return sourceFolders;
     }
+
+    private void getSourceFolders(Array<SourceFolder> sourceFolders, Array<Resource> children) {
+        for (Resource r : children.asIterable()) {
+            if (r instanceof SourceFolder) {
+                sourceFolders.add((SourceFolder)r);
+                return;
+            } else if (r instanceof Folder) {
+                getSourceFolders(sourceFolders, ((Folder)r).getChildren());
+            }
+        }
+    }
+    
 }

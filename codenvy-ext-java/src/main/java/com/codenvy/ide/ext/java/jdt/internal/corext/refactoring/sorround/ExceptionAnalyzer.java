@@ -10,11 +10,22 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.sorround;
 
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.BodyDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.ClassInstanceCreation;
+import com.codenvy.ide.ext.java.jdt.core.dom.ConstructorInvocation;
+import com.codenvy.ide.ext.java.jdt.core.dom.IMethodBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.ITypeBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodInvocation;
+import com.codenvy.ide.ext.java.jdt.core.dom.Name;
+import com.codenvy.ide.ext.java.jdt.core.dom.SuperConstructorInvocation;
+import com.codenvy.ide.ext.java.jdt.core.dom.SuperMethodInvocation;
+import com.codenvy.ide.ext.java.jdt.core.dom.ThrowStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationExpression;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.Bindings;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.Selection;
 import com.codenvy.ide.ext.java.jdt.internal.corext.refactoring.util.AbstractExceptionAnalyzer;
-
 import com.codenvy.ide.runtime.Assert;
 
 import java.util.Collections;

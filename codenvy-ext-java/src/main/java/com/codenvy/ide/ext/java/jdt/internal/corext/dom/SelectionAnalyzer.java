@@ -12,12 +12,9 @@ package com.codenvy.ide.ext.java.jdt.internal.corext.dom;
 
 import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
 import com.codenvy.ide.ext.java.jdt.core.dom.Expression;
-
+import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.RegionImpl;
-
-import com.codenvy.ide.runtime.Assert;
-
 
 import java.util.ArrayList;
 import java.util.List;

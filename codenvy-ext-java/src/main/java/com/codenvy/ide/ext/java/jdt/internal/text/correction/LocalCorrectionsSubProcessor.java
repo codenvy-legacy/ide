@@ -17,7 +17,58 @@ import com.codenvy.ide.ext.java.jdt.Images;
 import com.codenvy.ide.ext.java.jdt.JavaPreferencesSettings;
 import com.codenvy.ide.ext.java.jdt.codeassistant.api.IProblemLocation;
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
-import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.AST;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTVisitor;
+import com.codenvy.ide.ext.java.jdt.core.dom.AbstractTypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.Annotation;
+import com.codenvy.ide.ext.java.jdt.core.dom.ArrayType;
+import com.codenvy.ide.ext.java.jdt.core.dom.Assignment;
+import com.codenvy.ide.ext.java.jdt.core.dom.Block;
+import com.codenvy.ide.ext.java.jdt.core.dom.BodyDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.CastExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.CatchClause;
+import com.codenvy.ide.ext.java.jdt.core.dom.ClassInstanceCreation;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.dom.ConditionalExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.EmptyStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.EnumDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.Expression;
+import com.codenvy.ide.ext.java.jdt.core.dom.ExpressionStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.FieldAccess;
+import com.codenvy.ide.ext.java.jdt.core.dom.ForStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.IBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.IMethodBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.ITypeBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.IVariableBinding;
+import com.codenvy.ide.ext.java.jdt.core.dom.IfStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.InfixExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.Initializer;
+import com.codenvy.ide.ext.java.jdt.core.dom.InstanceofExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.MethodInvocation;
+import com.codenvy.ide.ext.java.jdt.core.dom.Modifier;
+import com.codenvy.ide.ext.java.jdt.core.dom.Name;
+import com.codenvy.ide.ext.java.jdt.core.dom.ParameterizedType;
+import com.codenvy.ide.ext.java.jdt.core.dom.ParenthesizedExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.PrefixExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.PrimitiveType;
+import com.codenvy.ide.ext.java.jdt.core.dom.QualifiedName;
+import com.codenvy.ide.ext.java.jdt.core.dom.ReturnStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.SimpleName;
+import com.codenvy.ide.ext.java.jdt.core.dom.SimpleType;
+import com.codenvy.ide.ext.java.jdt.core.dom.SingleVariableDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.Statement;
+import com.codenvy.ide.ext.java.jdt.core.dom.StructuralPropertyDescriptor;
+import com.codenvy.ide.ext.java.jdt.core.dom.SwitchCase;
+import com.codenvy.ide.ext.java.jdt.core.dom.SwitchStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.ThrowStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.TryStatement;
+import com.codenvy.ide.ext.java.jdt.core.dom.Type;
+import com.codenvy.ide.ext.java.jdt.core.dom.TypeDeclaration;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationExpression;
+import com.codenvy.ide.ext.java.jdt.core.dom.VariableDeclarationFragment;
+import com.codenvy.ide.ext.java.jdt.core.dom.WhileStatement;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ImportRewrite;
 import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ImportRewrite.ImportRewriteContext;
@@ -68,7 +119,6 @@ import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.edits.InsertEdit;
 import com.codenvy.ide.text.edits.TextEdit;
-import com.codenvy.ide.util.loging.Log;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -1060,7 +1110,7 @@ public class LocalCorrectionsSubProcessor {
             addRemoveProposal(context, rewrite, label, proposals);
 
             AssistContext assistContext =
-                    new AssistContext(null, context.getDocument(), infixExpression.getRightOperand().getStartPosition() - 1, 0);
+                    new AssistContext(context.getDocument(), infixExpression.getRightOperand().getStartPosition() - 1, 0);
             assistContext.setASTRoot(root);
             AdvancedQuickAssistProcessor.getSplitAndConditionProposals(assistContext, infixExpression, proposals);
             AdvancedQuickAssistProcessor.getSplitOrConditionProposals(assistContext, infixExpression, proposals);
@@ -1805,7 +1855,8 @@ public class LocalCorrectionsSubProcessor {
             //         proposal2.setEndPosition(rewrite.track(hashCode));
 
         } catch (CoreException e) {
-            Log.error(LocalCorrectionsSubProcessor.class, e);
+            //TODO log error
+//            Log.error(LocalCorrectionsSubProcessor.class, e);
         }
 
         proposals.add(proposal2);

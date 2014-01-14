@@ -13,7 +13,6 @@ package com.codenvy.ide.ext.java.jdt.quickassist.api;
 
 import com.codenvy.ide.ext.java.jdt.codeassistant.api.IProblemLocation;
 import com.codenvy.ide.ext.java.jdt.codeassistant.api.JavaCompletionProposal;
-
 import com.codenvy.ide.runtime.CoreException;
 
 
@@ -22,19 +21,6 @@ import com.codenvy.ide.runtime.CoreException;
  * <code>org.eclipse.jdt.ui.quickFixProcessors</code>.
  */
 public interface QuickFixProcessor {
-
-    /**
-     * Returns <code>true</code> if the processor has proposals for the given problem. This test should be an
-     * optimistic guess and be very cheap.
-     *
-     * @param unit
-     *         the compilation unit
-     * @param problemId
-     *         the problem Id. The id is of a problem of the problem type(s) this processor specified in
-     *         the extension point.
-     * @return <code>true</code> if the processor has proposals for the given problem
-     */
-    boolean hasCorrections(int problemId);
 
     /**
      * Collects corrections or code manipulations for the given context.
