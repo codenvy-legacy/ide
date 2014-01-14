@@ -37,12 +37,12 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegate {
-    
+
     private NavigateToFileView view;
-    private ResourceProvider resourceProvider;
-    private EventBus eventBus;
-    private StringMap<File> projectFiles;
-    
+    private ResourceProvider   resourceProvider;
+    private EventBus           eventBus;
+    private StringMap<File>    projectFiles;
+
     @Inject
     public NavigateToFilePresenter(NavigateToFileView view, ResourceProvider resourceProvider, EventBus eventBus) {
         this.resourceProvider = resourceProvider;
@@ -50,7 +50,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
         this.eventBus = eventBus;
         view.setDelegate(this);
     }
-    
+
     /**
      * Show dialog with view for navigation.
      */
@@ -63,7 +63,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
         view.clearInput();
         view.focusInput();
     }
-    
+
     /**
      * Recursively get project's files.
      * 
@@ -81,11 +81,11 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
             }
         }
     }
-    
+
     /**
      * Returns the formed display name of the file.
      * 
-     * @param file file to display 
+     * @param file file to display
      * @return {@link String}
      */
     private String getDisplayName(File file)
@@ -94,15 +94,13 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
         String path = file.getParent() != null ? "   (" + file.getParent().getPath().replaceFirst("/", "") + ")" : "";
         return displayName + path;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onFileSelected() {
         File fileToOpen = projectFiles.get(view.getFile());
-        if (fileToOpen != null) {
-            view.close();
-            eventBus.fireEvent(new FileEvent(fileToOpen, FileOperation.OPEN));
-        }
+        view.close();
+        eventBus.fireEvent(new FileEvent(fileToOpen, FileOperation.OPEN));
     }
 
 }
