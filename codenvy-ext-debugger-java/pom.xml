@@ -26,9 +26,9 @@
         <artifactId>codenvy-ide-parent</artifactId>
         <version>3.0.0-M7-SNAPSHOT</version>
     </parent>
-    <artifactId>codenvy-ext-java-runtime</artifactId>
+    <artifactId>codenvy-ext-debugger-java</artifactId>
     <packaging>jar</packaging>
-    <name>Codenvy Extension :: Java :: Runtime</name>
+    <name>Codenvy Extension :: Debugger :: Java</name>
 
     <properties>
         <dto-generator-out-directory>${project.build.directory}/generated-sources/dto/</dto-generator-out-directory>
