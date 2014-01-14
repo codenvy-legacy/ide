@@ -59,12 +59,14 @@ public class WorkerNameEnvironment implements INameEnvironment {
     /**
      *
      */
-    public WorkerNameEnvironment(String projectId, String restContext, String vfsId, String wsName) {
-        this.projectId = projectId;
+    public WorkerNameEnvironment(String restContext, String vfsId, String wsName) {
         restServiceContext = restContext + "/code-assistant-java" + wsName;
         this.vfsId = vfsId;
     }
 
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
 //    /**
 //     * Get Class description (methods, fields etc.) by class FQN
 //     *

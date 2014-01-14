@@ -38,4 +38,6 @@ public interface ComputeCorrMessage extends Message{
     boolean updatedOffset();
 
     Array<ProblemLocationMessage> problemLocations();
+
+    String projectId();
 }

@@ -116,7 +116,7 @@ public class MavenBuilder extends Builder {
                 if (!targets.isEmpty()) {
                     commandLine.add(targets);
                 } else {
-                    commandLine.add("clean", "package");
+                    commandLine.add("clean", "install");
                 }
                 if (config.getRequest().isDeployJarWithDependencies()) {
                     try {

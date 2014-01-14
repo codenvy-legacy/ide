@@ -145,6 +145,23 @@ public class CodenvyDispatcherServletConfigurationFactory extends DispatcherServ
                                                  }
                                              })
                                              .priority(300)
+                                             .done()
+                                             .when(new Condition() {
+                                                 @Override
+                                                 public boolean matches(HttpServletRequest request, HttpServletResponse response) {
+                                                     final String host = request.getParameter("h");
+                                                     final String port = request.getParameter("p");
+                                                     return host != null && port != null;
+                                                 }
+                                             })
+                                             .execute(new Action() {
+                                                 @Override
+                                                 public void perform(HttpServletRequest request, HttpServletResponse response)
+                                                         throws ServletException, IOException {
+                                                     request.getRequestDispatcher("/_app/main").forward(request, response);
+                                                 }
+                                             })
+                                             .priority(400)
                                              .done();
     }
 }
