@@ -37,6 +37,7 @@ import com.codenvy.ide.ext.git.shared.CommitRequest;
 import com.codenvy.ide.ext.git.shared.Commiters;
 import com.codenvy.ide.ext.git.shared.DiffRequest;
 import com.codenvy.ide.ext.git.shared.FetchRequest;
+import com.codenvy.ide.ext.git.shared.GitUrlVendorInfo;
 import com.codenvy.ide.ext.git.shared.InitRequest;
 import com.codenvy.ide.ext.git.shared.LogRequest;
 import com.codenvy.ide.ext.git.shared.MergeRequest;
@@ -49,6 +50,7 @@ import com.codenvy.ide.ext.git.shared.RmRequest;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.websocket.Message;
@@ -188,7 +190,8 @@ public class GitClientServiceImpl implements GitClientService {
     public void cloneRepositoryWS(@NotNull String vfsId, @NotNull Project project, @NotNull String remoteUri, @NotNull String remoteName,
                                   @NotNull RequestCallback<String> callback) throws WebSocketException {
         CloneRequest cloneRequest =
-                dtoFactory.createDto(CloneRequest.class).withRemoteName(remoteName).withRemoteUri(remoteUri).withWorkingDir(project.getId());
+                dtoFactory.createDto(CloneRequest.class).withRemoteName(remoteName).withRemoteUri(remoteUri)
+                          .withWorkingDir(project.getId());
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
         callback.setStatusHandler(new CloneRequestStatusHandler(project.getName(), remoteUri, eventBus, constant));
@@ -405,7 +408,8 @@ public class GitClientServiceImpl implements GitClientService {
     @Override
     public void branchCheckout(@NotNull String vfsId, @NotNull String projectid, @NotNull String name, @NotNull String startPoint,
                                boolean createNew, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
-        BranchCheckoutRequest branchCheckoutRequest = dtoFactory.createDto(BranchCheckoutRequest.class).withName(name).withStartPoint(startPoint).withCreateNew(createNew);
+        BranchCheckoutRequest branchCheckoutRequest =
+                dtoFactory.createDto(BranchCheckoutRequest.class).withName(name).withStartPoint(startPoint).withCreateNew(createNew);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
         String url = restServiceContext + BRANCH_CHECKOUT + params;
@@ -489,7 +493,8 @@ public class GitClientServiceImpl implements GitClientService {
     @Override
     public void fetch(@NotNull String vfsId, @NotNull Project project, @NotNull String remote, List<String> refspec,
                       boolean removeDeletedRefs, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
-        FetchRequest fetchRequest = dtoFactory.createDto(FetchRequest.class).withRefSpec(refspec).withRemote(remote).withRemoveDeletedRefs(removeDeletedRefs);
+        FetchRequest fetchRequest =
+                dtoFactory.createDto(FetchRequest.class).withRefSpec(refspec).withRemote(remote).withRemoveDeletedRefs(removeDeletedRefs);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
         String url = restServiceContext + FETCH + params;
@@ -503,7 +508,8 @@ public class GitClientServiceImpl implements GitClientService {
     @Override
     public void fetchWS(@NotNull String vfsId, @NotNull Project project, @NotNull String remote, List<String> refspec,
                         boolean removeDeletedRefs, @NotNull RequestCallback<String> callback) throws WebSocketException {
-        FetchRequest fetchRequest = dtoFactory.createDto(FetchRequest.class).withRefSpec(refspec).withRemote(remote).withRemoveDeletedRefs(removeDeletedRefs);
+        FetchRequest fetchRequest =
+                dtoFactory.createDto(FetchRequest.class).withRefSpec(refspec).withRemote(remote).withRemoveDeletedRefs(removeDeletedRefs);
 
         callback.setStatusHandler(new FetchRequestHandler(project.getName(), refspec, eventBus, constant));
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
@@ -555,8 +561,8 @@ public class GitClientServiceImpl implements GitClientService {
                      @NotNull DiffRequest.DiffType type, boolean noRenames, int renameLimit, @NotNull String commitA,
                      @NotNull String commitB, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         DiffRequest diffRequest =
-            dtoFactory.createDto(DiffRequest.class).withFileFilter(fileFilter).withType(type)
-                      .withNoRenames(noRenames).withCommitA(commitA).withCommitB(commitB).withRenameLimit(renameLimit);
+                dtoFactory.createDto(DiffRequest.class).withFileFilter(fileFilter).withType(type)
+                          .withNoRenames(noRenames).withCommitA(commitA).withCommitB(commitB).withRenameLimit(renameLimit);
 
         diff(diffRequest, vfsId, projectid, callback);
     }
@@ -567,8 +573,8 @@ public class GitClientServiceImpl implements GitClientService {
                      @NotNull DiffRequest.DiffType type, boolean noRenames, int renameLimit, @NotNull String commitA, boolean cached,
                      @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         DiffRequest diffRequest =
-                                  dtoFactory.createDto(DiffRequest.class).withFileFilter(fileFilter).withType(type)
-                                            .withNoRenames(noRenames).withCommitA(commitA).withRenameLimit(renameLimit).withCached(cached);
+                dtoFactory.createDto(DiffRequest.class).withFileFilter(fileFilter).withType(type)
+                          .withNoRenames(noRenames).withCommitA(commitA).withRenameLimit(renameLimit).withCached(cached);
 
         diff(diffRequest, vfsId, projectid, callback);
     }
@@ -638,5 +644,14 @@ public class GitClientServiceImpl implements GitClientService {
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader)
                     .header(CONTENTTYPE, APPLICATION_JSON).header(ACCEPT, TEXT_PLAIN)
                     .send(callback);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void getUrlVendorInfo(@NotNull String vcsUrl, @NotNull AsyncRequestCallback<GitUrlVendorInfo> callback) throws RequestException {
+        String url = restServiceContext + "/git-service/info";
+
+        String params = "vcsurl=" + vcsUrl;
+        AsyncRequest.build(RequestBuilder.GET, url + "?" + params).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
     }
 }
