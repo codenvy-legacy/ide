@@ -278,11 +278,11 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             onFail(constant.stopApplicationFailed(currentProject.getName()), null);
         }
 
+        applicationProcessDescriptor = null;
         try {
             service.stop(stopLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
                 protected void onSuccess(String result) {
-                    applicationProcessDescriptor = null;
                     console.print(constant.applicationStopped(currentProject.getName()));
                 }
 

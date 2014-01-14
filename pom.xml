@@ -130,7 +130,7 @@
         <module>codenvy-ext-runner</module>
         <module>codenvy-ext-web</module>
         <module>codenvy-ext-java</module>
-        <module>codenvy-ext-java-runtime</module>
+        <module>codenvy-ext-debugger-java</module>
         <module>codenvy-ext-git</module>
         <module>codenvy-ext-ssh</module>
         <module>codenvy-ext-github</module>

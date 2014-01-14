@@ -102,7 +102,7 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-java-runtime</artifactId>
+            <artifactId>codenvy-ext-debugger-java</artifactId>
             <version>${project.version}</version>
             <exclusions>
                 <exclusion>
