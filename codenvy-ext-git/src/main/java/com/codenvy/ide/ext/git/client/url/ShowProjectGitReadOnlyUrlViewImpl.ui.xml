@@ -48,7 +48,7 @@
                     <g:Label text="{locale.projectReadOnlyGitUrlTitle}" addStyleNames="{res.gitCSS.textFont}"/>
                 </g:north>
                 <g:center>
-                    <g:TextBox width="438px" height="16px" ui:field="url" addStyleNames="{res.gitCSS.textFont}" readOnly="true"/>
+                    <g:TextBox width="438px" ui:field="url" addStyleNames="{res.gitCSS.textFont}" readOnly="true"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:center>

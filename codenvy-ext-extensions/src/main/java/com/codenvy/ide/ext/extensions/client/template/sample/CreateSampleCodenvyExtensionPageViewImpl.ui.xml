@@ -14,7 +14,7 @@
                     <g:Label text="GroupId:" height="18px" addStyleNames="{res.extensionRuntimeCss.loginFont}"/>
                 </g:west>
                 <g:center>
-                    <g:TextBox ui:field="groupIdField" width="97%" height="16px"/>
+                    <g:TextBox ui:field="groupIdField" width="97%" />
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>
@@ -24,7 +24,7 @@
                     <g:Label text="ArtifactId:" height="18px" addStyleNames="{res.extensionRuntimeCss.loginFont}"/>
                 </g:west>
                 <g:center>
-                    <g:TextBox ui:field="artifactIdField" width="97%" height="16px"/>
+                    <g:TextBox ui:field="artifactIdField" width="97%" />
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>
@@ -34,7 +34,7 @@
                     <g:Label text="Version:" height="18px" addStyleNames="{res.extensionRuntimeCss.loginFont}"/>
                 </g:west>
                 <g:center>
-                    <g:TextBox ui:field="versionField" width="97%" height="16px"/>
+                    <g:TextBox ui:field="versionField" width="97%" />
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>
