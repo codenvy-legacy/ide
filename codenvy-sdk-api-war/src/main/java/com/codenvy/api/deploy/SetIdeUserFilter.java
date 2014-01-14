@@ -41,7 +41,7 @@ import java.util.Set;
 /**
  * Filter that set current user as "ide" on all requests.
  * This filter is needed in order to allow the user to be always logged on and
- * to avoiding unauthorized access in launched extension in SDK.
+ * to avoiding unauthorized access in launched extension.
  *
  * @author Artem Zatsarynnyy
  */
@@ -81,7 +81,6 @@ public class SetIdeUserFilter implements Filter {
         if (state == null || (principal != null && state.getUser() instanceof IdeUser)) {
             final User user;
             if (principal == null) {
-                // user is not authenticated
                 user = new IdeUser();
             } else {
                 Set<String> userRoles = new LinkedHashSet<>();
