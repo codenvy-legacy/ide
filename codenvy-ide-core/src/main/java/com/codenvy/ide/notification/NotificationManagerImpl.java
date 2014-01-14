@@ -46,9 +46,11 @@ import static com.codenvy.ide.notification.NotificationManagerView.Status.IN_PRO
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class NotificationManagerImpl extends BasePresenter
-        implements NotificationManager, NotificationItem.ActionDelegate, Notification.NotificationObserver,
-                   NotificationManagerView.ActionDelegate, NotificationMessageStack.ActionDelegate {
+public class NotificationManagerImpl extends BasePresenter   implements NotificationManager,
+                                                                        NotificationItem.ActionDelegate,
+                                                                        Notification.NotificationObserver,
+                                                                        NotificationManagerView.ActionDelegate,
+                                                                        NotificationMessageStack.ActionDelegate {
     private static final String TITEL = "Events";
     private WorkspacePresenter workspacePresenter;
     private NotificationManagerView view;
@@ -103,6 +105,8 @@ public class NotificationManagerImpl extends BasePresenter
         } else {
             view.setStatus(HAS_UNREAD);
         }
+
+        minimize();
     }
 
     /** {@inheritDoc} */
