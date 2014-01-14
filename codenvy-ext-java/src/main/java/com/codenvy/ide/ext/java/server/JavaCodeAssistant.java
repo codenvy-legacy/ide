@@ -79,8 +79,10 @@ public class JavaCodeAssistant extends CodeAssistant {
     private List<Folder> getProjectSourceFolders(VirtualFileSystem vfs, Project project)
             throws VirtualFileSystemException, CodeAssistantException {
         List<Folder> sourceFolders = new ArrayList<>();
-        if (project.getProjectType().equals("Multiple Module Project")) {
-            ItemList children = vfs.getChildren(project.getId(), -1, 0, ItemType.PROJECT.value(), false);
+        Item parentProject = vfs.getItem(project.getParentId(), false);
+        if(parentProject != null && parentProject instanceof Project &&  ((Project)parentProject).getProjectType().equals("Multiple Module Project"))
+        {
+            ItemList children = vfs.getChildren(parentProject.getId(), -1, 0, ItemType.PROJECT.value(), false);
             for (Item item : children.getItems()) {
                 sourceFolders.addAll(getSourceFolders(vfs, (Project)item));
             }

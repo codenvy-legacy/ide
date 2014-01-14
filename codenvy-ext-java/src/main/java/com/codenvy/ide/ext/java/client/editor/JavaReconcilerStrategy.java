@@ -68,7 +68,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, JavaParserWo
      *
      */
     private void parse() {
-        worker.parse(document.get(), file.getName(), file.getId(), file.getParent().getName(), this);
+        worker.parse(document.get(), file.getName(), file.getId(), file.getParent().getName(),file.getProject().getId(), this);
     }
 
     /** {@inheritDoc} */
