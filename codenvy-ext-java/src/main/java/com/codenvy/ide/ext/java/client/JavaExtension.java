@@ -29,6 +29,8 @@ import com.codenvy.ide.api.resources.FileEventHandler;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.TemplateAgent;
+import com.codenvy.ide.api.ui.action.ActionManager;
+import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.collections.Array;
@@ -57,7 +59,6 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
@@ -66,6 +67,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_CONTEXT_MENU;
 import static com.codenvy.ide.collections.Collections.createArray;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 
@@ -112,7 +114,7 @@ public class JavaExtension {
                          Provider<CreateMavenWarProjectPage> createMavenWarProjectPage,
                          Provider<CreateMavenSpringProjectPage> createMavenSpringProjectPage,
                          Provider<CreateAntJavaProjectPage> createAntJavaProjectPage,
-                         Provider<CreateAntSpringProjectPage> createAntSpringProjectPage) {
+                         Provider<CreateAntSpringProjectPage> createAntSpringProjectPage,ActionManager actionManager) {
 
         this();
         FileType javaFile = new FileType(JavaResources.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
@@ -124,6 +126,13 @@ public class JavaExtension {
         resourceProvider.registerFileType(javaFile);
         resourceProvider.registerModelProvider(JavaProject.PRIMARY_NATURE, new JavaProjectModelProvider(eventBus));
         JavaResources.INSTANCE.css().ensureInjected();
+
+        // add actions in context menu
+        DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
+        contextMenuGroup.addSeparator();
+        UpdateDependencyAction dependencyAction = new UpdateDependencyAction(this, resourceProvider);
+        actionManager.registerAction("updateDependency", dependencyAction);
+        contextMenuGroup.addAction(dependencyAction);
 
         Array<String> emptyArray = Collections.createArray();
 

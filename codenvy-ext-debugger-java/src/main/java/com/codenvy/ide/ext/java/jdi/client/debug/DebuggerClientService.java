@@ -33,7 +33,7 @@ import javax.validation.constraints.NotNull;
  */
 public interface DebuggerClientService {
     /**
-     * Connects to application.
+     * Attach debugger.
      *
      * @param host
      * @param port
@@ -43,13 +43,13 @@ public interface DebuggerClientService {
     void connect(@NotNull String host, int port, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
-     * Disconnects to application.
+     * Disconnect debugger.
      *
      * @param id
      * @param callback
      * @throws RequestException
      */
-    void disconnect(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void disconnect(@NotNull String id, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
      * Adds breakpoint.
@@ -110,7 +110,7 @@ public interface DebuggerClientService {
     void resume(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
-     * Returns value of field.
+     * Returns value of a variable.
      *
      * @param id
      * @param var
@@ -120,7 +120,7 @@ public interface DebuggerClientService {
     void getValue(@NotNull String id, @NotNull Variable var, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
-     * Sets field's value.
+     * Sets value of a variable.
      *
      * @param id
      * @param request
@@ -137,7 +137,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void stepInto(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void stepInto(@NotNull String id, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
      * Do step over.
@@ -146,7 +146,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void stepOver(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void stepOver(@NotNull String id, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
      * Do step return.
@@ -155,19 +155,19 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void stepReturn(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void stepReturn(@NotNull String id, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
-     * Remove all breakpoint.
+     * Remove all breakpoints.
      *
      * @param id
      * @param callback
      * @throws RequestException
      */
-    void deleteAllBreakPoint(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void deleteAllBreakpoints(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
-     * Evaluate expression.
+     * Evaluate an expression.
      *
      * @param id
      * @param expression

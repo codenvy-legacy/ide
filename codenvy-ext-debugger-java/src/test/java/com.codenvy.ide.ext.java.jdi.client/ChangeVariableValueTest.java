@@ -129,6 +129,7 @@ public class ChangeVariableValueTest extends BaseTest {
         presenter.showDialog(debuggerInfo, var, asyncCallback);
         presenter.onChangeClicked();
 
+        verify(service).setValue(anyString(), (UpdateVariableRequest)anyObject(), (AsyncRequestCallback<Void>)anyObject());
         verify(asyncCallback).onSuccess(eq(VAR_VALUE));
         verify(view).close();
     }
@@ -150,6 +151,7 @@ public class ChangeVariableValueTest extends BaseTest {
         presenter.showDialog(debuggerInfo, var, asyncCallback);
         presenter.onChangeClicked();
 
+        verify(service).setValue(anyString(), (UpdateVariableRequest)anyObject(), (AsyncRequestCallback<Void>)anyObject());
         verify(asyncCallback).onFailure((Throwable)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(view).close();
@@ -163,6 +165,7 @@ public class ChangeVariableValueTest extends BaseTest {
         presenter.showDialog(debuggerInfo, var, asyncCallback);
         presenter.onChangeClicked();
 
+        verify(service).setValue(anyString(), (UpdateVariableRequest)anyObject(), (AsyncRequestCallback<Void>)anyObject());
         verify(asyncCallback).onFailure((RequestException)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(view).close();
