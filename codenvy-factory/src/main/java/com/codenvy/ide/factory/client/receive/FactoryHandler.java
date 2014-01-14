@@ -156,11 +156,6 @@ public class FactoryHandler
             factoryUrl.setCommitid(getParamValue("idcommit", parameterMap));
         }
 
-        //For back compatibility we check if user pass through factory url old version of commit id parameter.
-        if (factoryUrl.getCommitid() == null && getParamValue("idcommit", parameterMap) != null) {
-            factoryUrl.setCommitid(getParamValue("idcommit", parameterMap));
-        }
-
         prepareCloning();
     }
 

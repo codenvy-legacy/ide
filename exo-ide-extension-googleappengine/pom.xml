@@ -97,7 +97,6 @@
             <version>${gwt.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- CLIENT SIDE -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
