@@ -245,6 +245,108 @@ public class DebuggerTest extends BaseTest {
         verify(notificationManager).showNotification((Notification)anyObject());
     }
 
+    @Test
+    public void testStepOverRequestIsSuccessful() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, (Void)null);
+                return callback;
+            }
+        }).when(service).stepOver(anyString(), (AsyncRequestCallback<Void>)anyObject());
+
+        presenter.onStepOverButtonClicked();
+
+        verifySetEnableButtons(DISABLE_BUTTON);
+        verify(service).stepOver(anyString(), (AsyncRequestCallback<Void>)anyObject());
+        verify(view).setVariables(anyListOf(Variable.class));
+        verify(view).setEnableChangeValueButtonEnable(eq(DISABLE_BUTTON));
+        verify(gutterManager).unmarkCurrentBreakPoint();
+    }
+
+    @Test
+    public void testStepOverRequestIsFailed() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
+                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
+                onFailure.invoke(callback, mock(Throwable.class));
+                return callback;
+            }
+        }).when(service).stepOver(anyString(), (AsyncRequestCallback<Void>)anyObject());
+
+        presenter.onStepOverButtonClicked();
+
+        verify(service).stepOver(anyString(), (AsyncRequestCallback<Void>)anyObject());
+        verify(notificationManager).showNotification((Notification)anyObject());
+    }
+
+    @Test
+    public void testStepOverRequestExceptionHappened() throws Exception {
+        doThrow(RequestException.class).when(service).stepOver(anyString(), (AsyncRequestCallback<Void>)anyObject());
+
+        presenter.onStepOverButtonClicked();
+
+        verify(service).stepOver(anyString(), (AsyncRequestCallback<Void>)anyObject());
+        verify(notificationManager).showNotification((Notification)anyObject());
+    }
+
+    @Test
+    public void testStepReturnRequestIsSuccessful() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, (Void)null);
+                return callback;
+            }
+        }).when(service).stepReturn(anyString(), (AsyncRequestCallback<Void>)anyObject());
+
+        presenter.onStepReturnButtonClicked();
+
+        verifySetEnableButtons(DISABLE_BUTTON);
+        verify(service).stepReturn(anyString(), (AsyncRequestCallback<Void>)anyObject());
+        verify(view).setVariables(anyListOf(Variable.class));
+        verify(view).setEnableChangeValueButtonEnable(eq(DISABLE_BUTTON));
+        verify(gutterManager).unmarkCurrentBreakPoint();
+    }
+
+    @Test
+    public void testStepReturnRequestIsFailed() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
+                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
+                onFailure.invoke(callback, mock(Throwable.class));
+                return callback;
+            }
+        }).when(service).stepReturn(anyString(), (AsyncRequestCallback<Void>)anyObject());
+
+        presenter.onStepReturnButtonClicked();
+
+        verify(service).stepReturn(anyString(), (AsyncRequestCallback<Void>)anyObject());
+        verify(notificationManager).showNotification((Notification)anyObject());
+    }
+
+    @Test
+    public void testStepReturnRequestExceptionHappened() throws Exception {
+        doThrow(RequestException.class).when(service).stepReturn(anyString(), (AsyncRequestCallback<Void>)anyObject());
+
+        presenter.onStepReturnButtonClicked();
+
+        verify(service).stepReturn(anyString(), (AsyncRequestCallback<Void>)anyObject());
+        verify(notificationManager).showNotification((Notification)anyObject());
+    }
+
     protected void verifySetEnableButtons(boolean enabled) {
         verify(view).setEnableResumeButton(eq(enabled));
         verify(view).setEnableStepIntoButton(eq(enabled));
