@@ -151,11 +151,13 @@ public class EvaluateExpressionTest extends BaseTest {
     public void testEvaluateExpressionRequestExceptionHappened() throws Exception {
         doThrow(RequestException.class).when(service).evaluateExpression(anyString(), anyString(),
                                                                          (AsyncRequestCallback<String>)anyObject());
+        when(view.getExpression()).thenReturn(EXPRESSION);
 
         presenter.showDialog(debuggerInfo);
         presenter.onEvaluateClicked();
 
         verify(view, atLeastOnce()).setEnableEvaluateButton(eq(DISABLE_BUTTON));
+        verify(service).evaluateExpression(eq(DEBUGGER_ID), eq(EXPRESSION), (AsyncRequestCallback<String>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(view).setEnableEvaluateButton(eq(!DISABLE_BUTTON));
     }
