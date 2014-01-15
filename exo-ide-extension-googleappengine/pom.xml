@@ -16,6 +16,11 @@
             <type>zip</type>
         </dependency>
         <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-tools-sdk</artifactId>
+            <version>${appengine.version}</version>
+        </dependency>
+        <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>${commons-lang.version}</version>
@@ -78,11 +83,6 @@
             <version>${google.api-client.version}</version>
             <!-- Set as provided. Use jarajr plugin because conflict guava. -->
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-tools-sdk</artifactId>
-            <version>${appengine.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
