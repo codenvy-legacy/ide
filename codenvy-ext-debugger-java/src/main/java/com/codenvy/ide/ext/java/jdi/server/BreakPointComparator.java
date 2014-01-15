@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.java.jdi.server;
 
-
 import com.codenvy.ide.ext.java.jdi.shared.BreakPoint;
 
 import java.util.Comparator;
@@ -25,7 +24,7 @@ import java.util.Comparator;
 /**
  * Helps to order breakpoints by name of location and line number.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author andrew00x
  */
 final class BreakPointComparator implements Comparator<BreakPoint> {
     @Override

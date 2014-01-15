@@ -21,10 +21,12 @@ import com.codenvy.dto.shared.DTO;
 
 import java.util.List;
 
-/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+/** @author andrew00x */
 @DTO
 public interface BreakPointList {
     List<BreakPoint> getBreakPoints();
 
     void setBreakPoints(List<BreakPoint> breakPoints);
+
+    BreakPointList withBreakPoints(List<BreakPoint> breakPoints);
 }

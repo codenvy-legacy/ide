@@ -24,6 +24,7 @@ import com.codenvy.ide.debug.Breakpoint;
 import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerView;
+import com.codenvy.ide.ext.java.jdi.client.debug.changevalue.ChangeValuePresenter;
 import com.codenvy.ide.ext.java.jdi.client.debug.expression.EvaluateExpressionPresenter;
 import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolver;
 import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolverFactory;
@@ -75,6 +76,8 @@ public class DebuggerTest extends BaseTest {
     private DebuggerView                 view;
     @Mock
     private EvaluateExpressionPresenter  evaluateExpressionPresenter;
+    @Mock
+    private ChangeValuePresenter         changeValuePresenter;
     @InjectMocks
     private DebuggerPresenter            presenter;
     @Mock
@@ -518,6 +521,14 @@ public class DebuggerTest extends BaseTest {
 
         verify(service).deleteBreakpoint(anyString(), (BreakPoint)anyObject(), (AsyncRequestCallback<Void>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
+    }
+
+    @Test
+    public void shouldOpenChangeVariableValueDialog() throws Exception {
+        presenter.onSelectedVariableElement(mock(Variable.class));
+        presenter.onChangeValueButtonClicked();
+
+        verify(changeValuePresenter).showDialog((DebuggerInfo)anyObject(), (Variable)anyObject(), (AsyncCallback<String>)anyObject());
     }
 
     @Test

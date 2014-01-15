@@ -20,8 +20,7 @@ package com.codenvy.ide.ext.java.jdi.server;
 /**
  * Main exception to throw my Debugger. Used as wrapper for JDI (Java Debug Interface) exceptions.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * @author andrew00x
  */
 @SuppressWarnings("serial")
 public class DebuggerException extends Exception {

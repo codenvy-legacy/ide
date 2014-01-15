@@ -21,10 +21,12 @@ import com.codenvy.dto.shared.DTO;
 
 import java.util.List;
 
-/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+/** @author andrew00x */
 @DTO
 public interface VariablePath {
     List<String> getPath();
 
     void setPath(List<String> path);
+
+    VariablePath withPath(List<String> path);
 }
