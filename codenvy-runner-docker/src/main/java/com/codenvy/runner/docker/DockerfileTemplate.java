@@ -53,10 +53,10 @@ import java.util.regex.Pattern;
  *                                 "MAINTAINER Codenvy Corp\n" +
  *                                 "ADD $app$ /tmp/$app$\n" +
  *                                 "CMD /bin/bash -cl \"java -classpath /tmp/$app$ $main_class$\"";
- *     DockerfileBuilder builder = DockerfileBuilder.of(dockerFileTemplate);
- *     builder.setParameter("app", "hello.jar");
- *     builder.setParameter("main_class", "test.helloworld.Main");
- *     builder.writeDockerfile(System.out);
+ *     DockerfileTemplate template = DockerfileTemplate.of(dockerFileTemplate);
+ *     template.setParameter("app", "hello.jar");
+ *     template.setParameter("main_class", "test.helloworld.Main");
+ *     template.writeDockerfile(System.out);
  * </pre>
  * In example above output is:
  * <pre>
@@ -68,33 +68,33 @@ import java.util.regex.Pattern;
  *
  * @author andrew00x
  */
-public class DockerfileBuilder {
+public class DockerfileTemplate {
     private final static Pattern TEMPLATE_PATTERN = Pattern.compile("\\$[^\\$^\\$]+\\$");
 
-    public static DockerfileBuilder of(java.io.File pattern) {
+    public static DockerfileTemplate of(java.io.File pattern) {
         if (pattern == null) {
             throw new IllegalArgumentException("null value is not allowed");
         }
-        return new DockerfileBuilder(pattern);
+        return new DockerfileTemplate(pattern);
     }
 
-    public static DockerfileBuilder of(String pattern) {
+    public static DockerfileTemplate of(String pattern) {
         if (pattern == null) {
             throw new IllegalArgumentException("null value is not allowed");
         }
-        return new DockerfileBuilder(pattern);
+        return new DockerfileTemplate(pattern);
     }
 
     private final java.io.File        patternFile;
     private final String              patternString;
     private final Map<String, Object> parameters;
 
-    public DockerfileBuilder setParameter(String name, Object value) {
+    public DockerfileTemplate setParameter(String name, Object value) {
         parameters.put(name, value);
         return this;
     }
 
-    public DockerfileBuilder setParameters(Map<String, ?> parameters) {
+    public DockerfileTemplate setParameters(Map<String, ?> parameters) {
         this.parameters.putAll(parameters);
         return this;
     }
@@ -103,7 +103,7 @@ public class DockerfileBuilder {
         return parameters.get(name);
     }
 
-    public DockerfileBuilder clearParameters() {
+    public DockerfileTemplate clearParameters() {
         parameters.clear();
         return this;
     }
@@ -143,13 +143,13 @@ public class DockerfileBuilder {
         }
     }
 
-    private DockerfileBuilder(java.io.File pattern) {
+    private DockerfileTemplate(java.io.File pattern) {
         this.patternFile = pattern;
         this.patternString = null;
         this.parameters = new LinkedHashMap<>();
     }
 
-    private DockerfileBuilder(String pattern) {
+    private DockerfileTemplate(String pattern) {
         this.patternFile = null;
         this.patternString = pattern;
         this.parameters = new LinkedHashMap<>();

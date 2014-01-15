@@ -31,7 +31,7 @@ public class UpdateDependencyAction extends Action {
     private ResourceProvider resourceProvider;
 
     public UpdateDependencyAction(JavaExtension javaExtension, ResourceProvider resourceProvider) {
-        super("Update dependencys", "Update dependencys", null);
+        super("Update dependencies", "Update dependencies", null);
         this.javaExtension = javaExtension;
         this.resourceProvider = resourceProvider;
     }

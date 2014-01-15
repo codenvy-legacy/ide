@@ -18,29 +18,21 @@
     from Codenvy S.A..
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
+        <groupId>com.codenvy.ide</groupId>
         <version>3.0.0-M7-SNAPSHOT</version>
     </parent>
-
     <artifactId>codenvy-runner-sdk</artifactId>
-    <name>Codenvy Runner :: SDK</name>
     <packaging>jar</packaging>
-
+    <name>Codenvy Runner :: SDK</name>
     <dependencies>
         <dependency>
             <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-lang</artifactId>
             <version>${com.codenvy.commons.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.platform-api</groupId>
-            <artifactId>codenvy-api-runner</artifactId>
-            <version>${com.codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
@@ -57,8 +49,12 @@
             <artifactId>codenvy-maven-tools</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-runner</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
+        </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -81,7 +77,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -102,14 +97,12 @@
                                     <outputDirectory>${project.build.directory}/classes</outputDirectory>
                                     <destFileName>tomcat.zip</destFileName>
                                 </artifactItem>
-
                                 <artifactItem>
                                     <groupId>com.codenvy.ide</groupId>
                                     <artifactId>codenvy-sdk-api-war</artifactId>
                                     <type>war</type>
                                     <version>${project.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/webapps
-                                    </outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/webapps</outputDirectory>
                                     <destFileName>api.war</destFileName>
                                 </artifactItem>
                                 <artifactItem>
@@ -117,8 +110,7 @@
                                     <artifactId>exo-ide-codeassistant-storage</artifactId>
                                     <type>war</type>
                                     <version>${org.exoplatform.ide.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/webapps
-                                    </outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/webapps</outputDirectory>
                                     <destFileName>codeassistant-storage.war</destFileName>
                                 </artifactItem>
                                 <artifactItem>
@@ -126,41 +118,35 @@
                                     <artifactId>codenvy-organization-packaging-api-war</artifactId>
                                     <type>war</type>
                                     <version>${com.codenvy.organization.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/webapps
-                                    </outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/webapps</outputDirectory>
                                     <destFileName>userdb.war</destFileName>
                                 </artifactItem>
-
                                 <artifactItem>
                                     <groupId>org.slf4j</groupId>
                                     <artifactId>slf4j-api</artifactId>
                                     <version>${org.slf4j.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/lib
-                                    </outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/lib</outputDirectory>
                                     <destFileName>slf4j-api.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.slf4j</groupId>
                                     <artifactId>jul-to-slf4j</artifactId>
                                     <version>${org.slf4j.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/lib
-                                    </outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/lib</outputDirectory>
                                     <destFileName>jul-to-slf4j.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>ch.qos.logback</groupId>
                                     <artifactId>logback-core</artifactId>
                                     <version>${ch.qos.logback.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/lib
-                                    </outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/lib</outputDirectory>
                                     <destFileName>logback-core.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>ch.qos.logback</groupId>
                                     <artifactId>logback-classic</artifactId>
                                     <version>${ch.qos.logback.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/lib
-                                    </outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/lib</outputDirectory>
                                     <destFileName>logback-classic.jar</destFileName>
                                 </artifactItem>
                             </artifactItems>
@@ -168,7 +154,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -182,39 +167,32 @@
                         <configuration>
                             <tasks>
                                 <!-- Unzip Tomcat package -->
-                                <unzip src="${project.build.directory}/classes/tomcat.zip"
-                                       dest="${project.build.directory}/classes">
+                                <unzip dest="${project.build.directory}/classes" src="${project.build.directory}/classes/tomcat.zip">
                                     <patternset>
-                                        <exclude name="**/ROOT/**"/>
-                                        <exclude name="**/docs/**"/>
-                                        <exclude name="**/examples/**"/>
-                                        <exclude name="**/manager/**"/>
-                                        <exclude name="**/host-manager/**"/>
+                                        <exclude name="**/ROOT/**" />
+                                        <exclude name="**/docs/**" />
+                                        <exclude name="**/examples/**" />
+                                        <exclude name="**/manager/**" />
+                                        <exclude name="**/host-manager/**" />
                                     </patternset>
                                 </unzip>
                                 <move todir="${project.build.directory}/classes/tomcat-bundle">
-                                    <fileset dir="${project.build.directory}/classes/apache-tomcat-${tomcat.version}"/>
+                                    <fileset dir="${project.build.directory}/classes/apache-tomcat-${tomcat.version}" />
                                 </move>
-                                <delete file="${project.build.directory}/classes/tomcat.zip"/>
-
+                                <delete file="${project.build.directory}/classes/tomcat.zip" />
                                 <!-- Move additional libraries and WAR's -->
                                 <move todir="${project.build.directory}/classes/tomcat-bundle">
-                                    <fileset dir="${project.build.directory}/classes/tomcat-resources"/>
+                                    <fileset dir="${project.build.directory}/classes/tomcat-resources" />
                                 </move>
-
                                 <!-- Copy pre-configured sh-scripts and configuration files -->
-                                <copy todir="${project.build.directory}/classes/tomcat-bundle" overwrite="true">
-                                    <fileset dir="${project.build.directory}/classes/tomcat"/>
+                                <copy overwrite="true" todir="${project.build.directory}/classes/tomcat-bundle">
+                                    <fileset dir="${project.build.directory}/classes/tomcat" />
                                 </copy>
-
                                 <!-- Zip prepared Tomcat binary distribution and remove temporary directory -->
-                                <zip basedir="${project.build.directory}/classes/tomcat-bundle"
-                                     destfile="${project.build.directory}/classes/tomcat.zip"/>
-                                <delete dir="${project.build.directory}/classes/tomcat-bundle"/>
-
+                                <zip basedir="${project.build.directory}/classes/tomcat-bundle" destfile="${project.build.directory}/classes/tomcat.zip" />
+                                <delete dir="${project.build.directory}/classes/tomcat-bundle" />
                                 <!-- Prepare Codenvy Platform sources -->
-                                <zip basedir="${project.build.directory}/classes/codenvyPlatform"
-                                     destfile="${project.build.directory}/classes/CodenvyPlatform.zip"/>
+                                <zip basedir="${project.build.directory}/classes/codenvyPlatform" destfile="${project.build.directory}/classes/CodenvyPlatform.zip" />
                             </tasks>
                         </configuration>
                     </execution>
