@@ -227,7 +227,7 @@ public class Debugger implements EventsHandler {
             String expression = breakPoint.getCondition();
             if (!(expression == null || expression.isEmpty())) {
                 ExpressionParser parser = ExpressionParser.newInstance(expression);
-                breakPointRequest.putProperty("org.exoplatform.ide.java.debug.condition.expression.parser", parser);
+                breakPointRequest.putProperty("com.codenvy.ide.java.debug.condition.expression.parser", parser);
             }
             breakPointRequest.setEnabled(true);
         } catch (NativeMethodException | IllegalThreadStateException | InvalidRequestStateException e) {
@@ -548,8 +548,7 @@ public class Debugger implements EventsHandler {
     private boolean processBreakPointEvent(com.sun.jdi.event.BreakpointEvent event) throws DebuggerException {
         setCurrentThread(event.thread());
         boolean hitBreakpoint;
-        ExpressionParser parser = (ExpressionParser)event.request()
-                                                         .getProperty("org.exoplatform.ide.java.debug.condition.expression.parser");
+        ExpressionParser parser = (ExpressionParser)event.request().getProperty("com.codenvy.ide.java.debug.condition.expression.parser");
         if (parser != null) {
             com.sun.jdi.Value result = evaluate(parser);
             hitBreakpoint = result instanceof com.sun.jdi.BooleanValue && ((com.sun.jdi.BooleanValue)result).value();

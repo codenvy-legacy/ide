@@ -22,7 +22,7 @@ import com.codenvy.dto.shared.DTO;
 /**
  * Description of debug breakpoint.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author andrew00x
  */
 @DTO
 public interface BreakPoint {
@@ -30,12 +30,17 @@ public interface BreakPoint {
 
     void setLocation(Location location);
 
+    BreakPoint withLocation(Location location);
+
     boolean isEnabled();
 
     void setEnabled(boolean enabled);
+
+    BreakPoint withEnabled(boolean enabled);
 
     String getCondition();
 
     void setCondition(String condition);
 
+    BreakPoint withCondition(String condition);
 }

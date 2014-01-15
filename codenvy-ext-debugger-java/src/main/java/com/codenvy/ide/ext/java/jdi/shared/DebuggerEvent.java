@@ -19,7 +19,7 @@ package com.codenvy.ide.ext.java.jdi.shared;
 
 import com.codenvy.dto.shared.DTO;
 
-/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+/** @author andrew00x */
 @DTO
 public interface DebuggerEvent {
     int BREAKPOINT = 1;

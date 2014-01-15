@@ -19,14 +19,18 @@ package com.codenvy.ide.ext.java.jdi.shared;
 
 import com.codenvy.dto.shared.DTO;
 
-/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+/** @author andrew00x */
 @DTO
 public interface UpdateVariableRequest {
     VariablePath getVariablePath();
 
-    String getExpression();
-
     void setVariablePath(VariablePath variablePath);
 
+    UpdateVariableRequest withVariablePath(VariablePath variablePath);
+
+    String getExpression();
+
     void setExpression(String expression);
+
+    UpdateVariableRequest withExpression(String expression);
 }
