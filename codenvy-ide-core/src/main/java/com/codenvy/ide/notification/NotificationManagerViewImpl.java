@@ -64,7 +64,7 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
 
     @UiField(provided = true)
     final   Resources      res;
-    private ActionDelegate delegate;
+//    private ActionDelegate delegate;
 
     /**
      * Create view.
@@ -103,12 +103,7 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
         iconPanel.setWidget(icon);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void setDelegate(ActionDelegate delegate) {
-        this.delegate = delegate;
-    }
-
+    
     /**
      * Return image for status
      *
