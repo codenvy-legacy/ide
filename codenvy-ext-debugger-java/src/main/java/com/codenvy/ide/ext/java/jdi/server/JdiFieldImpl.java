@@ -22,10 +22,7 @@ import com.sun.jdi.ObjectReference;
 import com.sun.jdi.ReferenceType;
 import com.sun.jdi.Value;
 
-/**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
- */
+/** @author andrew00x */
 public class JdiFieldImpl implements JdiField, Comparable<JdiFieldImpl> {
     private final Field           field;
     private final ReferenceType   type;
