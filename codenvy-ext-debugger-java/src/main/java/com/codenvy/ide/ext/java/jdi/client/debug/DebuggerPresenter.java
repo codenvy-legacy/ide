@@ -396,9 +396,9 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     public void onResumeButtonClicked() {
         changeButtonsEnableState(false);
         try {
-            service.resume(debuggerInfo.getId(), new AsyncRequestCallback<String>() {
+            service.resume(debuggerInfo.getId(), new AsyncRequestCallback<Void>() {
                 @Override
-                protected void onSuccess(String result) {
+                protected void onSuccess(Void result) {
                     resetStates();
                 }
 
@@ -527,8 +527,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         changeValuePresenter.showDialog(debuggerInfo, selectedVariable, new AsyncCallback<String>() {
             @Override
             public void onSuccess(String s) {
-                dtoFactory.createDtoFromJson(s, Variable.class);
-//                ((DtoClientImpls.VariableImpl)selectedVariable).setValue(s);
                 view.setVariables(variables);
             }
 
@@ -731,7 +729,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
 
     /** {@inheritDoc} */
     @Override
-    public void addBreakPoint(@NotNull final File file, final int lineNumber, final AsyncCallback<Breakpoint> callback)
+    public void addBreakpoint(@NotNull final File file, final int lineNumber, final AsyncCallback<Breakpoint> callback)
             throws RequestException {
         if (debuggerInfo != null) {
             Location location = dtoFactory.createDto(Location.class);
@@ -748,11 +746,11 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
             breakPoint.setEnabled(true);
 
             try {
-                service.addBreakPoint(debuggerInfo.getId(), breakPoint, new AsyncRequestCallback<String>() {
+                service.addBreakpoint(debuggerInfo.getId(), breakPoint, new AsyncRequestCallback<Void>() {
                     @Override
-                    protected void onSuccess(String result) {
+                    protected void onSuccess(Void result) {
                         if (resolver != null) {
-                            String fqn = resolver.resolveFqn(file);
+                            final String fqn = resolver.resolveFqn(file);
                             filesToBreakpoints.put(fqn, file);
                             Breakpoint breakpoint = new Breakpoint(Breakpoint.Type.BREAKPOINT, lineNumber, fqn);
                             callback.onSuccess(breakpoint);
@@ -766,14 +764,15 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                     }
                 });
             } catch (RequestException e) {
-                Log.error(DebuggerPresenter.class, e);
+                Notification notification = new Notification(e.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
             }
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void deleteBreakPoint(@NotNull File file, int lineNumber, final AsyncCallback<Void> callback) throws RequestException {
+    public void deleteBreakpoint(@NotNull File file, int lineNumber, final AsyncCallback<Void> callback) throws RequestException {
         if (debuggerInfo != null) {
             Location location = dtoFactory.createDto(Location.class);
             location.setLineNumber(lineNumber);
@@ -789,7 +788,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
             point.setEnabled(true);
 
             try {
-                service.deleteBreakPoint(debuggerInfo.getId(), point, new AsyncRequestCallback<Void>() {
+                service.deleteBreakpoint(debuggerInfo.getId(), point, new AsyncRequestCallback<Void>() {
                     @Override
                     protected void onSuccess(Void result) {
                         callback.onSuccess(null);
@@ -802,7 +801,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                     }
                 });
             } catch (RequestException e) {
-                Log.error(DebuggerPresenter.class, e);
+                Notification notification = new Notification(e.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
             }
         }
     }

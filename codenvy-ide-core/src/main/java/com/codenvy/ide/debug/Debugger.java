@@ -35,7 +35,7 @@ public interface Debugger {
      * @param callback
      * @throws RequestException
      */
-    void addBreakPoint(File file, int lineNumber, AsyncCallback<Breakpoint> callback) throws RequestException;
+    void addBreakpoint(File file, int lineNumber, AsyncCallback<Breakpoint> callback) throws RequestException;
 
     /**
      * Deletes breakpoint on server.
@@ -45,5 +45,5 @@ public interface Debugger {
      * @param callback
      * @throws RequestException
      */
-    void deleteBreakPoint(File file, int lineNumber, AsyncCallback<Void> callback) throws RequestException;
+    void deleteBreakpoint(File file, int lineNumber, AsyncCallback<Void> callback) throws RequestException;
 }

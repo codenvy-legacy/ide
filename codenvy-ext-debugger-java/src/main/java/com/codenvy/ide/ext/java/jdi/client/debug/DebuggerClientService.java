@@ -59,18 +59,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void addBreakPoint(@NotNull String id, @NotNull BreakPoint breakPoint, @NotNull AsyncRequestCallback<String> callback)
-            throws RequestException;
-
-    /**
-     * Deletes breakpoint.
-     *
-     * @param id
-     * @param breakPoint
-     * @param callback
-     * @throws RequestException
-     */
-    void deleteBreakPoint(@NotNull String id, @NotNull BreakPoint breakPoint, @NotNull AsyncRequestCallback<Void> callback)
+    void addBreakpoint(@NotNull String id, @NotNull BreakPoint breakPoint, @NotNull AsyncRequestCallback<Void> callback)
             throws RequestException;
 
     /**
@@ -80,7 +69,27 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void getAllBreakPoints(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void getAllBreakpoints(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+
+    /**
+     * Deletes breakpoint.
+     *
+     * @param id
+     * @param breakPoint
+     * @param callback
+     * @throws RequestException
+     */
+    void deleteBreakpoint(@NotNull String id, @NotNull BreakPoint breakPoint, @NotNull AsyncRequestCallback<Void> callback)
+            throws RequestException;
+
+    /**
+     * Remove all breakpoints.
+     *
+     * @param id
+     * @param callback
+     * @throws RequestException
+     */
+    void deleteAllBreakpoints(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Checks event.
@@ -107,7 +116,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void resume(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void resume(@NotNull String id, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
      * Returns value of a variable.
@@ -156,15 +165,6 @@ public interface DebuggerClientService {
      * @throws RequestException
      */
     void stepReturn(@NotNull String id, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
-
-    /**
-     * Remove all breakpoints.
-     *
-     * @param id
-     * @param callback
-     * @throws RequestException
-     */
-    void deleteAllBreakpoints(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Evaluate an expression.
