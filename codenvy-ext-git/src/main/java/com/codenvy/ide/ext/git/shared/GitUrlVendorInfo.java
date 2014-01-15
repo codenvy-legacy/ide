@@ -1,5 +1,7 @@
 package com.codenvy.ide.ext.git.shared;
 
+import com.codenvy.dto.shared.DTO;
+
 import java.util.List;
 
 /**
@@ -9,57 +11,36 @@ import java.util.List;
  * pattern, and in response to client we send all necessary information about this provider(e.g. its base host, short name, authorization
  * scopes if it support authorization via oauth and if our url is ssh url) and client based on this info can call authorization for user.
  */
-public class GitUrlVendorInfo {
-    private String       vendorName;
-    private String       vendorBaseHost;
-    private List<String> oauthScopes;
-    private boolean      givenUrlSSH;
-
-    public GitUrlVendorInfo() {
-    }
-
-    public GitUrlVendorInfo(String vendorName, String vendorBaseHost, List<String> oauthScopes, boolean givenUrlSSH) {
-        this.vendorName = vendorName;
-        this.vendorBaseHost = vendorBaseHost;
-        this.oauthScopes = oauthScopes;
-        this.givenUrlSSH = givenUrlSSH;
-    }
+@DTO
+public interface GitUrlVendorInfo {
 
     /**
      * Get short Git service name.
      *
      * @return short service name
      */
-    public String getVendorName() {
-        return vendorName;
-    }
+    String getVendorName();
 
     /**
      * Get base Git service host.
      *
      * @return base Git service host
      */
-    public String getVendorBaseHost() {
-        return vendorBaseHost;
-    }
+    String getVendorBaseHost();
 
     /**
      * If current url is SSH.
      *
      * @return true is current url is SSH
      */
-    public boolean isGivenUrlSSH() {
-        return givenUrlSSH;
-    }
+    boolean isGivenUrlSSH();
 
     /**
      * Get list of authorization scopes for specific Git service.
      *
      * @return list of scopes
      */
-    public List<String> getOAuthScopes() {
-        return oauthScopes;
-    }
+    List<String> getOAuthScopes();
 
     /**
      * Set short Git service name.
@@ -67,9 +48,15 @@ public class GitUrlVendorInfo {
      * @param vendorName
      *         short service name
      */
-    public void setVendorName(String vendorName) {
-        this.vendorName = vendorName;
-    }
+    void setVendorName(String vendorName);
+
+    /**
+     * Set short Git service name.
+     *
+     * @param vendorName
+     *         short service name
+     */
+    GitUrlVendorInfo withVendorName(String vendorName);
 
     /**
      * Set base Git service host.
@@ -77,9 +64,16 @@ public class GitUrlVendorInfo {
      * @param vendorBaseHost
      *         base Git service host
      */
-    public void setVendorBaseHost(String vendorBaseHost) {
-        this.vendorBaseHost = vendorBaseHost;
-    }
+    void setVendorBaseHost(String vendorBaseHost);
+
+    /**
+     * Set base Git service host.
+     *
+     * @param vendorBaseHost
+     *         base Git service host
+     */
+
+    GitUrlVendorInfo withVendorBaseHost(String vendorBaseHost);
 
     /**
      * Set list of authorization scopes for specific Git service.
@@ -87,9 +81,15 @@ public class GitUrlVendorInfo {
      * @param oauthScopes
      *         list of scopes
      */
-    public void setOauthScopes(List<String> oauthScopes) {
-        this.oauthScopes = oauthScopes;
-    }
+    void setOAuthScopes(List<String> oauthScopes);
+
+    /**
+     * Set list of authorization scopes for specific Git service.
+     *
+     * @param oauthScopes
+     *         list of scopes
+     */
+    GitUrlVendorInfo withOAuthScopes(List<String> oauthScopes);
 
     /**
      * Set if current url is SSH.
@@ -97,7 +97,13 @@ public class GitUrlVendorInfo {
      * @param givenUrlSSH
      *         true is current url is SSH
      */
-    public void setGivenUrlSSH(boolean givenUrlSSH) {
-        this.givenUrlSSH = givenUrlSSH;
-    }
+    void setGivenUrlSSH(boolean givenUrlSSH);
+
+    /**
+     * Set if current url is SSH.
+     *
+     * @param givenUrlSSH
+     *         true is current url is SSH
+     */
+    GitUrlVendorInfo withGivenUrlSSH(boolean givenUrlSSH);
 }

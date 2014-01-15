@@ -2,6 +2,7 @@ package com.codenvy.ide.ext.git.server.provider.rest;
 
 
 import com.codenvy.commons.json.JsonHelper;
+import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.ext.git.server.provider.GitVendorService;
 import com.codenvy.ide.ext.git.server.provider.GitVendorServiceProvider;
@@ -49,10 +50,12 @@ public class ProviderService {
     @Produces(MediaType.APPLICATION_JSON)
     public GitUrlVendorInfo getInfoForVcsUrl(@QueryParam("vcsurl") String vcsUrl) throws ProviderException {
         GitVendorService gitService = gitProvider.getGitServiceByUrlMatch(vcsUrl);
-        return new GitUrlVendorInfo(gitService == null ? null : gitService.getVendorName(),
-                                    gitService == null ? null : gitService.getVendorBaseHost(),
-                                    gitService == null ? null : gitService.getVendorOAuthScopes(),
-                                    GitVendorService.isVcsUrlIsSSH(vcsUrl));
+
+        return DtoFactory.getInstance().createDto(GitUrlVendorInfo.class)
+                         .withVendorName(gitService.getVendorName())
+                         .withVendorBaseHost(gitService.getVendorBaseHost())
+                         .withOAuthScopes(gitService.getVendorOAuthScopes())
+                         .withGivenUrlSSH(GitVendorService.isVcsUrlIsSSH(vcsUrl));
     }
 
     /**
