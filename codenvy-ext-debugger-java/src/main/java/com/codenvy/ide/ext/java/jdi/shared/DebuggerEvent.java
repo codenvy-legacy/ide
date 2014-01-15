@@ -26,4 +26,8 @@ public interface DebuggerEvent {
     int STEP       = 2;
 
     int getType();
+
+    void setType(int type);
+
+    DebuggerEvent withType(int type);
 }
