@@ -20,6 +20,7 @@ package com.codenvy.ide.ext.git.client;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.Commiters;
 import com.codenvy.ide.ext.git.shared.DiffRequest;
+import com.codenvy.ide.ext.git.shared.GitUrlVendorInfo;
 import com.codenvy.ide.ext.git.shared.ResetRequest;
 import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.resources.model.Project;
@@ -659,4 +660,6 @@ public interface GitClientService {
 
     void deleteRepository(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<Void> callback)
             throws RequestException;
+
+    void getUrlVendorInfo(@NotNull String vcsUrl, @NotNull AsyncRequestCallback<GitUrlVendorInfo> callback) throws RequestException;
 }

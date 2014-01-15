@@ -2,8 +2,8 @@
  * CODENVY CONFIDENTIAL
  * __________________
  * 
- *  [2012] - [2013] Codenvy, S.A. 
- *  All Rights Reserved.
+ * [2012] - [2014] Codenvy, S.A. 
+ * All Rights Reserved.
  * 
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
@@ -15,34 +15,26 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.git.server;
+package com.codenvy.ide.ext.github.server.inject;
 
-import com.codenvy.ide.ext.git.server.nativegit.CredentialsProvider;
-import com.codenvy.ide.ext.git.server.nativegit.OAuthCredentialsProvider;
 import com.codenvy.ide.ext.git.server.provider.GitVendorService;
-import com.codenvy.ide.ext.git.server.provider.rest.ProviderExceptionMapper;
-import com.codenvy.ide.ext.git.server.provider.rest.ProviderService;
+import com.codenvy.ide.ext.github.server.GitHub;
 import com.codenvy.inject.DynaModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
 
 /**
- * The module that contains configuration of the server side part of the Git extension.
+ * The module that contains configuration of the server side part of the GitHub extension.
  *
- * @author andrew00x
+ * @author Andrey Plotnikov
  */
 @DynaModule
-public class GitModule extends AbstractModule {
+public class GitHubModule extends AbstractModule {
 
     /** {@inheritDoc} */
     @Override
     protected void configure() {
-        Multibinder<CredentialsProvider> multiBindings = Multibinder.newSetBinder(binder(), CredentialsProvider.class);
-        multiBindings.addBinding().to(OAuthCredentialsProvider.class);
-
         Multibinder<GitVendorService> gitVendorServices = Multibinder.newSetBinder(binder(), GitVendorService.class);
-
-        bind(ProviderService.class);
-        bind(ProviderExceptionMapper.class).toInstance(new ProviderExceptionMapper());
+        gitVendorServices.addBinding().to(GitHub.class);
     }
 }
