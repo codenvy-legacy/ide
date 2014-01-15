@@ -71,10 +71,10 @@ public class CredentialsLoader {
         }
         File gitAskPassScript = new File(askScriptDirectory, GIT_ASK_PASS_SCRIPT);
         try (FileOutputStream fos = new FileOutputStream(gitAskPassScript)) {
-            gitAskPassTemplate = gitAskPassTemplate.replace("$self", gitAskPassScript.getAbsolutePath())
+            String actualGitAskPassTemplate = gitAskPassTemplate.replace("$self", gitAskPassScript.getAbsolutePath())
                                                    .replace("$password", password.toString())
                                                    .replace("$username", username.getValue());
-            fos.write(gitAskPassTemplate.getBytes());
+            fos.write(actualGitAskPassTemplate.getBytes());
         } catch (IOException e) {
             LOG.error("It is not possible to store " + gitAskPassScript + " credentials", e);
             throw new GitException("Can't store credentials");
@@ -100,14 +100,14 @@ public class CredentialsLoader {
     public File findCredentialsAndCreateGitAskPassScript(String url) throws GitException {
         CredentialItem.Username username = new CredentialItem.Username();
         CredentialItem.Password password = new CredentialItem.Password();
-        boolean b = false;
+        boolean isCredentialsPresent = false;
         for (CredentialsProvider cp : credentialsProviders) {
-           if (b = cp.get(url, username, password)) {
+           if (isCredentialsPresent = cp.get(url, username, password)) {
                break;
            }
         }
         //if not available providers exist
-        if (!b) {
+        if (!isCredentialsPresent) {
             username.setValue("");
             password.setValue("");
         }

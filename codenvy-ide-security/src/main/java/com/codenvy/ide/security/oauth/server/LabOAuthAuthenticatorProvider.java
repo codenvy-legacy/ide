@@ -21,6 +21,7 @@ import com.codenvy.commons.security.oauth.GitHubOAuthAuthenticator;
 import com.codenvy.commons.security.oauth.GoogleOAuthAuthenticator;
 import com.codenvy.commons.security.oauth.OAuthAuthenticator;
 import com.codenvy.commons.security.oauth.OAuthAuthenticatorProvider;
+import com.codenvy.commons.security.oauth.WSO2OAuthAuthenticator;
 import com.google.api.client.auth.oauth2.MemoryCredentialStore;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.json.jackson.JacksonFactory;
@@ -56,6 +57,15 @@ public class LabOAuthAuthenticatorProvider implements OAuthAuthenticatorProvider
 
         authenticators.put(gitHubOAuthAuthenticator.getOAuthProvider(), gitHubOAuthAuthenticator);
         authenticators.put(googleOAuthAuthenticator.getOAuthProvider(), googleOAuthAuthenticator);
+
+        try {
+            WSO2OAuthAuthenticator wso2OAuthAuthenticator =
+                    new WSO2OAuthAuthenticator(new MemoryCredentialStore(),
+                                               getClientSecrets("wso2_client_secrets.json"));
+            authenticators.put(wso2OAuthAuthenticator.getOAuthProvider(), wso2OAuthAuthenticator);
+        } catch (Exception ignored) {
+            // ignore wso2 configuration
+        }
     }
 
     @Override
@@ -77,6 +87,5 @@ public class LabOAuthAuthenticatorProvider implements OAuthAuthenticatorProvider
             throw new RuntimeException(e.getLocalizedMessage(), e);
         }
     }
-
 
 }
