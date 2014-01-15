@@ -25,6 +25,7 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -46,15 +47,15 @@ public class CloneRepositoryViewImpl extends DialogBox implements CloneRepositor
     private static CloneRepositoryViewImplUiBinder ourUiBinder = GWT.create(CloneRepositoryViewImplUiBinder.class);
 
     @UiField
-    TextBox                   remoteUri;
+    TextBox remoteUri;
     @UiField
-    TextBox                   projectName;
+    TextBox projectName;
     @UiField
-    TextBox                   remoteName;
+    TextBox remoteName;
     @UiField
-    com.codenvy.ide.ui.Button btnClone;
+    Button  btnClone;
     @UiField
-    com.codenvy.ide.ui.Button btnCancel;
+    Button  btnCancel;
     @UiField(provided = true)
     final   GitResources            res;
     @UiField(provided = true)

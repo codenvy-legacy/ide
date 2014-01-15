@@ -18,8 +18,7 @@
 
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui"
-             xmlns:c="urn:import:com.codenvy.ide.ui">
+             xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:with field='res' type='com.codenvy.ide.Resources'/>
     <ui:style>
         .alignBtn {
@@ -43,13 +42,13 @@
         <g:south size="40.0">
             <g:FlowPanel addStyleNames="{style.emptyBorder}">
                 <g:FlowPanel height="100%" width="100%">
-                    <c:Button text="Cancel" icon="{res.cancel}" width="60px" size="SMALL" addStyleNames="{style.alignBtn}"
+                    <g:Button text="Cancel"  width="60px" height="100%"  addStyleNames="{style.alignBtn}"
                               ui:field="btnCancel"/>
-                    <c:Button text="Finish" icon="{res.ok}" width="60px" size="SMALL" addStyleNames="{style.alignBtn} {style.space}"
+                    <g:Button text="Finish"  width="60px" height="100%" addStyleNames="{style.alignBtn} {style.space}"
                               ui:field="btnFinish"/>
-                    <c:Button text="Next" icon="{res.next}" width="60px" size="SMALL" addStyleNames="{style.alignBtn} {style.space}"
+                    <g:Button text="Next"  width="60px" height="100%" addStyleNames="{style.alignBtn} {style.space}"
                               ui:field="btnNext"/>
-                    <c:Button text="Back" icon="{res.back}" width="60px" size="SMALL" addStyleNames="{style.alignBtn} {style.space}"
+                    <g:Button text="Back"  width="60px" height="100%" addStyleNames="{style.alignBtn} {style.space}"
                               ui:field="btnBack"/>
                 </g:FlowPanel>
             </g:FlowPanel>

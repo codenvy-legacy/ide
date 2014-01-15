@@ -17,10 +17,12 @@
  */
 package com.codenvy.ide.user;
 
+import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.json.JsonHelper;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.Utils;
 import com.google.gwt.http.client.RequestBuilder;
@@ -64,6 +66,6 @@ public class UserClientServiceImpl implements UserClientService {
             throws RequestException {
         final String requestUrl = restContext + UPDATE_USER_ATTRIBUTES;
         String updateAttributesData = JsonHelper.toJson(updateUserAttributes);
-        AsyncRequest.build(RequestBuilder.POST, requestUrl).loader(loader).data(updateAttributesData).send(callback);
+        AsyncRequest.build(RequestBuilder.POST, requestUrl).loader(loader).header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(updateAttributesData).send(callback);
     }
 }

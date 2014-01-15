@@ -73,16 +73,17 @@ dialogBottomRightInner;
     }
 
     .gwt-DialogBox .dialogMiddleLeft {
-        width: 6px;
+        width: 1px;
         background: dialogMiddleLeft;
     }
 
     .gwt-DialogBox .dialogMiddleLeftInner {
-
+        width: 1px;
     }
 
     .gwt-DialogBox .dialogMiddleCenter {
         padding: 0px;
+        background-color: dialogContentBackground;
     }
 
     .gwt-DialogBox .dialogMiddleCenterInner {

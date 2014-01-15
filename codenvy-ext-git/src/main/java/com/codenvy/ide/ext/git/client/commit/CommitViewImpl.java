@@ -25,6 +25,7 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.TextArea;
@@ -47,15 +48,15 @@ public class CommitViewImpl extends DialogBox implements CommitView {
     private static CommitViewImplUiBinder ourUiBinder = GWT.create(CommitViewImplUiBinder.class);
 
     @UiField
-    CheckBox                  all;
+    CheckBox all;
     @UiField
-    CheckBox                  amend;
+    CheckBox amend;
     @UiField
-    TextArea                  message;
+    TextArea message;
     @UiField
-    com.codenvy.ide.ui.Button btnCommit;
+    Button   btnCommit;
     @UiField
-    com.codenvy.ide.ui.Button btnCancel;
+    Button   btnCancel;
     @UiField(provided = true)
     final   GitResources            res;
     @UiField(provided = true)

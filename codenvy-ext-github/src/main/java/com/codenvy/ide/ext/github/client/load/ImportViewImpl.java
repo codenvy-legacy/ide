@@ -20,7 +20,6 @@ package com.codenvy.ide.ext.github.client.load;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.github.client.GitHubLocalizationConstant;
 import com.codenvy.ide.ext.github.client.GitHubResources;
-import com.codenvy.ide.ui.Button;
 import com.google.gwt.cell.client.ImageResourceCell;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
@@ -35,6 +34,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
@@ -74,7 +74,7 @@ public class ImportViewImpl extends DialogBox implements ImportView {
     final   GitHubResources            res;
     @UiField(provided = true)
     final   GitHubLocalizationConstant locale;
-    private ActionDelegate          delegate;
+    private ActionDelegate             delegate;
 
     /**
      * Create view.

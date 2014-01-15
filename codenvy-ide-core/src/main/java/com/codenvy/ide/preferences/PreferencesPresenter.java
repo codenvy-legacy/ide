@@ -21,8 +21,9 @@ import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
+
+import java.util.Set;
 
 
 /**
@@ -36,11 +37,11 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class PreferencesPresenter implements PreferencesView.ActionDelegate, PreferencesPagePresenter.DirtyStateListener {
-    private PreferencesView                 view;
+    private PreferencesView view;
+    private Set<PreferencesPagePresenter> presenters;
     private PreferencesPagePresenter        currentPage;
     private Array<PreferencesPagePresenter> preferences;
     private boolean                         hasDirtyPage;
-    private PreferencesAgentImpl            agent;
 
     /**
      * Create presenter.
@@ -48,13 +49,13 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
      * For tests.
      *
      * @param view
-     * @param agent
+     * @param presenters
      */
     @Inject
-    protected PreferencesPresenter(PreferencesView view, PreferencesAgentImpl agent) {
+    protected PreferencesPresenter(PreferencesView view, Set<PreferencesPagePresenter> presenters) {
         this.view = view;
+        this.presenters = presenters;
         this.view.setDelegate(this);
-        this.agent = agent;
     }
 
     /** {@inheritDoc} */
@@ -100,10 +101,9 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
     /** Shows preferences. */
     public void showPreferences() {
         if (preferences == null) {
-            Array<Provider<? extends PreferencesPagePresenter>> preferenceProvides = agent.getPreferences();
             preferences = Collections.createArray();
-            for (Provider<? extends PreferencesPagePresenter> provider : preferenceProvides.asIterable()) {
-                preferences.add(provider.get());
+            for (PreferencesPagePresenter presenter : presenters) {
+                preferences.add(presenter);
             }
         }
 

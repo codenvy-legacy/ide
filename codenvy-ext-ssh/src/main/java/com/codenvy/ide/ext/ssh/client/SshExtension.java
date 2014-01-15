@@ -34,6 +34,6 @@ import com.google.inject.Singleton;
 public class SshExtension {
     @Inject
     public SshExtension(PreferencesAgent preferencesAgent, Provider<SshKeyManagerPresenter> managerPresenter) {
-        preferencesAgent.addPage(managerPresenter);
+//        preferencesAgent.addPage(managerPresenter);
     }
 }

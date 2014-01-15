@@ -55,11 +55,11 @@
     }
 
     .menuBarItem {
-        color: #333333;
+        /*color: #333333;*/
     }
 
     .menuBarItemOver {
-        color: #333333;
+        /*color: #333333;*/
         /*background: -moz-linear-gradient(top, rgba(192,195,199,1) 0%, rgba(242,252,255,1) 5%, rgba(230,248,255,1) 26%, rgba(178,215,255,1) 79%, rgba(178,215,255,1) 100%); *//* FF3.6+ */
         /*background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(192,195,199,1)), color-stop(5%,rgba(242,252,255,1)), color-stop(26%,rgba(230,248,255,1)), color-stop(79%,rgba(178,215,255,1)), color-stop(100%,rgba(178,215,255,1))); *//* Chrome,Safari4+ */
         /*background: -webkit-linear-gradient(top, rgba(192,195,199,1) 0%,rgba(242,252,255,1) 5%,rgba(230,248,255,1) 26%,rgba(178,215,255,1) 79%,rgba(178,215,255,1) 100%); *//* Chrome10+,Safari5.1+ */
@@ -67,7 +67,7 @@
     }
 
     .menuBarItemSelected {
-        color: #333333;
+        /*color: #333333;*/
         /*background: -moz-linear-gradient(top, rgba(192,195,199,1) 0%, rgba(178,215,255,1) 5%, rgba(234,250,255,1) 63%, rgba(242,252,255,1) 79%, rgba(242,252,255,1) 100%); *//* FF3.6+ */
         /*background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(192,195,199,1)), color-stop(5%,rgba(178,215,255,1)), color-stop(63%,rgba(234,250,255,1)), color-stop(79%,rgba(242,252,255,1)), color-stop(100%,rgba(242,252,255,1))); *//* Chrome,Safari4+ */
         /*background: -webkit-linear-gradient(top, rgba(192,195,199,1) 0%,rgba(178,215,255,1) 5%,rgba(234,250,255,1) 63%,rgba(242,252,255,1) 79%,rgba(242,252,255,1) 100%); *//* Chrome10+,Safari5.1+ */
@@ -76,5 +76,5 @@
     }
 
     .menuBarItemDisabled {
-        color: #AAAAAA;
+        color: disabledMenuItemColor;
     }

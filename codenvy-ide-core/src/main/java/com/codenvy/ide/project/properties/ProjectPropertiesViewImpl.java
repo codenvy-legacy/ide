@@ -35,6 +35,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
@@ -56,21 +57,21 @@ public class ProjectPropertiesViewImpl extends DialogBox implements ProjectPrope
     private static ProjectPropertiesViewImplUiBinder uiBinder = GWT.create(ProjectPropertiesViewImplUiBinder.class);
 
     @UiField
-    com.codenvy.ide.ui.Button                        btnCancel;
+    Button btnCancel;
     @UiField
-    com.codenvy.ide.ui.Button                        btnSave;
+    Button btnSave;
     @UiField
-    com.codenvy.ide.ui.Button                        btnDelete;
+    Button btnDelete;
     @UiField
-    com.codenvy.ide.ui.Button                        btnEdit;
+    Button btnEdit;
 
     @UiField(provided = true)
-    CellTable<Property>                              propertiesTable;
+    CellTable<Property> propertiesTable;
 
     @UiField(provided = true)
-    Resources                                        res;
-    private ActionDelegate                           delegate;
-    private ProjectPropertiesLocalizationConstant    localization;
+    Resources res;
+    private ActionDelegate                        delegate;
+    private ProjectPropertiesLocalizationConstant localization;
 
 
     @Inject

@@ -15,24 +15,133 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
+@external .gwt-SplitLayoutPanel-HDragger, .gwt-SplitLayoutPanel-VDragger, .hsplitter, .hsplitter, .gwt-DialogBox, gwt-Button,
+          gwt-PushButton-up,gwt-PushButton-up-hovering,gwt-PushButton-up-disabled,
+          gwt-PushButton-down,.gwt-PushButton-down-hovering,.gwt-PushButton-down-disabled, gwt-ToggleButton-up, gwt-ToggleButton-up-hovering, gwt-ToggleButton-up-disabled,
+          gwt-ToggleButton-down, .gwt-ToggleButton-down-hovering, .gwt-ToggleButton-down-disabled, gwt-TextBox;
 
     /* Global styles and external GWT styles. */
 
     body, td {
         font-size: 13px;
-        font-family: arial, sans-serif;
-        color: #222;
+        font-family: mainFontFamily;
+        color: mainFontColor;
 
         /* We turn off document level scrolling all together for the outer page. */
         overflow: hidden;
+        /*background-color: partBackground;*/
     }
 
         /* We must override the user agent stylesheet which sets textarea font to monospace. */
     textarea {
         font-family: inherit;
+        background-color: #272727;
     }
+.gwt-TextBox{
+    background-color: inputBackground;
+    color: mainFontColor;
+    border: 1px solid tabBorder;
+    border-radius: 2px;
+}
 
-    #talk_roster {
+.gwt-Button{
+    padding: 0px;
+    color: mainFontColor;
+    border-radius: 2px;
+    border: 1px solid tabBorder;
+    font-weight: 500;
+    background: linear-gradient(to bottom, buttonTopColor 0%, buttonTopColor 3%,buttonColor 4%, buttonColor 100%);
+}
+.gwt-Button:hover, .gwt-Button[disabled]:hover{
+    /*border-top: 1px solid #646464;*/
+    border: 1px solid tabBorder;
+}
+
+.gwt-Button:active{
+    box-shadow:  0 0 4px 2px selectionBackground;
+    border-radius: 3px;
+    outline: none;
+}
+
+*::-moz-focus-inner {
+    border: 0;
+}
+
+.gwt-Button[disabled]:active{
+    box-shadow:  0 0 0px 0px selectionBackground;
+    border-radius: 2px;
+    outline: none;
+}
+
+
+.gwt-PushButton-up,.gwt-ToggleButton-up{
+    color: mainFontColor;
+    border-radius: 2px;
+    border: 1px solid tabBorder;
+    font-weight: 500;
+    background: linear-gradient(to bottom, buttonTopColor 0%, buttonTopColor 3%,buttonColor 4%, buttonColor 100%);
+}
+.gwt-PushButton-up-hovering, .gwt-ToggleButton-up-hovering{
+    border: 1px solid tabBorder;
+    background: linear-gradient(to bottom, buttonTopColor 0%, buttonTopColor 3%,buttonColor 4%, buttonColor 100%);
+}
+.gwt-PushButton-up-disabled, .gwt-ToggleButton-up-disabled{
+
+}
+.gwt-PushButton-down, .gwt-ToggleButton-down{
+    color: mainFontColor;
+    border-radius: 2px;
+    border: 1px solid tabBorder;
+    font-weight: 500;
+    background: linear-gradient(to bottom, buttonTopColor 0%, buttonTopColor 3%,buttonColor 4%, buttonColor 100%);
+    box-shadow:  0 0 4px 2px selectionBackground;
+    border-radius: 3px;
+    outline: none;
+}
+.gwt-PushButton-down-hovering, .gwt-ToggleButton-down-hovering{
+    color: mainFontColor;
+    border-radius: 2px;
+    border: 1px solid tabBorder;
+    font-weight: 500;
+    background: linear-gradient(to bottom, buttonTopColor 0%, buttonTopColor 3%,buttonColor 4%, buttonColor 100%);
+    box-shadow:  0 0 4px 2px selectionBackground;
+    border-radius: 3px;
+    outline: none;
+}
+.gwt-PushButton-down-disabled, .gwt-ToggleButton-down-disabled{
+    box-shadow:  0 0 0px 0px selectionBackground;
+    border-radius: 2px;
+    outline: none;
+    color: #888888;
+}
+
+/* Style for splitter */
+.gwt-SplitLayoutPanel-HDragger {
+    /*background: tabBorder;*/
+    cursor: col-resize;
+}
+
+.gwt-SplitLayoutPanel-VDragger {
+    /*background: tabBorder;*/
+    cursor: row-resize;
+}
+
+.gwt-DialogBox {
+    box-shadow: 0 0 6px 1px tabBorder;
+}
+
+.hsplitter, .gwt-SplitLayoutPanel-HDragger {
+    background: tabBorder;  /*Old browsers */
+    background: linear-gradient(to right, tabBorder 0%, tabBorder 10%,tabsPanelBackground 10%,tabsPanelBackground 90%,tabBorder 91%,tabBorder 100%); /* W3C */
+}
+
+.vsplitter, .gwt-SplitLayoutPanel-VDragger {
+    background: tabBorder;  /*Old browsers */
+    background: linear-gradient(to bottom, tabBorder 0%,tabBorder 10%,tabsPanelBackground 10%,tabsPanelBackground 90%,tabBorder 91%,tabBorder 100%); /* W3C */
+}
+
+
+#talk_roster {
         display: none;
     }
 

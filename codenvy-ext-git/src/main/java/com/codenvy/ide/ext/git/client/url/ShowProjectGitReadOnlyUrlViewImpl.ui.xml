@@ -18,8 +18,7 @@
 
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:c='urn:import:com.codenvy.ide.ui'>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field='locale' type='com.codenvy.ide.ext.git.client.GitLocalizationConstant'/>
     <ui:with field='res' type='com.codenvy.ide.ext.git.client.GitResources'/>
     <ui:style>
@@ -38,8 +37,7 @@
     <g:DockLayoutPanel unit="PX" width="450px" height="90px" addStyleNames="{style.emptyBorder}">
         <g:south size="26.0">
             <g:FlowPanel>
-                <c:Button addStyleNames="{style.alignBtn}" text="{locale.buttonClose}" width="60px" size="SMALL"
-                          type="SUCCESS" ui:field="btnClose"/>
+                <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonClose}" width="60px" ui:field="btnClose"/>
             </g:FlowPanel>
         </g:south>
         <g:center>

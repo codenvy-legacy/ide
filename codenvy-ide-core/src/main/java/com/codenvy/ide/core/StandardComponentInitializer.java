@@ -39,11 +39,9 @@ import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
-import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
 import com.codenvy.ide.api.ui.wizard.DefaultWizard;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResource;
-import com.codenvy.ide.extension.ExtensionManagerPresenter;
 import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.welcome.WelcomeLocalizationConstant;
@@ -173,12 +171,6 @@ public class StandardComponentInitializer {
     @Inject
     private Provider<ChooseTemplatePagePresenter> chooseTemplatePageProvider;
 
-    @Inject
-    private PreferencesAgent preferencesAgent;
-
-    @Inject
-    private Provider<ExtensionManagerPresenter> extensionManagerPresenter;
-
     /** Instantiates {@link StandardComponentInitializer} an creates standard content */
     @Inject
     public StandardComponentInitializer() {
@@ -195,8 +187,6 @@ public class StandardComponentInitializer {
         resourceProvider.registerFileType(xmlFile);
         newResourceAgent.register(xmlFileProvider);
         editorRegistry.register(xmlFile, xmlEditorProvider);
-
-        preferencesAgent.addPage(extensionManagerPresenter);
 
         DefaultActionGroup window = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_WINDOW);
         actionManager.registerAction("showPreferences", showPreferencesAction);

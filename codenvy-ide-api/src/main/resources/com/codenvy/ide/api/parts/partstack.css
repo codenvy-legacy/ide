@@ -1,3 +1,4 @@
+@CHARSET "UTF-8";
 /*
  * CODENVY CONFIDENTIAL
  * __________________
@@ -15,8 +16,6 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-
-@CHARSET "UTF-8";
 
 .ide-PartStack {
     /* fill */
@@ -88,19 +87,8 @@
 }
 
 .ide-PartStack-focused .ide-Base-Part-Toolbar {
-    /*border: 2px solid highlightFocus;*/
-    background: -moz-linear-gradient(top, rgba(195,222,255,1) 0%, rgba(212,232,255,1) 5%, rgba(212,232,255,1) 95%, rgba(195,222,255,1) 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(195,222,255,1)), color-stop(5%,rgba(212,232,255,1)), color-stop(95%,rgba(212,232,255,1)), color-stop(100%,rgba(195,222,255,1))); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, rgba(195,222,255,1) 0%,rgba(212,232,255,1) 5%,rgba(212,232,255,1) 95%,rgba(195,222,255,1) 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, rgba(195,222,255,1) 0%,rgba(212,232,255,1) 5%,rgba(212,232,255,1) 95%,rgba(195,222,255,1) 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, rgba(195,222,255,1) 0%,rgba(212,232,255,1) 5%,rgba(212,232,255,1) 95%,rgba(195,222,255,1) 100%); /* IE10+ */
-    background: linear-gradient(to bottom, rgba(195,222,255,1) 0%,rgba(212,232,255,1) 5%,rgba(212,232,255,1) 95%,rgba(195,222,255,1) 100%); /* W3C */
+    background-color: partToolbarActive;
 }
-
-/*.ide-PartStack-focused .ide-PartStack-Tab-selected {*/
-    /*background: highlightFocus;*/
-    /*border-bottom: 2px solid highlightFocus;*/
-/*}*/
 
 .ide-PartStack-Tab-Left{
     -webkit-transform: rotate(270deg);
@@ -157,7 +145,7 @@
 /*}*/
 
 .ide-PartStack-Content{
-    background-color: activeTabBackground;
+    background-color: partBackground;
     width: 100%;
     height: 100%;
 }
@@ -180,9 +168,12 @@
 }
 
 .ide-Base-Part-Toolbar{
-    background: -webkit-linear-gradient(top, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);
-    background: -moz-linear-gradient(top, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);
-    background: linear-gradient(to bottom, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);
+    /*background: -webkit-linear-gradient(top, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);*/
+    /*background: -moz-linear-gradient(top, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);*/
+    /*background: linear-gradient(to bottom, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);*/
+    background-color: partToolbar;
+    border-bottom: 1px solid tabBorder;
+    box-shadow: 0px 2px 5px 0px partToolbarShadow;
     padding-left: 3px;
     padding-right: 5px;
     /*border-left: 1px solid  rgb(150, 150, 150);*/
