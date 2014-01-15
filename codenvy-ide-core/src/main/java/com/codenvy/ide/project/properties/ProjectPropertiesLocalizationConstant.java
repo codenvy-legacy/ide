@@ -41,24 +41,42 @@ public interface ProjectPropertiesLocalizationConstant extends Messages {
     @Key("edit.button.title")
     String editButtonTitle();
 
+    @Key("add.button.title")
+    String addButtonTitle();
+
     @Key("save.button.title")
     String saveButtonTitle();
 
     @Key("cancel.button.title")
     String cancelButtonTitle();
-    
+
     @Key("ok.button.title")
     String okButtonTitle();
 
     @Key("edit.property.view.title")
     String editPropertyViewTitle();
-    
+
     @Key("get.project.properties.failed")
     String getProjectPropertiesFailed();
-    
+
     @Key("save.project.properties.failed")
     String saveProjectPropertiesFailed();
-    
+
     @Key("delete.property.question")
     String deletePropertyQuestion(String property);
+
+    @Key("add.property.view.title")
+    String addPropertyViewTitle();
+
+    @Key("add.property.view.name.field")
+    String addPropertyViewNameField();
+
+    @Key("add.property.view.value.field")
+    String addPropertyViewValueField();
+
+    @Key("add.property.view.value.explanation")
+    String addPropertyViewValueExplanation();
+
+    @Key("add.property.failed")
+    String addPropertyFailed(String property);
 }

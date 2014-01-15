@@ -19,9 +19,11 @@ package com.codenvy.ide.project.properties;
 
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.notification.Notification.Type;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.project.properties.add.AddNewPropertyPresenter;
 import com.codenvy.ide.project.properties.edit.EditPropertyPresenter;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
@@ -49,19 +51,21 @@ public class ProjectPropertiesPresenter implements ProjectPropertiesView.ActionD
     private Array<Property>                       properties;
     private NotificationManager                   notificationManager;
     private EditPropertyPresenter                 editPropertyPresenter;
+    private AddNewPropertyPresenter               addNewPropertyPresenter;
 
     @Inject
     public ProjectPropertiesPresenter(ProjectPropertiesView view,
                                       ResourceProvider resourceProvider,
                                       ProjectPropertiesLocalizationConstant localization,
                                       NotificationManager notificationManager,
-                                      EditPropertyPresenter editPropertyPresenter) {
+                                      EditPropertyPresenter editPropertyPresenter, AddNewPropertyPresenter addNewPropertyPresenter) {
         this.view = view;
         view.setDelegate(this);
         this.resourceProvider = resourceProvider;
         this.localization = localization;
         this.notificationManager = notificationManager;
         this.editPropertyPresenter = editPropertyPresenter;
+        this.addNewPropertyPresenter = addNewPropertyPresenter;
     }
 
     /**
@@ -163,6 +167,32 @@ public class ProjectPropertiesPresenter implements ProjectPropertiesView.ActionD
         boolean enable = selectedProperty != null;
         view.setDeleteButtonEnabled(enable);
         view.setEditButtonEnabled(enable);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onAddClicked() {
+        addNewPropertyPresenter.addNewProperty(new AsyncCallback<Property>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+
+            }
+
+            @Override
+            public void onSuccess(Property result) {
+                for (Property property : properties.asIterable()) {
+                    if (property.getName().equals(result.getName())) {
+                        Notification notification = new Notification(localization.addPropertyFailed(result.getName()), Type.WARNING);
+                        notificationManager.showNotification(notification);
+                        return;
+                    }
+                }
+                properties.add(result);
+                view.setSaveButtonEnabled(true);
+                view.setProperties(properties);
+            }
+        });
     }
 
 }
