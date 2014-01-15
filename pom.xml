@@ -23,7 +23,7 @@
     <parent>
         <groupId>com.codenvy</groupId>
         <artifactId>maven-parent-pom</artifactId>
-        <version>3.0.1</version>
+        <version>3.1.1-SNAPSHOT</version>
     </parent>
     <groupId>com.codenvy.ide</groupId>
     <artifactId>codenvy-ide-parent</artifactId>
@@ -42,13 +42,10 @@
         <exo.product.name>codenvy-ide</exo.product.name>
 
         <!-- Codenvy -->
-        <com.codenvy.commons.version>0.12.0</com.codenvy.commons.version>
-        <com.codenvy.organization.version>0.10.0</com.codenvy.organization.version>
-        <com.codenvy.platform-api.version>0.6.0</com.codenvy.platform-api.version>
+        <com.codenvy.commons.version>0.14.0-SNAPSHOT</com.codenvy.commons.version>
+        <com.codenvy.organization.version>0.11.0-SNAPSHOT</com.codenvy.organization.version>
+        <com.codenvy.platform-api.version>0.7.0-SNAPSHOT</com.codenvy.platform-api.version>
 
-        <!-- eXo -->
-        <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>
-        <org.exoplatform.core.version>2.4.9-GA</org.exoplatform.core.version>
 
         <org.exoplatform.ide.version>2.8.1</org.exoplatform.ide.version>
 
