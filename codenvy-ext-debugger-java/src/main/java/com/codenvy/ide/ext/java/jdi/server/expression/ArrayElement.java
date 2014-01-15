@@ -23,10 +23,7 @@ import com.sun.jdi.InvalidTypeException;
 import com.sun.jdi.VMCannotBeModifiedException;
 import com.sun.jdi.Value;
 
-/**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
- */
+/** @author andrew00x */
 public class ArrayElement implements ExpressionValue {
     private final ArrayReference array;
     private final int            indx;
@@ -53,13 +50,7 @@ public class ArrayElement implements ExpressionValue {
     public void setValue(Value value) {
         try {
             array.setValue(indx, value);
-        } catch (InvalidTypeException e) {
-            throw new ExpressionException(e.getMessage(), e);
-        } catch (ClassNotLoadedException e) {
-            throw new ExpressionException(e.getMessage(), e);
-        } catch (VMCannotBeModifiedException e) {
-            throw new ExpressionException(e.getMessage(), e);
-        } catch (IndexOutOfBoundsException e) {
+        } catch (InvalidTypeException | ClassNotLoadedException | VMCannotBeModifiedException | IndexOutOfBoundsException e) {
             throw new ExpressionException(e.getMessage(), e);
         }
         this.value = value;
