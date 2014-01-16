@@ -19,7 +19,7 @@ package com.codenvy.runner.sdk;
 
 import com.codenvy.ide.commons.GwtXmlUtils;
 import com.codenvy.ide.maven.tools.MavenUtils;
-import com.codenvy.vfs.impl.fs.EnvironmentContextLocalFSMountStrategy;
+import com.codenvy.vfs.impl.fs.WorkspaceHashLocalFSMountStrategy;
 
 import org.apache.maven.model.Model;
 
@@ -61,7 +61,7 @@ class Utils {
     // TODO: it's a temporary solution for standalone version
     static Path getMountPath() {
         final String vfsRootDir = System.getProperty("com.codenvy.vfs.rootdir", "../temp/fs-root");
-        return EnvironmentContextLocalFSMountStrategy.calculateDirPath(new java.io.File(vfsRootDir), "dev-monit").toPath();
+        return WorkspaceHashLocalFSMountStrategy.calculateDirPath(new java.io.File(vfsRootDir), "dev-monit").toPath();
     }
 
     static ExtensionDescriptor getExtensionFromJarFile(ZipFile zipFile) throws IOException {
