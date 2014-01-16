@@ -31,7 +31,6 @@ import com.codenvy.api.runner.internal.SlaveRunnerService;
 import com.codenvy.api.vfs.server.ContentStreamWriter;
 import com.codenvy.api.vfs.server.RequestValidator;
 import com.codenvy.api.vfs.server.VirtualFileSystemFactory;
-import com.codenvy.api.vfs.server.VirtualFileSystemProvider;
 import com.codenvy.api.vfs.server.exceptions.ConstraintExceptionMapper;
 import com.codenvy.api.vfs.server.exceptions.InvalidArgumentExceptionMapper;
 import com.codenvy.api.vfs.server.exceptions.ItemAlreadyExistExceptionMapper;
@@ -41,6 +40,7 @@ import com.codenvy.api.vfs.server.exceptions.NotSupportedExceptionMapper;
 import com.codenvy.api.vfs.server.exceptions.PermissionDeniedExceptionMapper;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemRuntimeExceptionMapper;
 import com.codenvy.api.vfs.server.observation.EventListenerList;
+import com.codenvy.api.vfs.server.search.SearcherProvider;
 import com.codenvy.api.workspace.server.WorkspaceService;
 import com.codenvy.commons.security.oauth.OAuthAuthenticationService;
 import com.codenvy.commons.security.oauth.OAuthAuthenticatorProvider;
@@ -63,12 +63,13 @@ import com.codenvy.ide.security.oauth.server.LabOAuthAuthenticatorProvider;
 import com.codenvy.ide.server.UserService;
 import com.codenvy.inject.DynaModule;
 import com.codenvy.runner.webapps.DeployToApplicationServerRunner;
-import com.codenvy.vfs.impl.fs.EnvironmentContextLocalFSMountStrategy;
-import com.codenvy.vfs.impl.fs.LocalFileSystemProvider;
+import com.codenvy.vfs.impl.fs.CleanableSearcherProvider;
+import com.codenvy.vfs.impl.fs.WorkspaceHashLocalFSMountStrategy;
+import com.codenvy.vfs.impl.fs.LocalFSMountStrategy;
+import com.codenvy.vfs.impl.fs.LocalFileSystemRegistryPlugin;
 import com.codenvy.vfs.impl.fs.exceptions.GitUrlResolveExceptionMapper;
 import com.codenvy.vfs.impl.fs.exceptions.LocalPathResolveExceptionMapper;
 import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.Multibinder;
 import com.google.inject.util.Providers;
 
 import org.everrest.core.impl.async.AsynchronousJobPool;
@@ -79,8 +80,9 @@ public class ApiModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(WorkspaceService.class);
-        Multibinder<VirtualFileSystemProvider> vfsBindings = Multibinder.newSetBinder(binder(), VirtualFileSystemProvider.class);
-        vfsBindings.addBinding().toInstance(new LocalFileSystemProvider("dev-monit", new EnvironmentContextLocalFSMountStrategy()));
+        bind(LocalFileSystemRegistryPlugin.class);
+        bind(LocalFSMountStrategy.class).to(WorkspaceHashLocalFSMountStrategy.class);
+        bind(SearcherProvider.class).to(CleanableSearcherProvider.class);
         bind(EventListenerList.class).toInstance(new EventListenerList());
         bind(RequestValidator.class).toProvider(Providers.<RequestValidator>of(null));
         bind(ContentStreamWriter.class).toInstance(new ContentStreamWriter());

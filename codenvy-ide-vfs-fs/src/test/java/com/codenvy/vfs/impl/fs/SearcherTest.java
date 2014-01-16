@@ -19,7 +19,6 @@ package com.codenvy.vfs.impl.fs;
 
 import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.api.vfs.shared.dto.ItemList;
-import com.codenvy.commons.env.EnvironmentContext;
 
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.index.Term;
@@ -86,20 +85,17 @@ public class SearcherTest extends LocalFileSystemTest {
         queryToResult[8] = new Pair<>(new String[]{file2, file3}, "name=SearcherTest*&mediaType=text/plain");
         queryToResult[9] = new Pair<>(new String[]{file1}, "name=SearcherTest*&mediaType=text/xml");
 
-        CleanableSearcherProvider searcherProvider = new CleanableSearcherProvider();
+        CleanableSearcherProvider searcherProvider = new CleanableSearcherProvider(root.getParentFile());
         // Re-register virtual file system with searching enabled.
         // remove old one first
         provider.close();
         assertFalse(provider.isMounted());
         virtualFileSystemRegistry.unregisterProvider(MY_WORKSPACE_ID);
         // create new one
-        provider = new LocalFileSystemProvider(MY_WORKSPACE_ID, new EnvironmentContextLocalFSMountStrategy(), searcherProvider);
+        provider = new LocalFileSystemProvider(MY_WORKSPACE_ID, new WorkspaceHashLocalFSMountStrategy(root), searcherProvider);
         provider.mount(testFsIoRoot);
         mountPoint = provider.getMountPoint(true);
         virtualFileSystemRegistry.registerProvider(MY_WORKSPACE_ID, provider);
-        // set up index directory
-        EnvironmentContext env = EnvironmentContext.getCurrent();
-        env.setVariable(EnvironmentContext.VFS_INDEX_DIR, root.getParentFile());
 
         // Touch Searcher to initialize it.
         searcher = (CleanableSearcher)searcherProvider.getSearcher(mountPoint, true);
