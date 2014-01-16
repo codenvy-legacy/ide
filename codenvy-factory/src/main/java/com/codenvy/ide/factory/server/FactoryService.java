@@ -495,7 +495,7 @@ public class FactoryService {
                     return true;
                 }
             } catch (IOException io) {
-                LOG.error("It is not possible to get stream to " + gitUrl, io);
+                LOG.warn("It is not possible to get stream to " + gitUrl, io);
                 return false;
             } finally {
                 try {
