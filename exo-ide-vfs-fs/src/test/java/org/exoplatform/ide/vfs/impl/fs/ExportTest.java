@@ -149,7 +149,7 @@ public class ExportTest extends LocalFileSystemTest {
 
         java.io.File unzip = getIoFile(createDirectory(testRootPath, "__unzip__"));
         unzip(new ByteArrayInputStream(writer.getBody()), unzip);
-        java.io.File dotProject = new java.io.File(unzip, ".project");
+        java.io.File dotProject = new java.io.File(unzip, ".codenvy");
         Property[] properties = parseDotProjectFile(dotProject);
         assertEquals(2, properties.length);
         for (Property property : properties) {
@@ -189,7 +189,7 @@ public class ExportTest extends LocalFileSystemTest {
         unzip(new ByteArrayInputStream(writer.getBody()), unzip);
 
         // properties of parent project
-        java.io.File dotProject = new java.io.File(unzip, ".project");
+        java.io.File dotProject = new java.io.File(unzip, ".codenvy");
         Property[] properties = parseDotProjectFile(dotProject);
         assertEquals(2, properties.length);
         for (Property property : properties) {
@@ -206,7 +206,7 @@ public class ExportTest extends LocalFileSystemTest {
 
 
         // properties of nested project
-        java.io.File nestedDotProject = new java.io.File(new java.io.File(unzip, "Nested_Project"), ".project");
+        java.io.File nestedDotProject = new java.io.File(new java.io.File(unzip, "Nested_Project"), ".codenvy");
         properties = parseDotProjectFile(nestedDotProject);
         assertEquals(2, properties.length);
         for (Property property : properties) {

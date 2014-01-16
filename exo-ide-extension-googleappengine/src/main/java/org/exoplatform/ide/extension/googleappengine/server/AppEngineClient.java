@@ -33,7 +33,6 @@ import com.google.appengine.tools.admin.UpdateListener;
 import com.google.apphosting.utils.config.BackendsXml;
 import com.google.apphosting.utils.config.BackendsXml.State;
 
-import org.exoplatform.ide.extension.googleappengine.server.PythonApplication;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfoImpl;
 import org.exoplatform.ide.vfs.server.ContentStream;
@@ -369,7 +368,7 @@ public class AppEngineClient {
             case PHP: {
                 java.io.File appDir = createTempDirectory(null, "ide-appengine");
                 unzip(vfs.exportZip(projectId).getStream(), appDir);
-                java.io.File projectFile = new java.io.File(appDir, ".project");
+                java.io.File projectFile = new java.io.File(appDir, ".codenvy");
                 if (projectFile.exists()) {
                     projectFile.delete();
                 }
