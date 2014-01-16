@@ -88,7 +88,7 @@ public class DebuggerClientServiceImpl implements DebuggerClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void addBreakPoint(@NotNull String id, @NotNull BreakPoint breakPoint, @NotNull AsyncRequestCallback<String> callback)
+    public void addBreakpoint(@NotNull String id, @NotNull BreakPoint breakPoint, @NotNull AsyncRequestCallback<Void> callback)
             throws RequestException {
         final String requestUrl = baseUrl + "/debug-java/" + Utils.getWorkspaceName() + "/breakpoints/add/" + id;
         final String json = dtoFactory.toJson(breakPoint);
@@ -97,14 +97,14 @@ public class DebuggerClientServiceImpl implements DebuggerClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void getAllBreakPoints(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+    public void getAllBreakpoints(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         final String requestUrl = baseUrl + "/debug-java/" + Utils.getWorkspaceName() + "/breakpoints/" + id;
         AsyncRequest.build(GET, requestUrl).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void deleteBreakPoint(@NotNull String id, @NotNull BreakPoint breakPoint, @NotNull AsyncRequestCallback<Void> callback)
+    public void deleteBreakpoint(@NotNull String id, @NotNull BreakPoint breakPoint, @NotNull AsyncRequestCallback<Void> callback)
             throws RequestException {
         final String requestUrl = baseUrl + "/debug-java/" + Utils.getWorkspaceName() + "/breakpoints/delete/" + id;
         final String json = dtoFactory.toJson(breakPoint);
@@ -134,7 +134,7 @@ public class DebuggerClientServiceImpl implements DebuggerClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void resume(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+    public void resume(@NotNull String id, @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
         final String requestUrl = baseUrl + "/debug-java/" + Utils.getWorkspaceName() + "/resume/" + id;
         AsyncRequest.build(GET, requestUrl).loader(loader).send(callback);
     }

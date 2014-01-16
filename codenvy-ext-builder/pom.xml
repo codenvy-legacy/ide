@@ -23,7 +23,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M7-SNAPSHOT</version>
+        <version>3.0.0-M8-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ext-builder</artifactId>
     <packaging>jar</packaging>
@@ -117,7 +117,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.8</version>
                 <executions>
                     <execution>
                         <id>add-resource</id>
@@ -163,7 +162,6 @@
             <plugin>
                 <groupId>com.codenvy.platform-api</groupId>
                 <artifactId>codenvy-dto-maven-plugin</artifactId>
-                <version>${com.codenvy.platform-api.version}</version>
                 <executions>
                     <execution>
                         <phase>process-sources</phase>

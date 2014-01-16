@@ -24,10 +24,7 @@ import com.sun.jdi.ObjectReference;
 import com.sun.jdi.VMCannotBeModifiedException;
 import com.sun.jdi.Value;
 
-/**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
- */
+/** @author andrew00x */
 public class InstanceValue implements ExpressionValue {
     private final ObjectReference instance;
     private final Field           field;
@@ -54,13 +51,7 @@ public class InstanceValue implements ExpressionValue {
     public void setValue(Value value) {
         try {
             instance.setValue(field, value);
-        } catch (InvalidTypeException e) {
-            throw new ExpressionException(e.getMessage(), e);
-        } catch (ClassNotLoadedException e) {
-            throw new ExpressionException(e.getMessage(), e);
-        } catch (VMCannotBeModifiedException e) {
-            throw new ExpressionException(e.getMessage(), e);
-        } catch (IllegalArgumentException e) {
+        } catch (InvalidTypeException | ClassNotLoadedException | VMCannotBeModifiedException | IllegalArgumentException e) {
             throw new ExpressionException(e.getMessage(), e);
         }
         this.value = value;

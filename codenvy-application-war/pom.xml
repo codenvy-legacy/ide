@@ -23,7 +23,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M7-SNAPSHOT</version>
+        <version>3.0.0-M8-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-application-war</artifactId>
     <packaging>war</packaging>
@@ -154,7 +154,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
                 <executions>
                     <execution>
                         <id>extManager-client</id>
@@ -201,7 +200,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
-                <version>${gwt.maven.plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -245,21 +243,12 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
-                    <packagingIncludes>WEB-INF/lib/codenvy-commons-servlet-${com.codenvy.commons.version}.jar, WEB-INF/classes/com/codenvy/ide/servlet/*, WEB-INF/classes/META-INF/, _app/**</packagingIncludes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <packagingIncludes>WEB-INF/lib/codenvy-commons-servlet-*.jar, WEB-INF/classes/com/codenvy/ide/servlet/*, WEB-INF/classes/META-INF/, _app/**</packagingIncludes>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.8</version>
                 <executions>
                     <execution>
                         <id>add-source</id>

@@ -20,8 +20,7 @@ package com.codenvy.ide.ext.java.jdi.server;
 /**
  * Thrown if Debugger is in inappropriate state to execute requested operation.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * @author andrew00x
  */
 @SuppressWarnings("serial")
 public final class DebuggerStateException extends DebuggerException {

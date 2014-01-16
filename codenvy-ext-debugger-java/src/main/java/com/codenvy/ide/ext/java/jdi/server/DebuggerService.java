@@ -17,9 +17,7 @@
  */
 package com.codenvy.ide.ext.java.jdi.server;
 
-import com.codenvy.ide.ext.java.jdi.server.model.BreakPointListImpl;
-import com.codenvy.ide.ext.java.jdi.server.model.DebuggerEventListImpl;
-import com.codenvy.ide.ext.java.jdi.server.model.DebuggerInfoImpl;
+import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.ext.java.jdi.shared.BreakPoint;
 import com.codenvy.ide.ext.java.jdi.shared.BreakPointList;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerEventList;
@@ -51,7 +49,12 @@ public class DebuggerService {
     public DebuggerInfo create(@QueryParam("host") String host,
                                @QueryParam("port") int port) throws DebuggerException {
         Debugger d = Debugger.newInstance(host, port);
-        return new DebuggerInfoImpl(d.getHost(), d.getPort(), d.id, d.getVmName(), d.getVmVersion());
+        return DtoFactory.getInstance().createDto(DebuggerInfo.class)
+                         .withHost(d.getHost())
+                         .withPort(d.getPort())
+                         .withId(d.id)
+                         .withVmName(d.getVmName())
+                         .withVmVersion(d.getVmVersion());
     }
 
     @GET
@@ -69,27 +72,28 @@ public class DebuggerService {
     @POST
     @Path("breakpoints/add/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void addBreakPoint(@PathParam("id") String id, BreakPoint breakPoint) throws DebuggerException {
+    public void addBreakpoint(@PathParam("id") String id, BreakPoint breakPoint) throws DebuggerException {
         Debugger.getInstance(id).addBreakPoint(breakPoint);
     }
 
     @GET
     @Path("breakpoints/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public BreakPointList getBreakPoints(@PathParam("id") String id) throws DebuggerException {
-        return new BreakPointListImpl(Debugger.getInstance(id).getBreakPoints());
+    public BreakPointList getBreakpoints(@PathParam("id") String id) throws DebuggerException {
+        return DtoFactory.getInstance().createDto(BreakPointList.class)
+                         .withBreakPoints(Debugger.getInstance(id).getBreakPoints());
     }
 
     @POST
     @Path("breakpoints/delete/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void deleteBreakPoint(@PathParam("id") String id, BreakPoint breakPoint) throws DebuggerException {
+    public void deleteBreakpoint(@PathParam("id") String id, BreakPoint breakPoint) throws DebuggerException {
         Debugger.getInstance(id).deleteBreakPoint(breakPoint);
     }
 
     @GET
     @Path("breakpoints/delete_all/{id}")
-    public void deleteAllBreakPoint(@PathParam("id") String id) throws DebuggerException {
+    public void deleteAllBreakpoint(@PathParam("id") String id) throws DebuggerException {
         Debugger.getInstance(id).deleteAllBreakPoints();
     }
 
@@ -97,7 +101,7 @@ public class DebuggerService {
     @Path("events/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public DebuggerEventList getEvents(@PathParam("id") String id) throws DebuggerException {
-        return new DebuggerEventListImpl(Debugger.getInstance(id).getEvents());
+        return DtoFactory.getInstance().createDto(DebuggerEventList.class).withEvents(Debugger.getInstance(id).getEvents());
     }
 
     @GET

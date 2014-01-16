@@ -27,8 +27,7 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
 /**
  * ANTLR based implementation of ExpressionParser.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * @author andrew00x
  */
 public final class ANTLRExpressionParser extends ExpressionParser {
     private CommonTreeNodeStream nodes;
