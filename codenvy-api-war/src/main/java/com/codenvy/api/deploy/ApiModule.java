@@ -66,6 +66,7 @@ import com.codenvy.ide.ext.java.server.RestCodeAssistantJava;
 import com.codenvy.ide.ext.ssh.server.DummySshKeyStore;
 import com.codenvy.ide.ext.ssh.server.KeyService;
 import com.codenvy.ide.ext.ssh.server.SshKeyStore;
+import com.codenvy.ide.ext.tutorials.server.TutorialsService;
 import com.codenvy.ide.security.oauth.server.LabOAuthAuthenticatorProvider;
 import com.codenvy.ide.server.UserService;
 import com.codenvy.inject.DynaModule;
@@ -122,6 +123,7 @@ public class ApiModule extends AbstractModule {
         bind(AsynchronousJobPool.class).toInstance(new CodenvyAsynchronousJobPool(null)); // asynchronous job with default configuration
         bind(CodenvyAsynchronousJobService.class);
         bind(CreateProjectService.class);
+        bind(TutorialsService.class);
         bind(GitService.class);
         bind(BranchListWriter.class).toInstance(new  BranchListWriter());
         bind(CommitMessageWriter.class).toInstance(new  CommitMessageWriter());
