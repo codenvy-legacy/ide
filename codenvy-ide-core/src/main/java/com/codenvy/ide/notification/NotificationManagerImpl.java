@@ -71,7 +71,6 @@ public class NotificationManagerImpl extends BasePresenter   implements Notifica
         this.view = view;
         this.notificationContainer = notificationContainer;
         this.view.setDelegate(this);
-        this.view.setStatus(EMPTY);
         this.view.setContainer(notificationContainer);
         this.view.setTitle(TITEL);
         this.notificationContainer.setDelegate(this);
@@ -105,8 +104,7 @@ public class NotificationManagerImpl extends BasePresenter   implements Notifica
         } else {
             view.setStatus(HAS_UNREAD);
         }
-
-        minimize();
+//        minimize();
     }
 
     /** {@inheritDoc} */

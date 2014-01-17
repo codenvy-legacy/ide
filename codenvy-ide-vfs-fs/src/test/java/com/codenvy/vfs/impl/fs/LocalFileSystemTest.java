@@ -135,10 +135,10 @@ public abstract class LocalFileSystemTest extends TestCase {
         // path to test directory
         testRootPath = '/' + testName;
         // backend for test virtual filesystem
-        testFsIoRoot = EnvironmentContextLocalFSMountStrategy.calculateDirPath(root, MY_WORKSPACE_ID);
+        testFsIoRoot = WorkspaceHashLocalFSMountStrategy.calculateDirPath(root, MY_WORKSPACE_ID);
         assertTrue(new java.io.File(testFsIoRoot, testName).mkdirs());
 
-        provider = new LocalFileSystemProvider(MY_WORKSPACE_ID, new EnvironmentContextLocalFSMountStrategy());
+        provider = new LocalFileSystemProvider(MY_WORKSPACE_ID, new WorkspaceHashLocalFSMountStrategy(root), null);
         provider.mount(testFsIoRoot);
         mountPoint = provider.getMountPoint(true);
         ROOT_ID = mountPoint.getRoot().getId();

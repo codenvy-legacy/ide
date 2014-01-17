@@ -35,8 +35,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * Implementation of VirtualFileSystemProvider for plain file system.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * @author andrew00x
  */
 public class LocalFileSystemProvider extends VirtualFileSystemProvider {
     private static final Logger LOG = LoggerFactory.getLogger(LocalFileSystemProvider.class);
@@ -48,23 +47,12 @@ public class LocalFileSystemProvider extends VirtualFileSystemProvider {
     private final VirtualFileSystemUserContext userContext;
 
     /**
-     * @param vfsId
-     *         virtual file system identifier
-     * @param mountStrategy
-     *         LocalFSMountStrategy
-     * @see LocalFileSystemProvider
-     */
-    public LocalFileSystemProvider(String vfsId, LocalFSMountStrategy mountStrategy) {
-        this(vfsId, mountStrategy, null);
-    }
-
-    /**
      * @param workspaceId
      *         virtual file system identifier
      * @param mountStrategy
      *         LocalFSMountStrategy
      * @param searcherProvider
-     *         SearcherProvider
+     *         SearcherProvider or {@code null}
      * @see LocalFileSystemProvider
      */
     public LocalFileSystemProvider(String workspaceId, LocalFSMountStrategy mountStrategy, SearcherProvider searcherProvider) {
@@ -81,10 +69,10 @@ public class LocalFileSystemProvider extends VirtualFileSystemProvider {
      *         SearcherProvider
      * @see LocalFileSystemProvider
      */
-    public LocalFileSystemProvider(String workspaceId,
-                                   LocalFSMountStrategy mountStrategy,
-                                   SearcherProvider searcherProvider,
-                                   VirtualFileSystemUserContext userContext) {
+    protected LocalFileSystemProvider(String workspaceId,
+                                      LocalFSMountStrategy mountStrategy,
+                                      SearcherProvider searcherProvider,
+                                      VirtualFileSystemUserContext userContext) {
         super(workspaceId);
         this.workspaceId = workspaceId;
         this.mountStrategy = mountStrategy;

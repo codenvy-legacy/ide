@@ -94,6 +94,8 @@ import com.codenvy.ide.preferences.PreferencesView;
 import com.codenvy.ide.preferences.PreferencesViewImpl;
 import com.codenvy.ide.project.properties.ProjectPropertiesView;
 import com.codenvy.ide.project.properties.ProjectPropertiesViewImpl;
+import com.codenvy.ide.project.properties.add.AddNewPropertyView;
+import com.codenvy.ide.project.properties.add.AddNewPropertyViewImpl;
 import com.codenvy.ide.project.properties.edit.EditPropertyView;
 import com.codenvy.ide.project.properties.edit.EditPropertyViewImpl;
 import com.codenvy.ide.projecttype.SelectProjectTypeView;
@@ -252,6 +254,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(OpenProjectView.class).to(OpenProjectViewImpl.class);
         bind(ProjectPropertiesView.class).to(ProjectPropertiesViewImpl.class);
         bind(EditPropertyView.class).to(EditPropertyViewImpl.class).in(Singleton.class);
+        bind(AddNewPropertyView.class).to(AddNewPropertyViewImpl.class).in(Singleton.class);
         bind(PreferencesView.class).to(PreferencesViewImpl.class).in(Singleton.class);
         bind(WelcomePartView.class).to(WelcomePartViewImpl.class).in(Singleton.class);
         bind(SelectProjectTypeView.class).to(SelectProjectTypeViewImpl.class).in(Singleton.class);

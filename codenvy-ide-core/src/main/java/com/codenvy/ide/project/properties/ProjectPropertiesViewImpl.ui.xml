@@ -67,6 +67,7 @@
         <g:east size="100">
              <g:FlowPanel>
                 <c:Button addStyleNames="{style.spaceLeft}" width="60px" size="SMALL" text="{locale.editButtonTitle}" ui:field="btnEdit"/>
+                <c:Button addStyleNames="{style.spaceLeft} {style.spacing}" width="60px" size="SMALL" text="{locale.addButtonTitle}" ui:field="btnAdd"/>
                 <c:Button addStyleNames="{style.spaceLeft} {style.spacing}" width="60px" size="SMALL" text="{locale.deleteButtonTitle}" ui:field="btnDelete"/>
             </g:FlowPanel>
         </g:east>

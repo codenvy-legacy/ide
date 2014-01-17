@@ -57,20 +57,13 @@ import java.util.Set;
  */
 @Singleton
 public class CodeAssistantStorageClient implements CodeAssistantStorage {
-    private static final Logger LOG              = LoggerFactory.getLogger(CodeAssistantStorageClient.class);
-    private static final String STORAGE_BASE     = "/storage/get";
-    // TODO(GUICE) :  rename
-    public static final  String STORAGE_BASE_URL = "exo.ide.codeassistan.storage-base-url";
+    private static final Logger LOG          = LoggerFactory.getLogger(CodeAssistantStorageClient.class);
+    private static final String STORAGE_BASE = "/storage/get";
     private final String baseURL;
 
-    // TODO(GUICE): better name for "codeassistant-storage-base-url" property ??
     @Inject
-    public CodeAssistantStorageClient(@Nullable @Named("codeassistant-storage-base-url") String baseURL) {
-        if (baseURL == null) {
-            this.baseURL = System.getProperty(STORAGE_BASE_URL);
-        } else {
-            this.baseURL = baseURL;
-        }
+    public CodeAssistantStorageClient(@Named("codeassistant.storage_base_url") String baseURL) {
+        this.baseURL = baseURL;
     }
 
     public String updateTypeIndex(String dependencyList, String zipUrl) throws IOException {

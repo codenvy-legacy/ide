@@ -59,7 +59,7 @@ public class SshKeyServiceImpl implements SshKeyService {
 
     /** {@inheritDoc} */
     @Override
-    public void getAllKeys(@NotNull AsyncRequestCallback<JavaScriptObject> callback) throws RequestException {
+    public void getAllKeys(@NotNull AsyncRequestCallback<String> callback) throws RequestException {
         loader.setMessage("Getting SSH keys....");
         loader.show();
         AsyncRequest.build(RequestBuilder.GET, restContext + "/ssh-keys/" + Utils.getWorkspaceName() + "/all").send(callback);
@@ -79,7 +79,7 @@ public class SshKeyServiceImpl implements SshKeyService {
 
     /** {@inheritDoc} */
     @Override
-    public void getPublicKey(@NotNull KeyItem keyItem, @NotNull AsyncRequestCallback<JavaScriptObject> callback) throws RequestException {
+    public void getPublicKey(@NotNull KeyItem keyItem, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         loader.setMessage("Getting public SSH key for " + keyItem.getHost());
         loader.show();
         AsyncRequest.build(RequestBuilder.GET, keyItem.getPublicKeyUrl()).send(callback);
