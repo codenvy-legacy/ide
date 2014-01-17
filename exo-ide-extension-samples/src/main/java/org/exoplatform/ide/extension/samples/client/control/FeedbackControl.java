@@ -19,13 +19,16 @@ package org.exoplatform.ide.extension.samples.client.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
+import org.exoplatform.ide.extension.samples.client.startpage.PremiumAccountInfoReceivedEvent;
+import org.exoplatform.ide.extension.samples.client.startpage.PremiumAccountInfoReceivedHandler;
 
 /**
- * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
- * @version $Id: $
+ * Feedback Control Button.
+ * @author Vladislav Zhukovskii
  */
-public class FeedbackControl extends SimpleControl implements IDEControl {
+public class FeedbackControl extends SimpleControl implements IDEControl, PremiumAccountInfoReceivedHandler {
     private static final String ID = "Help/Submit Feedback";
 
     private static final String TITLE = "Submit Feedback";
@@ -44,5 +47,12 @@ public class FeedbackControl extends SimpleControl implements IDEControl {
 
     @Override
     public void initialize() {
+        IDE.addHandler(PremiumAccountInfoReceivedEvent.TYPE, this);
+    }
+
+    @Override
+    public void onPremiumAccountInfoReceived(PremiumAccountInfoReceivedEvent event) {
+        getAttributes().put("onCLick", event.isUserHasPremiumAccount() ? "javascript:UserVoice.showPopupWidget({mode:'feedback'});"
+                                                                       : "javascript:window.open('https://codenvy.uservoice.com/forums/183121-general/filters/top');");
     }
 }
