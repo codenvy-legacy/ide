@@ -232,8 +232,8 @@ public class TemplatesRestService {
                 InputStream prjDescrStream = null;
                 try {
                     zip = new ZipFile(f);
-                    ZipArchiveEntry entry = zip.getEntry(".project");
-                    // if zip not contains ".project" file then search in next archive
+                    ZipArchiveEntry entry = zip.getEntry(".codenvy");
+                    // if zip not contains ".codenvy" file then search in next archive
                     if (entry == null)
                         continue;
                     JsonParser jp = new JsonParser();

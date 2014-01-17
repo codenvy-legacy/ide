@@ -123,7 +123,7 @@ public final class ZipContent {
 
             ZipEntry zipEntry;
             while ((zipEntry = zip.getNextEntry()) != null) {
-                if (".project".equals(zipEntry.getName())) {
+                if (".codenvy".equals(zipEntry.getName())) {
                     isProject = true;
                 } else if (!zipEntry.isDirectory()) {
                     while (uncompressedCounter.read(buff) != -1) {

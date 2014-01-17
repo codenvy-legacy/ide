@@ -110,9 +110,9 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             }
             path = createTempDirectory(null, "app-php-");
             unzip(vfs.exportZip(projectId).getStream(), path);
-            java.io.File projectFile = new java.io.File(path, ".project");
+            java.io.File projectFile = new java.io.File(path, ".codenvy");
             if (projectFile.exists()) {
-                projectFile.delete(); // Do not send .project file to CF.
+                projectFile.delete(); // Do not send .codenvy file to CF.
             }
 
             final Cloudfoundry cloudfoundry = cfServers.next();
