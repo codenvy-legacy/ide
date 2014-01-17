@@ -18,8 +18,8 @@
 package com.codenvy.ide.project.properties;
 
 import com.codenvy.ide.api.notification.Notification;
-import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.notification.Notification.Type;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -27,7 +27,6 @@ import com.codenvy.ide.project.properties.add.AddNewPropertyPresenter;
 import com.codenvy.ide.project.properties.edit.EditPropertyPresenter;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
-import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -72,8 +71,9 @@ public class ProjectPropertiesPresenter implements ProjectPropertiesView.ActionD
      * Shows properties of the active project.
      */
     public void showProperties() {
-        if (resourceProvider.getActiveProject() != null) {
-            resourceProvider.getActiveProject().refreshProperties(new AsyncCallback<Project>() {
+        Project project = resourceProvider.getActiveProject();
+        if (project != null) {
+            project.refreshProperties(new AsyncCallback<Project>() {
 
                 @Override
                 public void onSuccess(Project result) {
@@ -87,7 +87,8 @@ public class ProjectPropertiesPresenter implements ProjectPropertiesView.ActionD
 
                 @Override
                 public void onFailure(Throwable caught) {
-                    Log.error(ProjectPropertiesPresenter.class, localization.getProjectPropertiesFailed(), caught);
+                    Notification notification = new Notification(localization.getProjectPropertiesFailed(), ERROR);
+                    notificationManager.showNotification(notification);
                 }
             });
         }
@@ -194,5 +195,4 @@ public class ProjectPropertiesPresenter implements ProjectPropertiesView.ActionD
             }
         });
     }
-
 }

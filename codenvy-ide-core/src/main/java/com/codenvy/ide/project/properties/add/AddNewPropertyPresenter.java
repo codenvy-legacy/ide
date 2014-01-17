@@ -96,6 +96,5 @@ public class AddNewPropertyPresenter implements AddNewPropertyView.ActionDelegat
                           view.getPropertyName() != null && !view.getPropertyName().isEmpty() && view.getPropertyValue() != null
                               && !view.getPropertyValue().isEmpty();
         view.setOkButtonEnabled(enabled);
-        ;
     }
 }
