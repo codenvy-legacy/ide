@@ -22,20 +22,18 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 
 /**
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: WelcomeView.java Aug 25, 2011 12:33:32 PM vereshchaka $
+ * View for Welcome Page.
+ * @author Oksana Vereshchaka
  */
 public class StartPageView extends ViewImpl implements StartPagePresenter.Display {
 
@@ -133,8 +131,12 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
     public HasClickHandlers getInvitationsLink() {
         return invitationsLink;
     }
-    
-    
+
+    @Override
+    public Anchor getSupportLink() {
+        return supportLink;
+    }
+
     @Override
     public void disableInvitationsLink() {
         invitationsLink.getElement().setAttribute("style", " color: grey;cursor: default; text-decoration: none;");
