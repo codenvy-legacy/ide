@@ -179,11 +179,11 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     @Override
     public void onGenerateGithubKeyClicked() {
         try {
-            service.getAllKeys(new AsyncRequestCallback<JavaScriptObject>() {
+            service.getAllKeys(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
-                public void onSuccess(JavaScriptObject result) {
+                public void onSuccess(String result) {
                     boolean githubKeyExists = false;
-                    Array<KeyItem> keys = dtoFactory.createListDtoFromJson(new JSONArray(result).toString(), KeyItem.class);
+                    Array<KeyItem> keys = dtoFactory.createListDtoFromJson(result, KeyItem.class);
 
                     for (int i = 0; i < keys.size(); i++) {
                         KeyItem key = keys.get(i);
@@ -261,10 +261,10 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     /** Need to remove failed uploaded keys from local storage if they can't be uploaded to github */
     private void getFailedKey() {
         try {
-            service.getAllKeys(new AsyncRequestCallback<JavaScriptObject>() {
+            service.getAllKeys(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
-                public void onSuccess(JavaScriptObject result) {
-                    Array<KeyItem> keys = dtoFactory.createListDtoFromJson(result.toString(), KeyItem.class);
+                public void onSuccess(String result) {
+                    Array<KeyItem> keys = dtoFactory.createListDtoFromJson(result, KeyItem.class);
                     for (int i = 0; i < keys.size(); i++) {
                         KeyItem key = keys.get(i);
                         if (key.getHost().equals("github.com")) {
@@ -338,11 +338,11 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     /** Refresh ssh keys. */
     private void refreshKeys() {
         try {
-            service.getAllKeys(new AsyncRequestCallback<JavaScriptObject>() {
+            service.getAllKeys(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
-                public void onSuccess(JavaScriptObject result) {
+                public void onSuccess(String result) {
                     loader.hide();
-                    Array<KeyItem> keys = dtoFactory.createListDtoFromJson(new JSONArray(result).toString(), KeyItem.class);
+                    Array<KeyItem> keys = dtoFactory.createListDtoFromJson(result, KeyItem.class);
                     view.setKeys(keys);
                 }
 
