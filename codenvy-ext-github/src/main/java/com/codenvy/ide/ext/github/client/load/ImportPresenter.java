@@ -93,11 +93,18 @@ public class ImportPresenter implements ImportView.ActionDelegate {
      * @param notificationManager
      */
     @Inject
-    public ImportPresenter(ImportView view, GitHubClientService service, GitClientService gitService, EventBus eventBus,
+    public ImportPresenter(ImportView view,
+                           GitHubClientService service,
+                           GitClientService gitService,
+                           EventBus eventBus,
                            @Named("restContext") String restContext,
-                           GitHubLocalizationConstant constant, GitLocalizationConstant gitConstant, ResourceProvider resourceProvider,
+                           GitHubLocalizationConstant constant,
+                           GitLocalizationConstant gitConstant,
+                           ResourceProvider resourceProvider,
                            ConsolePart console,
-                           NotificationManager notificationManager, GitHubSshKeyProvider gitHubSshKeyProvider, DtoFactory dtoFactory) {
+                           NotificationManager notificationManager,
+                           GitHubSshKeyProvider gitHubSshKeyProvider,
+                           DtoFactory dtoFactory) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
@@ -192,18 +199,9 @@ public class ImportPresenter implements ImportView.ActionDelegate {
     }
 
     /**
-     * Return token for user.
-     *
-     * @param user
-     *         user which need token
-     */
-   
-
-   
-
-    
-
-    /** {@inheritDoc} */
+    * Return token for user.
+    *
+    */
     @Override
     public void onFinishClicked() {
         final String projectName = view.getProjectName();

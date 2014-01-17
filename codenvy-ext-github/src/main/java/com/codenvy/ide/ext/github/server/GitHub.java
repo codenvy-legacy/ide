@@ -322,6 +322,19 @@ public class GitHub extends GitVendorService {
     }
 
 
+    /**
+     * @return return SSH key for GitHub if it exist otherwise null
+     */
+    public SshKey getGitHubSshKey() {
+        SshKey key;
+        try {
+            key = sshKeyStore.getPublicKey("github.com");
+        } catch (SshKeyStoreException e) {
+            return null;
+        }
+        return key;
+    }
+
     public void generateGitHubSshKey()
             throws IOException, SshKeyStoreException, GitHubException, ParsingResponseException {
         final String oauthToken = getToken(getUserId());
