@@ -203,7 +203,7 @@
 					</div>
 					<div class="{style.floatLeft} {style.linkWithText}">
 						<g:Anchor ui:field="supportLink" text="{locale.supportTitle}"
-							styleName="{style.a}" href="javascript:UserVoice.showPopupWidget();"></g:Anchor>
+							styleName="{style.a}" href="javascript:UserVoice.showPopupWidget();" target="_blank"></g:Anchor>
 						<g:Label text="{locale.supportText}" styleName="{style.linkText} {style.welcomeLabel}"></g:Label>
 					</div>
 				</div>
