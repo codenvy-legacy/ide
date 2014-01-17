@@ -18,7 +18,6 @@
 package com.codenvy.ide.notification;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.workspace.WorkspaceView;
@@ -27,7 +26,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -56,14 +54,14 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
     @UiField
     FlowPanel mainPanel;
     //    @UiField
-    Label     count = new Label();
-    FlowPanel panel = new FlowPanel();
+    Label     count       = new Label();
+    FlowPanel statusPanel = new FlowPanel();
 
     SimplePanel iconPanel;
 
 
     @UiField(provided = true)
-    final   Resources      res;
+    final Resources res;
 //    private ActionDelegate delegate;
 
     /**
@@ -78,12 +76,12 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
         super(partStackUIResources);
         //TODO:need improve this
         iconPanel = new SimplePanel();
-        iconPanel.addStyleName(resources.notificationCss().floatRight());
-        count.addStyleName(resources.notificationCss().floatRight());
-        panel.add(iconPanel);
-        panel.add(count);
-
-        workspaceView.getStatusPanel().setWidget(panel);
+        iconPanel.addStyleName(resources.notificationCss().statusPanel());
+        count.addStyleName(resources.notificationCss().statusPanel());
+        statusPanel.add(iconPanel);
+        statusPanel.add(count);
+        statusPanel.addStyleName(resources.notificationCss().right25px());
+        workspaceView.getStatusPanel().setWidget(statusPanel);
         iconPanel.addDomHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -103,7 +101,7 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
         iconPanel.setWidget(icon);
     }
 
-    
+
     /**
      * Return image for status
      *

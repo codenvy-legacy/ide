@@ -25,16 +25,21 @@
         cursor: pointer;
     }
 
+    .statusPanel {
+        padding: 2px;
+        float: right;
+    }
+
     .floatLeft {
         float: left;
     }
 
-    .floatRight {
-        float: right;
-    }
-
     .top1px {
         top: 1px !important;
+    }
+
+    .right25px {
+        margin-right: 25px !important;
     }
 
     .error {
