@@ -73,7 +73,7 @@ public class DebuggerService {
     @Path("breakpoints/add/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public void addBreakpoint(@PathParam("id") String id, BreakPoint breakPoint) throws DebuggerException {
-        Debugger.getInstance(id).addBreakPoint(breakPoint);
+        Debugger.getInstance(id).addBreakpoint(breakPoint);
     }
 
     @GET
