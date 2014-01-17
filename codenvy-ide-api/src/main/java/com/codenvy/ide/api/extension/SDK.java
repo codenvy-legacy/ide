@@ -18,7 +18,7 @@
 package com.codenvy.ide.api.extension;
 
 /**
- * Describes IDE 2 SDK Component
+ * Describes IDE 3 SDK Component
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
