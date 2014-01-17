@@ -63,6 +63,8 @@ public class ProjectPropertiesViewImpl extends DialogBox implements ProjectPrope
     com.codenvy.ide.ui.Button                        btnDelete;
     @UiField
     com.codenvy.ide.ui.Button                        btnEdit;
+    @UiField
+    com.codenvy.ide.ui.Button                        btnAdd;
 
     @UiField(provided = true)
     CellTable<Property>                              propertiesTable;
@@ -193,6 +195,11 @@ public class ProjectPropertiesViewImpl extends DialogBox implements ProjectPrope
     @UiHandler("btnEdit")
     void onBtnEditClick(ClickEvent event) {
         delegate.onEditClicked();
+    }
+    
+    @UiHandler("btnAdd")
+    void onBtnAddClick(ClickEvent event) {
+        delegate.onAddClicked();
     }
 
     @UiHandler("btnDelete")

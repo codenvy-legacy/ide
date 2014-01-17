@@ -46,8 +46,6 @@ public class EditPropertyPresenter implements EditPropertyView.ActionDelegate {
     public EditPropertyPresenter(EditPropertyView view) {
         this.view = view;
         view.setDelegate(this);
-
-
     }
 
     /** {@inheritDoc} */
