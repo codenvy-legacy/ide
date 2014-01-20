@@ -83,4 +83,7 @@ public interface CoreLocalizationConstant extends Messages {
     
     @Key("navigateToFile.view.file.field.title")
     String navigateToFileViewFileFieldTitle();
+    
+    @Key("deleteResourceQuestion")
+    String deleteResourceQuestion(String resource);
 }

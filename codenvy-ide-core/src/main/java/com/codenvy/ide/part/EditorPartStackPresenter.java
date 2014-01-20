@@ -20,9 +20,12 @@ package com.codenvy.ide.part;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
+import com.codenvy.ide.api.event.ResourceChangedEvent;
+import com.codenvy.ide.api.event.ResourceChangedHandler;
 import com.codenvy.ide.api.ui.workspace.EditorPartStack;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackView;
+import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
@@ -72,6 +75,38 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
             @Override
             public void onProjectDescriptionChanged(ProjectActionEvent event) {
                 //do nothing
+            }
+        });
+        
+        eventBus.addHandler(ResourceChangedEvent.TYPE, new ResourceChangedHandler() {
+            @Override
+            public void onResourceRenamed(ResourceChangedEvent event) {
+            }
+
+            @Override
+            public void onResourceMoved(ResourceChangedEvent event) {
+            }
+
+            @Override
+            public void onResourceDeleted(ResourceChangedEvent event) {
+                if (event.getResource() instanceof Project) {
+                    for (int i = parts.size() - 1; i >= 0; i--) {
+                        PartPresenter part = parts.get(i);
+                        if (part instanceof TextEditorPresenter
+                            && ((TextEditorPresenter)part).getEditorInput().getFile().getProject().equals((Project)event.getResource())) {
+                            //Set file's project to null for not to refer to non existing project:
+                            ((TextEditorPresenter)part).getEditorInput().getFile().setProject(null);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onResourceCreated(ResourceChangedEvent event) {
+            }
+
+            @Override
+            public void onResourceTreeRefreshed(ResourceChangedEvent event) {
             }
         });
     }
