@@ -43,13 +43,13 @@
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
 
-    <filter>
+    <!--filter>
         <filter-name>VFSPermissionsFilter</filter-name>
         <filter-class>com.codenvy.ide.git.VFSPermissionsFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>VFSPermissionsFilter</filter-name>
         <servlet-name>GitServlet</servlet-name>
-    </filter-mapping>
+    </filter-mapping-->
 
 </web-app>
