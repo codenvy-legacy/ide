@@ -1,3 +1,4 @@
+@CHARSET "UTF-8";
 /*
  * CODENVY CONFIDENTIAL
  * __________________
@@ -16,28 +17,50 @@
  * from Codenvy S.A..
  */
 
-@CHARSET "UTF-8";
-    /*Tabs*/
-@def tabBorder #bdbdbd;
-@def inactiveTabBackground #d6d6d6;
-@def activeTabBackground #ffffff;
-@def tabsPanelBackground #f6f6f6;
-@def highlightFocus #92c1f0;
 
-@def hoverBackgroundColor #D4E8FF;
-@def lightTextColor #999;
-@def lightestTextColor #BCBCBC;
-@def lightGreyBackground #F1F1F1;
-@def barBackgroundColor #f5f5f5;
+    /*Tabs*/
+
+@eval tabBorder com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
+@eval inactiveTabBackground com.codenvy.ide.api.ui.theme.Style.getInactiveTabBackground();
+@eval activeTabBackground com.codenvy.ide.api.ui.theme.Style.getActiveTabBackground();
+@eval tabsPanelBackground com.codenvy.ide.api.ui.theme.Style.getTabsPanelBackground();
+@eval highlightFocus com.codenvy.ide.api.ui.theme.Style.getHighlightFocus();
+
+@eval hoverBackgroundColor com.codenvy.ide.api.ui.theme.Style.getHoverBackgroundColor();
+@eval lightTextColor com.codenvy.ide.api.ui.theme.Style.getLightTextColor();
+@eval lightestTextColor com.codenvy.ide.api.ui.theme.Style.getLightestTextColor();
+@eval lightGreyBackground com.codenvy.ide.api.ui.theme.Style.getLightGreyBackground();
+@eval barBackgroundColor com.codenvy.ide.api.ui.theme.Style.getBarBackgroundColor();
+
+@eval partBackground com.codenvy.ide.api.ui.theme.Style.getPartBackground();
+@eval partToolbar com.codenvy.ide.api.ui.theme.Style.getPartToolbar();
+@eval partToolbarActive com.codenvy.ide.api.ui.theme.Style.getPartToolbarActive();
+@eval partToolbarShadow com.codenvy.ide.api.ui.theme.Style.getPartToolbarShadow();
+
     /* Indicates a completed action. Preferred text color is lightTextColor. */
-@def completedBackgroundColor #f9edbe;
+@eval completedBackgroundColor com.codenvy.ide.api.ui.theme.Style.getCompletedBackgroundColor();
     /* Background color for an item selected with the keyboard */
-@def keyboardSelectionBackgroundColor #C3DEFF;
-@def anchorColor #1155CC;
+@eval keyboardSelectionBackgroundColor com.codenvy.ide.api.ui.theme.Style.getKeyboardSelectionBackgroundColor();
+@eval anchorColor com.codenvy.ide.api.ui.theme.Style.getAnchorColor();
 
     /* Tree */
-@def hoverBackground #D4E8FF;
-@def selectionBackground #C3DEFF;
+@eval hoverBackground com.codenvy.ide.api.ui.theme.Style.getHoverBackground();
+@eval selectionBackground com.codenvy.ide.api.ui.theme.Style.getSelectionBackground();
+
+/* Button */
+@eval buttonTopColor com.codenvy.ide.api.ui.theme.Style.getButtonTopColor();
+@eval buttonColor com.codenvy.ide.api.ui.theme.Style.getButtonColor();
+
+/*input*/
+@eval inputBackground com.codenvy.ide.api.ui.theme.Style.getInputBackground();
+
+/*Editor*/
+@eval editorBackgroundColor com.codenvy.ide.api.ui.theme.Style.getEditorBackgroundColor();
+@eval editorCurrentLineColor com.codenvy.ide.api.ui.theme.Style.getEditorCurrentLineColor();
+@eval editorDefaultFontColor com.codenvy.ide.api.ui.theme.Style.getEditorDefaultFontColor();
+@eval editorSelectionColor com.codenvy.ide.api.ui.theme.Style.getEditorSelectionColor();
+@eval editorInactiveSelectionColor com.codenvy.ide.api.ui.theme.Style.getEditorInactiveSelectionColor();
+@eval editoGutterColor com.codenvy.ide.api.ui.theme.Style.getEditorGutterColor();
 
     /* Sizes */
 @def dividerThickness 1px;
@@ -68,12 +91,36 @@
 @def editorLineHeight 15px;
 @def editorFontFamily 'Andale Mono', monospace;
 
+@eval mainFontColor com.codenvy.ide.api.ui.theme.Style.getMainFontColor();
+@eval disabledMenuItemColor com.codenvy.ide.api.ui.theme.Style.getDeisabledMenuColor();
+
     /* DialogBox*/
-@def dialogTopLeft url("/ide/_app/style/light/window/window_TL.png") no-repeat;
-@def dialogTopCenter url("/ide/_app/style/light/window/window_T.png") repeat-x;
-@def dialogTopRight url("/ide/_app/style/light/window/window_TR.png") no-repeat;
-@def dialogMiddleLeft url("/ide/_app/style/light/window/window_L.png") repeat-y;
-@def dialogMiddleRight url("/ide/_app/style/light/window/window_R.png") repeat-y;
-@def dialogBottomLeft url("/ide/_app/style/light/window/window_BL.png") no-repeat;
-@def dialogBottomCenter url("/ide/_app/style/light/window/window_B.png") repeat-x;
-@def dialogBottomRight url("/ide/_app/style/light/window/window_BR.png") no-repeat;
+@eval dialogTopLeft com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
+@eval dialogTopCenter com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
+@eval dialogTopRight com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
+@eval dialogMiddleLeft com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
+@eval dialogMiddleRight com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
+@eval dialogBottomLeft com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
+@eval dialogBottomCenter com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
+@eval dialogBottomRight com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
+
+@eval dialogContentBackground com.codenvy.ide.api.ui.theme.Style.getDialogContentBackground();
+
+
+/*syntax highlight*/
+@eval keyword com.codenvy.ide.api.ui.theme.Style.getEditorKeyWord();
+@eval atom com.codenvy.ide.api.ui.theme.Style.getEditorAtom();
+@eval number com.codenvy.ide.api.ui.theme.Style.getEditorNumber();
+@eval deff com.codenvy.ide.api.ui.theme.Style.getEditorDef();
+@eval variable com.codenvy.ide.api.ui.theme.Style.getEditorVariable();
+@eval variable2 com.codenvy.ide.api.ui.theme.Style.getEditorVariable2();
+@eval property com.codenvy.ide.api.ui.theme.Style.getEditorProperty();
+@eval operator com.codenvy.ide.api.ui.theme.Style.getEditorOperator();
+@eval comment com.codenvy.ide.api.ui.theme.Style.getEditorComment();
+@eval string com.codenvy.ide.api.ui.theme.Style.getEditorString();
+@eval string2 com.codenvy.ide.api.ui.theme.Style.getEditorString2();
+@eval smeta com.codenvy.ide.api.ui.theme.Style.getEditorMeta();
+@eval error com.codenvy.ide.api.ui.theme.Style.getEditorError();
+@eval builtin com.codenvy.ide.api.ui.theme.Style.getEditorBuiltin();
+@eval tag com.codenvy.ide.api.ui.theme.Style.getEditorTag();
+@eval attribute com.codenvy.ide.api.ui.theme.Style.getEditorAttribute();

@@ -19,7 +19,7 @@
     /* Annotated CSS for the Editor presenter. */
 
     .root {
-        background-color: white;
+        background-color: editorBackgroundColor;
         bottom: 0;
         font-family: editorFontFamily;
         font-size: 13px;
@@ -31,6 +31,7 @@
         top: 0;
         user-select: none;
         white-space: pre;
+        color: editorDefaultFontColor;
     }
 
     .editorFont, .root {
@@ -40,16 +41,16 @@
 
         /* Same selection colors as the editor's manually drawn selection */
     ::selection {
-        background: #d4e2ff;
+        background: editorSelectionColor;
     }
 
     ::selection:window-inactive {
-        background: #d4d4d4;
+        background: editorInactiveSelectionColor;
     }
 
         /* FF doesn't support inactive selection */
     ::-moz-selection {
-        background: #d4e2ff;
+        background: editorSelectionColor;
     }
 
     .scrolled {
@@ -86,13 +87,13 @@
         min-width: 2em;
         padding-left: 5px;
         padding-right: 6px;
-        border-right: 1px dotted;
+        border-right: 1px dotted #888888;
         text-align: right;
     }
 
     .leftGutterNotification {
         width: 14px;
-        background-color: #eee;
+        background-color: editoGutterColor;
         text-align: right;
     }
 

@@ -57,7 +57,7 @@
         }
 
         .emptyBackground {
-            background: #ffffff;
+            /*background: #ffffff;*/
         }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="100%" height="100%">
@@ -67,13 +67,13 @@
                     <g:west size="100">
                         <g:FlowPanel>
                             <g:Label text="{locale.createProjectFromTemplateName}"
-                                     addStyleNames="{res.coreCss.mainBoldFont} {res.coreCss.greyFontColor} {style.projectNamePosition}"/>
+                                     addStyleNames="{res.coreCss.mainBoldFont} {style.projectNamePosition}"/>
                         </g:FlowPanel>
                     </g:west>
                     <g:center>
                         <g:SimplePanel addStyleNames="{style.spaceRight}">
                             <g:SimplePanel>
-                                <g:TextBox width="100%" ui:field="projectName"/>
+                                <g:TextBox width="100%" height="16px" ui:field="projectName"/>
                             </g:SimplePanel>
                         </g:SimplePanel>
                     </g:center>
@@ -83,7 +83,7 @@
         <g:north size="140">
             <g:FlowPanel addStyleNames="{res.coreCss.line}">
                 <g:Label text="{locale.chooseTechnology}"
-                         addStyleNames="{style.title} {res.coreCss.mainBoldFont} {res.coreCss.greyFontColor} {style.alignLeft}"/>
+                         addStyleNames="{style.title} {res.coreCss.mainBoldFont} {style.alignLeft}"/>
                 <g:Image ui:field="chooseTechnologyTooltip" resource="{res.question}"
                          addStyleNames="{style.questionImage} {res.coreCss.cursorPointer} {style.alignLeft}"/>
                 <g:SimplePanel ui:field="techPanel"
@@ -93,7 +93,7 @@
         <g:north size="140">
             <g:FlowPanel addStyleNames="{res.coreCss.line}">
                 <g:Label text="{locale.choosePaaS}"
-                         addStyleNames="{style.title} {res.coreCss.mainBoldFont} {res.coreCss.greyFontColor} {style.alignLeft}"/>
+                         addStyleNames="{style.title} {res.coreCss.mainBoldFont} {style.alignLeft}"/>
                 <g:Image ui:field="choosePaaSTooltip" resource="{res.question}"
                          addStyleNames="{style.questionImage} {res.coreCss.cursorPointer} {style.alignLeft}"/>
                 <g:SimplePanel ui:field="paasPanel"

@@ -27,7 +27,6 @@ import com.codenvy.ide.toolbar.ActionSelectedHandler;
 import com.codenvy.ide.toolbar.MenuLockLayer;
 import com.codenvy.ide.toolbar.PopupMenu;
 import com.codenvy.ide.toolbar.PresentationFactory;
-import com.codenvy.ide.ui.menu.UpdateItemEnablingCallback;
 import com.google.gwt.user.client.Element;
 
 /**
@@ -36,7 +35,7 @@ import com.google.gwt.user.client.Element;
  *          <p/>
  *          Menu bar is implementation of Menu interface and represents a visual component.
  */
-public class MenuBarItem implements ActionSelectedHandler, UpdateItemEnablingCallback {
+public class MenuBarItem implements ActionSelectedHandler {
 
     private final ActionGroup         group;
     private final ActionManager       actionManager;
@@ -143,11 +142,6 @@ public class MenuBarItem implements ActionSelectedHandler, UpdateItemEnablingCal
             element.setClassName(css.menuBarItemOver());
             hovered = true;
         }
-    }
-
-    /** {@inheritDoc} */
-    public void onUpdateItemEnabling() {
-        updateEnabledState();
     }
 
     /**

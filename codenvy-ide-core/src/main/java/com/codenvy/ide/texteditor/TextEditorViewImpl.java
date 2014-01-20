@@ -164,13 +164,13 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         focusManager = new FocusManagerImpl(buffer, input.getInputElement());
 
         Gutter overviewGutter = createGutter(true, Gutter.Position.RIGHT, resources.workspaceEditorCss().leftGutterNotification());
-        Gutter leftNotificationGutter = createGutter(false, Gutter.Position.LEFT,
-                                                     resources.workspaceEditorCss().leftGutterNotification());
-        verticalRuler = new VerticalRuler(leftNotificationGutter, this);
         overviewRuller = new OverviewRuler(overviewGutter, this);
 
         Gutter leftGutter = createGutter(false, Gutter.Position.LEFT, resources.workspaceEditorCss().leftGutter());
         leftGutterManager = new LeftGutterManager(leftGutter, buffer);
+        Gutter leftNotificationGutter = createGutter(false, Gutter.Position.LEFT,
+                                                     resources.workspaceEditorCss().leftGutterNotification());
+        verticalRuler = new VerticalRuler(leftNotificationGutter, this);
 
         editorDocumentMutator = new EditorTextStoreMutator(this);
         mouseHoverManager = new MouseHoverManager(this);

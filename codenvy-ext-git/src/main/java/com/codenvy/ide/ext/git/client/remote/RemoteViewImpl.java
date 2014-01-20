@@ -29,6 +29,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
@@ -53,13 +54,13 @@ public class RemoteViewImpl extends DialogBox implements RemoteView {
     private static RemoteViewImplUiBinder ourUiBinder = GWT.create(RemoteViewImplUiBinder.class);
 
     @UiField
-    com.codenvy.ide.ui.Button btnClose;
+    Button            btnClose;
     @UiField
-    com.codenvy.ide.ui.Button btnAdd;
+    Button            btnAdd;
     @UiField
-    com.codenvy.ide.ui.Button btnDelete;
+    Button            btnDelete;
     @UiField(provided = true)
-    CellTable<Remote>         repositories;
+    CellTable<Remote> repositories;
     @UiField(provided = true)
     final   GitResources            res;
     @UiField(provided = true)

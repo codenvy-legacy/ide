@@ -56,9 +56,9 @@
         margin-top: 1px;
     }
 
-    .treeNodeBody:hover {
-        background-color: hoverBackground;
-    }
+    /*.treeNodeBody:hover {*/
+        /*background-color: hoverBackground;*/
+    /*}*/
 
     .expandControl {
         display: inline-block;
@@ -102,6 +102,10 @@
     }
 
     .treeNodeLabel {
+    }
+
+    .treeNode a:hover {
+        color: mainFontColor;
     }
 
     .active, .selected {

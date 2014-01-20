@@ -23,7 +23,7 @@
 @def listItemRightPadding 44px;
 
 .listBase {
-    background: #FFF;
+    background: dialogContentBackground;
     outline: none;
     white-space: nowrap;
 }
@@ -72,5 +72,5 @@
 }
 
 .listItem:hover {
-    background-color: hoverBackgroundColor;
+    /*background-color: hoverBackgroundColor;*/
 }

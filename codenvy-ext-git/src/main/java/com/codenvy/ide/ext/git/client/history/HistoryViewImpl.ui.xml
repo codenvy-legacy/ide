@@ -19,8 +19,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:p1='urn:import:com.google.gwt.user.cellview.client'
-             xmlns:c='urn:import:com.codenvy.ide.ui'>
+             xmlns:p1='urn:import:com.google.gwt.user.cellview.client'>
     <ui:with field='locale' type='com.codenvy.ide.ext.git.client.GitLocalizationConstant'/>
     <ui:with field='res' type='com.codenvy.ide.ext.git.client.GitResources'/>
     <ui:style>
@@ -52,18 +51,18 @@
         <g:north size="26.0">
             <g:FlowPanel width="100%">
                 <g:FlowPanel addStyleNames="{style.emptyBorder}">
-                    <c:Button ui:field="btnRefresh" addStyleNames="{style.alignRight} {style.withoutPadding}"
-                              icon="{res.refresh}" width="18px" height="16px"/>
-                    <c:Button ui:field="btnProjectChanges" addStyleNames="{style.alignRight} {style.space} {style.withoutPadding}"
-                              icon="{res.projectLevel}" width="18px" height="16px"/>
-                    <c:Button ui:field="btnResourceChanges" addStyleNames="{style.alignRight} {style.space} {style.withoutPadding}"
-                              icon="{res.resourceLevel}" width="18px" height="16px"/>
-                    <c:Button ui:field="btnDiffWithIndex" addStyleNames="{style.alignRight} {style.space} {style.withoutPadding}"
-                              icon="{res.diffIndex}" width="18px" height="16px"/>
-                    <c:Button ui:field="btnDiffWithWorkTree" addStyleNames="{style.alignRight} {style.space} {style.withoutPadding}"
-                              icon="{res.diffWorkTree}" width="18px" height="16px"/>
-                    <c:Button ui:field="btnDiffWithPrevCommit" addStyleNames="{style.alignRight} {style.space} {style.withoutPadding}"
-                              icon="{res.diffPrevVersion}" width="18px" height="16px"/>
+                    <g:Button ui:field="btnRefresh" addStyleNames="{style.alignRight} {style.withoutPadding}"
+                              width="18px" height="16px"/>
+                    <g:Button ui:field="btnProjectChanges" addStyleNames="{style.alignRight} {style.space} {style.withoutPadding}"
+                              width="18px" height="16px"/>
+                    <g:Button ui:field="btnResourceChanges" addStyleNames="{style.alignRight} {style.space} {style.withoutPadding}"
+                              width="18px" height="16px"/>
+                    <g:Button ui:field="btnDiffWithIndex" addStyleNames="{style.alignRight} {style.space} {style.withoutPadding}"
+                              width="18px" height="16px"/>
+                    <g:Button ui:field="btnDiffWithWorkTree" addStyleNames="{style.alignRight} {style.space} {style.withoutPadding}"
+                              width="18px" height="16px"/>
+                    <g:Button ui:field="btnDiffWithPrevCommit" addStyleNames="{style.alignRight} {style.space} {style.withoutPadding}"
+                              width="18px" height="16px"/>
                 </g:FlowPanel>
             </g:FlowPanel>
         </g:north>

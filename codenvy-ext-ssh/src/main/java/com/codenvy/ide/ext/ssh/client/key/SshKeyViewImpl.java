@@ -23,6 +23,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
@@ -44,9 +45,9 @@ public class SshKeyViewImpl extends DialogBox implements SshKeyView {
     private static SshKeyViewImplUiBinder ourUiBinder = GWT.create(SshKeyViewImplUiBinder.class);
 
     @UiField
-    com.codenvy.ide.ui.Button btnClose;
+    Button   btnClose;
     @UiField
-    TextArea                  key;
+    TextArea key;
     @UiField(provided = true)
     final   SshLocalizationConstant locale;
     private ActionDelegate          delegate;

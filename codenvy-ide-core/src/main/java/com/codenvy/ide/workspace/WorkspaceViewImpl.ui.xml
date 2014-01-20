@@ -19,8 +19,9 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:style>
+        @eval bgColor com.codenvy.ide.api.ui.theme.Style.getTabsPanelBackground();
         .buttonsPanel {
-            background-color: #f6f6f6;
+            background-color: bgColor;
         }
 
         .space {

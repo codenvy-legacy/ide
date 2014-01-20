@@ -25,6 +25,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -49,15 +50,15 @@ public class UploadSshKeyViewImpl extends DialogBox implements UploadSshKeyView 
     private static UploadSshKeyViewImplUiBinder ourUiBinder = GWT.create(UploadSshKeyViewImplUiBinder.class);
 
     @UiField
-    Label                     message;
+    Label     message;
     @UiField
-    TextBox                   host;
+    TextBox   host;
     @UiField
-    FormPanel                 uploadForm;
+    FormPanel uploadForm;
     @UiField
-    com.codenvy.ide.ui.Button btnCancel;
+    Button    btnCancel;
     @UiField
-    com.codenvy.ide.ui.Button btnUpload;
+    Button    btnUpload;
     @UiField(provided = true)
     final SshLocalizationConstant locale;
     FileUpload file;

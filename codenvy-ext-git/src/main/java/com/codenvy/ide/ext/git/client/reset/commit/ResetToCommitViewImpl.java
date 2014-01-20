@@ -31,6 +31,7 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
@@ -57,21 +58,21 @@ public class ResetToCommitViewImpl extends DialogBox implements ResetToCommitVie
     private static ResetToCommitViewImplUiBinder ourUiBinder = GWT.create(ResetToCommitViewImplUiBinder.class);
 
     @UiField
-    RadioButton               soft;
+    RadioButton         soft;
     @UiField
-    RadioButton               mixed;
+    RadioButton         mixed;
     @UiField
-    RadioButton               hard;
+    RadioButton         hard;
     @UiField
-    RadioButton               keep;
+    RadioButton         keep;
     @UiField
-    RadioButton               merge;
+    RadioButton         merge;
     @UiField
-    com.codenvy.ide.ui.Button btnReset;
+    Button              btnReset;
     @UiField
-    com.codenvy.ide.ui.Button btnCancel;
+    Button              btnCancel;
     @UiField(provided = true)
-    CellTable<Revision>       commits;
+    CellTable<Revision> commits;
     @UiField(provided = true)
     final   GitResources            res;
     @UiField(provided = true)

@@ -32,7 +32,9 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -54,13 +56,13 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
     private static SshKeyManagerViewImplUiBinder ourUiBinder = GWT.create(SshKeyManagerViewImplUiBinder.class);
 
     @UiField
-    com.codenvy.ide.ui.Button btnGenerate;
+    Button             btnGenerate;
     @UiField
-    com.codenvy.ide.ui.Button btnUpload;
+    Button             btnUpload;
     @UiField
-    com.codenvy.ide.ui.Button btnGenerateGithubKey;
+    PushButton         btnGenerateGithubKey;
     @UiField(provided = true)
-    CellTable<KeyItem>        keys;
+    CellTable<KeyItem> keys;
     @UiField(provided = true)
     final   SshResources            res;
     @UiField(provided = true)

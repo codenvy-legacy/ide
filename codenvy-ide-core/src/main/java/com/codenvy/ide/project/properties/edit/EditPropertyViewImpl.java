@@ -24,6 +24,7 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
@@ -45,15 +46,15 @@ public class EditPropertyViewImpl extends DialogBox implements EditPropertyView 
     private static EditPropertyViewImplUiBinder ourUiBinder = GWT.create(EditPropertyViewImplUiBinder.class);
 
     @UiField
-    Label                   name;
+    Label   name;
     @UiField
-    TextBox                   value;
+    TextBox value;
     @UiField
-    com.codenvy.ide.ui.Button btnOk;
+    Button  btnOk;
     @UiField
-    com.codenvy.ide.ui.Button btnCancel;
-    
-    private ActionDelegate          delegate;
+    Button  btnCancel;
+
+    private ActionDelegate delegate;
 
     /**
      * Create view.
@@ -96,7 +97,7 @@ public class EditPropertyViewImpl extends DialogBox implements EditPropertyView 
     public void onCancelClicked(ClickEvent event) {
         delegate.onCancelClicked();
     }
-    
+
     @UiHandler({"value"})
     public void onValueChanged(KeyUpEvent event) {
         delegate.onValueChanged();

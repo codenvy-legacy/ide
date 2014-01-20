@@ -19,8 +19,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:p1='urn:import:com.google.gwt.user.cellview.client'
-             xmlns:c='urn:import:com.codenvy.ide.ui'>
+             xmlns:p1='urn:import:com.google.gwt.user.cellview.client'>
     <ui:with field='locale' type='com.codenvy.ide.ext.ssh.client.SshLocalizationConstant'/>
     <ui:with field='res' type='com.codenvy.ide.ext.ssh.client.SshResources'/>
     <ui:style>
@@ -37,19 +36,21 @@
         }
 
         .space {
-            margin-right: 5px;
+            margin-left: 5px;
         }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="100%" height="100%">
         <g:south size="36.0">
             <g:FlowPanel width="100%">
                 <g:FlowPanel addStyleNames="{style.emptyBorder}">
-                    <c:Button addStyleNames="{style.alignLeft}" text="{locale.managerGenerateButton}" size="SMALL" ui:field="btnGenerate"/>
-                    <c:Button addStyleNames="{style.alignLeft} {style.space}" text="{locale.managerUploadButton}" size="SMALL"
-                              ui:field="btnUpload"/>
-                    <c:Button addStyleNames="{style.alignRight} {style.space}" width="18px" height="16px" size="SMALL"
-                              ui:field="btnGenerateGithubKey" icon="{res.sshKeyGithubGenerate}"
-                              title="Generate key and upload it to GitHub"/>
+                    <g:Button addStyleNames="{style.alignLeft}" height="22px"  ui:field="btnGenerate"><ui:text from="{locale.managerGenerateButton}"/></g:Button>
+                    <g:Button addStyleNames="{style.alignLeft} {style.space}" height="22px" ui:field="btnUpload"><ui:text from="{locale.managerUploadButton}"/></g:Button>
+                    <g:PushButton addStyleNames="{style.alignRight} {style.space}" width="16px" height="17px"
+                              ui:field="btnGenerateGithubKey"
+                              title="Generate key and upload it to GitHub" >
+                        <g:downFace image="{res.sshKeyGithubGenerate}" />
+                        <g:upFace image="{res.sshKeyGithubGenerate}"/>
+                              </g:PushButton>
                 </g:FlowPanel>
             </g:FlowPanel>
         </g:south>

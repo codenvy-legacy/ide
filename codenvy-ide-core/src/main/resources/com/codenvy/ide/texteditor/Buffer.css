@@ -18,8 +18,6 @@
 
     /* Annotated CSS for the Editor presenter. */
     @def scrollableLeftPadding 3px;
-    @def backgroundColor white;
-
     .root {
         height: 100%;
         position: relative;
@@ -56,11 +54,11 @@
         /* Needed so it doesn't leave room for a horizontal scrollbar at the bottom */
         overflow-x: hidden;
         outline: none;
-        background-color: backgroundColor;
+        background-color: editorBackgroundColor;
     }
 
     .scrollable {
-        background-color: backgroundColor;
+        background-color: editorBackgroundColor;
         height: 100%;
         overflow: auto;
         outline: none;
@@ -108,7 +106,7 @@
     }
 
     .currentLine {
-        background-color: #E8F2FF;
+        background-color: editorCurrentLineColor;
         position: absolute;
         z-index: -1;
     }
