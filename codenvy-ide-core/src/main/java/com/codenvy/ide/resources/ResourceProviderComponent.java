@@ -164,7 +164,10 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
 
                         rootFolder.getChildren().clear();
                         rootFolder.addChild(project);
-
+                        if (activeProject != null) {
+                            eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
+                        }
+                        
                         activeProject = project;
 
                         // get project structure
@@ -249,7 +252,6 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     @Override
     public void createProject(String name, Array<Property> properties, final AsyncCallback<Project> callback) {
         final Folder rootFolder = vfsInfo.getRoot();
-
         // create internal wrapping Request Callback with proper Unmarshaller
         AsyncRequestCallback<ProjectModelProviderAdapter> internalCallback =
                 new AsyncRequestCallback<ProjectModelProviderAdapter>(new ProjectModelUnmarshaller(this)) {
@@ -261,6 +263,9 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                         rootFolder.addChild(project);
                         project.setProject(project);
                         project.setVFSInfo(vfsInfo);
+                        if (activeProject != null) {
+                            eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
+                        }
                         activeProject = project;
 
                         // get project structure
