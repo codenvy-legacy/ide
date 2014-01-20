@@ -27,63 +27,63 @@
     @external clike-builtin, clike-tag, clike-attribute;
 
     .clike-keyword {
-        color: #708;
+        color: keyword;
     }
 
     .clike-atom {
-        color: #219;
+        color: atom;
     }
 
     .clike-number {
-        color: #164;
+        color: number;
     }
 
     .clike-def {
-        color: #00f;
+        color: deff;
     }
 
     .clike-variable {
-        color: black;
+        color: variable;
     }
 
     .clike-variable-2 {
-        color: #05a;
+        color: variable2;
     }
 
     .clike-property {
-        color: black;
+        color: property;
     }
 
     .clike-operator {
-        color: black;
+        color: operator;
     }
 
     .clike-comment {
-        color: #a50;
+        color: comment;
     }
 
     .clike-string {
-        color: #a11;
+        color: string;
     }
 
     .clike-meta {
-        color: #049;
+        color: smeta;
     }
 
     .clike-error {
-        color: #f00;
+        color: error;
     }
 
     .clike-builtin {
-        color: #30a;
+        color: builtin;
     }
 
     .clike-tag {
-        color: #170;
+        color: tag;
     }
 
     .clike-attribute {
-        color: #00c;
+        color: attribute;
     }
 
         /*
@@ -91,65 +91,70 @@
          */
     @external css-keyword, css-atom, css-number, css-def, css-variable, css-variable-2;
     @external css-property, css-operator, css-comment, css-string, css-meta, css-error;
-    @external css-builtin, css-tag, css-attribute;
+    @external css-builtin, css-tag, css-attribute, css-string-2;
 
     .css-keyword {
-        color: #708;
+        color: keyword;
     }
 
     .css-atom {
-        color: #219;
+        color: atom;
     }
 
     .css-number {
-        color: #164;
+        color: number;
     }
 
     .css-def {
-        color: #00f;
+        color: deff;
     }
 
     .css-variable {
-        color: black;
+        color: variable;
     }
 
     .css-variable-2 {
-        color: #05a;
+        color: variable2;
     }
 
     .css-property {
-        color: black;
+        color: property;
     }
 
     .css-operator {
-        color: black;
+        color: operator;
     }
 
     .css-comment {
-        color: #a50;
+        color: comment;
     }
 
     .css-string {
-        color: #a11;
+        color: string;
     }
 
     .css-meta {
-        color: #555;
+        color: smeta;
     }
 
     .css-error {
+        color: error;
     }
 
     .css-builtin {
-        color: #30a;
+        color: builtin;
     }
 
     .css-tag {
-        color: #170;
+        color: tag;
     }
 
     .css-attribute {
-        color: #00c;
+        color: attribute;
+    }
+
+    .css-string-2{
+        color: string2;
     }
 
         /*
@@ -160,62 +165,62 @@
     @external dart-builtin, dart-tag, dart-attribute;
 
     .dart-keyword {
-        color: #708;
+        color: keyword;
     }
 
     .dart-atom {
-        color: #219;
+        color: atom;
     }
 
     .dart-number {
-        color: #164;
+        color: number;
     }
 
     .dart-def {
-        color: #00f;
+        color: deff;
     }
 
     .dart-variable {
-        color: black;
+        color: variable;
     }
 
     .dart-variable-2 {
-        color: #05a;
+        color: variable2;
     }
 
     .dart-property {
-        color: black;
+        color: property;
     }
 
     .dart-operator {
-        color: black;
+        color: operator;
     }
 
     .dart-comment {
-        color: #a50;
+        color: comment;
     }
 
     .dart-string {
-        color: #a11;
+        color: string;
     }
 
     .dart-meta {
-        color: #049;
+        color: smeta;
     }
 
     .dart-error {
     }
 
     .dart-builtin {
-        color: #30a;
+        color: builtin;
     }
 
     .dart-tag {
-        color: #170;
+        color: tag;
     }
 
     .dart-attribute {
-        color: #00c;
+        color: attribute;
     }
 
         /*
@@ -226,63 +231,63 @@
     @external go-builtin, go-tag, go-attribute;
 
     .go-keyword {
-        color: #708;
+        color: keyword;
     }
 
     .go-atom {
-        color: #219;
+        color: atom;
     }
 
     .go-number {
-        color: #164;
+        color: number;
     }
 
     .go-def {
-        color: #00f;
+        color: deff;
     }
 
     .go-variable {
-        color: black;
+        color: variable;
     }
 
     .go-variable-2 {
-        color: #05a;
+        color: variable2;
     }
 
     .go-property {
-        color: black;
+        color: property;
     }
 
     .go-operator {
-        color: black;
+        color: operator;
     }
 
     .go-comment {
-        color: #a50;
+        color: comment;
     }
 
     .go-string {
-        color: #a11;
+        color: string;
     }
 
     .go-meta {
-        color: #049;
+        color: smeta;
     }
 
     .go-error {
-        color: #f00;
+        color: error;
     }
 
     .go-builtin {
-        color: #30a;
+        color: builtin;
     }
 
     .go-tag {
-        color: #170;
+        color: tag;
     }
 
     .go-attribute {
-        color: #00c;
+        color: attribute;
     }
 
         /*
@@ -291,30 +296,30 @@
     @external html-atom, html-comment, html-string, html-meta, html-error, html-tag, html-attribute;
 
     .html-atom {
-        color: #219;
+        color: atom;
     }
 
     .html-comment {
-        color: #a50;
+        color: comment;
     }
 
     .html-string {
-        color: #a11;
+        color: string;
     }
 
     .html-meta {
-        color: #555;
+        color: smeta;
     }
 
     .html-error {
     }
 
     .html-tag {
-        color: #170;
+        color: tag;
     }
 
     .html-attribute {
-        color: #00c;
+        color: attribute;
     }
 
         /*
@@ -327,66 +332,66 @@
     @external javascript-tag, javascript-attribute;
 
     .javascript-keyword {
-        color: #708;
+        color: keyword;
     }
 
     .javascript-atom {
-        color: #219;
+        color: atom;
     }
 
     .javascript-number {
-        color: #164;
+        color: number;
     }
 
     .javascript-def {
-        color: #00f;
+        color: deff;
     }
 
     .javascript-variable {
-        color: black;
+        color: variable;
     }
 
     .javascript-variable-2 {
-        color: #05a;
+        color: variable2;
     }
 
     .javascript-property {
-        color: black;
+        color: property;
     }
 
     .javascript-operator {
-        color: black;
+        color: operator;
     }
 
     .javascript-comment {
-        color: #a50;
+        color: comment;
     }
 
     .javascript-string {
-        color: #a11;
+        color: string;
     }
 
     .javascript-string-2 {
-        color: #f50;
+        color: string2;
     }
 
     .javascript-meta {
-        color: #555;
+        color: smeta;
     }
 
     .javascript-error {
     }
 
     .javascript-builtin {
-        color: #30a;
+        color: builtin;
     }
 
     .javascript-tag {
-        color: #170;
+        color: tag;
     }
 
     .javascript-attribute {
-        color: #00c;
+        color: attribute;
     }
 
         /*
@@ -397,63 +402,63 @@
     @external php-builtin, php-tag, php-attribute;
 
     .php-keyword {
-        color: #708;
+        color:keyword;
     }
 
     .php-atom {
-        color: #219;
+        color: atom;
     }
 
     .php-number {
-        color: #164;
+        color: number;
     }
 
     .php-def {
-        color: #00f;
+        color: deff;
     }
 
     .php-variable {
-        color: black;
+        color: variable;
     }
 
     .php-variable-2 {
-        color: #05a;
+        color: variable2;
     }
 
     .php-property {
-        color: black;
+        color: property;
     }
 
     .php-operator {
-        color: black;
+        color: operator;
     }
 
     .php-comment {
-        color: #a50;
+        color: comment;
     }
 
     .php-string {
-        color: #a11;
+        color: string;
     }
 
     .php-meta {
-        color: #049;
+        color: smeta;
     }
 
     .php-error {
-        color: #f00;
+        color: error;
     }
 
     .php-builtin {
-        color: #30a;
+        color: builtin;
     }
 
     .php-tag {
-        color: #170;
+        color: tag;
     }
 
     .php-attribute {
-        color: #00c;
+        color: attribute;
     }
 
         /*
@@ -465,58 +470,58 @@
     @external python-builtin, python-tag, python-attribute;
 
     .python-keyword {
-        color: #708;
+        color: keyword;
     }
 
     .python-atom {
-        color: #219;
+        color: atom;
     }
 
     .python-number {
-        color: #164;
+        color: number;
     }
 
     .python-def {
-        color: #00f;
+        color: deff;
     }
 
     .python-variable {
-        color: black;
+        color: variable;
     }
 
     .python-property {
-        color: black;
+        color: property;
     }
 
     .python-operator {
-        color: black;
+        color: operator;
     }
 
     .python-comment {
-        color: #a50;
+        color: comment;
     }
 
     .python-string {
-        color: #a11;
+        color: string;
     }
 
     .python-meta {
-        color: #555;
+        color: smeta;
     }
 
     .python-error {
     }
 
     .python-builtin {
-        color: #30a;
+        color: builtin;
     }
 
     .python-tag {
-        color: #170;
+        color: tag;
     }
 
     .python-attribute {
-        color: #00c;
+        color: attribute;
     }
 
         /*
@@ -526,35 +531,35 @@
     @external yaml-string, yaml-meta, yaml-error;
 
     .yaml-keyword {
-        color: #708;
+        color: keyword;
     }
 
     .yaml-atom {
-        color: #219;
+        color: atom;
     }
 
     .yaml-number {
-        color: #164;
+        color: number;
     }
 
     .yaml-def {
-        color: #00f;
+        color: deff;
     }
 
     .yaml-variable-2 {
-        color: #05a;
+        color: variable2;
     }
 
     .yaml-comment {
-        color: #a50;
+        color: comment;
     }
 
     .yaml-string {
-        color: #a11;
+        color: string;
     }
 
     .yaml-meta {
-        color: #555;
+        color: smeta;
     }
 
     .yaml-error {
@@ -566,28 +571,28 @@
     @external xml-atom, xml-comment, xml-meta, xml-error, xml-tag, xml-string, xml-attribute;
 
     .xml-atom {
-        color: #219;
+        color: atom;
     }
 
     .xml-comment {
-        color: #a50;
+        color: comment;
     }
 
     .xml-string {
-        color: #a11;
+        color: string;
     }
 
     .xml-meta {
-        color: #555;
+        color: smeta;
     }
 
     .xml-error {
     }
 
     .xml-tag {
-        color: #170;
+        color: tag;
     }
 
     .xml-attribute {
-        color: #00c;
+        color: attribute;
     }

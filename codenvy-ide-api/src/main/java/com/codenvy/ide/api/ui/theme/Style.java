@@ -130,4 +130,96 @@ public class Style {
         return theme.getInputBackground();
     }
 
+    public static String getEditorBackgroundColor() {
+        return theme.getEditorBackgroundColor();
+    }
+
+    public static String getEditorCurrentLineColor() {
+        return theme.getEditorCurrentLineColor();
+    }
+
+    public static String getEditorDefaultFontColor() {
+        return theme.getEditorDefaultFontColor();
+    }
+
+    public static String getEditorSelectionColor() {
+        return theme.getEditorSelectionColor();
+    }
+
+    public static String getEditorInactiveSelectionColor() {
+        return theme.getEditorInactiveSelectionColor();
+    }
+
+    public static String getEditorCursorColor() {
+        return theme.getEditorCursorColor();
+    }
+
+    public static String getEditorGutterColor() {
+        return theme.getEditorGutterColor();
+    }
+
+    //syntax
+    public static String getEditorKeyWord() {
+        return theme.getEditorKeyWord();
+    }
+
+    public static String getEditorAtom(){
+        return theme.getEditorAtom();
+    }
+
+    public static String getEditorNumber() {
+        return theme.getEditorNumber();
+    }
+
+    public static String getEditorDef() {
+        return theme.getEditorDef();
+    }
+
+    public static String getEditorVariable() {
+        return theme.getEditorVariable();
+    }
+
+    public static String getEditorVariable2() {
+        return theme.getEditorVariable2();
+    }
+
+    public static String getEditorProperty() {
+        return theme.getEditorProperty();
+    }
+
+    public static String getEditorOperator() {
+        return theme.getEditorOperator();
+    }
+
+    public static String getEditorComment() {
+        return theme.getEditorComment();
+    }
+
+    public static String getEditorString() {
+        return theme.getEditorString();
+    }
+
+    public static String getEditorString2() {
+        return theme.getEditorString2();
+    }
+
+    public static String getEditorMeta() {
+        return theme.getEditorMeta();
+    }
+
+    public static String getEditorError() {
+        return theme.getEditorError();
+    }
+
+    public static String getEditorBuiltin() {
+        return theme.getEditorBuiltin();
+    }
+
+    public static String getEditorTag() {
+        return theme.getEditorTag();
+    }
+
+    public static String getEditorAttribute() {
+        return theme.getEditorAttribute();
+    }
 }

@@ -160,4 +160,119 @@ public class DarkTheme implements Theme {
     public String getInputBackground() {
         return "#272727";
     }
+
+    @Override
+    public String getEditorBackgroundColor() {
+        return "#2b2b2b";
+    }
+
+    @Override
+    public String getEditorCurrentLineColor() {
+        return "#323232";
+    }
+
+    @Override
+    public String getEditorDefaultFontColor() {
+        return "#A9B7C6";
+    }
+
+    @Override
+    public String getEditorSelectionColor() {
+        return "#214283";
+    }
+
+    @Override
+    public String getEditorInactiveSelectionColor() {
+        return "#d4d4d4";
+    }
+
+    @Override
+    public String getEditorCursorColor() {
+        return getEditorDefaultFontColor();
+    }
+
+    @Override
+    public String getEditorGutterColor() {
+        return "#313335";
+    }
+
+    @Override
+    public String getEditorKeyWord() {
+        return "#cc7832";
+    }
+
+    @Override
+    public String getEditorAtom() {
+        return "#9876aa";
+    }
+
+    @Override
+    public String getEditorNumber() {
+        return "#6897bb";
+    }
+
+    @Override
+    public String getEditorDef() {
+        return "#00f";
+    }
+
+    @Override
+    public String getEditorVariable() {
+        return getEditorDefaultFontColor();
+    }
+
+    @Override
+    public String getEditorVariable2() {
+        return "#05a";
+    }
+
+    @Override
+    public String getEditorProperty() {
+        return getEditorDefaultFontColor();
+    }
+
+    @Override
+    public String getEditorOperator() {
+        return getEditorDefaultFontColor();
+    }
+
+    @Override
+    public String getEditorComment() {
+        return "#629755";
+    }
+
+    @Override
+    public String getEditorString() {
+        return "#6A8759";
+    }
+
+    @Override
+    public String getEditorMeta() {
+        return "#BBB529";
+    }
+
+    @Override
+    public String getEditorError() {
+        return "#f00";
+    }
+
+    @Override
+    public String getEditorBuiltin() {
+        return "#30a";
+    }
+
+    @Override
+    public String getEditorTag() {
+        return "#E8BF6A";
+    }
+
+    @Override
+    public String getEditorAttribute() {
+        return "rgb(152,118,170)";
+    }
+
+    @Override
+    public String getEditorString2() {
+        return "#CC7832";
+    }
 }

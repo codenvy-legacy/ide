@@ -54,6 +54,14 @@
 /*input*/
 @eval inputBackground com.codenvy.ide.api.ui.theme.Style.getInputBackground();
 
+/*Editor*/
+@eval editorBackgroundColor com.codenvy.ide.api.ui.theme.Style.getEditorBackgroundColor();
+@eval editorCurrentLineColor com.codenvy.ide.api.ui.theme.Style.getEditorCurrentLineColor();
+@eval editorDefaultFontColor com.codenvy.ide.api.ui.theme.Style.getEditorDefaultFontColor();
+@eval editorSelectionColor com.codenvy.ide.api.ui.theme.Style.getEditorSelectionColor();
+@eval editorInactiveSelectionColor com.codenvy.ide.api.ui.theme.Style.getEditorInactiveSelectionColor();
+@eval editoGutterColor com.codenvy.ide.api.ui.theme.Style.getEditorGutterColor();
+
     /* Sizes */
 @def dividerThickness 1px;
 @def popupPadding 24px;
@@ -97,3 +105,22 @@
 @eval dialogBottomRight com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
 
 @eval dialogContentBackground com.codenvy.ide.api.ui.theme.Style.getDialogContentBackground();
+
+
+/*syntax highlight*/
+@eval keyword com.codenvy.ide.api.ui.theme.Style.getEditorKeyWord();
+@eval atom com.codenvy.ide.api.ui.theme.Style.getEditorAtom();
+@eval number com.codenvy.ide.api.ui.theme.Style.getEditorNumber();
+@eval deff com.codenvy.ide.api.ui.theme.Style.getEditorDef();
+@eval variable com.codenvy.ide.api.ui.theme.Style.getEditorVariable();
+@eval variable2 com.codenvy.ide.api.ui.theme.Style.getEditorVariable2();
+@eval property com.codenvy.ide.api.ui.theme.Style.getEditorProperty();
+@eval operator com.codenvy.ide.api.ui.theme.Style.getEditorOperator();
+@eval comment com.codenvy.ide.api.ui.theme.Style.getEditorComment();
+@eval string com.codenvy.ide.api.ui.theme.Style.getEditorString();
+@eval string2 com.codenvy.ide.api.ui.theme.Style.getEditorString2();
+@eval smeta com.codenvy.ide.api.ui.theme.Style.getEditorMeta();
+@eval error com.codenvy.ide.api.ui.theme.Style.getEditorError();
+@eval builtin com.codenvy.ide.api.ui.theme.Style.getEditorBuiltin();
+@eval tag com.codenvy.ide.api.ui.theme.Style.getEditorTag();
+@eval attribute com.codenvy.ide.api.ui.theme.Style.getEditorAttribute();

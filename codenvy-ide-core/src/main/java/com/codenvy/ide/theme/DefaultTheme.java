@@ -191,4 +191,119 @@ public class DefaultTheme implements Theme{
     public String getInputBackground() {
         return "#FFFFFF";
     }
+
+    @Override
+    public String getEditorBackgroundColor() {
+        return "white";
+    }
+
+    @Override
+    public String getEditorCurrentLineColor() {
+        return "#E8F2FF";
+    }
+
+    @Override
+    public String getEditorDefaultFontColor() {
+        return "black";
+    }
+
+    @Override
+    public String getEditorSelectionColor() {
+        return "#d4e2ff";
+    }
+
+    @Override
+    public String getEditorInactiveSelectionColor() {
+        return "#d4d4d4";
+    }
+
+    @Override
+    public String getEditorCursorColor() {
+        return "black";
+    }
+
+    @Override
+    public String getEditorGutterColor() {
+        return "#eee";
+    }
+
+    @Override
+    public String getEditorKeyWord() {
+        return "#708";
+    }
+
+    @Override
+    public String getEditorAtom() {
+        return "#219";
+    }
+
+    @Override
+    public String getEditorNumber() {
+        return "#164";
+    }
+
+    @Override
+    public String getEditorDef() {
+        return "#00f";
+    }
+
+    @Override
+    public String getEditorVariable() {
+        return "black";
+    }
+
+    @Override
+    public String getEditorVariable2() {
+        return "#05a";
+    }
+
+    @Override
+    public String getEditorProperty() {
+        return "black";
+    }
+
+    @Override
+    public String getEditorOperator() {
+        return "black";
+    }
+
+    @Override
+    public String getEditorComment() {
+        return "#a50";
+    }
+
+    @Override
+    public String getEditorString() {
+        return "#a11";
+    }
+
+    @Override
+    public String getEditorMeta() {
+        return "#049";
+    }
+
+    @Override
+    public String getEditorError() {
+        return "#f00";
+    }
+
+    @Override
+    public String getEditorBuiltin() {
+        return "#30a";
+    }
+
+    @Override
+    public String getEditorTag() {
+        return "#170";
+    }
+
+    @Override
+    public String getEditorAttribute() {
+        return "#00c";
+    }
+
+    @Override
+    public String getEditorString2() {
+        return "#f50";
+    }
 }

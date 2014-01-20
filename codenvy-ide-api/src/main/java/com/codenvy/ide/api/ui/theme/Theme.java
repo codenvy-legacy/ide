@@ -82,4 +82,50 @@ public interface Theme {
     String getButtonColor();
 
     String getInputBackground();
+
+    String getEditorBackgroundColor();
+
+    String getEditorCurrentLineColor();
+
+    String getEditorDefaultFontColor();
+
+    String getEditorSelectionColor();
+
+    String getEditorInactiveSelectionColor();
+
+    String getEditorCursorColor();
+
+    String getEditorGutterColor();
+
+    String getEditorKeyWord();
+
+    String getEditorAtom();
+
+    String getEditorNumber();
+
+    String getEditorDef();
+
+    String getEditorVariable();
+
+    String getEditorVariable2();
+
+    String getEditorProperty();
+
+    String getEditorOperator();
+
+    String getEditorComment();
+
+    String getEditorString();
+
+    String getEditorMeta();
+
+    String getEditorError();
+
+    String getEditorBuiltin();
+
+    String getEditorTag();
+
+    String getEditorAttribute();
+
+    String getEditorString2();
 }
