@@ -20,14 +20,23 @@ package com.codenvy.ide.ext.java.jdi.client;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
+import com.codenvy.ide.debug.Breakpoint;
 import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerView;
+import com.codenvy.ide.ext.java.jdi.client.debug.changevalue.ChangeValuePresenter;
+import com.codenvy.ide.ext.java.jdi.client.debug.expression.EvaluateExpressionPresenter;
+import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolver;
+import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolverFactory;
+import com.codenvy.ide.ext.java.jdi.shared.BreakPoint;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
+import com.codenvy.ide.ext.java.jdi.shared.Location;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
 import com.codenvy.ide.extension.runner.client.RunnerController;
+import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Before;
@@ -62,8 +71,13 @@ public class DebuggerTest extends BaseTest {
     private static final String TEST_JSON  = "test_json";
     private static final String VM_NAME    = "vm_name";
     private static final String VM_VERSION = "vm_version";
+    private static final String MIME_TYPE  = "application/java";
     @Mock
     private DebuggerView                 view;
+    @Mock
+    private EvaluateExpressionPresenter  evaluateExpressionPresenter;
+    @Mock
+    private ChangeValuePresenter         changeValuePresenter;
     @InjectMocks
     private DebuggerPresenter            presenter;
     @Mock
@@ -72,6 +86,14 @@ public class DebuggerTest extends BaseTest {
     private RunnerController             runnerController;
     @Mock
     private BreakpointGutterManager      gutterManager;
+    @Mock
+    private File                         file;
+    @Mock
+    private FqnResolverFactory           resolverFactory;
+    @Mock
+    private AsyncCallback<Breakpoint>    asyncCallbackBreakpoint;
+    @Mock
+    private AsyncCallback<Void>          asyncCallbackVoid;
 
     @Before
     public void setUp() {
@@ -83,6 +105,13 @@ public class DebuggerTest extends BaseTest {
         when(dtoFactory.createDtoFromJson(TEST_JSON, DebuggerInfo.class)).thenReturn(debuggerInfoMock);
         when(debuggerInfoMock.getVmName()).thenReturn(VM_NAME);
         when(debuggerInfoMock.getVmVersion()).thenReturn(VM_VERSION);
+
+        when(file.getMimeType()).thenReturn(MIME_TYPE);
+
+        when(dtoFactory.createDto(Location.class)).thenReturn(mock(Location.class));
+        when(dtoFactory.createDto(BreakPoint.class)).thenReturn(mock(BreakPoint.class));
+
+        when(resolverFactory.getResolver(anyString())).thenReturn(mock(FqnResolver.class));
     }
 
     @Test
@@ -191,6 +220,57 @@ public class DebuggerTest extends BaseTest {
         presenter.onDisconnectButtonClicked();
 
         verify(service).disconnect(anyString(), (AsyncRequestCallback<Void>)anyObject());
+        verify(notificationManager).showNotification((Notification)anyObject());
+    }
+
+    @Test
+    public void testResumeRequestIsSuccessful() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, (Void)null);
+                return callback;
+            }
+        }).when(service).resume(anyString(), (AsyncRequestCallback<Void>)anyObject());
+
+        presenter.onResumeButtonClicked();
+
+        verifySetEnableButtons(DISABLE_BUTTON);
+        verify(service).resume(anyString(), (AsyncRequestCallback<Void>)anyObject());
+        verify(view).setVariables(anyListOf(Variable.class));
+        verify(view).setEnableChangeValueButtonEnable(eq(DISABLE_BUTTON));
+        verify(gutterManager).unmarkCurrentBreakPoint();
+    }
+
+    @Test
+    public void testResumeRequestIsFailed() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
+                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
+                onFailure.invoke(callback, mock(Throwable.class));
+                return callback;
+            }
+        }).when(service).resume(anyString(), (AsyncRequestCallback<Void>)anyObject());
+
+        presenter.onResumeButtonClicked();
+
+        verify(service).resume(anyString(), (AsyncRequestCallback<Void>)anyObject());
+        verify(notificationManager).showNotification((Notification)anyObject());
+    }
+
+    @Test
+    public void testResumeRequestExceptionHappened() throws Exception {
+        doThrow(RequestException.class).when(service).resume(anyString(), (AsyncRequestCallback<Void>)anyObject());
+
+        presenter.onResumeButtonClicked();
+
+        verify(service).resume(anyString(), (AsyncRequestCallback<Void>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
     }
 
@@ -345,6 +425,117 @@ public class DebuggerTest extends BaseTest {
 
         verify(service).stepReturn(anyString(), (AsyncRequestCallback<Void>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
+    }
+
+    @Test
+    public void testAddBreakpointRequestIsSuccessful() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[2];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, (Void)null);
+                return callback;
+            }
+        }).when(service).addBreakpoint(anyString(), (BreakPoint)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+
+        presenter.addBreakpoint(file, anyInt(), asyncCallbackBreakpoint);
+
+        verify(service).addBreakpoint(anyString(), (BreakPoint)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        verify(asyncCallbackBreakpoint).onSuccess((Breakpoint)anyObject());
+    }
+
+    @Test
+    public void testAddBreakpointRequestIsFailed() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[2];
+                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
+                onFailure.invoke(callback, mock(Throwable.class));
+                return callback;
+            }
+        }).when(service).addBreakpoint(anyString(), (BreakPoint)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+
+        presenter.addBreakpoint(file, anyInt(), asyncCallbackBreakpoint);
+
+        verify(service).addBreakpoint(anyString(), (BreakPoint)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        verify(asyncCallbackBreakpoint).onFailure((Throwable)anyObject());
+    }
+
+    @Test
+    public void testAddBreakpointRequestExceptionHappened() throws Exception {
+        doThrow(RequestException.class).when(service).addBreakpoint(anyString(), (BreakPoint)anyObject(),
+                                                                    (AsyncRequestCallback<Void>)anyObject());
+        presenter.addBreakpoint(file, anyInt(), asyncCallbackBreakpoint);
+
+        verify(service).addBreakpoint(anyString(), (BreakPoint)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        verify(notificationManager).showNotification((Notification)anyObject());
+    }
+
+    @Test
+    public void testRemoveBreakpointRequestIsSuccessful() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[2];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, (Void)null);
+                return callback;
+            }
+        }).when(service).deleteBreakpoint(anyString(), (BreakPoint)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+
+        presenter.deleteBreakpoint(file, anyInt(), asyncCallbackVoid);
+
+        verify(service).deleteBreakpoint(anyString(), (BreakPoint)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        verify(asyncCallbackVoid).onSuccess((Void)anyObject());
+    }
+
+    @Test
+    public void testRemoveBreakpointRequestIsFailed() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[2];
+                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
+                onFailure.invoke(callback, mock(Throwable.class));
+                return callback;
+            }
+        }).when(service).deleteBreakpoint(anyString(), (BreakPoint)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+
+        presenter.deleteBreakpoint(file, anyInt(), asyncCallbackVoid);
+
+        verify(service).deleteBreakpoint(anyString(), (BreakPoint)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        verify(asyncCallbackVoid).onFailure((Throwable)anyObject());
+    }
+
+    @Test
+    public void testRemoveBreakpointRequestExceptionHappened() throws Exception {
+        doThrow(RequestException.class).when(service).deleteBreakpoint(anyString(), (BreakPoint)anyObject(),
+                                                                       (AsyncRequestCallback<Void>)anyObject());
+        presenter.deleteBreakpoint(file, anyInt(), asyncCallbackVoid);
+
+        verify(service).deleteBreakpoint(anyString(), (BreakPoint)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        verify(notificationManager).showNotification((Notification)anyObject());
+    }
+
+    @Test
+    public void shouldOpenChangeVariableValueDialog() throws Exception {
+        presenter.onSelectedVariableElement(mock(Variable.class));
+        presenter.onChangeValueButtonClicked();
+
+        verify(changeValuePresenter).showDialog((DebuggerInfo)anyObject(), (Variable)anyObject(), (AsyncCallback<String>)anyObject());
+    }
+
+    @Test
+    public void shouldOpenEvaluateExpressionDialog() throws Exception {
+        presenter.onEvaluateExpressionButtonClicked();
+
+        verify(evaluateExpressionPresenter).showDialog((DebuggerInfo)anyObject());
     }
 
     protected void verifySetEnableButtons(boolean enabled) {

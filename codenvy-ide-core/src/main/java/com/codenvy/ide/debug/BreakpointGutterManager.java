@@ -33,10 +33,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 /**
  * The manager provides to manege breakpoints and shows it into gutter.
  *
@@ -105,7 +101,7 @@ public class BreakpointGutterManager {
                         if (breakpoint.getLineNumber() == lineNumber) {
                             final int index = i;
 
-                            debugger.deleteBreakPoint(activeFile, lineNumber, new AsyncCallback<Void>() {
+                            debugger.deleteBreakpoint(activeFile, lineNumber, new AsyncCallback<Void>() {
                                 @Override
                                 public void onSuccess(Void result) {
                                     breakPoints.remove(index);
@@ -129,14 +125,13 @@ public class BreakpointGutterManager {
                     }
                 }
 
-                debugger.addBreakPoint(activeFile, lineNumber, new AsyncCallback<Breakpoint>() {
+                debugger.addBreakpoint(activeFile, lineNumber, new AsyncCallback<Breakpoint>() {
                     @Override
                     public void onSuccess(Breakpoint result) {
                         if (breakPoints != null) {
                             breakPoints.add(result);
                         } else {
-                            BreakpointGutterManager.this.breakPoints.put(activeFile.getId(),
-                                                                         Collections.<Breakpoint>createArray(result));
+                            BreakpointGutterManager.this.breakPoints.put(activeFile.getId(), Collections.<Breakpoint>createArray(result));
                         }
                         renderer.fillOrUpdateLines(lineNumber, lineNumber);
                     }

@@ -20,8 +20,7 @@ package com.codenvy.ide.ext.java.jdi.server;
 /**
  * Local variable in debuggee JVM.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * @author andrew00x
  */
 public interface JdiLocalVariable extends JdiVariable {
 }

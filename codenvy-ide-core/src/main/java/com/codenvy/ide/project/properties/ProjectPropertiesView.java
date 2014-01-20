@@ -29,6 +29,9 @@ import com.codenvy.ide.resources.model.Property;
 public interface ProjectPropertiesView extends View<ProjectPropertiesView.ActionDelegate> {
     
     public interface ActionDelegate {
+        /** Performs any actions appropriate in response to the user having pressed the Add button. */
+        void onAddClicked();
+        
         /** Performs any actions appropriate in response to the user having pressed the Edit button. */
         void onEditClicked();
         

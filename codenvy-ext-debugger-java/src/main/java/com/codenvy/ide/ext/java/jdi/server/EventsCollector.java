@@ -23,17 +23,13 @@ import com.sun.jdi.event.EventQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author andrew00x
- */
+/** @author andrew00x */
 final class EventsCollector implements Runnable {
     private static final Logger LOG = LoggerFactory.getLogger(EventsCollector.class);
-
-    private final EventsHandler handler;
-    private final EventQueue    queue;
-
-    private final    Thread  thread;
-    private volatile boolean running;
+    private final    EventsHandler handler;
+    private final    EventQueue    queue;
+    private final    Thread        thread;
+    private volatile boolean       running;
 
     EventsCollector(EventQueue queue, EventsHandler handler) {
         this.queue = queue;

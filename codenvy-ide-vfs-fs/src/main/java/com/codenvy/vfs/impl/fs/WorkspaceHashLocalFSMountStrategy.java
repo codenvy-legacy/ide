@@ -20,14 +20,19 @@ package com.codenvy.vfs.impl.fs;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.commons.env.EnvironmentContext;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 /**
- * Implementation of LocalFSMountStrategy that uses EnvironmentContext to determine mount point for virtual filesystem.
+ * Implementation of LocalFSMountStrategy that uses hash of workspace id for resolving path on local filesystem.
  *
  * @author andrew00x
  * @see FSMountPoint
  * @see LocalFileSystem
  */
-public class EnvironmentContextLocalFSMountStrategy implements LocalFSMountStrategy {
+@Singleton
+public class WorkspaceHashLocalFSMountStrategy implements LocalFSMountStrategy {
     private static final String[] segments = new String[]
             {
                     "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "0a", "0b", "0c", "0d", "0e", "0f",
@@ -48,6 +53,13 @@ public class EnvironmentContextLocalFSMountStrategy implements LocalFSMountStrat
                     "f0", "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "fa", "fb", "fc", "fd", "fe", "ff",
             };
 
+    private final java.io.File mountRoot;
+
+    @Inject
+    public WorkspaceHashLocalFSMountStrategy(@Named("vfs.local.fs_root_dir") java.io.File mountRoot) {
+        this.mountRoot = mountRoot;
+    }
+
     @Override
     public java.io.File getMountPath(String workspaceId) throws VirtualFileSystemException {
         final EnvironmentContext context = EnvironmentContext.getCurrent();
@@ -57,17 +69,11 @@ public class EnvironmentContextLocalFSMountStrategy implements LocalFSMountStrat
         if (workspaceId == null || workspaceId.isEmpty()) {
             throw new VirtualFileSystemException("Unable get mount path for virtual file system. Workspace id is not set.");
         }
-        java.io.File mountRoot = (java.io.File)context.getVariable(EnvironmentContext.VFS_ROOT_DIR);
-        if (mountRoot == null) {
-            throw new VirtualFileSystemException(
-                    String.format("Unable get mount path for virtual file system '%s'. Root mount directory is not set. ", workspaceId));
-        }
         // We can have a lot of workspace and create root folder for all of them at the same level of filesystem
         // may be inefficient. Keep workspace root folder in some hierarchy tree, use hash code for it.
-        return calculateDirPath((java.io.File)context.getVariable(EnvironmentContext.VFS_ROOT_DIR), workspaceId);
+        return calculateDirPath(mountRoot, workspaceId);
     }
 
-    // need package visibility for test
     public static java.io.File calculateDirPath(java.io.File parent, String workspaceId) {
         final int hash = workspaceId.hashCode();
         final String relPath = segments[hash & 0xff] +

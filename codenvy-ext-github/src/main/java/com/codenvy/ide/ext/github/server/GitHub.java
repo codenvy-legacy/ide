@@ -17,14 +17,16 @@
  */
 package com.codenvy.ide.ext.github.server;
 
-import com.codenvy.api.core.user.UserState;
 import com.codenvy.commons.json.JsonHelper;
 import com.codenvy.commons.json.JsonNameConventions;
 import com.codenvy.commons.json.JsonParseException;
 import com.codenvy.commons.security.oauth.OAuthTokenProvider;
 import com.codenvy.commons.security.shared.Token;
 import com.codenvy.dto.server.DtoFactory;
+import com.codenvy.ide.MimeType;
 import com.codenvy.ide.commons.ParsingResponseException;
+import com.codenvy.ide.ext.git.server.provider.GitVendorService;
+import com.codenvy.ide.ext.git.server.provider.rest.ProviderException;
 import com.codenvy.ide.ext.github.shared.Collaborators;
 import com.codenvy.ide.ext.github.shared.GitHubRepository;
 import com.codenvy.ide.ext.github.shared.GitHubRepositoryList;
@@ -32,10 +34,13 @@ import com.codenvy.ide.ext.github.shared.GitHubUser;
 import com.codenvy.ide.ext.ssh.server.SshKey;
 import com.codenvy.ide.ext.ssh.server.SshKeyStore;
 import com.codenvy.ide.ext.ssh.server.SshKeyStoreException;
+import com.codenvy.ide.rest.HTTPHeader;
+import com.codenvy.ide.rest.HTTPMethod;
 
 import org.everrest.core.impl.provider.json.JsonValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.BufferedWriter;
@@ -60,7 +65,9 @@ import java.util.regex.Pattern;
  *
  * @author Oksana Vereshchaka
  */
-public class GitHub {
+public class GitHub extends GitVendorService {
+
+    private final static Logger LOG = LoggerFactory.getLogger(GitHub.class);
 
     /** Predefined name of GitHub user. Use it to make possible for users to clone repositories with samples. */
     private final String             myGitHubUser;
@@ -88,11 +95,19 @@ public class GitHub {
     /** Name of the link for the next page. */
     private static final String META_NEXT = "next";
 
-    // TODO(GUICE): better name for property "github-user" ??
+    // TODO(GUICE): better name for properties ??
     @Inject
-    public GitHub(@Nullable @Named("github-user") String myGitHubUser,
+    public GitHub(@Named("github.user") String myGitHubUser,
                   OAuthTokenProvider oauthTokenProvider,
-                  SshKeyStore sshKeyStore) {
+                  SshKeyStore sshKeyStore,
+                  @Named("github.vendorName") String vendorName,
+                  @Named("github.vendorBaseHost") String vendorBaseHost,
+                  @Named("github.vendorUrlPattern") String vendorUrlPattern,
+                  @Named("github.vendorOAuthScopes") String[] vendorOAuthScopes,
+                  @Named("github.vendorSupportOAuth2") boolean oauth2) {
+
+        super(vendorName, vendorBaseHost, vendorUrlPattern, vendorOAuthScopes, oauth2, sshKeyStore);
+
         this.myGitHubUser = myGitHubUser;
         this.oauthTokenProvider = oauthTokenProvider;
         this.sshKeyStore = sshKeyStore;
@@ -306,6 +321,19 @@ public class GitHub {
         return false;
     }
 
+
+    /**
+     * @return return SSH key for GitHub if it exist otherwise null
+     */
+    public SshKey getGitHubSshKey() {
+        SshKey key;
+        try {
+            key = sshKeyStore.getPublicKey("github.com");
+        } catch (SshKeyStoreException e) {
+            return null;
+        }
+        return key;
+    }
 
     public void generateGitHubSshKey()
             throws IOException, SshKeyStoreException, GitHubException, ParsingResponseException {
@@ -565,8 +593,46 @@ public class GitHub {
         return body;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void uploadNewPublicKey(SshKey publicKey) throws ProviderException {
+        Map<String, String> postParams = new HashMap<>(2);
+        postParams.put("title", getSSHKeyLabel());
+        postParams.put("key", new String(publicKey.getBytes()));
 
-    private String getUserId() {
-        return UserState.get().getUser().getName();
+        new RequestBuilder().withUrl("https://api.github.com/user/keys" + getTokenString())
+                            .withMethod(HTTPMethod.POST)
+                            .withRequestHeader(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+                            .withRequestHeader(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                            .withBody(JsonHelper.toJson(postParams))
+                            .makeRequest();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isRepositoryPrivate(String repositoryName) {
+        return false;
+    }
+
+    /**
+     * ************************************************************************************
+     * Common methods
+     * *************************************************************************************
+     */
+    public String getTokenString() {
+        Token token = null;
+        try {
+            token = oauthTokenProvider.getToken(getVendorName(), getUserId());
+        } catch (IOException e) {
+            LOG.warn("Failed to obtain token for GitHub", e);
+        }
+
+        StringBuilder oauthToken = new StringBuilder("?access_token=");
+
+        if (token != null && token.getToken() != null && !token.getToken().isEmpty()) {
+            oauthToken.append(token.getToken());
+        }
+
+        return oauthToken.toString();
     }
 }

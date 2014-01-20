@@ -17,24 +17,19 @@
  */
 package com.codenvy.ide.ext.java.jdi.server;
 
+import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.ext.java.jdi.server.expression.Evaluator;
 import com.codenvy.ide.ext.java.jdi.server.expression.ExpressionParser;
-import com.codenvy.ide.ext.java.jdi.server.model.BreakPointEventImpl;
-import com.codenvy.ide.ext.java.jdi.server.model.BreakPointImpl;
-import com.codenvy.ide.ext.java.jdi.server.model.DebuggerEventListImpl;
-import com.codenvy.ide.ext.java.jdi.server.model.FieldImpl;
-import com.codenvy.ide.ext.java.jdi.server.model.LocationImpl;
-import com.codenvy.ide.ext.java.jdi.server.model.StackFrameDumpImpl;
-import com.codenvy.ide.ext.java.jdi.server.model.StepEventImpl;
-import com.codenvy.ide.ext.java.jdi.server.model.ValueImpl;
-import com.codenvy.ide.ext.java.jdi.server.model.VariableImpl;
-import com.codenvy.ide.ext.java.jdi.server.model.VariablePathImpl;
 import com.codenvy.ide.ext.java.jdi.shared.BreakPoint;
 import com.codenvy.ide.ext.java.jdi.shared.BreakPointEvent;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerEvent;
+import com.codenvy.ide.ext.java.jdi.shared.DebuggerEventList;
+import com.codenvy.ide.ext.java.jdi.shared.Field;
+import com.codenvy.ide.ext.java.jdi.shared.Location;
 import com.codenvy.ide.ext.java.jdi.shared.StackFrameDump;
 import com.codenvy.ide.ext.java.jdi.shared.StepEvent;
 import com.codenvy.ide.ext.java.jdi.shared.Value;
+import com.codenvy.ide.ext.java.jdi.shared.Variable;
 import com.codenvy.ide.ext.java.jdi.shared.VariablePath;
 import com.sun.jdi.AbsentInformationException;
 import com.sun.jdi.Bootstrap;
@@ -49,6 +44,7 @@ import com.sun.jdi.connect.AttachingConnector;
 import com.sun.jdi.connect.Connector;
 import com.sun.jdi.connect.IllegalConnectorArgumentsException;
 import com.sun.jdi.request.BreakpointRequest;
+import com.sun.jdi.request.ClassPrepareRequest;
 import com.sun.jdi.request.EventRequest;
 import com.sun.jdi.request.EventRequestManager;
 import com.sun.jdi.request.InvalidRequestStateException;
@@ -105,6 +101,14 @@ public class Debugger implements EventsHandler {
     private final String host;
     private final int    port;
     private final List<DebuggerEvent> events = new ArrayList<>();
+
+    /**
+     * A mapping of source file names to breakpoints. This mapping is used to set
+     * breakpoints in files that haven't been loaded yet by a target Java VM.
+     */
+    private final ConcurrentMap<String, List<BreakPoint>>    deferredBreakpoints  = new ConcurrentHashMap<>();
+    /** Stores ClassPrepareRequests to prevent making duplicate class prepare requests. */
+    private final ConcurrentMap<String, ClassPrepareRequest> classPrepareRequests = new ConcurrentHashMap<>();
 
     /** Target Java VM representation. */
     private VirtualMachine  vm;
@@ -177,23 +181,25 @@ public class Debugger implements EventsHandler {
     }
 
     /**
-     * Add new break point.
+     * Add new breakpoint.
      *
-     * @param breakPoint
+     * @param breakpoint
      *         break point description
      * @throws InvalidBreakPointException
-     *         if description of break point is invalid (specified line number or class name
-     *         is invalid)
+     *         if description of break point is invalid (specified line number or class name is invalid)
      * @throws DebuggerException
      *         when other JDI error occurs
      */
-    public void addBreakPoint(BreakPoint breakPoint) throws InvalidBreakPointException, DebuggerException {
-        final String className = breakPoint.getLocation().getClassName();
-        final int lineNumber = breakPoint.getLocation().getLineNumber();
+    public void addBreakpoint(BreakPoint breakpoint) throws InvalidBreakPointException, DebuggerException {
+        final String className = breakpoint.getLocation().getClassName();
+        final int lineNumber = breakpoint.getLocation().getLineNumber();
         List<ReferenceType> classes = vm.classesByName(className);
+        // it may mean that class doesn't loaded by a target JVM yet
         if (classes.isEmpty()) {
-            throw new InvalidBreakPointException("Class " + className + " not found. ");
+            deferBreakpoint(breakpoint);
+            return;
         }
+
         ReferenceType clazz = classes.get(0);
         List<com.sun.jdi.Location> locations;
         try {
@@ -213,8 +219,8 @@ public class Debugger implements EventsHandler {
         }
 
         // Ignore new breakpoint if already have breakpoint at the same location.
-        EventRequestManager events = getEventManager();
-        for (BreakpointRequest breakpointRequest : events.breakpointRequests()) {
+        EventRequestManager requestManager = getEventManager();
+        for (BreakpointRequest breakpointRequest : requestManager.breakpointRequests()) {
             if (location.equals(breakpointRequest.location())) {
                 LOG.debug("Breakpoint at {} already set", location);
                 return;
@@ -222,18 +228,37 @@ public class Debugger implements EventsHandler {
         }
 
         try {
-            EventRequest breakPointRequest = events.createBreakpointRequest(location);
+            EventRequest breakPointRequest = requestManager.createBreakpointRequest(location);
             breakPointRequest.setSuspendPolicy(EventRequest.SUSPEND_ALL);
-            String expression = breakPoint.getCondition();
+            String expression = breakpoint.getCondition();
             if (!(expression == null || expression.isEmpty())) {
                 ExpressionParser parser = ExpressionParser.newInstance(expression);
-                breakPointRequest.putProperty("org.exoplatform.ide.java.debug.condition.expression.parser", parser);
+                breakPointRequest.putProperty("com.codenvy.ide.java.debug.condition.expression.parser", parser);
             }
             breakPointRequest.setEnabled(true);
         } catch (NativeMethodException | IllegalThreadStateException | InvalidRequestStateException e) {
             throw new DebuggerException(e.getMessage(), e);
         }
         LOG.debug("Add breakpoint: {}", location);
+    }
+
+    private void deferBreakpoint(BreakPoint breakpoint) throws DebuggerException {
+        final String className = breakpoint.getLocation().getClassName();
+        List<BreakPoint> newList = new ArrayList<>();
+        List<BreakPoint> list = deferredBreakpoints.putIfAbsent(className, newList);
+        if (list == null) {
+            list = newList;
+        }
+        list.add(breakpoint);
+
+        // start listening for the load of the type
+        if (!classPrepareRequests.containsKey(className)) {
+            ClassPrepareRequest request = getEventManager().createClassPrepareRequest();
+            // set class filter in order to reduce the amount of event traffic sent from the target VM to the debugger VM
+            request.addClassFilter(className);
+            request.enable();
+            classPrepareRequests.put(className, request);
+        }
     }
 
     /**
@@ -258,7 +283,12 @@ public class Debugger implements EventsHandler {
         List<BreakPoint> breakPoints = new ArrayList<>(breakpointRequests.size());
         for (BreakpointRequest breakpointRequest : breakpointRequests) {
             com.sun.jdi.Location location = breakpointRequest.location();
-            breakPoints.add(new BreakPointImpl(new LocationImpl(location.declaringType().name(), location.lineNumber())));
+            // Breakpoint always enabled at the moment. Managing states of breakpoint is not supported for now.
+            breakPoints.add(DtoFactory.getInstance().createDto(BreakPoint.class)
+                                    .withEnabled(true)
+                                    .withLocation(DtoFactory.getInstance().createDto(Location.class)
+                                                            .withClassName(location.declaringType().name())
+                                                            .withLineNumber(location.lineNumber())));
         }
         Collections.sort(breakPoints, BREAKPOINT_COMPARATOR);
         return breakPoints;
@@ -341,27 +371,30 @@ public class Debugger implements EventsHandler {
      *         when any other errors occur when try to access the current state of target JVM
      */
     public StackFrameDump dumpStackFrame() throws DebuggerStateException, DebuggerException {
-        StackFrameDumpImpl dump = new StackFrameDumpImpl();
+        StackFrameDump dump = DtoFactory.getInstance().createDto(StackFrameDump.class);
         for (JdiField f : getCurrentFrame().getFields()) {
-            dump.getFields().add(
-                    new FieldImpl(f.getName(),
-                                  f.getValue().getAsString(),
-                                  f.getTypeName(),
-                                  new VariablePathImpl(Arrays.asList(f.isStatic() ? "static" : "this", f.getName())),
-                                  f.isFinal(),
-                                  f.isStatic(),
-                                  f.isTransient(),
-                                  f.isVolatile(),
-                                  f.isPrimitive())
-                                );
+            dump.getFields().add((Field)DtoFactory.getInstance().createDto(Field.class)
+                                                  .withIsFinal(f.isFinal())
+                                                  .withIsStatic(f.isStatic())
+                                                  .withIsTransient(f.isTransient())
+                                                  .withIsVolatile(f.isVolatile())
+                                                  .withName(f.getName())
+                                                  .withValue(f.getValue().getAsString())
+                                                  .withType(f.getTypeName())
+                                                  .withVariablePath(
+                                                          DtoFactory.getInstance().createDto(VariablePath.class)
+                                                                    .withPath(Arrays.asList(f.isStatic() ? "static" : "this", f.getName())))
+                                                  .withPrimitive(f.isPrimitive()));
         }
         for (JdiLocalVariable var : getCurrentFrame().getLocalVariables()) {
-            dump.getLocalVariables().add(
-                    new VariableImpl(var.getName(),
-                                     var.getValue().getAsString(),
-                                     var.getTypeName(),
-                                     new VariablePathImpl(Collections.singletonList(var.getName())),
-                                     var.isPrimitive()));
+            dump.getLocalVariables().add(DtoFactory.getInstance().createDto(Variable.class)
+                                                   .withName(var.getName())
+                                                   .withValue(var.getValue().getAsString())
+                                                   .withType(var.getTypeName())
+                                                   .withVariablePath(
+                                                           DtoFactory.getInstance().createDto(VariablePath.class)
+                                                                     .withPath(Collections.singletonList(var.getName())))
+                                                   .withPrimitive(var.isPrimitive()));
         }
         return dump;
     }
@@ -437,32 +470,30 @@ public class Debugger implements EventsHandler {
             return null;
         }
 
-        ValueImpl value = new ValueImpl();
-        value.setValue(variable.getValue().getAsString());
+        Value value = DtoFactory.getInstance().createDto(Value.class).withValue(variable.getValue().getAsString());
         for (JdiVariable ch : variable.getValue().getVariables()) {
-            VariablePath chPath = new VariablePathImpl(new ArrayList<>(path));
+            VariablePath chPath = DtoFactory.getInstance().createDto(VariablePath.class).withPath(new ArrayList<>(path));
             chPath.getPath().add(ch.getName());
             if (ch instanceof JdiField) {
                 JdiField f = (JdiField)ch;
-                value.getVariables().add(
-                        new FieldImpl(f.getName(),
-                                      f.getValue().getAsString(),
-                                      f.getTypeName(),
-                                      chPath,
-                                      f.isFinal(),
-                                      f.isStatic(),
-                                      f.isTransient(),
-                                      f.isVolatile(),
-                                      f.isPrimitive())
-                                        );
+                value.getVariables().add(DtoFactory.getInstance().createDto(Field.class)
+                                                   .withIsFinal(f.isFinal())
+                                                   .withIsStatic(f.isStatic())
+                                                   .withIsTransient(f.isTransient())
+                                                   .withIsVolatile(f.isVolatile())
+                                                   .withName(f.getName())
+                                                   .withValue(f.getValue().getAsString())
+                                                   .withType(f.getTypeName())
+                                                   .withVariablePath(chPath)
+                                                   .withPrimitive(f.isPrimitive()));
             } else {
                 // Array element.
-                value.getVariables().add(
-                        new VariableImpl(ch.getName(),
-                                         ch.getValue().getAsString(),
-                                         ch.getTypeName(),
-                                         chPath,
-                                         ch.isPrimitive()));
+                value.getVariables().add(DtoFactory.getInstance().createDto(Variable.class)
+                                                   .withName(ch.getName())
+                                                   .withValue(ch.getValue().getAsString())
+                                                   .withType(ch.getTypeName())
+                                                   .withVariablePath(chPath)
+                                                   .withPrimitive(ch.isPrimitive()));
             }
         }
         return value;
@@ -533,9 +564,11 @@ public class Debugger implements EventsHandler {
                 if (event instanceof com.sun.jdi.event.BreakpointEvent) {
                     resume = processBreakPointEvent((com.sun.jdi.event.BreakpointEvent)event);
                 } else if (event instanceof com.sun.jdi.event.StepEvent) {
-                    resume = processBreakStepEvent((com.sun.jdi.event.StepEvent)event);
+                    resume = processStepEvent((com.sun.jdi.event.StepEvent)event);
                 } else if (event instanceof com.sun.jdi.event.VMDisconnectEvent) {
                     resume = processDisconnectEvent((com.sun.jdi.event.VMDisconnectEvent)event);
+                } else if (event instanceof com.sun.jdi.event.ClassPrepareEvent) {
+                    resume = processClassPrepareEvent((com.sun.jdi.event.ClassPrepareEvent)event);
                 }
             }
         } finally {
@@ -548,8 +581,7 @@ public class Debugger implements EventsHandler {
     private boolean processBreakPointEvent(com.sun.jdi.event.BreakpointEvent event) throws DebuggerException {
         setCurrentThread(event.thread());
         boolean hitBreakpoint;
-        ExpressionParser parser = (ExpressionParser)event.request()
-                                                         .getProperty("org.exoplatform.ide.java.debug.condition.expression.parser");
+        ExpressionParser parser = (ExpressionParser)event.request().getProperty("com.codenvy.ide.java.debug.condition.expression.parser");
         if (parser != null) {
             com.sun.jdi.Value result = evaluate(parser);
             hitBreakpoint = result instanceof com.sun.jdi.BooleanValue && ((com.sun.jdi.BooleanValue)result).value();
@@ -562,15 +594,24 @@ public class Debugger implements EventsHandler {
             com.sun.jdi.Location location = event.location();
             BreakPointEvent breakPointEvent;
             synchronized (events) {
-                breakPointEvent =
-                        new BreakPointEventImpl(new BreakPointImpl(new LocationImpl(location.declaringType().name(),
-                                                                                    location.lineNumber())));
+                // Breakpoint always enabled at the moment. Managing states of breakpoint is not supported for now.
+                breakPointEvent = (BreakPointEvent)DtoFactory.getInstance().createDto(BreakPointEvent.class)
+                                                             .withBreakPoint(
+                                                                     DtoFactory.getInstance().createDto(BreakPoint.class)
+                                                                               .withEnabled(true)
+                                                                               .withLocation(
+                                                                                       DtoFactory.getInstance().createDto(Location.class)
+                                                                                                 .withClassName(
+                                                                                                         location.declaringType().name())
+                                                                                                 .withLineNumber(location.lineNumber())))
+                                                             .withType(DebuggerEvent.BREAKPOINT);
                 events.add(breakPointEvent);
             }
 
             List<DebuggerEvent> eventsList = new ArrayList<>();
             eventsList.add(breakPointEvent);
-            publishWebSocketMessage(new DebuggerEventListImpl(eventsList), EVENTS_CHANNEL + id);
+            publishWebSocketMessage(DtoFactory.getInstance().createDto(DebuggerEventList.class).withEvents(eventsList),
+                                    EVENTS_CHANNEL + id);
         }
 
         // Left target JVM in suspended state if result of evaluation of expression is boolean value and true
@@ -578,19 +619,23 @@ public class Debugger implements EventsHandler {
         return !hitBreakpoint;
     }
 
-    private boolean processBreakStepEvent(com.sun.jdi.event.StepEvent event) throws DebuggerException {
+    private boolean processStepEvent(com.sun.jdi.event.StepEvent event) throws DebuggerException {
         setCurrentThread(event.thread());
         com.sun.jdi.Location location = event.location();
         StepEvent stepEvent;
         synchronized (events) {
-            stepEvent = new StepEventImpl(new LocationImpl(location.declaringType().name(), location.lineNumber()));
+            stepEvent = (StepEvent)DtoFactory.getInstance().createDto(StepEvent.class)
+                                             .withLocation(DtoFactory.getInstance().createDto(Location.class)
+                                                                     .withClassName(location.declaringType().name())
+                                                                     .withLineNumber(location.lineNumber()))
+                                             .withType(DebuggerEvent.STEP);
             events.add(stepEvent);
         }
 
         List<DebuggerEvent> eventsList = new ArrayList<>();
         eventsList.add(stepEvent);
-        publishWebSocketMessage(new DebuggerEventListImpl(eventsList), EVENTS_CHANNEL + id);
-
+        publishWebSocketMessage(DtoFactory.getInstance().createDto(DebuggerEventList.class).withEvents(eventsList),
+                                EVENTS_CHANNEL + id);
         // Lets target JVM to be in suspend state.
         return false;
     }
@@ -599,6 +644,26 @@ public class Debugger implements EventsHandler {
         eventsCollector.stop();
         instances.remove(id);
         publishWebSocketMessage(null, DISCONNECTED_CHANNEL + id);
+        return true;
+    }
+
+    private boolean processClassPrepareEvent(com.sun.jdi.event.ClassPrepareEvent event) throws DebuggerException {
+        final String className = event.referenceType().name();
+        // add deferred breakpoints
+        List<BreakPoint> breakpointsToAdd = deferredBreakpoints.get(className);
+        if (breakpointsToAdd != null) {
+            for (BreakPoint b : breakpointsToAdd) {
+                addBreakpoint(b);
+            }
+            deferredBreakpoints.remove(className);
+
+            // All deferred breakpoints for className have been already added,
+            // so no need to listen for an appropriate ClassPrepareRequests any more.
+            ClassPrepareRequest request = classPrepareRequests.remove(className);
+            if (request != null) {
+                getEventManager().deleteEventRequest(request);
+            }
+        }
         return true;
     }
 

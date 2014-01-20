@@ -27,10 +27,7 @@ import com.sun.jdi.Value;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
- */
+/** @author andrew00x */
 public class JdiValueImpl implements JdiValue {
     private final Value         value;
     private       JdiVariable[] variables;

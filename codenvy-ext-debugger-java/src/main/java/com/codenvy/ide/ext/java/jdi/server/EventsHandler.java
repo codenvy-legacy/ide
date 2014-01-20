@@ -22,7 +22,7 @@ import com.sun.jdi.event.EventSet;
 /**
  * Handle events from {@link EventsCollector}.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author andrew00x
  * @see com.codenvy.ide.ext.java.jdi.server.EventsCollector#run()
  */
 public interface EventsHandler {

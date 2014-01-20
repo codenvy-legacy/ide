@@ -21,14 +21,18 @@ import com.codenvy.dto.shared.DTO;
 
 import java.util.List;
 
-/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+/** @author andrew00x */
 @DTO
 public interface StackFrameDump {
     List<Field> getFields();
 
-    List<Variable> getLocalVariables();
-
     void setFields(List<Field> fields);
 
+    StackFrameDump withFields(List<Field> fields);
+
+    List<Variable> getLocalVariables();
+
     void setLocalVariables(List<Variable> localVariables);
+
+    StackFrameDump withLocalVariables(List<Variable> localVariables);
 }

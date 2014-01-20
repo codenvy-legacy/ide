@@ -55,7 +55,7 @@ public interface SshKeyService {
      *
      * @param callback
      */
-    void getAllKeys(@NotNull AsyncRequestCallback<JavaScriptObject> callback) throws RequestException;
+    void getAllKeys(@NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Generate new ssh key pare
@@ -74,7 +74,7 @@ public interface SshKeyService {
      *         to get public key
      * @param callback
      */
-    void getPublicKey(@NotNull KeyItem keyItem, @NotNull AsyncRequestCallback<JavaScriptObject> callback) throws RequestException;
+    void getPublicKey(@NotNull KeyItem keyItem, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Delete ssh key

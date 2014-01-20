@@ -1,4 +1,4 @@
-// $ANTLR 3.3 Nov 30, 2010 12:50:56 org/exoplatform/ide/extension/java/jdi/server/expression/Java.g 2013-02-07 15:54:12
+// $ANTLR 3.3 Nov 30, 2010 12:50:56 com/codenvy/ide/ext/java/jdi/server/expression/Java.g 2013-02-07 15:54:12
 
 package com.codenvy.ide.ext.java.jdi.server.expression;
 
@@ -216,7 +216,7 @@ public class JavaLexer extends Lexer {
     }
 
     public String getGrammarFileName() {
-        return "org/exoplatform/ide/extension/java/jdi/server/expression/Java.g";
+        return "com/codenvy/ide/ext/java/jdi/server/expression/Java.g";
     }
 
     // $ANTLR start "AND"
@@ -224,8 +224,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = AND;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:19:5: ( '&' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:19:7: '&'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:19:5: ( '&' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:19:7: '&'
             {
                 match('&');
 
@@ -243,8 +243,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = AND_ASSIGN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:20:12: ( '&=' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:20:14: '&='
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:20:12: ( '&=' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:20:14: '&='
             {
                 match("&=");
 
@@ -263,8 +263,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = ASSIGN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:21:8: ( '=' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:21:10: '='
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:21:8: ( '=' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:21:10: '='
             {
                 match('=');
 
@@ -282,8 +282,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = AT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:22:4: ( '@' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:22:6: '@'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:22:4: ( '@' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:22:6: '@'
             {
                 match('@');
 
@@ -301,8 +301,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = BIT_SHIFT_RIGHT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:23:17: ( '>>>' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:23:19: '>>>'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:23:17: ( '>>>' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:23:19: '>>>'
             {
                 match(">>>");
 
@@ -321,8 +321,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = BIT_SHIFT_RIGHT_ASSIGN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:24:24: ( '>>>=' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:24:26: '>>>='
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:24:24: ( '>>>=' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:24:26: '>>>='
             {
                 match(">>>=");
 
@@ -341,8 +341,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = COLON;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:25:7: ( ':' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:25:9: ':'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:25:7: ( ':' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:25:9: ':'
             {
                 match(':');
 
@@ -360,8 +360,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = COMMA;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:26:7: ( ',' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:26:9: ','
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:26:7: ( ',' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:26:9: ','
             {
                 match(',');
 
@@ -379,8 +379,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = DEC;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:27:5: ( '--' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:27:7: '--'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:27:5: ( '--' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:27:7: '--'
             {
                 match("--");
 
@@ -399,8 +399,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = DIV;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:28:5: ( '/' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:28:7: '/'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:28:5: ( '/' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:28:7: '/'
             {
                 match('/');
 
@@ -418,8 +418,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = DIV_ASSIGN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:29:12: ( '/=' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:29:14: '/='
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:29:12: ( '/=' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:29:14: '/='
             {
                 match("/=");
 
@@ -438,8 +438,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = DOT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:30:5: ( '.' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:30:7: '.'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:30:5: ( '.' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:30:7: '.'
             {
                 match('.');
 
@@ -457,8 +457,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = DOTSTAR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:31:9: ( '.*' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:31:11: '.*'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:31:9: ( '.*' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:31:11: '.*'
             {
                 match(".*");
 
@@ -477,8 +477,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = ELLIPSIS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:32:10: ( '...' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:32:12: '...'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:32:10: ( '...' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:32:12: '...'
             {
                 match("...");
 
@@ -497,8 +497,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = EQUAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:33:7: ( '==' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:33:9: '=='
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:33:7: ( '==' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:33:9: '=='
             {
                 match("==");
 
@@ -517,8 +517,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = GREATER_OR_EQUAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:34:18: ( '>=' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:34:20: '>='
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:34:18: ( '>=' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:34:20: '>='
             {
                 match(">=");
 
@@ -537,8 +537,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = GREATER_THAN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:35:14: ( '>' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:35:16: '>'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:35:14: ( '>' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:35:16: '>'
             {
                 match('>');
 
@@ -556,8 +556,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = INC;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:36:5: ( '++' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:36:7: '++'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:36:5: ( '++' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:36:7: '++'
             {
                 match("++");
 
@@ -576,8 +576,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = LBRACK;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:37:8: ( '[' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:37:10: '['
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:37:8: ( '[' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:37:10: '['
             {
                 match('[');
 
@@ -595,8 +595,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = LCURLY;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:38:8: ( '{' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:38:10: '{'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:38:8: ( '{' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:38:10: '{'
             {
                 match('{');
 
@@ -614,8 +614,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = LESS_OR_EQUAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:39:15: ( '<=' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:39:17: '<='
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:39:15: ( '<=' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:39:17: '<='
             {
                 match("<=");
 
@@ -634,8 +634,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = LESS_THAN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:40:11: ( '<' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:40:13: '<'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:40:11: ( '<' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:40:13: '<'
             {
                 match('<');
 
@@ -653,8 +653,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = LOGICAL_AND;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:41:13: ( '&&' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:41:15: '&&'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:41:13: ( '&&' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:41:15: '&&'
             {
                 match("&&");
 
@@ -673,8 +673,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = LOGICAL_NOT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:42:13: ( '!' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:42:15: '!'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:42:13: ( '!' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:42:15: '!'
             {
                 match('!');
 
@@ -692,8 +692,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = LOGICAL_OR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:43:12: ( '||' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:43:14: '||'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:43:12: ( '||' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:43:14: '||'
             {
                 match("||");
 
@@ -712,8 +712,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = LPAREN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:44:8: ( '(' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:44:10: '('
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:44:8: ( '(' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:44:10: '('
             {
                 match('(');
 
@@ -731,8 +731,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = MINUS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:45:7: ( '-' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:45:9: '-'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:45:7: ( '-' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:45:9: '-'
             {
                 match('-');
 
@@ -750,8 +750,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = MINUS_ASSIGN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:46:14: ( '-=' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:46:16: '-='
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:46:14: ( '-=' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:46:16: '-='
             {
                 match("-=");
 
@@ -770,8 +770,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = MOD;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:47:5: ( '%' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:47:7: '%'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:47:5: ( '%' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:47:7: '%'
             {
                 match('%');
 
@@ -789,8 +789,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = MOD_ASSIGN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:48:12: ( '%=' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:48:14: '%='
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:48:12: ( '%=' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:48:14: '%='
             {
                 match("%=");
 
@@ -809,8 +809,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = NOT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:49:5: ( '~' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:49:7: '~'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:49:5: ( '~' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:49:7: '~'
             {
                 match('~');
 
@@ -828,8 +828,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = NOT_EQUAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:50:11: ( '!=' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:50:13: '!='
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:50:11: ( '!=' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:50:13: '!='
             {
                 match("!=");
 
@@ -848,8 +848,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = OR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:51:4: ( '|' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:51:6: '|'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:51:4: ( '|' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:51:6: '|'
             {
                 match('|');
 
@@ -867,8 +867,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = OR_ASSIGN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:52:11: ( '|=' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:52:13: '|='
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:52:11: ( '|=' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:52:13: '|='
             {
                 match("|=");
 
@@ -887,8 +887,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = PLUS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:53:6: ( '+' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:53:8: '+'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:53:6: ( '+' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:53:8: '+'
             {
                 match('+');
 
@@ -906,8 +906,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = PLUS_ASSIGN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:54:13: ( '+=' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:54:15: '+='
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:54:13: ( '+=' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:54:15: '+='
             {
                 match("+=");
 
@@ -926,8 +926,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = QUESTION;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:55:10: ( '?' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:55:12: '?'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:55:10: ( '?' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:55:12: '?'
             {
                 match('?');
 
@@ -945,8 +945,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = RBRACK;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:56:8: ( ']' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:56:10: ']'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:56:8: ( ']' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:56:10: ']'
             {
                 match(']');
 
@@ -964,8 +964,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = RCURLY;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:57:8: ( '}' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:57:10: '}'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:57:8: ( '}' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:57:10: '}'
             {
                 match('}');
 
@@ -983,8 +983,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = RPAREN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:58:8: ( ')' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:58:10: ')'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:58:8: ( ')' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:58:10: ')'
             {
                 match(')');
 
@@ -1002,8 +1002,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = SEMI;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:59:6: ( ';' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:59:8: ';'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:59:6: ( ';' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:59:8: ';'
             {
                 match(';');
 
@@ -1021,8 +1021,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = SHIFT_LEFT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:60:12: ( '<<' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:60:14: '<<'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:60:12: ( '<<' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:60:14: '<<'
             {
                 match("<<");
 
@@ -1041,8 +1041,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = SHIFT_LEFT_ASSIGN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:61:19: ( '<<=' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:61:21: '<<='
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:61:19: ( '<<=' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:61:21: '<<='
             {
                 match("<<=");
 
@@ -1061,8 +1061,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = SHIFT_RIGHT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:62:13: ( '>>' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:62:15: '>>'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:62:13: ( '>>' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:62:15: '>>'
             {
                 match(">>");
 
@@ -1081,8 +1081,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = SHIFT_RIGHT_ASSIGN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:63:20: ( '>>=' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:63:22: '>>='
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:63:20: ( '>>=' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:63:22: '>>='
             {
                 match(">>=");
 
@@ -1101,8 +1101,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = STAR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:64:6: ( '*' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:64:8: '*'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:64:6: ( '*' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:64:8: '*'
             {
                 match('*');
 
@@ -1120,8 +1120,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = STAR_ASSIGN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:65:13: ( '*=' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:65:15: '*='
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:65:13: ( '*=' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:65:15: '*='
             {
                 match("*=");
 
@@ -1140,8 +1140,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = XOR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:66:5: ( '^' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:66:7: '^'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:66:5: ( '^' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:66:7: '^'
             {
                 match('^');
 
@@ -1159,8 +1159,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = XOR_ASSIGN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:67:12: ( '^=' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:67:14: '^='
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:67:12: ( '^=' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:67:14: '^='
             {
                 match("^=");
 
@@ -1179,8 +1179,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = ABSTRACT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:68:10: ( 'abstract' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:68:12: 'abstract'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:68:10: ( 'abstract' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:68:12: 'abstract'
             {
                 match("abstract");
 
@@ -1199,8 +1199,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = ASSERT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:69:8: ( 'assert' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:69:10: 'assert'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:69:8: ( 'assert' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:69:10: 'assert'
             {
                 match("assert");
 
@@ -1219,8 +1219,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = BOOLEAN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:70:9: ( 'boolean' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:70:11: 'boolean'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:70:9: ( 'boolean' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:70:11: 'boolean'
             {
                 match("boolean");
 
@@ -1239,8 +1239,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = BREAK;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:71:7: ( 'break' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:71:9: 'break'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:71:7: ( 'break' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:71:9: 'break'
             {
                 match("break");
 
@@ -1259,8 +1259,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = BYTE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:72:6: ( 'byte' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:72:8: 'byte'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:72:6: ( 'byte' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:72:8: 'byte'
             {
                 match("byte");
 
@@ -1279,8 +1279,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = CASE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:73:6: ( 'case' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:73:8: 'case'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:73:6: ( 'case' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:73:8: 'case'
             {
                 match("case");
 
@@ -1299,8 +1299,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = CATCH;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:74:7: ( 'catch' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:74:9: 'catch'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:74:7: ( 'catch' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:74:9: 'catch'
             {
                 match("catch");
 
@@ -1319,8 +1319,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = CHAR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:75:6: ( 'char' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:75:8: 'char'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:75:6: ( 'char' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:75:8: 'char'
             {
                 match("char");
 
@@ -1339,8 +1339,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = CLASS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:76:7: ( 'class' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:76:9: 'class'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:76:7: ( 'class' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:76:9: 'class'
             {
                 match("class");
 
@@ -1359,8 +1359,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = CONTINUE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:77:10: ( 'continue' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:77:12: 'continue'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:77:10: ( 'continue' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:77:12: 'continue'
             {
                 match("continue");
 
@@ -1379,8 +1379,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = DEFAULT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:78:9: ( 'default' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:78:11: 'default'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:78:9: ( 'default' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:78:11: 'default'
             {
                 match("default");
 
@@ -1399,8 +1399,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = DO;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:79:4: ( 'do' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:79:6: 'do'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:79:4: ( 'do' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:79:6: 'do'
             {
                 match("do");
 
@@ -1419,8 +1419,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = DOUBLE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:80:8: ( 'double' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:80:10: 'double'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:80:8: ( 'double' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:80:10: 'double'
             {
                 match("double");
 
@@ -1439,8 +1439,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = ELSE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:81:6: ( 'else' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:81:8: 'else'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:81:6: ( 'else' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:81:8: 'else'
             {
                 match("else");
 
@@ -1459,8 +1459,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = ENUM;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:82:6: ( 'enum' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:82:8: 'enum'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:82:6: ( 'enum' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:82:8: 'enum'
             {
                 match("enum");
 
@@ -1479,8 +1479,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = EXTENDS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:83:9: ( 'extends' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:83:11: 'extends'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:83:9: ( 'extends' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:83:11: 'extends'
             {
                 match("extends");
 
@@ -1499,8 +1499,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = FALSE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:84:7: ( 'false' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:84:9: 'false'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:84:7: ( 'false' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:84:9: 'false'
             {
                 match("false");
 
@@ -1519,8 +1519,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = FINAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:85:7: ( 'final' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:85:9: 'final'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:85:7: ( 'final' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:85:9: 'final'
             {
                 match("final");
 
@@ -1539,8 +1539,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = FINALLY;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:86:9: ( 'finally' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:86:11: 'finally'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:86:9: ( 'finally' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:86:11: 'finally'
             {
                 match("finally");
 
@@ -1559,8 +1559,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = FLOAT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:87:7: ( 'float' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:87:9: 'float'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:87:7: ( 'float' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:87:9: 'float'
             {
                 match("float");
 
@@ -1579,8 +1579,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = FOR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:88:5: ( 'for' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:88:7: 'for'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:88:5: ( 'for' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:88:7: 'for'
             {
                 match("for");
 
@@ -1599,8 +1599,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = IF;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:89:4: ( 'if' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:89:6: 'if'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:89:4: ( 'if' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:89:6: 'if'
             {
                 match("if");
 
@@ -1619,8 +1619,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = IMPLEMENTS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:90:12: ( 'implements' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:90:14: 'implements'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:90:12: ( 'implements' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:90:14: 'implements'
             {
                 match("implements");
 
@@ -1639,8 +1639,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = INSTANCEOF;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:91:12: ( 'instanceof' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:91:14: 'instanceof'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:91:12: ( 'instanceof' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:91:14: 'instanceof'
             {
                 match("instanceof");
 
@@ -1659,8 +1659,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = INTERFACE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:92:11: ( 'interface' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:92:13: 'interface'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:92:11: ( 'interface' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:92:13: 'interface'
             {
                 match("interface");
 
@@ -1679,8 +1679,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = IMPORT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:93:8: ( 'import' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:93:10: 'import'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:93:8: ( 'import' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:93:10: 'import'
             {
                 match("import");
 
@@ -1699,8 +1699,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = INT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:94:5: ( 'int' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:94:7: 'int'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:94:5: ( 'int' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:94:7: 'int'
             {
                 match("int");
 
@@ -1719,8 +1719,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = LONG;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:95:6: ( 'long' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:95:8: 'long'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:95:6: ( 'long' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:95:8: 'long'
             {
                 match("long");
 
@@ -1739,8 +1739,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = NATIVE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:96:8: ( 'native' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:96:10: 'native'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:96:8: ( 'native' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:96:10: 'native'
             {
                 match("native");
 
@@ -1759,8 +1759,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = NEW;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:97:5: ( 'new' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:97:7: 'new'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:97:5: ( 'new' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:97:7: 'new'
             {
                 match("new");
 
@@ -1779,8 +1779,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = NULL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:98:6: ( 'null' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:98:8: 'null'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:98:6: ( 'null' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:98:8: 'null'
             {
                 match("null");
 
@@ -1799,8 +1799,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = PACKAGE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:99:9: ( 'package' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:99:11: 'package'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:99:9: ( 'package' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:99:11: 'package'
             {
                 match("package");
 
@@ -1819,8 +1819,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = PRIVATE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:100:9: ( 'private' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:100:11: 'private'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:100:9: ( 'private' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:100:11: 'private'
             {
                 match("private");
 
@@ -1839,8 +1839,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = PROTECTED;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:101:11: ( 'protected' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:101:13: 'protected'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:101:11: ( 'protected' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:101:13: 'protected'
             {
                 match("protected");
 
@@ -1859,8 +1859,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = PUBLIC;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:102:8: ( 'public' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:102:10: 'public'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:102:8: ( 'public' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:102:10: 'public'
             {
                 match("public");
 
@@ -1879,8 +1879,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = RETURN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:103:8: ( 'return' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:103:10: 'return'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:103:8: ( 'return' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:103:10: 'return'
             {
                 match("return");
 
@@ -1899,8 +1899,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = SHORT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:104:7: ( 'short' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:104:9: 'short'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:104:7: ( 'short' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:104:9: 'short'
             {
                 match("short");
 
@@ -1919,8 +1919,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = STATIC;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:105:8: ( 'static' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:105:10: 'static'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:105:8: ( 'static' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:105:10: 'static'
             {
                 match("static");
 
@@ -1939,8 +1939,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = STRICTFP;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:106:10: ( 'strictfp' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:106:12: 'strictfp'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:106:10: ( 'strictfp' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:106:12: 'strictfp'
             {
                 match("strictfp");
 
@@ -1959,8 +1959,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = SUPER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:107:7: ( 'super' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:107:9: 'super'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:107:7: ( 'super' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:107:9: 'super'
             {
                 match("super");
 
@@ -1979,8 +1979,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = SWITCH;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:108:8: ( 'switch' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:108:10: 'switch'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:108:8: ( 'switch' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:108:10: 'switch'
             {
                 match("switch");
 
@@ -1999,8 +1999,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = SYNCHRONIZED;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:109:14: ( 'synchronized' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:109:16: 'synchronized'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:109:14: ( 'synchronized' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:109:16: 'synchronized'
             {
                 match("synchronized");
 
@@ -2019,8 +2019,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = THIS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:110:6: ( 'this' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:110:8: 'this'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:110:6: ( 'this' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:110:8: 'this'
             {
                 match("this");
 
@@ -2039,8 +2039,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = THROW;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:111:7: ( 'throw' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:111:9: 'throw'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:111:7: ( 'throw' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:111:9: 'throw'
             {
                 match("throw");
 
@@ -2059,8 +2059,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = THROWS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:112:8: ( 'throws' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:112:10: 'throws'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:112:8: ( 'throws' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:112:10: 'throws'
             {
                 match("throws");
 
@@ -2079,8 +2079,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = TRANSIENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:113:11: ( 'transient' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:113:13: 'transient'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:113:11: ( 'transient' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:113:13: 'transient'
             {
                 match("transient");
 
@@ -2099,8 +2099,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = TRUE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:114:6: ( 'true' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:114:8: 'true'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:114:6: ( 'true' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:114:8: 'true'
             {
                 match("true");
 
@@ -2119,8 +2119,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = TRY;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:115:5: ( 'try' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:115:7: 'try'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:115:5: ( 'try' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:115:7: 'try'
             {
                 match("try");
 
@@ -2139,8 +2139,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = VOID;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:116:6: ( 'void' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:116:8: 'void'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:116:6: ( 'void' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:116:8: 'void'
             {
                 match("void");
 
@@ -2159,8 +2159,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = VOLATILE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:117:10: ( 'volatile' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:117:12: 'volatile'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:117:10: ( 'volatile' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:117:12: 'volatile'
             {
                 match("volatile");
 
@@ -2179,8 +2179,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = WHILE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:118:7: ( 'while' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:118:9: 'while'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:118:7: ( 'while' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:118:9: 'while'
             {
                 match("while");
 
@@ -2199,9 +2199,9 @@ public class JavaLexer extends Lexer {
         try {
             int _type = HEX_LITERAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1083:13: ( '0' ( 'x' | 'X' ) ( HEX_DIGIT )+ (
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1083:13: ( '0' ( 'x' | 'X' ) ( HEX_DIGIT )+ (
             // INTEGER_TYPE_SUFFIX )? )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1083:15: '0' ( 'x' | 'X' ) ( HEX_DIGIT )+ (
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1083:15: '0' ( 'x' | 'X' ) ( HEX_DIGIT )+ (
             // INTEGER_TYPE_SUFFIX )?
             {
                 match('0');
@@ -2214,7 +2214,7 @@ public class JavaLexer extends Lexer {
                     throw mse;
                 }
 
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1083:29: ( HEX_DIGIT )+
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1083:29: ( HEX_DIGIT )+
                 int cnt1 = 0;
                 loop1:
                 do {
@@ -2228,7 +2228,7 @@ public class JavaLexer extends Lexer {
 
                     switch (alt1) {
                         case 1:
-                            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1083:29: HEX_DIGIT
+                            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1083:29: HEX_DIGIT
                         {
                             mHEX_DIGIT();
 
@@ -2244,7 +2244,7 @@ public class JavaLexer extends Lexer {
                     cnt1++;
                 } while (true);
 
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1083:40: ( INTEGER_TYPE_SUFFIX )?
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1083:40: ( INTEGER_TYPE_SUFFIX )?
                 int alt2 = 2;
                 int LA2_0 = input.LA(1);
 
@@ -2253,7 +2253,7 @@ public class JavaLexer extends Lexer {
                 }
                 switch (alt2) {
                     case 1:
-                        // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1083:40: INTEGER_TYPE_SUFFIX
+                        // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1083:40: INTEGER_TYPE_SUFFIX
                     {
                         mINTEGER_TYPE_SUFFIX();
 
@@ -2277,12 +2277,12 @@ public class JavaLexer extends Lexer {
         try {
             int _type = DECIMAL_LITERAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1085:17: ( ( '0' | '1' .. '9' ( '0' .. '9' )* ) (
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1085:17: ( ( '0' | '1' .. '9' ( '0' .. '9' )* ) (
             // INTEGER_TYPE_SUFFIX )? )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1085:19: ( '0' | '1' .. '9' ( '0' .. '9' )* ) (
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1085:19: ( '0' | '1' .. '9' ( '0' .. '9' )* ) (
             // INTEGER_TYPE_SUFFIX )?
             {
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1085:19: ( '0' | '1' .. '9' ( '0' .. '9' )* )
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1085:19: ( '0' | '1' .. '9' ( '0' .. '9' )* )
                 int alt4 = 2;
                 int LA4_0 = input.LA(1);
 
@@ -2298,17 +2298,17 @@ public class JavaLexer extends Lexer {
                 }
                 switch (alt4) {
                     case 1:
-                        // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1085:20: '0'
+                        // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1085:20: '0'
                     {
                         match('0');
 
                     }
                     break;
                     case 2:
-                        // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1085:26: '1' .. '9' ( '0' .. '9' )*
+                        // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1085:26: '1' .. '9' ( '0' .. '9' )*
                     {
                         matchRange('1', '9');
-                        // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1085:35: ( '0' .. '9' )*
+                        // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1085:35: ( '0' .. '9' )*
                         loop3:
                         do {
                             int alt3 = 2;
@@ -2321,7 +2321,7 @@ public class JavaLexer extends Lexer {
 
                             switch (alt3) {
                                 case 1:
-                                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1085:35: '0' .. '9'
+                                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1085:35: '0' .. '9'
                                 {
                                     matchRange('0', '9');
 
@@ -2339,7 +2339,7 @@ public class JavaLexer extends Lexer {
 
                 }
 
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1085:46: ( INTEGER_TYPE_SUFFIX )?
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1085:46: ( INTEGER_TYPE_SUFFIX )?
                 int alt5 = 2;
                 int LA5_0 = input.LA(1);
 
@@ -2348,7 +2348,7 @@ public class JavaLexer extends Lexer {
                 }
                 switch (alt5) {
                     case 1:
-                        // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1085:46: INTEGER_TYPE_SUFFIX
+                        // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1085:46: INTEGER_TYPE_SUFFIX
                     {
                         mINTEGER_TYPE_SUFFIX();
 
@@ -2372,11 +2372,11 @@ public class JavaLexer extends Lexer {
         try {
             int _type = OCTAL_LITERAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1087:15: ( '0' ( '0' .. '7' )+ ( INTEGER_TYPE_SUFFIX )? )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1087:17: '0' ( '0' .. '7' )+ ( INTEGER_TYPE_SUFFIX )?
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1087:15: ( '0' ( '0' .. '7' )+ ( INTEGER_TYPE_SUFFIX )? )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1087:17: '0' ( '0' .. '7' )+ ( INTEGER_TYPE_SUFFIX )?
             {
                 match('0');
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1087:21: ( '0' .. '7' )+
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1087:21: ( '0' .. '7' )+
                 int cnt6 = 0;
                 loop6:
                 do {
@@ -2390,7 +2390,7 @@ public class JavaLexer extends Lexer {
 
                     switch (alt6) {
                         case 1:
-                            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1087:22: '0' .. '7'
+                            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1087:22: '0' .. '7'
                         {
                             matchRange('0', '7');
 
@@ -2406,7 +2406,7 @@ public class JavaLexer extends Lexer {
                     cnt6++;
                 } while (true);
 
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1087:33: ( INTEGER_TYPE_SUFFIX )?
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1087:33: ( INTEGER_TYPE_SUFFIX )?
                 int alt7 = 2;
                 int LA7_0 = input.LA(1);
 
@@ -2415,7 +2415,7 @@ public class JavaLexer extends Lexer {
                 }
                 switch (alt7) {
                     case 1:
-                        // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1087:33: INTEGER_TYPE_SUFFIX
+                        // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1087:33: INTEGER_TYPE_SUFFIX
                     {
                         mINTEGER_TYPE_SUFFIX();
 
@@ -2437,8 +2437,8 @@ public class JavaLexer extends Lexer {
     // $ANTLR start "HEX_DIGIT"
     public final void mHEX_DIGIT() throws RecognitionException {
         try {
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1090:11: ( ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1090:13: ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1090:11: ( ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1090:13: ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' )
             {
                 if ((input.LA(1) >= '0' && input.LA(1) <= '9') || (input.LA(1) >= 'A' && input.LA(1) <= 'F') ||
                     (input.LA(1) >= 'a' && input.LA(1) <= 'f')) {
@@ -2461,8 +2461,8 @@ public class JavaLexer extends Lexer {
     // $ANTLR start "INTEGER_TYPE_SUFFIX"
     public final void mINTEGER_TYPE_SUFFIX() throws RecognitionException {
         try {
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1093:21: ( ( 'l' | 'L' ) )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1093:23: ( 'l' | 'L' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1093:21: ( ( 'l' | 'L' ) )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1093:23: ( 'l' | 'L' )
             {
                 if (input.LA(1) == 'L' || input.LA(1) == 'l') {
                     input.consume();
@@ -2486,7 +2486,7 @@ public class JavaLexer extends Lexer {
         try {
             int _type = FLOATING_POINT_LITERAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1096:5: ( ( '0' .. '9' )+ ( DOT ( '0' .. '9' )* ( EXPONENT
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1096:5: ( ( '0' .. '9' )+ ( DOT ( '0' .. '9' )* ( EXPONENT
             // )? ( FLOAT_TYPE_SUFFIX )? | EXPONENT ( FLOAT_TYPE_SUFFIX )? | FLOAT_TYPE_SUFFIX ) | DOT ( '0' .. '9' )+ ( EXPONENT )? (
             // FLOAT_TYPE_SUFFIX )? )
             int alt17 = 2;
@@ -2504,10 +2504,10 @@ public class JavaLexer extends Lexer {
             }
             switch (alt17) {
                 case 1:
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1096:9: ( '0' .. '9' )+ ( DOT ( '0' .. '9' )* (
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1096:9: ( '0' .. '9' )+ ( DOT ( '0' .. '9' )* (
                     // EXPONENT )? ( FLOAT_TYPE_SUFFIX )? | EXPONENT ( FLOAT_TYPE_SUFFIX )? | FLOAT_TYPE_SUFFIX )
                 {
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1096:9: ( '0' .. '9' )+
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1096:9: ( '0' .. '9' )+
                     int cnt8 = 0;
                     loop8:
                     do {
@@ -2521,7 +2521,7 @@ public class JavaLexer extends Lexer {
 
                         switch (alt8) {
                             case 1:
-                                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1096:10: '0' .. '9'
+                                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1096:10: '0' .. '9'
                             {
                                 matchRange('0', '9');
 
@@ -2537,7 +2537,7 @@ public class JavaLexer extends Lexer {
                         cnt8++;
                     } while (true);
 
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1097:9: ( DOT ( '0' .. '9' )* ( EXPONENT )? (
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1097:9: ( DOT ( '0' .. '9' )* ( EXPONENT )? (
                     // FLOAT_TYPE_SUFFIX )? | EXPONENT ( FLOAT_TYPE_SUFFIX )? | FLOAT_TYPE_SUFFIX )
                     int alt13 = 3;
                     switch (input.LA(1)) {
@@ -2566,11 +2566,11 @@ public class JavaLexer extends Lexer {
 
                     switch (alt13) {
                         case 1:
-                            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1098:13: DOT ( '0' .. '9' )* ( EXPONENT )?
+                            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1098:13: DOT ( '0' .. '9' )* ( EXPONENT )?
                             // ( FLOAT_TYPE_SUFFIX )?
                         {
                             mDOT();
-                            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1098:17: ( '0' .. '9' )*
+                            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1098:17: ( '0' .. '9' )*
                             loop9:
                             do {
                                 int alt9 = 2;
@@ -2583,7 +2583,7 @@ public class JavaLexer extends Lexer {
 
                                 switch (alt9) {
                                     case 1:
-                                        // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1098:18: '0' .. '9'
+                                        // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1098:18: '0' .. '9'
                                     {
                                         matchRange('0', '9');
 
@@ -2595,7 +2595,7 @@ public class JavaLexer extends Lexer {
                                 }
                             } while (true);
 
-                            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1098:29: ( EXPONENT )?
+                            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1098:29: ( EXPONENT )?
                             int alt10 = 2;
                             int LA10_0 = input.LA(1);
 
@@ -2604,7 +2604,7 @@ public class JavaLexer extends Lexer {
                             }
                             switch (alt10) {
                                 case 1:
-                                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1098:29: EXPONENT
+                                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1098:29: EXPONENT
                                 {
                                     mEXPONENT();
 
@@ -2613,7 +2613,7 @@ public class JavaLexer extends Lexer {
 
                             }
 
-                            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1098:39: ( FLOAT_TYPE_SUFFIX )?
+                            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1098:39: ( FLOAT_TYPE_SUFFIX )?
                             int alt11 = 2;
                             int LA11_0 = input.LA(1);
 
@@ -2622,7 +2622,7 @@ public class JavaLexer extends Lexer {
                             }
                             switch (alt11) {
                                 case 1:
-                                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1098:39: FLOAT_TYPE_SUFFIX
+                                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1098:39: FLOAT_TYPE_SUFFIX
                                 {
                                     mFLOAT_TYPE_SUFFIX();
 
@@ -2635,10 +2635,10 @@ public class JavaLexer extends Lexer {
                         }
                         break;
                         case 2:
-                            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1099:13: EXPONENT ( FLOAT_TYPE_SUFFIX )?
+                            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1099:13: EXPONENT ( FLOAT_TYPE_SUFFIX )?
                         {
                             mEXPONENT();
-                            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1099:22: ( FLOAT_TYPE_SUFFIX )?
+                            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1099:22: ( FLOAT_TYPE_SUFFIX )?
                             int alt12 = 2;
                             int LA12_0 = input.LA(1);
 
@@ -2647,7 +2647,7 @@ public class JavaLexer extends Lexer {
                             }
                             switch (alt12) {
                                 case 1:
-                                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1099:22: FLOAT_TYPE_SUFFIX
+                                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1099:22: FLOAT_TYPE_SUFFIX
                                 {
                                     mFLOAT_TYPE_SUFFIX();
 
@@ -2660,7 +2660,7 @@ public class JavaLexer extends Lexer {
                         }
                         break;
                         case 3:
-                            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1100:13: FLOAT_TYPE_SUFFIX
+                            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1100:13: FLOAT_TYPE_SUFFIX
                         {
                             mFLOAT_TYPE_SUFFIX();
 
@@ -2673,11 +2673,11 @@ public class JavaLexer extends Lexer {
                 }
                 break;
                 case 2:
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1102:9: DOT ( '0' .. '9' )+ ( EXPONENT )? (
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1102:9: DOT ( '0' .. '9' )+ ( EXPONENT )? (
                     // FLOAT_TYPE_SUFFIX )?
                 {
                     mDOT();
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1102:13: ( '0' .. '9' )+
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1102:13: ( '0' .. '9' )+
                     int cnt14 = 0;
                     loop14:
                     do {
@@ -2691,7 +2691,7 @@ public class JavaLexer extends Lexer {
 
                         switch (alt14) {
                             case 1:
-                                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1102:14: '0' .. '9'
+                                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1102:14: '0' .. '9'
                             {
                                 matchRange('0', '9');
 
@@ -2707,7 +2707,7 @@ public class JavaLexer extends Lexer {
                         cnt14++;
                     } while (true);
 
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1102:25: ( EXPONENT )?
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1102:25: ( EXPONENT )?
                     int alt15 = 2;
                     int LA15_0 = input.LA(1);
 
@@ -2716,7 +2716,7 @@ public class JavaLexer extends Lexer {
                     }
                     switch (alt15) {
                         case 1:
-                            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1102:25: EXPONENT
+                            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1102:25: EXPONENT
                         {
                             mEXPONENT();
 
@@ -2725,7 +2725,7 @@ public class JavaLexer extends Lexer {
 
                     }
 
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1102:35: ( FLOAT_TYPE_SUFFIX )?
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1102:35: ( FLOAT_TYPE_SUFFIX )?
                     int alt16 = 2;
                     int LA16_0 = input.LA(1);
 
@@ -2734,7 +2734,7 @@ public class JavaLexer extends Lexer {
                     }
                     switch (alt16) {
                         case 1:
-                            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1102:35: FLOAT_TYPE_SUFFIX
+                            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1102:35: FLOAT_TYPE_SUFFIX
                         {
                             mFLOAT_TYPE_SUFFIX();
 
@@ -2758,8 +2758,8 @@ public class JavaLexer extends Lexer {
     // $ANTLR start "EXPONENT"
     public final void mEXPONENT() throws RecognitionException {
         try {
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1106:10: ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1106:12: ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1106:10: ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1106:12: ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+
             {
                 if (input.LA(1) == 'E' || input.LA(1) == 'e') {
                     input.consume();
@@ -2770,7 +2770,7 @@ public class JavaLexer extends Lexer {
                     throw mse;
                 }
 
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1106:22: ( '+' | '-' )?
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1106:22: ( '+' | '-' )?
                 int alt18 = 2;
                 int LA18_0 = input.LA(1);
 
@@ -2779,7 +2779,7 @@ public class JavaLexer extends Lexer {
                 }
                 switch (alt18) {
                     case 1:
-                        // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:
+                        // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:
                     {
                         if (input.LA(1) == '+' || input.LA(1) == '-') {
                             input.consume();
@@ -2796,7 +2796,7 @@ public class JavaLexer extends Lexer {
 
                 }
 
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1106:33: ( '0' .. '9' )+
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1106:33: ( '0' .. '9' )+
                 int cnt19 = 0;
                 loop19:
                 do {
@@ -2810,7 +2810,7 @@ public class JavaLexer extends Lexer {
 
                     switch (alt19) {
                         case 1:
-                            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1106:34: '0' .. '9'
+                            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1106:34: '0' .. '9'
                         {
                             matchRange('0', '9');
 
@@ -2837,8 +2837,8 @@ public class JavaLexer extends Lexer {
     // $ANTLR start "FLOAT_TYPE_SUFFIX"
     public final void mFLOAT_TYPE_SUFFIX() throws RecognitionException {
         try {
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1109:19: ( ( 'f' | 'F' | 'd' | 'D' ) )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1109:21: ( 'f' | 'F' | 'd' | 'D' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1109:19: ( ( 'f' | 'F' | 'd' | 'D' ) )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1109:21: ( 'f' | 'F' | 'd' | 'D' )
             {
                 if (input.LA(1) == 'D' || input.LA(1) == 'F' || input.LA(1) == 'd' || input.LA(1) == 'f') {
                     input.consume();
@@ -2862,13 +2862,13 @@ public class JavaLexer extends Lexer {
         try {
             int _type = CHARACTER_LITERAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1112:5: ( '\\'' ( ESCAPE_SEQUENCE | ~ ( '\\'' | '\\\\' ) )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1112:5: ( '\\'' ( ESCAPE_SEQUENCE | ~ ( '\\'' | '\\\\' ) )
             // '\\'' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1112:9: '\\'' ( ESCAPE_SEQUENCE | ~ ( '\\'' | '\\\\' ) )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1112:9: '\\'' ( ESCAPE_SEQUENCE | ~ ( '\\'' | '\\\\' ) )
             // '\\''
             {
                 match('\'');
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1112:14: ( ESCAPE_SEQUENCE | ~ ( '\\'' | '\\\\' ) )
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1112:14: ( ESCAPE_SEQUENCE | ~ ( '\\'' | '\\\\' ) )
                 int alt20 = 2;
                 int LA20_0 = input.LA(1);
 
@@ -2885,14 +2885,14 @@ public class JavaLexer extends Lexer {
                 }
                 switch (alt20) {
                     case 1:
-                        // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1112:16: ESCAPE_SEQUENCE
+                        // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1112:16: ESCAPE_SEQUENCE
                     {
                         mESCAPE_SEQUENCE();
 
                     }
                     break;
                     case 2:
-                        // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1112:34: ~ ( '\\'' | '\\\\' )
+                        // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1112:34: ~ ( '\\'' | '\\\\' )
                     {
                         if ((input.LA(1) >= '\u0000' && input.LA(1) <= '&') || (input.LA(1) >= '(' && input.LA(1) <= '[') ||
                             (input.LA(1) >= ']' && input.LA(1) <= '\uFFFF')) {
@@ -2926,12 +2926,12 @@ public class JavaLexer extends Lexer {
         try {
             int _type = STRING_LITERAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1116:5: ( '\"' ( ESCAPE_SEQUENCE | ~ ( '\\\\' | '\"' ) )*
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1116:5: ( '\"' ( ESCAPE_SEQUENCE | ~ ( '\\\\' | '\"' ) )*
             // '\"' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1116:8: '\"' ( ESCAPE_SEQUENCE | ~ ( '\\\\' | '\"' ) )* '\"'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1116:8: '\"' ( ESCAPE_SEQUENCE | ~ ( '\\\\' | '\"' ) )* '\"'
             {
                 match('\"');
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1116:12: ( ESCAPE_SEQUENCE | ~ ( '\\\\' | '\"' ) )*
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1116:12: ( ESCAPE_SEQUENCE | ~ ( '\\\\' | '\"' ) )*
                 loop21:
                 do {
                     int alt21 = 3;
@@ -2947,14 +2947,14 @@ public class JavaLexer extends Lexer {
 
                     switch (alt21) {
                         case 1:
-                            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1116:14: ESCAPE_SEQUENCE
+                            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1116:14: ESCAPE_SEQUENCE
                         {
                             mESCAPE_SEQUENCE();
 
                         }
                         break;
                         case 2:
-                            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1116:32: ~ ( '\\\\' | '\"' )
+                            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1116:32: ~ ( '\\\\' | '\"' )
                         {
                             if ((input.LA(1) >= '\u0000' && input.LA(1) <= '!') || (input.LA(1) >= '#' && input.LA(1) <= '[') ||
                                 (input.LA(1) >= ']' && input.LA(1) <= '\uFFFF')) {
@@ -2989,7 +2989,7 @@ public class JavaLexer extends Lexer {
     // $ANTLR start "ESCAPE_SEQUENCE"
     public final void mESCAPE_SEQUENCE() throws RecognitionException {
         try {
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1121:5: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' |
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1121:5: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' |
             // '\\'' | '\\\\' ) | UNICODE_ESCAPE | OCTAL_ESCAPE )
             int alt22 = 3;
             int LA22_0 = input.LA(1);
@@ -3037,7 +3037,7 @@ public class JavaLexer extends Lexer {
             }
             switch (alt22) {
                 case 1:
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1121:9: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' |
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1121:9: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' |
                     // '\\\"' | '\\'' | '\\\\' )
                 {
                     match('\\');
@@ -3055,14 +3055,14 @@ public class JavaLexer extends Lexer {
                 }
                 break;
                 case 2:
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1122:9: UNICODE_ESCAPE
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1122:9: UNICODE_ESCAPE
                 {
                     mUNICODE_ESCAPE();
 
                 }
                 break;
                 case 3:
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1123:9: OCTAL_ESCAPE
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1123:9: OCTAL_ESCAPE
                 {
                     mOCTAL_ESCAPE();
 
@@ -3078,7 +3078,7 @@ public class JavaLexer extends Lexer {
     // $ANTLR start "OCTAL_ESCAPE"
     public final void mOCTAL_ESCAPE() throws RecognitionException {
         try {
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1128:5: ( '\\\\' ( '0' .. '3' ) ( '0' .. '7' ) ( '0' ..
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1128:5: ( '\\\\' ( '0' .. '3' ) ( '0' .. '7' ) ( '0' ..
             // '7' ) | '\\\\' ( '0' .. '7' ) ( '0' .. '7' ) | '\\\\' ( '0' .. '7' ) )
             int alt23 = 3;
             int LA23_0 = input.LA(1);
@@ -3122,26 +3122,26 @@ public class JavaLexer extends Lexer {
             }
             switch (alt23) {
                 case 1:
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1128:9: '\\\\' ( '0' .. '3' ) ( '0' .. '7' ) ( '0'
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1128:9: '\\\\' ( '0' .. '3' ) ( '0' .. '7' ) ( '0'
                     // .. '7' )
                 {
                     match('\\');
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1128:14: ( '0' .. '3' )
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1128:15: '0' .. '3'
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1128:14: ( '0' .. '3' )
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1128:15: '0' .. '3'
                     {
                         matchRange('0', '3');
 
                     }
 
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1128:25: ( '0' .. '7' )
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1128:26: '0' .. '7'
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1128:25: ( '0' .. '7' )
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1128:26: '0' .. '7'
                     {
                         matchRange('0', '7');
 
                     }
 
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1128:36: ( '0' .. '7' )
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1128:37: '0' .. '7'
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1128:36: ( '0' .. '7' )
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1128:37: '0' .. '7'
                     {
                         matchRange('0', '7');
 
@@ -3151,18 +3151,18 @@ public class JavaLexer extends Lexer {
                 }
                 break;
                 case 2:
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1129:9: '\\\\' ( '0' .. '7' ) ( '0' .. '7' )
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1129:9: '\\\\' ( '0' .. '7' ) ( '0' .. '7' )
                 {
                     match('\\');
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1129:14: ( '0' .. '7' )
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1129:15: '0' .. '7'
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1129:14: ( '0' .. '7' )
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1129:15: '0' .. '7'
                     {
                         matchRange('0', '7');
 
                     }
 
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1129:25: ( '0' .. '7' )
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1129:26: '0' .. '7'
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1129:25: ( '0' .. '7' )
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1129:26: '0' .. '7'
                     {
                         matchRange('0', '7');
 
@@ -3172,11 +3172,11 @@ public class JavaLexer extends Lexer {
                 }
                 break;
                 case 3:
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1130:9: '\\\\' ( '0' .. '7' )
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1130:9: '\\\\' ( '0' .. '7' )
                 {
                     match('\\');
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1130:14: ( '0' .. '7' )
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1130:15: '0' .. '7'
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1130:14: ( '0' .. '7' )
+                    // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1130:15: '0' .. '7'
                     {
                         matchRange('0', '7');
 
@@ -3195,9 +3195,9 @@ public class JavaLexer extends Lexer {
     // $ANTLR start "UNICODE_ESCAPE"
     public final void mUNICODE_ESCAPE() throws RecognitionException {
         try {
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1135:5: ( '\\\\' 'u' HEX_DIGIT HEX_DIGIT HEX_DIGIT
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1135:5: ( '\\\\' 'u' HEX_DIGIT HEX_DIGIT HEX_DIGIT
             // HEX_DIGIT )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1135:9: '\\\\' 'u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1135:9: '\\\\' 'u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
             {
                 match('\\');
                 match('u');
@@ -3218,11 +3218,11 @@ public class JavaLexer extends Lexer {
         try {
             int _type = IDENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1139:5: ( JAVA_ID_START ( JAVA_ID_PART )* )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1139:9: JAVA_ID_START ( JAVA_ID_PART )*
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1139:5: ( JAVA_ID_START ( JAVA_ID_PART )* )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1139:9: JAVA_ID_START ( JAVA_ID_PART )*
             {
                 mJAVA_ID_START();
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1139:23: ( JAVA_ID_PART )*
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1139:23: ( JAVA_ID_PART )*
                 loop24:
                 do {
                     int alt24 = 2;
@@ -3240,7 +3240,7 @@ public class JavaLexer extends Lexer {
 
                     switch (alt24) {
                         case 1:
-                            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1139:24: JAVA_ID_PART
+                            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1139:24: JAVA_ID_PART
                         {
                             mJAVA_ID_PART();
 
@@ -3265,11 +3265,11 @@ public class JavaLexer extends Lexer {
     // $ANTLR start "JAVA_ID_START"
     public final void mJAVA_ID_START() throws RecognitionException {
         try {
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1144:5: ( '\\u0024' | '\\u0041' .. '\\u005a' | '\\u005f' |
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1144:5: ( '\\u0024' | '\\u0041' .. '\\u005a' | '\\u005f' |
             // '\\u0061' .. '\\u007a' | '\\u00c0' .. '\\u00d6' | '\\u00d8' .. '\\u00f6' | '\\u00f8' .. '\\u00ff' | '\\u0100' .. '\\u1fff'
             // | '\\u3040' .. '\\u318f' | '\\u3300' .. '\\u337f' | '\\u3400' .. '\\u3d2d' | '\\u4e00' .. '\\u9fff' | '\\uf900' ..
             // '\\ufaff' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:
             {
                 if (input.LA(1) == '$' || (input.LA(1) >= 'A' && input.LA(1) <= 'Z') || input.LA(1) == '_' ||
                     (input.LA(1) >= 'a' && input.LA(1) <= 'z') || (input.LA(1) >= '\u00C0' && input.LA(1) <= '\u00D6') ||
@@ -3296,8 +3296,8 @@ public class JavaLexer extends Lexer {
     // $ANTLR start "JAVA_ID_PART"
     public final void mJAVA_ID_PART() throws RecognitionException {
         try {
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1161:5: ( JAVA_ID_START | '\\u0030' .. '\\u0039' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1161:5: ( JAVA_ID_START | '\\u0030' .. '\\u0039' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:
             {
                 if (input.LA(1) == '$' || (input.LA(1) >= '0' && input.LA(1) <= '9') || (input.LA(1) >= 'A' && input.LA(1) <= 'Z') ||
                     input.LA(1) == '_' || (input.LA(1) >= 'a' && input.LA(1) <= 'z') ||
@@ -3326,8 +3326,8 @@ public class JavaLexer extends Lexer {
         try {
             int _type = WS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1165:5: ( ( ' ' | '\\r' | '\\t' | '\\u000C' | '\\n' ) )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1165:8: ( ' ' | '\\r' | '\\t' | '\\u000C' | '\\n' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1165:5: ( ( ' ' | '\\r' | '\\t' | '\\u000C' | '\\n' ) )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1165:8: ( ' ' | '\\r' | '\\t' | '\\u000C' | '\\n' )
             {
                 if ((input.LA(1) >= '\t' && input.LA(1) <= '\n') || (input.LA(1) >= '\f' && input.LA(1) <= '\r') || input.LA(1) == ' ') {
                     input.consume();
@@ -3360,12 +3360,12 @@ public class JavaLexer extends Lexer {
         try {
             int _type = COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1176:5: ( '/*' ( options {greedy=false; } : . )* '*/' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1176:9: '/*' ( options {greedy=false; } : . )* '*/'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1176:5: ( '/*' ( options {greedy=false; } : . )* '*/' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1176:9: '/*' ( options {greedy=false; } : . )* '*/'
             {
                 match("/*");
 
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1176:14: ( options {greedy=false; } : . )*
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1176:14: ( options {greedy=false; } : . )*
                 loop25:
                 do {
                     int alt25 = 2;
@@ -3388,7 +3388,7 @@ public class JavaLexer extends Lexer {
 
                     switch (alt25) {
                         case 1:
-                            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1176:42: .
+                            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1176:42: .
                         {
                             matchAny();
 
@@ -3424,12 +3424,12 @@ public class JavaLexer extends Lexer {
         try {
             int _type = LINE_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1187:5: ( '//' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n' )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1187:7: '//' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n'
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1187:5: ( '//' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n' )
+            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1187:7: '//' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n'
             {
                 match("//");
 
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1187:12: (~ ( '\\n' | '\\r' ) )*
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1187:12: (~ ( '\\n' | '\\r' ) )*
                 loop26:
                 do {
                     int alt26 = 2;
@@ -3443,7 +3443,7 @@ public class JavaLexer extends Lexer {
 
                     switch (alt26) {
                         case 1:
-                            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1187:12: ~ ( '\\n' | '\\r' )
+                            // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1187:12: ~ ( '\\n' | '\\r' )
                         {
                             if ((input.LA(1) >= '\u0000' && input.LA(1) <= '\t') || (input.LA(1) >= '\u000B' && input.LA(1) <= '\f') ||
                                 (input.LA(1) >= '\u000E' && input.LA(1) <= '\uFFFF')) {
@@ -3464,7 +3464,7 @@ public class JavaLexer extends Lexer {
                     }
                 } while (true);
 
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1187:26: ( '\\r' )?
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1187:26: ( '\\r' )?
                 int alt27 = 2;
                 int LA27_0 = input.LA(1);
 
@@ -3473,7 +3473,7 @@ public class JavaLexer extends Lexer {
                 }
                 switch (alt27) {
                     case 1:
-                        // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1187:26: '\\r'
+                        // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1187:26: '\\r'
                     {
                         match('\r');
 
@@ -3501,7 +3501,7 @@ public class JavaLexer extends Lexer {
     // $ANTLR end "LINE_COMMENT"
 
     public void mTokens() throws RecognitionException {
-        // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:8: ( AND | AND_ASSIGN | ASSIGN | AT | BIT_SHIFT_RIGHT |
+        // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:8: ( AND | AND_ASSIGN | ASSIGN | AT | BIT_SHIFT_RIGHT |
         // BIT_SHIFT_RIGHT_ASSIGN | COLON | COMMA | DEC | DIV | DIV_ASSIGN | DOT | DOTSTAR | ELLIPSIS | EQUAL | GREATER_OR_EQUAL |
         // GREATER_THAN | INC | LBRACK | LCURLY | LESS_OR_EQUAL | LESS_THAN | LOGICAL_AND | LOGICAL_NOT | LOGICAL_OR | LPAREN | MINUS |
         // MINUS_ASSIGN | MOD | MOD_ASSIGN | NOT | NOT_EQUAL | OR | OR_ASSIGN | PLUS | PLUS_ASSIGN | QUESTION | RBRACK | RCURLY | RPAREN
@@ -3515,770 +3515,770 @@ public class JavaLexer extends Lexer {
         alt28 = dfa28.predict(input);
         switch (alt28) {
             case 1:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:10: AND
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:10: AND
             {
                 mAND();
 
             }
             break;
             case 2:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:14: AND_ASSIGN
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:14: AND_ASSIGN
             {
                 mAND_ASSIGN();
 
             }
             break;
             case 3:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:25: ASSIGN
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:25: ASSIGN
             {
                 mASSIGN();
 
             }
             break;
             case 4:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:32: AT
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:32: AT
             {
                 mAT();
 
             }
             break;
             case 5:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:35: BIT_SHIFT_RIGHT
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:35: BIT_SHIFT_RIGHT
             {
                 mBIT_SHIFT_RIGHT();
 
             }
             break;
             case 6:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:51: BIT_SHIFT_RIGHT_ASSIGN
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:51: BIT_SHIFT_RIGHT_ASSIGN
             {
                 mBIT_SHIFT_RIGHT_ASSIGN();
 
             }
             break;
             case 7:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:74: COLON
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:74: COLON
             {
                 mCOLON();
 
             }
             break;
             case 8:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:80: COMMA
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:80: COMMA
             {
                 mCOMMA();
 
             }
             break;
             case 9:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:86: DEC
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:86: DEC
             {
                 mDEC();
 
             }
             break;
             case 10:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:90: DIV
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:90: DIV
             {
                 mDIV();
 
             }
             break;
             case 11:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:94: DIV_ASSIGN
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:94: DIV_ASSIGN
             {
                 mDIV_ASSIGN();
 
             }
             break;
             case 12:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:105: DOT
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:105: DOT
             {
                 mDOT();
 
             }
             break;
             case 13:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:109: DOTSTAR
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:109: DOTSTAR
             {
                 mDOTSTAR();
 
             }
             break;
             case 14:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:117: ELLIPSIS
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:117: ELLIPSIS
             {
                 mELLIPSIS();
 
             }
             break;
             case 15:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:126: EQUAL
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:126: EQUAL
             {
                 mEQUAL();
 
             }
             break;
             case 16:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:132: GREATER_OR_EQUAL
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:132: GREATER_OR_EQUAL
             {
                 mGREATER_OR_EQUAL();
 
             }
             break;
             case 17:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:149: GREATER_THAN
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:149: GREATER_THAN
             {
                 mGREATER_THAN();
 
             }
             break;
             case 18:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:162: INC
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:162: INC
             {
                 mINC();
 
             }
             break;
             case 19:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:166: LBRACK
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:166: LBRACK
             {
                 mLBRACK();
 
             }
             break;
             case 20:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:173: LCURLY
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:173: LCURLY
             {
                 mLCURLY();
 
             }
             break;
             case 21:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:180: LESS_OR_EQUAL
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:180: LESS_OR_EQUAL
             {
                 mLESS_OR_EQUAL();
 
             }
             break;
             case 22:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:194: LESS_THAN
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:194: LESS_THAN
             {
                 mLESS_THAN();
 
             }
             break;
             case 23:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:204: LOGICAL_AND
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:204: LOGICAL_AND
             {
                 mLOGICAL_AND();
 
             }
             break;
             case 24:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:216: LOGICAL_NOT
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:216: LOGICAL_NOT
             {
                 mLOGICAL_NOT();
 
             }
             break;
             case 25:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:228: LOGICAL_OR
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:228: LOGICAL_OR
             {
                 mLOGICAL_OR();
 
             }
             break;
             case 26:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:239: LPAREN
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:239: LPAREN
             {
                 mLPAREN();
 
             }
             break;
             case 27:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:246: MINUS
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:246: MINUS
             {
                 mMINUS();
 
             }
             break;
             case 28:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:252: MINUS_ASSIGN
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:252: MINUS_ASSIGN
             {
                 mMINUS_ASSIGN();
 
             }
             break;
             case 29:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:265: MOD
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:265: MOD
             {
                 mMOD();
 
             }
             break;
             case 30:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:269: MOD_ASSIGN
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:269: MOD_ASSIGN
             {
                 mMOD_ASSIGN();
 
             }
             break;
             case 31:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:280: NOT
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:280: NOT
             {
                 mNOT();
 
             }
             break;
             case 32:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:284: NOT_EQUAL
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:284: NOT_EQUAL
             {
                 mNOT_EQUAL();
 
             }
             break;
             case 33:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:294: OR
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:294: OR
             {
                 mOR();
 
             }
             break;
             case 34:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:297: OR_ASSIGN
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:297: OR_ASSIGN
             {
                 mOR_ASSIGN();
 
             }
             break;
             case 35:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:307: PLUS
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:307: PLUS
             {
                 mPLUS();
 
             }
             break;
             case 36:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:312: PLUS_ASSIGN
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:312: PLUS_ASSIGN
             {
                 mPLUS_ASSIGN();
 
             }
             break;
             case 37:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:324: QUESTION
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:324: QUESTION
             {
                 mQUESTION();
 
             }
             break;
             case 38:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:333: RBRACK
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:333: RBRACK
             {
                 mRBRACK();
 
             }
             break;
             case 39:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:340: RCURLY
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:340: RCURLY
             {
                 mRCURLY();
 
             }
             break;
             case 40:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:347: RPAREN
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:347: RPAREN
             {
                 mRPAREN();
 
             }
             break;
             case 41:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:354: SEMI
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:354: SEMI
             {
                 mSEMI();
 
             }
             break;
             case 42:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:359: SHIFT_LEFT
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:359: SHIFT_LEFT
             {
                 mSHIFT_LEFT();
 
             }
             break;
             case 43:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:370: SHIFT_LEFT_ASSIGN
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:370: SHIFT_LEFT_ASSIGN
             {
                 mSHIFT_LEFT_ASSIGN();
 
             }
             break;
             case 44:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:388: SHIFT_RIGHT
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:388: SHIFT_RIGHT
             {
                 mSHIFT_RIGHT();
 
             }
             break;
             case 45:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:400: SHIFT_RIGHT_ASSIGN
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:400: SHIFT_RIGHT_ASSIGN
             {
                 mSHIFT_RIGHT_ASSIGN();
 
             }
             break;
             case 46:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:419: STAR
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:419: STAR
             {
                 mSTAR();
 
             }
             break;
             case 47:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:424: STAR_ASSIGN
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:424: STAR_ASSIGN
             {
                 mSTAR_ASSIGN();
 
             }
             break;
             case 48:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:436: XOR
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:436: XOR
             {
                 mXOR();
 
             }
             break;
             case 49:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:440: XOR_ASSIGN
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:440: XOR_ASSIGN
             {
                 mXOR_ASSIGN();
 
             }
             break;
             case 50:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:451: ABSTRACT
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:451: ABSTRACT
             {
                 mABSTRACT();
 
             }
             break;
             case 51:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:460: ASSERT
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:460: ASSERT
             {
                 mASSERT();
 
             }
             break;
             case 52:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:467: BOOLEAN
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:467: BOOLEAN
             {
                 mBOOLEAN();
 
             }
             break;
             case 53:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:475: BREAK
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:475: BREAK
             {
                 mBREAK();
 
             }
             break;
             case 54:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:481: BYTE
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:481: BYTE
             {
                 mBYTE();
 
             }
             break;
             case 55:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:486: CASE
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:486: CASE
             {
                 mCASE();
 
             }
             break;
             case 56:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:491: CATCH
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:491: CATCH
             {
                 mCATCH();
 
             }
             break;
             case 57:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:497: CHAR
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:497: CHAR
             {
                 mCHAR();
 
             }
             break;
             case 58:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:502: CLASS
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:502: CLASS
             {
                 mCLASS();
 
             }
             break;
             case 59:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:508: CONTINUE
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:508: CONTINUE
             {
                 mCONTINUE();
 
             }
             break;
             case 60:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:517: DEFAULT
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:517: DEFAULT
             {
                 mDEFAULT();
 
             }
             break;
             case 61:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:525: DO
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:525: DO
             {
                 mDO();
 
             }
             break;
             case 62:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:528: DOUBLE
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:528: DOUBLE
             {
                 mDOUBLE();
 
             }
             break;
             case 63:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:535: ELSE
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:535: ELSE
             {
                 mELSE();
 
             }
             break;
             case 64:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:540: ENUM
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:540: ENUM
             {
                 mENUM();
 
             }
             break;
             case 65:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:545: EXTENDS
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:545: EXTENDS
             {
                 mEXTENDS();
 
             }
             break;
             case 66:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:553: FALSE
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:553: FALSE
             {
                 mFALSE();
 
             }
             break;
             case 67:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:559: FINAL
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:559: FINAL
             {
                 mFINAL();
 
             }
             break;
             case 68:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:565: FINALLY
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:565: FINALLY
             {
                 mFINALLY();
 
             }
             break;
             case 69:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:573: FLOAT
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:573: FLOAT
             {
                 mFLOAT();
 
             }
             break;
             case 70:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:579: FOR
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:579: FOR
             {
                 mFOR();
 
             }
             break;
             case 71:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:583: IF
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:583: IF
             {
                 mIF();
 
             }
             break;
             case 72:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:586: IMPLEMENTS
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:586: IMPLEMENTS
             {
                 mIMPLEMENTS();
 
             }
             break;
             case 73:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:597: INSTANCEOF
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:597: INSTANCEOF
             {
                 mINSTANCEOF();
 
             }
             break;
             case 74:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:608: INTERFACE
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:608: INTERFACE
             {
                 mINTERFACE();
 
             }
             break;
             case 75:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:618: IMPORT
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:618: IMPORT
             {
                 mIMPORT();
 
             }
             break;
             case 76:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:625: INT
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:625: INT
             {
                 mINT();
 
             }
             break;
             case 77:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:629: LONG
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:629: LONG
             {
                 mLONG();
 
             }
             break;
             case 78:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:634: NATIVE
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:634: NATIVE
             {
                 mNATIVE();
 
             }
             break;
             case 79:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:641: NEW
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:641: NEW
             {
                 mNEW();
 
             }
             break;
             case 80:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:645: NULL
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:645: NULL
             {
                 mNULL();
 
             }
             break;
             case 81:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:650: PACKAGE
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:650: PACKAGE
             {
                 mPACKAGE();
 
             }
             break;
             case 82:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:658: PRIVATE
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:658: PRIVATE
             {
                 mPRIVATE();
 
             }
             break;
             case 83:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:666: PROTECTED
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:666: PROTECTED
             {
                 mPROTECTED();
 
             }
             break;
             case 84:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:676: PUBLIC
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:676: PUBLIC
             {
                 mPUBLIC();
 
             }
             break;
             case 85:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:683: RETURN
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:683: RETURN
             {
                 mRETURN();
 
             }
             break;
             case 86:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:690: SHORT
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:690: SHORT
             {
                 mSHORT();
 
             }
             break;
             case 87:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:696: STATIC
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:696: STATIC
             {
                 mSTATIC();
 
             }
             break;
             case 88:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:703: STRICTFP
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:703: STRICTFP
             {
                 mSTRICTFP();
 
             }
             break;
             case 89:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:712: SUPER
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:712: SUPER
             {
                 mSUPER();
 
             }
             break;
             case 90:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:718: SWITCH
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:718: SWITCH
             {
                 mSWITCH();
 
             }
             break;
             case 91:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:725: SYNCHRONIZED
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:725: SYNCHRONIZED
             {
                 mSYNCHRONIZED();
 
             }
             break;
             case 92:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:738: THIS
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:738: THIS
             {
                 mTHIS();
 
             }
             break;
             case 93:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:743: THROW
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:743: THROW
             {
                 mTHROW();
 
             }
             break;
             case 94:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:749: THROWS
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:749: THROWS
             {
                 mTHROWS();
 
             }
             break;
             case 95:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:756: TRANSIENT
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:756: TRANSIENT
             {
                 mTRANSIENT();
 
             }
             break;
             case 96:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:766: TRUE
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:766: TRUE
             {
                 mTRUE();
 
             }
             break;
             case 97:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:771: TRY
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:771: TRY
             {
                 mTRY();
 
             }
             break;
             case 98:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:775: VOID
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:775: VOID
             {
                 mVOID();
 
             }
             break;
             case 99:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:780: VOLATILE
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:780: VOLATILE
             {
                 mVOLATILE();
 
             }
             break;
             case 100:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:789: WHILE
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:789: WHILE
             {
                 mWHILE();
 
             }
             break;
             case 101:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:795: HEX_LITERAL
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:795: HEX_LITERAL
             {
                 mHEX_LITERAL();
 
             }
             break;
             case 102:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:807: DECIMAL_LITERAL
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:807: DECIMAL_LITERAL
             {
                 mDECIMAL_LITERAL();
 
             }
             break;
             case 103:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:823: OCTAL_LITERAL
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:823: OCTAL_LITERAL
             {
                 mOCTAL_LITERAL();
 
             }
             break;
             case 104:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:837: FLOATING_POINT_LITERAL
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:837: FLOATING_POINT_LITERAL
             {
                 mFLOATING_POINT_LITERAL();
 
             }
             break;
             case 105:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:860: CHARACTER_LITERAL
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:860: CHARACTER_LITERAL
             {
                 mCHARACTER_LITERAL();
 
             }
             break;
             case 106:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:878: STRING_LITERAL
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:878: STRING_LITERAL
             {
                 mSTRING_LITERAL();
 
             }
             break;
             case 107:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:893: IDENT
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:893: IDENT
             {
                 mIDENT();
 
             }
             break;
             case 108:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:899: WS
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:899: WS
             {
                 mWS();
 
             }
             break;
             case 109:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:902: COMMENT
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:902: COMMENT
             {
                 mCOMMENT();
 
             }
             break;
             case 110:
-                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1:910: LINE_COMMENT
+                // com/codenvy/ide/ext/java/jdi/server/expression/Java.g:1:910: LINE_COMMENT
             {
                 mLINE_COMMENT();
 

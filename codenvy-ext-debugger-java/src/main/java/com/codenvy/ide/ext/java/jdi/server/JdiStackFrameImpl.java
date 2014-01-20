@@ -29,10 +29,7 @@ import com.sun.jdi.StackFrame;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
- */
+/** @author andrew00x */
 public class JdiStackFrameImpl implements JdiStackFrame {
     private final StackFrame         stackFrame;
     private       JdiField[]         fields;
@@ -95,11 +92,7 @@ public class JdiStackFrameImpl implements JdiStackFrame {
                 for (LocalVariable var : targetVariables) {
                     localVariables[i++] = new JdiLocalVariableImpl(stackFrame, var);
                 }
-            } catch (AbsentInformationException e) {
-                throw new DebuggerException(e.getMessage(), e);
-            } catch (InvalidStackFrameException e) {
-                throw new DebuggerException(e.getMessage(), e);
-            } catch (NativeMethodException e) {
+            } catch (AbsentInformationException | InvalidStackFrameException | NativeMethodException e) {
                 throw new DebuggerException(e.getMessage(), e);
             }
         }

@@ -24,6 +24,10 @@ import com.codenvy.api.vfs.server.search.Searcher;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.commons.lang.NamedThreadFactory;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,13 +41,17 @@ import java.util.concurrent.Executors;
  * NOTE: This implementation always create new index in new directory. Index is not reused after call {@link
  * CleanableSearcher#close()}. Index directory is cleaned after close Searcher.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author andrew00x
  */
+@Singleton
 public class CleanableSearcherProvider extends LuceneSearcherProvider {
     private final ConcurrentMap<java.io.File, CleanableSearcher> instances;
     private final ExecutorService                                executor;
+    private final File                                           indexRootDir;
 
-    public CleanableSearcherProvider() {
+    @Inject
+    public CleanableSearcherProvider(@Named("vfs.local.fs_index_root_dir") java.io.File indexRootDir) {
+        this.indexRootDir = indexRootDir;
         executor = Executors.newFixedThreadPool(1 + Runtime.getRuntime().availableProcessors(),
                                                 new NamedThreadFactory("LocalVirtualFileSystem-CleanableSearcher-", true));
         instances = new ConcurrentHashMap<>();
@@ -58,12 +66,6 @@ public class CleanableSearcherProvider extends LuceneSearcherProvider {
             final String workspaceId = (String)context.getVariable(EnvironmentContext.WORKSPACE_ID);
             if (workspaceId == null || workspaceId.isEmpty()) {
                 throw new VirtualFileSystemException("Unable create searcher. Workspace id is not set.");
-            }
-
-            final java.io.File indexRootDir = (java.io.File)context.getVariable(EnvironmentContext.VFS_INDEX_DIR);
-            if (indexRootDir == null) {
-                throw new VirtualFileSystemException(
-                        String.format("Unable create searcher for virtual file system '%s'. Index directory is not set. ", workspaceId));
             }
 
             final java.io.File myIndexDir;

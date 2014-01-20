@@ -25,10 +25,7 @@ import com.sun.jdi.LocalVariable;
 import com.sun.jdi.ThreadReference;
 import com.sun.jdi.Value;
 
-/**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
- */
+/** @author andrew00x */
 public class LocalValue implements ExpressionValue {
     private final ThreadReference thread;
     private final LocalVariable   variable;
@@ -44,11 +41,7 @@ public class LocalValue implements ExpressionValue {
         if (value == null) {
             try {
                 value = thread.frame(0).getValue(variable);
-            } catch (IncompatibleThreadStateException e) {
-                throw new ExpressionException(e.getMessage(), e);
-            } catch (IllegalArgumentException e) {
-                throw new ExpressionException(e.getMessage(), e);
-            } catch (InvalidStackFrameException e) {
+            } catch (IncompatibleThreadStateException | IllegalArgumentException | InvalidStackFrameException e) {
                 throw new ExpressionException(e.getMessage(), e);
             }
         }
@@ -59,11 +52,7 @@ public class LocalValue implements ExpressionValue {
     public void setValue(Value value) {
         try {
             thread.frame(0).setValue(variable, value);
-        } catch (IncompatibleThreadStateException e) {
-            throw new ExpressionException(e.getMessage(), e);
-        } catch (InvalidTypeException e) {
-            throw new ExpressionException(e.getMessage(), e);
-        } catch (ClassNotLoadedException e) {
+        } catch (IncompatibleThreadStateException | InvalidTypeException | ClassNotLoadedException e) {
             throw new ExpressionException(e.getMessage(), e);
         }
         this.value = value;

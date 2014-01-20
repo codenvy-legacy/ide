@@ -30,8 +30,6 @@ public interface NotificationResources extends ClientBundle {
 
         String floatLeft();
 
-        String floatRight();
-
         String top1px();
 
         String error();
@@ -39,6 +37,10 @@ public interface NotificationResources extends ClientBundle {
         String unread();
 
         String warning();
+
+        String statusPanel();
+
+        String right25px();
     }
 
     @Source({"notification.css", "com/codenvy/ide/api/ui/style.css"})

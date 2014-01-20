@@ -68,6 +68,7 @@ import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_CONTEXT_MENU;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
 import static com.codenvy.ide.collections.Collections.createArray;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 
@@ -133,6 +134,9 @@ public class JavaExtension {
         UpdateDependencyAction dependencyAction = new UpdateDependencyAction(this, resourceProvider);
         actionManager.registerAction("updateDependency", dependencyAction);
         contextMenuGroup.addAction(dependencyAction);
+
+        DefaultActionGroup projectMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_PROJECT);
+        projectMenuActionGroup.add(dependencyAction);
 
         Array<String> emptyArray = Collections.createArray();
 

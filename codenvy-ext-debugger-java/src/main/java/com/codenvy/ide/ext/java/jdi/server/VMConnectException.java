@@ -20,8 +20,7 @@ package com.codenvy.ide.ext.java.jdi.server;
 /**
  * Thrown if connection to JVM is not established or lost.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * @author andrew00x
  */
 @SuppressWarnings("serial")
 public final class VMConnectException extends DebuggerException {

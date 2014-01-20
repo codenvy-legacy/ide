@@ -40,9 +40,8 @@ public class DummySshKeyStore implements SshKeyStore {
     private final String              storageFile;
     private final Map<String, SshKey> store;
 
-    // TODO(GUICE): better name for property "codenvy.sshkeystore.location" ??
     @Inject
-    public DummySshKeyStore(@Nullable @Named("codenvy.sshkeystore.location") String dirPath) {
+    public DummySshKeyStore(@Nullable @Named("ssh.key_store_location") String dirPath) {
         if (dirPath == null || dirPath.isEmpty()) {
             storageFile = System.getProperty("java.io.tmpdir") + "/ssh_keys.json";
         } else {

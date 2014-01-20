@@ -17,7 +17,37 @@
  */
 package com.codenvy.ide.ext.java.jdi.server.expression;
 
-import com.sun.jdi.*;
+import com.sun.jdi.AbsentInformationException;
+import com.sun.jdi.ArrayReference;
+import com.sun.jdi.ArrayType;
+import com.sun.jdi.BooleanType;
+import com.sun.jdi.BooleanValue;
+import com.sun.jdi.ClassNotLoadedException;
+import com.sun.jdi.ClassNotPreparedException;
+import com.sun.jdi.ClassType;
+import com.sun.jdi.DoubleValue;
+import com.sun.jdi.Field;
+import com.sun.jdi.FloatValue;
+import com.sun.jdi.IncompatibleThreadStateException;
+import com.sun.jdi.IntegerValue;
+import com.sun.jdi.InterfaceType;
+import com.sun.jdi.InvalidStackFrameException;
+import com.sun.jdi.InvalidTypeException;
+import com.sun.jdi.InvocationException;
+import com.sun.jdi.LocalVariable;
+import com.sun.jdi.LongValue;
+import com.sun.jdi.Method;
+import com.sun.jdi.NativeMethodException;
+import com.sun.jdi.ObjectReference;
+import com.sun.jdi.PrimitiveType;
+import com.sun.jdi.PrimitiveValue;
+import com.sun.jdi.ReferenceType;
+import com.sun.jdi.StackFrame;
+import com.sun.jdi.StringReference;
+import com.sun.jdi.ThreadReference;
+import com.sun.jdi.Type;
+import com.sun.jdi.Value;
+import com.sun.jdi.VirtualMachine;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,19 +58,32 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-/**
- * @author andrew00x
- */
+/** @author andrew00x */
 public class Evaluator {
-    private static final Logger LOG = LoggerFactory.getLogger(Evaluator.class);
+    private static final Logger      LOG             = LoggerFactory.getLogger(Evaluator.class);
+    private static final Set<String> PRIMITIVE_TYPES = new HashSet<>(8);
 
-    private final VirtualMachine vm;
+    static {
+        PRIMITIVE_TYPES.add("boolean");
+        PRIMITIVE_TYPES.add("byte");
+        PRIMITIVE_TYPES.add("char");
+        PRIMITIVE_TYPES.add("short");
+        PRIMITIVE_TYPES.add("int");
+        PRIMITIVE_TYPES.add("long");
+        PRIMITIVE_TYPES.add("float");
+        PRIMITIVE_TYPES.add("double");
+    }
 
+    private final VirtualMachine  vm;
     private final ThreadReference thread;
 
     public Evaluator(VirtualMachine vm, ThreadReference thread) {
         this.vm = vm;
         this.thread = thread;
+    }
+
+    private static boolean isPrimitive(Type type) {
+        return PRIMITIVE_TYPES.contains(type.name());
     }
 
     public ThreadReference getThread() {
@@ -95,6 +138,8 @@ public class Evaluator {
         return value(Double.parseDouble(text));
     }
 
+//
+
     public ExpressionValue charValue(String text) {
         return value(text.charAt(0));
     }
@@ -106,8 +151,6 @@ public class Evaluator {
     public ExpressionValue nullValue() {
         return new ReadOnlyValue(null);
     }
-
-//
 
     public ExpressionValue value(boolean v) {
         return new ReadOnlyValue(vm.mirrorOf(v));
@@ -133,26 +176,10 @@ public class Evaluator {
         return new ReadOnlyValue(vm.mirrorOf(v));
     }
 
-    public ExpressionValue value(double v) {
-        return new ReadOnlyValue(vm.mirrorOf(v));
-    }
-
-    public ExpressionValue value(char v) {
-        return new ReadOnlyValue(vm.mirrorOf(v));
-    }
-
-    public ExpressionValue value(String v) {
-        return new ReadOnlyValue(vm.mirrorOf(v));
-    }
-
 //
 
-    public ExpressionValue getThisObject() {
-        try {
-            return new ReadOnlyValue(thread.frame(0).thisObject());
-        } catch (IncompatibleThreadStateException e) {
-            throw new ExpressionException(e.getMessage(), e);
-        }
+    public ExpressionValue value(double v) {
+        return new ReadOnlyValue(vm.mirrorOf(v));
     }
 
 /*
@@ -198,6 +225,22 @@ public class Evaluator {
    }
 */
 
+    public ExpressionValue value(char v) {
+        return new ReadOnlyValue(vm.mirrorOf(v));
+    }
+
+    public ExpressionValue value(String v) {
+        return new ReadOnlyValue(vm.mirrorOf(v));
+    }
+
+    public ExpressionValue getThisObject() {
+        try {
+            return new ReadOnlyValue(thread.frame(0).thisObject());
+        } catch (IncompatibleThreadStateException e) {
+            throw new ExpressionException(e.getMessage(), e);
+        }
+    }
+
     public ExpressionValue getField(Value parent, String name) {
         if (!(parent instanceof ObjectReference)) {
             throw new ExpressionException("Value is not object. Cannot invoke method " + name);
@@ -224,13 +267,7 @@ public class Evaluator {
             if (var != null) {
                 value = new LocalValue(thread, var);
             }
-        } catch (IncompatibleThreadStateException e) {
-            throw new ExpressionException(e.getMessage(), e);
-        } catch (AbsentInformationException e) {
-            throw new ExpressionException(e.getMessage(), e);
-        } catch (InvalidStackFrameException e) {
-            throw new ExpressionException(e.getMessage(), e);
-        } catch (NativeMethodException e) {
+        } catch (IncompatibleThreadStateException | AbsentInformationException | InvalidStackFrameException | NativeMethodException e) {
             throw new ExpressionException(e.getMessage(), e);
         }
         LOG.debug("GET local variable {} {} ", text, value);
@@ -245,27 +282,6 @@ public class Evaluator {
             throw new ExpressionException("Invalid array index. ");
         }
         return new ArrayElement((ArrayReference)arrayValue, ((IntegerValue)indexValue).value());
-    }
-
-    private static final Set<String> PRIMITIVE_TYPES = new HashSet<String>(8);
-
-    static {
-        PRIMITIVE_TYPES.add("boolean");
-        PRIMITIVE_TYPES.add("byte");
-        PRIMITIVE_TYPES.add("char");
-        PRIMITIVE_TYPES.add("short");
-        PRIMITIVE_TYPES.add("int");
-        PRIMITIVE_TYPES.add("long");
-        PRIMITIVE_TYPES.add("float");
-        PRIMITIVE_TYPES.add("double");
-    }
-
-    private enum ARGUMENT_MATCHING {
-        MATCH, ASSIGNABLE, NOT_MATCH
-    }
-
-    private static boolean isPrimitive(Type type) {
-        return PRIMITIVE_TYPES.contains(type.name());
     }
 
     private Method findMethod(List<Method> methods, List<Value> arguments) {
@@ -389,13 +405,7 @@ public class Evaluator {
         }
         try {
             return new ReadOnlyValue(object.invokeMethod(thread, method, arguments, 0));
-        } catch (InvalidTypeException e) {
-            throw new ExpressionException(e.getMessage(), e);
-        } catch (ClassNotLoadedException e) {
-            throw new ExpressionException(e.getMessage(), e);
-        } catch (IncompatibleThreadStateException e) {
-            throw new ExpressionException(e.getMessage(), e);
-        } catch (InvocationException e) {
+        } catch (InvalidTypeException | ClassNotLoadedException | IncompatibleThreadStateException | InvocationException e) {
             throw new ExpressionException(e.getMessage(), e);
         }
     }
@@ -746,5 +756,9 @@ public class Evaluator {
             return stringValue == null ? "null" : stringValue.value();
         }
         return value.toString();
+    }
+
+    private enum ARGUMENT_MATCHING {
+        MATCH, ASSIGNABLE, NOT_MATCH
     }
 }

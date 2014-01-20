@@ -19,10 +19,14 @@ package com.codenvy.ide.ext.ssh.client.key;
 
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.ssh.client.SshKeyService;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
+import com.codenvy.ide.ext.ssh.dto.PublicKey;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.ui.loader.Loader;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestException;
@@ -43,7 +47,8 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 @Singleton
 public class SshKeyPresenter implements SshKeyView.ActionDelegate {
-    private SshKeyView          view;
+    private SshKeyView view;
+    private DtoFactory dtoFactory;
     private SshKeyService       service;
     private EventBus            eventBus;
     private NotificationManager notificationManager;
@@ -58,8 +63,14 @@ public class SshKeyPresenter implements SshKeyView.ActionDelegate {
      * @param notificationManager
      */
     @Inject
-    public SshKeyPresenter(SshKeyView view, SshKeyService service, EventBus eventBus, Loader loader, NotificationManager notificationManager) {
+    public SshKeyPresenter(SshKeyView view,
+                           SshKeyService service,
+                           EventBus eventBus,
+                           Loader loader,
+                           NotificationManager notificationManager,
+                           DtoFactory dtoFactory) {
         this.view = view;
+        this.dtoFactory = dtoFactory;
         this.view.setDelegate(this);
         this.service = service;
         this.eventBus = eventBus;
@@ -72,13 +83,14 @@ public class SshKeyPresenter implements SshKeyView.ActionDelegate {
         view.addHostToTitle(keyItem.getHost());
 
         try {
-            service.getPublicKey(keyItem, new AsyncRequestCallback<JavaScriptObject>() {
+            service.getPublicKey(keyItem, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
-                public void onSuccess(JavaScriptObject result) {
+                public void onSuccess(String result) {
                     loader.hide();
-                    JSONObject jso = new JSONObject(result);
-                    String key = jso.get("key").isString().stringValue();
-                    view.setKey(key);
+                    PublicKey key = dtoFactory.createDtoFromJson(result, PublicKey.class);
+//                    JSONObject jso = new JSONObject(result);
+//                    String key = jso.get("key").isString().stringValue();
+                    view.setKey(key.getKey());
                     view.showDialog();
                 }
 
