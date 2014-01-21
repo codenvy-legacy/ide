@@ -19,6 +19,7 @@ package org.exoplatform.ide.extension.samples.client.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 import org.exoplatform.ide.extension.samples.client.startpage.PremiumAccountInfoReceivedEvent;
 import org.exoplatform.ide.extension.samples.client.startpage.PremiumAccountInfoReceivedHandler;
@@ -43,6 +44,7 @@ public class SupportControl extends SimpleControl implements IDEControl, Premium
 
     @Override
     public void initialize() {
+        IDE.addHandler(PremiumAccountInfoReceivedEvent.TYPE, this);
     }
 
     @Override
