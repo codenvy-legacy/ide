@@ -38,35 +38,17 @@
         background-color: #272727;
     }
 
-@-moz-document url-prefix(http://),url-prefix(https://) {
-    scrollbar {
-        -moz-appearance: none !important;
-        background: rgb(0,255,0) !important;
-    }
-    thumb,scrollbarbutton {
-        -moz-appearance: none !important;
-        background-color: rgb(0,0,255) !important;
-    }
 
-    thumb:hover,scrollbarbutton:hover {
-        -moz-appearance: none !important;
-        background-color: rgb(255,0,0) !important;
-    }
-
-    scrollbarbutton {
-        display: none !important;
-    }
-
-    scrollbar[orient="vertical"] {
-        min-width: 15px !important;
-    }
-}
 
 .gwt-TextBox{
     background-color: inputBackground;
     color: mainFontColor;
     border: 1px solid tabBorder;
     border-radius: 2px;
+}
+
+.gwt-TextBox[disabled]{
+    background-color: tabsPanelBackground;
 }
 
 .gwt-Button{
