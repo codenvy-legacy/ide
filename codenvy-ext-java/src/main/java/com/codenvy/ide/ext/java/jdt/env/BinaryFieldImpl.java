@@ -29,6 +29,7 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.DoubleConstant;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.FloatConstant;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.IntConstant;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.LongConstant;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.StringConstant;
 
 
 /**
@@ -71,8 +72,9 @@ public class BinaryFieldImpl implements IBinaryField {
                 if (defaultValue.isEmpty())
                     return null;
                 char[] elementType = Signature.getElementType(getTypeName());
-                if (elementType.length > 1)
-                    return null;
+                if("Ljava/lang/String;".equals(new String(getTypeName()))) {
+                    return StringConstant.fromValue(defaultValue);
+                }
                 switch (elementType[0]) {
                     case 'I':
                         return IntConstant.fromValue(Integer.parseInt(defaultValue));
