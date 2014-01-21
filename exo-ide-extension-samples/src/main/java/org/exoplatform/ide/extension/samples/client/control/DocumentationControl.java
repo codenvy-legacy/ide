@@ -28,7 +28,7 @@ import org.exoplatform.ide.extension.samples.client.startpage.PremiumAccountInfo
  * Documentation Control Button.
  * @author Vladislav Zhukovskii
  */
-public class DocumentationControl extends SimpleControl implements IDEControl, PremiumAccountInfoReceivedHandler {
+public class DocumentationControl extends SimpleControl implements IDEControl {
     private static final String ID = "Help/Documentation";
 
     private static final String TITLE = "Documentation";
@@ -43,18 +43,11 @@ public class DocumentationControl extends SimpleControl implements IDEControl, P
         setEnabled(true);
         setImages(SamplesClientBundle.INSTANCE.help(), SamplesClientBundle.INSTANCE.helpDisabled());
 
-        getAttributes().put("onClick", "javascript:UserVoice.showPopupWidget();");
+        getAttributes().put("onClick", "javascript:window.open('http://docs.codenvy.com');");
     }
 
 
     @Override
     public void initialize() {
-        IDE.addHandler(PremiumAccountInfoReceivedEvent.TYPE, this);
-    }
-
-    @Override
-    public void onPremiumAccountInfoReceived(PremiumAccountInfoReceivedEvent event) {
-        getAttributes().put("onCLick", event.isUserHasPremiumAccount() ? "javascript:UserVoice.showPopupWidget();"
-                                                                       : "javascript:window.open('http://helpdesk.codenvy.com');");
     }
 }
