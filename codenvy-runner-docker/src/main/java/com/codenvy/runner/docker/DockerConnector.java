@@ -49,6 +49,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -164,9 +165,33 @@ public class DockerConnector {
     }
 
 
-    public void createImage(java.io.File dockerFile, java.io.File application, String name, Appendable output) throws IOException {
-        final java.io.File tar = Files.createTempFile(application.getName(), ".tar.gz").toFile();
+    public void createImage(java.io.File dockerFile, String repository, String tag, Appendable output) throws IOException {
+        final java.io.File tar = Files.createTempFile(repository.replace('/', '_'), ".tar").toFile();
+        createTarArchive(tar, dockerFile);
+        String name = repository;
+        if (tag != null) {
+            name += (':' + tag);
+        }
+        buildImage(tar, name, output);
+    }
+
+
+    public void createImage(java.io.File dockerFile,
+                            java.io.File application,
+                            String repository,
+                            String tag,
+                            Appendable output) throws IOException {
+        final java.io.File tar = Files.createTempFile(repository.replace('/', '_'), ".tar").toFile();
         createTarArchive(tar, dockerFile, application);
+        String name = repository;
+        if (tag != null) {
+            name += (':' + tag);
+        }
+        buildImage(tar, name, output);
+    }
+
+
+    private void buildImage(java.io.File tar, String name, Appendable output) throws IOException {
         final int fd = connect();
         try (InputStream tarInput = new FileInputStream(tar)) {
             final List<Pair<String, ?>> headers = new ArrayList<>(2);
@@ -186,7 +211,6 @@ public class DockerConnector {
             }
         }
     }
-
 
     public void removeImage(String name) throws IOException {
         final int fd = connect();

@@ -23,6 +23,7 @@ import com.codenvy.api.builder.BuilderService;
 import com.codenvy.api.builder.LastInUseBuilderSelectionStrategy;
 import com.codenvy.api.builder.internal.SlaveBuilderService;
 import com.codenvy.api.core.rest.ApiExceptionMapper;
+import com.codenvy.api.project.server.ProjectService;
 import com.codenvy.api.runner.LastInUseRunnerSelectionStrategy;
 import com.codenvy.api.runner.RunnerAdminService;
 import com.codenvy.api.runner.RunnerSelectionStrategy;
@@ -41,7 +42,6 @@ import com.codenvy.api.vfs.server.exceptions.PermissionDeniedExceptionMapper;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemRuntimeExceptionMapper;
 import com.codenvy.api.vfs.server.observation.EventListenerList;
 import com.codenvy.api.vfs.server.search.SearcherProvider;
-import com.codenvy.api.workspace.server.WorkspaceService;
 import com.codenvy.commons.security.oauth.OAuthAuthenticationService;
 import com.codenvy.commons.security.oauth.OAuthAuthenticatorProvider;
 import com.codenvy.commons.security.oauth.OAuthAuthenticatorTokenProvider;
@@ -73,9 +73,9 @@ import com.codenvy.inject.DynaModule;
 import com.codenvy.runner.sdk.SDKRunner;
 import com.codenvy.runner.webapps.DeployToApplicationServerRunner;
 import com.codenvy.vfs.impl.fs.CleanableSearcherProvider;
-import com.codenvy.vfs.impl.fs.WorkspaceHashLocalFSMountStrategy;
 import com.codenvy.vfs.impl.fs.LocalFSMountStrategy;
 import com.codenvy.vfs.impl.fs.LocalFileSystemRegistryPlugin;
+import com.codenvy.vfs.impl.fs.WorkspaceHashLocalFSMountStrategy;
 import com.codenvy.vfs.impl.fs.exceptions.GitUrlResolveExceptionMapper;
 import com.codenvy.vfs.impl.fs.exceptions.LocalPathResolveExceptionMapper;
 import com.google.inject.AbstractModule;
@@ -88,7 +88,7 @@ import org.everrest.core.impl.async.AsynchronousJobPool;
 public class ApiModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(WorkspaceService.class);
+        bind(ProjectService.class);
         bind(LocalFileSystemRegistryPlugin.class);
         bind(LocalFSMountStrategy.class).to(WorkspaceHashLocalFSMountStrategy.class);
         bind(SearcherProvider.class).to(CleanableSearcherProvider.class);
