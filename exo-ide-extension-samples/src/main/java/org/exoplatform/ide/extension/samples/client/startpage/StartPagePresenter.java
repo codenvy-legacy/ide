@@ -135,7 +135,7 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
             display.disableInvitationsLink();
 
         display.getSupportLink().setHref(premiumUser ? "javascript:UserVoice.showPopupWidget();"
-                                                     : "http://helpdesk.codenvy.com");
+                                                     : "javascript:window.open('http://helpdesk.codenvy.com');");
     }
 
     @Override
