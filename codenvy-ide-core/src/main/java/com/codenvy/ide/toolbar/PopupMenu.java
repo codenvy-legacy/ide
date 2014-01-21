@@ -248,8 +248,7 @@ public class PopupMenu extends Composite {
                     hotKey = "&nbsp;";
                 } else {
                     hotKey =
-                            "<nobr><font color=\"" + (presentation.isEnabled() ? "#000088" : "#AAAAAA") + "\">&nbsp;[" + hotKey
-                            + "]&nbsp;</font></nobr>";
+                            "<nobr>&nbsp;[" + hotKey + "]&nbsp;</nobr>";
                 }
 
                 table.setHTML(i, work, hotKey);

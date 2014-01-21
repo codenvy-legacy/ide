@@ -25,6 +25,7 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -46,13 +47,13 @@ public class AddRemoteRepositoryViewImpl extends DialogBox implements AddRemoteR
     private static AddRemoteRepositoryViewImplUiBinder ourUiBinder = GWT.create(AddRemoteRepositoryViewImplUiBinder.class);
 
     @UiField
-    TextBox                   name;
+    TextBox name;
     @UiField
-    TextBox                   url;
+    TextBox url;
     @UiField
-    com.codenvy.ide.ui.Button btnOk;
+    Button  btnOk;
     @UiField
-    com.codenvy.ide.ui.Button btnCancel;
+    Button  btnCancel;
     @UiField(provided = true)
     final   GitResources            res;
     @UiField(provided = true)

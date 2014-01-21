@@ -26,6 +26,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -47,15 +48,15 @@ public class PullViewImpl extends DialogBox implements PullView {
     private static PullViewImplUiBinder ourUiBinder = GWT.create(PullViewImplUiBinder.class);
 
     @UiField
-    ListBox                   repository;
+    ListBox repository;
     @UiField
-    ListBox                   localBranch;
+    ListBox localBranch;
     @UiField
-    ListBox                   remoteBranch;
+    ListBox remoteBranch;
     @UiField
-    com.codenvy.ide.ui.Button btnPull;
+    Button  btnPull;
     @UiField
-    com.codenvy.ide.ui.Button btnCancel;
+    Button  btnCancel;
     @UiField(provided = true)
     final   GitResources            res;
     @UiField(provided = true)

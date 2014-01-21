@@ -32,6 +32,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.TextArea;
@@ -78,17 +79,17 @@ public class HistoryViewImpl extends BaseView<HistoryView.ActionDelegate> implem
     @UiField(provided = true)
     CellTable<Revision>       commits;
     @UiField
-    com.codenvy.ide.ui.Button btnRefresh;
+    Button                    btnRefresh;
     @UiField
-    com.codenvy.ide.ui.Button btnProjectChanges;
+    Button btnProjectChanges;
     @UiField
-    com.codenvy.ide.ui.Button btnResourceChanges;
+    Button btnResourceChanges;
     @UiField
-    com.codenvy.ide.ui.Button btnDiffWithIndex;
+    Button btnDiffWithIndex;
     @UiField
-    com.codenvy.ide.ui.Button btnDiffWithWorkTree;
+    Button btnDiffWithWorkTree;
     @UiField
-    com.codenvy.ide.ui.Button btnDiffWithPrevCommit;
+    Button btnDiffWithPrevCommit;
     @UiField(provided = true)
     final GitResources            res;
     @UiField(provided = true)

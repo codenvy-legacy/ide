@@ -15,6 +15,7 @@
 package com.codenvy.ide.texteditor.selection;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.ui.theme.Style;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.text.store.LineInfo;
@@ -96,7 +97,7 @@ public class LocalCursorController
     }
 
     public void resetCursorView() {
-        cursorView.setColor("black");
+        cursorView.setColor(Style.getEditorCursorColor());
         cursorView.setBlockMode(false);
     }
 

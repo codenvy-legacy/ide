@@ -17,11 +17,12 @@
  */
 
 .lineNumber {
-    font-family: alternativeFontFamily;
-    font-weight: 600;
+    font-family: "DejaVu Sans Mono", alternativeFontFamily;
+    /*font-weight: 600;*/
     font-size: 12px;
     right: 0px;
     position: absolute;
+    color: #888888;
 }
 
 .animationEnabled .lineNumber {
@@ -37,12 +38,12 @@
 }
 
 .activeLineNumber {
-    color: #333;
+    /*color: #333333;*/
 }
 
 .scrollable {
 }
 
 .activeline {
-    background: #E8F2FF !important;
+    background: editorCurrentLineColor !important;
 }

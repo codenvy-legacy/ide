@@ -24,6 +24,7 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -44,19 +45,19 @@ public class AddNewPropertyViewImpl extends DialogBox implements AddNewPropertyV
     private static AddNewPropertyViewImplUiBinder ourUiBinder = GWT.create(AddNewPropertyViewImplUiBinder.class);
 
     @UiField
-    TextBox                                       name;
+    TextBox name;
     @UiField
-    TextBox                                       value;
+    TextBox value;
     @UiField
-    com.codenvy.ide.ui.Button                     btnOk;
+    Button  btnOk;
     @UiField
-    com.codenvy.ide.ui.Button                     btnCancel;
+    Button  btnCancel;
 
-    private ActionDelegate                        delegate;
+    private ActionDelegate delegate;
 
     /**
      * Create view.
-     * 
+     *
      * @param resources
      * @param locale
      */
@@ -101,7 +102,7 @@ public class AddNewPropertyViewImpl extends DialogBox implements AddNewPropertyV
     public void onValueChanged(KeyUpEvent event) {
         delegate.onValueChanged();
     }
-    
+
     @UiHandler({"name"})
     public void onNameChanged(KeyUpEvent event) {
         delegate.onNameChanged();

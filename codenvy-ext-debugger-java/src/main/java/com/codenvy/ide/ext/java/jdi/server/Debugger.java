@@ -44,6 +44,7 @@ import com.sun.jdi.connect.AttachingConnector;
 import com.sun.jdi.connect.Connector;
 import com.sun.jdi.connect.IllegalConnectorArgumentsException;
 import com.sun.jdi.request.BreakpointRequest;
+import com.sun.jdi.request.ClassPrepareRequest;
 import com.sun.jdi.request.EventRequest;
 import com.sun.jdi.request.EventRequestManager;
 import com.sun.jdi.request.InvalidRequestStateException;
@@ -100,6 +101,14 @@ public class Debugger implements EventsHandler {
     private final String host;
     private final int    port;
     private final List<DebuggerEvent> events = new ArrayList<>();
+
+    /**
+     * A mapping of source file names to breakpoints. This mapping is used to set
+     * breakpoints in files that haven't been loaded yet by a target Java VM.
+     */
+    private final ConcurrentMap<String, List<BreakPoint>>    deferredBreakpoints  = new ConcurrentHashMap<>();
+    /** Stores ClassPrepareRequests to prevent making duplicate class prepare requests. */
+    private final ConcurrentMap<String, ClassPrepareRequest> classPrepareRequests = new ConcurrentHashMap<>();
 
     /** Target Java VM representation. */
     private VirtualMachine  vm;
@@ -172,23 +181,25 @@ public class Debugger implements EventsHandler {
     }
 
     /**
-     * Add new break point.
+     * Add new breakpoint.
      *
-     * @param breakPoint
+     * @param breakpoint
      *         break point description
      * @throws InvalidBreakPointException
-     *         if description of break point is invalid (specified line number or class name
-     *         is invalid)
+     *         if description of break point is invalid (specified line number or class name is invalid)
      * @throws DebuggerException
      *         when other JDI error occurs
      */
-    public void addBreakPoint(BreakPoint breakPoint) throws InvalidBreakPointException, DebuggerException {
-        final String className = breakPoint.getLocation().getClassName();
-        final int lineNumber = breakPoint.getLocation().getLineNumber();
+    public void addBreakpoint(BreakPoint breakpoint) throws InvalidBreakPointException, DebuggerException {
+        final String className = breakpoint.getLocation().getClassName();
+        final int lineNumber = breakpoint.getLocation().getLineNumber();
         List<ReferenceType> classes = vm.classesByName(className);
+        // it may mean that class doesn't loaded by a target JVM yet
         if (classes.isEmpty()) {
-            throw new InvalidBreakPointException("Class " + className + " not found. ");
+            deferBreakpoint(breakpoint);
+            return;
         }
+
         ReferenceType clazz = classes.get(0);
         List<com.sun.jdi.Location> locations;
         try {
@@ -208,8 +219,8 @@ public class Debugger implements EventsHandler {
         }
 
         // Ignore new breakpoint if already have breakpoint at the same location.
-        EventRequestManager events = getEventManager();
-        for (BreakpointRequest breakpointRequest : events.breakpointRequests()) {
+        EventRequestManager requestManager = getEventManager();
+        for (BreakpointRequest breakpointRequest : requestManager.breakpointRequests()) {
             if (location.equals(breakpointRequest.location())) {
                 LOG.debug("Breakpoint at {} already set", location);
                 return;
@@ -217,9 +228,9 @@ public class Debugger implements EventsHandler {
         }
 
         try {
-            EventRequest breakPointRequest = events.createBreakpointRequest(location);
+            EventRequest breakPointRequest = requestManager.createBreakpointRequest(location);
             breakPointRequest.setSuspendPolicy(EventRequest.SUSPEND_ALL);
-            String expression = breakPoint.getCondition();
+            String expression = breakpoint.getCondition();
             if (!(expression == null || expression.isEmpty())) {
                 ExpressionParser parser = ExpressionParser.newInstance(expression);
                 breakPointRequest.putProperty("com.codenvy.ide.java.debug.condition.expression.parser", parser);
@@ -229,6 +240,25 @@ public class Debugger implements EventsHandler {
             throw new DebuggerException(e.getMessage(), e);
         }
         LOG.debug("Add breakpoint: {}", location);
+    }
+
+    private void deferBreakpoint(BreakPoint breakpoint) throws DebuggerException {
+        final String className = breakpoint.getLocation().getClassName();
+        List<BreakPoint> newList = new ArrayList<>();
+        List<BreakPoint> list = deferredBreakpoints.putIfAbsent(className, newList);
+        if (list == null) {
+            list = newList;
+        }
+        list.add(breakpoint);
+
+        // start listening for the load of the type
+        if (!classPrepareRequests.containsKey(className)) {
+            ClassPrepareRequest request = getEventManager().createClassPrepareRequest();
+            // set class filter in order to reduce the amount of event traffic sent from the target VM to the debugger VM
+            request.addClassFilter(className);
+            request.enable();
+            classPrepareRequests.put(className, request);
+        }
     }
 
     /**
@@ -534,9 +564,11 @@ public class Debugger implements EventsHandler {
                 if (event instanceof com.sun.jdi.event.BreakpointEvent) {
                     resume = processBreakPointEvent((com.sun.jdi.event.BreakpointEvent)event);
                 } else if (event instanceof com.sun.jdi.event.StepEvent) {
-                    resume = processBreakStepEvent((com.sun.jdi.event.StepEvent)event);
+                    resume = processStepEvent((com.sun.jdi.event.StepEvent)event);
                 } else if (event instanceof com.sun.jdi.event.VMDisconnectEvent) {
                     resume = processDisconnectEvent((com.sun.jdi.event.VMDisconnectEvent)event);
+                } else if (event instanceof com.sun.jdi.event.ClassPrepareEvent) {
+                    resume = processClassPrepareEvent((com.sun.jdi.event.ClassPrepareEvent)event);
                 }
             }
         } finally {
@@ -587,7 +619,7 @@ public class Debugger implements EventsHandler {
         return !hitBreakpoint;
     }
 
-    private boolean processBreakStepEvent(com.sun.jdi.event.StepEvent event) throws DebuggerException {
+    private boolean processStepEvent(com.sun.jdi.event.StepEvent event) throws DebuggerException {
         setCurrentThread(event.thread());
         com.sun.jdi.Location location = event.location();
         StepEvent stepEvent;
@@ -612,6 +644,26 @@ public class Debugger implements EventsHandler {
         eventsCollector.stop();
         instances.remove(id);
         publishWebSocketMessage(null, DISCONNECTED_CHANNEL + id);
+        return true;
+    }
+
+    private boolean processClassPrepareEvent(com.sun.jdi.event.ClassPrepareEvent event) throws DebuggerException {
+        final String className = event.referenceType().name();
+        // add deferred breakpoints
+        List<BreakPoint> breakpointsToAdd = deferredBreakpoints.get(className);
+        if (breakpointsToAdd != null) {
+            for (BreakPoint b : breakpointsToAdd) {
+                addBreakpoint(b);
+            }
+            deferredBreakpoints.remove(className);
+
+            // All deferred breakpoints for className have been already added,
+            // so no need to listen for an appropriate ClassPrepareRequests any more.
+            ClassPrepareRequest request = classPrepareRequests.remove(className);
+            if (request != null) {
+                getEventManager().deleteEventRequest(request);
+            }
+        }
         return true;
     }
 

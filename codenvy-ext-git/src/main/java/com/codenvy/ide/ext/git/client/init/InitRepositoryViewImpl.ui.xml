@@ -18,8 +18,7 @@
 
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:c='urn:import:com.codenvy.ide.ui'>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field='locale' type='com.codenvy.ide.ext.git.client.GitLocalizationConstant'/>
     <ui:with field='res' type='com.codenvy.ide.ext.git.client.GitResources'/>
     <ui:style>
@@ -42,10 +41,8 @@
     <g:DockLayoutPanel unit="PX" width="380px" height="130px" addStyleNames="{style.emptyBorder}">
         <g:south size="26.0">
             <g:FlowPanel>
-                <c:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" size="SMALL" type="DANGER"
-                          ui:field="btnCancel"/>
-                <c:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonOk}" width="60px" size="SMALL"
-                          type="SUCCESS" ui:field="btnOk"/>
+                <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" ui:field="btnCancel"/>
+                <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonOk}" width="60px" ui:field="btnOk"/>
             </g:FlowPanel>
         </g:south>
         <g:north size="50.0">

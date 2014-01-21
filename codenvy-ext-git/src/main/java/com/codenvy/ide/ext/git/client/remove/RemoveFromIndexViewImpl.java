@@ -24,6 +24,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Label;
@@ -46,13 +47,13 @@ public class RemoveFromIndexViewImpl extends DialogBox implements RemoveFromInde
     private static RemoveFromIndexViewImplUiBinder ourUiBinder = GWT.create(RemoveFromIndexViewImplUiBinder.class);
 
     @UiField
-    Label                     message;
+    Label    message;
     @UiField
-    CheckBox                  remove;
+    CheckBox remove;
     @UiField
-    com.codenvy.ide.ui.Button btnRemove;
+    Button   btnRemove;
     @UiField
-    com.codenvy.ide.ui.Button btnCancel;
+    Button   btnCancel;
     @UiField(provided = true)
     final   GitResources            res;
     @UiField(provided = true)

@@ -34,7 +34,7 @@ public class SelectionLineRenderer implements LineRenderer {
 
     /** ClientBundle for the {@link SelectionLineRenderer}. */
     public interface Resources extends ClientBundle {
-        @Source("SelectionLineRenderer.css")
+        @Source({"SelectionLineRenderer.css", "com/codenvy/ide/api/ui/style.css"})
         Css editorSelectionLineRendererCss();
     }
 

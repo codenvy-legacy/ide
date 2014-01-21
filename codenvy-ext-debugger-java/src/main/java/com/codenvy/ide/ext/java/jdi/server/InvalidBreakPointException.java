@@ -20,11 +20,11 @@ package com.codenvy.ide.ext.java.jdi.server;
 import com.codenvy.ide.ext.java.jdi.shared.BreakPoint;
 
 /**
- * Thrown by {@link Debugger} when request to add new breakpoint is invalid. Typically it means the location (class
- * name or line number) is invalid.
+ * Thrown by {@link Debugger} when request to add a new breakpoint is invalid.
+ * Typically it means the location (class name or line number) is invalid.
  *
  * @author andrew00x
- * @see Debugger#addBreakPoint(BreakPoint)
+ * @see Debugger#addBreakpoint(BreakPoint)
  */
 @SuppressWarnings("serial")
 public final class InvalidBreakPointException extends DebuggerException {

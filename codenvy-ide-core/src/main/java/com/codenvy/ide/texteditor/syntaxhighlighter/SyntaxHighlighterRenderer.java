@@ -31,7 +31,7 @@ public class SyntaxHighlighterRenderer implements LineRenderer {
 
     /** ClientBundle for the syntax highlighter renderer. */
     public interface Resources extends ClientBundle {
-        @Source("SyntaxHighlighterRenderer.css")
+        @Source({"SyntaxHighlighterRenderer.css", "com/codenvy/ide/api/ui/style.css"})
         CssResource syntaxHighlighterRendererCss();
     }
 

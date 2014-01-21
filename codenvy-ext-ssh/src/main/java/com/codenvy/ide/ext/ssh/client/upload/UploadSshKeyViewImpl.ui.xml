@@ -18,8 +18,7 @@
 
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:c='urn:import:com.codenvy.ide.ui'>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field='locale' type='com.codenvy.ide.ext.ssh.client.SshLocalizationConstant'/>
     <ui:style>
         .alignBtn {
@@ -41,10 +40,10 @@
     <g:DockLayoutPanel unit="PX" width="350px" height="145px" addStyleNames="{style.emptyBorder}">
         <g:south size="26.0">
             <g:FlowPanel>
-                <c:Button addStyleNames="{style.alignBtn}" text="{locale.cancelButton}" width="60px" size="SMALL" type="DANGER"
+                <g:Button addStyleNames="{style.alignBtn}" text="{locale.cancelButton}" width="60px"
                           ui:field="btnCancel"/>
-                <c:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.uploadButton}" width="60px" size="SMALL"
-                          type="SUCCESS" ui:field="btnUpload"/>
+                <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.uploadButton}" width="60px"
+                          ui:field="btnUpload"/>
             </g:FlowPanel>
         </g:south>
         <g:north size="50.0">

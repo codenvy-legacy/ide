@@ -35,6 +35,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -59,17 +60,17 @@ public class PreferencesViewImpl extends DialogBox implements PreferencesView {
     private static PreferenceViewImplUiBinder uiBinder = GWT.create(PreferenceViewImplUiBinder.class);
 
     @UiField
-    com.codenvy.ide.ui.Button btnClose;
+    Button      btnClose;
     @UiField
-    com.codenvy.ide.ui.Button btnOk;
+    Button      btnOk;
     @UiField
-    com.codenvy.ide.ui.Button btnApply;
+    Button      btnApply;
     @UiField
-    ScrollPanel               preferences;
+    ScrollPanel preferences;
     @UiField
-    SimplePanel               contentPanel;
+    SimplePanel contentPanel;
     @UiField(provided = true)
-    Resources                 res;
+    Resources   res;
     private ActionDelegate                       delegate;
     private PreferencesPagePresenter             firstPage;
     private SimpleList<PreferencesPagePresenter> list;

@@ -157,6 +157,7 @@ public class GitHubService {
     @POST
     @Path("ssh/generate")
     public void updateSSHKey() throws SshKeyStoreException, IOException, GitHubException, ParsingResponseException {
+        if (github.getGitHubSshKey() == null)
         github.generateGitHubSshKey();
     }
 }

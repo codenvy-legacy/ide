@@ -18,8 +18,7 @@
 
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui"
-             xmlns:c="urn:import:com.codenvy.ide.ui">
+             xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:with field='res' type='com.codenvy.ide.Resources'/>
     <ui:style>
         .btnAlign {
@@ -41,9 +40,9 @@
     <g:DockLayoutPanel unit="PX" width="600px" height="400px" addStyleNames="{style.emptyBorder}">
         <g:south size="36.0">
             <g:FlowPanel height="100%" width="100%" addStyleNames="{style.spacing}">
-                <c:Button addStyleNames="{style.btnAlign}" width="50px" size="SMALL" text="Close" ui:field="btnClose"/>
-                <c:Button addStyleNames="{style.btnAlign} {style.space}" width="50px" size="SMALL" text="Ok" ui:field="btnOk"/>
-                <c:Button addStyleNames="{style.btnAlign} {style.space}" width="50px" size="SMALL" text="Apply" ui:field="btnApply"/>
+                <g:Button addStyleNames="{style.btnAlign}" width="50px"  height="22px" ui:field="btnClose">Close</g:Button>
+                <g:Button addStyleNames="{style.btnAlign} {style.space}" width="50px"  height="22px"  ui:field="btnOk">Ok</g:Button>
+                <g:Button addStyleNames="{style.btnAlign} {style.space}" width="50px"  height="22px"  ui:field="btnApply">Apply</g:Button>
             </g:FlowPanel>
         </g:south>
         <g:west size="180.0">

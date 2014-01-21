@@ -7,6 +7,7 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.TextArea;
@@ -25,9 +26,9 @@ public class CreateGistViewImpl extends DialogBox implements CreateGistView {
     @UiField
     TextArea                  snippet;
     @UiField
-    com.codenvy.ide.ui.Button btnCreate;
+    Button                    btnCreate;
     @UiField
-    com.codenvy.ide.ui.Button btnCancel;
+    Button btnCancel;
     @UiField(provided = true)
     final   GistExtensionResources            res;
     @UiField(provided = true)
