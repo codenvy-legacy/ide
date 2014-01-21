@@ -122,7 +122,7 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
-            <artifactId>codenvy-api-workspace</artifactId>
+            <artifactId>codenvy-api-project</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
