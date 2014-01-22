@@ -48,7 +48,7 @@ import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_REMOTE;
 
 /**
  * Presenter pulling changes from remote repository.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 20, 2011 4:20:24 PM anya $
  */
@@ -64,7 +64,7 @@ public class PullPresenter implements PullView.ActionDelegate {
 
     /**
      * Create presenter.
-     *
+     * 
      * @param view
      * @param service
      * @param resourceProvider
@@ -104,16 +104,16 @@ public class PullPresenter implements PullView.ActionDelegate {
                                    protected void onSuccess(String result) {
                                        Array<Remote> remotes = dtoFactory.createListDtoFromJson(result, Remote.class);
                                        getBranches(projectId, LIST_REMOTE);
-                                       getBranches(projectId, LIST_LOCAL);
-                                       view.setEnablePullButton(!result.isEmpty());
                                        view.setRepositories(remotes);
+                                       view.setEnablePullButton(!result.isEmpty());
                                        view.showDialog();
                                    }
 
                                    @Override
                                    protected void onFailure(Throwable exception) {
                                        String errorMessage =
-                                               exception.getMessage() != null ? exception.getMessage() : constant.remoteListFailed();
+                                                             exception.getMessage() != null ? exception.getMessage()
+                                                                 : constant.remoteListFailed();
                                        Window.alert(errorMessage);
                                        view.setEnablePullButton(false);
                                    }
@@ -127,13 +127,11 @@ public class PullPresenter implements PullView.ActionDelegate {
 
     /**
      * Get the list of branches.
-     *
-     * @param projectId
-     *         Git repository work tree location
-     * @param remoteMode
-     *         is a remote mode
+     * 
+     * @param projectId Git repository work tree location
+     * @param remoteMode is a remote mode
      */
-    private void getBranches(@NotNull String projectId, @NotNull final String remoteMode) {
+    private void getBranches(@NotNull final String projectId, @NotNull final String remoteMode) {
         try {
             service.branchList(resourceProvider.getVfsInfo().getId(), projectId, remoteMode,
                                new AsyncRequestCallback<String>(new StringUnmarshaller()) {
@@ -142,15 +140,23 @@ public class PullPresenter implements PullView.ActionDelegate {
                                        Array<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
                                        if (LIST_REMOTE.equals(remoteMode)) {
                                            view.setRemoteBranches(getRemoteBranchesToDisplay(view.getRepositoryName(), branches));
+                                           getBranches(projectId, LIST_LOCAL);
                                        } else {
                                            view.setLocalBranches(getLocalBranchesToDisplay(branches));
+                                           for (Branch branch : branches.asIterable()) {
+                                               if (branch.isActive()) {
+                                                   view.selectRemoteBranch(branch.getDisplayName());
+                                                   break;
+                                               }
+                                           }
                                        }
                                    }
 
                                    @Override
                                    protected void onFailure(Throwable exception) {
                                        String errorMessage =
-                                               exception.getMessage() != null ? exception.getMessage() : constant.branchesListFailed();
+                                                             exception.getMessage() != null ? exception.getMessage()
+                                                                 : constant.branchesListFailed();
                                        Notification notification = new Notification(errorMessage, ERROR);
                                        notificationManager.showNotification(notification);
                                        view.setEnablePullButton(false);
@@ -166,11 +172,9 @@ public class PullPresenter implements PullView.ActionDelegate {
 
     /**
      * Set values of remote branches: filter remote branches due to selected remote repository.
-     *
-     * @param remoteName
-     *         remote name
-     * @param remoteBranches
-     *         remote branches
+     * 
+     * @param remoteName remote name
+     * @param remoteBranches remote branches
      */
     @NotNull
     private Array<String> getRemoteBranchesToDisplay(@NotNull String remoteName, @NotNull Array<Branch> remoteBranches) {
@@ -198,9 +202,8 @@ public class PullPresenter implements PullView.ActionDelegate {
 
     /**
      * Set values of local branches.
-     *
-     * @param localBranches
-     *         local branches
+     * 
+     * @param localBranches local branches
      */
     @NotNull
     private Array<String> getLocalBranchesToDisplay(@NotNull Array<Branch> localBranches) {
@@ -210,15 +213,14 @@ public class PullPresenter implements PullView.ActionDelegate {
             branches.add("master");
             return branches;
         }
-        String compareString = "refs/heads/";
-        for (int i = 0; i < localBranches.size(); i++) {
-            Branch branch = localBranches.get(i);
-            String branchName = branch.getName().replaceFirst(compareString, "");
-            branches.add(branchName);
+
+        for (Branch branch : localBranches.asIterable()) {
+            branches.add(branch.getDisplayName());
         }
 
         return branches;
     }
+
 
     /** {@inheritDoc} */
     @Override
@@ -296,14 +298,13 @@ public class PullPresenter implements PullView.ActionDelegate {
         String remoteBranch = view.getRemoteBranch();
 
         return localBranch.isEmpty() ? remoteBranch
-                                     : "refs/heads/" + localBranch + ":" + "refs/remotes/" + remoteName + "/" + remoteBranch;
+            : "refs/heads/" + localBranch + ":" + "refs/remotes/" + remoteName + "/" + remoteBranch;
     }
 
     /**
      * Handler some action whether some exception happened.
-     *
-     * @param t
-     *         exception what happened
+     * 
+     * @param t exception what happened
      */
     private void handleError(@NotNull Throwable t, @NotNull String remoteUrl) {
         String errorMessage = (t.getMessage() != null) ? t.getMessage() : constant.pullFail(remoteUrl);
@@ -316,4 +317,11 @@ public class PullPresenter implements PullView.ActionDelegate {
     public void onCancelClicked() {
         view.close();
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onRemoteBranchChanged() {
+        view.selectLocalBranch(view.getRemoteBranch());
+    }
+
 }
