@@ -48,11 +48,11 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.io.FileFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
-import java.net.URISyntaxException;
+import java.io.Writer;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -69,7 +69,6 @@ import java.util.regex.Pattern;
 public class DockerRunner extends Runner {
     private static final Logger LOG = LoggerFactory.getLogger(DockerRunner.class);
 
-    private final Map<String, java.io.File> dockerFileTemplates;
     private final Map<String, ImageUsage>   dockerImageUsage;
     private final String                    hostName;
     private final CustomPortService         portService;
@@ -97,41 +96,39 @@ public class DockerRunner extends Runner {
         super(deployDirectoryRoot, cleanupDelay, allocators);
         this.hostName = hostName;
         this.portService = portService;
-        this.dockerFileTemplates = new HashMap<>();
         this.dockerImageUsage = new HashMap<>();
-        loadDockerfiles();
     }
 
-    /** Load Templates of Dockerfiles. */
-    protected void loadDockerfiles() {
-        final URL dockerFilesUrl = Thread.currentThread().getContextClassLoader().getResource("codenvy/runner/docker");
-        final java.io.File dockerFilesDir;
-        final Map<String, java.io.File> myDockerFileTemplates = new HashMap<>();
-        if (dockerFilesUrl != null) {
-            try {
-                dockerFilesDir = new java.io.File(dockerFilesUrl.toURI());
-            } catch (URISyntaxException e) {
-                throw new IllegalStateException(e);
-            }
-            if (dockerFilesDir.isDirectory()) {
-                final java.io.File[] dockerFiles = dockerFilesDir.listFiles(new FileFilter() {
-                    @Override
-                    public boolean accept(java.io.File file) {
-                        return file.isFile();
-                    }
-                });
-                if (dockerFiles != null) {
-                    for (java.io.File file : dockerFiles) {
-                        final String fName = file.getName();
-                        myDockerFileTemplates.put(fName, file);
-                    }
-                }
-            }
-        }
-        if (!myDockerFileTemplates.isEmpty()) {
-            this.dockerFileTemplates.putAll(myDockerFileTemplates);
-        }
-    }
+//    /** Load Templates of Dockerfiles. */
+//    protected void loadDockerfiles() {
+//        final URL dockerFilesUrl = Thread.currentThread().getContextClassLoader().getResource("codenvy/runner/docker");
+//        final java.io.File dockerFilesDir;
+//        final Map<String, java.io.File> myDockerFileTemplates = new HashMap<>();
+//        if (dockerFilesUrl != null) {
+//            try {
+//                dockerFilesDir = new java.io.File(dockerFilesUrl.toURI());
+//            } catch (URISyntaxException e) {
+//                throw new IllegalStateException(e);
+//            }
+//            if (dockerFilesDir.isDirectory()) {
+//                final java.io.File[] dockerFiles = dockerFilesDir.listFiles(new FileFilter() {
+//                    @Override
+//                    public boolean accept(java.io.File file) {
+//                        return file.isFile();
+//                    }
+//                });
+//                if (dockerFiles != null) {
+//                    for (java.io.File file : dockerFiles) {
+//                        final String fName = file.getName();
+//                        myDockerFileTemplates.put(fName, file);
+//                    }
+//                }
+//            }
+//        }
+//        if (!myDockerFileTemplates.isEmpty()) {
+//            this.dockerFileTemplates.putAll(myDockerFileTemplates);
+//        }
+//    }
 
     @Override
     public String getName() {
@@ -148,43 +145,7 @@ public class DockerRunner extends Runner {
         return new RunnerConfigurationFactory() {
             @Override
             public RunnerConfiguration createRunnerConfiguration(RunRequest request) throws RunnerException {
-                final String dockerfileName = getDockerfileName(request);
-                final java.io.File templateFile = dockerFileTemplates.get(dockerfileName);
-                if (templateFile == null) {
-                    throw new RunnerException(String.format("Dockerfile %s not found", dockerfileName));
-                }
-                final DockerRunnerConfiguration configuration =
-                        new DockerRunnerConfiguration(request.getMemorySize(), request, DockerfileTemplate.of(templateFile));
-                int debugPort = -1;
-                try (Reader reader = Files.newBufferedReader(templateFile.toPath(), Charset.forName("UTF-8"))) {
-                    for (Dockerfile dockerfile : DockerfileParser.parse(reader)) {
-                        for (Map.Entry<String, String> entry : dockerfile.getEnv().entrySet()) {
-                            final String name = entry.getKey();
-                            if (HTTP_PORT_PATTERN.matcher(name).matches()) {
-                                final int privatePort = Integer.parseInt(entry.getValue());
-                                final int publicPort = portService.acquire();
-                                configuration.getPortMapping().add(Pair.of(publicPort, privatePort));
-                                final String webUrl = String.format("http://%s:%d", hostName, publicPort);
-                                configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class)
-                                                                       .withRel("web url")
-                                                                       .withHref(webUrl));
-                            } else if (DEBUG_PORT_PATTERN.matcher(name).matches()) {
-                                final int privatePort = Integer.parseInt(entry.getValue());
-                                debugPort = portService.acquire();
-                                configuration.getPortMapping().add(Pair.of(debugPort, privatePort));
-                            }
-                        }
-                    }
-                } catch (IOException e) {
-                    throw new RunnerException(e);
-                }
-                final DebugMode debugMode = request.getDebugMode();
-                if (debugMode != null) {
-                    configuration.setDebugHost(hostName);
-                    configuration.setDebugPort(debugPort);
-                    configuration.setDebugSuspend("suspend".equals(debugMode.getMode()));
-                }
-                return configuration;
+                return new DockerRunnerConfiguration(request.getMemorySize(), request);
             }
         };
     }
@@ -193,20 +154,66 @@ public class DockerRunner extends Runner {
     protected ApplicationProcess newApplicationProcess(DeploymentSources toDeploy, RunnerConfiguration runnerCfg) throws RunnerException {
         try {
             final java.io.File applicationFile = toDeploy.getFile();
-            final java.io.File dockerFile = new java.io.File(applicationFile.getParentFile(), "Dockerfile");
+            java.io.File dockerFile = null;
             // It always should be DockerRunnerConfiguration.
             final DockerRunnerConfiguration dockerRunnerCfg = (DockerRunnerConfiguration)runnerCfg;
-            dockerRunnerCfg.getDockerfileBuilder()
-                           .setParameters(runnerCfg.getOptions())
-                           .setParameter("app", applicationFile.getName())
-                           .writeDockerfile(dockerFile);
-            final String dockerRepoName = runnerCfg.getRequest().getWorkspace() + '/' + runnerCfg.getRequest().getProject();
+            final List<String> dockerFileUrl = dockerRunnerCfg.getRequest().getProjectDescriptor().getAttributes().get("dockerfile_url");
+            if (!(dockerFileUrl == null || dockerFileUrl.isEmpty())) {
+                dockerFile = new java.io.File(applicationFile.getParentFile(), "Dockerfile");
+                try (InputStream in = new URL(dockerFileUrl.get(0)).openStream()) {
+                    Files.copy(in, dockerFile.toPath());
+                }
+            }
+            if (dockerFile == null) {
+                throw new RunnerException("Dockerfile is not set");
+            }
+            final List<Pair<Integer, Integer>> portMapping = new ArrayList<>(2);
+            int debugPort = -1;
+            try (Reader reader = Files.newBufferedReader(dockerFile.toPath(), Charset.forName("UTF-8"))) {
+                for (Dockerfile dockerfile : DockerfileParser.parse(reader)) {
+                    for (Map.Entry<String, String> entry : dockerfile.getEnv().entrySet()) {
+                        final String name = entry.getKey();
+                        if (HTTP_PORT_PATTERN.matcher(name).matches()) {
+                            final int privatePort = Integer.parseInt(entry.getValue());
+                            final int publicPort = portService.acquire();
+                            portMapping.add(Pair.of(publicPort, privatePort));
+                            final String webUrl = String.format("http://%s:%d", hostName, publicPort);
+                            dockerRunnerCfg.getLinks().add(DtoFactory.getInstance().createDto(Link.class)
+                                                                     .withRel("web url")
+                                                                     .withHref(webUrl));
+                        } else if (DEBUG_PORT_PATTERN.matcher(name).matches()) {
+                            final int privatePort = Integer.parseInt(entry.getValue());
+                            debugPort = portService.acquire();
+                            portMapping.add(Pair.of(debugPort, privatePort));
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                throw new RunnerException(e);
+            }
+            final DebugMode debugMode = dockerRunnerCfg.getRequest().getDebugMode();
+            if (debugMode != null) {
+                dockerRunnerCfg.setDebugHost(hostName);
+                dockerRunnerCfg.setDebugPort(debugPort);
+                dockerRunnerCfg.setDebugSuspend("suspend".equals(debugMode.getMode()));
+            }
+
+            final DockerfileTemplate dockerFileTemplate = DockerfileTemplate.of(dockerFile)
+                                                                            .setParameters(runnerCfg.getOptions())
+                                                                            .setParameter("app", applicationFile.getName());
+            final StringBuilder sb = new StringBuilder();
+            dockerFileTemplate.writeDockerfile(sb);
+            try (Writer writer = Files.newBufferedWriter(dockerFile.toPath(), Charset.forName("UTF-8"))) {
+                writer.write(sb.toString());
+            }
+            final String workspace = runnerCfg.getRequest().getWorkspace();
+            final String project = runnerCfg.getRequest().getProject();
+            final String dockerRepoName = workspace + (project.startsWith("/") ? project : ('/' + runnerCfg.getRequest().getProject()));
             final String fileHash = com.google.common.io.Files.hash(applicationFile, Hashing.sha1()).toString();
             final DockerConnector connector = DockerConnector.getInstance();
             final ImageUsage imageUsage = createImageIfNeed(connector, dockerRepoName, fileHash, dockerFile, applicationFile);
             final ContainerConfig dockerCfg =
                     new ContainerConfig().withImage(imageUsage.image).withMemory(runnerCfg.getMemory() * 1024 * 1024).withCpuShares(1);
-            final List<Pair<Integer, Integer>> portMapping = dockerRunnerCfg.getPortMapping();
             HostConfig hostConfig = null;
             if (!portMapping.isEmpty()) {
                 // only port mapping at the moment
@@ -274,7 +281,7 @@ public class DockerRunner extends Runner {
         final String dockerImageName = dockerRepoName + ':' + tag;
         if (dockerImageId == null) {
             final StringBuilder output = new StringBuilder();
-            connector.createImage(dockerFile, applicationFile, dockerImageName, output);
+            connector.createImage(dockerFile, applicationFile, dockerRepoName, tag, output);
             final String buildLog = output.toString();
             LOG.debug(buildLog);
             for (String line : CharStreams.readLines(new StringReader(buildLog))) {
@@ -316,40 +323,24 @@ public class DockerRunner extends Runner {
         }
     }
 
-    protected String getDockerfileName(RunRequest request) {
-        final DebugMode debugMode = request.getDebugMode();
-        final boolean debug = debugMode != null;
-        final boolean suspend = debug && "suspend".equals(debugMode.getMode());
-        // TODO: determine name of dockerfile from project type.
-        String dockerFile = request.getOptions().get("docker_file");
-        if (debug) {
-            dockerFile += "_debug";
-            if (suspend) {
-                dockerFile += "_suspend";
-            }
-        }
-        return dockerFile;
-    }
+//    protected String getDockerfileName(RunRequest request) {
+//        final DebugMode debugMode = request.getDebugMode();
+//        final boolean debug = debugMode != null;
+//        final boolean suspend = debug && "suspend".equals(debugMode.getMode());
+//        // TODO: determine name of dockerfile from project type.
+//        String dockerFile = request.getOptions().get("docker_file");
+//        if (debug) {
+//            dockerFile += "_debug";
+//            if (suspend) {
+//                dockerFile += "_suspend";
+//            }
+//        }
+//        return dockerFile;
+//    }
 
     public static class DockerRunnerConfiguration extends RunnerConfiguration {
-        private final DockerfileTemplate dockerFileTemplate;
-
-        private List<Pair<Integer, Integer>> portMapping;
-
-        public DockerRunnerConfiguration(int memory, RunRequest request, DockerfileTemplate dockerFileTemplate) {
+        public DockerRunnerConfiguration(int memory, RunRequest request) {
             super(memory, request);
-            this.dockerFileTemplate = dockerFileTemplate;
-        }
-
-        public DockerfileTemplate getDockerfileBuilder() throws RunnerException {
-            return dockerFileTemplate;
-        }
-
-        public List<Pair<Integer, Integer>> getPortMapping() {
-            if (portMapping == null) {
-                portMapping = new ArrayList<>(2);
-            }
-            return portMapping;
         }
     }
 

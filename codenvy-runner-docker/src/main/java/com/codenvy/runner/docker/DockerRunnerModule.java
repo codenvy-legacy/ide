@@ -17,6 +17,7 @@
  */
 package com.codenvy.runner.docker;
 
+import com.codenvy.api.project.server.ValueProviderFactory;
 import com.codenvy.api.runner.internal.Runner;
 import com.codenvy.inject.DynaModule;
 import com.google.inject.AbstractModule;
@@ -27,7 +28,7 @@ import com.google.inject.multibindings.Multibinder;
 public class DockerRunnerModule extends AbstractModule {
     @Override
     protected void configure() {
-        Multibinder<Runner> multiBinder = Multibinder.newSetBinder(binder(), Runner.class);
-        multiBinder.addBinding().to(DockerRunner.class);
+        Multibinder.newSetBinder(binder(), Runner.class).addBinding().to(DockerRunner.class);
+        Multibinder.newSetBinder(binder(), ValueProviderFactory.class).addBinding().to(DockerfileUrlValueProviderFactory.class);
     }
 }

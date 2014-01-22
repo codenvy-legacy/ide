@@ -120,11 +120,15 @@ public class JavaCodeAssistant extends CodeAssistant {
 
         List<Folder> sourceFolders = new ArrayList<>(2);
         for (String s : sourcePath) {
-            Item sourceFolder = vfs.getItemByPath(project.getPath() + "/" + s, null, false, PropertyFilter.NONE_FILTER);
-            if (sourceFolder.getItemType() != ItemType.FOLDER) {
-                throw new CodeAssistantException(500, "Can't find project source, in " + sourcePath);
+            try {
+                Item sourceFolder = vfs.getItemByPath(project.getPath() + "/" + s, null, false, PropertyFilter.NONE_FILTER);
+                if (sourceFolder.getItemType() != ItemType.FOLDER) {
+                    throw new CodeAssistantException(500, "Can't find project source, in " + sourcePath);
+                }
+                sourceFolders.add((Folder)sourceFolder);
+            } catch (ItemNotFoundException e) {
+                //ignore, some maven project doesn't have "src/main/java" folders
             }
-            sourceFolders.add((Folder)sourceFolder);
         }
 
 

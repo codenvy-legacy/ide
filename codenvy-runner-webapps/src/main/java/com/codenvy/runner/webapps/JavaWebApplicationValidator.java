@@ -26,7 +26,7 @@ import java.util.zip.ZipFile;
 /**
  * Validator checks that {@link DeploymentSources} is a valid Java web application.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @author Artem Zatsarynnyy
  */
 public class JavaWebApplicationValidator implements DeploymentSourcesValidator {
     public static final String WEB_XML = "WEB-INF" + java.io.File.separatorChar + "web.xml";
@@ -34,8 +34,8 @@ public class JavaWebApplicationValidator implements DeploymentSourcesValidator {
     @Override
     public boolean isValid(DeploymentSources deployment) {
         if (deployment.isArchive()) {
-            try {
-                return new ZipFile(deployment.getFile()).getEntry(WEB_XML) != null;
+            try (ZipFile zip = new ZipFile(deployment.getFile())) {
+                return zip.getEntry(WEB_XML) != null;
             } catch (IOException e) {
                 return false;
             }
