@@ -17,9 +17,12 @@
  */
 package com.codenvy.ide.git;
 
+import com.codenvy.commons.lang.ExpirableCache;
 import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
 import com.codenvy.organization.model.Role;
+import com.codenvy.organization.util.MD5HexPasswordEncrypter;
+import com.codenvy.organization.util.PasswordEncrypter;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -29,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * If user doesn't have permissions to repository, filter will deny request with 403.
@@ -40,14 +44,18 @@ import java.util.Set;
  */
 public class VFSPermissionsFilter implements Filter {
 
-    private UserManager           userManager;
-    private VFSPermissionsChecker vfsPermissionsChecker;
+    private UserManager                     userManager;
+    private VFSPermissionsChecker           vfsPermissionsChecker;
+    private ExpirableCache<String, Boolean> credentialsCache;
+    private PasswordEncrypter               passwordEncrypter;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         try {
             userManager = new UserManager();
             vfsPermissionsChecker = new VFSPermissionsChecker();
+            credentialsCache = new ExpirableCache<>(TimeUnit.MINUTES.toMillis(5), 20);
+            passwordEncrypter = new MD5HexPasswordEncrypter();
         } catch (OrganizationServiceException e) {
             throw new ServletException(e.getMessage(), e);
         }
@@ -103,7 +111,14 @@ public class VFSPermissionsFilter implements Filter {
                         //ignore, let userMembershipRoles be null
                     }
 
-                    if (!userManager.authenticateUser(user, password) || !vfsPermissionsChecker.isAccessAllowed(user, userMembershipRoles, projectDirectory)) {
+                    String encryptedPassword = new String(passwordEncrypter.encrypt(password.getBytes()));
+                    Boolean authenticated = credentialsCache.get((user + encryptedPassword));
+                    if (authenticated == null) {
+                        authenticated = userManager.authenticateUser(user, password);
+                        credentialsCache.put(user + encryptedPassword, authenticated);
+                    }
+
+                    if (!authenticated || !vfsPermissionsChecker.isAccessAllowed(user, userMembershipRoles, projectDirectory)) {
                         ((HttpServletResponse)response).sendError(HttpServletResponse.SC_FORBIDDEN);
                     }
                 }
