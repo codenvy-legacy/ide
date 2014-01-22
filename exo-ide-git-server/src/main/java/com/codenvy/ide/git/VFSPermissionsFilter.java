@@ -23,12 +23,7 @@ import com.codenvy.organization.model.Role;
 
 import org.apache.commons.codec.binary.Base64;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -89,32 +84,28 @@ public class VFSPermissionsFilter implements Filter {
                 password = userAndPasswordDecoded.substring(betweenUserAndPassword + 1);
             }
 
-            Set<Role> userMembershipRoles = null;
+            // Check if user authenticated and hasn't permissions to project, then send response code 403
             try {
-                userMembershipRoles = userManager.getUserMembershipRoles(user, projectDirectory.getParentFile().getName());
-            } catch (OrganizationServiceException e) {
-                //ignore, let userMembershipRoles be null
-            }
-                /*
-                    Check if user authenticated and hasn't permissions to project, then
-                    send response code 403
-                */
-            try {
+                if (user.isEmpty()) {
+                    // if user wasn't required check project permissions to any user,
+                    // if it is not READ or ALL send response code 401 and header with BASIC type of authentication
 
-                if (!user.isEmpty() &&
-                    !(userManager.authenticateUser(user, password) &&
-                      vfsPermissionsChecker.isAccessAllowed(user, userMembershipRoles, projectDirectory))) {
-                    ((HttpServletResponse)response).sendError(HttpServletResponse.SC_FORBIDDEN);
+                    if (!vfsPermissionsChecker.isAccessAllowed(user, null, projectDirectory)) {
+                        ((HttpServletResponse)response).addHeader("Cache-Control", "private");
+                        ((HttpServletResponse)response).addHeader("WWW-Authenticate", "Basic");
+                        ((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                    }
+                } else {
+                    Set<Role> userMembershipRoles = null;
+                    try {
+                        userMembershipRoles = userManager.getUserMembershipRoles(user, projectDirectory.getParentFile().getName());
+                    } catch (OrganizationServiceException e) {
+                        //ignore, let userMembershipRoles be null
+                    }
 
-                 /*
-                    if user wasn't required check project permissions to
-                    any user, if it is not READ or ALL send response code 401 and header with BASIC type
-                    of authentication
-                 */
-                } else if (user.isEmpty() && !vfsPermissionsChecker.isAccessAllowed(user, userMembershipRoles, projectDirectory)) {
-                    ((HttpServletResponse)response).addHeader("Cache-Control", "private");
-                    ((HttpServletResponse)response).addHeader("WWW-Authenticate", "Basic");
-                    ((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                    if (!userManager.authenticateUser(user, password) || !vfsPermissionsChecker.isAccessAllowed(user, userMembershipRoles, projectDirectory)) {
+                        ((HttpServletResponse)response).sendError(HttpServletResponse.SC_FORBIDDEN);
+                    }
                 }
             } catch (OrganizationServiceException e) {
                 throw new ServletException(e.getMessage(), e);
