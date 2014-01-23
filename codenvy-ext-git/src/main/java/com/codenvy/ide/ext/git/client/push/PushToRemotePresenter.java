@@ -38,6 +38,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import javax.validation.constraints.NotNull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -49,7 +50,7 @@ import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_REMOTE;
 
 /**
  * Presenter for pushing changes to remote repository.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 4, 2011 9:53:07 AM anya $
  */
@@ -65,7 +66,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
 
     /**
      * Create presenter.
-     *
+     * 
      * @param view
      * @param service
      * @param resourceProvider
@@ -104,8 +105,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
                                    protected void onSuccess(String result) {
                                        Array<Remote> remotes = dtoFactory.createListDtoFromJson(result, Remote.class);
                                        getBranches(projectId, LIST_REMOTE);
-                                       getBranches(projectId, LIST_LOCAL);
-                                       view.setEnablePushButton(!result.isEmpty());
+                                       view.setEnablePushButton(!remotes.isEmpty());
                                        view.setRepositories(remotes);
                                        view.showDialog();
                                    }
@@ -113,7 +113,8 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
                                    @Override
                                    protected void onFailure(Throwable exception) {
                                        String errorMessage =
-                                               exception.getMessage() != null ? exception.getMessage() : constant.remoteListFailed();
+                                                             exception.getMessage() != null ? exception.getMessage()
+                                                                 : constant.remoteListFailed();
                                        Window.alert(errorMessage);
                                        view.setEnablePushButton(false);
                                    }
@@ -127,13 +128,11 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
 
     /**
      * Get the list of branches.
-     *
-     * @param projectId
-     *         Git repository work tree location
-     * @param remoteMode
-     *         is a remote mode
+     * 
+     * @param projectId Git repository work tree location
+     * @param remoteMode is a remote mode
      */
-    private void getBranches(@NotNull String projectId, @NotNull final String remoteMode) {
+    private void getBranches(@NotNull final String projectId, @NotNull final String remoteMode) {
         try {
             service.branchList(resourceProvider.getVfsInfo().getId(), projectId, remoteMode,
                                new AsyncRequestCallback<String>(new StringUnmarshaller()) {
@@ -142,15 +141,23 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
                                        Array<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
                                        if (LIST_REMOTE.equals(remoteMode)) {
                                            view.setRemoteBranches(getRemoteBranchesToDisplay(view.getRepository(), branches));
+                                           getBranches(projectId, LIST_LOCAL);
                                        } else {
                                            view.setLocalBranches(getLocalBranchesToDisplay(branches));
+                                           for (Branch branch : branches.asIterable()) {
+                                               if (branch.isActive()) {
+                                                   view.selectLocalBranch(branch.getDisplayName());
+                                                   break;
+                                               }
+                                           }
                                        }
                                    }
 
                                    @Override
                                    protected void onFailure(Throwable exception) {
                                        String errorMessage =
-                                               exception.getMessage() != null ? exception.getMessage() : constant.branchesListFailed();
+                                                             exception.getMessage() != null ? exception.getMessage()
+                                                                 : constant.branchesListFailed();
                                        Notification notification = new Notification(errorMessage, ERROR);
                                        notificationManager.showNotification(notification);
                                        view.setEnablePushButton(false);
@@ -166,11 +173,9 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
 
     /**
      * Set values of remote branches: filter remote branches due to selected remote repository.
-     *
-     * @param remoteName
-     *         remote name
-     * @param remoteBranches
-     *         remote branches
+     * 
+     * @param remoteName remote name
+     * @param remoteBranches remote branches
      */
     @NotNull
     private Array<String> getRemoteBranchesToDisplay(@NotNull String remoteName, @NotNull Array<Branch> remoteBranches) {
@@ -197,9 +202,8 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
 
     /**
      * Set values of local branches.
-     *
-     * @param localBranches
-     *         local branches
+     * 
+     * @param localBranches local branches
      */
     @NotNull
     private Array<String> getLocalBranchesToDisplay(@NotNull Array<Branch> localBranches) {
@@ -210,11 +214,8 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
             return branches;
         }
 
-        String compareString = "refs/heads/";
-        for (int i = 0; i < localBranches.size(); i++) {
-            Branch branch = localBranches.get(i);
-            String branchName = branch.getName().replaceFirst(compareString, "");
-            branches.add(branchName);
+        for (Branch branch : localBranches.asIterable()) {
+            branches.add(branch.getDisplayName());
         }
 
         return branches;
@@ -282,9 +283,8 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
 
     /**
      * Handler some action whether some exception happened.
-     *
-     * @param t
-     *         exception what happened
+     * 
+     * @param t exception what happened
      */
     private void handleError(@NotNull Throwable t) {
         String errorMessage = t.getMessage() != null ? t.getMessage() : constant.pushFail();
@@ -296,5 +296,11 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
     @Override
     public void onCancelClicked() {
         view.close();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onLocalBranchChanged() {
+        view.selectRemoteBranch(view.getLocalBranch());
     }
 }

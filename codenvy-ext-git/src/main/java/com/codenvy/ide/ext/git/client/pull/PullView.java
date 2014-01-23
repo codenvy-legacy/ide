@@ -36,6 +36,9 @@ public interface PullView extends View<PullView.ActionDelegate> {
 
         /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
         void onCancelClicked();
+        
+        /** Performs any actions appropriate in response to the remote branch value changed. */
+        void onRemoteBranchChanged();
     }
 
     /**
@@ -65,6 +68,20 @@ public interface PullView extends View<PullView.ActionDelegate> {
     /** @return local branch */
     @NotNull
     String getLocalBranch();
+    
+    /** 
+     * Selects pointed local branch
+     * 
+     * @param branch local branch to select
+     */
+    void selectLocalBranch(@NotNull String branch);
+    
+    /** 
+     * Selects pointed remote branch
+     * 
+     * @param branch remote branch to select
+     */
+    void selectRemoteBranch(@NotNull String branch);
 
     /**
      * Set local branches into view.
