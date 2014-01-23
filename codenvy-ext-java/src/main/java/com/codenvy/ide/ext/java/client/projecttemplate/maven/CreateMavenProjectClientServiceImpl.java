@@ -17,8 +17,10 @@
  */
 package com.codenvy.ide.ext.java.client.projecttemplate.maven;
 
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -29,7 +31,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
-import static com.codenvy.ide.resources.marshal.JSONSerializer.PROPERTY_SERIALIZER;
+import java.util.List;
+import java.util.Map;
+
 import static com.codenvy.ide.rest.HTTPHeader.CONTENT_TYPE;
 import static com.google.gwt.http.client.RequestBuilder.POST;
 
@@ -40,66 +44,75 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
  */
 @Singleton
 public class CreateMavenProjectClientServiceImpl implements CreateMavenProjectClientService {
-    private static final String BASE_URL              = "/create-maven/" + Utils.getWorkspaceName();
-    private static final String CREATE_WAR_PROJECT    = BASE_URL + "/project/war";
-    private static final String CREATE_JAVA_PROJECT   = BASE_URL + "/project/java";
-    private static final String CREATE_SPRING_PROJECT = BASE_URL + "/project/spring";
-    private String           restContext;
-    private Loader           loader;
-    private ResourceProvider resourceProvider;
+    private static final String BASE_URL               = "/create-maven/" + Utils.getWorkspaceName();
+    private static final String CREATE_PROJECT         = "/project/" + Utils.getWorkspaceName() + "/create";
+    private static final String UNPACK_JAR_TEMPLATE    = BASE_URL + "/template/jar";
+    private static final String UNPACK_WAR_TEMPLATE    = BASE_URL + "/template/war";
+    private static final String UNPACK_SPRING_TEMPLATE = BASE_URL + "/template/spring";
+    private final DtoFactory       dtoFactory;
+    private       String           restContext;
+    private       Loader           loader;
+    private       ResourceProvider resourceProvider;
 
     @Inject
     protected CreateMavenProjectClientServiceImpl(@Named("restContext") String restContext, Loader loader,
-                                                  ResourceProvider resourceProvider) {
+                                                  ResourceProvider resourceProvider, DtoFactory dtoFactory) {
         this.restContext = restContext;
         this.loader = loader;
         this.resourceProvider = resourceProvider;
+        this.dtoFactory = dtoFactory;
     }
 
-    /** {@inheritDoc} */
     @Override
-    public void createWarProject(String projectName, Array<Property> properties, AsyncRequestCallback<Void> callback)
+    public void createJarProject(String projectName, Map<String, List<String>> attributes, AsyncRequestCallback<Void> callback)
             throws RequestException {
-        String requestUrl = restContext + CREATE_WAR_PROJECT;
-
-        String param = "?vfsid=" + resourceProvider.getVfsInfo().getId() + "&name=" + projectName;
+        String requestUrl = restContext + CREATE_PROJECT;
+        String param = "?name=" + projectName;
         String url = requestUrl + param;
 
         loader.setMessage("Creating new project...");
 
-        AsyncRequest.build(POST, url)
-                    .data(PROPERTY_SERIALIZER.fromCollection(properties).toString())
+        ProjectDescriptor descriptor =
+                dtoFactory.createDto(ProjectDescriptor.class).withProjectTypeId("jar").withProjectTypeName("Java Library (JAR)")
+                          .withAttributes(attributes);
+
+        AsyncRequest.build(POST, url).data(dtoFactory.toJson(descriptor))
                     .header(CONTENT_TYPE, "application/json").loader(loader).send(callback);
     }
 
-    /** {@inheritDoc} */
     @Override
-    public void createSpringProject(String projectName, Array<Property> properties, AsyncRequestCallback<Void> callback)
-            throws RequestException {
-        String requestUrl = restContext + CREATE_SPRING_PROJECT;
-
+    public void unzipJarTemplate(String projectName, AsyncRequestCallback<Void> callback) throws RequestException {
+        String requestUrl = restContext + UNPACK_JAR_TEMPLATE;
         String param = "?vfsid=" + resourceProvider.getVfsInfo().getId() + "&name=" + projectName;
         String url = requestUrl + param;
 
-        loader.setMessage("Creating new project...");
+        loader.setMessage("Unpacking from template...");
 
-        AsyncRequest.build(POST, url)
-                    .data(PROPERTY_SERIALIZER.fromCollection(properties).toString())
-                    .header(CONTENT_TYPE, "application/json").loader(loader).send(callback);
+        AsyncRequest.build(POST, url).loader(loader).send(callback);
     }
 
-    /** {@inheritDoc} */
     @Override
-    public void createJavaProject(String projectName, Array<Property> properties, AsyncRequestCallback<Void> callback)
+    public void unzipWarTemplate(String projectName, Array<Property> properties, AsyncRequestCallback<Void> callback)
             throws RequestException {
-        String requestUrl = restContext + CREATE_JAVA_PROJECT;
+        String requestUrl = restContext + UNPACK_WAR_TEMPLATE;
         String param = "?vfsid=" + resourceProvider.getVfsInfo().getId() + "&name=" + projectName;
         String url = requestUrl + param;
 
-        loader.setMessage("Creating new project...");
+        loader.setMessage("Unpacking from template...");
 
-        AsyncRequest.build(POST, url)
-                    .data(PROPERTY_SERIALIZER.fromCollection(properties).toString())
-                    .header(CONTENT_TYPE, "application/json").loader(loader).send(callback);
+        AsyncRequest.build(POST, url).loader(loader).send(callback);
     }
+
+    @Override
+    public void unzipSpringTemplate(String projectName, Array<Property> properties, AsyncRequestCallback<Void> callback)
+            throws RequestException {
+        String requestUrl = restContext + UNPACK_SPRING_TEMPLATE;
+        String param = "?vfsid=" + resourceProvider.getVfsInfo().getId() + "&name=" + projectName;
+        String url = requestUrl + param;
+
+        loader.setMessage("Unpacking from template...");
+
+        AsyncRequest.build(POST, url).loader(loader).send(callback);
+    }
+
 }

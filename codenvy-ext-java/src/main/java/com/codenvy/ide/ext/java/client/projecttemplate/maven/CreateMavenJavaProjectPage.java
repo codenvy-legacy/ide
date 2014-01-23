@@ -28,6 +28,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
 import static com.codenvy.ide.collections.Collections.createArray;
@@ -39,7 +44,7 @@ import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
 /**
- * The wizard page for creating a Java project from a projecttemplate.
+ * The wizard page for creating a Java project from a project template.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
@@ -65,13 +70,48 @@ public class CreateMavenJavaProjectPage extends AbstractTemplatePage {
     /** {@inheritDoc} */
     @Override
     public void commit(final CommitCallback callback) {
-        Array<Property> properties =
-                createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
-                            new Property(PROPERTY_MIXIN_NATURES, createArray(JAVA_APPLICATION_PROJECT_TYPE)),
-                            new Property(PROPERTY_SOURCE_FOLDERS, createArray("src/main/java", "src/test/java")));
+//        Array<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
+//                                                 new Property(PROPERTY_MIXIN_NATURES, createArray(JAVA_APPLICATION_PROJECT_TYPE)),
+//                                                 new Property(PROPERTY_SOURCE_FOLDERS, createArray("src/main/java", "src/test/java")));
+
+        Map<String, List<String>> attributes = new HashMap<String, List<String>>(1);
+        // TODO: make it as calculated attributes
+        List<String> sourceFolders = new ArrayList<String>(2);
+        sourceFolders.add("src/main/java");
+        sourceFolders.add("src/test/java");
+        attributes.put(PROPERTY_SOURCE_FOLDERS, sourceFolders);
+
         final String projectName = wizardContext.getData(PROJECT_NAME);
         try {
-            service.createJavaProject(projectName, properties, new AsyncRequestCallback<Void>() {
+            service.createJarProject(projectName, attributes, new AsyncRequestCallback<Void>() {
+                @Override
+                protected void onSuccess(Void result) {
+                    resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
+                        @Override
+                        public void onSuccess(Project result) {
+                            unzipTemplate(projectName, callback);
+                        }
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            callback.onFailure(caught);
+                        }
+                    });
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    callback.onFailure(exception);
+                }
+            });
+        } catch (RequestException e) {
+            callback.onFailure(e);
+        }
+    }
+
+    private void unzipTemplate(final String projectName, final CommitCallback callback) {
+        try {
+            service.unzipJarTemplate(projectName, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     resourceProvider.getProject(projectName, new AsyncCallback<Project>() {

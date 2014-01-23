@@ -71,7 +71,7 @@ public class CreateMavenWarProjectPage extends AbstractTemplatePage {
                             new Property(PROPERTY_SOURCE_FOLDERS, createArray("src/main/java", "src/main/resources")));
         final String projectName = wizardContext.getData(PROJECT_NAME);
         try {
-            service.createWarProject(projectName, properties, new AsyncRequestCallback<Void>() {
+            service.unzipWarTemplate(projectName, properties, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     resourceProvider.getProject(projectName, new AsyncCallback<Project>() {

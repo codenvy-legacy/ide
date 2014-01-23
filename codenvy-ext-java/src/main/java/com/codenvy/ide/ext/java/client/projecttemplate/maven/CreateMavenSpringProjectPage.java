@@ -69,7 +69,7 @@ public class CreateMavenSpringProjectPage extends AbstractTemplatePage {
                                                      new Property(PROPERTY_SOURCE_FOLDERS, createArray("src/main/java")));
         final String projectName = wizardContext.getData(PROJECT_NAME);
         try {
-            service.createSpringProject(projectName, properties, new AsyncRequestCallback<Void>() {
+            service.unzipSpringTemplate(projectName, properties, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     resourceProvider.getProject(projectName, new AsyncCallback<Project>() {

@@ -55,7 +55,7 @@ import com.codenvy.ide.ext.git.server.nativegit.NativeGitConnectionFactory;
 import com.codenvy.ide.ext.git.server.rest.GitService;
 import com.codenvy.ide.ext.github.server.rest.GitHubService;
 import com.codenvy.ide.ext.java.server.CreateAntProjectService;
-import com.codenvy.ide.ext.java.server.CreateMavenProjectService;
+import com.codenvy.ide.ext.java.server.CreateProjectFromTemplateService;
 import com.codenvy.ide.ext.java.server.RestCodeAssistantJava;
 import com.codenvy.ide.ext.ssh.server.DummySshKeyStore;
 import com.codenvy.ide.ext.ssh.server.KeyService;
@@ -110,7 +110,7 @@ public class ApiModule extends AbstractModule {
         bind(SlaveRunnerService.class);
         bind(DeployToApplicationServerRunner.class);
         bind(UserService.class);
-        bind(CreateMavenProjectService.class);
+        bind(CreateProjectFromTemplateService.class);
         bind(CreateAntProjectService.class);
         bind(RestCodeAssistantJava.class);
         bind(AsynchronousJobPool.class).toInstance(new CodenvyAsynchronousJobPool(null)); // asynchronous job with default configuration

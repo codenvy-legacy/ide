@@ -62,7 +62,7 @@ public class CreateWarProjectPageTest extends BaseCreateProjectTest {
                 return callback;
             }
         }).when(service)
-                .createWarProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .unzipWarTemplate(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsSuccessful();
     }
@@ -79,7 +79,7 @@ public class CreateWarProjectPageTest extends BaseCreateProjectTest {
                 return callback;
             }
         }).when(service)
-                .createWarProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .unzipWarTemplate(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenCreateTutorialRequestIsFailed();
     }
@@ -96,7 +96,7 @@ public class CreateWarProjectPageTest extends BaseCreateProjectTest {
                 return callback;
             }
         }).when(service)
-                .createWarProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .unzipWarTemplate(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsFailed();
     }
@@ -104,7 +104,7 @@ public class CreateWarProjectPageTest extends BaseCreateProjectTest {
     @Override
     public void testCreateWhenRequestExceptionHappened() throws Exception {
         doThrow(RequestException.class).when(service)
-                .createWarProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .unzipWarTemplate(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenRequestExceptionHappened();
     }

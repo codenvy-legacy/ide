@@ -22,6 +22,9 @@ import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Client service for creating projects.
  *
@@ -29,15 +32,29 @@ import com.google.gwt.http.client.RequestException;
  */
 public interface CreateMavenProjectClientService {
     /**
+     * Creates java project.
+     *
+     * @param projectName
+     * @param attributes
+     * @param callback
+     * @throws com.google.gwt.http.client.RequestException
+     *
+     */
+    void createJarProject(String projectName, Map<String, List<String>> attributes, AsyncRequestCallback<Void> callback)
+            throws RequestException;
+
+    void unzipJarTemplate(String projectName, AsyncRequestCallback<Void> callback) throws RequestException;
+
+    /**
      * Creates web project.
      *
      * @param projectName
      * @param properties
      * @param callback
      * @throws com.google.gwt.http.client.RequestException
+     *
      */
-    void createWarProject(String projectName, Array<Property> properties, AsyncRequestCallback<Void> callback)
-            throws RequestException;
+    void unzipWarTemplate(String projectName, Array<Property> properties, AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
      * Create spring project.
@@ -46,17 +63,8 @@ public interface CreateMavenProjectClientService {
      * @param properties
      * @param callback
      * @throws com.google.gwt.http.client.RequestException
-     */
-    void createSpringProject(String projectName, Array<Property> properties, AsyncRequestCallback<Void> callback)
-            throws RequestException;
-
-    /**
-     * Creates java project.
      *
-     * @param projectName
-     * @param properties
-     * @param callback
-     * @throws com.google.gwt.http.client.RequestException
      */
-    void createJavaProject(String projectName, Array<Property> properties, AsyncRequestCallback<Void> callback) throws RequestException;
+    void unzipSpringTemplate(String projectName, Array<Property> properties, AsyncRequestCallback<Void> callback) throws RequestException;
+
 }

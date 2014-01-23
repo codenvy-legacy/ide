@@ -62,7 +62,7 @@ public class CreateSpringProjectPageTest extends BaseCreateProjectTest {
                 return callback;
             }
         }).when(service)
-                .createSpringProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .unzipSpringTemplate(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsSuccessful();
     }
@@ -79,7 +79,7 @@ public class CreateSpringProjectPageTest extends BaseCreateProjectTest {
                 return callback;
             }
         }).when(service)
-                .createSpringProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .unzipSpringTemplate(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenCreateTutorialRequestIsFailed();
     }
@@ -96,7 +96,7 @@ public class CreateSpringProjectPageTest extends BaseCreateProjectTest {
                 return callback;
             }
         }).when(service)
-                .createSpringProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .unzipSpringTemplate(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsFailed();
     }
@@ -104,7 +104,7 @@ public class CreateSpringProjectPageTest extends BaseCreateProjectTest {
     @Override
     public void testCreateWhenRequestExceptionHappened() throws Exception {
         doThrow(RequestException.class).when(service)
-                .createSpringProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .unzipSpringTemplate(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenRequestExceptionHappened();
     }
