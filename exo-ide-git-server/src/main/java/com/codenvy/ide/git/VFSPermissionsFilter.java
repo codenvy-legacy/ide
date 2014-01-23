@@ -20,6 +20,7 @@ package com.codenvy.ide.git;
 import com.codenvy.commons.lang.ExpirableCache;
 import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
+import com.codenvy.organization.exception.UserExistenceException;
 import com.codenvy.organization.model.Role;
 import com.codenvy.organization.model.User;
 import com.codenvy.organization.util.MD5HexPasswordEncrypter;
@@ -96,7 +97,29 @@ public class VFSPermissionsFilter implements Filter {
 
             // Check if user authenticated and hasn't permissions to project, then send response code 403
             try {
-                if (userName.isEmpty()) {
+                User user = null;
+                if (!userName.isEmpty()) {
+                    try {
+                        user = userManager.getUserByAlias(userName);
+                        Set<Role> userMembershipRoles = user.getMembership(projectDirectory.getParentFile().getName()).getRoles();
+
+                        String encryptedPassword = new String(passwordEncrypter.encrypt(password.getBytes()));
+                        Boolean authenticated = credentialsCache.get((userName + encryptedPassword));
+                        if (authenticated == null) {
+                            authenticated = userManager.authenticateUser(userName, password);
+                            credentialsCache.put(userName + encryptedPassword, authenticated);
+                        }
+
+                        if (!authenticated || !vfsPermissionsChecker.isAccessAllowed(userName, userMembershipRoles, projectDirectory)) {
+                            ((HttpServletResponse)response).sendError(HttpServletResponse.SC_FORBIDDEN);
+                            return;
+                        }
+                    } catch (UserExistenceException ignore) {
+                        //ignore, let user be anonymous
+                    }
+                }
+
+                if (userName.isEmpty() || user == null) {
                     // if user wasn't required check project permissions to any user,
                     // if it is not READ or ALL send response code 401 and header with BASIC type of authentication
 
@@ -104,25 +127,7 @@ public class VFSPermissionsFilter implements Filter {
                         ((HttpServletResponse)response).addHeader("Cache-Control", "private");
                         ((HttpServletResponse)response).addHeader("WWW-Authenticate", "Basic");
                         ((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
-                    }
-                } else {
-                    Set<Role> userMembershipRoles = null;
-                    try {
-                        User user = userManager.getUserByAlias(userName);
-                        userMembershipRoles = user.getMembership(projectDirectory.getParentFile().getName()).getRoles();
-                    } catch (OrganizationServiceException e) {
-                        //ignore, let userMembershipRoles be null
-                    }
-
-                    String encryptedPassword = new String(passwordEncrypter.encrypt(password.getBytes()));
-                    Boolean authenticated = credentialsCache.get((userName + encryptedPassword));
-                    if (authenticated == null) {
-                        authenticated = userManager.authenticateUser(userName, password);
-                        credentialsCache.put(userName + encryptedPassword, authenticated);
-                    }
-
-                    if (!authenticated || !vfsPermissionsChecker.isAccessAllowed(userName, userMembershipRoles, projectDirectory)) {
-                        ((HttpServletResponse)response).sendError(HttpServletResponse.SC_FORBIDDEN);
+                        return;
                     }
                 }
             } catch (OrganizationServiceException e) {

@@ -68,7 +68,7 @@ public class VFSPermissionsCheckerTest {
     public void testEmptyUserAndProjectWithUserAllPermissions() throws IOException, ServletException, OrganizationServiceException {
         //given
         Principal principal = new PrincipalImpl(VirtualFileSystemInfo.ANY_PRINCIPAL, Principal.Type.USER);
-        createACL(getPermissionsMap(principal, VirtualFileSystemInfo.BasicPermissions.ALL));
+        createProjectACL(getPermissionsMap(principal, VirtualFileSystemInfo.BasicPermissions.ALL));
         //then
         assertTrue(userPermissionsChecker.isAccessAllowed("", null, projectDirectory));
     }
@@ -79,7 +79,7 @@ public class VFSPermissionsCheckerTest {
             throws OrganizationServiceException, IOException, ServletException {
         //given
         PrincipalImpl userPrincipal = new PrincipalImpl("workspace/developer", Principal.Type.GROUP);
-        createACL(getPermissionsMap(userPrincipal, VirtualFileSystemInfo.BasicPermissions.ALL));
+        createProjectACL(getPermissionsMap(userPrincipal, VirtualFileSystemInfo.BasicPermissions.ALL));
         //then
         assertTrue(userPermissionsChecker.isAccessAllowed("user", getSetOfRoles("developer"), projectDirectory));
         assertFalse(userPermissionsChecker.isAccessAllowed("user", getSetOfRoles("president"), projectDirectory));
@@ -90,7 +90,17 @@ public class VFSPermissionsCheckerTest {
     public void testProjectWithAllPermissionsToSpecificUserAndUserWithCorrectCredentials() throws IOException, ServletException {
         //given
         PrincipalImpl userPrincipal = new PrincipalImpl("user", Principal.Type.USER);
-        createACL(getPermissionsMap(userPrincipal, VirtualFileSystemInfo.BasicPermissions.ALL));
+        createProjectACL(getPermissionsMap(userPrincipal, VirtualFileSystemInfo.BasicPermissions.ALL));
+        //then
+        assertTrue(userPermissionsChecker.isAccessAllowed("user", getSetOfRoles("developer"), projectDirectory));
+        assertFalse(userPermissionsChecker.isAccessAllowed("ChuckNorris", getSetOfRoles("developer"), projectDirectory));
+    }
+
+    @Test
+    public void shouldReadPermissionsFromWorkspaceAclIfProjectAclDoesNotExists() throws Exception {
+        //given
+        PrincipalImpl userPrincipal = new PrincipalImpl("user", Principal.Type.USER);
+        createWorkspaceACL(getPermissionsMap(userPrincipal, VirtualFileSystemInfo.BasicPermissions.ALL));
         //then
         assertTrue(userPermissionsChecker.isAccessAllowed("user", getSetOfRoles("developer"), projectDirectory));
         assertFalse(userPermissionsChecker.isAccessAllowed("ChuckNorris", getSetOfRoles("developer"), projectDirectory));
@@ -98,12 +108,19 @@ public class VFSPermissionsCheckerTest {
 
     /* delete project acl file after test */
     @AfterMethod
-    public void deleteACL() {
+    public void deleteACLs() {
         File projectACL = new File(projectDirectory.getParentFile(),
                                    ".vfs".concat(File.separator).concat("acl").concat(File.separator).concat(
                                            projectDirectory.getName().concat("_acl")));
         if (projectACL.exists()) {
             projectACL.delete();
+        }
+
+        File workspaceACL = new File(projectDirectory.getParentFile(),
+                                     ".vfs".concat(File.separator).concat("acl").concat(File.separator).concat("_acl"));
+
+        if (workspaceACL.exists()) {
+            workspaceACL.delete();
         }
     }
 
@@ -141,7 +158,6 @@ public class VFSPermissionsCheckerTest {
         return resultPermissions;
     }
 
-
     /**
      * Create project aclFile and write given permissions to it
      *
@@ -150,13 +166,33 @@ public class VFSPermissionsCheckerTest {
      * @throws java.io.IOException
      *         when it is not possible to write permissions
      */
-    private void createACL(Map<Principal, Set<VirtualFileSystemInfo.BasicPermissions>> permissionsMap)
+    private void createProjectACL(Map<Principal, Set<VirtualFileSystemInfo.BasicPermissions>> permissionsMap)
             throws IOException {
         File aclDir = new File(projectDirectory.getParentFile(), ".vfs".concat(File.separator).concat("acl"));
         if (!aclDir.exists()) {
             aclDir.mkdirs();
         }
         File aclFile = new File(aclDir, projectDirectory.getName().concat("_acl"));
+        AccessControlListSerializer serializer = new AccessControlListSerializer();
+        AccessControlList acl = new AccessControlList(permissionsMap);
+        serializer.write(new DataOutputStream(new FileOutputStream(aclFile)), acl);
+    }
+
+    /**
+     * Create workspace aclFile and write given permissions to it
+     *
+     * @param permissionsMap
+     *         map with permissions
+     * @throws java.io.IOException
+     *         when it is not possible to write permissions
+     */
+    private void createWorkspaceACL(Map<Principal, Set<VirtualFileSystemInfo.BasicPermissions>> permissionsMap)
+            throws IOException {
+        File aclDir = new File(projectDirectory.getParentFile(), ".vfs".concat(File.separator).concat("acl"));
+        if (!aclDir.exists()) {
+            aclDir.mkdirs();
+        }
+        File aclFile = new File(aclDir, "_acl");
         AccessControlListSerializer serializer = new AccessControlListSerializer();
         AccessControlList acl = new AccessControlList(permissionsMap);
         serializer.write(new DataOutputStream(new FileOutputStream(aclFile)), acl);
