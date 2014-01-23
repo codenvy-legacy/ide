@@ -105,7 +105,7 @@ public class PullPresenter implements PullView.ActionDelegate {
                                        Array<Remote> remotes = dtoFactory.createListDtoFromJson(result, Remote.class);
                                        getBranches(projectId, LIST_REMOTE);
                                        view.setRepositories(remotes);
-                                       view.setEnablePullButton(!result.isEmpty());
+                                       view.setEnablePullButton(!remotes.isEmpty());
                                        view.showDialog();
                                    }
 

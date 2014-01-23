@@ -105,7 +105,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
                                    protected void onSuccess(String result) {
                                        Array<Remote> remotes = dtoFactory.createListDtoFromJson(result, Remote.class);
                                        getBranches(projectId, LIST_REMOTE);
-                                       view.setEnablePushButton(!result.isEmpty());
+                                       view.setEnablePushButton(!remotes.isEmpty());
                                        view.setRepositories(remotes);
                                        view.showDialog();
                                    }
