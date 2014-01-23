@@ -21,14 +21,11 @@ import com.codenvy.organization.model.Role;
 
 import org.exoplatform.ide.vfs.impl.fs.AccessControlList;
 import org.exoplatform.ide.vfs.impl.fs.AccessControlListSerializer;
-import org.exoplatform.ide.vfs.shared.Principal;
-import org.exoplatform.ide.vfs.shared.PrincipalImpl;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.ide.vfs.shared.*;
 
-import java.io.DataInputStream;
+import java.io.*;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -56,16 +53,18 @@ public class VFSPermissionsChecker {
      */
     public boolean isAccessAllowed(String user, Set<Role> userMembershipRoles, File projectDirectory) throws IOException {
         String projectName = projectDirectory.getName();
-        //go to parent project acl file that under ../projectDirectory/.vfs/acl/projectName_acl
-        File projectAcl = new File(projectDirectory.getParentFile(), ".vfs"
-                .concat(File.separator)
-                .concat("acl")
-                .concat(File.separator)
-                .concat(projectName.concat("_acl")));
-        if (!projectAcl.exists()) {
-            return true;
+        //acl folder by path ../projectDirectory/.vfs/acl
+        File aclDirectory = Paths.get(projectDirectory.getParentFile().getAbsolutePath(), ".vfs", "acl").toFile();
+        // project acl is projectName_acl
+        File aclFile = new File(aclDirectory, projectName + "_acl");
+        if (!aclFile.exists()) {
+            // if there is no acl for project find it for workspace
+            aclFile = new File(aclDirectory, "_acl");
+            if (!aclFile.exists()) {
+                return true;
+            }
         }
-        AccessControlList acl = new AccessControlListSerializer().read(new DataInputStream(new FileInputStream(projectAcl)));
+        AccessControlList acl = new AccessControlListSerializer().read(new DataInputStream(new FileInputStream(aclFile)));
         Set<VirtualFileSystemInfo.BasicPermissions> resultPermissions = new HashSet<>();
         PrincipalImpl principal = new PrincipalImpl(VirtualFileSystemInfo.ANY_PRINCIPAL, Principal.Type.USER);
         //get permissions to any principal
