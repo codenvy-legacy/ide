@@ -24,6 +24,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -45,9 +46,9 @@ public class ShowProjectGitReadOnlyUrlViewImpl extends DialogBox implements Show
     private static ShowProjectGitReadOnlyUrlViewImplUiBinder ourUiBinder = GWT.create(ShowProjectGitReadOnlyUrlViewImplUiBinder.class);
 
     @UiField
-    TextBox                   url;
+    TextBox url;
     @UiField
-    com.codenvy.ide.ui.Button btnClose;
+    Button  btnClose;
     @UiField(provided = true)
     final   GitResources            res;
     @UiField(provided = true)

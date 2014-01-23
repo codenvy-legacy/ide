@@ -22,27 +22,37 @@ import com.codenvy.dto.shared.DTO;
 /**
  * Summary of debugger information.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author andrew00x
  */
 @DTO
 public interface DebuggerInfo {
     String getHost();
 
-    int getPort();
-
-    String getId();
-
-    String getVmName();
-
-    String getVmVersion();
-
     void setHost(String host);
 
-    void setId(String id);
+    DebuggerInfo withHost(String host);
+
+    int getPort();
 
     void setPort(int port);
 
+    DebuggerInfo withPort(int port);
+
+    String getId();
+
+    void setId(String id);
+
+    DebuggerInfo withId(String id);
+
+    String getVmName();
+
     void setVmName(String vmName);
 
+    DebuggerInfo withVmName(String vmName);
+
+    String getVmVersion();
+
     void setVmVersion(String vmVersion);
+
+    DebuggerInfo withVmVersion(String vmVersion);
 }

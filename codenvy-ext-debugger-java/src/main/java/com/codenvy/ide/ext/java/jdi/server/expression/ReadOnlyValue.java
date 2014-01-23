@@ -19,10 +19,7 @@ package com.codenvy.ide.ext.java.jdi.server.expression;
 
 import com.sun.jdi.Value;
 
-/**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
- */
+/** @author andrew00x */
 public class ReadOnlyValue implements ExpressionValue {
     private final Value value;
 

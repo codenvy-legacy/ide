@@ -45,10 +45,14 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
     public BaseView(PartStackUIResources resources) {
         container = new DockLayoutPanel(Style.Unit.PX);
         initWidget(container);
-        setSize("100%", "100%");
+        container.setSize("100%", "100%");
         toolBar = new DockLayoutPanel(Style.Unit.PX);
         toolBar.addStyleName(resources.partStackCss().ideBasePartToolbar());
         container.addNorth(toolBar, 20);
+
+        //this hack used for adding box shadow effect to toolbar
+        toolBar.getElement().getParentElement().getStyle().setOverflow(Style.Overflow.VISIBLE);
+
         ToolButton toolButton = new ToolButton(new Image(resources.minimize()));
         toolButton.addClickHandler(new ClickHandler() {
             @Override
@@ -75,8 +79,7 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
         l.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
         l.getElement().getStyle().setLineHeight(20, Style.Unit.PX);
         l.getElement().getStyle().setVerticalAlign(Style.VerticalAlign.MIDDLE);
-        l.getElement().getStyle().setTextAlign(Style.TextAlign.CENTER);
-        toolBar.addWest(l, 90);
+        toolBar.addWest(l, 100);
     }
 
     /** {@inheritDoc} */

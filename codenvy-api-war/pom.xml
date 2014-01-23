@@ -21,45 +21,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
+        <groupId>com.codenvy.ide</groupId>
         <version>3.0.0-M8-SNAPSHOT</version>
     </parent>
-
     <artifactId>codenvy-api-war</artifactId>
     <packaging>war</packaging>
-
     <dependencies>
         <dependency>
             <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-inject</artifactId>
             <version>${com.codenvy.commons.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.platform-api</groupId>
-            <artifactId>codenvy-api-workspace</artifactId>
-            <version>${com.codenvy.platform-api.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.platform-api</groupId>
-            <artifactId>codenvy-api-builder</artifactId>
-            <version>${com.codenvy.platform-api.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.platform-api</groupId>
-            <artifactId>codenvy-api-runner</artifactId>
-            <version>${com.codenvy.platform-api.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-core</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>servlet-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
@@ -73,7 +45,23 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-debugger-java</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>tools</artifactId>
+                    <groupId>sun.jdt</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-extensions</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-tutorials</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -88,13 +76,19 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-runner-sdk</artifactId>
+            <artifactId>codenvy-ext-java</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-runner-webapps</artifactId>
+            <artifactId>codenvy-ide-core</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
@@ -108,19 +102,28 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-java</artifactId>
+            <artifactId>codenvy-runner-sdk</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-debugger-java</artifactId>
+            <artifactId>codenvy-runner-webapps</artifactId>
             <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>sun.jdt</groupId>
-                    <artifactId>tools</artifactId>
-                </exclusion>
-            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-builder</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-runner</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-project</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
             <groupId>org.everrest</groupId>
@@ -133,6 +136,17 @@
             <version>${everrest.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${org.slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${servlet-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-catalina</artifactId>
             <version>${tomcat.version}</version>
@@ -143,17 +157,6 @@
             <artifactId>tomcat-coyote</artifactId>
             <version>${tomcat.version}</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${servlet-api.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${org.slf4j.version}</version>
         </dependency>
     </dependencies>
     <build>

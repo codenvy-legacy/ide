@@ -24,6 +24,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Label;
@@ -46,13 +47,13 @@ public class AddToIndexViewImpl extends DialogBox implements AddToIndexView {
     private static AddToIndexViewImplUiBinder ourUiBinder = GWT.create(AddToIndexViewImplUiBinder.class);
 
     @UiField
-    Label                     message;
+    Label    message;
     @UiField
-    CheckBox                  update;
+    CheckBox update;
     @UiField
-    com.codenvy.ide.ui.Button btnAdd;
+    Button   btnAdd;
     @UiField
-    com.codenvy.ide.ui.Button btnCancel;
+    Button   btnCancel;
     @UiField(provided = true)
     final   GitResources            res;
     @UiField(provided = true)

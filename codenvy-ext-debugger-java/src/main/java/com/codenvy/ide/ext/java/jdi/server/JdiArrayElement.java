@@ -20,8 +20,7 @@ package com.codenvy.ide.ext.java.jdi.server;
 /**
  * Element of array in debuggee JVM.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * @author andrew00x
  */
 public interface JdiArrayElement extends JdiVariable {
     /**

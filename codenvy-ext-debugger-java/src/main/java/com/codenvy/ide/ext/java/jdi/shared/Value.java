@@ -21,14 +21,18 @@ import com.codenvy.dto.shared.DTO;
 
 import java.util.List;
 
-/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+/** @author andrew00x */
 @DTO
 public interface Value {
     List<Variable> getVariables();
+
+    void setVariables(List<Variable> variables);
+
+    Value withVariables(List<Variable> variables);
 
     String getValue();
 
     void setValue(String value);
 
-    void setVariables(List<Variable> variables);
+    Value withValue(String value);
 }

@@ -31,7 +31,6 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
-import com.codenvy.ide.ui.Button;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
@@ -45,6 +44,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -60,29 +60,23 @@ import java.util.List;
  */
 @Singleton
 public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> implements DebuggerView {
-    interface DebuggerViewImplUiBinder extends UiBinder<Widget, DebuggerViewImpl> {
-    }
-
     private static DebuggerViewImplUiBinder ourUiBinder = GWT.create(DebuggerViewImplUiBinder.class);
-
-    private SimpleList<Breakpoint> breakpoints;
-    private Tree<Variable>         variables;
     @UiField
-    Button                          btnResume;
+    PushButton                      btnResume;
     @UiField
-    Button                          btnStepInto;
+    PushButton                      btnStepInto;
     @UiField
-    Button                          btnStepOver;
+    PushButton                      btnStepOver;
     @UiField
-    Button                          btnStepReturn;
+    PushButton                      btnStepReturn;
     @UiField
-    Button                          btnDisconnect;
+    PushButton                      btnDisconnect;
     @UiField
-    Button                          btnRemoveAllBreakpoints;
+    PushButton                      btnRemoveAllBreakpoints;
     @UiField
-    Button                          btnChangeValue;
+    PushButton                      btnChangeValue;
     @UiField
-    Button                          btnEvaluateExpression;
+    PushButton                      btnEvaluateExpression;
     @UiField
     Label                           vmName;
     @UiField
@@ -95,6 +89,8 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
     JavaRuntimeResources            res;
     @UiField(provided = true)
     Resources                       coreRes;
+    private SimpleList<Breakpoint>    breakpoints;
+    private Tree<Variable>            variables;
     private DtoFactory                dtoFactory;
     private TreeNodeElement<Variable> selectedVariable;
 
@@ -133,35 +129,36 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
             }
         };
 
-        SimpleList.ListItemRenderer<Breakpoint> breakpointListItemRenderer = new SimpleList.ListItemRenderer<Breakpoint>() {
-            @Override
-            public void render(Element itemElement, Breakpoint itemData) {
-                TableCellElement label = Elements.createTDElement();
+        SimpleList.ListItemRenderer<Breakpoint> breakpointListItemRenderer = new
+                SimpleList.ListItemRenderer<Breakpoint>() {
+                    @Override
+                    public void render(Element itemElement, Breakpoint itemData) {
+                        TableCellElement label = Elements.createTDElement();
 
-                SafeHtmlBuilder sb = new SafeHtmlBuilder();
-                // Add icon
-                sb.appendHtmlConstant("<table><tr><td>");
-                ImageResource icon = res.breakpoint();
-                if (icon != null) {
-                    sb.appendHtmlConstant("<img src=\"" + icon.getSafeUri().asString() + "\">");
-                }
-                sb.appendHtmlConstant("</td>");
+                        SafeHtmlBuilder sb = new SafeHtmlBuilder();
+                        // Add icon
+                        sb.appendHtmlConstant("<table><tr><td>");
+                        ImageResource icon = res.breakpoint();
+                        if (icon != null) {
+                            sb.appendHtmlConstant("<img src=\"" + icon.getSafeUri().asString() + "\">");
+                        }
+                        sb.appendHtmlConstant("</td>");
 
-                // Add title
-                sb.appendHtmlConstant("<td>");
-                sb.appendEscaped(itemData.getPath() + " - [line: " + String.valueOf(itemData.getLineNumber() + 1) + "]");
-                sb.appendHtmlConstant("</td></tr></table>");
+                        // Add title
+                        sb.appendHtmlConstant("<td>");
+                        sb.appendEscaped(itemData.getPath() + " - [line: " + String.valueOf(itemData.getLineNumber() + 1) + "]");
+                        sb.appendHtmlConstant("</td></tr></table>");
 
-                label.setInnerHTML(sb.toSafeHtml().asString());
+                        label.setInnerHTML(sb.toSafeHtml().asString());
 
-                itemElement.appendChild(label);
-            }
+                        itemElement.appendChild(label);
+                    }
 
-            @Override
-            public Element createElement() {
-                return Elements.createTRElement();
-            }
-        };
+                    @Override
+                    public Element createElement() {
+                        return Elements.createTRElement();
+                    }
+                };
 
         breakpoints = SimpleList.create((SimpleList.View)breakPointsElement, coreRes.defaultSimpleListCss(), breakpointListItemRenderer,
                                         breakpointListEventDelegate);
@@ -344,5 +341,8 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
     @UiHandler("btnEvaluateExpression")
     public void onEvaluateExpressionButtonClicked(ClickEvent event) {
         delegate.onEvaluateExpressionButtonClicked();
+    }
+
+    interface DebuggerViewImplUiBinder extends UiBinder<Widget, DebuggerViewImpl> {
     }
 }

@@ -19,8 +19,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:p1='urn:import:com.google.gwt.user.cellview.client'
-             xmlns:c='urn:import:com.codenvy.ide.ui'>
+             xmlns:p1='urn:import:com.google.gwt.user.cellview.client'>
     <ui:with field='locale' type='com.codenvy.ide.ext.git.client.GitLocalizationConstant'/>
     <ui:with field='res' type='com.codenvy.ide.ext.git.client.GitResources'/>
     <ui:style>
@@ -47,12 +46,10 @@
     <g:DockLayoutPanel unit="PX" width="550px" height="250px" addStyleNames="{style.emptyBorder}">
         <g:south size="36.0">
             <g:FlowPanel addStyleNames="{style.spacing}">
-                <c:Button addStyleNames="{style.alignRightBtn}" text="{locale.buttonClose}" width="70px" size="SMALL" type="DANGER"
+                <g:Button addStyleNames="{style.alignRightBtn}" text="{locale.buttonClose}" width="70px"
                           ui:field="btnClose"/>
-                <c:Button addStyleNames="{style.alignLeftBtn} {style.space}" text="{locale.buttonAdd}" width="70px" size="SMALL"
-                          ui:field="btnAdd" icon="{res.add}"/>
-                <c:Button addStyleNames="{style.alignLeftBtn} {style.space}" text="{locale.buttonRemove}" width="70px" size="SMALL"
-                          ui:field="btnDelete" icon="{res.remove}"/>
+                <g:Button addStyleNames="{style.alignLeftBtn} {style.space}" text="{locale.buttonAdd}" width="70px" ui:field="btnAdd"/>
+                <g:Button addStyleNames="{style.alignLeftBtn} {style.space}" text="{locale.buttonRemove}" width="70px" ui:field="btnDelete"/>
             </g:FlowPanel>
         </g:south>
         <g:center>

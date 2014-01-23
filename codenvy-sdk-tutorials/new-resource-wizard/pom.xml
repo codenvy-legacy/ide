@@ -2,21 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
+        <groupId>com.codenvy.ide</groupId>
         <version>3.0.0-M8-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>new-resource-wizard-tutorial</artifactId>
-    <name>Codenvy Tutorial :: New Resource Wizard API</name>
     <packaging>jar</packaging>
-
+    <name>Codenvy Tutorial :: New Resource Wizard API</name>
     <dependencies>
         <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
-            <scope>provided</scope>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-api</artifactId>
+            <version>${parent.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.gwt.inject</groupId>
@@ -24,13 +22,23 @@
             <version>${gin.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-api</artifactId>
-            <version>${parent.version}</version>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
-
     <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <outputDirectory>target/classes</outputDirectory>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -54,16 +62,5 @@
                 </executions>
             </plugin>
         </plugins>
-
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-        </resources>
-        <sourceDirectory>src/main/java</sourceDirectory>
-        <outputDirectory>target/classes</outputDirectory>
     </build>
 </project>

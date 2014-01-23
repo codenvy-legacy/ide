@@ -19,28 +19,23 @@
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
+        <groupId>com.codenvy.ide</groupId>
         <version>3.0.0-M8-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ext-runner</artifactId>
     <packaging>jar</packaging>
     <name>Codenvy :: Runner</name>
-
     <properties>
         <dto-generator-out-directory>${project.build.directory}/generated-sources/dto/</dto-generator-out-directory>
     </properties>
-
     <dependencies>
-        <!-- Client libraries -->
         <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <scope>provided</scope>
-            <version>${gwt.version}</version>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-extensions</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
@@ -48,21 +43,14 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-extensions</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-project</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-runner</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
-        </dependency>
-
-        <!-- Server libraries -->
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>${javax.ws.rs.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
@@ -70,34 +58,37 @@
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>${javax.validation.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-model</artifactId>
             <version>${maven-model.version}</version>
         </dependency>
-
-        <!-- Testing libraries -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-            <version>${junit.version}</version>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${ch.qos.logback.version}</version>
             <scope>test</scope>
-            <version>${mockito.version}</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.gwt-test-utils</groupId>
             <artifactId>gwt-test-utils</artifactId>
-            <scope>test</scope>
             <version>${gwt-test-utils.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>${javax.validation.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>javax.validation</groupId>
@@ -107,19 +98,45 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${ch.qos.logback.version}</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
+        <outputDirectory>target/classes</outputDirectory>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>${dto-generator-out-directory}</directory>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>src/test/java</directory>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+        </testResources>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.8</version>
                 <executions>
                     <execution>
                         <id>add-source</id>
@@ -150,7 +167,6 @@
             <plugin>
                 <groupId>com.codenvy.platform-api</groupId>
                 <artifactId>codenvy-dto-maven-plugin</artifactId>
-                <version>${com.codenvy.platform-api.version}</version>
                 <executions>
                     <execution>
                         <phase>process-sources</phase>
@@ -159,52 +175,35 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <dtoPackages>
-                        <package>com.codenvy.api.runner.dto</package>
-                        <package>com.codenvy.api.runner.internal.dto</package>
-                        <package>com.codenvy.api.core.rest.shared.dto</package>
-                    </dtoPackages>
-                    <outputDirectory>${dto-generator-out-directory}</outputDirectory>
-                    <genClassName>com.codenvy.ide.ext.extensions.client.dto.DtoClientImpls</genClassName>
-                    <impl>client</impl>
-                </configuration>
                 <dependencies>
-                    <dependency>
-                        <groupId>com.codenvy.platform-api</groupId>
-                        <artifactId>codenvy-api-runner</artifactId>
-                        <version>${com.codenvy.platform-api.version}</version>
-                    </dependency>
                     <dependency>
                         <groupId>com.codenvy.platform-api</groupId>
                         <artifactId>codenvy-api-core</artifactId>
                         <version>${com.codenvy.platform-api.version}</version>
                     </dependency>
+                    <dependency>
+                        <groupId>com.codenvy.platform-api</groupId>
+                        <artifactId>codenvy-api-project</artifactId>
+                        <version>${com.codenvy.platform-api.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.codenvy.platform-api</groupId>
+                        <artifactId>codenvy-api-runner</artifactId>
+                        <version>${com.codenvy.platform-api.version}</version>
+                    </dependency>
                 </dependencies>
+                <configuration>
+                    <dtoPackages>
+                        <package>com.codenvy.api.core.rest.shared.dto</package>
+                        <package>com.codenvy.api.project.shared.dto</package>
+                        <package>com.codenvy.api.runner.dto</package>
+                        <package>com.codenvy.api.runner.internal.dto</package>
+                    </dtoPackages>
+                    <outputDirectory>${dto-generator-out-directory}</outputDirectory>
+                    <genClassName>com.codenvy.ide.ext.extensions.client.dto.DtoClientImpls</genClassName>
+                    <impl>client</impl>
+                </configuration>
             </plugin>
         </plugins>
-
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-            <resource>
-                <directory>${dto-generator-out-directory}</directory>
-            </resource>
-        </resources>
-        <sourceDirectory>src/main/java</sourceDirectory>
-        <testResources>
-            <testResource>
-                <directory>src/test/java</directory>
-            </testResource>
-            <testResource>
-                <directory>src/test/resources</directory>
-            </testResource>
-        </testResources>
-        <testSourceDirectory>src/test/java</testSourceDirectory>
-        <outputDirectory>target/classes</outputDirectory>
     </build>
 </project>

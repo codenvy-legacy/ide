@@ -21,7 +21,7 @@
       ****************************************************************************************/
 
     .popupMenuMain {
-        background: #FFFFFF;
+        background-color: tabsPanelBackground;
         position: absolute;
     }
 
@@ -83,7 +83,7 @@
     }
 
     .popupMenuTitleField {
-        color: #333333;
+        /*color: #333333;*/
     }
 
     .popupMenuHotKeyField {
@@ -112,10 +112,6 @@
     .popupMenuTitleFieldOver,
     .popupMenuHotKeyFieldOver,
     .popupMenuSubMenuFieldOver {
-        /*background: -moz-linear-gradient(top, rgba(195,222,255,1) 0%, rgba(230,248,255,1) 5%, rgba(207,230,255,1) 95%, rgba(195,222,255,1) 100%); *//* FF3.6+ */
-        /*background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(195,222,255,1)), color-stop(5%,rgba(230,248,255,1)), color-stop(95%,rgba(207,230,255,1)), color-stop(100%,rgba(195,222,255,1))); *//* Chrome,Safari4+ */
-        /*background: -webkit-linear-gradient(top, rgba(195,222,255,1) 0%,rgba(230,248,255,1) 5%,rgba(207,230,255,1) 95%,rgba(195,222,255,1) 100%); *//* Chrome10+,Safari5.1+ */
-        /*background: linear-gradient(to bottom, rgba(195,222,255,1) 0%,rgba(230,248,255,1) 5%,rgba(207,230,255,1) 95%,rgba(195,222,255,1) 100%); *//* W3C */
         background-color: selectionBackground;
     }
 
@@ -123,7 +119,7 @@
     .popupMenuTitleFieldDisabled,
     .popupMenuHotKeyFieldDisabled,
     .popupMenuSubMenuFieldDisabled {
-        color: #AAAAAA;
+        color: disabledMenuItemColor;
     }
 
     .popupMenuSubMenuImage {

@@ -95,6 +95,6 @@ public class AclUpdaterMain {
     }
 
     private java.io.File getVfsRootFolder(java.io.File root, String ws) {
-        return EnvironmentContextLocalFSMountStrategy.calculateDirPath(root, ws);
+        return WorkspaceHashLocalFSMountStrategy.calculateDirPath(root, ws);
     }
 }

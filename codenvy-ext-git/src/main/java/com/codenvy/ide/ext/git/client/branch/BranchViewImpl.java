@@ -35,6 +35,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -56,15 +57,15 @@ public class BranchViewImpl extends DialogBox implements BranchView {
     private static BranchViewImplUiBinder ourUiBinder = GWT.create(BranchViewImplUiBinder.class);
 
     @UiField
-    com.codenvy.ide.ui.Button btnClose;
+    Button                    btnClose;
     @UiField
-    com.codenvy.ide.ui.Button btnRename;
+    Button btnRename;
     @UiField
-    com.codenvy.ide.ui.Button btnDelete;
+    Button btnDelete;
     @UiField
-    com.codenvy.ide.ui.Button btnCreate;
+    Button btnCreate;
     @UiField
-    com.codenvy.ide.ui.Button btnCheckout;
+    Button btnCheckout;
     @UiField
     ScrollPanel               branchesPanel;
     @UiField(provided = true)

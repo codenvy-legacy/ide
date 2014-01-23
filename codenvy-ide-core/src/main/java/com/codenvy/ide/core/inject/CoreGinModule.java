@@ -42,6 +42,8 @@ import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
+import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
+import com.codenvy.ide.api.ui.theme.ThemeAgent;
 import com.codenvy.ide.api.ui.wizard.DefaultWizard;
 import com.codenvy.ide.api.ui.wizard.DefaultWizardFactory;
 import com.codenvy.ide.api.ui.wizard.WizardDialog;
@@ -60,6 +62,11 @@ import com.codenvy.ide.core.editor.DefaultEditorProvider;
 import com.codenvy.ide.core.editor.EditorAgentImpl;
 import com.codenvy.ide.core.editor.EditorRegistryImpl;
 import com.codenvy.ide.core.editor.ResourceDocumentProvider;
+import com.codenvy.ide.extension.ExtensionManagerPresenter;
+import com.codenvy.ide.theme.AppearancePresenter;
+import com.codenvy.ide.theme.AppearanceView;
+import com.codenvy.ide.theme.AppearanceViewImpl;
+import com.codenvy.ide.theme.ThemeAgentImpl;
 import com.codenvy.ide.extension.ExtensionManagerView;
 import com.codenvy.ide.extension.ExtensionManagerViewImpl;
 import com.codenvy.ide.extension.ExtensionRegistry;
@@ -94,6 +101,8 @@ import com.codenvy.ide.preferences.PreferencesView;
 import com.codenvy.ide.preferences.PreferencesViewImpl;
 import com.codenvy.ide.project.properties.ProjectPropertiesView;
 import com.codenvy.ide.project.properties.ProjectPropertiesViewImpl;
+import com.codenvy.ide.project.properties.add.AddNewPropertyView;
+import com.codenvy.ide.project.properties.add.AddNewPropertyViewImpl;
 import com.codenvy.ide.project.properties.edit.EditPropertyView;
 import com.codenvy.ide.project.properties.edit.EditPropertyViewImpl;
 import com.codenvy.ide.projecttype.SelectProjectTypeView;
@@ -143,6 +152,7 @@ import com.codenvy.ide.workspace.WorkspaceView;
 import com.codenvy.ide.workspace.WorkspaceViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
+import com.google.gwt.inject.client.multibindings.GinMultibinder;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
@@ -170,6 +180,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(PreferencesManager.class).to(PreferencesManagerImpl.class).in(Singleton.class);
         bind(MessageBus.class).to(MessageBusImpl.class).in(Singleton.class);
         bind(NotificationManager.class).to(NotificationManagerImpl.class).in(Singleton.class);
+        bind(ThemeAgent.class).to(ThemeAgentImpl.class).in(Singleton.class);
         apiBindingConfigure();
 
         resourcesAPIconfigure();
@@ -226,8 +237,11 @@ public class CoreGinModule extends AbstractGinModule {
 
     /** Configure Core UI components, resources and views */
     protected void coreUiConfigure() {
-        // Resources
+        GinMultibinder<PreferencesPagePresenter> prefBinder = GinMultibinder.newSetBinder(binder(), PreferencesPagePresenter.class);
+        prefBinder.addBinding().to(AppearancePresenter.class);
+        prefBinder.addBinding().to(ExtensionManagerPresenter.class);
 
+        // Resources
         bind(PartStackUIResources.class).to(Resources.class).in(Singleton.class);
         // Views
         bind(WorkspaceView.class).to(WorkspaceViewImpl.class).in(Singleton.class);
@@ -252,12 +266,14 @@ public class CoreGinModule extends AbstractGinModule {
         bind(OpenProjectView.class).to(OpenProjectViewImpl.class);
         bind(ProjectPropertiesView.class).to(ProjectPropertiesViewImpl.class);
         bind(EditPropertyView.class).to(EditPropertyViewImpl.class).in(Singleton.class);
+        bind(AddNewPropertyView.class).to(AddNewPropertyViewImpl.class).in(Singleton.class);
         bind(PreferencesView.class).to(PreferencesViewImpl.class).in(Singleton.class);
         bind(WelcomePartView.class).to(WelcomePartViewImpl.class).in(Singleton.class);
         bind(SelectProjectTypeView.class).to(SelectProjectTypeViewImpl.class).in(Singleton.class);
         bind(NavigateToFileView.class).to(NavigateToFileViewImpl.class).in(Singleton.class);
 
         bind(ExtensionManagerView.class).to(ExtensionManagerViewImpl.class).in(Singleton.class);
+        bind(AppearanceView.class).to(AppearanceViewImpl.class).in(Singleton.class);
     }
 
     @Provides

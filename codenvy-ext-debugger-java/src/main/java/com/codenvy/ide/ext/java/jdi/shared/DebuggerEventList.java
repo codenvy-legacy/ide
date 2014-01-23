@@ -21,10 +21,12 @@ import com.codenvy.dto.shared.DTO;
 
 import java.util.List;
 
-/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+/** @author andrew00x */
 @DTO
 public interface DebuggerEventList {
     List<DebuggerEvent> getEvents();
 
     void setEvents(List<DebuggerEvent> events);
+
+    DebuggerEventList withEvents(List<DebuggerEvent> events);
 }

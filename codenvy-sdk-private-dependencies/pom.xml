@@ -19,18 +19,61 @@
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
+        <groupId>com.codenvy.ide</groupId>
         <version>3.0.0-M8-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-sdk-private-dependencies</artifactId>
     <packaging>pom</packaging>
     <name>Codenvy SDK :: Assemblies Private Dependencies</name>
-
     <dependencies>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-builder</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-extensions</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-git</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-github</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-java</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-runner</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-ssh</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-tutorials</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-web</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-client</artifactId>
@@ -46,54 +89,7 @@
             <artifactId>codenvy-api-vfs</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
-        <!-- Extensions -->
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-java</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-web</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-git</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-github</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-ssh</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-builder</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-runner</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-extensions</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-tutorials</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -110,13 +106,11 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeGroupIds>
-                                org.exoplatform,
+                            <includeGroupIds>org.exoplatform,
                                 org.everrest,
                                 com.codenvy,
                                 com.exoplatform,
-                                com.github.dcarter.gdata-java-client
-                            </includeGroupIds>
+                                com.github.dcarter.gdata-java-client</includeGroupIds>
                             <excludeGroupIds>org.exoplatform.tool</excludeGroupIds>
                             <useRepositoryLayout>true</useRepositoryLayout>
                             <copyPom>true</copyPom>
@@ -170,5 +164,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

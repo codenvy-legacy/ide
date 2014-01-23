@@ -21,30 +21,42 @@ import com.codenvy.dto.shared.DTO;
 
 import java.util.List;
 
-/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+/** @author andrew00x */
 @DTO
 public interface Variable {
     String getName();
 
-    String getValue();
-
-    String getType();
-
-    VariablePath getVariablePath();
-
-    void setType(String type);
-
     void setName(String name);
+
+    Variable withName(String name);
+
+    String getValue();
 
     void setValue(String value);
 
+    Variable withValue(String value);
+
+    String getType();
+
+    void setType(String type);
+
+    Variable withType(String type);
+
+    VariablePath getVariablePath();
+
     void setVariablePath(VariablePath variablePath);
+
+    Variable withVariablePath(VariablePath variablePath);
+
+    boolean isPrimitive();
 
     void setPrimitive(boolean primitive);
 
-    boolean isPrimitive();
+    Variable withPrimitive(boolean primitive);
 
     List<Variable> getVariables();
 
     void setVariables(List<Variable> variables);
+
+    Variable withVariables(List<Variable> variables);
 }

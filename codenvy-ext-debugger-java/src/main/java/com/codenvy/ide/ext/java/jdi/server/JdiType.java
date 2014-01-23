@@ -17,11 +17,11 @@
  */
 package com.codenvy.ide.ext.java.jdi.server;
 
-/**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
- */
+/** @author andrew00x */
 public class JdiType {
+    private JdiType() {
+    }
+
     /**
      * <table>
      * <tr><th>Type Signature</th><th>Java Type</th></tr>
@@ -51,8 +51,5 @@ public class JdiType {
      */
     public static boolean isArray(String signature) {
         return signature.charAt(0) == '[';
-    }
-
-    private JdiType() {
     }
 }

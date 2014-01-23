@@ -17,11 +17,14 @@
  */
 package com.codenvy.ide.ext.java.jdi.server.expression;
 
-/**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
- */
+/** @author andrew00x */
 public abstract class ExpressionParser {
+    private final String expression;
+
+    protected ExpressionParser(String expression) {
+        this.expression = expression;
+    }
+
     /**
      * Create new instance of parser for specified Java expression.
      *
@@ -32,12 +35,6 @@ public abstract class ExpressionParser {
     public static ExpressionParser newInstance(String expression) {
         // At the moment create instance of ANTLRExpressionParser directly.
         return new ANTLRExpressionParser(expression);
-    }
-
-    private final String expression;
-
-    protected ExpressionParser(String expression) {
-        this.expression = expression;
     }
 
     /**

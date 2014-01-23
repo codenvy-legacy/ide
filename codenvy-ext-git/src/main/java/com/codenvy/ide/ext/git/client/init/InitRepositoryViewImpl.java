@@ -25,6 +25,7 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.TextBox;
@@ -47,13 +48,13 @@ public class InitRepositoryViewImpl extends DialogBox implements InitRepositoryV
     private static InitRepositoryViewImplUiBinder ourUiBinder = GWT.create(InitRepositoryViewImplUiBinder.class);
 
     @UiField
-    CheckBox                  bare;
+    CheckBox bare;
     @UiField
-    TextBox                   workdir;
+    TextBox  workdir;
     @UiField
-    com.codenvy.ide.ui.Button btnOk;
+    Button   btnOk;
     @UiField
-    com.codenvy.ide.ui.Button btnCancel;
+    Button   btnCancel;
     @UiField(provided = true)
     final   GitResources            res;
     @UiField(provided = true)

@@ -17,9 +17,9 @@
  */
 
 .selection {
-    background-color: #d4e2ff !important;
+    background-color: editorSelectionColor !important;
 }
 
 .inactiveSelection {
-    background-color: #d4d4d4 !important;
+    background-color: editorInactiveSelectionColor !important;
 }

@@ -147,6 +147,7 @@ public class GitService {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.branchCheckout(request);
+            determineProjectType();
         } finally {
             gitConnection.close();
         }
@@ -270,7 +271,7 @@ public class GitService {
                     propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("builder.name")
                                                  .withValue(new ArrayList<String>(Arrays.asList("maven"))));
                     processMultiModuleMavenProject(vfs, projectId);
-                } else {
+                } else if (!isProjectTypePropertySet(vfs.getItem(projectId, false))) {
                     Property projectTypeProperty = DtoFactory.getInstance().createDto(Property.class).withName("vfs:projectType")
                                                              .withValue(new ArrayList<String>(Arrays.asList("undefined")));
                     propertiesList.add(projectTypeProperty);
@@ -292,7 +293,7 @@ public class GitService {
      * @throws VirtualFileSystemException
      */
     private void processMultiModuleMavenProject(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException {
-        ItemList folders = vfs.getChildren(projectId, -1, 0, "folder", false, PropertyFilter.NONE_FILTER);
+        ItemList folders = vfs.getChildren(projectId, -1, 0, "folder", false, PropertyFilter.ALL_FILTER);
         findPom(vfs, folders);
     }
 
@@ -317,7 +318,8 @@ public class GitService {
             ItemList files = vfs.getChildren(folder.getId(), -1, 0, "file", false, PropertyFilter.NONE_FILTER);
             boolean found = false;
             for (Item file : files.getItems()) {
-                if ("pom.xml".equals(file.getName())) {
+                if ("pom.xml".equals(file.getName()) && !isProjectTypePropertySet(folder)) {
+                    
                     List<Property> propertiesList = new ArrayList<Property>();
                     Property projectTypeProperty =
                             DtoFactory.getInstance().createDto(Property.class).withName("vfs:projectType")
@@ -333,9 +335,18 @@ public class GitService {
                 }
             }
             if (!found) {
-                findPom(vfs, vfs.getChildren(folder.getId(), -1, 0, "folder", false, PropertyFilter.NONE_FILTER));
+                findPom(vfs, vfs.getChildren(folder.getId(), -1, 0, "folder", false, PropertyFilter.ALL_FILTER));
             }
         }
+    }
+    
+    private boolean isProjectTypePropertySet(Item item) {
+        for (Property property : item.getProperties()) {
+            if ("vfs:projectType".equals(property.getName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -401,6 +412,7 @@ public class GitService {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.fetch(request);
+            determineProjectType();
         } finally {
             gitConnection.close();
         }
@@ -465,6 +477,7 @@ public class GitService {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.pull(request);
+            determineProjectType();
         } finally {
             gitConnection.close();
         }

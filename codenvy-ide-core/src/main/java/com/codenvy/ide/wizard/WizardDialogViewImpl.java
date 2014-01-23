@@ -25,6 +25,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DeckLayoutPanel;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
@@ -54,21 +55,21 @@ public class WizardDialogViewImpl extends DialogBox implements WizardDialogView 
     private final int NO_TIME        = 0;
 
     @UiField
-    com.codenvy.ide.ui.Button btnCancel;
+    Button          btnCancel;
     @UiField
-    com.codenvy.ide.ui.Button btnFinish;
+    Button          btnFinish;
     @UiField
-    com.codenvy.ide.ui.Button btnBack;
+    Button          btnBack;
     @UiField
-    com.codenvy.ide.ui.Button btnNext;
+    Button          btnNext;
     @UiField
-    SimplePanel               imagePanel;
+    SimplePanel     imagePanel;
     @UiField
-    HTML                      caption;
+    HTML            caption;
     @UiField
-    HTML                      notice;
+    HTML            notice;
     @UiField
-    DeckLayoutPanel           contentPanel;
+    DeckLayoutPanel contentPanel;
     @UiField(provided = true)
     final   Resources      res;
     private ActionDelegate delegate;

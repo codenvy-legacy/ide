@@ -21,28 +21,25 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
+        <groupId>com.codenvy.ide</groupId>
         <version>3.0.0-M8-SNAPSHOT</version>
     </parent>
-
     <artifactId>codenvy-runner-webapps</artifactId>
-    <name>Codenvy Runner :: WebApps</name>
     <packaging>jar</packaging>
-
+    <name>Codenvy Runner :: WebApps</name>
     <dependencies>
-        <dependency>
-            <groupId>com.codenvy.platform-api</groupId>
-            <artifactId>codenvy-api-runner</artifactId>
-            <version>${com.codenvy.platform-api.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-commons</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-runner</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
+        </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -70,7 +67,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -84,7 +80,7 @@
                         <configuration>
                             <tasks>
                                 <!-- Unzip Tomcat package -->
-                                <unzip src="${project.build.directory}/classes/tomcat.zip" dest="${project.build.directory}/classes">
+                                <unzip dest="${project.build.directory}/classes" src="${project.build.directory}/classes/tomcat.zip">
                                     <patternset>
                                         <exclude name="**/webapps/**" />
                                     </patternset>
@@ -93,7 +89,6 @@
                                     <fileset dir="${project.build.directory}/classes/apache-tomcat-${tomcat.version}" />
                                 </move>
                                 <delete file="${project.build.directory}/classes/tomcat.zip" />
-
                                 <!-- Zip prepared Tomcat binary distribution and remove temporary directory -->
                                 <zip basedir="${project.build.directory}/classes/tomcat-bundle" destfile="${project.build.directory}/classes/tomcat.zip" />
                                 <delete dir="${project.build.directory}/classes/tomcat-bundle" />

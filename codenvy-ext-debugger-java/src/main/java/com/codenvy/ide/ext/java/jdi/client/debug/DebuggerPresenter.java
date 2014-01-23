@@ -94,7 +94,7 @@ import static com.codenvy.ide.ext.java.jdi.shared.DebuggerEvent.STEP;
 public class DebuggerPresenter extends BasePresenter implements DebuggerView.ActionDelegate, Debugger {
     private static final String TITLE                  = "Debug";
     /** Period for checking debugger events. */
-    private static final int    CHECK_EVENTS_PERIOD_MS = 3000;
+    private static final int    CHECK_EVENTS_PERIOD_MS = 2000;
     /** Channel identifier to receive events from debugger over WebSocket. */
     private String                                 debuggerEventsChannel;
     /** Channel identifier to receive event when debugger will disconnected. */
@@ -121,6 +121,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private Timer                                  checkEventsTimer;
     /** Handler for processing events which is received from debugger over WebSocket connection. */
     private SubscriptionHandler<DebuggerEventList> debuggerEventsHandler;
+    private SubscriptionHandler<Void>              debuggerDisconnectedHandler;
     private List<Variable>                         variables;
     private ApplicationProcessDescriptor           appDescriptor;
 
@@ -208,7 +209,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
             public void onErrorReceived(Throwable exception) {
                 try {
                     messageBus.unsubscribe(debuggerEventsChannel, this);
-                } catch (WebSocketException ignore) {
+                } catch (WebSocketException e) {
+                    Log.error(DebuggerPresenter.class, e);
                 }
                 closeView();
 
@@ -224,6 +226,30 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 }
                 Notification notification = new Notification(exception.getMessage(), ERROR);
                 notificationManager.showNotification(notification);
+            }
+        };
+
+        this.debuggerDisconnectedHandler = new SubscriptionHandler<Void>() {
+            @Override
+            protected void onMessageReceived(Void result) {
+                try {
+                    messageBus.unsubscribe(debuggerDisconnectedChannel, this);
+                } catch (WebSocketException e) {
+                    Log.error(DebuggerPresenter.class, e);
+                }
+
+                evaluateExpressionPresenter.closeDialog();
+                closeView();
+                onDebuggerDisconnected();
+            }
+
+            @Override
+            protected void onErrorReceived(Throwable exception) {
+                try {
+                    messageBus.unsubscribe(debuggerDisconnectedChannel, this);
+                } catch (WebSocketException e) {
+                    Log.error(DebuggerPresenter.class, e);
+                }
             }
         };
 
@@ -396,9 +422,9 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     public void onResumeButtonClicked() {
         changeButtonsEnableState(false);
         try {
-            service.resume(debuggerInfo.getId(), new AsyncRequestCallback<String>() {
+            service.resume(debuggerInfo.getId(), new AsyncRequestCallback<Void>() {
                 @Override
-                protected void onSuccess(String result) {
+                protected void onSuccess(Void result) {
                     resetStates();
                 }
 
@@ -527,8 +553,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         changeValuePresenter.showDialog(debuggerInfo, selectedVariable, new AsyncCallback<String>() {
             @Override
             public void onSuccess(String s) {
-                dtoFactory.createDtoFromJson(s, Variable.class);
-//                ((DtoClientImpls.VariableImpl)selectedVariable).setValue(s);
                 view.setVariables(variables);
             }
 
@@ -604,8 +628,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         if (activePart != null && !activePart.equals(this)) {
             partStack.setActivePart(this);
         }
-
-        startCheckingEvents();
     }
 
     private void closeView() {
@@ -626,6 +648,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                                     console.print(
                                             constant.debuggerConnected(appDescriptor.getDebugHost() + ':' + appDescriptor.getDebugPort()));
                                     showDialog(debuggerInfo);
+                                    startCheckingEvents();
                                 }
 
                                 @Override
@@ -642,7 +665,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
 
     private void disconnectDebugger() {
         if (debuggerInfo != null) {
-            stopCheckingEvents();
+            stopCheckingDebugEvents();
             try {
                 service.disconnect(debuggerInfo.getId(), new AsyncRequestCallback<Void>() {
                     @Override
@@ -659,7 +682,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                         notificationManager.showNotification(notification);
                     }
                 });
-
             } catch (RequestException e) {
                 Notification notification = new Notification(e.getMessage(), ERROR);
                 notificationManager.showNotification(notification);
@@ -675,44 +697,29 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         try {
             messageBus.subscribe(debuggerEventsChannel, debuggerEventsHandler);
         } catch (WebSocketException e) {
+            // In case of WebSocket subscription is failed try to poll debugger events over HTTP,
             checkEventsTimer.scheduleRepeating(CHECK_EVENTS_PERIOD_MS);
         }
 
         try {
             debuggerDisconnectedChannel = JavaRuntimeExtension.DISCONNECT_CHANNEL + debuggerInfo.getId();
-            messageBus.subscribe(debuggerDisconnectedChannel, new SubscriptionHandler<Object>() {
-                @Override
-                protected void onMessageReceived(Object result) {
-                    try {
-                        messageBus.unsubscribe(debuggerDisconnectedChannel, this);
-                    } catch (WebSocketException e) {
-                        // nothing to do
-                    }
-
-                    evaluateExpressionPresenter.closeDialog();
-                    closeView();
-                    onDebuggerDisconnected();
-                }
-
-                @Override
-                protected void onErrorReceived(Throwable exception) {
-                    try {
-                        messageBus.unsubscribe(debuggerDisconnectedChannel, this);
-                    } catch (WebSocketException ignore) {
-                    }
-                }
-            });
-        } catch (WebSocketException ignore) {
+            messageBus.subscribe(debuggerDisconnectedChannel, debuggerDisconnectedHandler);
+        } catch (WebSocketException e) {
+            Log.error(DebuggerPresenter.class, e);
         }
     }
 
-    private void stopCheckingEvents() {
+    private void stopCheckingDebugEvents() {
         checkEventsTimer.cancel();
         try {
             if (messageBus.isHandlerSubscribed(debuggerEventsHandler, debuggerEventsChannel)) {
                 messageBus.unsubscribe(debuggerEventsChannel, debuggerEventsHandler);
             }
-        } catch (WebSocketException ignore) {
+            if (messageBus.isHandlerSubscribed(debuggerDisconnectedHandler, debuggerDisconnectedChannel)) {
+                messageBus.unsubscribe(debuggerDisconnectedChannel, debuggerDisconnectedHandler);
+            }
+        } catch (WebSocketException e) {
+            Log.error(DebuggerPresenter.class, e);
         }
     }
 
@@ -731,7 +738,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
 
     /** {@inheritDoc} */
     @Override
-    public void addBreakPoint(@NotNull final File file, final int lineNumber, final AsyncCallback<Breakpoint> callback)
+    public void addBreakpoint(@NotNull final File file, final int lineNumber, final AsyncCallback<Breakpoint> callback)
             throws RequestException {
         if (debuggerInfo != null) {
             Location location = dtoFactory.createDto(Location.class);
@@ -748,11 +755,11 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
             breakPoint.setEnabled(true);
 
             try {
-                service.addBreakPoint(debuggerInfo.getId(), breakPoint, new AsyncRequestCallback<String>() {
+                service.addBreakpoint(debuggerInfo.getId(), breakPoint, new AsyncRequestCallback<Void>() {
                     @Override
-                    protected void onSuccess(String result) {
+                    protected void onSuccess(Void result) {
                         if (resolver != null) {
-                            String fqn = resolver.resolveFqn(file);
+                            final String fqn = resolver.resolveFqn(file);
                             filesToBreakpoints.put(fqn, file);
                             Breakpoint breakpoint = new Breakpoint(Breakpoint.Type.BREAKPOINT, lineNumber, fqn);
                             callback.onSuccess(breakpoint);
@@ -766,14 +773,15 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                     }
                 });
             } catch (RequestException e) {
-                Log.error(DebuggerPresenter.class, e);
+                Notification notification = new Notification(e.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
             }
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void deleteBreakPoint(@NotNull File file, int lineNumber, final AsyncCallback<Void> callback) throws RequestException {
+    public void deleteBreakpoint(@NotNull File file, int lineNumber, final AsyncCallback<Void> callback) throws RequestException {
         if (debuggerInfo != null) {
             Location location = dtoFactory.createDto(Location.class);
             location.setLineNumber(lineNumber);
@@ -789,7 +797,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
             point.setEnabled(true);
 
             try {
-                service.deleteBreakPoint(debuggerInfo.getId(), point, new AsyncRequestCallback<Void>() {
+                service.deleteBreakpoint(debuggerInfo.getId(), point, new AsyncRequestCallback<Void>() {
                     @Override
                     protected void onSuccess(Void result) {
                         callback.onSuccess(null);
@@ -802,7 +810,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                     }
                 });
             } catch (RequestException e) {
-                Log.error(DebuggerPresenter.class, e);
+                Notification notification = new Notification(e.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
             }
         }
     }

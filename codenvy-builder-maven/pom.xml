@@ -21,8 +21,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
+        <groupId>com.codenvy.ide</groupId>
         <version>3.0.0-M8-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-builder-maven</artifactId>
@@ -38,14 +38,14 @@
             <version>${com.codenvy.commons.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.codenvy.platform-api</groupId>
-            <artifactId>codenvy-api-builder</artifactId>
-            <version>${com.codenvy.platform-api.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-maven-tools</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-builder</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -64,7 +64,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.8</version>
                 <executions>
                     <execution>
                         <id>add-resource</id>
@@ -110,7 +109,6 @@
             <plugin>
                 <groupId>com.codenvy.platform-api</groupId>
                 <artifactId>codenvy-dto-maven-plugin</artifactId>
-                <version>${com.codenvy.platform-api.version}</version>
                 <executions>
                     <execution>
                         <phase>process-sources</phase>

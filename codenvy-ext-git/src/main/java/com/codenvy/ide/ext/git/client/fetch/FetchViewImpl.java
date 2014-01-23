@@ -27,6 +27,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.ListBox;
@@ -59,9 +60,9 @@ public class FetchViewImpl extends DialogBox implements FetchView {
     @UiField
     ListBox                   remoteBranch;
     @UiField
-    com.codenvy.ide.ui.Button btnFetch;
+    Button                    btnFetch;
     @UiField
-    com.codenvy.ide.ui.Button btnCancel;
+    Button btnCancel;
     @UiField(provided = true)
     final   GitResources            res;
     @UiField(provided = true)

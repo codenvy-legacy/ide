@@ -49,6 +49,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -56,9 +57,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.zip.GZIPOutputStream;
 
-/** @author andrew00x */
+/**
+ * Connects to the docker daemon that listens on <i>unix:///var/run/docker.sock</i>.
+ *
+ * @author andrew00x
+ */
 public class DockerConnector {
 
     private static class InstanceHolder {
@@ -161,13 +165,37 @@ public class DockerConnector {
     }
 
 
-    public void createImage(java.io.File dockerFile, java.io.File application, String name, Appendable output) throws IOException {
-        final java.io.File tar = Files.createTempFile(application.getName(), "tar.gz").toFile();
-        createTarGzArchive(tar, dockerFile, application);
+    public void createImage(java.io.File dockerFile, String repository, String tag, Appendable output) throws IOException {
+        final java.io.File tar = Files.createTempFile(repository.replace('/', '_'), ".tar").toFile();
+        createTarArchive(tar, dockerFile);
+        String name = repository;
+        if (tag != null) {
+            name += (':' + tag);
+        }
+        buildImage(tar, name, output);
+    }
+
+
+    public void createImage(java.io.File dockerFile,
+                            java.io.File application,
+                            String repository,
+                            String tag,
+                            Appendable output) throws IOException {
+        final java.io.File tar = Files.createTempFile(repository.replace('/', '_'), ".tar").toFile();
+        createTarArchive(tar, dockerFile, application);
+        String name = repository;
+        if (tag != null) {
+            name += (':' + tag);
+        }
+        buildImage(tar, name, output);
+    }
+
+
+    private void buildImage(java.io.File tar, String name, Appendable output) throws IOException {
         final int fd = connect();
         try (InputStream tarInput = new FileInputStream(tar)) {
             final List<Pair<String, ?>> headers = new ArrayList<>(2);
-            headers.add(Pair.of("Content-Type", "application/tar"));
+            headers.add(Pair.of("Content-Type", "application/x-compressed-tar"));
             headers.add(Pair.of("Content-Length", tar.length()));
             final DockerResponse response = request(fd, "POST", String.format("/build?t=%s&rm=%d", name, 1), headers, tarInput);
             final int status = response.getStatus();
@@ -183,26 +211,6 @@ public class DockerConnector {
             }
         }
     }
-
-//  TODO: finish it
-//    public void inspectImage(String image) throws IOException {
-//        final int fd = connect();
-//        try {
-//            final DockerResponse response = request(fd,
-//                                                    "GET",
-//                                                    String.format("/images/%s/json", image),
-//                                                    Collections.<Pair<String, ?>>emptyList(),
-//                                                    (String)null);
-//            final int status = response.getStatus();
-//            if (200 != status) {
-//                final String msg = CharStreams.toString(new InputStreamReader(response.getInputStream()));
-//                throw new IOException(String.format("Error response from docker API, status: %d, message: %s", status, msg));
-//            }
-//            System.out.println(CharStreams.toString(new InputStreamReader(response.getInputStream())));
-//        } finally {
-//            close(fd);
-//        }
-//    }
 
     public void removeImage(String name) throws IOException {
         final int fd = connect();
@@ -369,7 +377,37 @@ public class DockerConnector {
                 final String msg = CharStreams.toString(new InputStreamReader(response.getInputStream()));
                 throw new IOException(String.format("Error response from docker API, status: %d, message: %s", status, msg));
             }
-            CharStreams.copy(new InputStreamReader(response.getInputStream()), output);
+            final InputStream stream = response.getInputStream();
+            final byte[] buf = new byte[8192];
+            int streamType = 0;
+            while (true) {
+                int r = stream.read(buf, 0, 8);
+                if (r != 8) {
+                    if (r != -1) {
+                        LOG.error("Invalid stream, can't read header. Header of each frame must contain 8 bytes but got {}", r);
+                    }
+                    break;
+                }
+                int prevStreamType = streamType;
+                streamType = buf[0];
+                if (prevStreamType != streamType) {
+                    // write header if stream type is changed
+                    switch (streamType) {
+                        case (1):
+                            output.append("\n====> stdout <====\n\n");
+                            break;
+                        case (2):
+                            output.append("\n====> stderr <====\n\n");
+                            break;
+                    }
+                }
+                int remaining = (buf[7] & 0xFF) + ((buf[6] & 0xFF) << 8) + ((buf[5] & 0xFF) << 16) + ((buf[4] & 0xFF) << 24);
+                while (remaining > 0) {
+                    r = stream.read(buf, 0, Math.min(remaining, buf.length));
+                    remaining -= r;
+                    output.append(new String(buf, 0, r));
+                }
+            }
         } finally {
             close(fd);
         }
@@ -527,10 +565,9 @@ public class DockerConnector {
     }
 
 
-    private void createTarGzArchive(java.io.File tar, java.io.File... files) throws IOException {
+    private void createTarArchive(java.io.File tar, java.io.File... files) throws IOException {
         try (final FileOutputStream fOut = new FileOutputStream(tar);
-             final GZIPOutputStream gzipOut = new GZIPOutputStream(fOut);
-             final TarArchiveOutputStream tarOut = new TarArchiveOutputStream(gzipOut)) {
+             final TarArchiveOutputStream tarOut = new TarArchiveOutputStream(fOut)) {
             for (java.io.File file : files) {
                 if (file.isFile()) {
                     addFile(tarOut, file, "");

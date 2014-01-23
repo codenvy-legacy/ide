@@ -19,63 +19,22 @@
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
+        <groupId>com.codenvy.ide</groupId>
         <version>3.0.0-M8-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ide-core</artifactId>
     <packaging>jar</packaging>
     <name>Codenvy :: Core</name>
-
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <dto-generator-out-directory>${project.build.directory}/generated-sources/dto/</dto-generator-out-directory>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
-        <dto-generator-out-directory>${project.build.directory}/generated-sources/dto/</dto-generator-out-directory>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
     <dependencies>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <scope>provided</scope>
-            <version>${gwt.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-dev</artifactId>
-            <scope>provided</scope>
-            <version>${gwt.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gwt.inject</groupId>
-            <artifactId>gin</artifactId>
-            <version>${gin.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-elemental</artifactId>
-            <version>collide</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-commons</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>javassist</groupId>
-                    <artifactId>javassist</artifactId>
-                </exclusion>
-            </exclusions>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.platform-api</groupId>
-            <artifactId>codenvy-api-vfs</artifactId>
-            <version>${com.codenvy.platform-api.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-env</artifactId>
@@ -92,35 +51,30 @@
             <version>${com.codenvy.commons.version}</version>
         </dependency>
         <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>${javax.validation.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.everrest</groupId>
-            <artifactId>everrest-core</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>javassist</groupId>
-                    <artifactId>javassist</artifactId>
-                </exclusion>
-            </exclusions>
-            <version>${everrest.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.everrest</groupId>
-            <artifactId>everrest-websockets</artifactId>
-            <version>${everrest.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-commons</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>javassist</artifactId>
+                    <groupId>javassist</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>com.codenvy.organization</groupId>
             <artifactId>codenvy-organization-api-java-client</artifactId>
             <version>${com.codenvy.organization.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-vfs</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -133,16 +87,59 @@
             <version>${guava.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-elemental</artifactId>
+            <version>collide</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt.inject</groupId>
+            <artifactId>gin</artifactId>
+            <version>${gin.version}</version>
+        </dependency>
+        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <scope>compile</scope>
             <version>${commons-io.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>${javax.validation.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-core</artifactId>
+            <version>${everrest.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>javassist</artifactId>
+                    <groupId>javassist</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-websockets</artifactId>
+            <version>${everrest.version}</version>
         </dependency>
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
-            <scope>compile</scope>
             <version>${reflections.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-dev</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
@@ -156,25 +153,17 @@
             <version>${tomcat.version}</version>
             <scope>provided</scope>
         </dependency>
-
-        <!-- Testing libraries -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${ch.qos.logback.version}</version>
             <scope>test</scope>
-            <version>${junit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
-            <version>${mockito.version}</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.gwt-test-utils</groupId>
             <artifactId>gwt-test-utils</artifactId>
-            <scope>test</scope>
             <version>${gwt-test-utils.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>javax.validation</groupId>
@@ -184,27 +173,48 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.easytesting</groupId>
             <artifactId>fest-assert</artifactId>
-            <scope>test</scope>
             <version>${org.easytesting.fest-assert.version}</version>
-        </dependency>
-
-        <!-- Logging libraries -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
             <scope>test</scope>
-            <version>${ch.qos.logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
+        <outputDirectory>target/classes</outputDirectory>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>${dto-generator-out-directory}</directory>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+        </testResources>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.8</version>
                 <executions>
                     <execution>
                         <id>add-resource</id>
@@ -250,7 +260,6 @@
             <plugin>
                 <groupId>com.codenvy.platform-api</groupId>
                 <artifactId>codenvy-dto-maven-plugin</artifactId>
-                <version>${com.codenvy.platform-api.version}</version>
                 <executions>
                     <execution>
                         <id>generate-client-dto</id>
@@ -293,12 +302,12 @@
                     </dependency>
                     <dependency>
                         <groupId>com.codenvy.ide</groupId>
-                        <artifactId>codenvy-ide-core</artifactId>
+                        <artifactId>codenvy-ide-commons</artifactId>
                         <version>${project.version}</version>
                     </dependency>
                     <dependency>
                         <groupId>com.codenvy.ide</groupId>
-                        <artifactId>codenvy-ide-commons</artifactId>
+                        <artifactId>codenvy-ide-core</artifactId>
                         <version>${project.version}</version>
                     </dependency>
                     <dependency>
@@ -312,25 +321,5 @@
                 </dependencies>
             </plugin>
         </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-            <resource>
-                <directory>${dto-generator-out-directory}</directory>
-            </resource>
-        </resources>
-        <testSourceDirectory>src/test/java</testSourceDirectory>
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-            </testResource>
-        </testResources>
-        <sourceDirectory>src/main/java</sourceDirectory>
-        <outputDirectory>target/classes</outputDirectory>
     </build>
-
 </project>

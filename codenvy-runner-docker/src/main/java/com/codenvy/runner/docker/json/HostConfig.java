@@ -18,11 +18,15 @@
 package com.codenvy.runner.docker.json;
 
 import java.util.Arrays;
+import java.util.Map;
 
 /** @author andrew00x */
 public class HostConfig {
-    private String[]       binds;
-    private LxcConfParam[] lxcConf;
+    private String[]                   binds;
+    private LxcConfParam[]             lxcConf;
+    private boolean                    privileged;
+    private Map<String, PortBinding[]> portBindings;
+    private boolean                    publishAllPorts;
 
     public String[] getBinds() {
         return binds;
@@ -40,11 +44,38 @@ public class HostConfig {
         this.lxcConf = lxcConf;
     }
 
+    public boolean isPrivileged() {
+        return privileged;
+    }
+
+    public void setPrivileged(boolean privileged) {
+        this.privileged = privileged;
+    }
+
+    public Map<String, PortBinding[]> getPortBindings() {
+        return portBindings;
+    }
+
+    public void setPortBindings(Map<String, PortBinding[]> portBindings) {
+        this.portBindings = portBindings;
+    }
+
+    public boolean isPublishAllPorts() {
+        return publishAllPorts;
+    }
+
+    public void setPublishAllPorts(boolean publishAllPorts) {
+        this.publishAllPorts = publishAllPorts;
+    }
+
     @Override
     public String toString() {
         return "HostConfig{" +
                "binds=" + Arrays.toString(binds) +
                ", lxcConf=" + Arrays.toString(lxcConf) +
+               ", privileged=" + privileged +
+               ", portBindings=" + portBindings +
+               ", publishAllPorts=" + publishAllPorts +
                '}';
     }
 
@@ -57,6 +88,21 @@ public class HostConfig {
 
     public HostConfig withLxcConf(LxcConfParam... lxcConf) {
         this.lxcConf = lxcConf;
+        return this;
+    }
+
+    public HostConfig withPrivileged(boolean privileged) {
+        this.privileged = privileged;
+        return this;
+    }
+
+    public HostConfig withPortBindings(Map<String, PortBinding[]> portBindings) {
+        this.portBindings = portBindings;
+        return this;
+    }
+
+    public HostConfig withPublishAllPorts(boolean publishAllPorts) {
+        this.publishAllPorts = publishAllPorts;
         return this;
     }
 }
