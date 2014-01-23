@@ -21,6 +21,7 @@ import com.codenvy.commons.lang.ExpirableCache;
 import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
 import com.codenvy.organization.model.Role;
+import com.codenvy.organization.model.User;
 import com.codenvy.organization.util.MD5HexPasswordEncrypter;
 import com.codenvy.organization.util.PasswordEncrypter;
 
@@ -31,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -75,9 +77,9 @@ public class VFSPermissionsFilter implements Filter {
             //adaptation to fs
             url = url.replaceAll("/", File.separator);
             //search for dotVFS directory
-            File projectDirectory = new File(fsRootPath.concat(File.separator).concat(url));
+            File projectDirectory = Paths.get(fsRootPath, url).toFile();
             String auth;
-            String user = "";
+            String userName = "";
             String password = "";
             if ((auth = req.getHeader("authorization")) != null) {
                 //get encoded password phrase
@@ -87,18 +89,18 @@ public class VFSPermissionsFilter implements Filter {
                 //get username and password separator ':'
                 int betweenUserAndPassword = userAndPasswordDecoded.indexOf(':');
                 //get username - it is before first ':'
-                user = userAndPasswordDecoded.substring(0, betweenUserAndPassword);
+                userName = userAndPasswordDecoded.substring(0, betweenUserAndPassword);
                 //get password - it is after first ':'
                 password = userAndPasswordDecoded.substring(betweenUserAndPassword + 1);
             }
 
             // Check if user authenticated and hasn't permissions to project, then send response code 403
             try {
-                if (user.isEmpty()) {
+                if (userName.isEmpty()) {
                     // if user wasn't required check project permissions to any user,
                     // if it is not READ or ALL send response code 401 and header with BASIC type of authentication
 
-                    if (!vfsPermissionsChecker.isAccessAllowed(user, null, projectDirectory)) {
+                    if (!vfsPermissionsChecker.isAccessAllowed("", null, projectDirectory)) {
                         ((HttpServletResponse)response).addHeader("Cache-Control", "private");
                         ((HttpServletResponse)response).addHeader("WWW-Authenticate", "Basic");
                         ((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -106,19 +108,20 @@ public class VFSPermissionsFilter implements Filter {
                 } else {
                     Set<Role> userMembershipRoles = null;
                     try {
-                        userMembershipRoles = userManager.getUserMembershipRoles(user, projectDirectory.getParentFile().getName());
+                        User user = userManager.getUserByAlias(userName);
+                        userMembershipRoles = user.getMembership(projectDirectory.getParentFile().getName()).getRoles();
                     } catch (OrganizationServiceException e) {
                         //ignore, let userMembershipRoles be null
                     }
 
                     String encryptedPassword = new String(passwordEncrypter.encrypt(password.getBytes()));
-                    Boolean authenticated = credentialsCache.get((user + encryptedPassword));
+                    Boolean authenticated = credentialsCache.get((userName + encryptedPassword));
                     if (authenticated == null) {
-                        authenticated = userManager.authenticateUser(user, password);
-                        credentialsCache.put(user + encryptedPassword, authenticated);
+                        authenticated = userManager.authenticateUser(userName, password);
+                        credentialsCache.put(userName + encryptedPassword, authenticated);
                     }
 
-                    if (!authenticated || !vfsPermissionsChecker.isAccessAllowed(user, userMembershipRoles, projectDirectory)) {
+                    if (!authenticated || !vfsPermissionsChecker.isAccessAllowed(userName, userMembershipRoles, projectDirectory)) {
                         ((HttpServletResponse)response).sendError(HttpServletResponse.SC_FORBIDDEN);
                     }
                 }
