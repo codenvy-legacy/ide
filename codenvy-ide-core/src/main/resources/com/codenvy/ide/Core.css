@@ -57,6 +57,7 @@
     border-radius: 2px;
     border: 1px solid tabBorder;
     font-weight: 500;
+    height: 26px;
     background: linear-gradient(to bottom, buttonTopColor 0%, buttonTopColor 3%,buttonColor 4%, buttonColor 100%);
 }
 .gwt-Button:hover, .gwt-Button[disabled]:hover{

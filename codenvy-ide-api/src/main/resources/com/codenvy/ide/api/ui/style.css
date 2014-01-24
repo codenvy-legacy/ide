@@ -85,9 +85,9 @@
 @def largeDropdownLabel 12px;
 
     /* Fonts */
-@def alternativeFontFamily "Myriad Pro","open sans", arial, sans-serif;
-@def fileTreeFontFamily "Myriad Pro","Lucida Grande", Verdana, Arial;
-@def mainFontFamily "Myriad Pro",arial,Verdana,Verdana,sans-serif;
+@def alternativeFontFamily "Helvetica Neue", "Myriad Pro","open sans", arial, sans-serif;
+@def fileTreeFontFamily "Helvetica Neue", "Myriad Pro","Lucida Grande", Verdana, Arial;
+@def mainFontFamily "Helvetica Neue", "Myriad Pro",arial,Verdana,Verdana,sans-serif;
 @def editorLineHeight 15px;
 @def editorFontFamily 'Andale Mono', monospace;
 
@@ -103,9 +103,11 @@
 @eval dialogBottomLeft com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
 @eval dialogBottomCenter com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
 @eval dialogBottomRight com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
-
 @eval dialogContentBackground com.codenvy.ide.api.ui.theme.Style.getDialogContentBackground();
 
+/*Window*/
+@eval windowContentBackground com.codenvy.ide.api.ui.theme.Style.getWindowContentBackground();
+@eval windowHeaderBackground com.codenvy.ide.api.ui.theme.Style.getWindowHeaderBackground();
 
 /*syntax highlight*/
 @eval keyword com.codenvy.ide.api.ui.theme.Style.getEditorKeyWord();

@@ -306,4 +306,14 @@ public class DefaultTheme implements Theme{
     public String getEditorString2() {
         return "#f50";
     }
+
+    @Override
+    public String getWindowContentBackground() {
+        return getDialogContentBackground();
+    }
+
+    @Override
+    public String getWindowHeaderBackground() {
+        return getTabBorderColor();
+    }
 }

@@ -128,4 +128,8 @@ public interface Theme {
     String getEditorAttribute();
 
     String getEditorString2();
+
+    String getWindowContentBackground();
+
+    String getWindowHeaderBackground();
 }

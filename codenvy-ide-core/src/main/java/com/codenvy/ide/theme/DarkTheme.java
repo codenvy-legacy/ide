@@ -275,4 +275,14 @@ public class DarkTheme implements Theme {
     public String getEditorString2() {
         return "#CC7832";
     }
+
+    @Override
+    public String getWindowContentBackground() {
+        return "#373737";
+    }
+
+    @Override
+    public String getWindowHeaderBackground() {
+        return "#656565";
+    }
 }
