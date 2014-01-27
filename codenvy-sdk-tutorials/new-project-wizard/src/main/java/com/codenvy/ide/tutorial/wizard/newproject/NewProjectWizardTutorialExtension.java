@@ -9,7 +9,6 @@ import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.tutorial.wizard.newproject.pages.paas.PaasPageProvider;
@@ -63,32 +62,32 @@ public class NewProjectWizardTutorialExtension {
                                MY_TEMPLATE_1,
                                null,
                                MY_PROJECT_TYPE,
-                               Collections.<String>createArray(),
+//                               Collections.<String>createArray(),
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(
                                        new TemplatePageProvider("Template 1 page", MY_TEMPLATE_1)));
         templateAgent.register(MY_TEMPLATE_2,
                                MY_TEMPLATE_2,
                                null,
                                MY_PROJECT_TYPE,
-                               Collections.<String>createArray(),
+//                               Collections.<String>createArray(),
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(
                                        new TemplatePageProvider("Template 2 page", MY_TEMPLATE_2)));
 
-        StringMap<Array<String>> natures = Collections.createStringMap();
-        natures.put(MY_PROJECT_TYPE, Collections.<String>createArray());
+        Array<String> projectTypes = Collections.createArray();
+        projectTypes.add(MY_PROJECT_TYPE);
 
         Array<Provider<? extends AbstractPaasPage>> wizardPages = Collections.createArray();
         wizardPages.add(new PaasPageProvider("PaaS 1 page", MY_PAAS_1));
 
-        paasAgent.register(MY_PAAS_1, MY_PAAS_1, null, natures, wizardPages, false);
+        paasAgent.register(MY_PAAS_1, MY_PAAS_1, null, projectTypes, wizardPages, false);
 
-        StringMap<Array<String>> natures2 = Collections.createStringMap();
-        natures2.put(MY_PROJECT_TYPE, Collections.<String>createArray());
+        Array<String> projectTypes2 = Collections.createArray();
+        projectTypes2.add(MY_PROJECT_TYPE);
 
         Array<Provider<? extends AbstractPaasPage>> wizardPages2 = Collections.createArray();
         wizardPages2.add(new PaasPageProvider("PaaS 2 page", MY_PAAS_2));
 
-        paasAgent.register(MY_PAAS_2, MY_PAAS_2, null, natures2, wizardPages2, false);
+        paasAgent.register(MY_PAAS_2, MY_PAAS_2, null, projectTypes2, wizardPages2, false);
 
         newProjectWizard.addPageAfterFirst(new PageProvider("Page after first"));
         newProjectWizard.addPageAfterChooseTemplate(new PageProvider("Page after choose template"));

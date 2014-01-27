@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.wizard.newproject.pages;
 
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.ide.CoreLocalizationConstant;
@@ -28,9 +29,8 @@ import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.resources.ProjectTypeData;
+import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.wizard.newproject.PaaSAgentImpl;
-import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageView;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -71,37 +71,33 @@ public class NewProjectPagePresenterTest {
     public static final boolean IS_COMPLETED     = true;
     public static final boolean IS_NOT_COMPLETED = false;
     public static final boolean AVAILABLE        = true;
-
-    public static String items =
+    public static       String  items            =
             "{\"numItems\":1,\"hasMoreItems\":false,\"items\":[{\"projectType\":\"War\",\"mimeType\":\"text/vnd.ideproject+directory\"," +
             "\"creationDate\":-1,\"links\":null,\"vfsId\":null,\"itemType\":\"PROJECT\",\"parentId\":\"ZGV2LW1vbml0OnJvb3Q\"," +
             "\"name\":\"g1\",\"properties\":null,\"permissions\":null,\"id\":\"ZGV2LW1vbml0Oi9nMQ\",\"path\":\"/g1\"}]}";
-
     @Mock
-    private NewProjectPageView       view;
+    private NewProjectPageView            view;
     @Mock
-    private Resources                resources;
+    private Resources                     resources;
     @Mock
-    private ProjectTypeAgentImpl     projectTypeAgent;
+    private ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
     @Mock
-    private PaaSAgentImpl            paasAgent;
+    private PaaSAgentImpl                 paasAgent;
     @Mock
-    private ResourceProvider         resourceProvider;
+    private ResourceProvider              resourceProvider;
     @Mock
-    private CoreLocalizationConstant constant;
+    private CoreLocalizationConstant      constant;
     @Mock
-    private WizardContext            wizardContext;
+    private WizardContext                 wizardContext;
     @Mock
-    private ProjectTypeData          projectType;
+    private ProjectTypeDescriptor         projectTypeDescriptor;
     @Mock
-    private PaaS                     paas;
+    private PaaS                          paas;
     @Mock
-    private UpdateDelegate           delegate;
+    private UpdateDelegate                delegate;
     @Mock
-    private DtoFactory               dtoFactory;
-
-
-    private NewProjectPagePresenter presenter;
+    private DtoFactory                    dtoFactory;
+    private NewProjectPagePresenter       presenter;
 
     /** Prepare test when project list is come. */
     private void setUpWithProjects() {
@@ -128,13 +124,14 @@ public class NewProjectPagePresenterTest {
         when(itemList.getItems()).thenReturn(list);
         when(item.getName()).thenReturn(PROJECT_NAME);
 
-        Array<ProjectTypeData> projectTypes = Collections.createArray(projectType);
-        when(projectTypeAgent.getProjectTypes()).thenReturn(projectTypes);
+        Array<ProjectTypeDescriptor> projectTypes = Collections.createArray(projectTypeDescriptor);
+        when(projectTypeDescriptorRegistry.getDescriptors()).thenReturn(projectTypes);
 
         Array<PaaS> paases = Collections.createArray(paas);
         when(paasAgent.getPaaSes()).thenReturn(paases);
 
-        presenter = new NewProjectPagePresenter(view, resources, projectTypeAgent, paasAgent, resourceProvider, constant, dtoFactory);
+        presenter = new NewProjectPagePresenter(view, resources, projectTypeDescriptorRegistry, paasAgent, resourceProvider, constant,
+                                                dtoFactory);
         presenter.setContext(wizardContext);
         presenter.setUpdateDelegate(delegate);
     }
@@ -159,7 +156,7 @@ public class NewProjectPagePresenterTest {
     public void testIsCompletedWhenHaveNotPaaS() throws Exception {
         setUp();
         when(wizardContext.getData(NewProjectWizard.PROJECT_NAME)).thenReturn(PROJECT_NAME);
-        when(wizardContext.getData(PROJECT_TYPE)).thenReturn(mock(ProjectTypeData.class));
+        when(wizardContext.getData(PROJECT_TYPE)).thenReturn(mock(ProjectTypeDescriptor.class));
 
         assertEquals(presenter.isCompleted(), IS_NOT_COMPLETED);
     }
@@ -168,7 +165,7 @@ public class NewProjectPagePresenterTest {
     public void testIsCompleted() throws Exception {
         setUpWithProjects();
         when(wizardContext.getData(NewProjectWizard.PROJECT_NAME)).thenReturn(PROJECT_NAME);
-        when(wizardContext.getData(PROJECT_TYPE)).thenReturn(mock(ProjectTypeData.class));
+        when(wizardContext.getData(PROJECT_TYPE)).thenReturn(mock(ProjectTypeDescriptor.class));
         when(wizardContext.getData(PAAS)).thenReturn(mock(PaaS.class));
 
         assertEquals(presenter.isCompleted(), IS_COMPLETED);
@@ -177,7 +174,7 @@ public class NewProjectPagePresenterTest {
     @Test
     public void testFocusComponent() throws Exception {
         setUp();
-        when(paas.isAvailable(anyString(), (Array<String>)anyObject())).thenReturn(AVAILABLE);
+        when(paas.isAvailable(anyString())).thenReturn(AVAILABLE);
 
         presenter.focusComponent();
 
@@ -185,7 +182,7 @@ public class NewProjectPagePresenterTest {
         verify(view).selectProjectType(0);
         verify(view).selectPaas(0);
         verify(delegate, times(2)).updateControls();
-        verify(wizardContext).putData(eq(PROJECT_TYPE), eq(projectType));
+        verify(wizardContext).putData(eq(PROJECT_TYPE), eq(projectTypeDescriptor));
         verify(wizardContext).putData(eq(PAAS), eq(paas));
     }
 
@@ -259,7 +256,7 @@ public class NewProjectPagePresenterTest {
         setUpWithProjects();
         when(view.getProjectName()).thenReturn("projectName2");
         when(constant.choosePaaS()).thenReturn(PROJECT_NAME);
-        when(wizardContext.getData(eq(PROJECT_TYPE))).thenReturn(projectType);
+        when(wizardContext.getData(eq(PROJECT_TYPE))).thenReturn(projectTypeDescriptor);
         presenter.checkProjectName();
 
         assertEquals(presenter.getNotice(), PROJECT_NAME);
@@ -269,7 +266,7 @@ public class NewProjectPagePresenterTest {
     public void testGetNotice() throws Exception {
         setUpWithProjects();
         when(view.getProjectName()).thenReturn("projectName2");
-        when(wizardContext.getData(eq(PROJECT_TYPE))).thenReturn(projectType);
+        when(wizardContext.getData(eq(PROJECT_TYPE))).thenReturn(projectTypeDescriptor);
         when(wizardContext.getData(eq(PAAS))).thenReturn(paas);
         presenter.checkProjectName();
 
@@ -289,7 +286,7 @@ public class NewProjectPagePresenterTest {
     @Test
     public void testOnProjectTypeSelected() throws Exception {
         setUp();
-        when(paas.isAvailable(anyString(), (Array<String>)anyObject())).thenReturn(AVAILABLE);
+        when(paas.isAvailable(anyString())).thenReturn(AVAILABLE);
 
         presenter.focusComponent();
         reset(view);
@@ -300,7 +297,7 @@ public class NewProjectPagePresenterTest {
         verify(view).selectProjectType(0);
         verify(view).selectPaas(0);
         verify(delegate, times(2)).updateControls();
-        verify(wizardContext).putData(eq(PROJECT_TYPE), eq(projectType));
+        verify(wizardContext).putData(eq(PROJECT_TYPE), eq(projectTypeDescriptor));
         verify(wizardContext).putData(eq(PAAS), eq(paas));
     }
 

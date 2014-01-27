@@ -57,7 +57,7 @@ public class CreateMavenWarProjectPage extends AbstractTemplatePage {
      */
     @Inject
     public CreateMavenWarProjectPage(CreateMavenProjectClientService service, ResourceProvider resourceProvider) {
-        super(null, null, JavaExtension.WAR_PROJECT_ID);
+        super(null, null, JavaExtension.WAR_MAVEN_TEMPLATE_ID);
         this.service = service;
         this.resourceProvider = resourceProvider;
     }

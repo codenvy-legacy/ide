@@ -114,58 +114,58 @@ public class TutorialsExtension {
                                "Notification API tutorial.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
-                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
+//                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(createNotificationTutorialPage));
         templateAgent.register(ACTION_TUTORIAL_ID,
                                "Action API tutorial.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
-                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
+//                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(createActionTutorialPage));
         templateAgent.register(WIZARD_TUTORIAL_ID,
                                "Wizard API tutorial.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
-                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
+//                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(createWizardTutorialPageProvider));
         templateAgent.register(NEW_PROJECT_WIZARD_TUTORIAL_ID,
                                "New project wizard tutorial.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
-                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
+//                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(
                                        createNewProjectWizardTutorialPageProvider));
         templateAgent.register(NEW_RESOURCE_WIZARD_TUTORIAL_ID,
                                "New resource wizard tutorial.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
-                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
+//                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(
                                        createNewResourceWizardTutorialPageProvider));
         templateAgent.register(PARTS_TUTORIAL_ID,
                                "Part API tutorial.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
-                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
+//                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(createPartsTutorialPageProvider));
         templateAgent.register(EDITOR_TUTORIAL_ID,
                                "Editor API tutorial.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
-                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
+//                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(createEditorTutorialPageProvider));
         templateAgent.register(GIN_TUTORIAL_ID,
                                "GIN (GWT Injection) tutorial.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
-                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
+//                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(createGinTutorialPageProvider));
 
         templateAgent.register(WYSIWIG_EDITOR_TUTORIAL_ID,
                                "WYSIWYG Editor tutorial.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
-                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
+//                               Collections.createArray(TUTORIAL_PROJECT_TYPE),
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(createWysiwygTutorialPageProvider));
     }
 }

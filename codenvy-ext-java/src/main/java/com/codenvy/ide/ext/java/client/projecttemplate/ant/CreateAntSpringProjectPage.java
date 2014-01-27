@@ -56,7 +56,7 @@ public class CreateAntSpringProjectPage extends AbstractTemplatePage {
      */
     @Inject
     public CreateAntSpringProjectPage(CreateAntProjectClientService service, ResourceProvider resourceProvider) {
-        super(null, null, JavaExtension.ANT_SPRING_PROJECT_ID);
+        super(null, null, JavaExtension.ANT_SPRING_TEMPLATE_ID);
         this.service = service;
         this.resourceProvider = resourceProvider;
     }

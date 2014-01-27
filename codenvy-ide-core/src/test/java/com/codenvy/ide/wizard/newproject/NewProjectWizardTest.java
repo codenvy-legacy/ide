@@ -26,7 +26,6 @@ import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.wizard.BaseWizardTest;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
@@ -108,13 +107,13 @@ public class NewProjectWizardTest extends BaseWizardTest {
         wizard.addPage(newProjectPageProvider);
         wizard.addPage(chooseTemplatePageProvider);
 
-        template = new Template("id", "title", null, "primaryNature", Collections.createArray("secondaryNature"));
+        template = new Template("id", "title", null, "projectTypeId");
 
-        StringMap<Array<String>> natures = Collections.createStringMap();
-        natures.put("primaryNature", Collections.createArray("secondaryNature"));
-        paas = new PaaS("id", "title", null, natures, false);
-        nonePaas = new PaaS("id", "title", null, natures, false);
-        paasWithTemplate = new PaaS("id", "title", null, natures, true);
+        Array<String> projectTypes = Collections.createArray();
+        projectTypes.add("projectTypeId");
+        paas = new PaaS("id", "title", null, projectTypes, false);
+        nonePaas = new PaaS("id", "title", null, projectTypes, false);
+        paasWithTemplate = new PaaS("id", "title", null, projectTypes, true);
 
         /** Add template pages to wizard. */
         Provider<? extends WizardPage> templatePageProvider = mock(Provider.class);

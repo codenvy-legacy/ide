@@ -56,7 +56,7 @@ public class CreateMavenSpringProjectPage extends AbstractTemplatePage {
      */
     @Inject
     public CreateMavenSpringProjectPage(CreateMavenProjectClientService service, ResourceProvider resourceProvider) {
-        super(null, null, JavaExtension.SPRING_PROJECT_ID);
+        super(null, null, JavaExtension.SPRING_TEMPLATE_ID);
         this.service = service;
         this.resourceProvider = resourceProvider;
     }

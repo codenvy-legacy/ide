@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.wizard.newproject.pages;
 
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.template.Template;
@@ -24,7 +25,6 @@ import com.codenvy.ide.api.ui.wizard.Wizard;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.wizard.newproject.TemplateAgentImpl;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePageView;
@@ -71,14 +71,14 @@ public class ChooseTemplatePagePresenterTest {
     private Wizard.UpdateDelegate       delegate;
     @Mock
     private WizardContext               wizardContext;
+    @Mock
+    private ProjectTypeDescriptor       projectType;
     private Template                    template;
-    private ProjectTypeData             projectType;
     private ChooseTemplatePagePresenter page;
 
     @Before
     public void setUp() {
-        template = new Template("id", "title", null, "primaryNature", Collections.createArray("secondaryNature"));
-        projectType = new ProjectTypeData("typeName", "title", null, "primaryNature", Collections.createArray("secondaryNature"), null);
+        template = new Template("id", "title", null, "projectTypeId");
 
         page = new ChooseTemplatePagePresenter(view, resources, templateAgent, constant);
         page.setContext(wizardContext);
@@ -99,7 +99,7 @@ public class ChooseTemplatePagePresenterTest {
     @Test
     public void testCanSkip() throws Exception {
         when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectType);
-        when(templateAgent.getTemplatesForProjectType(anyString(), (Array<String>)anyObject()))
+        when(templateAgent.getTemplatesForProjectType(anyString()))
                 .thenReturn(Collections.createArray(template));
 
         assertEquals(page.canSkip(), CAN_SKIP);
@@ -111,7 +111,7 @@ public class ChooseTemplatePagePresenterTest {
     @Test
     public void testCanNotSkip() throws Exception {
         when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectType);
-        when(templateAgent.getTemplatesForProjectType(anyString(), (Array<String>)anyObject()))
+        when(templateAgent.getTemplatesForProjectType(anyString()))
                 .thenReturn(Collections.createArray(template, template));
 
         assertEquals(page.canSkip(), CAN_NOT_SKIP);
@@ -123,7 +123,7 @@ public class ChooseTemplatePagePresenterTest {
     @Test
     public void testFocusComponent() throws Exception {
         when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectType);
-        when(templateAgent.getTemplatesForProjectType(anyString(), (Array<String>)anyObject()))
+        when(templateAgent.getTemplatesForProjectType(anyString()))
                 .thenReturn(Collections.createArray(template));
 
         page.canSkip();
@@ -160,7 +160,7 @@ public class ChooseTemplatePagePresenterTest {
     @Test
     public void testGo() throws Exception {
         when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectType);
-        when(templateAgent.getTemplatesForProjectType(anyString(), (Array<String>)anyObject()))
+        when(templateAgent.getTemplatesForProjectType(anyString()))
                 .thenReturn(Collections.createArray(template, template));
         AcceptsOneWidget container = mock(AcceptsOneWidget.class);
 

@@ -66,6 +66,7 @@ public class UserClientServiceImpl implements UserClientService {
             throws RequestException {
         final String requestUrl = restContext + UPDATE_USER_ATTRIBUTES;
         String updateAttributesData = JsonHelper.toJson(updateUserAttributes);
-        AsyncRequest.build(RequestBuilder.POST, requestUrl).loader(loader).header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(updateAttributesData).send(callback);
+        AsyncRequest.build(RequestBuilder.POST, requestUrl).loader(loader).header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+                    .data(updateAttributesData).send(callback);
     }
 }

@@ -40,8 +40,8 @@ import javax.validation.constraints.NotNull;
  */
 @Singleton
 public class TemplateAgentImpl implements TemplateAgent {
-    private       NewProjectWizard    newProjectWizard;
     private final StringMap<Template> templates;
+    private       NewProjectWizard    newProjectWizard;
 
     /** Create agent. */
     @Inject
@@ -55,15 +55,14 @@ public class TemplateAgentImpl implements TemplateAgent {
     public void register(@NotNull String id,
                          @NotNull String title,
                          @Nullable ImageResource icon,
-                         @NotNull String primaryNature,
-                         @NotNull Array<String> secondaryNatures,
+                         @NotNull String projectTypeId,
                          @NotNull Array<Provider<? extends AbstractTemplatePage>> wizardPages) {
         if (templates.containsKey(id)) {
             Window.alert("Template with " + id + " id already exists");
             return;
         }
 
-        Template template = new Template(id, title, icon, primaryNature, secondaryNatures);
+        Template template = new Template(id, title, icon, projectTypeId);
         templates.put(id, template);
         for (Provider<? extends AbstractTemplatePage> provider : wizardPages.asIterable()) {
             newProjectWizard.addPageAfterChooseTemplate(provider);
@@ -71,19 +70,17 @@ public class TemplateAgentImpl implements TemplateAgent {
     }
 
     /**
-     * Returns all available templates for creating project.
+     * Returns all available templates for the specified project type id.
      *
-     * @param primaryNature
-     *         needed primary nature
-     * @param secondaryNatures
-     *         needed secondary nature
-     * @return available project type
+     * @param projectTypeId
+     *         project type id
+     * @return available project types
      */
     @NotNull
-    public Array<Template> getTemplatesForProjectType(@NotNull String primaryNature, @NotNull Array<String> secondaryNatures) {
+    public Array<Template> getTemplatesForProjectType(@NotNull String projectTypeId) {
         Array<Template> availableTemplates = Collections.createArray();
         for (Template template : templates.getValues().asIterable()) {
-            if (template.isAvailable(primaryNature, secondaryNatures)) {
+            if (template.isAvailable(projectTypeId)) {
                 availableTemplates.add(template);
             }
         }

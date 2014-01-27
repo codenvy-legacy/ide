@@ -17,15 +17,18 @@
  */
 package com.codenvy.ide.client;
 
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.theme.Style;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
+import com.codenvy.ide.api.projecttype.ProjectTypeDescriptionClientService;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
+import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.Utils;
@@ -70,6 +73,8 @@ public class BootstrapController {
                                final ExtensionInitializer extensionInitializer,
                                final PreferencesManagerImpl preferencesManager,
                                UserClientService userService,
+                               final ProjectTypeDescriptionClientService projectTypeService,
+                               final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
                                final ResourceProvider resourceProvider,
                                DtoRegistrar dtoRegistrar,
                                final DtoFactory dtoFactory,
@@ -109,6 +114,7 @@ public class BootstrapController {
                         themeAgent.setCurrentThemeId(themeAgent.getDefault().getId());
                     }
                     styleInjector.inject();
+
                     // initialize components
                     componentRegistry.get().start(new Callback<Void, ComponentException>() {
                         @Override
@@ -133,7 +139,7 @@ public class BootstrapController {
 
                             // Display IDE
                             workspacePresenter.go(mainPanel);
-                            //Display list of projects in project explorer
+                            // Display list of projects in project explorer
                             resourceProvider.showListProjects();
                         }
 
@@ -142,6 +148,24 @@ public class BootstrapController {
                             Log.error(BootstrapController.class, "FAILED to start service:" + caught.getComponent(), caught);
                         }
                     });
+
+                    // get project type descriptors from the server
+                    try {
+                        projectTypeService.getProjectTypes(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                            @Override
+                            protected void onSuccess(String result) {
+                                projectTypeDescriptorRegistry.registerDescriptors(
+                                        dtoFactory.createListDtoFromJson(result, ProjectTypeDescriptor.class));
+                            }
+
+                            @Override
+                            protected void onFailure(Throwable exception) {
+                                Log.error(BootstrapController.class, exception);
+                            }
+                        });
+                    } catch (RequestException e) {
+                        Log.error(BootstrapController.class, e);
+                    }
                 }
 
                 @Override

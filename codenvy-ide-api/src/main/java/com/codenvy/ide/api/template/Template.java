@@ -17,14 +17,13 @@
  */
 package com.codenvy.ide.api.template;
 
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.resources.client.ImageResource;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 /**
- * Aggregate information about registered Template for creating a project.
+ * Aggregate information about registered template for creating a project.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
@@ -32,8 +31,7 @@ public class Template {
     private ImageResource icon;
     private String        id;
     private String        title;
-    private String        primaryNature;
-    private Array<String> secondaryNature;
+    private String        projectTypeId;
 
     /**
      * Create template.
@@ -44,21 +42,17 @@ public class Template {
      *         title that will be shown on a new project wizard
      * @param icon
      *         image that will be shown on a new project wizard
-     * @param primaryNature
-     *         primary nature that this template supports
-     * @param secondaryNature
-     *         secondary nature which this template supports
+     * @param projectTypeId
+     *         project type that this template supports
      */
     public Template(@NotNull String id,
                     @NotNull String title,
                     @Nullable ImageResource icon,
-                    @NotNull String primaryNature,
-                    @NotNull Array<String> secondaryNature) {
+                    @NotNull String projectTypeId) {
         this.id = id;
         this.icon = icon;
         this.title = title;
-        this.primaryNature = primaryNature;
-        this.secondaryNature = secondaryNature;
+        this.projectTypeId = projectTypeId;
     }
 
     /** @return {@link String} template id */
@@ -80,23 +74,13 @@ public class Template {
     }
 
     /**
-     * Returns whether the template is available for a chosen primary and secondary natures.
+     * Returns whether the template supports the specified project type.
      *
-     * @param primaryNature
-     *         chosen primary nature
-     * @param secondaryNature
-     *         chosen secondary nature
-     * @return <code>true</code> if a template is available, and <code>false</code> otherwise
+     * @param projectTypeId
+     *         project type to check
+     * @return <code>true</code> if a template supports project type, and <code>false</code> otherwise
      */
-    public boolean isAvailable(@NotNull String primaryNature, @NotNull Array<String> secondaryNature) {
-        if (this.primaryNature.equals(primaryNature)) {
-            for (String nature : secondaryNature.asIterable()) {
-                if (!this.secondaryNature.contains(nature)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
+    public boolean isAvailable(@NotNull String projectTypeId) {
+        return this.projectTypeId.equals(projectTypeId);
     }
 }

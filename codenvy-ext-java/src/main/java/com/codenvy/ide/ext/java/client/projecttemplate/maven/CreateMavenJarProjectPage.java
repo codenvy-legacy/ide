@@ -19,9 +19,7 @@ package com.codenvy.ide.ext.java.client.projecttemplate.maven;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -36,12 +34,8 @@ import java.util.Map;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
 import static com.codenvy.ide.collections.Collections.createArray;
-import static com.codenvy.ide.ext.java.client.JavaExtension.JAR_PROJECT_ID;
-import static com.codenvy.ide.ext.java.client.JavaExtension.JAVA_APPLICATION_PROJECT_TYPE;
-import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
+import static com.codenvy.ide.ext.java.client.JavaExtension.JAR_TEMPLATE_ID;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS;
-import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
-import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
 /**
  * The wizard page for creating a Java project from a project template.
@@ -49,7 +43,7 @@ import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMAR
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class CreateMavenJavaProjectPage extends AbstractTemplatePage {
+public class CreateMavenJarProjectPage extends AbstractTemplatePage {
     private CreateMavenProjectClientService service;
     private ResourceProvider                resourceProvider;
 
@@ -61,8 +55,8 @@ public class CreateMavenJavaProjectPage extends AbstractTemplatePage {
      * @param resourceProvider
      */
     @Inject
-    public CreateMavenJavaProjectPage(CreateMavenProjectClientService service, ResourceProvider resourceProvider) {
-        super(null, null, JAR_PROJECT_ID);
+    public CreateMavenJarProjectPage(CreateMavenProjectClientService service, ResourceProvider resourceProvider) {
+        super(null, null, JAR_TEMPLATE_ID);
         this.service = service;
         this.resourceProvider = resourceProvider;
     }

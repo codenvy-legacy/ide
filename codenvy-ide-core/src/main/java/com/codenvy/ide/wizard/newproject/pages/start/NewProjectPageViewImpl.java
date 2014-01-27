@@ -17,12 +17,12 @@
  */
 package com.codenvy.ide.wizard.newproject.pages.start;
 
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.resources.ProjectTypeData;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -103,7 +103,7 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
 
     /** {@inheritDoc} */
     @Override
-    public void setProjectTypes(Array<ProjectTypeData> projectTypes) {
+    public void setProjectTypes(Array<ProjectTypeDescriptor> projectTypes) {
         projectTypeButtons = Collections.createArray();
         //create table where contains kind of technology
         Grid grid = new Grid(2, projectTypes.size());
@@ -112,9 +112,10 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
 
         //create button for each available wizard
         for (int i = 0; i < projectTypes.size(); i++) {
-            final ProjectTypeData projectTypeData = projectTypes.get(i);
+            final ProjectTypeDescriptor projectTypeData = projectTypes.get(i);
 
-            ImageResource icon = projectTypeData.getIcon();
+            // TODO: add project type icon
+            ImageResource icon = null;//projectTypeData.getIcon();
             final ToggleButton btn;
             if (icon != null) {
                 btn = new ToggleButton(new Image(icon));
@@ -132,7 +133,7 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
             grid.setWidget(0, i, btn);
             formatter.setHorizontalAlignment(0, i, HasHorizontalAlignment.ALIGN_CENTER);
 
-            Label title = new Label(projectTypeData.getTitle());
+            Label title = new Label(projectTypeData.getProjectTypeName());
             grid.setWidget(1, i, title);
             formatter.setHorizontalAlignment(1, i, HasHorizontalAlignment.ALIGN_CENTER);
 

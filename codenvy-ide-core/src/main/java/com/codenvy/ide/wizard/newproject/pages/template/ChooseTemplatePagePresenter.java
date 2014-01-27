@@ -17,12 +17,12 @@
  */
 package com.codenvy.ide.wizard.newproject.pages.template;
 
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.wizard.newproject.TemplateAgentImpl;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -110,9 +110,9 @@ public class ChooseTemplatePagePresenter extends AbstractWizardPage implements C
 
     /** Prepare list of templates available for a chosen project type and show this list on view. */
     private void prepareTemplates() {
-        ProjectTypeData projectType = wizardContext.getData(PROJECT_TYPE);
+        ProjectTypeDescriptor projectType = wizardContext.getData(PROJECT_TYPE);
         if (projectType != null) {
-            templates = templateAgent.getTemplatesForProjectType(projectType.getPrimaryNature(), projectType.getSecondaryNature());
+            templates = templateAgent.getTemplatesForProjectType(projectType.getProjectTypeId());
             view.setTemplates(templates);
             if (!templates.isEmpty() && needToChange) {
                 Template template = templates.get(0);

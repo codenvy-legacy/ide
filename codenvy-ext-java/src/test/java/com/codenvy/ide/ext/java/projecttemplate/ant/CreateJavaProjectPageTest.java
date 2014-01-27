@@ -29,7 +29,7 @@ import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
 
-import static com.codenvy.ide.ext.java.client.JavaExtension.ANT_JAR_PROJECT_ID;
+import static com.codenvy.ide.ext.java.client.JavaExtension.ANT_JAR_TEMPLATE_ID;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
@@ -111,7 +111,7 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
 
     @Override
     public void testInContext() {
-        when(template.getId()).thenReturn(ANT_JAR_PROJECT_ID);
+        when(template.getId()).thenReturn(ANT_JAR_TEMPLATE_ID);
 
         super.testInContext();
     }

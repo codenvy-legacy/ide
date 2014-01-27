@@ -86,19 +86,19 @@ public class ExtRuntimeExtension {
         codenvyExtensionProperties.add(new Property("folders.source", Collections.createArray("src/main/java", "src/main/resources")));
 
         // register project type
-        projectTypeAgent.register(CODENVY_EXTENSION_PROJECT_TYPE,
-                                  "Codenvy extension",
-                                  resources.codenvyExtensionProject(),
-                                  PRIMARY_NATURE,
-                                  Collections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
-                                  codenvyExtensionProperties);
+//        projectTypeAgent.register(CODENVY_EXTENSION_PROJECT_TYPE,
+//                                  "Codenvy extension",
+//                                  resources.codenvyExtensionProject(),
+//                                  PRIMARY_NATURE,
+//                                  Collections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
+//                                  codenvyExtensionProperties);
 
         // register templates
         templateAgent.register(EMPTY_EXTENSION_ID,
                                "Empty Codenvy extension project.",
                                resources.codenvyExtensionTemplate(),
                                PRIMARY_NATURE,
-                               Collections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
+//                               Collections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(
                                        createEmptyCodenvyExtensionPage));
 
@@ -106,7 +106,7 @@ public class ExtRuntimeExtension {
                                "Gist extension project.",
                                resources.codenvyExtensionTemplate(),
                                PRIMARY_NATURE,
-                               Collections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
+//                               Collections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(
                                        createSampleCodenvyExtensionPage));
     }

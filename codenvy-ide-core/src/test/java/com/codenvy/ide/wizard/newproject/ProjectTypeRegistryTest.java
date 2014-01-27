@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.model.Property;
@@ -27,46 +28,44 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
 /**
- * Testing {@link ProjectTypeAgentImpl} functionality.
+ * Testing {@link ProjectTypeDescriptorRegistryImpl} functionality.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @GwtModule("com.codenvy.ide.Core")
-public class ProjectTypeAgentImplTest extends GwtTestWithMockito {
-    private ProjectTypeAgentImpl agent;
-    private Array<Property> projectProperties;
+public class ProjectTypeRegistryTest extends GwtTestWithMockito {
+    private ProjectTypeDescriptorRegistryImpl registry;
+    private Array<Property>                   projectProperties;
 
     @Before
     public void setUp() {
-        agent = new ProjectTypeAgentImpl();
+        registry = new ProjectTypeDescriptorRegistryImpl();
         projectProperties = Collections.createArray();
-        projectProperties.add(new Property("propertieName", "propertieValue"));
+        projectProperties.add(new Property("propertyName", "propertyValue"));
     }
 
     @Test
     public void testRegister() throws Exception {
-        assertEquals(agent.getProjectTypes().size(), 0);
+        assertEquals(registry.getDescriptors().size(), 0);
 
-        Array<Property> projectProperties = Collections.createArray();
-        projectProperties.add(new Property("propertieName", "propertieValue"));
+        registry.registerDescriptor(mock(ProjectTypeDescriptor.class));
 
-        agent.register("type", "title", null, "primaryNature", Collections.createArray("secondaryNature"), projectProperties);
-
-        assertEquals(agent.getProjectTypes().size(), 1);
+        assertEquals(registry.getDescriptors().size(), 1);
     }
 
     @Test
     public void testRegisterWhenProjectTypeIsExist() throws Exception {
-        assertEquals(agent.getProjectTypes().size(), 0);
+        assertEquals(registry.getDescriptors().size(), 0);
 
-        agent.register("type", "title", null, "primaryNature", Collections.createArray("secondaryNature"), projectProperties);
+        registry.registerDescriptor(mock(ProjectTypeDescriptor.class));
 
-        assertEquals(agent.getProjectTypes().size(), 1);
+        assertEquals(registry.getDescriptors().size(), 1);
 
-        agent.register("type", "title", null, "primaryNature", Collections.createArray("secondaryNature"), projectProperties);
+        registry.registerDescriptor(mock(ProjectTypeDescriptor.class));
 
-        assertEquals(agent.getProjectTypes().size(), 1);
+        assertEquals(registry.getDescriptors().size(), 1);
     }
 }

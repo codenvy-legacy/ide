@@ -17,9 +17,7 @@
  */
 package com.codenvy.ide.ext.java.projecttemplate.maven;
 
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenJavaProjectPage;
-import com.codenvy.ide.resources.model.Property;
+import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenJarProjectPage;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -31,7 +29,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.ext.java.client.JavaExtension.JAR_PROJECT_ID;
+import static com.codenvy.ide.ext.java.client.JavaExtension.JAR_TEMPLATE_ID;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
@@ -39,7 +37,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 /**
- * Testing {@link com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenJavaProjectPage} functionality.
+ * Testing {@link com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenJarProjectPage} functionality.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
@@ -48,7 +46,7 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
     @Override
     public void setUp() {
         super.setUp();
-        page = new CreateMavenJavaProjectPage(service, resourceProvider);
+        page = new CreateMavenJarProjectPage(service, resourceProvider);
         page.setContext(wizardContext);
     }
 
@@ -113,7 +111,7 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
 
     @Override
     public void testInContext() {
-        when(template.getId()).thenReturn(JAR_PROJECT_ID);
+        when(template.getId()).thenReturn(JAR_TEMPLATE_ID);
 
         super.testInContext();
     }

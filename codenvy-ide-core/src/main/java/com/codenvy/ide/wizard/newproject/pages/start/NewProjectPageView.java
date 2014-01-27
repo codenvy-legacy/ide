@@ -17,10 +17,10 @@
  */
 package com.codenvy.ide.wizard.newproject.pages.start;
 
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.resources.ProjectTypeData;
 
 /**
  * Interface of new project page view.
@@ -83,7 +83,7 @@ public interface NewProjectPageView extends View<NewProjectPageView.ActionDelega
      * @param projectTypes
      *         project types those need to be set
      */
-    void setProjectTypes(Array<ProjectTypeData> projectTypes);
+    void setProjectTypes(Array<ProjectTypeDescriptor> projectTypes);
 
     /**
      * Set PaaSes on place on view.
