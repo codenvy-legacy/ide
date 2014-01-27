@@ -24,7 +24,7 @@ import com.codenvy.ide.resources.model.ProjectDescription;
 /** @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> */
 public class JavaProjectDesctiprion extends ProjectDescription {
 
-    public static final String PROPERTY_SOURCE_FOLDERS = "folders.source";
+    public static final String ATTRIBUTE_SOURCE_FOLDERS = "folders.source";
 
     /** @param project */
     public JavaProjectDesctiprion(JavaProject project) {
@@ -34,6 +34,6 @@ public class JavaProjectDesctiprion extends ProjectDescription {
 
     /** @return The set of Project's source folders or empty set. */
     public StringSet getSourceFolders() {
-        return asStringSet(PROPERTY_SOURCE_FOLDERS);
+        return asStringSet(ATTRIBUTE_SOURCE_FOLDERS);
     }
 }

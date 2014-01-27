@@ -19,24 +19,23 @@ package com.codenvy.ide.ext.java.client.projecttemplate.ant;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
-import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.ext.java.client.projecttemplate.CreateProjectClientService;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
-import static com.codenvy.ide.collections.Collections.createArray;
 import static com.codenvy.ide.ext.java.client.JavaExtension.ANT_JAR_TEMPLATE_ID;
-import static com.codenvy.ide.ext.java.client.JavaExtension.JAVA_APPLICATION_PROJECT_TYPE;
-import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
-import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS;
-import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
-import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
+import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.ATTRIBUTE_SOURCE_FOLDERS;
 
 /**
  * The wizard page for creating a Java project from a template.
@@ -44,9 +43,9 @@ import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMAR
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class CreateAntJavaProjectPage extends AbstractTemplatePage {
-    private CreateAntProjectClientService service;
-    private ResourceProvider              resourceProvider;
+public class CreateAntJarProjectPage extends AbstractTemplatePage {
+    private CreateProjectClientService service;
+    private ResourceProvider           resourceProvider;
 
     /**
      * Create page.
@@ -56,7 +55,7 @@ public class CreateAntJavaProjectPage extends AbstractTemplatePage {
      * @param resourceProvider
      */
     @Inject
-    public CreateAntJavaProjectPage(CreateAntProjectClientService service, ResourceProvider resourceProvider) {
+    public CreateAntJarProjectPage(CreateProjectClientService service, ResourceProvider resourceProvider) {
         super(null, null, ANT_JAR_TEMPLATE_ID);
         this.service = service;
         this.resourceProvider = resourceProvider;
@@ -65,13 +64,48 @@ public class CreateAntJavaProjectPage extends AbstractTemplatePage {
     /** {@inheritDoc} */
     @Override
     public void commit(final CommitCallback callback) {
-        Array<Property> properties =
-                createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
-                            new Property(PROPERTY_MIXIN_NATURES, createArray(JAVA_APPLICATION_PROJECT_TYPE)),
-                            new Property(PROPERTY_SOURCE_FOLDERS, createArray("src")));
+        Map<String, List<String>> attributes = new HashMap<String, List<String>>(1);
+        List<String> language = new ArrayList<String>(1);
+        language.add("java");
+
+        // TODO: make it as calculated attributes
+        List<String> sourceFolders = new ArrayList<String>(1);
+        sourceFolders.add("src");
+
+        attributes.put(ATTRIBUTE_SOURCE_FOLDERS, sourceFolders);
+        attributes.put("language", language);
+
         final String projectName = wizardContext.getData(PROJECT_NAME);
         try {
-            service.createJavaProject(projectName, properties, new AsyncRequestCallback<Void>() {
+            service.createJarProject(projectName, attributes, new AsyncRequestCallback<Void>() {
+                @Override
+                protected void onSuccess(Void result) {
+                    resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
+                        @Override
+                        public void onSuccess(Project result) {
+                            unzipTemplate(projectName, callback);
+                        }
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            callback.onFailure(caught);
+                        }
+                    });
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    callback.onFailure(exception);
+                }
+            });
+        } catch (RequestException e) {
+            callback.onFailure(e);
+        }
+    }
+
+    private void unzipTemplate(final String projectName, final CommitCallback callback) {
+        try {
+            service.unzipAntJarTemplate(projectName, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     resourceProvider.getProject(projectName, new AsyncCallback<Project>() {

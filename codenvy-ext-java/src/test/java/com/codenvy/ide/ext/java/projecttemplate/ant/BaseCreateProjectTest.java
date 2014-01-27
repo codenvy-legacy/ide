@@ -24,7 +24,7 @@ import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
-import com.codenvy.ide.ext.java.client.projecttemplate.ant.CreateAntProjectClientService;
+import com.codenvy.ide.ext.java.client.projecttemplate.CreateProjectClientService;
 import com.codenvy.ide.resources.model.Project;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -48,7 +48,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Base test for creating project from projecttemplate page.
+ * Base test for creating project from project template page.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
@@ -59,22 +59,22 @@ public abstract class BaseCreateProjectTest {
     public static final boolean PROVIDE_TEMPLATE = true;
     public static final boolean IN_CONTEXT       = true;
     @Mock
-    protected CreateAntProjectClientService service;
+    protected CreateProjectClientService service;
     @Mock
-    protected ResourceProvider              resourceProvider;
+    protected ResourceProvider           resourceProvider;
     @Mock
-    protected WizardPage.CommitCallback     callback;
+    protected WizardPage.CommitCallback  callback;
     @Mock
-    protected Project                       project;
+    protected Project                    project;
     @Mock
-    protected WizardContext                 wizardContext;
+    protected WizardContext              wizardContext;
     @Mock
-    protected Throwable                     throwable;
+    protected Throwable                  throwable;
     @Mock
-    protected PaaS                          paas;
+    protected PaaS                       paas;
     @Mock
-    protected Template                      template;
-    protected AbstractTemplatePage          page;
+    protected Template                   template;
+    protected AbstractTemplatePage       page;
 
     @Before
     public void setUp() {

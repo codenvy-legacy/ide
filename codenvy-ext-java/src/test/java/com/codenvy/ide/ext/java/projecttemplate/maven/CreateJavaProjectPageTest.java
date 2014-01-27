@@ -29,7 +29,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.ext.java.client.JavaExtension.JAR_TEMPLATE_ID;
+import static com.codenvy.ide.ext.java.client.JavaExtension.MAVEN_JAR_TEMPLATE_ID;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
@@ -61,8 +61,7 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service)
-                .createJarProject(anyString(), (Map<String, List<String>>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        }).when(service).createJarProject(anyString(), (Map<String, List<String>>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsSuccessful();
     }
@@ -78,8 +77,7 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
                 onFailure.invoke(callback, throwable);
                 return callback;
             }
-        }).when(service)
-                .createJarProject(anyString(), (Map<String, List<String>>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        }).when(service).createJarProject(anyString(), (Map<String, List<String>>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenCreateTutorialRequestIsFailed();
     }
@@ -95,8 +93,7 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service)
-                .createJarProject(anyString(), (Map<String, List<String>>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        }).when(service).createJarProject(anyString(), (Map<String, List<String>>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsFailed();
     }
@@ -111,7 +108,7 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
 
     @Override
     public void testInContext() {
-        when(template.getId()).thenReturn(JAR_TEMPLATE_ID);
+        when(template.getId()).thenReturn(MAVEN_JAR_TEMPLATE_ID);
 
         super.testInContext();
     }

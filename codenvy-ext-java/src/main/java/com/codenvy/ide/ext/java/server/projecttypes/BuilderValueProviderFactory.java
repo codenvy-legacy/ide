@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * //
+ * {@link ValueProviderFactory} implementation for 'builder.name' attribute.
  *
  * @author Artem Zatsarynnyy
  */

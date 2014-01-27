@@ -17,9 +17,7 @@
  */
 package com.codenvy.ide.ext.java.projecttemplate.maven;
 
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenWarProjectPage;
-import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -28,8 +26,10 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
 
-import static com.codenvy.ide.ext.java.client.JavaExtension.WAR_MAVEN_TEMPLATE_ID;
+import static com.codenvy.ide.ext.java.client.JavaExtension.MAVEN_WAR_TEMPLATE_ID;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
@@ -61,8 +61,7 @@ public class CreateWarProjectPageTest extends BaseCreateProjectTest {
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service)
-                .unzipWarTemplate(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        }).when(service).createWarProject(anyString(), (Map<String, List<String>>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsSuccessful();
     }
@@ -78,8 +77,7 @@ public class CreateWarProjectPageTest extends BaseCreateProjectTest {
                 onFailure.invoke(callback, throwable);
                 return callback;
             }
-        }).when(service)
-                .unzipWarTemplate(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        }).when(service).createWarProject(anyString(), (Map<String, List<String>>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenCreateTutorialRequestIsFailed();
     }
@@ -95,8 +93,7 @@ public class CreateWarProjectPageTest extends BaseCreateProjectTest {
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service)
-                .unzipWarTemplate(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        }).when(service).createWarProject(anyString(), (Map<String, List<String>>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsFailed();
     }
@@ -104,14 +101,14 @@ public class CreateWarProjectPageTest extends BaseCreateProjectTest {
     @Override
     public void testCreateWhenRequestExceptionHappened() throws Exception {
         doThrow(RequestException.class).when(service)
-                .unzipWarTemplate(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .createWarProject(anyString(), (Map<String, List<String>>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenRequestExceptionHappened();
     }
 
     @Override
     public void testInContext() {
-        when(template.getId()).thenReturn(WAR_MAVEN_TEMPLATE_ID);
+        when(template.getId()).thenReturn(MAVEN_WAR_TEMPLATE_ID);
 
         super.testInContext();
     }

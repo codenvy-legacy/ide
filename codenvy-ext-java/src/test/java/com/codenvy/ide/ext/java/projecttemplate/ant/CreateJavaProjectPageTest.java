@@ -17,9 +17,7 @@
  */
 package com.codenvy.ide.ext.java.projecttemplate.ant;
 
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.ext.java.client.projecttemplate.ant.CreateAntJavaProjectPage;
-import com.codenvy.ide.resources.model.Property;
+import com.codenvy.ide.ext.java.client.projecttemplate.ant.CreateAntJarProjectPage;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -28,6 +26,8 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.ext.java.client.JavaExtension.ANT_JAR_TEMPLATE_ID;
 import static org.mockito.Matchers.anyObject;
@@ -37,7 +37,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 /**
- * Testing {@link com.codenvy.ide.ext.java.client.projecttemplate.ant.CreateAntJavaProjectPage} functionality.
+ * Testing {@link com.codenvy.ide.ext.java.client.projecttemplate.ant.CreateAntJarProjectPage} functionality.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
@@ -46,7 +46,7 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
     @Override
     public void setUp() {
         super.setUp();
-        page = new CreateAntJavaProjectPage(service, resourceProvider);
+        page = new CreateAntJarProjectPage(service, resourceProvider);
         page.setContext(wizardContext);
     }
 
@@ -61,8 +61,7 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service)
-                .createJavaProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        }).when(service).createJarProject(anyString(), (Map<String, List<String>>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsSuccessful();
     }
@@ -78,8 +77,7 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
                 onFailure.invoke(callback, throwable);
                 return callback;
             }
-        }).when(service)
-                .createJavaProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        }).when(service).createJarProject(anyString(), (Map<String, List<String>>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenCreateTutorialRequestIsFailed();
     }
@@ -95,8 +93,7 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service)
-                .createJavaProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        }).when(service).createJarProject(anyString(), (Map<String, List<String>>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsFailed();
     }
@@ -104,7 +101,7 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
     @Override
     public void testCreateWhenRequestExceptionHappened() throws Exception {
         doThrow(RequestException.class).when(service)
-                .createJavaProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .createJarProject(anyString(), (Map<String, List<String>>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenRequestExceptionHappened();
     }
