@@ -41,7 +41,7 @@ import java.util.List;
  *
  * @author Artem Zatsarynnyy
  */
-@Path("tutorials/{ws-name}")
+@Path("tutorials/{ws-id}")
 public class TutorialsService {
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;

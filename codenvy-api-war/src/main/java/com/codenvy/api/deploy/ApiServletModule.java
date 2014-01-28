@@ -18,14 +18,17 @@
 package com.codenvy.api.deploy;
 
 import com.codenvy.api.core.user.UserStateFilter;
-import com.codenvy.api.servlet.EnvironmentFilter;
+import com.codenvy.ide.env.SingleEnvironmentFilter;
 import com.codenvy.ide.everrest.CodenvyEverrestWebSocketServlet;
 import com.codenvy.inject.DynaModule;
 import com.google.inject.servlet.ServletModule;
 
 import org.everrest.guice.servlet.GuiceEverrestServlet;
-import org.everrest.websockets.EverrestWebSocketServlet;
 import org.everrest.websockets.WSConnectionTracker;
+
+import javax.inject.Singleton;
+import java.util.HashMap;
+import java.util.Map;
 
 /** @author andrew00x */
 @DynaModule
@@ -33,9 +36,13 @@ public class ApiServletModule extends ServletModule {
     @Override
     protected void configureServlets() {
         getServletContext().addListener(new WSConnectionTracker());
-        filter("/*").through(EnvironmentFilter.class);
+        bind(SingleEnvironmentFilter.class).in(Singleton.class);
+        Map<String,String> params = new HashMap<>(2);
+        params.put("ws-name", "default");
+        params.put("ws-id", "1q2w3e");
+        filter("/*").through(SingleEnvironmentFilter.class, params);
         filter("/*").through(UserStateFilter.class);
         serve("/rest/*").with(GuiceEverrestServlet.class);
-        serve("/ws/*").with(CodenvyEverrestWebSocketServlet.class);
+        serve("/ws").with(CodenvyEverrestWebSocketServlet.class);
     }
 }

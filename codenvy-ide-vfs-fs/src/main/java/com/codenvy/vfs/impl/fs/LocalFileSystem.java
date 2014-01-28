@@ -29,7 +29,6 @@ import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo;
 import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.ACLCapability;
 import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
 import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.QueryCapability;
-import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.dto.server.DtoFactory;
 
 import java.net.URI;
@@ -78,8 +77,7 @@ public class LocalFileSystem extends VirtualFileSystemImpl {
                          .withPermissions(permissions)
                          .withAclCapability(ACLCapability.MANAGE)
                          .withQueryCapability(searcherProvider == null ? QueryCapability.NONE : QueryCapability.FULLTEXT)
-                         .withUrlTemplates(LinksHelper.createUrlTemplates(baseUri, (String)EnvironmentContext.getCurrent().getVariable(
-                                 EnvironmentContext.WORKSPACE_NAME)))
+                         .withUrlTemplates(LinksHelper.createUrlTemplates(baseUri, vfsId))
                          .withRoot((Folder)fromVirtualFile(getMountPoint().getRoot(), true, PropertyFilter.ALL_FILTER));
     }
 }

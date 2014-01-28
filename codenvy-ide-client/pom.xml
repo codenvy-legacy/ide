@@ -236,7 +236,7 @@
                     <module>com.codenvy.ide.IDE</module>
                     <logLevel>INFO</logLevel>
                     <extraJvmArgs>-Xss512m -Xmx2048m -XX:MaxPermSize=1024m</extraJvmArgs>
-                    <runTarget>ide/dev-monit</runTarget>
+                    <runTarget>ide/default</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                 </configuration>
             </plugin>

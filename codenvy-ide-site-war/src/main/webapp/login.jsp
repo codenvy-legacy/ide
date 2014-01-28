@@ -30,21 +30,6 @@
 <head>
     <title>Codenvy Login Page</title>
     <link rel="stylesheet" type="text/css" href="loginPageStyle.css">
-    <script type="text/javascript" src="popup.js"></script>
-    <script type="text/javascript">
-        var REST_SERVICE_CONTEXT = "/rest";
-
-        function getXmlHTTP() {
-            var xmlHttp = null;
-            if (window.XMLHttpRequest) {
-                xmlHttp = new XMLHttpRequest();
-            }
-            else if (window.ActiveXObject) {
-                xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-            }
-            return xmlHttp;
-        }
-    </script>
 </head>
 <body bgcolor="#f3f3f3" style="font-family: 'Roboto',sans-serif">
     <div class="logo">

@@ -50,12 +50,12 @@ import java.util.Set;
  *
  * @author andrew00x
  */
-@Path("ssh-keys/{ws-name}")
+@Path("ssh-keys/{ws-id}")
 public class KeyService {
     private final SshKeyStore keyStore;
 
-    @PathParam("ws-name")
-    private String wsName;
+    @PathParam("ws-id")
+    private String wsId;
 
     @Inject
     public KeyService(SshKeyStore keyStore) {
@@ -177,11 +177,11 @@ public class KeyService {
                     String getPublicKeyUrl = null;
                     if (publicKeyExists) {
                         getPublicKeyUrl =
-                                uriInfo.getBaseUriBuilder().path(getClass()).queryParam("host", host).build(wsName).toString();
+                                uriInfo.getBaseUriBuilder().path(getClass()).queryParam("host", host).build(wsId).toString();
                     }
                     String removeKeysUrl =
                             uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "removeKeys").queryParam("host", host)
-                                   .build(wsName).toString();
+                                   .build(wsId).toString();
                     result.add(DtoFactory.getInstance().createDto(KeyItem.class).withHost(host).withPublicKeyUrl(getPublicKeyUrl)
                                          .withRemoteKeyUrl(removeKeysUrl));
                 }

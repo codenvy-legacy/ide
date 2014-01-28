@@ -67,49 +67,6 @@ public class WorkerNameEnvironment implements INameEnvironment {
     public void setProjectId(String projectId) {
         this.projectId = projectId;
     }
-//    /**
-//     * Get Class description (methods, fields etc.) by class FQN
-//     *
-//     * @param fqn
-//     * @param fileHref
-//     *         for who autocompletion called (Need for find classpath)
-//     * @param callback
-//     *         - the callback which client has to implement
-//     */
-//    public void getClassDescription(String fqn, String projectId, AsyncRequestCallback<TypeInfo> callback) {
-//        String url =
-//                restServiceContext + wsName + GET_CLASS_URL + fqn + "&projectid=" + projectId + "&vfsid="
-//                + "dev-monit";
-//        int status[] = {HTTPStatus.NO_CONTENT, HTTPStatus.OK};
-//        callback.setSuccessCodes(status);
-//        try {
-//            AsyncRequest.build(RequestBuilder.GET, url).send(callback);
-//        } catch (RequestException e) {
-//            Log.error(WorkerNameEnvironment.class, e);
-//        }
-//    }
-
-//    /**
-//     * Find classes by prefix
-//     *
-//     * @param prefix
-//     *         the first letters of class name
-//     * @param projectId
-//     *         for who autocompletion called (Need for find classpath)
-//     * @param callback
-//     *         - the callback which client has to implement
-//     */
-//    public void findClassesByPrefix(String prefix, String projectId, AsyncRequestCallback<TypesList> callback) {
-//        String url =
-//                restServiceContext + wsName + FIND_CLASS_BY_PREFIX + prefix + "?where=className" + "&projectid=" + projectId
-//                //TODO configure vfs id
-//                + "&vfsid=" + "dev-monit";
-//        try {
-//            AsyncRequest.build(RequestBuilder.GET, url).send(callback);
-//        } catch (RequestException e) {
-//            Log.error(getClass(), e);
-//        }
-//    }
 
     private static String convertSearchFilterToModelFilter(int searchFilter) {
         switch (searchFilter) {

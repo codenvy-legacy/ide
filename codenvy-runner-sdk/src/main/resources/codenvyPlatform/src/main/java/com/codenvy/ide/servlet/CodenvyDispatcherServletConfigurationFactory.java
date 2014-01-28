@@ -56,7 +56,7 @@ public class CodenvyDispatcherServletConfigurationFactory extends DispatcherServ
                                              .when(new Condition() {
                                                  @Override
                                                  public boolean matches(HttpServletRequest request, HttpServletResponse response) {
-                                                     return request.getAttribute("ws") == null;
+                                                     return request.getAttribute("wsName") == null || request.getAttribute("wsId") == null;
                                                  }
                                              })
                                              .execute(new Action() {
@@ -72,11 +72,12 @@ public class CodenvyDispatcherServletConfigurationFactory extends DispatcherServ
                                                  @Override
                                                  public void perform(HttpServletRequest request, HttpServletResponse response)
                                                          throws ServletException, IOException {
-                                                     final String ws = (String)request.getAttribute("ws");
+                                                     final String wsName = (String)request.getAttribute("wsName");
+                                                     final String wsId = (String)request.getAttribute("wsId");
                                                      String path = request.getPathInfo();
                                                      String project = null;
                                                      String filePath = null;
-                                                     path = path.substring(('/' + ws).length());
+                                                     path = path.substring(('/' + wsName).length());
                                                      if (path.startsWith("/")) {
                                                          path = path.substring(1);
                                                      }
@@ -110,41 +111,59 @@ public class CodenvyDispatcherServletConfigurationFactory extends DispatcherServ
                                                          redirectUrlBuilder.append('/');
                                                          redirectUrlBuilder.append(request.getContextPath());
                                                          redirectUrlBuilder.append('/');
-                                                         redirectUrlBuilder.append(ws);
+                                                         redirectUrlBuilder.append(wsName);
                                                          redirectUrl = redirectUrlBuilder.toString();
                                                      }
                                                      writer.write("<html>\n");
-                                                     writer.write("<head>\n");
+                                                     writer.write("  <head>\n");
                                                      if (redirectUrl != null) {
-                                                         writer.write(String.format("  <script>window.location.replace(\"%s\");</script>\n",
+                                                         writer.write(String.format("    <script>window.location.replace(\"%s\");</script>\n",
                                                                                     redirectUrl));
                                                      }
-                                                     writer.write("  <script type=\"text/javascript\" language=\"javascript\">\n");
-                                                     writer.write("    var hiddenFiles = \".*\";\n");
-                                                     writer.write(String.format("    var ws = \"%s\";\n", ws));
+                                                     writer.write("    <script type=\"text/javascript\" language=\"javascript\">\n");
+                                                     writer.write("      var hiddenFiles = \".*\";\n");
+                                                     writer.write(String.format("      var wsName = \"%s\";\n", wsName));
+                                                     writer.write(String.format("      var wsId = \"%s\";\n", wsId));
                                                      if (project != null) {
-                                                         writer.write(String.format("    var project = \"%s\";\n", project));
+                                                         writer.write(String.format("      var project = \"%s\";\n", project));
                                                      } else {
-                                                         writer.write("    var project = null;\n");
+                                                         writer.write("      var project = null;\n");
                                                      }
                                                      if (filePath != null) {
-                                                         writer.write(String.format("    var path = \"%s\";\n", filePath));
+                                                         writer.write(String.format("      var path = \"%s\";\n", filePath));
                                                      } else {
-                                                         writer.write("    var path = null;\n");
+                                                         writer.write("      var path = null;\n");
                                                      }
-                                                     writer.write("  </script>\n");
-                                                     writer.write("  <link rel=\"shortcut icon\" href=\"_app/favicon.ico\"/>\n");
-                                                     writer.write("</head>\n");
-                                                     writer.write("<body>\n");
+                                                     writer.write("    </script>\n");
+                                                     writer.write("    <link rel=\"shortcut icon\" href=\"_app/favicon.ico\"/>\n");
+                                                     writer.write("  </head>\n");
+                                                     writer.write("  <body>\n");
                                                      writer.write(
-                                                             "  <script type=\"text/javascript\" language=\"javascript\" src=\"_app/browserNotSupported.js\"></script>\n");
+                                                             "    <script type=\"text/javascript\" language=\"javascript\" src=\"_app/browserNotSupported.js\"></script>\n");
                                                      writer.write(
-                                                             "  <script type=\"text/javascript\" language=\"javascript\" src=\"_app/_app.nocache.js\"></script>\n");
-                                                     writer.write("<body>\n");
-                                                     writer.write("</html>");
+                                                             "    <script type=\"text/javascript\" language=\"javascript\" src=\"_app/_app.nocache.js\"></script>\n");
+                                                     writer.write("  </body>\n");
+                                                     writer.write("</html>\n");
                                                  }
                                              })
                                              .priority(300)
+                                             .done()
+                                             .when(new Condition() {
+                                                 @Override
+                                                 public boolean matches(HttpServletRequest request, HttpServletResponse response) {
+                                                     final String host = request.getParameter("h");
+                                                     final String port = request.getParameter("p");
+                                                     return host != null && port != null;
+                                                 }
+                                             })
+                                             .execute(new Action() {
+                                                 @Override
+                                                 public void perform(HttpServletRequest request, HttpServletResponse response)
+                                                         throws ServletException, IOException {
+                                                     request.getRequestDispatcher("/_app/main").forward(request, response);
+                                                 }
+                                             })
+                                             .priority(400)
                                              .done();
     }
 }

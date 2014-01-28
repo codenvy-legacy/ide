@@ -82,51 +82,57 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
  */
 @Singleton
 public class GitClientServiceImpl implements GitClientService {
-    private static final String BASE_URL          = "/git/" + Utils.getWorkspaceName();
-    public static final  String ADD               = BASE_URL + "/add";
-    public static final  String BRANCH_LIST       = BASE_URL + "/branch-list";
-    public static final  String BRANCH_CHECKOUT   = BASE_URL + "/branch-checkout";
-    public static final  String BRANCH_CREATE     = BASE_URL + "/branch-create";
-    public static final  String BRANCH_DELETE     = BASE_URL + "/branch-delete";
-    public static final  String BRANCH_RENAME     = BASE_URL + "/branch-rename";
-    public static final  String CLONE             = BASE_URL + "/clone";
-    public static final  String COMMIT            = BASE_URL + "/commit";
-    public static final  String DIFF              = BASE_URL + "/diff";
-    public static final  String FETCH             = BASE_URL + "/fetch";
-    public static final  String INIT              = BASE_URL + "/init";
-    public static final  String LOG               = BASE_URL + "/log";
-    public static final  String MERGE             = BASE_URL + "/merge";
-    public static final  String STATUS            = BASE_URL + "/status";
-    public static final  String RO_URL            = BASE_URL + "/read-only-url";
-    public static final  String PUSH              = BASE_URL + "/push";
-    public static final  String PULL              = BASE_URL + "/pull";
-    public static final  String REMOTE_LIST       = BASE_URL + "/remote-list";
-    public static final  String REMOTE_ADD        = BASE_URL + "/remote-add";
-    public static final  String REMOTE_DELETE     = BASE_URL + "/remote-delete";
-    public static final  String REMOVE            = BASE_URL + "/rm";
-    public static final  String RESET             = BASE_URL + "/reset";
-    public static final  String COMMITERS         = BASE_URL + "/commiters";
-    public static final  String DELETE_REPOSITORY = BASE_URL + "/delete-repository";
+    public static final String ADD               = "/add";
+    public static final String BRANCH_LIST       = "/branch-list";
+    public static final String BRANCH_CHECKOUT   = "/branch-checkout";
+    public static final String BRANCH_CREATE     = "/branch-create";
+    public static final String BRANCH_DELETE     = "/branch-delete";
+    public static final String BRANCH_RENAME     = "/branch-rename";
+    public static final String CLONE             = "/clone";
+    public static final String COMMIT            = "/commit";
+    public static final String DIFF              = "/diff";
+    public static final String FETCH             = "/fetch";
+    public static final String INIT              = "/init";
+    public static final String LOG               = "/log";
+    public static final String MERGE             = "/merge";
+    public static final String STATUS            = "/status";
+    public static final String RO_URL            = "/read-only-url";
+    public static final String PUSH              = "/push";
+    public static final String PULL              = "/pull";
+    public static final String REMOTE_LIST       = "/remote-list";
+    public static final String REMOTE_ADD        = "/remote-add";
+    public static final String REMOTE_DELETE     = "/remote-delete";
+    public static final String REMOVE            = "/rm";
+    public static final String RESET             = "/reset";
+    public static final String COMMITERS         = "/commiters";
+    public static final String DELETE_REPOSITORY = "/delete-repository";
+
     /** REST service context. */
-    private String                  restServiceContext;
+    private final String                  baseHttpUrl;
+    private final String                  gitServicePath;
     /** Loader to be displayed. */
-    private Loader                  loader;
-    private MessageBus              wsMessageBus;
-    private EventBus                eventBus;
-    private GitLocalizationConstant constant;
-    private DtoFactory              dtoFactory;
+    private final Loader                  loader;
+    private final MessageBus              wsMessageBus;
+    private final EventBus                eventBus;
+    private final GitLocalizationConstant constant;
+    private final DtoFactory              dtoFactory;
 
     /**
-     * @param restContext
+     * @param baseHttpUrl
      *         rest context
      * @param loader
      *         loader to show on server request
      */
     @Inject
-    protected GitClientServiceImpl(@Named("restContext") String restContext, Loader loader, MessageBus wsMessageBus, EventBus eventBus,
-                                   GitLocalizationConstant constant, DtoFactory dtoFactory) {
+    protected GitClientServiceImpl(@Named("restContext") String baseHttpUrl,
+                                   Loader loader,
+                                   MessageBus wsMessageBus,
+                                   EventBus eventBus,
+                                   GitLocalizationConstant constant,
+                                   DtoFactory dtoFactory) {
         this.loader = loader;
-        this.restServiceContext = restContext;
+        this.gitServicePath = "/git/" + Utils.getWorkspaceId();
+        this.baseHttpUrl = baseHttpUrl + gitServicePath;
         this.wsMessageBus = wsMessageBus;
         this.eventBus = eventBus;
         this.constant = constant;
@@ -142,7 +148,7 @@ public class GitClientServiceImpl implements GitClientService {
         initRequest.setWorkingDir(projectid);
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
-        String url = restServiceContext + INIT + "?" + params;
+        String url = baseHttpUrl + INIT + "?" + params;
 
         AsyncRequest.build(POST, url, true).data(dtoFactory.toJson(initRequest))
                     .header(CONTENTTYPE, APPLICATION_JSON).delay(2000)
@@ -159,7 +165,7 @@ public class GitClientServiceImpl implements GitClientService {
 
         callback.setStatusHandler(new InitRequestStatusHandler(projectName, eventBus, constant));
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
-        String url = INIT + params;
+        String url = gitServicePath + INIT + params;
 
         MessageBuilder builder = new MessageBuilder(POST, url);
         builder.data(dtoFactory.toJson(initRequest)).header(CONTENTTYPE, APPLICATION_JSON);
@@ -176,7 +182,7 @@ public class GitClientServiceImpl implements GitClientService {
                                               .withWorkingDir(project.getId());
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
-        String url = restServiceContext + CLONE + params;
+        String url = baseHttpUrl + CLONE + params;
 
         AsyncRequest.build(POST, url, true)
                     .requestStatusHandler(new CloneRequestStatusHandler(project.getName(), remoteUri, eventBus, constant))
@@ -196,7 +202,7 @@ public class GitClientServiceImpl implements GitClientService {
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
         callback.setStatusHandler(new CloneRequestStatusHandler(project.getName(), remoteUri, eventBus, constant));
 
-        String url = CLONE + params;
+        String url = gitServicePath + CLONE + params;
 
         MessageBuilder builder = new MessageBuilder(POST, url);
         builder.data(dtoFactory.toJson(cloneRequest))
@@ -211,7 +217,7 @@ public class GitClientServiceImpl implements GitClientService {
     @Override
     public void statusText(@NotNull String vfsId, @NotNull String projectid, boolean shortFormat,
                            @NotNull AsyncRequestCallback<String> callback) throws RequestException {
-        String url = restServiceContext + STATUS;
+        String url = baseHttpUrl + STATUS;
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid + "&short=" + shortFormat;
 
         AsyncRequest.build(POST, url + params).loader(loader)
@@ -231,7 +237,7 @@ public class GitClientServiceImpl implements GitClientService {
         }
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
-        String url = restServiceContext + ADD + params;
+        String url = baseHttpUrl + ADD + params;
 
         AsyncRequest.build(POST, url, true).data(dtoFactory.toJson(addRequest))
                     .header(CONTENTTYPE, APPLICATION_JSON)
@@ -251,7 +257,7 @@ public class GitClientServiceImpl implements GitClientService {
 
         callback.setStatusHandler(new AddRequestHandler(project.getName(), eventBus, constant));
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
-        String url = ADD + params;
+        String url = gitServicePath + ADD + params;
 
         MessageBuilder builder = new MessageBuilder(POST, url);
         builder.data(dtoFactory.toJson(addRequest))
@@ -268,7 +274,7 @@ public class GitClientServiceImpl implements GitClientService {
         CommitRequest commitRequest = dtoFactory.createDto(CommitRequest.class).withMessage(message).withAmend(amend).withAll(all);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
-        String url = restServiceContext + COMMIT + params;
+        String url = baseHttpUrl + COMMIT + params;
 
         AsyncRequest.build(POST, url, true).data(dtoFactory.toJson(commitRequest))
                     .header(CONTENTTYPE, APPLICATION_JSON)
@@ -282,7 +288,7 @@ public class GitClientServiceImpl implements GitClientService {
         CommitRequest commitRequest = dtoFactory.createDto(CommitRequest.class).withMessage(message).withAmend(amend).withAll(all);
         callback.setStatusHandler(new CommitRequestHandler(project.getName(), message, eventBus, constant));
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
-        String url = COMMIT + params;
+        String url = gitServicePath + COMMIT + params;
 
         MessageBuilder builder = new MessageBuilder(POST, url);
         builder.data(dtoFactory.toJson(commitRequest))
@@ -299,7 +305,7 @@ public class GitClientServiceImpl implements GitClientService {
         PushRequest pushRequest = dtoFactory.createDto(PushRequest.class).withRemote(remote).withRefSpec(refSpec).withForce(force);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
-        String url = restServiceContext + PUSH + params;
+        String url = baseHttpUrl + PUSH + params;
 
         PushRequestHandler requestHandler = new PushRequestHandler(project.getName(), refSpec, eventBus, constant);
         AsyncRequest.build(POST, url, true).data(dtoFactory.toJson(pushRequest))
@@ -314,7 +320,7 @@ public class GitClientServiceImpl implements GitClientService {
 
         callback.setStatusHandler(new PushRequestHandler(project.getName(), refSpec, eventBus, constant));
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
-        String url = PUSH + params;
+        String url = gitServicePath + PUSH + params;
 
         MessageBuilder builder = new MessageBuilder(POST, url);
         builder.data(dtoFactory.toJson(pushRequest))
@@ -334,7 +340,7 @@ public class GitClientServiceImpl implements GitClientService {
         }
 
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
-        String url = restServiceContext + REMOTE_LIST + params;
+        String url = baseHttpUrl + REMOTE_LIST + params;
 
         AsyncRequest.build(POST, url).loader(loader).data(dtoFactory.toJson(remoteListRequest))
                     .header(CONTENTTYPE, APPLICATION_JSON).send(callback);
@@ -347,7 +353,7 @@ public class GitClientServiceImpl implements GitClientService {
         BranchListRequest branchListRequest = dtoFactory.createDto(BranchListRequest.class).withListMode(remoteMode);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
-        String url = restServiceContext + BRANCH_LIST + params;
+        String url = baseHttpUrl + BRANCH_LIST + params;
 
         AsyncRequest.build(POST, url).data(dtoFactory.toJson(branchListRequest))
                     .header(CONTENTTYPE, APPLICATION_JSON).send(callback);
@@ -358,7 +364,7 @@ public class GitClientServiceImpl implements GitClientService {
     public void status(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<String> callback)
             throws RequestException {
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid + "&short=false";
-        String url = restServiceContext + STATUS + params;
+        String url = baseHttpUrl + STATUS + params;
 
         AsyncRequest.build(POST, url).loader(loader)
                     .header(CONTENTTYPE, APPLICATION_JSON)
@@ -372,7 +378,7 @@ public class GitClientServiceImpl implements GitClientService {
         BranchDeleteRequest branchDeleteRequest = dtoFactory.createDto(BranchDeleteRequest.class).withName(name).withForce(force);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
-        String url = restServiceContext + BRANCH_DELETE + params;
+        String url = baseHttpUrl + BRANCH_DELETE + params;
 
         AsyncRequest.build(POST, url).loader(loader).data(dtoFactory.toJson(branchDeleteRequest))
                     .header(CONTENTTYPE, APPLICATION_JSON).send(callback);
@@ -383,7 +389,7 @@ public class GitClientServiceImpl implements GitClientService {
     public void branchRename(@NotNull String vfsId, @NotNull String projectid, @NotNull String oldName, @NotNull String newName,
                              @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid + "&oldName=" + oldName + "&newName=" + newName;
-        String url = restServiceContext + BRANCH_RENAME + params;
+        String url = baseHttpUrl + BRANCH_RENAME + params;
 
         AsyncRequest.build(POST, url).loader(loader)
                     .header(CONTENTTYPE, MimeType.APPLICATION_FORM_URLENCODED).send(callback);
@@ -397,7 +403,7 @@ public class GitClientServiceImpl implements GitClientService {
         BranchCreateRequest branchCreateRequest = dtoFactory.createDto(BranchCreateRequest.class).withName(name).withStartPoint(startPoint);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
-        String url = restServiceContext + BRANCH_CREATE + params;
+        String url = baseHttpUrl + BRANCH_CREATE + params;
 
         AsyncRequest.build(POST, url).loader(loader).data(dtoFactory.toJson(branchCreateRequest))
                     .header(CONTENTTYPE, APPLICATION_JSON)
@@ -412,7 +418,7 @@ public class GitClientServiceImpl implements GitClientService {
                 dtoFactory.createDto(BranchCheckoutRequest.class).withName(name).withStartPoint(startPoint).withCreateNew(createNew);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
-        String url = restServiceContext + BRANCH_CHECKOUT + params;
+        String url = baseHttpUrl + BRANCH_CHECKOUT + params;
 
         AsyncRequest.build(POST, url).loader(loader).data(dtoFactory.toJson(branchCheckoutRequest))
                     .header(CONTENTTYPE, APPLICATION_JSON).send(callback);
@@ -425,7 +431,7 @@ public class GitClientServiceImpl implements GitClientService {
         RmRequest rmRequest = dtoFactory.createDto(RmRequest.class).withFiles(files).withCached(cached);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
-        String url = restServiceContext + REMOVE + params;
+        String url = baseHttpUrl + REMOVE + params;
 
         AsyncRequest.build(POST, url).loader(loader).data(dtoFactory.toJson(rmRequest))
                     .header(CONTENTTYPE, APPLICATION_JSON).send(callback);
@@ -442,7 +448,7 @@ public class GitClientServiceImpl implements GitClientService {
         }
 
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
-        String url = restServiceContext + RESET + params;
+        String url = baseHttpUrl + RESET + params;
 
         AsyncRequest.build(POST, url).loader(loader).data(dtoFactory.toJson(resetRequest))
                     .header(CONTENTTYPE, APPLICATION_JSON).send(callback);
@@ -454,7 +460,7 @@ public class GitClientServiceImpl implements GitClientService {
                     @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         LogRequest logRequest = dtoFactory.createDto(LogRequest.class);
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
-        String url = restServiceContext + LOG + params;
+        String url = baseHttpUrl + LOG + params;
 
         if (isTextFormat) {
             AsyncRequest.build(POST, url).data(dtoFactory.toJson(logRequest))
@@ -473,7 +479,7 @@ public class GitClientServiceImpl implements GitClientService {
         RemoteAddRequest remoteAddRequest = dtoFactory.createDto(RemoteAddRequest.class).withName(name).withUrl(repositoryURL);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
-        String url = restServiceContext + REMOTE_ADD + params;
+        String url = baseHttpUrl + REMOTE_ADD + params;
 
         AsyncRequest.build(POST, url).loader(loader).data(dtoFactory.toJson(remoteAddRequest))
                     .header(CONTENTTYPE, APPLICATION_JSON).send(callback);
@@ -484,7 +490,7 @@ public class GitClientServiceImpl implements GitClientService {
     public void remoteDelete(@NotNull String vfsId, @NotNull String projectid, @NotNull String name,
                              @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
-        String url = restServiceContext + REMOTE_DELETE + '/' + name + params;
+        String url = baseHttpUrl + REMOTE_DELETE + '/' + name + params;
 
         AsyncRequest.build(POST, url).loader(loader).send(callback);
     }
@@ -497,7 +503,7 @@ public class GitClientServiceImpl implements GitClientService {
                 dtoFactory.createDto(FetchRequest.class).withRefSpec(refspec).withRemote(remote).withRemoveDeletedRefs(removeDeletedRefs);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
-        String url = restServiceContext + FETCH + params;
+        String url = baseHttpUrl + FETCH + params;
 
         AsyncRequest.build(POST, url).data(dtoFactory.toJson(fetchRequest))
                     .header(CONTENTTYPE, APPLICATION_JSON)
@@ -513,7 +519,7 @@ public class GitClientServiceImpl implements GitClientService {
 
         callback.setStatusHandler(new FetchRequestHandler(project.getName(), refspec, eventBus, constant));
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
-        String url = FETCH + params;
+        String url = gitServicePath + FETCH + params;
 
         MessageBuilder builder = new MessageBuilder(POST, url);
         builder.data(dtoFactory.toJson(fetchRequest))
@@ -530,7 +536,7 @@ public class GitClientServiceImpl implements GitClientService {
         PullRequest pullRequest = dtoFactory.createDto(PullRequest.class).withRemote(remote).withRefSpec(refSpec);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
-        String url = restServiceContext + PULL + params;
+        String url = baseHttpUrl + PULL + params;
 
         AsyncRequest.build(POST, url, true).data(dtoFactory.toJson(pullRequest))
                     .header(CONTENTTYPE, APPLICATION_JSON)
@@ -545,7 +551,7 @@ public class GitClientServiceImpl implements GitClientService {
 
         callback.setStatusHandler(new PullRequestHandler(project.getName(), refSpec, eventBus, constant));
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
-        String url = PULL + params;
+        String url = gitServicePath + PULL + params;
 
         MessageBuilder builder = new MessageBuilder(POST, url);
         builder.data(dtoFactory.toJson(pullRequest))
@@ -595,7 +601,7 @@ public class GitClientServiceImpl implements GitClientService {
     private void diff(DiffRequest diffRequest, String vfsId, String projectid, AsyncRequestCallback<String> callback)
             throws RequestException {
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
-        String url = restServiceContext + DIFF + params;
+        String url = baseHttpUrl + DIFF + params;
 
         AsyncRequest.build(POST, url).loader(loader).data(dtoFactory.toJson(diffRequest))
                     .header(CONTENTTYPE, APPLICATION_JSON).send(callback);
@@ -608,7 +614,7 @@ public class GitClientServiceImpl implements GitClientService {
         MergeRequest mergeRequest = dtoFactory.createDto(MergeRequest.class).withCommit(commit);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
-        String url = restServiceContext + MERGE + params;
+        String url = baseHttpUrl + MERGE + params;
 
         AsyncRequest.build(POST, url).loader(loader).data(dtoFactory.toJson(mergeRequest))
                     .header(CONTENTTYPE, APPLICATION_JSON)
@@ -619,7 +625,7 @@ public class GitClientServiceImpl implements GitClientService {
     @Override
     public void getGitReadOnlyUrl(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<String> callback)
             throws RequestException {
-        String url = restServiceContext + RO_URL;
+        String url = baseHttpUrl + RO_URL;
         url += "?vfsid=" + vfsId + "&projectid=" + projectid;
         AsyncRequest.build(RequestBuilder.GET, url).send(callback);
     }
@@ -629,7 +635,7 @@ public class GitClientServiceImpl implements GitClientService {
     public void getCommiters(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<Commiters> callback)
             throws RequestException {
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
-        String url = restServiceContext + COMMITERS + params;
+        String url = baseHttpUrl + COMMITERS + params;
         AsyncRequest.build(RequestBuilder.GET, url).header(ACCEPT, APPLICATION_JSON)
                     .send(callback);
     }
@@ -640,7 +646,7 @@ public class GitClientServiceImpl implements GitClientService {
     public void deleteRepository(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<Void> callback)
             throws RequestException {
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
-        String url = restServiceContext + DELETE_REPOSITORY + params;
+        String url = baseHttpUrl + DELETE_REPOSITORY + params;
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader)
                     .header(CONTENTTYPE, APPLICATION_JSON).header(ACCEPT, TEXT_PLAIN)
                     .send(callback);
@@ -649,7 +655,7 @@ public class GitClientServiceImpl implements GitClientService {
     /** {@inheritDoc} */
     @Override
     public void getUrlVendorInfo(@NotNull String vcsUrl, @NotNull AsyncRequestCallback<GitUrlVendorInfo> callback) throws RequestException {
-        String url = restServiceContext + "/git-service/info";
+        String url = baseHttpUrl + "/git-service/info";
 
         String params = "vcsurl=" + vcsUrl;
         AsyncRequest.build(RequestBuilder.GET, url + "?" + params).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);

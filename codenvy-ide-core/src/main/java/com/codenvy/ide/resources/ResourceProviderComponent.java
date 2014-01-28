@@ -108,7 +108,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         this.eventBus = eventBus;
         this.defaultFile = defaultFile;
         this.dtoFactory = dtoFactory;
-        this.workspaceURL = restContext + "/vfs/" + Utils.getWorkspaceName() + "/v2";
+        this.workspaceURL = restContext + "/vfs/" + Utils.getWorkspaceId() + "/v2";
         this.modelProviders = Collections.<ModelProvider>createStringMap();
         this.natures = Collections.<ProjectNature>createStringMap();
         this.fileTypes = Collections.createIntegerMap();

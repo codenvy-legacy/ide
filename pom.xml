@@ -32,6 +32,7 @@
     <name>Codenvy :: Parent</name>
     <modules>
         <module>codenvy-ide-commons</module>
+        <module>codenvy-ide-env-dummy</module>
         <module>codenvy-ide-api</module>
         <module>codenvy-ide-vfs-fs</module>
         <module>codenvy-ide-core</module>
@@ -130,7 +131,6 @@
         <version.animal-sniffer.enforcer-rule>1.8</version.animal-sniffer.enforcer-rule>
         <version.enforcer.plugin>1.2</version.enforcer.plugin>
     </properties>
-
     <build>
         <pluginManagement>
             <plugins>
@@ -139,7 +139,6 @@
                     <artifactId>codenvy-dto-maven-plugin</artifactId>
                     <version>${com.codenvy.platform-api.version}</version>
                 </plugin>
-
                 <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
@@ -171,7 +170,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore></ignore>
+                                        <ignore />
                                     </action>
                                 </pluginExecution>
                                 <pluginExecution>
@@ -184,7 +183,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore></ignore>
+                                        <ignore />
                                     </action>
                                 </pluginExecution>
                                 <pluginExecution>
@@ -197,7 +196,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore></ignore>
+                                        <ignore />
                                     </action>
                                 </pluginExecution>
                             </pluginExecutions>

@@ -28,7 +28,6 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.Utils;
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
@@ -44,14 +43,14 @@ import javax.validation.constraints.NotNull;
  */
 @Singleton
 public class SshKeyServiceImpl implements SshKeyService {
-    private final String                    restContext;
+    private final String                    baseUrl;
     private final Loader                    loader;
     private final DtoFactory                dtoFactory;
     private final StringMap<SshKeyProvider> sshKeyProviders;
 
     @Inject
-    protected SshKeyServiceImpl(@Named("restContext") String restContext, Loader loader, DtoFactory dtoFactory) {
-        this.restContext = restContext;
+    protected SshKeyServiceImpl(@Named("restContext") String baseUrl, Loader loader, DtoFactory dtoFactory) {
+        this.baseUrl = baseUrl;
         this.loader = loader;
         this.dtoFactory = dtoFactory;
         this.sshKeyProviders = Collections.createStringMap();
@@ -62,13 +61,13 @@ public class SshKeyServiceImpl implements SshKeyService {
     public void getAllKeys(@NotNull AsyncRequestCallback<String> callback) throws RequestException {
         loader.setMessage("Getting SSH keys....");
         loader.show();
-        AsyncRequest.build(RequestBuilder.GET, restContext + "/ssh-keys/" + Utils.getWorkspaceName() + "/all").send(callback);
+        AsyncRequest.build(RequestBuilder.GET, baseUrl + "/ssh-keys/" + Utils.getWorkspaceId() + "/all").send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
     public void generateKey(@NotNull String host, @NotNull AsyncRequestCallback<GenKeyRequest> callback) throws RequestException {
-        String url = restContext + "/ssh-keys/" + Utils.getWorkspaceName() + "/gen";
+        String url = baseUrl + "/ssh-keys/" + Utils.getWorkspaceId() + "/gen";
 
         GenKeyRequest keyRequest = dtoFactory.createDto(GenKeyRequest.class).withHost(host);
 

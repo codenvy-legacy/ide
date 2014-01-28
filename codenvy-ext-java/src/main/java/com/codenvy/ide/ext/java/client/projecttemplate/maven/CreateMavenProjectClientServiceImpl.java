@@ -40,18 +40,17 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
  */
 @Singleton
 public class CreateMavenProjectClientServiceImpl implements CreateMavenProjectClientService {
-    private static final String BASE_URL              = "/create-maven/" + Utils.getWorkspaceName();
-    private static final String CREATE_WAR_PROJECT    = BASE_URL + "/project/war";
-    private static final String CREATE_JAVA_PROJECT   = BASE_URL + "/project/java";
-    private static final String CREATE_SPRING_PROJECT = BASE_URL + "/project/spring";
-    private String           restContext;
-    private Loader           loader;
-    private ResourceProvider resourceProvider;
+    private static final String CREATE_WAR_PROJECT    = "/project/war";
+    private static final String CREATE_JAVA_PROJECT   = "/project/java";
+    private static final String CREATE_SPRING_PROJECT = "/project/spring";
+
+    private final String           baseUrl;
+    private final Loader           loader;
+    private final ResourceProvider resourceProvider;
 
     @Inject
-    protected CreateMavenProjectClientServiceImpl(@Named("restContext") String restContext, Loader loader,
-                                                  ResourceProvider resourceProvider) {
-        this.restContext = restContext;
+    protected CreateMavenProjectClientServiceImpl(@Named("restContext") String baseUrl, Loader loader, ResourceProvider resourceProvider) {
+        this.baseUrl = baseUrl + "/create-maven/" + Utils.getWorkspaceId();
         this.loader = loader;
         this.resourceProvider = resourceProvider;
     }
@@ -60,7 +59,7 @@ public class CreateMavenProjectClientServiceImpl implements CreateMavenProjectCl
     @Override
     public void createWarProject(String projectName, Array<Property> properties, AsyncRequestCallback<Void> callback)
             throws RequestException {
-        String requestUrl = restContext + CREATE_WAR_PROJECT;
+        String requestUrl = baseUrl + CREATE_WAR_PROJECT;
 
         String param = "?vfsid=" + resourceProvider.getVfsInfo().getId() + "&name=" + projectName;
         String url = requestUrl + param;
@@ -76,7 +75,7 @@ public class CreateMavenProjectClientServiceImpl implements CreateMavenProjectCl
     @Override
     public void createSpringProject(String projectName, Array<Property> properties, AsyncRequestCallback<Void> callback)
             throws RequestException {
-        String requestUrl = restContext + CREATE_SPRING_PROJECT;
+        String requestUrl = baseUrl + CREATE_SPRING_PROJECT;
 
         String param = "?vfsid=" + resourceProvider.getVfsInfo().getId() + "&name=" + projectName;
         String url = requestUrl + param;
@@ -92,7 +91,7 @@ public class CreateMavenProjectClientServiceImpl implements CreateMavenProjectCl
     @Override
     public void createJavaProject(String projectName, Array<Property> properties, AsyncRequestCallback<Void> callback)
             throws RequestException {
-        String requestUrl = restContext + CREATE_JAVA_PROJECT;
+        String requestUrl = baseUrl + CREATE_JAVA_PROJECT;
         String param = "?vfsid=" + resourceProvider.getVfsInfo().getId() + "&name=" + projectName;
         String url = requestUrl + param;
 
