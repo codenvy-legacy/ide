@@ -44,7 +44,7 @@ public class NewFileProviderTest extends BaseNewResourceProviderTest {
     @Before
     public void setUp() {
         newResourceProvider = new NewFileProvider(resources);
-        textFileName = RESOURCE_NAME + '.' + newResourceProvider.getExtension();
+        textFileName = RESOURCE_NAME;
     }
 
     @Override
