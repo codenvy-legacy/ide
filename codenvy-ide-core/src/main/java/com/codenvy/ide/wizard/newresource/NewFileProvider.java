@@ -35,18 +35,18 @@ import javax.validation.constraints.NotNull;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewTextFileProvider extends NewResourceProvider {
+public class NewFileProvider extends NewResourceProvider {
 
     @Inject
-    public NewTextFileProvider(Resources resources) {
-        super("Text file", "Text file", resources.file(), "txt");
+    public NewFileProvider(Resources resources) {
+        super("File", "File", resources.file(), "");
     }
 
     /** {@inheritDoc} */
     @Override
     public void create(@NotNull String name, @NotNull Folder parent, @NotNull Project project,
                        @NotNull final AsyncCallback<Resource> callback) {
-        String fileName = name + '.' + getExtension();
+        String fileName = name;
         project.createFile(parent, fileName, "", MimeType.TEXT_PLAIN, new AsyncCallback<File>() {
             @Override
             public void onSuccess(File result) {
