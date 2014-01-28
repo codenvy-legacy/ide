@@ -156,6 +156,10 @@ public class FactoryHandler
             factoryUrl.setCommitid(getParamValue("idcommit", parameterMap));
         }
 
+        if (!factoryUrl.getProjectattributes().containsKey(PROJECT_NAME)) {
+            factoryUrl.getProjectattributes().put(PROJECT_NAME, "Untitled_project");
+        }
+
         prepareCloning();
     }
 
