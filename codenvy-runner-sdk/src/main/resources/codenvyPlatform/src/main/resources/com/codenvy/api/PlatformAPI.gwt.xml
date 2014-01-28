@@ -41,5 +41,6 @@
     <source path='runner'/>
     <source path='core'/>
     <source path='vfs'/>
+    <source path='project'/>
 
 </module>
