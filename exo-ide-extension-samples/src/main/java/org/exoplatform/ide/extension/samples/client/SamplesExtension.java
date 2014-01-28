@@ -18,7 +18,6 @@
 package org.exoplatform.ide.extension.samples.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -37,15 +36,14 @@ import org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogle
 import org.exoplatform.ide.extension.samples.client.inviting.manage.ManageInviteControl;
 import org.exoplatform.ide.extension.samples.client.inviting.manage.ManageInvitePresenter;
 import org.exoplatform.ide.extension.samples.client.startpage.OpenStartPageEvent;
+import org.exoplatform.ide.extension.samples.client.startpage.RequestPremiumAccountInfoEvent;
 import org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter;
-import org.exoplatform.ide.git.client.GitAutoBeanFactory;
+import org.exoplatform.ide.extension.samples.client.startpage.SupportPremiumHandler;
 import org.exoplatform.ide.git.client.github.collaborators.GitHubClientServiceImpl;
 
 /**
  * Samples extension for IDE.
- *
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: SamplesExtension.java Sep 2, 2011 12:34:36 PM vereshchaka $
+ * @author Oksana Vereshchaka
  */
 public class SamplesExtension extends Extension implements InitializeServicesHandler {
 
@@ -55,6 +53,9 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
         new GitHubClientServiceImpl(event.getLoader());
+
+        IDE.fireEvent(new RequestPremiumAccountInfoEvent());
+
         if (!IDE.currentWorkspace.isTemporary()) {
             IDE.fireEvent(new OpenStartPageEvent());
         }
@@ -81,6 +82,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
         new GetStartedPresenter();
         new InviteGoogleDevelopersPresenter();
         new InviteGitHubDevelopersPresenter();
+        new SupportPremiumHandler();
     }
 
 }
