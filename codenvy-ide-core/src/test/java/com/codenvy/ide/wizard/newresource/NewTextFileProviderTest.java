@@ -34,7 +34,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 /**
- * Testing {@link NewTextFileProvider} functionality.
+ * Testing {@link NewFileProvider} functionality.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
@@ -43,7 +43,7 @@ public class NewTextFileProviderTest extends BaseNewResourceProviderTest {
 
     @Before
     public void setUp() {
-        newResourceProvider = new NewTextFileProvider(resources);
+        newResourceProvider = new NewFileProvider(resources);
         textFileName = RESOURCE_NAME + '.' + newResourceProvider.getExtension();
     }
 
