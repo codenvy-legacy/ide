@@ -38,7 +38,7 @@ import static org.mockito.Mockito.verify;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class NewTextFileProviderTest extends BaseNewResourceProviderTest {
+public class NewFileProviderTest extends BaseNewResourceProviderTest {
     private String textFileName;
 
     @Before
