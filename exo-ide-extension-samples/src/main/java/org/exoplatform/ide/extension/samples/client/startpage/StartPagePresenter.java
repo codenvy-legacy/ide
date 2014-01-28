@@ -134,6 +134,21 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
         if (IDE.isRoUser() || IDE.currentWorkspace.isTemporary())
             display.disableInvitationsLink();
 
+        changeSupportLink();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onPremiumAccountInfoReceived(PremiumAccountInfoReceivedEvent event) {
+        premiumUser = event.isUserHasPremiumAccount();
+
+        if (display != null) {
+            changeSupportLink();
+        }
+    }
+
+    /** Perform change Support Link for premium user. */
+    private void changeSupportLink() {
         display.getSupportLink().setHref(premiumUser ? "javascript:UserVoice.showPopupWidget();"
                                                      : "http://helpdesk.codenvy.com");
         if (!premiumUser) {
@@ -141,13 +156,13 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
         }
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void onPremiumAccountInfoReceived(PremiumAccountInfoReceivedEvent event) {
+    public void onOpenStartPage(OpenStartPageEvent event) {
         if (display == null) {
             Display d = GWT.create(Display.class);
             IDE.getInstance().openView((View)d);
             display = d;
-            premiumUser = event.isUserHasPremiumAccount();
             bindDisplay();
             IDE.fireEvent(new WelcomePageOpenedEvent());
         } else {
@@ -157,90 +172,9 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
 
     /** {@inheritDoc} */
     @Override
-    public void onOpenStartPage(OpenStartPageEvent event) {
-        getUserFromApi();
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
             display = null;
         }
     }
-
-    /** Call User API to fetch information about current loggined user. */
-    private void getUserFromApi() {
-        try {
-            AsyncRequestCallback<StringBuilder> callback =
-                    new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
-                        @Override
-                        protected void onSuccess(StringBuilder json) {
-                            List<String> accountIds = new ArrayList<String>();
-                            JSONValue jsonUserProfile = JSONParser.parseStrict(json.toString());
-                            String currentUserId = jsonUserProfile.isObject().get("id").isString().stringValue();
-                            if (jsonUserProfile.isObject()!= null && jsonUserProfile.isObject().containsKey("accounts")) {
-                                JSONArray jsonAccounts = jsonUserProfile.isObject().get("accounts").isArray();
-                                for (int i = 0; i < jsonAccounts.size(); i++) {
-                                    JSONObject jsonAccount = jsonAccounts.get(i).isObject();
-                                    accountIds.add(jsonAccount.get("id").isString().stringValue());
-                                }
-
-                                accountInfo.clear();
-                                getAccountPremierProperty(currentUserId, accountIds);
-                            }
-                        }
-
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            IDE.fireEvent(new PremiumAccountInfoReceivedEvent(false));
-                        }
-                    };
-            AsyncRequest.build(RequestBuilder.GET, "/api/user").header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
-        } catch (RequestException e) {
-            IDE.fireEvent(new PremiumAccountInfoReceivedEvent(false));
-        }
-    }
-
-    private HashMap<String, Boolean> accountInfo = new HashMap<String, Boolean>();
-
-    /** Get information about all accounts which user managed. */
-    private void getAccountPremierProperty(final String currentUserId, final List<String> accountIds) {
-        if (accountIds.isEmpty()) {
-            IDE.fireEvent(new PremiumAccountInfoReceivedEvent(false));
-            return;
-        }
-
-        final String accountId = accountIds.get(0);
-        accountIds.remove(0);
-
-        try {
-            AsyncRequestCallback<StringBuilder> callback =
-                    new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
-                        @Override
-                        protected void onSuccess(StringBuilder json) {
-                            JSONObject jsonAccount = JSONParser.parseStrict(json.toString()).isObject();
-                            String accountOwnerId = jsonAccount.get("owner").isObject().get("id").isString().stringValue();
-                            if (accountOwnerId.equals(currentUserId)) {
-                                JSONObject jsonAttributes = jsonAccount.get("attributes").isObject();
-                                if (jsonAttributes.containsKey("tariff_plan")) {
-                                    IDE.fireEvent(new PremiumAccountInfoReceivedEvent(true));
-                                    return;
-                                }
-                            }
-                            getAccountPremierProperty(currentUserId, accountIds);
-                        }
-
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            IDE.fireEvent(new PremiumAccountInfoReceivedEvent(false));
-                        }
-                    };
-            AsyncRequest.build(RequestBuilder.GET, "/api/account/" + accountId).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
-                        .send(callback);
-        } catch (RequestException e) {
-            IDE.fireEvent(new PremiumAccountInfoReceivedEvent(false));
-        }
-    }
-
 }
