@@ -15,20 +15,17 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.server.projecttypes;
+package com.codenvy.ide.ext.extensions.server;
 
-import com.codenvy.api.project.server.ValueProviderFactory;
 import com.codenvy.inject.DynaModule;
 import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.Multibinder;
 
 /** @author Artem Zatsarynnyy */
 @DynaModule
-public class JavaModule extends AbstractModule {
+public class CodenvyExtModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(ProjectTypeDescriptionsExtension.class);
-        bind(JavaProjectTypeExtension.class);
-        Multibinder.newSetBinder(binder(), ValueProviderFactory.class).addBinding().to(BuilderValueProviderFactory.class);
+        bind(CodenvyExtProjectTypeExtension.class);
     }
 }

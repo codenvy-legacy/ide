@@ -2,8 +2,8 @@
  * CODENVY CONFIDENTIAL
  * __________________
  * 
- * [2012] - [2013] Codenvy, S.A. 
- * All Rights Reserved.
+ *  [2012] - [2013] Codenvy, S.A. 
+ *  All Rights Reserved.
  * 
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
@@ -15,13 +15,13 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.client.projecttemplate.ant;
+package com.codenvy.ide.ext.extensions.client.template;
 
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.resources.CreateProjectClientService;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
-import com.codenvy.ide.ext.java.client.projecttemplate.UnzipTemplateClientService;
+import com.codenvy.ide.ext.extensions.client.UnzipTemplateClientService;
 import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -37,29 +37,36 @@ import java.util.Map;
 
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
-import static com.codenvy.ide.ext.java.client.JavaExtension.ANT_JAR_TEMPLATE_ID;
-import static com.codenvy.ide.ext.java.client.JavaExtension.JAR_PROJECT_TYPE_ID;
+import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE_ID;
+import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.GIST_TEMPLATE_ID;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDescription.ATTRIBUTE_SOURCE_FOLDERS;
 
 /**
- * The wizard page for creating a Java project from a template.
+ * Presenter for creating Codenvy extension project from 'Create project wizard' template.
  *
- * @author Andrey Plotnikov
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class CreateAntJarProjectPage extends AbstractTemplatePage {
+public class CreateSampleCodenvyExtensionPage extends AbstractTemplatePage {
     private CreateProjectClientService    createProjectClientService;
     private ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
     private UnzipTemplateClientService    unzipTemplateClientService;
     private ResourceProvider              resourceProvider;
 
-    /** Create page. */
+    /**
+     * Create presenter.
+     *
+     * @param createProjectClientService
+     * @param projectTypeDescriptorRegistry
+     * @param unzipTemplateClientService
+     * @param resourceProvider
+     */
     @Inject
-    public CreateAntJarProjectPage(CreateProjectClientService createProjectClientService,
-                                   ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
-                                   UnzipTemplateClientService unzipTemplateClientService, ResourceProvider resourceProvider) {
-        super(null, null, ANT_JAR_TEMPLATE_ID);
+    public CreateSampleCodenvyExtensionPage(CreateProjectClientService createProjectClientService,
+                                            ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
+                                            UnzipTemplateClientService unzipTemplateClientService,
+                                            ResourceProvider resourceProvider) {
+        super(null, null, GIST_TEMPLATE_ID);
         this.createProjectClientService = createProjectClientService;
         this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
         this.unzipTemplateClientService = unzipTemplateClientService;
@@ -71,14 +78,15 @@ public class CreateAntJarProjectPage extends AbstractTemplatePage {
     public void commit(final CommitCallback callback) {
         Map<String, List<String>> attributes = new HashMap<String, List<String>>(1);
         // TODO: make it as calculated attributes
-        List<String> sourceFolders = new ArrayList<String>(1);
-        sourceFolders.add("src");
+        List<String> sourceFolders = new ArrayList<String>(2);
+        sourceFolders.add("src/main/java");
+        sourceFolders.add("src/test/java");
         attributes.put(ATTRIBUTE_SOURCE_FOLDERS, sourceFolders);
 
         final String projectName = wizardContext.getData(PROJECT_NAME);
-        ProjectTypeDescriptor jarDescriptor = projectTypeDescriptorRegistry.getDescriptor(JAR_PROJECT_TYPE_ID);
+        ProjectTypeDescriptor projectTypeDescriptor = projectTypeDescriptorRegistry.getDescriptor(CODENVY_EXTENSION_PROJECT_TYPE_ID);
         try {
-            createProjectClientService.createProject(projectName, jarDescriptor, attributes, new AsyncRequestCallback<Void>() {
+            createProjectClientService.createProject(projectName, projectTypeDescriptor, attributes, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
@@ -106,7 +114,7 @@ public class CreateAntJarProjectPage extends AbstractTemplatePage {
 
     private void unzipTemplate(final String projectName, final CommitCallback callback) {
         try {
-            unzipTemplateClientService.unzipAntJarTemplate(projectName, new AsyncRequestCallback<Void>() {
+            unzipTemplateClientService.unzipGistTemplate(projectName, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     resourceProvider.getProject(projectName, new AsyncCallback<Project>() {

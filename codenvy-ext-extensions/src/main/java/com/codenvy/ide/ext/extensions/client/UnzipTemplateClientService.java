@@ -18,8 +18,6 @@
 package com.codenvy.ide.ext.extensions.client;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.google.gwt.http.client.RequestException;
@@ -29,33 +27,19 @@ import javax.validation.constraints.NotNull;
 /**
  * Client service to work with Codenvy extensions.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ExtRuntimeClientService.java Jul 3, 2013 12:48:08 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
-public interface ExtRuntimeClientService {
+public interface UnzipTemplateClientService {
     /**
      * Create sample Codenvy extension project.
      *
      * @param projectName
-     *         name of the project to create
-     * @param properties
-     *         properties to set to a newly created project
-     * @param groupId
-     *         group id to set to the projects pom.xml
-     * @param artifactId
-     *         artifact id to set to the projects pom.xml
-     * @param version
-     *         version to set to the projects pom.xml
+     *         name of the project into which unpack the template
      * @param callback
      *         callback
      * @throws RequestException
      */
-    void createSampleCodenvyExtensionProject(@NotNull String projectName,
-                                             @NotNull Array<Property> properties,
-                                             @NotNull String groupId,
-                                             @NotNull String artifactId,
-                                             @NotNull String version,
-                                             @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+    void unzipGistTemplate(String projectName, AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
      * Run a specified WAR, that contains Codenvy Platform with (or without) any extension.

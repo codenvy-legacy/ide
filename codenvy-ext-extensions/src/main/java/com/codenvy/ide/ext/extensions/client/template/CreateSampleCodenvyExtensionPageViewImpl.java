@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.extensions.client.template.sample;
+package com.codenvy.ide.ext.extensions.client.template;
 
 import com.codenvy.ide.ext.extensions.client.ExtRuntimeResources;
 import com.google.gwt.core.client.GWT;

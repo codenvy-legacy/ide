@@ -42,10 +42,9 @@ public class BuilderValueProviderFactory implements ValueProviderFactory {
 
     @Inject
     private VirtualFileSystemRegistry registry;
-
     @Inject
     @Named("vfs.local.id")
-    private String vfsId;
+    private String                    vfsId;
 
     @Override
     public String getName() {
@@ -66,14 +65,14 @@ public class BuilderValueProviderFactory implements ValueProviderFactory {
                     MountPoint mountPoint = provider.getMountPoint(false);
                     VirtualFile root = mountPoint.getRoot();
                     VirtualFile projectFolder = root.getChild(project.getName());
-                    VirtualFile pomFile = projectFolder.getChild("pom.xml");
-                    if (pomFile != null) {
+                    // TODO: consider to provide several builders
+                    if (projectFolder.getChild("pom.xml") != null) {
                         list.add("maven");
+                    } else if (projectFolder.getChild("build.xml") != null) {
+                        list.add("ant");
                     }
-                } catch (VirtualFileSystemException e) {
-
+                } catch (VirtualFileSystemException ignore) {
                 }
-
                 return list;
             }
 

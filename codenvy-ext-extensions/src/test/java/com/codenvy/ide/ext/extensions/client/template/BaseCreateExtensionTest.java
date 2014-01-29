@@ -18,12 +18,14 @@
 package com.codenvy.ide.ext.extensions.client.template;
 
 import com.codenvy.ide.api.paas.PaaS;
+import com.codenvy.ide.api.resources.CreateProjectClientService;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
-import com.codenvy.ide.ext.extensions.client.ExtRuntimeClientService;
+import com.codenvy.ide.ext.extensions.client.UnzipTemplateClientService;
+import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.model.Project;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -50,7 +52,7 @@ import static org.mockito.Mockito.when;
 /**
  * Base test for creating codenvy extension from template page.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
 @RunWith(MockitoJUnitRunner.class)
 public abstract class BaseCreateExtensionTest {
@@ -59,22 +61,26 @@ public abstract class BaseCreateExtensionTest {
     public static final boolean PROVIDE_TEMPLATE = true;
     public static final boolean IN_CONTEXT       = true;
     @Mock
-    protected ExtRuntimeClientService service;
+    protected ResourceProvider              resourceProvider;
     @Mock
-    protected ResourceProvider        resourceProvider;
+    protected CommitCallback                callback;
     @Mock
-    protected CommitCallback          callback;
+    protected Project                       project;
     @Mock
-    protected Project                 project;
+    protected WizardContext                 wizardContext;
     @Mock
-    protected WizardContext           wizardContext;
+    protected Throwable                     throwable;
     @Mock
-    protected Throwable               throwable;
+    protected PaaS                          paas;
     @Mock
-    protected PaaS                    paas;
+    protected Template                      template;
+    protected AbstractTemplatePage          page;
     @Mock
-    protected Template                template;
-    protected AbstractTemplatePage    page;
+    protected UnzipTemplateClientService    unzipTemplateClientService;
+    @Mock
+    protected CreateProjectClientService    createProjectClientService;
+    @Mock
+    protected ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
 
     @Before
     public void setUp() {

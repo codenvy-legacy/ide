@@ -49,7 +49,6 @@ import com.codenvy.commons.security.oauth.OAuthAuthenticatorTokenProvider;
 import com.codenvy.commons.security.oauth.OAuthTokenProvider;
 import com.codenvy.ide.everrest.CodenvyAsynchronousJobPool;
 import com.codenvy.ide.everrest.CodenvyAsynchronousJobService;
-import com.codenvy.ide.ext.extensions.server.CreateProjectService;
 import com.codenvy.ide.ext.git.server.GitConnectionFactory;
 import com.codenvy.ide.ext.git.server.nativegit.NativeGitConnectionFactory;
 import com.codenvy.ide.ext.git.server.rest.BranchListWriter;
@@ -61,8 +60,8 @@ import com.codenvy.ide.ext.git.server.rest.StatusPageWriter;
 import com.codenvy.ide.ext.git.server.rest.TagListWriter;
 import com.codenvy.ide.ext.github.server.rest.GitHubService;
 import com.codenvy.ide.ext.java.jdi.server.DebuggerService;
-import com.codenvy.ide.ext.java.server.projecttypes.CreateProjectFromTemplateService;
 import com.codenvy.ide.ext.java.server.RestCodeAssistantJava;
+import com.codenvy.ide.ext.java.server.projecttypes.CreateProjectFromTemplateService;
 import com.codenvy.ide.ext.ssh.server.DummySshKeyStore;
 import com.codenvy.ide.ext.ssh.server.KeyService;
 import com.codenvy.ide.ext.ssh.server.SshKeyStore;
@@ -124,7 +123,7 @@ public class ApiModule extends AbstractModule {
         bind(DebuggerService.class);
         bind(AsynchronousJobPool.class).toInstance(new CodenvyAsynchronousJobPool(null)); // asynchronous job with default configuration
         bind(CodenvyAsynchronousJobService.class);
-        bind(CreateProjectService.class);
+        bind(com.codenvy.ide.ext.extensions.server.CreateProjectFromTemplateService.class);
         bind(TutorialsService.class);
         bind(GitService.class);
         bind(BranchListWriter.class).toInstance(new BranchListWriter());

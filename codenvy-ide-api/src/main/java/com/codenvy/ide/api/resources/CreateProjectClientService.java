@@ -2,8 +2,8 @@
  * CODENVY CONFIDENTIAL
  * __________________
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
+ *  [2012] - [2014] Codenvy, S.A.
+ *  All Rights Reserved.
  *
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
@@ -15,23 +15,21 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.api.projecttype;
+package com.codenvy.ide.api.resources;
 
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 
+import java.util.List;
+import java.util.Map;
+
 /**
- * Client service to get information about registered project types.
+ * //
  *
  * @author Artem Zatsarynnyy
  */
-public interface ProjectTypeDescriptionClientService {
-    /**
-     * Get information about all registered project types.
-     *
-     * @param callback
-     * @throws RequestException
-     */
-    void getProjectTypes(AsyncRequestCallback<String> callback) throws RequestException;
-
+public interface CreateProjectClientService {
+    public void createProject(String projectName, ProjectTypeDescriptor projectTypeDescriptor, Map<String, List<String>> attributes,
+                              AsyncRequestCallback<Void> callback) throws RequestException;
 }

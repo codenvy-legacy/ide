@@ -18,10 +18,10 @@
 package com.codenvy.ide.ext.extensions.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.ext.extensions.client.ExtRuntimeClientService;
-import com.codenvy.ide.ext.extensions.client.ExtRuntimeClientServiceImpl;
-import com.codenvy.ide.ext.extensions.client.template.sample.CreateSampleCodenvyExtensionPageView;
-import com.codenvy.ide.ext.extensions.client.template.sample.CreateSampleCodenvyExtensionPageViewImpl;
+import com.codenvy.ide.ext.extensions.client.UnzipTemplateClientService;
+import com.codenvy.ide.ext.extensions.client.UnzipTemplateClientServiceImpl;
+import com.codenvy.ide.ext.extensions.client.template.CreateSampleCodenvyExtensionPageView;
+import com.codenvy.ide.ext.extensions.client.template.CreateSampleCodenvyExtensionPageViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
@@ -36,7 +36,7 @@ public class ExtRuntimeGinModule extends AbstractGinModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
-        bind(ExtRuntimeClientService.class).to(ExtRuntimeClientServiceImpl.class).in(Singleton.class);
+        bind(UnzipTemplateClientService.class).to(UnzipTemplateClientServiceImpl.class).in(Singleton.class);
         bind(CreateSampleCodenvyExtensionPageView.class).to(CreateSampleCodenvyExtensionPageViewImpl.class).in(Singleton.class);
     }
 }

@@ -15,9 +15,9 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.projecttemplate.ant;
+package com.codenvy.ide.ext.java.client.projecttemplate.maven;
 
-import com.codenvy.ide.ext.java.client.projecttemplate.ant.CreateAntJarProjectPage;
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -29,7 +29,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.ext.java.client.JavaExtension.ANT_JAR_TEMPLATE_ID;
+import static com.codenvy.ide.ext.java.client.JavaExtension.MAVEN_JAR_TEMPLATE_ID;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
@@ -37,7 +37,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 /**
- * Testing {@link com.codenvy.ide.ext.java.client.projecttemplate.ant.CreateAntJarProjectPage} functionality.
+ * Testing {@link com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenJarProjectPage} functionality.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
@@ -46,7 +46,8 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
     @Override
     public void setUp() {
         super.setUp();
-        page = new CreateAntJarProjectPage(service, resourceProvider);
+        page = new CreateMavenJarProjectPage(createProjectClientService, projectTypeDescriptorRegistry, unzipTemplateClientService,
+                                             resourceProvider);
         page.setContext(wizardContext);
     }
 
@@ -61,7 +62,9 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service).createJarProject(anyString(), (Map<String, List<String>>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        }).when(createProjectClientService)
+                .createProject(anyString(), (ProjectTypeDescriptor)anyObject(), (Map<String, List<String>>)anyObject(),
+                               (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsSuccessful();
     }
@@ -77,7 +80,9 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
                 onFailure.invoke(callback, throwable);
                 return callback;
             }
-        }).when(service).createJarProject(anyString(), (Map<String, List<String>>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        }).when(createProjectClientService)
+                .createProject(anyString(), (ProjectTypeDescriptor)anyObject(), (Map<String, List<String>>)anyObject(),
+                               (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenCreateTutorialRequestIsFailed();
     }
@@ -93,22 +98,25 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service).createJarProject(anyString(), (Map<String, List<String>>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        }).when(createProjectClientService)
+                .createProject(anyString(), (ProjectTypeDescriptor)anyObject(), (Map<String, List<String>>)anyObject(),
+                               (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsFailed();
     }
 
     @Override
     public void testCreateWhenRequestExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(service)
-                .createJarProject(anyString(), (Map<String, List<String>>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        doThrow(RequestException.class).when(createProjectClientService)
+                .createProject(anyString(), (ProjectTypeDescriptor)anyObject(), (Map<String, List<String>>)anyObject(),
+                               (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenRequestExceptionHappened();
     }
 
     @Override
     public void testInContext() {
-        when(template.getId()).thenReturn(ANT_JAR_TEMPLATE_ID);
+        when(template.getId()).thenReturn(MAVEN_JAR_TEMPLATE_ID);
 
         super.testInContext();
     }

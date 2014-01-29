@@ -57,7 +57,7 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
     private WorkspaceAgent                 workspaceAgent;
     private ResourceProvider               resourceProvider;
     private ConsolePart                    console;
-    private ExtRuntimeClientService        service;
+    private UnzipTemplateClientService     service;
     private ExtRuntimeLocalizationConstant constant;
     private NotificationManager            notificationManager;
     private Notification                   notification;
@@ -80,7 +80,7 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
      * @param console
      *         {@link ConsolePart}
      * @param service
-     *         {@link ExtRuntimeClientService}
+     *         {@link UnzipTemplateClientService}
      * @param constant
      *         {@link ExtRuntimeLocalizationConstant}
      * @param notificationManager
@@ -90,7 +90,7 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
      */
     @Inject
     protected ExtensionsController(ResourceProvider resourceProvider, EventBus eventBus, WorkspaceAgent workspaceAgent,
-                                   final ConsolePart console, ExtRuntimeClientService service,
+                                   final ConsolePart console, UnzipTemplateClientService service,
                                    ExtRuntimeLocalizationConstant constant, NotificationManager notificationManager,
                                    DtoFactory dtoFactory) {
         this.resourceProvider = resourceProvider;

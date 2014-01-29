@@ -17,10 +17,13 @@
  */
 package com.codenvy.ide.ext.java.client.projecttemplate.maven;
 
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
+import com.codenvy.ide.api.resources.CreateProjectClientService;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.ext.java.client.JavaExtension;
-import com.codenvy.ide.ext.java.client.projecttemplate.CreateProjectClientService;
+import com.codenvy.ide.ext.java.client.projecttemplate.UnzipTemplateClientService;
+import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
@@ -35,7 +38,8 @@ import java.util.Map;
 
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
-import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.ATTRIBUTE_SOURCE_FOLDERS;
+import static com.codenvy.ide.ext.java.client.JavaExtension.SPRING_PROJECT_TYPE_ID;
+import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDescription.ATTRIBUTE_SOURCE_FOLDERS;
 
 /**
  * The wizard page for creating a Spring project from a template.
@@ -44,8 +48,10 @@ import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprio
  */
 @Singleton
 public class CreateMavenSpringProjectPage extends AbstractTemplatePage {
-    private CreateProjectClientService service;
-    private ResourceProvider           resourceProvider;
+    private CreateProjectClientService    createProjectClientService;
+    private ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
+    private UnzipTemplateClientService    unzipTemplateClientService;
+    private ResourceProvider              resourceProvider;
 
     /**
      * Create page.
@@ -55,9 +61,13 @@ public class CreateMavenSpringProjectPage extends AbstractTemplatePage {
      * @param resourceProvider
      */
     @Inject
-    public CreateMavenSpringProjectPage(CreateProjectClientService service, ResourceProvider resourceProvider) {
+    public CreateMavenSpringProjectPage(CreateProjectClientService createProjectClientService,
+                                        ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
+                                        UnzipTemplateClientService unzipTemplateClientService, ResourceProvider resourceProvider) {
         super(null, null, JavaExtension.MAVEN_SPRING_TEMPLATE_ID);
-        this.service = service;
+        this.createProjectClientService = createProjectClientService;
+        this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
+        this.unzipTemplateClientService = unzipTemplateClientService;
         this.resourceProvider = resourceProvider;
     }
 
@@ -65,19 +75,15 @@ public class CreateMavenSpringProjectPage extends AbstractTemplatePage {
     @Override
     public void commit(final CommitCallback callback) {
         Map<String, List<String>> attributes = new HashMap<String, List<String>>(1);
-        List<String> language = new ArrayList<String>(1);
-        language.add("java");
-
         // TODO: make it as calculated attributes
         List<String> sourceFolders = new ArrayList<String>(1);
         sourceFolders.add("src/main/java");
-
         attributes.put(ATTRIBUTE_SOURCE_FOLDERS, sourceFolders);
-        attributes.put("language", language);
 
         final String projectName = wizardContext.getData(PROJECT_NAME);
+        ProjectTypeDescriptor springDescriptor = projectTypeDescriptorRegistry.getDescriptor(SPRING_PROJECT_TYPE_ID);
         try {
-            service.createSpringProject(projectName, attributes, new AsyncRequestCallback<Void>() {
+            createProjectClientService.createProject(projectName, springDescriptor, attributes, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
@@ -105,7 +111,7 @@ public class CreateMavenSpringProjectPage extends AbstractTemplatePage {
 
     private void unzipTemplate(final String projectName, final CommitCallback callback) {
         try {
-            service.unzipMavenJarTemplate(projectName, new AsyncRequestCallback<Void>() {
+            unzipTemplateClientService.unzipMavenSpringTemplate(projectName, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     resourceProvider.getProject(projectName, new AsyncCallback<Project>() {

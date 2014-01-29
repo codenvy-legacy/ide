@@ -26,12 +26,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
-
 /**
  * The manager provides to return debugger for current project.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
 @Singleton
 public class DebuggerManager {
@@ -50,8 +48,7 @@ public class DebuggerManager {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
                 Project project = event.getProject();
-                String projectType = (String)project.getPropertyValue(PROPERTY_MIXIN_NATURES);
-                currentDebugger = debuggers.get(projectType);
+                currentDebugger = debuggers.get(project.getDescription().getProjectTypeId());
             }
 
             @Override
@@ -66,13 +63,13 @@ public class DebuggerManager {
     }
 
     /**
-     * Register new debugger for some project type.
+     * Register new debugger for the specified project type ID.
      *
-     * @param projectType
+     * @param projectTypeId
      * @param debugger
      */
-    public void registeredDebugger(String projectType, Debugger debugger) {
-        debuggers.put(projectType, debugger);
+    public void registeredDebugger(String projectTypeId, Debugger debugger) {
+        debuggers.put(projectTypeId, debugger);
     }
 
     /** @return debugger for project type */

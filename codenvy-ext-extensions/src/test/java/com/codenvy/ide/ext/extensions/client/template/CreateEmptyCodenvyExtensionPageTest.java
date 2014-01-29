@@ -18,6 +18,7 @@
 package com.codenvy.ide.ext.extensions.client.template;
 
 import com.codenvy.ide.api.paas.PaaS;
+import com.codenvy.ide.api.resources.CreateProjectClientService;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
@@ -25,7 +26,8 @@ import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.ext.extensions.client.ExtRuntimeClientService;
+import com.codenvy.ide.ext.extensions.client.UnzipTemplateClientService;
+import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -41,7 +43,7 @@ import org.mockito.stubbing.Answer;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.TEMPLATE;
-import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.EMPTY_EXTENSION_ID;
+import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.EMPTY_EXTENSION_TEMPLATE_ID;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
@@ -53,7 +55,7 @@ import static org.mockito.Mockito.when;
 /**
  * Testing {@link com.codenvy.ide.ext.extensions.client.template.CreateEmptyCodenvyExtensionPage} functionality.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
 @RunWith(MockitoJUnitRunner.class)
 public class CreateEmptyCodenvyExtensionPageTest {
@@ -62,22 +64,26 @@ public class CreateEmptyCodenvyExtensionPageTest {
     public static final boolean PROVIDE_TEMPLATE = true;
     public static final boolean IN_CONTEXT       = true;
     @Mock
-    private ExtRuntimeClientService   service;
+    private UnzipTemplateClientService    service;
     @Mock
-    private ResourceProvider          resourceProvider;
+    private CreateProjectClientService    createProjectClientService;
     @Mock
-    private WizardPage.CommitCallback callback;
+    private ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
     @Mock
-    private Project                   project;
+    private ResourceProvider              resourceProvider;
     @Mock
-    private WizardContext             wizardContext;
+    private WizardPage.CommitCallback     callback;
     @Mock
-    private Throwable                 throwable;
+    private Project                       project;
     @Mock
-    private PaaS                      paas;
+    private WizardContext                 wizardContext;
     @Mock
-    private Template                  template;
-    private AbstractTemplatePage      page;
+    private Throwable                     throwable;
+    @Mock
+    private PaaS                          paas;
+    @Mock
+    private Template                      template;
+    private AbstractTemplatePage          page;
 
     @Before
     public void setUp() {
@@ -86,7 +92,7 @@ public class CreateEmptyCodenvyExtensionPageTest {
         when(wizardContext.getData(TEMPLATE)).thenReturn(template);
         when(template.getId()).thenReturn(TEMPLATE_ID);
 
-        page = new CreateEmptyCodenvyExtensionPage(resourceProvider);
+        page = new CreateEmptyCodenvyExtensionPage(projectTypeDescriptorRegistry, createProjectClientService, resourceProvider);
         page.setContext(wizardContext);
     }
 
@@ -144,7 +150,7 @@ public class CreateEmptyCodenvyExtensionPageTest {
 
     @Test
     public void testInContext() {
-        when(template.getId()).thenReturn(EMPTY_EXTENSION_ID);
+        when(template.getId()).thenReturn(EMPTY_EXTENSION_TEMPLATE_ID);
         when(paas.isProvideTemplate()).thenReturn(!PROVIDE_TEMPLATE);
 
         assertEquals(page.inContext(), IN_CONTEXT);

@@ -20,33 +20,20 @@ package com.codenvy.ide.ext.java.client.projecttemplate;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * Client service for unpack java-project templates.
  *
  * @author Artem Zatsarynnyy
  */
-public interface CreateProjectClientService {
-    void createJarProject(String projectName, Map<String, List<String>> attributes, AsyncRequestCallback<Void> callback)
-            throws RequestException;
-
-    void createWarProject(String projectName, Map<String, List<String>> attributes, AsyncRequestCallback<Void> callback)
-            throws RequestException;
-
-    void createSpringProject(String projectName, Map<String, List<String>> attributes, AsyncRequestCallback<Void> callback)
-            throws RequestException;
+public interface UnzipTemplateClientService {
 
     void unzipMavenJarTemplate(String projectName, AsyncRequestCallback<Void> callback) throws RequestException;
 
     void unzipMavenWarTemplate(String projectName, AsyncRequestCallback<Void> callback) throws RequestException;
 
-    void unzipMavenSpringTemplate(String projectName, AsyncRequestCallback<Void> callback)
-            throws RequestException;
+    void unzipMavenSpringTemplate(String projectName, AsyncRequestCallback<Void> callback) throws RequestException;
 
     void unzipAntJarTemplate(String projectName, AsyncRequestCallback<Void> callback) throws RequestException;
 
-    void unzipAntSpringTemplate(String projectName, AsyncRequestCallback<Void> callback)
-            throws RequestException;
+    void unzipAntSpringTemplate(String projectName, AsyncRequestCallback<Void> callback) throws RequestException;
 }

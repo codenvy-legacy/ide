@@ -19,8 +19,6 @@ package com.codenvy.ide.ext.extensions.client;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.ui.loader.Loader;
@@ -33,19 +31,19 @@ import com.google.inject.name.Named;
 
 import javax.validation.constraints.NotNull;
 
-import static com.codenvy.ide.resources.marshal.JSONSerializer.PROPERTY_SERIALIZER;
-import static com.codenvy.ide.rest.HTTPHeader.CONTENT_TYPE;
 import static com.google.gwt.http.client.RequestBuilder.POST;
 
 /**
- * Implementation of {@link ExtRuntimeClientService} service.
+ * Implementation of {@link UnzipTemplateClientService} service.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
+public class UnzipTemplateClientServiceImpl implements UnzipTemplateClientService {
+    private static final String BASE_URL             = "/create-extension/" + Utils.getWorkspaceName();
+    private static final String UNPACK_GIST_TEMPLATE = BASE_URL + "/template/gist";
     /** REST-service context. */
-    private final String           baseUrl;
+    private final String           restContext;
     /** Loader to be displayed. */
     private final Loader           loader;
     /** Provider of IDE resources. */
@@ -54,7 +52,7 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
     /**
      * Create service.
      *
-     * @param baseUrl
+     * @param restContext
      *         REST-service context
      * @param loader
      *         loader to show on server request
@@ -62,34 +60,25 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
      *         provider of IDE resources
      */
     @Inject
-    protected ExtRuntimeClientServiceImpl(@Named("restContext") String baseUrl, Loader loader, ResourceProvider resourceProvider) {
+    protected UnzipTemplateClientServiceImpl(@Named("restContext") String restContext, Loader loader, ResourceProvider resourceProvider) {
         this.loader = loader;
-        this.baseUrl = baseUrl;
+        this.restContext = restContext;
         this.resourceProvider = resourceProvider;
     }
 
-    /** {@inheritDoc} */
     @Override
-    public void createSampleCodenvyExtensionProject(@NotNull String projectName,
-                                                    @NotNull Array<Property> properties,
-                                                    @NotNull String groupId,
-                                                    @NotNull String artifactId,
-                                                    @NotNull String version,
-                                                    @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
-        final String requestUrl = baseUrl + "/create-extension/" + Utils.getWorkspaceName() + "/sample";
-        final String param = "?vfsid=" + resourceProvider.getVfsInfo().getId() + "&name=" + projectName
-                             + "&rootid=" + resourceProvider.getRootId()
-                             + "&groupid=" + groupId + "&artifactid=" + artifactId + "&version=" + version;
-        loader.setMessage("Creating new project...");
-        AsyncRequest.build(POST, requestUrl + param)
-                    .data(PROPERTY_SERIALIZER.fromCollection(properties).toString())
-                    .header(CONTENT_TYPE, "application/json").loader(loader).send(callback);
+    public void unzipGistTemplate(String projectName, AsyncRequestCallback<Void> callback) throws RequestException {
+        String requestUrl = restContext + UNPACK_GIST_TEMPLATE;
+        String param = "?vfsid=" + resourceProvider.getVfsInfo().getId() + "&name=" + projectName;
+        String url = requestUrl + param;
+        loader.setMessage("Unpacking from template...");
+        AsyncRequest.build(POST, url).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
     public void launch(@NotNull String projectName, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
-        final String requestUrl = baseUrl + "/runner/" + Utils.getWorkspaceName() + "/run";
+        final String requestUrl = restContext + "/runner/" + Utils.getWorkspaceName() + "/run";
         String params = "project=" + projectName;
         AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params).send(callback);
     }

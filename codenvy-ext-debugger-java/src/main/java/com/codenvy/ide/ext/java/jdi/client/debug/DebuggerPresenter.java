@@ -80,7 +80,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.ATTRIBUTE_SOURCE_FOLDERS;
+import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDescription.ATTRIBUTE_SOURCE_FOLDERS;
 import static com.codenvy.ide.ext.java.jdi.shared.DebuggerEvent.BREAKPOINT;
 import static com.codenvy.ide.ext.java.jdi.shared.DebuggerEvent.STEP;
 

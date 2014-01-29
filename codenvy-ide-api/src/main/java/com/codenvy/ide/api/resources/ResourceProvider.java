@@ -21,12 +21,10 @@ import com.codenvy.ide.api.extension.SDK;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.ProjectNature;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.resources.model.VirtualFileSystemInfo;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-
 
 /**
  * Public interface of Resources API is presented by {@link ResourceProvider}. This class is designed to provide
@@ -41,7 +39,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  * primary nature is retrieved from properties provided, then corresponding ModelProvider invoked to create
  * empty Project that is initialized with JSon data retrieved from REST VFS service.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 @SDK(title = "ide.api.resource")
 public interface ResourceProvider {
@@ -51,11 +49,12 @@ public interface ResourceProvider {
      * @return active project or null if none.
      */
     public Project getActiveProject();
-    
+
     /**
      * Sets the active project.
-     * 
-     * @param project active project
+     *
+     * @param project
+     *         active project
      */
     public void setActiveProject(Project project);
 
@@ -77,7 +76,6 @@ public interface ResourceProvider {
      */
     public void createProject(String name, Array<Property> properties, AsyncCallback<Project> callback);
 
-
     /**
      * Experimental and to be changed: List all projects stored on vfs
      *
@@ -85,51 +83,24 @@ public interface ResourceProvider {
      */
     public void listProjects(AsyncCallback<String> callback);
 
-    /**
-     * Reads already stored projects and shows them in project explorer.
-     *
-     */
+    /** Reads already stored projects and shows them in project explorer. */
     public void showListProjects();
 
     /**
-     * Registers ModelProvider instance for given Primary Project Nature
+     * Registers {@link ModelProvider} instance for the given language.
      *
-     * @param primaryNature
+     * @param language
      * @param modelProvider
      */
-    public void registerModelProvider(String primaryNature, ModelProvider modelProvider);
+    public void registerModelProvider(String language, ModelProvider modelProvider);
 
     /**
-     * Retrieves Model Provider instance for given Primary Nature, of Generic Model Provider is none found.
+     * Returns {@link ModelProvider} instance for the given language or Generic Model Provider if none was found.
      *
-     * @param primaryNature
+     * @param language
      * @return
      */
-    public ModelProvider getModelProvider(String primaryNature);
-
-    /**
-     * Register Nature
-     *
-     * @param nature
-     */
-    public void registerNature(ProjectNature nature);
-
-    /**
-     * Get nature by ID
-     *
-     * @param natureId
-     * @return
-     */
-    public ProjectNature getNature(String natureId);
-
-    /**
-     * Apply nature to the given Project. Project Description will flushed to VFS immediately.
-     *
-     * @param project
-     * @param natureId
-     * @param callback
-     */
-    public void applyNature(Project project, String natureId, AsyncCallback<Project> callback);
+    public ModelProvider getModelProvider(String language);
 
     /**
      * Register file type.
@@ -148,7 +119,7 @@ public interface ResourceProvider {
 
     /**
      * Return virtual file system information.
-     * 
+     *
      * @return
      */
     public VirtualFileSystemInfo getVfsInfo();

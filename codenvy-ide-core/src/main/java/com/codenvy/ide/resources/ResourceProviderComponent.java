@@ -30,7 +30,6 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.IntegerMap;
 import com.codenvy.ide.collections.IntegerMap.IterationCallback;
 import com.codenvy.ide.collections.StringMap;
-import com.codenvy.ide.collections.StringSet;
 import com.codenvy.ide.core.Component;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.dto.DtoFactory;
@@ -42,8 +41,6 @@ import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Link;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.ProjectDescription;
-import com.codenvy.ide.resources.model.ProjectNature;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.resources.model.VirtualFileSystemInfo;
@@ -60,7 +57,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.regexp.shared.RegExp;
-import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -77,20 +73,19 @@ import com.google.web.bindery.event.shared.EventBus;
 public class ResourceProviderComponent implements ResourceProvider, Component {
     /** Used for compatibility with IDE-VFS 1.x */
     private static final String DEPRECATED_PROJECT_TYPE = "deprecated.project.type";
+    protected final ModelProvider            genericModelProvider;
     /** Fully qualified URL to root folder of VFS */
     private final   String                   workspaceURL;
-    private         Loader                   loader;
     private final   StringMap<ModelProvider> modelProviders;
-    private final   StringMap<ProjectNature> natures;
     private final   IntegerMap<FileType>     fileTypes;
+    private final   EventBus                 eventBus;
+    private final   FileType                 defaultFile;
     protected       VirtualFileSystemInfo    vfsInfo;
-    protected final ModelProvider            genericModelProvider;
+    private         Loader                   loader;
     @SuppressWarnings("unused")
     private boolean initialized = false;
-    private       Project    activeProject;
-    private final EventBus   eventBus;
-    private final FileType   defaultFile;
-    private       DtoFactory dtoFactory;
+    private Project    activeProject;
+    private DtoFactory dtoFactory;
 
     /**
      * Resources API for client application.
@@ -110,7 +105,6 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         this.dtoFactory = dtoFactory;
         this.workspaceURL = restContext + "/vfs/" + Utils.getWorkspaceName() + "/v2";
         this.modelProviders = Collections.<ModelProvider>createStringMap();
-        this.natures = Collections.<ProjectNature>createStringMap();
         this.fileTypes = Collections.createIntegerMap();
         this.loader = loader;
     }
@@ -167,7 +161,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                         if (activeProject != null) {
                             eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
                         }
-                        
+
                         activeProject = project;
 
                         // get project structure
@@ -308,15 +302,15 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
 
     /** {@inheritDoc} */
     @Override
-    public void registerModelProvider(String primaryNature, ModelProvider modelProvider) {
-        modelProviders.put(primaryNature, modelProvider);
+    public void registerModelProvider(String language, ModelProvider modelProvider) {
+        modelProviders.put(language, modelProvider);
     }
 
     /** {@inheritDoc} */
     @Override
-    public ModelProvider getModelProvider(String primaryNature) {
-        if (primaryNature != null) {
-            ModelProvider modelProvider = modelProviders.get(primaryNature);
+    public ModelProvider getModelProvider(String language) {
+        if (language != null) {
+            ModelProvider modelProvider = modelProviders.get(language);
             if (modelProvider != null) {
                 return modelProvider;
             }
@@ -333,100 +327,8 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
 
     /** {@inheritDoc} */
     @Override
-    public void registerNature(ProjectNature nature) {
-        if (nature != null) {
-            natures.put(nature.getNatureId(), nature);
-        }
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public ProjectNature getNature(String natureId) {
-        return natures.get(natureId);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void applyNature(final Project project, final String natureId, final AsyncCallback<Project> callback) {
-        ProjectNature nature = natures.get(natureId);
-        try {
-            validate(project, nature);
-        } catch (IllegalStateException e) {
-            callback.onFailure(e);
-            // break process
-            return;
-        }
-        // Call ProjectNature.configure()
-        nature.configure(project, new AsyncCallback<Project>() {
-            @Override
-            public void onSuccess(Project result) {
-                // finally add property and flush settings
-                project.getProperty(ProjectDescription.PROPERTY_MIXIN_NATURES).getValue().add(natureId);
-                project.flushProjectProperties(new AsyncCallback<Project>() {
-
-                    @Override
-                    public void onSuccess(Project result) {
-                        callback.onSuccess(result);
-                    }
-
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        callback.onFailure(caught);
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                callback.onFailure(caught);
-            }
-        });
-    }
-
-    /**
-     * Validate, if nature can be applied on project
-     *
-     * @param project
-     * @param nature
-     */
-    protected void validate(Project project, ProjectNature nature) throws IllegalStateException {
-        // Nature can't be null
-        if (nature == null) {
-            throw new IllegalStateException("Nature can't be null");
-        }
-        // check nature not primary
-        if (nature.getNatureCategories().contains(ProjectNature.PRIMARY_NATURE_CATEGORY)) {
-            throw new IllegalStateException("Can't set primary nature in runtime");
-        }
-
-        StringSet natureCategories = nature.getNatureCategories();
-        StringSet requiredNatureIds = nature.getRequiredNatureIds();
-
-        StringSet appliedNatureIds = project.getDescription().getNatures();
-        // checj already applied
-        if (appliedNatureIds.contains(nature.getNatureId())) {
-            throw new IllegalStateException("Nature aready applied");
-        }
-
-        // check dependencies
-        for (String requiredNatureId : requiredNatureIds.getKeys().asIterable()) {
-            if (!appliedNatureIds.contains(requiredNatureId)) {
-                throw new IllegalStateException("Missing required Nature on the project: " + requiredNatureId);
-            }
-        }
-
-        // check ONE-OF-CATEGORY constraint
-        for (String appliedNatureId : appliedNatureIds.getKeys().asIterable()) {
-            ProjectNature appliedNature = natures.get(appliedNatureId);
-
-            for (String appliedNatureCategory : appliedNature.getNatureCategories().getKeys().asIterable()) {
-                if (natureCategories.contains(appliedNatureCategory)) {
-                    throw new IllegalStateException("New Nature conflict with: " + appliedNatureId
-                                                    + ", cause of the following category: " + appliedNatureCategory);
-                }
-            }
-        }
+    public void setActiveProject(Project project) {
+        this.activeProject = project;
     }
 
     /** {@inheritDoc} */
@@ -612,11 +514,5 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 Log.error(ResourceProviderComponent.class, "Can not get list of projects", caught);
             }
         });
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setActiveProject(Project project) {
-        this.activeProject = project;
     }
 }

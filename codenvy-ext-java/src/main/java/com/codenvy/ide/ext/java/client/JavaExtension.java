@@ -33,7 +33,6 @@ import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.java.client.editor.JavaEditorProvider;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
@@ -48,9 +47,7 @@ import com.codenvy.ide.ext.java.client.wizard.NewClassProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewEnumProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewInterfaceProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewPackageProvider;
-import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
@@ -73,13 +70,14 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
 /** @author Evgen Vidolob */
 @Extension(title = "Java syntax highlighting and code autocompletion.", version = "3.0.0")
 public class JavaExtension {
-    public static final String JAVA_WEB_APPLICATION_PROJECT_TYPE = "War";
-    public static final String SPRING_APPLICATION_PROJECT_TYPE   = "Spring";
-    public static final String MAVEN_JAR_TEMPLATE_ID             = "maven_jar";
-    public static final String MAVEN_WAR_TEMPLATE_ID             = "maven_war";
-    public static final String MAVEN_SPRING_TEMPLATE_ID          = "maven_spring";
-    public static final String ANT_JAR_TEMPLATE_ID               = "ant_jar";
-    public static final String ANT_SPRING_TEMPLATE_ID            = "ant_spring";
+    public static final String JAR_PROJECT_TYPE_ID      = "jar";
+    public static final String WAR_PROJECT_TYPE_ID      = "war";
+    public static final String SPRING_PROJECT_TYPE_ID   = "spring";
+    public static final String MAVEN_JAR_TEMPLATE_ID    = "maven_jar";
+    public static final String MAVEN_WAR_TEMPLATE_ID    = "maven_war";
+    public static final String MAVEN_SPRING_TEMPLATE_ID = "maven_spring";
+    public static final String ANT_JAR_TEMPLATE_ID      = "ant_jar";
+    public static final String ANT_SPRING_TEMPLATE_ID   = "ant_spring";
     private ResourceProvider    resourceProvider;
     private NotificationManager notificationManager;
     private String              restContext;
@@ -96,7 +94,6 @@ public class JavaExtension {
                          NewEnumProvider newEnumHandler,
                          NewAnnotationProvider newAnnotationHandler,
                          NewPackageProvider newPackage,
-                         ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
                          @Named("restContext") String restContext,
                          TemplateAgent templateAgent,
                          Provider<CreateMavenJarProjectPage> createMavenJarProjectPage,
@@ -105,16 +102,17 @@ public class JavaExtension {
                          Provider<CreateAntJarProjectPage> createAntJavaProjectPage,
                          Provider<CreateAntSpringProjectPage> createAntSpringProjectPage,
                          ActionManager actionManager) {
-
         this();
-        FileType javaFile = new FileType(JavaResources.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
         this.resourceProvider = resourceProvider;
         this.notificationManager = notificationManager;
         this.restContext = restContext;
 
+        FileType javaFile = new FileType(JavaResources.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
         editorRegistry.register(javaFile, javaEditorProvider);
         resourceProvider.registerFileType(javaFile);
-        resourceProvider.registerModelProvider(JavaProject.PRIMARY_NATURE, new JavaProjectModelProvider(eventBus));
+
+        resourceProvider.registerModelProvider("java", new JavaProjectModelProvider(eventBus));
+
         JavaResources.INSTANCE.css().ensureInjected();
 
         // add actions in context menu
@@ -127,89 +125,36 @@ public class JavaExtension {
         DefaultActionGroup projectMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_PROJECT);
         projectMenuActionGroup.add(dependencyAction);
 
-        Array<String> emptyArray = Collections.createArray();
-
-        // Jar project properties
-        Array<Property> jarProperties = Collections.createArray();
-        jarProperties.add(new Property("nature.primary", Collections.createArray("java")));
-        jarProperties.add(new Property("vfs:projectType", Collections.createArray("Jar")));
-        jarProperties.add(new Property("exoide:classpath", emptyArray));
-        jarProperties.add(new Property("nature.mixin", Collections.createArray("Jar")));
-        jarProperties.add(new Property("vfs:mimeType", Collections.createArray("text/vnd.ideproject+directory")));
-        jarProperties.add(new Property("builder.name", Collections.createArray("maven")));
-        jarProperties.add(new Property("folders.source", Collections.createArray("src/main/java", "src/test/java")));
-        jarProperties.add(new Property("exoide:projectDescription", Collections.createArray("Simple JAR project.")));
-
-        // War project properties
-        Array<Property> warProperties = Collections.createArray();
-        warProperties.add(new Property("nature.primary", Collections.createArray("java")));
-        warProperties.add(new Property("exoide:classpath", emptyArray));
-        warProperties.add(new Property("nature.mixin", Collections.createArray("War")));
-        warProperties.add(new Property("exoide:target", Collections.createArray("CloudBees", "CloudFoundry", "AWS", "AppFog", "Tier3WF")));
-        warProperties.add(new Property("runner.name", Collections.createArray("webapps")));
-        warProperties.add(new Property("exoide:projectDescription", Collections.createArray("Java Web project.")));
-        warProperties.add(new Property("vfs:projectType", Collections.createArray("War")));
-        warProperties.add(new Property("vfs:mimeType", Collections.createArray("text/vnd.ideproject+directory")));
-        warProperties.add(new Property("builder.name", Collections.createArray("maven")));
-        warProperties.add(new Property("folders.source", Collections.createArray("src/main/java", "src/main/resources")));
-
-//        projectTypeAgent.register(JAVA_APPLICATION_PROJECT_TYPE,
-//                                  "Java application",
-//                                  JavaResources.INSTANCE.newJavaProject(),
-//                                  PRIMARY_NATURE,
-//                                  createArray(JAVA_APPLICATION_PROJECT_TYPE),
-//                                  jarProperties);
-//
-//        projectTypeAgent.register(JAVA_WEB_APPLICATION_PROJECT_TYPE,
-//                                  "Java web application",
-//                                  JavaResources.INSTANCE.newJavaProject(),
-//                                  PRIMARY_NATURE,
-//                                  createArray(JAVA_WEB_APPLICATION_PROJECT_TYPE),
-//                                  warProperties);
-//
-//        projectTypeAgent.register(SPRING_APPLICATION_PROJECT_TYPE,
-//                                  "Spring application",
-//                                  JavaResources.INSTANCE.newJavaProject(),
-//                                  PRIMARY_NATURE,
-//                                  createArray(SPRING_APPLICATION_PROJECT_TYPE),
-//                                  warProperties);
-
         newResourceAgent.register(newClassHandler);
         newResourceAgent.register(newInterfaceHandler);
         newResourceAgent.register(newEnumHandler);
         newResourceAgent.register(newAnnotationHandler);
         newResourceAgent.register(newPackage);
 
-        templateAgent.register(MAVEN_WAR_TEMPLATE_ID,
-                               "War project",
-                               null,
-                               "war",//PRIMARY_NATURE,
-//                               createArray(JAVA_WEB_APPLICATION_PROJECT_TYPE),
-                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenWarProjectPage));
         templateAgent.register(MAVEN_JAR_TEMPLATE_ID,
-                               "Java project",
+                               "Maven JAR project",
                                JavaResources.INSTANCE.javaProject(),
-                               "jar",//PRIMARY_NATURE,
-//                               createArray(JAVA_APPLICATION_PROJECT_TYPE),
+                               JAR_PROJECT_TYPE_ID,
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenJarProjectPage));
+        templateAgent.register(MAVEN_WAR_TEMPLATE_ID,
+                               "Java Web project",
+                               null,
+                               WAR_PROJECT_TYPE_ID,
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenWarProjectPage));
         templateAgent.register(MAVEN_SPRING_TEMPLATE_ID,
-                               "Spring project",
+                               "Maven Spring application",
                                JavaResources.INSTANCE.javaProject(),
-                               "spring",//PRIMARY_NATURE,
-//                               createArray(SPRING_APPLICATION_PROJECT_TYPE),
+                               SPRING_PROJECT_TYPE_ID,
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenSpringProjectPage));
-
         templateAgent.register(ANT_JAR_TEMPLATE_ID,
-                               "Ant Java project",
+                               "Ant JAR project",
                                JavaResources.INSTANCE.javaProject(),
-                               "jar",//PRIMARY_NATURE,
-//                               createArray(JAVA_APPLICATION_PROJECT_TYPE),
+                               JAR_PROJECT_TYPE_ID,
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(createAntJavaProjectPage));
         templateAgent.register(ANT_SPRING_TEMPLATE_ID,
-                               "Ant Spring project",
+                               "Ant Spring application",
                                JavaResources.INSTANCE.javaProject(),
-                               "spring",//PRIMARY_NATURE,
-//                               createArray(SPRING_APPLICATION_PROJECT_TYPE),
+                               SPRING_PROJECT_TYPE_ID,
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(createAntSpringProjectPage));
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
@@ -222,12 +167,10 @@ public class JavaExtension {
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
-                // do nothing
             }
 
             @Override
             public void onProjectDescriptionChanged(ProjectActionEvent event) {
-                // do nothing
             }
         });
 

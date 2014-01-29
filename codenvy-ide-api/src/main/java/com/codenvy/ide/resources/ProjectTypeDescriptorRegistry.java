@@ -28,7 +28,7 @@ import com.codenvy.ide.collections.Array;
 public interface ProjectTypeDescriptorRegistry {
 
     /**
-     * Returns registered project type descriptor by id.
+     * Get registered project type descriptor by ID.
      *
      * @param id
      *         project type descriptor id

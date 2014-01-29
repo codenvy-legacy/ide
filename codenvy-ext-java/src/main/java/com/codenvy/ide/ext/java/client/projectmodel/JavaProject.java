@@ -48,28 +48,27 @@ import javax.validation.constraints.NotNull;
  * implementations try to create package or compilation unit if it's possible,
  * else fall back to super implementations of this methods.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public class JavaProject extends Project {
 
-    /** Primary nature for Java-scpecific project */
+    /** Primary nature for Java-specific project */
     public static final String PRIMARY_NATURE = "java";
-
-    /** Java-scpecific project description */
-    private JavaProjectDesctiprion description;
+    /** Java-specific project description */
+    private JavaProjectDescription description;
 
     /** @param eventBus */
     protected JavaProject(EventBus eventBus) {
         super(eventBus);
-        this.description = new JavaProjectDesctiprion(this);
+        this.description = new JavaProjectDescription(this);
     }
 
     /** {@inheritDoc} */
     @Override
-    public JavaProjectDesctiprion getDescription() {
+    public JavaProjectDescription getDescription() {
         return description;
     }
-  
+
     /** {@inheritDoc} */
     @Override
     public void refreshTree(final Folder root, final AsyncCallback<Folder> callback) {
@@ -77,7 +76,8 @@ public class JavaProject extends Project {
         try {
             // create internal wrapping Request Callback with proper Unmarshaller
             AsyncRequestCallback<Folder> internalCallback =
-                    new AsyncRequestCallback<Folder>(new JavaModelUnmarshaller(folderToRefresh, (JavaProject)folderToRefresh.getProject(), eventBus)) {
+                    new AsyncRequestCallback<Folder>(
+                            new JavaModelUnmarshaller(folderToRefresh, (JavaProject)folderToRefresh.getProject(), eventBus)) {
                         @Override
                         protected void onSuccess(Folder refreshedRoot) {
                             callback.onSuccess(refreshedRoot);
@@ -129,7 +129,7 @@ public class JavaProject extends Project {
                     pack.setProject(JavaProject.this);
                     checkedParent.addChild(pack);
                     // TODO workaround for a unified view for packages
-                   // SourceFolder sourceFolder = getSourceFolder(pack);
+                    // SourceFolder sourceFolder = getSourceFolder(pack);
                     // refresh tree, cause additional hierarchy folders my have been created
                     refreshTree(folderParent, new AsyncCallback<Folder>() {
                         @Override
@@ -377,11 +377,9 @@ public class JavaProject extends Project {
     protected Folder checkParent(Folder parent) throws JavaModelException {
         if (!(parent instanceof Package) && !(parent instanceof SourceFolder)) {
             for (SourceFolder sourceFolder : getSourceFolders().asIterable()) {
-                if (parent.getPath().equals(sourceFolder.getPath()))
-                {
+                if (parent.getPath().equals(sourceFolder.getPath())) {
                     return sourceFolder;
-                }
-                else if (parent.getPath().startsWith(sourceFolder.getPath())) {
+                } else if (parent.getPath().startsWith(sourceFolder.getPath())) {
                     String id = parent.getId();
                     String name = parent.getPath().replaceFirst(sourceFolder.getPath(), "");
                     name = (name.startsWith("/")) ? name.replaceFirst("/", "").replaceAll("/", ".") : name.replaceAll("/", ".");
@@ -463,5 +461,5 @@ public class JavaProject extends Project {
             }
         }
     }
-    
+
 }

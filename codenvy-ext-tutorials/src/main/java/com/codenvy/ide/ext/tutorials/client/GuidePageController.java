@@ -55,7 +55,7 @@ public class GuidePageController {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
                 if (event.getProject() != null &&
-                    event.getProject().getDescription().getNatures().contains(TUTORIAL_PROJECT_TYPE)) {
+                    event.getProject().getDescription().getProjectTypeId().equals(TUTORIAL_PROJECT_TYPE)) {
                     openTutorialPage();
                 }
             }
@@ -63,7 +63,7 @@ public class GuidePageController {
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
                 if (event.getProject() != null &&
-                    event.getProject().getDescription().getNatures().contains(TUTORIAL_PROJECT_TYPE)) {
+                    event.getProject().getDescription().getProjectTypeId().equals(TUTORIAL_PROJECT_TYPE)) {
                     closeTutorialPage();
                 }
             }

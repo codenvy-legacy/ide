@@ -33,9 +33,9 @@ import javax.validation.constraints.NotNull;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
 import static com.codenvy.ide.collections.Collections.createArray;
-import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE;
+import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE_ID;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
-import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.ATTRIBUTE_SOURCE_FOLDERS;
+import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDescription.ATTRIBUTE_SOURCE_FOLDERS;
 import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.NEW_PROJECT_WIZARD_TUTORIAL_ID;
 import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.TUTORIAL_PROJECT_TYPE;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
@@ -69,7 +69,7 @@ public class CreateNewProjectWizardTutorialPage extends AbstractTemplatePage {
     public void commit(@NotNull final CommitCallback callback) {
         Array<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
                                                      new Property(PROPERTY_MIXIN_NATURES,
-                                                                  createArray(TUTORIAL_PROJECT_TYPE, CODENVY_EXTENSION_PROJECT_TYPE)),
+                                                                  createArray(TUTORIAL_PROJECT_TYPE, CODENVY_EXTENSION_PROJECT_TYPE_ID)),
                                                      new Property(ATTRIBUTE_SOURCE_FOLDERS,
                                                                   createArray("src/main/java", "src/main/resources")));
         final String projectName = wizardContext.getData(PROJECT_NAME);

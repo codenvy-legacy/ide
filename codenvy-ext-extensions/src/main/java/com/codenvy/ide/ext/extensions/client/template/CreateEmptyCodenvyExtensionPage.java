@@ -17,36 +17,40 @@
  */
 package com.codenvy.ide.ext.extensions.client.template;
 
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
+import com.codenvy.ide.api.resources.CreateProjectClientService;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
-import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Property;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
-import static com.codenvy.ide.collections.Collections.createArray;
-import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE;
-import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.EMPTY_EXTENSION_ID;
-import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
-import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.ATTRIBUTE_SOURCE_FOLDERS;
-import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
-import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
+import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE_ID;
+import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.EMPTY_EXTENSION_TEMPLATE_ID;
+import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDescription.ATTRIBUTE_SOURCE_FOLDERS;
 
 /**
  * The wizard page for creating empty Codenvy extension project.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: CreateEmptyCodenvyExtensionPage.java Sep 2, 2013 10:54:05 AM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 public class CreateEmptyCodenvyExtensionPage extends AbstractTemplatePage {
-    private ResourceProvider resourceProvider;
+    private ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
+    private CreateProjectClientService    createProjectClientService;
+    private ResourceProvider              resourceProvider;
 
     /**
      * Create page.
@@ -54,34 +58,52 @@ public class CreateEmptyCodenvyExtensionPage extends AbstractTemplatePage {
      * @param resourceProvider
      */
     @Inject
-    public CreateEmptyCodenvyExtensionPage(ResourceProvider resourceProvider) {
-        super(null, null, EMPTY_EXTENSION_ID);
+    public CreateEmptyCodenvyExtensionPage(ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
+                                           CreateProjectClientService createProjectClientService,
+                                           ResourceProvider resourceProvider) {
+        super(null, null, EMPTY_EXTENSION_TEMPLATE_ID);
+        this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
+        this.createProjectClientService = createProjectClientService;
         this.resourceProvider = resourceProvider;
     }
 
     /** {@inheritDoc} */
     @Override
     public void commit(@NotNull final CommitCallback callback) {
-        Array<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
-                                                     new Property(PROPERTY_MIXIN_NATURES, CODENVY_EXTENSION_PROJECT_TYPE),
-                                                     new Property(ATTRIBUTE_SOURCE_FOLDERS,
-                                                                  createArray("src/main/java", "src/main/resources")),
-                                                     new Property("builder.name", "maven"),
-                                                     new Property("builder.maven.targets", createArray("clean", "install")),
-                                                     new Property("runner.name", "sdk"));
+        Map<String, List<String>> attributes = new HashMap<String, List<String>>(1);
+        // TODO: make it as calculated attributes
+        List<String> sourceFolders = new ArrayList<String>(2);
+        sourceFolders.add("src/main/java");
+        sourceFolders.add("src/main/resources");
+        attributes.put(ATTRIBUTE_SOURCE_FOLDERS, sourceFolders);
+
         final String projectName = wizardContext.getData(PROJECT_NAME);
+        ProjectTypeDescriptor projectTypeDescriptor = projectTypeDescriptorRegistry.getDescriptor(CODENVY_EXTENSION_PROJECT_TYPE_ID);
+        try {
+            createProjectClientService.createProject(projectName, projectTypeDescriptor, attributes, new AsyncRequestCallback<Void>() {
+                @Override
+                protected void onSuccess(Void result) {
+                    resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
+                        @Override
+                        public void onSuccess(Project result) {
+                            wizardContext.putData(PROJECT, result);
+                            callback.onSuccess();
+                        }
 
-        resourceProvider.createProject(projectName, properties, new AsyncCallback<Project>() {
-            @Override
-            public void onSuccess(Project result) {
-                wizardContext.putData(PROJECT, result);
-                callback.onSuccess();
-            }
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            callback.onFailure(caught);
+                        }
+                    });
+                }
 
-            @Override
-            public void onFailure(Throwable caught) {
-                callback.onFailure(caught);
-            }
-        });
+                @Override
+                protected void onFailure(Throwable exception) {
+                    callback.onFailure(exception);
+                }
+            });
+        } catch (RequestException e) {
+            callback.onFailure(e);
+        }
     }
 }

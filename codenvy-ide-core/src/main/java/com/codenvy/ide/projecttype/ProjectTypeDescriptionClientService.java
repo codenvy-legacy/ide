@@ -17,39 +17,40 @@
  */
 package com.codenvy.ide.projecttype;
 
-import com.codenvy.ide.api.projecttype.ProjectTypeDescriptionClientService;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.ui.loader.Loader;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 import static com.codenvy.ide.MimeType.APPLICATION_JSON;
 import static com.codenvy.ide.rest.HTTPHeader.ACCEPT;
 
 /**
- * Implementation of {@link ProjectTypeDescriptionClientService}.
+ * Client service to get information about registered project types.
  *
  * @author Artem Zatsarynnyy
  */
-@Singleton
-public class ProjectTypeDescriptionClientServiceImpl implements ProjectTypeDescriptionClientService {
+public class ProjectTypeDescriptionClientService {
     private static final String BASE_URL         = "/project-description";
     private static final String GET_DESCRIPTIONS = BASE_URL + "/descriptions";
     private String restContext;
     private Loader loader;
 
     @Inject
-    protected ProjectTypeDescriptionClientServiceImpl(@Named("restContext") String restContext, Loader loader) {
+    protected ProjectTypeDescriptionClientService(@Named("restContext") String restContext, Loader loader) {
         this.restContext = restContext;
         this.loader = loader;
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Get information about all registered project types.
+     *
+     * @param callback
+     * @throws RequestException
+     */
     public void getProjectTypes(AsyncRequestCallback<String> callback) throws RequestException {
         final String requestUrl = restContext + GET_DESCRIPTIONS;
         AsyncRequest.build(RequestBuilder.GET, requestUrl).header(ACCEPT, APPLICATION_JSON).loader(loader).send(callback);

@@ -21,16 +21,15 @@ import com.codenvy.ide.collections.StringSet;
 import com.codenvy.ide.resources.model.ProjectDescription;
 
 
-/** @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> */
-public class JavaProjectDesctiprion extends ProjectDescription {
+/** @author Nikolay Zamosenchuk */
+public class JavaProjectDescription extends ProjectDescription {
 
     public static final String ATTRIBUTE_SOURCE_FOLDERS = "folders.source";
 
     /** @param project */
-    public JavaProjectDesctiprion(JavaProject project) {
+    public JavaProjectDescription(JavaProject project) {
         super(project);
     }
-
 
     /** @return The set of Project's source folders or empty set. */
     public StringSet getSourceFolders() {

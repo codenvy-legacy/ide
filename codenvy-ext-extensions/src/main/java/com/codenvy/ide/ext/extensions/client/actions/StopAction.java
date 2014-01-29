@@ -27,7 +27,7 @@ import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE;
+import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE_ID;
 
 /**
  * Action to stop previously launched Codenvy extension.
@@ -61,8 +61,7 @@ public class StopAction extends Action {
     public void update(ActionEvent e) {
         Project activeProject = resourceProvider.getActiveProject();
         if (activeProject != null) {
-            e.getPresentation()
-             .setVisible(activeProject.getDescription().getNatures().contains(CODENVY_EXTENSION_PROJECT_TYPE));
+            e.getPresentation().setVisible(activeProject.getDescription().getProjectTypeId().equals(CODENVY_EXTENSION_PROJECT_TYPE_ID));
             e.getPresentation().setEnabled(controller.isAnyAppLaunched());
         } else {
             e.getPresentation().setEnabledAndVisible(false);
