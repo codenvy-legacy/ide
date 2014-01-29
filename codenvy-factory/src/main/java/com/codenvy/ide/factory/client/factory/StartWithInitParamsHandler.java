@@ -22,8 +22,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 
 /**
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: StartWithInitParamsHandler.java Nov 21, 2012 vetal $
+ * @author Vitaly Parfonov
  */
 public interface StartWithInitParamsHandler extends EventHandler {
 

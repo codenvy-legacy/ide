@@ -20,8 +20,9 @@ package com.codenvy.ide.factory.client.factory;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * @author Vitaliy Guluy
+ * This {@link FactoryReceivedHandler} uses to handle {@link FactoryReceivedEvent}
  * 
+ * @author Vitaliy Guluy
  */
 public interface FactoryReceivedHandler extends EventHandler {
 

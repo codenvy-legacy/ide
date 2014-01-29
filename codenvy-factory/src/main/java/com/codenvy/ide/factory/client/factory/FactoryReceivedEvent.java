@@ -21,6 +21,8 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.json.client.JSONObject;
 
 /**
+ * This event is fired just after successfully reading a Factory bean by {@link FactoryHandler}
+ * 
  * @author Vitaliy Guluy
  */
 public class FactoryReceivedEvent extends GwtEvent<FactoryReceivedHandler> {
