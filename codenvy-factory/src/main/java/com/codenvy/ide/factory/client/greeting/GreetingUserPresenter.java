@@ -205,16 +205,16 @@ public class GreetingUserPresenter implements InitialConfigurationReceivedHandle
             }
 
             String url = getGreetingPanelContentURL(key + "-" + projectType);
-            if (url != null && !url.trim().isEmpty() && "undefined".equals(url)) {
+            if (url != null && !url.trim().isEmpty()) {
                 createGreetingFrame(url);
+                return;
             }
         }
 
         final String greetingContentURL = getGreetingPanelContentURL(key);
-        if (greetingContentURL == null || greetingContentURL.trim().isEmpty()) {
-            return;
+        if (greetingContentURL != null && !greetingContentURL.trim().isEmpty()) {
+            createGreetingFrame(greetingContentURL);
         }
-        createGreetingFrame(greetingContentURL);
     }
 
     //TODO when Workspace API will be ready this method should be replaced with calling Workspace API to get Workspace information.
