@@ -16,7 +16,7 @@
  * from Codenvy S.A..
  */
 
-package com.codenvy.ide.factory.client.receive;
+package com.codenvy.ide.factory.client.factory;
 
 import com.google.gwt.event.shared.EventHandler;
 
