@@ -65,6 +65,11 @@
             <artifactId>codenvy-ext-github</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-ui</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- Extensions -->
         <dependency>
             <groupId>com.codenvy.ide</groupId>

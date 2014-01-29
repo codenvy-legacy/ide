@@ -55,7 +55,7 @@ public class ChooseTemplatePagePresenter extends AbstractWizardPage implements C
                                        Resources resources,
                                        TemplateAgentImpl templateAgent,
                                        CoreLocalizationConstant constant) {
-        super("Choose project template", resources.templateIcon());
+        super("Select Template", resources.templateIcon());
 
         this.view = view;
         this.view.setDelegate(this);
