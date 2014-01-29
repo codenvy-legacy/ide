@@ -19,6 +19,10 @@ package com.codenvy.ide.factory.client.greeting;
 
 import com.codenvy.ide.factory.client.FactoryClientBundle;
 import com.codenvy.ide.factory.client.copy.CopyProjectEvent;
+import com.codenvy.ide.factory.client.factory.FactoryReceivedEvent;
+import com.codenvy.ide.factory.client.factory.FactoryReceivedHandler;
+import com.codenvy.ide.factory.client.factory.StartWithInitParamsEvent;
+import com.codenvy.ide.factory.client.factory.StartWithInitParamsHandler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.Style;
@@ -31,6 +35,7 @@ import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Image;
@@ -60,7 +65,8 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * Presenter that show user in right panel greeting message.
  * @author Vitaliy Guluy
  */
-public class GreetingUserPresenter implements InitialConfigurationReceivedHandler, ProjectOpenedHandler, IDELoadCompleteHandler {
+public class GreetingUserPresenter implements InitialConfigurationReceivedHandler, ProjectOpenedHandler, IDELoadCompleteHandler, 
+    StartWithInitParamsHandler, FactoryReceivedHandler {
 
     public interface GreetingDisplay extends IsView {
     }
@@ -75,13 +81,28 @@ public class GreetingUserPresenter implements InitialConfigurationReceivedHandle
      */
     private ProjectModel project;
 
+    /**
+     * Determines whether Welcome page has been already opened.
+     */
     private boolean welcomeOnceAppeared = false;
+    
+    /**
+     * Source factory.
+     */
+    private JSONObject factory;
+    
+    /**
+     * Determines whether opened project was created from a factory.
+     */
+    private boolean waitForFactory = false;    
 
     /** Creates presenter instance */
     public GreetingUserPresenter() {
         IDE.addHandler(InitialConfigurationReceivedEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(IDELoadCompleteEvent.TYPE, this);
+        IDE.addHandler(StartWithInitParamsEvent.TYPE, this);
+        IDE.addHandler(FactoryReceivedEvent.TYPE, this);
     }
 
     /** {@inheritDoc} */
@@ -197,7 +218,7 @@ public class GreetingUserPresenter implements InitialConfigurationReceivedHandle
     }
 
     //TODO when Workspace API will be ready this method should be replaced with calling Workspace API to get Workspace information.
-    private void getWorkspaceAccessibility() {
+    private void checkIsWorkspacePrivate() {
         try {
             AsyncRequestCallback<StringBuilder> callback =
                     new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
@@ -219,8 +240,6 @@ public class GreetingUserPresenter implements InitialConfigurationReceivedHandle
     }
 
     private void createGreetingFrame(final String greetingPageURL) {
-        welcomeOnceAppeared = true;
-
         final Frame frame = new Frame(greetingPageURL);
         Style style = frame.getElement().getStyle();
 
@@ -240,22 +259,6 @@ public class GreetingUserPresenter implements InitialConfigurationReceivedHandle
         });
 
         RootPanel.get().add(frame);
-    }
-
-    private Timer scheduleGreetingTimer = new Timer() {
-        @Override
-        public void run() {
-            getWorkspaceAccessibility();
-        }
-    };
-
-    private void scheduleLoadGreeting() {
-        if (welcomeOnceAppeared) {
-            return;
-        }
-
-        scheduleGreetingTimer.cancel();
-        scheduleGreetingTimer.schedule(1500);
     }
 
     // @formatter:off
@@ -327,15 +330,108 @@ public class GreetingUserPresenter implements InitialConfigurationReceivedHandle
     private void loadGreetingError(String message) {
         Dialogs.getInstance().showError("IDE", "Could not load greeting page");
     }
+    
+    /**
+     * Fetching information about welcome page from a Factory directly.
+     */
+    private void fetchWelcomePageParametersFromFactory() {
+        try {
+            JSONObject welcome = factory.get("welcome").isObject();
+            
+            String title, iconurl, contenturl, notification;
+            
+            if (!IDE.isTemporaryUser()) {
+                JSONObject authenticated = welcome.get("authenticated").isObject();
+                title = authenticated.get("title").isString().stringValue();
+                iconurl = authenticated.get("iconurl").isString().stringValue();
+                contenturl = authenticated.get("contenturl").isString().stringValue();
+                
+                try {
+                    notification = authenticated.get("notification").isString().stringValue();
+                } catch (Exception e) {
+                    notification = null;
+                }
+                
+            } else {
+                JSONObject nonauthenticated = welcome.get("nonauthenticated").isObject();
+                title = nonauthenticated.get("title").isString().stringValue();
+                iconurl = nonauthenticated.get("iconurl").isString().stringValue();
+                contenturl = nonauthenticated.get("contenturl").isString().stringValue();
+                
+                try {
+                    notification = nonauthenticated.get("notification").isString().stringValue();
+                } catch (Exception e) {
+                    notification = null;
+                }
+            }
+            
+            showGreeting(title, iconurl, contenturl, notification);
+        } catch (Exception e) {
+            checkIsWorkspacePrivate();
+        }
+    }
+    
+    /**
+     * Timer to schedule appearing of Welcome page.
+     */
+    private Timer scheduleGreetingTimer = new Timer() {
+        @Override
+        public void run() {
+            if (!welcomeOnceAppeared) {
+                welcomeOnceAppeared = true;
+                
+                if (waitForFactory) {
+                    fetchWelcomePageParametersFromFactory();
+                } else {
+                    checkIsWorkspacePrivate();
+                }
+            }
+        }
+    };
 
+    /**
+     * Schedule appearing of Welcome page.
+     */
+    private void scheduleLoadGreeting() {
+        if (!welcomeOnceAppeared) {
+            scheduleGreetingTimer.cancel();
+            scheduleGreetingTimer.schedule(1500);
+        }
+    }    
+    
+    /**
+     * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+     */
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
         project = event.getProject();
         scheduleLoadGreeting();
     }
 
+    /**
+     * @see org.exoplatform.ide.client.framework.event.IDELoadCompleteHandler#onIDELoadComplete(org.exoplatform.ide.client.framework.event.IDELoadCompleteEvent)
+     */
     @Override
     public void onIDELoadComplete(IDELoadCompleteEvent event) {
         scheduleLoadGreeting();
     }
+
+    /**
+     * @see com.codenvy.ide.factory.client.factory.StartWithInitParamsHandler#onStartWithInitParams(com.codenvy.ide.factory.client.factory.StartWithInitParamsEvent)
+     */
+    @Override
+    public void onStartWithInitParams(StartWithInitParamsEvent event) {
+        waitForFactory = true;
+        scheduleLoadGreeting();
+    }
+    
+    /**
+     * @see com.codenvy.ide.factory.client.factory.FactoryReceivedHandler#onFactoryReceived(com.codenvy.ide.factory.client.factory.FactoryReceivedEvent)
+     */
+    @Override
+    public void onFactoryReceived(FactoryReceivedEvent event) {
+        this.factory = event.getFactory();
+        scheduleLoadGreeting();
+    }
+    
 }

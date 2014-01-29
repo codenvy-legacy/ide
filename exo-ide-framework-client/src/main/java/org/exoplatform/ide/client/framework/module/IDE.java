@@ -209,14 +209,25 @@ public abstract class IDE {
     public abstract void registerPaaS(PaaS paas);
 
     /**
-     * Return true if user not "developer" and not "admin" 
+     * Returns <b>true</b> whether current user has "developer" or "admin" role, <b>false</b> otherwise.
      * 
-     * @return
+     * @return <b>true</b> is user has "developer" of "admin" role, <b>false</b> otherwise
      */
     public static boolean isRoUser() {
         if (user == null)
             return true;
         return !user.getRoles().contains("developer") && !user.getRoles().contains("admin");
+    }
+    
+    /**
+     * Determines is current user temporary.
+     * 
+     * @return <b>true</b> if the user is temporary, <b>false</b> otherwise
+     */
+    public static boolean isTemporaryUser() {
+        if (user == null)
+            return true;
+        return user.isTemporary();
     }
     
     /**

@@ -18,7 +18,7 @@
 package org.exoplatform.ide.client.application;
 
 import com.codenvy.ide.client.util.logging.Log;
-import com.codenvy.ide.factory.client.receive.StartWithInitParamsEvent;
+import com.codenvy.ide.factory.client.factory.StartWithInitParamsEvent;
 import com.codenvy.ide.factory.shared.AdvancedFactorySpec;
 import com.codenvy.ide.factory.shared.CopySpec10;
 import com.codenvy.ide.factory.shared.FactorySpec10;
@@ -27,7 +27,6 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.Image;
 
@@ -73,8 +72,6 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -192,103 +189,62 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
     public void onVfsChanged(VfsChangedEvent event) {
         IDE.notifyStatusChanged("vfs-changed " + (event.getVfsInfo() != null ? event.getVfsInfo().getId() : "NULL"));
-        
         IDE.removeHandler(VfsChangedEvent.TYPE, this);
-        String projectToOpen = Utils.getProjectToOpen();
-        if (projectToOpen != null && !projectToOpen.isEmpty()) {
-            try {
-                VirtualFileSystem.getInstance()
-                                 .getItemByPath(projectToOpen,
-                                                new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper())) {
-                                                    @Override
-                                                    protected void onSuccess(ItemWrapper result) {
-                                                        if (result.getItem() != null && result.getItem() instanceof ProjectModel) {
-                                                            ProjectModel projectModel = (ProjectModel)result.getItem();
-                                                            initialOpenedProject = projectModel.getId();
-                                                            String file = Utils.getFilePathToOpen();
-                                                            IDE.fireEvent(new OpenProjectEvent(projectModel));
-                                                            if (file != null && !file.isEmpty())
-                                                                openFile(file, projectModel);
-                                                            else {
-                                                                initialActiveFile = null;
-                                                                initialOpenedFiles.clear();
-                                                                new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject,
-                                                                                            initialOpenedFiles, initialActiveFile);
-                                                            }
 
+        String project = Utils.getProjectToOpen();
+        if (project != null && !project.isEmpty()) {
+            openProject(project);
+            return;
+        }
 
-                                                        }
-                                                    }
-
-                                                    @Override
-                                                    protected void onFailure(Throwable exception) {
-                                                        Log.error(AsyncRequestCallback.class, exception);
-                                                        initialOpenedProject = null;
-                                                        initialOpenedFiles.clear();
-                                                        initialActiveFile = null;
-                                                        Dialogs.getInstance().showError("Not found resource",
-                                                                                        "The requested project URL was not found in this " +
-                                                                                            "workspace.");
-                                                        new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject,
-                                                                                    initialOpenedFiles, initialActiveFile);
-                                                    }
-                                                });
-            } catch (RequestException e) {
-                Log.debug(getClass(), e);
-            }
-
+        Map<String, List<String>> parameterMap = Utils.getStartUpParamsAsMap();
+        
+        if (parameterMap != null && (parameterMap.get(FactorySpec10.FACTORY_VERSION) != null || parameterMap.get(AdvancedFactorySpec.ID) != null)) {
+            IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
+            
+        } else if (parameterMap != null && parameterMap.get(CopySpec10.DOWNLOAD_URL) != null && parameterMap.get(CopySpec10.PROJECT_ID) != null) {
+            IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
+            
         } else {
-            Map<String, List<String>> parameterMap = buildListParamMap(Utils.getStartUpParams());
-            if (parameterMap != null && (parameterMap.get(FactorySpec10.FACTORY_VERSION) != null || parameterMap.get(AdvancedFactorySpec.ID) != null)) {
-                IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
-                
-                
-                
-            } else if (parameterMap != null && parameterMap.get(CopySpec10.DOWNLOAD_URL) != null
-                       && parameterMap.get(CopySpec10.PROJECT_ID) != null) {
-                IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
-                
-                
-                
-            } else {
-                
-                
-                
-                
-                new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject, initialOpenedFiles, initialActiveFile);
-            }
+            new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject, initialOpenedFiles, initialActiveFile);
+            
         }
     }
+    
+    private void openProject(String projectName) {
+        try {
+            VirtualFileSystem.getInstance().getItemByPath(projectName,
+                    new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper())) {
+                        @Override
+                        protected void onSuccess(ItemWrapper result) {
+                            if (result.getItem() != null && result.getItem() instanceof ProjectModel) {
+                                ProjectModel projectModel = (ProjectModel)result.getItem();
+                                initialOpenedProject = projectModel.getId();
+                                String file = Utils.getFilePathToOpen();
+                                IDE.fireEvent(new OpenProjectEvent(projectModel));
+                                if (file != null && !file.isEmpty())
+                                    openFile(file, projectModel);
+                                else {
+                                    initialActiveFile = null;
+                                    initialOpenedFiles.clear();
+                                    new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject, initialOpenedFiles, initialActiveFile);
+                                }
+                            }
+                        }
 
-
-    private Map<String, List<String>> buildListParamMap(String queryString) {
-        Map<String, List<String>> out = new HashMap<String, List<String>>();
-
-        if (queryString != null && queryString.length() > 1) {
-            String qs = queryString.substring(1);
-
-            for (String kvPair : qs.split("&")) {
-                String[] kv = kvPair.split("=", 2);
-                if (kv[0].length() == 0) {
-                    continue;
-                }
-
-                List<String> values = out.get(kv[0]);
-                if (values == null) {
-                    values = new ArrayList<String>();
-                    out.put(kv[0], values);
-                }
-                values.add(kv.length > 1 ? URL.decodeQueryString(kv[1]) : "");
-            }
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            Log.error(AsyncRequestCallback.class, exception);
+                            initialOpenedProject = null;
+                            initialOpenedFiles.clear();
+                            initialActiveFile = null;
+                            Dialogs.getInstance().showError("Not found resource", "The requested project URL was not found in this workspace.");
+                            new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject, initialOpenedFiles, initialActiveFile);
+                        }
+                    });
+        } catch (RequestException e) {
+            Log.debug(getClass(), e);
         }
-
-        for (Map.Entry<String, List<String>> entry : out.entrySet()) {
-            entry.setValue(Collections.unmodifiableList(entry.getValue()));
-        }
-
-        out = Collections.unmodifiableMap(out);
-
-        return out;
     }
 
     /** @param file */
@@ -348,9 +304,8 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
             }
         });
     }
-
+    
     private void initServices() {
-
         IDE.fireEvent(new InitializeServicesEvent(applicationConfiguration, IDELoader.get()));
 
         /*
@@ -376,7 +331,6 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                     IDE.getInstance().openView(new ReadOnlyUserView(IDE.user.getWorkspaces()));
                 }
             });
-            
         }
     }
 
