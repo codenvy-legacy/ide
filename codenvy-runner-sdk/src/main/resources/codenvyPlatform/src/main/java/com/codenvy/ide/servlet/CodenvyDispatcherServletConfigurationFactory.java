@@ -62,7 +62,7 @@ public class CodenvyDispatcherServletConfigurationFactory extends DispatcherServ
                                              .execute(new Action() {
                                                  @Override
                                                  public void perform(HttpServletRequest request, HttpServletResponse response) {
-                                                     throw new IllegalArgumentException("workspace is not set");
+                                                     throw new IllegalStateException("workspace is not set");
                                                  }
                                              })
                                              .priority(200)

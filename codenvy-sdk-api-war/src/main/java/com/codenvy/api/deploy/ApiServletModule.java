@@ -41,7 +41,7 @@ public class ApiServletModule extends ServletModule {
         params.put("ws-id", "1q2w3e");
         filter("/*").through(SingleEnvironmentFilter.class, params);
         filter("/*").through(SetIdeUserFilter.class);
-        serve("/rest/*").with(GuiceEverrestServlet.class);
-        serve("/ws").with(CodenvyEverrestWebSocketServlet.class);
+        serve("/ws/*").with(CodenvyEverrestWebSocketServlet.class);
+        serve("/*").with(GuiceEverrestServlet.class);
     }
 }
