@@ -21,7 +21,7 @@ import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.ext.extensions.client.UnzipTemplateClientService;
 import com.codenvy.ide.ext.extensions.client.UnzipTemplateClientServiceImpl;
 import com.codenvy.ide.ext.extensions.client.template.CreateSampleCodenvyExtensionPageView;
-import com.codenvy.ide.ext.extensions.client.template.CreateSampleCodenvyExtensionPageViewImpl;
+import com.codenvy.ide.ext.extensions.client.template.CreateSampleExtensionPageViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
@@ -37,6 +37,6 @@ public class ExtRuntimeGinModule extends AbstractGinModule {
     @Override
     protected void configure() {
         bind(UnzipTemplateClientService.class).to(UnzipTemplateClientServiceImpl.class).in(Singleton.class);
-        bind(CreateSampleCodenvyExtensionPageView.class).to(CreateSampleCodenvyExtensionPageViewImpl.class).in(Singleton.class);
+        bind(CreateSampleCodenvyExtensionPageView.class).to(CreateSampleExtensionPageViewImpl.class).in(Singleton.class);
     }
 }

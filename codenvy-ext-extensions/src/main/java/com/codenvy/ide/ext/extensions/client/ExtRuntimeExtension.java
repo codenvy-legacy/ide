@@ -26,8 +26,8 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.extensions.client.actions.GetLogsAction;
 import com.codenvy.ide.ext.extensions.client.actions.LaunchAction;
 import com.codenvy.ide.ext.extensions.client.actions.StopAction;
-import com.codenvy.ide.ext.extensions.client.template.CreateEmptyCodenvyExtensionPage;
-import com.codenvy.ide.ext.extensions.client.template.CreateSampleCodenvyExtensionPage;
+import com.codenvy.ide.ext.extensions.client.template.CreateEmptyExtensionPage;
+import com.codenvy.ide.ext.extensions.client.template.CreateSampleExtensionPage;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -48,8 +48,8 @@ public class ExtRuntimeExtension {
 
     @Inject
     public ExtRuntimeExtension(TemplateAgent templateAgent,
-                               Provider<CreateEmptyCodenvyExtensionPage> createEmptyCodenvyExtensionPage,
-                               Provider<CreateSampleCodenvyExtensionPage> createSampleCodenvyExtensionPage,
+                               Provider<CreateEmptyExtensionPage> createEmptyCodenvyExtensionPage,
+                               Provider<CreateSampleExtensionPage> createSampleCodenvyExtensionPage,
                                ExtRuntimeLocalizationConstant localizationConstants,
                                ExtRuntimeResources resources,
                                ActionManager actionManager,

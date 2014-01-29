@@ -34,16 +34,16 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 /**
- * Testing {@link CreateSampleCodenvyExtensionPage} functionality.
+ * Testing {@link CreateSampleExtensionPage} functionality.
  *
  * @author Andrey Plotnikov
  */
-public class CreateSampleCodenvyExtensionPageTest extends BaseCreateExtensionTest {
+public class CreateSampleExtensionPageTest extends BaseCreateExtensionTest {
 
     @Override
     public void setUp() {
         super.setUp();
-        page = new CreateSampleCodenvyExtensionPage(createProjectClientService, projectTypeDescriptorRegistry, unzipTemplateClientService,
+        page = new CreateSampleExtensionPage(createProjectClientService, projectTypeDescriptorRegistry, unzipTemplateClientService,
                                                     resourceProvider);
         page.setContext(wizardContext);
     }

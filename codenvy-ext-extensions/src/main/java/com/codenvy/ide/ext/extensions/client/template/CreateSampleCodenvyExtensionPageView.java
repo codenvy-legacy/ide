@@ -22,7 +22,7 @@ import com.codenvy.ide.api.mvp.View;
 import javax.validation.constraints.NotNull;
 
 /**
- * The view of {@link CreateSampleCodenvyExtensionPage}.
+ * The view of {@link CreateSampleExtensionPage}.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: CreateSampleCodenvyExtensionPageView.java Jul 8, 2013 4:07:39 PM azatsarynnyy $

@@ -35,11 +35,11 @@ import javax.validation.constraints.NotNull;
  * The implementation of {@link CreateSampleCodenvyExtensionPageView}.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: CreateSampleCodenvyExtensionPageViewImpl.java Jul 8, 2013 4:07:57 PM azatsarynnyy $
+ * @version $Id: CreateSampleExtensionPageViewImpl.java Jul 8, 2013 4:07:57 PM azatsarynnyy $
  */
 @Singleton
-public class CreateSampleCodenvyExtensionPageViewImpl extends Composite implements CreateSampleCodenvyExtensionPageView {
-    interface ExtensionPageViewImplUiBinder extends UiBinder<Widget, CreateSampleCodenvyExtensionPageViewImpl> {
+public class CreateSampleExtensionPageViewImpl extends Composite implements CreateSampleCodenvyExtensionPageView {
+    interface ExtensionPageViewImplUiBinder extends UiBinder<Widget, CreateSampleExtensionPageViewImpl> {
     }
 
     private static ExtensionPageViewImplUiBinder uiBinder = GWT.create(ExtensionPageViewImplUiBinder.class);
@@ -60,7 +60,7 @@ public class CreateSampleCodenvyExtensionPageViewImpl extends Composite implemen
      * @param resources
      */
     @Inject
-    protected CreateSampleCodenvyExtensionPageViewImpl(ExtRuntimeResources resources) {
+    protected CreateSampleExtensionPageViewImpl(ExtRuntimeResources resources) {
         this.res = resources;
 
         initWidget(uiBinder.createAndBindUi(this));
