@@ -148,7 +148,11 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         eventBus.addHandler(ResourceChangedEvent.TYPE, new ResourceChangedHandler() {
             @Override
             public void onResourceRenamed(ResourceChangedEvent event) {
-                // TODO handle it
+                if (event.getResource() instanceof Project && event.getResource().getParent().getId().equals(resourceProvider.getRootId())) {
+                    setContent(event.getResource().getParent());
+                } else {
+                    updateItem(event.getResource().getParent());
+                }
             }
 
             @Override
@@ -182,7 +186,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             }
         });
     }
-    
+
     /**
      * Update item in the project explorer.
      * 
@@ -261,7 +265,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
             @Override
             public void onFailure(Throwable caught) {
-                Log.error(ProjectExplorerPartPresenter.class, "Can not change project type.", caught); 
+                Log.error(ProjectExplorerPartPresenter.class, "Can not change project type.", caught);
             }
 
             @Override
@@ -281,7 +285,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
             }
         };
-        
+
         if (resource.getResourceType().equals(Project.TYPE) && ((Project)resource).getProperties().isEmpty()) {
             ((Project)resource).setVFSInfo(resourceProvider.getVfsInfo());
             ((Project)resource).refreshProperties(new AsyncCallback<Project>() {

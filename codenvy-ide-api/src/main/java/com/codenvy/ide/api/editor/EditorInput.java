@@ -67,4 +67,11 @@ public interface EditorInput {
      */
     @NotNull
     File getFile();
+    
+    /**
+     * Sets file of this input.
+     * 
+     * @param file
+     */
+    void setFile(@NotNull File file);
 }

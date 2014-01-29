@@ -89,4 +89,13 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("deleteResourceQuestion")
     String deleteResourceQuestion(String resource);
+    
+    @Key("renameButton")
+    String renameButton();
+    
+    @Key("renameResourceViewTitle")
+    String renameResourceViewTitle();
+    
+    @Key("renameFieldTitle")
+    String renameFieldTitle();
 }
