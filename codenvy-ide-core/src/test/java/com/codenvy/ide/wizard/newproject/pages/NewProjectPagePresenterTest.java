@@ -183,9 +183,8 @@ public class NewProjectPagePresenterTest {
 
         verify(view).focusProjectName();
         verify(view).selectProjectType(0);
-        verify(delegate, times(2)).updateControls();
+        verify(delegate, times(1)).updateControls();
         verify(wizardContext).putData(eq(PROJECT_TYPE), eq(projectType));
-        verify(wizardContext).putData(eq(PAAS), eq(paas));
     }
 
     @Test
@@ -297,22 +296,8 @@ public class NewProjectPagePresenterTest {
         presenter.onProjectTypeSelected(0);
 
         verify(view).selectProjectType(0);
-        verify(delegate, times(2)).updateControls();
+        verify(delegate, times(1)).updateControls();
         verify(wizardContext).putData(eq(PROJECT_TYPE), eq(projectType));
-        verify(wizardContext).putData(eq(PAAS), eq(paas));
-    }
-
-    @Test
-    public void testOnPaaSSelected() throws Exception {
-        setUp();
-
-        presenter.focusComponent();
-        reset(view);
-        reset(delegate);
-        reset(wizardContext);
-
-        verify(delegate).updateControls();
-        verify(wizardContext).putData(eq(PAAS), eq(paas));
     }
 
     @Test
