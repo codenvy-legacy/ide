@@ -34,6 +34,7 @@
         <module>codenvy-ide-commons</module>
         <module>codenvy-ide-env-dummy</module>
         <module>codenvy-ide-api</module>
+        <module>codenvy-ide-ui</module>
         <module>codenvy-ide-vfs-fs</module>
         <module>codenvy-ide-core</module>
         <module>codenvy-maven-tools</module>

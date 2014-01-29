@@ -69,7 +69,7 @@ public class CreateSampleCodenvyExtensionPage extends AbstractTemplatePage imple
                                             ExtRuntimeClientService service,
                                             ResourceProvider resourceProvider,
                                             ExtRuntimeResources resources) {
-        super("Define the properties of a new Maven module", resources.codenvyExtensionTemplate(), SAMPLE_EXTENSION_ID);
+        super("Properties Maven module", resources.codenvyExtensionTemplate(), SAMPLE_EXTENSION_ID);
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
