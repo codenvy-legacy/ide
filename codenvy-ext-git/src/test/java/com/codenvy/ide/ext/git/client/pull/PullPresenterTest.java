@@ -39,10 +39,10 @@ import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
 
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -126,6 +126,64 @@ public class PullPresenterTest extends BaseTest {
         verify(view).showDialog();
         verify(view).setRemoteBranches((Array<String>)anyObject());
         verify(view).setLocalBranches((Array<String>)anyObject());
+    }
+    
+    @Test
+    public void testSelectActiveBranch() throws Exception {
+        final Array<Remote> remotes = Collections.createArray();
+        remotes.add(mock(Remote.class));
+        final Array<Branch> branches = Collections.createArray();
+        branches.add(branch);
+        when(branch.isActive()).thenReturn(ACTIVE_BRANCH);
+        when(dtoFactory.createListDtoFromJson(anyString(), (Class<Remote>)anyObject())).thenReturn(remotes);
+        when(dtoFactory.createListDtoFromJson(anyString(), (Class<Branch>)anyObject())).thenReturn(branches);
+        
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, dtoFactory.toJson(remotes));
+                return callback;
+            }
+        }).when(service).remoteList(anyString(), anyString(), anyString(), anyBoolean(),
+                                    (AsyncRequestCallback<String>)anyObject());
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, dtoFactory.toJson(branches));
+                return callback;
+            }
+        }).doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, dtoFactory.toJson(branches));
+                return callback;
+            }
+        }).when(service).branchList(anyString(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
+
+        presenter.showDialog();
+
+        verify(resourceProvider).getActiveProject();
+        verify(service).remoteList(eq(VFS_ID), eq(PROJECT_ID), anyString(), eq(SHOW_ALL_INFORMATION),
+                                   (AsyncRequestCallback<String>)anyObject());
+        verify(service, times(2)).branchList(eq(VFS_ID), eq(PROJECT_ID), anyString(), (AsyncRequestCallback<String>)anyObject());
+        verify(view, times(2)).setEnablePullButton(eq(ENABLE_BUTTON));
+        verify(view).setRepositories((Array<Remote>)anyObject());
+        verify(view).showDialog();
+        verify(view).setRemoteBranches((Array<String>)anyObject());
+        verify(view).setLocalBranches((Array<String>)anyObject());
+        verify(view).selectRemoteBranch(anyString());
+        
+        presenter.onRemoteBranchChanged();
+        verify(view).selectLocalBranch(anyString());
     }
 
     @Test

@@ -22,6 +22,7 @@ import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -167,5 +168,33 @@ public class PushToRemoteViewImpl extends DialogBox implements PushToRemoteView 
     @UiHandler("btnCancel")
     public void onCancelClicked(ClickEvent event) {
         delegate.onCancelClicked();
+    }
+    
+    @UiHandler("localBranch")
+    public void onValueChanged(ChangeEvent event) {
+        delegate.onLocalBranchChanged();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void selectLocalBranch(String branch) {
+        for (int i = 0; i < localBranch.getItemCount(); i++) {
+            if (localBranch.getValue(i).equals(branch)) {
+                localBranch.setItemSelected(i, true);
+                delegate.onLocalBranchChanged();
+                break;
+            }
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void selectRemoteBranch(String branch) {
+        for (int i = 0; i < remoteBranch.getItemCount(); i++) {
+            if (remoteBranch.getValue(i).equals(branch)) {
+                remoteBranch.setItemSelected(i, true);
+                break;
+            }
+        }
     }
 }

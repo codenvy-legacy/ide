@@ -39,6 +39,9 @@ public interface FetchView extends View<FetchView.ActionDelegate> {
         
         /** Performs any actions appropriate in response to the user having changed something. */
         void onValueChanged();
+        
+        /** Performs any actions appropriate in response to the remote branch value changed. */
+        void onRemoteBranchChanged();
     }
 
     /** @return <code>true</code> if need to delete remove refs, and <code>false</code> otherwise */
@@ -109,6 +112,20 @@ public interface FetchView extends View<FetchView.ActionDelegate> {
      *         remote branches
      */
     void setRemoteBranches(@NotNull Array<String> branches);
+    
+    /** 
+     * Selects pointed local branch
+     * 
+     * @param branch local branch to select
+     */
+    void selectLocalBranch(@NotNull String branch);
+    
+    /** 
+     * Selects pointed remote branch
+     * 
+     * @param branch remote branch to select
+     */
+    void selectRemoteBranch(@NotNull String branch);
 
     /**
      * Change the enable state of the push button.

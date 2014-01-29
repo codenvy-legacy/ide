@@ -52,8 +52,8 @@ import com.codenvy.ide.welcome.action.ShowDocumentationAction;
 import com.codenvy.ide.wizard.NewResourceAgentImpl;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
+import com.codenvy.ide.wizard.newresource.NewFileProvider;
 import com.codenvy.ide.wizard.newresource.NewFolderProvider;
-import com.codenvy.ide.wizard.newresource.NewTextFileProvider;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePagePresenter;
 import com.codenvy.ide.xml.XmlFileProvider;
 import com.codenvy.ide.xml.editor.XmlEditorProvider;
@@ -87,7 +87,7 @@ public class StandardComponentInitializer {
     private NewFolderProvider folderProvider;
 
     @Inject
-    private NewTextFileProvider textFileProvider;
+    private NewFileProvider textFileProvider;
 
     @Inject
     private XmlFileProvider xmlFileProvider;
@@ -130,7 +130,7 @@ public class StandardComponentInitializer {
 
     @Inject
     private ShowProjectPropertiesAction showProjectPropertiesAction;
-    
+
     @Inject
     private NavigateToFileAction navigateToFileAction;
 
@@ -203,10 +203,10 @@ public class StandardComponentInitializer {
 
         actionManager.registerAction("newProject", newProjectAction);
         actionManager.registerAction("openProject", openProjectAction);
-        
+
         actionManager.registerAction("navigateToFile", navigateToFileAction);
         keyBinding.getGlobal().addKey(new KeyBuilder().action().alt().charCode('n').build(), "navigateToFile");
-        
+
         DefaultActionGroup toolbarGroup = new DefaultActionGroup(actionManager);
         toolbarGroup.addSeparator();
         actionManager.registerAction(IdeActions.GROUP_MAIN_TOOLBAR, toolbarGroup);

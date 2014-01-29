@@ -27,7 +27,12 @@ import com.google.gwt.user.client.Window;
 public class Utils {
     /** @return workspace name */
     public static native String getWorkspaceName() /*-{
-        return $wnd.ws;
+        return $wnd.wsName;
+    }-*/;
+
+    /** @return workspace name */
+    public static native String getWorkspaceId() /*-{
+        return $wnd.wsId;
     }-*/;
 
     /** @return <code>true</code> if Codenvy launched in SDK runner and <code>false</code> otherwise */

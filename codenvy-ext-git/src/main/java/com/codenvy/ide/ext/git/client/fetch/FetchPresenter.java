@@ -105,10 +105,9 @@ public class FetchPresenter implements FetchView.ActionDelegate {
                                    @Override
                                    protected void onSuccess(String result) {
                                        Array<Remote> remotes = dtoFactory.createListDtoFromJson(result, Remote.class);
-                                       getBranches(projectId, LIST_REMOTE);
-                                       getBranches(projectId, LIST_LOCAL);
-                                       view.setEnableFetchButton(!result.isEmpty());
                                        view.setRepositories(remotes);
+                                       getBranches(projectId, LIST_REMOTE);
+                                       view.setEnableFetchButton(!result.isEmpty());
                                        view.showDialog();
                                    }
 
@@ -135,7 +134,7 @@ public class FetchPresenter implements FetchView.ActionDelegate {
      * @param remoteMode
      *         is a remote mode
      */
-    private void getBranches(@NotNull String projectId, @NotNull final String remoteMode) {
+    private void getBranches(@NotNull final String projectId, @NotNull final String remoteMode) {
         try {
             service.branchList(resourceProvider.getVfsInfo().getId(), projectId, remoteMode,
                                new AsyncRequestCallback<String>(new StringUnmarshaller()) {
@@ -144,8 +143,15 @@ public class FetchPresenter implements FetchView.ActionDelegate {
                                        Array<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
                                        if (LIST_REMOTE.equals(remoteMode)) {
                                            view.setRemoteBranches(getRemoteBranchesToDisplay(view.getRepositoryName(), branches));
+                                           getBranches(projectId, LIST_LOCAL);
                                        } else {
                                            view.setLocalBranches(getLocalBranchesToDisplay(branches));
+                                           for (Branch branch : branches.asIterable()) {
+                                               if (branch.isActive()) {
+                                                   view.selectRemoteBranch(branch.getDisplayName());
+                                                   break;
+                                               }
+                                           }
                                        }
                                    }
 
@@ -213,11 +219,8 @@ public class FetchPresenter implements FetchView.ActionDelegate {
             return branches;
         }
 
-        String compareString = "refs/heads/";
-        for (int i = 0; i < localBranches.size(); i++) {
-            Branch branch = localBranches.get(i);
-            String branchName = branch.getName().replaceFirst(compareString, "");
-            branches.add(branchName);
+        for (Branch branch : localBranches.asIterable()) {
+            branches.add(branch.getDisplayName());
         }
 
         return branches;
@@ -309,5 +312,11 @@ public class FetchPresenter implements FetchView.ActionDelegate {
         boolean isFetchAll = view.isFetchAllBranches();
         view.setEnableLocalBranchField(!isFetchAll);
         view.setEnableRemoteBranchField(!isFetchAll);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onRemoteBranchChanged() {
+        view.selectLocalBranch(view.getRemoteBranch());
     }
 }

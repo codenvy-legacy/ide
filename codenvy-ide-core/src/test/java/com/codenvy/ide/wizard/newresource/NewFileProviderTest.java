@@ -34,17 +34,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 /**
- * Testing {@link NewTextFileProvider} functionality.
+ * Testing {@link NewFileProvider} functionality.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class NewTextFileProviderTest extends BaseNewResourceProviderTest {
+public class NewFileProviderTest extends BaseNewResourceProviderTest {
     private String textFileName;
 
     @Before
     public void setUp() {
-        newResourceProvider = new NewTextFileProvider(resources);
-        textFileName = RESOURCE_NAME + '.' + newResourceProvider.getExtension();
+        newResourceProvider = new NewFileProvider(resources);
+        textFileName = RESOURCE_NAME;
     }
 
     @Override
