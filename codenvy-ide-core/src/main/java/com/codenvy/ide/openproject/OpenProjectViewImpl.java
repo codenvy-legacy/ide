@@ -26,7 +26,6 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.list.SimpleList.View;
 import com.codenvy.ide.util.dom.Elements;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -49,8 +48,6 @@ import com.google.inject.Singleton;
 public class OpenProjectViewImpl extends DialogBox implements OpenProjectView {
     interface OpenProjectViewImplUiBinder extends UiBinder<Widget, OpenProjectViewImpl> {
     }
-
-    private static OpenProjectViewImplUiBinder uiBinder = GWT.create(OpenProjectViewImplUiBinder.class);
 
     @UiField
     Button      btnCancel;
@@ -91,7 +88,7 @@ public class OpenProjectViewImpl extends DialogBox implements OpenProjectView {
      * @param resources
      */
     @Inject
-    protected OpenProjectViewImpl(Resources resources) {
+    protected OpenProjectViewImpl(Resources resources, OpenProjectViewImplUiBinder uiBinder) {
         this.res = resources;
 
         Widget widget = uiBinder.createAndBindUi(this);

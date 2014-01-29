@@ -18,7 +18,6 @@
 package com.codenvy.ide.rename;
 
 import com.codenvy.ide.CoreLocalizationConstant;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -40,23 +39,22 @@ public class RenameResourceViewImpl extends DialogBox implements RenameResourceV
     interface RenameResourceViewImplUiBinder extends UiBinder<Widget, RenameResourceViewImpl> {
     }
 
-    private static RenameResourceViewImplUiBinder uiBinder = GWT.create(RenameResourceViewImplUiBinder.class);
-
     @UiField
-    TextBox                                       newName;
+    TextBox                  newName;
     @UiField
-    Button                                        btnRename;
+    Button                   btnRename;
     @UiField
-    Button                                        btnCancel;
-
-    private ActionDelegate                        delegate;
+    Button                   btnCancel;
+    @UiField(provided = true)
+    CoreLocalizationConstant locale;
+    private ActionDelegate   delegate;
 
     @Inject
-    public RenameResourceViewImpl(CoreLocalizationConstant localizationConstant) {
-        this.setText(localizationConstant.renameResourceViewTitle());
+    public RenameResourceViewImpl(CoreLocalizationConstant locale, RenameResourceViewImplUiBinder uiBinder) {
+        this.locale = locale;
+        this.setText(locale.renameResourceViewTitle());
 
-        Widget widget = uiBinder.createAndBindUi(this);
-        this.setWidget(widget);
+        this.setWidget(uiBinder.createAndBindUi(this));
     }
 
     /** {@inheritDoc} */

@@ -25,13 +25,13 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
-import com.googlecode.gwt.test.GwtModule;
-import com.googlecode.gwt.test.GwtTestWithMockito;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import static org.mockito.Matchers.anyObject;
@@ -49,8 +49,8 @@ import static org.mockito.Mockito.when;
  * 
  * @author Ann Shumilova
  */
-@GwtModule("com.codenvy.ide.Core")
-public class RenameResourceTest extends GwtTestWithMockito {
+@RunWith(MockitoJUnitRunner.class)
+public class RenameResourceTest {
     public static final String      FOLDER_NAME  = "folder";
     public static final String      NEW_NAME     = "newName";
     public static final String      EMPTY        = "";
