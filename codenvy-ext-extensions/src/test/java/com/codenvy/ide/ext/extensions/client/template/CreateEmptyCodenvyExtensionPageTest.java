@@ -43,7 +43,7 @@ import org.mockito.stubbing.Answer;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.TEMPLATE;
-import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.EMPTY_EXTENSION_TEMPLATE_ID;
+import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.EMPTY_TEMPLATE_ID;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
@@ -150,7 +150,7 @@ public class CreateEmptyCodenvyExtensionPageTest {
 
     @Test
     public void testInContext() {
-        when(template.getId()).thenReturn(EMPTY_EXTENSION_TEMPLATE_ID);
+        when(template.getId()).thenReturn(EMPTY_TEMPLATE_ID);
         when(paas.isProvideTemplate()).thenReturn(!PROVIDE_TEMPLATE);
 
         assertEquals(page.inContext(), IN_CONTEXT);

@@ -17,8 +17,6 @@
  */
 package com.codenvy.ide.ext.tutorials.client.template;
 
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -43,7 +41,7 @@ public class CreateWizardTutorialPageTest extends BaseCreateTutorialTest {
     @Override
     public void setUp() {
         super.setUp();
-        page = new CreateWizardTutorialPage(service, resourceProvider);
+        page = new CreateWizardTutorialPage(createProjectClientService, projectTypeDescriptorRegistry, service, resourceProvider);
         page.setContext(wizardContext);
         templateId = WIZARD_TUTORIAL_ID;
     }
@@ -59,8 +57,7 @@ public class CreateWizardTutorialPageTest extends BaseCreateTutorialTest {
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service)
-                .createWizardTutorialProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        }).when(service).unzipWizardTutorial(anyString(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsSuccessful();
     }
@@ -76,8 +73,7 @@ public class CreateWizardTutorialPageTest extends BaseCreateTutorialTest {
                 onFailure.invoke(callback, throwable);
                 return callback;
             }
-        }).when(service)
-                .createWizardTutorialProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        }).when(service).unzipWizardTutorial(anyString(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenCreateTutorialRequestIsFailed();
     }
@@ -93,16 +89,14 @@ public class CreateWizardTutorialPageTest extends BaseCreateTutorialTest {
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service)
-                .createWizardTutorialProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        }).when(service).unzipWizardTutorial(anyString(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsFailed();
     }
 
     @Override
     public void testCreateWhenRequestExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(service)
-                .createWizardTutorialProject(anyString(), (Array<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        doThrow(RequestException.class).when(service).unzipWizardTutorial(anyString(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenRequestExceptionHappened();
     }

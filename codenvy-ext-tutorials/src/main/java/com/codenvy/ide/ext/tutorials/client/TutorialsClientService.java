@@ -17,8 +17,6 @@
  */
 package com.codenvy.ide.ext.tutorials.client;
 
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 
@@ -27,108 +25,75 @@ import javax.validation.constraints.NotNull;
 /**
  * Client service to create 'Tutorial' projects.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: TutorialsClientService.java Sep 13, 2013 12:48:08 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 public interface TutorialsClientService {
 
     /**
-     * Create 'DTO tutorial' project.
+     * Create 'Notification tutorial' project.
      *
      * @param projectName
      *         name of the project to create
-     * @param properties
-     *         properties to set to a newly created project
      * @param callback
      *         callback
      * @throws RequestException
      */
-    void createDTOTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
-                                  @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+    void unzipNotificationTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
      * Create 'Notification tutorial' project.
      *
      * @param projectName
      *         name of the project to create
-     * @param properties
-     *         properties to set to a newly created project
      * @param callback
      *         callback
      * @throws RequestException
      */
-    void createNotificationTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
-                                           @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
-
-    /**
-     * Create 'Notification tutorial' project.
-     *
-     * @param projectName
-     *         name of the project to create
-     * @param properties
-     *         properties to set to a newly created project
-     * @param callback
-     *         callback
-     * @throws RequestException
-     */
-    void createActionTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
-                                     @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+    void unzipActionTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
      * Create 'Wizard tutorial' project.
      *
      * @param projectName
      *         name of the project to create
-     * @param properties
-     *         properties to set to a newly created project
      * @param callback
      *         callback
      * @throws RequestException
      */
-    void createWizardTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
-                                     @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+    void unzipWizardTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
      * Create 'New project wizard tutorial' project.
      *
      * @param projectName
      *         name of the project to create
-     * @param properties
-     *         properties to set to a newly created project
      * @param callback
      *         callback
      * @throws RequestException
      */
-    void createNewProjectWizardTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
-                                               @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+    void unzipNewProjectWizardTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
      * Create 'New resource wizard tutorial' project.
      *
      * @param projectName
      *         name of the project to create
-     * @param properties
-     *         properties to set to a newly created project
      * @param callback
      *         callback
      * @throws RequestException
      */
-    void createNewResourceWizardTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
-                                                @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+    void unzipNewResourceWizardTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
      * Create 'Parts tutorial' project.
      *
      * @param projectName
      *         name of the project to create
-     * @param properties
-     *         properties to set to a newly created project
      * @param callback
      *         callback
      * @throws RequestException
      */
-    void createPartsTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
-                                    @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+    void unzipPartsTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
      * Create 'Editor tutorial' project.
@@ -141,34 +106,27 @@ public interface TutorialsClientService {
      *         callback
      * @throws RequestException
      */
-    void createEditorTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
-                                     @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+    void unzipEditorTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
      * Create 'GIN tutorial' project.
      *
      * @param projectName
      *         name of the project to create
-     * @param properties
-     *         properties to set to a newly created project
      * @param callback
      *         callback
      * @throws RequestException
      */
-    void createGinTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
-                                  @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+    void unzipGinTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
-     * Create 'WYSUWYG Editor' project.
+     * Create 'WYSIWYG Editor' project.
      *
      * @param projectName
      *         name of the project to create
-     * @param properties
-     *         properties to set to a newly created project
      * @param callback
      *         callback
      * @throws RequestException
      */
-    void createWYSIWYGEditorProject(@NotNull String projectName, @NotNull Array<Property> properties,
-                                  @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+    void unzipWYSIWYGEditorTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 }

@@ -32,8 +32,7 @@ import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.CODENVY_
 /**
  * Action to launch Codenvy application with custom extension.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: LaunchAction.java Jul 3, 2013 1:58:47 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 public class LaunchAction extends Action {
@@ -61,7 +60,8 @@ public class LaunchAction extends Action {
     public void update(ActionEvent e) {
         Project activeProject = resourceProvider.getActiveProject();
         if (activeProject != null) {
-            e.getPresentation().setVisible(activeProject.getDescription().getProjectTypeId().equals(CODENVY_EXTENSION_PROJECT_TYPE_ID));
+            e.getPresentation().setVisible(activeProject.getDescription().getProjectTypeId().equals(CODENVY_EXTENSION_PROJECT_TYPE_ID) ||
+                                           activeProject.getDescription().getProjectTypeId().equals("codenvy_tutorial"));
             e.getPresentation().setEnabled(!controller.isAnyAppLaunched());
         } else {
             e.getPresentation().setEnabledAndVisible(false);

@@ -18,12 +18,14 @@
 package com.codenvy.ide.ext.tutorials.client.template;
 
 import com.codenvy.ide.api.paas.PaaS;
+import com.codenvy.ide.api.resources.CreateProjectClientService;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.ext.tutorials.client.TutorialsClientService;
+import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.model.Project;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -59,23 +61,27 @@ public abstract class BaseCreateTutorialTest {
     public static final boolean PROVIDE_TEMPLATE = true;
     public static final boolean IN_CONTEXT       = true;
     @Mock
-    protected TutorialsClientService service;
+    protected CreateProjectClientService    createProjectClientService;
     @Mock
-    protected ResourceProvider       resourceProvider;
+    protected ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
     @Mock
-    protected CommitCallback         callback;
+    protected TutorialsClientService        service;
     @Mock
-    protected Project                project;
+    protected ResourceProvider              resourceProvider;
     @Mock
-    protected WizardContext          wizardContext;
+    protected CommitCallback                callback;
     @Mock
-    protected Throwable              throwable;
+    protected Project                       project;
     @Mock
-    protected PaaS                   paas;
+    protected WizardContext                 wizardContext;
     @Mock
-    protected Template               template;
-    protected String                 templateId;
-    protected AbstractTemplatePage   page;
+    protected Throwable                     throwable;
+    @Mock
+    protected PaaS                          paas;
+    @Mock
+    protected Template                      template;
+    protected String                        templateId;
+    protected AbstractTemplatePage          page;
 
     @Before
     public void setUp() {

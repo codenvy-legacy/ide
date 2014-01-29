@@ -17,60 +17,91 @@
  */
 package com.codenvy.ide.ext.tutorials.client.template;
 
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
+import com.codenvy.ide.api.resources.CreateProjectClientService;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.tutorials.client.TutorialsClientService;
 import com.codenvy.ide.ext.tutorials.client.TutorialsExtension;
+import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
-import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
-import static com.codenvy.ide.collections.Collections.createArray;
-import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE_ID;
-import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDescription.ATTRIBUTE_SOURCE_FOLDERS;
-import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.TUTORIAL_PROJECT_TYPE;
-import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
-import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
+import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.TUTORIAL_PROJECT_TYPE_ID;
 
-/**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
- */
+/** @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a> */
 public class CreateWysiwygTutorialPage extends AbstractTemplatePage {
-    private final TutorialsClientService service;
-    private final ResourceProvider resourceProvider;
+    private CreateProjectClientService    createProjectClientService;
+    private ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
+    private TutorialsClientService        unzipTemplateClientService;
+    private ResourceProvider              resourceProvider;
 
-    /**
-     * Create wizard page.
-     *
-     */
+    /** Create wizard page. */
     @Inject
-    public CreateWysiwygTutorialPage(TutorialsClientService service, ResourceProvider resourceProvider) {
-        super(null, null, TutorialsExtension.WYSIWIG_EDITOR_TUTORIAL_ID);
-        this.service = service;
+    public CreateWysiwygTutorialPage(CreateProjectClientService createProjectClientService,
+                                     ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
+                                     TutorialsClientService unzipTemplateClientService,
+                                     ResourceProvider resourceProvider) {
+        super(null, null, TutorialsExtension.WYSIWYG_EDITOR_TUTORIAL_ID);
+        this.createProjectClientService = createProjectClientService;
+        this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
+        this.unzipTemplateClientService = unzipTemplateClientService;
         this.resourceProvider = resourceProvider;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void commit(@NotNull final CommitCallback callback) {
-        Array<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
-                                                 new Property(PROPERTY_MIXIN_NATURES,
-                                                              createArray(TUTORIAL_PROJECT_TYPE, CODENVY_EXTENSION_PROJECT_TYPE_ID)),
-                                                 new Property(ATTRIBUTE_SOURCE_FOLDERS,
-                                                              createArray("src/main/java", "src/main/resources")));
+    public void commit(final CommitCallback callback) {
+        Map<String, List<String>> attributes = new HashMap<String, List<String>>(1);
+        // TODO: make it as calculated attributes
+        List<String> sourceFolders = new ArrayList<String>(2);
+        sourceFolders.add("src/main/java");
+        sourceFolders.add("src/test/java");
+        attributes.put(ATTRIBUTE_SOURCE_FOLDERS, sourceFolders);
+
         final String projectName = wizardContext.getData(PROJECT_NAME);
+        ProjectTypeDescriptor projectTypeDescriptor = projectTypeDescriptorRegistry.getDescriptor(TUTORIAL_PROJECT_TYPE_ID);
         try {
-            service.createWYSIWYGEditorProject(projectName, properties, new AsyncRequestCallback<Void>() {
+            createProjectClientService.createProject(projectName, projectTypeDescriptor, attributes, new AsyncRequestCallback<Void>() {
+                @Override
+                protected void onSuccess(Void result) {
+                    resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
+                        @Override
+                        public void onSuccess(Project result) {
+                            unzipTemplate(projectName, callback);
+                        }
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            callback.onFailure(caught);
+                        }
+                    });
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    callback.onFailure(exception);
+                }
+            });
+        } catch (RequestException e) {
+            callback.onFailure(e);
+        }
+    }
+
+    private void unzipTemplate(final String projectName, final CommitCallback callback) {
+        try {
+            unzipTemplateClientService.unzipWYSIWYGEditorTutorial(projectName, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     resourceProvider.getProject(projectName, new AsyncCallback<Project>() {

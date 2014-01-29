@@ -18,8 +18,6 @@
 package com.codenvy.ide.ext.tutorials.client;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.ui.loader.Loader;
@@ -31,8 +29,6 @@ import com.google.inject.name.Named;
 
 import javax.validation.constraints.NotNull;
 
-import static com.codenvy.ide.resources.marshal.JSONSerializer.PROPERTY_SERIALIZER;
-import static com.codenvy.ide.rest.HTTPHeader.CONTENT_TYPE;
 import static com.google.gwt.http.client.RequestBuilder.POST;
 
 /**
@@ -42,19 +38,16 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
  */
 @Singleton
 public class TutorialsClientServiceImpl implements TutorialsClientService {
-    /** Base url. */
-    private static final String BASE_URL                            = "/tutorials/" + Utils.getWorkspaceName();
-    /** Create sample project method's path. */
-    private static final String CREATE_DTO_TUTORIAL                 = "/dto";
-    private static final String CREATE_NOTIFICATION_TUTORIAL        = "/notification";
-    private static final String CREATE_ACTION_TUTORIAL              = "/action";
-    private static final String CREATE_WIZARD_TUTORIAL              = "/wizard";
-    private static final String CREATE_NEW_PROJECT_WIZARD_TUTORIAL  = "/newproject";
-    private static final String CREATE_NEW_RESOURCE_WIZARD_TUTORIAL = "/newresource";
-    private static final String CREATE_PARTS_TUTORIAL               = "/parts";
-    private static final String CREATE_EDITOR_TUTORIAL              = "/editor";
-    private static final String CREATE_GIN_TUTORIAL                 = "/gin";
-    private static final String CREATE_WYSIWYG_TUTORIAL             = "/wysiwyg";
+    private static final String BASE_URL                            = "/create-tutorial/" + Utils.getWorkspaceName();
+    private static final String UNPACK_NOTIFICATION_TUTORIAL        = BASE_URL + "/notification";
+    private static final String UNPACK_ACTION_TUTORIAL              = BASE_URL + "/action";
+    private static final String UNPACK_WIZARD_TUTORIAL              = BASE_URL + "/wizard";
+    private static final String UNPACK_NEW_PROJECT_WIZARD_TUTORIAL  = BASE_URL + "/newproject";
+    private static final String UNPACK_NEW_RESOURCE_WIZARD_TUTORIAL = BASE_URL + "/newresource";
+    private static final String UNPACK_PARTS_TUTORIAL               = BASE_URL + "/parts";
+    private static final String UNPACK_EDITOR_TUTORIAL              = BASE_URL + "/editor";
+    private static final String UNPACK_GIN_TUTORIAL                 = BASE_URL + "/gin";
+    private static final String UNPACK_WYSIWYG_TUTORIAL             = BASE_URL + "/wysiwyg";
     /** REST-service context. */
     private String           restContext;
     /** Loader to be displayed. */
@@ -73,90 +66,10 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
      *         provider of IDE resources
      */
     @Inject
-    protected TutorialsClientServiceImpl(@Named("restContext") String restContext, Loader loader,
-                                         ResourceProvider resourceProvider) {
+    protected TutorialsClientServiceImpl(@Named("restContext") String restContext, Loader loader, ResourceProvider resourceProvider) {
         this.loader = loader;
         this.restContext = restContext;
         this.resourceProvider = resourceProvider;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void createDTOTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
-                                         @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
-        String requestUrl = restContext + BASE_URL + CREATE_DTO_TUTORIAL;
-        sendRequest(requestUrl, projectName, properties, callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void createNotificationTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
-                                                  @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
-        String requestUrl = restContext + BASE_URL + CREATE_NOTIFICATION_TUTORIAL;
-        sendRequest(requestUrl, projectName, properties, callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void createActionTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
-                                            @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
-        String requestUrl = restContext + BASE_URL + CREATE_ACTION_TUTORIAL;
-        sendRequest(requestUrl, projectName, properties, callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void createWizardTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
-                                            @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
-        String requestUrl = restContext + BASE_URL + CREATE_WIZARD_TUTORIAL;
-        sendRequest(requestUrl, projectName, properties, callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void createNewProjectWizardTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
-                                                      @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
-        String requestUrl = restContext + BASE_URL + CREATE_NEW_PROJECT_WIZARD_TUTORIAL;
-        sendRequest(requestUrl, projectName, properties, callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void createNewResourceWizardTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
-                                                       @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
-        String requestUrl = restContext + BASE_URL + CREATE_NEW_RESOURCE_WIZARD_TUTORIAL;
-        sendRequest(requestUrl, projectName, properties, callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void createPartsTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
-                                           @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
-        String requestUrl = restContext + BASE_URL + CREATE_PARTS_TUTORIAL;
-        sendRequest(requestUrl, projectName, properties, callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void createEditorTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
-                                            @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
-        String requestUrl = restContext + BASE_URL + CREATE_EDITOR_TUTORIAL;
-        sendRequest(requestUrl, projectName, properties, callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void createGinTutorialProject(@NotNull String projectName, @NotNull Array<Property> properties,
-                                         @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
-        String requestUrl = restContext + BASE_URL + CREATE_GIN_TUTORIAL;
-        sendRequest(requestUrl, projectName, properties, callback);
-    }
-
-    @Override
-    public void createWYSIWYGEditorProject(@NotNull String projectName, @NotNull Array<Property> properties,
-                                           @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
-        String requestUrl = restContext + BASE_URL + CREATE_WYSIWYG_TUTORIAL;
-        sendRequest(requestUrl, projectName, properties, callback);
     }
 
     /**
@@ -166,18 +79,72 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
      *         url where request need to be sent
      * @param projectName
      *         name of the project to create
-     * @param properties
-     *         properties to set to a newly created project
      * @param callback
      *         callback
      * @throws RequestException
      */
-    private void sendRequest(@NotNull String requestUrl, @NotNull String projectName, @NotNull Array<Property> properties,
-                             @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
+    private void sendRequest(@NotNull String requestUrl, @NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback)
+            throws RequestException {
         final String param = "?vfsid=" + resourceProvider.getVfsInfo().getId() + "&name=" + projectName;
-        loader.setMessage("Creating new project...");
-        AsyncRequest.build(POST, requestUrl + param)
-                    .data(PROPERTY_SERIALIZER.fromCollection(properties).toString())
-                    .header(CONTENT_TYPE, "application/json").loader(loader).send(callback);
+        loader.setMessage("Unpacking from template...");
+        AsyncRequest.build(POST, requestUrl + param).loader(loader).send(callback);
+    }
+
+    @Override
+    public void unzipNotificationTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback)
+            throws RequestException {
+        final String requestUrl = restContext + UNPACK_NOTIFICATION_TUTORIAL;
+        sendRequest(requestUrl, projectName, callback);
+    }
+
+    @Override
+    public void unzipActionTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
+        final String requestUrl = restContext + UNPACK_ACTION_TUTORIAL;
+        sendRequest(requestUrl, projectName, callback);
+    }
+
+    @Override
+    public void unzipWizardTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
+        final String requestUrl = restContext + UNPACK_WIZARD_TUTORIAL;
+        sendRequest(requestUrl, projectName, callback);
+    }
+
+    @Override
+    public void unzipNewProjectWizardTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback)
+            throws RequestException {
+        final String requestUrl = restContext + UNPACK_NEW_PROJECT_WIZARD_TUTORIAL;
+        sendRequest(requestUrl, projectName, callback);
+    }
+
+    @Override
+    public void unzipNewResourceWizardTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback)
+            throws RequestException {
+        final String requestUrl = restContext + UNPACK_NEW_RESOURCE_WIZARD_TUTORIAL;
+        sendRequest(requestUrl, projectName, callback);
+    }
+
+    @Override
+    public void unzipPartsTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
+        final String requestUrl = restContext + UNPACK_PARTS_TUTORIAL;
+        sendRequest(requestUrl, projectName, callback);
+    }
+
+    @Override
+    public void unzipEditorTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
+        final String requestUrl = restContext + UNPACK_EDITOR_TUTORIAL;
+        sendRequest(requestUrl, projectName, callback);
+    }
+
+    @Override
+    public void unzipGinTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
+        final String requestUrl = restContext + UNPACK_GIN_TUTORIAL;
+        sendRequest(requestUrl, projectName, callback);
+    }
+
+    @Override
+    public void unzipWYSIWYGEditorTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback)
+            throws RequestException {
+        final String requestUrl = restContext + UNPACK_WYSIWYG_TUTORIAL;
+        sendRequest(requestUrl, projectName, callback);
     }
 }

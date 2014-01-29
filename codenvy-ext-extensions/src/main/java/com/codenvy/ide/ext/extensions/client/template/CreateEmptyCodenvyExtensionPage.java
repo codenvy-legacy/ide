@@ -38,7 +38,7 @@ import java.util.Map;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
 import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE_ID;
-import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.EMPTY_EXTENSION_TEMPLATE_ID;
+import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.EMPTY_TEMPLATE_ID;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDescription.ATTRIBUTE_SOURCE_FOLDERS;
 
 /**
@@ -61,7 +61,7 @@ public class CreateEmptyCodenvyExtensionPage extends AbstractTemplatePage {
     public CreateEmptyCodenvyExtensionPage(ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
                                            CreateProjectClientService createProjectClientService,
                                            ResourceProvider resourceProvider) {
-        super(null, null, EMPTY_EXTENSION_TEMPLATE_ID);
+        super(null, null, EMPTY_TEMPLATE_ID);
         this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
         this.createProjectClientService = createProjectClientService;
         this.resourceProvider = resourceProvider;

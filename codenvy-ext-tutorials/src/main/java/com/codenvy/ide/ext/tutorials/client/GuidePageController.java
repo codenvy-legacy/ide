@@ -28,14 +28,13 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.DEFAULT_README_FILE_NAME;
-import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.TUTORIAL_PROJECT_TYPE;
+import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.TUTORIAL_PROJECT_TYPE_ID;
 
 /**
  * Controls a tutorial page state: can shows or hides it. Automatically shows a tutorial page when project has opened
  * and closes it when project has closed.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: GuidePageController.java Sep 13, 2013 12:48:08 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 public class GuidePageController {
@@ -55,7 +54,7 @@ public class GuidePageController {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
                 if (event.getProject() != null &&
-                    event.getProject().getDescription().getProjectTypeId().equals(TUTORIAL_PROJECT_TYPE)) {
+                    event.getProject().getDescription().getProjectTypeId().equals(TUTORIAL_PROJECT_TYPE_ID)) {
                     openTutorialPage();
                 }
             }
@@ -63,7 +62,7 @@ public class GuidePageController {
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
                 if (event.getProject() != null &&
-                    event.getProject().getDescription().getProjectTypeId().equals(TUTORIAL_PROJECT_TYPE)) {
+                    event.getProject().getDescription().getProjectTypeId().equals(TUTORIAL_PROJECT_TYPE_ID)) {
                     closeTutorialPage();
                 }
             }

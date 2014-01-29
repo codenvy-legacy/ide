@@ -433,7 +433,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
             try {
                 AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(internalCallback);
             } catch (RequestException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();
             }
         } else {
             activeProject.deleteChild(item, new AsyncCallback<Void>() {

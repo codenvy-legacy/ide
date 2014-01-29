@@ -54,7 +54,7 @@ public class CreateSampleCodenvyExtensionPage extends AbstractTemplatePage {
     private ResourceProvider              resourceProvider;
 
     /**
-     * Create presenter.
+     * Create page.
      *
      * @param createProjectClientService
      * @param projectTypeDescriptorRegistry

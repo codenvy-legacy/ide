@@ -17,8 +17,6 @@
  */
 package com.codenvy.ide.ext.tutorials.client.template;
 
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -43,7 +41,8 @@ public class CreateNewResourceWizardTutorialPageTest extends BaseCreateTutorialT
     @Override
     public void setUp() {
         super.setUp();
-        page = new CreateNewResourceWizardTutorialPage(service, resourceProvider);
+        page = new CreateNewResourceWizardTutorialPage(createProjectClientService, projectTypeDescriptorRegistry, service,
+                                                       resourceProvider);
         page.setContext(wizardContext);
         templateId = NEW_RESOURCE_WIZARD_TUTORIAL_ID;
     }
@@ -59,8 +58,7 @@ public class CreateNewResourceWizardTutorialPageTest extends BaseCreateTutorialT
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service).createNewResourceWizardTutorialProject(anyString(), (Array<Property>)anyObject(),
-                                                                (AsyncRequestCallback<Void>)anyObject());
+        }).when(service).unzipNewResourceWizardTutorial(anyString(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsSuccessful();
     }
@@ -76,8 +74,7 @@ public class CreateNewResourceWizardTutorialPageTest extends BaseCreateTutorialT
                 onFailure.invoke(callback, throwable);
                 return callback;
             }
-        }).when(service).createNewResourceWizardTutorialProject(anyString(), (Array<Property>)anyObject(),
-                                                                (AsyncRequestCallback<Void>)anyObject());
+        }).when(service).unzipNewResourceWizardTutorial(anyString(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenCreateTutorialRequestIsFailed();
     }
@@ -93,17 +90,14 @@ public class CreateNewResourceWizardTutorialPageTest extends BaseCreateTutorialT
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service).createNewResourceWizardTutorialProject(anyString(), (Array<Property>)anyObject(),
-                                                                (AsyncRequestCallback<Void>)anyObject());
+        }).when(service).unzipNewResourceWizardTutorial(anyString(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsFailed();
     }
 
     @Override
     public void testCreateWhenRequestExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(service).createNewResourceWizardTutorialProject(anyString(),
-                                                                                             (Array<Property>)anyObject(),
-                                                                                             (AsyncRequestCallback<Void>)anyObject());
+        doThrow(RequestException.class).when(service).unzipNewResourceWizardTutorial(anyString(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenRequestExceptionHappened();
     }
