@@ -230,4 +230,12 @@ public class Style {
     public static String getWindowHeaderBackground() {
         return theme.getWindowHeaderBackground();
     }
+
+    public static String getWizardStepsColor() {
+        return theme.getWizardStepsColor();
+    }
+
+    public static String getWizardStepsBorderColor() {
+        return theme.getWizardStepsBorderColor();
+    }
 }

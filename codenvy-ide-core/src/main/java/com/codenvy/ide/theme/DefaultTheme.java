@@ -316,4 +316,14 @@ public class DefaultTheme implements Theme{
     public String getWindowHeaderBackground() {
         return getTabBorderColor();
     }
+
+    @Override
+    public String getWizardStepsColor() {
+        return "#DBDBDB";
+    }
+
+    @Override
+    public String getWizardStepsBorderColor() {
+        return "#BDBDBD";
+    }
 }

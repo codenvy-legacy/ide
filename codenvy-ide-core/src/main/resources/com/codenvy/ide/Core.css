@@ -34,17 +34,56 @@
 
         /* We must override the user agent stylesheet which sets textarea font to monospace. */
     textarea {
-        font-family: inherit;
-        background-color: #272727;
+        font-family: mainFontFamily;
+        color: mainFontColor;
+        background-color: inputBackground;
+        border: 1px solid tabBorder;
+        border-radius: 2px;
+        font-size: fontSize;
     }
 
+label {
+    display: inline-block;
+    cursor: pointer;
+    position: relative;
+    padding-left: 23px;
+    margin-right: 15px;
+    height: 18px;
+    font-weight: bold;
+}
+input[type=radio] {
+    display: none;
+}
 
+label:before {
+    content: "";
+    display: inline-block;
+
+    width: 13px;
+    height: 13px;
+
+    margin-right: 10px;
+    position: absolute;
+    left: 0;
+    background-color: mainFontColor;
+}
+.gwt-RadioButton label:before {
+    border-radius: 8px;
+}
+input[type=radio]:checked + label:before {
+    /*text-align: center;*/
+    /*line-height: 18px;*/
+    background: -moz-radial-gradient(center, ellipse cover, windowContentBackground 46%, mainFontColor 51%); /* FF3.6+ */
+    background: -webkit-radial-gradient(center, ellipse cover, windowContentBackground 46%,mainFontColor 51%); /* Chrome10+,Safari5.1+ */
+    background: radial-gradient(ellipse at center, windowContentBackground 46%,mainFontColor 51%); /* W3C */
+}
 
 .gwt-TextBox{
     background-color: inputBackground;
     color: mainFontColor;
     border: 1px solid tabBorder;
     border-radius: 2px;
+    font-size: fontSize;
 }
 
 .gwt-TextBox[disabled]{
@@ -199,7 +238,7 @@
     }
 
     .line {
-        border-bottom: 1px solid #DBDFE5;
+
     }
 
 /* We tweaked so that the default styles will be

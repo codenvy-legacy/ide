@@ -21,7 +21,6 @@ import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.extensions.client.actions.GetLogsAction;
@@ -93,21 +92,22 @@ public class ExtRuntimeExtension {
                                   Collections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
                                   codenvyExtensionProperties);
 
-        // register templates
-        templateAgent.register(EMPTY_EXTENSION_ID,
-                               "Empty Codenvy extension project.",
-                               resources.codenvyExtensionTemplate(),
-                               PRIMARY_NATURE,
-                               Collections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
-                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(
-                                       createEmptyCodenvyExtensionPage));
+        //TODO
+//        // register templates
+//        templateAgent.register(EMPTY_EXTENSION_ID,
+//                               "Empty Codenvy extension project.",
+//                               resources.codenvyExtensionTemplate(),
+//                               PRIMARY_NATURE,
+//                               Collections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
+//                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(
+//                                       createEmptyCodenvyExtensionPage));
 
-        templateAgent.register(SAMPLE_EXTENSION_ID,
-                               "Gist extension project.",
-                               resources.codenvyExtensionTemplate(),
-                               PRIMARY_NATURE,
-                               Collections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
-                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(
-                                       createSampleCodenvyExtensionPage));
+//        templateAgent.register(SAMPLE_EXTENSION_ID,
+//                               "Gist extension project.",
+//                               resources.codenvyExtensionTemplate(),
+//                               PRIMARY_NATURE,
+//                               Collections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
+//                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(
+//                                       createSampleCodenvyExtensionPage));
     }
 }

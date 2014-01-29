@@ -132,4 +132,8 @@ public interface Theme {
     String getWindowContentBackground();
 
     String getWindowHeaderBackground();
+
+    String getWizardStepsColor();
+
+    String getWizardStepsBorderColor();
 }
