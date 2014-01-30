@@ -51,6 +51,7 @@ import com.codenvy.ide.welcome.action.CreateProjectAction;
 import com.codenvy.ide.welcome.action.InviteAction;
 import com.codenvy.ide.welcome.action.ShowDocumentationAction;
 import com.codenvy.ide.wizard.NewResourceAgentImpl;
+import com.codenvy.ide.wizard.newproject.pages.paas.SelectPaasPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
 import com.codenvy.ide.wizard.newresource.NewFileProvider;
@@ -175,6 +176,9 @@ public class StandardComponentInitializer {
     @Inject
     private Provider<ChooseTemplatePagePresenter> chooseTemplatePageProvider;
 
+    @Inject
+    private Provider<SelectPaasPagePresenter> selectPaasPagePresenterProvider;
+
     /** Instantiates {@link StandardComponentInitializer} an creates standard content */
     @Inject
     public StandardComponentInitializer() {
@@ -275,5 +279,6 @@ public class StandardComponentInitializer {
 
         newProjectWizard.addPage(newProjectPageProvider);
         newProjectWizard.addPage(chooseTemplatePageProvider);
+        newProjectWizard.addPage(selectPaasPagePresenterProvider);
     }
 }

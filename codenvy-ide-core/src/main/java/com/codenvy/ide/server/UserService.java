@@ -39,7 +39,7 @@ import java.util.Set;
  *
  * @author Andrey Plotnikov
  */
-@Path("user/{ws-name}")
+@Path("user/{ws-id}")
 public class UserService {
     @Inject
     UserManager userManager;

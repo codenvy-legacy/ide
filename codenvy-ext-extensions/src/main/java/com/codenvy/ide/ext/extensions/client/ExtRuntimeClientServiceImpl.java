@@ -76,7 +76,7 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
                                                     @NotNull String artifactId,
                                                     @NotNull String version,
                                                     @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
-        final String requestUrl = baseUrl + "/create-extension/" + Utils.getWorkspaceName() + "/sample";
+        final String requestUrl = baseUrl + "/create-extension/" + Utils.getWorkspaceId() + "/sample";
         final String param = "?vfsid=" + resourceProvider.getVfsInfo().getId() + "&name=" + projectName
                              + "&rootid=" + resourceProvider.getRootId()
                              + "&groupid=" + groupId + "&artifactid=" + artifactId + "&version=" + version;
@@ -89,7 +89,7 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
     /** {@inheritDoc} */
     @Override
     public void launch(@NotNull String projectName, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
-        final String requestUrl = baseUrl + "/runner/" + Utils.getWorkspaceName() + "/run";
+        final String requestUrl = baseUrl + "/runner/" + Utils.getWorkspaceId() + "/run";
         String params = "project=" + projectName;
         AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params).send(callback);
     }

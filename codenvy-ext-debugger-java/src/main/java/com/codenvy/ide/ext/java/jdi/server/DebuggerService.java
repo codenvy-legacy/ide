@@ -41,7 +41,7 @@ import javax.ws.rs.core.MediaType;
  *
  * @author andrew00x
  */
-@Path("debug-java/{ws-name}")
+@Path("debug-java/{ws-id}")
 public class DebuggerService {
     @GET
     @Path("connect")

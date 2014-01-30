@@ -26,11 +26,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /** Methods to process common operations for Git services. For example upload public key, check if repository is private, etc. */
-@Path("{ws-name}/git-service")
+@Path("git-service/{ws-id}")
 public class ProviderService {
 
-    @PathParam("ws-name")
-    private String workspaceName;
+    @PathParam("ws-id")
+    private String workspaceId;
 
     @Inject
     private GitVendorServiceProvider gitProvider;

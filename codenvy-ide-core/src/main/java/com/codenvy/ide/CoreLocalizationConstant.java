@@ -98,4 +98,23 @@ public interface CoreLocalizationConstant extends Messages {
     
     @Key("renameFieldTitle")
     String renameFieldTitle();
+
+    @Key("createProjectFromTemplate.descriptionField")
+    String createProjectFromTemplateDescription();
+
+    @Key("createProjectFromTemplate.projectPrivacy")
+    String createProjectFromTemplateProjectPrivacy();
+
+    @Key("createProjectFromTemplate.public")
+    String createProjectFromTemplatePublic();
+
+    @Key("createProjectFromTemplate.publicDescription")
+    String createProjectFromTemplatePublicDescription();
+
+    @Key("createProjectFromTemplate.private")
+    String createProjectFromTemplatePrivate();
+
+    @Key("createProjectFromTemplate.privateDescription")
+    String createProjectFromTemplatePrivateDescription();
+
 }

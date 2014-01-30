@@ -1,37 +1,36 @@
 /*
- * CODENVY CONFIDENTIAL
- * __________________
- *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+* CODENVY CONFIDENTIAL
+* __________________
+*
+* [2012] - [2013] Codenvy, S.A.
+* All Rights Reserved.
+*
+* NOTICE: All information contained herein is, and remains
+* the property of Codenvy S.A. and its suppliers,
+* if any. The intellectual and technical concepts contained
+* herein are proprietary to Codenvy S.A.
+* and its suppliers and may be covered by U.S. and Foreign Patents,
+* patents in process, and are protected by trade secret or copyright law.
+* Dissemination of this information or reproduction of this material
+* is strictly forbidden unless prior written permission is obtained
+* from Codenvy S.A..
+*/
 package com.codenvy.ide.openproject;
 
 import elemental.html.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
-import com.codenvy.ide.Resources;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.list.SimpleList;
-import com.codenvy.ide.ui.list.SimpleList.View;
+import com.codenvy.ide.ui.window.Window;
 import com.codenvy.ide.util.dom.Elements;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -39,27 +38,25 @@ import com.google.inject.Singleton;
 
 
 /**
- * The implementation of {@link OpenProjectView}.
- * Provides selecting project what want to open.
- *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
- */
+* The implementation of {@link OpenProjectView}.
+* Provides selecting project what want to open.
+*
+* @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+*/
 @Singleton
-public class OpenProjectViewImpl extends DialogBox implements OpenProjectView {
-    interface OpenProjectViewImplUiBinder extends UiBinder<Widget, OpenProjectViewImpl> {
-    }
-
+public class OpenProjectViewImpl extends Window implements OpenProjectView {
+    private static OpenProjectViewImplUiBinder uiBinder = GWT.create(OpenProjectViewImplUiBinder.class);
     @UiField
-    Button      btnCancel;
+    Button btnCancel;
     @UiField
-    Button      btnOpen;
+    Button btnOpen;
     @UiField
     ScrollPanel listPanel;
     @UiField(provided = true)
-    Resources   res;
-    private ActionDelegate     delegate;
+    com.codenvy.ide.Resources res;
+    private ActionDelegate delegate;
     private SimpleList<String> list;
-    private SimpleList.ListItemRenderer<String>  listItemRenderer = new SimpleList.ListItemRenderer<String>() {
+    private SimpleList.ListItemRenderer<String> listItemRenderer = new SimpleList.ListItemRenderer<String>() {
         @Override
         public void render(Element itemElement, String itemData) {
             TableCellElement label = Elements.createTDElement();
@@ -72,7 +69,7 @@ public class OpenProjectViewImpl extends DialogBox implements OpenProjectView {
             return Elements.createTRElement();
         }
     };
-    private SimpleList.ListEventDelegate<String> listDelegate     = new SimpleList.ListEventDelegate<String>() {
+    private SimpleList.ListEventDelegate<String> listDelegate = new SimpleList.ListEventDelegate<String>() {
         public void onListItemClicked(Element itemElement, String itemData) {
             list.getSelectionModel().setSelectedItem(itemData);
             delegate.selectedProject(itemData);
@@ -83,23 +80,28 @@ public class OpenProjectViewImpl extends DialogBox implements OpenProjectView {
     };
 
     /**
-     * Create view.
-     *
-     * @param resources
-     */
+* Create view.
+*
+* @param resources
+*/
     @Inject
-    protected OpenProjectViewImpl(Resources resources, OpenProjectViewImplUiBinder uiBinder) {
+    protected OpenProjectViewImpl(com.codenvy.ide.Resources resources) {
         this.res = resources;
 
         Widget widget = uiBinder.createAndBindUi(this);
 
         TableElement tableElement = Elements.createTableElement();
         tableElement.setAttribute("style", "width: 100%");
-        list = SimpleList.create((View)tableElement, res.defaultSimpleListCss(), listItemRenderer, listDelegate);
+        list = SimpleList.create((SimpleList.View)tableElement, res.defaultSimpleListCss(), listItemRenderer, listDelegate);
         this.listPanel.add(list);
 
-        this.setText("Open Project");
+        this.setTitle("Open Project");
         this.setWidget(widget);
+    }
+
+    @Override
+    protected void onClose() {
+        delegate.onCancelClicked();
     }
 
     /** {@inheritDoc} */
@@ -129,7 +131,6 @@ public class OpenProjectViewImpl extends DialogBox implements OpenProjectView {
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        this.center();
         this.show();
     }
 
@@ -141,5 +142,8 @@ public class OpenProjectViewImpl extends DialogBox implements OpenProjectView {
     @UiHandler("btnOpen")
     void onBtnOpenClick(ClickEvent event) {
         delegate.onOpenClicked();
+    }
+
+    interface OpenProjectViewImplUiBinder extends UiBinder<Widget, OpenProjectViewImpl> {
     }
 }

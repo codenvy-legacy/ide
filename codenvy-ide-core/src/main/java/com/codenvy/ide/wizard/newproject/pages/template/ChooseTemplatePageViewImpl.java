@@ -28,7 +28,7 @@ import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.list.SimpleList.View;
 import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -44,10 +44,12 @@ import com.google.inject.Inject;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public class ChooseTemplatePageViewImpl extends Composite implements ChooseTemplatePageView {
-    interface TemplateViewUiBinder extends UiBinder<Widget, ChooseTemplatePageViewImpl> {
-    }
+    private static TemplateViewUiBinder uiBinder  = GWT.create(TemplateViewUiBinder.class);
+    private static ListResources        RESOURCES = GWT.create(ListResources.class);
 
-    private static TemplateViewUiBinder uiBinder = GWT.create(TemplateViewUiBinder.class);
+    static {
+        RESOURCES.templateListCss().ensureInjected();
+    }
 
     @UiField
     ScrollPanel templates;
@@ -62,15 +64,15 @@ public class ChooseTemplatePageViewImpl extends Composite implements ChooseTempl
 
             SafeHtmlBuilder sb = new SafeHtmlBuilder();
             // Add icon
-            sb.appendHtmlConstant("<table><tr><td>");
-            ImageResource icon = itemData.getIcon();
-            if (icon != null) {
-                sb.appendHtmlConstant("<img src=\"" + icon.getSafeUri().asString() + "\">");
-            }
-            sb.appendHtmlConstant("</td>");
+            sb.appendHtmlConstant("<table><tr>");
+//            ImageResource icon = itemData.getIcon();
+//            if (icon != null) {
+//                sb.appendHtmlConstant("<img src=\"" + icon.getSafeUri().asString() + "\">");
+//            }
+//            sb.appendHtmlConstant("</td>");
 
             // Add title
-            sb.appendHtmlConstant("<td>");
+            sb.appendHtmlConstant("<td style=\"font-weight: bold;\">");
             sb.appendEscaped(itemData.getTitle());
             sb.appendHtmlConstant("</td></tr></table>");
 
@@ -106,7 +108,7 @@ public class ChooseTemplatePageViewImpl extends Composite implements ChooseTempl
 
         TableElement tableElement = Elements.createTableElement();
         tableElement.setAttribute("style", "width: 100%");
-        list = SimpleList.create((View)tableElement, resources.defaultSimpleListCss(), listItemRenderer, listDelegate);
+        list = SimpleList.create((View)tableElement, RESOURCES.templateListCss(), listItemRenderer, listDelegate);
         this.templates.add(list);
     }
 
@@ -125,5 +127,30 @@ public class ChooseTemplatePageViewImpl extends Composite implements ChooseTempl
     @Override
     public void selectItem(Template template) {
         list.getSelectionModel().setSelectedItem(template);
+    }
+
+    protected interface TemplateList extends SimpleList.Css {
+        @Override
+        int menuListBorderPx();
+
+        @Override
+        @ClassName("tListItem")
+        String listItem();
+
+        @Override
+        @ClassName("tListBase")
+        String listBase();
+
+        @Override
+        @ClassName("tListContainer")
+        String listContainer();
+    }
+
+    protected interface ListResources extends ClientBundle {
+        @Source({"TemplateList.css", "com/codenvy/ide/common/constants.css", "com/codenvy/ide/api/ui/style.css"})
+        TemplateList templateListCss();
+    }
+
+    interface TemplateViewUiBinder extends UiBinder<Widget, ChooseTemplatePageViewImpl> {
     }
 }

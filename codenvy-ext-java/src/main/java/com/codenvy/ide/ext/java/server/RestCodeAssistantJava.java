@@ -75,17 +75,17 @@ import java.util.List;
 
 
 /**
- * Service provide Autocomplete of source code is also known as code completion feature. In a source code editor autocomplete is
+ * Service provide auto-complete of source code is also known as code completion feature. In a source code editor auto-complete is
  * greatly simplified by the regular structure of the programming languages. At current moment implemented the search class FQN,
  * by Simple Class Name and a prefix (the lead characters in the name of the package or class).
  *
  * @author Evgen Vidolob
  */
-@Path("code-assistant-java/{ws-name}")
+@Path("code-assistant-java/{ws-id}")
 public class RestCodeAssistantJava {
 
-    @PathParam("ws-name")
-    private String                     wsName;
+    @PathParam("ws-id")
+    private String                     wsId;
     @Inject
     private JavaCodeAssistant          codeAssistant;
     @Inject
@@ -268,7 +268,7 @@ public class RestCodeAssistantJava {
         if (port > 0 && port != 80) {
             url += ":" + port;
         }
-        url += "/api/rest/builder/" + wsName + "/dependencies"; //TODO: remove hardcode "api/rest"
+        url += "/api/builder/" + wsId + "/dependencies";
         try {
             String jsonDependencies = null;
             List<MavenDependency> dependencies = null;

@@ -1,0 +1,124 @@
+@def animationDuration 300ms;
+
+.popup, .glass {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.popup {
+    z-index: popupZIndex;
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;
+}
+
+.glass {
+    background: #373737;
+    opacity: 0.0;
+    -moz-transition: all animationDuration;
+    -webkit-transition: all animationDuration;
+    transition: all animationDuration;
+}
+
+.glassVisible {
+    opacity: 0.4;
+}
+
+.positioner {
+    position: relative;
+    height: 100%;
+    width: 100%;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-pack: center;
+    -webkit-box-align: center;
+
+    display: -moz-box;
+    -moz-box-orient: vertical;
+    -moz-box-pack: center;
+    -moz-box-align: center;
+
+    display: box;
+    box-orient: vertical;
+    box-pack: center;
+    box-align: center;
+}
+
+.content {
+    display: inline-block;
+    background: windowContentBackground;
+    border: 1px solid tabBorder;
+    -moz-box-shadow: 0 0px 4px 0px tabBorder;
+    -webkit-box-shadow: 0 0px 4px 0px tabBorder;
+    box-shadow: 0 0px 4px 0px tabBorder;
+
+    -moz-transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+    -moz-transition: all animationDuration;
+    -webkit-transition: all animationDuration;
+    transition: all animationDuration;
+
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;
+    opacity: 0.0;
+}
+
+.contentVisible {
+    -moz-transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;
+    opacity: 1.0;
+}
+
+.header {
+    background: windowHeaderBackground;
+    border-bottom: 1px solid tabBorder;
+    height: 26px;
+    padding-left: 12px;
+    user-select: none;
+}
+
+.headerTitleWrapper {
+    display: table;
+    height: 100%;
+}
+
+.headerTitleLabel {
+    vertical-align: middle;
+    display: table-cell;
+}
+
+@if (com.codenvy.ide.api.ui.theme.Style.theme.getId().equals(com.codenvy.ide.theme.DarkTheme.DARK_THEME_ID)) {
+ @sprite .crossButton{
+   gwt-image: "closeDark";
+   position: absolute;
+   right: 10px;
+   top: 8px;
+ }
+ @sprite .crossButton:hover {
+  gwt-image: "closeDarkHover";
+ }
+} @else {
+ @sprite .crossButton{
+  gwt-image: "closeWhite";
+  position: absolute;
+  right: 10px;
+  top: 8px;
+ }
+ @sprite .crossButton:hover {
+  gwt-image: "closeWhiteHover";
+ }
+}
+

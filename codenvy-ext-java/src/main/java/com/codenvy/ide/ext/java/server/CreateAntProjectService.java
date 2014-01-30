@@ -42,7 +42,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
  *
  * @author Andrey Plotnikov
  */
-@Path("create-ant/{ws-name}")
+@Path("create-ant/{ws-id}")
 public class CreateAntProjectService {
     @Inject
     VirtualFileSystemRegistry registry;

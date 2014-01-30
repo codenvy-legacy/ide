@@ -23,6 +23,23 @@
          metadata-complete="true">
 
     <display-name>Codenvy IDE</display-name>
+    <filter>
+        <filter-name>Env</filter-name>
+        <filter-class>com.codenvy.ide.env.SingleEnvironmentFilter</filter-class>
+        <init-param>
+            <param-name>ws-name</param-name>
+            <param-value>default</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ws-id</param-name>
+            <param-value>1q2w3e</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>Env</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
     <servlet>
         <servlet-name>Dispatcher</servlet-name>

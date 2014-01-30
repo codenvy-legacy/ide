@@ -43,95 +43,84 @@ import java.util.List;
  */
 @Singleton
 public class GitHubClientServiceImpl implements GitHubClientService {
-    private static final String BASE_URL      = "/github/" + Utils.getWorkspaceName();
-    private static final String LIST          = BASE_URL + "/list";
-    private static final String LIST_ACCOUNT  = BASE_URL + "/list/account";
-    private static final String LIST_ORG      = BASE_URL + "/list/org";
-    private static final String LIST_USER     = BASE_URL + "/list/user";
-    private static final String LIST_ALL      = BASE_URL + "/list/available";
-    private static final String COLLABORATORS = BASE_URL + "/collaborators";
-    private static final String ORGANIZATIONS = BASE_URL + "/orgs";
-    private static final String PAGE          = BASE_URL + "/page";
-    private static final String TOKEN         = BASE_URL + "/token";
-    private static final String USER          = BASE_URL + "/user";
-    
+    private static final String LIST          = "/list";
+    private static final String LIST_ACCOUNT  = "/list/account";
+    private static final String LIST_ORG      = "/list/org";
+    private static final String LIST_USER     = "/list/user";
+    private static final String LIST_ALL      = "/list/available";
+    private static final String COLLABORATORS = "/collaborators";
+    private static final String ORGANIZATIONS = "/orgs";
+    private static final String PAGE          = "/page";
+    private static final String TOKEN         = "/token";
+    private static final String USER          = "/user";
+
     /** REST service context. */
-    private String restServiceContext;
-    
+    private final String baseUrl;
     /** Loader to be displayed. */
-    private Loader loader;
-    
-    /**
-     * Create service.
-     *
-     * @param restContext
-     * @param loader
-     */
+    private final Loader loader;
+
     @Inject
-    protected GitHubClientServiceImpl(@Named("restContext") String restContext, Loader loader) {
-        this.restServiceContext = restContext;
+    protected GitHubClientServiceImpl(@Named("restContext") String baseUrl, Loader loader) {
+        this.baseUrl = baseUrl + "/github/" + Utils.getWorkspaceId();
         this.loader = loader;
     }
 
-    
     /** {@inheritDoc} */
     @Override
     public void getRepositoriesList(AsyncRequestCallback<GitHubRepositoryList> callback) throws RequestException {
-        String url = restServiceContext + LIST;
+        String url = baseUrl + LIST;
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void getRepositoriesByUser(String userName, AsyncRequestCallback<GitHubRepositoryList> callback)
-                                                                                                             throws RequestException {
+    public void getRepositoriesByUser(String userName, AsyncRequestCallback<GitHubRepositoryList> callback) throws RequestException {
         String params = (userName != null) ? "?username=" + userName : "";
-        String url = restServiceContext + LIST_USER;
+        String url = baseUrl + LIST_USER;
         AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void getAllRepositories(AsyncRequestCallback<StringMap<Array<GitHubRepository>>> callback)
-                                                                                                      throws RequestException {
-        String url = restServiceContext + LIST_ALL;
+    public void getAllRepositories(AsyncRequestCallback<StringMap<Array<GitHubRepository>>> callback) throws RequestException {
+        String url = baseUrl + LIST_ALL;
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void getCollaborators(String user, String repository, AsyncRequestCallback<Collaborators> callback)
-                                                                                                              throws RequestException {
-        String url = restServiceContext + COLLABORATORS + "/" + user + "/" + repository;
+    public void getCollaborators(String user, String repository, AsyncRequestCallback<Collaborators> callback) throws RequestException {
+        String url = baseUrl + COLLABORATORS + "/" + user + "/" + repository;
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
     public void getUserToken(@NotNull String user, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
-        String url = restServiceContext + TOKEN + "/" + user;
+        String url = baseUrl + TOKEN + "/" + user;
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
     }
     
     /** {@inheritDoc} */
     @Override
     public void getOrganizations(AsyncRequestCallback<List<String>> callback) throws RequestException {
-        String url = restServiceContext + ORGANIZATIONS;
+        String url = baseUrl + ORGANIZATIONS;
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
     public void getUserInfo(AsyncRequestCallback<GitHubUser> callback) throws RequestException {
-        String url = restServiceContext + USER;
+        String url = baseUrl + USER;
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void getRepositoriesByOrganization(String organization, AsyncRequestCallback<GitHubRepositoryList> callback) throws RequestException {
+    public void getRepositoriesByOrganization(String organization, AsyncRequestCallback<GitHubRepositoryList> callback)
+            throws RequestException {
         String params = (organization != null) ? "?organization=" + organization : "";
-        String url = restServiceContext + LIST_ORG;
+        String url = baseUrl + LIST_ORG;
         AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader).send(callback);
     }
 
@@ -139,7 +128,7 @@ public class GitHubClientServiceImpl implements GitHubClientService {
     @Override
     public void getRepositoriesByAccount(String account, AsyncRequestCallback<GitHubRepositoryList> callback) throws RequestException {
         String params = (account != null) ? "?account=" + account : "";
-        String url = restServiceContext + LIST_ACCOUNT;
+        String url = baseUrl + LIST_ACCOUNT;
         AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader).send(callback);
     }
 
@@ -147,7 +136,7 @@ public class GitHubClientServiceImpl implements GitHubClientService {
     @Override
     public void getPage(String pageLocation, AsyncRequestCallback<GitHubRepositoryList> callback) throws RequestException {
         String params = (pageLocation != null) ? "?url=" + pageLocation : "";
-        String url = restServiceContext + PAGE;
+        String url = baseUrl + PAGE;
         AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader).send(callback);
     }
 }
