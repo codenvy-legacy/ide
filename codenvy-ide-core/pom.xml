@@ -67,6 +67,11 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-ui</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.codenvy.organization</groupId>
             <artifactId>codenvy-organization-api-java-client</artifactId>
             <version>${com.codenvy.organization.version}</version>

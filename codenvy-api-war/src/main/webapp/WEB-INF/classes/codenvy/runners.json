@@ -6,7 +6,7 @@
                     "rel": "runners state",
                     "produces": "application/json",
                     "requestBody": null,
-                    "href": "http://localhost:8080/api/rest/internal/runner/state",
+                    "href": "http://localhost:8080/api/internal/runner/state",
                     "consumes": null,
                     "method": "GET",
                     "parameters": [
@@ -24,7 +24,7 @@
                     "rel": "available runners",
                     "produces": "application/json",
                     "requestBody": null,
-                    "href": "http://localhost:8080/api/rest/internal/runner/available",
+                    "href": "http://localhost:8080/api/internal/runner/available",
                     "consumes": null,
                     "method": "GET",
                     "parameters": []
@@ -35,13 +35,13 @@
                     "requestBody": {
                         "description": "Parameters for run task in JSON format"
                     },
-                    "href": "http://localhost:8080/api/rest/internal/runner/run",
+                    "href": "http://localhost:8080/api/internal/runner/run",
                     "consumes": "application/json",
                     "method": "POST",
                     "parameters": []
                 }
             ],
-            "href": "http://localhost:8080/api/rest/internal/runner",
+            "href": "http://localhost:8080/api/internal/runner",
             "description": null,
             "version": "1.0"
         },

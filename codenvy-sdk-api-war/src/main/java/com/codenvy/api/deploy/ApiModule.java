@@ -113,7 +113,7 @@ public class ApiModule extends AbstractModule {
         bind(CreateMavenProjectService.class);
         bind(CreateAntProjectService.class);
         bind(RestCodeAssistantJava.class);
-        bind(AsynchronousJobPool.class).toInstance(new CodenvyAsynchronousJobPool(null)); // asynchronous job with default configuration
+        bind(AsynchronousJobPool.class).to(CodenvyAsynchronousJobPool.class);
         bind(CodenvyAsynchronousJobService.class);
         bind(CreateProjectService.class);
         bind(GitService.class);

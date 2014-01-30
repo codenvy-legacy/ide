@@ -44,8 +44,7 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
 /**
  * Provides SSH keys for github.com and deploys it.
  *
- * @author <a href="mailto:ashumilova@codenvy.com">Ann Shumilova</a>
- * @version $Id:
+ * @author Ann Shumilova
  */
 @Singleton
 public class GitHubSshKeyProvider implements SshKeyProvider, OAuthCallback {
@@ -56,19 +55,19 @@ public class GitHubSshKeyProvider implements SshKeyProvider, OAuthCallback {
 
     private NotificationManager notificationManager;
 
-    private String restContext;
+    private String baseUrl;
 
     private GitHubLocalizationConstant constant;
 
     private AsyncRequestCallback<Void> callback;
 
     @Inject
-    public GitHubSshKeyProvider(GitHubClientService gitHubService, EventBus eventBus, @Named("restContext") String restContext,
+    public GitHubSshKeyProvider(GitHubClientService gitHubService, EventBus eventBus, @Named("restContext") String baseUrl,
                                 GitHubLocalizationConstant constant, NotificationManager notificationManager) {
         this.gitHubService = gitHubService;
         this.eventBus = eventBus;
         this.notificationManager = notificationManager;
-        this.restContext = restContext;
+        this.baseUrl = baseUrl;
         this.constant = constant;
     }
 
@@ -107,7 +106,7 @@ public class GitHubSshKeyProvider implements SshKeyProvider, OAuthCallback {
     private void oAuthLoginStart(@NotNull String user) {
         boolean permitToRedirect = Window.confirm(constant.loginOAuthLabel());
         if (permitToRedirect) {
-            String authUrl = restContext + "/oauth/authenticate?oauth_provider=github"
+            String authUrl = baseUrl + "/oauth/authenticate?oauth_provider=github"
                              + "&scope=user&userId=" + user + "&scope=repo&redirect_after_login=/ide/" + Utils.getWorkspaceName();
             JsOAuthWindow authWindow = new JsOAuthWindow(authUrl, "error.url", 500, 980, this);
             authWindow.loginWithOAuth();
@@ -125,7 +124,7 @@ public class GitHubSshKeyProvider implements SshKeyProvider, OAuthCallback {
     /** Generate github key. */
     public void generateGitHubKey() {
         try {
-            String url = restContext + "/github/" + Utils.getWorkspaceName() + "/ssh/generate";
+            String url = baseUrl + "/github/" + Utils.getWorkspaceId() + "/ssh/generate";
             AsyncRequest.build(POST, url).loader(new EmptyLoader()).send(callback);
         } catch (RequestException e) {
             Window.alert("Upload key to github failed.");

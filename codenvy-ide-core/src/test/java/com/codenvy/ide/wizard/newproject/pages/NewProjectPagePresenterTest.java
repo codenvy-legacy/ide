@@ -134,7 +134,7 @@ public class NewProjectPagePresenterTest {
         Array<PaaS> paases = Collections.createArray(paas);
         when(paasAgent.getPaaSes()).thenReturn(paases);
 
-        presenter = new NewProjectPagePresenter(view, resources, projectTypeAgent, paasAgent, resourceProvider, constant, dtoFactory);
+        presenter = new NewProjectPagePresenter(view, resources, projectTypeAgent, resourceProvider, constant, dtoFactory);
         presenter.setContext(wizardContext);
         presenter.setUpdateDelegate(delegate);
     }
@@ -183,10 +183,8 @@ public class NewProjectPagePresenterTest {
 
         verify(view).focusProjectName();
         verify(view).selectProjectType(0);
-        verify(view).selectPaas(0);
-        verify(delegate, times(2)).updateControls();
+        verify(delegate, times(1)).updateControls();
         verify(wizardContext).putData(eq(PROJECT_TYPE), eq(projectType));
-        verify(wizardContext).putData(eq(PAAS), eq(paas));
     }
 
     @Test
@@ -298,25 +296,8 @@ public class NewProjectPagePresenterTest {
         presenter.onProjectTypeSelected(0);
 
         verify(view).selectProjectType(0);
-        verify(view).selectPaas(0);
-        verify(delegate, times(2)).updateControls();
+        verify(delegate, times(1)).updateControls();
         verify(wizardContext).putData(eq(PROJECT_TYPE), eq(projectType));
-        verify(wizardContext).putData(eq(PAAS), eq(paas));
-    }
-
-    @Test
-    public void testOnPaaSSelected() throws Exception {
-        setUp();
-
-        presenter.focusComponent();
-        reset(view);
-        reset(delegate);
-        reset(wizardContext);
-        presenter.onPaaSSelected(0);
-
-        verify(view).selectPaas(0);
-        verify(delegate).updateControls();
-        verify(wizardContext).putData(eq(PAAS), eq(paas));
     }
 
     @Test
@@ -386,18 +367,5 @@ public class NewProjectPagePresenterTest {
 
         verify(view).showPopup(anyString(), eq(left), eq(top));
         verify(constant).chooseTechnologyTooltip();
-    }
-
-    @Test
-    public void testOnPaaSIconClicked() throws Exception {
-        setUp();
-
-        int top = 100;
-        int left = 100;
-
-        presenter.onPaaSIconClicked(left, top);
-
-        verify(view).showPopup(anyString(), eq(left), eq(top));
-        verify(constant).choosePaaSTooltip();
     }
 }

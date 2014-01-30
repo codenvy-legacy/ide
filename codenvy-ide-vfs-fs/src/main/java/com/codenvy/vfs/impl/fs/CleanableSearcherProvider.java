@@ -21,7 +21,6 @@ import com.codenvy.api.vfs.server.MountPoint;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.server.search.LuceneSearcherProvider;
 import com.codenvy.api.vfs.server.search.Searcher;
-import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.commons.lang.NamedThreadFactory;
 
 import javax.inject.Inject;
@@ -62,17 +61,11 @@ public class CleanableSearcherProvider extends LuceneSearcherProvider {
         final java.io.File vfsIoRoot = ((VirtualFileImpl)mountPoint.getRoot()).getIoFile();
         CleanableSearcher searcher = instances.get(vfsIoRoot);
         if (searcher == null && create) {
-            final EnvironmentContext context = EnvironmentContext.getCurrent();
-            final String workspaceId = (String)context.getVariable(EnvironmentContext.WORKSPACE_ID);
-            if (workspaceId == null || workspaceId.isEmpty()) {
-                throw new VirtualFileSystemException("Unable create searcher. Workspace id is not set.");
-            }
-
             final java.io.File myIndexDir;
             CleanableSearcher newSearcher;
             try {
                 Files.createDirectories(indexRootDir.toPath());
-                myIndexDir = Files.createTempDirectory(indexRootDir.toPath(), workspaceId).toFile();
+                myIndexDir = Files.createTempDirectory(indexRootDir.toPath(), null).toFile();
                 newSearcher = new CleanableSearcher(this, myIndexDir, getIndexedMediaTypes());
             } catch (IOException e) {
                 throw new VirtualFileSystemException("Unable create searcher. " + e.getMessage(), e);

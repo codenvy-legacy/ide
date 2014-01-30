@@ -124,9 +124,9 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
 
     @Override
     public void removeFanFromCache(String fqn) {
-        MessagesImpls.RemoveFqnMessageImpl mesage = MessagesImpls.RemoveFqnMessageImpl.make();
-        mesage.setFqn(fqn);
-        worker.postMessage(mesage.serialize());
+        MessagesImpls.RemoveFqnMessageImpl message = MessagesImpls.RemoveFqnMessageImpl.make();
+        message.setFqn(fqn);
+        worker.postMessage(message.serialize());
     }
 
     /** {@inheritDoc} */
@@ -186,11 +186,6 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         worker.postMessage(corrMessage.serialize());
     }
 
-    /**
-     * Project opened
-     *
-     * @param event
-     */
     @Override
     public void onProjectOpened(ProjectActionEvent event) {
         if (worker != null) {
@@ -216,18 +211,12 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         MessagesImpls.ConfigMessageImpl config = MessagesImpls.ConfigMessageImpl.make();
         config.setRestContext(restContext);
         config.setVfsId(resourceProvider.getVfsInfo().getId());
-        config.setWsName("/" + Utils.getWorkspaceName());
+        config.setWsId("/" + Utils.getWorkspaceId());
         config.setProjectName(event.getProject().getName());
-        config.setJavaDocContext(//TODO configure doc context
-                                 "rest/ide/code-assistant/java/class-doc?fqn=");
+        config.setJavaDocContext(""); //TODO configure doc context
         worker.postMessage(config.serialize());
     }
 
-    /**
-     * Project opened
-     *
-     * @param event
-     */
     @Override
     public void onProjectClosed(ProjectActionEvent event) {
         if (worker != null) {
@@ -236,16 +225,10 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         }
     }
 
-    /**
-     * Project Description Changed
-     *
-     * @param event
-     */
     @Override
     public void onProjectDescriptionChanged(ProjectActionEvent event) {
     }
 
-    /** {@inheritDoc} */
     @Override
     @SuppressWarnings("unchecked")
     public void onMessageReceived(ProblemsMessage message) {

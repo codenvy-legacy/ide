@@ -362,17 +362,17 @@ public class MessagesImpls {
     }-*/;
 
     @Override
-    public final native java.lang.String wsName() /*-{
-      return this["wsName"];
+    public final native java.lang.String wsId() /*-{
+      return this["wsId"];
     }-*/;
 
-    public final native ConfigMessageImpl setWsName(java.lang.String wsName) /*-{
-      this["wsName"] = wsName;
+    public final native ConfigMessageImpl setWsId(java.lang.String wsId) /*-{
+      this["wsId"] = wsId;
       return this;
     }-*/;
 
-    public final native boolean hasWsName() /*-{
-      return this.hasOwnProperty("wsName");
+    public final native boolean hasWsId() /*-{
+      return this.hasOwnProperty("wsId");
     }-*/;
 
     @Override

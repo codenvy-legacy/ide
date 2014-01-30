@@ -37,20 +37,10 @@ import com.google.inject.name.Named;
  */
 @Singleton
 public class BuilderClientServiceImpl implements BuilderClientService {
-    /** Base url. */
-    private static final String BASE_URL = "/builder/" + Utils.getWorkspaceName();
-    /** Build project method's path. */
-    private static final String BUILD    = BASE_URL + "/build";
-    /** Build project method's path. */
-    private static final String DEPLOY   = BASE_URL + "/deploy";
-    /** Cancel building project method's path. */
-    private static final String CANCEL   = BASE_URL + "/cancel";
-    /** Get result of build method's path. */
-    private static final String RESULT   = BASE_URL + "/result";
     /** REST-service context. */
-    private final String restContext;
+    private final String baseUrl;
     /** Loader to be displayed. */
-    private Loader loader;
+    private final Loader loader;
 
     /**
      * Create service.
@@ -59,17 +49,15 @@ public class BuilderClientServiceImpl implements BuilderClientService {
      *         loader to show on server request
      */
     @Inject
-    public BuilderClientServiceImpl(@Named("restContext") String restContext, Loader loader) {
-        this.restContext = restContext;
+    public BuilderClientServiceImpl(@Named("restContext") String baseUrl, Loader loader) {
+        this.baseUrl = baseUrl+ "/builder/" + Utils.getWorkspaceId();
         this.loader = loader;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void build(String projectName, AsyncRequestCallback<String> callback)
-            throws RequestException {
-        final String requestUrl = restContext + BUILD;
-
+    public void build(String projectName, AsyncRequestCallback<String> callback) throws RequestException {
+        final String requestUrl = baseUrl + "/build";
         String params = "project=" + projectName;
         callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
         AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params)
@@ -78,9 +66,8 @@ public class BuilderClientServiceImpl implements BuilderClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void cancel(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
-        final String requestUrl = restContext + CANCEL + "/" + buildid;
-
+    public void cancel(String buildId, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+        final String requestUrl = baseUrl + "/cancel/" + buildId;
         AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(loader)
                     .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
     }
@@ -102,8 +89,8 @@ public class BuilderClientServiceImpl implements BuilderClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void result(String buildid, AsyncRequestCallback<String> callback) throws RequestException {
-        final String requestUrl = restContext + RESULT + "/" + buildid;
+    public void result(String buildId, AsyncRequestCallback<String> callback) throws RequestException {
+        final String requestUrl = baseUrl + "/result/" + buildId;
         callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
         AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
                     .send(callback);

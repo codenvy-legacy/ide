@@ -74,13 +74,15 @@ public class CodeServer {
     private static final Logger LOG                    = LoggerFactory.getLogger(CodeServer.class);
     /** Id of Maven POM profile used to add (re)sources of custom extension to code server recompilation process. */
     private static final String ADD_SOURCES_PROFILE_ID = "customExtensionSources";
-    protected final ExecutorService pidTaskExecutor;
+    private final ExecutorService pidTaskExecutor;
 
     public CodeServer() {
         pidTaskExecutor = Executors.newCachedThreadPool(new NamedThreadFactory("CodeServer-", true));
     }
 
-    public CodeServerProcess prepare(Path workDirPath, SDKRunnerConfiguration runnerConfiguration,
+    public CodeServerProcess prepare(Path workDirPath,
+                                     Path projectSourcesPath,
+                                     SDKRunnerConfiguration runnerConfiguration,
                                      Utils.ExtensionDescriptor extensionDescriptor) throws RunnerException {
         try {
             final Path warDirPath = workDirPath.resolve("war");
@@ -98,7 +100,6 @@ public class CodeServer {
             // Create symbolic links to the project's sources in order
             // to provide actual sources to code server at any time.
             final Path extDirPath = Files.createDirectory(workDirPath.resolve("ext"));
-            Path projectSourcesPath = Utils.getMountPath().resolve(runnerConfiguration.getRequest().getProject());
             if (!projectSourcesPath.isAbsolute()) {
                 projectSourcesPath = projectSourcesPath.toAbsolutePath();
             }

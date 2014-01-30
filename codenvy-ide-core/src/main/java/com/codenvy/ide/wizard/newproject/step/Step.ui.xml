@@ -1,0 +1,36 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        @eval brColor com.codenvy.ide.api.ui.theme.Style.getWizardStepsBorderColor();
+        .mainPanel{
+            height: 42px;
+            width: 100%;
+            border-bottom: 1px solid brColor;
+
+        }
+
+        .stepNum{
+            width: 24px;
+            height: 24px;
+            float: left;
+            vertical-align: middle;
+            text-align: center;
+            border-radius: 3px;
+            background: none repeat scroll 0% 0% rgb(45, 107, 163);
+            border: 1px solid brColor;
+            margin-top:  7px;
+            line-height: 24px;
+            margin-left: 11px;
+            font-weight: bold;
+        }
+
+        .stepText{
+            margin-left: 17px;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.mainPanel}">
+        <div ui:field="stepNum" class="{style.stepNum}"></div>
+        <span ui:field="text" class="{style.stepText}"></span>
+        <span style="height: 41px; display: inline-block;vertical-align: middle;"></span>
+    </g:HTMLPanel>
+</ui:UiBinder>

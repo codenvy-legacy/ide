@@ -1,0 +1,29 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field='res' type='com.codenvy.ide.Resources'/>
+    <ui:with field='locale' type='com.codenvy.ide.CoreLocalizationConstant'/>
+    <ui:style>
+
+
+        .title {
+            float: left;
+            margin-bottom: 10px;
+        }
+
+        .paases {
+            border: 0px;
+            clear: left;
+        }
+        .title, .paases{
+            margin-left: 20px;
+        }
+    </ui:style>
+    <g:HTMLPanel>
+        <g:FlowPanel addStyleNames="{res.coreCss.line}">
+            <g:Label text="{locale.choosePaaS}"
+                     addStyleNames="{style.title}"/>
+            <g:SimplePanel ui:field="paasPanel"
+                           addStyleNames="{res.coreCss.mainFont}  {style.paases}"/>
+        </g:FlowPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

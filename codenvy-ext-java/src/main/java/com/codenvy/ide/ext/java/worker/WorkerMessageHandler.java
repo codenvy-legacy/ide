@@ -63,8 +63,7 @@ import com.google.gwt.webworker.client.messages.MessageImpl;
 import java.util.HashMap;
 
 /**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Evgen Vidolob
  */
 public class WorkerMessageHandler implements MessageHandler, MessageFilter.MessageRecipient<ParseMessage> {
 
@@ -93,7 +92,7 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
             @Override
             public void onMessageReceived(ConfigMessage config) {
                 nameEnvironment =
-                        new WorkerNameEnvironment(config.restContext(), config.vfsId(), config.wsName());
+                        new WorkerNameEnvironment(config.restContext(), config.vfsId(), config.wsId());
                 projectName = config.projectName();
                 WorkerProposalApplier applier = new WorkerProposalApplier(WorkerMessageHandler.this.worker, messageFilter);
                 workerCodeAssist =

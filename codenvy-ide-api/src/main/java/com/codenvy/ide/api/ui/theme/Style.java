@@ -24,7 +24,7 @@ package com.codenvy.ide.api.ui.theme;
  */
 public class Style {
 
-    private static Theme theme;
+    public static Theme theme;
 
     public static void setTheme(Theme theme) {
         Style.theme = theme;
@@ -221,5 +221,21 @@ public class Style {
 
     public static String getEditorAttribute() {
         return theme.getEditorAttribute();
+    }
+
+    public static String getWindowContentBackground() {
+        return theme.getWindowContentBackground();
+    }
+
+    public static String getWindowHeaderBackground() {
+        return theme.getWindowHeaderBackground();
+    }
+
+    public static String getWizardStepsColor() {
+        return theme.getWizardStepsColor();
+    }
+
+    public static String getWizardStepsBorderColor() {
+        return theme.getWizardStepsBorderColor();
     }
 }
