@@ -46,7 +46,7 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
     @Override
     public void setUp() {
         super.setUp();
-        page = new CreateMavenJarProjectPage(createProjectClientService, projectTypeDescriptorRegistry, unzipTemplateClientService,
+        page = new CreateMavenJarProjectPage(manageProjectsClientService, projectTypeDescriptorRegistry, unzipTemplateClientService,
                                              resourceProvider);
         page.setContext(wizardContext);
     }
@@ -62,7 +62,7 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(createProjectClientService)
+        }).when(manageProjectsClientService)
                 .createProject(anyString(), (ProjectTypeDescriptor)anyObject(), (Map<String, List<String>>)anyObject(),
                                (AsyncRequestCallback<Void>)anyObject());
 
@@ -80,7 +80,7 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
                 onFailure.invoke(callback, throwable);
                 return callback;
             }
-        }).when(createProjectClientService)
+        }).when(manageProjectsClientService)
                 .createProject(anyString(), (ProjectTypeDescriptor)anyObject(), (Map<String, List<String>>)anyObject(),
                                (AsyncRequestCallback<Void>)anyObject());
 
@@ -98,7 +98,7 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(createProjectClientService)
+        }).when(manageProjectsClientService)
                 .createProject(anyString(), (ProjectTypeDescriptor)anyObject(), (Map<String, List<String>>)anyObject(),
                                (AsyncRequestCallback<Void>)anyObject());
 
@@ -107,7 +107,7 @@ public class CreateJavaProjectPageTest extends BaseCreateProjectTest {
 
     @Override
     public void testCreateWhenRequestExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(createProjectClientService)
+        doThrow(RequestException.class).when(manageProjectsClientService)
                 .createProject(anyString(), (ProjectTypeDescriptor)anyObject(), (Map<String, List<String>>)anyObject(),
                                (AsyncRequestCallback<Void>)anyObject());
 

@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.java.client.projecttemplate.maven;
 
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
-import com.codenvy.ide.api.resources.CreateProjectClientService;
+import com.codenvy.ide.api.resources.ManageProjectsClientService;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.ext.java.client.JavaExtension;
@@ -48,7 +48,7 @@ import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDescriptio
  */
 @Singleton
 public class CreateMavenWarProjectPage extends AbstractTemplatePage {
-    private CreateProjectClientService    createProjectClientService;
+    private ManageProjectsClientService   manageProjectsClientService;
     private ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
     private UnzipTemplateClientService    unzipTemplateClientService;
     private ResourceProvider              resourceProvider;
@@ -61,11 +61,11 @@ public class CreateMavenWarProjectPage extends AbstractTemplatePage {
      * @param resourceProvider
      */
     @Inject
-    public CreateMavenWarProjectPage(CreateProjectClientService createProjectClientService,
+    public CreateMavenWarProjectPage(ManageProjectsClientService manageProjectsClientService,
                                      ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
                                      UnzipTemplateClientService unzipTemplateClientService, ResourceProvider resourceProvider) {
         super(null, null, JavaExtension.MAVEN_WAR_TEMPLATE_ID);
-        this.createProjectClientService = createProjectClientService;
+        this.manageProjectsClientService = manageProjectsClientService;
         this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
         this.unzipTemplateClientService = unzipTemplateClientService;
         this.resourceProvider = resourceProvider;
@@ -84,20 +84,10 @@ public class CreateMavenWarProjectPage extends AbstractTemplatePage {
         final String projectName = wizardContext.getData(PROJECT_NAME);
         ProjectTypeDescriptor warDescriptor = projectTypeDescriptorRegistry.getDescriptor(WAR_PROJECT_TYPE_ID);
         try {
-            createProjectClientService.createProject(projectName, warDescriptor, attributes, new AsyncRequestCallback<Void>() {
+            manageProjectsClientService.createProject(projectName, warDescriptor, attributes, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
-                    resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
-                        @Override
-                        public void onSuccess(Project result) {
-                            unzipTemplate(projectName, callback);
-                        }
-
-                        @Override
-                        public void onFailure(Throwable caught) {
-                            callback.onFailure(caught);
-                        }
-                    });
+                    unzipTemplate(projectName, callback);
                 }
 
                 @Override

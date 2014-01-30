@@ -41,7 +41,7 @@ public class CreatePartsTutorialPageTest extends BaseCreateTutorialTest {
     @Override
     public void setUp() {
         super.setUp();
-        page = new CreatePartsTutorialPage(createProjectClientService, projectTypeDescriptorRegistry, service, resourceProvider);
+        page = new CreatePartsTutorialPage(manageProjectsClientService, projectTypeDescriptorRegistry, service, resourceProvider);
         page.setContext(wizardContext);
         templateId = PARTS_TUTORIAL_ID;
     }

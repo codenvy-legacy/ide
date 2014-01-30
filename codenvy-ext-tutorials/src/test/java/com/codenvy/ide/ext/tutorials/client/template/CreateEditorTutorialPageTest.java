@@ -41,7 +41,7 @@ public class CreateEditorTutorialPageTest extends BaseCreateTutorialTest {
     @Override
     public void setUp() {
         super.setUp();
-        page = new CreateEditorTutorialPage(createProjectClientService, projectTypeDescriptorRegistry, service, resourceProvider);
+        page = new CreateEditorTutorialPage(manageProjectsClientService, projectTypeDescriptorRegistry, service, resourceProvider);
         page.setContext(wizardContext);
         templateId = EDITOR_TUTORIAL_ID;
     }

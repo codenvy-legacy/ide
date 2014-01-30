@@ -41,7 +41,7 @@ public class CreateNotificationTutorialPageTest extends BaseCreateTutorialTest {
     @Override
     public void setUp() {
         super.setUp();
-        page = new CreateNotificationTutorialPage(createProjectClientService, projectTypeDescriptorRegistry, service, resourceProvider);
+        page = new CreateNotificationTutorialPage(manageProjectsClientService, projectTypeDescriptorRegistry, service, resourceProvider);
         page.setContext(wizardContext);
         templateId = NOTIFICATION_TUTORIAL_ID;
     }

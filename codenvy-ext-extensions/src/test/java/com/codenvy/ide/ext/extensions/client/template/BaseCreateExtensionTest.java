@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.extensions.client.template;
 
 import com.codenvy.ide.api.paas.PaaS;
-import com.codenvy.ide.api.resources.CreateProjectClientService;
+import com.codenvy.ide.api.resources.ManageProjectsClientService;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
@@ -79,7 +79,7 @@ public abstract class BaseCreateExtensionTest {
     @Mock
     protected UnzipTemplateClientService    unzipTemplateClientService;
     @Mock
-    protected CreateProjectClientService    createProjectClientService;
+    protected ManageProjectsClientService   manageProjectsClientService;
     @Mock
     protected ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
 

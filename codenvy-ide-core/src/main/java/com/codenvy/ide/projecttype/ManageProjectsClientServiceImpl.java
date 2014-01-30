@@ -19,7 +19,7 @@ package com.codenvy.ide.projecttype;
 
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
-import com.codenvy.ide.api.resources.CreateProjectClientService;
+import com.codenvy.ide.api.resources.ManageProjectsClientService;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -37,19 +37,19 @@ import static com.codenvy.ide.rest.HTTPHeader.CONTENT_TYPE;
 import static com.google.gwt.http.client.RequestBuilder.POST;
 
 /**
- * //
+ * The implementation of {@link ManageProjectsClientService}.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class CreateProjectClientServiceImpl implements CreateProjectClientService {
+public class ManageProjectsClientServiceImpl implements ManageProjectsClientService {
     private static final String CREATE_PROJECT = "/project/" + Utils.getWorkspaceId() + "/create";
     private DtoFactory dtoFactory;
     private String     restContext;
     private Loader     loader;
 
     @Inject
-    protected CreateProjectClientServiceImpl(@Named("restContext") String restContext, Loader loader, DtoFactory dtoFactory) {
+    protected ManageProjectsClientServiceImpl(@Named("restContext") String restContext, Loader loader, DtoFactory dtoFactory) {
         this.restContext = restContext;
         this.loader = loader;
         this.dtoFactory = dtoFactory;
@@ -58,16 +58,13 @@ public class CreateProjectClientServiceImpl implements CreateProjectClientServic
     @Override
     public void createProject(String projectName, ProjectTypeDescriptor projectTypeDescriptor, Map<String, List<String>> attributes,
                               AsyncRequestCallback<Void> callback) throws RequestException {
-        String param = "?name=" + projectName;
-        String requestUrl = restContext + CREATE_PROJECT + param;
-
+        final String requestUrl = restContext + CREATE_PROJECT;
+        final String param = "?name=" + projectName;
         ProjectDescriptor descriptor =
                 dtoFactory.createDto(ProjectDescriptor.class).withProjectTypeId(projectTypeDescriptor.getProjectTypeId())
                           .withProjectTypeName(projectTypeDescriptor.getProjectTypeName()).withAttributes(attributes);
-
         loader.setMessage("Creating new project...");
-
-        AsyncRequest.build(POST, requestUrl).data(dtoFactory.toJson(descriptor)).header(CONTENT_TYPE, "application/json").loader(loader)
+        AsyncRequest.build(POST, requestUrl + param).data(dtoFactory.toJson(descriptor)).header(CONTENT_TYPE, "application/json").loader(loader)
                     .send(callback);
     }
 

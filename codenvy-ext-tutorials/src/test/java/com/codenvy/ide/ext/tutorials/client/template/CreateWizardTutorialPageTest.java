@@ -41,7 +41,7 @@ public class CreateWizardTutorialPageTest extends BaseCreateTutorialTest {
     @Override
     public void setUp() {
         super.setUp();
-        page = new CreateWizardTutorialPage(createProjectClientService, projectTypeDescriptorRegistry, service, resourceProvider);
+        page = new CreateWizardTutorialPage(manageProjectsClientService, projectTypeDescriptorRegistry, service, resourceProvider);
         page.setContext(wizardContext);
         templateId = WIZARD_TUTORIAL_ID;
     }

@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.tutorials.client.template;
 
 import com.codenvy.ide.api.paas.PaaS;
-import com.codenvy.ide.api.resources.CreateProjectClientService;
+import com.codenvy.ide.api.resources.ManageProjectsClientService;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
@@ -62,7 +62,7 @@ public abstract class BaseCreateTutorialTest {
     public static final boolean PROVIDE_TEMPLATE = true;
     public static final boolean IN_CONTEXT       = true;
     @Mock
-    protected CreateProjectClientService    createProjectClientService;
+    protected ManageProjectsClientService   manageProjectsClientService;
     @Mock
     protected ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
     @Mock

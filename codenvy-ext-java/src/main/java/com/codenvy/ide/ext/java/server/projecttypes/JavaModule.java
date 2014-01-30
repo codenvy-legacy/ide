@@ -28,7 +28,9 @@ public class JavaModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(ProjectTypeDescriptionsExtension.class);
-        bind(JavaProjectTypeExtension.class);
-        Multibinder.newSetBinder(binder(), ValueProviderFactory.class).addBinding().to(BuilderValueProviderFactory.class);
+        bind(JarProjectTypeExtension.class);
+        bind(WarProjectTypeExtension.class);
+        bind(SpringProjectTypeExtension.class);
+        Multibinder.newSetBinder(binder(), ValueProviderFactory.class).addBinding().to(BuilderNameValueProviderFactory.class);
     }
 }

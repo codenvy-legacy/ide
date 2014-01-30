@@ -38,7 +38,7 @@ import java.util.List;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class BuilderValueProviderFactory implements ValueProviderFactory {
+public class BuilderNameValueProviderFactory implements ValueProviderFactory {
 
     @Inject
     private VirtualFileSystemRegistry registry;

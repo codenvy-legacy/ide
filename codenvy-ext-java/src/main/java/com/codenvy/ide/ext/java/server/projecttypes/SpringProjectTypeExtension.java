@@ -30,15 +30,15 @@ import java.util.List;
 
 /** @author Artem Zatsarynnyy */
 @Singleton
-public class JavaProjectTypeExtension implements ProjectTypeExtension {
+public class SpringProjectTypeExtension implements ProjectTypeExtension {
     @Inject
-    public JavaProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
+    public SpringProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
         registry.registerProjectType(this);
     }
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType("jar", "Java Library (JAR)");
+        return new ProjectType("spring", "Spring Application");
     }
 
     @Override
@@ -47,6 +47,7 @@ public class JavaProjectTypeExtension implements ProjectTypeExtension {
         // TODO: provide a single value for predefined attributes. Avoid using ValueProviders
         // VfsPropertyValueProvider is used as temporary solution because we don't have any way to get attribute's value on the client side
         list.add(new Attribute("language", new VfsPropertyValueProvider("language", "java")));
+        list.add(new Attribute("runner.name", new VfsPropertyValueProvider("runner.name", "webapps")));
         return list;
     }
 }

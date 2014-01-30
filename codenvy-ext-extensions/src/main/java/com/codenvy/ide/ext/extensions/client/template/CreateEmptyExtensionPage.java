@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.extensions.client.template;
 
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
-import com.codenvy.ide.api.resources.CreateProjectClientService;
+import com.codenvy.ide.api.resources.ManageProjectsClientService;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
@@ -49,7 +49,7 @@ import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDescriptio
 @Singleton
 public class CreateEmptyExtensionPage extends AbstractTemplatePage {
     private ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
-    private CreateProjectClientService    createProjectClientService;
+    private ManageProjectsClientService   manageProjectsClientService;
     private ResourceProvider              resourceProvider;
 
     /**
@@ -59,11 +59,11 @@ public class CreateEmptyExtensionPage extends AbstractTemplatePage {
      */
     @Inject
     public CreateEmptyExtensionPage(ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
-                                    CreateProjectClientService createProjectClientService,
+                                    ManageProjectsClientService manageProjectsClientService,
                                     ResourceProvider resourceProvider) {
         super(null, null, EMPTY_TEMPLATE_ID);
         this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
-        this.createProjectClientService = createProjectClientService;
+        this.manageProjectsClientService = manageProjectsClientService;
         this.resourceProvider = resourceProvider;
     }
 
@@ -80,7 +80,7 @@ public class CreateEmptyExtensionPage extends AbstractTemplatePage {
         final String projectName = wizardContext.getData(PROJECT_NAME);
         ProjectTypeDescriptor projectTypeDescriptor = projectTypeDescriptorRegistry.getDescriptor(CODENVY_EXTENSION_PROJECT_TYPE_ID);
         try {
-            createProjectClientService.createProject(projectName, projectTypeDescriptor, attributes, new AsyncRequestCallback<Void>() {
+            manageProjectsClientService.createProject(projectName, projectTypeDescriptor, attributes, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     resourceProvider.getProject(projectName, new AsyncCallback<Project>() {

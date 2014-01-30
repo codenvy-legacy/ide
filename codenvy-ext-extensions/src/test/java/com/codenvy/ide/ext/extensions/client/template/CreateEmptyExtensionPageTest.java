@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.extensions.client.template;
 
 import com.codenvy.ide.api.paas.PaaS;
-import com.codenvy.ide.api.resources.CreateProjectClientService;
+import com.codenvy.ide.api.resources.ManageProjectsClientService;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
@@ -67,7 +67,7 @@ public class CreateEmptyExtensionPageTest {
     @Mock
     private UnzipTemplateClientService    service;
     @Mock
-    private CreateProjectClientService    createProjectClientService;
+    private ManageProjectsClientService   manageProjectsClientService;
     @Mock
     private ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
     @Mock
@@ -93,7 +93,7 @@ public class CreateEmptyExtensionPageTest {
         when(wizardContext.getData(TEMPLATE)).thenReturn(template);
         when(template.getId()).thenReturn(TEMPLATE_ID);
 
-        page = new CreateEmptyExtensionPage(projectTypeDescriptorRegistry, createProjectClientService, resourceProvider);
+        page = new CreateEmptyExtensionPage(projectTypeDescriptorRegistry, manageProjectsClientService, resourceProvider);
         page.setContext(wizardContext);
     }
 

@@ -25,11 +25,24 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * //
+ * Client service for managing projects.
  *
  * @author Artem Zatsarynnyy
  */
-public interface CreateProjectClientService {
+public interface ManageProjectsClientService {
+    /**
+     * Creates a new project based on the specified {@link ProjectTypeDescriptor} with the provided attributes.
+     *
+     * @param projectName
+     *         name of the created project
+     * @param projectTypeDescriptor
+     *         descriptor of type of project to create
+     * @param attributes
+     *         {@link Map} of project's attributes
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
     public void createProject(String projectName, ProjectTypeDescriptor projectTypeDescriptor, Map<String, List<String>> attributes,
                               AsyncRequestCallback<Void> callback) throws RequestException;
 }

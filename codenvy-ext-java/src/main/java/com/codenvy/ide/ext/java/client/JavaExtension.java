@@ -161,8 +161,9 @@ public class JavaExtension {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
                 Project project = event.getProject();
-                if (project instanceof JavaProject)
+                if (project instanceof JavaProject) {
                     updateDependencies();
+                }
             }
 
             @Override

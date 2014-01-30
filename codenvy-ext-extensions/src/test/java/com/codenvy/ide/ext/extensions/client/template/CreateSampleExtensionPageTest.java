@@ -43,7 +43,7 @@ public class CreateSampleExtensionPageTest extends BaseCreateExtensionTest {
     @Override
     public void setUp() {
         super.setUp();
-        page = new CreateSampleExtensionPage(createProjectClientService, projectTypeDescriptorRegistry, unzipTemplateClientService,
+        page = new CreateSampleExtensionPage(manageProjectsClientService, projectTypeDescriptorRegistry, unzipTemplateClientService,
                                                     resourceProvider);
         page.setContext(wizardContext);
     }

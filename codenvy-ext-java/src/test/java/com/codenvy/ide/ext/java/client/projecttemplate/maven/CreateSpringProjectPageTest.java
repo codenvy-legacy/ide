@@ -46,7 +46,7 @@ public class CreateSpringProjectPageTest extends BaseCreateProjectTest {
     @Override
     public void setUp() {
         super.setUp();
-        page = new CreateMavenSpringProjectPage(createProjectClientService, projectTypeDescriptorRegistry, unzipTemplateClientService,
+        page = new CreateMavenSpringProjectPage(manageProjectsClientService, projectTypeDescriptorRegistry, unzipTemplateClientService,
                                                 resourceProvider);
         page.setContext(wizardContext);
     }
@@ -62,7 +62,7 @@ public class CreateSpringProjectPageTest extends BaseCreateProjectTest {
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(createProjectClientService).createProject(anyString(), (ProjectTypeDescriptor)anyObject(),
+        }).when(manageProjectsClientService).createProject(anyString(), (ProjectTypeDescriptor)anyObject(),
                                                           (Map<String, List<String>>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsSuccessful();
@@ -79,7 +79,7 @@ public class CreateSpringProjectPageTest extends BaseCreateProjectTest {
                 onFailure.invoke(callback, throwable);
                 return callback;
             }
-        }).when(createProjectClientService).createProject(anyString(), (ProjectTypeDescriptor)anyObject(),
+        }).when(manageProjectsClientService).createProject(anyString(), (ProjectTypeDescriptor)anyObject(),
                                                           (Map<String, List<String>>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenCreateTutorialRequestIsFailed();
@@ -96,7 +96,7 @@ public class CreateSpringProjectPageTest extends BaseCreateProjectTest {
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(createProjectClientService).createProject(anyString(), (ProjectTypeDescriptor)anyObject(),
+        }).when(manageProjectsClientService).createProject(anyString(), (ProjectTypeDescriptor)anyObject(),
                                                           (Map<String, List<String>>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsFailed();
@@ -104,7 +104,7 @@ public class CreateSpringProjectPageTest extends BaseCreateProjectTest {
 
     @Override
     public void testCreateWhenRequestExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(createProjectClientService)
+        doThrow(RequestException.class).when(manageProjectsClientService)
                 .createProject(anyString(), (ProjectTypeDescriptor)anyObject(), (Map<String, List<String>>)anyObject(),
                                (AsyncRequestCallback<Void>)anyObject());
 
