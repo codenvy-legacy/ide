@@ -48,7 +48,6 @@ import com.codenvy.commons.security.oauth.OAuthAuthenticatorProvider;
 import com.codenvy.commons.security.oauth.OAuthAuthenticatorTokenProvider;
 import com.codenvy.commons.security.oauth.OAuthTokenProvider;
 import com.codenvy.ide.everrest.CodenvyAsynchronousJobPool;
-import com.codenvy.ide.everrest.CodenvyAsynchronousJobService;
 import com.codenvy.ide.ext.extensions.server.CreateProjectService;
 import com.codenvy.ide.ext.git.server.GitConnectionFactory;
 import com.codenvy.ide.ext.git.server.nativegit.NativeGitConnectionFactory;
@@ -74,6 +73,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.util.Providers;
 
 import org.everrest.core.impl.async.AsynchronousJobPool;
+import org.everrest.core.impl.async.AsynchronousJobService;
+import org.everrest.guice.PathKey;
 
 /** @author andrew00x */
 @DynaModule
@@ -114,7 +115,7 @@ public class ApiModule extends AbstractModule {
         bind(CreateAntProjectService.class);
         bind(RestCodeAssistantJava.class);
         bind(AsynchronousJobPool.class).to(CodenvyAsynchronousJobPool.class);
-        bind(CodenvyAsynchronousJobService.class);
+        bind(new PathKey<>(AsynchronousJobService.class, "/async/{ws-id}")).to(AsynchronousJobService.class);
         bind(CreateProjectService.class);
         bind(GitService.class);
         bind(GitHubService.class);
