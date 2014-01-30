@@ -20,8 +20,7 @@ package com.codenvy.ide.security.oauth;
 import com.google.gwt.user.client.Window;
 
 /**
-* @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
-* @version $Id: $
+* @author Vladislav Zhukovskii
 */
 public class JsOAuthWindow {
     private String        authUrl;
@@ -71,7 +70,7 @@ public class JsOAuthWindow {
             var popup_close_handler = function () {
                 if (!popupWindow || popupWindow.closed) {
                     instance.@com.codenvy.ide.security.oauth.JsOAuthWindow::setAuthenticationStatus(I)(1);
-                    console.log("OAuth: login not permitted.")
+                    console.log("OAuth: login not permitted.");
                     popupWindow = null;
                     if (popupCloseHandlerIntervalId) {
                         window.clearInterval(popupCloseHandlerIntervalId);
@@ -86,7 +85,7 @@ public class JsOAuthWindow {
                     if (href) {
                         console.log(href);
                         var path = popupWindow.location.pathname;
-                        if (path == ("/ide/" + $wnd.ws)) {
+                        if (path == ("/ide/" + $wnd.wsName)) {
                             instance.@com.codenvy.ide.security.oauth.JsOAuthWindow::setAuthenticationStatus(I)(3);
                             popupWindow.close();
                             popupWindow = null;

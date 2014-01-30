@@ -40,22 +40,21 @@ import java.util.Map;
  */
 @Singleton
 public class UserClientServiceImpl implements UserClientService {
-    private static final String BASE_URL               = "/user/" + Utils.getWorkspaceName();
-    private static final String GET_USER               = BASE_URL + "/get";
-    private static final String UPDATE_USER_ATTRIBUTES = BASE_URL + "/update";
-    private String restContext;
+    private static final String GET_USER               = "/get";
+    private static final String UPDATE_USER_ATTRIBUTES = "/update";
+    private String baseUrl;
     private Loader loader;
 
     @Inject
-    protected UserClientServiceImpl(@Named("restContext") String restContext, Loader loader) {
-        this.restContext = restContext;
+    protected UserClientServiceImpl(@Named("restContext") String baseUrl, Loader loader) {
+        this.baseUrl = baseUrl + "/user/" + Utils.getWorkspaceId();
         this.loader = loader;
     }
 
     /** {@inheritDoc} */
     @Override
     public void getUser(AsyncRequestCallback<String> callback) throws RequestException {
-        final String requestUrl = restContext + GET_USER;
+        final String requestUrl = baseUrl + GET_USER;
 
         AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(loader).send(callback);
     }
@@ -64,7 +63,7 @@ public class UserClientServiceImpl implements UserClientService {
     @Override
     public void updateUserAttributes(Map<String, String> updateUserAttributes, AsyncRequestCallback<Void> callback)
             throws RequestException {
-        final String requestUrl = restContext + UPDATE_USER_ATTRIBUTES;
+        final String requestUrl = baseUrl + UPDATE_USER_ATTRIBUTES;
         String updateAttributesData = JsonHelper.toJson(updateUserAttributes);
         AsyncRequest.build(RequestBuilder.POST, requestUrl).loader(loader).header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
                     .data(updateAttributesData).send(callback);

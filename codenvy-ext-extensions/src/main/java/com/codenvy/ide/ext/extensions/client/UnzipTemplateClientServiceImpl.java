@@ -19,6 +19,8 @@ package com.codenvy.ide.ext.extensions.client;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.ui.loader.Loader;
@@ -31,6 +33,8 @@ import com.google.inject.name.Named;
 
 import javax.validation.constraints.NotNull;
 
+import static com.codenvy.ide.resources.marshal.JSONSerializer.PROPERTY_SERIALIZER;
+import static com.codenvy.ide.rest.HTTPHeader.CONTENT_TYPE;
 import static com.google.gwt.http.client.RequestBuilder.POST;
 
 /**
@@ -40,7 +44,7 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
  */
 @Singleton
 public class UnzipTemplateClientServiceImpl implements UnzipTemplateClientService {
-    private static final String BASE_URL             = "/create-extension/" + Utils.getWorkspaceName();
+    private static final String BASE_URL             = "/create-extension/" + Utils.getWorkspaceId();
     private static final String UNPACK_GIST_TEMPLATE = BASE_URL + "/template/gist";
     /** REST-service context. */
     private final String           restContext;
@@ -66,6 +70,7 @@ public class UnzipTemplateClientServiceImpl implements UnzipTemplateClientServic
         this.resourceProvider = resourceProvider;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unzipGistTemplate(String projectName, AsyncRequestCallback<Void> callback) throws RequestException {
         String requestUrl = restContext + UNPACK_GIST_TEMPLATE;
@@ -78,7 +83,7 @@ public class UnzipTemplateClientServiceImpl implements UnzipTemplateClientServic
     /** {@inheritDoc} */
     @Override
     public void launch(@NotNull String projectName, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
-        final String requestUrl = restContext + "/runner/" + Utils.getWorkspaceName() + "/run";
+        final String requestUrl = restContext + "/runner/" + Utils.getWorkspaceId() + "/run";
         String params = "project=" + projectName;
         AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params).send(callback);
     }

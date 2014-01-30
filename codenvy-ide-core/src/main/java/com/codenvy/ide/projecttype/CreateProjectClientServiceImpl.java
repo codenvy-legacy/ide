@@ -43,7 +43,7 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
  */
 @Singleton
 public class CreateProjectClientServiceImpl implements CreateProjectClientService {
-    private static final String CREATE_PROJECT = "/project/" + Utils.getWorkspaceName() + "/create";
+    private static final String CREATE_PROJECT = "/project/" + Utils.getWorkspaceId() + "/create";
     private DtoFactory dtoFactory;
     private String     restContext;
     private Loader     loader;

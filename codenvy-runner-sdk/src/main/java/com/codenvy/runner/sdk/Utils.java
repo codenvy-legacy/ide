@@ -19,13 +19,11 @@ package com.codenvy.runner.sdk;
 
 import com.codenvy.ide.commons.GwtXmlUtils;
 import com.codenvy.ide.maven.tools.MavenUtils;
-import com.codenvy.vfs.impl.fs.WorkspaceHashLocalFSMountStrategy;
 
 import org.apache.maven.model.Model;
 
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -56,12 +54,6 @@ class Utils {
             throw new IOException("Unable to get Codenvy Platform binary distribution.");
         }
         return codenvyPlatformDistributionUrl;
-    }
-
-    // TODO: it's a temporary solution for standalone version
-    static Path getMountPath() {
-        final String vfsRootDir = System.getProperty("com.codenvy.vfs.rootdir", "../temp/fs-root");
-        return WorkspaceHashLocalFSMountStrategy.calculateDirPath(new java.io.File(vfsRootDir), "dev-monit").toPath();
     }
 
     static ExtensionDescriptor getExtensionFromJarFile(ZipFile zipFile) throws IOException {

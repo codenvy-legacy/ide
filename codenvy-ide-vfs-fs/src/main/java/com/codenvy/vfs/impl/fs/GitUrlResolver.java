@@ -19,10 +19,10 @@ package com.codenvy.vfs.impl.fs;
 
 import com.codenvy.api.vfs.server.VirtualFileSystem;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
-import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.vfs.impl.fs.exceptions.GitUrlResolveException;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
@@ -35,9 +35,11 @@ import java.net.URI;
 @Singleton
 public class GitUrlResolver {
     private final LocalPathResolver pathResolver;
+    private final String            mountPath;
 
     @Inject
-    public GitUrlResolver(LocalPathResolver pathResolver) {
+    public GitUrlResolver(@Named("vfs.local.fs_root_dir") java.io.File mountRoot, LocalPathResolver pathResolver) {
+        this.mountPath = mountRoot.getAbsolutePath();
         this.pathResolver = pathResolver;
     }
 
@@ -54,8 +56,6 @@ public class GitUrlResolver {
 
     public String resolve(URI baseUri, VirtualFileImpl virtualFile) throws VirtualFileSystemException {
         final String localPath = pathResolver.resolve(virtualFile);
-        final EnvironmentContext context = EnvironmentContext.getCurrent();
-        final String rootPath = ((java.io.File)context.getVariable(EnvironmentContext.VFS_ROOT_DIR)).getAbsolutePath();
         StringBuilder result = new StringBuilder();
         result.append("http");
         result.append("://");
@@ -67,7 +67,7 @@ public class GitUrlResolver {
         }
         result.append('/');
         result.append("git");
-        result.append(localPath.substring(rootPath.length()));
+        result.append(localPath.substring(mountPath.length()));
         return result.toString();
     }
 }

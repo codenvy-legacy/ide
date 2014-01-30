@@ -18,6 +18,8 @@
 package com.codenvy.ide.ext.tutorials.client;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.ui.loader.Loader;
@@ -29,6 +31,8 @@ import com.google.inject.name.Named;
 
 import javax.validation.constraints.NotNull;
 
+import static com.codenvy.ide.resources.marshal.JSONSerializer.PROPERTY_SERIALIZER;
+import static com.codenvy.ide.rest.HTTPHeader.CONTENT_TYPE;
 import static com.google.gwt.http.client.RequestBuilder.POST;
 
 /**
@@ -38,7 +42,7 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
  */
 @Singleton
 public class TutorialsClientServiceImpl implements TutorialsClientService {
-    private static final String BASE_URL                            = "/create-tutorial/" + Utils.getWorkspaceName();
+    private static final String BASE_URL                            = "/create-tutorial/" + Utils.getWorkspaceId();
     private static final String UNPACK_NOTIFICATION_TUTORIAL        = BASE_URL + "/notification";
     private static final String UNPACK_ACTION_TUTORIAL              = BASE_URL + "/action";
     private static final String UNPACK_WIZARD_TUTORIAL              = BASE_URL + "/wizard";
@@ -90,6 +94,7 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
         AsyncRequest.build(POST, requestUrl + param).loader(loader).send(callback);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unzipNotificationTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback)
             throws RequestException {
@@ -97,18 +102,21 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
         sendRequest(requestUrl, projectName, callback);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unzipActionTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
         final String requestUrl = restContext + UNPACK_ACTION_TUTORIAL;
         sendRequest(requestUrl, projectName, callback);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unzipWizardTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
         final String requestUrl = restContext + UNPACK_WIZARD_TUTORIAL;
         sendRequest(requestUrl, projectName, callback);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unzipNewProjectWizardTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback)
             throws RequestException {
@@ -116,6 +124,7 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
         sendRequest(requestUrl, projectName, callback);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unzipNewResourceWizardTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback)
             throws RequestException {
@@ -123,18 +132,21 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
         sendRequest(requestUrl, projectName, callback);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unzipPartsTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
         final String requestUrl = restContext + UNPACK_PARTS_TUTORIAL;
         sendRequest(requestUrl, projectName, callback);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unzipEditorTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
         final String requestUrl = restContext + UNPACK_EDITOR_TUTORIAL;
         sendRequest(requestUrl, projectName, callback);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unzipGinTutorial(@NotNull String projectName, @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
         final String requestUrl = restContext + UNPACK_GIN_TUTORIAL;

@@ -22,9 +22,12 @@ import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.api.vfs.server.VirtualFileSystemProvider;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
+import com.codenvy.api.vfs.shared.PropertyFilter;
+import com.codenvy.api.vfs.shared.dto.Property;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
@@ -32,6 +35,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * RESTful service for creating 'Tutorial' projects.
@@ -42,6 +46,7 @@ import java.io.InputStream;
 public class CreateProjectFromTemplateService {
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
+
     @Inject
     @Named("tutorials-url")
     private String                    baseUrl;
@@ -53,6 +58,8 @@ public class CreateProjectFromTemplateService {
      *         identifier of virtual file system
      * @param name
      *         name of the newly created project
+     * @param properties
+     *         properties to set to project
      * @throws VirtualFileSystemException
      *         if any error occurred in VFS
      * @throws IOException
@@ -72,6 +79,8 @@ public class CreateProjectFromTemplateService {
      *         identifier of virtual file system
      * @param name
      *         name of the newly created project
+     * @param properties
+     *         properties to set to project
      * @throws VirtualFileSystemException
      *         if any error occurred in VFS
      * @throws IOException
@@ -91,6 +100,8 @@ public class CreateProjectFromTemplateService {
      *         identifier of virtual file system
      * @param name
      *         name of the newly created project
+     * @param properties
+     *         properties to set to project
      * @throws VirtualFileSystemException
      *         if any error occurred in VFS
      * @throws IOException
@@ -110,6 +121,8 @@ public class CreateProjectFromTemplateService {
      *         identifier of virtual file system
      * @param name
      *         name of the newly created project
+     * @param properties
+     *         properties to set to project
      * @throws VirtualFileSystemException
      *         if any error occurred in VFS
      * @throws IOException
@@ -129,6 +142,8 @@ public class CreateProjectFromTemplateService {
      *         identifier of virtual file system
      * @param name
      *         name of the newly created project
+     * @param properties
+     *         properties to set to project
      * @throws VirtualFileSystemException
      *         if any error occurred in VFS
      * @throws IOException
@@ -148,6 +163,8 @@ public class CreateProjectFromTemplateService {
      *         identifier of virtual file system
      * @param name
      *         name of the newly created project
+     * @param properties
+     *         properties to set to project
      * @throws VirtualFileSystemException
      *         if any error occurred in VFS
      * @throws IOException
@@ -167,6 +184,8 @@ public class CreateProjectFromTemplateService {
      *         identifier of virtual file system
      * @param name
      *         name of the newly created project
+     * @param properties
+     *         properties to set to project
      * @throws VirtualFileSystemException
      *         if any error occurred in VFS
      * @throws IOException
@@ -186,6 +205,8 @@ public class CreateProjectFromTemplateService {
      *         identifier of virtual file system
      * @param name
      *         name of the newly created project
+     * @param properties
+     *         properties to set to project
      * @throws VirtualFileSystemException
      *         if any error occurred in VFS
      * @throws IOException
@@ -205,6 +226,8 @@ public class CreateProjectFromTemplateService {
      *         identifier of virtual file system
      * @param name
      *         name of the newly created project
+     * @param properties
+     *         properties to set to project
      * @throws VirtualFileSystemException
      *         if any error occurred in VFS
      * @throws IOException

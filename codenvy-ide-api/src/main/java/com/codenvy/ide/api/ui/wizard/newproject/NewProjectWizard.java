@@ -25,6 +25,8 @@ import com.codenvy.ide.api.ui.wizard.DefaultWizard;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -112,5 +114,14 @@ public class NewProjectWizard extends DefaultWizard {
         if (index <= lastTemplatePage) {
             lastTemplatePage++;
         }
+    }
+
+    /**
+     * @return all pages in this wizard.
+     * <br />
+     * IMPORTANT !!! call this method only after <code>flipToFirst()</code>
+     */
+    public Array<WizardPage> getPages(){
+        return wizardPages;
     }
 }

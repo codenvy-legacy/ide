@@ -23,6 +23,8 @@ import com.codenvy.ide.api.ui.wizard.WizardDialog;
 import com.codenvy.ide.api.ui.wizard.WizardDialogFactory;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.welcome.WelcomeLocalizationConstant;
+import com.codenvy.ide.wizard.newproject.ProjectWizardPresenter;
+import com.codenvy.ide.wizard.newproject.ProjectWizardViewImpl;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -38,6 +40,7 @@ public class CreateProjectAction implements WelcomeItemAction {
     private Resources                   resources;
     private WizardDialogFactory         wizardDialogFactory;
     private NewProjectWizard            wizard;
+    private ProjectWizardViewImpl projectWizardView;
 
     /**
      * Create action.
@@ -51,11 +54,13 @@ public class CreateProjectAction implements WelcomeItemAction {
     public CreateProjectAction(WelcomeLocalizationConstant constant,
                                Resources resources,
                                WizardDialogFactory wizardDialogFactory,
-                               NewProjectWizard wizard) {
+                               NewProjectWizard wizard,
+                               ProjectWizardViewImpl projectWizardView) {
         this.constant = constant;
         this.resources = resources;
         this.wizardDialogFactory = wizardDialogFactory;
         this.wizard = wizard;
+        this.projectWizardView = projectWizardView;
     }
 
     /** {@inheritDoc} */
@@ -79,7 +84,8 @@ public class CreateProjectAction implements WelcomeItemAction {
     /** {@inheritDoc} */
     @Override
     public void execute() {
-        WizardDialog wizardDialog = wizardDialogFactory.create(wizard);
+        WizardDialog wizardDialog =
+                new ProjectWizardPresenter(projectWizardView, wizard);//WizardDialog wizardDialog = wizardDialogFactory.create(wizard);
         wizardDialog.show();
     }
 }

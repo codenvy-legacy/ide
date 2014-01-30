@@ -19,7 +19,6 @@ package com.codenvy.ide.wizard.newproject.pages.start;
 
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.collections.Array;
 
 /**
@@ -38,14 +37,6 @@ public interface NewProjectPageView extends View<NewProjectPageView.ActionDelega
          */
         void onProjectTypeSelected(int id);
 
-        /**
-         * Performs any actions appropriate in response to the user having selected paas.
-         *
-         * @param id
-         *         button's id
-         */
-        void onPaaSSelected(int id);
-
         /** Checks whether project's name is complete or not and updates navigation buttons. */
         void checkProjectName();
 
@@ -58,16 +49,6 @@ public interface NewProjectPageView extends View<NewProjectPageView.ActionDelega
          *         the mouse y-position within the browser window's client area.
          */
         void onTechnologyIconClicked(int x, int y);
-
-        /**
-         * Performs any actions appropriate in response to the user having pressed the PaaS icon.
-         *
-         * @param x
-         *         the mouse x-position within the browser window's client area.
-         * @param y
-         *         the mouse y-position within the browser window's client area.
-         */
-        void onPaaSIconClicked(int x, int y);
     }
 
     /**
@@ -86,14 +67,6 @@ public interface NewProjectPageView extends View<NewProjectPageView.ActionDelega
     void setProjectTypes(Array<ProjectTypeDescriptor> projectTypes);
 
     /**
-     * Set PaaSes on place on view.
-     *
-     * @param paases
-     *         paases those need to be set
-     */
-    void setPaases(Array<PaaS> paases);
-
-    /**
      * Select project type on view.
      *
      * @param id
@@ -101,26 +74,8 @@ public interface NewProjectPageView extends View<NewProjectPageView.ActionDelega
      */
     void selectProjectType(int id);
 
-    /**
-     * Select paas on view.
-     *
-     * @param id
-     *         id of paas that need to be selected
-     */
-    void selectPaas(int id);
-
     /** Focus project name field on view. */
     void focusProjectName();
-
-    /**
-     * Sets whether Paas button is enabled.
-     *
-     * @param id
-     *         id of PaaS that need to be enabled
-     * @param isEnabled
-     *         <code>true</code> to enable the button, <code>false</code> to disable it
-     */
-    void setEnablePaas(int id, boolean isEnabled);
 
     /**
      * Show popup with some message.

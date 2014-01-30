@@ -71,33 +71,35 @@ public class NewProjectPagePresenterTest {
     public static final boolean IS_COMPLETED     = true;
     public static final boolean IS_NOT_COMPLETED = false;
     public static final boolean AVAILABLE        = true;
-    public static       String  items            =
+
+    public static String items =
             "{\"numItems\":1,\"hasMoreItems\":false,\"items\":[{\"projectType\":\"War\",\"mimeType\":\"text/vnd.ideproject+directory\"," +
             "\"creationDate\":-1,\"links\":null,\"vfsId\":null,\"itemType\":\"PROJECT\",\"parentId\":\"ZGV2LW1vbml0OnJvb3Q\"," +
             "\"name\":\"g1\",\"properties\":null,\"permissions\":null,\"id\":\"ZGV2LW1vbml0Oi9nMQ\",\"path\":\"/g1\"}]}";
+
     @Mock
-    private NewProjectPageView            view;
+    private NewProjectPageView       view;
     @Mock
-    private Resources                     resources;
+    private Resources                resources;
     @Mock
     private ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
     @Mock
-    private PaaSAgentImpl                 paasAgent;
+    private PaaSAgentImpl            paasAgent;
     @Mock
-    private ResourceProvider              resourceProvider;
+    private ResourceProvider         resourceProvider;
     @Mock
-    private CoreLocalizationConstant      constant;
+    private CoreLocalizationConstant constant;
     @Mock
-    private WizardContext                 wizardContext;
+    private WizardContext            wizardContext;
     @Mock
     private ProjectTypeDescriptor         projectTypeDescriptor;
     @Mock
-    private PaaS                          paas;
+    private PaaS                     paas;
     @Mock
-    private UpdateDelegate                delegate;
+    private UpdateDelegate           delegate;
     @Mock
-    private DtoFactory                    dtoFactory;
-    private NewProjectPagePresenter       presenter;
+    private DtoFactory               dtoFactory;
+    private NewProjectPagePresenter presenter;
 
     /** Prepare test when project list is come. */
     private void setUpWithProjects() {
@@ -180,10 +182,8 @@ public class NewProjectPagePresenterTest {
 
         verify(view).focusProjectName();
         verify(view).selectProjectType(0);
-        verify(view).selectPaas(0);
-        verify(delegate, times(2)).updateControls();
+        verify(delegate, times(1)).updateControls();
         verify(wizardContext).putData(eq(PROJECT_TYPE), eq(projectTypeDescriptor));
-        verify(wizardContext).putData(eq(PAAS), eq(paas));
     }
 
     @Test
@@ -295,25 +295,8 @@ public class NewProjectPagePresenterTest {
         presenter.onProjectTypeSelected(0);
 
         verify(view).selectProjectType(0);
-        verify(view).selectPaas(0);
-        verify(delegate, times(2)).updateControls();
+        verify(delegate, times(1)).updateControls();
         verify(wizardContext).putData(eq(PROJECT_TYPE), eq(projectTypeDescriptor));
-        verify(wizardContext).putData(eq(PAAS), eq(paas));
-    }
-
-    @Test
-    public void testOnPaaSSelected() throws Exception {
-        setUp();
-
-        presenter.focusComponent();
-        reset(view);
-        reset(delegate);
-        reset(wizardContext);
-        presenter.onPaaSSelected(0);
-
-        verify(view).selectPaas(0);
-        verify(delegate).updateControls();
-        verify(wizardContext).putData(eq(PAAS), eq(paas));
     }
 
     @Test
@@ -383,18 +366,5 @@ public class NewProjectPagePresenterTest {
 
         verify(view).showPopup(anyString(), eq(left), eq(top));
         verify(constant).chooseTechnologyTooltip();
-    }
-
-    @Test
-    public void testOnPaaSIconClicked() throws Exception {
-        setUp();
-
-        int top = 100;
-        int left = 100;
-
-        presenter.onPaaSIconClicked(left, top);
-
-        verify(view).showPopup(anyString(), eq(left), eq(top));
-        verify(constant).choosePaaSTooltip();
     }
 }

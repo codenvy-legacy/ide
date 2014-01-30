@@ -31,11 +31,13 @@ import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
 import com.codenvy.api.runner.internal.dto.DebugMode;
 import com.codenvy.api.runner.internal.dto.RunRequest;
+import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.commons.GwtXmlUtils;
 import com.codenvy.ide.maven.tools.MavenUtils;
+import com.codenvy.vfs.impl.fs.LocalFSMountStrategy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +74,7 @@ public class SDKRunner extends Runner {
     private final Map<String, ApplicationServer> applicationServers;
     private final String                         codeServerBindAddress;
     private final String                         hostName;
+    private final LocalFSMountStrategy           mountStrategy;
     private final CustomPortService              portService;
 
     @Inject
@@ -79,12 +82,14 @@ public class SDKRunner extends Runner {
                      @Named(CLEANUP_DELAY_TIME) int cleanupDelay,
                      @Named(CODE_SERVER_BIND_ADDRESS) String codeServerBindAddress,
                      @Named("runner.sdk.host_name") String hostName,
+                     LocalFSMountStrategy mountStrategy,
                      CustomPortService portService,
                      Set<ApplicationServer> appServers,
                      ResourceAllocators allocators) {
         super(deployDirectoryRoot, cleanupDelay, allocators);
         this.codeServerBindAddress = codeServerBindAddress;
         this.hostName = hostName;
+        this.mountStrategy = mountStrategy;
         this.portService = portService;
         applicationServers = new HashMap<>();
         //available application servers should be already injected
@@ -117,7 +122,7 @@ public class SDKRunner extends Runner {
                                                                                         codeServerPort,
                                                                                         request);
                 configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class).withRel("web url")
-                                                       .withHref(String.format("http://%s:%d/%s", hostName, httpPort, "ide/dev-monit")));
+                                                       .withHref(String.format("http://%s:%d/%s", hostName, httpPort, "ide/default")));
                 configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class)
                                                        .withRel(LINK_REL_CODE_SERVER)
                                                        .withHref(String.format("%s:%d", codeServerBindAddress, codeServerPort)));
@@ -155,9 +160,19 @@ public class SDKRunner extends Runner {
             throw new RunnerException(e);
         }
 
+        final String workspace = sdkRunnerCfg.getRequest().getWorkspace();
+        final String project = sdkRunnerCfg.getRequest().getProject();
+        final Path projectSourcesPath;
+        try {
+            projectSourcesPath = mountStrategy.getMountPath(workspace).toPath().resolve(project);
+        } catch (VirtualFileSystemException e) {
+            throw new RunnerException(e);
+        }
         CodeServer codeServer = new CodeServer();
-        CodeServer.CodeServerProcess codeServerProcess = codeServer.prepare(codeServerWorkDirPath, sdkRunnerCfg, extension);
-
+        CodeServer.CodeServerProcess codeServerProcess = codeServer.prepare(codeServerWorkDirPath,
+                                                                            projectSourcesPath,
+                                                                            sdkRunnerCfg,
+                                                                            extension);
         final ZipFile warFile = buildCodenvyWebAppWithExtension(extension);
         final ApplicationProcess process =
                 server.deploy(appDir, warFile, sdkRunnerCfg, codeServerProcess,

@@ -120,7 +120,7 @@ public class ApiModule extends AbstractModule {
         bind(CreateProjectFromTemplateService.class);
         bind(RestCodeAssistantJava.class);
         bind(DebuggerService.class);
-        bind(AsynchronousJobPool.class).toInstance(new CodenvyAsynchronousJobPool(null)); // asynchronous job with default configuration
+        bind(AsynchronousJobPool.class).to(CodenvyAsynchronousJobPool.class);
         bind(CodenvyAsynchronousJobService.class);
         bind(com.codenvy.ide.ext.extensions.server.CreateProjectFromTemplateService.class);
         bind(com.codenvy.ide.ext.tutorials.server.CreateProjectFromTemplateService.class);

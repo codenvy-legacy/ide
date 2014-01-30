@@ -36,7 +36,7 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
  */
 @Singleton
 public class UnzipTemplateClientServiceImpl implements UnzipTemplateClientService {
-    private static final String BASE_URL                     = "/create-java/" + Utils.getWorkspaceName();
+    private static final String BASE_URL                     = "/create-java/" + Utils.getWorkspaceId();
     private static final String UNPACK_MAVEN_JAR_TEMPLATE    = BASE_URL + "/template/maven-jar";
     private static final String UNPACK_MAVEN_WAR_TEMPLATE    = BASE_URL + "/template/maven-war";
     private static final String UNPACK_MAVEN_SPRING_TEMPLATE = BASE_URL + "/template/maven-spring";

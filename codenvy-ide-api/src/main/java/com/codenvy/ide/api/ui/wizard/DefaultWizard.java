@@ -49,8 +49,8 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
     private String                                title;
     private UpdateDelegate                        delegate;
     private WizardContext                         wizardContext;
-    private Array<Provider<? extends WizardPage>> wizardPageProviders;
-    private Array<WizardPage>                     wizardPages;
+    protected Array<Provider<? extends WizardPage>> wizardPageProviders;
+    protected Array<WizardPage>                     wizardPages;
     private int                                   index;
 
     /**

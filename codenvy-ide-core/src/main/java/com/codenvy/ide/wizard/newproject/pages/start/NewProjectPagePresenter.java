@@ -32,6 +32,7 @@ import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.newproject.PaaSAgentImpl;
+import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -56,6 +57,7 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
     private Array<String>                 projectList;
     private ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
     private PaaSAgentImpl                 paasAgent;
+    private DtoFactory dtoFactory;
 
     /**
      * Create presenter.
@@ -77,7 +79,8 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
                                    CoreLocalizationConstant constant,
                                    final DtoFactory dtoFactory) {
 
-        super("Select project type and paas", resources.newResourceIcon());
+        super("Project Descriptions", resources.newResourceIcon());
+        this.dtoFactory = dtoFactory;
         resourceProvider.listProjects(new AsyncCallback<String>() {
             @Override
             public void onSuccess(String result) {
@@ -99,23 +102,21 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
         this.view = view;
         this.view.setDelegate(this);
         this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
-        this.paasAgent = paasAgent;
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean isCompleted() {
-        return wizardContext.getData(PROJECT_NAME) != null && wizardContext.getData(PAAS) != null &&
+        return wizardContext.getData(PROJECT_NAME) != null &&
                wizardContext.getData(PROJECT_TYPE) != null && hasProjectList;
     }
 
     /** {@inheritDoc} */
     @Override
     public void focusComponent() {
-        this.paases = paasAgent.getPaaSes();
         this.projectTypes = projectTypeDescriptorRegistry.getDescriptors();
         this.view.setProjectTypes(projectTypes);
-        this.view.setPaases(paases);
+
 
         if (!projectTypes.isEmpty()) {
             onProjectTypeSelected(0);
@@ -164,29 +165,7 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
 
         view.selectProjectType(id);
 
-        boolean isFirst = true;
-        for (int i = 0; i < paases.size(); i++) {
-            PaaS paas = paases.get(i);
-            boolean isAvailable = paas.isAvailable(projectType2.getProjectTypeId());
-            view.setEnablePaas(i, isAvailable);
-            if (isAvailable && isFirst) {
-                onPaaSSelected(i);
-                isFirst = false;
-            }
-        }
-
         wizardContext.putData(PROJECT_TYPE, projectType2);
-
-        delegate.updateControls();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onPaaSSelected(int id) {
-        PaaS paas = paases.get(id);
-        wizardContext.putData(PAAS, paas);
-
-        view.selectPaas(id);
 
         delegate.updateControls();
     }
@@ -220,9 +199,4 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
         view.showPopup(constant.chooseTechnologyTooltip(), x, y);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onPaaSIconClicked(int x, int y) {
-        view.showPopup(constant.choosePaaSTooltip(), x, y);
-    }
 }

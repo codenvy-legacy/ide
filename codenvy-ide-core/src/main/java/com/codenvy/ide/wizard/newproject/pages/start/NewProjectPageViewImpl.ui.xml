@@ -22,30 +22,20 @@
     <ui:with field='res' type='com.codenvy.ide.Resources'/>
     <ui:with field='locale' type='com.codenvy.ide.CoreLocalizationConstant'/>
     <ui:style>
-        .alignLeft {
-            float: left;
-        }
-
         .spaceRight {
             margin-right: 8px;
         }
 
-        .title {
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
-
-        .questionImage {
-            position: relative;
-            float: left;
-            margin-left: 10px;
-            margin-top: 7px;
-            top: 3px;
-        }
-
         .projectNamePosition {
             position: relative;
-            top: 4px;
+            line-height: 29px;
+            margin-left: 20px;
+
+        }
+
+        .projectPrivacyPosition {
+            margin-left: 20px;
+
         }
 
         .clearLeft {
@@ -59,46 +49,87 @@
         .emptyBackground {
             /*background: #ffffff;*/
         }
+
+        .privacyDescription {
+            margin-left: 23px;
+            font-size: 10px;
+            color: #8e8e8e;
+        }
+
+        @eval bgCol com.codenvy.ide.api.ui.theme.Style.getMainFontColor();
+        @eval fontColor com.codenvy.ide.api.ui.theme.Style.getWindowContentBackground();
+        .technology {
+            background-color: bgCol;
+            color: fontColor;
+            font-weight: bold;
+            padding-left: 18px;
+            padding-top: 2px;
+        }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="100%" height="100%">
         <g:north size="50">
-            <g:FlowPanel addStyleNames="{res.coreCss.line}">
-                <g:DockLayoutPanel unit="PX" width="100%" height="100%">
-                    <g:west size="100">
-                        <g:FlowPanel>
-                            <g:Label text="{locale.createProjectFromTemplateName}"
-                                     addStyleNames="{res.coreCss.mainBoldFont} {style.projectNamePosition}"/>
-                        </g:FlowPanel>
-                    </g:west>
-                    <g:center>
-                        <g:SimplePanel addStyleNames="{style.spaceRight}">
-                            <g:SimplePanel>
-                                <g:TextBox width="100%" height="16px" ui:field="projectName"/>
-                            </g:SimplePanel>
+            <g:DockLayoutPanel unit="PX" width="100%" height="100%">
+                <g:west size="138">
+                    <g:FlowPanel>
+                        <g:Label text="{locale.createProjectFromTemplateName}"
+                                 addStyleNames="{style.projectNamePosition}"/>
+                    </g:FlowPanel>
+                </g:west>
+                <g:center>
+                    <g:SimplePanel addStyleNames="{style.spaceRight}">
+                        <g:SimplePanel>
+                            <g:TextBox width="390px" height="29px" ui:field="projectName"/>
                         </g:SimplePanel>
-                    </g:center>
-                </g:DockLayoutPanel>
-            </g:FlowPanel>
+                    </g:SimplePanel>
+                </g:center>
+            </g:DockLayoutPanel>
         </g:north>
-        <g:north size="140">
-            <g:FlowPanel addStyleNames="{res.coreCss.line}">
-                <g:Label text="{locale.chooseTechnology}"
-                         addStyleNames="{style.title} {res.coreCss.mainBoldFont} {style.alignLeft}"/>
-                <g:Image ui:field="chooseTechnologyTooltip" resource="{res.question}"
-                         addStyleNames="{style.questionImage} {res.coreCss.cursorPointer} {style.alignLeft}"/>
-                <g:SimplePanel ui:field="techPanel"
-                               addStyleNames="{res.coreCss.mainFont} {style.clearLeft} {style.emptyBorder} {style.emptyBackground}"/>
-            </g:FlowPanel>
+        <g:north size="91">
+            <g:DockLayoutPanel unit="PX">
+                <g:west size="138">
+                    <g:FlowPanel>
+                        <g:Label text="{locale.createProjectFromTemplateDescription}"
+                                 addStyleNames="{style.projectNamePosition}"/>
+                    </g:FlowPanel>
+                </g:west>
+                <g:center>
+                    <g:SimplePanel addStyleNames="{style.spaceRight}">
+                        <g:SimplePanel>
+                            <g:TextArea width="686px" height="66px" ui:field="projectDescription"/>
+                        </g:SimplePanel>
+                    </g:SimplePanel>
+                </g:center>
+            </g:DockLayoutPanel>
         </g:north>
-        <g:north size="140">
-            <g:FlowPanel addStyleNames="{res.coreCss.line}">
-                <g:Label text="{locale.choosePaaS}"
-                         addStyleNames="{style.title} {res.coreCss.mainBoldFont} {style.alignLeft}"/>
-                <g:Image ui:field="choosePaaSTooltip" resource="{res.question}"
-                         addStyleNames="{style.questionImage} {res.coreCss.cursorPointer} {style.alignLeft}"/>
-                <g:SimplePanel ui:field="paasPanel"
-                               addStyleNames="{res.coreCss.mainFont} {style.clearLeft} {style.emptyBorder} {style.emptyBackground}"/>
-            </g:FlowPanel>
+        <g:north size="42">
+            <g:DockLayoutPanel unit="PX">
+                <g:west size="138">
+                    <g:FlowPanel>
+                        <g:Label text="{locale.createProjectFromTemplateProjectPrivacy}"
+                                 addStyleNames="{style.projectPrivacyPosition}"/>
+                    </g:FlowPanel>
+                </g:west>
+                <g:west size="340">
+                    <g:FlowPanel>
+                        <g:RadioButton name="privacy" text="{locale.createProjectFromTemplatePublic}" height="13px" checked="true"/>
+                        <g:Label addStyleNames="{style.privacyDescription}" text="{locale.createProjectFromTemplatePublicDescription}"/>
+                    </g:FlowPanel>
+                </g:west>
+                <g:west size="340">
+                    <g:FlowPanel>
+                        <g:RadioButton name="privacy" text="{locale.createProjectFromTemplatePrivate}" height="13px"/>
+                        <g:Label addStyleNames="{style.privacyDescription}" text="{locale.createProjectFromTemplatePrivateDescription}"/>
+                    </g:FlowPanel>
+                </g:west>
+            </g:DockLayoutPanel>
         </g:north>
+        <g:north size="19">
+            <g:Label text="{locale.chooseTechnology}"
+                     addStyleNames="{style.technology}"/>
+        </g:north>
+        <g:center>
+            <g:SimplePanel ui:field="techPanel"
+                           addStyleNames="{res.coreCss.mainFont} {style.emptyBorder}"/>
+        </g:center>
     </g:DockLayoutPanel>
 </ui:UiBinder> 

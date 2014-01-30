@@ -82,7 +82,7 @@ public class UploadSshKeyPresenter implements UploadSshKeyView.ActionDelegate {
             return;
         }
         view.setEncoding(FormPanel.ENCODING_MULTIPART);
-        view.setAction(restContext + "/ssh-keys/" + Utils.getWorkspaceName() + "/add?host=" + host);
+        view.setAction(restContext + "/ssh-keys/" + Utils.getWorkspaceId() + "/add?host=" + host);
         view.submit();
     }
 

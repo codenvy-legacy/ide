@@ -193,7 +193,7 @@ public class JavaExtension {
         Project project = resourceProvider.getActiveProject();
         String projectId = project.getId();
         String vfsId = resourceProvider.getVfsInfo().getId();
-        String url = restContext + "/code-assistant-java/" + Utils.getWorkspaceName() + "/update-dependencies?projectid=" + projectId +
+        String url = restContext + "/code-assistant-java/" + Utils.getWorkspaceId() + "/update-dependencies?projectid=" + projectId +
                      "&vfsid=" + vfsId;
 
         final Notification notification = new Notification("Updating dependencies...", PROGRESS);

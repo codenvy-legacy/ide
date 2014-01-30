@@ -32,14 +32,14 @@ public class GitUrlResolveTest extends LocalFileSystemTest {
 
     public void testResolveGitUrlWithPort() throws Exception {
         String expectedUrl = String.format("http://localhost:9000/git/%s", root.toPath().relativize(getIoFile(file).toPath()));
-        GitUrlResolver resolver = new GitUrlResolver(new LocalPathResolver());
+        GitUrlResolver resolver = new GitUrlResolver(root, new LocalPathResolver());
         final String url = resolver.resolve(URI.create("http://localhost:9000/some/path"), mountPoint.getVirtualFile(file));
         assertEquals(expectedUrl, url);
     }
 
     public void testResolveGitUrlWithoutPort() throws Exception {
         String expectedUrl = String.format("http://localhost/git/%s", root.toPath().relativize(getIoFile(file).toPath()));
-        GitUrlResolver resolver = new GitUrlResolver(new LocalPathResolver());
+        GitUrlResolver resolver = new GitUrlResolver(root, new LocalPathResolver());
         final String url = resolver.resolve(URI.create("http://localhost/some/path"), mountPoint.getVirtualFile(file));
         assertEquals(expectedUrl, url);
     }

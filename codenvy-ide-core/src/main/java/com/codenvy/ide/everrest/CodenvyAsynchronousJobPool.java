@@ -24,6 +24,9 @@ import org.everrest.core.impl.EverrestConfiguration;
 import org.everrest.core.impl.async.AsynchronousJob;
 import org.everrest.core.impl.async.AsynchronousJobPool;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
@@ -32,19 +35,35 @@ import java.util.concurrent.Callable;
 
 
 /** @author Vitaly Parfonov */
+@Singleton
 @Provider
 public class CodenvyAsynchronousJobPool extends AsynchronousJobPool implements ContextResolver<AsynchronousJobPool> {
-    public CodenvyAsynchronousJobPool(EverrestConfiguration config) {
-        super(config);
+    @Inject
+    public CodenvyAsynchronousJobPool(@Named("everrest.async.pool_size") int poolSize,
+                                      @Named("everrest.async.queue_size") int queueSize,
+                                      @Named("everrest.async.job_timeout") int jobTimeOut,
+                                      @Named("everrest.async.cache_size") int cacheSize) {
+        super(createEverrestConfiguration(poolSize, queueSize, jobTimeOut, cacheSize, "/async/"));
+    }
+
+    private static EverrestConfiguration createEverrestConfiguration(int poolSize,
+                                                                     int queueSize,
+                                                                     int jobTimeOut,
+                                                                     int cacheSize,
+                                                                     String servicePath) {
+        final EverrestConfiguration configuration = new EverrestConfiguration();
+        configuration.setAsynchronousPoolSize(poolSize);
+        configuration.setAsynchronousQueueSize(queueSize);
+        configuration.setAsynchronousJobTimeout(jobTimeOut);
+        configuration.setAsynchronousCacheSize(cacheSize);
+        configuration.setAsynchronousServicePath(servicePath);
+        return configuration;
     }
 
     @Override
-    protected void initAsynchronousJobContext(AsynchronousJob job) {
-        final String internalJobUri =
-                UriBuilder.fromPath("/").path(CodenvyAsynchronousJobService.class)
-                          .path(CodenvyAsynchronousJobService.class, "get")
-                          .build(EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME), job.getJobId()).toString();
-        job.getContext().put("internal-uri", internalJobUri);
+    protected UriBuilder getAsynchronousJobUriBuilder(AsynchronousJob job) {
+        return UriBuilder.fromPath(asynchronousServicePath).path(
+                (String)EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID)).path(Long.toString(job.getJobId()));
     }
 
     @Override

@@ -18,7 +18,6 @@
 package com.codenvy.vfs.impl.fs;
 
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
-import com.codenvy.commons.env.EnvironmentContext;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -62,10 +61,6 @@ public class WorkspaceHashLocalFSMountStrategy implements LocalFSMountStrategy {
 
     @Override
     public java.io.File getMountPath(String workspaceId) throws VirtualFileSystemException {
-        final EnvironmentContext context = EnvironmentContext.getCurrent();
-        if (workspaceId == null) {
-            workspaceId = (String)context.getVariable(EnvironmentContext.WORKSPACE_ID);
-        }
         if (workspaceId == null || workspaceId.isEmpty()) {
             throw new VirtualFileSystemException("Unable get mount path for virtual file system. Workspace id is not set.");
         }
