@@ -28,7 +28,7 @@ import com.google.inject.Singleton;
  * Class responsible for register DTO providers. It uses {@link DtoFactoryVisitorRegistry} to acquire
  * {@link DtoFactoryVisitor}s.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 public class DtoRegistrar {

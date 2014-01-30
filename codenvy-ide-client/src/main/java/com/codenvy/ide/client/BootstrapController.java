@@ -46,12 +46,14 @@ import com.google.inject.Provider;
 import java.util.Map;
 
 /**
- * Performs initial application startup
+ * Performs initial application startup.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public class BootstrapController {
 
+    private ProjectTypeDescriptionClientService projectTypeService;
+    private ProjectTypeDescriptorRegistry       projectTypeDescriptorRegistry;
     private DtoFactory dtoFactory;
 
     /**
@@ -63,8 +65,12 @@ public class BootstrapController {
      * @param extensionInitializer
      * @param preferencesManager
      * @param userService
+     * @param projectTypeService
+     * @param projectTypeDescriptorRegistry
      * @param resourceProvider
      * @param dtoRegistrar
+     * @param dtoFactory
+     * @param themeAgent
      */
     @Inject
     public BootstrapController(final Provider<ComponentRegistry> componentRegistry,
@@ -79,6 +85,8 @@ public class BootstrapController {
                                DtoRegistrar dtoRegistrar,
                                final DtoFactory dtoFactory,
                                final ThemeAgent themeAgent) {
+        this.projectTypeService = projectTypeService;
+        this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
         this.dtoFactory = dtoFactory;
 
         ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW)
@@ -93,7 +101,6 @@ public class BootstrapController {
                                             .setWindow(ScriptInjector.TOP_WINDOW).inject();
                           }
                       }).inject();
-
 
         try {
             dtoRegistrar.registerDtoProviders();
@@ -128,7 +135,7 @@ public class BootstrapController {
 
                             workspacePresenter.setUpdateButtonVisibility(Utils.isAppLaunchedInSDKRunner());
 
-                            String userId = user.getUserId();
+                            final String userId = user.getUserId();
                             if (userId.equals("__anonim")) {
                                 workspacePresenter.setVisibleLoginButton(true);
                                 workspacePresenter.setVisibleLogoutButton(false);
@@ -150,22 +157,7 @@ public class BootstrapController {
                     });
 
                     // get project type descriptors from the server
-                    try {
-                        projectTypeService.getProjectTypes(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                            @Override
-                            protected void onSuccess(String result) {
-                                projectTypeDescriptorRegistry.registerDescriptors(
-                                        dtoFactory.createListDtoFromJson(result, ProjectTypeDescriptor.class));
-                            }
-
-                            @Override
-                            protected void onFailure(Throwable exception) {
-                                Log.error(BootstrapController.class, exception);
-                            }
-                        });
-                    } catch (RequestException e) {
-                        Log.error(BootstrapController.class, e);
-                    }
+                    getProjectTypes();
                 }
 
                 @Override
@@ -177,4 +169,24 @@ public class BootstrapController {
             Log.error(BootstrapController.class, e);
         }
     }
+
+    private void getProjectTypes() {
+        try {
+            projectTypeService.getProjectTypes(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                @Override
+                protected void onSuccess(String result) {
+                    projectTypeDescriptorRegistry.registerDescriptors(
+                            dtoFactory.createListDtoFromJson(result, ProjectTypeDescriptor.class));
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    Log.error(BootstrapController.class, exception);
+                }
+            });
+        } catch (RequestException e) {
+            Log.error(BootstrapController.class, e);
+        }
+    }
+
 }
