@@ -25,7 +25,7 @@
 
     <%!
       public String genShellStaticResourceUrl(HttpServletRequest request, String name) {
-        return request.getContextPath() + "/" + request.getAttribute("ws") + "/_app/" + name;
+        return request.getContextPath() + "/" + request.getAttribute("wsName") + "/_app/" + name;
       }
      %>
 
@@ -34,7 +34,7 @@
             "context": "/ide/rest/",
             "websocketContext": "/w/websocket/"
         }
-        var ws = "<%= request.getAttribute("ws")%>";
+        var ws = "<%= request.getAttribute("wsName")%>";
     </script>
 
     <script>

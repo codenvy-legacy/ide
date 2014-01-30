@@ -20,7 +20,7 @@
 
 <%!
 	public String staticResourceUrl(HttpServletRequest request, String name) {
-	   return request.getContextPath() + "/" + request.getAttribute("ws") + "/_app/" + name;
+	   return request.getContextPath() + "/" + request.getAttribute("wsName") + "/_app/" + name;
 	}
 %>
 
@@ -32,7 +32,7 @@
     <title>IDE</title>
     
     <script type="text/javascript">
-		var ide_base_path = '<%=request.getContextPath() + "/" + request.getAttribute("ws") + "/_app/"%>';
+		var ide_base_path = '<%=request.getContextPath() + "/" + request.getAttribute("wsName") + "/_app/"%>';
 
         var appConfig = {
             "context": "/ide/rest/",
@@ -49,7 +49,7 @@
 		var facebook_like_url = ide_base_path + "facebook-like.html";
         
         var hiddenFiles = ".*";
-        var ws = "<%= request.getAttribute("ws")%>";
+        var ws = "<%= request.getAttribute("wsName")%>";
         var project = <%= request.getAttribute("project") != null ? "\"" + request.getAttribute("project")  + "\"" : null%>;
         var path = <%= request.getAttribute("path") != null ? "\"" + request.getAttribute("path")  + "\"" : null%>;
         var startUpParams = <%= request.getAttribute("startUpParams") != null ? "\"?" + request.getAttribute("startUpParams")  + "\"" : null%>;
