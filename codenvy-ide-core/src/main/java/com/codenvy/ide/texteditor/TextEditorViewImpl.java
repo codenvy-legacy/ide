@@ -711,6 +711,10 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         this.quickAssistAssistant = quickAssistAssistant;
     }
 
+    public void resetHistory() {
+        editorUndoManager.reset();
+    }
+
     /** Animation CSS. */
     @CssResource.Shared
     public interface EditorSharedCss extends CssResource {

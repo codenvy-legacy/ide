@@ -77,6 +77,7 @@ public abstract class AbstractTextEditorPresenter extends AbstractEditorPresente
             @Override
             public void onSuccess(EditorInput result) {
                 updateDirtyState(false);
+                afterSave();
             }
 
             @Override
@@ -85,6 +86,13 @@ public abstract class AbstractTextEditorPresenter extends AbstractEditorPresente
                 notificationManager.showNotification(notification);
             }
         });
+    }
+
+    /**
+     * Override this method for handling after save actions
+     */
+    protected void afterSave() {
+        //default nothing to do
     }
 
     /** {@inheritDoc} */

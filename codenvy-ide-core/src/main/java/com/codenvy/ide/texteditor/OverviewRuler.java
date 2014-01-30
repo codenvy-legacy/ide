@@ -160,6 +160,12 @@ public class OverviewRuler {
                     showToolTip(Mark.this);
                 }
             }, false);
+            getElement().addEventListener(Event.MOUSEDOWN, new EventListener() {
+                @Override
+                public void handleEvent(Event event) {
+                    editor.getSelection().setCursorPosition(model.getPosition(annotation).getOffset());
+                }
+            }, false);
         }
 
         public void setTopPosition(int top, String unit) {
