@@ -356,9 +356,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private String resolveFilePathByLocation(@NotNull Location location) {
         File file = getFileWithBreakPoints(location.getClassName());
         Project fileProject = file.getProject();
-        String sourcePath = fileProject.hasProperty(ATTRIBUTE_SOURCE_FOLDERS) ? (String)fileProject.getPropertyValue(
-                ATTRIBUTE_SOURCE_FOLDERS)
-                                                                             : "src/main/java";
+        final String sourcePath = fileProject.hasProperty(ATTRIBUTE_SOURCE_FOLDERS) ?
+                                  (String)fileProject.getPropertyValue(ATTRIBUTE_SOURCE_FOLDERS) : "src/main/java";
         return fileProject.getPath() + "/" + sourcePath + "/" + location.getClassName().replace(".", "/") + ".java";
     }
 

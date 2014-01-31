@@ -25,20 +25,24 @@ import com.codenvy.api.vfs.server.VirtualFileSystemProvider;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.shared.dto.Project;
+import com.codenvy.ide.maven.tools.MavenUtils;
+
+import org.apache.maven.model.Model;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@link ValueProviderFactory} implementation for 'builder.name' attribute.
+ * {@link com.codenvy.api.project.server.ValueProviderFactory} implementation for 'builder.name' attribute.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class BuilderNameValueProviderFactory implements ValueProviderFactory {
+public class SourceFoldersValueProviderFactory implements ValueProviderFactory {
 
     @Inject
     private VirtualFileSystemRegistry registry;
@@ -48,7 +52,7 @@ public class BuilderNameValueProviderFactory implements ValueProviderFactory {
 
     @Override
     public String getName() {
-        return "builder.name";
+        return "folders.source";
     }
 
     @Override
@@ -56,7 +60,7 @@ public class BuilderNameValueProviderFactory implements ValueProviderFactory {
         return new ValueProvider() {
             @Override
             public List<String> getValues() {
-                final List<String> list = new ArrayList<>(1);
+                final List<String> list = new ArrayList<>(2);
                 VirtualFileSystemProvider provider;
                 try {
                     // TODO: get VFS ID
@@ -65,12 +69,15 @@ public class BuilderNameValueProviderFactory implements ValueProviderFactory {
                     MountPoint mountPoint = provider.getMountPoint(false);
                     VirtualFile root = mountPoint.getRoot();
                     VirtualFile projectFolder = root.getChild(project.getName());
-                    if (projectFolder.getChild("pom.xml") != null) {
-                        list.add("maven");
-                    } else if (projectFolder.getChild("build.xml") != null) {
-                        list.add("ant");
+                    VirtualFile mavenDescriptor = projectFolder.getChild("pom.xml");
+                    VirtualFile antDescriptor = projectFolder.getChild("build.xml");
+                    if (mavenDescriptor != null) {
+                        list.addAll(getMavenSourceFolders(mavenDescriptor));
+                    } else if (antDescriptor != null) {
+                        list.addAll(getAntSourceFolders(antDescriptor));
                     }
-                } catch (VirtualFileSystemException ignore) {
+                } catch (VirtualFileSystemException | IOException e) {
+                    e.printStackTrace();
                 }
                 return list;
             }
@@ -81,4 +88,22 @@ public class BuilderNameValueProviderFactory implements ValueProviderFactory {
             }
         };
     }
+
+    private List<String> getAntSourceFolders(VirtualFile buildXml) throws VirtualFileSystemException {
+        // TODO: temporary hardcoded
+        List<String> list = new ArrayList<>(1);
+        list.add("src");
+        return list;
+    }
+
+    private List<String> getMavenSourceFolders(VirtualFile pomXml) throws VirtualFileSystemException, IOException {
+        Model model = MavenUtils.readModel(pomXml.getContent().getStream());
+        List<String> list = MavenUtils.getSourceDirectories(model);
+        if (list.isEmpty()) {
+            // add at least one source folder
+            list.add("src/main/java");
+        }
+        return list;
+    }
+
 }

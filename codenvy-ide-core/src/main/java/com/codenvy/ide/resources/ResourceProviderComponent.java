@@ -19,6 +19,7 @@ package com.codenvy.ide.resources;
 
 import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.api.vfs.shared.dto.ItemList;
+import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.api.resources.FileEvent;
@@ -294,7 +295,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         try {
             AsyncRequest.build(RequestBuilder.POST, url)
                         .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(properties).toString())
-                        .header(HTTPHeader.CONTENT_TYPE, "application/json").loader(loader).send(internalCallback);
+                        .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).loader(loader).send(internalCallback);
         } catch (RequestException e) {
             callback.onFailure(e);
         }

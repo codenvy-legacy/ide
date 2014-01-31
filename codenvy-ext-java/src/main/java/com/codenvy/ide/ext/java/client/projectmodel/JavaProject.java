@@ -51,9 +51,6 @@ import javax.validation.constraints.NotNull;
  * @author Nikolay Zamosenchuk
  */
 public class JavaProject extends Project {
-
-    /** Primary nature for Java-specific project */
-    public static final String PRIMARY_NATURE = "java";
     /** Java-specific project description */
     private JavaProjectDescription description;
 

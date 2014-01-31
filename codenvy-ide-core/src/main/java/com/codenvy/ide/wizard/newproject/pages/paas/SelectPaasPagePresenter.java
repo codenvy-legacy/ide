@@ -21,7 +21,6 @@ import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.wizard.newproject.PaaSAgentImpl;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -31,10 +30,8 @@ import javax.annotation.Nullable;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_TYPE;
 
-/**
- * @author Evgen Vidolob
- */
-public class SelectPaasPagePresenter  extends AbstractWizardPage implements SelectPaasPageView.ActionDelegate {
+/** @author Evgen Vidolob */
+public class SelectPaasPagePresenter extends AbstractWizardPage implements SelectPaasPageView.ActionDelegate {
 
     private SelectPaasPageView view;
     private PaaSAgentImpl      paasAgent;

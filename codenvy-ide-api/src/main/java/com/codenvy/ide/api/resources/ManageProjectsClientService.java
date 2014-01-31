@@ -31,18 +31,34 @@ import java.util.Map;
  */
 public interface ManageProjectsClientService {
     /**
-     * Creates a new project based on the specified {@link ProjectTypeDescriptor} with the provided attributes.
+     * Create a new project based on the specified {@link ProjectTypeDescriptor}.
      *
      * @param projectName
      *         name of the created project
      * @param projectTypeDescriptor
      *         descriptor of type of project to create
      * @param attributes
-     *         {@link Map} of project's attributes
+     *         {@link Map} of project's attributes. May be <code>null</code>.
      * @param callback
      *         callback
      * @throws RequestException
      */
     public void createProject(String projectName, ProjectTypeDescriptor projectTypeDescriptor, Map<String, List<String>> attributes,
+                              AsyncRequestCallback<Void> callback) throws RequestException;
+
+    /**
+     * Update project with the specified {@link ProjectTypeDescriptor}.
+     *
+     * @param projectName
+     *         name of the project to update
+     * @param projectTypeDescriptor
+     *         new descriptor of type of project
+     * @param attributes
+     *         {@link Map} of project's attributes. May be <code>null</code>.
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
+    public void updateProject(String projectName, ProjectTypeDescriptor projectTypeDescriptor, Map<String, List<String>> attributes,
                               AsyncRequestCallback<Void> callback) throws RequestException;
 }

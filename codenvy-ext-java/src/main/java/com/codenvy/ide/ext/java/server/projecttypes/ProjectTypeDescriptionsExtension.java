@@ -50,9 +50,10 @@ public class ProjectTypeDescriptionsExtension implements ProjectTypeDescriptionE
 
     @Override
     public List<AttributeDescription> getAttributeDescriptions() {
-        final List<AttributeDescription> list = new ArrayList<>(4);
+        final List<AttributeDescription> list = new ArrayList<>(5);
         list.add(new AttributeDescription("language"));
         list.add(new AttributeDescription("exoide:classpath"));
+        list.add(new AttributeDescription("folders.source"));
         list.add(new AttributeDescription("builder.name"));
         list.add(new AttributeDescription("runner.name"));
         return list;

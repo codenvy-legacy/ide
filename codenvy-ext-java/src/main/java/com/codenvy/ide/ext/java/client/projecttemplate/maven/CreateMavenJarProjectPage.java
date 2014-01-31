@@ -30,16 +30,13 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
 import static com.codenvy.ide.ext.java.client.JavaExtension.JAR_PROJECT_TYPE_ID;
 import static com.codenvy.ide.ext.java.client.JavaExtension.MAVEN_JAR_TEMPLATE_ID;
-import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDescription.ATTRIBUTE_SOURCE_FOLDERS;
 
 /**
  * The wizard page for creating a Java project from a template.
@@ -56,8 +53,9 @@ public class CreateMavenJarProjectPage extends AbstractTemplatePage {
     /**
      * Create page.
      *
-     * @param service
-     *         service that makes it possible to create this kind of project
+     * @param manageProjectsClientService
+     * @param projectTypeDescriptorRegistry
+     * @param unzipTemplateClientService
      * @param resourceProvider
      */
     @Inject
@@ -74,17 +72,11 @@ public class CreateMavenJarProjectPage extends AbstractTemplatePage {
     /** {@inheritDoc} */
     @Override
     public void commit(final CommitCallback callback) {
-        Map<String, List<String>> attributes = new HashMap<String, List<String>>(1);
-        // TODO: make it as calculated attributes
-        List<String> sourceFolders = new ArrayList<String>(2);
-        sourceFolders.add("src/main/java");
-        sourceFolders.add("src/test/java");
-        attributes.put(ATTRIBUTE_SOURCE_FOLDERS, sourceFolders);
-
         final String projectName = wizardContext.getData(PROJECT_NAME);
         ProjectTypeDescriptor jarDescriptor = projectTypeDescriptorRegistry.getDescriptor(JAR_PROJECT_TYPE_ID);
         try {
-            manageProjectsClientService.createProject(projectName, jarDescriptor, attributes, new AsyncRequestCallback<Void>() {
+            manageProjectsClientService.createProject(projectName, jarDescriptor,
+                                                      Collections.<String, List<String>>emptyMap(), new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     unzipTemplate(projectName, callback);

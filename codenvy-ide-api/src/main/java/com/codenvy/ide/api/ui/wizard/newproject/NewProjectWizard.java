@@ -26,7 +26,6 @@ import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -38,7 +37,7 @@ import javax.validation.constraints.NotNull;
  * The wizard for creating new project. A user pre-defines behavior of the wizard already from the start page by choosing a technology and
  * PaaS. Depending on the PaaS choice made, the wizard shows different pages after 'choose a template' page.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
 @Singleton
 public class NewProjectWizard extends DefaultWizard {
@@ -118,10 +117,10 @@ public class NewProjectWizard extends DefaultWizard {
 
     /**
      * @return all pages in this wizard.
-     * <br />
-     * IMPORTANT !!! call this method only after <code>flipToFirst()</code>
+     *         <br />
+     *         IMPORTANT !!! call this method only after <code>flipToFirst()</code>
      */
-    public Array<WizardPage> getPages(){
+    public Array<WizardPage> getPages() {
         return wizardPages;
     }
 }
