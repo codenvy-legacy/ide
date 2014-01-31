@@ -59,7 +59,7 @@ public class TemplateAgentImpl implements TemplateAgent {
                          @NotNull String projectTypeId,
                          @NotNull Array<Provider<? extends AbstractTemplatePage>> wizardPages) {
         if (templates.containsKey(id)) {
-            Window.alert("Template with " + id + " id already exists");
+            Window.alert("Template with ID " + id + " already exists");
             return;
         }
 

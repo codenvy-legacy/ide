@@ -41,7 +41,7 @@ import com.google.inject.Inject;
 /**
  * The implementation of {@link ChooseTemplatePageView}.
  *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
 public class ChooseTemplatePageViewImpl extends Composite implements ChooseTemplatePageView {
     private static TemplateViewUiBinder uiBinder  = GWT.create(TemplateViewUiBinder.class);
@@ -61,26 +61,15 @@ public class ChooseTemplatePageViewImpl extends Composite implements ChooseTempl
         @Override
         public void render(Element itemElement, Template itemData) {
             TableCellElement label = Elements.createTDElement();
-
             SafeHtmlBuilder sb = new SafeHtmlBuilder();
-            // Add icon
             sb.appendHtmlConstant("<table><tr>");
-//            ImageResource icon = itemData.getIcon();
-//            if (icon != null) {
-//                sb.appendHtmlConstant("<img src=\"" + icon.getSafeUri().asString() + "\">");
-//            }
-//            sb.appendHtmlConstant("</td>");
-
-            // Add title
             sb.appendHtmlConstant("<td style=\"font-weight: bold;\">");
             sb.appendEscaped(itemData.getTitle());
             sb.appendHtmlConstant("</td></tr>");
             sb.appendHtmlConstant("<tr><td style=\"padding: 10px\">");
             sb.appendEscaped(itemData.getDescription());
             sb.appendHtmlConstant("</td></tr></table>");
-
             label.setInnerHTML(sb.toSafeHtml().asString());
-
             itemElement.appendChild(label);
         }
 
