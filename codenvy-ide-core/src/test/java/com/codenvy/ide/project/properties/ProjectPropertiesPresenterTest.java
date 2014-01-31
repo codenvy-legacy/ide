@@ -18,13 +18,21 @@
 package com.codenvy.ide.project.properties;
 
 import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.project.properties.add.AddNewPropertyPresenter;
 import com.codenvy.ide.project.properties.edit.EditPropertyPresenter;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
+import com.codenvy.ide.resources.model.VirtualFileSystemInfo;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.event.shared.EventBus;
+import com.googlecode.gwt.test.GwtModule;
+import com.googlecode.gwt.test.GwtTestWithMockito;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -46,23 +54,62 @@ import static org.mockito.Mockito.when;
  * 
  * @author Ann Shumilova
  */
-public class ProjectPropertiesPresenterTest extends PropertiesBaseTest {
-    @Mock
-    private ProjectPropertiesView      view;
-    @Mock
-    private EditPropertyPresenter      editPropertyPresenter;
-    @Mock
-    private AddNewPropertyPresenter    addNewPropertyPresenter;
-    @Mock
-    private Property                   selectedProperty;
+@GwtModule("com.codenvy.ide.Core")
+public class ProjectPropertiesPresenterTest extends GwtTestWithMockito {
+    public static final String                    PROJECT_ID            = "projectID";
+    public static final String                    PROJECT_PATH          = "/test";
+    public static final boolean                   ENABLE_BUTTON         = true;
+    public static final boolean                   DISABLE_BUTTON        = false;
+    public static final String                    PROJECT_NAME          = "test";
 
-    private ProjectPropertiesPresenter presenter;
+    public static final String                    PROPERTY_NATURE_MIXIN = "nature.mixin";
+    public static final String                    PROPERTY_RUNNER_NAME  = "runner_name";
+    public static final String                    PROPERTY_MIMETYPE     = "vfs:mimeType";
+    public static final String                    PROPERTY_PROJECT_TYPE = "vfs:projectType";
+    public static final String                    VALUE_NATURE_MIXIN    = "Java";
+    public static final String                    VALUE_RUNNER_NAME     = "maven";
+    public static final String                    VALUE_MIMETYPE        = "text/vnd.ideproject+directory";
+    public static final String                    VALUE_PROJECT_TYPE    = "Java";
 
+    @Mock
+    private Project                               project;
+    @Mock
+    private ResourceProvider                      resourceProvider;
+    @Mock
+    private EventBus                              eventBus;
+    @Mock
+    private NotificationManager                   notificationManager;
+    @Mock
+    private ProjectPropertiesLocalizationConstant localization;
+    @Mock
+    private VirtualFileSystemInfo                 vfsInfo;
+    @Mock
+    private ProjectPropertiesView                 view;
+    @Mock
+    private EditPropertyPresenter                 editPropertyPresenter;
+    @Mock
+    private AddNewPropertyPresenter               addNewPropertyPresenter;
+    @Mock
+    private Property                              selectedProperty;
 
-    /** {@inheritDoc} */
-    @Override
+    private ProjectPropertiesPresenter            presenter;
+
+    private Array<Property>                       properties;
+
+    @Before
     public void disarm() {
-        super.disarm();
+        properties = Collections.createArray();
+        properties.add(new Property(PROPERTY_NATURE_MIXIN, VALUE_NATURE_MIXIN));
+        properties.add(new Property(PROPERTY_RUNNER_NAME, VALUE_RUNNER_NAME));
+        properties.add(new Property(PROPERTY_MIMETYPE, VALUE_MIMETYPE));
+        properties.add(new Property(PROPERTY_PROJECT_TYPE, VALUE_PROJECT_TYPE));
+
+        when(resourceProvider.getActiveProject()).thenReturn(project);
+        when(resourceProvider.getVfsInfo()).thenReturn(vfsInfo);
+        when(project.getId()).thenReturn(PROJECT_ID);
+        when(project.getPath()).thenReturn(PROJECT_PATH);
+        when(project.getName()).thenReturn(PROJECT_NAME);
+        when(project.getProperties()).thenReturn(properties);
 
         presenter =
                     new ProjectPropertiesPresenter(view, resourceProvider, localization, notificationManager, editPropertyPresenter,

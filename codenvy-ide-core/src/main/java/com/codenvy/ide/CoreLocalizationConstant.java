@@ -89,6 +89,15 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("deleteResourceQuestion")
     String deleteResourceQuestion(String resource);
+    
+    @Key("renameButton")
+    String renameButton();
+    
+    @Key("renameResourceViewTitle")
+    String renameResourceViewTitle();
+    
+    @Key("renameFieldTitle")
+    String renameFieldTitle();
 
     @Key("createProjectFromTemplate.descriptionField")
     String createProjectFromTemplateDescription();
@@ -107,4 +116,5 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("createProjectFromTemplate.privateDescription")
     String createProjectFromTemplatePrivateDescription();
+
 }

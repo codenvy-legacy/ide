@@ -94,4 +94,10 @@ public abstract class AbstractEditorPresenter extends AbstractPartPresenter impl
             handler.onClose(this);
         }
     }
+    
+    /** {@inheritDoc} */
+    @Override
+    public void onFileChanged() {
+        firePropertyChange(TITLE_PROPERTY);
+    }
 }
