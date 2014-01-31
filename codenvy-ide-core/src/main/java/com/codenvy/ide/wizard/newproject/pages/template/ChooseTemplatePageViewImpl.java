@@ -74,6 +74,9 @@ public class ChooseTemplatePageViewImpl extends Composite implements ChooseTempl
             // Add title
             sb.appendHtmlConstant("<td style=\"font-weight: bold;\">");
             sb.appendEscaped(itemData.getTitle());
+            sb.appendHtmlConstant("</td></tr>");
+            sb.appendHtmlConstant("<tr><td style=\"padding: 10px\">");
+            sb.appendEscaped(itemData.getDescription());
             sb.appendHtmlConstant("</td></tr></table>");
 
             label.setInnerHTML(sb.toSafeHtml().asString());

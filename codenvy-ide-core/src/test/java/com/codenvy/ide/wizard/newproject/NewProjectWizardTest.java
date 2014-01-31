@@ -107,7 +107,7 @@ public class NewProjectWizardTest extends BaseWizardTest {
         wizard.addPage(newProjectPageProvider);
         wizard.addPage(chooseTemplatePageProvider);
 
-        template = new Template("id", "title", null, "projectTypeId");
+        template = new Template("id", "title", "description", null, "projectTypeId");
 
         Array<String> projectTypes = Collections.createArray();
         projectTypes.add("projectTypeId");

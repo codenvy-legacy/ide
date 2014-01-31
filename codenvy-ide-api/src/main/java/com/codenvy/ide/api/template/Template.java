@@ -31,6 +31,7 @@ public class Template {
     private ImageResource icon;
     private String        id;
     private String        title;
+    private String        description;
     private String        projectTypeId;
 
     /**
@@ -40,6 +41,8 @@ public class Template {
      *         template identification
      * @param title
      *         title that will be shown on a new project wizard
+     * @param description
+     *         description that will be shown on a new project wizard
      * @param icon
      *         image that will be shown on a new project wizard
      * @param projectTypeId
@@ -47,11 +50,13 @@ public class Template {
      */
     public Template(@NotNull String id,
                     @NotNull String title,
+                    @NotNull String description,
                     @Nullable ImageResource icon,
                     @NotNull String projectTypeId) {
         this.id = id;
-        this.icon = icon;
         this.title = title;
+        this.description = description;
+        this.icon = icon;
         this.projectTypeId = projectTypeId;
     }
 
@@ -71,6 +76,12 @@ public class Template {
     @NotNull
     public String getTitle() {
         return title;
+    }
+
+    /** @return template's description */
+    @NotNull
+    public String getDescription() {
+        return description;
     }
 
     /**

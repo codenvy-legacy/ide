@@ -34,7 +34,7 @@ import javax.validation.constraints.NotNull;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class ProjectWizardPresenter implements WizardDialog, Wizard.UpdateDelegate, ProjectWizardView.ActionDelegate {
-    private NewProjectWizard            wizard;
+    private NewProjectWizard  wizard;
     private WizardPage        currentPage;
     private ProjectWizardView view;
 

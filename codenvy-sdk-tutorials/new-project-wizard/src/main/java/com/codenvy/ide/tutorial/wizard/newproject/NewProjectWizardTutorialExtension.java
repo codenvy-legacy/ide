@@ -61,11 +61,13 @@ public class NewProjectWizardTutorialExtension {
         templateAgent.register(MY_TEMPLATE_1,
                                MY_TEMPLATE_1,
                                null,
+                               null,
                                MY_PROJECT_TYPE,
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(
                                        new TemplatePageProvider("Template 1 page", MY_TEMPLATE_1)));
         templateAgent.register(MY_TEMPLATE_2,
                                MY_TEMPLATE_2,
+                               null,
                                null,
                                MY_PROJECT_TYPE,
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(

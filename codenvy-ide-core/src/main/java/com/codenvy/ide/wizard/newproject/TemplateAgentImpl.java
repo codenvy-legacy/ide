@@ -54,6 +54,7 @@ public class TemplateAgentImpl implements TemplateAgent {
     @Override
     public void register(@NotNull String id,
                          @NotNull String title,
+                         @NotNull String description,
                          @Nullable ImageResource icon,
                          @NotNull String projectTypeId,
                          @NotNull Array<Provider<? extends AbstractTemplatePage>> wizardPages) {
@@ -62,7 +63,7 @@ public class TemplateAgentImpl implements TemplateAgent {
             return;
         }
 
-        Template template = new Template(id, title, icon, projectTypeId);
+        Template template = new Template(id, title, description, icon, projectTypeId);
         templates.put(id, template);
         for (Provider<? extends AbstractTemplatePage> provider : wizardPages.asIterable()) {
             newProjectWizard.addPageAfterChooseTemplate(provider);

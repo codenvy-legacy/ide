@@ -78,7 +78,7 @@ public class ChooseTemplatePagePresenterTest {
 
     @Before
     public void setUp() {
-        template = new Template("id", "title", null, "projectTypeId");
+        template = new Template("id", "title", "description", null, "projectTypeId");
 
         page = new ChooseTemplatePagePresenter(view, resources, templateAgent, constant);
         page.setContext(wizardContext);

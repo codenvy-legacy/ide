@@ -69,12 +69,14 @@ public class ExtRuntimeExtension {
         runMenuActionGroup.add(stopAction);
 
         templateAgent.register(EMPTY_TEMPLATE_ID,
+                               "Empty extension",
                                "Empty Codenvy extension project.",
                                resources.codenvyExtensionTemplate(),
                                CODENVY_EXTENSION_PROJECT_TYPE_ID,
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(createEmptyCodenvyExtensionPage));
         templateAgent.register(GIST_TEMPLATE_ID,
-                               "Gist extension project.",
+                               "Gist example",
+                               "Simple Codenvy extension project is demonstrating basic usage Codenvy API.",
                                resources.codenvyExtensionTemplate(),
                                CODENVY_EXTENSION_PROJECT_TYPE_ID,
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(createSampleCodenvyExtensionPage));

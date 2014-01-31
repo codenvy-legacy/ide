@@ -59,7 +59,7 @@ public class TemplateAgentImplTest extends GwtTestWithMockito {
         Provider<? extends AbstractTemplatePage> pageProvider = mock(Provider.class);
         Array<Provider<? extends AbstractTemplatePage>> pages = Collections.createArray(pageProvider, pageProvider);
 
-        agent.register("id", "title", null, "projectTypeId", pages);
+        agent.register("id", "title", "description", null, "projectTypeId", pages);
 
         assertEquals(agent.getTemplatesForProjectType("projectTypeId").size(), 1);
         verify(newProjectWizard, times(pages.size())).addPageAfterChooseTemplate(eq(pageProvider));
@@ -69,11 +69,11 @@ public class TemplateAgentImplTest extends GwtTestWithMockito {
     public void testRegisterWhenTemplateWithGivenIdIsExist() throws Exception {
         assertEquals(agent.getTemplatesForProjectType("projectTypeId").size(), 0);
 
-        agent.register("id", "title", null, "projectTypeId", Collections.<Provider<? extends AbstractTemplatePage>>createArray());
+        agent.register("id", "title", "description", null, "projectTypeId", Collections.<Provider<? extends AbstractTemplatePage>>createArray());
 
         assertEquals(agent.getTemplatesForProjectType("projectTypeId").size(), 1);
 
-        agent.register("id", "title", null, "projectTypeId", Collections.<Provider<? extends AbstractTemplatePage>>createArray());
+        agent.register("id", "title", "description", null, "projectTypeId", Collections.<Provider<? extends AbstractTemplatePage>>createArray());
 
         assertEquals(agent.getTemplatesForProjectType("projectTypeId").size(), 1);
     }

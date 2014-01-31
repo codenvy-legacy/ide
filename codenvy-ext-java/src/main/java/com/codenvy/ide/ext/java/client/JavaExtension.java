@@ -133,26 +133,31 @@ public class JavaExtension {
 
         templateAgent.register(MAVEN_JAR_TEMPLATE_ID,
                                "Maven JAR project",
+                               "Simple JAR project which uses Maven build system.",
                                JavaResources.INSTANCE.javaProject(),
                                JAR_PROJECT_TYPE_ID,
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenJarProjectPage));
         templateAgent.register(MAVEN_WAR_TEMPLATE_ID,
                                "Java Web project",
+                               "Java Web project.",
                                null,
                                WAR_PROJECT_TYPE_ID,
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenWarProjectPage));
         templateAgent.register(MAVEN_SPRING_TEMPLATE_ID,
                                "Maven Spring application",
+                               "Simple Spring project which uses Maven build system.",
                                JavaResources.INSTANCE.javaProject(),
                                SPRING_PROJECT_TYPE_ID,
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenSpringProjectPage));
         templateAgent.register(ANT_JAR_TEMPLATE_ID,
                                "Ant JAR project",
+                               "Simple JAR project which uses Ant build system.",
                                JavaResources.INSTANCE.javaProject(),
                                JAR_PROJECT_TYPE_ID,
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(createAntJavaProjectPage));
         templateAgent.register(ANT_SPRING_TEMPLATE_ID,
                                "Ant Spring application",
+                               "Simple Spring project which uses Ant build system.",
                                JavaResources.INSTANCE.javaProject(),
                                SPRING_PROJECT_TYPE_ID,
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(createAntSpringProjectPage));

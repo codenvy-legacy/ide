@@ -38,6 +38,8 @@ public interface TemplateAgent {
      *         id for template identification
      * @param title
      *         title that will be shown on a new project wizard page
+     * @param description
+     *         description that will be shown on a new project wizard page
      * @param icon
      *         icon that will be shown on a new project wizard page
      * @param projectTypeId
@@ -47,6 +49,7 @@ public interface TemplateAgent {
      */
     void register(@NotNull String id,
                   @NotNull String title,
+                  @NotNull String description,
                   @Nullable ImageResource icon,
                   @NotNull String projectTypeId,
                   @NotNull Array<Provider<? extends AbstractTemplatePage>> wizardPages);
