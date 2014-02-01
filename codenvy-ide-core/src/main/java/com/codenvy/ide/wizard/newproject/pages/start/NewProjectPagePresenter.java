@@ -22,7 +22,6 @@ import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
@@ -31,8 +30,6 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
 import com.codenvy.ide.util.loging.Log;
-import com.codenvy.ide.wizard.newproject.PaaSAgentImpl;
-import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -48,7 +45,6 @@ import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_
  */
 public class NewProjectPagePresenter extends AbstractWizardPage implements NewProjectPageView.ActionDelegate {
     private NewProjectPageView            view;
-    private Array<PaaS>                   paases;
     private Array<ProjectTypeDescriptor>  projectTypes;
     private CoreLocalizationConstant      constant;
     private boolean                       hasProjectNameIncorrectSymbol;
@@ -56,8 +52,6 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
     private boolean                       hasProjectList;
     private Array<String>                 projectList;
     private ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
-    private PaaSAgentImpl                 paasAgent;
-    private DtoFactory dtoFactory;
 
     /**
      * Create presenter.
@@ -65,7 +59,6 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
      * @param view
      * @param resources
      * @param projectTypeDescriptorRegistry
-     * @param paasAgent
      * @param resourceProvider
      * @param constant
      * @param dtoFactory
@@ -74,13 +67,11 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
     public NewProjectPagePresenter(NewProjectPageView view,
                                    Resources resources,
                                    ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
-                                   PaaSAgentImpl paasAgent,
                                    ResourceProvider resourceProvider,
                                    CoreLocalizationConstant constant,
                                    final DtoFactory dtoFactory) {
 
         super("Project Descriptions", resources.newResourceIcon());
-        this.dtoFactory = dtoFactory;
         resourceProvider.listProjects(new AsyncCallback<String>() {
             @Override
             public void onSuccess(String result) {

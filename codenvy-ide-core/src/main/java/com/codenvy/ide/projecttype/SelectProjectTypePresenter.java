@@ -33,10 +33,7 @@ import com.google.inject.Singleton;
 import javax.validation.constraints.NotNull;
 import java.util.Iterator;
 
-/**
- * @author <a href="mailto:ashumilova@codenvy.com">Ann Shumilova</a>
- * @version $Id:
- */
+/** @author Ann Shumilova */
 @Singleton
 public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionDelegate {
 
