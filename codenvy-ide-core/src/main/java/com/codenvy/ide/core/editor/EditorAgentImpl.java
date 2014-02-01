@@ -92,7 +92,7 @@ public class EditorAgentImpl implements EditorAgent {
         /**
          *
          */
-        private final File file;
+        private File file;
 
         /** @param file */
         private EditorInputImpl(File file) {
@@ -119,6 +119,12 @@ public class EditorAgentImpl implements EditorAgent {
         @Override
         public File getFile() {
             return file;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void setFile(File file) {
+            this.file = file;
         }
     }
 

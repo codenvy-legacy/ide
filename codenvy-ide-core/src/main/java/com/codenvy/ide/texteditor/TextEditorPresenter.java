@@ -196,4 +196,9 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
         if (file.equals(eventFile))
             workspaceAgent.removePart(this);
     }
+
+    @Override
+    protected void afterSave() {
+        editor.resetHistory();
+    }
 }
