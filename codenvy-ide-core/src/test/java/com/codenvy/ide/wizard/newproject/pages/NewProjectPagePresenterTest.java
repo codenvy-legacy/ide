@@ -71,35 +71,33 @@ public class NewProjectPagePresenterTest {
     public static final boolean IS_COMPLETED     = true;
     public static final boolean IS_NOT_COMPLETED = false;
     public static final boolean AVAILABLE        = true;
-
-    public static String items =
+    public static       String  items            =
             "{\"numItems\":1,\"hasMoreItems\":false,\"items\":[{\"projectType\":\"War\",\"mimeType\":\"text/vnd.ideproject+directory\"," +
             "\"creationDate\":-1,\"links\":null,\"vfsId\":null,\"itemType\":\"PROJECT\",\"parentId\":\"ZGV2LW1vbml0OnJvb3Q\"," +
             "\"name\":\"g1\",\"properties\":null,\"permissions\":null,\"id\":\"ZGV2LW1vbml0Oi9nMQ\",\"path\":\"/g1\"}]}";
-
     @Mock
-    private NewProjectPageView       view;
+    private NewProjectPageView            view;
     @Mock
-    private Resources                resources;
+    private Resources                     resources;
     @Mock
     private ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
     @Mock
-    private PaaSAgentImpl            paasAgent;
+    private PaaSAgentImpl                 paasAgent;
     @Mock
-    private ResourceProvider         resourceProvider;
+    private ResourceProvider              resourceProvider;
     @Mock
-    private CoreLocalizationConstant constant;
+    private CoreLocalizationConstant      constant;
     @Mock
-    private WizardContext            wizardContext;
+    private WizardContext                 wizardContext;
     @Mock
     private ProjectTypeDescriptor         projectTypeDescriptor;
     @Mock
-    private PaaS                     paas;
+    private PaaS                          paas;
     @Mock
-    private UpdateDelegate           delegate;
+    private UpdateDelegate                delegate;
     @Mock
-    private DtoFactory               dtoFactory;
-    private NewProjectPagePresenter presenter;
+    private DtoFactory                    dtoFactory;
+    private NewProjectPagePresenter       presenter;
 
     /** Prepare test when project list is come. */
     private void setUpWithProjects() {
@@ -132,8 +130,7 @@ public class NewProjectPagePresenterTest {
         Array<PaaS> paases = Collections.createArray(paas);
         when(paasAgent.getPaaSes()).thenReturn(paases);
 
-        presenter = new NewProjectPagePresenter(view, resources, projectTypeDescriptorRegistry, paasAgent, resourceProvider, constant,
-                                                dtoFactory);
+        presenter = new NewProjectPagePresenter(view, resources, projectTypeDescriptorRegistry, resourceProvider, constant, dtoFactory);
         presenter.setContext(wizardContext);
         presenter.setUpdateDelegate(delegate);
     }
