@@ -77,7 +77,7 @@ public class SourceFoldersValueProviderFactory implements ValueProviderFactory {
                         list.addAll(getAntSourceFolders(antDescriptor));
                     }
                 } catch (VirtualFileSystemException | IOException e) {
-                    e.printStackTrace();
+                    throw new IllegalStateException(e);
                 }
                 return list;
             }

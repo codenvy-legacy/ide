@@ -70,7 +70,8 @@ public class BuilderNameValueProviderFactory implements ValueProviderFactory {
                     } else if (projectFolder.getChild("build.xml") != null) {
                         list.add("ant");
                     }
-                } catch (VirtualFileSystemException ignore) {
+                } catch (VirtualFileSystemException e) {
+                    throw new IllegalStateException(e);
                 }
                 return list;
             }

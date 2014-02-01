@@ -106,9 +106,13 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
         stepsPanel.clear();
         int i = 1;
         for (String s : stepsTitles.asIterable()) {
-            if (s != null && !s.isEmpty())
-                stepsPanel.add(new Step(s, i++));
+            stepsPanel.add(new Step(s, i++));
         }
+    }
+
+    @Override
+    public void setStepArrowPosition(int position) {
+        arrow.getElement().getStyle().setTop(arrow.getElement().getOffsetTop() + 42 * position, Style.Unit.PX);
     }
 
     /** {@inheritDoc} */
@@ -208,13 +212,11 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     @UiHandler("btnNext")
     void onBtnNextClick(ClickEvent event) {
         delegate.onNextClicked();
-        arrow.getElement().getStyle().setTop(arrow.getElement().getOffsetTop() + 42, Style.Unit.PX);
     }
 
     @UiHandler("btnBack")
     void onBtnBackClick(ClickEvent event) {
         delegate.onBackClicked();
-        arrow.getElement().getStyle().setTop(arrow.getElement().getOffsetTop() - 42, Style.Unit.PX);
     }
 
     public interface Css extends CssResource{
