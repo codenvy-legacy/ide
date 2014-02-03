@@ -70,6 +70,7 @@ public class WorkBenchViewImpl extends Composite implements WorkBenchView<WorkBe
         this.res = resources;
         resources.workBenchCss().ensureInjected();
         initWidget(uiBinder.createAndBindUi(this));
+        splitPanel.getElement().setId("codenvyIdeWorkbench");
     }
 
     /** {@inheritDoc} */
