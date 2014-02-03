@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.server.projecttypes;
+package com.codenvy.ide.extension.builder.server;
 
 import com.codenvy.api.project.server.ValueProviderFactory;
 import com.codenvy.inject.DynaModule;
@@ -24,15 +24,10 @@ import com.google.inject.multibindings.Multibinder;
 
 /** @author Artem Zatsarynnyy */
 @DynaModule
-public class JavaModule extends AbstractModule {
+public class BuilderModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(ProjectTypeDescriptionsExtension.class);
-        bind(JarProjectTypeExtension.class);
-        bind(WarProjectTypeExtension.class);
-        bind(SpringProjectTypeExtension.class);
-
         Multibinder<ValueProviderFactory> multiBinder = Multibinder.newSetBinder(binder(), ValueProviderFactory.class);
-        multiBinder.addBinding().to(SourceFoldersValueProviderFactory.class);
+        multiBinder.addBinding().to(BuilderNameValueProviderFactory.class);
     }
 }

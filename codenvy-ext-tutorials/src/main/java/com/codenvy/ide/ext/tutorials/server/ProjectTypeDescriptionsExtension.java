@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@link com.codenvy.api.project.shared.ProjectTypeDescriptionExtension} to register project types.
+ * {@link ProjectTypeDescriptionExtension} to register project types.
  *
  * @author Artem Zatsarynnyy
  */
@@ -48,9 +48,10 @@ public class ProjectTypeDescriptionsExtension implements ProjectTypeDescriptionE
 
     @Override
     public List<AttributeDescription> getAttributeDescriptions() {
-        final List<AttributeDescription> list = new ArrayList<>(4);
+        final List<AttributeDescription> list = new ArrayList<>(5);
         list.add(new AttributeDescription("language"));
         list.add(new AttributeDescription("exoide:classpath"));
+        list.add(new AttributeDescription("folders.source"));
         list.add(new AttributeDescription("builder.name"));
         list.add(new AttributeDescription("runner.name"));
         return list;

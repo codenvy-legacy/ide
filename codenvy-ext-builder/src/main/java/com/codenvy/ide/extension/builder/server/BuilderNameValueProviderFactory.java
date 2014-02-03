@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.server.projecttypes;
+package com.codenvy.ide.extension.builder.server;
 
 import com.codenvy.api.project.server.ValueProviderFactory;
 import com.codenvy.api.project.shared.ValueProvider;
@@ -59,8 +59,6 @@ public class BuilderNameValueProviderFactory implements ValueProviderFactory {
                 final List<String> list = new ArrayList<>(1);
                 VirtualFileSystemProvider provider;
                 try {
-                    // TODO: get VFS ID
-                    // final String vfsId = (String)EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
                     provider = registry.getProvider(vfsId);
                     MountPoint mountPoint = provider.getMountPoint(false);
                     VirtualFile root = mountPoint.getRoot();

@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@link com.codenvy.api.project.server.ValueProviderFactory} implementation for 'builder.name' attribute.
+ * {@link ValueProviderFactory} implementation for 'folders.source' attribute.
  *
  * @author Artem Zatsarynnyy
  */
@@ -63,8 +63,6 @@ public class SourceFoldersValueProviderFactory implements ValueProviderFactory {
                 final List<String> list = new ArrayList<>(2);
                 VirtualFileSystemProvider provider;
                 try {
-                    // TODO: get VFS ID
-                    // final String vfsId = (String)EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
                     provider = registry.getProvider(vfsId);
                     MountPoint mountPoint = provider.getMountPoint(false);
                     VirtualFile root = mountPoint.getRoot();
@@ -100,7 +98,7 @@ public class SourceFoldersValueProviderFactory implements ValueProviderFactory {
         Model model = MavenUtils.readModel(pomXml.getContent().getStream());
         List<String> list = MavenUtils.getSourceDirectories(model);
         if (list.isEmpty()) {
-            // add at least one source folder
+            // add at least one 'default' source folder
             list.add("src/main/java");
         }
         return list;
