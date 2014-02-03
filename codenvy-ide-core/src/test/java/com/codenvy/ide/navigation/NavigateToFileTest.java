@@ -31,8 +31,10 @@ import com.googlecode.gwt.test.GwtTestWithMockito;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.verify;
@@ -43,8 +45,8 @@ import static org.mockito.Mockito.when;
  * 
  * @author Ann Shumilova
  */
-@GwtModule("com.codenvy.ide.Core")
-public class NavigateToFileTest extends GwtTestWithMockito {
+@RunWith(MockitoJUnitRunner.class)
+public class NavigateToFileTest {
     
     public static final String  PROJECT_ID      = "projectID";
     public static final String  PROJECT_PATH    = "/test";

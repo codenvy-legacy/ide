@@ -25,7 +25,6 @@ import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.cell.client.TextCell;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -54,31 +53,32 @@ public class ProjectPropertiesViewImpl extends DialogBox implements ProjectPrope
     interface ProjectPropertiesViewImplUiBinder extends UiBinder<Widget, ProjectPropertiesViewImpl> {
     }
 
-    private static ProjectPropertiesViewImplUiBinder uiBinder = GWT.create(ProjectPropertiesViewImplUiBinder.class);
-
     @UiField
-    Button btnCancel;
+    Button                                        btnCancel;
     @UiField
-    Button btnSave;
+    Button                                        btnSave;
     @UiField
-    Button btnDelete;
+    Button                                        btnDelete;
     @UiField
-    Button btnEdit;
+    Button                                        btnEdit;
     @UiField
-    Button btnAdd;
+    Button                                        btnAdd;
     @UiField(provided = true)
-    CellTable<Property> propertiesTable;
+    CellTable<Property>                           propertiesTable;
 
     @UiField(provided = true)
-    Resources res;
+    Resources                                     res;
     private ActionDelegate                        delegate;
-    private ProjectPropertiesLocalizationConstant localization;
+    @UiField(provided = true)
+    ProjectPropertiesLocalizationConstant locale;
 
 
     @Inject
-    protected ProjectPropertiesViewImpl(Resources resources, ProjectPropertiesLocalizationConstant localization) {
+    protected ProjectPropertiesViewImpl(Resources resources,
+                                        ProjectPropertiesLocalizationConstant locale,
+                                        ProjectPropertiesViewImplUiBinder uiBinder) {
         this.res = resources;
-        this.localization = localization;
+        this.locale = locale;
         initPropertiesTable();
 
         Widget widget = uiBinder.createAndBindUi(this);
@@ -86,7 +86,7 @@ public class ProjectPropertiesViewImpl extends DialogBox implements ProjectPrope
         TableElement tableElement = Elements.createTableElement();
         tableElement.setAttribute("style", "width: 100%");
 
-        this.setText(localization.projectPropertiesViewTitle());
+        this.setText(locale.projectPropertiesViewTitle());
         this.setWidget(widget);
 
     }
@@ -115,8 +115,8 @@ public class ProjectPropertiesViewImpl extends DialogBox implements ProjectPrope
             }
         };
 
-        propertiesTable.addColumn(nameColumn, localization.propertyNameTitle());
-        propertiesTable.addColumn(valueColumn, localization.propertyValueTitle());
+        propertiesTable.addColumn(nameColumn, locale.propertyNameTitle());
+        propertiesTable.addColumn(valueColumn, locale.propertyValueTitle());
         propertiesTable.setColumnWidth(nameColumn, 40, Style.Unit.PCT);
         propertiesTable.setColumnWidth(valueColumn, 60, Style.Unit.PCT);
 
@@ -196,7 +196,7 @@ public class ProjectPropertiesViewImpl extends DialogBox implements ProjectPrope
     void onBtnEditClick(ClickEvent event) {
         delegate.onEditClicked();
     }
-    
+
     @UiHandler("btnAdd")
     void onBtnAddClick(ClickEvent event) {
         delegate.onAddClicked();

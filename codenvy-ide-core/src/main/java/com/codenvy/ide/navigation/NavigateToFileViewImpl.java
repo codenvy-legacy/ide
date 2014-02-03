@@ -19,7 +19,6 @@ package com.codenvy.ide.navigation;
 
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.collections.Array;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
@@ -31,7 +30,6 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestOracle;
-import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -47,18 +45,19 @@ public class NavigateToFileViewImpl extends DialogBox implements NavigateToFileV
     interface NavigateToFileViewImplUiBinder extends UiBinder<Widget, NavigateToFileViewImpl> {
     }
 
-    private static NavigateToFileViewImplUiBinder uiBinder = GWT.create(NavigateToFileViewImplUiBinder.class);
-
     @UiField(provided = true)
-    SuggestBox                                    files;
+    SuggestBox               files;
 
-    private ActionDelegate                        delegate;
+    private ActionDelegate   delegate;
+    @UiField(provided = true)
+    CoreLocalizationConstant locale;
 
     @Inject
-    public NavigateToFileViewImpl(CoreLocalizationConstant localizationConstant) {
-        this.setText(localizationConstant.navigateToFileViewTitle());
+    public NavigateToFileViewImpl(CoreLocalizationConstant locale, NavigateToFileViewImplUiBinder uiBinder) {
+        this.setText(locale.navigateToFileViewTitle());
+        this.locale = locale;
         files = new SuggestBox(new FilesSuggestOracle());
-        
+
         files.getValueBox().addKeyUpHandler(new KeyUpHandler() {
 
             @Override
@@ -69,16 +68,16 @@ public class NavigateToFileViewImpl extends DialogBox implements NavigateToFileV
 
             }
         });
-    
+
         files.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
 
             @Override
             public void onSelection(SelectionEvent<SuggestOracle.Suggestion> event) {
                 delegate.onFileSelected();
             }
-           
+
         });
-        
+
         Widget widget = uiBinder.createAndBindUi(this);
         this.setWidget(widget);
     }
@@ -131,14 +130,14 @@ public class NavigateToFileViewImpl extends DialogBox implements NavigateToFileV
     public void clearInput() {
         files.getValueBox().setValue("");
     }
-    
+
     private class FilesSuggestOracle extends MultiWordSuggestOracle {
         /** {@inheritDoc} */
         @Override
         public boolean isDisplayStringHTML() {
             return true;
         }
-        
+
         /** {@inheritDoc} */
         @Override
         protected MultiWordSuggestion createSuggestion(String replacementString, String displayString) {
@@ -146,11 +145,11 @@ public class NavigateToFileViewImpl extends DialogBox implements NavigateToFileV
             if (parts.length > 1) {
                 displayString = parts[0];
                 displayString += " <span style=\"color: #989898;\">";
-                for (int i=1; i < parts.length; i++) {
+                for (int i = 1; i < parts.length; i++) {
                     displayString += parts[i];
                 }
                 displayString += "</span>";
-            } 
+            }
             return super.createSuggestion(replacementString, displayString);
         }
     }

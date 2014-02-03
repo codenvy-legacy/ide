@@ -41,9 +41,6 @@ import com.google.inject.Singleton;
 public class AddNewPropertyViewImpl extends DialogBox implements AddNewPropertyView {
     interface AddNewPropertyViewImplUiBinder extends UiBinder<Widget, AddNewPropertyViewImpl> {
     }
-
-    private static AddNewPropertyViewImplUiBinder ourUiBinder = GWT.create(AddNewPropertyViewImplUiBinder.class);
-
     @UiField
     TextBox name;
     @UiField
@@ -52,6 +49,8 @@ public class AddNewPropertyViewImpl extends DialogBox implements AddNewPropertyV
     Button  btnOk;
     @UiField
     Button  btnCancel;
+    @UiField(provided = true)
+    ProjectPropertiesLocalizationConstant locale;
 
     private ActionDelegate delegate;
 
@@ -62,8 +61,9 @@ public class AddNewPropertyViewImpl extends DialogBox implements AddNewPropertyV
      * @param locale
      */
     @Inject
-    protected AddNewPropertyViewImpl(ProjectPropertiesLocalizationConstant locale) {
-        Widget widget = ourUiBinder.createAndBindUi(this);
+    protected AddNewPropertyViewImpl(ProjectPropertiesLocalizationConstant locale, AddNewPropertyViewImplUiBinder uiBinder) {
+        Widget widget = uiBinder.createAndBindUi(this);
+        this.locale = locale;
         this.setText(locale.addPropertyViewTitle());
         this.setWidget(widget);
     }

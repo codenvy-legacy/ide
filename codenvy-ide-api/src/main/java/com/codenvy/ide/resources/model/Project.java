@@ -33,6 +33,7 @@ import com.codenvy.ide.resources.marshal.StringUnmarshaller;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
+import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.loader.EmptyLoader;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.loging.Log;
@@ -202,6 +203,7 @@ public class Project extends Folder {
                         @Override
                         public void onSuccess(Folder result) {
                             File file = (File)result.findResourceById(newFile.getId());
+                            file.getParent().setTag(parent.getTag());
                             eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(file));
                             callback.onSuccess(file);
                         }
@@ -558,18 +560,37 @@ public class Project extends Folder {
      * @param callback
      * @throws RequestException
      */
-    public void rename(final Resource resource, final String newname, String lockToken, final AsyncCallback<Resource> callback) {
+    public void rename(final Resource resource, final String newname, final AsyncCallback<Resource> callback) {
         try {
             checkItemValid(resource);
-
+            Unmarshallable<Resource> unmarshaller = (Unmarshallable<Resource>)((resource instanceof File) ? new FileUnmarshaller() : new FolderUnmarshaller());
             // internal call back
-            AsyncRequestCallback<Void> internalCallback = new AsyncRequestCallback<Void>() {
+            AsyncRequestCallback<Resource> internalCallback = new AsyncRequestCallback<Resource>(unmarshaller) {
                 @Override
-                protected void onSuccess(Void result) {
-                    // TODO : check consistency
-                    resource.setName(newname);
-                    eventBus.fireEvent(ResourceChangedEvent.createResourceRenamedEvent(resource));
-                    callback.onSuccess(resource);
+                protected void onSuccess(Resource result) {
+                    final String id = result.getId();
+                    final Folder folderToRefresh = (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId())) ? (Project)resource : resource.getParent();
+                    //Renamed the project:
+                    if (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId())){
+                        ((Project)resource).setName(result.getName());
+                        ((Project)resource).setId(result.getId());
+                        ((Project)resource).getLinks().putAll(result.getLinks());
+                    }
+                    
+                    refreshTree(folderToRefresh, new AsyncCallback<Folder>() {
+                        @Override
+                        public void onSuccess(Folder result) {
+                            Resource renamed = (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId())) ? resource : result.findResourceById(id);
+                            renamed.getParent().setTag(folderToRefresh.getTag());
+                            eventBus.fireEvent(ResourceChangedEvent.createResourceRenamedEvent(renamed));
+                            callback.onSuccess(renamed);
+                        }
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            Log.error(Project.class, callback);
+                        }
+                    });
                 }
 
                 @Override
