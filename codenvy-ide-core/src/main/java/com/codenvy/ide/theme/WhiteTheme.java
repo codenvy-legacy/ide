@@ -64,7 +64,7 @@ public class WhiteTheme implements Theme {
 
     @Override
     public String getDescription() {
-        return "Default theme";
+        return "White theme";
     }
 
     @Override
