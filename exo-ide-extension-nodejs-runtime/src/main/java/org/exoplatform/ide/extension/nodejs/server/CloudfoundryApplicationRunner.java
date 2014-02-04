@@ -39,8 +39,10 @@ import org.picocontainer.Startable;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -51,6 +53,7 @@ import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
 import static com.codenvy.commons.lang.NameGenerator.generate;
 import static com.codenvy.commons.lang.ZipUtils.unzip;
 import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
+import static com.codenvy.ide.commons.server.ContainerUtils.readValuesParam;
 
 /**
  * ApplicationRunner for deploy Node.js applications at Cloud Foundry.
@@ -71,9 +74,12 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
     private final Map<String, Application> applications;
     private final ScheduledExecutorService applicationTerminator;
+    private final LinkedList<String>       allowedApplicationNames;
+    private final boolean                  restrictApplicationNames;
 
     public CloudfoundryApplicationRunner(CloudfoundryPool cfServers, InitParams initParams) {
-        this(cfServers, parseApplicationLifeTime(readValueParam(initParams, "cloudfoundry-application-lifetime")));
+        this(cfServers, parseApplicationLifeTime(readValueParam(initParams, "cloudfoundry-application-lifetime")),
+             new LinkedList<>(readValuesParam(initParams, "cloudfoundry-application-names")));
     }
 
     private static int parseApplicationLifeTime(String str) {
@@ -86,7 +92,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
         return DEFAULT_APPLICATION_LIFETIME;
     }
 
-    protected CloudfoundryApplicationRunner(CloudfoundryPool cfServers, int applicationLifetime) {
+    protected CloudfoundryApplicationRunner(CloudfoundryPool cfServers, int applicationLifetime,
+                                            LinkedList<String> allowedApplicationNames) {
         if (applicationLifetime < 1) {
             throw new IllegalArgumentException("Invalid application lifetime: " + 1);
         }
@@ -97,11 +104,14 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
         this.applications = new ConcurrentHashMap<String, Application>();
         this.applicationTerminator = Executors.newSingleThreadScheduledExecutor();
         this.applicationTerminator.scheduleAtFixedRate(new TerminateApplicationTask(), 1, 1, TimeUnit.MINUTES);
+        this.allowedApplicationNames = allowedApplicationNames;
+        this.restrictApplicationNames = !allowedApplicationNames.isEmpty();
     }
 
     @Override
     public ApplicationInstance runApplication(VirtualFileSystem vfs, String projectId) throws ApplicationRunnerException,
                                                                                               VirtualFileSystemException {
+        final String name = getApplicationName();
         java.io.File path = null;
         try {
             Item project = vfs.getItem(projectId, false, PropertyFilter.NONE_FILTER);
@@ -116,7 +126,6 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             }
 
             final Cloudfoundry cloudfoundry = cfServers.next();
-            final String name = generate("app-", 16);
             try {
                 return doRunApplication(cloudfoundry, name, path, project.getName());
             } catch (ApplicationRunnerException e) {
@@ -131,11 +140,33 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                 throw e;
             }
         } catch (IOException e) {
+            releaseApplicationName(name);
             throw new ApplicationRunnerException(e.getMessage(), e);
+        } catch (VirtualFileSystemException | ApplicationRunnerException | RuntimeException | Error e) {
+            releaseApplicationName(name);
+            throw e;
         } finally {
             if (path != null && path.exists()) {
                 deleteRecursive(path);
             }
+        }
+    }
+
+    private synchronized String getApplicationName() throws ApplicationRunnerException {
+        if (restrictApplicationNames) {
+            try {
+                return allowedApplicationNames.pop();
+            } catch (NoSuchElementException e) {
+                // all allowed names are used
+                throw new ApplicationRunnerException("Unable run application. Max number of applications is reached. ");
+            }
+        }
+        return generate("app-", 16);
+    }
+
+    private synchronized void releaseApplicationName(String name) {
+        if (restrictApplicationNames) {
+            allowedApplicationNames.add(name);
         }
     }
 
@@ -255,6 +286,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             LOG.info("EVENT#run-finished# WS#" + wsName + "# USER#" + userId + "# PROJECT#" + applications.get(name).projectName +
                      "# TYPE#nodejs#");
             applications.remove(name);
+            releaseApplicationName(name);
         } catch (Exception e) {
             throw new ApplicationRunnerException(e.getMessage(), e);
         }
