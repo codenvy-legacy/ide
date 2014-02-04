@@ -17,9 +17,9 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
+import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.paas.PaaS;
-import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
@@ -70,7 +70,8 @@ public class NewProjectWizardTest extends BaseWizardTest {
     @Mock
     private AbstractPaasPage                      paasPage;
     private WizardContext                         wizardContext;
-    private Template                              template;
+    @Mock
+    private ProjectTemplateDescriptor             template;
     private PaaS                                  paas;
     private PaaS                                  nonePaas;
     private PaaS                                  paasWithTemplate;
@@ -106,8 +107,6 @@ public class NewProjectWizardTest extends BaseWizardTest {
 
         wizard.addPage(newProjectPageProvider);
         wizard.addPage(chooseTemplatePageProvider);
-
-        template = new Template("id", "title", "description", null, "projectTypeId");
 
         Array<String> projectTypes = Collections.createArray();
         projectTypes.add("projectTypeId");

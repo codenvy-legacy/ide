@@ -24,6 +24,7 @@ import com.codenvy.api.builder.LastInUseBuilderSelectionStrategy;
 import com.codenvy.api.builder.internal.SlaveBuilderService;
 import com.codenvy.api.core.rest.ApiExceptionMapper;
 import com.codenvy.api.project.server.ProjectService;
+import com.codenvy.api.project.server.ProjectTemplateService;
 import com.codenvy.api.project.server.ProjectTypeDescriptionService;
 import com.codenvy.api.runner.LastInUseRunnerSelectionStrategy;
 import com.codenvy.api.runner.RunnerAdminService;
@@ -60,7 +61,6 @@ import com.codenvy.ide.ext.git.server.rest.TagListWriter;
 import com.codenvy.ide.ext.github.server.rest.GitHubService;
 import com.codenvy.ide.ext.java.jdi.server.DebuggerService;
 import com.codenvy.ide.ext.java.server.RestCodeAssistantJava;
-import com.codenvy.ide.ext.java.server.projecttypes.CreateProjectFromTemplateService;
 import com.codenvy.ide.ext.ssh.server.DummySshKeyStore;
 import com.codenvy.ide.ext.ssh.server.KeyService;
 import com.codenvy.ide.ext.ssh.server.SshKeyStore;
@@ -89,6 +89,7 @@ public class ApiModule extends AbstractModule {
     protected void configure() {
         bind(ProjectService.class);
         bind(ProjectTypeDescriptionService.class);
+        bind(ProjectTemplateService.class);
         bind(LocalFileSystemRegistryPlugin.class);
         bind(LocalFSMountStrategy.class).to(WorkspaceHashLocalFSMountStrategy.class);
         bind(SearcherProvider.class).to(CleanableSearcherProvider.class);
@@ -118,13 +119,10 @@ public class ApiModule extends AbstractModule {
         bind(DeployToApplicationServerRunner.class);
         bind(SDKRunner.class);
         bind(UserService.class);
-        bind(CreateProjectFromTemplateService.class);
         bind(RestCodeAssistantJava.class);
         bind(DebuggerService.class);
         bind(AsynchronousJobPool.class).to(CodenvyAsynchronousJobPool.class);
         bind(new PathKey<>(AsynchronousJobService.class, "/async/{ws-id}")).to(AsynchronousJobService.class);
-        bind(com.codenvy.ide.ext.extensions.server.CreateProjectFromTemplateService.class);
-        bind(com.codenvy.ide.ext.tutorials.server.CreateProjectFromTemplateService.class);
         bind(GitService.class);
         bind(BranchListWriter.class).toInstance(new BranchListWriter());
         bind(CommitMessageWriter.class).toInstance(new CommitMessageWriter());

@@ -32,6 +32,7 @@ import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
+import com.codenvy.ide.websocket.rest.StringUnmarshallerWS;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -115,7 +116,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
     private void cloneRepository(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
         try {
             service.cloneRepositoryWS(resourceProvider.getVfsInfo().getId(), project, remoteUri, remoteName,
-                                      new RequestCallback<String>(new com.codenvy.ide.ext.git.client.marshaller.StringUnmarshaller()) {
+                                      new RequestCallback<String>(new StringUnmarshallerWS()) {
                                           @Override
                                           protected void onSuccess(String result) {
                                               RepoInfo repository = dtoFactory.createDtoFromJson(result, RepoInfo.class);

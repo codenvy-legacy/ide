@@ -31,6 +31,9 @@ public class JavaModule extends AbstractModule {
         bind(JarProjectTypeExtension.class);
         bind(WarProjectTypeExtension.class);
         bind(SpringProjectTypeExtension.class);
+        bind(JarProjectTemplateExtension.class);
+        bind(WarProjectTemplateExtension.class);
+        bind(SpringProjectTemplateExtension.class);
 
         Multibinder<ValueProviderFactory> multiBinder = Multibinder.newSetBinder(binder(), ValueProviderFactory.class);
         multiBinder.addBinding().to(SourceFoldersValueProviderFactory.class);

@@ -18,24 +18,18 @@
 package com.codenvy.ide.ext.extensions.client;
 
 import com.codenvy.ide.api.extension.Extension;
-import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.extensions.client.actions.GetLogsAction;
 import com.codenvy.ide.ext.extensions.client.actions.LaunchAction;
 import com.codenvy.ide.ext.extensions.client.actions.StopAction;
-import com.codenvy.ide.ext.extensions.client.template.CreateEmptyExtensionPage;
-import com.codenvy.ide.ext.extensions.client.template.CreateSampleExtensionPage;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_MAIN_MENU;
 
 /**
- * Entry point for an extension that adds support for running Codenvy-extensions in Codenvy.
+ * Entry point for an extension that adds support for running Codenvy extensions.
  *
  * @author Artem Zatsarynnyy
  */
@@ -43,15 +37,9 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_MAIN_MENU;
 @Extension(title = "Codenvy extensions", version = "3.0.0")
 public class ExtRuntimeExtension {
     public static final String CODENVY_EXTENSION_PROJECT_TYPE_ID = "codenvy_extension";
-    public static final String EMPTY_TEMPLATE_ID                 = "EmptyCodenvyExtension";
-    public static final String GIST_TEMPLATE_ID                  = "gist";
 
     @Inject
-    public ExtRuntimeExtension(TemplateAgent templateAgent,
-                               Provider<CreateEmptyExtensionPage> createEmptyCodenvyExtensionPage,
-                               Provider<CreateSampleExtensionPage> createSampleCodenvyExtensionPage,
-                               ExtRuntimeLocalizationConstant localizationConstants,
-                               ExtRuntimeResources resources,
+    public ExtRuntimeExtension(ExtRuntimeLocalizationConstant localizationConstants,
                                ActionManager actionManager,
                                LaunchAction launchAction,
                                GetLogsAction getLogsAction,
@@ -67,18 +55,5 @@ public class ExtRuntimeExtension {
 
         actionManager.registerAction(localizationConstants.stopExtensionActionId(), stopAction);
         runMenuActionGroup.add(stopAction);
-
-        templateAgent.register(EMPTY_TEMPLATE_ID,
-                               "Empty extension",
-                               "Empty Codenvy extension project.",
-                               resources.codenvyExtensionTemplate(),
-                               CODENVY_EXTENSION_PROJECT_TYPE_ID,
-                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createEmptyCodenvyExtensionPage));
-        templateAgent.register(GIST_TEMPLATE_ID,
-                               "Gist example",
-                               "Simple Codenvy extension project is demonstrating basic usage Codenvy API.",
-                               resources.codenvyExtensionTemplate(),
-                               CODENVY_EXTENSION_PROJECT_TYPE_ID,
-                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createSampleCodenvyExtensionPage));
     }
 }

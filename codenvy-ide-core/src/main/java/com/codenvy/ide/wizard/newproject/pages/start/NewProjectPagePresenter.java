@@ -45,10 +45,10 @@ import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_
  */
 public class NewProjectPagePresenter extends AbstractWizardPage implements NewProjectPageView.ActionDelegate {
     private NewProjectPageView            view;
-    private Array<ProjectTypeDescriptor>  projectTypes;
+    private Array<ProjectTypeDescriptor>  projectTypeDescriptors;
     private CoreLocalizationConstant      constant;
-    private boolean                       hasProjectNameIncorrectSymbol;
-    private boolean                       hasSameProject;
+    private boolean                       isProjectNameValid;
+    private boolean                       isProjectNameUnique;
     private boolean                       hasProjectList;
     private Array<String>                 projectList;
     private ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
@@ -89,27 +89,25 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
             }
         });
 
+        this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
         this.constant = constant;
         this.view = view;
         this.view.setDelegate(this);
-        this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean isCompleted() {
-        return wizardContext.getData(PROJECT_NAME) != null &&
-               wizardContext.getData(PROJECT_TYPE) != null && hasProjectList;
+        return wizardContext.getData(PROJECT_NAME) != null && wizardContext.getData(PROJECT_TYPE) != null && hasProjectList;
     }
 
     /** {@inheritDoc} */
     @Override
     public void focusComponent() {
-        this.projectTypes = projectTypeDescriptorRegistry.getDescriptors();
-        this.view.setProjectTypes(projectTypes);
+        this.projectTypeDescriptors = projectTypeDescriptorRegistry.getDescriptors();
+        this.view.setProjectTypes(projectTypeDescriptors);
 
-
-        if (!projectTypes.isEmpty()) {
+        if (!projectTypeDescriptors.isEmpty()) {
             onProjectTypeSelected(0);
         }
         view.focusProjectName();
@@ -130,9 +128,9 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
             return constant.enteringProjectName();
         } else if (!hasProjectList) {
             return constant.checkingProjectsList();
-        } else if (hasSameProject) {
+        } else if (!isProjectNameUnique) {
             return constant.createProjectFromTemplateProjectExists(view.getProjectName());
-        } else if (hasProjectNameIncorrectSymbol) {
+        } else if (!isProjectNameValid) {
             return constant.noIncorrectProjectNameMessage();
         } else if (wizardContext.getData(PROJECT_TYPE) == null) {
             return constant.noTechnologyMessage();
@@ -152,30 +150,26 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
     /** {@inheritDoc} */
     @Override
     public void onProjectTypeSelected(int id) {
-        ProjectTypeDescriptor projectType2 = projectTypes.get(id);
-
         view.selectProjectType(id);
-
-        wizardContext.putData(PROJECT_TYPE, projectType2);
-
+        wizardContext.putData(PROJECT_TYPE, projectTypeDescriptors.get(id));
         delegate.updateControls();
     }
 
     /** {@inheritDoc} */
     @Override
     public void checkProjectName() {
-        String projectName = view.getProjectName();
-        hasProjectNameIncorrectSymbol = !ResourceNameValidator.isProjectNameValid(projectName);
+        final String projectName = view.getProjectName();
+        isProjectNameValid = ResourceNameValidator.isProjectNameValid(projectName);
 
-        hasSameProject = false;
+        isProjectNameUnique = true;
         if (projectList != null) {
-            for (int i = 0; i < projectList.size() && !hasSameProject; i++) {
-                String name = projectList.get(i);
-                hasSameProject = projectName.equals(name);
+            for (int i = 0; i < projectList.size() && isProjectNameUnique; i++) {
+                final String name = projectList.get(i);
+                isProjectNameUnique = !projectName.equals(name);
             }
         }
 
-        if (!projectName.isEmpty() && !hasProjectNameIncorrectSymbol && !hasSameProject) {
+        if (!projectName.isEmpty() && isProjectNameValid && isProjectNameUnique) {
             wizardContext.putData(PROJECT_NAME, projectName);
         } else {
             wizardContext.removeData(PROJECT_NAME);

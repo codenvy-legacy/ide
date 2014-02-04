@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.api.ui.wizard.newproject;
 
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.paas.PaaS;
@@ -34,18 +36,21 @@ import com.google.inject.Singleton;
 import javax.validation.constraints.NotNull;
 
 /**
- * The wizard for creating new project. A user pre-defines behavior of the wizard already from the start page by choosing a technology and
- * PaaS. Depending on the PaaS choice made, the wizard shows different pages after 'choose a template' page.
+ * The wizard for creating new project. A user pre-defines behavior of
+ * the wizard already from the start page by choosing a technology and
+ * PaaS. Depending on the PaaS choice made, the wizard shows different
+ * pages after 'choose a template' page.
  *
  * @author Andrey Plotnikov
  */
 @Singleton
 public class NewProjectWizard extends DefaultWizard {
-    public static final WizardContext.Key<PaaS>                  PAAS         = new WizardContext.Key<PaaS>("PaaS");
-    public static final WizardContext.Key<Template>              TEMPLATE     = new WizardContext.Key<Template>("Template");
-    public static final WizardContext.Key<String>                PROJECT_NAME = new WizardContext.Key<String>("Project name");
-    public static final WizardContext.Key<ProjectTypeDescriptor> PROJECT_TYPE = new WizardContext.Key<ProjectTypeDescriptor>("Project type");
-    public static final WizardContext.Key<Project>               PROJECT      = new WizardContext.Key<Project>("Project");
+    public static final WizardContext.Key<PaaS>                      PAAS         = new WizardContext.Key<PaaS>("PaaS");
+    public static final WizardContext.Key<ProjectTemplateDescriptor> TEMPLATE     = new WizardContext.Key<ProjectTemplateDescriptor>("Template");
+    public static final WizardContext.Key<String>                    PROJECT_NAME = new WizardContext.Key<String>("Project name");
+    public static final WizardContext.Key<ProjectTypeDescriptor>     PROJECT_TYPE =
+            new WizardContext.Key<ProjectTypeDescriptor>("Project type");
+    public static final WizardContext.Key<ProjectDescriptor>         PROJECT      = new WizardContext.Key<ProjectDescriptor>("Project");
     private int chooseTemplate;
     private int lastTemplatePage;
 

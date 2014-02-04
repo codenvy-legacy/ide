@@ -17,12 +17,16 @@
  */
 package com.codenvy.ide.client;
 
+import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.template.TemplateClientService;
+import com.codenvy.ide.api.template.TemplateDescriptorRegistry;
 import com.codenvy.ide.api.ui.theme.Style;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
 import com.codenvy.ide.dto.DtoFactory;
@@ -54,7 +58,9 @@ public class BootstrapController {
 
     private ProjectTypeDescriptionClientService projectTypeService;
     private ProjectTypeDescriptorRegistry       projectTypeDescriptorRegistry;
-    private DtoFactory dtoFactory;
+    private TemplateClientService               templateClientService;
+    private TemplateDescriptorRegistry          templateDescriptorRegistry;
+    private DtoFactory                          dtoFactory;
 
     /**
      * Create controller.
@@ -67,6 +73,8 @@ public class BootstrapController {
      * @param userService
      * @param projectTypeService
      * @param projectTypeDescriptorRegistry
+     * @param templateClientService
+     * @param templateDescriptorRegistry
      * @param resourceProvider
      * @param dtoRegistrar
      * @param dtoFactory
@@ -81,42 +89,44 @@ public class BootstrapController {
                                UserClientService userService,
                                final ProjectTypeDescriptionClientService projectTypeService,
                                final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
+                               TemplateClientService templateClientService,
+                               final TemplateDescriptorRegistry templateDescriptorRegistry,
                                final ResourceProvider resourceProvider,
                                DtoRegistrar dtoRegistrar,
                                final DtoFactory dtoFactory,
                                final ThemeAgent themeAgent) {
         this.projectTypeService = projectTypeService;
         this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
+        this.templateClientService = templateClientService;
+        this.templateDescriptorRegistry = templateDescriptorRegistry;
         this.dtoFactory = dtoFactory;
 
         ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW)
                       .setCallback(new Callback<Void, Exception>() {
                           @Override
-                          public void onFailure(Exception reason) {
-                          }
-
-                          @Override
                           public void onSuccess(Void result) {
                               ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_parsers.js")
                                             .setWindow(ScriptInjector.TOP_WINDOW).inject();
+                          }
+
+                          @Override
+                          public void onFailure(Exception reason) {
                           }
                       }).inject();
 
         try {
             dtoRegistrar.registerDtoProviders();
-            StringUnmarshaller unmarshaller = new StringUnmarshaller();
-            userService.getUser(new AsyncRequestCallback<String>(unmarshaller) {
+            userService.getUser(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
                 protected void onSuccess(final String result) {
                     final User user = dtoFactory.createDtoFromJson(result, User.class);
-                    Map<String,String> attributes = user.getProfileAttributes();
+                    Map<String, String> attributes = user.getProfileAttributes();
                     preferencesManager.load(attributes);
                     String theme = preferencesManager.getValue("Theme");
-                    if(theme != null){
-                       Style.setTheme(themeAgent.getTheme(theme));
-                       themeAgent.setCurrentThemeId(theme);
-                    }
-                    else{
+                    if (theme != null) {
+                        Style.setTheme(themeAgent.getTheme(theme));
+                        themeAgent.setCurrentThemeId(theme);
+                    } else {
                         Style.setTheme(themeAgent.getDefault());
                         themeAgent.setCurrentThemeId(themeAgent.getDefault().getId());
                     }
@@ -156,8 +166,7 @@ public class BootstrapController {
                         }
                     });
 
-                    // get project type descriptors from the server
-                    getProjectTypes();
+                    initializeProjectTypeDescriptorRegistry();
                 }
 
                 @Override
@@ -170,13 +179,14 @@ public class BootstrapController {
         }
     }
 
-    private void getProjectTypes() {
+    private void initializeProjectTypeDescriptorRegistry() {
         try {
             projectTypeService.getProjectTypes(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
                 protected void onSuccess(String result) {
                     projectTypeDescriptorRegistry.registerDescriptors(
                             dtoFactory.createListDtoFromJson(result, ProjectTypeDescriptor.class));
+                    initializeProjectTemplateRegistry();
                 }
 
                 @Override
@@ -189,4 +199,25 @@ public class BootstrapController {
         }
     }
 
+    private void initializeProjectTemplateRegistry() {
+        Array<ProjectTypeDescriptor> descriptors = projectTypeDescriptorRegistry.getDescriptors();
+        for (ProjectTypeDescriptor descriptor : descriptors.asIterable()) {
+            try {
+                templateClientService.getTemplates(descriptor, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                    @Override
+                    protected void onSuccess(String result) {
+                        templateDescriptorRegistry.registerTemplates(
+                                dtoFactory.createListDtoFromJson(result, ProjectTemplateDescriptor.class));
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        Log.error(BootstrapController.class, exception);
+                    }
+                });
+            } catch (RequestException e) {
+                Log.error(BootstrapController.class, e);
+            }
+        }
+    }
 }

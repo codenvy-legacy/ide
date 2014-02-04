@@ -32,7 +32,7 @@ public interface ProjectTypeDescriptorRegistry {
      *
      * @param id
      *         project type descriptor id
-     * @return project type descriptor with provided id, or null if any {@link ProjectTypeDescriptor} registered with the specified id
+     * @return project type descriptor with the specified ID, or null if no {@link ProjectTypeDescriptor} registered with the specified id
      */
     ProjectTypeDescriptor getDescriptor(String id);
 

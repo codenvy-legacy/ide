@@ -31,7 +31,7 @@ import javax.validation.constraints.NotNull;
 /**
  * The implementation of {@link com.codenvy.ide.api.ui.wizard.WizardDialog}.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
 public class ProjectWizardPresenter implements WizardDialog, Wizard.UpdateDelegate, ProjectWizardView.ActionDelegate {
     private NewProjectWizard  wizard;

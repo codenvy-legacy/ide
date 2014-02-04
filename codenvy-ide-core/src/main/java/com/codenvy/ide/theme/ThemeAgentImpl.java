@@ -33,12 +33,12 @@ public class ThemeAgentImpl  implements ThemeAgent{
 
     private StringMap<Theme> themes = Collections.createStringMap();
 
-    private final Theme defaultTheme = new DefaultTheme();
+    private final Theme defaultTheme = new DarkTheme();
     private String currentThemeId;
 
     public ThemeAgentImpl() {
         addTheme(defaultTheme);
-        addTheme(new DarkTheme());
+        addTheme(new WhiteTheme());
     }
 
     @Override

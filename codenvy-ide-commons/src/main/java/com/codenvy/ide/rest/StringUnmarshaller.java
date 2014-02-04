@@ -17,14 +17,13 @@
  */
 package com.codenvy.ide.rest;
 
-/**
- * @author <a href="mailto:vparfonov@codenvy.com">Vitaly Parfonov</a>
- * @version $Id:
- */
-
 import com.google.gwt.http.client.Response;
 
-/** Deserializer for responses body. */
+/**
+ * Deserializer for responses body.
+ *
+ * @author Vitaly Parfonov
+ */
 public class StringUnmarshaller implements Unmarshallable<String> {
     protected String builder;
 

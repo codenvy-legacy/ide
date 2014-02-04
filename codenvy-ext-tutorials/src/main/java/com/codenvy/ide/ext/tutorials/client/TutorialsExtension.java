@@ -18,23 +18,10 @@
 package com.codenvy.ide.ext.tutorials.client;
 
 import com.codenvy.ide.api.extension.Extension;
-import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.tutorials.client.action.ShowTutorialGuideAction;
-import com.codenvy.ide.ext.tutorials.client.template.CreateActionTutorialPage;
-import com.codenvy.ide.ext.tutorials.client.template.CreateEditorTutorialPage;
-import com.codenvy.ide.ext.tutorials.client.template.CreateGinTutorialPage;
-import com.codenvy.ide.ext.tutorials.client.template.CreateNewProjectWizardTutorialPage;
-import com.codenvy.ide.ext.tutorials.client.template.CreateNewResourceWizardTutorialPage;
-import com.codenvy.ide.ext.tutorials.client.template.CreateNotificationTutorialPage;
-import com.codenvy.ide.ext.tutorials.client.template.CreatePartsTutorialPage;
-import com.codenvy.ide.ext.tutorials.client.template.CreateWizardTutorialPage;
-import com.codenvy.ide.ext.tutorials.client.template.CreateWysiwygTutorialPage;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_WINDOW;
@@ -47,31 +34,12 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_WINDOW;
 @Singleton
 @Extension(title = "Codenvy tutorial projects", version = "3.0.0")
 public class TutorialsExtension {
-    public static final String TUTORIAL_PROJECT_TYPE_ID        = "codenvy_tutorial";
-    public static final String ACTION_TUTORIAL_ID              = "ActionTutorial";
-    public static final String NOTIFICATION_TUTORIAL_ID        = "NotificationTutorial";
-    public static final String WIZARD_TUTORIAL_ID              = "WizardTutorial";
-    public static final String NEW_PROJECT_WIZARD_TUTORIAL_ID  = "NewProjectWizardTutorial";
-    public static final String NEW_RESOURCE_WIZARD_TUTORIAL_ID = "NewResourceWizardTutorial";
-    public static final String PARTS_TUTORIAL_ID               = "PartsTutorial";
-    public static final String EDITOR_TUTORIAL_ID              = "EditorTutorial";
-    public static final String GIN_TUTORIAL_ID                 = "GinTutorial";
-    public static final String WYSIWYG_EDITOR_TUTORIAL_ID      = "WysiwygEditorTutorial";
+    public static final String TUTORIAL_PROJECT_TYPE_ID = "codenvy_tutorial";
     /** Default name of the file that contains tutorial description. */
-    public static final String DEFAULT_README_FILE_NAME        = "guide.html";
+    public static final String DEFAULT_README_FILE_NAME = "guide.html";
 
     @Inject
-    public TutorialsExtension(TemplateAgent templateAgent,
-                              Provider<CreateActionTutorialPage> createActionTutorialPage,
-                              Provider<CreateNotificationTutorialPage> createNotificationTutorialPage,
-                              Provider<CreateWizardTutorialPage> createWizardTutorialPageProvider,
-                              Provider<CreateNewProjectWizardTutorialPage> createNewProjectWizardTutorialPageProvider,
-                              Provider<CreateNewResourceWizardTutorialPage> createNewResourceWizardTutorialPageProvider,
-                              Provider<CreatePartsTutorialPage> createPartsTutorialPageProvider,
-                              Provider<CreateEditorTutorialPage> createEditorTutorialPageProvider,
-                              Provider<CreateGinTutorialPage> createGinTutorialPageProvider,
-                              Provider<CreateWysiwygTutorialPage> createWysiwygTutorialPageProvider,
-                              TutorialsResources resources,
+    public TutorialsExtension(TutorialsResources resources,
                               TutorialsLocalizationConstant localizationConstants,
                               ActionManager actionManager,
                               ShowTutorialGuideAction showAction) {
@@ -82,63 +50,5 @@ public class TutorialsExtension {
 
         actionManager.registerAction(localizationConstants.showTutorialGuideActionId(), showAction);
         windowMenuActionGroup.add(showAction);
-
-        // register templates
-        templateAgent.register(NOTIFICATION_TUTORIAL_ID,
-                               "Notification API tutorial",
-                               "Tutorial that is demonstrating how to use Codenvy Notification API.",
-                               resources.codenvyTutorialTemplate(),
-                               TUTORIAL_PROJECT_TYPE_ID,
-                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createNotificationTutorialPage));
-        templateAgent.register(ACTION_TUTORIAL_ID,
-                               "Action API tutorial",
-                               "Tutorial that is demonstrating how to use Codenvy Action API.",
-                               resources.codenvyTutorialTemplate(),
-                               TUTORIAL_PROJECT_TYPE_ID,
-                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createActionTutorialPage));
-        templateAgent.register(WIZARD_TUTORIAL_ID,
-                               "Wizard API tutorial",
-                               "Tutorial that is demonstrating how to use Codenvy Wizard API.",
-                               resources.codenvyTutorialTemplate(),
-                               TUTORIAL_PROJECT_TYPE_ID,
-                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createWizardTutorialPageProvider));
-        templateAgent.register(NEW_PROJECT_WIZARD_TUTORIAL_ID,
-                               "New project wizard tutorial",
-                               "The following tutorial will take you through simple example to learn how to implement a new project wizard.",
-                               resources.codenvyTutorialTemplate(),
-                               TUTORIAL_PROJECT_TYPE_ID,
-                               Collections
-                                       .<Provider<? extends AbstractTemplatePage>>createArray(createNewProjectWizardTutorialPageProvider));
-        templateAgent.register(NEW_RESOURCE_WIZARD_TUTORIAL_ID,
-                               "New resource wizard tutorial",
-                               "The following tutorial will take you through simple example to learn how to implement a new resource wizard.",
-                               resources.codenvyTutorialTemplate(),
-                               TUTORIAL_PROJECT_TYPE_ID,
-                               Collections
-                                       .<Provider<? extends AbstractTemplatePage>>createArray(createNewResourceWizardTutorialPageProvider));
-        templateAgent.register(PARTS_TUTORIAL_ID,
-                               "Part API tutorial",
-                               "Tutorial that is demonstrating how to use Codenvy Part API.",
-                               resources.codenvyTutorialTemplate(),
-                               TUTORIAL_PROJECT_TYPE_ID,
-                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createPartsTutorialPageProvider));
-        templateAgent.register(EDITOR_TUTORIAL_ID,
-                               "Editor API tutorial",
-                               "Tutorial that is demonstrating how to use Codenvy Editor API.",
-                               resources.codenvyTutorialTemplate(),
-                               TUTORIAL_PROJECT_TYPE_ID,
-                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createEditorTutorialPageProvider));
-        templateAgent.register(GIN_TUTORIAL_ID,
-                               "GIN tutorial",
-                               "The following tutorial will take you through simple example to learn how to use GIN with Codenvy API.",
-                               resources.codenvyTutorialTemplate(),
-                               TUTORIAL_PROJECT_TYPE_ID,
-                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createGinTutorialPageProvider));
-        templateAgent.register(WYSIWYG_EDITOR_TUTORIAL_ID,
-                               "WYSIWYG editor tutorial",
-                               "The following tutorial will take you through simple example to learn how to implement WYSIWYG editor.",
-                               resources.codenvyTutorialTemplate(),
-                               TUTORIAL_PROJECT_TYPE_ID,
-                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createWysiwygTutorialPageProvider));
     }
 }

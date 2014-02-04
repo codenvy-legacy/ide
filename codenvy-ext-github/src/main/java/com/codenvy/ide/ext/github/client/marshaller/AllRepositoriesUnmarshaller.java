@@ -32,7 +32,7 @@ import com.google.gwt.json.client.JSONParser;
 import java.util.Set;
 
 /**
- * Umarshaller for all repositories list.
+ * Unmarshaller for all repositories list.
  *
  * @author <a href="mailto:dvishinskiy@codenvy.com">Dmitriy Vyshinskiy</a>
  */

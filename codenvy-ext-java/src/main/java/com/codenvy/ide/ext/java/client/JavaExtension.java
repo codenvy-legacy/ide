@@ -28,20 +28,12 @@ import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEventHandler;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
-import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.java.client.editor.JavaEditorProvider;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProjectModelProvider;
-import com.codenvy.ide.ext.java.client.projecttemplate.ant.CreateAntJarProjectPage;
-import com.codenvy.ide.ext.java.client.projecttemplate.ant.CreateAntSpringProjectPage;
-import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenJarProjectPage;
-import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenSpringProjectPage;
-import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenWarProjectPage;
 import com.codenvy.ide.ext.java.client.wizard.NewAnnotationProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewClassProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewEnumProvider;
@@ -57,7 +49,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -70,14 +61,8 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
 /** @author Evgen Vidolob */
 @Extension(title = "Java syntax highlighting and code autocompletion.", version = "3.0.0")
 public class JavaExtension {
-    public static final String JAR_PROJECT_TYPE_ID      = "jar";
-    public static final String WAR_PROJECT_TYPE_ID      = "war";
-    public static final String SPRING_PROJECT_TYPE_ID   = "spring";
-    public static final String MAVEN_JAR_TEMPLATE_ID    = "maven_jar";
-    public static final String MAVEN_WAR_TEMPLATE_ID    = "maven_war";
-    public static final String MAVEN_SPRING_TEMPLATE_ID = "maven_spring";
-    public static final String ANT_JAR_TEMPLATE_ID      = "ant_jar";
-    public static final String ANT_SPRING_TEMPLATE_ID   = "ant_spring";
+    public static final String WAR_PROJECT_TYPE_ID    = "war";
+    public static final String SPRING_PROJECT_TYPE_ID = "spring";
     private ResourceProvider    resourceProvider;
     private NotificationManager notificationManager;
     private String              restContext;
@@ -95,12 +80,6 @@ public class JavaExtension {
                          NewAnnotationProvider newAnnotationHandler,
                          NewPackageProvider newPackage,
                          @Named("restContext") String restContext,
-                         TemplateAgent templateAgent,
-                         Provider<CreateMavenJarProjectPage> createMavenJarProjectPage,
-                         Provider<CreateMavenWarProjectPage> createMavenWarProjectPage,
-                         Provider<CreateMavenSpringProjectPage> createMavenSpringProjectPage,
-                         Provider<CreateAntJarProjectPage> createAntJavaProjectPage,
-                         Provider<CreateAntSpringProjectPage> createAntSpringProjectPage,
                          ActionManager actionManager) {
         this();
         this.resourceProvider = resourceProvider;
@@ -130,37 +109,6 @@ public class JavaExtension {
         newResourceAgent.register(newEnumHandler);
         newResourceAgent.register(newAnnotationHandler);
         newResourceAgent.register(newPackage);
-
-        templateAgent.register(MAVEN_JAR_TEMPLATE_ID,
-                               "Maven JAR project",
-                               "Simple JAR project which uses Maven build system.",
-                               JavaResources.INSTANCE.javaProject(),
-                               JAR_PROJECT_TYPE_ID,
-                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenJarProjectPage));
-        templateAgent.register(MAVEN_WAR_TEMPLATE_ID,
-                               "Java Web project",
-                               "Java Web project.",
-                               null,
-                               WAR_PROJECT_TYPE_ID,
-                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenWarProjectPage));
-        templateAgent.register(MAVEN_SPRING_TEMPLATE_ID,
-                               "Maven Spring application",
-                               "Simple Spring project which uses Maven build system.",
-                               JavaResources.INSTANCE.javaProject(),
-                               SPRING_PROJECT_TYPE_ID,
-                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenSpringProjectPage));
-        templateAgent.register(ANT_JAR_TEMPLATE_ID,
-                               "Ant JAR project",
-                               "Simple JAR project which uses Ant build system.",
-                               JavaResources.INSTANCE.javaProject(),
-                               JAR_PROJECT_TYPE_ID,
-                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createAntJavaProjectPage));
-        templateAgent.register(ANT_SPRING_TEMPLATE_ID,
-                               "Ant Spring application",
-                               "Simple Spring project which uses Ant build system.",
-                               JavaResources.INSTANCE.javaProject(),
-                               SPRING_PROJECT_TYPE_ID,
-                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createAntSpringProjectPage));
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
