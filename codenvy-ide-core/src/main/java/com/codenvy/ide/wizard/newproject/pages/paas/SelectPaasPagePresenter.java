@@ -57,6 +57,7 @@ public class SelectPaasPagePresenter extends AbstractWizardPage implements Selec
                                    PaaSAgentImpl paasAgent, DtoFactory dtoFactory) {
         super("Select PaaS", null);
         this.view = view;
+        this.view.setDelegate(this);
         this.resourceProvider = resourceProvider;
         this.templateClientService = templateClientService;
         this.paasAgent = paasAgent;
