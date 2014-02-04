@@ -29,15 +29,17 @@ import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
 
 import org.junit.Before;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.when;
 
 /**
  * @author Ann Shumilova
  */
-@GwtModule("com.codenvy.ide.Core")
-public abstract class PropertiesBaseTest extends GwtTestWithMockito {
+@RunWith(MockitoJUnitRunner.class)
+public abstract class PropertiesBaseTest {
 
     public static final String                      PROJECT_ID            = "projectID";
     public static final String                      PROJECT_PATH          = "/test";

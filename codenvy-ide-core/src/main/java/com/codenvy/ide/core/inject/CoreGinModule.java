@@ -107,6 +107,8 @@ import com.codenvy.ide.project.properties.edit.EditPropertyView;
 import com.codenvy.ide.project.properties.edit.EditPropertyViewImpl;
 import com.codenvy.ide.projecttype.SelectProjectTypeView;
 import com.codenvy.ide.projecttype.SelectProjectTypeViewImpl;
+import com.codenvy.ide.rename.RenameResourceView;
+import com.codenvy.ide.rename.RenameResourceViewImpl;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.resources.model.GenericModelProvider;
@@ -271,6 +273,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(WelcomePartView.class).to(WelcomePartViewImpl.class).in(Singleton.class);
         bind(SelectProjectTypeView.class).to(SelectProjectTypeViewImpl.class).in(Singleton.class);
         bind(NavigateToFileView.class).to(NavigateToFileViewImpl.class).in(Singleton.class);
+        bind(RenameResourceView.class).to(RenameResourceViewImpl.class).in(Singleton.class);
 
         bind(ExtensionManagerView.class).to(ExtensionManagerViewImpl.class).in(Singleton.class);
         bind(AppearanceView.class).to(AppearanceViewImpl.class).in(Singleton.class);

@@ -44,8 +44,6 @@ public class SelectProjectTypeViewImpl extends DialogBox implements SelectProjec
     interface SelectProjectTypeViewImplUiBinder extends UiBinder<Widget, SelectProjectTypeViewImpl> {
     }
 
-    private static SelectProjectTypeViewImplUiBinder uiBinder = GWT.create(SelectProjectTypeViewImplUiBinder.class);
-
     @UiField
     ListBox projectTypeField;
     @UiField
@@ -59,7 +57,7 @@ public class SelectProjectTypeViewImpl extends DialogBox implements SelectProjec
     private ActionDelegate delegate;
 
     @Inject
-    protected SelectProjectTypeViewImpl(CoreLocalizationConstant localizationConstant) {
+    protected SelectProjectTypeViewImpl(CoreLocalizationConstant localizationConstant, SelectProjectTypeViewImplUiBinder uiBinder) {
         this.setText(localizationConstant.setProjectTypeTitle());
         Widget widget = uiBinder.createAndBindUi(this);
         this.setWidget(widget);
