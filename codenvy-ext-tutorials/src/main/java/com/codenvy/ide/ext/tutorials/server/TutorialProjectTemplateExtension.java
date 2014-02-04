@@ -63,11 +63,6 @@ public class TutorialProjectTemplateExtension implements ProjectTemplateExtensio
                                                 "Tutorial that is demonstrating how to use Codenvy Wizard API.",
                                                 baseUrl + "/wizard-api-tutorial.zip"));
 
-        list.add(new ProjectTemplateDescription("NewProjectWizardTutorial",
-                                                "NEW PROJECT WIZARD TUTORIAL",
-                                                "The following tutorial will take you through simple example to learn how to implement a new project wizard.",
-                                                baseUrl + "/new-project-wizard-tutorial.zip"));
-
         list.add(new ProjectTemplateDescription("NewResourceWizardTutorial",
                                                 "NEW RESOURCE WIZARD TUTORIAL",
                                                 "The following tutorial will take you through simple example to learn how to implement a new resource wizard.",
