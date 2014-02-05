@@ -25,6 +25,7 @@ import com.codenvy.api.vfs.server.search.SearcherProvider;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.File;
 
 /**
  * Implementation of VirtualFileSystemRegistry that is able to create VirtualFileSystemProvider automatically (even if it doesn't
@@ -46,9 +47,12 @@ public class AutoMountVirtualFileSystemRegistry extends VirtualFileSystemRegistr
 
     @Override
     protected VirtualFileSystemProvider loadProvider(String vfsId) throws VirtualFileSystemException {
-        if (mountStrategy.getMountPath(vfsId).exists()) {
-            return new LocalFileSystemProvider(vfsId, mountStrategy, searcherProvider);
+        File wsPath = mountStrategy.getMountPath(vfsId);
+        if (!wsPath.exists()) {
+            if (!wsPath.mkdirs()) {
+                return null;
+            }
         }
-        return null;
+        return new LocalFileSystemProvider(vfsId, mountStrategy, searcherProvider);
     }
 }
