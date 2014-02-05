@@ -17,10 +17,10 @@
  */
 package com.codenvy.ide.client;
 
+import com.codenvy.api.project.gwt.client.TemplateClientService;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.template.TemplateClientService;
 import com.codenvy.ide.api.template.TemplateDescriptorRegistry;
 import com.codenvy.ide.api.ui.theme.Style;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;

@@ -17,6 +17,10 @@
  */
 package com.codenvy.ide.core.inject;
 
+import com.codenvy.api.project.gwt.client.ProjectClientService;
+import com.codenvy.api.project.gwt.client.ProjectClientServiceImpl;
+import com.codenvy.api.project.gwt.client.TemplateClientService;
+import com.codenvy.api.project.gwt.client.TemplateClientServiceImpl;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.actions.ActionManagerImpl;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
@@ -40,7 +44,6 @@ import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.template.TemplateAgent;
-import com.codenvy.ide.api.template.TemplateClientService;
 import com.codenvy.ide.api.template.TemplateDescriptorRegistry;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
@@ -108,7 +111,6 @@ import com.codenvy.ide.projecttype.ManageProjectsClientServiceImpl;
 import com.codenvy.ide.projecttype.ProjectTypeDescriptionClientService;
 import com.codenvy.ide.projecttype.SelectProjectTypeView;
 import com.codenvy.ide.projecttype.SelectProjectTypeViewImpl;
-import com.codenvy.ide.projecttype.TemplateClientServiceImpl;
 import com.codenvy.ide.rename.RenameResourceView;
 import com.codenvy.ide.rename.RenameResourceViewImpl;
 import com.codenvy.ide.resources.ProjectTypeAgent;
@@ -172,7 +174,7 @@ import com.google.inject.name.Names;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
-/** @author Nikolay Zamosenchuk*/
+/** @author Nikolay Zamosenchuk */
 @ExtensionGinModule
 public class CoreGinModule extends AbstractGinModule {
 
@@ -190,6 +192,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(UserClientService.class).to(UserClientServiceImpl.class).in(Singleton.class);
         bind(ManageProjectsClientService.class).to(ManageProjectsClientServiceImpl.class).in(Singleton.class);
         bind(TemplateClientService.class).to(TemplateClientServiceImpl.class).in(Singleton.class);
+        bind(ProjectClientService.class).to(ProjectClientServiceImpl.class).in(Singleton.class);
         bind(ProjectTypeDescriptionClientService.class).in(Singleton.class);
         bind(PreferencesManager.class).to(PreferencesManagerImpl.class).in(Singleton.class);
         bind(MessageBus.class).to(MessageBusImpl.class).in(Singleton.class);
@@ -312,6 +315,13 @@ public class CoreGinModule extends AbstractGinModule {
     @Singleton
     protected String provideDefaultRestContext() {
         return "/api";
+    }
+
+    @Provides
+    @Named("workspaceId")
+    @Singleton
+    protected String provideWorkspaceId() {
+        return Utils.getWorkspaceId();
     }
 
     @Provides

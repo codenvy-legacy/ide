@@ -45,14 +45,14 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-commons</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-vfs</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api-gwt-client</groupId>
+            <artifactId>codenvy-api-gwt-client-commons</artifactId>
+            <version>${codenvy.platform-api-gwt-client.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.validation</groupId>

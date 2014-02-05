@@ -31,7 +31,6 @@
     <packaging>pom</packaging>
     <name>Codenvy :: Parent</name>
     <modules>
-        <module>codenvy-ide-commons</module>
         <module>codenvy-ide-env-dummy</module>
         <module>codenvy-ide-api</module>
         <module>codenvy-ide-ui</module>
@@ -87,6 +86,7 @@
         <buildnumber.plugin.version>1.1</buildnumber.plugin.version>
         <ch.qos.logback.version>1.0.13</ch.qos.logback.version>
         <codenvy.ide-codeassistant-index.version>20120627</codenvy.ide-codeassistant-index.version>
+        <codenvy.platform-api-gwt-client.version>0.1.0-SNAPSHOT</codenvy.platform-api-gwt-client.version>
         <com.codenvy.commons.version>0.14.0-SNAPSHOT</com.codenvy.commons.version>
         <com.codenvy.organization.version>0.11.0-SNAPSHOT</com.codenvy.organization.version>
         <com.codenvy.platform-api.version>0.8.0-SNAPSHOT</com.codenvy.platform-api.version>
