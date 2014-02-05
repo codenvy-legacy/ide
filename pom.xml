@@ -93,6 +93,7 @@
         <codenvy.ide-codeassistant-index.version>20120627</codenvy.ide-codeassistant-index.version>
         <codenvy.organization.version>0.11.0-SNAPSHOT</codenvy.organization.version>
         <codenvy.platform-api.version>0.8.0-SNAPSHOT</codenvy.platform-api.version>
+        <codenvy.security.version>0.1.0-SNAPSHOT</codenvy.security.version>
         <commons-codec.version>1.6</commons-codec.version>
         <commons-compress.version>1.0</commons-compress.version>
         <commons-configuration.version>1.8</commons-configuration.version>

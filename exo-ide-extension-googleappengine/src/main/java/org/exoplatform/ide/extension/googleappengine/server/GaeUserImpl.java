@@ -17,7 +17,7 @@
  */
 package org.exoplatform.ide.extension.googleappengine.server;
 
-import com.codenvy.commons.security.shared.Token;
+import com.codenvy.security.shared.Token;
 
 import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
 

@@ -19,8 +19,8 @@ package org.exoplatform.ide.git.server.provider.github;
 
 import com.codenvy.commons.json.JsonHelper;
 import com.codenvy.commons.json.JsonParseException;
-import com.codenvy.commons.security.oauth.OAuthTokenProvider;
-import com.codenvy.commons.security.shared.Token;
+import com.codenvy.security.oauth.OAuthTokenProvider;
+import com.codenvy.security.shared.Token;
 
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.exoplatform.container.xml.InitParams;

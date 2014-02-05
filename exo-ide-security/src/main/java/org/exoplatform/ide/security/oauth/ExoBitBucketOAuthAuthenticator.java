@@ -1,6 +1,6 @@
 package org.exoplatform.ide.security.oauth;
 
-import com.codenvy.commons.security.oauth.oauth1.BitBucketOAuthAuthenticator;
+import com.codenvy.security.oauth.oauth1.BitBucketOAuthAuthenticator;
 
 import org.exoplatform.container.xml.InitParams;
 

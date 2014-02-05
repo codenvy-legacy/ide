@@ -105,7 +105,7 @@
     </component>
 
     <component>
-        <type>com.codenvy.commons.security.oauth.OAuthAuthenticatorTokenProvider</type>
+        <type>com.codenvy.security.oauth.OAuthAuthenticatorTokenProvider</type>
     </component>
 
     <component>

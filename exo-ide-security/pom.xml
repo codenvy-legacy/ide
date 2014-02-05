@@ -15,11 +15,6 @@
             <version>${codenvy.commons.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.codenvy.commons</groupId>
-            <artifactId>codenvy-commons-security</artifactId>
-            <version>${codenvy.commons.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.codenvy.organization</groupId>
             <artifactId>codenvy-organization-api</artifactId>
             <version>${codenvy.organization.version}</version>
@@ -28,6 +23,11 @@
             <groupId>com.codenvy.organization</groupId>
             <artifactId>codenvy-organization-api-java-client</artifactId>
             <version>${codenvy.organization.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.security</groupId>
+            <artifactId>codenvy-security-oauth</artifactId>
+            <version>${codenvy.security.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.api-client</groupId>

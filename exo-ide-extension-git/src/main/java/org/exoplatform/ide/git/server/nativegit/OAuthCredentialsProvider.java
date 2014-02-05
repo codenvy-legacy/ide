@@ -17,8 +17,8 @@
  */
 package org.exoplatform.ide.git.server.nativegit;
 
-import com.codenvy.commons.security.oauth.OAuthTokenProvider;
-import com.codenvy.commons.security.shared.Token;
+import com.codenvy.security.oauth.OAuthTokenProvider;
+import com.codenvy.security.shared.Token;
 
 import org.exoplatform.ide.git.server.GitException;
 import org.exoplatform.ide.git.server.provider.GitVendorService;

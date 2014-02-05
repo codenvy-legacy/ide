@@ -17,8 +17,8 @@
  */
 package org.exoplatform.ide.extension.googleappengine.shared;
 
-import com.codenvy.commons.security.shared.Token;
-import com.codenvy.commons.security.shared.User;
+import com.codenvy.security.shared.Token;
+import com.codenvy.security.shared.User;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>

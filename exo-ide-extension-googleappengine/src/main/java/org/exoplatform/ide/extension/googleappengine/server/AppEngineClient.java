@@ -18,8 +18,8 @@
 package org.exoplatform.ide.extension.googleappengine.server;
 
 import com.codenvy.commons.env.EnvironmentContext;
-import com.codenvy.commons.security.oauth.OAuthTokenProvider;
-import com.codenvy.commons.security.shared.Token;
+import com.codenvy.security.oauth.OAuthTokenProvider;
+import com.codenvy.security.shared.Token;
 import com.google.appengine.tools.admin.AppAdmin;
 import com.google.appengine.tools.admin.AppAdminFactory.ApplicationProcessingOptions;
 import com.google.appengine.tools.admin.AppAdminFactory.ConnectOptions;

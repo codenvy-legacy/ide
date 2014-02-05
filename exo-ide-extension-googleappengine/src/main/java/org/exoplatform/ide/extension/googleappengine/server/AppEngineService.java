@@ -17,8 +17,8 @@
  */
 package org.exoplatform.ide.extension.googleappengine.server;
 
-import com.codenvy.commons.security.oauth.OAuthTokenProvider;
-import com.codenvy.commons.security.shared.Token;
+import com.codenvy.security.oauth.OAuthTokenProvider;
+import com.codenvy.security.shared.Token;
 import com.google.appengine.tools.admin.CronEntry;
 import com.google.apphosting.utils.config.BackendsXml;
 
