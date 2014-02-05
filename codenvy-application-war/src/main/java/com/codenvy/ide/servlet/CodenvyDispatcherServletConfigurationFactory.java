@@ -135,8 +135,8 @@ public class CodenvyDispatcherServletConfigurationFactory extends DispatcherServ
                                                          writer.write("      var path = null;\n");
                                                      }
                                                      
-                                                     writer.write("      var facebook_like_url = \"/ide/_app/fblike.html\";\n");
-                                                     writer.write("      var google_like_url = \"/ide/_app/googleone.html\";\n");
+                                                     writer.write("      var facebook_like_url = \"/ide/_app/facebook-like.html\";\n");
+                                                     writer.write("      var google_like_url = \"/ide/_app/google-like.html\";\n");
                                                      
                                                      writer.write("    </script>\n");
                                                      writer.write("    <link rel=\"shortcut icon\" href=\"_app/favicon.ico\"/>\n");

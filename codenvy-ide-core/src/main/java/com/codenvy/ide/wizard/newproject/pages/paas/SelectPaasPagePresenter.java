@@ -43,6 +43,7 @@ public class SelectPaasPagePresenter  extends AbstractWizardPage implements Sele
     public SelectPaasPagePresenter(SelectPaasPageView view, PaaSAgentImpl paasAgent) {
         super("Select PaaS", null);
         this.view = view;
+        this.view.setDelegate(this);
         this.paasAgent = paasAgent;
     }
 
