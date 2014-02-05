@@ -28,9 +28,11 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
+import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.wizard.newproject.PaaSAgentImpl;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
@@ -125,7 +127,18 @@ public class SelectPaasPagePresenter extends AbstractWizardPage implements Selec
             projectService.importProject(projectName, zip, new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(final String result) {
-                    wizardContext.putData(PROJECT, dtoFactory.createDtoFromJson(result, ProjectDescriptor.class));
+                    resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
+                        @Override
+                        public void onSuccess(Project project) {
+                            wizardContext.putData(PROJECT, dtoFactory.createDtoFromJson(result, ProjectDescriptor.class));
+                            callback.onSuccess();
+                        }
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            callback.onFailure(caught);
+                        }
+                    });
                 }
 
                 @Override
