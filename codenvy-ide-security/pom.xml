@@ -30,14 +30,14 @@
     <name>Codenvy :: Security</name>
     <dependencies>
         <dependency>
-            <groupId>com.codenvy.commons</groupId>
-            <artifactId>codenvy-commons-security</artifactId>
-            <version>${com.codenvy.commons.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.codenvy.organization</groupId>
             <artifactId>codenvy-organization-api-java-client</artifactId>
             <version>${com.codenvy.organization.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.security</groupId>
+            <artifactId>codenvy-security-oauth</artifactId>
+            <version>${com.codenvy.security.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>

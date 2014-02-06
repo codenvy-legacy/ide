@@ -20,8 +20,6 @@ package com.codenvy.ide.ext.github.server;
 import com.codenvy.commons.json.JsonHelper;
 import com.codenvy.commons.json.JsonNameConventions;
 import com.codenvy.commons.json.JsonParseException;
-import com.codenvy.commons.security.oauth.OAuthTokenProvider;
-import com.codenvy.commons.security.shared.Token;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.commons.ParsingResponseException;
@@ -36,6 +34,8 @@ import com.codenvy.ide.ext.ssh.server.SshKeyStore;
 import com.codenvy.ide.ext.ssh.server.SshKeyStoreException;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.HTTPMethod;
+import com.codenvy.security.oauth.OAuthTokenProvider;
+import com.codenvy.security.shared.Token;
 
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.slf4j.Logger;
