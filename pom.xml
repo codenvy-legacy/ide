@@ -95,7 +95,7 @@
         <commons-io.version>2.4</commons-io.version>
         <commons.compress.version>1.6</commons.compress.version>
         <enforcer.plugin.version>1.0.1</enforcer.plugin.version>
-        <everrest.version>1.1.9-SNAPSHOT</everrest.version>
+        <everrest.version>1.1.9</everrest.version>
         <exo.product.name>codenvy-ide</exo.product.name>
         <failsafe.plugin.version>2.6</failsafe.plugin.version>
         <gin.version>2.1.2</gin.version>
