@@ -17,11 +17,7 @@
  */
 package com.codenvy.ide.security.oauth.server;
 
-import com.codenvy.commons.security.oauth.GitHubOAuthAuthenticator;
-import com.codenvy.commons.security.oauth.GoogleOAuthAuthenticator;
-import com.codenvy.commons.security.oauth.OAuthAuthenticator;
-import com.codenvy.commons.security.oauth.OAuthAuthenticatorProvider;
-import com.codenvy.commons.security.oauth.WSO2OAuthAuthenticator;
+import com.codenvy.security.oauth.*;
 import com.google.api.client.auth.oauth2.MemoryCredentialStore;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.json.jackson.JacksonFactory;

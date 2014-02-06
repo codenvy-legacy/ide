@@ -18,9 +18,9 @@
 package com.codenvy.ide.ext.git.server.nativegit;
 
 import com.codenvy.api.core.user.UserState;
-import com.codenvy.commons.security.oauth.OAuthTokenProvider;
-import com.codenvy.commons.security.shared.Token;
 import com.codenvy.ide.ext.git.server.GitException;
+import com.codenvy.security.oauth.OAuthTokenProvider;
+import com.codenvy.security.shared.Token;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,7 @@ public class OAuthCredentialsProvider implements CredentialsProvider {
         "(:[0-9]{1,5})?/.+\\.git";
 
     public static final Pattern WSO_2_URL_PATTERN = Pattern.compile(WSO_2_URL_STRING);
-    
+
     private static final Logger LOG = LoggerFactory.getLogger(OAuthCredentialsProvider.class);
     private final OAuthTokenProvider tokenProvider;
 
