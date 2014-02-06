@@ -24,6 +24,7 @@ import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorPartPresenter.EditorPartCloseHandler;
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.editor.EditorRegistry;
+import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
 import com.codenvy.ide.api.resources.FileEvent;
@@ -182,8 +183,8 @@ public class EditorAgentImpl implements EditorAgent {
             activeEditor = null;
         }
         //call close() method
-        if(editor instanceof TextEditorPresenter){
-            ((TextEditorPresenter)editor).close(false);
+        if(editor instanceof TextEditorPartPresenter){
+            ((TextEditorPartPresenter)editor).close(false);
         }
         Array<String> keys = openedEditors.getKeys();
         for (int i = 0; i < keys.size(); i++) {
