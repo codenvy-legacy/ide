@@ -19,6 +19,8 @@ package com.codenvy.ide.core.inject;
 
 import com.codenvy.api.project.gwt.client.ProjectClientService;
 import com.codenvy.api.project.gwt.client.ProjectClientServiceImpl;
+import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionClientService;
+import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionClientServiceImpl;
 import com.codenvy.api.project.gwt.client.TemplateClientService;
 import com.codenvy.api.project.gwt.client.TemplateClientServiceImpl;
 import com.codenvy.ide.Resources;
@@ -106,7 +108,6 @@ import com.codenvy.ide.project.properties.add.AddNewPropertyView;
 import com.codenvy.ide.project.properties.add.AddNewPropertyViewImpl;
 import com.codenvy.ide.project.properties.edit.EditPropertyView;
 import com.codenvy.ide.project.properties.edit.EditPropertyViewImpl;
-import com.codenvy.ide.projecttype.ProjectTypeDescriptionClientService;
 import com.codenvy.ide.projecttype.SelectProjectTypeView;
 import com.codenvy.ide.projecttype.SelectProjectTypeViewImpl;
 import com.codenvy.ide.rename.RenameResourceView;
@@ -190,7 +191,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(UserClientService.class).to(UserClientServiceImpl.class).in(Singleton.class);
         bind(TemplateClientService.class).to(TemplateClientServiceImpl.class).in(Singleton.class);
         bind(ProjectClientService.class).to(ProjectClientServiceImpl.class).in(Singleton.class);
-        bind(ProjectTypeDescriptionClientService.class).in(Singleton.class);
+        bind(ProjectTypeDescriptionClientService.class).to(ProjectTypeDescriptionClientServiceImpl.class).in(Singleton.class);
         bind(PreferencesManager.class).to(PreferencesManagerImpl.class).in(Singleton.class);
         bind(MessageBus.class).to(MessageBusImpl.class).in(Singleton.class);
         bind(NotificationManager.class).to(NotificationManagerImpl.class).in(Singleton.class);
