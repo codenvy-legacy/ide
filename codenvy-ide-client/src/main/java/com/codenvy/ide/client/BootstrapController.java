@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.client;
 
+import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionClientService;
 import com.codenvy.api.project.gwt.client.TemplateClientService;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
@@ -31,7 +32,6 @@ import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
-import com.codenvy.ide.projecttype.ProjectTypeDescriptionClientService;
 import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
@@ -71,7 +71,7 @@ public class BootstrapController {
      * @param extensionInitializer
      * @param preferencesManager
      * @param userService
-     * @param projectTypeService
+     * @param projectTypeDescriptionService
      * @param projectTypeDescriptorRegistry
      * @param templateClientService
      * @param templateDescriptorRegistry
@@ -87,7 +87,7 @@ public class BootstrapController {
                                final ExtensionInitializer extensionInitializer,
                                final PreferencesManagerImpl preferencesManager,
                                UserClientService userService,
-                               final ProjectTypeDescriptionClientService projectTypeService,
+                               final ProjectTypeDescriptionClientService projectTypeDescriptionService,
                                final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
                                TemplateClientService templateClientService,
                                final TemplateDescriptorRegistry templateDescriptorRegistry,
@@ -95,7 +95,7 @@ public class BootstrapController {
                                DtoRegistrar dtoRegistrar,
                                final DtoFactory dtoFactory,
                                final ThemeAgent themeAgent) {
-        this.projectTypeService = projectTypeService;
+        this.projectTypeService = projectTypeDescriptionService;
         this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
         this.templateClientService = templateClientService;
         this.templateDescriptorRegistry = templateDescriptorRegistry;
