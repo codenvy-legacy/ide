@@ -38,7 +38,7 @@ public class ThemeAgentImpl  implements ThemeAgent{
 
     public ThemeAgentImpl() {
         addTheme(defaultTheme);
-        addTheme(new WhiteTheme());
+        addTheme(new LightTheme());
     }
 
     @Override

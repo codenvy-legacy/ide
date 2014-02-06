@@ -22,9 +22,9 @@ import com.codenvy.ide.api.ui.theme.Theme;
 /**
  * @author Evgen Vidolob
  */
-public class WhiteTheme implements Theme {
+public class LightTheme implements Theme {
 
-    public static final String DEFAULT_THEME_ID = "WhiteTheme";
+    public static final String DEFAULT_THEME_ID = "LightTheme";
 
     private static String tabBorderColor = "#bdbdbd";
 
@@ -64,7 +64,7 @@ public class WhiteTheme implements Theme {
 
     @Override
     public String getDescription() {
-        return "White theme";
+        return "Light theme";
     }
 
     @Override
