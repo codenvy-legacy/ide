@@ -100,13 +100,9 @@ public class GitHub extends GitVendorService {
     public GitHub(@Named("github.user") String myGitHubUser,
                   OAuthTokenProvider oauthTokenProvider,
                   SshKeyStore sshKeyStore,
-                  @Named("github.vendorName") String vendorName,
-                  @Named("github.vendorBaseHost") String vendorBaseHost,
-                  @Named("github.vendorUrlPattern") String vendorUrlPattern,
-                  @Named("github.vendorOAuthScopes") String[] vendorOAuthScopes,
-                  @Named("github.vendorSupportOAuth2") boolean oauth2) {
+                  @Named("github.vendorOAuthScopes") String[] vendorOAuthScopes) {
 
-        super(vendorName, vendorBaseHost, vendorUrlPattern, vendorOAuthScopes, oauth2, sshKeyStore);
+        super("github", "github.com", ".*github\\.com.*", vendorOAuthScopes, true, sshKeyStore);
 
         this.myGitHubUser = myGitHubUser;
         this.oauthTokenProvider = oauthTokenProvider;

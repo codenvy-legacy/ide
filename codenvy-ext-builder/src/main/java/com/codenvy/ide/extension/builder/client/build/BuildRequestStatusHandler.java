@@ -40,7 +40,6 @@ public class BuildRequestStatusHandler implements RequestStatusHandler {
      *         project's name
      */
     public BuildRequestStatusHandler(String projectName, EventBus eventBus, BuilderLocalizationConstant constant) {
-        super();
         this.projectName = projectName;
         this.eventBus = eventBus;
         this.constant = constant;

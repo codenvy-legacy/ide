@@ -34,7 +34,7 @@ import com.google.inject.Singleton;
 
 /**
  * UI for editing property's value.
- * 
+ *
  * @author Ann Shumilova
  */
 @Singleton
@@ -43,13 +43,13 @@ public class EditPropertyViewImpl extends DialogBox implements EditPropertyView 
     }
 
     @UiField
-    Label   name;
+    Label                                 name;
     @UiField
-    TextBox value;
+    TextBox                               value;
     @UiField
-    Button  btnOk;
+    Button                                btnOk;
     @UiField
-    Button  btnCancel;
+    Button                                btnCancel;
     @UiField(provided = true)
     ProjectPropertiesLocalizationConstant locale;
 
@@ -58,13 +58,13 @@ public class EditPropertyViewImpl extends DialogBox implements EditPropertyView 
     /**
      * Create view.
      *
-     * @param resources
      * @param locale
+     * @param uiBinder
      */
     @Inject
     protected EditPropertyViewImpl(ProjectPropertiesLocalizationConstant locale, EditPropertyViewImplUiBinder uiBinder) {
-        Widget widget = uiBinder.createAndBindUi(this);
         this.locale = locale;
+        Widget widget = uiBinder.createAndBindUi(this);
         this.setText(locale.editPropertyViewTitle());
         this.setWidget(widget);
     }
