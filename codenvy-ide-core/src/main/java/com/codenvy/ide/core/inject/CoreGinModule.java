@@ -112,7 +112,6 @@ import com.codenvy.ide.projecttype.SelectProjectTypeView;
 import com.codenvy.ide.projecttype.SelectProjectTypeViewImpl;
 import com.codenvy.ide.rename.RenameResourceView;
 import com.codenvy.ide.rename.RenameResourceViewImpl;
-import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.resources.model.GenericModelProvider;
@@ -146,7 +145,6 @@ import com.codenvy.ide.wizard.WizardDialogPresenter;
 import com.codenvy.ide.wizard.WizardDialogView;
 import com.codenvy.ide.wizard.WizardDialogViewImpl;
 import com.codenvy.ide.wizard.newproject.PaaSAgentImpl;
-import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
 import com.codenvy.ide.wizard.newproject.ProjectTypeDescriptorRegistryImpl;
 import com.codenvy.ide.wizard.newproject.TemplateAgentImpl;
 import com.codenvy.ide.wizard.newproject.TemplateDescriptorRegistryImpl;
@@ -215,7 +213,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(NewResourceAgent.class).to(NewResourceAgentImpl.class).in(Singleton.class);
         bind(PaaSAgent.class).to(PaaSAgentImpl.class).in(Singleton.class);
         bind(TemplateAgent.class).to(TemplateAgentImpl.class).in(Singleton.class);
-        bind(ProjectTypeAgent.class).to(ProjectTypeAgentImpl.class).in(Singleton.class);
         bind(ProjectTypeDescriptorRegistry.class).to(ProjectTypeDescriptorRegistryImpl.class).in(Singleton.class);
         bind(TemplateDescriptorRegistry.class).to(TemplateDescriptorRegistryImpl.class).in(Singleton.class);
         // UI Model
