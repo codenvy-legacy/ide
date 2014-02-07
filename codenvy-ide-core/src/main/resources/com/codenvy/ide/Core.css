@@ -78,7 +78,7 @@ input[type=radio]:checked + label:before {
     background: radial-gradient(ellipse at center, windowContentBackground 46%,mainFontColor 51%); /* W3C */
 }
 
-.gwt-TextBox{
+.gwt-TextBox, .gwt-PasswordTextBox{
     background-color: inputBackground;
     color: mainFontColor;
     border: 1px solid tabBorder;
@@ -86,7 +86,7 @@ input[type=radio]:checked + label:before {
     font-size: fontSize;
 }
 
-.gwt-TextBox[disabled]{
+.gwt-TextBox[disabled], .gwt-PasswordTextBox[disabled]{
     background-color: tabsPanelBackground;
 }
 
