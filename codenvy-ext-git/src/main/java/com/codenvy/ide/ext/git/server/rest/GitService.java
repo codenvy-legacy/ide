@@ -264,7 +264,7 @@ public class GitService {
                     Property projectTypeProperty = DtoFactory.getInstance().createDto(Property.class).withName("vfs:projectType")
                                                              .withValue(new ArrayList<String>(Arrays.asList("Multiple Module Project")));
                     propertiesList.add(projectTypeProperty);
-                    propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("nature.primary")
+                    propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("language")
                                                  .withValue(new ArrayList<String>(Arrays.asList("java"))));
                     propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("vfs:mimeType")
                                                  .withValue(new ArrayList<String>(Arrays.asList("text/vnd.ideproject+directory"))));
