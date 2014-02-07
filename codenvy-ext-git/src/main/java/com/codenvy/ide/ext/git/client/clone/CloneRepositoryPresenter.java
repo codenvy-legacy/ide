@@ -232,8 +232,8 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
         view.setProjectName("");
         view.setRemoteUri("");
         view.setRemoteName(DEFAULT_REPO_NAME);
-        view.focusInRemoteUrlField();
         view.setEnableCloneButton(false);
         view.showDialog();
+        view.focusInRemoteUrlField();
     }
 }
