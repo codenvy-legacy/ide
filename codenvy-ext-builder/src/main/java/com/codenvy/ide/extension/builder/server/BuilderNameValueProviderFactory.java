@@ -62,7 +62,7 @@ public class BuilderNameValueProviderFactory implements ValueProviderFactory {
                     provider = registry.getProvider(vfsId);
                     MountPoint mountPoint = provider.getMountPoint(false);
                     VirtualFile root = mountPoint.getRoot();
-                    VirtualFile projectFolder = root.getChild(project.getName());
+                    VirtualFile projectFolder = root.getChild(project.getPath());
                     if (projectFolder.getChild("pom.xml") != null) {
                         list.add("maven");
                     } else if (projectFolder.getChild("build.xml") != null) {

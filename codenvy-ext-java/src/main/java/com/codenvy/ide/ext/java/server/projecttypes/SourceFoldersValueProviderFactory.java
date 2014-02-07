@@ -66,7 +66,7 @@ public class SourceFoldersValueProviderFactory implements ValueProviderFactory {
                     provider = registry.getProvider(vfsId);
                     MountPoint mountPoint = provider.getMountPoint(false);
                     VirtualFile root = mountPoint.getRoot();
-                    VirtualFile projectFolder = root.getChild(project.getName());
+                    VirtualFile projectFolder = root.getChild(project.getPath());
                     VirtualFile mavenDescriptor = projectFolder.getChild("pom.xml");
                     VirtualFile antDescriptor = projectFolder.getChild("build.xml");
                     if (mavenDescriptor != null) {

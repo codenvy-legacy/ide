@@ -59,8 +59,8 @@ public interface ResourceProvider {
     public void setActiveProject(Project project);
 
     /**
-     * Reads already stored project. Model Provider will be invoked to deserialized Project Model corresponding to
-     * Primary Nature stored in Project's Properties.
+     * Reads already stored project. Model Provider will be invoked to deserialized
+     * Project Model corresponding to the value of the project's attribute 'language'.
      *
      * @param name
      * @param callback
