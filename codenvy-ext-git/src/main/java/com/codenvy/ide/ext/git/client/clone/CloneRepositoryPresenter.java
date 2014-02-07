@@ -37,7 +37,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
 
 import javax.validation.constraints.NotNull;
 
@@ -48,8 +47,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 /**
  * The presenter for Clone Repository from github.com.
  *
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Mar 22, 2011 4:31:12 PM anya $
+ * @author Ann Zhuleva
  */
 @Singleton
 public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDelegate {
@@ -57,7 +55,6 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
     private CloneRepositoryView     view;
     private GitClientService        service;
     private ResourceProvider        resourceProvider;
-    private EventBus                eventBus;
     private GitLocalizationConstant constant;
     private NotificationManager     notificationManager;
     private Notification            notification;
@@ -65,13 +62,11 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
 
     @Inject
     public CloneRepositoryPresenter(CloneRepositoryView view, GitClientService service, ResourceProvider resourceProvider,
-                                    EventBus eventBus, GitLocalizationConstant constant, NotificationManager notificationManager,
-                                    DtoFactory dtoFactory) {
+                                    GitLocalizationConstant constant, NotificationManager notificationManager, DtoFactory dtoFactory) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
-        this.eventBus = eventBus;
         this.constant = constant;
         this.notificationManager = notificationManager;
         this.dtoFactory = dtoFactory;
