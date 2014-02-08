@@ -4,7 +4,7 @@
     <parent>
         <artifactId>exo-ide-parent</artifactId>
         <groupId>org.exoplatform.ide</groupId>
-        <version>2.10.4-SNAPSHOT</version>
+        <version>2.10.4</version>
     </parent>
     <artifactId>exo-ide-extension-appfog</artifactId>
     <name>Codenvy IDE :: Extension :: Appfog</name>
