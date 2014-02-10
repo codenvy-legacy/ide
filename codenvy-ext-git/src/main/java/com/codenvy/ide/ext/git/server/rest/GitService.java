@@ -329,6 +329,8 @@ public class GitService {
                                                  .withValue(new ArrayList<String>(Arrays.asList("text/vnd.ideproject+directory"))));
                     propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("isGitRepository")
                                                  .withValue(new ArrayList<String>(Arrays.asList("true"))));
+                    propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("builder.name")
+                                                 .withValue(new ArrayList<String>(Arrays.asList("maven"))));
                     vfs.updateItem(folder.getId(), propertiesList, null);
                     found = true;
                     break;
