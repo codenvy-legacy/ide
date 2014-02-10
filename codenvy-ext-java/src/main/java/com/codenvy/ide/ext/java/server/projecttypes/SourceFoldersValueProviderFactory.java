@@ -25,7 +25,6 @@ import com.codenvy.api.vfs.server.VirtualFileSystemProvider;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.shared.dto.Project;
-import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.ide.maven.tools.MavenUtils;
 
 import org.apache.maven.model.Model;
@@ -58,9 +57,8 @@ public class SourceFoldersValueProviderFactory implements ValueProviderFactory {
             @Override
             public List<String> getValues() {
                 final List<String> list = new ArrayList<>();
-                final String workspaceId = (String)EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
                 try {
-                    VirtualFileSystemProvider provider = registry.getProvider(workspaceId);
+                    VirtualFileSystemProvider provider = registry.getProvider(project.getVfsId());
                     MountPoint mountPoint = provider.getMountPoint(false);
                     VirtualFile root = mountPoint.getRoot();
                     VirtualFile projectFolder = root.getChild(project.getPath());
