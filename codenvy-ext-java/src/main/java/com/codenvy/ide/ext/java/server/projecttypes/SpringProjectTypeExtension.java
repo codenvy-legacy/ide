@@ -43,9 +43,7 @@ public class SpringProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public List<Attribute> getPredefinedAttributes() {
-        final List<Attribute> list = new ArrayList<>(1);
-        // TODO: provide a single value for predefined attributes. Avoid using ValueProviders
-        // VfsPropertyValueProvider is used as temporary solution because we don't have any way to get attribute's value on the client side
+        final List<Attribute> list = new ArrayList<>(2);
         list.add(new Attribute("language", new VfsPropertyValueProvider("language", "java")));
         list.add(new Attribute("runner.name", new VfsPropertyValueProvider("runner.name", "webapps")));
         return list;

@@ -43,10 +43,9 @@ public class CodenvyTutorialProjectTypeExtension implements ProjectTypeExtension
 
     @Override
     public List<Attribute> getPredefinedAttributes() {
-        final List<Attribute> list = new ArrayList<>(2);
-        // TODO: provide a single value for predefined attributes. Avoid using ValueProviders
-        // VfsPropertyValueProvider is used as temporary solution because we don't have any way to get attribute's value on the client side
+        final List<Attribute> list = new ArrayList<>(3);
         list.add(new Attribute("language", new VfsPropertyValueProvider("language", "java")));
+        list.add(new Attribute("builder.name", new VfsPropertyValueProvider("builder.name", "maven")));
         list.add(new Attribute("runner.name", new VfsPropertyValueProvider("runner.name", "sdk")));
         return list;
     }
