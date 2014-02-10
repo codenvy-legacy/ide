@@ -21,25 +21,40 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.event.CreateProjectEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 import org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersEvent;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryEvent;
 import org.exoplatform.ide.git.client.github.gitimport.ImportFromGithubEvent;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * Presenter for welcome view.
- * 
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: WelcomePresenter.java Aug 25, 2011 12:27:27 PM vereshchaka $
+ * @author Oksana Vereshchaka
  */
-public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandler {
+public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandler, PremiumAccountInfoReceivedHandler {
 
     public interface Display extends IsView {
 
@@ -50,18 +65,21 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
         HasClickHandlers getImportLink();
 
         HasClickHandlers getInvitationsLink();
-        
+
+        Anchor getSupportLink();
+
         void disableInvitationsLink();
 
     }
 
     private Display          display;
-
     private ReadOnlyUserView readOnlyUserView;
+    private boolean          premiumUser;
 
     public StartPagePresenter() {
         IDE.addHandler(OpenStartPageEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(PremiumAccountInfoReceivedEvent.TYPE, this);
     }
 
     private void bindDisplay() {
@@ -114,13 +132,31 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
             }
         });
         if (IDE.isRoUser() || IDE.currentWorkspace.isTemporary())
-          display.disableInvitationsLink();
+            display.disableInvitationsLink();
+
+        changeSupportLink();
     }
 
-    /**
-     * @see org.exoplatform.ide.client.OpenStartPageHandler.OpenWelcomeHandler#onOpenStartPage(org.exoplatform.ide.client
-     *      .OpenStartPageEvent.OpenWelcomeEvent)
-     */
+    /** {@inheritDoc} */
+    @Override
+    public void onPremiumAccountInfoReceived(PremiumAccountInfoReceivedEvent event) {
+        premiumUser = event.isUserHasPremiumAccount();
+
+        if (display != null) {
+            changeSupportLink();
+        }
+    }
+
+    /** Perform change Support Link for premium user. */
+    private void changeSupportLink() {
+        display.getSupportLink().setHref(premiumUser ? "javascript:UserVoice.showPopupWidget();"
+                                                     : "http://helpdesk.codenvy.com");
+        if (!premiumUser) {
+            display.getSupportLink().setTarget("_blank");
+        }
+    }
+
+    /** {@inheritDoc} */
     @Override
     public void onOpenStartPage(OpenStartPageEvent event) {
         if (display == null) {
@@ -134,15 +170,11 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
         }
     }
 
-    /**
-     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     *      .event.ViewClosedEvent)
-     */
+    /** {@inheritDoc} */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
             display = null;
         }
     }
-
 }

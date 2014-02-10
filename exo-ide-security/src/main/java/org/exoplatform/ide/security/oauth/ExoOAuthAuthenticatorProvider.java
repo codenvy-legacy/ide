@@ -17,8 +17,8 @@
  */
 package org.exoplatform.ide.security.oauth;
 
-import com.codenvy.commons.security.oauth.OAuthAuthenticator;
-import com.codenvy.commons.security.oauth.OAuthAuthenticatorProvider;
+import com.codenvy.security.oauth.OAuthAuthenticator;
+import com.codenvy.security.oauth.OAuthAuthenticatorProvider;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;

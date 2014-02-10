@@ -17,6 +17,14 @@
  */
 package org.exoplatform.ide.client.framework.util;
 
+import com.google.gwt.http.client.URL;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
@@ -411,6 +419,43 @@ public class Utils {
         return $wnd.startUpParams;
     }-*/;
 
+    /**
+     * Parses window["startUpParams"] parameter and returns the result as a map.
+     * 
+     * @return
+     */
+    public static Map<String, List<String>> getStartUpParamsAsMap() {
+        String queryString = getStartUpParams();
+        if (queryString == null || queryString.isEmpty()) {
+            return null;
+        }
+        
+        while (queryString.startsWith("?")) {
+            queryString = queryString.substring(1);
+        }
+        
+        Map<String, List<String>> out = new HashMap<String, List<String>>();
+        for (String kvPair : queryString.split("&")) {
+            String[] kv = kvPair.split("=", 2);
+            if (kv[0].length() == 0) {
+                continue;
+            }
+
+            List<String> values = out.get(kv[0]);
+            if (values == null) {
+                values = new ArrayList<String>();
+                out.put(kv[0], values);
+            }
+            values.add(kv.length > 1 ? URL.decodeQueryString(kv[1]) : "");
+        }
+
+        for (Map.Entry<String, List<String>> entry : out.entrySet()) {
+            entry.setValue(Collections.unmodifiableList(entry.getValue()));
+        }
+
+        return Collections.unmodifiableMap(out);
+    }
+    
     public static native String getFilePathToOpen() /*-{
         if ($wnd.path)
             return $wnd.project + $wnd.path;

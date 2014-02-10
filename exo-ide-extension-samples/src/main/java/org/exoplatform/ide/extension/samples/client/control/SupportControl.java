@@ -19,13 +19,13 @@ package org.exoplatform.ide.extension.samples.client.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
+import org.exoplatform.ide.extension.samples.client.startpage.PremiumAccountInfoReceivedEvent;
+import org.exoplatform.ide.extension.samples.client.startpage.PremiumAccountInfoReceivedHandler;
 
-/**
- * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
- * @version $Id: $
- */
-public class SupportControl extends SimpleControl implements IDEControl {
+/** Contact Support control */
+public class SupportControl extends SimpleControl implements IDEControl, PremiumAccountInfoReceivedHandler {
     private static final String ID = "Help/Contact Support";
 
     private static final String TITLE = "Contact Support";
@@ -38,11 +38,18 @@ public class SupportControl extends SimpleControl implements IDEControl {
         setEnabled(true);
         setImages(SamplesClientBundle.INSTANCE.contact(), SamplesClientBundle.INSTANCE.contactDisabled());
 
-        getAttributes().put("onClick", "javascript:UserVoice.showPopupWidget({mode:'support'});");
+        getAttributes().put("onClick", "javascript:UserVoice.showPopupWidget();");
     }
 
 
     @Override
     public void initialize() {
+        IDE.addHandler(PremiumAccountInfoReceivedEvent.TYPE, this);
+    }
+
+    @Override
+    public void onPremiumAccountInfoReceived(PremiumAccountInfoReceivedEvent event) {
+        getAttributes().put("onClick", event.isUserHasPremiumAccount() ? "javascript:UserVoice.showPopupWidget();"
+                                                                       : "javascript:window.open('http://helpdesk.codenvy.com');");
     }
 }

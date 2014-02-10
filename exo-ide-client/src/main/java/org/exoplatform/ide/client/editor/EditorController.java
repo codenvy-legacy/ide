@@ -101,6 +101,7 @@ import org.exoplatform.ide.editor.client.api.event.EditorContextMenuEvent;
 import org.exoplatform.ide.editor.client.api.event.EditorContextMenuHandler;
 import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedEvent;
 import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedHandler;
+import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
@@ -434,7 +435,7 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
         try {
             Editor[] editors = IDE.getInstance().getFileTypeRegistry().getEditors(file.getMimeType());
             EditorView editorView = new EditorView(file, isReadOnly(file), editors, 0);
-            if (!MimeType.APPLICATION_JAVA.equals(file.getMimeType())) {
+            if (editorView.getEditor() instanceof CodeMirror) {
                 ignoreContentChangedList.add(file.getId());
             }
             openedFiles.put(file.getId(), file);

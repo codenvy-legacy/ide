@@ -65,7 +65,7 @@ public class ImportTest extends MemoryFileSystemTest {
 
         bout.reset();
         zipOut = new ZipOutputStream(bout);
-        zipOut.putNextEntry(new ZipEntry(".project"));
+        zipOut.putNextEntry(new ZipEntry(".codenvy"));
         zipOut.write(projectProperties.getBytes());
         zipOut.putNextEntry(new ZipEntry("readme.txt"));
         zipOut.write(DEFAULT_CONTENT_BYTES);
@@ -108,7 +108,7 @@ public class ImportTest extends MemoryFileSystemTest {
                 assertEquals("text/vnd.ideproject+directory", property.getValue().get(0));
             }
         }
-        assertEquals(1, parent.getChildren().size()); // file .project must be store as project properties not like a file
+        assertEquals(1, parent.getChildren().size()); // file .codenvy must be store as project properties not like a file
         MemoryFile readme = (MemoryFile)parent.getChild("readme.txt");
         assertNotNull(readme);
         checkFileContext(DEFAULT_CONTENT, "text/plain", readme);

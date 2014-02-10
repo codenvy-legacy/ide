@@ -19,12 +19,12 @@ package com.codenvy.ide.factory.client;
 
 import com.codenvy.ide.factory.client.copy.CopyProjectController;
 import com.codenvy.ide.factory.client.factory.CreateFactoryPresenter;
+import com.codenvy.ide.factory.client.factory.FactoryHandler;
 import com.codenvy.ide.factory.client.generate.CommitChangesPresenter;
 import com.codenvy.ide.factory.client.generate.FactoryURLHandler;
 import com.codenvy.ide.factory.client.generate.FactoryUrlControl;
 import com.codenvy.ide.factory.client.generate.SendMailPresenter;
 import com.codenvy.ide.factory.client.greeting.GreetingUserPresenter;
-import com.codenvy.ide.factory.client.receive.FactoryHandler;
 import com.google.gwt.core.client.GWT;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
@@ -63,4 +63,5 @@ public class FactoryExtension extends Extension implements InitializeServicesHan
         new CopyProjectController();
         new GreetingUserPresenter();
     }
+    
 }

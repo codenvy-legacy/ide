@@ -108,7 +108,7 @@ public class ImportTest extends LocalFileSystemTest {
 
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         ZipOutputStream zbout = new ZipOutputStream(bout);
-        zbout.putNextEntry(new ZipEntry(".project"));
+        zbout.putNextEntry(new ZipEntry(".codenvy"));
         zbout.write(("[{\"name\":\"vfs:mimeType\",\"value\":[\"text/vnd.ideproject+directory\"]}," +
                      "{\"name\":\"vfs:projectType\",\"value\":[\"test\"]}]").getBytes());
         zbout.closeEntry();

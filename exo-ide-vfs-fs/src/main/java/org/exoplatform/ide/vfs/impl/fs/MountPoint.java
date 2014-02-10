@@ -872,7 +872,7 @@ public class MountPoint {
             try {
                 final ZipOutputStream zipOut = new ZipOutputStream(out);
                 if (virtualFile.isProject()) {
-                    zipOut.putNextEntry(new ZipEntry(".project"));
+                    zipOut.putNextEntry(new ZipEntry(".codenvy"));
                     JsonWriter jw = new JsonWriter(zipOut);
                     JsonGenerator.createJsonArray(virtualFile.getProperties(PropertyFilter.ALL_FILTER)).writeTo(jw);
                     jw.flush();
@@ -904,7 +904,7 @@ public class MountPoint {
                             } else if (current.isFolder()) {
                                 zipOut.putNextEntry(new ZipEntry(zipEntryName + '/'));
                                 if (current.isProject()) {
-                                    zipOut.putNextEntry(new ZipEntry(zipEntryName + "/.project"));
+                                    zipOut.putNextEntry(new ZipEntry(zipEntryName + "/.codenvy"));
                                     JsonWriter jw = new JsonWriter(zipOut);
                                     JsonGenerator.createJsonArray(current.getProperties(PropertyFilter.ALL_FILTER)).writeTo(jw);
                                     jw.flush();
@@ -980,7 +980,7 @@ public class MountPoint {
                             throw new VirtualFileSystemException(
                                     String.format("Unable create directory '%s' ", current.getInternalPath().newPath(name)));
                         }
-                    } else if (".project".equals(name)) {
+                    } else if (".codenvy".equals(name)) {
                         final JsonParser parser = new JsonParser();
                         parser.parse(noCloseZip);
                         final Property[] array = (Property[])ObjectBuilder.createArray(Property[].class, parser.getJsonObject());
@@ -1049,7 +1049,8 @@ public class MountPoint {
                 }
 
             } catch (JsonException e) {
-                throw new VirtualFileSystemException(e.getMessage(), e);
+                throw new VirtualFileSystemException(
+                        "Failed to read the project description file. The file contains invalid information about project.", e);
             } finally {
                 closeQuietly(zip);
             }

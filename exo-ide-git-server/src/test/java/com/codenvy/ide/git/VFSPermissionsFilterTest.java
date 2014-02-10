@@ -19,7 +19,9 @@ package com.codenvy.ide.git;
 
 import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
+import com.codenvy.organization.exception.UserExistenceException;
 import com.codenvy.organization.model.Role;
+import com.codenvy.organization.model.User;
 
 import org.apache.commons.codec.binary.Base64;
 import org.mockito.Mock;
@@ -41,9 +43,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 
 /**
  * Test different situations of user access to projects with different permissions.
@@ -53,7 +55,6 @@ import static org.mockito.Mockito.when;
  */
 
 @Listeners(MockitoTestNGListener.class)
-
 public class VFSPermissionsFilterTest {
 
     final static String               USER      = "username";
@@ -83,33 +84,34 @@ public class VFSPermissionsFilterTest {
     }
 
     @BeforeMethod
-    public void before() throws OrganizationServiceException, NoSuchFieldException, IllegalAccessException {
-        when(userManager.authenticateUser(USER, PASSWORD)).thenReturn(true);
-        when((request).getRequestURL())
-                .thenReturn(new StringBuffer("http://host.com/git/").append(WORKSPACE).append("/testProject"));
-        //set up UserManager mock instead of filter UserManager
+    public void before() throws Exception {
+        System.setProperty("organization.application.server.url", "orgPath");
+        filter.init(null);
+        //set up UserManager mock
         Field filterUserManager = filter.getClass().getDeclaredField("userManager");
         filterUserManager.setAccessible(true);
         filterUserManager.set(filter, userManager);
-        //set up UserManager mock instead of filter UserManager
+        //set up permission checker mock
         Field filterUserPermissionsChecker = filter.getClass().getDeclaredField("vfsPermissionsChecker");
         filterUserPermissionsChecker.setAccessible(true);
         filterUserPermissionsChecker.set(filter, vfsPermissionsChecker);
+
+        when((request).getRequestURL())
+                .thenReturn(new StringBuffer("http://host.com/git/").append(WORKSPACE).append("/testProject"));
     }
 
     @Test
-    public void testProjectWithoutPermissionsAndEmptyUser() throws IOException, ServletException {
+    public void shouldSkipFurtherIfProjectHasPermissionsForAllAndUserIsEmpty() throws IOException, ServletException {
         //given
-        when(vfsPermissionsChecker.isAccessAllowed("", new HashSet<Role>(), projectDirectory)).thenReturn(true);
+        when(vfsPermissionsChecker.isAccessAllowed("", null, projectDirectory)).thenReturn(true);
         //when
         filter.doFilter(request, response, filterChain);
-        //then should be neither 401 no 403
-        verify(response, never()).sendError(HttpServletResponse.SC_UNAUTHORIZED);
-        verify(response, never()).sendError(HttpServletResponse.SC_FORBIDDEN);
+        //then should skip further request
+        verify(filterChain).doFilter(request, response);
     }
 
     @Test
-    public void testProjectWithPermissionsToSpecificUserAndEmptyUser() throws IOException, ServletException {
+    public void shouldRespondUnauthorizedIfProjectHasPermissionsToSpecificUserAndUserIsEmpty() throws IOException, ServletException {
         //given
         when(vfsPermissionsChecker.isAccessAllowed("", null, projectDirectory)).thenReturn(false);
         //when
@@ -120,45 +122,50 @@ public class VFSPermissionsFilterTest {
 
 
     @Test
-    public void testProjectWithWorkspaceDeveloperGroupAllPermissionsAndExistingUserWithDeveloperRole()
+    public void shouldSkipFurtherIfProjectHasWorkspaceDeveloperGroupAllPermissionsAndUserHasDeveloperRole()
             throws OrganizationServiceException, IOException, ServletException {
         //given
+        User user = new User(USER);
+        user.addMembership(WORKSPACE);
+        user.addMembershipRole("developer", WORKSPACE);
         Set<Role> userRoles = new HashSet(Arrays.asList(new Role("developer")));
-        when(userManager.getUserMembershipRoles(USER, WORKSPACE)).thenReturn(userRoles);
+        when(userManager.getUserByAlias(USER)).thenReturn(user);
         when(vfsPermissionsChecker.isAccessAllowed(USER, userRoles, projectDirectory)).thenReturn(true);
         when(request.getHeader("authorization")).thenReturn("BASIC " + (Base64.encodeBase64String((USER + ":" + PASSWORD).getBytes())));
+        when(userManager.authenticateUser(eq(USER), anyString())).thenReturn(true);
         //when
         filter.doFilter(request, response, filterChain);
-        //then should be neither 401 no 403
-        verify(response, never()).sendError(HttpServletResponse.SC_UNAUTHORIZED);
-        verify(response, never()).sendError(HttpServletResponse.SC_FORBIDDEN);
+        //then should skip further request
+        verify(filterChain).doFilter(request, response);
     }
 
     @Test
-    public void testProjectWithWorkspaceDeveloperGroupAllPermissionsAndNotExistingUserWithDeveloperRole()
+    public void shouldRespondUnauthorizedIfProjectHasHasPermissionsToSpecificUserAndUserDoesNotExist()
             throws OrganizationServiceException, IOException, ServletException {
         //given
-        Set<Role> userRoles = new HashSet(Arrays.asList(new Role("developer")));
-        when(userManager.getUserMembershipRoles(USER, WORKSPACE)).thenReturn(userRoles);
-        when(vfsPermissionsChecker.isAccessAllowed(USER, userRoles, projectDirectory)).thenReturn(true);
-        when(request.getHeader("authorization"))
-                .thenReturn("BASIC " + (Base64.encodeBase64String(("OTHERUSER" + ":" + PASSWORD).getBytes())));
-        //when
-        filter.doFilter(request, response, filterChain);
-        //then
-        verify(response).sendError(HttpServletResponse.SC_FORBIDDEN);
-    }
-
-    @Test
-    public void testProjectWithWorkspaceDeveloperGroupAllPermissionsAndNotExistingEmptyUser()
-            throws OrganizationServiceException, IOException, ServletException {
-        //given
-        when(request.getHeader("authorization"))
-                .thenReturn("BASIC " + (Base64.encodeBase64String((":").getBytes())));
+        //when(userManager.getUserByAlias(eq(USER))).thenThrow(new UserExistenceException());
+        doThrow(new UserExistenceException()).when(userManager).getUserByAlias(eq("OTHERUSER"));
+        when(vfsPermissionsChecker.isAccessAllowed("", null, projectDirectory)).thenReturn(false);
+        when(request.getHeader("authorization")).thenReturn(
+                "BASIC " + (Base64.encodeBase64String(("OTHERUSER" + ":" + PASSWORD).getBytes())));
         //when
         filter.doFilter(request, response, filterChain);
         //then
         verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
+    @Test
+    public void shouldSkipFurtherIfProjectHasWorkspaceDeveloperGroupAllPermissionsAndUserDoesNotExist()
+            throws OrganizationServiceException, IOException, ServletException {
+        //given
+        //when(userManager.getUserByAlias(eq(USER))).thenThrow(new UserExistenceException());
+        doThrow(new UserExistenceException()).when(userManager).getUserByAlias(eq("OTHERUSER"));
+        when(vfsPermissionsChecker.isAccessAllowed("", null, projectDirectory)).thenReturn(true);
+        when(request.getHeader("authorization")).thenReturn(
+                "BASIC " + (Base64.encodeBase64String(("OTHERUSER" + ":" + PASSWORD).getBytes())));
+        //when
+        filter.doFilter(request, response, filterChain);
+        //then
+        verify(filterChain).doFilter(request, response);
+    }
 }

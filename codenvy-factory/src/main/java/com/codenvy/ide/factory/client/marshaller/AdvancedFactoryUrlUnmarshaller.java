@@ -44,7 +44,10 @@ import java.util.Map;
  * @version $Id: 22.10.13 vlad $
  */
 public class AdvancedFactoryUrlUnmarshaller implements Unmarshallable<AdvancedFactoryUrl>, AdvancedFactorySpec {
+    
     private AdvancedFactoryUrl advancedFactoryUrl;
+    
+    private JSONObject factoryObject;
 
     /** Construct unmarshaller. */
     public AdvancedFactoryUrlUnmarshaller(AdvancedFactoryUrl advancedFactoryUrl) {
@@ -58,7 +61,7 @@ public class AdvancedFactoryUrlUnmarshaller implements Unmarshallable<AdvancedFa
             return;
         }
 
-        JSONObject factoryObject = JSONParser.parseStrict(response.getText()).isObject();
+        factoryObject = JSONParser.parseStrict(response.getText()).isObject();
 
         //v 1.1
         advancedFactoryUrl.setId(getValue(ID, factoryObject));
@@ -163,4 +166,14 @@ public class AdvancedFactoryUrlUnmarshaller implements Unmarshallable<AdvancedFa
     public AdvancedFactoryUrl getPayload() {
         return advancedFactoryUrl;
     }
+
+    /**
+     * Returns factory JSON object.
+     * 
+     * @return factory JSON object
+     */
+    public JSONObject getFactoryObject() {
+        return factoryObject;
+    }
+    
 }

@@ -4,7 +4,7 @@
 <body>
 <%@page import="java.util.*"%>
 <%
-System.out.println(">>>>> "+request.getAttribute("ws"));
+System.out.println(">>>>> "+request.getAttribute("wsName"));
    response.sendRedirect(request.getHeader("Referer"));
 %>
 </body>

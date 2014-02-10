@@ -50,7 +50,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -59,7 +66,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.codenvy.commons.json.JsonHelper.toJson;
-import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
 import static com.codenvy.commons.lang.IoUtil.countFileHash;
 import static com.codenvy.commons.lang.IoUtil.createTempDirectory;
 import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
@@ -69,9 +75,12 @@ import static com.codenvy.commons.lang.NameGenerator.generate;
 import static com.codenvy.commons.lang.ZipUtils.listEntries;
 import static com.codenvy.commons.lang.ZipUtils.unzip;
 import static com.codenvy.commons.lang.ZipUtils.zipDir;
+import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
+import static com.codenvy.ide.commons.server.ContainerUtils.readValuesParam;
 
 /**
  * ApplicationRunner for deploy Java applications at Cloud Foundry PaaS.
+ *
  * @author Andrey Parfonov
  */
 public class CloudfoundryApplicationRunner implements ApplicationRunner, Startable {
@@ -90,10 +99,12 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
     private final Map<String, Application> applications;
     private final ScheduledExecutorService applicationTerminator;
-
+    private final LinkedList<String>       allowedApplicationNames;
+    private final boolean                  restrictApplicationNames;
 
     public CloudfoundryApplicationRunner(CloudfoundryPool cfServers, InitParams initParams) {
-        this(cfServers, parseApplicationLifeTime(readValueParam(initParams, "cloudfoundry-application-lifetime")));
+        this(cfServers, parseApplicationLifeTime(readValueParam(initParams, "cloudfoundry-application-lifetime")),
+             new LinkedList<>(readValuesParam(initParams, "cloudfoundry-application-names")));
     }
 
     private static int parseApplicationLifeTime(String str) {
@@ -106,9 +117,11 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
         return DEFAULT_APPLICATION_LIFETIME;
     }
 
-    protected CloudfoundryApplicationRunner(CloudfoundryPool cfServers, int applicationLifetime) {
+    protected CloudfoundryApplicationRunner(CloudfoundryPool cfServers,
+                                            int applicationLifetime,
+                                            LinkedList<String> allowedApplicationNames) {
         if (applicationLifetime < 1) {
-            throw new IllegalArgumentException("Invalid application lifetime: " + 1);
+            throw new IllegalArgumentException("Invalid application lifetime: " + applicationLifetime);
         }
         this.applicationLifetime = applicationLifetime;
         this.applicationLifetimeMillis = applicationLifetime * 60 * 1000;
@@ -117,18 +130,49 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
         this.applications = new ConcurrentHashMap<String, Application>();
         this.applicationTerminator = Executors.newSingleThreadScheduledExecutor();
         this.applicationTerminator.scheduleAtFixedRate(new TerminateApplicationTask(), 1, 1, TimeUnit.MINUTES);
+        this.allowedApplicationNames = allowedApplicationNames;
+        this.restrictApplicationNames = !allowedApplicationNames.isEmpty();
     }
 
     @Override
     public ApplicationInstance runApplication(URL war, Map<String, String> params) throws ApplicationRunnerException {
-        return startApplication(cfServers.next(), generate("app-", 16), war, null, params);
+        final String name = getApplicationName();
+        try {
+            return startApplication(cfServers.next(), name, war, null, params);
+        } catch (ApplicationRunnerException | RuntimeException | Error e) {
+            releaseApplicationName(name);
+            throw e;
+        }
     }
 
     @Override
     public ApplicationInstance debugApplication(URL war, boolean suspend, Map<String, String> params)
             throws ApplicationRunnerException {
-        return startApplication(cfServers.next(), generate("app-", 16), war,
-                                suspend ? new DebugMode("suspend") : new DebugMode(), params);
+        final String name = getApplicationName();
+        try {
+            return startApplication(cfServers.next(), name, war, suspend ? new DebugMode("suspend") : new DebugMode(), params);
+        } catch (ApplicationRunnerException | RuntimeException | Error e) {
+            releaseApplicationName(name);
+            throw e;
+        }
+    }
+
+    private synchronized String getApplicationName() throws ApplicationRunnerException {
+        if (restrictApplicationNames) {
+            try {
+                return allowedApplicationNames.pop();
+            } catch (NoSuchElementException e) {
+                // all allowed names are used
+                throw new ApplicationRunnerException("Unable run application. Max number of applications is reached. ");
+            }
+        }
+        return generate("app-", 16);
+    }
+
+    private synchronized void releaseApplicationName(String name) {
+        if (restrictApplicationNames) {
+            allowedApplicationNames.add(name);
+        }
     }
 
     private enum APPLICATION_TYPE {
@@ -353,6 +397,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                          + "# TYPE#War# ID#" + app.getUniqueAppID() + "#");
             }
             applications.remove(name);
+            releaseApplicationName(name);
         } catch (Exception e) {
             throw new ApplicationRunnerException(e.getMessage(), e);
         }

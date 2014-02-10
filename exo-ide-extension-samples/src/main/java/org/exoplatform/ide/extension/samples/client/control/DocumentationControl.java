@@ -19,11 +19,14 @@ package org.exoplatform.ide.extension.samples.client.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
+import org.exoplatform.ide.extension.samples.client.startpage.PremiumAccountInfoReceivedEvent;
+import org.exoplatform.ide.extension.samples.client.startpage.PremiumAccountInfoReceivedHandler;
 
 /**
- * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
- * @version $Id: $
+ * Documentation Control Button.
+ * @author Vladislav Zhukovskii
  */
 public class DocumentationControl extends SimpleControl implements IDEControl {
     private static final String ID = "Help/Documentation";
@@ -40,7 +43,7 @@ public class DocumentationControl extends SimpleControl implements IDEControl {
         setEnabled(true);
         setImages(SamplesClientBundle.INSTANCE.help(), SamplesClientBundle.INSTANCE.helpDisabled());
 
-        getAttributes().put("onClick", "javascript:window.open('http://docs.codenvy.com/');");
+        getAttributes().put("onClick", "javascript:window.open('http://docs.codenvy.com');");
     }
 
 

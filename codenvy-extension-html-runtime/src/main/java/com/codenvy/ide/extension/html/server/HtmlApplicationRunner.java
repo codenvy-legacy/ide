@@ -31,8 +31,10 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -40,6 +42,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.codenvy.commons.lang.NameGenerator.generate;
 import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
+import static com.codenvy.ide.commons.server.ContainerUtils.readValuesParam;
 
 /**
  * {@link ApplicationRunner} for running HTML applications.
@@ -47,21 +50,24 @@ import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
  */
 public class HtmlApplicationRunner implements ApplicationRunner {
     /** Default application lifetime (in minutes). After this time application may be stopped automatically. */
-    private static final int                     DEFAULT_APPLICATION_LIFETIME = 10;
+    private static final int DEFAULT_APPLICATION_LIFETIME = 10;
 
-    private static final Log                     LOG                          = ExoLogger.getLogger(HtmlApplicationRunner.class);
+    private static final Log LOG = ExoLogger.getLogger(HtmlApplicationRunner.class);
 
-    private final int                            applicationLifetime;
-    private final long                           applicationLifetimeMillis;
+    private final int  applicationLifetime;
+    private final long applicationLifetimeMillis;
 
-    private final String                         applicationURL;
+    private final String applicationURL;
 
     private final Map<String, RunnedApplication> applications;
     private final ScheduledExecutorService       applicationTerminator;
+    private final LinkedList<String>             allowedApplicationNames;
+    private final boolean                        restrictApplicationNames;
 
     public HtmlApplicationRunner(InitParams initParams) {
         this(parseApplicationLifeTime(readValueParam(initParams, "html-application-lifetime")),
-             readValueParam(initParams, "html-application-url"));
+             readValueParam(initParams, "html-application-url"),
+             new LinkedList<>(readValuesParam(initParams, "cloudfoundry-application-names")));
     }
 
     private static int parseApplicationLifeTime(String str) {
@@ -74,7 +80,7 @@ public class HtmlApplicationRunner implements ApplicationRunner {
         return DEFAULT_APPLICATION_LIFETIME;
     }
 
-    protected HtmlApplicationRunner(int applicationLifetime, String applicationURL) {
+    protected HtmlApplicationRunner(int applicationLifetime, String applicationURL, LinkedList<String> allowedApplicationNames) {
         if (applicationLifetime < 1) {
             throw new IllegalArgumentException("Invalid application lifetime: " + 1);
         }
@@ -86,6 +92,8 @@ public class HtmlApplicationRunner implements ApplicationRunner {
 
         this.applicationTerminator = Executors.newSingleThreadScheduledExecutor();
         this.applicationTerminator.scheduleAtFixedRate(new TerminateApplicationTask(), 1, 1, TimeUnit.MINUTES);
+        this.allowedApplicationNames = allowedApplicationNames;
+        this.restrictApplicationNames = !allowedApplicationNames.isEmpty();
     }
 
     /**
@@ -93,23 +101,48 @@ public class HtmlApplicationRunner implements ApplicationRunner {
      *      java.lang.String, java.lang.String)
      */
     @Override
-    public ApplicationInstance runApplication(VirtualFileSystem vfs, String projectId, String wsMountPath) throws ApplicationRunnerException,
-                                                                                                          VirtualFileSystemException {
+    public ApplicationInstance runApplication(VirtualFileSystem vfs, String projectId, String wsMountPath)
+            throws ApplicationRunnerException,
+                   VirtualFileSystemException {
         Item project = vfs.getItem(projectId, false, PropertyFilter.NONE_FILTER);
         if (project.getItemType() != ItemType.PROJECT) {
             throw new ApplicationRunnerException("Item '" + project.getPath() + "' is not a project. ");
         }
 
-        final String name = generate("app-", 16);
-        final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
-        final String wsName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString();
-        final String userId = ConversationState.getCurrent().getIdentity().getUserId();
+        final String name = getApplicationName();
+        try {
+            final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
+            final String wsName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString();
+            final String userId = ConversationState.getCurrent().getIdentity().getUserId();
 
-        applications.put(name, new RunnedApplication(name, expired, project.getName(), wsMountPath + project.getPath()));
-        LOG.info("EVENT#run-started# PROJECT#" + project.getName() + "# TYPE#HTML#");
-        LOG.info("EVENT#project-deployed# WS#" + wsName + "# USER#" + userId + "# PROJECT#" + project.getName() + "# TYPE#HTML# PAAS#LOCAL#");
+            applications.put(name, new RunnedApplication(name, expired, project.getName(), wsMountPath + project.getPath()));
+            LOG.info("EVENT#run-started# PROJECT#" + project.getName() + "# TYPE#HTML#");
+            LOG.info("EVENT#project-deployed# WS#" + wsName + "# USER#" + userId + "# PROJECT#" + project.getName()
+                     + "# TYPE#HTML# PAAS#LOCAL#");
 
-        return new ApplicationInstanceImpl(name, applicationLifetime, applicationURL);
+            return new ApplicationInstanceImpl(name, applicationLifetime, applicationURL);
+        } catch (RuntimeException | Error e) {
+            releaseApplicationName(name);
+            throw e;
+        }
+    }
+
+    private synchronized String getApplicationName() throws ApplicationRunnerException {
+        if (restrictApplicationNames) {
+            try {
+                return allowedApplicationNames.pop();
+            } catch (NoSuchElementException e) {
+                // all allowed names are used
+                throw new ApplicationRunnerException("Unable run application. Max number of applications is reached. ");
+            }
+        }
+        return generate("app-", 16);
+    }
+
+    private synchronized void releaseApplicationName(String name) {
+        if (restrictApplicationNames) {
+            allowedApplicationNames.add(name);
+        }
     }
 
     /** @see com.codenvy.ide.extension.html.server.ApplicationRunner#stopApplication(java.lang.String) */
@@ -124,6 +157,7 @@ public class HtmlApplicationRunner implements ApplicationRunner {
             } catch (Exception e) {
                 throw new ApplicationRunnerException(e.getMessage(), e);
             }
+            releaseApplicationName(name);
         } else {
             throw new ApplicationRunnerException("Unable to stop application. Application '" + name + "' not found. ");
         }
