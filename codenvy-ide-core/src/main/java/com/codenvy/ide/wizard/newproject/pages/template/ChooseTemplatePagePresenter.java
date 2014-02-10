@@ -17,13 +17,13 @@
  */
 package com.codenvy.ide.wizard.newproject.pages.template;
 
+import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.template.Template;
+import com.codenvy.ide.api.template.TemplateDescriptorRegistry;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.resources.ProjectTypeData;
-import com.codenvy.ide.wizard.newproject.TemplateAgentImpl;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
@@ -33,33 +33,33 @@ import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.TEMPLATE
 /**
  * The presenter makes it possible to choose the kind of a template that a user needs to create a new project.
  *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
 public class ChooseTemplatePagePresenter extends AbstractWizardPage implements ChooseTemplatePageView.ActionDelegate {
-    private ChooseTemplatePageView   view;
-    private TemplateAgentImpl        templateAgent;
-    private CoreLocalizationConstant constant;
-    private Array<Template>          templates;
-    private boolean                  needToChange;
+    private ChooseTemplatePageView           view;
+    private TemplateDescriptorRegistry       templateDescriptorRegistry;
+    private CoreLocalizationConstant         constant;
+    private Array<ProjectTemplateDescriptor> templates;
+    private boolean                          needToChange;
 
     /**
      * Create presenter.
      *
-     * @param resources
      * @param view
-     * @param templateAgent
+     * @param templateDescriptorRegistry
+     * @param resources
      * @param constant
      */
     @Inject
     public ChooseTemplatePagePresenter(ChooseTemplatePageView view,
+                                       TemplateDescriptorRegistry templateDescriptorRegistry,
                                        Resources resources,
-                                       TemplateAgentImpl templateAgent,
                                        CoreLocalizationConstant constant) {
         super("Select Template", resources.templateIcon());
 
         this.view = view;
+        this.templateDescriptorRegistry = templateDescriptorRegistry;
         this.view.setDelegate(this);
-        this.templateAgent = templateAgent;
         this.constant = constant;
         needToChange = true;
     }
@@ -110,12 +110,12 @@ public class ChooseTemplatePagePresenter extends AbstractWizardPage implements C
 
     /** Prepare list of templates available for a chosen project type and show this list on view. */
     private void prepareTemplates() {
-        ProjectTypeData projectType = wizardContext.getData(PROJECT_TYPE);
-        if (projectType != null) {
-            templates = templateAgent.getTemplatesForProjectType(projectType.getPrimaryNature(), projectType.getSecondaryNature());
+        ProjectTypeDescriptor projectTypeDescriptor = wizardContext.getData(PROJECT_TYPE);
+        if (projectTypeDescriptor != null) {
+            templates = templateDescriptorRegistry.getDescriptors(projectTypeDescriptor);
             view.setTemplates(templates);
             if (!templates.isEmpty() && needToChange) {
-                Template template = templates.get(0);
+                ProjectTemplateDescriptor template = templates.get(0);
                 wizardContext.putData(TEMPLATE, template);
                 view.selectItem(template);
             }
@@ -124,7 +124,7 @@ public class ChooseTemplatePagePresenter extends AbstractWizardPage implements C
 
     /** {@inheritDoc} */
     @Override
-    public void onTemplateSelected(Template template) {
+    public void onTemplateSelected(ProjectTemplateDescriptor template) {
         wizardContext.putData(TEMPLATE, template);
         view.selectItem(template);
         delegate.updateControls();

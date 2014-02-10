@@ -80,7 +80,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS;
+import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDescription.ATTRIBUTE_SOURCE_FOLDERS;
 import static com.codenvy.ide.ext.java.jdi.shared.DebuggerEvent.BREAKPOINT;
 import static com.codenvy.ide.ext.java.jdi.shared.DebuggerEvent.STEP;
 
@@ -356,8 +356,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private String resolveFilePathByLocation(@NotNull Location location) {
         File file = getFileWithBreakPoints(location.getClassName());
         Project fileProject = file.getProject();
-        String sourcePath = fileProject.hasProperty(PROPERTY_SOURCE_FOLDERS) ? (String)fileProject.getPropertyValue(PROPERTY_SOURCE_FOLDERS)
-                                                                             : "src/main/java";
+        final String sourcePath = fileProject.hasProperty(ATTRIBUTE_SOURCE_FOLDERS) ?
+                                  (String)fileProject.getPropertyValue(ATTRIBUTE_SOURCE_FOLDERS) : "src/main/java";
         return fileProject.getPath() + "/" + sourcePath + "/" + location.getClassName().replace(".", "/") + ".java";
     }
 

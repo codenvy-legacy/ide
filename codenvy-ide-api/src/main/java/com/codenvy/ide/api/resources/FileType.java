@@ -36,7 +36,6 @@ import com.google.gwt.resources.client.ImageResource;
  * <p/>
  *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
  */
 public class FileType {
 

@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.api.ui.wizard.template;
 
+import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.ide.api.paas.PaaS;
-import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -53,8 +53,8 @@ public abstract class AbstractTemplatePage extends AbstractWizardPage {
     @Override
     public boolean inContext() {
         PaaS paas = wizardContext.getData(PAAS);
-        Template template = wizardContext.getData(TEMPLATE);
-        return paas != null && !paas.isProvideTemplate() && template != null && template.getId().equals(templateID);
+        ProjectTemplateDescriptor template = wizardContext.getData(TEMPLATE);
+        return paas != null && !paas.isProvideTemplate() && template != null && template.getTemplateId().equals(templateID);
     }
 
     /** {@inheritDoc} */

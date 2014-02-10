@@ -31,7 +31,6 @@
     <packaging>pom</packaging>
     <name>Codenvy :: Parent</name>
     <modules>
-        <module>codenvy-ide-commons</module>
         <module>codenvy-ide-env-dummy</module>
         <module>codenvy-ide-api</module>
         <module>codenvy-ide-ui</module>
@@ -62,7 +61,6 @@
         <module>codenvy-sdk-tutorials/wizard-api</module>
         <module>codenvy-sdk-tutorials/parts-api</module>
         <module>codenvy-sdk-tutorials/notification-api</module>
-        <module>codenvy-sdk-tutorials/new-project-wizard</module>
         <module>codenvy-sdk-tutorials/new-resource-wizard</module>
         <module>codenvy-sdk-tutorials/editor-api</module>
         <module>codenvy-sdk-tutorials/gin</module>
@@ -88,15 +86,17 @@
         <buildnumber.plugin.version>1.1</buildnumber.plugin.version>
         <ch.qos.logback.version>1.0.13</ch.qos.logback.version>
         <codenvy.ide-codeassistant-index.version>20120627</codenvy.ide-codeassistant-index.version>
+        <codenvy.platform-api-gwt-client.version>0.1.0-SNAPSHOT</codenvy.platform-api-gwt-client.version>
         <com.codenvy.commons.version>0.14.0-SNAPSHOT</com.codenvy.commons.version>
         <com.codenvy.organization.version>0.11.0-SNAPSHOT</com.codenvy.organization.version>
         <com.codenvy.platform-api.version>0.8.0-SNAPSHOT</com.codenvy.platform-api.version>
+        <com.codenvy.security.version>0.1.0-SNAPSHOT</com.codenvy.security.version>
         <commons-codec.version>1.6</commons-codec.version>
         <commons-fileupload.version>1.2.1</commons-fileupload.version>
         <commons-io.version>2.4</commons-io.version>
         <commons.compress.version>1.6</commons.compress.version>
         <enforcer.plugin.version>1.0.1</enforcer.plugin.version>
-        <everrest.version>1.1.9-SNAPSHOT</everrest.version>
+        <everrest.version>1.1.9</everrest.version>
         <exo.product.name>codenvy-ide</exo.product.name>
         <failsafe.plugin.version>2.6</failsafe.plugin.version>
         <gin.version>2.1.2</gin.version>
@@ -128,7 +128,7 @@
         <reflections.version>0.9.9-RC1</reflections.version>
         <release.plugin.version>2.2.1</release.plugin.version>
         <servlet-api.version>3.0.1</servlet-api.version>
-        <tomcat.version>7.0.42</tomcat.version>
+        <tomcat.version>7.0.50</tomcat.version>
         <version.animal-sniffer.enforcer-rule>1.8</version.animal-sniffer.enforcer-rule>
         <version.enforcer.plugin>1.2</version.enforcer.plugin>
     </properties>

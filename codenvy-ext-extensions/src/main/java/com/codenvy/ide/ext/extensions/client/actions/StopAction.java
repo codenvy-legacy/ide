@@ -27,13 +27,12 @@ import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE;
+import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE_ID;
 
 /**
  * Action to stop previously launched Codenvy extension.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: StopAction.java Jul 3, 2013 1:58:47 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 public class StopAction extends Action {
@@ -61,8 +60,8 @@ public class StopAction extends Action {
     public void update(ActionEvent e) {
         Project activeProject = resourceProvider.getActiveProject();
         if (activeProject != null) {
-            e.getPresentation()
-             .setVisible(activeProject.getDescription().getNatures().contains(CODENVY_EXTENSION_PROJECT_TYPE));
+            e.getPresentation().setVisible(activeProject.getDescription().getProjectTypeId().equals(CODENVY_EXTENSION_PROJECT_TYPE_ID) ||
+                                           activeProject.getDescription().getProjectTypeId().equals("codenvy_tutorial"));
             e.getPresentation().setEnabled(controller.isAnyAppLaunched());
         } else {
             e.getPresentation().setEnabledAndVisible(false);

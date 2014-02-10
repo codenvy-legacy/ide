@@ -20,7 +20,6 @@ package com.codenvy.ide.api.paas;
 import com.codenvy.ide.api.extension.SDK;
 import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.StringMap;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Provider;
 
@@ -43,8 +42,8 @@ public interface PaaSAgent {
      *         title that will be shown on a new project wizard page
      * @param image
      *         image that will be shown on a new project wizard page
-     * @param natures
-     *         natures which support the PaaS
+     * @param projectTypeIds
+     *         project type identifiers which PaaS supports
      * @param wizardPages
      *         pages which need to be added to a new project wizard
      * @param provideTemplate
@@ -53,7 +52,7 @@ public interface PaaSAgent {
     void register(@NotNull String id,
                   @NotNull String title,
                   @Nullable ImageResource image,
-                  @NotNull StringMap<Array<String>> natures,
+                  @NotNull Array<String> projectTypeIds,
                   @NotNull Array<Provider<? extends AbstractPaasPage>> wizardPages,
                   boolean provideTemplate);
 }

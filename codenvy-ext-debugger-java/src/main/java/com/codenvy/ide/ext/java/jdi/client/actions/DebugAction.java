@@ -21,7 +21,6 @@ import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.collections.StringSet;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
@@ -31,8 +30,8 @@ import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import static com.codenvy.ide.ext.java.client.JavaExtension.JAVA_WEB_APPLICATION_PROJECT_TYPE;
-import static com.codenvy.ide.ext.java.client.JavaExtension.SPRING_APPLICATION_PROJECT_TYPE;
+import static com.codenvy.ide.ext.java.client.JavaExtension.SPRING_PROJECT_TYPE_ID;
+import static com.codenvy.ide.ext.java.client.JavaExtension.WAR_PROJECT_TYPE_ID;
 
 /**
  * Action to run project on runner in debug mode.
@@ -71,9 +70,8 @@ public class DebugAction extends Action {
     public void update(ActionEvent e) {
         Project activeProject = resourceProvider.getActiveProject();
         if (activeProject != null) {
-            StringSet natures = activeProject.getDescription().getNatures();
-            e.getPresentation().setVisible(natures.contains(SPRING_APPLICATION_PROJECT_TYPE)
-                                           || natures.contains(JAVA_WEB_APPLICATION_PROJECT_TYPE));
+            final String projectTypeId = activeProject.getDescription().getProjectTypeId();
+            e.getPresentation().setVisible(projectTypeId.equals(SPRING_PROJECT_TYPE_ID) || projectTypeId.equals(WAR_PROJECT_TYPE_ID));
             e.getPresentation().setEnabled(!runnerController.isAnyAppLaunched());
         } else {
             e.getPresentation().setEnabledAndVisible(false);

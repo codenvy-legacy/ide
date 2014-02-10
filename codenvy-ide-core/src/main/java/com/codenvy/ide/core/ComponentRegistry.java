@@ -24,13 +24,12 @@ import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Callback;
 import com.google.inject.Inject;
 
-
-/** @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> */
+/** @author Nikolay Zamosenchuk */
 public class ComponentRegistry {
     private Array<Component>             pendingComponents;
     private StandardComponentInitializer componentInitializer;
 
-    /** Instantiates Component Registry. All components should be listed in this constructor */
+    /** Instantiates Component Registry. All components should be listed in this constructor. */
     @Inject
     public ComponentRegistry(ResourceProviderComponent resourceManager, StandardComponentInitializer componentInitializer) {
         this.componentInitializer = componentInitializer;
@@ -39,7 +38,7 @@ public class ComponentRegistry {
     }
 
     /**
-     * Starts all the components listed in reg
+     * Starts all the components listed in registry.
      *
      * @param callback
      */

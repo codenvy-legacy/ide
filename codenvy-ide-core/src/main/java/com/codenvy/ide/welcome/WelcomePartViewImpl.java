@@ -77,10 +77,30 @@ public class WelcomePartViewImpl extends Composite implements WelcomePartView {
 
         initWidget(ourUiBinder.createAndBindUi(this));
 
-        fbFrame.setUrl(UriUtils.fromString("/ide/_app/fblike.html"));
-        googleFrame.setUrl(UriUtils.fromString("/ide/_app/googleone.html"));
+        fbFrame.setUrl(UriUtils.fromString(facebookLikeURL()));
+        googleFrame.setUrl(UriUtils.fromString(googleLikeURL()));
+        
         googleFrame.getElement().setAttribute("scrolling", "no");
     }
+    
+    /**
+     * Returns URL to Facebook like page.
+     * 
+     * @return
+     */
+    private static native String facebookLikeURL() /*-{
+        return $wnd["facebook_like_url"];
+    }-*/;    
+
+    /**
+     * Returns URL to Google like page.
+     * 
+     * @return
+     */
+    private static native String googleLikeURL() /*-{
+        return $wnd["google_like_url"];
+    }-*/;
+    
 
     /** {@inheritDoc} */
     @Override

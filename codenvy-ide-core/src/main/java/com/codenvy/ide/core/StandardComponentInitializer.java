@@ -179,7 +179,7 @@ public class StandardComponentInitializer {
     @Inject
     private Provider<SelectPaasPagePresenter> selectPaasPagePresenterProvider;
 
-    /** Instantiates {@link StandardComponentInitializer} an creates standard content */
+    /** Instantiates {@link StandardComponentInitializer} an creates standard content. */
     @Inject
     public StandardComponentInitializer() {
     }

@@ -17,44 +17,48 @@
  */
 package com.codenvy.ide.projecttype;
 
+import com.codenvy.api.project.gwt.client.ProjectClientService;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringMap;
-import com.codenvy.ide.resources.ProjectTypeData;
+import com.codenvy.ide.dto.DtoFactory;
+import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
+import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.util.loging.Log;
-import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import javax.validation.constraints.NotNull;
-import java.util.Iterator;
 
-/**
- * @author <a href="mailto:ashumilova@codenvy.com">Ann Shumilova</a>
- * @version $Id:
- */
+import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PROJECT_TYPE;
+
+/** @author Ann Shumilova */
 @Singleton
 public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionDelegate {
 
-    private SelectProjectTypeView      view;
-    private StringMap<Array<Property>> typesMap;
-    private CoreLocalizationConstant   localizationConstant;
-    private Project                    project;
-    private AsyncCallback<Project>     callback;
-    private ProjectTypeAgentImpl       projectTypeAgent;
+    private SelectProjectTypeView         view;
+    private CoreLocalizationConstant      localizationConstant;
+    private Project                       project;
+    private AsyncCallback<Project>        callback;
+    private ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
+    private DtoFactory                    dtoFactory;
+    private ProjectClientService          projectClientService;
 
     @Inject
-    public SelectProjectTypePresenter(SelectProjectTypeView view,
-                                      CoreLocalizationConstant localizationConstant,
-                                      ProjectTypeAgentImpl projectTypeAgent) {
+    public SelectProjectTypePresenter(SelectProjectTypeView view, CoreLocalizationConstant localizationConstant,
+                                      ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
+                                      DtoFactory dtoFactory,
+                                      ProjectClientService projectClientService) {
         this.view = view;
         this.localizationConstant = localizationConstant;
-        this.projectTypeAgent = projectTypeAgent;
-        typesMap = Collections.createStringMap();
+        this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
+        this.dtoFactory = dtoFactory;
+        this.projectClientService = projectClientService;
         view.setDelegate(this);
     }
 
@@ -64,40 +68,27 @@ public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionD
         this.callback = callback;
         view.setLabel(localizationConstant.selectProjectType(project.getName()));
         view.clearTypes();
-
-        Array<ProjectTypeData> projectsTypeData = projectTypeAgent.getProjectTypes();
-        Iterator<ProjectTypeData> projectTypeDataIterator = projectsTypeData.asIterable().iterator();
-        while (projectTypeDataIterator.hasNext()) {
-            ProjectTypeData projectTypeData = projectTypeDataIterator.next();
-            typesMap.put(projectTypeData.getTypeName(), projectTypeData.getProperties());
-        }
-
-        view.setTypes(typesMap.getKeys());
+        view.setTypes(projectTypeDescriptorRegistry.getDescriptors());
         view.showDialog();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onOkClicked() {
-        String projectType = view.getProjectType();
+        final String selectedProjectTypeId = view.getSelectedProjectTypeId();
+        final ProjectTypeDescriptor descriptor = projectTypeDescriptorRegistry.getDescriptor(selectedProjectTypeId);
 
-        Array<Property> properties = typesMap.get(projectType);
-
-        for (Property property : properties.asIterable()) {
-            Property projectProperty = project.getProperty(property.getName());
-            if (projectProperty != null) {
-                projectProperty.setValue(property.getValue());
-            } else {
-                project.getProperties().add(property);
-            }
+        Property projectProperty = project.getProperty(PROPERTY_PROJECT_TYPE);
+        if (projectProperty != null) {
+            projectProperty.setValue(Collections.createArray(descriptor.getProjectTypeId()));
+        } else {
+            project.getProperties().add(new Property(PROPERTY_PROJECT_TYPE, descriptor.getProjectTypeId()));
         }
 
         project.flushProjectProperties(new AsyncCallback<Project>() {
-
             @Override
             public void onSuccess(Project result) {
-                view.close();
-                callback.onSuccess(result);
+                updateProject(descriptor);
             }
 
             @Override
@@ -106,6 +97,30 @@ public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionD
                 callback.onFailure(caught);
             }
         });
+    }
+
+    private void updateProject(ProjectTypeDescriptor descriptor) {
+        ProjectDescriptor dto = dtoFactory.createDto(ProjectDescriptor.class)
+                                          .withProjectTypeId(descriptor.getProjectTypeId())
+                                          .withProjectTypeName(descriptor.getProjectTypeName());
+        try {
+            projectClientService.updateProject(project.getPath(), dto, new AsyncRequestCallback<String>() {
+                @Override
+                protected void onSuccess(String result) {
+                    view.close();
+                    callback.onSuccess(project);
+                }
+
+                @Override
+                protected void onFailure(Throwable throwable) {
+                    Log.error(SelectProjectTypePresenter.class, "Can't update project.", throwable);
+                    callback.onFailure(throwable);
+                }
+            });
+        } catch (RequestException e) {
+            Log.error(SelectProjectTypePresenter.class, "Can't update project.", e);
+            callback.onFailure(e);
+        }
     }
 
     /** {@inheritDoc} */

@@ -38,7 +38,7 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
 public class BuilderExtension {
     public static final String PROJECT_BUILD_GROUP_MAIN_MENU   = "ProjectBuildGroup";
     /** Channel for the messages containing status of the Maven build job. */
-    public static final String BUILD_STATUS_CHANNEL            = "builder:buildStatus:";
+    public static final String BUILD_STATUS_CHANNEL            = "builder:status:";
 
 
     /**

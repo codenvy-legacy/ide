@@ -46,7 +46,7 @@ public interface Wizard {
     String getTitle();
 
     /**
-     * Performs some actions requitred for flipping to first page and returning to the first page of a wizard.
+     * Performs some actions required for flipping to first page and returning to the first page of a wizard.
      *
      * @return first page
      */
