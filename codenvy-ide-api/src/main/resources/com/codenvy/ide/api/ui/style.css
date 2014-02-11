@@ -92,13 +92,10 @@
 @def editorFontFamily 'Andale Mono', monospace;
 
 @eval mainFontColor com.codenvy.ide.api.ui.theme.Style.getMainFontColor();
-<<<<<<< HEAD
-=======
 @eval welcomeFontColor com.codenvy.ide.api.ui.theme.Style.getWelcomeFontColor();
 @eval lightTextColor com.codenvy.ide.api.ui.theme.Style.getLightTextColor();
 @eval lightestTextColor com.codenvy.ide.api.ui.theme.Style.getLightestTextColor();
 @eval radioButtonBackgroundColor com.codenvy.ide.api.ui.theme.Style.getRadioButtonBackgroundColor();
->>>>>>> 3b9be04... IDEX-380 fix fonts, use Theme API in CellWidget's
 @eval disabledMenuItemColor com.codenvy.ide.api.ui.theme.Style.getDeisabledMenuColor();
 
     /* DialogBox*/

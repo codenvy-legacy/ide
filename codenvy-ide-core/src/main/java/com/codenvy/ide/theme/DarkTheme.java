@@ -152,6 +152,11 @@ public class DarkTheme implements Theme {
     }
 
     @Override
+    public String getRadioButtonBackgroundColor() {
+        return "#BDBDBD";
+    }
+
+    @Override
     public String getButtonColor() {
         return "#515151";
     }

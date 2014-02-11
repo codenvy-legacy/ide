@@ -73,6 +73,8 @@ public interface Theme {
 
     String getMainFontColor();
 
+    String getRadioButtonBackgroundColor();
+
     String getDisabledMenuColor();
 
     String getDialogContentBackground();

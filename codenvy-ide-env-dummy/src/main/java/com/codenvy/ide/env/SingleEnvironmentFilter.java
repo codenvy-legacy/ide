@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.io.IOException;
+import java.nio.file.attribute.UserPrincipalLookupService;
 
 /**
  * Set up environment variable. Only for local packaging with single workspace. Don't use it in production packaging.
