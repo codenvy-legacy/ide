@@ -48,8 +48,7 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
- * @version $Id: $
+ * @author Vitaly Parfonov
  */
 public class SearchResultsPresenter implements ViewVisibilityChangedHandler, ViewClosedHandler,
                                                SearchResultReceivedHandler {
@@ -94,7 +93,6 @@ public class SearchResultsPresenter implements ViewVisibilityChangedHandler, Vie
     }
 
     private void refreshSearchResult() {
-        // searchResult.setIcon(Images.FileTypes.WORKSPACE);
         if (searchResult.getChildren() != null) {
             // sort items in search result list
             Collections.sort(searchResult.getChildren().getItems(), new Comparator<Item>() {
@@ -102,6 +100,7 @@ public class SearchResultsPresenter implements ViewVisibilityChangedHandler, Vie
                     return item1.getName().compareTo(item2.getName());
                 }
             });
+            
             //Clear previous results:
             display.getSearchResultTree().setValue(null);
             display.getSearchResultTree().setValue(searchResult);

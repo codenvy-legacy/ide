@@ -21,6 +21,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Timer;
 
 import org.eclipse.jdt.client.core.compiler.IProblem;
@@ -322,7 +323,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
     /** @param event */
     private void startJob(FileModel file) {
         Job job = new Job(file.getId(), JobStatus.STARTED);
-        job.setStartMessage("Initialize Java tooling for " + file.getName());
+        job.setStartMessage("Initialize Java tooling for " + SafeHtmlUtils.htmlEscape(file.getName()));
         IDE.fireEvent(new JobChangeEvent(job));
     }
 
@@ -335,17 +336,6 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
             workingParsers.get(activeFile.getId()).cancel();
         }
     }
-
-    //   RepeatingCommand com = new RepeatingCommand()
-    //   {
-    //
-    //      @Override
-    //      public boolean execute()
-    //      {
-    //         asyncParse(activeFile);
-    //         return false;
-    //      }
-    //   };
 
     /**
      * @see org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler#onEditorFileContentChanged(org.exoplatform
@@ -397,7 +387,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
      */
     private void finishJob(FileModel file) {
         Job job = new Job(file.getId(), JobStatus.FINISHED);
-        job.setFinishMessage("Java Tooling initialized  for " + file.getName());
+        job.setFinishMessage("Java Tooling initialized  for " + SafeHtmlUtils.htmlEscape(file.getName()));
         IDE.fireEvent(new JobChangeEvent(job));
     }
 
