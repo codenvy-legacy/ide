@@ -18,6 +18,7 @@
 package org.eclipse.jdt.client.packaging.ui;
 
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -60,8 +61,8 @@ public abstract class PackageExplorerTreeItem extends TreeItem {
         // treeNodeIcon.setWidth("16px");
         treeNodeIcon.setHeight("16px");
         grid.setWidget(0, 0, treeNodeIcon);
-        // Label l = new Label(text, false);
-        HTMLPanel l = new HTMLPanel("div", getItemTitle());
+        
+        HTMLPanel l = new HTMLPanel("div", SafeHtmlUtils.htmlEscape(getItemTitle()));
         l.setStyleName("ide-Tree-label");
         grid.setWidget(0, 1, l);
 
@@ -280,20 +281,5 @@ public abstract class PackageExplorerTreeItem extends TreeItem {
             ((PackageExplorerTreeItem)child).removeIcons(icons);
         }
     }
-
-    // public void insertItem(int beforeIndex, TreeItem item)
-    // throws IndexOutOfBoundsException {
-    // if (beforeIndex > getChildCount())
-    // {
-    // System.out.println("!!! ERR");
-    // System.out.println("tree item > " + getItemTitle());
-    // System.out.println("beforeIndex > " + beforeIndex);
-    // System.out.println("child count > " + getChildCount());
-    //
-    // beforeIndex = getChildCount();
-    // }
-    //
-    // super.insertItem(beforeIndex, item);
-    // }
 
 }

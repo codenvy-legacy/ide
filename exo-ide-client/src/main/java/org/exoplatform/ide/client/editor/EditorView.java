@@ -22,6 +22,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -93,9 +94,12 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler {
     private static String getFileTitle(FileModel file, boolean isReadOnly) {
         boolean fileChanged = file.isContentChanged();
 
-        String fileName = Utils.unescape(fileChanged ? file.getName() + "&nbsp;*" : file.getName());
+        String fileName = Utils.unescape(fileChanged ? 
+                SafeHtmlUtils.htmlEscape(file.getName()) + "&nbsp;*" : 
+                SafeHtmlUtils.htmlEscape(file.getName()));
 
         String mainHint = file.getName();
+        mainHint = SafeHtmlUtils.htmlEscape(mainHint);
 
         String readonlyImage = (isReadOnly) ?
                                "<img id=\"fileReadonly\"  style=\"margin-left:-4px; margin-bottom: -4px;\" border=\"0\" suppress=\"true\"" +
@@ -103,8 +107,7 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler {
                                Images.Editor.READONLY_FILE + "\" />" : "";
 
         mainHint = (isReadOnly) ? FILE_IS_READ_ONLY : mainHint;
-        String title = "<span title=\"" + mainHint + "\">" + readonlyImage + "&nbsp;" + fileName + "&nbsp;</span>";
-
+        String title = "<span title='" + mainHint + "'>" + readonlyImage + "&nbsp;" + fileName + "&nbsp;</span>";
         return title;
     }
 
@@ -246,13 +249,6 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler {
 
         final Editor currentEditor = getEditor();
         currentEditor.setFocus();
-
-//        new Timer() {
-//            @Override
-//            public void run() {
-//                currentEditor.setFocus();
-//            }
-//        }.schedule(100);
     }
 
 }

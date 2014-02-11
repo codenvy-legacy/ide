@@ -23,6 +23,7 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
@@ -35,10 +36,8 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 import java.util.HashMap;
 
 /**
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author Vitaliy Gulyy
  */
-
 public class FilesListGrid extends ListGrid<FileModel> implements HasAllKeyHandlers {
 
     private static final HashMap<String, String> mimeTypeImages = new HashMap<String, String>();
@@ -55,7 +54,7 @@ public class FilesListGrid extends ListGrid<FileModel> implements HasAllKeyHandl
     }
 
     private String renderCell(final FileModel file) {
-        String name = file.getName();
+        String name = SafeHtmlUtils.htmlEscape(file.getName());
 
         String img = mimeTypeImages.get(file.getMimeType());
         if (img == null) {
@@ -86,10 +85,7 @@ public class FilesListGrid extends ListGrid<FileModel> implements HasAllKeyHandl
 
         nameColumn.setCellStyleNames("default-cursor");
         getCellTable().addColumn(nameColumn);
-
-        //getCellTable().setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
         getCellTable().setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
-
         getCellTable().setKeyboardPagingPolicy(KeyboardPagingPolicy.CURRENT_PAGE);
     }
 

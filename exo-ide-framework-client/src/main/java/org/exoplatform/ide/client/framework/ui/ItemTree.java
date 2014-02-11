@@ -21,6 +21,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.cellview.client.CellTree;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -100,11 +101,10 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
         Grid grid = new Grid(1, 2);
         grid.setWidth("100%");
 
-        // Image i = new Image(icon);
         TreeIcon i = new TreeIcon(icon);
         i.setHeight("16px");
         grid.setWidget(0, 0, i);
-        // Label l = new Label(text, false);
+
         HTMLPanel l = new HTMLPanel("div", text);
         l.setStyleName("ide-Tree-label");
         grid.setWidget(0, 1, l);
@@ -113,7 +113,6 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
         grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
         grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
         grid.getCellFormatter().setWidth(0, 1, "100%");
-        // grid.getCellFormatter().addStyleName(0, 1, "ide-Tree-label");
         DOM.setStyleAttribute(grid.getElement(), "display", "block");
         return grid;
     }
@@ -190,11 +189,6 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
             if (DirectoryFilter.get().matchWithPattern(item.getName())) {
                 continue;
             }
-
-            // if (item.getName() != null && item.getName().startsWith("."))
-            // {
-            // continue;
-            // }
 
             TreeItem node = createTreeNode(item);
             parentNode.addItem(node);
@@ -295,7 +289,8 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
         String title = "";
 
         if (locktokens == null) {
-            return (item.getName() == null || item.getName().isEmpty()) ? "/" : item.getName();
+            return (item.getName() == null || item.getName().isEmpty()) ? 
+                "/" : SafeHtmlUtils.htmlEscape(item.getName());
         }
 
         if (item instanceof FileModel && ((FileModel)item).isLocked()) {
@@ -306,7 +301,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
                         + UIHelper.getGadgetImagesURL() + "navigation/lock.png" + "\" />&nbsp;&nbsp;";
             }
         }
-        title += item.getName().isEmpty() ? "/" : item.getName();
+        title += item.getName().isEmpty() ? "/" : SafeHtmlUtils.htmlEscape(item.getName());
 
         return title;
     }
