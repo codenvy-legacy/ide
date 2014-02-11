@@ -65,7 +65,7 @@
     margin-right: 10px;
     position: absolute;
     left: 0;
-    background-color: mainFontColor;
+    background-color: radioButtonBackgroundColor;
 }
 .gwt-RadioButton label:before {
     border-radius: 8px;
@@ -73,9 +73,9 @@
 .gwt-RadioButton input[type=radio]:checked + label:before {
     /*text-align: center;*/
     /*line-height: 18px;*/
-    background: -moz-radial-gradient(center, ellipse cover, windowContentBackground 46%, mainFontColor 51%); /* FF3.6+ */
-    background: -webkit-radial-gradient(center, ellipse cover, windowContentBackground 46%,mainFontColor 51%); /* Chrome10+,Safari5.1+ */
-    background: radial-gradient(ellipse at center, windowContentBackground 46%,mainFontColor 51%); /* W3C */
+    background: -moz-radial-gradient(center, ellipse cover, windowContentBackground 35%, radioButtonBackgroundColor 40%);  /*FF3.6+*/
+    background: -webkit-radial-gradient(center, ellipse cover, windowContentBackground 35%,radioButtonBackgroundColor 40%);  /*Chrome10+,Safari5.1+*/
+    background: radial-gradient(ellipse at center, windowContentBackground 35%,radioButtonBackgroundColor 40%); /* W3C*/
 }
 
 .gwt-TextBox{
