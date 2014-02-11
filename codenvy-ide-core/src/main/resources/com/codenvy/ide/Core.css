@@ -42,7 +42,7 @@
         font-size: fontSize;
     }
 
-label {
+.gwt-RadioButton label {
     display: inline-block;
     cursor: pointer;
     position: relative;
@@ -51,11 +51,11 @@ label {
     height: 18px;
     font-weight: bold;
 }
-input[type=radio] {
+.gwt-RadioButton input[type=radio] {
     display: none;
 }
 
-label:before {
+.gwt-RadioButton label:before {
     content: "";
     display: inline-block;
 
@@ -70,7 +70,7 @@ label:before {
 .gwt-RadioButton label:before {
     border-radius: 8px;
 }
-input[type=radio]:checked + label:before {
+.gwt-RadioButton input[type=radio]:checked + label:before {
     /*text-align: center;*/
     /*line-height: 18px;*/
     background: -moz-radial-gradient(center, ellipse cover, windowContentBackground 46%, mainFontColor 51%); /* FF3.6+ */
