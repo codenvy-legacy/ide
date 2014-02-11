@@ -86,10 +86,10 @@
         <buildnumber.plugin.version>1.1</buildnumber.plugin.version>
         <ch.qos.logback.version>1.0.13</ch.qos.logback.version>
         <codenvy.ide-codeassistant-index.version>20120627</codenvy.ide-codeassistant-index.version>
-        <codenvy.platform-api-gwt-client.version>0.1.0-SNAPSHOT</codenvy.platform-api-gwt-client.version>
+        <codenvy.platform-api-gwt-client.version>0.1.0</codenvy.platform-api-gwt-client.version>
         <com.codenvy.commons.version>0.14.0</com.codenvy.commons.version>
         <com.codenvy.organization.version>0.11.0</com.codenvy.organization.version>
-        <com.codenvy.platform-api.version>0.8.1-SNAPSHOT</com.codenvy.platform-api.version>
+        <com.codenvy.platform-api.version>0.8.1</com.codenvy.platform-api.version>
         <com.codenvy.security.version>0.1.0</com.codenvy.security.version>
         <commons-codec.version>1.6</commons-codec.version>
         <commons-fileupload.version>1.2.1</commons-fileupload.version>
