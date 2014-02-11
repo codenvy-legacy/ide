@@ -89,4 +89,32 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("deleteResourceQuestion")
     String deleteResourceQuestion(String resource);
+    
+    @Key("renameButton")
+    String renameButton();
+    
+    @Key("renameResourceViewTitle")
+    String renameResourceViewTitle();
+    
+    @Key("renameFieldTitle")
+    String renameFieldTitle();
+
+    @Key("createProjectFromTemplate.descriptionField")
+    String createProjectFromTemplateDescription();
+
+    @Key("createProjectFromTemplate.projectPrivacy")
+    String createProjectFromTemplateProjectPrivacy();
+
+    @Key("createProjectFromTemplate.public")
+    String createProjectFromTemplatePublic();
+
+    @Key("createProjectFromTemplate.publicDescription")
+    String createProjectFromTemplatePublicDescription();
+
+    @Key("createProjectFromTemplate.private")
+    String createProjectFromTemplatePrivate();
+
+    @Key("createProjectFromTemplate.privateDescription")
+    String createProjectFromTemplatePrivateDescription();
+
 }

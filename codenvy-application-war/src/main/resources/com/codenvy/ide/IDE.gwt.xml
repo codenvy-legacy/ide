@@ -48,6 +48,7 @@
     <inherits name='com.codenvy.ide.ext.tutorials.Tutorials'/>
 
     <inherits name='com.codenvy.api.PlatformAPI'/>
+    <inherits name="com.codenvy.ide.ui.CodenvyUI"/>
 
     <stylesheet src="IDE.css"/>
 
@@ -57,5 +58,9 @@
     <!-- Specify the paths for translatable code                    -->
     <source path='client'/>
     <source path='shared'/>
-
+    <!--
+            Cross-site iframe linker is needed to generate compilation-mappings.txt.
+            The file is used to determine JavaScript file to be loaded.
+        -->
+    <add-linker name="xsiframe"/>
 </module>

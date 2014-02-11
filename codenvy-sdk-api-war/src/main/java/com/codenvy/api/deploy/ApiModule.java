@@ -24,6 +24,7 @@ import com.codenvy.api.builder.LastInUseBuilderSelectionStrategy;
 import com.codenvy.api.builder.internal.SlaveBuilderService;
 import com.codenvy.api.core.rest.ApiExceptionMapper;
 import com.codenvy.api.project.server.ProjectService;
+import com.codenvy.api.project.server.ProjectTemplateService;
 import com.codenvy.api.project.server.ProjectTypeDescriptionService;
 import com.codenvy.api.runner.LastInUseRunnerSelectionStrategy;
 import com.codenvy.api.runner.RunnerAdminService;
@@ -43,19 +44,11 @@ import com.codenvy.api.vfs.server.exceptions.PermissionDeniedExceptionMapper;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemRuntimeExceptionMapper;
 import com.codenvy.api.vfs.server.observation.EventListenerList;
 import com.codenvy.api.vfs.server.search.SearcherProvider;
-import com.codenvy.commons.security.oauth.OAuthAuthenticationService;
-import com.codenvy.commons.security.oauth.OAuthAuthenticatorProvider;
-import com.codenvy.commons.security.oauth.OAuthAuthenticatorTokenProvider;
-import com.codenvy.commons.security.oauth.OAuthTokenProvider;
 import com.codenvy.ide.everrest.CodenvyAsynchronousJobPool;
-import com.codenvy.ide.everrest.CodenvyAsynchronousJobService;
-import com.codenvy.ide.ext.extensions.server.CreateProjectService;
 import com.codenvy.ide.ext.git.server.GitConnectionFactory;
 import com.codenvy.ide.ext.git.server.nativegit.NativeGitConnectionFactory;
 import com.codenvy.ide.ext.git.server.rest.GitService;
 import com.codenvy.ide.ext.github.server.rest.GitHubService;
-import com.codenvy.ide.ext.java.server.CreateAntProjectService;
-import com.codenvy.ide.ext.java.server.CreateMavenProjectService;
 import com.codenvy.ide.ext.java.server.RestCodeAssistantJava;
 import com.codenvy.ide.ext.ssh.server.DummySshKeyStore;
 import com.codenvy.ide.ext.ssh.server.KeyService;
@@ -64,6 +57,7 @@ import com.codenvy.ide.security.oauth.server.LabOAuthAuthenticatorProvider;
 import com.codenvy.ide.server.UserService;
 import com.codenvy.inject.DynaModule;
 import com.codenvy.runner.webapps.DeployToApplicationServerRunner;
+import com.codenvy.security.oauth.*;
 import com.codenvy.vfs.impl.fs.CleanableSearcherProvider;
 import com.codenvy.vfs.impl.fs.LocalFSMountStrategy;
 import com.codenvy.vfs.impl.fs.LocalFileSystemRegistryPlugin;
@@ -74,6 +68,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.util.Providers;
 
 import org.everrest.core.impl.async.AsynchronousJobPool;
+import org.everrest.core.impl.async.AsynchronousJobService;
+import org.everrest.guice.PathKey;
 
 /** @author andrew00x */
 @DynaModule
@@ -82,6 +78,7 @@ public class ApiModule extends AbstractModule {
     protected void configure() {
         bind(ProjectService.class);
         bind(ProjectTypeDescriptionService.class);
+        bind(ProjectTemplateService.class);
         bind(LocalFileSystemRegistryPlugin.class);
         bind(LocalFSMountStrategy.class).to(WorkspaceHashLocalFSMountStrategy.class);
         bind(SearcherProvider.class).to(CleanableSearcherProvider.class);
@@ -110,12 +107,9 @@ public class ApiModule extends AbstractModule {
         bind(SlaveRunnerService.class);
         bind(DeployToApplicationServerRunner.class);
         bind(UserService.class);
-        bind(CreateMavenProjectService.class);
-        bind(CreateAntProjectService.class);
         bind(RestCodeAssistantJava.class);
-        bind(AsynchronousJobPool.class).toInstance(new CodenvyAsynchronousJobPool(null)); // asynchronous job with default configuration
-        bind(CodenvyAsynchronousJobService.class);
-        bind(CreateProjectService.class);
+        bind(AsynchronousJobPool.class).to(CodenvyAsynchronousJobPool.class);
+        bind(new PathKey<>(AsynchronousJobService.class, "/async/{ws-id}")).to(AsynchronousJobService.class);
         bind(GitService.class);
         bind(GitHubService.class);
         bind(GitConnectionFactory.class).to(NativeGitConnectionFactory.class);

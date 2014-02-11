@@ -25,6 +25,7 @@ import com.codenvy.ide.actions.NavigateToFileAction;
 import com.codenvy.ide.actions.NewProjectAction;
 import com.codenvy.ide.actions.NewResourceAction;
 import com.codenvy.ide.actions.OpenProjectAction;
+import com.codenvy.ide.actions.RenameResourceAction;
 import com.codenvy.ide.actions.SaveAction;
 import com.codenvy.ide.actions.SaveAllAction;
 import com.codenvy.ide.actions.ShowPreferencesAction;
@@ -50,10 +51,11 @@ import com.codenvy.ide.welcome.action.CreateProjectAction;
 import com.codenvy.ide.welcome.action.InviteAction;
 import com.codenvy.ide.welcome.action.ShowDocumentationAction;
 import com.codenvy.ide.wizard.NewResourceAgentImpl;
+import com.codenvy.ide.wizard.newproject.pages.paas.SelectPaasPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
+import com.codenvy.ide.wizard.newresource.NewFileProvider;
 import com.codenvy.ide.wizard.newresource.NewFolderProvider;
-import com.codenvy.ide.wizard.newresource.NewTextFileProvider;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePagePresenter;
 import com.codenvy.ide.xml.XmlFileProvider;
 import com.codenvy.ide.xml.editor.XmlEditorProvider;
@@ -87,7 +89,7 @@ public class StandardComponentInitializer {
     private NewFolderProvider folderProvider;
 
     @Inject
-    private NewTextFileProvider textFileProvider;
+    private NewFileProvider textFileProvider;
 
     @Inject
     private XmlFileProvider xmlFileProvider;
@@ -130,7 +132,7 @@ public class StandardComponentInitializer {
 
     @Inject
     private ShowProjectPropertiesAction showProjectPropertiesAction;
-    
+
     @Inject
     private NavigateToFileAction navigateToFileAction;
 
@@ -158,6 +160,9 @@ public class StandardComponentInitializer {
 
     @Inject
     private DeleteResourceAction deleteResourceAction;
+    
+    @Inject
+    private RenameResourceAction renameResourceAction;
 
     @Inject
     private CloseProjectAction closeProjectAction;
@@ -171,7 +176,10 @@ public class StandardComponentInitializer {
     @Inject
     private Provider<ChooseTemplatePagePresenter> chooseTemplatePageProvider;
 
-    /** Instantiates {@link StandardComponentInitializer} an creates standard content */
+    @Inject
+    private Provider<SelectPaasPagePresenter> selectPaasPagePresenterProvider;
+
+    /** Instantiates {@link StandardComponentInitializer} an creates standard content. */
     @Inject
     public StandardComponentInitializer() {
     }
@@ -203,10 +211,10 @@ public class StandardComponentInitializer {
 
         actionManager.registerAction("newProject", newProjectAction);
         actionManager.registerAction("openProject", openProjectAction);
-        
+
         actionManager.registerAction("navigateToFile", navigateToFileAction);
         keyBinding.getGlobal().addKey(new KeyBuilder().action().alt().charCode('n').build(), "navigateToFile");
-        
+
         DefaultActionGroup toolbarGroup = new DefaultActionGroup(actionManager);
         toolbarGroup.addSeparator();
         actionManager.registerAction(IdeActions.GROUP_MAIN_TOOLBAR, toolbarGroup);
@@ -219,6 +227,7 @@ public class StandardComponentInitializer {
         fileGroup.add(newGroup);
         fileGroup.add(openProjectAction);
         fileGroup.add(navigateToFileAction);
+        fileGroup.add(renameResourceAction);
         actionManager.registerAction("newResource", newFileAction);
         newGroup.add(newFileAction);
 
@@ -238,6 +247,7 @@ public class StandardComponentInitializer {
         actionManager.registerAction("changeResourceGroup", changeResourceGroup);
         actionManager.registerAction("closeProject", closeProjectAction);
         actionManager.registerAction("deleteItem", deleteResourceAction);
+        actionManager.registerAction("renameResource", renameResourceAction);
         changeResourceGroup.add(closeProjectAction);
         changeResourceGroup.add(deleteResourceAction);
         changeResourceGroup.addSeparator();
@@ -258,6 +268,7 @@ public class StandardComponentInitializer {
         resourceOperation.addSeparator();
         actionManager.registerAction("resourceOperation", resourceOperation);
         resourceOperation.add(deleteResourceAction);
+        resourceOperation.add(renameResourceAction);
         contextMenuGroup.add(resourceOperation);
 
         DefaultActionGroup closeProjectGroup = new DefaultActionGroup(actionManager);
@@ -268,5 +279,6 @@ public class StandardComponentInitializer {
 
         newProjectWizard.addPage(newProjectPageProvider);
         newProjectWizard.addPage(chooseTemplatePageProvider);
+        newProjectWizard.addPage(selectPaasPagePresenterProvider);
     }
 }

@@ -54,29 +54,27 @@ public class TemplateAgentImplTest extends GwtTestWithMockito {
     @SuppressWarnings("unchecked")
     @Test
     public void testRegister() throws Exception {
-        assertEquals(agent.getTemplatesForProjectType("primaryNature", Collections.createArray("secondaryNature")).size(), 0);
+        assertEquals(agent.getTemplatesForProjectType("projectTypeId").size(), 0);
 
         Provider<? extends AbstractTemplatePage> pageProvider = mock(Provider.class);
         Array<Provider<? extends AbstractTemplatePage>> pages = Collections.createArray(pageProvider, pageProvider);
 
-        agent.register("id", "title", null, "primaryNature", Collections.createArray("secondaryNature"), pages);
+        agent.register("id", "title", "description", null, "projectTypeId", pages);
 
-        assertEquals(agent.getTemplatesForProjectType("primaryNature", Collections.createArray("secondaryNature")).size(), 1);
+        assertEquals(agent.getTemplatesForProjectType("projectTypeId").size(), 1);
         verify(newProjectWizard, times(pages.size())).addPageAfterChooseTemplate(eq(pageProvider));
     }
 
     @Test
     public void testRegisterWhenTemplateWithGivenIdIsExist() throws Exception {
-        assertEquals(agent.getTemplatesForProjectType("primaryNature", Collections.createArray("secondaryNature")).size(), 0);
+        assertEquals(agent.getTemplatesForProjectType("projectTypeId").size(), 0);
 
-        agent.register("id", "title", null, "primaryNature", Collections.createArray("secondaryNature"),
-                       Collections.<Provider<? extends AbstractTemplatePage>>createArray());
+        agent.register("id", "title", "description", null, "projectTypeId", Collections.<Provider<? extends AbstractTemplatePage>>createArray());
 
-        assertEquals(agent.getTemplatesForProjectType("primaryNature", Collections.createArray("secondaryNature")).size(), 1);
+        assertEquals(agent.getTemplatesForProjectType("projectTypeId").size(), 1);
 
-        agent.register("id", "title", null, "primaryNature", Collections.createArray("secondaryNature"),
-                       Collections.<Provider<? extends AbstractTemplatePage>>createArray());
+        agent.register("id", "title", "description", null, "projectTypeId", Collections.<Provider<? extends AbstractTemplatePage>>createArray());
 
-        assertEquals(agent.getTemplatesForProjectType("primaryNature", Collections.createArray("secondaryNature")).size(), 1);
+        assertEquals(agent.getTemplatesForProjectType("projectTypeId").size(), 1);
     }
 }

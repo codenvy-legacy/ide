@@ -27,7 +27,6 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.list.SimpleList.View;
 import com.codenvy.ide.util.dom.Elements;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -56,8 +55,6 @@ import com.google.inject.Singleton;
 public class PreferencesViewImpl extends DialogBox implements PreferencesView {
     interface PreferenceViewImplUiBinder extends UiBinder<Widget, PreferencesViewImpl> {
     }
-
-    private static PreferenceViewImplUiBinder uiBinder = GWT.create(PreferenceViewImplUiBinder.class);
 
     @UiField
     Button      btnClose;
@@ -121,7 +118,7 @@ public class PreferencesViewImpl extends DialogBox implements PreferencesView {
      * @param resources
      */
     @Inject
-    protected PreferencesViewImpl(Resources resources) {
+    protected PreferencesViewImpl(Resources resources, PreferenceViewImplUiBinder uiBinder) {
         this.res = resources;
 
         Widget widget = uiBinder.createAndBindUi(this);

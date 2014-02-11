@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.github.server.rest;
 
-import com.codenvy.commons.security.oauth.OAuthTokenProvider;
 import com.codenvy.ide.commons.ParsingResponseException;
 import com.codenvy.ide.ext.github.server.GitHub;
 import com.codenvy.ide.ext.github.server.GitHubException;
@@ -26,6 +25,7 @@ import com.codenvy.ide.ext.github.shared.GitHubRepository;
 import com.codenvy.ide.ext.github.shared.GitHubRepositoryList;
 import com.codenvy.ide.ext.github.shared.GitHubUser;
 import com.codenvy.ide.ext.ssh.server.SshKeyStoreException;
+import com.codenvy.security.oauth.OAuthTokenProvider;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -41,16 +41,16 @@ import java.util.Map;
 
 /**
  * REST service to get the list of repositories from GitHub (where sample projects are located).
- * 
+ *
  * @author Oksana Vereshchaka
  */
-@Path("github/{ws-name}")
+@Path("github/{ws-id}")
 public class GitHubService {
     @Inject
     OAuthTokenProvider oauthTokenProvider;
 
     @Inject
-    GitHub             github;
+    GitHub github;
 
     public GitHubService() {
     }
@@ -62,30 +62,24 @@ public class GitHubService {
     @Path("list/user")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public GitHubRepositoryList listRepositoriesByUser(
-                                                       @QueryParam("username") String userName) throws IOException,
-                                                                                               GitHubException,
-                                                                                               ParsingResponseException {
+    public GitHubRepositoryList listRepositoriesByUser(@QueryParam("username") String userName)
+            throws IOException, GitHubException, ParsingResponseException {
         return github.listUserPublicRepositories(userName);
     }
-    
+
     @Path("list/org")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public GitHubRepositoryList listRepositoriesByOrganization(
-                                                               @QueryParam("organization") String organization) throws IOException,
-                                                                                                               GitHubException,
-                                                                                                               ParsingResponseException {
+    public GitHubRepositoryList listRepositoriesByOrganization(@QueryParam("organization") String organization)
+            throws IOException, GitHubException, ParsingResponseException {
         return github.listAllOrganizationRepositories(organization);
     }
-    
+
     @Path("list/account")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public GitHubRepositoryList listRepositoriesByAccount(
-                                                          @QueryParam("account") String account) throws IOException,
-                                                                                                GitHubException,
-                                                                                                ParsingResponseException {
+    public GitHubRepositoryList listRepositoriesByAccount(@QueryParam("account") String account)
+            throws IOException, GitHubException, ParsingResponseException {
         try {
             //First, try to retrieve organization repositories:
             return github.listAllOrganizationRepositories(account);
@@ -105,45 +99,41 @@ public class GitHubService {
     public GitHubRepositoryList listRepositories() throws IOException, GitHubException, ParsingResponseException {
         return github.listCurrentUserRepositories();
     }
-    
+
 
     @Path("list/available")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Map<String, List<GitHubRepository>> availableRepositories() throws IOException, GitHubException, ParsingResponseException
-    {
+    public Map<String, List<GitHubRepository>> availableRepositories() throws IOException, GitHubException, ParsingResponseException {
         return github.availableRepositoriesList();
     }
-    
+
     @Path("page")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public GitHubRepositoryList getPage(@QueryParam("url") String url) throws IOException, GitHubException, ParsingResponseException {
         return github.getPage(url);
     }
-    
+
     @Path("orgs")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<String> listOrganizations() throws IOException, GitHubException, ParsingResponseException
-    {
+    public List<String> listOrganizations() throws IOException, GitHubException, ParsingResponseException {
         return github.listOrganizations();
     }
-    
+
     @Path("user")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public GitHubUser getUserInfo() throws IOException, GitHubException, ParsingResponseException
-    {
+    public GitHubUser getUserInfo() throws IOException, GitHubException, ParsingResponseException {
         return github.getGithubUser();
     }
 
     @GET
     @Path("collaborators/{user}/{repository}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Collaborators collaborators(@PathParam("user") String user,
-                                       @PathParam("repository") String repository) throws IOException,
-                                                                                  GitHubException, ParsingResponseException {
+    public Collaborators collaborators(@PathParam("user") String user, @PathParam("repository") String repository)
+            throws IOException, GitHubException, ParsingResponseException {
         return github.getCollaborators(user, repository);
     }
 
@@ -158,6 +148,6 @@ public class GitHubService {
     @Path("ssh/generate")
     public void updateSSHKey() throws SshKeyStoreException, IOException, GitHubException, ParsingResponseException {
         if (github.getGitHubSshKey() == null)
-        github.generateGitHubSshKey();
+            github.generateGitHubSshKey();
     }
 }

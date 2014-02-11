@@ -77,6 +77,9 @@ public interface EditorPartPresenter extends PartPresenter {
 
     /** Saves the contents of this part to another object. */
     void doSaveAs();
+    
+    /** Perform action on file changed (e.g. renamed). */
+    void onFileChanged();
 
     /**
      * Returns whether the contents of this part have changed since the last save

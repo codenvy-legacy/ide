@@ -103,7 +103,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /** @author andrew00x */
-@Path("git/{ws-name}")
+@Path("git/{ws-id}")
 public class GitService {
     private static final Logger LOG = LoggerFactory.getLogger(GitService.class);
 
@@ -264,7 +264,7 @@ public class GitService {
                     Property projectTypeProperty = DtoFactory.getInstance().createDto(Property.class).withName("vfs:projectType")
                                                              .withValue(new ArrayList<String>(Arrays.asList("Multiple Module Project")));
                     propertiesList.add(projectTypeProperty);
-                    propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("nature.primary")
+                    propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("language")
                                                  .withValue(new ArrayList<String>(Arrays.asList("java"))));
                     propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("vfs:mimeType")
                                                  .withValue(new ArrayList<String>(Arrays.asList("text/vnd.ideproject+directory"))));
@@ -329,6 +329,8 @@ public class GitService {
                                                  .withValue(new ArrayList<String>(Arrays.asList("text/vnd.ideproject+directory"))));
                     propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("isGitRepository")
                                                  .withValue(new ArrayList<String>(Arrays.asList("true"))));
+                    propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("builder.name")
+                                                 .withValue(new ArrayList<String>(Arrays.asList("maven"))));
                     vfs.updateItem(folder.getId(), propertiesList, null);
                     found = true;
                     break;

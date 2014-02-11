@@ -1,0 +1,101 @@
+/*
+ * CODENVY CONFIDENTIAL
+ * __________________
+ *
+ *  [2012] - [2014] Codenvy, S.A.
+ *  All Rights Reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
+ */
+package com.codenvy.ide.ext.java.server.projecttypes;
+
+import com.codenvy.api.project.server.ValueProviderFactory;
+import com.codenvy.api.project.shared.ValueProvider;
+import com.codenvy.api.vfs.server.MountPoint;
+import com.codenvy.api.vfs.server.VirtualFile;
+import com.codenvy.api.vfs.server.VirtualFileSystemProvider;
+import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
+import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
+import com.codenvy.api.vfs.shared.dto.Project;
+import com.codenvy.ide.maven.tools.MavenUtils;
+
+import org.apache.maven.model.Model;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * {@link ValueProviderFactory} implementation for 'folders.source' attribute.
+ *
+ * @author Artem Zatsarynnyy
+ */
+@Singleton
+public class SourceFoldersValueProviderFactory implements ValueProviderFactory {
+
+    @Inject
+    private VirtualFileSystemRegistry registry;
+
+    @Override
+    public String getName() {
+        return "folders.source";
+    }
+
+    @Override
+    public ValueProvider newInstance(final Project project) {
+        return new ValueProvider() {
+            @Override
+            public List<String> getValues() {
+                final List<String> list = new ArrayList<>();
+                try {
+                    VirtualFileSystemProvider provider = registry.getProvider(project.getVfsId());
+                    MountPoint mountPoint = provider.getMountPoint(false);
+                    VirtualFile root = mountPoint.getRoot();
+                    VirtualFile projectFolder = root.getChild(project.getPath());
+                    VirtualFile mavenBuildDescriptor = projectFolder.getChild("pom.xml");
+                    VirtualFile antBuildDescriptor = projectFolder.getChild("build.xml");
+                    if (mavenBuildDescriptor != null) {
+                        list.addAll(getMavenSourceFolders(mavenBuildDescriptor));
+                    } else if (antBuildDescriptor != null) {
+                        list.addAll(getAntSourceFolders(antBuildDescriptor));
+                    }
+                } catch (VirtualFileSystemException | IOException e) {
+                    throw new IllegalStateException(e);
+                }
+                return list;
+            }
+
+            @Override
+            public void setValues(List<String> strings) {
+                // Nothing to do
+            }
+        };
+    }
+
+    private List<String> getAntSourceFolders(VirtualFile buildXml) throws VirtualFileSystemException {
+        List<String> list = new ArrayList<>(1);
+        list.add("src");
+        return list;
+    }
+
+    private List<String> getMavenSourceFolders(VirtualFile pomXml) throws VirtualFileSystemException, IOException {
+        Model model = MavenUtils.readModel(pomXml.getContent().getStream());
+        List<String> list = MavenUtils.getSourceDirectories(model);
+        if (list.isEmpty()) {
+            // add at least one 'default' source folder
+            list.add("src/main/java");
+        }
+        return list;
+    }
+
+}

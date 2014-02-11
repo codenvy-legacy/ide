@@ -24,13 +24,13 @@ import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
-import com.codenvy.ide.ext.git.client.marshaller.StringUnmarshaller;
 import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
+import com.codenvy.ide.websocket.rest.StringUnmarshallerWS;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -104,7 +104,7 @@ public class CommitPresenter implements CommitView.ActionDelegate {
 
         try {
             service.commitWS(resourceProvider.getVfsInfo().getId(), project, message, all, amend,
-                             new RequestCallback<String>(new StringUnmarshaller()) {
+                             new RequestCallback<String>(new StringUnmarshallerWS()) {
                                  @Override
                                  protected void onSuccess(String result) {
                                      Revision revision = dtoFactory.createDtoFromJson(result, Revision.class);

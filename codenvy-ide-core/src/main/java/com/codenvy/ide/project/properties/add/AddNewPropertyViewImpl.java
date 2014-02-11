@@ -18,7 +18,6 @@
 package com.codenvy.ide.project.properties.add;
 
 import com.codenvy.ide.project.properties.ProjectPropertiesLocalizationConstant;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -34,7 +33,7 @@ import com.google.inject.Singleton;
 
 /**
  * UI for adding new property.
- * 
+ *
  * @author Ann Shumilova
  */
 @Singleton
@@ -42,28 +41,29 @@ public class AddNewPropertyViewImpl extends DialogBox implements AddNewPropertyV
     interface AddNewPropertyViewImplUiBinder extends UiBinder<Widget, AddNewPropertyViewImpl> {
     }
 
-    private static AddNewPropertyViewImplUiBinder ourUiBinder = GWT.create(AddNewPropertyViewImplUiBinder.class);
-
     @UiField
-    TextBox name;
+    TextBox                               name;
     @UiField
-    TextBox value;
+    TextBox                               value;
     @UiField
-    Button  btnOk;
+    Button                                btnOk;
     @UiField
-    Button  btnCancel;
+    Button                                btnCancel;
+    @UiField(provided = true)
+    ProjectPropertiesLocalizationConstant locale;
 
     private ActionDelegate delegate;
 
     /**
      * Create view.
      *
-     * @param resources
      * @param locale
+     * @param uiBinder
      */
     @Inject
-    protected AddNewPropertyViewImpl(ProjectPropertiesLocalizationConstant locale) {
-        Widget widget = ourUiBinder.createAndBindUi(this);
+    protected AddNewPropertyViewImpl(ProjectPropertiesLocalizationConstant locale, AddNewPropertyViewImplUiBinder uiBinder) {
+        this.locale = locale;
+        Widget widget = uiBinder.createAndBindUi(this);
         this.setText(locale.addPropertyViewTitle());
         this.setWidget(widget);
     }

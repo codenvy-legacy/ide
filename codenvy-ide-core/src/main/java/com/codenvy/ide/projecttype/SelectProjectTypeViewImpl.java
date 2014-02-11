@@ -17,9 +17,9 @@
  */
 package com.codenvy.ide.projecttype;
 
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.collections.Array;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -34,32 +34,22 @@ import com.google.inject.Singleton;
 
 import javax.validation.constraints.NotNull;
 
-/**
- * @author <a href="mailto:ashumilova@codenvy.com">Ann Shumilova</a>
- * @version $Id:
- */
+/** @author <a href="mailto:ashumilova@codenvy.com">Ann Shumilova</a> */
 @Singleton
 public class SelectProjectTypeViewImpl extends DialogBox implements SelectProjectTypeView {
-
-    interface SelectProjectTypeViewImplUiBinder extends UiBinder<Widget, SelectProjectTypeViewImpl> {
-    }
-
-    private static SelectProjectTypeViewImplUiBinder uiBinder = GWT.create(SelectProjectTypeViewImplUiBinder.class);
 
     @UiField
     ListBox projectTypeField;
     @UiField
     Label   selectProjectLabel;
-
     @UiField
-    Button btnOk;
+    Button  btnOk;
     @UiField
-    Button btnCancel;
-
+    Button  btnCancel;
     private ActionDelegate delegate;
 
     @Inject
-    protected SelectProjectTypeViewImpl(CoreLocalizationConstant localizationConstant) {
+    protected SelectProjectTypeViewImpl(CoreLocalizationConstant localizationConstant, SelectProjectTypeViewImplUiBinder uiBinder) {
         this.setText(localizationConstant.setProjectTypeTitle());
         Widget widget = uiBinder.createAndBindUi(this);
         this.setWidget(widget);
@@ -73,9 +63,9 @@ public class SelectProjectTypeViewImpl extends DialogBox implements SelectProjec
 
     /** {@inheritDoc} */
     @Override
-    public void setTypes(Array<String> types) {
-        for (String type : types.asIterable()) {
-            projectTypeField.addItem(type);
+    public void setTypes(Array<ProjectTypeDescriptor> types) {
+        for (ProjectTypeDescriptor type : types.asIterable()) {
+            projectTypeField.addItem(type.getProjectTypeId());
         }
     }
 
@@ -109,8 +99,8 @@ public class SelectProjectTypeViewImpl extends DialogBox implements SelectProjec
 
     /** {@inheritDoc} */
     @Override
-    public String getProjectType() {
-        int index = projectTypeField.getSelectedIndex();
+    public String getSelectedProjectTypeId() {
+        final int index = projectTypeField.getSelectedIndex();
         return index != -1 ? projectTypeField.getItemText(index) : "";
     }
 
@@ -118,5 +108,8 @@ public class SelectProjectTypeViewImpl extends DialogBox implements SelectProjec
     @Override
     public void setLabel(@NotNull String label) {
         selectProjectLabel.getElement().setInnerHTML(label);
+    }
+
+    interface SelectProjectTypeViewImplUiBinder extends UiBinder<Widget, SelectProjectTypeViewImpl> {
     }
 }

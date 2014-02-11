@@ -56,13 +56,13 @@ public class CodenvyDispatcherServletConfigurationFactory extends DispatcherServ
                                              .when(new Condition() {
                                                  @Override
                                                  public boolean matches(HttpServletRequest request, HttpServletResponse response) {
-                                                     return request.getAttribute("ws") == null;
+                                                     return request.getAttribute("wsName") == null || request.getAttribute("wsId") == null;
                                                  }
                                              })
                                              .execute(new Action() {
                                                  @Override
                                                  public void perform(HttpServletRequest request, HttpServletResponse response) {
-                                                     throw new IllegalArgumentException("workspace is not set");
+                                                     throw new IllegalStateException("workspace is not set");
                                                  }
                                              })
                                              .priority(200)
@@ -72,11 +72,12 @@ public class CodenvyDispatcherServletConfigurationFactory extends DispatcherServ
                                                  @Override
                                                  public void perform(HttpServletRequest request, HttpServletResponse response)
                                                          throws ServletException, IOException {
-                                                     final String ws = (String)request.getAttribute("ws");
+                                                     final String wsName = (String)request.getAttribute("wsName");
+                                                     final String wsId = (String)request.getAttribute("wsId");
                                                      String path = request.getPathInfo();
                                                      String project = null;
                                                      String filePath = null;
-                                                     path = path.substring(('/' + ws).length());
+                                                     path = path.substring(('/' + wsName).length());
                                                      if (path.startsWith("/")) {
                                                          path = path.substring(1);
                                                      }
@@ -110,7 +111,7 @@ public class CodenvyDispatcherServletConfigurationFactory extends DispatcherServ
                                                          redirectUrlBuilder.append('/');
                                                          redirectUrlBuilder.append(request.getContextPath());
                                                          redirectUrlBuilder.append('/');
-                                                         redirectUrlBuilder.append(ws);
+                                                         redirectUrlBuilder.append(wsName);
                                                          redirectUrl = redirectUrlBuilder.toString();
                                                      }
                                                      writer.write("<html>\n");
@@ -121,7 +122,8 @@ public class CodenvyDispatcherServletConfigurationFactory extends DispatcherServ
                                                      }
                                                      writer.write("    <script type=\"text/javascript\" language=\"javascript\">\n");
                                                      writer.write("      var hiddenFiles = \".*\";\n");
-                                                     writer.write(String.format("      var ws = \"%s\";\n", ws));
+                                                     writer.write(String.format("      var wsName = \"%s\";\n", wsName));
+                                                     writer.write(String.format("      var wsId = \"%s\";\n", wsId));
                                                      if (project != null) {
                                                          writer.write(String.format("      var project = \"%s\";\n", project));
                                                      } else {
@@ -132,6 +134,10 @@ public class CodenvyDispatcherServletConfigurationFactory extends DispatcherServ
                                                      } else {
                                                          writer.write("      var path = null;\n");
                                                      }
+                                                     
+                                                     writer.write("      var facebook_like_url = \"/ide/_app/facebook-like.html\";\n");
+                                                     writer.write("      var google_like_url = \"/ide/_app/google-like.html\";\n");
+                                                     
                                                      writer.write("    </script>\n");
                                                      writer.write("    <link rel=\"shortcut icon\" href=\"_app/favicon.ico\"/>\n");
                                                      writer.write("  </head>\n");

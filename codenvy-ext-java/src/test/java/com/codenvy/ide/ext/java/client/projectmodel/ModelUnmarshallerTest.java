@@ -56,7 +56,7 @@ public class ModelUnmarshallerTest extends BaseTest {
     private JavaProject project = new JavaProject(null);
 
     @Mock
-    private JavaProjectDesctiprion projectDescription;
+    private JavaProjectDescription projectDescription;
 
     @Mock
     private Response response;

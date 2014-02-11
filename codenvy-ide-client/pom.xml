@@ -98,6 +98,11 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-ui</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-vfs-fs</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -105,6 +110,16 @@
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-runner</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api-gwt-client</groupId>
+            <artifactId>codenvy-api-project-gwt-client</artifactId>
+            <version>${codenvy.platform-api-gwt-client.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api-gwt-client</groupId>
+            <artifactId>codenvy-gwt-client-commons</artifactId>
+            <version>${codenvy.platform-api-gwt-client.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.gwt.inject</groupId>
@@ -236,7 +251,7 @@
                     <module>com.codenvy.ide.IDE</module>
                     <logLevel>INFO</logLevel>
                     <extraJvmArgs>-Xss512m -Xmx2048m -XX:MaxPermSize=1024m</extraJvmArgs>
-                    <runTarget>ide/dev-monit</runTarget>
+                    <runTarget>ide/default</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                 </configuration>
             </plugin>

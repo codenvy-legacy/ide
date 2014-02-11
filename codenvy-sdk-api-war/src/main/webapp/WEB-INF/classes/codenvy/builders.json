@@ -6,7 +6,7 @@
                     "rel": "builder state",
                     "produces": "application/json",
                     "requestBody": null,
-                    "href": "http://localhost:${PORT}/api/rest/internal/builder/state",
+                    "href": "http://localhost:${PORT}/api/internal/builder/state",
                     "consumes": null,
                     "method": "GET",
                     "parameters": [
@@ -24,7 +24,7 @@
                     "rel": "available builders",
                     "produces": "application/json",
                     "requestBody": null,
-                    "href": "http://localhost:${PORT}/api/rest/internal/builder/available",
+                    "href": "http://localhost:${PORT}/api/internal/builder/available",
                     "consumes": null,
                     "method": "GET",
                     "parameters": []
@@ -35,7 +35,7 @@
                     "requestBody": {
                         "description": "Parameters for analyze dependencies in JSON format"
                     },
-                    "href": "http://localhost:${PORT}/api/rest/internal/builder/dependencies",
+                    "href": "http://localhost:${PORT}/api/internal/builder/dependencies",
                     "consumes": "application/json",
                     "method": "POST",
                     "parameters": []
@@ -46,13 +46,13 @@
                     "requestBody": {
                         "description": "Parameters for build task in JSON format"
                     },
-                    "href": "http://localhost:${PORT}/api/rest/internal/builder/build",
+                    "href": "http://localhost:${PORT}/api/internal/builder/build",
                     "consumes": "application/json",
                     "method": "POST",
                     "parameters": []
                 }
             ],
-            "href": "http://localhost:${PORT}/api/rest/internal/builder",
+            "href": "http://localhost:${PORT}/api/internal/builder",
             "description": null,
             "version": "1.0"
         },

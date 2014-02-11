@@ -18,7 +18,6 @@
 package com.codenvy.ide.project.properties.edit;
 
 import com.codenvy.ide.project.properties.ProjectPropertiesLocalizationConstant;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -35,7 +34,7 @@ import com.google.inject.Singleton;
 
 /**
  * UI for editing property's value.
- * 
+ *
  * @author Ann Shumilova
  */
 @Singleton
@@ -43,28 +42,29 @@ public class EditPropertyViewImpl extends DialogBox implements EditPropertyView 
     interface EditPropertyViewImplUiBinder extends UiBinder<Widget, EditPropertyViewImpl> {
     }
 
-    private static EditPropertyViewImplUiBinder ourUiBinder = GWT.create(EditPropertyViewImplUiBinder.class);
-
     @UiField
-    Label   name;
+    Label                                 name;
     @UiField
-    TextBox value;
+    TextBox                               value;
     @UiField
-    Button  btnOk;
+    Button                                btnOk;
     @UiField
-    Button  btnCancel;
+    Button                                btnCancel;
+    @UiField(provided = true)
+    ProjectPropertiesLocalizationConstant locale;
 
     private ActionDelegate delegate;
 
     /**
      * Create view.
      *
-     * @param resources
      * @param locale
+     * @param uiBinder
      */
     @Inject
-    protected EditPropertyViewImpl(ProjectPropertiesLocalizationConstant locale) {
-        Widget widget = ourUiBinder.createAndBindUi(this);
+    protected EditPropertyViewImpl(ProjectPropertiesLocalizationConstant locale, EditPropertyViewImplUiBinder uiBinder) {
+        this.locale = locale;
+        Widget widget = uiBinder.createAndBindUi(this);
         this.setText(locale.editPropertyViewTitle());
         this.setWidget(widget);
     }

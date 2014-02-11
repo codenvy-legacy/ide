@@ -21,36 +21,32 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringSet;
 
 /**
- * Description of the project containing nature set and it's specific properties
+ * Description of the project.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
+ * @author Artem Zatsarynnyy
  */
 public class ProjectDescription {
 
-    public static final String PROPERTY_PRIMARY_NATURE = "nature.primary";
-
-    public static final String PROPERTY_MIXIN_NATURES = "nature.mixin";
-
-    /** Properties. */
+    public static final String PROPERTY_PROJECT_TYPE = "vfs:projectType";
+    public static final String PROPERTY_LANGUAGE     = "language";
     protected Project project;
 
     public ProjectDescription(Project project) {
         this.project = project;
     }
 
-    /** @return primary nature */
-    public String getPrimaryNature() {
-        return (String)project.getPropertyValue(PROPERTY_PRIMARY_NATURE);
-    }
-
-    /** @return The set of Mixin natures or empty set */
-    public StringSet getNatures() {
-        return asStringSet(PROPERTY_MIXIN_NATURES);
+    /** @return project type id */
+    public String getProjectTypeId() {
+        return (String)project.getPropertyValue(PROPERTY_PROJECT_TYPE);
     }
 
     /**
-     * @param property
-     * @return
+     * Get property values as {@link StringSet}.
+     *
+     * @param propertyName
+     *         property name
+     * @return {@link StringSet} of property values
      */
     protected StringSet asStringSet(String propertyName) {
         Property property = project.getProperty(propertyName);
@@ -60,5 +56,4 @@ public class ProjectDescription {
         }
         return natures;
     }
-
 }

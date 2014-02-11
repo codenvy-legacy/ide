@@ -41,7 +41,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Recursively traverses the JSON Response to build Java project model
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  */
 public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
@@ -52,11 +52,11 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
     private static final String ID       = "id";
     private static final String PATH     = "path";
     private static final String NAME     = "name";
-    private JavaProject         project;
-    private StringSet           sourceFolders;
-    private String              projectPath;
-    private Folder              root;
-    private EventBus            eventBus;
+    private JavaProject project;
+    private StringSet   sourceFolders;
+    private String      projectPath;
+    private Folder      root;
+    private EventBus    eventBus;
 
     public JavaModelUnmarshaller(Folder root, JavaProject project, EventBus eventBus) {
         super();
@@ -89,11 +89,15 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
 
     /**
      * Parse project structure and build Java project model
-     * 
-     * @param children the json array to parse
-     * @param parentFolder the folder to add children's that part of java model
-     * @param parentFolderNonModelItems the folder to add children's that not part of java model
-     * @param project the project for that building java model
+     *
+     * @param children
+     *         the json array to parse
+     * @param parentFolder
+     *         the folder to add children's that part of java model
+     * @param parentFolderNonModelItems
+     *         the folder to add children's that not part of java model
+     * @param project
+     *         the project for that building java model
      */
     private void parseProjectStructure(JSONValue children, Folder parentFolder, Folder parentFolderNonModelItems, Project project) {
         JSONArray itemsArray = children.isArray();
@@ -216,8 +220,7 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
     }
 
     private boolean isPackageNameValid(String name) {
-        IStatus status =
-                         JavaConventions.validatePackageName(name, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
+        IStatus status = JavaConventions.validatePackageName(name, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
                                                              JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
         switch (status.getSeverity()) {
             case Status.WARNING:
@@ -229,8 +232,7 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
     }
 
     private boolean isCompilationUnitName(String name) {
-        IStatus status =
-                         JavaConventions.validateCompilationUnitName(name, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
+        IStatus status = JavaConventions.validateCompilationUnitName(name, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
                                                                      JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
         switch (status.getSeverity()) {
             case Status.WARNING:

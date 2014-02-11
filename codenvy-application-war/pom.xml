@@ -96,6 +96,21 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-env-dummy</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api-gwt-client</groupId>
+            <artifactId>codenvy-api-project-gwt-client</artifactId>
+            <version>${codenvy.platform-api-gwt-client.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api-gwt-client</groupId>
+            <artifactId>codenvy-gwt-client-commons</artifactId>
+            <version>${codenvy.platform-api-gwt-client.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.google.gwt.inject</groupId>
             <artifactId>gin</artifactId>
             <version>${gin.version}</version>
@@ -219,7 +234,7 @@
                                 <module>com.codenvy.ide.ext.java.JavaParserWorker</module>
                             </modules>
                             <logLevel>INFO</logLevel>
-                            <style>PRETTY</style>
+                            <!--<style>PRETTY</style>-->
                             <!--<enableClosureCompiler>true</enableClosureCompiler>-->
                         </configuration>
                     </execution>
@@ -249,7 +264,14 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
-                    <packagingIncludes>WEB-INF/lib/codenvy-commons-servlet-*.jar, WEB-INF/classes/com/codenvy/ide/servlet/*, WEB-INF/classes/META-INF/, _app/**</packagingIncludes>
+                    <packagingIncludes>WEB-INF/lib/codenvy-commons-servlet-*.jar,
+                        WEB-INF/lib/codenvy-commons-env-*.jar,
+                        WEB-INF/lib/codenvy-commons-servlet-*.jar,
+                        WEB-INF/lib/codenvy-commons-lang-*.jar,
+                        WEB-INF/lib/codenvy-ide-env-dummy-*.jar,
+                        WEB-INF/classes/com/codenvy/ide/servlet/*,
+                        WEB-INF/classes/META-INF/,
+                        _app/**</packagingIncludes>
                 </configuration>
             </plugin>
             <plugin>

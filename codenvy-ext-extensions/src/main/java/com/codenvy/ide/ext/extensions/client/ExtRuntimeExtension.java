@@ -18,46 +18,28 @@
 package com.codenvy.ide.ext.extensions.client;
 
 import com.codenvy.ide.api.extension.Extension;
-import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.extensions.client.actions.GetLogsAction;
 import com.codenvy.ide.ext.extensions.client.actions.LaunchAction;
 import com.codenvy.ide.ext.extensions.client.actions.StopAction;
-import com.codenvy.ide.ext.extensions.client.template.CreateEmptyCodenvyExtensionPage;
-import com.codenvy.ide.ext.extensions.client.template.sample.CreateSampleCodenvyExtensionPage;
-import com.codenvy.ide.resources.ProjectTypeAgent;
-import com.codenvy.ide.resources.model.Property;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_MAIN_MENU;
-import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 
 /**
- * Entry point for an extension that adds support for running Codenvy-extensions in Codenvy.
+ * Entry point for an extension that adds support for running Codenvy extensions.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ExtRuntimeExtension.java Jul 2, 2013 4:14:56 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 @Extension(title = "Codenvy extensions", version = "3.0.0")
 public class ExtRuntimeExtension {
-    public static final String CODENVY_EXTENSION_PROJECT_TYPE = "CodenvyExtension";
-    public static final String EMPTY_EXTENSION_ID             = "EmptyCodenvyExtension";
-    public static final String SAMPLE_EXTENSION_ID            = "SampleCodenvyExtension";
+    public static final String CODENVY_EXTENSION_PROJECT_TYPE_ID = "codenvy_extension";
 
     @Inject
-    public ExtRuntimeExtension(TemplateAgent templateAgent,
-                               Provider<CreateEmptyCodenvyExtensionPage> createEmptyCodenvyExtensionPage,
-                               Provider<CreateSampleCodenvyExtensionPage> createSampleCodenvyExtensionPage,
-                               ProjectTypeAgent projectTypeAgent,
-                               ExtRuntimeLocalizationConstant localizationConstants,
-                               ExtRuntimeResources resources,
+    public ExtRuntimeExtension(ExtRuntimeLocalizationConstant localizationConstants,
                                ActionManager actionManager,
                                LaunchAction launchAction,
                                GetLogsAction getLogsAction,
@@ -73,41 +55,5 @@ public class ExtRuntimeExtension {
 
         actionManager.registerAction(localizationConstants.stopExtensionActionId(), stopAction);
         runMenuActionGroup.add(stopAction);
-
-        Array<Property> codenvyExtensionProperties = Collections.createArray();
-        codenvyExtensionProperties.add(new Property("nature.mixin", Collections.createArray("CodenvyExtension")));
-        codenvyExtensionProperties.add(new Property("exoide:projectDescription", Collections.createArray("Codenvy extension.")));
-        codenvyExtensionProperties.add(new Property("runner.name", Collections.createArray("sdk")));
-        codenvyExtensionProperties.add(new Property("vfs:projectType", Collections.createArray("CodenvyExtension")));
-        codenvyExtensionProperties.add(new Property("nature.primary", Collections.createArray("java")));
-        codenvyExtensionProperties.add(new Property("vfs:mimeType", Collections.createArray("text/vnd.ideproject+directory")));
-        codenvyExtensionProperties.add(new Property("builder.maven.targets", Collections.createArray("clean", "install")));
-        codenvyExtensionProperties.add(new Property("builder.name", Collections.createArray("maven")));
-        codenvyExtensionProperties.add(new Property("folders.source", Collections.createArray("src/main/java", "src/main/resources")));
-
-        // register project type
-        projectTypeAgent.register(CODENVY_EXTENSION_PROJECT_TYPE,
-                                  "Codenvy extension",
-                                  resources.codenvyExtensionProject(),
-                                  PRIMARY_NATURE,
-                                  Collections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
-                                  codenvyExtensionProperties);
-
-        // register templates
-        templateAgent.register(EMPTY_EXTENSION_ID,
-                               "Empty Codenvy extension project.",
-                               resources.codenvyExtensionTemplate(),
-                               PRIMARY_NATURE,
-                               Collections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
-                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(
-                                       createEmptyCodenvyExtensionPage));
-
-        templateAgent.register(SAMPLE_EXTENSION_ID,
-                               "Gist extension project.",
-                               resources.codenvyExtensionTemplate(),
-                               PRIMARY_NATURE,
-                               Collections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
-                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(
-                                       createSampleCodenvyExtensionPage));
     }
 }

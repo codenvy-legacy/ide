@@ -33,7 +33,6 @@ import com.google.inject.Singleton;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
-
 /**
  * The implementation of {@link PaaSAgent}.
  *
@@ -42,21 +41,8 @@ import javax.validation.constraints.NotNull;
 @Singleton
 public class PaaSAgentImpl implements PaaSAgent {
     private static final String NONE_PAAS_ID = "None";
-
-    private class NonePaaS extends PaaS {
-        public NonePaaS(@NotNull String id, @NotNull String title, @Nullable ImageResource image) {
-            super(id, title, image, Collections.<Array<String>>createStringMap(), false);
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public boolean isAvailable(@NotNull String primaryNature, @NotNull Array<String> secondaryNature) {
-            return true;
-        }
-    }
-
-    private       NewProjectWizard newProjectWizard;
     private final StringMap<PaaS>  registeredPaaS;
+    private       NewProjectWizard newProjectWizard;
 
     /** Create agent. */
     @Inject
@@ -71,7 +57,7 @@ public class PaaSAgentImpl implements PaaSAgent {
     public void register(@NotNull String id,
                          @NotNull String title,
                          @Nullable ImageResource image,
-                         @NotNull StringMap<Array<String>> natures,
+                         @NotNull Array<String> projectTypeIds,
                          @NotNull Array<Provider<? extends AbstractPaasPage>> wizardPages,
                          boolean provideTemplate) {
         if (registeredPaaS.containsKey(id)) {
@@ -79,7 +65,7 @@ public class PaaSAgentImpl implements PaaSAgent {
             return;
         }
 
-        PaaS paas = new PaaS(id, title, image, natures, provideTemplate);
+        PaaS paas = new PaaS(id, title, image, projectTypeIds, provideTemplate);
         registeredPaaS.put(id, paas);
         for (Provider<? extends AbstractPaasPage> provider : wizardPages.asIterable()) {
             newProjectWizard.addPaaSPage(provider);
@@ -89,5 +75,17 @@ public class PaaSAgentImpl implements PaaSAgent {
     /** @return all available PaaSes. */
     public Array<PaaS> getPaaSes() {
         return registeredPaaS.getValues();
+    }
+
+    private class NonePaaS extends PaaS {
+        public NonePaaS(@NotNull String id, @NotNull String title, @Nullable ImageResource image) {
+            super(id, title, image, Collections.<String>createArray(), false);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public boolean isAvailable(@NotNull String primaryNature) {
+            return true;
+        }
     }
 }

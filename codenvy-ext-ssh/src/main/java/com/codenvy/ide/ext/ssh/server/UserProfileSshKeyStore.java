@@ -27,6 +27,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.KeyPair;
 
+import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -52,6 +53,7 @@ public class UserProfileSshKeyStore implements SshKeyStore {
     private final Lock                  lock  = new ReentrantLock();
     private final JSch genJsch;
 
+    @Inject
     public UserProfileSshKeyStore(UserManager userManager) {
         this.userManager = userManager;
         this.genJsch = new JSch();

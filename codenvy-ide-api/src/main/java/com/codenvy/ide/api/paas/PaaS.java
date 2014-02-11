@@ -18,7 +18,6 @@
 package com.codenvy.ide.api.paas;
 
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.StringMap;
 import com.google.gwt.resources.client.ImageResource;
 
 import javax.annotation.Nullable;
@@ -32,13 +31,13 @@ import javax.validation.constraints.NotNull;
  */
 public class PaaS {
     /** Id of the PaaS. */
-    private String                   id;
+    private String        id;
     /** Title of the PaaS. */
-    private String                   title;
+    private String        title;
     /** PaaS image. */
-    private ImageResource            image;
-    private StringMap<Array<String>> natures;
-    private boolean                  provideTemplate;
+    private ImageResource image;
+    private Array<String> projectTypeIds;
+    private boolean       provideTemplate;
 
     /**
      * Create the PaaS.
@@ -49,20 +48,20 @@ public class PaaS {
      *         title that will be shown on a new project wizard
      * @param image
      *         image that will be shown on a new project wizard
-     * @param natures
-     *         nature which the PaaS supports
+     * @param projectTypeIds
+     *         project type identifiers which PaaS supports
      * @param provideTemplate
      *         <code>true</code> if the PaaS doesn't need general templates (it has own template), and <code>false</code> otherwise
      */
     public PaaS(@NotNull String id,
                 @NotNull String title,
                 @Nullable ImageResource image,
-                @NotNull StringMap<Array<String>> natures,
+                @NotNull Array<String> projectTypeIds,
                 boolean provideTemplate) {
         this.id = id;
         this.title = title;
         this.image = image;
-        this.natures = natures;
+        this.projectTypeIds = projectTypeIds;
         this.provideTemplate = provideTemplate;
     }
 
@@ -87,26 +86,13 @@ public class PaaS {
     }
 
     /**
-     * Returns whether the PaaS is available for chosen primary and secondary natures.
+     * Returns whether the PaaS is available for the specified project type.
      *
-     * @param primaryNature
-     *         chosen primary nature
-     * @param secondaryNature
-     *         chosen secondary nature
-     * @return <code>true</code> if the PaaS is available, and <code>false</code> otherwise
+     * @param projectTypeId
+     *         project type id to check
+     * @return <code>true</code> if the PaaS supports project type, and <code>false</code> otherwise
      */
-    public boolean isAvailable(@NotNull String primaryNature, @NotNull Array<String> secondaryNature) {
-        Array<String> secondary = natures.get(primaryNature);
-        if (secondary != null) {
-            for (String nature : secondaryNature.asIterable()) {
-                if (!secondary.contains(nature)) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        return false;
+    public boolean isAvailable(@NotNull String projectTypeId) {
+        return projectTypeIds.contains(projectTypeId);
     }
 }

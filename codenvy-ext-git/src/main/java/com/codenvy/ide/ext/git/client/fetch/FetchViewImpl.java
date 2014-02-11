@@ -22,6 +22,7 @@ import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -39,7 +40,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * The implementation of {@link FetchView}.
- *
+ * 
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
@@ -50,28 +51,28 @@ public class FetchViewImpl extends DialogBox implements FetchView {
     private static FetchViewImplUiBinder ourUiBinder = GWT.create(FetchViewImplUiBinder.class);
 
     @UiField
-    CheckBox                  removeDeletedRefs;
+    CheckBox                             removeDeletedRefs;
     @UiField
-    CheckBox                  fetchAllBranches;
+    CheckBox                             fetchAllBranches;
     @UiField
-    ListBox                   repository;
+    ListBox                              repository;
     @UiField
-    ListBox                   localBranch;
+    ListBox                              localBranch;
     @UiField
-    ListBox                   remoteBranch;
+    ListBox                              remoteBranch;
     @UiField
-    Button                    btnFetch;
+    Button                               btnFetch;
     @UiField
-    Button btnCancel;
+    Button                               btnCancel;
     @UiField(provided = true)
-    final   GitResources            res;
+    final GitResources                   res;
     @UiField(provided = true)
-    final   GitLocalizationConstant locale;
-    private ActionDelegate          delegate;
+    final GitLocalizationConstant        locale;
+    private ActionDelegate               delegate;
 
     /**
      * Create view.
-     *
+     * 
      * @param resources
      * @param locale
      */
@@ -194,10 +195,15 @@ public class FetchViewImpl extends DialogBox implements FetchView {
     public void onCancelClicked(ClickEvent event) {
         delegate.onCancelClicked();
     }
-    
+
     @UiHandler("fetchAllBranches")
     public void onValueChanged(ValueChangeEvent<Boolean> event) {
         delegate.onValueChanged();
+    }
+    
+    @UiHandler("remoteBranch")
+    public void onValueChanged(ChangeEvent event) {
+        delegate.onRemoteBranchChanged();;
     }
 
     /** {@inheritDoc} */
@@ -222,5 +228,28 @@ public class FetchViewImpl extends DialogBox implements FetchView {
     @Override
     public void setEnableLocalBranchField(boolean enabled) {
         localBranch.setEnabled(enabled);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void selectLocalBranch(String branch) {
+        for (int i = 0; i < localBranch.getItemCount(); i++) {
+            if (localBranch.getValue(i).equals(branch)) {
+                localBranch.setItemSelected(i, true);
+                break;
+            }
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void selectRemoteBranch(String branch) {
+        for (int i = 0; i < remoteBranch.getItemCount(); i++) {
+            if (remoteBranch.getValue(i).equals(branch)) {
+                remoteBranch.setItemSelected(i, true);
+                delegate.onRemoteBranchChanged();
+                break;
+            }
+        }
     }
 }

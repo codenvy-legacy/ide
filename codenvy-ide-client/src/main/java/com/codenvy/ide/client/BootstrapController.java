@@ -17,8 +17,14 @@
  */
 package com.codenvy.ide.client;
 
+import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionClientService;
+import com.codenvy.api.project.gwt.client.TemplateClientService;
+import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.template.TemplateDescriptorRegistry;
 import com.codenvy.ide.api.ui.theme.Style;
+import com.codenvy.ide.api.ui.theme.Theme;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
@@ -26,6 +32,7 @@ import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
+import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.Utils;
@@ -43,13 +50,19 @@ import com.google.inject.Provider;
 import java.util.Map;
 
 /**
- * Performs initial application startup
+ * Performs initial application startup.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public class BootstrapController {
 
-    private DtoFactory dtoFactory;
+    private PreferencesManagerImpl              preferencesManager;
+    private ProjectTypeDescriptionClientService projectTypeService;
+    private ProjectTypeDescriptorRegistry       projectTypeDescriptorRegistry;
+    private TemplateClientService               templateClientService;
+    private TemplateDescriptorRegistry          templateDescriptorRegistry;
+    private DtoFactory                          dtoFactory;
+    private ThemeAgent                          themeAgent;
 
     /**
      * Create controller.
@@ -60,8 +73,14 @@ public class BootstrapController {
      * @param extensionInitializer
      * @param preferencesManager
      * @param userService
+     * @param projectTypeDescriptionService
+     * @param projectTypeDescriptorRegistry
+     * @param templateClientService
+     * @param templateDescriptorRegistry
      * @param resourceProvider
      * @param dtoRegistrar
+     * @param dtoFactory
+     * @param themeAgent
      */
     @Inject
     public BootstrapController(final Provider<ComponentRegistry> componentRegistry,
@@ -70,45 +89,47 @@ public class BootstrapController {
                                final ExtensionInitializer extensionInitializer,
                                final PreferencesManagerImpl preferencesManager,
                                UserClientService userService,
+                               final ProjectTypeDescriptionClientService projectTypeDescriptionService,
+                               final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
+                               TemplateClientService templateClientService,
+                               final TemplateDescriptorRegistry templateDescriptorRegistry,
                                final ResourceProvider resourceProvider,
                                DtoRegistrar dtoRegistrar,
                                final DtoFactory dtoFactory,
                                final ThemeAgent themeAgent) {
+        this.preferencesManager = preferencesManager;
+        this.projectTypeService = projectTypeDescriptionService;
+        this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
+        this.templateClientService = templateClientService;
+        this.templateDescriptorRegistry = templateDescriptorRegistry;
         this.dtoFactory = dtoFactory;
+        this.themeAgent = themeAgent;
 
         ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW)
                       .setCallback(new Callback<Void, Exception>() {
-                          @Override
-                          public void onFailure(Exception reason) {
-                          }
-
                           @Override
                           public void onSuccess(Void result) {
                               ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_parsers.js")
                                             .setWindow(ScriptInjector.TOP_WINDOW).inject();
                           }
-                      }).inject();
 
+                          @Override
+                          public void onFailure(Exception reason) {
+                          }
+                      }).inject();
 
         try {
             dtoRegistrar.registerDtoProviders();
-            StringUnmarshaller unmarshaller = new StringUnmarshaller();
-            userService.getUser(new AsyncRequestCallback<String>(unmarshaller) {
+            userService.getUser(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
                 protected void onSuccess(final String result) {
                     final User user = dtoFactory.createDtoFromJson(result, User.class);
-                    Map<String,String> attributes = user.getProfileAttributes();
+                    Map<String, String> attributes = user.getProfileAttributes();
                     preferencesManager.load(attributes);
-                    String theme = preferencesManager.getValue("Theme");
-                    if(theme != null){
-                       Style.setTheme(themeAgent.getTheme(theme));
-                       themeAgent.setCurrentThemeId(theme);
-                    }
-                    else{
-                        Style.setTheme(themeAgent.getDefault());
-                        themeAgent.setCurrentThemeId(themeAgent.getDefault().getId());
-                    }
+
+                    setTheme();
                     styleInjector.inject();
+
                     // initialize components
                     componentRegistry.get().start(new Callback<Void, ComponentException>() {
                         @Override
@@ -122,18 +143,13 @@ public class BootstrapController {
 
                             workspacePresenter.setUpdateButtonVisibility(Utils.isAppLaunchedInSDKRunner());
 
-                            String userId = user.getUserId();
-                            if (userId.equals("__anonim")) {
-                                workspacePresenter.setVisibleLoginButton(true);
-                                workspacePresenter.setVisibleLogoutButton(false);
-                            } else {
-                                workspacePresenter.setVisibleLoginButton(false);
-                                workspacePresenter.setVisibleLogoutButton(true);
-                            }
+                            final boolean isUserLoggedIn = !user.getUserId().equals("__anonim");
+                            workspacePresenter.setVisibleLoginButton(!isUserLoggedIn);
+                            workspacePresenter.setVisibleLogoutButton(isUserLoggedIn);
 
                             // Display IDE
                             workspacePresenter.go(mainPanel);
-                            //Display list of projects in project explorer
+                            // Display list of projects in project explorer
                             resourceProvider.showListProjects();
                         }
 
@@ -142,6 +158,53 @@ public class BootstrapController {
                             Log.error(BootstrapController.class, "FAILED to start service:" + caught.getComponent(), caught);
                         }
                     });
+
+                    initializeProjectTypeDescriptorRegistry();
+                    initializeProjectTemplateRegistry();
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    Log.error(BootstrapController.class, exception);
+                }
+            });
+        } catch (RequestException e) {
+            Log.error(BootstrapController.class, e);
+        }
+    }
+
+    private void setTheme() {
+        final String storedThemeId = preferencesManager.getValue("Theme");
+        Theme themeToSet = storedThemeId != null ? themeAgent.getTheme(storedThemeId) : themeAgent.getDefault();
+        Style.setTheme(themeToSet);
+        themeAgent.setCurrentThemeId(themeToSet.getId());
+    }
+
+    private void initializeProjectTypeDescriptorRegistry() {
+        try {
+            projectTypeService.getProjectTypes(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                @Override
+                protected void onSuccess(String result) {
+                    projectTypeDescriptorRegistry
+                            .registerDescriptors(dtoFactory.createListDtoFromJson(result, ProjectTypeDescriptor.class));
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    Log.error(BootstrapController.class, exception);
+                }
+            });
+        } catch (RequestException e) {
+            Log.error(BootstrapController.class, e);
+        }
+    }
+
+    private void initializeProjectTemplateRegistry() {
+        try {
+            templateClientService.getAllTemplates(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                @Override
+                protected void onSuccess(String result) {
+                    templateDescriptorRegistry.registerTemplates(dtoFactory.createListDtoFromJson(result, ProjectTemplateDescriptor.class));
                 }
 
                 @Override

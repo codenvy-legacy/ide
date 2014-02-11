@@ -17,21 +17,19 @@
  */
 package com.codenvy.ide.wizard.newproject.pages.start;
 
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.resources.ProjectTypeData;
+import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
 import com.codenvy.ide.util.loging.Log;
-import com.codenvy.ide.wizard.newproject.PaaSAgentImpl;
-import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -46,40 +44,34 @@ import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public class NewProjectPagePresenter extends AbstractWizardPage implements NewProjectPageView.ActionDelegate {
-    private NewProjectPageView       view;
-    private Array<PaaS>              paases;
-    private Array<ProjectTypeData>   projectTypes;
-    private CoreLocalizationConstant constant;
-    private boolean                  hasProjectNameIncorrectSymbol;
-    private boolean                  hasSameProject;
-    private boolean                  hasProjectList;
-    private Array<String>            projectList;
-    private ProjectTypeAgentImpl     projectTypeAgent;
-    private PaaSAgentImpl            paasAgent;
-    private DtoFactory dtoFactory;
-
+    private NewProjectPageView            view;
+    private Array<ProjectTypeDescriptor>  projectTypeDescriptors;
+    private CoreLocalizationConstant      constant;
+    private boolean                       isProjectNameValid;
+    private boolean                       isProjectNameUnique;
+    private boolean                       hasProjectList;
+    private Array<String>                 projectList;
+    private ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
 
     /**
      * Create presenter.
      *
      * @param view
      * @param resources
-     * @param projectTypeAgent
-     * @param paasAgent
+     * @param projectTypeDescriptorRegistry
      * @param resourceProvider
      * @param constant
+     * @param dtoFactory
      */
     @Inject
     public NewProjectPagePresenter(NewProjectPageView view,
                                    Resources resources,
-                                   ProjectTypeAgentImpl projectTypeAgent,
-                                   PaaSAgentImpl paasAgent,
+                                   ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
                                    ResourceProvider resourceProvider,
                                    CoreLocalizationConstant constant,
                                    final DtoFactory dtoFactory) {
 
-        super("Select project type and paas", resources.newResourceIcon());
-        this.dtoFactory = dtoFactory;
+        super("Project Descriptions", resources.newResourceIcon());
         resourceProvider.listProjects(new AsyncCallback<String>() {
             @Override
             public void onSuccess(String result) {
@@ -97,29 +89,25 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
             }
         });
 
+        this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
         this.constant = constant;
         this.view = view;
         this.view.setDelegate(this);
-        this.projectTypeAgent = projectTypeAgent;
-        this.paasAgent = paasAgent;
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean isCompleted() {
-        return wizardContext.getData(PROJECT_NAME) != null && wizardContext.getData(PAAS) != null &&
-               wizardContext.getData(PROJECT_TYPE) != null && hasProjectList;
+        return wizardContext.getData(PROJECT_NAME) != null && wizardContext.getData(PROJECT_TYPE) != null && hasProjectList;
     }
 
     /** {@inheritDoc} */
     @Override
     public void focusComponent() {
-        this.paases = paasAgent.getPaaSes();
-        this.projectTypes = projectTypeAgent.getProjectTypes();
-        this.view.setProjectTypes(projectTypes);
-        this.view.setPaases(paases);
+        this.projectTypeDescriptors = projectTypeDescriptorRegistry.getDescriptors();
+        this.view.setProjectTypes(projectTypeDescriptors);
 
-        if (!projectTypes.isEmpty()) {
+        if (!projectTypeDescriptors.isEmpty()) {
             onProjectTypeSelected(0);
         }
         view.focusProjectName();
@@ -140,9 +128,9 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
             return constant.enteringProjectName();
         } else if (!hasProjectList) {
             return constant.checkingProjectsList();
-        } else if (hasSameProject) {
+        } else if (!isProjectNameUnique) {
             return constant.createProjectFromTemplateProjectExists(view.getProjectName());
-        } else if (hasProjectNameIncorrectSymbol) {
+        } else if (!isProjectNameValid) {
             return constant.noIncorrectProjectNameMessage();
         } else if (wizardContext.getData(PROJECT_TYPE) == null) {
             return constant.noTechnologyMessage();
@@ -162,52 +150,26 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
     /** {@inheritDoc} */
     @Override
     public void onProjectTypeSelected(int id) {
-        ProjectTypeData projectType = projectTypes.get(id);
-
         view.selectProjectType(id);
-
-        boolean isFirst = true;
-        for (int i = 0; i < paases.size(); i++) {
-            PaaS paas = paases.get(i);
-            boolean isAvailable = paas.isAvailable(projectType.getPrimaryNature(), projectType.getSecondaryNature());
-            view.setEnablePaas(i, isAvailable);
-            if (isAvailable && isFirst) {
-                onPaaSSelected(i);
-                isFirst = false;
-            }
-        }
-
-        wizardContext.putData(PROJECT_TYPE, projectType);
-
-        delegate.updateControls();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onPaaSSelected(int id) {
-        PaaS paas = paases.get(id);
-        wizardContext.putData(PAAS, paas);
-
-        view.selectPaas(id);
-
+        wizardContext.putData(PROJECT_TYPE, projectTypeDescriptors.get(id));
         delegate.updateControls();
     }
 
     /** {@inheritDoc} */
     @Override
     public void checkProjectName() {
-        String projectName = view.getProjectName();
-        hasProjectNameIncorrectSymbol = !ResourceNameValidator.isProjectNameValid(projectName);
+        final String projectName = view.getProjectName();
+        isProjectNameValid = ResourceNameValidator.isProjectNameValid(projectName);
 
-        hasSameProject = false;
+        isProjectNameUnique = true;
         if (projectList != null) {
-            for (int i = 0; i < projectList.size() && !hasSameProject; i++) {
-                String name = projectList.get(i);
-                hasSameProject = projectName.equals(name);
+            for (int i = 0; i < projectList.size() && isProjectNameUnique; i++) {
+                final String name = projectList.get(i);
+                isProjectNameUnique = !projectName.equals(name);
             }
         }
 
-        if (!projectName.isEmpty() && !hasProjectNameIncorrectSymbol && !hasSameProject) {
+        if (!projectName.isEmpty() && isProjectNameValid && isProjectNameUnique) {
             wizardContext.putData(PROJECT_NAME, projectName);
         } else {
             wizardContext.removeData(PROJECT_NAME);
@@ -222,9 +184,4 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
         view.showPopup(constant.chooseTechnologyTooltip(), x, y);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onPaaSIconClicked(int x, int y) {
-        view.showPopup(constant.choosePaaSTooltip(), x, y);
-    }
 }

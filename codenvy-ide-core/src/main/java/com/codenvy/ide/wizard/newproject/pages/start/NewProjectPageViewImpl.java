@@ -17,12 +17,11 @@
  */
 package com.codenvy.ide.wizard.newproject.pages.start;
 
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.resources.ProjectTypeData;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -61,12 +60,6 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
     @UiField
     TextBox     projectName;
     @UiField
-    Image       chooseTechnologyTooltip;
-    @UiField
-    Image       choosePaaSTooltip;
-    @UiField
-    SimplePanel paasPanel;
-    @UiField
     SimplePanel techPanel;
     @UiField(provided = true)
     final   Resources                res;
@@ -74,7 +67,6 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
     final   CoreLocalizationConstant locale;
     private ActionDelegate           delegate;
     private Array<ToggleButton>      projectTypeButtons;
-    private Array<ToggleButton>      paasButtons;
 
     /**
      * Create view.
@@ -103,7 +95,7 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
 
     /** {@inheritDoc} */
     @Override
-    public void setProjectTypes(Array<ProjectTypeData> projectTypes) {
+    public void setProjectTypes(Array<ProjectTypeDescriptor> projectTypes) {
         projectTypeButtons = Collections.createArray();
         //create table where contains kind of technology
         Grid grid = new Grid(2, projectTypes.size());
@@ -112,16 +104,17 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
 
         //create button for each available wizard
         for (int i = 0; i < projectTypes.size(); i++) {
-            final ProjectTypeData projectTypeData = projectTypes.get(i);
+            final ProjectTypeDescriptor projectTypeData = projectTypes.get(i);
 
-            ImageResource icon = projectTypeData.getIcon();
+            // TODO: add project type icon
+            ImageResource icon = null;//projectTypeData.getIcon();
             final ToggleButton btn;
             if (icon != null) {
                 btn = new ToggleButton(new Image(icon));
             } else {
                 btn = new ToggleButton();
             }
-            btn.setSize("48px", "48px");
+            btn.setSize("92px", "92px");
 
             final int id = i;
             btn.addClickHandler(new ClickHandler() {
@@ -132,51 +125,11 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
             grid.setWidget(0, i, btn);
             formatter.setHorizontalAlignment(0, i, HasHorizontalAlignment.ALIGN_CENTER);
 
-            Label title = new Label(projectTypeData.getTitle());
+            Label title = new Label(projectTypeData.getProjectTypeName());
             grid.setWidget(1, i, title);
             formatter.setHorizontalAlignment(1, i, HasHorizontalAlignment.ALIGN_CENTER);
 
             projectTypeButtons.add(btn);
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setPaases(Array<PaaS> paases) {
-        paasButtons = Collections.createArray();
-
-        Grid grid = new Grid(2, paases.size());
-        paasPanel.setWidget(grid);
-        HTMLTable.CellFormatter formatter = grid.getCellFormatter();
-
-        //create button for each paas
-        for (int i = 0; i < paases.size(); i++) {
-            PaaS paas = paases.get(i);
-
-            ImageResource icon = paas.getImage();
-            final ToggleButton btn;
-            if (icon != null) {
-                btn = new ToggleButton(new Image(icon));
-            } else {
-                btn = new ToggleButton();
-            }
-            btn.setSize("48px", "48px");
-            btn.setEnabled(false);
-
-            final int id = i;
-            btn.addClickHandler(new ClickHandler() {
-                public void onClick(ClickEvent event) {
-                    delegate.onPaaSSelected(id);
-                }
-            });
-            grid.setWidget(0, i, btn);
-            formatter.setHorizontalAlignment(0, i, HasHorizontalAlignment.ALIGN_CENTER);
-
-            Label title = new Label(paas.getTitle());
-            grid.setWidget(1, i, title);
-            formatter.setHorizontalAlignment(1, i, HasHorizontalAlignment.ALIGN_CENTER);
-
-            paasButtons.add(btn);
         }
     }
 
@@ -191,24 +144,8 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
 
     /** {@inheritDoc} */
     @Override
-    public void selectPaas(int id) {
-        for (int i = 0; i < paasButtons.size(); i++) {
-            ToggleButton button = paasButtons.get(i);
-            button.setDown(i == id);
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void focusProjectName() {
         projectName.setFocus(true);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setEnablePaas(int id, boolean isEnabled) {
-        ToggleButton button = paasButtons.get(id);
-        button.setEnabled(isEnabled);
     }
 
     /** {@inheritDoc} */
@@ -230,13 +167,8 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
         delegate.checkProjectName();
     }
 
-    @UiHandler("chooseTechnologyTooltip")
-    public void onTechnologyIconClicked(ClickEvent event) {
-        delegate.onTechnologyIconClicked(event.getClientX() + 10, event.getClientY() + 10);
-    }
-
-    @UiHandler("choosePaaSTooltip")
-    public void onPaaSIconClicked(ClickEvent event) {
-        delegate.onPaaSIconClicked(event.getClientX() + 10, event.getClientY() + 10);
-    }
+//    @UiHandler("chooseTechnologyTooltip")
+//    public void onTechnologyIconClicked(ClickEvent event) {
+//        delegate.onTechnologyIconClicked(event.getClientX() + 10, event.getClientY() + 10);
+//    }
 }

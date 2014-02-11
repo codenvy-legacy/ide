@@ -59,11 +59,11 @@ public class PaaSAgentImplTest extends GwtTestWithMockito {
         Provider<? extends AbstractPaasPage> pageProvider = mock(Provider.class);
         Array<Provider<? extends AbstractPaasPage>> pages = Collections.createArray(pageProvider, pageProvider);
 
-        StringMap<Array<String>> natures = Collections.createStringMap();
-        natures.put("primaryNature1", Collections.<String>createArray("secondaryNature1"));
-        natures.put("primaryNature2", Collections.<String>createArray("secondaryNature2"));
+        Array<String> projectTypes = Collections.createArray();
+        projectTypes.add("projectType1");
+        projectTypes.add("projectType2");
 
-        agent.register("id", "title", null, natures, pages, false);
+        agent.register("id", "title", null, projectTypes, pages, false);
 
         assertEquals(agent.getPaaSes().size(), 2);
         verify(newProjectWizard, times(pages.size())).addPaaSPage(eq(pageProvider));
