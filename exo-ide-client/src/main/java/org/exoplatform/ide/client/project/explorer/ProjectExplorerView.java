@@ -41,8 +41,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author Vitaliy Gulyy
  */
 
 public class ProjectExplorerView extends ViewImpl implements ProjectExplorerDisplay {

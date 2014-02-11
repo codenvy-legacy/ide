@@ -23,6 +23,7 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.HasAllKeyHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Image;
@@ -139,7 +140,7 @@ public class OpenResourceView extends ViewImpl implements
             folderIconElement.getStyle().setDisplay(Display.NONE);
             folderNameElement.removeAttribute("title");
         } else {
-            folderNameElement.setInnerHTML(folderName);
+            folderNameElement.setInnerHTML(SafeHtmlUtils.htmlEscape(folderName));
             folderNameElement.setAttribute("title", folderName);
             folderNameElement.getStyle().setDisplay(Display.BLOCK);
             folderIconElement.getStyle().setDisplay(Display.BLOCK);

@@ -18,6 +18,7 @@
 package org.exoplatform.ide.client.project.explorer.ui;
 
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -53,8 +54,7 @@ public abstract class ProjectExplorerTreeItem extends TreeItem {
     /**
      * Render tree item.
      */
-    protected void render()
-    {
+    protected void render() {
         if (gridWidget == null) {
             gridWidget = new Grid(1, 2);
             gridWidget.setWidth("100%");
@@ -72,17 +72,9 @@ public abstract class ProjectExplorerTreeItem extends TreeItem {
         treeNodeIcon.setHeight("16px");
         gridWidget.setWidget(0, 0, treeNodeIcon);
         
-        HTMLPanel l = new HTMLPanel("div", getItemTitle());
+        HTMLPanel l = new HTMLPanel("div", SafeHtmlUtils.htmlEscape(getItemTitle()));
         l.setStyleName("ide-Tree-label");
         gridWidget.setWidget(0, 1, l);
-
-//        gridWidget.getCellFormatter().setWidth(0, 0, "16px");
-//        gridWidget.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
-//        gridWidget.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
-//        gridWidget.getCellFormatter().setWidth(0, 1, "100%");
-//        gridWidget.getCellFormatter().addStyleName(0, 1, "ide-Tree-label");
-//        DOM.setStyleAttribute(gridWidget.getElement(), "display", "block");
-//        setWidget(gridWidget);
 
         Item item = (Item)getUserObject();
         getElement().setId(PREFIX_ID + Utils.md5(item.getPath()));

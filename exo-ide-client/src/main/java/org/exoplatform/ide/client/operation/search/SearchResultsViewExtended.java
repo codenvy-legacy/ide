@@ -33,8 +33,7 @@ import org.exoplatform.ide.vfs.shared.Item;
 import java.util.List;
 
 /**
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author Vitaliy Gulyy
  */
 
 public class SearchResultsViewExtended extends ViewImpl implements

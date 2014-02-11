@@ -22,6 +22,7 @@ import com.google.collide.client.CollabEditorExtension;
 import com.google.collide.client.collaboration.CollaborationPropertiesUtil;
 import com.google.collide.shared.document.Document;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
 
@@ -319,7 +320,7 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
                     file, true), null));
         } else {
             closeFileAfterSaving = true;
-            final String fileName = Utils.unescape(file.getName());
+            String fileName = SafeHtmlUtils.htmlEscape(Utils.unescape(file.getName()));
             String message =
                     org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.editorDoYouWantToSaveFileBeforeClosing(fileName);
             Dialogs.getInstance().ask(CLOSE_FILE, message, new BooleanValueReceivedHandler() {
@@ -539,10 +540,8 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
         if (activeFile != null && activeFile.getId().equals(oldFile.getId())) {
             IDE.fireEvent(new EditorActiveFileChangedEvent(newFile, editorView.getEditor()));
         }
-        //IDE.fireEvent(new EditorActiveFileChangedEvent(newFile, oldFileEditorView.getEditor()));
 
         if (event.isUpdateContent() && newFile.getContent() != null) {
-            //oldFileEditorView.getEditor().setText(newFile.getContent());
             editorView.getEditor().getDocument().set(newFile.getContent());
         }
     }
@@ -564,52 +563,6 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
         activeEditorView.getEditor().setCursorPosition(event.getLineNumber(), event.getColumnNumber());
     }
 
-    //   /**
-    //    * @see org.exoplatform.ide.client.editor.event.EditorFindTextHandler#onEditorFindText(org.exoplatform.ide.client.editor.event
-    // .EditorFindTextEvent)
-    //    */
-    //   public void onEditorFindText(EditorFindTextEvent event)
-    //   {
-    //      boolean isFound =
-    //         getEditorFromView(event.getFileId()).findAndSelect(event.getFindText(), event.isCaseSensitive());
-    //      IDE.fireEvent(new EditorTextFoundEvent(isFound));
-    //   }
-
-    //   /**
-    //    * @see org.exoplatform.ide.client.editor.event.EditorReplaceTextHandler#onEditorReplaceText(org.exoplatform.ide.client.editor
-    // .event.EditorReplaceTextEvent)
-    //    */
-    //   public void onEditorReplaceText(EditorReplaceTextEvent event)
-    //   {
-    //      Editor editor = getEditorFromView(event.getFileId());
-    //      if (event.isReplaceAll())
-    //      {
-    //         while (editor.findAndSelect(event.getFindText(), event.isCaseSensitive()))
-    //         {
-    //            editor.replaceFoundedText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive());
-    //         }
-    //         // display.replaceAllText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive(),
-    //         // event.getPath());
-    //      }
-    //      else
-    //      {
-    //         editor.replaceFoundedText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive());
-    //         // display.replaceText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive(), event.getPath());
-    //      }
-    //   }
-
-    //   /**
-    //    * @see org.exoplatform.ide.client.framework.editor.event.EditorReplaceAndFindTextHandler#onEditorReplaceAndFindText(org
-    // .exoplatform.ide.client.framework.editor.event.EditorReplaceAndFindTextEvent)
-    //    */
-    //   public void onEditorReplaceAndFindText(EditorReplaceAndFindTextEvent event)
-    //   {
-    //      Editor editor = getEditorFromView(event.getFileId());
-    //      editor.replaceFoundedText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive());
-    //      boolean isFound = editor.findAndSelect(event.getFindText(), event.isCaseSensitive());
-    //      IDE.fireEvent(new EditorTextFoundEvent(isFound));
-    //   }
-
     /**
      * @see org.exoplatform.ide.client.editor.event.EditorSetFocusHandler#onEditorSetFocus(org.exoplatform.ide.client.editor.event
      *      .EditorSetFocusEvent)
@@ -617,18 +570,6 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
     public void onEditorSetFocus(EditorSetFocusEvent event) {
         getEditorFromView(activeFile.getId()).setFocus();
     }
-
-    // public void onRefreshHotKeys(RefreshHotKeysEvent event)
-    // {
-    // Map<String, String> hotKeys = applicationSettings.getValueAsMap("hotkeys");
-    // List<String> hotKeyList = new ArrayList<String>(hotKeys.keySet());
-    // Iterator<String> it = openedFiles.keySet().iterator();
-    // while (it.hasNext())
-    // {
-    // String file = it.next();
-    // getEditorFromView(file).setHotKeyList(hotKeyList);
-    // }
-    // }
 
     /**
      * @see org.exoplatform.ide.client.framework.event.SaveFileAsHandler#onSaveFileAs(org.exoplatform.ide.client.framework.event
@@ -714,101 +655,6 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
         }
 
     }
-
-    // /**
-    // * Read applicationSettings and return true if there are more than one editors for file with mimeType.
-    // *
-    // * @param mimeType
-    // * @return
-    // * @throws EditorNotFoundException
-    // */
-    // private List<Editor> getSupportedEditorsForMimeType(String mimeType)
-    // {
-    // try
-    // {
-    // Editor []editors = IDE.getInstance().getEditors(mimeType);
-    // List<Editor> editorList = new ArrayList<Editor>();
-    // for (Edi) {
-    // }
-    // editorList.addAll(editors);
-    // return new ArrayList<Editor>();
-    // return EditorFactory.getEditors(mimeType);
-    // }
-    // catch (EditorNotFoundException e)
-    // {
-    // IDE.fireEvent(new ExceptionThrownEvent(e));
-    // }
-    //
-    // return null;
-    // }
-
-    // private List<Editor> getSupportedEditors(FileModel file)
-    // {
-    // boolean isLineNumbers = true;
-    // if (applicationSettings.getValueAsBoolean("line-numbers") != null)
-    // {
-    // isLineNumbers = applicationSettings.getValueAsBoolean("line-numbers");
-    // }
-    //
-    // // create editors for source/design view
-    // List<Editor> supportedEditors = new ArrayList<Editor>();
-    //
-    // List<EditorProducer> supportedEditorProducers = getSupportedEditorProducers(file.getMimeType());
-    // for (EditorProducer supportedEditorProducer : supportedEditorProducers)
-    // {
-    // // HashMap<String, Object> params = new HashMap<String, Object>();
-    // // params.put(EditorParameters.IS_READ_ONLY, isReadOnly(file));
-    // // params.put(EditorParameters.IS_SHOW_LINE_NUMER, isLineNumbers);
-    // Editor editor = supportedEditorProducer.createEditor(file.getContent(), IDE.eventBus(), params);
-    // supportedEditors.add(editor);
-    // DOM.setStyleAttribute(editor.getElement(), "zIndex", "0");
-    // }
-    //
-    // return supportedEditors;
-    // }
-
-    // /**
-    // * Return number from 1 of editor created by editorProducer to show in view among the supported editor producer for some mime
-    // * type.
-    // *
-    // * @param editorProducer
-    // * @return
-    // */
-    // private int getNumberOfEditorToShow(Editor editor)
-    // {
-    // try
-    // {
-    // // create editors for source/design view
-    // //List<Editor> supportedEditors = getSupportedEditorProducers(editor.getMimeType());
-    // Editor[] editors = IDE.getInstance().getEditors(editor.getMimeType());
-    //
-    // int i = 1;
-    // for (Editor e : editors)
-    // {
-    // if (editor.getDescription().equals(e.getDescription()))
-    // {
-    // return i;
-    // }
-    // i++;
-    // }
-    //
-    // }
-    // catch (EditorNotFoundException e)
-    // {
-    // IDE.fireEvent(new ExceptionThrownEvent(e));
-    // }
-    //
-    // // for (EditorProducer supportedEditorProducer : supportedEditorProducers)
-    // // {
-    // // if (editorProducer.getDescription().equals(supportedEditorProducer.getDescription()))
-    // // {
-    // // return i;
-    // // }
-    // // i++;
-    // // }
-    //
-    // return 1;
-    // }
 
     /**
      * @see org.exoplatform.ide.editor.client.api.event.EditorContextMenuHandler#onEditorContextMenu(org.exoplatform.ide.editor.client
