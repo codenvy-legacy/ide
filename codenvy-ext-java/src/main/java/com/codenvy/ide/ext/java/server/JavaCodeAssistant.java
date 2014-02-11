@@ -57,6 +57,7 @@ public class JavaCodeAssistant extends CodeAssistant {
 
     /** Default Maven 'sourceDirectory' value */
     public static final String DEFAULT_SOURCE_FOLDER = "src/main/java";
+    public static final String DEFAULT_TEST_SOURCE_FOLDER = "src/test/java";
 
     @Inject
     public JavaCodeAssistant(CodeAssistantStorageClient storage, VirtualFileSystemRegistry vfsRegistry) {
@@ -116,6 +117,7 @@ public class JavaCodeAssistant extends CodeAssistant {
 
         if (sourcePath.isEmpty()) {
             sourcePath.add(DEFAULT_SOURCE_FOLDER);
+            sourcePath.add(DEFAULT_TEST_SOURCE_FOLDER);
         }
 
         List<Folder> sourceFolders = new ArrayList<>(2);
