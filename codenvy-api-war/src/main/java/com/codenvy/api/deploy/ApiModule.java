@@ -24,7 +24,6 @@ import com.codenvy.api.builder.LastInUseBuilderSelectionStrategy;
 import com.codenvy.api.builder.internal.SlaveBuilderService;
 import com.codenvy.api.core.rest.ApiExceptionMapper;
 import com.codenvy.api.project.server.ProjectService;
-import com.codenvy.api.project.server.ProjectTemplateService;
 import com.codenvy.api.project.server.ProjectTypeDescriptionService;
 import com.codenvy.api.runner.LastInUseRunnerSelectionStrategy;
 import com.codenvy.api.runner.RunnerAdminService;
@@ -65,7 +64,10 @@ import com.codenvy.ide.server.UserService;
 import com.codenvy.inject.DynaModule;
 import com.codenvy.runner.sdk.SDKRunner;
 import com.codenvy.runner.webapps.DeployToApplicationServerRunner;
-import com.codenvy.security.oauth.*;
+import com.codenvy.security.oauth.OAuthAuthenticationService;
+import com.codenvy.security.oauth.OAuthAuthenticatorProvider;
+import com.codenvy.security.oauth.OAuthAuthenticatorTokenProvider;
+import com.codenvy.security.oauth.OAuthTokenProvider;
 import com.codenvy.vfs.impl.fs.CleanableSearcherProvider;
 import com.codenvy.vfs.impl.fs.LocalFSMountStrategy;
 import com.codenvy.vfs.impl.fs.LocalFileSystemRegistryPlugin;
@@ -86,7 +88,6 @@ public class ApiModule extends AbstractModule {
     protected void configure() {
         bind(ProjectService.class);
         bind(ProjectTypeDescriptionService.class);
-        bind(ProjectTemplateService.class);
         bind(LocalFileSystemRegistryPlugin.class);
         bind(LocalFSMountStrategy.class).to(WorkspaceHashLocalFSMountStrategy.class);
         bind(SearcherProvider.class).to(CleanableSearcherProvider.class);

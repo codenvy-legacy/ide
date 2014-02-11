@@ -18,11 +18,8 @@
 package com.codenvy.ide.client;
 
 import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionClientService;
-import com.codenvy.api.project.gwt.client.TemplateClientService;
-import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.template.TemplateDescriptorRegistry;
 import com.codenvy.ide.api.ui.theme.Style;
 import com.codenvy.ide.api.ui.theme.Theme;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
@@ -59,8 +56,6 @@ public class BootstrapController {
     private PreferencesManagerImpl              preferencesManager;
     private ProjectTypeDescriptionClientService projectTypeService;
     private ProjectTypeDescriptorRegistry       projectTypeDescriptorRegistry;
-    private TemplateClientService               templateClientService;
-    private TemplateDescriptorRegistry          templateDescriptorRegistry;
     private DtoFactory                          dtoFactory;
     private ThemeAgent                          themeAgent;
 
@@ -75,8 +70,6 @@ public class BootstrapController {
      * @param userService
      * @param projectTypeDescriptionService
      * @param projectTypeDescriptorRegistry
-     * @param templateClientService
-     * @param templateDescriptorRegistry
      * @param resourceProvider
      * @param dtoRegistrar
      * @param dtoFactory
@@ -91,8 +84,6 @@ public class BootstrapController {
                                UserClientService userService,
                                final ProjectTypeDescriptionClientService projectTypeDescriptionService,
                                final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
-                               TemplateClientService templateClientService,
-                               final TemplateDescriptorRegistry templateDescriptorRegistry,
                                final ResourceProvider resourceProvider,
                                DtoRegistrar dtoRegistrar,
                                final DtoFactory dtoFactory,
@@ -100,8 +91,6 @@ public class BootstrapController {
         this.preferencesManager = preferencesManager;
         this.projectTypeService = projectTypeDescriptionService;
         this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
-        this.templateClientService = templateClientService;
-        this.templateDescriptorRegistry = templateDescriptorRegistry;
         this.dtoFactory = dtoFactory;
         this.themeAgent = themeAgent;
 
@@ -160,7 +149,6 @@ public class BootstrapController {
                     });
 
                     initializeProjectTypeDescriptorRegistry();
-                    initializeProjectTemplateRegistry();
                 }
 
                 @Override
@@ -199,21 +187,4 @@ public class BootstrapController {
         }
     }
 
-    private void initializeProjectTemplateRegistry() {
-        try {
-            templateClientService.getAllTemplates(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                @Override
-                protected void onSuccess(String result) {
-                    templateDescriptorRegistry.registerTemplates(dtoFactory.createListDtoFromJson(result, ProjectTemplateDescriptor.class));
-                }
-
-                @Override
-                protected void onFailure(Throwable exception) {
-                    Log.error(BootstrapController.class, exception);
-                }
-            });
-        } catch (RequestException e) {
-            Log.error(BootstrapController.class, e);
-        }
-    }
 }
