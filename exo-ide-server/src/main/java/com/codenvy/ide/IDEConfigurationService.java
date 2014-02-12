@@ -89,7 +89,7 @@ public class IDEConfigurationService {
     public Map<String, Object> inializationParameters(@Context UriInfo uriInfo, @Context HttpServletRequest request) {
 
         try {
-            String vfsId = (String)EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
+            String vfsId = EnvironmentContext.getCurrent().getWorkspaceId();
             Map<String, Object> result = new HashMap<String, Object>();
             ConversationState curentState = ConversationState.getCurrent();
             Identity identity = curentState.getIdentity();

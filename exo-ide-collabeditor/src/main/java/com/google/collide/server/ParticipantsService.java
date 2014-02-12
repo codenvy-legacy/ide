@@ -76,7 +76,7 @@ public class ParticipantsService {
         EnvironmentContext environmentContext = EnvironmentContext.getCurrent();
         String workspace = null;
         if (environmentContext != null) {
-            workspace = (String)environmentContext.getVariable(EnvironmentContext.WORKSPACE_ID);
+            workspace = environmentContext.getWorkspaceId();
         }
         if (workspace == null) {
             throw new IllegalStateException("Workspace id is not set. ");

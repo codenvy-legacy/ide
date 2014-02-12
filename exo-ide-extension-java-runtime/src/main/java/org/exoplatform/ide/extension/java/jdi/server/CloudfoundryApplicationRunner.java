@@ -238,7 +238,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             final CloudFoundryApplication cfApp = createApplication(cloudfoundry, target, name, path, type, null, params);
             final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
 
-            String wsName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString();
+            String wsName = EnvironmentContext.getCurrent().getWorkspaceName();
             String userId = ConversationState.getCurrent().getIdentity().getUserId();
 
             Application application = new Application(name, target, expired, params.get("projectName"), wsName, userId, 0);
@@ -280,7 +280,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                 throw new ApplicationRunnerException("Unable run application in debug mode. ");
             }
 
-            String wsName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString();
+            String wsName = EnvironmentContext.getCurrent().getWorkspaceName();
             String userId = ConversationState.getCurrent().getIdentity().getUserId();
 
             Application application = new Application(name, target, expired, params.get("projectName"), wsName, userId, 1);

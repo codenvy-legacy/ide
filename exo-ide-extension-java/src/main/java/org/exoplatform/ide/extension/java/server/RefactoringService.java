@@ -88,7 +88,7 @@ public class RefactoringService {
     private static final Log          LOG = ExoLogger.getLogger(RefactoringService.class);
 
     private WorkspaceResource getWorkspace(String vfsid) {
-        Object tenantName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
+        Object tenantName = EnvironmentContext.getCurrent().getWorkspaceId();
 
         if (tenantName == null) {
             if (ResourcesPlugin.getDefaultWorkspace() == null) {
@@ -149,7 +149,7 @@ public class RefactoringService {
                 if (status.isOK()) {
                     renameSupport.perform();
                     Project proj = (Project)workspace.getVFS().getItem(projectid, false, PropertyFilter.ALL_FILTER);
-                    String workspaceName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString();
+                    String workspaceName = EnvironmentContext.getCurrent().getWorkspaceName();
                     String user = ConversationState.getCurrent().getIdentity().getUserId();
                     LOG.info("EVENT#user-code-refactor# WS#" + workspaceName + "# USER#" + user + "# PROJECT#" +
                              proj.getName() + "# TYPE#" + proj.getProjectType() + "# FEATURE#rename#");

@@ -2318,7 +2318,7 @@ public class JavaModelManager implements ISaveParticipant, IContentTypeChangeLis
     }
 
     private static JavaModelManager getManager() {
-        Object currentTenant = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
+        Object currentTenant = EnvironmentContext.getCurrent().getWorkspaceId();
         EnvironmentContext context = EnvironmentContext.getCurrent();
         if (currentTenant != null) {
             if (!MANAGERS.containsKey(currentTenant)) {

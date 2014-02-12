@@ -20,6 +20,7 @@ package org.exoplatform.ide.vfs.impl.fs;
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.EnvironmentContext;
 import org.everrest.test.mock.MockHttpServletRequest;
+import org.exoplatform.ide.vfs.impl.fs.*;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Principal;
@@ -31,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -312,7 +314,9 @@ public class ImportTest extends LocalFileSystemTest {
 
     private CleanableSearcher prepareSearcher() throws Exception {
         com.codenvy.commons.env.EnvironmentContext env = com.codenvy.commons.env.EnvironmentContext.getCurrent();
-        env.setVariable(com.codenvy.commons.env.EnvironmentContext.VFS_INDEX_DIR, root.getParentFile());
+        Method method = env.getClass().getDeclaredMethod("setVariable", String.class, Object.class);
+        method.setAccessible(true);
+        method.invoke(env, com.codenvy.commons.env.EnvironmentContext.VFS_INDEX_DIR, root.getParentFile());
         CleanableSearcherProvider searcherProvider = new CleanableSearcherProvider();
         provider = new LocalFileSystemProvider(MY_WORKSPACE_ID, new EnvironmentContextLocalFSMountStrategy(), searcherProvider);
         provider.mount(testFsIoRoot);

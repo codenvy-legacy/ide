@@ -17,7 +17,6 @@
  */
 package org.exoplatform.ide.websocket;
 
-import com.codenvy.api.core.user.UserState;
 import com.codenvy.commons.env.EnvironmentContext;
 
 import org.apache.catalina.websocket.StreamInbound;
@@ -49,7 +48,6 @@ import java.lang.reflect.Method;
 public class ExoIdeWebSocketServlet extends EverrestWebSocketServlet {
     static final         String CONVERSATION_STATE_SESSION_ATTRIBUTE_NAME = "ide.websocket." + ConversationState.class.getName();
     static final         String ENVIRONMENT_SESSION_ATTRIBUTE_NAME        = "ide.websocket." + EnvironmentContext.class.getName();
-    static final         String USERSTATE_SESSION_ATTRIBUTE_NAME          = "ide.websocket." + UserState.class.getName();
     static final         String MDC_CONTEXT_ATTRIBUTE_NAME                = "ide.websocket.slf4j.mdc.context";
     private static final Logger LOG                                       = LoggerFactory.getLogger(ExoIdeWebSocketServlet.class);
     private static Method mdc_getCopyOfContextMap;
@@ -117,8 +115,6 @@ public class ExoIdeWebSocketServlet extends EverrestWebSocketServlet {
         wsConnection.getHttpSession().setAttribute(CONVERSATION_STATE_SESSION_ATTRIBUTE_NAME, conversationState);
         EnvironmentContext environmentContext = EnvironmentContext.getCurrent();
         wsConnection.getHttpSession().setAttribute(ENVIRONMENT_SESSION_ATTRIBUTE_NAME, environmentContext);
-        UserState userState = UserState.get();
-        wsConnection.getHttpSession().setAttribute(USERSTATE_SESSION_ATTRIBUTE_NAME, userState);
         if (mdc_getCopyOfContextMap != null) {
             try {
                 wsConnection.getHttpSession().setAttribute(MDC_CONTEXT_ATTRIBUTE_NAME, mdc_getCopyOfContextMap.invoke(null));

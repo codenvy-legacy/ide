@@ -61,7 +61,7 @@ public class VirtualFileSystemFactory {
     @Path("v2")
     public VirtualFileSystem getFileSystem() throws VirtualFileSystemException {
         validateRequest();
-        final String vfsId = (String)EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
+        final String vfsId = EnvironmentContext.getCurrent().getWorkspaceId();
         VirtualFileSystemProvider provider = registry.getProvider(vfsId);
         return provider.newInstance(getContext(), listeners);
     }

@@ -1207,7 +1207,7 @@ public class MemoryFileSystem implements VirtualFileSystem {
             item = new FileImpl(vfsId, id, name, path, parentId, created, modified, versionId, mediaType, length,
                                 locked, file.getProperties(propertyFilter),
                                 addLinks ? LinksHelper
-                                        .createFileLinks(baseUri, EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString(), id, latestVersionId, path, mediaType, locked, parentId) : null);
+                                        .createFileLinks(baseUri, EnvironmentContext.getCurrent().getWorkspaceName(), id, latestVersionId, path, mediaType, locked, parentId) : null);
         } else {
             MemoryFolder folder = (MemoryFolder)object;
             if (folder.isProject()) {
@@ -1221,12 +1221,12 @@ public class MemoryFileSystem implements VirtualFileSystem {
                 }
 
                 item = new ProjectImpl(vfsId, id, name, mediaType, path, parentId, created, folder.getProperties(propertyFilter),
-                                       addLinks ? LinksHelper.createProjectLinks(baseUri, EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString(), id, parentId) : null, projectType);
+                                       addLinks ? LinksHelper.createProjectLinks(baseUri, EnvironmentContext.getCurrent().getWorkspaceName(), id, parentId) : null, projectType);
             } else {
 
                 item = new FolderImpl(vfsId, id, name, mediaType == null ? Folder.FOLDER_MIME_TYPE : mediaType, path, parentId, created,
                                       object.getProperties(propertyFilter),
-                                      addLinks ? LinksHelper.createFolderLinks(baseUri, EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString(), id, isRoot, parentId) : null);
+                                      addLinks ? LinksHelper.createFolderLinks(baseUri, EnvironmentContext.getCurrent().getWorkspaceName(), id, isRoot, parentId) : null);
             }
         }
 

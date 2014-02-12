@@ -70,7 +70,7 @@
 
     <filter>
         <filter-name>SetEnvironmentContextFilter</filter-name>
-        <filter-class>com.codenvy.ide.SetEnvironmentContextFilter</filter-class>
+        <filter-class>com.codenvy.commons.env.SetEnvironmentContextFilter</filter-class>
     </filter>
     
     <filter-mapping>

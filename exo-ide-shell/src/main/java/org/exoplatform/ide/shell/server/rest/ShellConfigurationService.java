@@ -56,7 +56,7 @@ public class ShellConfigurationService {
     @Produces(MediaType.APPLICATION_JSON)
     public Map<String, Object> inializationParameters(@Context UriInfo uriInfo) {
         try {
-            String vfsId = (String)EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
+            String vfsId = EnvironmentContext.getCurrent().getWorkspaceId();
             Map<String, Object> result = new HashMap<String, Object>();
             ConversationState curentState = ConversationState.getCurrent();
             if (curentState != null) {

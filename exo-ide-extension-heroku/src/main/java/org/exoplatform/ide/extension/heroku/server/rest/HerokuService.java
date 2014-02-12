@@ -129,7 +129,7 @@ public class HerokuService {
             propertiesList.add(isGitRepositoryProperty);
             vfs.updateItem(projectId, propertiesList, null);
         }
-        LOG.info("EVENT#application-created# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
+        LOG.info("EVENT#application-created# WS#" + EnvironmentContext.getCurrent().getWorkspaceName()
                  + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
                  + "# PAAS#Heroku#");
         return application;

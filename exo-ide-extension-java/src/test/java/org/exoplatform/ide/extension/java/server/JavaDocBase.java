@@ -51,8 +51,8 @@ public abstract class JavaDocBase extends Base {
     @BeforeClass
     public static void init() throws VirtualFileSystemException, IOException, InterruptedException {
         EnvironmentContext env = EnvironmentContext.getCurrent();
-        env.setVariable(EnvironmentContext.WORKSPACE_ID, VFS_ID);
-        env.setVariable(EnvironmentContext.WORKSPACE_NAME, VFS_ID);
+        env.setWorkspaceId(VFS_ID);
+        env.setWorkspaceName(VFS_ID);
         vfsRegistry = (VirtualFileSystemRegistry)container.getComponentInstanceOfType(VirtualFileSystemRegistry.class);
         EventListenerList eventListenerList = (EventListenerList)container.getComponentInstanceOfType(EventListenerList.class);
         vfs = vfsRegistry.getProvider(VFS_ID).newInstance(null, eventListenerList);
