@@ -18,12 +18,14 @@
 package com.codenvy.ide.ext.extensions.server;
 
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
+import com.codenvy.api.project.server.ProjectTypeExtension;
 import com.codenvy.api.project.server.VfsPropertyValueProvider;
 import com.codenvy.api.project.shared.Attribute;
+import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
-import com.codenvy.api.project.shared.ProjectTypeExtension;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +33,11 @@ import java.util.List;
 /** @author Artem Zatsarynnyy */
 @Singleton
 public class CodenvyExtProjectTypeExtension implements ProjectTypeExtension {
+    private String baseUrl;
+
     @Inject
-    public CodenvyExtProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
+    public CodenvyExtProjectTypeExtension(@Named("extension-url") String baseUrl, ProjectTypeDescriptionRegistry registry) {
+        this.baseUrl = baseUrl;
         registry.registerProjectType(this);
     }
 
@@ -47,6 +52,16 @@ public class CodenvyExtProjectTypeExtension implements ProjectTypeExtension {
         list.add(new Attribute("language", new VfsPropertyValueProvider("language", "java")));
         list.add(new Attribute("builder.name", new VfsPropertyValueProvider("builder.name", "maven")));
         list.add(new Attribute("runner.name", new VfsPropertyValueProvider("runner.name", "sdk")));
+        return list;
+    }
+
+    @Override
+    public List<ProjectTemplateDescription> getTemplates() {
+        final List<ProjectTemplateDescription> list = new ArrayList<>(1);
+        list.add(new ProjectTemplateDescription("zip",
+                                                "GIST EXAMPLE",
+                                                "Simple Codenvy extension project is demonstrating basic usage Codenvy API.",
+                                                baseUrl + "/gist-extension.zip"));
         return list;
     }
 }

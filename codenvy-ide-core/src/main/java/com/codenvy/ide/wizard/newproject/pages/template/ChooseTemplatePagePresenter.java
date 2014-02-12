@@ -21,9 +21,9 @@ import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.template.TemplateDescriptorRegistry;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
@@ -37,7 +37,6 @@ import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.TEMPLATE
  */
 public class ChooseTemplatePagePresenter extends AbstractWizardPage implements ChooseTemplatePageView.ActionDelegate {
     private ChooseTemplatePageView           view;
-    private TemplateDescriptorRegistry       templateDescriptorRegistry;
     private CoreLocalizationConstant         constant;
     private Array<ProjectTemplateDescriptor> templates;
     private boolean                          needToChange;
@@ -46,21 +45,19 @@ public class ChooseTemplatePagePresenter extends AbstractWizardPage implements C
      * Create presenter.
      *
      * @param view
-     * @param templateDescriptorRegistry
      * @param resources
      * @param constant
      */
     @Inject
     public ChooseTemplatePagePresenter(ChooseTemplatePageView view,
-                                       TemplateDescriptorRegistry templateDescriptorRegistry,
                                        Resources resources,
                                        CoreLocalizationConstant constant) {
         super("Select Template", resources.templateIcon());
 
         this.view = view;
-        this.templateDescriptorRegistry = templateDescriptorRegistry;
         this.view.setDelegate(this);
         this.constant = constant;
+        templates = Collections.createArray();
         needToChange = true;
     }
 
@@ -112,7 +109,10 @@ public class ChooseTemplatePagePresenter extends AbstractWizardPage implements C
     private void prepareTemplates() {
         ProjectTypeDescriptor projectTypeDescriptor = wizardContext.getData(PROJECT_TYPE);
         if (projectTypeDescriptor != null) {
-            templates = templateDescriptorRegistry.getDescriptors(projectTypeDescriptor);
+            templates.clear();
+            for (ProjectTemplateDescriptor descriptor : projectTypeDescriptor.getTemplates()) {
+                templates.add(descriptor);
+            }
             view.setTemplates(templates);
             if (!templates.isEmpty() && needToChange) {
                 ProjectTemplateDescriptor template = templates.get(0);

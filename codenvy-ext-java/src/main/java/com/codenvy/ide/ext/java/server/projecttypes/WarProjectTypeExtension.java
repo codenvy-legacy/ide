@@ -18,10 +18,11 @@
 package com.codenvy.ide.ext.java.server.projecttypes;
 
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
+import com.codenvy.api.project.server.ProjectTypeExtension;
 import com.codenvy.api.project.server.VfsPropertyValueProvider;
 import com.codenvy.api.project.shared.Attribute;
+import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
-import com.codenvy.api.project.shared.ProjectTypeExtension;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -46,6 +47,16 @@ public class WarProjectTypeExtension implements ProjectTypeExtension {
         final List<Attribute> list = new ArrayList<>(2);
         list.add(new Attribute("language", new VfsPropertyValueProvider("language", "java")));
         list.add(new Attribute("runner.name", new VfsPropertyValueProvider("runner.name", "webapps")));
+        return list;
+    }
+
+    @Override
+    public List<ProjectTemplateDescription> getTemplates() {
+        final List<ProjectTemplateDescription> list = new ArrayList<>(1);
+        list.add(new ProjectTemplateDescription("zip",
+                                                "JAVA WEB PROJECT",
+                                                "Java Web project.",
+                                                "templates/MavenWar.zip"));
         return list;
     }
 }

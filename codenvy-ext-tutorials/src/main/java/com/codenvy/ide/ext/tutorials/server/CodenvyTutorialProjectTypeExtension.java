@@ -18,12 +18,14 @@
 package com.codenvy.ide.ext.tutorials.server;
 
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
+import com.codenvy.api.project.server.ProjectTypeExtension;
 import com.codenvy.api.project.server.VfsPropertyValueProvider;
 import com.codenvy.api.project.shared.Attribute;
+import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
-import com.codenvy.api.project.shared.ProjectTypeExtension;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +33,11 @@ import java.util.List;
 /** @author Artem Zatsarynnyy */
 @Singleton
 public class CodenvyTutorialProjectTypeExtension implements ProjectTypeExtension {
+    private String baseUrl;
+
     @Inject
-    public CodenvyTutorialProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
+    public CodenvyTutorialProjectTypeExtension(@Named("extension-url") String baseUrl, ProjectTypeDescriptionRegistry registry) {
+        this.baseUrl = baseUrl;
         registry.registerProjectType(this);
     }
 
@@ -47,6 +52,51 @@ public class CodenvyTutorialProjectTypeExtension implements ProjectTypeExtension
         list.add(new Attribute("language", new VfsPropertyValueProvider("language", "java")));
         list.add(new Attribute("builder.name", new VfsPropertyValueProvider("builder.name", "maven")));
         list.add(new Attribute("runner.name", new VfsPropertyValueProvider("runner.name", "sdk")));
+        return list;
+    }
+
+    @Override
+    public List<ProjectTemplateDescription> getTemplates() {
+        final List<ProjectTemplateDescription> list = new ArrayList<>(8);
+        list.add(new ProjectTemplateDescription("zip",
+                                                "NOTIFICATION API TUTORIAL",
+                                                "Tutorial that is demonstrating how to use Codenvy Notification API.",
+                                                baseUrl + "/notification-api-tutorial.zip"));
+
+        list.add(new ProjectTemplateDescription("zip",
+                                                "ACTION API TUTORIAL",
+                                                "Tutorial that is demonstrating how to use Codenvy Action API.",
+                                                baseUrl + "/action-api-tutorial.zip"));
+
+        list.add(new ProjectTemplateDescription("zip",
+                                                "WIZARD API TUTORIAL",
+                                                "Tutorial that is demonstrating how to use Codenvy Wizard API.",
+                                                baseUrl + "/wizard-api-tutorial.zip"));
+
+        list.add(new ProjectTemplateDescription("zip",
+                                                "NEW RESOURCE WIZARD TUTORIAL",
+                                                "The following tutorial will take you through simple example to learn how to implement a new resource wizard.",
+                                                baseUrl + "/new-resource-wizard-tutorial.zip"));
+
+        list.add(new ProjectTemplateDescription("zip",
+                                                "PART API TUTORIAL",
+                                                "Tutorial that is demonstrating how to use Codenvy Part API.",
+                                                baseUrl + "/parts-api-tutorial.zip"));
+
+        list.add(new ProjectTemplateDescription("zip",
+                                                "EDITOR API TUTORIAL",
+                                                "Tutorial that is demonstrating how to use Codenvy Editor API.",
+                                                baseUrl + "/editor-api-tutorial.zip"));
+
+        list.add(new ProjectTemplateDescription("zip",
+                                                "WYSIWYG EDITOR TUTORIAL",
+                                                "The following tutorial will take you through simple example to learn how to implement WYSIWYG editor.",
+                                                baseUrl + "/wysiwyg-editor-tutorial.zip"));
+
+        list.add(new ProjectTemplateDescription("zip",
+                                                "GIN TUTORIAL",
+                                                "The following tutorial will take you through simple example to learn how to use GIN with Codenvy API.",
+                                                baseUrl + "/gin-tutorial.zip"));
         return list;
     }
 }
