@@ -377,10 +377,14 @@ public class GreetingUserPresenter implements InitialConfigurationReceivedHandle
     private Timer scheduleGreetingTimer = new Timer() {
         @Override
         public void run() {
+            if (project == null) {
+                return;
+            }
+
             if (!welcomeOnceAppeared) {
                 welcomeOnceAppeared = true;
                 
-                if (waitForFactory) {
+                if (waitForFactory && factory != null) {
                     fetchWelcomePageParametersFromFactory();
                 } else {
                     checkIsWorkspacePrivate();
