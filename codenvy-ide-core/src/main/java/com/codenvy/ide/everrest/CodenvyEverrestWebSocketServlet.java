@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.everrest;
 
-import com.codenvy.api.core.user.UserState;
 import com.codenvy.commons.env.EnvironmentContext;
 
 import org.apache.catalina.websocket.StreamInbound;
@@ -37,7 +36,6 @@ import javax.servlet.http.HttpServletRequest;
 /** @author andrew00x */
 @Singleton
 public class CodenvyEverrestWebSocketServlet extends EverrestWebSocketServlet {
-    static final String USER_STATE          = "ide.websocket." + UserState.class.getName();
     static final String ENVIRONMENT_CONTEXT = "ide.websocket." + EnvironmentContext.class.getName();
 
     @Override
@@ -55,7 +53,6 @@ public class CodenvyEverrestWebSocketServlet extends EverrestWebSocketServlet {
     @Override
     protected StreamInbound createWebSocketInbound(String s, HttpServletRequest req) {
         WSConnectionImpl wsConnection = (WSConnectionImpl)super.createWebSocketInbound(s, req);
-        wsConnection.getHttpSession().setAttribute(USER_STATE, UserState.get());
         wsConnection.getHttpSession().setAttribute(ENVIRONMENT_CONTEXT, EnvironmentContext.getCurrent());
         return wsConnection;
     }

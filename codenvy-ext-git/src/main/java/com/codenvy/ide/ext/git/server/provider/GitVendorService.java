@@ -1,6 +1,6 @@
 package com.codenvy.ide.ext.git.server.provider;
 
-import com.codenvy.api.core.user.UserState;
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.commons.json.JsonHelper;
 import com.codenvy.commons.json.JsonNameConventions;
 import com.codenvy.commons.json.JsonParseException;
@@ -176,7 +176,7 @@ public abstract class GitVendorService {
      * @return user email
      */
     protected String getUserId() {
-        return UserState.get().getUser().getName();
+        return EnvironmentContext.getCurrent().getUser().getName();
     }
 
     /**

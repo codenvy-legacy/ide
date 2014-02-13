@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.git.server.nativegit;
 
-import com.codenvy.api.core.user.UserState;
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.ide.ext.git.server.GitException;
 
 import org.slf4j.Logger;
@@ -65,7 +65,7 @@ public class CredentialsLoader {
     public File createGitAskPassScript(CredentialItem.Username username, CredentialItem.Password password)
             throws GitException {
         File askScriptDirectory = new File(System.getProperty("java.io.tmpdir")
-                                           + "/" + UserState.get().getUser().getName());
+                                           + "/" + EnvironmentContext.getCurrent().getUser().getName());
         if (!askScriptDirectory.exists()) {
             askScriptDirectory.mkdirs();
         }
