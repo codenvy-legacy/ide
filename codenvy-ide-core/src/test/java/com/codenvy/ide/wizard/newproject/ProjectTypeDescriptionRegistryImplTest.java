@@ -18,9 +18,6 @@
 package com.codenvy.ide.wizard.newproject;
 
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.resources.model.Property;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
 
@@ -33,18 +30,15 @@ import static org.mockito.Mockito.mock;
 /**
  * Testing {@link ProjectTypeDescriptorRegistryImpl} functionality.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author Artem Zatsarynnyy
  */
 @GwtModule("com.codenvy.ide.Core")
-public class ProjectTypeRegistryTest extends GwtTestWithMockito {
+public class ProjectTypeDescriptionRegistryImplTest extends GwtTestWithMockito {
     private ProjectTypeDescriptorRegistryImpl registry;
-    private Array<Property>                   projectProperties;
 
     @Before
     public void setUp() {
         registry = new ProjectTypeDescriptorRegistryImpl();
-        projectProperties = Collections.createArray();
-        projectProperties.add(new Property("propertyName", "propertyValue"));
     }
 
     @Test

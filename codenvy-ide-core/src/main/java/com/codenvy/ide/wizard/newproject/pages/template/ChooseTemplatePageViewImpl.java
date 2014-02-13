@@ -64,10 +64,10 @@ public class ChooseTemplatePageViewImpl extends Composite implements ChooseTempl
                     SafeHtmlBuilder sb = new SafeHtmlBuilder();
                     sb.appendHtmlConstant("<table><tr>");
                     sb.appendHtmlConstant("<td style=\"font-weight: bold;\">");
-                    sb.appendEscaped(itemData.getTemplateTitle());
+                    sb.appendEscaped(itemData.getDisplayName());
                     sb.appendHtmlConstant("</td></tr>");
                     sb.appendHtmlConstant("<tr><td style=\"padding: 10px\">");
-                    sb.appendEscaped(itemData.getTemplateDescription());
+                    sb.appendEscaped(itemData.getDescription());
                     sb.appendHtmlConstant("</td></tr></table>");
                     label.setInnerHTML(sb.toSafeHtml().asString());
                     itemElement.appendChild(label);
@@ -78,7 +78,7 @@ public class ChooseTemplatePageViewImpl extends Composite implements ChooseTempl
                     return Elements.createTRElement();
                 }
             };
-    private SimpleList.ListEventDelegate<ProjectTemplateDescriptor> listDelegate     =
+    private SimpleList.ListEventDelegate<ProjectTemplateDescriptor> listDelegate =
             new SimpleList.ListEventDelegate<ProjectTemplateDescriptor>() {
                 public void onListItemClicked(Element itemElement, ProjectTemplateDescriptor itemData) {
                     delegate.onTemplateSelected(itemData);

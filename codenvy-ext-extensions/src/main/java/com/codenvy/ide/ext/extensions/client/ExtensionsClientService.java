@@ -19,7 +19,6 @@ package com.codenvy.ide.ext.extensions.client;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.websocket.WebSocketException;
 import com.google.gwt.http.client.RequestException;
 
 import javax.validation.constraints.NotNull;
@@ -32,21 +31,13 @@ import javax.validation.constraints.NotNull;
 public interface ExtensionsClientService {
 
     /**
-     * Run a specified WAR, that contains Codenvy Platform with (or without) any extension.
-     * <p/>
-     * Hot update ability is supported.
+     * Run a specified extension project.
      *
-     * @param warUrl
-     *         URL to Codenvy Platform WAR
-     * @param enableHotUpdate
-     *         whether to enable the ability hot update or not
-     * @param vfsId
-     *         identifier of the virtual file system (makes sense only when hot update is enabled)
-     * @param projectId
-     *         identifier of the extension project (makes sense only when hot update is enabled)
+     * @param projectName
+     *         name of the extension project to launch
      * @param callback
      *         callback
-     * @throws WebSocketException
+     * @throws RequestException
      */
     void launch(@NotNull String projectName, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 

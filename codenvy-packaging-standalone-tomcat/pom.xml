@@ -23,7 +23,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M8-SNAPSHOT</version>
+        <version>3.0.0-M9-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-packaging-standalone-tomcat</artifactId>
     <packaging>pom</packaging>
@@ -95,12 +95,6 @@
             <artifactId>gist-extension</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>new-project-wizard-tutorial</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
@@ -299,15 +293,6 @@
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
                                     <destFileName>action-api-tutorial.zip</destFileName>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.codenvy.ide</groupId>
-                                    <artifactId>new-project-wizard-tutorial</artifactId>
-                                    <type>zip</type>
-                                    <version>${project.version}</version>
-                                    <overWrite>false</overWrite>
-                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
-                                    <destFileName>new-project-wizard-tutorial.zip</destFileName>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>com.codenvy.ide</groupId>

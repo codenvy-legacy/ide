@@ -344,7 +344,7 @@ public class GitService {
     
     private boolean isProjectTypePropertySet(Item item) {
         for (Property property : item.getProperties()) {
-            if ("vfs:projectType".equals(property.getName())) {
+            if ("vfs:projectType".equals(property.getName()) && property.getValue().size() > 0 && !"deprecated.project.type".equals(property.getValue().get(0))) {
                 return true;
             }
         }

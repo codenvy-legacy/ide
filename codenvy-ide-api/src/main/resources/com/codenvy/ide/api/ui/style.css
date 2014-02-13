@@ -92,6 +92,7 @@
 @def editorFontFamily 'Andale Mono', monospace;
 
 @eval mainFontColor com.codenvy.ide.api.ui.theme.Style.getMainFontColor();
+@eval radioButtonBackgroundColor com.codenvy.ide.api.ui.theme.Style.getRadioButtonBackgroundColor();
 @eval disabledMenuItemColor com.codenvy.ide.api.ui.theme.Style.getDeisabledMenuColor();
 
     /* DialogBox*/

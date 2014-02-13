@@ -18,8 +18,6 @@
 package com.codenvy.ide.wizard.newproject.pages.paas;
 
 import com.codenvy.api.project.gwt.client.ProjectClientService;
-import com.codenvy.api.project.gwt.client.TemplateClientService;
-import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
@@ -38,23 +36,25 @@ import com.google.inject.Inject;
 
 import javax.annotation.Nullable;
 
-import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.*;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_TYPE;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.TEMPLATE;
 
 /** @author Evgen Vidolob */
 public class SelectPaasPagePresenter extends AbstractWizardPage implements SelectPaasPageView.ActionDelegate {
 
-    private SelectPaasPageView    view;
-    private ProjectClientService  projectService;
-    private ResourceProvider      resourceProvider;
-    private TemplateClientService templateService;
-    private PaaSAgentImpl         paasAgent;
-    private DtoFactory            dtoFactory;
-    private Array<PaaS>           paases;
+    private SelectPaasPageView   view;
+    private ProjectClientService projectService;
+    private ResourceProvider     resourceProvider;
+    private PaaSAgentImpl        paasAgent;
+    private DtoFactory           dtoFactory;
+    private Array<PaaS>          paases;
 
     @Inject
     public SelectPaasPagePresenter(SelectPaasPageView view,
                                    ResourceProvider resourceProvider,
-                                   TemplateClientService templateService,
                                    ProjectClientService projectService,
                                    PaaSAgentImpl paasAgent,
                                    DtoFactory dtoFactory) {
@@ -63,7 +63,6 @@ public class SelectPaasPagePresenter extends AbstractWizardPage implements Selec
         this.projectService = projectService;
         this.view.setDelegate(this);
         this.resourceProvider = resourceProvider;
-        this.templateService = templateService;
         this.paasAgent = paasAgent;
         this.dtoFactory = dtoFactory;
     }
@@ -121,10 +120,8 @@ public class SelectPaasPagePresenter extends AbstractWizardPage implements Selec
     public void commit(final CommitCallback callback) {
         final String projectName = wizardContext.getData(PROJECT_NAME);
         final ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(TEMPLATE);
-        ImportSourceDescriptor zip =
-                dtoFactory.createDto(ImportSourceDescriptor.class).withType("zip").withLocation(templateDescriptor.getTemplateLocation());
         try {
-            projectService.importProject(projectName, zip, new AsyncRequestCallback<String>() {
+            projectService.importProject(projectName, templateDescriptor.getSources(), new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(final String result) {
                     resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
