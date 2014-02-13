@@ -43,6 +43,8 @@ public final class SignalKeyLogic {
      */
     public static final int IME_CODE = 229;
 
+    protected String operatingSystem = "Unknown OS";
+
     private static final String DELETE_KEY_IDENTIFIER = "U+007F";
 
     //TODO(danilatos): Use int map
@@ -101,6 +103,8 @@ public final class SignalKeyLogic {
         this.userAgent = userAgent;
         this.commandComboDoesntGiveKeypress = commandComboDoesntGiveKeypress;
         commandIsCtrl = os != OperatingSystem.MAC;
+        //For a correct determination os in debug mode
+        operatingSystem = getOperatingSystem();
     }
 
     public boolean commandIsCtrl() {
@@ -155,6 +159,7 @@ public final class SignalKeyLogic {
                 // us keypress events (though they happen after the dom is changed,
                 // for some things like delete. So not too useful). The number
                 // 63200 is known as the cutoff mark.
+                keyIdentifier = keyIdentifierModifierForWindowsChromeV32Bugs(keyIdentifier, keyCode, typeName);
                 if (typeInt == Event.ONKEYDOWN && computedKeyCode > 63200) {
                     result.type = null;
                     return;
@@ -370,4 +375,43 @@ public final class SignalKeyLogic {
 
         return ret;
     }
+
+    /**
+     * Replace keyIdentifier bugs for Chrome
+     */
+    public String keyIdentifierModifierForWindowsChromeV32Bugs(String keyIdentifier, int keyCode, String typeName) {
+        if (operatingSystem.indexOf("Win") != -1) {
+            if (typeName.equalsIgnoreCase("keypress")) {
+                if (((keyCode == 46) && (keyIdentifier.equalsIgnoreCase("U+007F")))
+                    || ((keyCode == 39) && (keyIdentifier.equalsIgnoreCase("Right")))
+                    || ((keyCode == 34) && (keyIdentifier.equalsIgnoreCase("PageDown")))
+                    || ((keyCode == 40) && (keyIdentifier.equalsIgnoreCase("Down")))
+                    || ((keyCode == 38) && (keyIdentifier.equalsIgnoreCase("Up")))
+                    || ((keyCode == 37) && (keyIdentifier.equalsIgnoreCase("Left")))
+                    || ((keyCode == 36) && (keyIdentifier.equalsIgnoreCase("Home")))
+                    || ((keyCode == 35) && (keyIdentifier.equalsIgnoreCase("End")))
+                    || ((keyCode == 33) && (keyIdentifier.equalsIgnoreCase("PageUp")))) {
+
+                    StringBuilder newKeyIdentifier = new StringBuilder();
+                    String hexKeyCode = Integer.toHexString(keyCode).toUpperCase();
+                    int lengthHexKeyCode = hexKeyCode.length();
+
+                    newKeyIdentifier.append("U+");
+                    for (int n = (4 - lengthHexKeyCode); n > 0; n--) {
+                        newKeyIdentifier.append("0");
+                    }
+                    newKeyIdentifier.append(hexKeyCode);
+                    keyIdentifier = newKeyIdentifier.toString();
+                }
+            }
+        }
+        return keyIdentifier;
+    }
+
+    /**
+     * Get information of the browser as a string
+     */
+    protected static native String getOperatingSystem() /*-{
+        return navigator.appVersion;
+    }-*/;
 }
