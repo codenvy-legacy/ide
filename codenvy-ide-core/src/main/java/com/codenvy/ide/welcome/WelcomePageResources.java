@@ -28,8 +28,6 @@ public interface WelcomePageResources extends ClientBundle {
 
         String welcomeHeaderText();
 
-        String welcomeTopContainer();
-
         String welcomeLabel();
 
         String link();
@@ -47,9 +45,6 @@ public interface WelcomePageResources extends ClientBundle {
 
     @Source("background.png")
     ImageResource welcomePageBgHeader();
-
-    @Source("bg-top-container.png")
-    ImageResource welcomePageBgTopContainer();
 
     @Source("spliter.png")
     ImageResource welcomePageSpliter();
