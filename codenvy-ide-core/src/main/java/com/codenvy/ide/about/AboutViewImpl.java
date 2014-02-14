@@ -54,9 +54,9 @@ public class AboutViewImpl extends DialogBox implements AboutView {
 
     @Inject
     public AboutViewImpl(AboutViewImplUiBinder uiBinder, AboutLocalizationConstant locale) {
+        this.locale = locale;
         this.setText(locale.aboutViewTitle());
         this.setWidget(uiBinder.createAndBindUi(this));
-        this.locale = locale;
     }
 
     /** {@inheritDoc} */

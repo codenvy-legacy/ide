@@ -30,12 +30,15 @@ public interface AboutLocalizationConstant extends Messages {
     String aboutViewTitle();
 
     @Key("about.version")
+    @DefaultMessage("xxx")
     String aboutVersion(String version);
 
     @Key("about.revision")
+    @DefaultMessage("zzz")
     String aboutRevision(String revision);
 
     @Key("about.buildtime")
+    @DefaultMessage("yyy")
     String aboutBuildTime(String time);
 
     @Key("about.control.title")
