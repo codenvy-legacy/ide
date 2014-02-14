@@ -2,7 +2,7 @@
  * CODENVY CONFIDENTIAL
  * __________________
  *
- * [2012] - [2013] Codenvy, S.A.
+ * [2012] - [2014] Codenvy, S.A.
  * All Rights Reserved.
  *
  * NOTICE:  All information contained herein is, and remains
@@ -17,13 +17,15 @@
  */
 package com.codenvy.ide;
 
+import com.google.gwt.i18n.client.Constants;
+
 
 /**
  * Represents application's build information.
  * 
  * @author Ann Shumilova
  */
-public interface BuildInfo extends com.google.gwt.i18n.client.Messages {
+public interface BuildInfo extends Constants {
 
     @Key("revision")
     String revision();

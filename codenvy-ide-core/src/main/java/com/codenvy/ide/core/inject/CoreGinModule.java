@@ -279,7 +279,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(SelectProjectTypeView.class).to(SelectProjectTypeViewImpl.class).in(Singleton.class);
         bind(NavigateToFileView.class).to(NavigateToFileViewImpl.class).in(Singleton.class);
         bind(RenameResourceView.class).to(RenameResourceViewImpl.class).in(Singleton.class);
-        bind(AboutView.class).to(AboutViewImpl.class).in(Singleton.class);
+        bind(AboutView.class).to(AboutViewImpl.class);
 
         bind(ExtensionManagerView.class).to(ExtensionManagerViewImpl.class).in(Singleton.class);
         bind(AppearanceView.class).to(AppearanceViewImpl.class).in(Singleton.class);
