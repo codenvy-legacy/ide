@@ -19,6 +19,7 @@ package org.exoplatform.ide.client.properties;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Image;
@@ -63,13 +64,11 @@ public class PropertiesView extends ViewImpl implements
     @Override
     public void showProperties(FileModel file) {
         Map<String, String> properties = new HashMap<String, String>();
-        properties.put("Name", file.getName());
-        properties.put("Path", file.getPath());
+        properties.put("Name", SafeHtmlUtils.htmlEscape(file.getName()));
+        properties.put("Path", SafeHtmlUtils.htmlEscape(file.getPath()));
         properties.put("Mime Type", file.getMimeType());
-        properties.put("Created",
-                       DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(new Date(file.getCreationDate())));
-        properties.put("Last modified",
-                       DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(new Date(file.getLastModificationDate())));
+        properties.put("Created", DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(new Date(file.getCreationDate())));
+        properties.put("Last modified", DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(new Date(file.getLastModificationDate())));
         properties.put("Content length", "" + file.getLength());
 
         if (file.getProperties() != null && !file.getProperties().isEmpty()) {

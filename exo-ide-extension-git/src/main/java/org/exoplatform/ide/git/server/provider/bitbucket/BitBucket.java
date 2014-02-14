@@ -1,9 +1,9 @@
 package org.exoplatform.ide.git.server.provider.bitbucket;
 
 import com.codenvy.commons.json.JsonParseException;
-import com.codenvy.commons.security.oauth.OAuthTokenProvider;
-import com.codenvy.commons.security.oauth.oauth1.OAuth1UrlInfo;
-import com.codenvy.commons.security.shared.Token;
+import com.codenvy.security.oauth.OAuthTokenProvider;
+import com.codenvy.security.oauth.oauth1.OAuth1UrlInfo;
+import com.codenvy.security.shared.Token;
 
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;

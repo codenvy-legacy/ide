@@ -817,7 +817,7 @@ public class MemoryFileSystem implements VirtualFileSystem {
         try {
             ZipOutputStream zipOut = new ZipOutputStream(out);
             if (exportFolder.isProject()) {
-                zipOut.putNextEntry(new ZipEntry(".project"));
+                zipOut.putNextEntry(new ZipEntry(".codenvy"));
                 try {
                     JsonWriter jw = new JsonWriter(zipOut);
                     JsonGenerator.createJsonArray(object.getProperties(PropertyFilter.ALL_FILTER)).writeTo(jw);
@@ -850,7 +850,7 @@ public class MemoryFileSystem implements VirtualFileSystem {
                         }
                     } else if (current.isProject()) {
                         zipOut.putNextEntry(new ZipEntry(zipEntryName + '/'));
-                        zipOut.putNextEntry(new ZipEntry(zipEntryName + "/.project"));
+                        zipOut.putNextEntry(new ZipEntry(zipEntryName + "/.codenvy"));
                         try {
                             JsonWriter jw = new JsonWriter(zipOut);
                             JsonGenerator.createJsonArray(current.getProperties(PropertyFilter.ALL_FILTER)).writeTo(jw);
@@ -918,7 +918,7 @@ public class MemoryFileSystem implements VirtualFileSystem {
                     if (current.getChild(name) == null) {
                         current.addChild(new MemoryFolder(name));
                     }
-                } else if (".project".equals(name)) {
+                } else if (".codenvy".equals(name)) {
                     JsonParser jp = new JsonParser();
                     jp.parse(noCloseZip);
                     Property[] array = (Property[])ObjectBuilder.createArray(PropertyImpl[].class, jp.getJsonObject());
@@ -963,7 +963,8 @@ public class MemoryFileSystem implements VirtualFileSystem {
             }
             context.putItem(folder);
         } catch (JsonException e) {
-            throw new VirtualFileSystemException(e.getMessage(), e);
+            throw new VirtualFileSystemException(
+                    "Failed to read the project description file. The file contains invalid information about project.", e);
         } finally {
             if (zip != null) {
                 zip.close();

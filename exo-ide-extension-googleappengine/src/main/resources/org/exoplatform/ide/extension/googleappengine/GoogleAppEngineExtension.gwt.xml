@@ -25,7 +25,7 @@
     <inherits name='com.google.gwt.json.JSON'/>
     <inherits name='org.exoplatform.gwtframework.commons.Commons'/>
 
-    <inherits name='com.codenvy.commons.security.Security'/>
+    <inherits name='com.codenvy.security.Security'/>
 
     <inherits name='org.exoplatform.ide.extension.googleappengine.Views'/>
 

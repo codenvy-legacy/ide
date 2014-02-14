@@ -1549,6 +1549,7 @@ public class Appfog {
                     return !(".cloudfoundry-application".equals(name)
                              || ".vmc_target".equals(name)
                              || ".project".equals(name)
+                             || ".codenvy".equals(name)
                              || ".git".equals(name)
                              || name.endsWith("~")
                              || name.endsWith(".log"));

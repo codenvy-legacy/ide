@@ -15,18 +15,17 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package org.exoplatform.ide.extension.googleappengine.shared;
+package com.codenvy.ide.factory.client.factory;
 
-import com.codenvy.security.shared.Token;
-import com.codenvy.security.shared.User;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * This {@link FactoryReceivedHandler} uses to handle {@link FactoryReceivedEvent}
+ * 
+ * @author Vitaliy Guluy
  */
-public interface GaeUser extends User {
+public interface FactoryReceivedHandler extends EventHandler {
 
-    public Token getToken();
-
-    public void setToken(Token token);
+    void onFactoryReceived(FactoryReceivedEvent event);
+    
 }

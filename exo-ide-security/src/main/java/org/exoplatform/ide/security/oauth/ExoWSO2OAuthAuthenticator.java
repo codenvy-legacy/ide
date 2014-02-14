@@ -18,7 +18,7 @@
 
 package org.exoplatform.ide.security.oauth;
 
-import com.codenvy.commons.security.oauth.WSO2OAuthAuthenticator;
+import com.codenvy.security.oauth.WSO2OAuthAuthenticator;
 import com.google.api.client.auth.oauth2.CredentialStore;
 import com.google.api.client.auth.oauth2.MemoryCredentialStore;
 

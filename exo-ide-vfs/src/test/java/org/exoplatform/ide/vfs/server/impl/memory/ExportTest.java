@@ -123,7 +123,7 @@ public class ExportTest extends MemoryFileSystemTest {
         MemoryFile projectFile = new MemoryFile("readme.txt", "text/plain", new ByteArrayInputStream(DEFAULT_CONTENT_BYTES));
         exportTestProject.addChild(projectFile);
 
-        expectedExportProjectZipItems.add(".project");
+        expectedExportProjectZipItems.add(".codenvy");
         expectedExportProjectZipItems.add("readme.txt");
 
         memoryContext.putItem(exportTestRoot);
@@ -147,7 +147,7 @@ public class ExportTest extends MemoryFileSystemTest {
         expectedExportTestRootZipItems.add("ExportTest_FOLDER/folder2/folder22/file22.txt");
         expectedExportTestRootZipItems.add("ExportTest_FOLDER/folder3/folder32/file32.txt");
         expectedExportTestRootZipItems.add("ExportTest_PROJECT/");
-        expectedExportTestRootZipItems.add("ExportTest_PROJECT/.project");
+        expectedExportTestRootZipItems.add("ExportTest_PROJECT/.codenvy");
         expectedExportTestRootZipItems.add("ExportTest_PROJECT/readme.txt");
     }
 

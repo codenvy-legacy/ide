@@ -16,7 +16,7 @@
  * from Codenvy S.A..
  */
 
-package com.codenvy.ide.factory.client.receive;
+package com.codenvy.ide.factory.client.factory;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -24,8 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: StartWithInitParamsEvent.java Nov 21, 2012 vetal $
+ * @author Vitaly Parfonov
  */
 public class StartWithInitParamsEvent extends GwtEvent<StartWithInitParamsHandler> {
 

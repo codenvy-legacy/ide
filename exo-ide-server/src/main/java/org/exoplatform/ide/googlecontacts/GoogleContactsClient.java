@@ -17,8 +17,8 @@
  */
 package org.exoplatform.ide.googlecontacts;
 
-import com.codenvy.commons.security.oauth.OAuthTokenProvider;
-import com.codenvy.commons.security.shared.Token;
+import com.codenvy.security.oauth.OAuthTokenProvider;
+import com.codenvy.security.shared.Token;
 import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.gdata.client.Query;

@@ -53,10 +53,6 @@ public class DirectoryFilter {
             if (!matchWithPattern(item.getName())) {
                 result.add(item);
             }
-//         if (parts == null || parts.length == 0 || !matchWithPattern(item.getName()))
-//         {
-//            result.add(item);
-//         }
         }
 
         return result;

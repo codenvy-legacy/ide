@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.factory.client.receive;
+package com.codenvy.ide.factory.client.factory;
 
 
 import com.codenvy.api.factory.AdvancedFactoryUrl;
@@ -132,6 +132,48 @@ public class FactoryHandler
         return null;
     }
 
+    /**
+     * Handle user factory url, which contains two parameter: download link and projects ids
+     * to start copying projects from temporary workspace into permanent.
+     *
+     * @param parameterMap
+     *         map, which contains all query parameters given by user
+     */
+    private void handleCopyProjects(Map<String, List<String>> parameterMap) {
+        final String downloadUrl = getParamValue(DOWNLOAD_URL, parameterMap);
+        final List<String> projects = parameterMap.get(PROJECT_ID);
+        
+        try {
+            FactoryClientService.getInstance()
+            .copyProjects(downloadUrl, projects,
+                          new RequestCallback<List<Item>>(new ChildrenUnmarshallerWS(new ArrayList<Item>())) {
+                @Override
+                protected void onSuccess(List<Item> result) {
+                    if (result.size() == 1) {
+                        IDE.fireEvent(new OpenProjectEvent((ProjectModel)result.get(0)));
+                    } else {
+                        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                            @Override
+                            public void execute() {
+                                IDE.fireEvent(new IDELoadCompleteEvent());
+                            }
+                        });
+                    }
+                }
+                
+                @Override
+                protected void onFailure(Throwable exception) {
+                    handleError(exception);
+                }
+            });
+        } catch (WebSocketException e) {
+            handleError(e);
+        }
+    }
+
+    /**
+     * @param parameterMap
+     */
     private void handleSimpleFactory(Map<String, List<String>> parameterMap) {
         Map<String, String> projectAttributes = new HashMap<String, String>();
 
@@ -173,66 +215,28 @@ public class FactoryHandler
      *         map, which contains all query parameters given by user
      */
     private void handleAdvancedFactory(Map<String, List<String>> parameterMap) {
-        AdvancedFactoryUrlUnmarshaller unmarshaller = new AdvancedFactoryUrlUnmarshaller(new AdvancedFactoryUrl());
+        final AdvancedFactoryUrlUnmarshaller unmarshaller = new AdvancedFactoryUrlUnmarshaller(new AdvancedFactoryUrl());
 
         try {
-            FactoryClientService.getInstance()
-                                .getFactory(getParamValue(ID, parameterMap),
-                                            new AsyncRequestCallback<AdvancedFactoryUrl>(unmarshaller) {
-                                                @Override
-                                                protected void onSuccess(AdvancedFactoryUrl advancedFactoryUrl) {
-                                                    factoryUrl = advancedFactoryUrl;
-                                                    prepareCloning();
-                                                }
+            FactoryClientService.getInstance().getFactory(getParamValue(ID, parameterMap),
+                    new AsyncRequestCallback<AdvancedFactoryUrl>(unmarshaller) {
+                        @Override
+                        protected void onSuccess(AdvancedFactoryUrl advancedFactoryUrl) {
+                            IDE.fireEvent(new FactoryReceivedEvent(unmarshaller.getFactoryObject()));
+                            factoryUrl = advancedFactoryUrl;
+                            prepareCloning();
+                        }
 
-                                                @Override
-                                                protected void onFailure(Throwable e) {
-                                                    handleError(e);
-                                                }
-                                            });
+                        @Override
+                        protected void onFailure(Throwable e) {
+                            handleError(e);
+                        }
+                    });
         } catch (RequestException e) {
             handleError(e);
         }
     }
 
-    /**
-     * Handle user factory url, which contains two parameter: download link and projects ids
-     * to start copying projects from temporary workspace into permanent.
-     *
-     * @param parameterMap
-     *         map, which contains all query parameters given by user
-     */
-    private void handleCopyProjects(Map<String, List<String>> parameterMap) {
-        final String downloadUrl = getParamValue(DOWNLOAD_URL, parameterMap);
-        final List<String> projects = parameterMap.get(PROJECT_ID);
-
-        try {
-            FactoryClientService.getInstance()
-                                .copyProjects(downloadUrl, projects,
-                                              new RequestCallback<List<Item>>(new ChildrenUnmarshallerWS(new ArrayList<Item>())) {
-                                                  @Override
-                                                  protected void onSuccess(List<Item> result) {
-                                                      if (result.size() == 1) {
-                                                          IDE.fireEvent(new OpenProjectEvent((ProjectModel)result.get(0)));
-                                                      } else {
-                                                          Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                                                              @Override
-                                                              public void execute() {
-                                                                  IDE.fireEvent(new IDELoadCompleteEvent());
-                                                              }
-                                                          });
-                                                      }
-                                                  }
-
-                                                  @Override
-                                                  protected void onFailure(Throwable exception) {
-                                                      handleError(exception);
-                                                  }
-                                              });
-        } catch (WebSocketException e) {
-            handleError(e);
-        }
-    }
 
     /**
      * Check if in our project's root already exist such project

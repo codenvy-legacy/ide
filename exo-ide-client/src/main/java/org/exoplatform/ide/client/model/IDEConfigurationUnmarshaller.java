@@ -70,8 +70,7 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable<IDEInitialCo
      * @param initializationConfiguration
      * @param defaultAppConfiguration
      */
-    public IDEConfigurationUnmarshaller(IDEInitialConfiguration initializationConfiguration,
-                                        JSONObject defaultAppConfiguration) {
+    public IDEConfigurationUnmarshaller(IDEInitialConfiguration initializationConfiguration, JSONObject defaultAppConfiguration) {
         this.initializationConfiguration = initializationConfiguration;
         this.defaultAppConfiguration = defaultAppConfiguration;
         configuration = new IDEConfiguration();
