@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.server;
 
-import com.codenvy.api.core.user.UserState;
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.organization.client.UserManager;
@@ -53,7 +53,7 @@ public class UserService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getUser() {
-        String userId = UserState.get().getUser().getName();
+        String userId = EnvironmentContext.getCurrent().getUser().getName();
         User user = DtoFactory.getInstance().createDto(User.class);
         user.setUserId(userId); //userId - "user alias" e.g. email
 
@@ -77,7 +77,7 @@ public class UserService {
     @POST
     public void updateUserAttributes(HashMap<String, String> map) {
         try {
-            String userId = UserState.get().getUser().getName();
+            String userId = EnvironmentContext.getCurrent().getUser().getName();
             com.codenvy.organization.model.User user = userManager.getUserByAlias(userId);
             final Profile profile = user.getProfile();
             Set<String> keys = map.keySet();

@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.git.server.nativegit;
 
-import com.codenvy.api.core.user.UserState;
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.ide.ext.git.server.GitException;
 import com.codenvy.ide.ext.ssh.server.SshKey;
 import com.codenvy.ide.ext.ssh.server.SshKeyStore;
@@ -56,7 +56,8 @@ public class SshKeysManager {
     }
 
     public static String getKeyDirectoryPath() throws GitException {
-        return (keyDirectoryPath == null ? DEFAULT_KEY_DIRECTORY_PATH : keyDirectoryPath) + '/' + UserState.get().getUser().getName();
+        return (keyDirectoryPath == null ? DEFAULT_KEY_DIRECTORY_PATH : keyDirectoryPath) + '/'
+               + EnvironmentContext.getCurrent().getUser().getName();
     }
 
     /**

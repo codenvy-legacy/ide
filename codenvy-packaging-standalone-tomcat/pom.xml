@@ -80,12 +80,6 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-site-war</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-sdk-private-dependencies</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
@@ -473,7 +467,6 @@
                                 </war>
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${org.exoplatform.ide.version}.war" overwrite="true" tofile="${project.build.directory}/tomcat-ide/webapps/git.war" />
                                 <copy file="${project.build.directory}/packager-conf/war/codenvy-api-war-${project.version}.war" overwrite="true" tofile="${project.build.directory}/tomcat-ide/webapps/api.war" />
-                                <copy file="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-${project.version}.war" overwrite="true" tofile="${project.build.directory}/tomcat-ide/webapps/site.war" />
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${org.exoplatform.ide.version}.war" overwrite="true" tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" />
                                 <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war" overwrite="true" tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" />
                                 <unzip dest="${project.build.directory}/tomcat-ide" src="${project.build.directory}/ide-codeassistant-lucene-index.zip" />
