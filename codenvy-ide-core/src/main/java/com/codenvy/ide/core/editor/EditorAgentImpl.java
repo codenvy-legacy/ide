@@ -24,6 +24,7 @@ import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorPartPresenter.EditorPartCloseHandler;
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.editor.EditorRegistry;
+import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
 import com.codenvy.ide.api.resources.FileEvent;
@@ -67,8 +68,8 @@ public class EditorAgentImpl implements EditorAgent {
     private final ActivePartChangedHandler activePartChangedHandler = new ActivePartChangedHandler() {
         @Override
         public void onActivePartChanged(ActivePartChangedEvent event) {
-            if (event.getActivePart() instanceof EditorPartPresenter) {
-                activeEditor = (EditorPartPresenter)event.getActivePart();
+            if (event.getActivePart() instanceof TextEditorPartPresenter) {
+                activeEditor = (TextEditorPartPresenter)event.getActivePart();
                 activeEditor.activate();
             }
         }
