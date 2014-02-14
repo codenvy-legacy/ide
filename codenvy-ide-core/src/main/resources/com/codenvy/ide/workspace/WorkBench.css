@@ -39,8 +39,6 @@
 .ide-work-bench-tool-panel-bottom {
     /* panel where tab-buttons created*/
     background: tabsPanelBackground;
-    border-right: 1px solid tabBorder;
-    border-bottom: 1px solid tabBorder;
-    border-left: 1px solid tabBorder;
     border-top: 1px solid tabBorder;
+    /*border-bottom: 1px solid tabBorder;*/
 }

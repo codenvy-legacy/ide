@@ -331,4 +331,34 @@ public class LightTheme implements Theme {
     public String getWizardStepsBorderColor() {
         return "#BDBDBD";
     }
+
+    @Override
+    public String getWelcomeFontColor() {
+        return "#5E5E5E";
+    }
+
+    @Override
+    public String getConsolePanelColor() {
+        return getTabsPanelBackground();
+    }
+
+    @Override
+    public String getCellOddRowColor() {
+        return "#f3f7fb";
+    }
+
+    @Override
+    public String getCellOddEvenColor() {
+        return "#ffffff";
+    }
+
+    @Override
+    public String getCellKeyboardSelectedRowColor() {
+        return "#ffc";
+    }
+
+    @Override
+    public String getCellHoveredRow() {
+        return "#eee";
+    }
 }

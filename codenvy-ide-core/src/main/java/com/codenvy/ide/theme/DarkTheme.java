@@ -300,4 +300,34 @@ public class DarkTheme implements Theme {
     public String getWizardStepsBorderColor() {
         return "#000000";
     }
+
+    @Override
+    public String getWelcomeFontColor() {
+        return getMainFontColor();
+    }
+
+    @Override
+    public String getConsolePanelColor() {
+        return "#313131";
+    }
+
+    @Override
+    public String getCellOddRowColor() {
+        return "#424242";
+    }
+
+    @Override
+    public String getCellOddEvenColor() {
+        return "#373737";
+    }
+
+    @Override
+    public String getCellKeyboardSelectedRowColor() {
+        return "#214283";
+    }
+
+    @Override
+    public String getCellHoveredRow() {
+        return getHoverBackgroundColor();
+    }
 }

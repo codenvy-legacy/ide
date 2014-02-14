@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.ssh.client.manage;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.ssh.client.SshLocalizationConstant;
 import com.codenvy.ide.ext.ssh.client.SshResources;
@@ -76,18 +77,18 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
      * @param locale
      */
     @Inject
-    protected SshKeyManagerViewImpl(SshResources resources, SshLocalizationConstant locale) {
+    protected SshKeyManagerViewImpl(SshResources resources, SshLocalizationConstant locale, Resources res) {
         this.res = resources;
         this.locale = locale;
 
-        initSshKeyTable();
+        initSshKeyTable(res);
 
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
     /** Creates table what contains list of available ssh keys. */
-    private void initSshKeyTable() {
-        keys = new CellTable<KeyItem>();
+    private void initSshKeyTable(CellTable.Resources res) {
+        keys = new CellTable<KeyItem>(15, res);
         Column<KeyItem, String> hostColumn = new Column<KeyItem, String>(new TextCell()) {
             @Override
             public String getValue(KeyItem object) {

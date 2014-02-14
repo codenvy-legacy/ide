@@ -50,7 +50,7 @@ import java.util.List;
 public class ExtensionManagerViewImpl implements ExtensionManagerView {
     private static ExtensionManagerViewImplUiBinder ourUiBinder = GWT.create(ExtensionManagerViewImplUiBinder.class);
     private final DockLayoutPanel rootElement;
-    @UiField
+    @UiField(provided = true)
     DataGrid<ExtensionDescription> dataGrid;
     @UiField
     TextAreaElement                descriptionArea;
@@ -60,6 +60,7 @@ public class ExtensionManagerViewImpl implements ExtensionManagerView {
 
     @Inject
     public ExtensionManagerViewImpl(ToolbarPresenter toolbarPresenter, ActionManager actionManager, Resources resources) {
+        dataGrid = new DataGrid<ExtensionDescription>(100, resources);
         rootElement = ourUiBinder.createAndBindUi(this);
         toolbarPresenter.go(toolBarPanel);
         DefaultActionGroup actionGroup = new DefaultActionGroup("extensionManager", false, actionManager);
