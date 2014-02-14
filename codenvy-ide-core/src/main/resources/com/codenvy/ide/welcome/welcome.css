@@ -28,10 +28,6 @@
         color: #FFFFFF;
     }
 
-    @sprite .welcomeTopContainer {
-        gwt-image: "welcomePageBgTopContainer";
-    }
-
     .welcomeLabel {
         font-size: largeDropdownLabel;
         color: #5E5E5E;
