@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.everrest;
 
-import com.codenvy.api.core.user.UserState;
 import com.codenvy.commons.env.EnvironmentContext;
 
 import org.everrest.core.ApplicationContext;
@@ -40,13 +39,11 @@ class WebSocketMethodInvokerDecorator extends MethodInvokerDecorator {
     public Object invokeMethod(Object resource, GenericMethodResource genericMethodResource, ApplicationContext context) {
         WSConnection wsConnection = (WSConnection)org.everrest.core.impl.EnvironmentContext.getCurrent().get(WSConnection.class);
         if (wsConnection != null) {
-            UserState.set((UserState)wsConnection.getHttpSession().getAttribute(CodenvyEverrestWebSocketServlet.USER_STATE));
             EnvironmentContext.setCurrent(
                     (EnvironmentContext)wsConnection.getHttpSession().getAttribute(CodenvyEverrestWebSocketServlet.ENVIRONMENT_CONTEXT));
             try {
                 return super.invokeMethod(resource, genericMethodResource, context);
             } finally {
-                UserState.reset();
                 EnvironmentContext.reset();
             }
         }

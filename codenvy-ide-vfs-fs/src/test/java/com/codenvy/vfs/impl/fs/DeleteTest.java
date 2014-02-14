@@ -17,10 +17,9 @@
  */
 package com.codenvy.vfs.impl.fs;
 
-import com.codenvy.api.core.user.User;
-import com.codenvy.api.core.user.UserImpl;
-import com.codenvy.api.core.user.UserState;
 import com.codenvy.api.vfs.shared.dto.Principal;
+import com.codenvy.commons.env.EnvironmentContext;
+import com.codenvy.commons.user.UserImpl;
 import com.codenvy.dto.server.DtoFactory;
 
 import org.everrest.core.impl.ContainerResponse;
@@ -149,8 +148,7 @@ public class DeleteTest extends LocalFileSystemTest {
         String requestPath = SERVICE_URI + "delete/" + protectedFileId;
         // File is protected and default principal 'andrew' has not write permission.
         // Replace default principal by principal who has write permission.
-        User user = new UserImpl("andrew");
-        UserState.set(new UserState(user));
+        EnvironmentContext.getCurrent().setUser(new UserImpl("andrew"));
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
         assertEquals(204, response.getStatus());
         assertFalse("File must not be removed. ", exists(protectedFilePath));

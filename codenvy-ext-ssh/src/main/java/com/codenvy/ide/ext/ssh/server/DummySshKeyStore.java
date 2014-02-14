@@ -1,6 +1,6 @@
 package com.codenvy.ide.ext.ssh.server;
 
-import com.codenvy.api.core.user.UserState;
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.dto.server.JsonStringMapImpl;
 import com.codenvy.ide.ext.ssh.dto.SshKeyEntry;
@@ -170,7 +170,7 @@ public class DummySshKeyStore implements SshKeyStore {
     }
 
     private String getUserId() {
-        return UserState.get().getUser().getName();
+        return EnvironmentContext.getCurrent().getUser().getName();
     }
 
     private String keyName(String user, String host, int i) {

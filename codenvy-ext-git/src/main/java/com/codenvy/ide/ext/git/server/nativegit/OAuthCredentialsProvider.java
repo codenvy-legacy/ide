@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.git.server.nativegit;
 
-import com.codenvy.api.core.user.UserState;
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.ide.ext.git.server.GitException;
 import com.codenvy.security.oauth.OAuthTokenProvider;
 import com.codenvy.security.shared.Token;
@@ -58,7 +58,7 @@ public class OAuthCredentialsProvider implements CredentialsProvider {
         }
         Token token;
         try {
-            token = tokenProvider.getToken("wso2", UserState.get().getUser().getName());
+            token = tokenProvider.getToken("wso2", EnvironmentContext.getCurrent().getUser().getName());
         } catch (IOException e) {
             LOG.error("Can't get token", e);
             return false;
