@@ -136,4 +136,16 @@ public interface Theme {
     String getWizardStepsColor();
 
     String getWizardStepsBorderColor();
+
+    String getWelcomeFontColor();
+
+    String getConsolePanelColor();
+
+    String getCellOddRowColor();
+
+    String getCellOddEvenColor();
+
+    String getCellKeyboardSelectedRowColor();
+
+    String getCellHoveredRow();
 }

@@ -10,7 +10,6 @@
             width: 100%;
             margin: 0; /* don't want to add to container size */
             border: 0; /* don't want to add to container size */
-            background: #FFFFFF;
             padding: 2px;
             box-sizing: border-box;
             -moz-box-sizing: border-box; /* Firefox */
@@ -18,7 +17,6 @@
         }
 
         .messageInputContainer {
-            /*border: 1px solid #5ea0e3;*/
             position: absolute;
             bottom: 0;
             top: 0;
@@ -26,11 +24,6 @@
             right: 0;
             outline: 0;
             margin: 2px;
-            background: #ffffff;
-        }
-
-        .background {
-            background: #eee;
         }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="100%" height="100%">
@@ -43,7 +36,7 @@
                     <cellview:DataGrid ui:field="dataGrid"/>
                 </g:center>
                 <g:east size="100" unit="PX">
-                    <g:HTMLPanel styleName="{style.background}">
+                    <g:HTMLPanel>
                         <div class="{style.messageInputContainer}">
                             <textarea ui:field="descriptionArea" class="{style.chatMessageInput}"/>
                         </div>

@@ -238,4 +238,28 @@ public class Style {
     public static String getWizardStepsBorderColor() {
         return theme.getWizardStepsBorderColor();
     }
+
+    public static String getWelcomeFontColor() {
+        return theme.getWelcomeFontColor();
+    }
+
+    public static String getConsolePanelColor() {
+        return theme.getConsolePanelColor();
+    }
+
+    public static String getCellOddRow() {
+        return theme.getCellOddRowColor();
+    }
+
+    public static String getCellEvenRow() {
+        return theme.getCellOddEvenColor();
+    }
+
+    public static String getCellKeyboardSelectedRow() {
+        return theme.getCellKeyboardSelectedRowColor();
+    }
+
+    public static String getCellHoveredRow() {
+        return theme.getCellHoveredRow();
+    }
 }
