@@ -78,7 +78,7 @@
     background: radial-gradient(ellipse at center, windowContentBackground 35%,radioButtonBackgroundColor 40%); /* W3C*/
 }
 
-.gwt-TextBox{
+.gwt-TextBox, .gwt-PasswordTextBox{
     background-color: inputBackground;
     color: mainFontColor;
     border: 1px solid tabBorder;
@@ -86,7 +86,7 @@
     font-size: fontSize;
 }
 
-.gwt-TextBox[disabled]{
+.gwt-TextBox[disabled], .gwt-PasswordTextBox[disabled]{
     background-color: tabsPanelBackground;
 }
 
