@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.git.server.rest;
 
-import com.codenvy.api.core.user.UserState;
 import com.codenvy.api.vfs.server.ContentStream;
 import com.codenvy.api.vfs.server.MountPoint;
 import com.codenvy.api.vfs.server.VirtualFile;
@@ -32,6 +31,7 @@ import com.codenvy.api.vfs.shared.PropertyFilter;
 import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.api.vfs.shared.dto.Property;
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.ext.git.server.GitConnection;
 import com.codenvy.ide.ext.git.server.GitConnectionFactory;
@@ -344,7 +344,7 @@ public class GitService {
     
     private boolean isProjectTypePropertySet(Item item) {
         for (Property property : item.getProperties()) {
-            if ("vfs:projectType".equals(property.getName())) {
+            if ("vfs:projectType".equals(property.getName()) && property.getValue().size() > 0 && !"deprecated.project.type".equals(property.getValue().get(0))) {
                 return true;
             }
         }
@@ -701,7 +701,7 @@ public class GitService {
     protected GitConnection getGitConnection() throws GitException, VirtualFileSystemException {
         GitUser gituser = null;
         try {
-            final String name = UserState.get().getUser().getName();
+            final String name = EnvironmentContext.getCurrent().getUser().getName();
             User user = userManager.getUserByAlias(name);
             String firstName = user.getProfile().getAttribute("firstName");
             String lastName = user.getProfile().getAttribute("lastName");

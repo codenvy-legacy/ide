@@ -282,7 +282,6 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                     public void onSuccess(Project result) {
                     }
                 });
-
             }
         };
 
@@ -313,22 +312,8 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     private void processProject(Project project, AsyncCallback<Project> callback) {
         project.setVFSInfo(resourceProvider.getVfsInfo());
         String projectType = (String)project.getPropertyValue("vfs:projectType");
-        if (projectType != null && projectType.equals("undefined")) {
+        if (projectType != null && projectType.equals("undefined") && !project.getChildren().isEmpty()) {
             selectProjectTypePresenter.showDialog(project, callback);
-        }
-        else
-        {
-            project.refreshTree(new AsyncCallback<Project>() {
-
-                @Override
-                public void onFailure(Throwable caught) {
-                    Log.error(ProjectExplorerPartPresenter.class, "Can not refresh project properties.", caught);
-                }
-
-                @Override
-                public void onSuccess(Project result) {
-                }
-            });
         }
     }
 }

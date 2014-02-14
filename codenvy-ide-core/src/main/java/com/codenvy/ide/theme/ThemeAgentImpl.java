@@ -33,12 +33,13 @@ public class ThemeAgentImpl  implements ThemeAgent{
 
     private StringMap<Theme> themes = Collections.createStringMap();
 
-    private final Theme defaultTheme = new DarkTheme();
+    private final Theme defaultTheme = new LightTheme();
+
     private String currentThemeId;
 
     public ThemeAgentImpl() {
         addTheme(defaultTheme);
-        addTheme(new LightTheme());
+        addTheme(new DarkTheme());
     }
 
     @Override
@@ -68,9 +69,18 @@ public class ThemeAgentImpl  implements ThemeAgent{
         return currentThemeId;
     }
 
+    /**
+     * Sharing theme ID through "IDE3" object makes it readable from native JavaScript.
+     * It's needed to display additional menu items in the same style as IDE
+     *    (style of menu additions must depend on style of IDE).
+     */
     @Override
-    public void setCurrentThemeId(String id) {
-        currentThemeId = id;
-    }
+    public native void setCurrentThemeId(String id) /*-{
+        this.@com.codenvy.ide.theme.ThemeAgentImpl::currentThemeId = id;
 
+        if ($wnd["IDE3"]) {
+            $wnd["IDE3"].theme = id;
+        }
+    }-*/;
+    
 }

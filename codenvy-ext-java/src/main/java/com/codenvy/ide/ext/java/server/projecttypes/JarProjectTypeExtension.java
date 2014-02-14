@@ -18,10 +18,11 @@
 package com.codenvy.ide.ext.java.server.projecttypes;
 
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
+import com.codenvy.api.project.server.ProjectTypeExtension;
 import com.codenvy.api.project.server.VfsPropertyValueProvider;
 import com.codenvy.api.project.shared.Attribute;
+import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
-import com.codenvy.api.project.shared.ProjectTypeExtension;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -45,6 +46,21 @@ public class JarProjectTypeExtension implements ProjectTypeExtension {
     public List<Attribute> getPredefinedAttributes() {
         final List<Attribute> list = new ArrayList<>(1);
         list.add(new Attribute("language", new VfsPropertyValueProvider("language", "java")));
+        return list;
+    }
+
+    @Override
+    public List<ProjectTemplateDescription> getTemplates() {
+        final List<ProjectTemplateDescription> list = new ArrayList<>(2);
+        list.add(new ProjectTemplateDescription("zip",
+                                                "MAVEN JAR PROJECT",
+                                                "Simple JAR project which uses Maven build system.",
+                                                "templates/MavenJar.zip"));
+
+        list.add(new ProjectTemplateDescription("zip",
+                                                "ANT JAR PROJECT",
+                                                "Simple JAR project which uses Ant build system",
+                                                "templates/AntJar.zip"));
         return list;
     }
 }

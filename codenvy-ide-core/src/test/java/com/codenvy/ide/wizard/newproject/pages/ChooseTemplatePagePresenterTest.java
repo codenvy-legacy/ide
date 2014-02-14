@@ -21,11 +21,9 @@ import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.template.TemplateDescriptorRegistry;
 import com.codenvy.ide.api.ui.wizard.Wizard;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePageView;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -35,6 +33,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_TYPE;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.TEMPLATE;
@@ -61,8 +62,6 @@ public class ChooseTemplatePagePresenterTest {
     @Mock
     private ChooseTemplatePageView      view;
     @Mock
-    private TemplateDescriptorRegistry  templateDescriptorRegistry;
-    @Mock
     private Resources                   resources;
     @Mock
     private CoreLocalizationConstant    constant;
@@ -71,16 +70,19 @@ public class ChooseTemplatePagePresenterTest {
     @Mock
     private WizardContext               wizardContext;
     @Mock
-    private ProjectTypeDescriptor       projectType;
+    private ProjectTypeDescriptor       projectTypeDescriptor;
     @Mock
     private ProjectTemplateDescriptor   template;
     private ChooseTemplatePagePresenter page;
+    private List<ProjectTemplateDescriptor> singleTemplatesList = new ArrayList<>(1);
 
     @Before
     public void setUp() {
-        page = new ChooseTemplatePagePresenter(view, templateDescriptorRegistry, resources, constant);
+        page = new ChooseTemplatePagePresenter(view, resources, constant);
         page.setContext(wizardContext);
         page.setUpdateDelegate(delegate);
+
+        singleTemplatesList.add(template);
     }
 
     @Test
@@ -96,8 +98,8 @@ public class ChooseTemplatePagePresenterTest {
 
     @Test
     public void testCanSkip() throws Exception {
-        when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectType);
-        when(templateDescriptorRegistry.getDescriptors(projectType)).thenReturn(Collections.createArray(template));
+        when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectTypeDescriptor);
+        when(projectTypeDescriptor.getTemplates()).thenReturn(singleTemplatesList);
 
         assertEquals(page.canSkip(), CAN_SKIP);
 
@@ -107,8 +109,9 @@ public class ChooseTemplatePagePresenterTest {
 
     @Test
     public void testCanNotSkip() throws Exception {
-        when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectType);
-        when(templateDescriptorRegistry.getDescriptors(projectType)).thenReturn(Collections.createArray(template, template));
+        singleTemplatesList.add(template);
+        when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectTypeDescriptor);
+        when(projectTypeDescriptor.getTemplates()).thenReturn(singleTemplatesList);
 
         assertEquals(page.canSkip(), CAN_NOT_SKIP);
 
@@ -118,8 +121,8 @@ public class ChooseTemplatePagePresenterTest {
 
     @Test
     public void testFocusComponent() throws Exception {
-        when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectType);
-        when(templateDescriptorRegistry.getDescriptors(projectType)).thenReturn(Collections.createArray(template));
+        when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectTypeDescriptor);
+        when(projectTypeDescriptor.getTemplates()).thenReturn(singleTemplatesList);
 
         page.canSkip();
         reset(wizardContext);
@@ -154,8 +157,8 @@ public class ChooseTemplatePagePresenterTest {
 
     @Test
     public void testGo() throws Exception {
-        when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectType);
-        when(templateDescriptorRegistry.getDescriptors(projectType)).thenReturn(Collections.createArray(template, template));
+        when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectTypeDescriptor);
+        when(projectTypeDescriptor.getTemplates()).thenReturn(singleTemplatesList);
         AcceptsOneWidget container = mock(AcceptsOneWidget.class);
 
         page.go(container);
