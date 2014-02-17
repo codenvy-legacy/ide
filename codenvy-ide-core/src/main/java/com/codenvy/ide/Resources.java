@@ -30,6 +30,8 @@ import com.codenvy.ide.welcome.WelcomePageResources;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.ImageResource.ImageOptions;
+import com.google.gwt.resources.client.ImageResource.RepeatStyle;
 
 
 /**
@@ -116,4 +118,11 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
 
     @Source("xml/xml_file.png")
     ImageResource xmlFile();
+
+//    @Source("about/logo.png")
+//    ImageResource logo();
+//
+//    @Source("about/logoBg.png")
+//    @ImageOptions(repeatStyle = RepeatStyle.Horizontal)
+//    ImageResource logoBg();
 }

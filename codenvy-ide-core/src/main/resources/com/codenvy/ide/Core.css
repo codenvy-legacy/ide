@@ -42,9 +42,6 @@
         font-size: fontSize;
     }
 
-<<<<<<< HEAD
-label {
-=======
 .gwt-ListBox{
     color: mainFontColor;
     background-color: partBackground;
@@ -54,7 +51,6 @@ label {
 }
 
 .gwt-RadioButton label {
->>>>>>> 3b9be04... IDEX-380 fix fonts, use Theme API in CellWidget's
     display: inline-block;
     cursor: pointer;
     position: relative;
@@ -63,11 +59,11 @@ label {
     height: 18px;
     font-weight: bold;
 }
-input[type=radio] {
+.gwt-RadioButton input[type=radio] {
     display: none;
 }
 
-label:before {
+.gwt-RadioButton label:before {
     content: "";
     display: inline-block;
 
@@ -77,20 +73,20 @@ label:before {
     margin-right: 10px;
     position: absolute;
     left: 0;
-    background-color: mainFontColor;
+    background-color: radioButtonBackgroundColor;
 }
 .gwt-RadioButton label:before {
     border-radius: 8px;
 }
-input[type=radio]:checked + label:before {
+.gwt-RadioButton input[type=radio]:checked + label:before {
     /*text-align: center;*/
     /*line-height: 18px;*/
-    background: -moz-radial-gradient(center, ellipse cover, windowContentBackground 46%, mainFontColor 51%); /* FF3.6+ */
-    background: -webkit-radial-gradient(center, ellipse cover, windowContentBackground 46%,mainFontColor 51%); /* Chrome10+,Safari5.1+ */
-    background: radial-gradient(ellipse at center, windowContentBackground 46%,mainFontColor 51%); /* W3C */
+    background: -moz-radial-gradient(center, ellipse cover, windowContentBackground 35%, radioButtonBackgroundColor 40%);  /*FF3.6+*/
+    background: -webkit-radial-gradient(center, ellipse cover, windowContentBackground 35%,radioButtonBackgroundColor 40%);  /*Chrome10+,Safari5.1+*/
+    background: radial-gradient(ellipse at center, windowContentBackground 35%,radioButtonBackgroundColor 40%); /* W3C*/
 }
 
-.gwt-TextBox{
+.gwt-TextBox, .gwt-PasswordTextBox{
     background-color: inputBackground;
     color: mainFontColor;
     border: 1px solid tabBorder;
@@ -98,7 +94,7 @@ input[type=radio]:checked + label:before {
     font-size: fontSize;
 }
 
-.gwt-TextBox[disabled]{
+.gwt-TextBox[disabled], .gwt-PasswordTextBox[disabled]{
     background-color: tabsPanelBackground;
 }
 
