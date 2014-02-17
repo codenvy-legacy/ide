@@ -17,8 +17,10 @@
  */
 package com.codenvy.ide.extension.builder.client;
 
+import com.codenvy.api.builder.dto.BuildOptions;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.MimeType;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
@@ -42,6 +44,8 @@ public class BuilderClientServiceImpl implements BuilderClientService {
     /** Loader to be displayed. */
     private final Loader loader;
 
+    private DtoFactory dtoFactory;
+
     /**
      * Create service.
      *
@@ -49,19 +53,30 @@ public class BuilderClientServiceImpl implements BuilderClientService {
      *         loader to show on server request
      */
     @Inject
-    public BuilderClientServiceImpl(@Named("restContext") String baseUrl, Loader loader) {
+    public BuilderClientServiceImpl(@Named("restContext") String baseUrl, Loader loader, DtoFactory dtoFactory) {
         this.baseUrl = baseUrl+ "/builder/" + Utils.getWorkspaceId();
         this.loader = loader;
+        this.dtoFactory = dtoFactory;
     }
 
     /** {@inheritDoc} */
     @Override
     public void build(String projectName, AsyncRequestCallback<String> callback) throws RequestException {
+        build(projectName, null, callback);
+    }
+
+    @Override
+    public void build(String projectName, BuildOptions buildOptions, AsyncRequestCallback<String> callback) throws RequestException {
         final String requestUrl = baseUrl + "/build";
         String params = "project=" + projectName;
         callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-        AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params)
-                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+        AsyncRequest asyncRequest = AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params)
+                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON);
+        if (buildOptions != null) {
+            asyncRequest = asyncRequest.data(dtoFactory.toJson(buildOptions));
+        }
+        asyncRequest.send(callback);
+
     }
 
     /** {@inheritDoc} */
