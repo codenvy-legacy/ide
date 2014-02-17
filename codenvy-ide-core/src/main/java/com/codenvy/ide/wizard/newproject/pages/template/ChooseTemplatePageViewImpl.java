@@ -21,8 +21,8 @@ import elemental.html.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
+import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.list.SimpleList.View;
@@ -37,11 +37,10 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-
 /**
  * The implementation of {@link ChooseTemplatePageView}.
  *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
 public class ChooseTemplatePageViewImpl extends Composite implements ChooseTemplatePageView {
     private static TemplateViewUiBinder uiBinder  = GWT.create(TemplateViewUiBinder.class);
@@ -55,45 +54,39 @@ public class ChooseTemplatePageViewImpl extends Composite implements ChooseTempl
     ScrollPanel templates;
     @UiField(provided = true)
     Resources   res;
-    private ActionDelegate       delegate;
-    private SimpleList<Template> list;
-    private SimpleList.ListItemRenderer<Template>  listItemRenderer = new SimpleList.ListItemRenderer<Template>() {
-        @Override
-        public void render(Element itemElement, Template itemData) {
-            TableCellElement label = Elements.createTDElement();
+    private ActionDelegate                        delegate;
+    private SimpleList<ProjectTemplateDescriptor> list;
+    private SimpleList.ListItemRenderer<ProjectTemplateDescriptor>  listItemRenderer =
+            new SimpleList.ListItemRenderer<ProjectTemplateDescriptor>() {
+                @Override
+                public void render(Element itemElement, ProjectTemplateDescriptor itemData) {
+                    TableCellElement label = Elements.createTDElement();
+                    SafeHtmlBuilder sb = new SafeHtmlBuilder();
+                    sb.appendHtmlConstant("<table><tr>");
+                    sb.appendHtmlConstant("<td style=\"font-weight: bold;\">");
+                    sb.appendEscaped(itemData.getDisplayName());
+                    sb.appendHtmlConstant("</td></tr>");
+                    sb.appendHtmlConstant("<tr><td style=\"padding: 10px\">");
+                    sb.appendEscaped(itemData.getDescription());
+                    sb.appendHtmlConstant("</td></tr></table>");
+                    label.setInnerHTML(sb.toSafeHtml().asString());
+                    itemElement.appendChild(label);
+                }
 
-            SafeHtmlBuilder sb = new SafeHtmlBuilder();
-            // Add icon
-            sb.appendHtmlConstant("<table><tr>");
-//            ImageResource icon = itemData.getIcon();
-//            if (icon != null) {
-//                sb.appendHtmlConstant("<img src=\"" + icon.getSafeUri().asString() + "\">");
-//            }
-//            sb.appendHtmlConstant("</td>");
+                @Override
+                public Element createElement() {
+                    return Elements.createTRElement();
+                }
+            };
+    private SimpleList.ListEventDelegate<ProjectTemplateDescriptor> listDelegate =
+            new SimpleList.ListEventDelegate<ProjectTemplateDescriptor>() {
+                public void onListItemClicked(Element itemElement, ProjectTemplateDescriptor itemData) {
+                    delegate.onTemplateSelected(itemData);
+                }
 
-            // Add title
-            sb.appendHtmlConstant("<td style=\"font-weight: bold;\">");
-            sb.appendEscaped(itemData.getTitle());
-            sb.appendHtmlConstant("</td></tr></table>");
-
-            label.setInnerHTML(sb.toSafeHtml().asString());
-
-            itemElement.appendChild(label);
-        }
-
-        @Override
-        public Element createElement() {
-            return Elements.createTRElement();
-        }
-    };
-    private SimpleList.ListEventDelegate<Template> listDelegate     = new SimpleList.ListEventDelegate<Template>() {
-        public void onListItemClicked(Element itemElement, Template itemData) {
-            delegate.onTemplateSelected(itemData);
-        }
-
-        public void onListItemDoubleClicked(Element listItemBase, Template itemData) {
-        }
-    };
+                public void onListItemDoubleClicked(Element listItemBase, ProjectTemplateDescriptor itemData) {
+                }
+            };
 
     /**
      * Create view.
@@ -119,13 +112,13 @@ public class ChooseTemplatePageViewImpl extends Composite implements ChooseTempl
 
     /** {@inheritDoc} */
     @Override
-    public void setTemplates(Array<Template> templates) {
+    public void setTemplates(Array<ProjectTemplateDescriptor> templates) {
         list.render(templates);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void selectItem(Template template) {
+    public void selectItem(ProjectTemplateDescriptor template) {
         list.getSelectionModel().setSelectedItem(template);
     }
 

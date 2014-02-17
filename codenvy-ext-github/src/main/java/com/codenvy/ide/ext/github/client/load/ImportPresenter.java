@@ -42,6 +42,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
+import com.codenvy.ide.websocket.rest.StringUnmarshallerWS;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -252,7 +253,7 @@ public class ImportPresenter implements ImportView.ActionDelegate {
     private void cloneRepository(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
       try {
             gitService.cloneRepositoryWS(resourceProvider.getVfsInfo().getId(), project, remoteUri, remoteName,
-                                         new RequestCallback<String>(new com.codenvy.ide.ext.git.client.marshaller.StringUnmarshaller()) {
+                                         new RequestCallback<String>(new StringUnmarshallerWS()) {
                                              @Override
                                              protected void onSuccess(String result) {
                                                  RepoInfo repoInfo = dtoFactory.createDtoFromJson(result, RepoInfo.class);

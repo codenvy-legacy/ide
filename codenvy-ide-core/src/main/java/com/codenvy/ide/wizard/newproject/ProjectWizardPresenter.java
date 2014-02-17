@@ -31,12 +31,14 @@ import javax.validation.constraints.NotNull;
 /**
  * The implementation of {@link com.codenvy.ide.api.ui.wizard.WizardDialog}.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
 public class ProjectWizardPresenter implements WizardDialog, Wizard.UpdateDelegate, ProjectWizardView.ActionDelegate {
-    private NewProjectWizard            wizard;
+    private NewProjectWizard  wizard;
     private WizardPage        currentPage;
     private ProjectWizardView view;
+    /** Pages for which 'step tabs' will be showed. */
+    private Array<WizardPage> stepsPages = Collections.createArray();
 
     /**
      * Creates Wizard dialog with given view and wizard.
@@ -56,15 +58,19 @@ public class ProjectWizardPresenter implements WizardDialog, Wizard.UpdateDelega
     @Override
     public void onNextClicked() {
         currentPage.storeOptions();
+        final int previousStepPageIndex = stepsPages.indexOf(currentPage);
         setPage(wizard.flipToNext());
         currentPage.focusComponent();
+        view.setStepArrowPosition(stepsPages.indexOf(currentPage) - previousStepPageIndex);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onBackClicked() {
         currentPage.removeOptions();
+        final int previousStepPageIndex = stepsPages.indexOf(currentPage);
         setPage(wizard.flipToPrevious());
+        view.setStepArrowPosition(stepsPages.indexOf(currentPage) - previousStepPageIndex);
     }
 
     /** {@inheritDoc} */
@@ -99,7 +105,10 @@ public class ProjectWizardPresenter implements WizardDialog, Wizard.UpdateDelega
         setPage(wizard.flipToFirst());
         Array<String> stepsTitles = Collections.createArray();
         for (WizardPage p : wizard.getPages().asIterable()) {
-            stepsTitles.add(p.getCaption());
+            if (p.getCaption() != null) {
+                stepsPages.add(p);
+                stepsTitles.add(p.getCaption());
+            }
         }
         view.setStepTitles(stepsTitles);
         currentPage.focusComponent();

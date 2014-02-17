@@ -23,7 +23,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M8-SNAPSHOT</version>
+        <version>3.0.0-M9-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ide-core</artifactId>
     <packaging>jar</packaging>
@@ -57,17 +57,6 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-commons</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>javassist</artifactId>
-                    <groupId>javassist</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-ui</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -78,8 +67,29 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-project</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-vfs</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api-gwt-client</groupId>
+            <artifactId>codenvy-api-project-gwt-client</artifactId>
+            <version>${codenvy.platform-api-gwt-client.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api-gwt-client</groupId>
+            <artifactId>codenvy-gwt-client-commons</artifactId>
+            <version>${codenvy.platform-api-gwt-client.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>javassist</artifactId>
+                    <groupId>javassist</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -277,6 +287,7 @@
                                 <package>com.codenvy.ide.api.user</package>
                                 <package>com.codenvy.ide.dto</package>
                                 <package>com.codenvy.api.vfs.shared.dto</package>
+                                <package>com.codenvy.api.project.shared.dto</package>
                             </dtoPackages>
                             <outputDirectory>${dto-generator-out-directory}</outputDirectory>
                             <genClassName>com.codenvy.ide.core.client.DtoClientImpls</genClassName>
@@ -307,22 +318,24 @@
                     </dependency>
                     <dependency>
                         <groupId>com.codenvy.ide</groupId>
-                        <artifactId>codenvy-ide-commons</artifactId>
+                        <artifactId>codenvy-ide-core</artifactId>
                         <version>${project.version}</version>
                     </dependency>
                     <dependency>
-                        <groupId>com.codenvy.ide</groupId>
-                        <artifactId>codenvy-ide-core</artifactId>
-                        <version>${project.version}</version>
+                        <groupId>com.codenvy.platform-api</groupId>
+                        <artifactId>codenvy-api-project</artifactId>
+                        <version>${com.codenvy.platform-api.version}</version>
                     </dependency>
                     <dependency>
                         <groupId>com.codenvy.platform-api</groupId>
                         <artifactId>codenvy-api-vfs</artifactId>
                         <version>${com.codenvy.platform-api.version}</version>
                     </dependency>
-                    <!--
-                    Other dependencies if DTOs from current project need them.
-                    -->
+                    <dependency>
+                        <groupId>com.codenvy.platform-api-gwt-client</groupId>
+                        <artifactId>codenvy-gwt-client-commons</artifactId>
+                        <version>${codenvy.platform-api-gwt-client.version}</version>
+                    </dependency>
                 </dependencies>
             </plugin>
         </plugins>

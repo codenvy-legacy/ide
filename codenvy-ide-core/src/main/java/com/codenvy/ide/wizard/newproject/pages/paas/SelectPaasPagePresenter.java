@@ -17,34 +17,54 @@
  */
 package com.codenvy.ide.wizard.newproject.pages.paas;
 
+import com.codenvy.api.project.gwt.client.ProjectClientService;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.paas.PaaS;
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.resources.ProjectTypeData;
+import com.codenvy.ide.dto.DtoFactory;
+import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.wizard.newproject.PaaSAgentImpl;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nullable;
 
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_TYPE;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.TEMPLATE;
 
-/**
- * @author Evgen Vidolob
- */
-public class SelectPaasPagePresenter  extends AbstractWizardPage implements SelectPaasPageView.ActionDelegate {
+/** @author Evgen Vidolob */
+public class SelectPaasPagePresenter extends AbstractWizardPage implements SelectPaasPageView.ActionDelegate {
 
-    private SelectPaasPageView view;
-    private PaaSAgentImpl      paasAgent;
-    private Array<PaaS>        paases;
+    private SelectPaasPageView   view;
+    private ProjectClientService projectService;
+    private ResourceProvider     resourceProvider;
+    private PaaSAgentImpl        paasAgent;
+    private DtoFactory           dtoFactory;
+    private Array<PaaS>          paases;
 
     @Inject
-    public SelectPaasPagePresenter(SelectPaasPageView view, PaaSAgentImpl paasAgent) {
+    public SelectPaasPagePresenter(SelectPaasPageView view,
+                                   ResourceProvider resourceProvider,
+                                   ProjectClientService projectService,
+                                   PaaSAgentImpl paasAgent,
+                                   DtoFactory dtoFactory) {
         super("Select PaaS", null);
         this.view = view;
+        this.projectService = projectService;
         this.view.setDelegate(this);
+        this.resourceProvider = resourceProvider;
         this.paasAgent = paasAgent;
+        this.dtoFactory = dtoFactory;
     }
 
     @Nullable
@@ -62,11 +82,11 @@ public class SelectPaasPagePresenter  extends AbstractWizardPage implements Sele
     public void focusComponent() {
         this.paases = paasAgent.getPaaSes();
         this.view.setPaases(paases);
-        ProjectTypeData projectType = wizardContext.getData(PROJECT_TYPE);
+        ProjectTypeDescriptor projectType = wizardContext.getData(PROJECT_TYPE);
         boolean isFirst = true;
         for (int i = 0; i < paases.size(); i++) {
             PaaS paas = paases.get(i);
-            boolean isAvailable = paas.isAvailable(projectType.getPrimaryNature(), projectType.getSecondaryNature());
+            boolean isAvailable = paas.isAvailable(projectType.getProjectTypeId());
             view.setEnablePaas(i, isAvailable);
             if (isAvailable && isFirst) {
                 onPaaSSelected(i);
@@ -77,7 +97,7 @@ public class SelectPaasPagePresenter  extends AbstractWizardPage implements Sele
 
     @Override
     public void removeOptions() {
-
+        // nothing to do
     }
 
     /** {@inheritDoc} */
@@ -94,5 +114,37 @@ public class SelectPaasPagePresenter  extends AbstractWizardPage implements Sele
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
+    }
+
+    @Override
+    public void commit(final CommitCallback callback) {
+        final String projectName = wizardContext.getData(PROJECT_NAME);
+        final ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(TEMPLATE);
+        try {
+            projectService.importProject(projectName, templateDescriptor.getSources(), new AsyncRequestCallback<String>() {
+                @Override
+                protected void onSuccess(final String result) {
+                    resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
+                        @Override
+                        public void onSuccess(Project project) {
+                            wizardContext.putData(PROJECT, dtoFactory.createDtoFromJson(result, ProjectDescriptor.class));
+                            callback.onSuccess();
+                        }
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            callback.onFailure(caught);
+                        }
+                    });
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    callback.onFailure(exception);
+                }
+            });
+        } catch (RequestException e) {
+            callback.onFailure(e);
+        }
     }
 }

@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.api.ui.wizard.template;
 
+import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.ide.api.paas.PaaS;
-import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -32,7 +32,7 @@ import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.TEMPLATE
 /**
  * The abstract implementation of page that a template provides.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
 public abstract class AbstractTemplatePage extends AbstractWizardPage {
     private String templateID;
@@ -53,8 +53,12 @@ public abstract class AbstractTemplatePage extends AbstractWizardPage {
     @Override
     public boolean inContext() {
         PaaS paas = wizardContext.getData(PAAS);
-        Template template = wizardContext.getData(TEMPLATE);
-        return paas != null && !paas.isProvideTemplate() && template != null && template.getId().equals(templateID);
+        ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(TEMPLATE);
+        return paas != null &&
+               !paas.isProvideTemplate() &&
+               templateDescriptor != null;
+        // TODO: reconsider it when new 'custom' project wizard will be implemented
+//               templateDescriptor.getTemplateId().equals(templateID);
     }
 
     /** {@inheritDoc} */

@@ -23,7 +23,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M8-SNAPSHOT</version>
+        <version>3.0.0-M9-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ext-builder</artifactId>
     <packaging>jar</packaging>
@@ -118,21 +118,6 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <executions>
-                    <execution>
-                        <id>add-resource</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>add-resource</goal>
-                        </goals>
-                        <configuration>
-                            <resources>
-                                <resource>
-                                    <directory>${dto-generator-out-directory}/META-INF</directory>
-                                    <targetPath>META-INF</targetPath>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>add-source</id>
                         <phase>process-sources</phase>

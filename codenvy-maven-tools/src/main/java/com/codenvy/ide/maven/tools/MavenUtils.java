@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.maven.tools;
 
+import org.apache.maven.model.Build;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
@@ -32,7 +33,9 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * A smattering of useful methods to work with the Maven POM.
@@ -293,6 +296,20 @@ public class MavenUtils {
             }
         }
         return version;
+    }
+
+    /** Get source directories. */
+    public static List<String> getSourceDirectories(Model model) {
+        List<String> list = new ArrayList<>();
+        Build build = model.getBuild();
+        if (build != null) {
+            if (build.getSourceDirectory() != null) {
+                list.add(build.getSourceDirectory());
+            } else if (build.getTestSourceDirectory() != null) {
+                list.add(build.getTestSourceDirectory());
+            }
+        }
+        return list;
     }
 
     /** Creates new {@link Dependency} instance. */

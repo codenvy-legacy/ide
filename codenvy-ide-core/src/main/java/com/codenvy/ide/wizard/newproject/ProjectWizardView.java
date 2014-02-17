@@ -40,6 +40,14 @@ public interface ProjectWizardView extends View<ProjectWizardView.ActionDelegate
     void setStepTitles(Array<String> stepsTitles);
 
     /**
+     * Sets position of the 'step arrow'.
+     *
+     * @param position
+     *         number of 'step tab' to set the arrow. Tab's number starts from zero.
+     */
+    void setStepArrowPosition(int position);
+
+    /**
      * Sets whether Next button is visible.
      *
      * @param isVisible

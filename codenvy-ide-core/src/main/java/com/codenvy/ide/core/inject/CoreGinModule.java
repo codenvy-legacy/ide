@@ -17,7 +17,13 @@
  */
 package com.codenvy.ide.core.inject;
 
+import com.codenvy.api.project.gwt.client.ProjectClientService;
+import com.codenvy.api.project.gwt.client.ProjectClientServiceImpl;
+import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionClientService;
+import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionClientServiceImpl;
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.about.AboutView;
+import com.codenvy.ide.about.AboutViewImpl;
 import com.codenvy.ide.actions.ActionManagerImpl;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.DocumentProvider;
@@ -38,7 +44,6 @@ import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
@@ -63,10 +68,6 @@ import com.codenvy.ide.core.editor.EditorAgentImpl;
 import com.codenvy.ide.core.editor.EditorRegistryImpl;
 import com.codenvy.ide.core.editor.ResourceDocumentProvider;
 import com.codenvy.ide.extension.ExtensionManagerPresenter;
-import com.codenvy.ide.theme.AppearancePresenter;
-import com.codenvy.ide.theme.AppearanceView;
-import com.codenvy.ide.theme.AppearanceViewImpl;
-import com.codenvy.ide.theme.ThemeAgentImpl;
 import com.codenvy.ide.extension.ExtensionManagerView;
 import com.codenvy.ide.extension.ExtensionManagerViewImpl;
 import com.codenvy.ide.extension.ExtensionRegistry;
@@ -109,7 +110,7 @@ import com.codenvy.ide.projecttype.SelectProjectTypeView;
 import com.codenvy.ide.projecttype.SelectProjectTypeViewImpl;
 import com.codenvy.ide.rename.RenameResourceView;
 import com.codenvy.ide.rename.RenameResourceViewImpl;
-import com.codenvy.ide.resources.ProjectTypeAgent;
+import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.resources.model.GenericModelProvider;
 import com.codenvy.ide.search.SearchPartPresenter;
@@ -119,6 +120,10 @@ import com.codenvy.ide.selection.SelectionAgentImpl;
 import com.codenvy.ide.text.DocumentFactory;
 import com.codenvy.ide.text.DocumentFactoryImpl;
 import com.codenvy.ide.texteditor.TextEditorPresenter;
+import com.codenvy.ide.theme.AppearancePresenter;
+import com.codenvy.ide.theme.AppearanceView;
+import com.codenvy.ide.theme.AppearanceViewImpl;
+import com.codenvy.ide.theme.ThemeAgentImpl;
 import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.toolbar.ToolbarView;
@@ -138,8 +143,7 @@ import com.codenvy.ide.wizard.WizardDialogPresenter;
 import com.codenvy.ide.wizard.WizardDialogView;
 import com.codenvy.ide.wizard.WizardDialogViewImpl;
 import com.codenvy.ide.wizard.newproject.PaaSAgentImpl;
-import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
-import com.codenvy.ide.wizard.newproject.TemplateAgentImpl;
+import com.codenvy.ide.wizard.newproject.ProjectTypeDescriptorRegistryImpl;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageView;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageViewImpl;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePageView;
@@ -163,7 +167,7 @@ import com.google.inject.name.Names;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
-/** @author Nikolay Zamosenchuk*/
+/** @author Nikolay Zamosenchuk */
 @ExtensionGinModule
 public class CoreGinModule extends AbstractGinModule {
 
@@ -179,6 +183,8 @@ public class CoreGinModule extends AbstractGinModule {
         install(new GinFactoryModuleBuilder().implement(PartStackView.class, PartStackViewImpl.class).build(PartStackViewFactory.class));
         install(new GinFactoryModuleBuilder().implement(PartStack.class, PartStackPresenter.class).build(PartStackPresenterFactory.class));
         bind(UserClientService.class).to(UserClientServiceImpl.class).in(Singleton.class);
+        bind(ProjectClientService.class).to(ProjectClientServiceImpl.class).in(Singleton.class);
+        bind(ProjectTypeDescriptionClientService.class).to(ProjectTypeDescriptionClientServiceImpl.class).in(Singleton.class);
         bind(PreferencesManager.class).to(PreferencesManagerImpl.class).in(Singleton.class);
         bind(MessageBus.class).to(MessageBusImpl.class).in(Singleton.class);
         bind(NotificationManager.class).to(NotificationManagerImpl.class).in(Singleton.class);
@@ -201,8 +207,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(PreferencesAgent.class).to(PreferencesAgentImpl.class).in(Singleton.class);
         bind(NewResourceAgent.class).to(NewResourceAgentImpl.class).in(Singleton.class);
         bind(PaaSAgent.class).to(PaaSAgentImpl.class).in(Singleton.class);
-        bind(TemplateAgent.class).to(TemplateAgentImpl.class).in(Singleton.class);
-        bind(ProjectTypeAgent.class).to(ProjectTypeAgentImpl.class).in(Singleton.class);
+        bind(ProjectTypeDescriptorRegistry.class).to(ProjectTypeDescriptorRegistryImpl.class).in(Singleton.class);
         // UI Model
         bind(EditorPartStack.class).to(EditorPartStackPresenter.class).in(Singleton.class);
         install(new GinFactoryModuleBuilder().implement(WizardDialog.class, WizardDialogPresenter.class).build(WizardDialogFactory.class));
@@ -274,6 +279,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(SelectProjectTypeView.class).to(SelectProjectTypeViewImpl.class).in(Singleton.class);
         bind(NavigateToFileView.class).to(NavigateToFileViewImpl.class).in(Singleton.class);
         bind(RenameResourceView.class).to(RenameResourceViewImpl.class).in(Singleton.class);
+        bind(AboutView.class).to(AboutViewImpl.class);
 
         bind(ExtensionManagerView.class).to(ExtensionManagerViewImpl.class).in(Singleton.class);
         bind(AppearanceView.class).to(AppearanceViewImpl.class).in(Singleton.class);
@@ -298,6 +304,13 @@ public class CoreGinModule extends AbstractGinModule {
     @Singleton
     protected String provideDefaultRestContext() {
         return "/api";
+    }
+
+    @Provides
+    @Named("workspaceId")
+    @Singleton
+    protected String provideWorkspaceId() {
+        return Utils.getWorkspaceId();
     }
 
     @Provides

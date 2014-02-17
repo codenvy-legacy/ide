@@ -29,10 +29,10 @@ import com.codenvy.ide.resources.marshal.FolderUnmarshaller;
 import com.codenvy.ide.resources.marshal.JSONDeserializer;
 import com.codenvy.ide.resources.marshal.JSONSerializer;
 import com.codenvy.ide.resources.marshal.PropertyUnmarshaller;
-import com.codenvy.ide.resources.marshal.StringUnmarshaller;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
+import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.loader.EmptyLoader;
 import com.codenvy.ide.ui.loader.Loader;
@@ -44,7 +44,6 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
-
 
 /**
  * Represents Project  model. Responsible for deserialization of JSon String to generate it' own project model

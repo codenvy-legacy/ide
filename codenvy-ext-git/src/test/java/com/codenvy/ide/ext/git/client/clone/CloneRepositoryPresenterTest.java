@@ -65,7 +65,7 @@ public class CloneRepositoryPresenterTest extends BaseTest {
     public void disarm() {
         super.disarm();
 
-        presenter = new CloneRepositoryPresenter(view, service, resourceProvider, eventBus, constant, notificationManager, dtoFactory);
+        presenter = new CloneRepositoryPresenter(view, service, resourceProvider, constant, notificationManager, dtoFactory);
 
         when(view.getProjectName()).thenReturn(PROJECT_NAME);
         when(view.getRemoteName()).thenReturn(REMOTE_NAME);

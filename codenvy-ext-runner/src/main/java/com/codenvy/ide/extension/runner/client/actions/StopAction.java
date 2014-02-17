@@ -20,7 +20,6 @@ package com.codenvy.ide.extension.runner.client.actions;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.collections.StringSet;
 import com.codenvy.ide.extension.runner.client.RunnerController;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
@@ -28,8 +27,8 @@ import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import static com.codenvy.ide.ext.java.client.JavaExtension.JAVA_WEB_APPLICATION_PROJECT_TYPE;
-import static com.codenvy.ide.ext.java.client.JavaExtension.SPRING_APPLICATION_PROJECT_TYPE;
+import static com.codenvy.ide.ext.java.client.JavaExtension.WAR_PROJECT_TYPE_ID;
+import static com.codenvy.ide.ext.java.client.JavaExtension.SPRING_PROJECT_TYPE_ID;
 
 /**
  * Action to stop application server where app is launched.
@@ -62,9 +61,8 @@ public class StopAction extends Action {
     public void update(ActionEvent e) {
         Project activeProject = resourceProvider.getActiveProject();
         if (activeProject != null) {
-            StringSet natures = activeProject.getDescription().getNatures();
-            e.getPresentation().setVisible(natures.contains(SPRING_APPLICATION_PROJECT_TYPE)
-                                           || natures.contains(JAVA_WEB_APPLICATION_PROJECT_TYPE));
+            final String projectTypeId = activeProject.getDescription().getProjectTypeId();
+            e.getPresentation().setVisible(projectTypeId.equals(SPRING_PROJECT_TYPE_ID) || projectTypeId.equals(WAR_PROJECT_TYPE_ID));
             e.getPresentation().setEnabled(controller.isAnyAppLaunched());
         } else {
             e.getPresentation().setEnabledAndVisible(false);

@@ -17,15 +17,13 @@
  */
 package com.codenvy.ide.wizard.newproject.pages;
 
+import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.Wizard;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.resources.ProjectTypeData;
-import com.codenvy.ide.wizard.newproject.TemplateAgentImpl;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePageView;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -36,12 +34,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_TYPE;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.TEMPLATE;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
@@ -64,25 +64,25 @@ public class ChooseTemplatePagePresenterTest {
     @Mock
     private Resources                   resources;
     @Mock
-    private TemplateAgentImpl           templateAgent;
-    @Mock
     private CoreLocalizationConstant    constant;
     @Mock
     private Wizard.UpdateDelegate       delegate;
     @Mock
     private WizardContext               wizardContext;
-    private Template                    template;
-    private ProjectTypeData             projectType;
+    @Mock
+    private ProjectTypeDescriptor       projectTypeDescriptor;
+    @Mock
+    private ProjectTemplateDescriptor   template;
     private ChooseTemplatePagePresenter page;
+    private List<ProjectTemplateDescriptor> singleTemplatesList = new ArrayList<>(1);
 
     @Before
     public void setUp() {
-        template = new Template("id", "title", null, "primaryNature", Collections.createArray("secondaryNature"));
-        projectType = new ProjectTypeData("typeName", "title", null, "primaryNature", Collections.createArray("secondaryNature"), null);
-
-        page = new ChooseTemplatePagePresenter(view, resources, templateAgent, constant);
+        page = new ChooseTemplatePagePresenter(view, resources, constant);
         page.setContext(wizardContext);
         page.setUpdateDelegate(delegate);
+
+        singleTemplatesList.add(template);
     }
 
     @Test
@@ -98,33 +98,31 @@ public class ChooseTemplatePagePresenterTest {
 
     @Test
     public void testCanSkip() throws Exception {
-        when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectType);
-        when(templateAgent.getTemplatesForProjectType(anyString(), (Array<String>)anyObject()))
-                .thenReturn(Collections.createArray(template));
+        when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectTypeDescriptor);
+        when(projectTypeDescriptor.getTemplates()).thenReturn(singleTemplatesList);
 
         assertEquals(page.canSkip(), CAN_SKIP);
 
-        verify(view).setTemplates((Array<Template>)anyObject());
+        verify(view).setTemplates((Array<ProjectTemplateDescriptor>)anyObject());
         verify(wizardContext).putData(eq(TEMPLATE), eq(template));
     }
 
     @Test
     public void testCanNotSkip() throws Exception {
-        when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectType);
-        when(templateAgent.getTemplatesForProjectType(anyString(), (Array<String>)anyObject()))
-                .thenReturn(Collections.createArray(template, template));
+        singleTemplatesList.add(template);
+        when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectTypeDescriptor);
+        when(projectTypeDescriptor.getTemplates()).thenReturn(singleTemplatesList);
 
         assertEquals(page.canSkip(), CAN_NOT_SKIP);
 
-        verify(view).setTemplates((Array<Template>)anyObject());
+        verify(view).setTemplates((Array<ProjectTemplateDescriptor>)anyObject());
         verify(wizardContext).putData(eq(TEMPLATE), eq(template));
     }
 
     @Test
     public void testFocusComponent() throws Exception {
-        when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectType);
-        when(templateAgent.getTemplatesForProjectType(anyString(), (Array<String>)anyObject()))
-                .thenReturn(Collections.createArray(template));
+        when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectTypeDescriptor);
+        when(projectTypeDescriptor.getTemplates()).thenReturn(singleTemplatesList);
 
         page.canSkip();
         reset(wizardContext);
@@ -159,14 +157,13 @@ public class ChooseTemplatePagePresenterTest {
 
     @Test
     public void testGo() throws Exception {
-        when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectType);
-        when(templateAgent.getTemplatesForProjectType(anyString(), (Array<String>)anyObject()))
-                .thenReturn(Collections.createArray(template, template));
+        when(wizardContext.getData(PROJECT_TYPE)).thenReturn(projectTypeDescriptor);
+        when(projectTypeDescriptor.getTemplates()).thenReturn(singleTemplatesList);
         AcceptsOneWidget container = mock(AcceptsOneWidget.class);
 
         page.go(container);
 
-        verify(view).setTemplates((Array<Template>)anyObject());
+        verify(view).setTemplates((Array<ProjectTemplateDescriptor>)anyObject());
         verify(wizardContext).putData(eq(TEMPLATE), eq(template));
         verify(container).setWidget(eq(view));
     }

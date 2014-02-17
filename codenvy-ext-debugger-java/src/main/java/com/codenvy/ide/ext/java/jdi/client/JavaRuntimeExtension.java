@@ -35,8 +35,8 @@ import static com.codenvy.ide.api.ui.action.Anchor.AFTER;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_CONTEXT_MENU;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_MAIN_MENU;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_TOOLBAR;
-import static com.codenvy.ide.ext.java.client.JavaExtension.JAVA_WEB_APPLICATION_PROJECT_TYPE;
-import static com.codenvy.ide.ext.java.client.JavaExtension.SPRING_APPLICATION_PROJECT_TYPE;
+import static com.codenvy.ide.ext.java.client.JavaExtension.WAR_PROJECT_TYPE_ID;
+import static com.codenvy.ide.ext.java.client.JavaExtension.SPRING_PROJECT_TYPE_ID;
 
 /**
  * Extension allows debug Java web applications.
@@ -72,8 +72,8 @@ public class JavaRuntimeExtension {
         DefaultActionGroup runContextGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_CONTEXT_MENU);
         runContextGroup.add(debugAction);
 
-        debuggerManager.registeredDebugger(SPRING_APPLICATION_PROJECT_TYPE, debuggerPresenter);
-        debuggerManager.registeredDebugger(JAVA_WEB_APPLICATION_PROJECT_TYPE, debuggerPresenter);
+        debuggerManager.registeredDebugger(WAR_PROJECT_TYPE_ID, debuggerPresenter);
+        debuggerManager.registeredDebugger(SPRING_PROJECT_TYPE_ID, debuggerPresenter);
         resolverFactory.addResolver(APPLICATION_JAVA, javaFqnResolver);
     }
 }

@@ -17,11 +17,10 @@
  */
 package com.codenvy.vfs.impl.fs;
 
-import com.codenvy.api.core.user.User;
-import com.codenvy.api.core.user.UserImpl;
-import com.codenvy.api.core.user.UserState;
 import com.codenvy.api.vfs.shared.dto.AccessControlEntry;
 import com.codenvy.api.vfs.shared.dto.Principal;
+import com.codenvy.commons.env.EnvironmentContext;
+import com.codenvy.commons.user.UserImpl;
 import com.codenvy.dto.server.DtoFactory;
 
 import org.everrest.core.impl.ContainerResponse;
@@ -179,8 +178,7 @@ public class ACLTest extends LocalFileSystemTest {
         h.put("Content-Type", Arrays.asList("application/json"));
         // File is protected and default principal 'andrew' has not update_acl permission.
         // Replace default principal by principal who has write permission.
-        User user = new UserImpl("andrew");
-        UserState.set(new UserState(user));
+        EnvironmentContext.getCurrent().setUser(new UserImpl("andrew"));
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, acl.getBytes(), null);
         assertEquals(204, response.getStatus());
 

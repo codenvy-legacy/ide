@@ -26,9 +26,6 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
 
-/**
- *
- */
 public interface CodeAssistantStorage {
     /**
      * Find all annotations by prefix.

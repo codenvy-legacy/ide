@@ -21,12 +21,10 @@ import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.resources.model.Project;
 import com.google.web.bindery.event.shared.EventBus;
 
-
 /**
  * Model provider for Java projects.
  *
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Evgen Vidolob
  */
 public class JavaProjectModelProvider implements ModelProvider {
 

@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.projecttype;
 
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.collections.Array;
 
@@ -26,7 +27,6 @@ import javax.validation.constraints.NotNull;
  * Interface for project type selection view.
  *
  * @author <a href="mailto:ashumilova@codenvy.com">Ann Shumilova</a>
- * @version $Id:
  */
 public interface SelectProjectTypeView extends View<SelectProjectTypeView.ActionDelegate> {
     /** Needs for delegate some function into SelectProjectType view. */
@@ -50,17 +50,17 @@ public interface SelectProjectTypeView extends View<SelectProjectTypeView.Action
      *
      * @param types
      */
-    void setTypes(@NotNull Array<String> types);
+    void setTypes(@NotNull Array<ProjectTypeDescriptor> types);
 
     /** Clear project types. */
     void clearTypes();
 
     /**
-     * Returns chosen project's type.
+     * Returns chosen project's type ID.
      *
-     * @return {@link String} project's type
+     * @return {@link String} project's type ID
      */
-    String getProjectType();
+    String getSelectedProjectTypeId();
 
     /** Close dialog. */
     void close();

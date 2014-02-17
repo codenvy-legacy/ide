@@ -24,20 +24,16 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.ProjectDescription;
 import com.codenvy.ide.resources.model.Property;
 
-
 /**
  * This class is used during unmarshalling of the project. It encapsulates both
  * {@link ResourceProvider} used to get proper {@link ModelProvider} and the
  * new {@link Project} instance that is filled with response data.
- * <p/>
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
- *         Sep 10, 2012
+ * @author Nikolay Zamosenchuk
  */
 public class ProjectModelProviderAdapter {
     private final ResourceProvider resourceProvider;
-
-    private Project project;
+    private       Project          project;
 
     /** @param resourceProvider */
     public ProjectModelProviderAdapter(ResourceProvider resourceProvider) {
@@ -51,19 +47,18 @@ public class ProjectModelProviderAdapter {
      * @return
      */
     public Project init(Array<Property> props) {
-        // find primary nature
-        String primaryNature = null;
+        String language = null;
         if (props != null) {
             for (int i = 0; i < props.size(); i++) {
                 Property p = props.get(i);
-                if (ProjectDescription.PROPERTY_PRIMARY_NATURE.equals(p.getName())) {
+                if (ProjectDescription.PROPERTY_LANGUAGE.equals(p.getName())) {
                     if (p.getValue().get(0) != null) {
-                        primaryNature = p.getValue().get(0).toString();
+                        language = p.getValue().get(0).toString();
                     }
                 }
             }
         }
-        project = resourceProvider.getModelProvider(primaryNature).createProjectInstance();
+        project = resourceProvider.getModelProvider(language).createProjectInstance();
         return project;
     }
 
