@@ -151,9 +151,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
 
     @NotNull
     protected Widget getWidget() {
-        HTML h = new HTML();
-        h.getElement().appendChild(editor.getElement());
-        return h;
+        return new TextEditorViewResizable(editor);
     }
 
     /** {@inheritDoc} */
