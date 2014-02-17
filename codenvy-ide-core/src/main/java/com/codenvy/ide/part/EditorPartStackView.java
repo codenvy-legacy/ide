@@ -38,6 +38,8 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.ResizeComposite;
+import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -45,7 +47,7 @@ import com.google.inject.Inject;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class EditorPartStackView extends Composite implements PartStackView {
+public class EditorPartStackView extends ResizeComposite implements PartStackView {
     private static PartStackUiBinder uiBinder = GWT.create(PartStackUiBinder.class);
     private ActionDelegate delegate;
 
@@ -70,7 +72,7 @@ public class EditorPartStackView extends Composite implements PartStackView {
     FlowPanel tabsPanel;
 
     @UiField
-    com.google.gwt.user.client.ui.SimplePanel contentPanel;
+    SimpleLayoutPanel contentPanel;
 
     interface PartStackUiBinder extends UiBinder<Widget, EditorPartStackView> {
     }

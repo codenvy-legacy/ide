@@ -85,6 +85,7 @@ import com.codenvy.ide.util.input.SignalEvent;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.RequiresResize;
 
 import java.util.Iterator;
 
@@ -101,7 +102,7 @@ import java.util.Iterator;
  * "user-select" CSS property. See
  * {@link CssUtils#setUserSelect(Element, boolean)}.
  */
-public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> implements TextEditorPartView {
+public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> implements TextEditorPartView, RequiresResize {
 
     public static final int ANIMATION_DURATION = 100;
     private static      int idCounter          = 0;
@@ -808,6 +809,12 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         public Resources getResources() {
             return res;
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onResize() {
+        buffer.getView().onResize();
     }
 
 }

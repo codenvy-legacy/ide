@@ -22,8 +22,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -34,7 +35,7 @@ import com.google.inject.Inject;
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class WorkBenchViewImpl extends Composite implements WorkBenchView<WorkBenchView.ActionDelegate> {
+public class WorkBenchViewImpl extends LayoutPanel implements WorkBenchView<WorkBenchView.ActionDelegate> {
 
     private static GenericPerspectiveViewUiBinder uiBinder = GWT.create(GenericPerspectiveViewUiBinder.class);
 
@@ -45,7 +46,7 @@ public class WorkBenchViewImpl extends Composite implements WorkBenchView<WorkBe
     SplitLayoutPanel splitPanel = new SplitLayoutPanel(6);
 
     @UiField
-    SimplePanel editorPanel;
+    ScrollPanel editorPanel;
 
     @UiField
     SimplePanel navPanel;
@@ -69,8 +70,7 @@ public class WorkBenchViewImpl extends Composite implements WorkBenchView<WorkBe
     public WorkBenchViewImpl(WorkBenchResources resources) {
         this.res = resources;
         resources.workBenchCss().ensureInjected();
-        initWidget(uiBinder.createAndBindUi(this));
-        splitPanel.getElement().setId("codenvyIdeWorkbench");
+        add(uiBinder.createAndBindUi(this));
     }
 
     /** {@inheritDoc} */
@@ -102,5 +102,11 @@ public class WorkBenchViewImpl extends Composite implements WorkBenchView<WorkBe
     public AcceptsOneWidget getToolPanel() {
         return toolPanel;
     }
-
+    
+    /** {@inheritDoc} */
+    @Override
+    public void onResize() {
+        editorPanel.onResize();
+        super.onResize();
+    }
 }
