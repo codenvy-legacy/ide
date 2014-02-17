@@ -186,7 +186,7 @@ public class AntBuilder extends Builder {
                         }
                     }
                 }
-                if (config.getRequest().isDeployJarWithDependencies()) {
+                if (config.getRequest().isIncludeDependencies()) {
                     //get all needed dependencies from classpath
                     final Set<java.io.File> classpath = new LinkedHashSet<>();
                     for (AntEvent event : server.receiver.events) {
