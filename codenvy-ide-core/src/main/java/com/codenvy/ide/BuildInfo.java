@@ -28,11 +28,14 @@ import com.google.gwt.i18n.client.Constants;
 public interface BuildInfo extends Constants {
 
     @Key("revision")
+    @DefaultStringValue("xxx")
     String revision();
 
     @Key("buildTime")
+    @DefaultStringValue("just now")
     String buildTime();
 
     @Key("version")
+    @DefaultStringValue("zzz")
     String version();
 }
