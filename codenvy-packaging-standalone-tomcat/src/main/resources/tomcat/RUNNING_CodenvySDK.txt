@@ -2,7 +2,7 @@
 CODENVY CONFIDENTIAL
 __________________
 
- [2012] - [2013] Codenvy, S.A.
+ [2012] - [2014] Codenvy, S.A.
  All Rights Reserved.
 
 NOTICE:  All information contained herein is, and remains
@@ -55,17 +55,18 @@ Installing
 4.1. Download a binary distribution of Codenvy Platform SDK.
 
 4.2. Unpack the archive where you would like to store the binaries.
-     A directory called "codenvy-platform-sdk-[version]" will be created.
+     A directory called "codenvy-sdk-[version]" will be created.
 
-5. Codenvy Platform SDK requires some libraries in order to launch Codenvy extensions that you develop.
-   You should to copy these libraries to your local Maven repository.
+5. Codenvy SDK requires some libraries in order to launch Codenvy extensions that you develop.
+   You should copy these libraries to your local Maven repository.
 
-5.1. Execute the following command:
+5.1. In Tomcat root, execute the following command:
 
 On *nix:
-      ./install.sh path_to_repo
-      , where path_to_repo is a path to your local Maven repository.
+      ./install.sh
 
+This script will find your local Maven repository and copy libs there.
+It will also download and unpack another Tomcat which is used as runtime for apps and extensions launched in Codenvy SDK.
 
 ===================
 Running & Stopping
@@ -76,7 +77,7 @@ Running & Stopping
 On *nix:
       ./catalina.sh start
 
-After launching, Codenvy Platform SDK application will be available on http://localhost:8080/
+After launching, Codenvy Platform SDK application will be available at http://localhost:8080/
 
 2. To stop a Codenvy Platform SDK application, execute the following command:
 
@@ -113,22 +114,37 @@ http://localhost:8080/api/oauth/callback
 
 * By default, values for Client ID and Client Secret are filled with "***". You need to replace those with real values obtained from GitHub application settings
 
-=====================
-Save SSH Keys Locally
-=====================
+===========================
+Local Storage Configuration
+===========================
 
-User's SSH keys are stored in JSON format on file system in folder with the current user's id. To set the SSH keys location - use codenvy.sshkeystore.location system property. To change location of SSH keys, head to .profile file and add -Dcodenvy.sshkeystore=[path to a folder where you want to store SSH keys]. Here's an example how to do it through JAVA_OPTS:
+Codenvy SDK provides configuration file 'codenvy-api-configuration.properties' located at webapps/api/WEB-INF/classes/codenvy with a set of parameters having default values. To persist local configuration settings each time a new SDK version is downloaded, this file should be copied to a permanent location, and a new local environment variable should be added:
 
-JAVA_OPTS="-Dcodenvy.sshkeystore.location=/home/codenvy/SSH_keys"
+export CODENVY_LOCAL_CONF_DIR="[path to a location where config file is stored]", for example:
 
-======================
-Change VFS Root Folder
-======================
+export CODENVY_LOCAL_CONF_DIR="/home/eugene/.codenvy"
 
-By default, VFS root folder is ${CATALINA_HOME}/temp/fs-root directory. In order to use another location, one should change the value of the com.codenvy.vfs.rootdir system property. This is an example how it can be done in .profile file.
+=================================================
+Configure local storage for projects and SSH keys
+=================================================
 
-JAVA_OPTS="-Dcom.codenvy.vfs.rootdir=/home/codenvy/SDK_projects"
+The vast majority of values do not need any changes. In order to store projects and SSH keys in a specified location (and thus avoid their deletion each time a user receives updates) the following default paths should be changed:
 
+1. For local SSH key storage:
+
+ssh.key_store_location=${catalina.base}/temp/ssh
+
+
+2. For local projects storage:
+
+vfs.local.fs_root_dir=${catalina.base}/temp/fs-root
+vfs.local.fs_index_root_dir=${catalina.base}/temp/fs-root
+
+Just replace default values with your local paths. For example:
+
+ssh.key_store_location=/home/codenvy/SDK/.ssh
+vfs.local.fs_root_dir=/home/codenvy/SDK/.projects
+vfs.local.fs_index_root_dir=/home/codenvy/SDK/.projects
 
 ===============================================
 Contribute 3rd-party extensions to Codenvy IDE
