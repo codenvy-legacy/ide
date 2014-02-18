@@ -165,7 +165,7 @@ On *nix:
 Update Extensions
 =================
 
-1. Launch extension ar Run > Launch Codenvy Extension
+1. Launch extension at Run > Launch Codenvy Extension
 2. Click extension URL in the Output console
 3. Click Update Extension button in the runner instance
 4. The extension will be recompiled which may take around 1 minute
