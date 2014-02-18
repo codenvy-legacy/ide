@@ -51,6 +51,7 @@ import com.codenvy.ide.util.dom.FontDimensionsCalculator.FontDimensions;
 import com.codenvy.ide.util.dom.MouseGestureListener;
 import com.codenvy.ide.util.executor.Executor;
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.user.client.ui.RequiresResize;
 
 
 /*
@@ -170,7 +171,7 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
     }
 
     /** View for the buffer. */
-    public static class View extends CompositeView<ViewEvents> {
+    public static class View extends CompositeView<ViewEvents> implements RequiresResize {
         private final Css css;
 
         private final EventListener mouseMoveListener = new EventListener() {
@@ -227,6 +228,8 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
 
             columnMarkerElement = Elements.createDivElement(css.columnMarkerLine());
             textLayerElement = Elements.createDivElement(css.textLayer());
+            
+            
 
             scrollableElement = createScrollableElement();
 //         if (false)
@@ -276,7 +279,7 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
         private Element createScrollableElement() {
             final DivElement scrollableElement = Elements.createDivElement(css.scrollable());
 
-
+            
             scrollableElement.addEventListener(Event.SCROLL, new EventListener() {
                 @Override
                 public void handleEvent(Event evt) {
@@ -347,7 +350,6 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
           * instead
           */
             scrollableElement.setTabIndex(-1);
-
             Browser.getWindow().addEventListener(Event.RESIZE, new EventListener() {
                 @Override
                 public void handleEvent(Event evt) {
@@ -363,6 +365,7 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
                 }
             }, false);
 
+            
             return scrollableElement;
         }
 
@@ -476,6 +479,16 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
             if (mouseOutListenerRemover != null) {
                 mouseOutListenerRemover.remove();
                 mouseOutListenerRemover = null;
+            }
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void onResize() {
+            int height = (int)textLayerElement.getBoundingClientRect().getHeight();
+            int viewportHeight = getHeight();
+            if (height > 0 && viewportHeight > 0) {
+                getDelegate().onScrollableResize(height, viewportHeight, scrollableElement.getScrollTop());
             }
         }
     }
@@ -677,8 +690,8 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
             public void onScrollableResize(final int height, final int viewportHeight, final int scrollTop) {
                 // TODO: Look into why this is necessary.
                 updateTextWidth();
-                updateVerticalScrollbarDisplayVisibility();
-                updateColumnMarkerHeight();
+                updateBufferHeight();
+                
 
                 resizeListenerManager.dispatch(new Dispatcher<ResizeListener>() {
                     @Override
