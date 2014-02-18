@@ -24,7 +24,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -34,14 +35,14 @@ import com.google.inject.Inject;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class WorkspaceViewImpl extends Composite implements WorkspaceView {
+public class WorkspaceViewImpl extends LayoutPanel implements WorkspaceView {
     interface WorkspaceViewUiBinder extends UiBinder<Widget, WorkspaceViewImpl> {
     }
 
     private static WorkspaceViewUiBinder uiBinder = GWT.create(WorkspaceViewUiBinder.class);
 
     @UiField
-    SimplePanel perspectivePanel;
+    SimpleLayoutPanel perspectivePanel;
     @UiField
     SimplePanel menuPanel;
     @UiField
@@ -59,7 +60,7 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView {
     /** Create view. */
     @Inject
     protected WorkspaceViewImpl() {
-        initWidget(uiBinder.createAndBindUi(this));
+        add(uiBinder.createAndBindUi(this));
         getElement().setId("codenvyIdeWorkspaceViewImpl");
     }
     
