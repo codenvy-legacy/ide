@@ -37,7 +37,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 2, 2011 6:00:15 PM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class CloudBeesControl extends SimpleControl implements IDEControl, 
         ProjectOpenedHandler, ProjectClosedHandler, FolderRefreshedHandler {
     

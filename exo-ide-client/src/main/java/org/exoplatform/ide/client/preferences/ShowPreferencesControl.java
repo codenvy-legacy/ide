@@ -29,7 +29,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 18, 2012 12:47:10 PM anya $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class ShowPreferencesControl extends SimpleControl implements IDEControl {
     public ShowPreferencesControl() {
         super(IDE.PREFERENCES_CONSTANT.showPreferencesControlId());

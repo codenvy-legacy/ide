@@ -39,7 +39,7 @@ import java.util.Map;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class SaveAllFilesControl extends SimpleControl implements IDEControl, EditorFileContentChangedHandler,
                                                                   EditorActiveFileChangedHandler, EditorFileOpenedHandler,
                                                                   EditorFileClosedHandler, VfsChangedHandler,

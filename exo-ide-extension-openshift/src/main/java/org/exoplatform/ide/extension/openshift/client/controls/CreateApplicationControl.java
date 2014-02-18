@@ -28,7 +28,7 @@ import org.exoplatform.ide.extension.openshift.client.create.CreateApplicationEv
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 7, 2011 5:35:09 PM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class CreateApplicationControl extends AbstractOpenShiftControl {
 
     public CreateApplicationControl() {

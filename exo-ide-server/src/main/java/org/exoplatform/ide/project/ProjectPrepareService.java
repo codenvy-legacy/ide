@@ -40,7 +40,7 @@ import java.util.List;
  * @version $Id: $
  */
 @Path("{ws-name}/project")
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class ProjectPrepareService {
     @Inject
     private LocalPathResolver localPathResolver;

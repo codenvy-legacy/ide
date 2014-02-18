@@ -81,7 +81,7 @@ public class VFSPermissionsChecker {
             principal.setType(Principal.Type.GROUP);
             if (userMembershipRoles != null) {
                 for (Role role : userMembershipRoles) {
-                    principal.setName("workspace/".concat(role.getName()));
+                    principal.setName((role.getName()));
                     if (acl.getPermissions(principal) != null) {
                         resultPermissions.addAll(acl.getPermissions(principal));
                     }

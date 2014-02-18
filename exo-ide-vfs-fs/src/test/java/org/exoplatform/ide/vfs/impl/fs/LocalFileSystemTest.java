@@ -162,7 +162,7 @@ public abstract class LocalFileSystemTest extends TestCase {
 
         // RUNTIME VARIABLES
         Identity identity = new Identity("admin");
-        identity.setRoles(Arrays.asList("developer"));
+        identity.setRoles(Arrays.asList("workspace/developer"));
         ConversationState user = new ConversationState(identity);
         ConversationState.setCurrent(user);
 

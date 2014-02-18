@@ -40,7 +40,7 @@ import org.exoplatform.ide.extension.php.client.run.event.ApplicationStoppedHand
  * @version $Id: ShowLogsControl.java Apr 17, 2013 4:02:56 PM azatsarynnyy $
  *
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class ShowLogsControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
                                                               ApplicationStartedHandler, ApplicationStoppedHandler {
     private static final String ID = "Run/PHP Logs";

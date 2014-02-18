@@ -30,7 +30,7 @@ import org.exoplatform.ide.extension.openshift.client.key.UpdatePublicKeyEvent;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 21, 2011 12:15:28 PM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class UpdatePublicKeyControl extends AbstractOpenShiftControl {
 
     public UpdatePublicKeyControl() {

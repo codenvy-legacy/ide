@@ -29,7 +29,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @version $
  */
 
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class OpenAutocompleteControl extends SimpleControl implements IDEControl {
 
     public static final String ID = "Edit/Do Autocomplete...";

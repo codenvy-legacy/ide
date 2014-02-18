@@ -127,8 +127,8 @@ public class VFSPermissionsFilterTest {
         //given
         User user = new User(USER);
         user.addMembership(WORKSPACE);
-        user.addMembershipRole("developer", WORKSPACE);
-        Set<Role> userRoles = new HashSet(Arrays.asList(new Role("developer")));
+        user.addMembershipRole("workspace/developer", WORKSPACE);
+        Set<Role> userRoles = new HashSet(Arrays.asList(new Role("workspace/developer")));
         when(userManager.getUserByAlias(USER)).thenReturn(user);
         when(vfsPermissionsChecker.isAccessAllowed(USER, userRoles, projectDirectory)).thenReturn(true);
         when(request.getHeader("authorization")).thenReturn("BASIC " + (Base64.encodeBase64String((USER + ":" + PASSWORD).getBytes())));

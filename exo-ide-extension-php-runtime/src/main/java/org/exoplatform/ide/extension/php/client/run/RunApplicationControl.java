@@ -42,7 +42,7 @@ import org.exoplatform.ide.extension.php.client.run.event.RunApplicationEvent;
  * @version $Id: RunApplicationControl.java Apr 17, 2013 4:10:36 PM azatsarynnyy $
  *
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class RunApplicationControl extends SimpleControl implements IDEControl,
         ProjectClosedHandler, ProjectOpenedHandler, ApplicationStartedHandler,
         ApplicationStoppedHandler {

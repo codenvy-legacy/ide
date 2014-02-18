@@ -30,7 +30,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
  * @version $Id: Tier3WebFabricControlGroup.java Apr 24, 2013 11:35:14 AM azatsarynnyy $
  *
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class Tier3WebFabricControlGroup extends SimpleControl implements IDEControl {
 
     private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.tier3WebFabricControlId();

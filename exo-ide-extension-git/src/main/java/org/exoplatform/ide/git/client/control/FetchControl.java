@@ -28,7 +28,7 @@ import org.exoplatform.ide.git.client.fetch.FetchEvent;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 20, 2011 11:31:10 AM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class FetchControl extends GitControl {
     public FetchControl() {
         super(GitExtension.MESSAGES.fetchControlId());

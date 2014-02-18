@@ -136,14 +136,14 @@ public class IDEConfigurationService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"developer"})
+    @RolesAllowed({"workspace/developer"})
     public String getConfiguration() {
         return "{}"; // TODO: small hack add for supporting previous version of IDE. In 1.2 changed structure of user settings
     }
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"developer"})
+    @RolesAllowed({"workspace/developer"})
     public void setConfiguration(String body) throws IOException {
         // not impl yet
     }

@@ -33,7 +33,7 @@ import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExte
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Aug 16, 2011 12:54:05 PM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class SwitchAccountControl extends AbstractCloudFoundryControl {
 
     private static final String CF_ID  = CloudFoundryExtension.LOCALIZATION_CONSTANT.switchAccountControlId();

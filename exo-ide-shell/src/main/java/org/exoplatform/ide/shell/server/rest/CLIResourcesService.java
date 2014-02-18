@@ -55,7 +55,7 @@ public class CLIResourcesService {
     @Path("resources")
     @Produces(MediaType.APPLICATION_JSON)
     @SuppressWarnings("rawtypes")
-    @RolesAllowed({"developer"})
+    @RolesAllowed({"workspace/developer"})
     public Set<CLIResource> getCLIResources() throws IOException {
         Set<CLIResource> result = new HashSet<CLIResource>();
         List<ObjectFactory<AbstractResourceDescriptor>> resources = binder.getResources();

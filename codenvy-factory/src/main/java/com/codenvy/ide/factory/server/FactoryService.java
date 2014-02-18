@@ -138,7 +138,7 @@ public class FactoryService {
     @POST
     @Path("share")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @RolesAllowed("developer")
+    @RolesAllowed({"workspace/developer"})
     public Response share(@FormParam("recipient") String recipient,
                           @FormParam("message") String message) {
         try {
@@ -170,7 +170,7 @@ public class FactoryService {
     @Path("clone")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    //@RolesAllowed("developer")
+    //@RolesAllowed({"workspace/developer"})
     public Item cloneProject(SimpleFactoryUrl factoryUrl,
                              @QueryParam("vfsid") String vfsId,
                              @QueryParam("projectid") String projectId) throws VirtualFileSystemException, GitException,

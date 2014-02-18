@@ -27,7 +27,7 @@ import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 @DisableInTempWorkspace
 public class ManageInviteControl extends SimpleControl implements IDEControl {
     private static final String ID = "Share/Manage Access";

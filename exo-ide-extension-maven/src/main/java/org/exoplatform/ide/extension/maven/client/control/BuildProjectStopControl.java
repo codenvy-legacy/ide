@@ -31,7 +31,7 @@ import org.exoplatform.ide.extension.maven.client.event.*;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class BuildProjectStopControl extends StatusTextControl implements IDEControl,
                                                                           BuildProjectHandler,
                                                                           ProjectBuiltHandler {

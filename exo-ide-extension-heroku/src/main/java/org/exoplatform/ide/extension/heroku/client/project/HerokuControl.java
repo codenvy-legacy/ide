@@ -36,7 +36,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 2, 2011 2:17:30 PM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class HerokuControl extends SimpleControl implements IDEControl, 
             ProjectClosedHandler, ProjectOpenedHandler, FolderRefreshedHandler {
     

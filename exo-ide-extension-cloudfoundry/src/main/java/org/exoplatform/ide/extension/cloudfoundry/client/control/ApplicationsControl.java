@@ -31,7 +31,7 @@ import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExte
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Aug 18, 2011 evgen $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class ApplicationsControl extends AbstractCloudFoundryControl {
 
     private static final String CF_ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.appsControlId();

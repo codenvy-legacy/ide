@@ -74,7 +74,7 @@ import java.util.regex.Pattern;
  * @version $Id: TemplatesRestService.java Apr 4, 2011 3:21:46 PM vereshchaka $
  */
 @Path("{ws-name}/templates")
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class TemplatesRestService {
 
     private static final Pattern PATTERN_GROUP_ID = Pattern.compile(".*<groupId>groupId</groupId>.*");

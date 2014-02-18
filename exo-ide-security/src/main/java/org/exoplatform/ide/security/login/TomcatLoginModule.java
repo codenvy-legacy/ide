@@ -72,10 +72,10 @@ public class TomcatLoginModule implements LoginModule {
         Set<Principal> principals = subject.getPrincipals();
 
 
-        principals.add(new RolePrincipal("developer"));
+        principals.add(new RolePrincipal("workspace/developer"));
 
         Set<String> roles = new HashSet<String>(1);
-        roles.add("developer");
+        roles.add("workspace/developer");
         identity.setRoles(roles);
         ExoContainer container = ExoContainerContext.getCurrentContainer();
         IdentityRegistry identityRegistry = (IdentityRegistry)container.getComponentInstanceOfType(IdentityRegistry.class);

@@ -43,7 +43,7 @@ import java.util.List;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: InitializeApplicationControl.java Jun 23, 2011 12:00:53 PM vereshchaka $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class ApplicationInfoControl extends SimpleControl implements IDEControl, VfsChangedHandler,
                                                                      ItemsSelectedHandler, ViewVisibilityChangedHandler {
 

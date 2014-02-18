@@ -46,7 +46,7 @@ import org.exoplatform.ide.vfs.shared.Item;
  * @author <a href="mailto:vsvydenko@codenvy.com">Valeriy Svydenko</a>
  * @version $Id: RunApplicationControl.java Apr 18, 2013 4:36:23 PM vsvydenko $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class RunApplicationControl extends SimpleControl implements IDEControl,
                                                         ProjectClosedHandler, ProjectOpenedHandler, ApplicationStartedHandler,
                                                         ApplicationStoppedHandler, ItemsSelectedHandler {

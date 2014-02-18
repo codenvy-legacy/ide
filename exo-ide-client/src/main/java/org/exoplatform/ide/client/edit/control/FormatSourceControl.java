@@ -33,7 +33,7 @@ import org.exoplatform.ide.editor.client.api.EditorCapability;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class FormatSourceControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler {
 
     public static final String ID = "Edit/Format";

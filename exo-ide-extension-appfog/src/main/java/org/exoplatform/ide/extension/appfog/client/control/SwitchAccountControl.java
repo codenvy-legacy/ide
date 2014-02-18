@@ -30,7 +30,7 @@ import org.exoplatform.ide.extension.appfog.client.login.LoginEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class SwitchAccountControl extends AbstractAppfogControl {
 
     private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.switchAccountControlId();

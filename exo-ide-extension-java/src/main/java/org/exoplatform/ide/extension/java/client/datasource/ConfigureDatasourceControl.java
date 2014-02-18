@@ -32,7 +32,7 @@ import org.exoplatform.ide.extension.java.client.JavaClientBundle;
  * @version $
  * 
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class ConfigureDatasourceControl extends SimpleControl implements IDEControl,
     ProjectOpenedHandler, ProjectClosedHandler {
 

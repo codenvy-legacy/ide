@@ -42,7 +42,7 @@ import org.exoplatform.ide.extension.nodejs.client.run.event.StopApplicationEven
  * @version $Id: StopApplicationControl.java Apr 18, 2013 4:24:01 PM vsvydenko $
  *
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class StopApplicationControl extends SimpleControl implements IDEControl, ProjectClosedHandler,
                                                                      ProjectOpenedHandler, ApplicationStartedHandler,
                                                                      ApplicationStoppedHandler {

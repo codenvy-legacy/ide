@@ -38,7 +38,7 @@ import org.exoplatform.ide.vfs.shared.Item;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 22, 2012 5:15:05 PM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class AppEngineProjectControl extends SimpleControl implements IDEControl,
             ProjectOpenedHandler, ProjectClosedHandler, ItemsSelectedHandler {
     

@@ -39,7 +39,7 @@ import org.exoplatform.ide.client.framework.project.ProjectType;
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: RunApplicationControl.java Jun 26, 2013 11:17:51 AM azatsarynnyy $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class RunApplicationControl extends SimpleControl implements IDEControl,
                                                         ProjectClosedHandler, ProjectOpenedHandler, ApplicationStartedHandler,
                                                         ApplicationStoppedHandler {

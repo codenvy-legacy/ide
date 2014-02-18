@@ -32,7 +32,7 @@ import org.exoplatform.ide.editor.client.api.EditorCapability;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Apr 6, 2012 10:56:42 AM anya $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class RemoveBlockCommentControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler {
 
     public static final String ID = "Edit/Remove Block Comment";

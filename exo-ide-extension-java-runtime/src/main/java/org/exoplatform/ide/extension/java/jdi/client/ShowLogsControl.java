@@ -27,7 +27,7 @@ import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.java.jdi.client.events.*;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class ShowLogsControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
                                                               AppStartedHandler, AppStoppedHandler {
     private static final String ID                = "Run/Java Logs";

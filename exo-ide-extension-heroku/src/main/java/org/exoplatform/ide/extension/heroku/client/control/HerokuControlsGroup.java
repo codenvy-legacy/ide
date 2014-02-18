@@ -28,7 +28,7 @@ import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 31, 2011 3:32:33 PM anya $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class HerokuControlsGroup extends SimpleControl implements IDEControl {
     /** Control ID. */
     public static final String ID = "PaaS/Heroku";

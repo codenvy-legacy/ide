@@ -42,7 +42,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: RefactoringRenameControl.java Jan 18, 2013 11:32:03 AM azatsarynnyy $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class RefactoringRenameControl extends JavaControl
     implements ProjectOpenedHandler, ProjectClosedHandler, CollaborationChangedHandler {
 

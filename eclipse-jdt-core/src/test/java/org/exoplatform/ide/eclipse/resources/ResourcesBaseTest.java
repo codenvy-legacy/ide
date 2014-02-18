@@ -107,7 +107,7 @@ public abstract class ResourcesBaseTest {
         deployer.publish(new VirtualFileSystemApplication());
 
         // RUNTIME VARIABLES
-        ConversationState.setCurrent(new ConversationState(new Identity("ide", new ArrayList<MembershipEntry>(0), Arrays.asList("developer"))));
+        ConversationState.setCurrent(new ConversationState(new Identity("ide", new ArrayList<MembershipEntry>(0), Arrays.asList("workspace/developer"))));
         
 
     }

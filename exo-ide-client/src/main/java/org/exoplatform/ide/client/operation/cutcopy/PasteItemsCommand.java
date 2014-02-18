@@ -40,7 +40,7 @@ import java.util.List;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class PasteItemsCommand extends SimpleControl implements IDEControl, ItemsToPasteSelectedHandler,
                                                                 PasteItemsCompleteHandler, ItemsSelectedHandler, VfsChangedHandler,
                                                                 ViewActivatedHandler {

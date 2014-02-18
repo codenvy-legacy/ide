@@ -30,7 +30,7 @@ import org.exoplatform.ide.extension.openshift.client.user.ShowApplicationListEv
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 14, 2011 10:47:04 AM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class ShowUserInfoControl extends AbstractOpenShiftControl {
 
     public ShowUserInfoControl() {

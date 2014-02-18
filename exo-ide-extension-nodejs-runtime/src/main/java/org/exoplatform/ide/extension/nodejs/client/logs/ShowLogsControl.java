@@ -40,7 +40,7 @@ import org.exoplatform.ide.extension.nodejs.client.run.event.ApplicationStoppedH
  * @version $Id: ShowLogsControl.java Apr 18, 2013 4:23:56 PM vsvydenko $
  *
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class ShowLogsControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
                                                               ApplicationStartedHandler, ApplicationStoppedHandler {
     private static final String ID = "Run/Node.js Logs";

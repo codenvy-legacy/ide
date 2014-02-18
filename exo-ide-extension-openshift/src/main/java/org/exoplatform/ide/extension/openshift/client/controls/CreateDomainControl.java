@@ -37,7 +37,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 6, 2011 2:22:44 PM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class CreateDomainControl extends AbstractOpenShiftControl implements ProjectClosedHandler, ProjectOpenedHandler,
                                                                  PropertiesChangedHandler {
 

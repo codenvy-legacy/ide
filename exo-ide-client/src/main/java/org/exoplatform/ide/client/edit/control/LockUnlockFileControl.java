@@ -49,7 +49,7 @@ import java.util.Map;
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class LockUnlockFileControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
                                                                     ApplicationSettingsReceivedHandler, ItemUnlockedHandler,
                                                                     ItemLockedHandler {

@@ -36,7 +36,7 @@ import org.exoplatform.ide.editor.client.api.Editor;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 3, 2012 12:35:53 PM anya $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class DeleteTextControl extends SimpleControl implements IDEControl, ShowContextMenuHandler,
                                                                 ViewActivatedHandler, EditorActiveFileChangedHandler {
     public static final String ID = "Edit/Delete";
