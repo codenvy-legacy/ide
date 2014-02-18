@@ -40,7 +40,6 @@ import com.codenvy.ide.texteditor.api.outline.OutlinePresenter;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -108,6 +107,11 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
                 });
             }
         });
+    }
+
+    @Override
+    public Document getDocument() {
+        return document;
     }
 
     /** {@inheritDoc} */

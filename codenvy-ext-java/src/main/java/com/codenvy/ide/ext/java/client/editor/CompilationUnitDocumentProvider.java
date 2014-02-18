@@ -28,6 +28,7 @@ import com.codenvy.ide.ext.java.jdt.core.IProblemRequestor;
 import com.codenvy.ide.ext.java.jdt.core.compiler.CategorizedProblem;
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
 import com.codenvy.ide.ext.java.jdt.internal.ui.text.FastJavaPartitionScanner;
+import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentFactory;
@@ -65,7 +66,7 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
     };
 
     private TextEditorViewImpl.Css css;
-    private Map<Document, AnnotationModel> modelStringMap = new HashMap<Document, AnnotationModel>();
+    private Map<File, AnnotationModel> modelStringMap = new HashMap<File, AnnotationModel>();
     private JavaCss javaCss;
 
     /**
@@ -82,14 +83,11 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
     /** {@inheritDoc} */
     @Override
     public AnnotationModel getAnnotationModel(@Nullable EditorInput input) {
-        if(cache.containsKey(input.getFile())) {
-            Document document = cache.get(input.getFile());
-            if (!modelStringMap.containsKey(document)) {
-                modelStringMap.put(document, new JavaAnnotationModel());
-            }
-            return modelStringMap.get(document);
-        } else return super.getAnnotationModel(input);
-
+        File file = input.getFile();
+        if (!modelStringMap.containsKey(file)) {
+            modelStringMap.put(file, new JavaAnnotationModel());
+        }
+        return modelStringMap.get(file);
     }
 
     /** {@inheritDoc} */

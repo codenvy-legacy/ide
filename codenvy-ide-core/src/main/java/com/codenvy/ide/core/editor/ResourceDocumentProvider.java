@@ -23,9 +23,7 @@ import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentFactory;
-import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.annotation.AnnotationModel;
-import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -33,8 +31,6 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -46,7 +42,6 @@ import java.util.Map;
 public class ResourceDocumentProvider implements DocumentProvider {
     private DocumentFactory documentFactory;
     private EventBus        eventBus;
-    protected Map<File, Document> cache = new HashMap<File, Document>();
 
     @Inject
     public ResourceDocumentProvider(DocumentFactory documentFactory, EventBus eventBus) {
@@ -66,19 +61,8 @@ public class ResourceDocumentProvider implements DocumentProvider {
 
     /** {@inheritDoc} */
     @Override
-    public void getDocument(@Nullable EditorInput input, @NotNull final DocumentCallback callback) {
-        /* TODO This is not good solution. It is a temporary solution. We will find something better than this. This needs when editor
-        is not initialized but some code wants to use it. In this case we returned a new instance of document. */
+    public void getDocument(@NotNull EditorInput input, @NotNull final DocumentCallback callback) {
         final File file = input.getFile();
-        if (cache.containsKey(file)) {
-            Document document = cache.get(file);
-            for (Line line = ((DocumentImpl)document).getTextStore().getFirstLine(); line != null; line = line.getNextLine()) {
-                line.clearTags();
-            }
-            callback.onDocument(document);
-            return;
-        }
-
         file.getProject().getContent(file, new AsyncCallback<File>() {
             @Override
             public void onSuccess(File result) {
@@ -98,7 +82,6 @@ public class ResourceDocumentProvider implements DocumentProvider {
      */
     private void contentReceived(@NotNull File file, @NotNull DocumentCallback callback) {
         Document document = documentFactory.get(file.getContent());
-        cache.put(file, document);
         callback.onDocument(document);
     }
 
@@ -124,7 +107,7 @@ public class ResourceDocumentProvider implements DocumentProvider {
 
     /** {@inheritDoc} */
     @Override
-    public void saveDocumentAs(@Nullable EditorInput input, @NotNull Document document, boolean overwrite) {
+    public void saveDocumentAs(@NotNull EditorInput input, @NotNull Document document, boolean overwrite) {
         final File file = input.getFile();
         file.getProject().createFile(file.getParent(), file.getName(), file.getContent(), file.getMimeType(), new AsyncCallback<File>() {
             @Override
@@ -142,15 +125,6 @@ public class ResourceDocumentProvider implements DocumentProvider {
     /** {@inheritDoc} */
     @Override
     public void documentClosed(@NotNull Document document) {
-        File fileToRemove = null;
-        for (File f : cache.keySet()) {
-            if (cache.get(f).equals(document)) {
-                fileToRemove = f;
-                break;
-            }
-        }
-        if (fileToRemove != null) {
-            cache.remove(fileToRemove);
-        }
+
     }
 }
