@@ -17,9 +17,7 @@
  */
 package com.codenvy.ide.tutorial.wizard.newresource.page;
 
-import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.api.notification.Notification;
@@ -120,29 +118,23 @@ public class MyResourcePagePresenter extends AbstractWizardPage implements MyRes
                 @Override
                 public void propertyChanged(PartPresenter source, int propId) {
                     if (propId == PROP_INPUT) {
-                        final DocumentProvider documentProvider = ((TextEditorPartPresenter)activeEditor).getDocumentProvider();
-                        final EditorInput editorInput = activeEditor.getEditorInput();
-                        documentProvider.getDocument(editorInput, new DocumentProvider.DocumentCallback() {
-                            @Override
-                            public void onDocument(Document document) {
-                                MultiTextEdit multiTextEdit = new MultiTextEdit();
+                        final Document document = ((TextEditorPartPresenter)activeEditor).getDocument();
+                        MultiTextEdit multiTextEdit = new MultiTextEdit();
 
-                                int indexLogin = document.get().indexOf(LOGIN_PLACE);
-                                multiTextEdit.addChild(new ReplaceEdit(indexLogin, LOGIN_PLACE.length(), view.getLogin()));
+                        int indexLogin = document.get().indexOf(LOGIN_PLACE);
+                        multiTextEdit.addChild(new ReplaceEdit(indexLogin, LOGIN_PLACE.length(), view.getLogin()));
 
-                                int indexPassword = document.get().indexOf(PASSWORD_PLACE);
-                                multiTextEdit.addChild(new ReplaceEdit(indexPassword, PASSWORD_PLACE.length(), view.getPassword()));
+                        int indexPassword = document.get().indexOf(PASSWORD_PLACE);
+                        multiTextEdit.addChild(new ReplaceEdit(indexPassword, PASSWORD_PLACE.length(), view.getPassword()));
 
-                                try {
-                                    multiTextEdit.apply(document);
-                                } catch (BadLocationException e) {
-                                    notificationManager.showNotification(new Notification(e.getMessage(), ERROR));
-                                }
+                        try {
+                            multiTextEdit.apply(document);
+                        } catch (BadLocationException e) {
+                            notificationManager.showNotification(new Notification(e.getMessage(), ERROR));
+                        }
 
-                                activeEditor.doSave();
-                                callback.onSuccess();
-                            }
-                        });
+                        activeEditor.doSave();
+                        callback.onSuccess();
                     }
                 }
             });

@@ -51,5 +51,7 @@ public class StyleInjector {
         resources.dialogBox().ensureInjected();
         resources.welcomeCSS().ensureInjected();
         resources.notificationCss().ensureInjected();
+        resources.dataGridStyle().ensureInjected();
+        resources.cellTableStyle().ensureInjected();
     }
 }

@@ -40,6 +40,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -126,7 +127,7 @@ public class BootstrapController {
                             // instantiate extensions
                             extensionInitializer.startExtensions();
                             // Start UI
-                            SimplePanel mainPanel = new SimplePanel();
+                            SimpleLayoutPanel mainPanel = new SimpleLayoutPanel();
                             RootLayoutPanel.get().add(mainPanel);
                             WorkspacePresenter workspacePresenter = workspaceProvider.get();
 

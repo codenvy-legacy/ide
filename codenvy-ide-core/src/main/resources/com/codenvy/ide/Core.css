@@ -18,7 +18,7 @@
 @external .gwt-SplitLayoutPanel-HDragger, .gwt-SplitLayoutPanel-VDragger, .hsplitter, .hsplitter, .gwt-DialogBox, gwt-Button,
           gwt-PushButton-up,gwt-PushButton-up-hovering,gwt-PushButton-up-disabled,
           gwt-PushButton-down,.gwt-PushButton-down-hovering,.gwt-PushButton-down-disabled, gwt-ToggleButton-up, gwt-ToggleButton-up-hovering, gwt-ToggleButton-up-disabled,
-          gwt-ToggleButton-down, .gwt-ToggleButton-down-hovering, .gwt-ToggleButton-down-disabled, gwt-TextBox;
+          gwt-ToggleButton-down, .gwt-ToggleButton-down-hovering, .gwt-ToggleButton-down-disabled, gwt-TextBox, gwt-ListBox, gwt-PopupPanel;
 
     /* Global styles and external GWT styles. */
 
@@ -41,6 +41,14 @@
         border-radius: 2px;
         font-size: fontSize;
     }
+
+.gwt-ListBox{
+    color: mainFontColor;
+    background-color: partBackground;
+    border: 1px solid tabBorder;
+    border-radius: 2px;
+    font-size: fontSize
+}
 
 .gwt-RadioButton label {
     display: inline-block;
@@ -78,7 +86,7 @@
     background: radial-gradient(ellipse at center, windowContentBackground 35%,radioButtonBackgroundColor 40%); /* W3C*/
 }
 
-.gwt-TextBox{
+.gwt-TextBox, .gwt-PasswordTextBox{
     background-color: inputBackground;
     color: mainFontColor;
     border: 1px solid tabBorder;
@@ -86,25 +94,26 @@
     font-size: fontSize;
 }
 
-.gwt-TextBox[disabled]{
+.gwt-TextBox[disabled], .gwt-PasswordTextBox[disabled]{
     background-color: tabsPanelBackground;
 }
 
-.gwt-Button{
+.gwt-Button, button{
     padding: 0px;
     color: mainFontColor;
     border-radius: 2px;
     border: 1px solid tabBorder;
     font-weight: 500;
+    font-size: fontSize;
     height: 26px;
     background: linear-gradient(to bottom, buttonTopColor 0%, buttonTopColor 3%,buttonColor 4%, buttonColor 100%);
 }
-.gwt-Button:hover, .gwt-Button[disabled]:hover{
+.gwt-Button:hover, .gwt-Button[disabled]:hover, button:hover, button[disabled]:hover{
     /*border-top: 1px solid #646464;*/
     border: 1px solid tabBorder;
 }
 
-.gwt-Button:active{
+.gwt-Button:active, button:active{
     box-shadow:  0 0 4px 2px selectionBackground;
     border-radius: 3px;
     outline: none;
@@ -114,7 +123,7 @@
     border: 0;
 }
 
-.gwt-Button[disabled]:active{
+.gwt-Button[disabled]:active, button[disabled]:active{
     box-shadow:  0 0 0px 0px selectionBackground;
     border-radius: 2px;
     outline: none;
@@ -315,4 +324,11 @@ class for the document-level scrollbars. */
     border-right: 0px solid transparent;
     border-top: 6px solid transparent;
     border-bottom: 1px solid transparent;
+}
+
+.gwt-PopupPanel{
+    color: mainFontColor;
+    border: 1px solid tabBorder;
+    border-radius: 3px;
+    background-color: partBackground;
 }
