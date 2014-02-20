@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.extension.builder.client;
 
+import com.codenvy.api.builder.dto.BuildOptions;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
@@ -42,6 +43,8 @@ public interface BuilderClientService {
     public void build(String projectName, AsyncRequestCallback<String> callback)
             throws RequestException;
 
+    public void build(String projectName, BuildOptions buildOptions, AsyncRequestCallback<String> callback)
+            throws RequestException;
 
     /**
      * Cancel previously launched build.
