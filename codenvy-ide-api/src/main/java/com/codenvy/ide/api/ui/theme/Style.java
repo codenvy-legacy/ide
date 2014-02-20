@@ -20,6 +20,7 @@ package com.codenvy.ide.api.ui.theme;
 /**
  * This class contains constants for style. Fields initialized from user preferences.
  * Static methods used for bridging with CssResources
+ *
  * @author Evgen Vidolob
  */
 public class Style {
@@ -90,15 +91,15 @@ public class Style {
         return theme.getTabBorderColor();
     }
 
-    public static String getPartBackground(){
+    public static String getPartBackground() {
         return theme.getPartBackground();
     }
 
-    public static String getPartToolbar(){
+    public static String getPartToolbar() {
         return theme.getPartToolbar();
     }
 
-    public static String getPartToolbarActive(){
+    public static String getPartToolbarActive() {
         return theme.getPartToolbarActive();
     }
 
@@ -110,11 +111,15 @@ public class Style {
         return theme.getMainFontColor();
     }
 
-    public static String getDeisabledMenuColor(){
+    public static String getRadioButtonBackgroundColor() {
+        return theme.getRadioButtonBackgroundColor();
+    }
+
+    public static String getDeisabledMenuColor() {
         return theme.getDisabledMenuColor();
     }
 
-    public static String getDialogContentBackground(){
+    public static String getDialogContentBackground() {
         return theme.getDialogContentBackground();
     }
 
@@ -126,7 +131,7 @@ public class Style {
         return theme.getButtonColor();
     }
 
-    public static String getInputBackground(){
+    public static String getInputBackground() {
         return theme.getInputBackground();
     }
 
@@ -163,7 +168,7 @@ public class Style {
         return theme.getEditorKeyWord();
     }
 
-    public static String getEditorAtom(){
+    public static String getEditorAtom() {
         return theme.getEditorAtom();
     }
 
@@ -237,5 +242,29 @@ public class Style {
 
     public static String getWizardStepsBorderColor() {
         return theme.getWizardStepsBorderColor();
+    }
+
+    public static String getWelcomeFontColor() {
+        return theme.getWelcomeFontColor();
+    }
+
+    public static String getConsolePanelColor() {
+        return theme.getConsolePanelColor();
+    }
+
+    public static String getCellOddRow() {
+        return theme.getCellOddRowColor();
+    }
+
+    public static String getCellEvenRow() {
+        return theme.getCellOddEvenColor();
+    }
+
+    public static String getCellKeyboardSelectedRow() {
+        return theme.getCellKeyboardSelectedRowColor();
+    }
+
+    public static String getCellHoveredRow() {
+        return theme.getCellHoveredRow();
     }
 }

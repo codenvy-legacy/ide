@@ -28,13 +28,9 @@
         color: #FFFFFF;
     }
 
-    @sprite .welcomeTopContainer {
-        gwt-image: "welcomePageBgTopContainer";
-    }
-
     .welcomeLabel {
         font-size: largeDropdownLabel;
-        color: #5E5E5E;
+        color: welcomeFontColor;
     }
 
     .link {
@@ -43,17 +39,17 @@
         background-color: transparent;
         font-size: titleFontSize;
         font-weight: bold;
-        color: #5E5E5E;
+        color:welcomeFontColor;
         text-decoration: none;
         margin-left: 0;
     }
 
     .link:visited {
-        color: #5E5E5E;
+        color:welcomeFontColor;
     }
 
     .link:hover {
-        color: #5E5E5E;
+        color: welcomeFontColor;
         text-decoration: underline;
     }
 

@@ -20,12 +20,20 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:style>
         @eval bgColor com.codenvy.ide.api.ui.theme.Style.getTabsPanelBackground();
+        @eval tabBorder com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
+        @eval conColor com.codenvy.ide.api.ui.theme.Style.getConsolePanelColor();
         .buttonsPanel {
             background-color: bgColor;
         }
 
         .space {
             margin-right: 20px;
+        }
+        .bottomPanel{
+            border-right: 1px solid tabBorder;
+            border-left: 1px solid tabBorder;
+            background-color: conColor;
+            border-bottom: 1px solid tabBorder;
         }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="100%" height="100%">
@@ -52,7 +60,7 @@
             <g:SimplePanel width="100%" ui:field="toolbarPanel"/>
         </g:north>
         <g:south size="22">
-            <g:SimplePanel width="100%" ui:field="statusPanel"/>
+            <g:SimplePanel width="100%" ui:field="statusPanel" addStyleNames="{style.bottomPanel}"/>
         </g:south>
         <g:center>
             <g:SimplePanel ui:field="perspectivePanel" width="100%" height="100%"/>

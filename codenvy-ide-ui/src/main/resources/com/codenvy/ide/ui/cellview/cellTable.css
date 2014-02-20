@@ -1,0 +1,125 @@
+
+@def selectionBorderWidth 2px;
+.cellTableWidget {
+
+}
+
+.cellTableFirstColumn {
+
+}
+
+.cellTableLastColumn {
+
+}
+
+.cellTableFooter {
+    border-top: 2px solid #6f7277;
+    padding: 3px 15px;
+    text-align: left;
+    color: mainFontColor;
+    /*text-shadow: #ddf 1px 1px 0;*/
+    overflow: hidden;
+    font-size: fontSize;
+}
+
+.cellTableHeader {
+    border-bottom: 2px solid #6f7277;
+    padding: 3px 15px;
+    text-align: left;
+    color: mainFontColor;
+    font-size: fontSize;
+    /*text-shadow: #ddf 1px 1px 0;*/
+    overflow: hidden;
+}
+
+.cellTableCell {
+    padding: 2px 15px;
+    overflow: hidden;
+}
+
+.cellTableFirstColumnFooter {
+
+}
+
+.cellTableFirstColumnHeader {
+
+}
+
+.cellTableLastColumnFooter {
+
+}
+
+.cellTableLastColumnHeader {
+
+}
+
+.cellTableSortableHeader {
+    cursor: pointer;
+    cursor: hand;
+}
+
+.cellTableSortableHeader:hover {
+    color: welcomeFontColor;
+}
+
+.cellTableSortedHeaderAscending {
+
+}
+
+.cellTableSortedHeaderDescending {
+
+}
+
+.cellTableEvenRow {
+    background: cellEvenRow;
+}
+
+.cellTableEvenRowCell {
+    border: selectionBorderWidth solid cellEvenRow;
+}
+
+.cellTableOddRow {
+    background: cellOddRow;
+}
+
+.cellTableOddRowCell {
+    border: selectionBorderWidth solid cellOddRow;
+}
+
+.cellTableHoveredRow {
+    /*background: cellHoveredRow;*/
+}
+
+.cellTableHoveredRowCell {
+    /*border: selectionBorderWidth solid cellHoveredRow;*/
+}
+
+.cellTableKeyboardSelectedRow {
+    background: cellKeyboardSelectedRow;
+}
+
+.cellTableKeyboardSelectedRowCell {
+    border: selectionBorderWidth solid cellKeyboardSelectedRow;
+}
+
+.cellTableSelectedRow {
+    background: selectionBackground;
+    color: white;
+    height: auto;
+    overflow: auto;
+}
+
+.cellTableSelectedRowCell {
+    border: selectionBorderWidth solid selectionBackground;
+}
+
+/**
+ * The keyboard selected cell is visible over selection.
+ */
+.cellTableKeyboardSelectedCell {
+    border: selectionBorderWidth solid cellKeyboardSelectedRow;
+}
+
+.cellTableLoading {
+    margin: 30px;
+}

@@ -27,8 +27,6 @@
 @eval highlightFocus com.codenvy.ide.api.ui.theme.Style.getHighlightFocus();
 
 @eval hoverBackgroundColor com.codenvy.ide.api.ui.theme.Style.getHoverBackgroundColor();
-@eval lightTextColor com.codenvy.ide.api.ui.theme.Style.getLightTextColor();
-@eval lightestTextColor com.codenvy.ide.api.ui.theme.Style.getLightestTextColor();
 @eval lightGreyBackground com.codenvy.ide.api.ui.theme.Style.getLightGreyBackground();
 @eval barBackgroundColor com.codenvy.ide.api.ui.theme.Style.getBarBackgroundColor();
 
@@ -36,6 +34,8 @@
 @eval partToolbar com.codenvy.ide.api.ui.theme.Style.getPartToolbar();
 @eval partToolbarActive com.codenvy.ide.api.ui.theme.Style.getPartToolbarActive();
 @eval partToolbarShadow com.codenvy.ide.api.ui.theme.Style.getPartToolbarShadow();
+
+@eval consolePanelColor com.codenvy.ide.api.ui.theme.Style.getConsolePanelColor();
 
     /* Indicates a completed action. Preferred text color is lightTextColor. */
 @eval completedBackgroundColor com.codenvy.ide.api.ui.theme.Style.getCompletedBackgroundColor();
@@ -92,6 +92,10 @@
 @def editorFontFamily 'Andale Mono', monospace;
 
 @eval mainFontColor com.codenvy.ide.api.ui.theme.Style.getMainFontColor();
+@eval welcomeFontColor com.codenvy.ide.api.ui.theme.Style.getWelcomeFontColor();
+@eval lightTextColor com.codenvy.ide.api.ui.theme.Style.getLightTextColor();
+@eval lightestTextColor com.codenvy.ide.api.ui.theme.Style.getLightestTextColor();
+@eval radioButtonBackgroundColor com.codenvy.ide.api.ui.theme.Style.getRadioButtonBackgroundColor();
 @eval disabledMenuItemColor com.codenvy.ide.api.ui.theme.Style.getDeisabledMenuColor();
 
     /* DialogBox*/
@@ -130,3 +134,9 @@
 /*wizard*/
 @eval stepsPanelColor com.codenvy.ide.api.ui.theme.Style.getWizardStepsColor();
 @eval stepsPanelBorerColor com.codenvy.ide.api.ui.theme.Style.getWizardStepsBorderColor();
+
+/*Cell widgets*/
+@eval cellOddRow com.codenvy.ide.api.ui.theme.Style.getCellOddRow();
+@eval cellEvenRow com.codenvy.ide.api.ui.theme.Style.getCellEvenRow();
+@eval cellKeyboardSelectedRow com.codenvy.ide.api.ui.theme.Style.getCellKeyboardSelectedRow();
+@eval cellHoveredRow com.codenvy.ide.api.ui.theme.Style.getCellHoveredRow();

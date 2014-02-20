@@ -22,12 +22,16 @@ import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.renderer.LineNumberRenderer;
 import com.codenvy.ide.tree.FileTreeNodeRenderer;
 import com.codenvy.ide.ui.DialogBoxResources;
+import com.codenvy.ide.ui.cellview.CellTableResources;
+import com.codenvy.ide.ui.cellview.DataGridResources;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.welcome.WelcomePageResources;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.ImageResource.ImageOptions;
+import com.google.gwt.resources.client.ImageResource.RepeatStyle;
 
 
 /**
@@ -43,7 +47,8 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resources, TextEditorViewImpl.Resources,
                                    LineNumberRenderer.Resources, EditableContentArea.Resources, PartStackUIResources, SimpleList.Resources,
-                                   MenuResources, DialogBoxResources, WelcomePageResources, NotificationResources {
+                                   MenuResources, DialogBoxResources, WelcomePageResources, NotificationResources , DataGridResources,
+                                   CellTableResources{
 
     /** Interface for css resources. */
     public interface CoreCss extends CssResource {
@@ -113,4 +118,11 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
 
     @Source("xml/xml_file.png")
     ImageResource xmlFile();
+
+//    @Source("about/logo.png")
+//    ImageResource logo();
+//
+//    @Source("about/logoBg.png")
+//    @ImageOptions(repeatStyle = RepeatStyle.Horizontal)
+//    ImageResource logoBg();
 }
