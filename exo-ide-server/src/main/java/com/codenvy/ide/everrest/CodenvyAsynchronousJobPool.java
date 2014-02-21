@@ -88,7 +88,7 @@ public class CodenvyAsynchronousJobPool extends AsynchronousJobPool implements C
         public CallableWrapper(Callable<Object> callable) {
             this.callable = callable;
             conversationState = ConversationState.getCurrent();
-            envContext = EnvironmentContext.getCurrent();
+            envContext = new EnvironmentContext(EnvironmentContext.getCurrent());
             if (setUpLogger) {
                 try {
                     loggerContext = mdc_getCopyOfContextMap.invoke(null);

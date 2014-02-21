@@ -113,7 +113,7 @@ public class ExoIdeWebSocketServlet extends EverrestWebSocketServlet {
         WSConnectionImpl wsConnection = (WSConnectionImpl)super.createWebSocketInbound(s, req);
         ConversationState conversationState = ConversationState.getCurrent();
         wsConnection.getHttpSession().setAttribute(CONVERSATION_STATE_SESSION_ATTRIBUTE_NAME, conversationState);
-        EnvironmentContext environmentContext = EnvironmentContext.getCurrent();
+        EnvironmentContext environmentContext = new EnvironmentContext(EnvironmentContext.getCurrent());
         wsConnection.getHttpSession().setAttribute(ENVIRONMENT_SESSION_ATTRIBUTE_NAME, environmentContext);
         if (mdc_getCopyOfContextMap != null) {
             try {
