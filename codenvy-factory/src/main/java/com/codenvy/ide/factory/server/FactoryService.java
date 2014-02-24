@@ -29,34 +29,15 @@ import com.codenvy.organization.model.Workspace;
 import org.codenvy.mail.MailSenderClient;
 import org.everrest.websockets.WSConnectionContext;
 import org.everrest.websockets.message.ChannelBroadcastMessage;
-import org.exoplatform.ide.git.server.GitConnection;
-import org.exoplatform.ide.git.server.GitConnectionFactory;
-import org.exoplatform.ide.git.server.GitException;
-import org.exoplatform.ide.git.shared.Branch;
-import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
-import org.exoplatform.ide.git.shared.BranchListRequest;
-import org.exoplatform.ide.git.shared.CloneRequest;
-import org.exoplatform.ide.git.shared.GitUser;
+import org.exoplatform.ide.git.server.*;
+import org.exoplatform.ide.git.shared.*;
 import org.exoplatform.ide.project.ProjectPrepare;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.impl.fs.LocalFSMountStrategy;
-import org.exoplatform.ide.vfs.server.LocalPathResolver;
-import org.exoplatform.ide.vfs.server.VirtualFileSystem;
-import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.*;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.AccessControlEntry;
-import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
-import org.exoplatform.ide.vfs.shared.File;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemType;
-import org.exoplatform.ide.vfs.shared.Principal;
-import org.exoplatform.ide.vfs.shared.PrincipalImpl;
-import org.exoplatform.ide.vfs.shared.Project;
-import org.exoplatform.ide.vfs.shared.Property;
-import org.exoplatform.ide.vfs.shared.PropertyFilter;
-import org.exoplatform.ide.vfs.shared.PropertyImpl;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.ide.vfs.shared.*;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
@@ -64,28 +45,15 @@ import org.exoplatform.services.security.ConversationState;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -99,19 +67,21 @@ public class FactoryService {
     private static final Log LOG = ExoLogger.getLogger(FactoryService.class);
 
     @Inject
-    private MailSenderClient          mailSenderClient;
+    private MailSenderClient            mailSenderClient;
     @Inject
-    private GitConnectionFactory      gitConnectionFactory;
+    private GitConnectionFactory        gitConnectionFactory;
     @Inject
-    private VirtualFileSystemRegistry vfsRegistry;
+    private VirtualFileSystemRegistry   vfsRegistry;
     @Inject
-    private LocalPathResolver         localPathResolver;
+    private LocalPathResolver           localPathResolver;
     @Inject
-    private UserManager               userManager;
+    private UserManager                 userManager;
     @Inject
-    private WorkspaceManager          workspaceManager;
+    private WorkspaceManager            workspaceManager;
     @Inject
-    private LocalFSMountStrategy      mountStrategy;
+    private LocalFSMountStrategy        mountStrategy;
+    @Inject
+    private GitRepositoryPrivacyChecker privacyChecker;
 
     @PathParam("ws-name")
     private String workspaceName;
@@ -176,9 +146,8 @@ public class FactoryService {
                              @QueryParam("projectid") String projectId) throws VirtualFileSystemException, GitException,
                                                                                URISyntaxException, IOException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-
-        GitConnection gitConnection = getGitConnection(vfs, projectId);
         try {
+            GitConnection gitConnection = getGitConnection(vfs, projectId);
             gitConnection.clone(new CloneRequest(factoryUrl.getVcsurl(), null));
 
             //check and set type of cloned repository
@@ -198,10 +167,14 @@ public class FactoryService {
             if (COMMIT_NOT_FOUND_PATTERN.matcher(e.getLocalizedMessage()).find()) {
                 publishWebsocketMessage(String.format(COMMIT_NOT_FOUND, factoryUrl.getCommitid()));
             } else {
-                deleteRepository(vfs, projectId);
                 LOG.warn(e.getLocalizedMessage(), e);
+                vfs.delete(projectId, null);
                 throw e;
             }
+        } catch (Exception e) {
+            LOG.error(e.getLocalizedMessage(), e);
+            vfs.delete(projectId, null);
+            throw e;
         } finally {
             //Finally if we found parameter vcsinfo we check that we should delete git repository after cloning.
             if (!factoryUrl.getVcsinfo()) {
@@ -443,76 +416,10 @@ public class FactoryService {
         return project;
     }
 
-    /**
-     * Check repository public or not.
-     * First of all if url is SSH, it will be converted to https,
-     * we trying to get stream, not successful result means that
-     * git provider doesn't provide stream for this url, so /info/refs/service=git-upload-pack
-     * should be appended to url, after this we are going to take stream one more time if url
-     * gives us stream, we read content and check it,
-     * if it contains "git repository not found", then it is private repository
-     * or it is not exists, else repository is public
-     *
-     * @param gitUrl
-     *         repository url
-     * @return <code>true</code> when repository is public
-     */
-    private boolean isRepositoryPublic(String gitUrl) {
-        //check if url is ssh convert it to https
-        if (gitUrl.matches("((((git|ssh)://)(([^\\\\/@:]+@)??)" +
-                           "[^\\\\/@:]+)|([^\\\\/@:]+@[^\\\\/@:]+)" +
-                           ")(:|/)[^\\\\@:]+")) {
-            int separatorPos;
-            if ((separatorPos = gitUrl.indexOf("://")) != -1) {
-                gitUrl = gitUrl.substring(separatorPos + 3);
-            }
-            if ((separatorPos = gitUrl.indexOf('@')) != -1) {
-                gitUrl = gitUrl.substring(separatorPos + 1);
-            }
-            gitUrl = gitUrl.replace(":", "/");
-            gitUrl = "https://".concat(gitUrl);
-        }
-        //make double open stream, try to get url stream, if not successful try to append url information
-        //and get stream again
-        try {
-            URL url = new URL(gitUrl);
-            url.openStream().close();
-            return true;
-        } catch (IOException e) {
-            BufferedReader reader = null;
-            try {
-                //append git information to the url
-                URL url = new URL(gitUrl.concat("/info/refs?service=git-upload-pack"));
-                reader = new BufferedReader(new InputStreamReader(url.openStream()));
-                StringBuilder sb = new StringBuilder();
-                String readerLine;
-                while ((readerLine = reader.readLine()) != null) {
-                    sb.append(readerLine);
-                }
-                if (sb.toString().toLowerCase().indexOf("git repository not found") != -1) {
-                    return false;
-                } else {
-                    return true;
-                }
-            } catch (IOException io) {
-                LOG.warn("It is not possible to get stream to " + gitUrl, io);
-                return false;
-            } finally {
-                try {
-                    if (reader != null) {
-                        reader.close();
-                    }
-                } catch (IOException io) {
-                    LOG.error("Can't close stream", io);
-                }
-            }
-        }
-    }
-
     private void setPrivateRepositoryPermissions(String vcsUrl, VirtualFileSystem vfs, String projectId) {
         try {
             Workspace workspace = workspaceManager.getWorkspaceByName(workspaceName);
-            if (isRepositoryPublic(vcsUrl)) {
+            if (privacyChecker.isRepositoryPublic(vcsUrl)) {
                 workspace.setAttribute("is_private", "false");
             } else {
                 workspace.setAttribute("is_private", "true");
@@ -523,9 +430,9 @@ public class FactoryService {
             }
             workspaceManager.updateWorkspace(workspace);
         } catch (OrganizationServiceException e) {
-            LOG.error("It is not possible to get workspace", e);
+            LOG.error(e.getLocalizedMessage(), e);
         } catch (VirtualFileSystemException e) {
-            LOG.error("Can't set permissions for private project");
+            LOG.error("Can't set permissions for private project. " + e.getLocalizedMessage(), e);
         }
     }
 }
