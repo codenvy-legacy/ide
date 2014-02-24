@@ -29,8 +29,8 @@ import com.codenvy.ide.resources.marshal.FolderUnmarshaller;
 import com.codenvy.ide.resources.marshal.JSONDeserializer;
 import com.codenvy.ide.resources.marshal.JSONSerializer;
 import com.codenvy.ide.resources.marshal.PropertyUnmarshaller;
-import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.rest.Unmarshallable;
@@ -38,7 +38,6 @@ import com.codenvy.ide.ui.loader.EmptyLoader;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.resources.client.ResourceException;
@@ -53,23 +52,25 @@ import com.google.web.bindery.event.shared.EventBus;
 public class Project extends Folder {
     public static final String PROJECT_MIME_TYPE = "text/vnd.ideproject+directory";
     public static final String TYPE              = "project";
-    private         ProjectDescription    description;
+    protected final EventBus              eventBus;
+    protected final AsyncRequestFactory   asyncRequestFactory;
     /** Properties. */
     protected       Array<Property>       properties;
     protected       Loader                loader;
-    protected final EventBus              eventBus;
     protected       VirtualFileSystemInfo vfsInfo;
+    private         ProjectDescription    description;
 
     /**
      * Constructor for empty project. Used for serialization only.
      * <p/>
      * Not intended to be used by client.
      */
-    public Project(EventBus eventBus) {
+    public Project(EventBus eventBus, AsyncRequestFactory asyncRequestFactory) {
         super(TYPE, PROJECT_MIME_TYPE);
         this.description = new ProjectDescription(this);
         this.properties = Collections.<Property>createArray();
         this.eventBus = eventBus;
+        this.asyncRequestFactory = asyncRequestFactory;
         // TODO : receive it in some way
         this.loader = new EmptyLoader();
     }
@@ -224,8 +225,8 @@ public class Project extends Folder {
             url = URL.decode(url).replace("[name]", name);
             url = URL.encode(url);
             loader.setMessage("Creating new file...");
-            AsyncRequest.build(RequestBuilder.POST, url).data(content).header(HTTPHeader.CONTENT_TYPE, mimeType)
-                        .loader(loader).send(internalCallback);
+            asyncRequestFactory.createPostRequest(url, content).header(HTTPHeader.CONTENT_TYPE, mimeType)
+                               .loader(loader).send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);
         }
@@ -272,7 +273,7 @@ public class Project extends Folder {
             String urlString = URL.decode(url).replace("[name]", name);
             urlString = URL.encode(urlString);
             loader.setMessage("Creating new folder...");
-            AsyncRequest.build(RequestBuilder.POST, urlString).loader(loader).send(internalCallback);
+            asyncRequestFactory.createPostRequest(urlString, null).loader(loader).send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);
         }
@@ -303,7 +304,6 @@ public class Project extends Folder {
      * need to refresh the tree of the folders, since new folders may have been created by the server-side.
      *
      * @param root
-     * @param newFolderId
      * @param callback
      */
     public void refreshTree(final Folder root, final AsyncCallback<Folder> callback) {
@@ -324,7 +324,7 @@ public class Project extends Folder {
 
             String url = vfsInfo.getUrlTemplates().get(Link.REL_TREE).getHref();
             url = URL.decode(url).replace("[id]", root.getId());
-            AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(loader).send(internalCallback);
+            asyncRequestFactory.createGetRequest(URL.encode(url)).loader(loader).send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);
         }
@@ -364,7 +364,7 @@ public class Project extends Folder {
                 url = URL.decode(url).replace("[lockToken]", ((File)resource).getLock().getLockToken());
             }
             loader.setMessage("Deleting item...");
-            AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(internalCallback);
+            asyncRequestFactory.createPostRequest(url, null).loader(loader).send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);
         }
@@ -400,7 +400,7 @@ public class Project extends Folder {
 
             String url = file.getLinkByRelation(Link.REL_CONTENT).getHref();
             loader.setMessage("Loading content...");
-            AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(internalCallback);
+            asyncRequestFactory.createGetRequest(url).loader(loader).send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);
         }
@@ -431,8 +431,11 @@ public class Project extends Folder {
             String url = file.getLinkByRelation(Link.REL_CONTENT).getHref();
             url += (file.isLocked()) ? "?lockToken=" + file.getLock().getLockToken() : "";
             loader.setMessage("Updating content...");
-            AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.CONTENT_TYPE, file.getMimeType())
-                        .data(file.getContent()).loader(loader).send(internalCallback);
+            asyncRequestFactory.createPostRequest(url, null)
+                               .data(file.getContent())
+                               .header(HTTPHeader.CONTENT_TYPE, file.getMimeType())
+                               .loader(loader)
+                               .send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);
         }
@@ -461,7 +464,7 @@ public class Project extends Folder {
 
             String url = file.getLinkByRelation(Link.REL_LOCK).getHref();
             loader.setMessage("Locking file...");
-            AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(internalCallback);
+            asyncRequestFactory.createPostRequest(url, null).loader(loader).send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);
         }
@@ -492,7 +495,7 @@ public class Project extends Folder {
             String url = file.getLinkByRelation(Link.REL_UNLOCK).getHref();
             url = URL.decode(url).replace("[lockToken]", lockToken);
             loader.setMessage("Unlocking file...");
-            AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(internalCallback);
+            asyncRequestFactory.createPostRequest(url, null).loader(loader).send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);
         }
@@ -535,7 +538,7 @@ public class Project extends Folder {
             }
             url = URL.encode(url);
             loader.setMessage("Moving item...");
-            AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(internalCallback);
+            asyncRequestFactory.createPostRequest(url, null).loader(loader).send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);
         }
@@ -552,34 +555,36 @@ public class Project extends Folder {
     }
 
     /**
-     * @param item
-     * @param mediaType
+     * @param resource
      * @param newname
-     * @param lockToken
      * @param callback
-     * @throws RequestException
      */
     public void rename(final Resource resource, final String newname, final AsyncCallback<Resource> callback) {
         try {
             checkItemValid(resource);
-            Unmarshallable<Resource> unmarshaller = (Unmarshallable<Resource>)((resource instanceof File) ? new FileUnmarshaller() : new FolderUnmarshaller());
+            Unmarshallable<Resource> unmarshaller =
+                    (Unmarshallable<Resource>)((resource instanceof File) ? new FileUnmarshaller() : new FolderUnmarshaller());
             // internal call back
             AsyncRequestCallback<Resource> internalCallback = new AsyncRequestCallback<Resource>(unmarshaller) {
                 @Override
                 protected void onSuccess(Resource result) {
                     final String id = result.getId();
-                    final Folder folderToRefresh = (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId())) ? (Project)resource : resource.getParent();
+                    final Folder folderToRefresh =
+                            (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId()))
+                            ? (Project)resource : resource.getParent();
                     //Renamed the project:
-                    if (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId())){
+                    if (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId())) {
                         ((Project)resource).setName(result.getName());
                         ((Project)resource).setId(result.getId());
                         ((Project)resource).getLinks().putAll(result.getLinks());
                     }
-                    
+
                     refreshTree(folderToRefresh, new AsyncCallback<Folder>() {
                         @Override
                         public void onSuccess(Folder result) {
-                            Resource renamed = (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId())) ? resource : result.findResourceById(id);
+                            Resource renamed =
+                                    (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId()))
+                                    ? resource : result.findResourceById(id);
                             renamed.getParent().setTag(folderToRefresh.getTag());
                             eventBus.fireEvent(ResourceChangedEvent.createResourceRenamedEvent(renamed));
                             callback.onSuccess(renamed);
@@ -613,7 +618,7 @@ public class Project extends Folder {
             url = url.replaceAll("&&", "&");
             url = URL.encode(url);
             loader.setMessage("Renaming item...");
-            AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(internalCallback);
+            asyncRequestFactory.createPostRequest(url, null).loader(loader).send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);
         }
@@ -640,10 +645,10 @@ public class Project extends Folder {
 
             String url = this.getLinkByRelation(Link.REL_SELF).getHref();
             loader.setMessage("Updating item...");
-            AsyncRequest.build(RequestBuilder.POST, url)
-                        .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(getProperties()).toString())
-                        .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
-                        .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).loader(loader).send(internalCallback);
+            asyncRequestFactory.createPostRequest(url, null)
+                               .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(getProperties()).toString())
+                               .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                               .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).loader(loader).send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);
         }
@@ -655,40 +660,34 @@ public class Project extends Folder {
      * @param callback
      */
     public void refreshProperties(final AsyncCallback<Project> callback) {
-        try {
-            final Array<Property> currentProperties = properties;
+        final Array<Property> currentProperties = properties;
 
-            AsyncRequestCallback<Array<Property>> internalCallback =
-                    new AsyncRequestCallback<Array<Property>>(new PropertyUnmarshaller()) {
-                        @Override
-                        protected void onSuccess(Array<Property> properties) {
-                            // Update properties on client-side Object
-                            currentProperties.clear();
-                            currentProperties.addAll(properties);
+        AsyncRequestCallback<Array<Property>> internalCallback =
+                new AsyncRequestCallback<Array<Property>>(new PropertyUnmarshaller()) {
+                    @Override
+                    protected void onSuccess(Array<Property> properties) {
+                        // Update properties on client-side Object
+                        currentProperties.clear();
+                        currentProperties.addAll(properties);
 
-                            eventBus.fireEvent(ProjectActionEvent.createProjectDescriptionChangedEvent(project));
+                        eventBus.fireEvent(ProjectActionEvent.createProjectDescriptionChangedEvent(project));
 
-                            callback.onSuccess(Project.this);
-                        }
+                        callback.onSuccess(Project.this);
+                    }
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            callback.onFailure(exception);
-                        }
-                    };
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        callback.onFailure(exception);
+                    }
+                };
 
-            // get JSON for this Project
-            String url = vfsInfo.getUrlTemplates().get(Link.REL_ITEM).getHref();
-            url = URL.decode(url).replace("[id]", id);
-            AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(loader).send(internalCallback);
-        } catch (RequestException e) {
-            callback.onFailure(e);
-        }
+        // get JSON for this Project
+        String url = vfsInfo.getUrlTemplates().get(Link.REL_ITEM).getHref();
+        url = URL.decode(url).replace("[id]", id);
+        asyncRequestFactory.createGetRequest(URL.encode(url)).loader(loader).send(internalCallback);
     }
 
     /**
-     * @param source
-     * @param destination
      * @param callback
      * @throws ResourceException
      */

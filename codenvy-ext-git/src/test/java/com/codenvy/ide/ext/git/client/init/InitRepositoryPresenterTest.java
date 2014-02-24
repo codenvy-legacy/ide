@@ -24,7 +24,6 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
@@ -83,12 +82,12 @@ public class InitRepositoryPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                RequestCallback<String> callback = (RequestCallback<String>)arguments[4];
+                RequestCallback<Void> callback = (RequestCallback<Void>)arguments[4];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, EMPTY_TEXT);
+                onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service).initWS(anyString(), anyString(), anyString(), anyBoolean(), (RequestCallback<String>)anyObject());
+        }).when(service).initWS(anyString(), anyString(), anyString(), anyBoolean(), (RequestCallback<Void>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -105,8 +104,8 @@ public class InitRepositoryPresenterTest extends BaseTest {
 
         verify(view).isBare();
         verify(view).close();
-        verify(service).initWS(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<String>)anyObject());
-        verify(service, never()).init(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (AsyncRequestCallback<String>)anyObject());
+        verify(service).initWS(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<Void>)anyObject());
+        verify(service, never()).init(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (AsyncRequestCallback<Void>)anyObject());
         verify(constant).initSuccess();
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(eventBus).fireEvent((RefreshBrowserEvent)anyObject());
@@ -124,15 +123,15 @@ public class InitRepositoryPresenterTest extends BaseTest {
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).initWS(anyString(), anyString(), anyString(), anyBoolean(), (RequestCallback<String>)anyObject());
+        }).when(service).initWS(anyString(), anyString(), anyString(), anyBoolean(), (RequestCallback<Void>)anyObject());
 
         presenter.showDialog();
         presenter.onOkClicked();
 
         verify(view).isBare();
         verify(view).close();
-        verify(service).initWS(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<String>)anyObject());
-        verify(service, never()).init(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (AsyncRequestCallback<String>)anyObject());
+        verify(service).initWS(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<Void>)anyObject());
+        verify(service, never()).init(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (AsyncRequestCallback<Void>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).initFailed();
     }
@@ -140,17 +139,17 @@ public class InitRepositoryPresenterTest extends BaseTest {
     @Test
     public void testOnOkClickedInitRequestIsSuccessful() throws Exception {
         doThrow(WebSocketException.class).when(service)
-                .initWS(anyString(), anyString(), anyString(), anyBoolean(), (RequestCallback<String>)anyObject());
+                .initWS(anyString(), anyString(), anyString(), anyBoolean(), (RequestCallback<Void>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[4];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, EMPTY_TEXT);
+                onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service).init(anyString(), anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).init(anyString(), anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<Void>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -167,8 +166,8 @@ public class InitRepositoryPresenterTest extends BaseTest {
 
         verify(view).isBare();
         verify(view).close();
-        verify(service).initWS(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<String>)anyObject());
-        verify(service).init(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (AsyncRequestCallback<String>)anyObject());
+        verify(service).initWS(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<Void>)anyObject());
+        verify(service).init(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (AsyncRequestCallback<Void>)anyObject());
         verify(constant).initSuccess();
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(eventBus).fireEvent((RefreshBrowserEvent)anyObject());
@@ -178,43 +177,25 @@ public class InitRepositoryPresenterTest extends BaseTest {
     @Test
     public void testOnOkClickedInitRequestIsFailed() throws Exception {
         doThrow(WebSocketException.class).when(service)
-                .initWS(anyString(), anyString(), anyString(), anyBoolean(), (RequestCallback<String>)anyObject());
+                .initWS(anyString(), anyString(), anyString(), anyBoolean(), (RequestCallback<Void>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[4];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).init(anyString(), anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).init(anyString(), anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<Void>)anyObject());
 
         presenter.showDialog();
         presenter.onOkClicked();
 
         verify(view).isBare();
         verify(view).close();
-        verify(service).initWS(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<String>)anyObject());
-        verify(service).init(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (AsyncRequestCallback<String>)anyObject());
-        verify(notificationManager).showNotification((Notification)anyObject());
-        verify(constant).initFailed();
-    }
-
-    @Test
-    public void testOnOkClickedRestRequestWhenExceptionHappened() throws Exception {
-        doThrow(WebSocketException.class).when(service)
-                .initWS(anyString(), anyString(), anyString(), anyBoolean(), (RequestCallback<String>)anyObject());
-        doThrow(RequestException.class).when(service)
-                .init(anyString(), anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
-
-        presenter.showDialog();
-        presenter.onOkClicked();
-
-        verify(view).isBare();
-        verify(view).close();
-        verify(service).initWS(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<String>)anyObject());
-        verify(service).init(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (AsyncRequestCallback<String>)anyObject());
+        verify(service).initWS(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<Void>)anyObject());
+        verify(service).init(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (AsyncRequestCallback<Void>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).initFailed();
     }

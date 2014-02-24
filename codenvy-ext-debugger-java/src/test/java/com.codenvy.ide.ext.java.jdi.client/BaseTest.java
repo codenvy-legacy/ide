@@ -24,6 +24,7 @@ import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerClientService;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.websocket.MessageBus;
 import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.gwt.test.GwtModule;
@@ -59,6 +60,8 @@ public abstract class BaseTest extends GwtTestWithMockito {
     protected ConsolePart                     console;
     @Mock
     protected DtoFactory                      dtoFactory;
+    @Mock
+    protected DtoUnmarshallerFactory          dtoUnmarshallerFactory;
     @Mock
     protected WorkspaceAgent                  workspaceAgent;
     @Mock

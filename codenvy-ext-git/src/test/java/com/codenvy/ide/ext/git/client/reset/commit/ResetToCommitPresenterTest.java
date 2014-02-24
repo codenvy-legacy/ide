@@ -24,11 +24,9 @@ import com.codenvy.ide.ext.git.shared.ResetRequest;
 import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -44,7 +42,6 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -70,11 +67,10 @@ public class ResetToCommitPresenterTest extends BaseTest {
     public void disarm() {
         super.disarm();
 
-        presenter = new ResetToCommitPresenter(view, service, resourceProvider, constant, notificationManager, dtoFactory);
+        presenter = new ResetToCommitPresenter(view, service, resourceProvider, constant, notificationManager, dtoUnmarshallerFactory);
     }
 
     @Test
-    @Ignore
     public void testShowDialogWhenLogRequestIsSuccessful() throws Exception {
         doAnswer(new Answer() {
             @Override
@@ -86,12 +82,12 @@ public class ResetToCommitPresenterTest extends BaseTest {
                 return callback;
 
             }
-        }).when(service).log(anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).log(anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<LogResponse>)anyObject());
 
         presenter.showDialog();
 
         verify(resourceProvider).getActiveProject();
-        verify(service).log(eq(VFS_ID), eq(PROJECT_ID), eq(!IS_TEXT_FORMATTED), (AsyncRequestCallback<String>)anyObject());
+        verify(service).log(eq(VFS_ID), eq(PROJECT_ID), eq(!IS_TEXT_FORMATTED), (AsyncRequestCallback<LogResponse>)anyObject());
         verify(view).setRevisions((ArrayList<Revision>)anyObject());
         verify(view).setMixMode(eq(IS_MIXED));
         verify(view).setEnableResetButton(eq(DISABLE_BUTTON));
@@ -110,25 +106,12 @@ public class ResetToCommitPresenterTest extends BaseTest {
                 return callback;
 
             }
-        }).when(service).log(anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).log(anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<LogResponse>)anyObject());
 
         presenter.showDialog();
 
         verify(resourceProvider).getActiveProject();
-        verify(service).log(eq(VFS_ID), eq(PROJECT_ID), eq(!IS_TEXT_FORMATTED), (AsyncRequestCallback<String>)anyObject());
-        verify(constant).logFailed();
-        verify(notificationManager).showNotification((Notification)anyObject());
-    }
-
-    @Test
-    public void testShowDialogWhenRequestExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(service)
-                .log(anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
-
-        presenter.showDialog();
-
-        verify(resourceProvider).getActiveProject();
-        verify(service).log(eq(VFS_ID), eq(PROJECT_ID), eq(!IS_TEXT_FORMATTED), (AsyncRequestCallback<String>)anyObject());
+        verify(service).log(eq(VFS_ID), eq(PROJECT_ID), eq(!IS_TEXT_FORMATTED), (AsyncRequestCallback<LogResponse>)anyObject());
         verify(constant).logFailed();
         verify(notificationManager).showNotification((Notification)anyObject());
     }
@@ -185,21 +168,6 @@ public class ResetToCommitPresenterTest extends BaseTest {
         presenter.onResetClicked();
 
         verify(service).reset(eq(VFS_ID), anyString(), eq(PROJECT_ID), eq(MIXED), (AsyncRequestCallback<String>)anyObject());
-        verify(constant).resetFail();
-        verify(notificationManager).showNotification((Notification)anyObject());
-    }
-
-    @Test
-    public void testOnResetClickedWhenRequestExceptionHappened() throws Exception {
-        when(view.isMixMode()).thenReturn(IS_MIXED);
-        when(selectedRevision.getId()).thenReturn(REVISION_ID);
-        doThrow(RequestException.class).when(service).reset(anyString(), anyString(), anyString(), (ResetRequest.ResetType)anyObject(),
-                                                            (AsyncRequestCallback<String>)anyObject());
-
-        presenter.onRevisionSelected(selectedRevision);
-        presenter.onResetClicked();
-
-        verify(service).reset(eq(VFS_ID), anyString(), eq(REVISION_ID), eq(MIXED), (AsyncRequestCallback<String>)anyObject());
         verify(constant).resetFail();
         verify(notificationManager).showNotification((Notification)anyObject());
     }

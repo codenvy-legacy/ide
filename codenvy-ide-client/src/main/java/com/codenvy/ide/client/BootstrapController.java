@@ -25,20 +25,19 @@ import com.codenvy.ide.api.ui.theme.Theme;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
 import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.StringUnmarshaller;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.workspace.WorkspacePresenter;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.ScriptInjector;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
@@ -53,11 +52,11 @@ import java.util.Map;
  */
 public class BootstrapController {
 
-    private PreferencesManagerImpl              preferencesManager;
-    private ProjectTypeDescriptionClientService projectTypeService;
-    private ProjectTypeDescriptorRegistry       projectTypeDescriptorRegistry;
-    private DtoFactory                          dtoFactory;
-    private ThemeAgent                          themeAgent;
+    private final DtoUnmarshallerFactory              dtoUnmarshallerFactory;
+    private       PreferencesManagerImpl              preferencesManager;
+    private       ProjectTypeDescriptionClientService projectTypeDescriptionService;
+    private       ProjectTypeDescriptorRegistry       projectTypeDescriptorRegistry;
+    private       ThemeAgent                          themeAgent;
 
     /**
      * Create controller.
@@ -72,7 +71,6 @@ public class BootstrapController {
      * @param projectTypeDescriptorRegistry
      * @param resourceProvider
      * @param dtoRegistrar
-     * @param dtoFactory
      * @param themeAgent
      */
     @Inject
@@ -86,13 +84,13 @@ public class BootstrapController {
                                final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
                                final ResourceProvider resourceProvider,
                                DtoRegistrar dtoRegistrar,
-                               final DtoFactory dtoFactory,
-                               final ThemeAgent themeAgent) {
+                               final ThemeAgent themeAgent,
+                               DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.preferencesManager = preferencesManager;
-        this.projectTypeService = projectTypeDescriptionService;
+        this.projectTypeDescriptionService = projectTypeDescriptionService;
         this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
-        this.dtoFactory = dtoFactory;
         this.themeAgent = themeAgent;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
 
         ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW)
                       .setCallback(new Callback<Void, Exception>() {
@@ -107,58 +105,53 @@ public class BootstrapController {
                           }
                       }).inject();
 
-        try {
-            dtoRegistrar.registerDtoProviders();
-            userService.getUser(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                @Override
-                protected void onSuccess(final String result) {
-                    final User user = dtoFactory.createDtoFromJson(result, User.class);
-                    Map<String, String> attributes = user.getProfileAttributes();
-                    preferencesManager.load(attributes);
+        dtoRegistrar.registerDtoProviders();
+        userService.getUser(new AsyncRequestCallback<User>(dtoUnmarshallerFactory.newUnmarshaller(User.class)) {
+            @Override
+            protected void onSuccess(final User user) {
+                Map<String, String> attributes = user.getProfileAttributes();
+                preferencesManager.load(attributes);
 
-                    setTheme();
-                    styleInjector.inject();
+                setTheme();
+                styleInjector.inject();
 
-                    // initialize components
-                    componentRegistry.get().start(new Callback<Void, ComponentException>() {
-                        @Override
-                        public void onSuccess(Void result) {
-                            // instantiate extensions
-                            extensionInitializer.startExtensions();
-                            // Start UI
-                            SimplePanel mainPanel = new SimplePanel();
-                            RootLayoutPanel.get().add(mainPanel);
-                            WorkspacePresenter workspacePresenter = workspaceProvider.get();
+                // initialize components
+                componentRegistry.get().start(new Callback<Void, ComponentException>() {
+                    @Override
+                    public void onSuccess(Void result) {
+                        // instantiate extensions
+                        extensionInitializer.startExtensions();
+                        // Start UI
+                        SimplePanel mainPanel = new SimplePanel();
+                        RootLayoutPanel.get().add(mainPanel);
+                        WorkspacePresenter workspacePresenter = workspaceProvider.get();
 
-                            workspacePresenter.setUpdateButtonVisibility(Utils.isAppLaunchedInSDKRunner());
+                        workspacePresenter.setUpdateButtonVisibility(Utils.isAppLaunchedInSDKRunner());
 
-                            final boolean isUserLoggedIn = !user.getUserId().equals("__anonim");
-                            workspacePresenter.setVisibleLoginButton(!isUserLoggedIn);
-                            workspacePresenter.setVisibleLogoutButton(isUserLoggedIn);
+                        final boolean isUserLoggedIn = !user.getUserId().equals("__anonim");
+                        workspacePresenter.setVisibleLoginButton(!isUserLoggedIn);
+                        workspacePresenter.setVisibleLogoutButton(isUserLoggedIn);
 
-                            // Display IDE
-                            workspacePresenter.go(mainPanel);
-                            // Display list of projects in project explorer
-                            resourceProvider.showListProjects();
-                        }
+                        // Display IDE
+                        workspacePresenter.go(mainPanel);
+                        // Display list of projects in project explorer
+                        resourceProvider.showListProjects();
+                    }
 
-                        @Override
-                        public void onFailure(ComponentException caught) {
-                            Log.error(BootstrapController.class, "FAILED to start service:" + caught.getComponent(), caught);
-                        }
-                    });
+                    @Override
+                    public void onFailure(ComponentException caught) {
+                        Log.error(BootstrapController.class, "FAILED to start service:" + caught.getComponent(), caught);
+                    }
+                });
 
-                    initializeProjectTypeDescriptorRegistry();
-                }
+                initializeProjectTypeDescriptorRegistry();
+            }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    Log.error(BootstrapController.class, exception);
-                }
-            });
-        } catch (RequestException e) {
-            Log.error(BootstrapController.class, e);
-        }
+            @Override
+            protected void onFailure(Throwable exception) {
+                Log.error(BootstrapController.class, exception);
+            }
+        });
     }
 
     private void setTheme() {
@@ -169,22 +162,19 @@ public class BootstrapController {
     }
 
     private void initializeProjectTypeDescriptorRegistry() {
-        try {
-            projectTypeService.getProjectTypes(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                @Override
-                protected void onSuccess(String result) {
-                    projectTypeDescriptorRegistry
-                            .registerDescriptors(dtoFactory.createListDtoFromJson(result, ProjectTypeDescriptor.class));
-                }
+        projectTypeDescriptionService
+                .getProjectTypes(new AsyncRequestCallback<Array<ProjectTypeDescriptor>>(
+                        dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectTypeDescriptor.class)) {
+                    @Override
+                    protected void onSuccess(Array<ProjectTypeDescriptor> result) {
+                        projectTypeDescriptorRegistry.registerDescriptors(result);
+                    }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    Log.error(BootstrapController.class, exception);
-                }
-            });
-        } catch (RequestException e) {
-            Log.error(BootstrapController.class, e);
-        }
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        Log.error(BootstrapController.class, exception);
+                    }
+                });
     }
 
 }

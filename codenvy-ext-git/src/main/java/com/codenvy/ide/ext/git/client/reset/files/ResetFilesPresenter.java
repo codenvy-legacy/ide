@@ -30,9 +30,8 @@ import com.codenvy.ide.ext.git.shared.ResetRequest.ResetType;
 import com.codenvy.ide.ext.git.shared.Status;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.StringUnmarshaller;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -52,18 +51,18 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
  * 3. Display files ready for commit in grid. (Checked items will be reseted from index).
  *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Apr 13, 2011 4:52:42 PM anya $
  */
 @Singleton
 public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
-    private ResetFilesView          view;
-    private GitClientService        service;
-    private ResourceProvider        resourceProvider;
-    private GitLocalizationConstant constant;
-    private NotificationManager     notificationManager;
-    private Project                 project;
-    private Array<IndexFile>        indexedFiles;
-    private DtoFactory              dtoFactory;
+    private final DtoFactory              dtoFactory;
+    private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
+    private       ResetFilesView          view;
+    private       GitClientService        service;
+    private       ResourceProvider        resourceProvider;
+    private       GitLocalizationConstant constant;
+    private       NotificationManager     notificationManager;
+    private       Project                 project;
+    private       Array<IndexFile>        indexedFiles;
 
     /**
      * Create presenter.
@@ -76,58 +75,54 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
      */
     @Inject
     public ResetFilesPresenter(ResetFilesView view, GitClientService service, ResourceProvider resourceProvider,
-                               GitLocalizationConstant constant, NotificationManager notificationManager, DtoFactory dtoFactory) {
+                               GitLocalizationConstant constant, NotificationManager notificationManager,
+                               DtoFactory dtoFactory, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
+        this.dtoFactory = dtoFactory;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
         this.constant = constant;
         this.notificationManager = notificationManager;
-        this.dtoFactory = dtoFactory;
     }
 
     /** Show dialog. */
     public void showDialog() {
         project = resourceProvider.getActiveProject();
 
-        try {
-            service.status(resourceProvider.getVfsInfo().getId(), project.getId(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                @Override
-                protected void onSuccess(String result) {
-                    Status status = dtoFactory.createDtoFromJson(result, Status.class);
-                    if (status.isClean()) {
-                        Window.alert(constant.indexIsEmpty());
-                        return;
-                    }
+        service.status(resourceProvider.getVfsInfo().getId(), project.getId(),
+                       new AsyncRequestCallback<Status>(dtoUnmarshallerFactory.newUnmarshaller(Status.class)) {
+                           @Override
+                           protected void onSuccess(Status result) {
+                               if (result.isClean()) {
+                                   Window.alert(constant.indexIsEmpty());
+                                   return;
+                               }
 
-                    Array<IndexFile> values = Collections.createArray();
-                    ArrayList<String> valuesTmp = new ArrayList<String>();
+                               Array<IndexFile> values = Collections.createArray();
+                               ArrayList<String> valuesTmp = new ArrayList<String>();
 
-                    valuesTmp.addAll(status.getAdded());
-                    valuesTmp.addAll(status.getChanged());
-                    valuesTmp.addAll(status.getRemoved());
+                               valuesTmp.addAll(result.getAdded());
+                               valuesTmp.addAll(result.getChanged());
+                               valuesTmp.addAll(result.getRemoved());
 
-                    for (String value : valuesTmp) {
-                        IndexFile indexFile = dtoFactory.createDto(IndexFile.class).withPath(value).withIndexed(true);
-                        values.add(indexFile);
-                    }
-                    view.setIndexedFiles(values);
-                    indexedFiles = values;
-                    view.showDialog();
-                }
+                               for (String value : valuesTmp) {
+                                   IndexFile indexFile = dtoFactory.createDto(IndexFile.class).withPath(value).withIndexed(true);
+                                   values.add(indexFile);
+                               }
+                               view.setIndexedFiles(values);
+                               indexedFiles = values;
+                               view.showDialog();
+                           }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    String errorMassage = exception.getMessage() != null ? exception.getMessage() : constant.statusFailed();
-                    Notification notification = new Notification(errorMassage, ERROR);
-                    notificationManager.showNotification(notification);
-                }
-            });
-        } catch (RequestException e) {
-            String errorMassage = e.getMessage() != null ? e.getMessage() : constant.statusFailed();
-            Notification notification = new Notification(errorMassage, ERROR);
-            notificationManager.showNotification(notification);
-        }
+                           @Override
+                           protected void onFailure(Throwable exception) {
+                               String errorMassage = exception.getMessage() != null ? exception.getMessage() : constant.statusFailed();
+                               Notification notification = new Notification(errorMassage, ERROR);
+                               notificationManager.showNotification(notification);
+                           }
+                       });
     }
 
     /** {@inheritDoc} */
@@ -150,37 +145,31 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
 
         String projectId = project.getId();
 
-        try {
-            service.reset(resourceProvider.getVfsInfo().getId(), projectId, "HEAD", ResetType.MIXED, new AsyncRequestCallback<String>() {
-                @Override
-                protected void onSuccess(String result) {
-                    resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
-                        @Override
-                        public void onSuccess(Project result) {
-                            view.close();
-                            Notification notification = new Notification(constant.resetFilesSuccessfully(), INFO);
-                            notificationManager.showNotification(notification);
-                        }
+        service.reset(resourceProvider.getVfsInfo().getId(), projectId, "HEAD", ResetType.MIXED, new AsyncRequestCallback<String>() {
+            @Override
+            protected void onSuccess(String result) {
+                resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
+                    @Override
+                    public void onSuccess(Project result) {
+                        view.close();
+                        Notification notification = new Notification(constant.resetFilesSuccessfully(), INFO);
+                        notificationManager.showNotification(notification);
+                    }
 
-                        @Override
-                        public void onFailure(Throwable caught) {
-                            Log.error(ResetFilesPresenter.class, "can not get project " + project.getName());
-                        }
-                    });
-                }
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        Log.error(ResetFilesPresenter.class, "can not get project " + project.getName());
+                    }
+                });
+            }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    String errorMassage = exception.getMessage() != null ? exception.getMessage() : constant.resetFilesFailed();
-                    Notification notification = new Notification(errorMassage, ERROR);
-                    notificationManager.showNotification(notification);
-                }
-            });
-        } catch (RequestException e) {
-            String errorMassage = e.getMessage() != null ? e.getMessage() : constant.resetFilesFailed();
-            Notification notification = new Notification(errorMassage, ERROR);
-            notificationManager.showNotification(notification);
-        }
+            @Override
+            protected void onFailure(Throwable exception) {
+                String errorMassage = exception.getMessage() != null ? exception.getMessage() : constant.resetFilesFailed();
+                Notification notification = new Notification(errorMassage, ERROR);
+                notificationManager.showNotification(notification);
+            }
+        });
     }
 
     /** {@inheritDoc} */

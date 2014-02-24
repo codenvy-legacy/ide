@@ -24,7 +24,6 @@ import com.codenvy.ide.ext.github.shared.GitHubRepository;
 import com.codenvy.ide.ext.github.shared.GitHubRepositoryList;
 import com.codenvy.ide.ext.github.shared.GitHubUser;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.http.client.RequestException;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -32,94 +31,95 @@ import java.util.List;
 /**
  * Client service for Samples.
  *
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: SamplesClientService.java Sep 2, 2011 12:34:16 PM vereshchaka $
+ * @author Oksana Vereshchaka
  */
 public interface GitHubClientService {
     /**
      * Get the list of available public and private repositories of the authorized user.
-     * 
-     * @param callback the callback client has to implement
+     *
+     * @param callback
+     *         the callback client has to implement
      */
-    public abstract void getRepositoriesList(@NotNull AsyncRequestCallback<GitHubRepositoryList> callback)
-                                                                                                   throws RequestException;
+    public abstract void getRepositoriesList(@NotNull AsyncRequestCallback<GitHubRepositoryList> callback);
 
     /**
      * Get the list of available public repositories from GitHub user.
-     * 
-     * @param userName Name of GitHub User
-     * @param callback the callback client has to implement
+     *
+     * @param userName
+     *         Name of GitHub User
+     * @param callback
+     *         the callback client has to implement
      */
-    public abstract void getRepositoriesByUser(@NotNull String userName, @NotNull AsyncRequestCallback<GitHubRepositoryList> callback)
-                                                                                                                      throws RequestException;
-    
+    public abstract void getRepositoriesByUser(@NotNull String userName, @NotNull AsyncRequestCallback<GitHubRepositoryList> callback);
+
     /**
      * Get the page with GitHub repositories.
-     * 
-     * @param pageLocation page location
+     *
+     * @param pageLocation
+     *         page location
      * @param callback
-     * @throws RequestException
      */
-    public abstract void getPage(@NotNull String pageLocation, @NotNull AsyncRequestCallback<GitHubRepositoryList> callback)
-                                                                                                 throws RequestException;
-    
+    public abstract void getPage(@NotNull String pageLocation, @NotNull AsyncRequestCallback<GitHubRepositoryList> callback);
+
     /**
      * Get the list of available repositories by GitHub organization.
-     * 
-     * @param organization Name of GitHub organization
-     * @param callback the callback client has to implement
+     *
+     * @param organization
+     *         Name of GitHub organization
+     * @param callback
+     *         the callback client has to implement
      */
-    public abstract void getRepositoriesByOrganization(@NotNull String organization, @NotNull AsyncRequestCallback<GitHubRepositoryList> callback)
-                                                                                                                      throws RequestException;
+    public abstract void getRepositoriesByOrganization(@NotNull String organization,
+                                                       @NotNull AsyncRequestCallback<GitHubRepositoryList> callback);
+
     /**
      * Get the list of available public repositories from GitHub account.
-     * 
-     * @param account Name of GitHub Account
-     * @param callback the callback client has to implement
+     *
+     * @param account
+     *         Name of GitHub Account
+     * @param callback
+     *         the callback client has to implement
      */
-    public abstract void getRepositoriesByAccount(@NotNull String account, @NotNull AsyncRequestCallback<GitHubRepositoryList> callback)
-                                                                                                                      throws RequestException;
-    
+    public abstract void getRepositoriesByAccount(@NotNull String account, @NotNull AsyncRequestCallback<GitHubRepositoryList> callback);
+
     /**
      * Get list of collaborators of GitHub repository. For detail see GitHub REST API http://developer.github.com/v3/repos/collaborators/.
-     * 
+     *
      * @param user
      * @param repository
      * @param callback
-     * @throws RequestException
      */
-    public abstract void getCollaborators(@NotNull String user, @NotNull String repository, @NotNull AsyncRequestCallback<Collaborators> callback)
-                                                                                                                       throws RequestException;
+    public abstract void getCollaborators(@NotNull String user, @NotNull String repository,
+                                          @NotNull AsyncRequestCallback<Collaborators> callback);
 
     /**
      * Get the GitHub oAuth token for the pointed user.
-     * 
-     * @param user user's id
+     *
+     * @param user
+     *         user's id
      * @param callback
-     * @throws RequestException
      */
-    public abstract void getUserToken(@NotNull String user, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    public abstract void getUserToken(@NotNull String user, @NotNull AsyncRequestCallback<String> callback);
 
     /**
      * Get the map of available public and private repositories of the authorized user and organizations he exists in.
-     * 
-     * @param callback the callback client has to implement
+     *
+     * @param callback
+     *         the callback client has to implement
      */
-    public abstract void getAllRepositories(@NotNull AsyncRequestCallback<StringMap<Array<GitHubRepository>>> callback) throws RequestException;
-    
+    public abstract void getAllRepositories(@NotNull AsyncRequestCallback<StringMap<Array<GitHubRepository>>> callback);
+
     /**
      * Get the list of the organizations, where authorized user is a member.
-     * 
+     *
      * @param callback
-     * @throws RequestException
      */
-    public abstract void getOrganizations(@NotNull AsyncRequestCallback<List<String>> callback) throws RequestException;
-    
+    public abstract void getOrganizations(@NotNull AsyncRequestCallback<List<String>> callback);
+
     /**
      * Get authorized user information.
-     * 
+     *
      * @param callback
-     * @throws RequestException
      */
-    public abstract void getUserInfo(@NotNull AsyncRequestCallback<GitHubUser> callback) throws RequestException;
+    public abstract void getUserInfo(@NotNull AsyncRequestCallback<GitHubUser> callback);
 }

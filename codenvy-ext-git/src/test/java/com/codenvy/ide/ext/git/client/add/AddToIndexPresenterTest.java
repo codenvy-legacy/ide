@@ -27,7 +27,6 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
@@ -130,13 +129,13 @@ public class AddToIndexPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                RequestCallback<String> callback = (RequestCallback<String>)arguments[4];
+                RequestCallback<Void> callback = (RequestCallback<Void>)arguments[4];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, PROJECT_NAME);
+                onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
         }).when(service).addWS(anyString(), (Project)anyObject(), anyBoolean(), (List<String>)anyObject(),
-                               (RequestCallback<String>)anyObject());
+                               (RequestCallback<Void>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -156,12 +155,10 @@ public class AddToIndexPresenterTest extends BaseTest {
 
         verify(view).isUpdated();
         verify(view).close();
-        verify(service)
-                .addWS(eq(VFS_ID), eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
-                       (RequestCallback<String>)anyObject());
-        verify(service, never())
-                .add(eq(VFS_ID), eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
-                     (AsyncRequestCallback<String>)anyObject());
+        verify(service).addWS(eq(VFS_ID), eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
+                              (RequestCallback<Void>)anyObject());
+        verify(service, never()).add(eq(VFS_ID), eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
+                                     (AsyncRequestCallback<Void>)anyObject());
         verify(resourceProvider).getProject(eq(PROJECT_NAME), (AsyncCallback<Project>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).addSuccess();
@@ -173,13 +170,13 @@ public class AddToIndexPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                RequestCallback<String> callback = (RequestCallback<String>)arguments[4];
+                RequestCallback<Void> callback = (RequestCallback<Void>)arguments[4];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
         }).when(service).addWS(anyString(), (Project)anyObject(), anyBoolean(), (List<String>)anyObject(),
-                               (RequestCallback<String>)anyObject());
+                               (RequestCallback<Void>)anyObject());
         when(view.isUpdated()).thenReturn(NEED_UPDATING);
 
         presenter.showDialog();
@@ -187,12 +184,10 @@ public class AddToIndexPresenterTest extends BaseTest {
 
         verify(view).isUpdated();
         verify(view).close();
-        verify(service)
-                .addWS(eq(VFS_ID), eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
-                       (RequestCallback<String>)anyObject());
-        verify(service, never())
-                .add(eq(VFS_ID), eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
-                     (AsyncRequestCallback<String>)anyObject());
+        verify(service).addWS(eq(VFS_ID), eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
+                              (RequestCallback<Void>)anyObject());
+        verify(service, never()).add(eq(VFS_ID), eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
+                                     (AsyncRequestCallback<Void>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).addFailed();
     }
@@ -201,18 +196,18 @@ public class AddToIndexPresenterTest extends BaseTest {
     public void testOnAddClickedWhenAddRequestIsSuccessful() throws Exception {
         doThrow(WebSocketException.class).when(service)
                 .addWS(anyString(), (Project)anyObject(), anyBoolean(), (List<String>)anyObject(),
-                       (RequestCallback<String>)anyObject());
+                       (RequestCallback<Void>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[4];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, PROJECT_NAME);
+                onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
         }).when(service).add(anyString(), (Project)anyObject(), anyBoolean(), (List<String>)anyObject(),
-                             (AsyncRequestCallback<String>)anyObject());
+                             (AsyncRequestCallback<Void>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -231,12 +226,9 @@ public class AddToIndexPresenterTest extends BaseTest {
         presenter.onAddClicked();
 
         verify(view).isUpdated();
-        verify(service)
-                .addWS(eq(VFS_ID), eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
-                       (RequestCallback<String>)anyObject());
-        verify(service)
-                .add(eq(VFS_ID), eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
-                     (AsyncRequestCallback<String>)anyObject());
+        verify(service).addWS(eq(VFS_ID), eq(project), eq(NEED_UPDATING), (List<String>)anyObject(), (RequestCallback<Void>)anyObject());
+        verify(service).add(eq(VFS_ID), eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
+                            (AsyncRequestCallback<Void>)anyObject());
         verify(view).close();
         verify(resourceProvider).getProject(eq(PROJECT_NAME), (AsyncCallback<Project>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
@@ -247,18 +239,18 @@ public class AddToIndexPresenterTest extends BaseTest {
     public void testOnAddClickedWhenAddRequestIsFailed() throws Exception {
         doThrow(WebSocketException.class).when(service)
                 .addWS(anyString(), (Project)anyObject(), anyBoolean(), (List<String>)anyObject(),
-                       (RequestCallback<String>)anyObject());
+                       (RequestCallback<Void>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[4];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onSuccess.invoke(callback, mock(Throwable.class));
                 return callback;
             }
         }).when(service).add(anyString(), (Project)anyObject(), anyBoolean(), (List<String>)anyObject(),
-                             (AsyncRequestCallback<String>)anyObject());
+                             (AsyncRequestCallback<Void>)anyObject());
         when(view.isUpdated()).thenReturn(NEED_UPDATING);
 
         presenter.showDialog();
@@ -267,36 +259,13 @@ public class AddToIndexPresenterTest extends BaseTest {
         verify(view).isUpdated();
         verify(service)
                 .addWS(eq(VFS_ID), eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
-                       (RequestCallback<String>)anyObject());
+                       (RequestCallback<Void>)anyObject());
         verify(service)
                 .add(eq(VFS_ID), eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
-                     (AsyncRequestCallback<String>)anyObject());
+                     (AsyncRequestCallback<Void>)anyObject());
         verify(view).close();
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).addFailed();
-    }
-
-    @Test
-    public void testOnAddClickedWhenRequestExceptionHappened() throws Exception {
-        doThrow(WebSocketException.class).when(service)
-                .addWS(anyString(), (Project)anyObject(), anyBoolean(), (List<String>)anyObject(),
-                       (RequestCallback<String>)anyObject());
-        doThrow(RequestException.class).when(service).add(anyString(), (Project)anyObject(), anyBoolean(), (List<String>)anyObject(),
-                                                          (AsyncRequestCallback<String>)anyObject());
-        when(view.isUpdated()).thenReturn(NEED_UPDATING);
-
-        presenter.showDialog();
-        presenter.onAddClicked();
-
-        verify(view).isUpdated();
-        verify(service)
-                .addWS(eq(VFS_ID), eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
-                       (RequestCallback<String>)anyObject());
-        verify(service)
-                .add(eq(VFS_ID), eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
-                     (AsyncRequestCallback<String>)anyObject());
-        verify(view).close();
-        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test

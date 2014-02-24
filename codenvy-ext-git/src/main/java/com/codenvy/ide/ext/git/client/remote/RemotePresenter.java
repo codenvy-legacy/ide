@@ -21,14 +21,11 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.remote.add.AddRemoteRepositoryPresenter;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.StringUnmarshaller;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -42,7 +39,6 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  * Presenter for working with remote repository list (view, add and delete).
  *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Apr 18, 2011 11:13:30 AM anya $
  */
 @Singleton
 public class RemotePresenter implements RemoteView.ActionDelegate {
@@ -54,7 +50,6 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
     private NotificationManager          notificationManager;
     private Remote                       selectedRemote;
     private String                       projectId;
-    private DtoFactory                   dtoFactory;
 
     /**
      * Create presenter.
@@ -68,8 +63,7 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
      */
     @Inject
     public RemotePresenter(RemoteView view, GitClientService service, ResourceProvider resourceProvider, GitLocalizationConstant constant,
-                           AddRemoteRepositoryPresenter addRemoteRepositoryPresenter, NotificationManager notificationManager,
-                           DtoFactory dtoFactory) {
+                           AddRemoteRepositoryPresenter addRemoteRepositoryPresenter, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
@@ -77,7 +71,6 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
         this.constant = constant;
         this.addRemoteRepositoryPresenter = addRemoteRepositoryPresenter;
         this.notificationManager = notificationManager;
-        this.dtoFactory = dtoFactory;
     }
 
     /** Show dialog. */
@@ -91,30 +84,24 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
      * local).
      */
     private void getRemotes() {
-        try {
-            service.remoteList(resourceProvider.getVfsInfo().getId(), projectId, null, true,
-                               new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                                   @Override
-                                   protected void onSuccess(String result) {
-                                       Array<Remote> remotes = dtoFactory.createListDtoFromJson(result, Remote.class);
-                                       view.setEnableDeleteButton(false);
-                                       view.setRemotes(remotes);
-                                       if (!view.isShown()) {
-                                           view.showDialog();
-                                       }
+        service.remoteList(resourceProvider.getVfsInfo().getId(), projectId, null, true,
+                           new AsyncRequestCallback<Array<Remote>>() {
+                               @Override
+                               protected void onSuccess(Array<Remote> result) {
+                                   view.setEnableDeleteButton(false);
+                                   view.setRemotes(result);
+                                   if (!view.isShown()) {
+                                       view.showDialog();
                                    }
+                               }
 
-                                   @Override
-                                   protected void onFailure(Throwable exception) {
-                                       String errorMessage =
-                                               exception.getMessage() != null ? exception.getMessage() : constant.remoteListFailed();
-                                       Window.alert(errorMessage);
-                                   }
-                               });
-        } catch (RequestException e) {
-            String errorMessage = e.getMessage() != null ? e.getMessage() : constant.remoteListFailed();
-            Window.alert(errorMessage);
-        }
+                               @Override
+                               protected void onFailure(Throwable exception) {
+                                   String errorMessage =
+                                           exception.getMessage() != null ? exception.getMessage() : constant.remoteListFailed();
+                                   Window.alert(errorMessage);
+                               }
+                           });
     }
 
     /** {@inheritDoc} */
@@ -152,25 +139,19 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
         String name = selectedRemote.getName();
         boolean needToDelete = Window.confirm(constant.deleteRemoteRepositoryQuestion(name));
         if (needToDelete) {
-            try {
-                service.remoteDelete(resourceProvider.getVfsInfo().getId(), projectId, name, new AsyncRequestCallback<String>() {
-                    @Override
-                    protected void onSuccess(String result) {
-                        getRemotes();
-                    }
+            service.remoteDelete(resourceProvider.getVfsInfo().getId(), projectId, name, new AsyncRequestCallback<String>() {
+                @Override
+                protected void onSuccess(String result) {
+                    getRemotes();
+                }
 
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        String errorMessage = exception.getMessage() != null ? exception.getMessage() : constant.remoteDeleteFailed();
-                        Notification notification = new Notification(errorMessage, ERROR);
-                        notificationManager.showNotification(notification);
-                    }
-                });
-            } catch (RequestException e) {
-                String errorMessage = e.getMessage() != null ? e.getMessage() : constant.remoteDeleteFailed();
-                Notification notification = new Notification(errorMessage, ERROR);
-                notificationManager.showNotification(notification);
-            }
+                @Override
+                protected void onFailure(Throwable exception) {
+                    String errorMessage = exception.getMessage() != null ? exception.getMessage() : constant.remoteDeleteFailed();
+                    Notification notification = new Notification(errorMessage, ERROR);
+                    notificationManager.showNotification(notification);
+                }
+            });
         }
     }
 

@@ -20,14 +20,12 @@ package com.codenvy.ide.ext.github.client.welcome;
 import com.codenvy.ide.api.parts.WelcomeItemAction;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.github.client.GitHubLocalizationConstant;
 import com.codenvy.ide.ext.github.client.GitHubResources;
 import com.codenvy.ide.ext.github.client.load.ImportPresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.StringUnmarshaller;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -39,11 +37,11 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ImportProjectAction implements WelcomeItemAction {
-    private GitHubLocalizationConstant constant;
-    private GitHubResources            resources;
-    private ImportPresenter            importPresenter;
-    private UserClientService          service;
-    private DtoFactory                 dtoFactory;
+    private final DtoUnmarshallerFactory     dtoUnmarshallerFactory;
+    private       GitHubLocalizationConstant constant;
+    private       GitHubResources            resources;
+    private       ImportPresenter            importPresenter;
+    private       UserClientService          service;
 
     /**
      * Create action.
@@ -56,12 +54,12 @@ public class ImportProjectAction implements WelcomeItemAction {
                                GitHubResources resources,
                                ImportPresenter importPresenter,
                                UserClientService service,
-                               DtoFactory dtoFactory) {
+                               DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.constant = constant;
         this.resources = resources;
         this.importPresenter = importPresenter;
         this.service = service;
-        this.dtoFactory = dtoFactory;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
     }
 
     /** {@inheritDoc} */
@@ -85,22 +83,16 @@ public class ImportProjectAction implements WelcomeItemAction {
     /** {@inheritDoc} */
     @Override
     public void execute() {
-        StringUnmarshaller unmarshaller = new StringUnmarshaller();
-        try {
-            service.getUser(new AsyncRequestCallback<String>(unmarshaller) {
-                @Override
-                protected void onSuccess(String result) {
-                    User user = dtoFactory.createDtoFromJson(result, User.class);
-                    importPresenter.showDialog(user);
-                }
+        service.getUser(new AsyncRequestCallback<User>(dtoUnmarshallerFactory.newUnmarshaller(User.class)) {
+            @Override
+            protected void onSuccess(User result) {
+                importPresenter.showDialog(result);
+            }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    Log.error(ImportProjectAction.class, "Can't get user", exception);
-                }
-            });
-        } catch (RequestException e) {
-            Log.error(ImportProjectAction.class, "Can't get user", e);
-        }
+            @Override
+            protected void onFailure(Throwable exception) {
+                Log.error(ImportProjectAction.class, "Can't get user", exception);
+            }
+        });
     }
 }

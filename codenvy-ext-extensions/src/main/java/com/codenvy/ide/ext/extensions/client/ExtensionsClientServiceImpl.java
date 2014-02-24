@@ -18,12 +18,10 @@
 package com.codenvy.ide.ext.extensions.client;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
-import com.codenvy.ide.rest.AsyncRequest;
+import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.ui.loader.Loader;
-import com.codenvy.ide.util.Utils;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -38,9 +36,11 @@ import javax.validation.constraints.NotNull;
 @Singleton
 public class ExtensionsClientServiceImpl implements ExtensionsClientService {
     /** REST-service context. */
-    private final String restContext;
+    private final String              restContext;
+    private final String              workspaceId;
     /** Loader to be displayed. */
-    private final Loader loader;
+    private final Loader              loader;
+    private final AsyncRequestFactory asyncRequestFactory;
 
     /**
      * Create service.
@@ -51,36 +51,39 @@ public class ExtensionsClientServiceImpl implements ExtensionsClientService {
      *         loader to show on server request
      */
     @Inject
-    protected ExtensionsClientServiceImpl(@Named("restContext") String restContext, Loader loader) {
-        this.loader = loader;
+    protected ExtensionsClientServiceImpl(@Named("restContext") String restContext, @Named("workspaceId") String workspaceId,
+                                          Loader loader, AsyncRequestFactory asyncRequestFactory) {
         this.restContext = restContext;
+        this.workspaceId = workspaceId;
+        this.loader = loader;
+        this.asyncRequestFactory = asyncRequestFactory;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void launch(@NotNull String projectName, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
-        final String requestUrl = restContext + "/runner/" + Utils.getWorkspaceId() + "/run";
+    public void launch(@NotNull String projectName, @NotNull AsyncRequestCallback<ApplicationProcessDescriptor> callback) {
+        final String requestUrl = restContext + "/runner/" + workspaceId + "/run";
         String params = "project=" + projectName;
-        AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params).send(callback);
+        asyncRequestFactory.createPostRequest(requestUrl + "?" + params, null).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void getStatus(@NotNull Link link, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
-        AsyncRequest.build(RequestBuilder.GET, link.getHref()).send(callback);
+    public void getStatus(@NotNull Link link, @NotNull AsyncRequestCallback<ApplicationProcessDescriptor> callback) {
+        asyncRequestFactory.createGetRequest(link.getHref()).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void getLogs(@NotNull Link link, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+    public void getLogs(@NotNull Link link, @NotNull AsyncRequestCallback<String> callback) {
         loader.setMessage("Retrieving logs...");
-        AsyncRequest.build(RequestBuilder.GET, link.getHref()).loader(loader).send(callback);
+        asyncRequestFactory.createGetRequest(link.getHref()).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void stop(@NotNull Link link, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+    public void stop(@NotNull Link link, @NotNull AsyncRequestCallback<String> callback) {
         loader.setMessage("Stopping an application...");
-        AsyncRequest.build(RequestBuilder.POST, link.getHref()).loader(loader).send(callback);
+        asyncRequestFactory.createPostRequest(link.getHref(), null).loader(loader).send(callback);
     }
 }

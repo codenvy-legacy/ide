@@ -48,10 +48,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import javax.validation.constraints.NotNull;
 
 
-/**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
- */
+/** @author Evgen Vidolob */
 public class TextEditorPresenter extends AbstractTextEditorPresenter implements FileEventHandler {
 
     private final TextListener textListener = new TextListener() {

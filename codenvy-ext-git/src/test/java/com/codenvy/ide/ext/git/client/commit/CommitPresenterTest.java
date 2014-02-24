@@ -25,11 +25,9 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -66,7 +64,7 @@ public class CommitPresenterTest extends BaseTest {
     public void disarm() {
         super.disarm();
 
-        presenter = new CommitPresenter(view, service, resourceProvider, constant, eventBus, notificationManager, dtoFactory);
+        presenter = new CommitPresenter(view, service, resourceProvider, constant, notificationManager, dtoUnmarshallerFactory);
 
         when(revision.isFake()).thenReturn(false);
     }
@@ -84,7 +82,6 @@ public class CommitPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
     public void testOnCommitClickedWhenCommitWSRequestIsSuccessful() throws Exception {
         when(view.getMessage()).thenReturn(COMMIT_TEXT);
         when(view.isAllFilesInclued()).thenReturn(ALL_FILE_INCLUDES);
@@ -93,13 +90,13 @@ public class CommitPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                RequestCallback<RepoInfo> callback = (RequestCallback<RepoInfo>)arguments[5];
+                RequestCallback<Revision> callback = (RequestCallback<Revision>)arguments[5];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, revision);
                 return callback;
             }
         }).when(service).commitWS(anyString(), (Project)anyObject(), anyString(), anyBoolean(), anyBoolean(),
-                                  (RequestCallback<String>)anyObject());
+                                  (RequestCallback<Revision>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -120,7 +117,7 @@ public class CommitPresenterTest extends BaseTest {
         verify(view).close();
 
         verify(service).commitWS(eq(VFS_ID), eq(project), eq(COMMIT_TEXT), eq(ALL_FILE_INCLUDES), eq(IS_OVERWRITTEN),
-                                 (RequestCallback<String>)anyObject());
+                                 (RequestCallback<Revision>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
     }
 
@@ -133,13 +130,13 @@ public class CommitPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                RequestCallback<RepoInfo> callback = (RequestCallback<RepoInfo>)arguments[5];
+                RequestCallback<Revision> callback = (RequestCallback<Revision>)arguments[5];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
         }).when(service).commitWS(anyString(), (Project)anyObject(), anyString(), anyBoolean(), anyBoolean(),
-                                  (RequestCallback<String>)anyObject());
+                                  (RequestCallback<Revision>)anyObject());
 
         presenter.showDialog();
         presenter.onCommitClicked();
@@ -150,19 +147,18 @@ public class CommitPresenterTest extends BaseTest {
         verify(view).close();
 
         verify(service).commitWS(eq(VFS_ID), eq(project), eq(COMMIT_TEXT), eq(ALL_FILE_INCLUDES), eq(IS_OVERWRITTEN),
-                                 (RequestCallback<String>)anyObject());
+                                 (RequestCallback<Revision>)anyObject());
         verify(constant).commitFailed();
         verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test
-    @Ignore
     public void testOnCommitClickedWhenCommitRequestIsSuccessful() throws Exception {
         when(view.getMessage()).thenReturn(COMMIT_TEXT);
         when(view.isAllFilesInclued()).thenReturn(ALL_FILE_INCLUDES);
         when(view.isAmend()).thenReturn(IS_OVERWRITTEN);
         doThrow(WebSocketException.class).when(service).commitWS(anyString(), (Project)anyObject(), anyString(), anyBoolean(), anyBoolean(),
-                                                                 (RequestCallback<String>)anyObject());
+                                                                 (RequestCallback<Revision>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -173,7 +169,7 @@ public class CommitPresenterTest extends BaseTest {
                 return callback;
             }
         }).when(service).commit(anyString(), (Project)anyObject(), anyString(), anyBoolean(), anyBoolean(),
-                                (AsyncRequestCallback<String>)anyObject());
+                                (AsyncRequestCallback<Revision>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -194,9 +190,9 @@ public class CommitPresenterTest extends BaseTest {
         verify(view).close();
 
         verify(service).commitWS(eq(VFS_ID), eq(project), eq(COMMIT_TEXT), eq(ALL_FILE_INCLUDES), eq(IS_OVERWRITTEN),
-                                 (RequestCallback<String>)anyObject());
+                                 (RequestCallback<Revision>)anyObject());
         verify(service).commit(eq(VFS_ID), eq(project), eq(COMMIT_TEXT), eq(ALL_FILE_INCLUDES), eq(IS_OVERWRITTEN),
-                               (AsyncRequestCallback<String>)anyObject());
+                               (AsyncRequestCallback<Revision>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
     }
 
@@ -206,7 +202,7 @@ public class CommitPresenterTest extends BaseTest {
         when(view.isAllFilesInclued()).thenReturn(ALL_FILE_INCLUDES);
         when(view.isAmend()).thenReturn(IS_OVERWRITTEN);
         doThrow(WebSocketException.class).when(service).commitWS(anyString(), (Project)anyObject(), anyString(), anyBoolean(), anyBoolean(),
-                                                                 (RequestCallback<String>)anyObject());
+                                                                 (RequestCallback<Revision>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -217,7 +213,7 @@ public class CommitPresenterTest extends BaseTest {
                 return callback;
             }
         }).when(service).commit(anyString(), (Project)anyObject(), anyString(), anyBoolean(), anyBoolean(),
-                                (AsyncRequestCallback<String>)anyObject());
+                                (AsyncRequestCallback<Revision>)anyObject());
 
         presenter.showDialog();
         presenter.onCommitClicked();
@@ -228,35 +224,10 @@ public class CommitPresenterTest extends BaseTest {
         verify(view).close();
 
         verify(service).commitWS(eq(VFS_ID), eq(project), eq(COMMIT_TEXT), eq(ALL_FILE_INCLUDES), eq(IS_OVERWRITTEN),
-                                 (RequestCallback<String>)anyObject());
+                                 (RequestCallback<Revision>)anyObject());
         verify(service).commit(eq(VFS_ID), eq(project), eq(COMMIT_TEXT), eq(ALL_FILE_INCLUDES), eq(IS_OVERWRITTEN),
-                               (AsyncRequestCallback<String>)anyObject());
+                               (AsyncRequestCallback<Revision>)anyObject());
         verify(constant).commitFailed();
-        verify(notificationManager).showNotification((Notification)anyObject());
-    }
-
-    @Test
-    public void testOnCommitClickedWhenRequestExceptionHappened() throws Exception {
-        when(view.getMessage()).thenReturn(COMMIT_TEXT);
-        when(view.isAllFilesInclued()).thenReturn(ALL_FILE_INCLUDES);
-        when(view.isAmend()).thenReturn(IS_OVERWRITTEN);
-        doThrow(WebSocketException.class).when(service).commitWS(anyString(), (Project)anyObject(), anyString(), anyBoolean(), anyBoolean(),
-                                                                 (RequestCallback<String>)anyObject());
-        doThrow(RequestException.class).when(service).commit(anyString(), (Project)anyObject(), anyString(), anyBoolean(), anyBoolean(),
-                                                             (AsyncRequestCallback<String>)anyObject());
-
-        presenter.showDialog();
-        presenter.onCommitClicked();
-
-        verify(view).getMessage();
-        verify(view).isAllFilesInclued();
-        verify(view).isAmend();
-        verify(view).close();
-
-        verify(service).commitWS(eq(VFS_ID), eq(project), eq(COMMIT_TEXT), eq(ALL_FILE_INCLUDES), eq(IS_OVERWRITTEN),
-                                 (RequestCallback<String>)anyObject());
-        verify(service).commit(eq(VFS_ID), eq(project), eq(COMMIT_TEXT), eq(ALL_FILE_INCLUDES), eq(IS_OVERWRITTEN),
-                               (AsyncRequestCallback<String>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
     }
 

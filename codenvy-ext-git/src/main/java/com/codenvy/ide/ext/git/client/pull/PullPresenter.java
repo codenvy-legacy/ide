@@ -22,18 +22,16 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.StringUnmarshaller;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -48,23 +46,22 @@ import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_REMOTE;
 
 /**
  * Presenter pulling changes from remote repository.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Apr 20, 2011 4:20:24 PM anya $
  */
 @Singleton
 public class PullPresenter implements PullView.ActionDelegate {
-    private PullView                view;
-    private GitClientService        service;
-    private ResourceProvider        resourceProvider;
-    private GitLocalizationConstant constant;
-    private NotificationManager     notificationManager;
-    private Project                 project;
-    private DtoFactory              dtoFactory;
+    private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
+    private       PullView                view;
+    private       GitClientService        service;
+    private       ResourceProvider        resourceProvider;
+    private       GitLocalizationConstant constant;
+    private       NotificationManager     notificationManager;
+    private       Project                 project;
 
     /**
      * Create presenter.
-     * 
+     *
      * @param view
      * @param service
      * @param resourceProvider
@@ -73,14 +70,15 @@ public class PullPresenter implements PullView.ActionDelegate {
      */
     @Inject
     public PullPresenter(PullView view, GitClientService service, ResourceProvider resourceProvider,
-                         GitLocalizationConstant constant, NotificationManager notificationManager, DtoFactory dtoFactory) {
+                         GitLocalizationConstant constant, NotificationManager notificationManager,
+                         DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
         this.constant = constant;
         this.notificationManager = notificationManager;
-        this.dtoFactory = dtoFactory;
     }
 
     /** Show dialog. */
@@ -97,84 +95,73 @@ public class PullPresenter implements PullView.ActionDelegate {
         final String projectId = project.getId();
         view.setEnablePullButton(true);
 
-        try {
-            service.remoteList(resourceProvider.getVfsInfo().getId(), projectId, null, true,
-                               new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                                   @Override
-                                   protected void onSuccess(String result) {
-                                       Array<Remote> remotes = dtoFactory.createListDtoFromJson(result, Remote.class);
-                                       getBranches(projectId, LIST_REMOTE);
-                                       view.setRepositories(remotes);
-                                       view.setEnablePullButton(!remotes.isEmpty());
-                                       view.showDialog();
-                                   }
+        service.remoteList(resourceProvider.getVfsInfo().getId(), projectId, null, true,
+                           new AsyncRequestCallback<Array<Remote>>() {
+                               @Override
+                               protected void onSuccess(Array<Remote> result) {
+                                   getBranches(projectId, LIST_REMOTE);
+                                   view.setRepositories(result);
+                                   view.setEnablePullButton(!result.isEmpty());
+                                   view.showDialog();
+                               }
 
-                                   @Override
-                                   protected void onFailure(Throwable exception) {
-                                       String errorMessage =
-                                                             exception.getMessage() != null ? exception.getMessage()
-                                                                 : constant.remoteListFailed();
-                                       Window.alert(errorMessage);
-                                       view.setEnablePullButton(false);
-                                   }
-                               });
-        } catch (RequestException e) {
-            String errorMessage = e.getMessage() != null ? e.getMessage() : constant.remoteListFailed();
-            Window.alert(errorMessage);
-            view.setEnablePullButton(false);
-        }
+                               @Override
+                               protected void onFailure(Throwable exception) {
+                                   String errorMessage =
+                                           exception.getMessage() != null ? exception.getMessage()
+                                                                          : constant.remoteListFailed();
+                                   Window.alert(errorMessage);
+                                   view.setEnablePullButton(false);
+                               }
+                           });
     }
 
     /**
      * Get the list of branches.
-     * 
-     * @param projectId Git repository work tree location
-     * @param remoteMode is a remote mode
+     *
+     * @param projectId
+     *         Git repository work tree location
+     * @param remoteMode
+     *         is a remote mode
      */
     private void getBranches(@NotNull final String projectId, @NotNull final String remoteMode) {
-        try {
-            service.branchList(resourceProvider.getVfsInfo().getId(), projectId, remoteMode,
-                               new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                                   @Override
-                                   protected void onSuccess(String result) {
-                                       Array<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
-                                       if (LIST_REMOTE.equals(remoteMode)) {
-                                           view.setRemoteBranches(getRemoteBranchesToDisplay(view.getRepositoryName(), branches));
-                                           getBranches(projectId, LIST_LOCAL);
-                                       } else {
-                                           view.setLocalBranches(getLocalBranchesToDisplay(branches));
-                                           for (Branch branch : branches.asIterable()) {
-                                               if (branch.isActive()) {
-                                                   view.selectRemoteBranch(branch.getDisplayName());
-                                                   break;
-                                               }
+        service.branchList(resourceProvider.getVfsInfo().getId(), projectId, remoteMode,
+                           new AsyncRequestCallback<Array<Branch>>(dtoUnmarshallerFactory.newArrayUnmarshaller(Branch.class)) {
+                               @Override
+                               protected void onSuccess(Array<Branch> result) {
+                                   if (LIST_REMOTE.equals(remoteMode)) {
+                                       view.setRemoteBranches(getRemoteBranchesToDisplay(view.getRepositoryName(), result));
+                                       getBranches(projectId, LIST_LOCAL);
+                                   } else {
+                                       view.setLocalBranches(getLocalBranchesToDisplay(result));
+                                       for (Branch branch : result.asIterable()) {
+                                           if (branch.isActive()) {
+                                               view.selectRemoteBranch(branch.getDisplayName());
+                                               break;
                                            }
                                        }
                                    }
+                               }
 
-                                   @Override
-                                   protected void onFailure(Throwable exception) {
-                                       String errorMessage =
-                                                             exception.getMessage() != null ? exception.getMessage()
-                                                                 : constant.branchesListFailed();
-                                       Notification notification = new Notification(errorMessage, ERROR);
-                                       notificationManager.showNotification(notification);
-                                       view.setEnablePullButton(false);
-                                   }
-                               });
-        } catch (RequestException e) {
-            String errorMessage = e.getMessage() != null ? e.getMessage() : constant.branchesListFailed();
-            Notification notification = new Notification(errorMessage, ERROR);
-            notificationManager.showNotification(notification);
-            view.setEnablePullButton(false);
-        }
+                               @Override
+                               protected void onFailure(Throwable exception) {
+                                   String errorMessage =
+                                           exception.getMessage() != null ? exception.getMessage()
+                                                                          : constant.branchesListFailed();
+                                   Notification notification = new Notification(errorMessage, ERROR);
+                                   notificationManager.showNotification(notification);
+                                   view.setEnablePullButton(false);
+                               }
+                           });
     }
 
     /**
      * Set values of remote branches: filter remote branches due to selected remote repository.
-     * 
-     * @param remoteName remote name
-     * @param remoteBranches remote branches
+     *
+     * @param remoteName
+     *         remote name
+     * @param remoteBranches
+     *         remote branches
      */
     @NotNull
     private Array<String> getRemoteBranchesToDisplay(@NotNull String remoteName, @NotNull Array<Branch> remoteBranches) {
@@ -202,8 +189,9 @@ public class PullPresenter implements PullView.ActionDelegate {
 
     /**
      * Set values of local branches.
-     * 
-     * @param localBranches local branches
+     *
+     * @param localBranches
+     *         local branches
      */
     @NotNull
     private Array<String> getLocalBranchesToDisplay(@NotNull Array<Branch> localBranches) {
@@ -220,7 +208,6 @@ public class PullPresenter implements PullView.ActionDelegate {
 
         return branches;
     }
-
 
     /** {@inheritDoc} */
     @Override
@@ -262,32 +249,28 @@ public class PullPresenter implements PullView.ActionDelegate {
      * request over HTTP.
      */
     private void doPullREST(@NotNull final String remoteUrl, @NotNull String remoteName) {
-        try {
-            service.pull(resourceProvider.getVfsInfo().getId(), project, getRefs(), remoteName, new AsyncRequestCallback<String>() {
-                @Override
-                protected void onSuccess(String result) {
-                    resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
-                        @Override
-                        public void onSuccess(Project result) {
-                            Notification notification = new Notification(constant.pullSuccess(remoteUrl), INFO);
-                            notificationManager.showNotification(notification);
-                        }
+        service.pull(resourceProvider.getVfsInfo().getId(), project, getRefs(), remoteName, new AsyncRequestCallback<String>() {
+            @Override
+            protected void onSuccess(String result) {
+                resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
+                    @Override
+                    public void onSuccess(Project result) {
+                        Notification notification = new Notification(constant.pullSuccess(remoteUrl), INFO);
+                        notificationManager.showNotification(notification);
+                    }
 
-                        @Override
-                        public void onFailure(Throwable caught) {
-                            Log.error(PullPresenter.class, "can not get project " + project.getName());
-                        }
-                    });
-                }
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        Log.error(PullPresenter.class, "can not get project " + project.getName());
+                    }
+                });
+            }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    handleError(exception, remoteUrl);
-                }
-            });
-        } catch (RequestException e) {
-            handleError(e, remoteUrl);
-        }
+            @Override
+            protected void onFailure(Throwable exception) {
+                handleError(exception, remoteUrl);
+            }
+        });
     }
 
     /** @return list of refs to fetch */
@@ -298,13 +281,14 @@ public class PullPresenter implements PullView.ActionDelegate {
         String remoteBranch = view.getRemoteBranch();
 
         return localBranch.isEmpty() ? remoteBranch
-            : "refs/heads/" + localBranch + ":" + "refs/remotes/" + remoteName + "/" + remoteBranch;
+                                     : "refs/heads/" + localBranch + ":" + "refs/remotes/" + remoteName + "/" + remoteBranch;
     }
 
     /**
      * Handler some action whether some exception happened.
-     * 
-     * @param t exception what happened
+     *
+     * @param t
+     *         exception what happened
      */
     private void handleError(@NotNull Throwable t, @NotNull String remoteUrl) {
         String errorMessage = (t.getMessage() != null) ? t.getMessage() : constant.pullFail(remoteUrl);

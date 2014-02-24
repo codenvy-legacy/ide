@@ -17,19 +17,16 @@
  */
 package com.codenvy.ide.ext.ssh.client;
 
-import com.codenvy.ide.MimeType;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.ssh.dto.GenKeyRequest;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
-import com.codenvy.ide.rest.AsyncRequest;
+import com.codenvy.ide.ext.ssh.dto.PublicKey;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.HTTPHeader;
+import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.ui.loader.Loader;
-import com.codenvy.ide.util.Utils;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -44,52 +41,56 @@ import javax.validation.constraints.NotNull;
 @Singleton
 public class SshKeyServiceImpl implements SshKeyService {
     private final String                    baseUrl;
+    private final String                    workspaceId;
     private final Loader                    loader;
     private final DtoFactory                dtoFactory;
+    private final AsyncRequestFactory       asyncRequestFactory;
     private final StringMap<SshKeyProvider> sshKeyProviders;
 
     @Inject
-    protected SshKeyServiceImpl(@Named("restContext") String baseUrl, Loader loader, DtoFactory dtoFactory) {
+    protected SshKeyServiceImpl(@Named("restContext") String baseUrl, @Named("workspaceId") String workspaceId, Loader loader,
+                                DtoFactory dtoFactory, AsyncRequestFactory asyncRequestFactory) {
         this.baseUrl = baseUrl;
+        this.workspaceId = workspaceId;
         this.loader = loader;
         this.dtoFactory = dtoFactory;
+        this.asyncRequestFactory = asyncRequestFactory;
         this.sshKeyProviders = Collections.createStringMap();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void getAllKeys(@NotNull AsyncRequestCallback<String> callback) throws RequestException {
+    public void getAllKeys(@NotNull AsyncRequestCallback<Array<KeyItem>> callback) {
         loader.setMessage("Getting SSH keys....");
         loader.show();
-        AsyncRequest.build(RequestBuilder.GET, baseUrl + "/ssh-keys/" + Utils.getWorkspaceId() + "/all").send(callback);
+        asyncRequestFactory.createGetRequest(baseUrl + "/ssh-keys/" + workspaceId + "/all").send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void generateKey(@NotNull String host, @NotNull AsyncRequestCallback<GenKeyRequest> callback) throws RequestException {
-        String url = baseUrl + "/ssh-keys/" + Utils.getWorkspaceId() + "/gen";
+    public void generateKey(@NotNull String host, @NotNull AsyncRequestCallback<GenKeyRequest> callback) {
+        String url = baseUrl + "/ssh-keys/" + workspaceId + "/gen";
 
         GenKeyRequest keyRequest = dtoFactory.createDto(GenKeyRequest.class).withHost(host);
 
         loader.setMessage("Generate keys for " + host);
-        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(dtoFactory.toJson(keyRequest))
-                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+        asyncRequestFactory.createPostRequest(url, keyRequest).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void getPublicKey(@NotNull KeyItem keyItem, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+    public void getPublicKey(@NotNull KeyItem keyItem, @NotNull AsyncRequestCallback<PublicKey> callback) {
         loader.setMessage("Getting public SSH key for " + keyItem.getHost());
         loader.show();
-        AsyncRequest.build(RequestBuilder.GET, keyItem.getPublicKeyUrl()).send(callback);
+        asyncRequestFactory.createGetRequest(keyItem.getPublicKeyUrl()).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void deleteKey(@NotNull KeyItem keyItem, @NotNull AsyncRequestCallback<Void> callback)  throws RequestException {
+    public void deleteKey(@NotNull KeyItem keyItem, @NotNull AsyncRequestCallback<Void> callback) {
         loader.setMessage("Deleting SSH keys for " + keyItem.getHost());
         loader.show();
-        AsyncRequest.build(RequestBuilder.GET, keyItem.getRemoteKeyUrl()).send(callback);
+        asyncRequestFactory.createGetRequest(keyItem.getRemoteKeyUrl()).send(callback);
     }
 
     /** {@inheritDoc} */
