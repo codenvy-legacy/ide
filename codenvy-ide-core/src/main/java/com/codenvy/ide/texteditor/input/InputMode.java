@@ -22,6 +22,7 @@ import com.codenvy.ide.util.input.CharCodeWithModifiers;
 import com.codenvy.ide.util.input.KeyCodeMap;
 import com.codenvy.ide.util.input.SignalEvent;
 import com.codenvy.ide.util.input.SignalEventUtils;
+import com.codenvy.ide.util.browser.UserAgent;
 
 
 /**
@@ -117,7 +118,7 @@ public abstract class InputMode {
              * to "apple".
              *
              * @return {@code 1} for direct match, {@code 0} for path match,
-             *         {@code -1} for no match
+             * {@code -1} for no match
              */
             int alongPath(JsArrayOfInt seq) {
                 Node<T> current = root;
@@ -361,6 +362,11 @@ public abstract class InputMode {
                 char character = 0;
                 if (text.length() == 1) {
                     character = text.charAt(0);
+                }
+                if (UserAgent.isWin() && UserAgent.isChrome()
+                    && event.getCtrlKey() && event.getAltKey()
+                    && event.getType().equalsIgnoreCase("keydown")) {
+                    return false;
                 }
                 return onDefaultInput(event, character);
             }
