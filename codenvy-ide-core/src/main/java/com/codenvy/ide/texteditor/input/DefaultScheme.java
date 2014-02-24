@@ -133,14 +133,15 @@ public class DefaultScheme extends InputScheme {
                     return true;
                 }
 
-                if (event.getAltKey()) {
-                    // Don't process Alt+* combinations.
-                    return false;
-                }
-
-                if (event.getCommandKey() || event.getKeySignalType() != SignalEvent.KeySignalType.INPUT) {
-                    // Don't insert any Action+* / non-input combinations as text.
-                    return false;
+                if (!(event.getAltKey() && event.getCtrlKey())) {
+                    if (event.getAltKey()) {
+                        // Don't process Alt+* combinations.
+                        return false;
+                    }
+                    if (event.getCommandKey() || event.getKeySignalType() != SignalEvent.KeySignalType.INPUT) {
+                        // Don't insert any Action+* / non-input combinations as text.
+                        return false;
+                    }
                 }
 
                 InputController input = this.getScheme().getInputController();
