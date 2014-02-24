@@ -126,6 +126,10 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
 
     @Override
     public void removeFanFromCache(String fqn) {
+        if (worker == null) {
+            return;
+        }
+        
         MessagesImpls.RemoveFqnMessageImpl message = MessagesImpls.RemoveFqnMessageImpl.make();
         message.setFqn(fqn);
         worker.postMessage(message.serialize());

@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.extension.builder.client;
 
+import com.codenvy.api.builder.dto.BuildOptions;
 import com.codenvy.api.builder.dto.BuildTaskDescriptor;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -38,6 +39,20 @@ public interface BuilderClientService {
      *         callback
      */
     public void build(String projectName, AsyncRequestCallback<BuildTaskDescriptor> callback);
+
+    /**
+     * Start new build.
+     *
+     * @param projectId
+     *         identifier of the project we want to send for build
+     * @param buildOptions
+     *         Options to configure build process
+     * @param vfsId
+     *         identifier of the virtual file system
+     * @param callback
+     *         callback
+     */
+    public void build(String projectName, BuildOptions buildOptions, AsyncRequestCallback<BuildTaskDescriptor> callback);
 
     /**
      * Cancel previously launched build.
@@ -65,12 +80,12 @@ public interface BuilderClientService {
     /**
      * Get build result.
      *
-     * @param buildid
+     * @param buildId
      *         ID of build
      * @param callback
      *         callback
      */
-    public void result(String buildid, AsyncRequestCallback<String> callback);
+    public void result(String buildId, AsyncRequestCallback<String> callback);
 
 
 }

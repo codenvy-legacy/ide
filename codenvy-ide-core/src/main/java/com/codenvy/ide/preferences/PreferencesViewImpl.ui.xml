@@ -41,7 +41,7 @@
         <g:south size="36.0">
             <g:FlowPanel height="100%" width="100%" addStyleNames="{style.spacing}">
                 <g:Button addStyleNames="{style.btnAlign}" width="50px"  height="22px" ui:field="btnClose">Close</g:Button>
-                <g:Button addStyleNames="{style.btnAlign} {style.space}" width="50px"  height="22px"  ui:field="btnOk">Ok</g:Button>
+                <g:Button addStyleNames="{style.btnAlign} {style.space}" width="50px"  height="22px"  ui:field="btnOk">OK</g:Button>
                 <g:Button addStyleNames="{style.btnAlign} {style.space}" width="50px"  height="22px"  ui:field="btnApply">Apply</g:Button>
             </g:FlowPanel>
         </g:south>

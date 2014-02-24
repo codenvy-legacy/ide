@@ -73,6 +73,8 @@ public interface Theme {
 
     String getMainFontColor();
 
+    String getRadioButtonBackgroundColor();
+
     String getDisabledMenuColor();
 
     String getDialogContentBackground();
@@ -136,4 +138,16 @@ public interface Theme {
     String getWizardStepsColor();
 
     String getWizardStepsBorderColor();
+
+    String getWelcomeFontColor();
+
+    String getConsolePanelColor();
+
+    String getCellOddRowColor();
+
+    String getCellOddEvenColor();
+
+    String getCellKeyboardSelectedRowColor();
+
+    String getCellHoveredRow();
 }

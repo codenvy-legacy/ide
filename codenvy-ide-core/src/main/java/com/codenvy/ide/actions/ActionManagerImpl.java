@@ -63,20 +63,25 @@ public class ActionManagerImpl implements ActionManager {
         DefaultActionGroup window = new DefaultActionGroup("Window", true, this);
         registerAction(IdeActions.GROUP_WINDOW, window);
         mainMenu.add(window);
+        
+        DefaultActionGroup help = new DefaultActionGroup("Help", true, this);
+        registerAction(IdeActions.GROUP_HELP, help);
+        Constraints afterWindow = new Constraints(Anchor.AFTER, IdeActions.GROUP_WINDOW);
+        mainMenu.add(help, afterWindow);
 
         DefaultActionGroup project = new DefaultActionGroup("Project", true, this);
         registerAction(IdeActions.GROUP_PROJECT, project);
         Constraints afterFile = new Constraints(Anchor.AFTER, IdeActions.GROUP_FILE);
         mainMenu.add(project, afterFile);
 
-        DefaultActionGroup paas = new DefaultActionGroup("Paas", true, this);
-        registerAction(IdeActions.GROUP_PAAS, paas);
-        Constraints beforeWindow = new Constraints(Anchor.BEFORE, IdeActions.GROUP_WINDOW);
-        mainMenu.add(paas, beforeWindow);
+//        DefaultActionGroup paas = new DefaultActionGroup("Paas", true, this);
+//        registerAction(IdeActions.GROUP_PAAS, paas);
+//        Constraints beforeWindow = new Constraints(Anchor.BEFORE, IdeActions.GROUP_WINDOW);
+//        mainMenu.add(paas, beforeWindow);
 
-        DefaultActionGroup projectPaas = new DefaultActionGroup("Paas", true, this);
-        registerAction(IdeActions.GROUP_PROJECT_PAAS, projectPaas);
-        project.add(projectPaas);
+//        DefaultActionGroup projectPaas = new DefaultActionGroup("Paas", true, this);
+//        registerAction(IdeActions.GROUP_PROJECT_PAAS, projectPaas);
+//        project.add(projectPaas);
 
         DefaultActionGroup runGroup = new DefaultActionGroup("Run", true, this);
         registerAction(IdeActions.GROUP_RUN_MAIN_MENU, runGroup);

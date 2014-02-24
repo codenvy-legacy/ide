@@ -22,6 +22,8 @@ import com.codenvy.api.project.gwt.client.ProjectClientServiceImpl;
 import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionClientService;
 import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionClientServiceImpl;
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.about.AboutView;
+import com.codenvy.ide.about.AboutViewImpl;
 import com.codenvy.ide.actions.ActionManagerImpl;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.DocumentProvider;
@@ -282,6 +284,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(SelectProjectTypeView.class).to(SelectProjectTypeViewImpl.class).in(Singleton.class);
         bind(NavigateToFileView.class).to(NavigateToFileViewImpl.class).in(Singleton.class);
         bind(RenameResourceView.class).to(RenameResourceViewImpl.class).in(Singleton.class);
+        bind(AboutView.class).to(AboutViewImpl.class);
 
         bind(ExtensionManagerView.class).to(ExtensionManagerViewImpl.class).in(Singleton.class);
         bind(AppearanceView.class).to(AppearanceViewImpl.class).in(Singleton.class);

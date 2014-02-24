@@ -118,7 +118,7 @@ public class MavenBuilder extends Builder {
                 } else {
                     commandLine.add("clean", "install");
                 }
-                if (config.getRequest().isDeployJarWithDependencies()) {
+                if (config.getRequest().isIncludeDependencies()) {
                     try {
                         Files.write(new java.io.File(config.getWorkDir(), ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES_FILE).toPath(),
                                     ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES.getBytes());

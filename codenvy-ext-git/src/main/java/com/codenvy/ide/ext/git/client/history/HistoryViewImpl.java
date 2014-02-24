@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.git.client.history;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.collections.Array;
@@ -103,20 +104,21 @@ public class HistoryViewImpl extends BaseView<HistoryView.ActionDelegate> implem
      * @param partStackUIResources
      */
     @Inject
-    protected HistoryViewImpl(GitResources resources, GitLocalizationConstant locale, PartStackUIResources partStackUIResources) {
+    protected HistoryViewImpl(GitResources resources, GitLocalizationConstant locale, PartStackUIResources partStackUIResources, Resources res) {
         super(partStackUIResources);
 
         this.res = resources;
         this.locale = locale;
 
-        createCommitsTable();
+        createCommitsTable(res);
 
         container.add(ourUiBinder.createAndBindUi(this));
     }
 
-    /** Creates table what contains list of available commits. */
-    private void createCommitsTable() {
-        commits = new CellTable<Revision>();
+    /** Creates table what contains list of available commits.
+     * @param res*/
+    private void createCommitsTable(Resources res) {
+        commits = new CellTable<Revision>(15, res);
 
         Column<Revision, String> dateColumn = new Column<Revision, String>(new TextCell()) {
             @Override

@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.extension.builder.client;
 
+import com.codenvy.api.builder.dto.BuildOptions;
 import com.codenvy.api.builder.dto.BuildTaskDescriptor;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.MimeType;
@@ -53,12 +54,15 @@ public class BuilderClientServiceImpl implements BuilderClientService {
     /** {@inheritDoc} */
     @Override
     public void build(String projectName, AsyncRequestCallback<BuildTaskDescriptor> callback) {
+        build(projectName, null, callback);
+    }
+
+    @Override
+    public void build(String projectName, BuildOptions buildOptions, AsyncRequestCallback<BuildTaskDescriptor> callback) {
         final String requestUrl = baseUrl + "/build";
         String params = "project=" + projectName;
         callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-        asyncRequestFactory.createPostRequest(requestUrl + "?" + params, null)
-                           .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
-                           .send(callback);
+        asyncRequestFactory.createPostRequest(requestUrl + "?" + params, buildOptions).send(callback);
     }
 
     /** {@inheritDoc} */

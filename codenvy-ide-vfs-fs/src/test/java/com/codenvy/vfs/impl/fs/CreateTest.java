@@ -17,12 +17,11 @@
  */
 package com.codenvy.vfs.impl.fs;
 
-import com.codenvy.api.core.user.User;
-import com.codenvy.api.core.user.UserImpl;
-import com.codenvy.api.core.user.UserState;
 import com.codenvy.api.vfs.shared.dto.Folder;
 import com.codenvy.api.vfs.shared.dto.Principal;
 import com.codenvy.api.vfs.shared.dto.Project;
+import com.codenvy.commons.env.EnvironmentContext;
+import com.codenvy.commons.user.UserImpl;
 import com.codenvy.dto.server.DtoFactory;
 
 import org.everrest.core.impl.ContainerResponse;
@@ -171,8 +170,7 @@ public class CreateTest extends LocalFileSystemTest {
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String requestPath = SERVICE_URI + "file/" + protectedFolderId + '?' + "name=" + name;
         // Replace default principal by principal who has write permission.
-        User user = new UserImpl("andrew");
-        UserState.set(new UserState(user));
+        EnvironmentContext.getCurrent().setUser(new UserImpl("andrew"));
         // --
         ContainerResponse response =
                 launcher.service("POST", requestPath, BASE_URI, null, content.getBytes(), writer, null);

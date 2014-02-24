@@ -23,11 +23,11 @@
     <parent>
         <artifactId>maven-parent-pom</artifactId>
         <groupId>com.codenvy</groupId>
-        <version>3.1.1-SNAPSHOT</version>
+        <version>3.1.1</version>
     </parent>
     <groupId>com.codenvy.ide</groupId>
     <artifactId>codenvy-ide-parent</artifactId>
-    <version>3.0.0-M8-SNAPSHOT</version>
+    <version>3.0.0-M11-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Codenvy :: Parent</name>
     <modules>
@@ -67,7 +67,6 @@
         <module>codenvy-sdk-tutorials/gist-ext</module>
         <module>codenvy-sdk-tutorials/wysiwyg-editor</module>
         <module>codenvy-application-war</module>
-        <module>codenvy-ide-site-war</module>
         <module>codenvy-sdk-private-dependencies</module>
         <module>codenvy-sdk-tools</module>
         <module>codenvy-packaging-standalone-tomcat</module>
@@ -90,7 +89,7 @@
         <com.codenvy.commons.version>0.15.0-SNAPSHOT</com.codenvy.commons.version>
         <com.codenvy.organization.version>0.12.0-SNAPSHOT</com.codenvy.organization.version>
         <com.codenvy.platform-api.version>0.9.0-SNAPSHOT</com.codenvy.platform-api.version>
-        <com.codenvy.security.version>0.1.0-SNAPSHOT</com.codenvy.security.version>
+        <com.codenvy.security.version>0.2.0-SNAPSHOT</com.codenvy.security.version>
         <commons-codec.version>1.6</commons-codec.version>
         <commons-fileupload.version>1.2.1</commons-fileupload.version>
         <commons-io.version>2.4</commons-io.version>

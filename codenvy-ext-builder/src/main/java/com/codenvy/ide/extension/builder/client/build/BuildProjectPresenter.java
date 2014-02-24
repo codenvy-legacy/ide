@@ -18,6 +18,7 @@
 package com.codenvy.ide.extension.builder.client.build;
 
 import com.codenvy.api.builder.BuildStatus;
+import com.codenvy.api.builder.dto.BuildOptions;
 import com.codenvy.api.builder.dto.BuildTaskDescriptor;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.api.notification.Notification;
@@ -115,6 +116,10 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
 
     /** Performs building of current project. */
     public void buildActiveProject() {
+        buildActiveProject(null);
+    }
+
+    public void buildActiveProject(BuildOptions buildOptions) {
 
         if (isBuildInProgress) {
             String message = constant.buildInProgress(projectToBuild.getPath().substring(1));
@@ -124,13 +129,14 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         }
         projectToBuild = resourceProvider.getActiveProject();
         statusHandler = new BuildRequestStatusHandler(projectToBuild.getName(), eventBus, constant);
-        doBuild();
+        doBuild(buildOptions);
     }
 
     /** Start the build of project. */
-    private void doBuild() {
+    private void doBuild(BuildOptions buildOptions) {
         statusHandler.requestInProgress(projectToBuild.getName());
         service.build(projectToBuild.getPath(),
+                      buildOptions,
                       new AsyncRequestCallback<BuildTaskDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(BuildTaskDescriptor.class)) {
                           @Override
                           protected void onSuccess(BuildTaskDescriptor result) {
@@ -262,6 +268,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
             if (link.getRel().equalsIgnoreCase("view build log"))
                 statusLink = link;
         }
+
         service.log(statusLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
             @Override
             protected void onSuccess(String result) {
@@ -270,7 +277,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
 
             @Override
             protected void onFailure(Throwable exception) {
-                final String msg = constant.failGetBuildResult();
+                String msg = constant.failGetBuildResult();
                 console.print(msg);
                 Notification notification = new Notification(msg, ERROR);
                 notificationManager.showNotification(notification);
