@@ -44,7 +44,7 @@ import java.util.List;
  * GitClientService.getInstance().init(workDir, bare, callback);
  * <code>
  *
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @author Ann Zhuleva
  */
 public interface GitClientService {
     /**
@@ -295,7 +295,7 @@ public interface GitClientService {
      * @param callback
      */
     void reset(@NotNull String vfsId, @NotNull String projectid, @NotNull String commit, @Nullable ResetRequest.ResetType resetType,
-               @NotNull AsyncRequestCallback<String> callback);
+               @NotNull AsyncRequestCallback<Void> callback);
 
     /**
      * Initializes new Git repository.

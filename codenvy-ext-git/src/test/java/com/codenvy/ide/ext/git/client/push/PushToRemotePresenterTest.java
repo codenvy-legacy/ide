@@ -25,7 +25,6 @@ import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
@@ -42,9 +41,7 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -266,12 +263,8 @@ public class PushToRemotePresenterTest extends BaseTest {
         presenter.showDialog();
         presenter.onPushClicked();
 
-        verify(service)
-                .pushWS(eq(VFS_ID), eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
-                        (RequestCallback<String>)anyObject());
-        verify(service, never())
-                .push(eq(VFS_ID), eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
-                      (AsyncRequestCallback<String>)anyObject());
+        verify(service).pushWS(eq(VFS_ID), eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
+                               (RequestCallback<String>)anyObject());
         verify(view).close();
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).pushSuccess(eq(REPOSITORY_NAME));
@@ -294,74 +287,8 @@ public class PushToRemotePresenterTest extends BaseTest {
         presenter.showDialog();
         presenter.onPushClicked();
 
-        verify(service)
-                .pushWS(eq(VFS_ID), eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
-                        (RequestCallback<String>)anyObject());
-        verify(service, never())
-                .push(eq(VFS_ID), eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
-                      (AsyncRequestCallback<String>)anyObject());
-        verify(view).close();
-        verify(constant).pushFail();
-        verify(notificationManager).showNotification((Notification)anyObject());
-    }
-
-    @Test
-    public void testOnPushClickedWhenPushRequestIsSuccessful() throws Exception {
-        doThrow(WebSocketException.class).when(service)
-                .pushWS(anyString(), (Project)anyObject(), (List<String>)anyObject(), anyString(), anyBoolean(),
-                        (RequestCallback<String>)anyObject());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[5];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, EMPTY_TEXT);
-                return callback;
-            }
-        }).when(service).push(anyString(), (Project)anyObject(), (List<String>)anyObject(), anyString(), anyBoolean(),
-                              (AsyncRequestCallback<String>)anyObject());
-
-        presenter.showDialog();
-        presenter.onPushClicked();
-
-        verify(service)
-                .pushWS(eq(VFS_ID), eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
-                        (RequestCallback<String>)anyObject());
-        verify(service)
-                .push(eq(VFS_ID), eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
-                      (AsyncRequestCallback<String>)anyObject());
-        verify(view).close();
-        verify(notificationManager).showNotification((Notification)anyObject());
-        verify(constant).pushSuccess(eq(REPOSITORY_NAME));
-    }
-
-    @Test
-    public void testOnPushClickedWhenPushRequestIsFailed() throws Exception {
-        doThrow(WebSocketException.class).when(service)
-                .pushWS(anyString(), (Project)anyObject(), (List<String>)anyObject(), anyString(), anyBoolean(),
-                        (RequestCallback<String>)anyObject());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[5];
-                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
-                onFailure.invoke(callback, mock(Throwable.class));
-                return callback;
-            }
-        }).when(service).push(anyString(), (Project)anyObject(), (List<String>)anyObject(), anyString(), anyBoolean(),
-                              (AsyncRequestCallback<String>)anyObject());
-
-        presenter.showDialog();
-        presenter.onPushClicked();
-
-        verify(service)
-                .pushWS(eq(VFS_ID), eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
-                        (RequestCallback<String>)anyObject());
-        verify(service)
-                .push(eq(VFS_ID), eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
-                      (AsyncRequestCallback<String>)anyObject());
+        verify(service).pushWS(eq(VFS_ID), eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
+                               (RequestCallback<String>)anyObject());
         verify(view).close();
         verify(constant).pushFail();
         verify(notificationManager).showNotification((Notification)anyObject());

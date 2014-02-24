@@ -246,36 +246,10 @@ public class ImportPresenter implements ImportView.ActionDelegate {
                                                  handleError(exception, remoteUri);
                                              }
                                          });
-            view.close();
         } catch (WebSocketException e) {
-            cloneRepositoryREST(remoteUri, remoteName, project);
+            deleteFolder(project);
+            handleError(e, remoteUri);
         }
-    }
-
-    /**
-     * Get the necessary parameters values and call the clone repository method (over HTTP).
-     *
-     * @param remoteUri
-     *         the location of the remote repository
-     * @param remoteName
-     *         remote name instead of "origin"
-     * @param project
-     *         folder (root of GIT repository)
-     */
-    private void cloneRepositoryREST(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
-        gitService.cloneRepository(resourceProvider.getVfsInfo().getId(), project, remoteUri, remoteName,
-                                   new AsyncRequestCallback<RepoInfo>(dtoUnmarshallerFactory.newUnmarshaller(RepoInfo.class)) {
-                                       @Override
-                                       protected void onSuccess(RepoInfo result) {
-                                           onCloneSuccess(result, project);
-                                       }
-
-                                       @Override
-                                       protected void onFailure(Throwable exception) {
-                                           deleteFolder(project);
-                                           handleError(exception, remoteUri);
-                                       }
-                                   });
         view.close();
     }
 

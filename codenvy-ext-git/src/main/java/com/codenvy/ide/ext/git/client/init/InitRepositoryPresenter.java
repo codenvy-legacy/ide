@@ -24,7 +24,6 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
@@ -107,23 +106,8 @@ public class InitRepositoryPresenter implements InitRepositoryView.ActionDelegat
                 }
             });
         } catch (WebSocketException e) {
-            initRepositoryREST(projectId, projectName, bare);
+            handleError(e);
         }
-    }
-
-    /** Initialize of the repository (sends request over HTTP). */
-    private void initRepositoryREST(@NotNull String projectId, @NotNull String projectName, boolean bare) {
-        service.init(resourceProvider.getVfsInfo().getId(), projectId, projectName, bare, new AsyncRequestCallback<Void>() {
-            @Override
-            protected void onSuccess(Void result) {
-                onInitSuccess();
-            }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                handleError(exception);
-            }
-        });
     }
 
     /** Perform actions when repository was successfully init. */

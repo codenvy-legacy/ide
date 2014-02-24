@@ -31,7 +31,6 @@ import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
-import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.debug.Breakpoint;
 import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.debug.Debugger;
@@ -43,7 +42,6 @@ import com.codenvy.ide.ext.java.jdi.client.debug.changevalue.ChangeValuePresente
 import com.codenvy.ide.ext.java.jdi.client.debug.expression.EvaluateExpressionPresenter;
 import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolver;
 import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolverFactory;
-import com.codenvy.ide.ext.java.jdi.client.marshaller.DebuggerEventListUnmarshaller;
 import com.codenvy.ide.ext.java.jdi.client.marshaller.DebuggerEventListUnmarshallerWS;
 import com.codenvy.ide.ext.java.jdi.shared.BreakPoint;
 import com.codenvy.ide.ext.java.jdi.shared.BreakPointEvent;
@@ -66,7 +64,6 @@ import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -117,8 +114,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private       ChangeValuePresenter                   changeValuePresenter;
     private       NotificationManager                    notificationManager;
     private       StringMap<File>                        filesToBreakpoints;
-    /** A timer for checking debugger events. */
-    private       Timer                                  checkEventsTimer;
     /** Handler for processing events which is received from debugger over WebSocket connection. */
     private       SubscriptionHandler<DebuggerEventList> debuggerEventsHandler;
     private       SubscriptionHandler<Void>              debuggerDisconnectedHandler;
@@ -164,38 +159,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         this.evaluateExpressionPresenter = evaluateExpressionPresenter;
         this.changeValuePresenter = changeValuePresenter;
         this.notificationManager = notificationManager;
-
-        this.checkEventsTimer = new Timer() {
-            @Override
-            public void run() {
-                service.checkEvents(debuggerInfo.getId(),
-                                    new AsyncRequestCallback<DebuggerEventList>(new DebuggerEventListUnmarshaller(dtoFactory)) {
-                                        @Override
-                                        protected void onSuccess(DebuggerEventList result) {
-                                            onEventListReceived(result);
-                                        }
-
-                                        @Override
-                                        protected void onFailure(Throwable exception) {
-                                            cancel();
-                                            closeView();
-
-                                            if (exception instanceof ServerException) {
-                                                ServerException serverException = (ServerException)exception;
-                                                if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus() &&
-                                                    serverException.getMessage() != null
-                                                    && serverException.getMessage().contains("not found")) {
-                                                    runnerController.stopActiveProject();
-                                                    onDebuggerDisconnected();
-                                                    return;
-                                                }
-                                            }
-                                            Notification notification = new Notification(exception.getMessage(), ERROR);
-                                            notificationManager.showNotification(notification);
-                                        }
-                                    });
-            }
-        };
 
         this.debuggerEventsHandler = new SubscriptionHandler<DebuggerEventList>(new DebuggerEventListUnmarshallerWS(dtoFactory)) {
             @Override
@@ -648,8 +611,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         try {
             messageBus.subscribe(debuggerEventsChannel, debuggerEventsHandler);
         } catch (WebSocketException e) {
-            // In case of WebSocket subscription is failed try to poll debugger events over HTTP,
-            checkEventsTimer.scheduleRepeating(CHECK_EVENTS_PERIOD_MS);
+            Log.error(DebuggerPresenter.class, e);
         }
 
         try {
@@ -661,11 +623,11 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     }
 
     private void stopCheckingDebugEvents() {
-        checkEventsTimer.cancel();
         try {
             if (messageBus.isHandlerSubscribed(debuggerEventsHandler, debuggerEventsChannel)) {
                 messageBus.unsubscribe(debuggerEventsChannel, debuggerEventsHandler);
             }
+
             if (messageBus.isHandlerSubscribed(debuggerDisconnectedHandler, debuggerDisconnectedChannel)) {
                 messageBus.unsubscribe(debuggerDisconnectedChannel, debuggerDisconnectedHandler);
             }

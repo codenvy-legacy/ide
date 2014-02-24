@@ -98,7 +98,7 @@ public class FetchPresenter implements FetchView.ActionDelegate {
         final String projectId = project.getId();
 
         service.remoteList(resourceProvider.getVfsInfo().getId(), projectId, null, true,
-                           new AsyncRequestCallback<Array<Remote>>() {
+                           new AsyncRequestCallback<Array<Remote>>(dtoUnmarshallerFactory.newArrayUnmarshaller(Remote.class)) {
                                @Override
                                protected void onSuccess(Array<Remote> result) {
                                    view.setRepositories(result);
@@ -231,26 +231,9 @@ public class FetchPresenter implements FetchView.ActionDelegate {
                                 }
                             });
         } catch (WebSocketException e) {
-            doFetchREST(remoteName, removeDeletedRefs, remoteUrl);
+            handleError(e, remoteUrl);
         }
         view.close();
-    }
-
-    /** Perform fetch from remote repository (sends request over HTTP). */
-    private void doFetchREST(@NotNull String remoteName, boolean removeDeletedRefs, @NotNull final String remoteUrl) {
-        service.fetch(resourceProvider.getVfsInfo().getId(), project, remoteName, getRefs(), removeDeletedRefs,
-                      new AsyncRequestCallback<String>() {
-                          @Override
-                          protected void onSuccess(String result) {
-                              Notification notification = new Notification(constant.fetchSuccess(remoteUrl), INFO);
-                              notificationManager.showNotification(notification);
-                          }
-
-                          @Override
-                          protected void onFailure(Throwable exception) {
-                              handleError(exception, remoteUrl);
-                          }
-                      });
     }
 
     /** @return list of refs to fetch */

@@ -63,10 +63,8 @@ import static org.mockito.Mockito.when;
  * @author Artem Zatsarynnyy
  */
 public class DebuggerTest extends BaseTest {
-
     private static final String DEBUG_HOST = "localhost";
     private static final int    DEBUG_PORT = 8000;
-    private static final String TEST_JSON  = "test_json";
     private static final String VM_NAME    = "vm_name";
     private static final String VM_VERSION = "vm_version";
     private static final String MIME_TYPE  = "application/java";

@@ -99,7 +99,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
     }
 
     /**
-     * Get the necessary parameters values and clone repository (over WebSocket or HTTP).
+     * Get the necessary parameters values and clone repository.
      *
      * @param remoteUri
      *         the location of the remote repository
@@ -121,39 +121,13 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
                                           protected void onFailure(Throwable exception) {
                                               resourceProvider.showListProjects();
                                               handleError(exception, remoteUri);
-
                                           }
                                       });
         } catch (WebSocketException e) {
-            cloneRepositoryREST(remoteUri, remoteName, project);
+            resourceProvider.showListProjects();
+            handleError(e, remoteUri);
         }
         view.close();
-    }
-
-    /**
-     * Get the necessary parameters values and call the clone repository method (over HTTP).
-     *
-     * @param remoteUri
-     *         the location of the remote repository
-     * @param remoteName
-     *         remote name instead of "origin"
-     * @param project
-     *         folder (root of GIT repository)
-     */
-    private void cloneRepositoryREST(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
-        service.cloneRepository(resourceProvider.getVfsInfo().getId(), project, remoteUri, remoteName,
-                                new AsyncRequestCallback<RepoInfo>(dtoUnmarshallerFactory.newUnmarshaller(RepoInfo.class)) {
-                                    @Override
-                                    protected void onSuccess(RepoInfo result) {
-                                        onCloneSuccess(result, project);
-                                    }
-
-                                    @Override
-                                    protected void onFailure(Throwable exception) {
-                                        resourceProvider.showListProjects();
-                                        handleError(exception, remoteUri);
-                                    }
-                                });
     }
 
     /**

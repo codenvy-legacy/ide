@@ -230,29 +230,13 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
                 }
             });
         } catch (WebSocketException e) {
-            doPushREST(repository);
-        }
-        view.close();
-    }
-
-    /** Push changes to remote repository (sends request over HTTP). */
-    private void doPushREST(@NotNull final String repository) {
-        service.push(resourceProvider.getVfsInfo().getId(), project, getRefs(), repository, false, new AsyncRequestCallback<String>() {
-            @Override
-            protected void onSuccess(String result) {
-                Notification notification = new Notification(constant.pushSuccess(repository), INFO);
+            handleError(e);
+            if (repository.startsWith("https://")) {
+                Notification notification = new Notification(constant.useSshProtocol(), ERROR);
                 notificationManager.showNotification(notification);
             }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                handleError(exception);
-                if (repository.startsWith("https://")) {
-                    Notification notification = new Notification(constant.useSshProtocol(), ERROR);
-                    notificationManager.showNotification(notification);
-                }
-            }
-        });
+        }
+        view.close();
     }
 
     /** @return list of refs to push */

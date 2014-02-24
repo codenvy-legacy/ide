@@ -26,6 +26,7 @@ import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.remote.add.AddRemoteRepositoryPresenter;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -42,14 +43,15 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 @Singleton
 public class RemotePresenter implements RemoteView.ActionDelegate {
-    private RemoteView                   view;
-    private GitClientService             service;
-    private ResourceProvider             resourceProvider;
-    private GitLocalizationConstant      constant;
-    private AddRemoteRepositoryPresenter addRemoteRepositoryPresenter;
-    private NotificationManager          notificationManager;
-    private Remote                       selectedRemote;
-    private String                       projectId;
+    private final DtoUnmarshallerFactory       dtoUnmarshallerFactory;
+    private       RemoteView                   view;
+    private       GitClientService             service;
+    private       ResourceProvider             resourceProvider;
+    private       GitLocalizationConstant      constant;
+    private       AddRemoteRepositoryPresenter addRemoteRepositoryPresenter;
+    private       NotificationManager          notificationManager;
+    private       Remote                       selectedRemote;
+    private       String                       projectId;
 
     /**
      * Create presenter.
@@ -63,8 +65,10 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
      */
     @Inject
     public RemotePresenter(RemoteView view, GitClientService service, ResourceProvider resourceProvider, GitLocalizationConstant constant,
-                           AddRemoteRepositoryPresenter addRemoteRepositoryPresenter, NotificationManager notificationManager) {
+                           AddRemoteRepositoryPresenter addRemoteRepositoryPresenter, NotificationManager notificationManager,
+                           DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
@@ -80,12 +84,12 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
     }
 
     /**
-     * Get the list of remote repositories for local one. If remote repositories are found, then get the list of branches (remote and
-     * local).
+     * Get the list of remote repositories for local one. If remote repositories are found,
+     * then get the list of branches (remote and local).
      */
     private void getRemotes() {
         service.remoteList(resourceProvider.getVfsInfo().getId(), projectId, null, true,
-                           new AsyncRequestCallback<Array<Remote>>() {
+                           new AsyncRequestCallback<Array<Remote>>(dtoUnmarshallerFactory.newArrayUnmarshaller(Remote.class)) {
                                @Override
                                protected void onSuccess(Array<Remote> result) {
                                    view.setEnableDeleteButton(false);

@@ -24,7 +24,6 @@ import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
@@ -113,30 +112,9 @@ public class CommitPresenter implements CommitView.ActionDelegate {
                                  }
                              });
         } catch (WebSocketException e) {
-            doCommitREST(project, message, all, amend);
+            handleError(e);
         }
         view.close();
-    }
-
-    /** Perform the commit to repository and process the response (sends request over HTTP). */
-    private void doCommitREST(@NotNull Project project, @NotNull String message, boolean all, boolean amend) {
-        service.commit(resourceProvider.getVfsInfo().getId(), project, message, all, amend,
-                       new AsyncRequestCallback<Revision>(dtoUnmarshallerFactory.newUnmarshaller(Revision.class)) {
-                           @Override
-                           protected void onSuccess(Revision result) {
-                               if (!result.isFake()) {
-                                   onCommitSuccess(result);
-                               } else {
-                                   Notification notification = new Notification(result.getMessage(), ERROR);
-                                   notificationManager.showNotification(notification);
-                               }
-                           }
-
-                           @Override
-                           protected void onFailure(Throwable exception) {
-                               handleError(exception);
-                           }
-                       });
     }
 
     /**

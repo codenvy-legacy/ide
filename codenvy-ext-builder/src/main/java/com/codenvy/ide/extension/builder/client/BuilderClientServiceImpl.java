@@ -62,7 +62,9 @@ public class BuilderClientServiceImpl implements BuilderClientService {
         final String requestUrl = baseUrl + "/build";
         String params = "project=" + projectName;
         callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-        asyncRequestFactory.createPostRequest(requestUrl + "?" + params, buildOptions).send(callback);
+        asyncRequestFactory.createPostRequest(requestUrl + "?" + params, buildOptions)
+                           .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                           .send(callback);
     }
 
     /** {@inheritDoc} */

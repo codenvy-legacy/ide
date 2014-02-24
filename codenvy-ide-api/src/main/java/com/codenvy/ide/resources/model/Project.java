@@ -37,7 +37,6 @@ import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.loader.EmptyLoader;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.resources.client.ResourceException;
@@ -225,7 +224,7 @@ public class Project extends Folder {
             url = URL.decode(url).replace("[name]", name);
             url = URL.encode(url);
             loader.setMessage("Creating new file...");
-            asyncRequestFactory.createPostRequest(url, content).header(HTTPHeader.CONTENT_TYPE, mimeType)
+            asyncRequestFactory.createPostRequest(url, null).data(content).header(HTTPHeader.CONTENT_TYPE, mimeType)
                                .loader(loader).send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);

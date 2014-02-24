@@ -442,7 +442,7 @@ public class GitClientServiceImpl implements GitClientService {
     /** {@inheritDoc} */
     @Override
     public void reset(@NotNull String vfsId, @NotNull String projectid, @NotNull String commit, @Nullable ResetRequest.ResetType resetType,
-                      @NotNull AsyncRequestCallback<String> callback) {
+                      @NotNull AsyncRequestCallback<Void> callback) {
 
         ResetRequest resetRequest = dtoFactory.createDto(ResetRequest.class).withCommit(commit);
         if (resetType != null) {

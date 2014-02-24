@@ -25,7 +25,6 @@ import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
@@ -42,9 +41,7 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -218,8 +215,6 @@ public class FetchPresenterTest extends BaseTest {
 
         verify(service).fetchWS(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (List<String>)anyObject(),
                                 eq(NO_REMOVE_DELETE_REFS), (RequestCallback<String>)anyObject());
-        verify(service, never()).fetch(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (List<String>)anyObject(),
-                                       eq(NO_REMOVE_DELETE_REFS), (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).fetchSuccess(eq(REMOTE_URI));
@@ -249,76 +244,6 @@ public class FetchPresenterTest extends BaseTest {
 
         verify(service).fetchWS(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (List<String>)anyObject(),
                                 eq(NO_REMOVE_DELETE_REFS), (RequestCallback<String>)anyObject());
-        verify(service, never()).fetch(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (List<String>)anyObject(),
-                                       eq(NO_REMOVE_DELETE_REFS), (AsyncRequestCallback<String>)anyObject());
-        verify(view).close();
-        verify(constant).fetchFail(eq(REMOTE_URI));
-        verify(notificationManager).showNotification((Notification)anyObject());
-    }
-
-    @Test
-    public void testOnFetchClickedWhenFetchRequestIsSuccessful() throws Exception {
-        when(view.getRepositoryUrl()).thenReturn(REMOTE_URI);
-        when(view.getRepositoryName()).thenReturn(REPOSITORY_NAME, REPOSITORY_NAME);
-        when(view.isRemoveDeletedRefs()).thenReturn(NO_REMOVE_DELETE_REFS);
-        when(view.getLocalBranch()).thenReturn(LOCAL_BRANCH);
-        when(view.getRemoteBranch()).thenReturn(REMOTE_BRANCH);
-        doThrow(WebSocketException.class).when(service).fetchWS(anyString(), (Project)anyObject(), anyString(),
-                                                                (List<String>)anyObject(),
-                                                                anyBoolean(), (RequestCallback<String>)anyObject());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[5];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, EMPTY_TEXT);
-                return callback;
-            }
-        }).when(service).fetch(anyString(), (Project)anyObject(), anyString(), (List<String>)anyObject(), anyBoolean(),
-                               (AsyncRequestCallback<String>)anyObject());
-
-        presenter.showDialog();
-        presenter.onFetchClicked();
-
-        verify(service).fetchWS(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (List<String>)anyObject(),
-                                eq(NO_REMOVE_DELETE_REFS), (RequestCallback<String>)anyObject());
-        verify(service).fetch(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (List<String>)anyObject(),
-                              eq(NO_REMOVE_DELETE_REFS), (AsyncRequestCallback<String>)anyObject());
-        verify(view).close();
-        verify(notificationManager).showNotification((Notification)anyObject());
-        verify(constant).fetchSuccess(eq(REMOTE_URI));
-    }
-
-    @Test
-    public void testOnFetchClickedWhenFetchRequestIsFailed() throws Exception {
-        when(view.getRepositoryUrl()).thenReturn(REMOTE_URI);
-        when(view.getRepositoryName()).thenReturn(REPOSITORY_NAME, REPOSITORY_NAME);
-        when(view.isRemoveDeletedRefs()).thenReturn(NO_REMOVE_DELETE_REFS);
-        when(view.getLocalBranch()).thenReturn(LOCAL_BRANCH);
-        when(view.getRemoteBranch()).thenReturn(REMOTE_BRANCH);
-        doThrow(WebSocketException.class).when(service).fetchWS(anyString(), (Project)anyObject(), anyString(),
-                                                                (List<String>)anyObject(),
-                                                                anyBoolean(), (RequestCallback<String>)anyObject());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[5];
-                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
-                onFailure.invoke(callback, mock(Throwable.class));
-                return callback;
-            }
-        }).when(service).fetch(anyString(), (Project)anyObject(), anyString(), (List<String>)anyObject(), anyBoolean(),
-                               (AsyncRequestCallback<String>)anyObject());
-
-        presenter.showDialog();
-        presenter.onFetchClicked();
-
-        verify(service).fetchWS(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (List<String>)anyObject(),
-                                eq(NO_REMOVE_DELETE_REFS), (RequestCallback<String>)anyObject());
-        verify(service).fetch(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (List<String>)anyObject(),
-                              eq(NO_REMOVE_DELETE_REFS), (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(constant).fetchFail(eq(REMOTE_URI));
         verify(notificationManager).showNotification((Notification)anyObject());

@@ -108,7 +108,9 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
                                valuesTmp.addAll(result.getRemoved());
 
                                for (String value : valuesTmp) {
-                                   IndexFile indexFile = dtoFactory.createDto(IndexFile.class).withPath(value).withIndexed(true);
+                                   IndexFile indexFile = dtoFactory.createDto(IndexFile.class);
+                                   indexFile.setPath(value);
+                                   indexFile.setIndexed(true);
                                    values.add(indexFile);
                                }
                                view.setIndexedFiles(values);
@@ -145,9 +147,9 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
 
         String projectId = project.getId();
 
-        service.reset(resourceProvider.getVfsInfo().getId(), projectId, "HEAD", ResetType.MIXED, new AsyncRequestCallback<String>() {
+        service.reset(resourceProvider.getVfsInfo().getId(), projectId, "HEAD", ResetType.MIXED, new AsyncRequestCallback<Void>() {
             @Override
-            protected void onSuccess(String result) {
+            protected void onSuccess(Void result) {
                 resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
                     @Override
                     public void onSuccess(Project result) {

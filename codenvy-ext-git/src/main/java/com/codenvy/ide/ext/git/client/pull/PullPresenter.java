@@ -96,7 +96,7 @@ public class PullPresenter implements PullView.ActionDelegate {
         view.setEnablePullButton(true);
 
         service.remoteList(resourceProvider.getVfsInfo().getId(), projectId, null, true,
-                           new AsyncRequestCallback<Array<Remote>>() {
+                           new AsyncRequestCallback<Array<Remote>>(dtoUnmarshallerFactory.newArrayUnmarshaller(Remote.class)) {
                                @Override
                                protected void onSuccess(Array<Remote> result) {
                                    getBranches(projectId, LIST_REMOTE);
@@ -239,38 +239,9 @@ public class PullPresenter implements PullView.ActionDelegate {
                 }
             });
         } catch (WebSocketException e) {
-            doPullREST(remoteUrl, remoteName);
+            handleError(e, remoteUrl);
         }
         view.close();
-    }
-
-    /**
-     * Perform pull from pointed by user remote repository, from pointed remote branch to local one. Local branch may not be pointed. Sends
-     * request over HTTP.
-     */
-    private void doPullREST(@NotNull final String remoteUrl, @NotNull String remoteName) {
-        service.pull(resourceProvider.getVfsInfo().getId(), project, getRefs(), remoteName, new AsyncRequestCallback<String>() {
-            @Override
-            protected void onSuccess(String result) {
-                resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
-                    @Override
-                    public void onSuccess(Project result) {
-                        Notification notification = new Notification(constant.pullSuccess(remoteUrl), INFO);
-                        notificationManager.showNotification(notification);
-                    }
-
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        Log.error(PullPresenter.class, "can not get project " + project.getName());
-                    }
-                });
-            }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                handleError(exception, remoteUrl);
-            }
-        });
     }
 
     /** @return list of refs to fetch */

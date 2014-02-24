@@ -27,11 +27,11 @@ import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.websocket.MessageBus;
 import com.google.web.bindery.event.shared.EventBus;
-import com.googlecode.gwt.test.GwtModule;
-import com.googlecode.gwt.test.GwtTestWithMockito;
 
 import org.junit.Before;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.when;
 
@@ -40,8 +40,8 @@ import static org.mockito.Mockito.when;
  *
  * @author Artem Zatsarynnyy
  */
-@GwtModule("com.codenvy.ide.ext.java.jdi.JavaRuntimeExtension")
-public abstract class BaseTest extends GwtTestWithMockito {
+@RunWith(MockitoJUnitRunner.class)
+public abstract class BaseTest {
     public static final String  DEBUGGER_ID    = "debugger_id";
     public static final boolean DISABLE_BUTTON = false;
     @Mock

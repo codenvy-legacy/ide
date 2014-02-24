@@ -25,7 +25,6 @@ import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -42,9 +41,7 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -275,7 +272,6 @@ public class PullPresenterTest extends BaseTest {
         presenter.onPullClicked();
 
         verify(service).pullWS(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (RequestCallback<String>)anyObject());
-        verify(service, never()).pull(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).pullSuccess(eq(REMOTE_URI));
@@ -298,67 +294,6 @@ public class PullPresenterTest extends BaseTest {
         presenter.onPullClicked();
 
         verify(service).pullWS(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (RequestCallback<String>)anyObject());
-        verify(service, never()).pull(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (AsyncRequestCallback<String>)anyObject());
-        verify(view).close();
-        verify(constant).pullFail(eq(REMOTE_URI));
-        verify(notificationManager).showNotification((Notification)anyObject());
-    }
-
-    @Test
-    public void testOnPullClickedWhenPullRequestIsSuccessful() throws Exception {
-        doThrow(WebSocketException.class).when(service)
-                .pullWS(anyString(), (Project)anyObject(), anyString(), anyString(), (RequestCallback<String>)anyObject());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, EMPTY_TEXT);
-                return callback;
-            }
-        }).when(service).pull(anyString(), (Project)anyObject(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[1];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, project);
-                return callback;
-            }
-        }).when(resourceProvider).getProject(anyString(), (AsyncCallback<Project>)anyObject());
-
-        presenter.showDialog();
-        presenter.onPullClicked();
-
-        verify(service).pullWS(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (RequestCallback<String>)anyObject());
-        verify(service).pull(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (AsyncRequestCallback<String>)anyObject());
-        verify(view).close();
-        verify(notificationManager).showNotification((Notification)anyObject());
-        verify(constant).pullSuccess(eq(REMOTE_URI));
-    }
-
-    @Test
-    public void testOnPullClickedWhenPullRequestIsFailed() throws Exception {
-        doThrow(WebSocketException.class).when(service)
-                .pullWS(anyString(), (Project)anyObject(), anyString(), anyString(), (RequestCallback<String>)anyObject());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
-                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
-                onFailure.invoke(callback, mock(Throwable.class));
-                return callback;
-            }
-        }).when(service).pull(anyString(), (Project)anyObject(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
-
-        presenter.showDialog();
-        presenter.onPullClicked();
-
-        verify(service).pullWS(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (RequestCallback<String>)anyObject());
-        verify(service).pull(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(constant).pullFail(eq(REMOTE_URI));
         verify(notificationManager).showNotification((Notification)anyObject());
