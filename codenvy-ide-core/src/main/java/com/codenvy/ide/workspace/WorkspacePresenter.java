@@ -128,25 +128,6 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
         void($doc.getElementsByTagName('head')[0].appendChild(s));
     }-*/;
 
-    /**
-     * Sets whether Login button is visible.
-     *
-     * @param visible
-     *         <code>true</code> to visible the button, <code>false</code> to disable it
-     */
-    public void setVisibleLoginButton(boolean visible) {
-        view.setVisibleLoginButton(visible);
-    }
-
-    /**
-     * Sets whether Logout button is visible.
-     *
-     * @param visible
-     *         <code>true</code> to visible the button, <code>false</code> to disable it
-     */
-    public void setVisibleLogoutButton(boolean visible) {
-        view.setVisibleLogoutButton(visible);
-    }
 
     /**
      * Sets whether 'Update extension' button is visible.

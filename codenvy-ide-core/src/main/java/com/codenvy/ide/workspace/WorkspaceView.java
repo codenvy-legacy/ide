@@ -50,22 +50,6 @@ public interface WorkspaceView extends View<WorkspaceView.ActionDelegate> {
     AcceptsOneWidget getStatusPanel();
 
     /**
-     * Sets whether Login button is visible.
-     *
-     * @param visible
-     *         <code>true</code> to visible the button, <code>false</code> to disable it
-     */
-    void setVisibleLoginButton(boolean visible);
-
-    /**
-     * Sets whether Logout button is visible.
-     *
-     * @param visible
-     *         <code>true</code> to visible the button, <code>false</code> to disable it
-     */
-    void setVisibleLogoutButton(boolean visible);
-
-    /**
      * Sets whether 'Update extension' button is visible.
      *
      * @param visible

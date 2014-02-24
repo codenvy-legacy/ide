@@ -133,10 +133,6 @@ public class BootstrapController {
 
                             workspacePresenter.setUpdateButtonVisibility(Utils.isAppLaunchedInSDKRunner());
 
-                            final boolean isUserLoggedIn = !user.getUserId().equals("__anonim");
-                            workspacePresenter.setVisibleLoginButton(!isUserLoggedIn);
-                            workspacePresenter.setVisibleLogoutButton(isUserLoggedIn);
-
                             // Display IDE
                             workspacePresenter.go(mainPanel);
                             // Display list of projects in project explorer

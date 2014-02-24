@@ -28,8 +28,7 @@
 }
 
 .ide-PartStack .ide-PartStack-Editor-Content {
-    /* content panel */
-    /*border: 2px solid activeTabBackground;*/
+    border: 2px solid activeTabBackground;
     background-color: activeTabBackground;
 }
 
@@ -38,10 +37,7 @@
     margin-left: 3px;
     margin-top: 3px;
     background: inactiveTabBackground;
-    border-radius: 4px 4px 0 0;
-    -moz-border-radius: 4px 4px 0 0;
-    -webkit-border-radius: 4px 4px 0 0;
-    border: 1px solid tabBorder;
+    /*border: 1px solid inactiveTabBackground;*/
     padding: 3px;
     cursor: pointer;
     cursor: hand;
@@ -78,8 +74,10 @@
     cursor: default;
     /*font-weight: bold;*/
     padding: 3px;
+    border : 1px solid tabBorder;
     border-bottom: 2px solid activeTabBackground;
     background: activeTabBackground;
+
 }
 
 .ide-PartStack-focused {
@@ -137,6 +135,7 @@
     /*font-weight: bold;*/
     /*padding: 3px;*/
     /*border-top: 2px solid activeTabBackground;*/
+    border: 1px solid tabBorder !important;
     background-color: activeTabBackground !important;
 }
 /*.ide-PartStack-focused .ide-PartStack-Tab-selected-Below {*/

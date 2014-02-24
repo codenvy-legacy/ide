@@ -267,4 +267,12 @@ public class Style {
     public static String getCellHoveredRow() {
         return theme.getCellHoveredRow();
     }
+
+    public static String getMainMenuBkgColor() {
+        return theme.getMainMenuBkgColor();
+    }
+
+    public static String getMainMenuFontColor() {
+        return  theme.getMainMenuFontColor();
+    }
 }

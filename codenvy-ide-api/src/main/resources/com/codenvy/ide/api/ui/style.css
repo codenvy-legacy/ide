@@ -91,6 +91,11 @@
 @def editorLineHeight 15px;
 @def editorFontFamily 'Andale Mono', monospace;
 
+/*Main Menu*/
+@eval mainMenuBkgColor com.codenvy.ide.api.ui.theme.Style.getMainMenuBkgColor();
+@eval mainMenuFontColor com.codenvy.ide.api.ui.theme.Style.getMainMenuFontColor();
+@def fontMenuSize 12px;
+
 @eval mainFontColor com.codenvy.ide.api.ui.theme.Style.getMainFontColor();
 @eval welcomeFontColor com.codenvy.ide.api.ui.theme.Style.getWelcomeFontColor();
 @eval lightTextColor com.codenvy.ide.api.ui.theme.Style.getLightTextColor();

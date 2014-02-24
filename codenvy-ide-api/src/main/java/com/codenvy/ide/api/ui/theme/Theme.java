@@ -150,4 +150,8 @@ public interface Theme {
     String getCellKeyboardSelectedRowColor();
 
     String getCellHoveredRow();
+
+    String getMainMenuBkgColor();
+
+    String getMainMenuFontColor();
 }
