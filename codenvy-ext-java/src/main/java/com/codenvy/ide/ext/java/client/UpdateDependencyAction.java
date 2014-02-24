@@ -36,7 +36,7 @@ public class UpdateDependencyAction extends Action {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        javaExtension.updateDependencies();
+        javaExtension.updateDependencies(resourceProvider.getActiveProject());
     }
 
     /** {@inheritDoc} */

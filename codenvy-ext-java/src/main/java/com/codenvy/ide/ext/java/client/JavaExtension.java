@@ -115,7 +115,7 @@ public class JavaExtension {
             public void onProjectOpened(ProjectActionEvent event) {
                 Project project = event.getProject();
                 if (project instanceof JavaProject) {
-                    updateDependencies();
+                    updateDependencies(project);
                 }
             }
 
@@ -133,7 +133,7 @@ public class JavaExtension {
             public void onFileOperation(FileEvent event) {
                 String name = event.getFile().getName();
                 if (event.getOperationType() == FileEvent.FileOperation.SAVE && "pom.xml".equals(name)) {
-                    updateDependencies();
+                    updateDependencies(event.getFile().getProject());
                 }
             }
         });
@@ -143,8 +143,7 @@ public class JavaExtension {
     public JavaExtension() {
     }
 
-    public void updateDependencies() {
-        Project project = resourceProvider.getActiveProject();
+    public void updateDependencies(Project project) {
         String projectId = project.getId();
         String vfsId = resourceProvider.getVfsInfo().getId();
         String url = restContext + "/code-assistant-java/" + Utils.getWorkspaceId() + "/update-dependencies?projectid=" + projectId +
