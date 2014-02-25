@@ -97,7 +97,7 @@ exit 1;;
   n|N ) 
 echo "$(tput setaf 2)INFO: Script execution cancelled. Please, check a path to your local Maven repository in settings.xml$(tput setaf 7)"
 exit;;
-  * ) echo "invalid";;
+  * ) echo "Invalid choice";;
 esac
 
 exit 1
@@ -163,7 +163,7 @@ exit 1;;
 n|N ) 
 echo "$(tput setaf 2)INFO: Script execution cancelled. Please, check a path to your local Maven repository in settings.xml$(tput setaf 7)"
 exit;;
-  * ) echo "invalid";;
+  * ) echo "Invalid choice";;
 esac
 fi
 
