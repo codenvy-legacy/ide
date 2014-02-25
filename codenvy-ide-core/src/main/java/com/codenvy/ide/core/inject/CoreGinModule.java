@@ -67,6 +67,7 @@ import com.codenvy.ide.core.editor.DefaultEditorProvider;
 import com.codenvy.ide.core.editor.EditorAgentImpl;
 import com.codenvy.ide.core.editor.EditorRegistryImpl;
 import com.codenvy.ide.core.editor.ResourceDocumentProvider;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.ExtensionManagerPresenter;
 import com.codenvy.ide.extension.ExtensionManagerView;
 import com.codenvy.ide.extension.ExtensionManagerViewImpl;
@@ -113,6 +114,8 @@ import com.codenvy.ide.rename.RenameResourceViewImpl;
 import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.resources.model.GenericModelProvider;
+import com.codenvy.ide.rest.AsyncRequestFactory;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.search.SearchPartPresenter;
 import com.codenvy.ide.search.SearchPartView;
 import com.codenvy.ide.search.SearchPartViewImpl;
@@ -182,19 +185,21 @@ public class CoreGinModule extends AbstractGinModule {
         bind(StandardComponentInitializer.class).in(Singleton.class);
         install(new GinFactoryModuleBuilder().implement(PartStackView.class, PartStackViewImpl.class).build(PartStackViewFactory.class));
         install(new GinFactoryModuleBuilder().implement(PartStack.class, PartStackPresenter.class).build(PartStackPresenterFactory.class));
+        bind(PreferencesManager.class).to(PreferencesManagerImpl.class).in(Singleton.class);
+        bind(NotificationManager.class).to(NotificationManagerImpl.class).in(Singleton.class);
+        bind(ThemeAgent.class).to(ThemeAgentImpl.class).in(Singleton.class);
+        bind(DtoFactory.class).in(Singleton.class);
+        bind(DtoUnmarshallerFactory.class).in(Singleton.class);
+        bind(AsyncRequestFactory.class).in(Singleton.class);
+        bind(MessageBus.class).to(MessageBusImpl.class).in(Singleton.class);
+        // client services
         bind(UserClientService.class).to(UserClientServiceImpl.class).in(Singleton.class);
         bind(ProjectClientService.class).to(ProjectClientServiceImpl.class).in(Singleton.class);
         bind(ProjectTypeDescriptionClientService.class).to(ProjectTypeDescriptionClientServiceImpl.class).in(Singleton.class);
-        bind(PreferencesManager.class).to(PreferencesManagerImpl.class).in(Singleton.class);
-        bind(MessageBus.class).to(MessageBusImpl.class).in(Singleton.class);
-        bind(NotificationManager.class).to(NotificationManagerImpl.class).in(Singleton.class);
-        bind(ThemeAgent.class).to(ThemeAgentImpl.class).in(Singleton.class);
+
         apiBindingConfigure();
-
         resourcesAPIconfigure();
-
         coreUiConfigure();
-
         editorAPIconfigure();
     }
 

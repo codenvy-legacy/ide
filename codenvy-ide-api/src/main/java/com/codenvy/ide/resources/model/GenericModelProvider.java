@@ -18,9 +18,9 @@
 package com.codenvy.ide.resources.model;
 
 import com.codenvy.ide.api.resources.ModelProvider;
+import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-
 
 /**
  * Model provider for generic Project
@@ -29,19 +29,20 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 public class GenericModelProvider implements ModelProvider {
 
-    private final EventBus eventBus;
+    private final EventBus            eventBus;
+    private final AsyncRequestFactory asyncRequestFactory;
 
     /** Creates GenericModel provider */
     @Inject
-    public GenericModelProvider(EventBus eventBus) {
+    public GenericModelProvider(EventBus eventBus, AsyncRequestFactory asyncRequestFactory) {
         this.eventBus = eventBus;
-
+        this.asyncRequestFactory = asyncRequestFactory;
     }
 
     /** {@inheritDoc} */
     @Override
     public Project createProjectInstance() {
-        return new Project(eventBus);
+        return new Project(eventBus, asyncRequestFactory);
     }
 
 }

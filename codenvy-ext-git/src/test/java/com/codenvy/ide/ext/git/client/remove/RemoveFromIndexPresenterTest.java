@@ -24,7 +24,6 @@ import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
@@ -41,7 +40,6 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -179,24 +177,6 @@ public class RemoveFromIndexPresenterTest extends BaseTest {
         verify(constant).removeFilesFailed();
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(view).close();
-    }
-
-    @Test
-    public void testOnRemoveClickedWhenExceptionHappened() throws Exception {
-        when(view.isRemoved()).thenReturn(REMOVED);
-        when(selectionAgent.getSelection()).thenReturn(null);
-        doThrow(RequestException.class).when(service).remove(anyString(), anyString(), (List<String>)anyObject(), anyBoolean(),
-                                                             (AsyncRequestCallback<String>)anyObject());
-
-        presenter.showDialog();
-        presenter.onRemoveClicked();
-
-        verify(service)
-                .remove(eq(VFS_ID), eq(PROJECT_ID), (List<String>)anyObject(), eq(REMOVED),
-                        (AsyncRequestCallback<String>)anyObject());
-        verify(view).close();
-        verify(constant).removeFilesFailed();
-        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test

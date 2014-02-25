@@ -23,16 +23,14 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.MergeResult;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.StringUnmarshaller;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -53,22 +51,21 @@ import static com.codenvy.ide.ext.git.shared.MergeResult.MergeStatus.ALREADY_UP_
  * Presenter to perform merge reference with current HEAD commit.
  *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Jul 20, 2011 12:38:39 PM anya $
  */
 @Singleton
 public class MergePresenter implements MergeView.ActionDelegate {
     public static final String LOCAL_BRANCHES_TITLE  = "Local Branches";
     public static final String REMOTE_BRANCHES_TITLE = "Remote Branches";
-    private MergeView               view;
-    private GitClientService        service;
-    private ResourceProvider        resourceProvider;
-    private EventBus                eventBus;
-    private GitLocalizationConstant constant;
-    private NotificationManager     notificationManager;
-    private Reference               selectedReference;
-    private String                  projectId;
-    private String                  projectName;
-    private DtoFactory              dtoFactory;
+    private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
+    private       MergeView               view;
+    private       GitClientService        service;
+    private       ResourceProvider        resourceProvider;
+    private       EventBus                eventBus;
+    private       GitLocalizationConstant constant;
+    private       NotificationManager     notificationManager;
+    private       Reference               selectedReference;
+    private       String                  projectId;
+    private       String                  projectName;
 
     /**
      * Create presenter.
@@ -82,15 +79,16 @@ public class MergePresenter implements MergeView.ActionDelegate {
      */
     @Inject
     public MergePresenter(MergeView view, GitClientService service, ResourceProvider resourceProvider, EventBus eventBus,
-                          GitLocalizationConstant constant, NotificationManager notificationManager, DtoFactory dtoFactory) {
+                          GitLocalizationConstant constant, NotificationManager notificationManager,
+                          DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
         this.eventBus = eventBus;
         this.constant = constant;
         this.notificationManager = notificationManager;
-        this.dtoFactory = dtoFactory;
     }
 
     /** Show dialog. */
@@ -101,74 +99,60 @@ public class MergePresenter implements MergeView.ActionDelegate {
         selectedReference = null;
         view.setEnableMergeButton(false);
 
-        try {
-            service.branchList(resourceProvider.getVfsInfo().getId(), projectId, LIST_LOCAL,
-                               new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                                   @Override
-                                   protected void onSuccess(String result) {
-                                       Array<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
-                                       if (branches.isEmpty()) {
-                                           return;
-                                       }
-
-                                       Array<Reference> references = Collections.createArray();
-                                       for (int i = 0; i < branches.size(); i++) {
-                                           Branch branch = branches.get(i);
-                                           if (!branch.isActive()) {
-                                               Reference reference = new Reference(branch.getName(), branch.getDisplayName(), LOCAL_BRANCH);
-                                               references.add(reference);
-                                           }
-                                       }
-                                       view.setLocalBranches(references);
+        service.branchList(resourceProvider.getVfsInfo().getId(), projectId, LIST_LOCAL,
+                           new AsyncRequestCallback<Array<Branch>>(dtoUnmarshallerFactory.newArrayUnmarshaller(Branch.class)) {
+                               @Override
+                               protected void onSuccess(Array<Branch> result) {
+                                   if (result.isEmpty()) {
+                                       return;
                                    }
 
-                                   @Override
-                                   protected void onFailure(Throwable exception) {
-                                       eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                       Notification notification = new Notification(exception.getMessage(), ERROR);
-                                       notificationManager.showNotification(notification);
-                                   }
-                               });
-        } catch (RequestException e) {
-            eventBus.fireEvent(new ExceptionThrownEvent(e));
-            Notification notification = new Notification(e.getMessage(), ERROR);
-            notificationManager.showNotification(notification);
-        }
-
-        try {
-            service.branchList(resourceProvider.getVfsInfo().getId(), projectId, LIST_REMOTE,
-                               new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                                   @Override
-                                   protected void onSuccess(String result) {
-                                       Array<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
-                                       
-                                       if (branches.isEmpty()){
-                                           return;
+                                   Array<Reference> references = Collections.createArray();
+                                   for (int i = 0; i < result.size(); i++) {
+                                       Branch branch = result.get(i);
+                                       if (!branch.isActive()) {
+                                           Reference reference = new Reference(branch.getName(), branch.getDisplayName(), LOCAL_BRANCH);
+                                           references.add(reference);
                                        }
+                                   }
+                                   view.setLocalBranches(references);
+                               }
 
-                                       Array<Reference> references = Collections.createArray();
-                                       for (int i = 0; i < branches.size(); i++) {
-                                           Branch branch = branches.get(i);
-                                           if (!branch.isActive()) {
-                                               Reference reference = new Reference(branch.getName(), branch.getDisplayName(), REMOTE_BRANCH);
-                                               references.add(reference);
-                                           }
+                               @Override
+                               protected void onFailure(Throwable exception) {
+                                   eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                                   Notification notification = new Notification(exception.getMessage(), ERROR);
+                                   notificationManager.showNotification(notification);
+                               }
+                           });
+
+        service.branchList(resourceProvider.getVfsInfo().getId(), projectId, LIST_REMOTE,
+                           new AsyncRequestCallback<Array<Branch>>(dtoUnmarshallerFactory.newArrayUnmarshaller(Branch.class)) {
+                               @Override
+                               protected void onSuccess(Array<Branch> result) {
+                                   if (result.isEmpty()) {
+                                       return;
+                                   }
+
+                                   Array<Reference> references = Collections.createArray();
+                                   for (int i = 0; i < result.size(); i++) {
+                                       Branch branch = result.get(i);
+                                       if (!branch.isActive()) {
+                                           Reference reference =
+                                                   new Reference(branch.getName(), branch.getDisplayName(), REMOTE_BRANCH);
+                                           references.add(reference);
                                        }
-                                       view.setRemoteBranches(references);
                                    }
+                                   view.setRemoteBranches(references);
+                               }
 
-                                   @Override
-                                   protected void onFailure(Throwable exception) {
-                                       eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                       Notification notification = new Notification(exception.getMessage(), ERROR);
-                                       notificationManager.showNotification(notification);
-                                   }
-                               });
-        } catch (RequestException e) {
-            eventBus.fireEvent(new ExceptionThrownEvent(e));
-            Notification notification = new Notification(e.getMessage(), ERROR);
-            notificationManager.showNotification(notification);
-        }
+                               @Override
+                               protected void onFailure(Throwable exception) {
+                                   eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                                   Notification notification = new Notification(exception.getMessage(), ERROR);
+                                   notificationManager.showNotification(notification);
+                               }
+                           });
 
         view.showDialog();
     }
@@ -182,39 +166,32 @@ public class MergePresenter implements MergeView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onMergeClicked() {
-        try {
-            service.merge(resourceProvider.getVfsInfo().getId(), projectId, selectedReference.getDisplayName(),
-                          new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                              @Override
-                              protected void onSuccess(String result) {
-                                  final MergeResult mergeResult = dtoFactory.createDtoFromJson(result, MergeResult.class);
-                                  resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
-                                      @Override
-                                      public void onSuccess(Project project) {
-                                          Notification notification = new Notification(formMergeMessage(mergeResult), INFO);
-                                          notificationManager.showNotification(notification);
-                                          view.close();
-                                      }
+        service.merge(resourceProvider.getVfsInfo().getId(), projectId, selectedReference.getDisplayName(),
+                      new AsyncRequestCallback<MergeResult>(dtoUnmarshallerFactory.newUnmarshaller(MergeResult.class)) {
+                          @Override
+                          protected void onSuccess(final MergeResult result) {
+                              resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
+                                  @Override
+                                  public void onSuccess(Project project) {
+                                      Notification notification = new Notification(formMergeMessage(result), INFO);
+                                      notificationManager.showNotification(notification);
+                                      view.close();
+                                  }
 
-                                      @Override
-                                      public void onFailure(Throwable caught) {
-                                          Log.error(MergePresenter.class, "can not get project " + projectName);
-                                      }
-                                  });
-                              }
+                                  @Override
+                                  public void onFailure(Throwable caught) {
+                                      Log.error(MergePresenter.class, "can not get project " + projectName);
+                                  }
+                              });
+                          }
 
-                              @Override
-                              protected void onFailure(Throwable exception) {
-                                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                  Notification notification = new Notification(exception.getMessage(), ERROR);
-                                  notificationManager.showNotification(notification);
-                              }
-                          });
-        } catch (RequestException e) {
-            eventBus.fireEvent(new ExceptionThrownEvent(e));
-            Notification notification = new Notification(e.getMessage(), ERROR);
-            notificationManager.showNotification(notification);
-        }
+                          @Override
+                          protected void onFailure(Throwable exception) {
+                              eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                              Notification notification = new Notification(exception.getMessage(), ERROR);
+                              notificationManager.showNotification(notification);
+                          }
+                      });
     }
 
     /**
@@ -233,7 +210,7 @@ public class MergePresenter implements MergeView.ActionDelegate {
         StringBuilder conflictMessage = new StringBuilder();
         List<String> conflicts = mergeResult.getConflicts();
         if (conflicts != null && conflicts.size() > 0) {
-            for (String conflict: conflicts) {
+            for (String conflict : conflicts) {
                 conflictMessage.append("- ").append(conflict).append("<br>");
             }
         }

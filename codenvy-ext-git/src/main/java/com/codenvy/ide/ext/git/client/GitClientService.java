@@ -17,17 +17,22 @@
  */
 package com.codenvy.ide.ext.git.client;
 
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.Commiters;
 import com.codenvy.ide.ext.git.shared.DiffRequest;
 import com.codenvy.ide.ext.git.shared.GitUrlVendorInfo;
+import com.codenvy.ide.ext.git.shared.LogResponse;
+import com.codenvy.ide.ext.git.shared.MergeResult;
+import com.codenvy.ide.ext.git.shared.Remote;
+import com.codenvy.ide.ext.git.shared.RepoInfo;
 import com.codenvy.ide.ext.git.shared.ResetRequest;
 import com.codenvy.ide.ext.git.shared.Revision;
+import com.codenvy.ide.ext.git.shared.Status;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
-import com.google.gwt.http.client.RequestException;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -39,8 +44,7 @@ import java.util.List;
  * GitClientService.getInstance().init(workDir, bare, callback);
  * <code>
  *
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Mar 23, 2011 11:48:14 AM anya $
+ * @author Ann Zhuleva
  */
 public interface GitClientService {
     /**
@@ -56,11 +60,9 @@ public interface GitClientService {
      * @param filePattern
      *         pattern of the files to be added, default is "." (all files are added)
      * @param callback
-     *         callback
-     * @throws RequestException
      */
     void add(@NotNull String vfsId, @NotNull Project project, boolean update, @Nullable List<String> filePattern,
-             @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+             @NotNull AsyncRequestCallback<Void> callback);
 
     /**
      * Add changes to Git index (temporary storage). Sends request over WebSocket.
@@ -79,7 +81,7 @@ public interface GitClientService {
      * @throws WebSocketException
      */
     void addWS(@NotNull String vfsId, @NotNull Project project, boolean update, @Nullable List<String> filePattern,
-               @NotNull RequestCallback<String> callback) throws WebSocketException;
+               @NotNull RequestCallback<Void> callback) throws WebSocketException;
 
     /**
      * Fetch changes from remote repository to local one.
@@ -102,11 +104,9 @@ public interface GitClientService {
      * @param removeDeletedRefs
      *         if <code>true</code> then delete removed refs from local repository
      * @param callback
-     *         callback
-     * @throws RequestException
      */
     void fetch(@NotNull String vfsId, @NotNull Project project, @NotNull String remote, List<String> refspec,
-               boolean removeDeletedRefs, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+               boolean removeDeletedRefs, @NotNull AsyncRequestCallback<String> callback);
 
     /**
      * Fetch changes from remote repository to local one (sends request over WebSocket).
@@ -146,10 +146,9 @@ public interface GitClientService {
      * @param mode
      *         get remote branches
      * @param callback
-     *         callback
      */
     void branchList(@NotNull String vfsId, @NotNull String projectid, @Nullable String mode,
-                    @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+                    @NotNull AsyncRequestCallback<Array<Branch>> callback);
 
     /**
      * Delete branch.
@@ -163,10 +162,9 @@ public interface GitClientService {
      * @param force
      *         force if <code>true</code> delete branch {@link #name} even if it is not fully merged
      * @param callback
-     *         callback
      */
     void branchDelete(@NotNull String vfsId, @NotNull String projectid, @NotNull String name, boolean force,
-                      @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+                      @NotNull AsyncRequestCallback<String> callback);
 
     /**
      * Checkout the branch with pointed name.
@@ -180,10 +178,9 @@ public interface GitClientService {
      * @param newName
      *         branch's new name
      * @param callback
-     *         callback
      */
     void branchRename(@NotNull String vfsId, @NotNull String projectid, @NotNull String oldName, @NotNull String newName,
-                      @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+                      @NotNull AsyncRequestCallback<String> callback);
 
     /**
      * Create new branch with pointed name.
@@ -197,10 +194,9 @@ public interface GitClientService {
      * @param startPoint
      *         name of a commit at which to start the new branch
      * @param callback
-     *         callback
      */
     void branchCreate(@NotNull String vfsId, @NotNull String projectid, @NotNull String name, @NotNull String startPoint,
-                      @NotNull AsyncRequestCallback<Branch> callback) throws RequestException;
+                      @NotNull AsyncRequestCallback<Branch> callback);
 
     /**
      * Checkout the branch with pointed name.
@@ -216,10 +212,9 @@ public interface GitClientService {
      * @param createNew
      *         if <code>true</code> then create a new branch
      * @param callback
-     *         callback
      */
     void branchCheckout(@NotNull String vfsId, @NotNull String projectid, @NotNull String name, @NotNull String startPoint,
-                        boolean createNew, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+                        boolean createNew, @NotNull AsyncRequestCallback<String> callback);
 
     /**
      * Get the list of remote repositories for pointed by <code>workDir</code> parameter one.
@@ -233,10 +228,9 @@ public interface GitClientService {
      * @param verbose
      *         If <code>true</code> show remote url and name otherwise show remote name
      * @param callback
-     *         callback
      */
     void remoteList(@NotNull String vfsId, @NotNull String projectid, @Nullable String remoteName, boolean verbose,
-                    @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+                    @NotNull AsyncRequestCallback<Array<Remote>> callback);
 
     /**
      * Adds remote repository to the list of remote repositories.
@@ -250,10 +244,9 @@ public interface GitClientService {
      * @param url
      *         remote repository's URL
      * @param callback
-     *         callback
      */
     void remoteAdd(@NotNull String vfsId, @NotNull String projectid, @NotNull String name, @NotNull String url,
-                   @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+                   @NotNull AsyncRequestCallback<String> callback);
 
     /**
      * Deletes the pointed(by name) remote repository from the list of repositories.
@@ -265,10 +258,9 @@ public interface GitClientService {
      * @param name
      *         remote repository name to delete
      * @param callback
-     *         callback
      */
     void remoteDelete(@NotNull String vfsId, @NotNull String projectid, @NotNull String name,
-                      @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+                      @NotNull AsyncRequestCallback<String> callback);
 
     /**
      * Remove files from the working tree and the index.
@@ -282,10 +274,9 @@ public interface GitClientService {
      * @param cached
      *         is for removal only from index
      * @param callback
-     *         callback
      */
     void remove(@NotNull String vfsId, @NotNull String projectid, List<String> files, boolean cached,
-                @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+                @NotNull AsyncRequestCallback<String> callback);
 
     /**
      * Reset current HEAD to the specified state. There two types of the reset: <br>
@@ -302,10 +293,9 @@ public interface GitClientService {
      * @param resetType
      *         type of the reset
      * @param callback
-     *         callback
      */
     void reset(@NotNull String vfsId, @NotNull String projectid, @NotNull String commit, @Nullable ResetRequest.ResetType resetType,
-               @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+               @NotNull AsyncRequestCallback<Void> callback);
 
     /**
      * Initializes new Git repository.
@@ -318,10 +308,9 @@ public interface GitClientService {
      * @param bare
      *         to create bare repository or not
      * @param callback
-     *         callback
      */
     void init(@NotNull String vfsId, @NotNull String projectid, @NotNull String projectName, boolean bare,
-              @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+              @NotNull AsyncRequestCallback<Void> callback);
 
     /**
      * Initializes new Git repository (over WebSocket).
@@ -338,7 +327,7 @@ public interface GitClientService {
      *         callback
      */
     void initWS(@NotNull String vfsId, @NotNull String projectid, @NotNull String projectName, boolean bare,
-                @NotNull RequestCallback<String> callback) throws WebSocketException;
+                @NotNull RequestCallback<Void> callback) throws WebSocketException;
 
     /**
      * Pull (fetch and merge) changes from remote repository to local one.
@@ -359,11 +348,9 @@ public interface GitClientService {
      * @param remote
      *         remote remote repository's name
      * @param callback
-     *         callback
-     * @throws RequestException
      */
     void pull(@NotNull String vfsId, @NotNull Project project, @NotNull String refSpec, @NotNull String remote,
-              @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+              @NotNull AsyncRequestCallback<String> callback);
 
     /**
      * Pull (fetch and merge) changes from remote repository to local one (sends request over WebSocket).
@@ -405,11 +392,9 @@ public interface GitClientService {
      *         push refuses to update a remote ref that is not an ancestor of the local ref used to overwrite it. If <code>true</code>
      *         disables the check. This can cause the remote repository to lose commits
      * @param callback
-     *         callback
-     * @throws RequestException
      */
     void push(@NotNull String vfsId, @NotNull Project project, @NotNull List<String> refSpec, @NotNull String remote, boolean force,
-              @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+              @NotNull AsyncRequestCallback<String> callback);
 
     /**
      * Push changes from local repository to remote one (sends request over WebSocket).
@@ -445,10 +430,9 @@ public interface GitClientService {
      *         remote name instead of "origin"
      * @param callback
      *         callback
-     * @throws RequestException
      */
     void cloneRepository(@NotNull String vfsId, @NotNull Project project, @NotNull String remoteUri, @NotNull String remoteName,
-                         @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+                         @NotNull AsyncRequestCallback<RepoInfo> callback);
 
     /**
      * Clones one remote repository to local one (over WebSocket).
@@ -466,7 +450,7 @@ public interface GitClientService {
      * @throws WebSocketException
      */
     void cloneRepositoryWS(@NotNull String vfsId, @NotNull Project project, @NotNull String remoteUri, @NotNull String remoteName,
-                           @NotNull RequestCallback<String> callback) throws WebSocketException;
+                           @NotNull RequestCallback<RepoInfo> callback) throws WebSocketException;
 
     /**
      * Performs commit changes from index to repository. The result of the commit is represented by {@link Revision}, which is returned by
@@ -483,11 +467,9 @@ public interface GitClientService {
      * @param amend
      *         indicates that previous commit must be overwritten
      * @param callback
-     *         callback
-     * @throws RequestException
      */
     void commit(@NotNull String vfsId, @NotNull Project project, @NotNull String message, boolean all, boolean amend,
-                @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+                @NotNull AsyncRequestCallback<Revision> callback);
 
     /**
      * Performs commit changes from index to repository. The result of the commit is represented by {@link Revision}, which is returned by
@@ -508,7 +490,7 @@ public interface GitClientService {
      * @throws WebSocketException
      */
     void commitWS(@NotNull String vfsId, @NotNull Project project, @NotNull String message, boolean all, boolean amend,
-                  @NotNull RequestCallback<String> callback) throws WebSocketException;
+                  @NotNull RequestCallback<Revision> callback) throws WebSocketException;
 
     /**
      * Compare two commits, get the diff for pointed file(s) or for the whole project in text format.
@@ -530,11 +512,10 @@ public interface GitClientService {
      * @param commitB
      *         second commit to be compared
      * @param callback
-     *         callback
      */
     void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull List<String> fileFilter, @NotNull DiffRequest.DiffType type,
               boolean noRenames, int renameLimit, @NotNull String commitA, @NotNull String commitB,
-              @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+              @NotNull AsyncRequestCallback<String> callback);
 
     /**
      * Compare commit with index or working tree (depends on {@link #cached}), get the diff for pointed file(s) or for the whole project in
@@ -557,11 +538,9 @@ public interface GitClientService {
      * @param cached
      *         if <code>true</code> then compare commit with index, if <code>false</code>, then compare with working tree.
      * @param callback
-     *         callback
      */
     void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull List<String> fileFilter, @NotNull DiffRequest.DiffType type,
-              boolean noRenames, int renameLimit, @NotNull String commitA, boolean cached, @NotNull AsyncRequestCallback<String> callback)
-            throws RequestException;
+              boolean noRenames, int renameLimit, @NotNull String commitA, boolean cached, @NotNull AsyncRequestCallback<String> callback);
 
     /**
      * Get log of commits. The result is the list of {@link Revision}, which is returned by callback in
@@ -574,10 +553,8 @@ public interface GitClientService {
      * @param isTextFormat
      *         if <code>true</code> the loq response will be in text format
      * @param callback
-     *         callback
      */
-    void log(@NotNull String vfsId, @NotNull String projectid, boolean isTextFormat, @NotNull AsyncRequestCallback<String> callback)
-            throws RequestException;
+    void log(@NotNull String vfsId, @NotNull String projectid, boolean isTextFormat, @NotNull AsyncRequestCallback<LogResponse> callback);
 
     /**
      * Merge the pointed commit with current HEAD.
@@ -589,10 +566,9 @@ public interface GitClientService {
      * @param commit
      *         commit's reference to merge with
      * @param callback
-     *         callback
      */
     void merge(@NotNull String vfsId, @NotNull String projectid, @NotNull String commit,
-               @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+               @NotNull AsyncRequestCallback<MergeResult> callback);
 
     /**
      * Gets the working tree status. The status of added, modified or deleted files is shown is written in {@link String}. The format may
@@ -624,10 +600,8 @@ public interface GitClientService {
      * @param shortFormat
      *         to show in short format or not
      * @param callback
-     *         callback
      */
-    void statusText(@NotNull String vfsId, @NotNull String projectid, boolean shortFormat, @NotNull AsyncRequestCallback<String> callback)
-            throws RequestException;
+    void statusText(@NotNull String vfsId, @NotNull String projectid, boolean shortFormat, @NotNull AsyncRequestCallback<String> callback);
 
     /**
      * Gets the working tree status : list of untracked, changed not commited and changed not updated.
@@ -637,9 +611,8 @@ public interface GitClientService {
      * @param projectid
      *         project's id (root of GIT repository)
      * @param callback
-     *         callback
      */
-    void status(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void status(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<Status> callback);
 
     /**
      * Get the Git ReadOnly Url for the pointed item's location.
@@ -649,17 +622,12 @@ public interface GitClientService {
      * @param projectid
      *         project's id (root of GIT repository)
      * @param callback
-     *         callback
-     * @throws RequestException
      */
-    void getGitReadOnlyUrl(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<String> callback)
-            throws RequestException;
+    void getGitReadOnlyUrl(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<String> callback);
 
-    void getCommiters(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<Commiters> callback)
-            throws RequestException;
+    void getCommitters(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<Commiters> callback);
 
-    void deleteRepository(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<Void> callback)
-            throws RequestException;
+    void deleteRepository(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<Void> callback);
 
-    void getUrlVendorInfo(@NotNull String vcsUrl, @NotNull AsyncRequestCallback<GitUrlVendorInfo> callback) throws RequestException;
+    void getUrlVendorInfo(@NotNull String vcsUrl, @NotNull AsyncRequestCallback<GitUrlVendorInfo> callback);
 }

@@ -34,13 +34,12 @@ import com.codenvy.ide.resources.model.Link;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
-import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.NewResourceAgentImpl;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePageView.ActionDelegate;
-import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -56,29 +55,25 @@ import static com.codenvy.ide.api.ui.wizard.newresource.NewResourceWizardKeys.RE
 
 /**
  * Provides selecting kind of file which user wish to create and create resource of the chosen type with given name.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public class NewResourcePagePresenter extends AbstractWizardPage implements ActionDelegate {
-    private NewResourcePageView      view;
-    private EditorAgent              editorAgent;
-    private CoreLocalizationConstant constant;
-    private NewResourceProvider      selectedResourceType;
-    private boolean                  isResourceNameValid;
-    private boolean                  hasSameResource;
-    private Project                  project;
-    private Folder                   parent;
-    private Project                   treeStructure;
-    private ResourceProvider         resourceProvider;
-    private Loader                   loader;
-    private EventBus                 eventBus;
+    private final AsyncRequestFactory      asyncRequestFactory;
+    private       NewResourcePageView      view;
+    private       EditorAgent              editorAgent;
+    private       CoreLocalizationConstant constant;
+    private       NewResourceProvider      selectedResourceType;
+    private       boolean                  isResourceNameValid;
+    private       boolean                  hasSameResource;
+    private       Project                  project;
+    private       Folder                   parent;
+    private       Project                  treeStructure;
+    private       ResourceProvider         resourceProvider;
+    private       Loader                   loader;
+    private       EventBus                 eventBus;
 
-    /**
-     * Create presenter.
-     * 
-     * @param resources
-     * @param view
-     */
+    /** Create presenter. */
     @Inject
     public NewResourcePagePresenter(Resources resources,
                                     CoreLocalizationConstant constant,
@@ -86,10 +81,11 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
                                     NewResourceAgentImpl newResourceAgent,
                                     com.codenvy.ide.api.resources.ResourceProvider resourceProvider,
                                     SelectionAgent selectionAgent,
-                                    EditorAgent editorAgent, Loader loader, EventBus eventBus) {
+                                    EditorAgent editorAgent, Loader loader, EventBus eventBus, AsyncRequestFactory asyncRequestFactory) {
         super("Create a new resource", resources.newResourceIcon());
 
         this.view = view;
+        this.asyncRequestFactory = asyncRequestFactory;
         this.view.setDelegate(this);
         this.view.setResourceName("");
         this.editorAgent = editorAgent;
@@ -114,7 +110,7 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
 
         project = resourceProvider.getActiveProject();
 
-        Selection< ? > selection = selectionAgent.getSelection();
+        Selection<?> selection = selectionAgent.getSelection();
         if (selection != null) {
             if (selectionAgent.getSelection().getFirstElement() instanceof Resource) {
                 Resource resource = (Resource)selectionAgent.getSelection().getFirstElement();
@@ -175,37 +171,37 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
         container.setWidget(view);
         getProjectStructure();
     }
-    
+
     private void getProjectStructure() {
         try {
-            treeStructure = new Project(eventBus);
+            treeStructure = new Project(eventBus, asyncRequestFactory);
             treeStructure.setId(project.getId());
             treeStructure.setName(project.getName());
             treeStructure.setParent(project.getParent());
             treeStructure.setMimeType(project.getMimeType());
             AsyncRequestCallback<Folder> callback =
-                                                    new AsyncRequestCallback<Folder>(new FolderTreeUnmarshaller(treeStructure, treeStructure)) {
-                                                        @Override
-                                                        protected void onSuccess(Folder refreshedRoot) {
-                                                            Array<String> paths = Collections.createArray();
-                                                            view.setPackages(getPackages(paths, treeStructure.getChildren()));
-                                                            view.selectPackage(paths.indexOf(getDisplayPath(parent.getPath())));  
-                                                        }
+                    new AsyncRequestCallback<Folder>(new FolderTreeUnmarshaller(treeStructure, treeStructure)) {
+                        @Override
+                        protected void onSuccess(Folder refreshedRoot) {
+                            Array<String> paths = Collections.createArray();
+                            view.setPackages(getPackages(paths, treeStructure.getChildren()));
+                            view.selectPackage(paths.indexOf(getDisplayPath(parent.getPath())));
+                        }
 
-                                                        @Override
-                                                        protected void onFailure(Throwable exception) {
-                                                            Log.error(NewResourcePagePresenter.class, exception);
-                                                        }
-                                                    };
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            Log.error(NewResourcePagePresenter.class, exception);
+                        }
+                    };
 
             String url = resourceProvider.getVfsInfo().getUrlTemplates().get(Link.REL_TREE).getHref();
             url = URL.decode(url).replace("[id]", project.getId());
-            AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(loader).send(callback);
+            asyncRequestFactory.createGetRequest(URL.encode(url)).loader(loader).send(callback);
         } catch (Exception e) {
             Log.error(NewResourcePagePresenter.class, e);
         }
     }
-    
+
     private Array<String> getPackages(Array<String> paths, Array<Resource> children) {
         for (Resource resource : children.asIterable()) {
             if (resource instanceof Folder) {
@@ -218,8 +214,9 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
 
     /**
      * Get path to display.
-     * 
-     * @param path item's path
+     *
+     * @param path
+     *         item's path
      * @return {@link String} path to display
      */
     private String getDisplayPath(String path) {
@@ -241,13 +238,11 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
     /** {@inheritDoc} */
     @Override
     public void onResourceNameChanged() {
-       checkEnteredData();
+        checkEnteredData();
     }
-    
-    /**
-     * Check the data on the view.
-     */
-    private void checkEnteredData(){
+
+    /** Check the data on the view. */
+    private void checkEnteredData() {
         String resourceName = view.getResourceName();
         isResourceNameValid = ResourceNameValidator.isFolderNameValid(resourceName);
 

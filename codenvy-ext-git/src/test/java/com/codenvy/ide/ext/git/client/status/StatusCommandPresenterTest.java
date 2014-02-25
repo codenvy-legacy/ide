@@ -20,7 +20,6 @@ package com.codenvy.ide.ext.git.client.status;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Test;
@@ -35,7 +34,6 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -57,7 +55,7 @@ public class StatusCommandPresenterTest extends BaseTest {
     }
 
     @Test
-    public void testShowStatusWhenStatusTextRequestIsSuccessful() throws RequestException {
+    public void testShowStatusWhenStatusTextRequestIsSuccessful() throws Exception {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -77,7 +75,7 @@ public class StatusCommandPresenterTest extends BaseTest {
     }
 
     @Test
-    public void testShowStatusWhenStatusTextRequestIsFailed() throws RequestException {
+    public void testShowStatusWhenStatusTextRequestIsFailed() throws Exception {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -97,16 +95,4 @@ public class StatusCommandPresenterTest extends BaseTest {
         verify(constant).statusFailed();
     }
 
-    @Test
-    public void testShowStatusWhenRequestExceptionHappened() throws RequestException {
-        doThrow(RequestException.class).when(service)
-                .statusText(anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
-
-        presenter.showStatus();
-
-        verify(resourceProvider).getActiveProject();
-        verify(service).statusText(eq(VFS_ID), eq(PROJECT_ID), eq(IS_NOT_FORMATTED), (AsyncRequestCallback<String>)anyObject());
-        verify(notificationManager).showNotification((Notification)anyObject());
-        verify(constant).statusFailed();
-    }
 }

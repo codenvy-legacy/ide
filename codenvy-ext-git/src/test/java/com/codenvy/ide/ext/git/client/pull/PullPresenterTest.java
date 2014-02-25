@@ -25,13 +25,10 @@ import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -44,9 +41,7 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -68,7 +63,7 @@ public class PullPresenterTest extends BaseTest {
     public void disarm() {
         super.disarm();
 
-        presenter = new PullPresenter(view, service, resourceProvider, constant, notificationManager, dtoFactory);
+        presenter = new PullPresenter(view, service, resourceProvider, constant, notificationManager, dtoUnmarshallerFactory);
 
         when(view.getRepositoryName()).thenReturn(REPOSITORY_NAME);
         when(view.getRepositoryUrl()).thenReturn(REMOTE_URI);
@@ -78,7 +73,6 @@ public class PullPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
     public void testShowDialogWhenBranchListRequestIsSuccessful() throws Exception {
         final Array<Remote> remotes = Collections.createArray();
         remotes.add(mock(Remote.class));
@@ -89,18 +83,18 @@ public class PullPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
+                AsyncRequestCallback<Array<Remote>> callback = (AsyncRequestCallback<Array<Remote>>)arguments[4];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, remotes);
                 return callback;
             }
         }).when(service).remoteList(anyString(), anyString(), anyString(), anyBoolean(),
-                                    (AsyncRequestCallback<String>)anyObject());
+                                    (AsyncRequestCallback<Array<Remote>>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
+                AsyncRequestCallback<Array<Branch>> callback = (AsyncRequestCallback<Array<Branch>>)arguments[3];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, branches);
                 return callback;
@@ -109,25 +103,25 @@ public class PullPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
+                AsyncRequestCallback<Array<Branch>> callback = (AsyncRequestCallback<Array<Branch>>)arguments[3];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, branches);
                 return callback;
             }
-        }).when(service).branchList(anyString(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).branchList(anyString(), anyString(), anyString(), (AsyncRequestCallback<Array<Branch>>)anyObject());
 
         presenter.showDialog();
 
         verify(resourceProvider).getActiveProject();
         verify(service).remoteList(eq(VFS_ID), eq(PROJECT_ID), anyString(), eq(SHOW_ALL_INFORMATION),
-                                   (AsyncRequestCallback<String>)anyObject());
+                                   (AsyncRequestCallback<Array<Remote>>)anyObject());
         verify(view, times(2)).setEnablePullButton(eq(ENABLE_BUTTON));
         verify(view).setRepositories((Array<Remote>)anyObject());
         verify(view).showDialog();
         verify(view).setRemoteBranches((Array<String>)anyObject());
         verify(view).setLocalBranches((Array<String>)anyObject());
     }
-    
+
     @Test
     public void testSelectActiveBranch() throws Exception {
         final Array<Remote> remotes = Collections.createArray();
@@ -135,59 +129,55 @@ public class PullPresenterTest extends BaseTest {
         final Array<Branch> branches = Collections.createArray();
         branches.add(branch);
         when(branch.isActive()).thenReturn(ACTIVE_BRANCH);
-        when(dtoFactory.createListDtoFromJson(anyString(), (Class<Remote>)anyObject())).thenReturn(remotes);
-        when(dtoFactory.createListDtoFromJson(anyString(), (Class<Branch>)anyObject())).thenReturn(branches);
-        
+
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
+                AsyncRequestCallback<Array<Remote>> callback = (AsyncRequestCallback<Array<Remote>>)arguments[4];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, dtoFactory.toJson(remotes));
+                onSuccess.invoke(callback, remotes);
                 return callback;
             }
-        }).when(service).remoteList(anyString(), anyString(), anyString(), anyBoolean(),
-                                    (AsyncRequestCallback<String>)anyObject());
+        }).when(service).remoteList(anyString(), anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<Array<Remote>>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
+                AsyncRequestCallback<Array<Branch>> callback = (AsyncRequestCallback<Array<Branch>>)arguments[3];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, dtoFactory.toJson(branches));
+                onSuccess.invoke(callback, branches);
                 return callback;
             }
         }).doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
+                AsyncRequestCallback<Array<Branch>> callback = (AsyncRequestCallback<Array<Branch>>)arguments[3];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, dtoFactory.toJson(branches));
+                onSuccess.invoke(callback, branches);
                 return callback;
             }
-        }).when(service).branchList(anyString(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).branchList(anyString(), anyString(), anyString(), (AsyncRequestCallback<Array<Branch>>)anyObject());
 
         presenter.showDialog();
 
         verify(resourceProvider).getActiveProject();
         verify(service).remoteList(eq(VFS_ID), eq(PROJECT_ID), anyString(), eq(SHOW_ALL_INFORMATION),
-                                   (AsyncRequestCallback<String>)anyObject());
-        verify(service, times(2)).branchList(eq(VFS_ID), eq(PROJECT_ID), anyString(), (AsyncRequestCallback<String>)anyObject());
+                                   (AsyncRequestCallback<Array<Remote>>)anyObject());
+        verify(service, times(2)).branchList(eq(VFS_ID), eq(PROJECT_ID), anyString(), (AsyncRequestCallback<Array<Branch>>)anyObject());
         verify(view, times(2)).setEnablePullButton(eq(ENABLE_BUTTON));
         verify(view).setRepositories((Array<Remote>)anyObject());
         verify(view).showDialog();
         verify(view).setRemoteBranches((Array<String>)anyObject());
         verify(view).setLocalBranches((Array<String>)anyObject());
         verify(view).selectRemoteBranch(anyString());
-        
+
         presenter.onRemoteBranchChanged();
         verify(view).selectLocalBranch(anyString());
     }
 
     @Test
-    @Ignore
     public void testShowDialogWhenBranchListRequestIsFailed() throws Exception {
         final Array<Remote> remotes = Collections.createArray();
         remotes.add(mock(Remote.class));
@@ -196,18 +186,17 @@ public class PullPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
+                AsyncRequestCallback<Array<Remote>> callback = (AsyncRequestCallback<Array<Remote>>)arguments[4];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, remotes);
                 return callback;
             }
-        }).when(service).remoteList(anyString(), anyString(), anyString(), anyBoolean(),
-                                    (AsyncRequestCallback<String>)anyObject());
+        }).when(service).remoteList(anyString(), anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<Array<Remote>>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
+                AsyncRequestCallback<Array<Branch>> callback = (AsyncRequestCallback<Array<Branch>>)arguments[3];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
@@ -216,51 +205,21 @@ public class PullPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
+                AsyncRequestCallback<Array<Branch>> callback = (AsyncRequestCallback<Array<Branch>>)arguments[3];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).branchList(anyString(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).branchList(anyString(), anyString(), anyString(), (AsyncRequestCallback<Array<Branch>>)anyObject());
 
         presenter.showDialog();
 
         verify(resourceProvider).getActiveProject();
         verify(service).remoteList(eq(VFS_ID), eq(PROJECT_ID), anyString(), eq(SHOW_ALL_INFORMATION),
-                                   (AsyncRequestCallback<String>)anyObject());
-        verify(constant, times(2)).branchesListFailed();
-        verify(notificationManager, times(2)).showNotification((Notification)anyObject());
-        verify(view, times(2)).setEnablePullButton(eq(DISABLE_BUTTON));
-    }
-
-    @Test
-    @Ignore
-    public void testShowDialogWhenBranchListRequestExceptionHappened() throws Exception {
-        final Array<Remote> remotes = Collections.createArray();
-        remotes.add(mock(Remote.class));
-
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, remotes);
-                return callback;
-            }
-        }).when(service).remoteList(anyString(), anyString(), anyString(), anyBoolean(),
-                                    (AsyncRequestCallback<String>)anyObject());
-        doThrow(RequestException.class).doThrow(RequestException.class).when(service)
-                .branchList(anyString(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
-
-        presenter.showDialog();
-
-        verify(resourceProvider).getActiveProject();
-        verify(service).remoteList(eq(VFS_ID), eq(PROJECT_ID), anyString(), eq(SHOW_ALL_INFORMATION),
-                                   (AsyncRequestCallback<String>)anyObject());
-        verify(constant, times(2)).branchesListFailed();
-        verify(notificationManager, times(2)).showNotification((Notification)anyObject());
-        verify(view, times(2)).setEnablePullButton(eq(DISABLE_BUTTON));
+                                   (AsyncRequestCallback<Array<Remote>>)anyObject());
+        verify(constant).branchesListFailed();
+        verify(notificationManager).showNotification((Notification)anyObject());
+        verify(view).setEnablePullButton(eq(DISABLE_BUTTON));
     }
 
     @Test
@@ -269,33 +228,19 @@ public class PullPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
+                AsyncRequestCallback<Array<Remote>> callback = (AsyncRequestCallback<Array<Remote>>)arguments[4];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
         }).when(service).remoteList(anyString(), anyString(), anyString(), anyBoolean(),
-                                    (AsyncRequestCallback<String>)anyObject());
+                                    (AsyncRequestCallback<Array<Remote>>)anyObject());
 
         presenter.showDialog();
 
         verify(resourceProvider).getActiveProject();
         verify(service).remoteList(eq(VFS_ID), eq(PROJECT_ID), anyString(), eq(SHOW_ALL_INFORMATION),
-                                   (AsyncRequestCallback<String>)anyObject());
-        verify(constant).remoteListFailed();
-        verify(view).setEnablePullButton(eq(DISABLE_BUTTON));
-    }
-
-    @Test
-    public void testShowDialogWhenRequestExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(service).remoteList(anyString(), anyString(), anyString(), anyBoolean(),
-                                                                 (AsyncRequestCallback<String>)anyObject());
-
-        presenter.showDialog();
-
-        verify(resourceProvider).getActiveProject();
-        verify(service).remoteList(eq(VFS_ID), eq(PROJECT_ID), anyString(), eq(SHOW_ALL_INFORMATION),
-                                   (AsyncRequestCallback<String>)anyObject());
+                                   (AsyncRequestCallback<Array<Remote>>)anyObject());
         verify(constant).remoteListFailed();
         verify(view).setEnablePullButton(eq(DISABLE_BUTTON));
     }
@@ -327,7 +272,6 @@ public class PullPresenterTest extends BaseTest {
         presenter.onPullClicked();
 
         verify(service).pullWS(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (RequestCallback<String>)anyObject());
-        verify(service, never()).pull(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).pullSuccess(eq(REMOTE_URI));
@@ -350,84 +294,6 @@ public class PullPresenterTest extends BaseTest {
         presenter.onPullClicked();
 
         verify(service).pullWS(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (RequestCallback<String>)anyObject());
-        verify(service, never()).pull(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (AsyncRequestCallback<String>)anyObject());
-        verify(view).close();
-        verify(constant).pullFail(eq(REMOTE_URI));
-        verify(notificationManager).showNotification((Notification)anyObject());
-    }
-
-    @Test
-    public void testOnPullClickedWhenPullRequestIsSuccessful() throws Exception {
-        doThrow(WebSocketException.class).when(service)
-                .pullWS(anyString(), (Project)anyObject(), anyString(), anyString(), (RequestCallback<String>)anyObject());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, EMPTY_TEXT);
-                return callback;
-            }
-        }).when(service).pull(anyString(), (Project)anyObject(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[1];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, project);
-                return callback;
-            }
-        }).when(resourceProvider).getProject(anyString(), (AsyncCallback<Project>)anyObject());
-
-        presenter.showDialog();
-        presenter.onPullClicked();
-
-        verify(service).pullWS(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (RequestCallback<String>)anyObject());
-        verify(service).pull(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (AsyncRequestCallback<String>)anyObject());
-        verify(view).close();
-        verify(notificationManager).showNotification((Notification)anyObject());
-        verify(constant).pullSuccess(eq(REMOTE_URI));
-    }
-
-    @Test
-    public void testOnPullClickedWhenPullRequestIsFailed() throws Exception {
-        doThrow(WebSocketException.class).when(service)
-                .pullWS(anyString(), (Project)anyObject(), anyString(), anyString(), (RequestCallback<String>)anyObject());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
-                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
-                onFailure.invoke(callback, mock(Throwable.class));
-                return callback;
-            }
-        }).when(service).pull(anyString(), (Project)anyObject(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
-
-        presenter.showDialog();
-        presenter.onPullClicked();
-
-        verify(service).pullWS(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (RequestCallback<String>)anyObject());
-        verify(service).pull(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (AsyncRequestCallback<String>)anyObject());
-        verify(view).close();
-        verify(constant).pullFail(eq(REMOTE_URI));
-        verify(notificationManager).showNotification((Notification)anyObject());
-    }
-
-    @Test
-    public void testOnPullClickedWhenRequestExceptionHappened() throws Exception {
-        doThrow(WebSocketException.class).when(service)
-                .pullWS(anyString(), (Project)anyObject(), anyString(), anyString(), (RequestCallback<String>)anyObject());
-        doThrow(RequestException.class).when(service)
-                .pull(anyString(), (Project)anyObject(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
-
-        presenter.showDialog();
-        presenter.onPullClicked();
-
-        verify(service).pullWS(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (RequestCallback<String>)anyObject());
-        verify(service).pull(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(constant).pullFail(eq(REMOTE_URI));
         verify(notificationManager).showNotification((Notification)anyObject());

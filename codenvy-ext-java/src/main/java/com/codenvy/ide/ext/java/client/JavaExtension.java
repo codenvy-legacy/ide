@@ -40,12 +40,9 @@ import com.codenvy.ide.ext.java.client.wizard.NewEnumProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewInterfaceProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewPackageProvider;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
-import com.codenvy.ide.util.Utils;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.inject.Inject;
@@ -66,6 +63,8 @@ public class JavaExtension {
     private ResourceProvider    resourceProvider;
     private NotificationManager notificationManager;
     private String              restContext;
+    private String              workspaceId;
+    private AsyncRequestFactory asyncRequestFactory;
 
     @Inject
     public JavaExtension(ResourceProvider resourceProvider,
@@ -80,17 +79,21 @@ public class JavaExtension {
                          NewAnnotationProvider newAnnotationHandler,
                          NewPackageProvider newPackage,
                          @Named("restContext") String restContext,
-                         ActionManager actionManager) {
+                         @Named("workspaceId") String workspaceId,
+                         ActionManager actionManager,
+                         AsyncRequestFactory asyncRequestFactory) {
         this();
         this.resourceProvider = resourceProvider;
         this.notificationManager = notificationManager;
         this.restContext = restContext;
+        this.workspaceId = workspaceId;
+        this.asyncRequestFactory = asyncRequestFactory;
 
         FileType javaFile = new FileType(JavaResources.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
         editorRegistry.register(javaFile, javaEditorProvider);
         resourceProvider.registerFileType(javaFile);
 
-        resourceProvider.registerModelProvider("java", new JavaProjectModelProvider(eventBus));
+        resourceProvider.registerModelProvider("java", new JavaProjectModelProvider(eventBus, asyncRequestFactory));
 
         JavaResources.INSTANCE.css().ensureInjected();
 
@@ -146,36 +149,30 @@ public class JavaExtension {
     public void updateDependencies(Project project) {
         String projectId = project.getId();
         String vfsId = resourceProvider.getVfsInfo().getId();
-        String url = restContext + "/code-assistant-java/" + Utils.getWorkspaceId() + "/update-dependencies?projectid=" + projectId +
+        String url = restContext + "/code-assistant-java/" + workspaceId + "/update-dependencies?projectid=" + projectId +
                      "&vfsid=" + vfsId;
 
         final Notification notification = new Notification("Updating dependencies...", PROGRESS);
         notificationManager.showNotification(notification);
 
-        StringUnmarshaller unmarshaller = new StringUnmarshaller();
-        try {
-            AsyncRequest.build(RequestBuilder.GET, url, true).send(new AsyncRequestCallback<String>(unmarshaller) {
-                @Override
-                protected void onSuccess(String result) {
-                    notification.setMessage("Dependencies successfully updated ");
-                    notification.setStatus(FINISHED);
-                }
+        asyncRequestFactory.createGetRequest(url, true).send(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+            @Override
+            protected void onSuccess(String result) {
+                notification.setMessage("Dependencies successfully updated ");
+                notification.setStatus(FINISHED);
+            }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    JSONObject object = JSONParser.parseLenient(exception.getMessage()).isObject();
-                    if (object.containsKey("message"))
-                        notification.setMessage(object.get("message").isString().stringValue());
-                    else
-                        notification.setMessage("Update dependencies fail");
-                    notification.setType(ERROR);
-                    notification.setStatus(FINISHED);
+            @Override
+            protected void onFailure(Throwable exception) {
+                JSONObject object = JSONParser.parseLenient(exception.getMessage()).isObject();
+                if (object.containsKey("message")) {
+                    notification.setMessage(object.get("message").isString().stringValue());
+                } else {
+                    notification.setMessage("Update dependencies fail");
                 }
-            });
-        } catch (RequestException e) {
-            notification.setMessage(e.getMessage());
-            notification.setType(ERROR);
-            notification.setStatus(FINISHED);
-        }
+                notification.setType(ERROR);
+                notification.setStatus(FINISHED);
+            }
+        });
     }
 }

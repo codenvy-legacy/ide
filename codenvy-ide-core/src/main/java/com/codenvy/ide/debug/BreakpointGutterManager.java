@@ -27,8 +27,6 @@ import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.texteditor.renderer.DebugLineRenderer;
 import com.codenvy.ide.texteditor.renderer.LineNumberRenderer;
-import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -93,64 +91,60 @@ public class BreakpointGutterManager {
         final Debugger debugger = debuggerManager.getDebugger();
 
         if (debugger != null) {
-            try {
-                if (breakPoints != null && !breakPoints.isEmpty()) {
-                    for (int i = 0; i < breakPoints.size(); i++) {
-                        Breakpoint breakpoint = breakPoints.get(i);
+            if (breakPoints != null && !breakPoints.isEmpty()) {
+                for (int i = 0; i < breakPoints.size(); i++) {
+                    Breakpoint breakpoint = breakPoints.get(i);
 
-                        if (breakpoint.getLineNumber() == lineNumber) {
-                            final int index = i;
+                    if (breakpoint.getLineNumber() == lineNumber) {
+                        final int index = i;
 
-                            debugger.deleteBreakpoint(activeFile, lineNumber, new AsyncCallback<Void>() {
-                                @Override
-                                public void onSuccess(Void result) {
-                                    breakPoints.remove(index);
-                                    renderer.fillOrUpdateLines(lineNumber, lineNumber);
-                                }
+                        debugger.deleteBreakpoint(activeFile, lineNumber, new AsyncCallback<Void>() {
+                            @Override
+                            public void onSuccess(Void result) {
+                                breakPoints.remove(index);
+                                renderer.fillOrUpdateLines(lineNumber, lineNumber);
+                            }
 
-                                @Override
-                                public void onFailure(Throwable exception) {
-                                    if (exception instanceof ServerException) {
-                                        ServerException e = (ServerException)exception;
-                                        if (e.isErrorMessageProvided()) {
-                                            console.print(e.getMessage());
-                                            return;
-                                        }
+                            @Override
+                            public void onFailure(Throwable exception) {
+                                if (exception instanceof ServerException) {
+                                    ServerException e = (ServerException)exception;
+                                    if (e.isErrorMessageProvided()) {
+                                        console.print(e.getMessage());
+                                        return;
                                     }
-                                    console.print("Can't delete breakpoint at " + (lineNumber + 1));
                                 }
-                            });
+                                console.print("Can't delete breakpoint at " + (lineNumber + 1));
+                            }
+                        });
+                        return;
+                    }
+                }
+            }
+
+            debugger.addBreakpoint(activeFile, lineNumber, new AsyncCallback<Breakpoint>() {
+                @Override
+                public void onSuccess(Breakpoint result) {
+                    if (breakPoints != null) {
+                        breakPoints.add(result);
+                    } else {
+                        BreakpointGutterManager.this.breakPoints.put(activeFile.getId(), Collections.<Breakpoint>createArray(result));
+                    }
+                    renderer.fillOrUpdateLines(lineNumber, lineNumber);
+                }
+
+                @Override
+                public void onFailure(Throwable exception) {
+                    if (exception instanceof ServerException) {
+                        ServerException e = (ServerException)exception;
+                        if (e.isErrorMessageProvided()) {
+                            console.print(e.getMessage());
                             return;
                         }
                     }
+                    console.print("Can't add breakpoint at " + (lineNumber + 1));
                 }
-
-                debugger.addBreakpoint(activeFile, lineNumber, new AsyncCallback<Breakpoint>() {
-                    @Override
-                    public void onSuccess(Breakpoint result) {
-                        if (breakPoints != null) {
-                            breakPoints.add(result);
-                        } else {
-                            BreakpointGutterManager.this.breakPoints.put(activeFile.getId(), Collections.<Breakpoint>createArray(result));
-                        }
-                        renderer.fillOrUpdateLines(lineNumber, lineNumber);
-                    }
-
-                    @Override
-                    public void onFailure(Throwable exception) {
-                        if (exception instanceof ServerException) {
-                            ServerException e = (ServerException)exception;
-                            if (e.isErrorMessageProvided()) {
-                                console.print(e.getMessage());
-                                return;
-                            }
-                        }
-                        console.print("Can't add breakpoint at " + (lineNumber + 1));
-                    }
-                });
-            } catch (RequestException e) {
-                Log.error(BreakpointGutterManager.class, e);
-            }
+            });
         }
     }
 

@@ -19,6 +19,7 @@ package com.codenvy.ide.ext.java.client.projectmodel;
 
 import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -28,17 +29,19 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 public class JavaProjectModelProvider implements ModelProvider {
 
-    private final EventBus eventBus;
+    private final EventBus            eventBus;
+    private final AsyncRequestFactory asyncRequestFactory;
 
     /** @param eventBus */
-    public JavaProjectModelProvider(EventBus eventBus) {
+    public JavaProjectModelProvider(EventBus eventBus, AsyncRequestFactory asyncRequestFactory) {
         this.eventBus = eventBus;
+        this.asyncRequestFactory = asyncRequestFactory;
     }
 
     /** {@inheritDoc} */
     @Override
     public Project createProjectInstance() {
-        return new JavaProject(eventBus);
+        return new JavaProject(eventBus, asyncRequestFactory);
     }
 
 }

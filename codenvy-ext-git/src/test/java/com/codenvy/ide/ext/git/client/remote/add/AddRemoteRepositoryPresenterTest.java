@@ -19,7 +19,6 @@ package com.codenvy.ide.ext.git.client.remote.add;
 
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
@@ -34,7 +33,6 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -107,18 +105,6 @@ public class AddRemoteRepositoryPresenterTest extends BaseTest {
             }
         }).when(service).remoteAdd(anyString(), anyString(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
 
-
-        presenter.showDialog(callback);
-        presenter.onOkClicked();
-
-        verify(service).remoteAdd(eq(VFS_ID), anyString(), eq(REMOTE_NAME), eq(REMOTE_URI), (AsyncRequestCallback<String>)anyObject());
-        verify(callback).onFailure((Throwable)anyObject());
-    }
-
-    @Test
-    public void testOnOkClickedWhenExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(service)
-                .remoteAdd(anyString(), anyString(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog(callback);
         presenter.onOkClicked();

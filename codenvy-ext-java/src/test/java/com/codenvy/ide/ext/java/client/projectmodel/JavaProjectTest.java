@@ -32,15 +32,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-/**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
- */
+/** @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a> */
 @RunWith(MockitoJUnitRunner.class)
 public class JavaProjectTest {
-
-    @Mock
-    private SourceFolder sourceFolder;
 
     private static final String[] packages = new String[]{
             "org",//
@@ -48,8 +42,9 @@ public class JavaProjectTest {
             "org.exo.ide",
             "org.exo.ide.cli"
     };
-
-    private JavaProject project = new JavaProject(null);
+    @Mock
+    private SourceFolder sourceFolder;
+    private JavaProject project = new JavaProject(null, null);
 
     @Before
     public void setUp() {
