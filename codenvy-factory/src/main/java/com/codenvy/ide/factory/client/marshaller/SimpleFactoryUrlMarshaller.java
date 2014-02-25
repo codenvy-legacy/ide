@@ -18,8 +18,8 @@
 
 package com.codenvy.ide.factory.client.marshaller;
 
-import com.codenvy.api.factory.SimpleFactoryUrl;
-import com.codenvy.api.factory.Variable;
+import com.codenvy.api.factory.dto.SimpleFactoryUrl;
+import com.codenvy.api.factory.dto.Variable;
 import com.codenvy.ide.factory.shared.FactorySpec10;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;

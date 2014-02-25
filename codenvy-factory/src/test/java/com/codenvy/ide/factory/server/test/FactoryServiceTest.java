@@ -1,7 +1,10 @@
 package com.codenvy.ide.factory.server.test;
 
-import com.codenvy.api.factory.Variable;
+import com.codenvy.api.factory.dto.Replacement;
+import com.codenvy.api.factory.dto.Variable;
 import com.codenvy.ide.factory.server.VariableReplacer;
+import com.codenvy.ide.factory.shared.ReplacementImpl;
+import com.codenvy.ide.factory.shared.VariableImpl;
 
 import org.testng.annotations.*;
 
@@ -68,14 +71,14 @@ public class FactoryServiceTest {
 
         assertEquals(String.format(template, f1, f2), getFileContent(Paths.get(root.toString(), file)));
 
-        List<Variable.Replacement> replacement = new ArrayList<>(2);
-        replacement.add(new Variable.Replacement(f1, r1));
-        replacement.add(new Variable.Replacement(f2, r2));
+        List<Replacement> replacement = new ArrayList<>(2);
+        replacement.add(new ReplacementImpl(f1, r1));
+        replacement.add(new ReplacementImpl(f2, r2));
 
         List<String> glob = new ArrayList<>(1);
         glob.add("**test_file.txt");
 
-        Variable variable = new Variable(glob, replacement);
+        Variable variable = new VariableImpl(glob, replacement);
 
         new VariableReplacer(root).performReplacement(Collections.singletonList(variable));
 
@@ -102,14 +105,14 @@ public class FactoryServiceTest {
         assertEquals(String.format(template, f1, f2), getFileContent(Paths.get(root.toString(), file1)));
         assertEquals(String.format(template, f1, f2), getFileContent(Paths.get(root.toString(), file3)));
 
-        List<Variable.Replacement> replacement = new ArrayList<>(2);
-        replacement.add(new Variable.Replacement(f1, r1));
-        replacement.add(new Variable.Replacement(f2, r2));
+        List<Replacement> replacement = new ArrayList<>(2);
+        replacement.add(new ReplacementImpl(f1, r1));
+        replacement.add(new ReplacementImpl(f2, r2));
 
         List<String> glob = new ArrayList<>(1);
         glob.add("**test_file.java");
 
-        Variable variable = new Variable(glob, replacement);
+        Variable variable = new VariableImpl(glob, replacement);
 
         new VariableReplacer(root).performReplacement(Collections.singletonList(variable));
 
@@ -134,14 +137,14 @@ public class FactoryServiceTest {
 
         assertEquals(String.format(template, f1, f2), getFileContent(Paths.get(child.toString(), file)));
 
-        List<Variable.Replacement> replacement = new ArrayList<>(2);
-        replacement.add(new Variable.Replacement(f1, r1));
-        replacement.add(new Variable.Replacement(f2, r2));
+        List<Replacement> replacement = new ArrayList<>(2);
+        replacement.add(new ReplacementImpl(f1, r1));
+        replacement.add(new ReplacementImpl(f2, r2));
 
         List<String> glob = new ArrayList<>(1);
         glob.add("**test_file.txt");
 
-        Variable variable = new Variable(glob, replacement);
+        Variable variable = new VariableImpl(glob, replacement);
 
         new VariableReplacer(root).performReplacement(Collections.singletonList(variable));
 
@@ -164,14 +167,14 @@ public class FactoryServiceTest {
 
         assertEquals(String.format(template, f1, f2), getFileContent(Paths.get(child.toString(), file)));
 
-        List<Variable.Replacement> replacement = new ArrayList<>(2);
-        replacement.add(new Variable.Replacement(f1, r1));
-        replacement.add(new Variable.Replacement(f2, r2));
+        List<Replacement> replacement = new ArrayList<>(2);
+        replacement.add(new ReplacementImpl(f1, r1));
+        replacement.add(new ReplacementImpl(f2, r2));
 
         List<String> glob = new ArrayList<>(1);
         glob.add("some/another/dir/test_file.txt");
 
-        Variable variable = new Variable(glob, replacement);
+        Variable variable = new VariableImpl(glob, replacement);
 
         new VariableReplacer(root).performReplacement(Collections.singletonList(variable));
 
@@ -192,14 +195,14 @@ public class FactoryServiceTest {
 
         assertEquals(String.format(template, f1, f2), getFileContent(Paths.get(root.toString(), file)));
 
-        List<Variable.Replacement> replacement = new ArrayList<>(2);
-        replacement.add(new Variable.Replacement(f1, r1));
-        replacement.add(new Variable.Replacement(f2, r2, "text_multipass"));
+        List<Replacement> replacement = new ArrayList<>(2);
+        replacement.add(new ReplacementImpl(f1, r1));
+        replacement.add(new ReplacementImpl(f2, r2, "text_multipass"));
 
         List<String> glob = new ArrayList<>(1);
         glob.add("**test_file.txt");
 
-        Variable variable = new Variable(glob, replacement);
+        Variable variable = new VariableImpl(glob, replacement);
 
         new VariableReplacer(root).performReplacement(Collections.singletonList(variable));
 
