@@ -200,6 +200,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         if (activePart != null && workBenchPartController != null) {
             workBenchPartController.setHidden(false);
             workBenchPartController.setSize(partsSize.get(parts.indexOf(activePart)));
+            activePart.onOpen();
         }
     }
 

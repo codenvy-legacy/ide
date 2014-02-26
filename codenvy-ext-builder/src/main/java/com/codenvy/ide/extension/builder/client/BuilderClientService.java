@@ -18,15 +18,14 @@
 package com.codenvy.ide.extension.builder.client;
 
 import com.codenvy.api.builder.dto.BuildOptions;
+import com.codenvy.api.builder.dto.BuildTaskDescriptor;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.http.client.RequestException;
 
 /**
  * Client service for builder.
  *
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: BuilderClientService.java Feb 17, 2012 12:36:01 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 public interface BuilderClientService {
     /**
@@ -38,51 +37,55 @@ public interface BuilderClientService {
      *         identifier of the virtual file system
      * @param callback
      *         callback
-     * @throws RequestException
      */
-    public void build(String projectName, AsyncRequestCallback<String> callback)
-            throws RequestException;
+    public void build(String projectName, AsyncRequestCallback<BuildTaskDescriptor> callback);
 
-    public void build(String projectName, BuildOptions buildOptions, AsyncRequestCallback<String> callback)
-            throws RequestException;
+    /**
+     * Start new build.
+     *
+     * @param projectId
+     *         identifier of the project we want to send for build
+     * @param buildOptions
+     *         Options to configure build process
+     * @param vfsId
+     *         identifier of the virtual file system
+     * @param callback
+     *         callback
+     */
+    public void build(String projectName, BuildOptions buildOptions, AsyncRequestCallback<BuildTaskDescriptor> callback);
 
     /**
      * Cancel previously launched build.
      *
-     * @param buildid
+     * @param buildId
      *         ID of build
      * @param callback
      *         callback
-     * @throws RequestException
      */
-    public void cancel(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+    public void cancel(String buildId, AsyncRequestCallback<StringBuilder> callback);
 
     /**
      * Check current status of previously launched build.
+     * <p/>
+     * identifier of build
      *
-     *         identifier of build
      * @param callback
      *         callback
-     * @throws RequestException
      */
-    public void status(Link link, AsyncRequestCallback<String> callback) throws RequestException;
+    public void status(Link link, AsyncRequestCallback<String> callback);
 
-    /**
-     * Get build log.
-     *
-     */
-    public void log(Link link, AsyncRequestCallback<String> callback) throws RequestException;
+    /** Get build log. */
+    public void log(Link link, AsyncRequestCallback<String> callback);
 
     /**
      * Get build result.
      *
-     * @param buildid
+     * @param buildId
      *         ID of build
      * @param callback
      *         callback
-     * @throws RequestException
      */
-    public void result(String buildid, AsyncRequestCallback<String> callback) throws RequestException;
+    public void result(String buildId, AsyncRequestCallback<String> callback);
 
 
 }

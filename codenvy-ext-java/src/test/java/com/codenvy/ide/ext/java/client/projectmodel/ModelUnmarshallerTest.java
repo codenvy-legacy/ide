@@ -44,27 +44,20 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
- */
+/** @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a> */
 public class ModelUnmarshallerTest extends BaseTest {
 
     private static String projectJs;
-
     @Spy
-    private JavaProject project = new JavaProject(null);
-
+    private JavaProject project = new JavaProject(null, null);
     @Mock
     private JavaProjectDescription projectDescription;
-
     @Mock
-    private Response response;
+    private Response               response;
 
     @BeforeClass
     public static void init() {
-        InputStream stream =
-                Thread.currentThread().getContextClassLoader()
+        InputStream stream = Thread.currentThread().getContextClassLoader()
                       .getResourceAsStream("com/codenvy/ide/ext/java/client/projectmodel/project.js");
         try {
             projectJs = IOUtils.toString(stream);
@@ -138,7 +131,7 @@ public class ModelUnmarshallerTest extends BaseTest {
      * @throws UnmarshallerException
      */
     private List<Resource> parseProject() throws UnmarshallerException {
-        JavaModelUnmarshaller unmarshaller = new JavaModelUnmarshaller(project, project, null);
+        JavaModelUnmarshaller unmarshaller = new JavaModelUnmarshaller(project, project, null, null);
         unmarshaller.unmarshal(response);
         ArgumentCaptor<Resource> childrens = ArgumentCaptor.forClass(Resource.class);
         verify(project, times(7)).addChild(childrens.capture());

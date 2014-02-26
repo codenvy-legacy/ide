@@ -21,15 +21,13 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.StringUnmarshaller;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -44,18 +42,17 @@ import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_ALL;
  * Presenter for displaying and work with branches.
  *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Apr 8, 2011 12:02:49 PM anya $
  */
 @Singleton
 public class BranchPresenter implements BranchView.ActionDelegate {
-    private BranchView              view;
-    private GitClientService        service;
-    private ResourceProvider        resourceProvider;
-    private GitLocalizationConstant constant;
-    private NotificationManager     notificationManager;
-    private Branch                  selectedBranch;
-    private Project                 project;
-    private DtoFactory              dtoFactory;
+    private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
+    private       BranchView              view;
+    private       GitClientService        service;
+    private       ResourceProvider        resourceProvider;
+    private       GitLocalizationConstant constant;
+    private       NotificationManager     notificationManager;
+    private       Branch                  selectedBranch;
+    private       Project                 project;
 
     /**
      * Create presenter.
@@ -68,14 +65,14 @@ public class BranchPresenter implements BranchView.ActionDelegate {
      */
     @Inject
     public BranchPresenter(BranchView view, GitClientService service, ResourceProvider resourceProvider, GitLocalizationConstant constant,
-                           NotificationManager notificationManager, DtoFactory dtoFactory) {
+                           NotificationManager notificationManager, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
         this.constant = constant;
         this.notificationManager = notificationManager;
-        this.dtoFactory = dtoFactory;
     }
 
     /** Show dialog. */
@@ -101,26 +98,22 @@ public class BranchPresenter implements BranchView.ActionDelegate {
         String name = Window.prompt(constant.branchTypeNew(), currentBranchName);
         if (!name.isEmpty()) {
             final String projectId = project.getId();
-            try {
-                service.branchRename(resourceProvider.getVfsInfo().getId(), projectId, currentBranchName, name, new AsyncRequestCallback<String>() {
-                    @Override
-                    protected void onSuccess(String result) {
-                        getBranches(projectId);
-                    }
+            service.branchRename(resourceProvider.getVfsInfo().getId(), projectId, currentBranchName, name,
+                                 new AsyncRequestCallback<String>() {
+                                     @Override
+                                     protected void onSuccess(String result) {
+                                         getBranches(projectId);
+                                     }
 
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        String errorMessage =
-                                (exception.getMessage() != null) ? exception.getMessage() : constant.branchRenameFailed();
-                        Notification notification = new Notification(errorMessage, ERROR);
-                        notificationManager.showNotification(notification);
-                    }
-                });
-            } catch (RequestException e) {
-                String errorMessage = (e.getMessage() != null) ? e.getMessage() : constant.branchRenameFailed();
-                Notification notification = new Notification(errorMessage, ERROR);
-                notificationManager.showNotification(notification);
-            }
+                                     @Override
+                                     protected void onFailure(Throwable exception) {
+                                         String errorMessage =
+                                                 (exception.getMessage() != null) ? exception.getMessage()
+                                                                                  : constant.branchRenameFailed();
+                                         Notification notification = new Notification(errorMessage, ERROR);
+                                         notificationManager.showNotification(notification);
+                                     }
+                                 });
         }
     }
 
@@ -131,25 +124,19 @@ public class BranchPresenter implements BranchView.ActionDelegate {
         boolean needToDelete = Window.confirm(constant.branchDeleteAsk(name));
         if (needToDelete) {
             final String projectId = project.getId();
-            try {
-                service.branchDelete(resourceProvider.getVfsInfo().getId(), projectId, name, true, new AsyncRequestCallback<String>() {
-                    @Override
-                    protected void onSuccess(String result) {
-                        getBranches(projectId);
-                    }
+            service.branchDelete(resourceProvider.getVfsInfo().getId(), projectId, name, true, new AsyncRequestCallback<String>() {
+                @Override
+                protected void onSuccess(String result) {
+                    getBranches(projectId);
+                }
 
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : constant.branchDeleteFailed();
-                        Notification notification = new Notification(errorMessage, ERROR);
-                        notificationManager.showNotification(notification);
-                    }
-                });
-            } catch (RequestException e) {
-                String errorMessage = (e.getMessage() != null) ? e.getMessage() : constant.branchDeleteFailed();
-                Notification notification = new Notification(errorMessage, ERROR);
-                notificationManager.showNotification(notification);
-            }
+                @Override
+                protected void onFailure(Throwable exception) {
+                    String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : constant.branchDeleteFailed();
+                    Notification notification = new Notification(errorMessage, ERROR);
+                    notificationManager.showNotification(notification);
+                }
+            });
         }
     }
 
@@ -167,35 +154,31 @@ public class BranchPresenter implements BranchView.ActionDelegate {
             return;
         }
 
-        try {
-            service.branchCheckout(resourceProvider.getVfsInfo().getId(), projectId, name, startingPoint, remote, new AsyncRequestCallback<String>() {
-                @Override
-                protected void onSuccess(String result) {
-                    resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
-                        @Override
-                        public void onSuccess(Project result) {
-                            getBranches(projectId);
-                        }
+        service.branchCheckout(resourceProvider.getVfsInfo().getId(), projectId, name, startingPoint, remote,
+                               new AsyncRequestCallback<String>() {
+                                   @Override
+                                   protected void onSuccess(String result) {
+                                       resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
+                                           @Override
+                                           public void onSuccess(Project result) {
+                                               getBranches(projectId);
+                                           }
 
-                        @Override
-                        public void onFailure(Throwable caught) {
-                            Log.error(BranchPresenter.class, "can not get project " + project.getName());
-                        }
-                    });
-                }
+                                           @Override
+                                           public void onFailure(Throwable caught) {
+                                               Log.error(BranchPresenter.class, "can not get project " + project.getName());
+                                           }
+                                       });
+                                   }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : constant.branchCheckoutFailed();
-                    Notification notification = new Notification(errorMessage, ERROR);
-                    notificationManager.showNotification(notification);
-                }
-            });
-        } catch (RequestException e) {
-            String errorMessage = (e.getMessage() != null) ? e.getMessage() : constant.branchCheckoutFailed();
-            Notification notification = new Notification(errorMessage, ERROR);
-            notificationManager.showNotification(notification);
-        }
+                                   @Override
+                                   protected void onFailure(Throwable exception) {
+                                       final String errorMessage = (exception.getMessage() != null) ? exception.getMessage()
+                                                                                                    : constant.branchCheckoutFailed();
+                                       Notification notification = new Notification(errorMessage, ERROR);
+                                       notificationManager.showNotification(notification);
+                                   }
+                               });
     }
 
     /**
@@ -205,26 +188,21 @@ public class BranchPresenter implements BranchView.ActionDelegate {
      *         project id
      */
     private void getBranches(@NotNull String projectId) {
-        try {
-            service.branchList(resourceProvider.getVfsInfo().getId(), projectId, LIST_ALL, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                @Override
-                protected void onSuccess(String result) {
-                    Array<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
-                    view.setBranches(branches);
-                }
+        service.branchList(resourceProvider.getVfsInfo().getId(), projectId, LIST_ALL,
+                           new AsyncRequestCallback<Array<Branch>>(dtoUnmarshallerFactory.newArrayUnmarshaller(Branch.class)) {
+                               @Override
+                               protected void onSuccess(Array<Branch> result) {
+                                   view.setBranches(result);
+                               }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : constant.branchesListFailed();
-                    Notification notification = new Notification(errorMessage, ERROR);
-                    notificationManager.showNotification(notification);
-                }
-            });
-        } catch (RequestException e) {
-            String errorMessage = (e.getMessage() != null) ? e.getMessage() : constant.branchesListFailed();
-            Notification notification = new Notification(errorMessage, ERROR);
-            notificationManager.showNotification(notification);
-        }
+                               @Override
+                               protected void onFailure(Throwable exception) {
+                                   final String errorMessage =
+                                           (exception.getMessage() != null) ? exception.getMessage() : constant.branchesListFailed();
+                                   Notification notification = new Notification(errorMessage, ERROR);
+                                   notificationManager.showNotification(notification);
+                               }
+                           });
     }
 
     /** {@inheritDoc} */
@@ -234,25 +212,21 @@ public class BranchPresenter implements BranchView.ActionDelegate {
         if (!name.isEmpty()) {
             final String projectId = project.getId();
 
-            try {
-                service.branchCreate(resourceProvider.getVfsInfo().getId(), projectId, name, null, new AsyncRequestCallback<Branch>() {
-                    @Override
-                    protected void onSuccess(Branch result) {
-                        getBranches(projectId);
-                    }
+            service.branchCreate(resourceProvider.getVfsInfo().getId(), projectId, name, null,
+                                 new AsyncRequestCallback<Branch>(dtoUnmarshallerFactory.newUnmarshaller(Branch.class)) {
+                                     @Override
+                                     protected void onSuccess(Branch result) {
+                                         getBranches(projectId);
+                                     }
 
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : constant.branchCreateFailed();
-                        Notification notification = new Notification(errorMessage, ERROR);
-                        notificationManager.showNotification(notification);
-                    }
-                });
-            } catch (RequestException e) {
-                String errorMessage = (e.getMessage() != null) ? e.getMessage() : constant.branchCreateFailed();
-                Notification notification = new Notification(errorMessage, ERROR);
-                notificationManager.showNotification(notification);
-            }
+                                     @Override
+                                     protected void onFailure(Throwable exception) {
+                                         final String errorMessage = (exception.getMessage() != null) ? exception.getMessage()
+                                                                                                      : constant.branchCreateFailed();
+                                         Notification notification = new Notification(errorMessage, ERROR);
+                                         notificationManager.showNotification(notification);
+                                     }
+                                 });
         }
     }
 

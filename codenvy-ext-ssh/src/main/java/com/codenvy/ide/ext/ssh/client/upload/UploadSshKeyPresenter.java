@@ -40,7 +40,8 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 @Singleton
 public class UploadSshKeyPresenter implements UploadSshKeyView.ActionDelegate {
-    private UploadSshKeyView        view;
+    private UploadSshKeyView view;
+    private String workspaceId;
     private SshLocalizationConstant constant;
     private String                  restContext;
     private EventBus                eventBus;
@@ -49,8 +50,10 @@ public class UploadSshKeyPresenter implements UploadSshKeyView.ActionDelegate {
 
     @Inject
     public UploadSshKeyPresenter(UploadSshKeyView view, SshLocalizationConstant constant, @Named("restContext") String restContext,
-                                 EventBus eventBus, ConsolePart console, NotificationManager notificationManager) {
+                                 @Named("workspaceId") String workspaceId, EventBus eventBus, ConsolePart console,
+                                 NotificationManager notificationManager) {
         this.view = view;
+        this.workspaceId = workspaceId;
         this.view.setDelegate(this);
         this.constant = constant;
         this.restContext = restContext;
@@ -82,7 +85,7 @@ public class UploadSshKeyPresenter implements UploadSshKeyView.ActionDelegate {
             return;
         }
         view.setEncoding(FormPanel.ENCODING_MULTIPART);
-        view.setAction(restContext + "/ssh-keys/" + Utils.getWorkspaceId() + "/add?host=" + host);
+        view.setAction(restContext + "/ssh-keys/" + workspaceId + "/add?host=" + host);
         view.submit();
     }
 

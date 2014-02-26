@@ -37,7 +37,6 @@ import com.codenvy.ide.ext.java.messages.impl.MessagesImpls;
 import com.codenvy.ide.ext.java.messages.impl.OutlineUpdateMessage;
 import com.codenvy.ide.ext.java.messages.impl.WorkerCodeBlock;
 import com.codenvy.ide.util.UUID;
-import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.webworker.client.ErrorEvent;
 import com.google.gwt.webworker.client.ErrorHandler;
@@ -56,18 +55,21 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHandler, MessageFilter.MessageRecipient<ProblemsMessage> {
 
-    private final MessageFilter    messageFilter;
-    private       Worker           worker;
-    private       ResourceProvider resourceProvider;
-    private String restContext;
-    private StringMap<WorkerCallback<?>> callbacks;
+    private final MessageFilter                messageFilter;
+    private final String                       workspaceId;
+    private       Worker                       worker;
+    private       ResourceProvider             resourceProvider;
+    private       String                       restContext;
+    private       StringMap<WorkerCallback<?>> callbacks;
     private StringMap<ApplyCallback>                   applyCallback    = Collections.createStringMap();
     private StringMap<WorkerCallback<WorkerCodeBlock>> outlineCallbacks = Collections.createStringMap();
 
     @Inject
-    public JavaParserWorkerImpl(ResourceProvider resourceProvider, EventBus eventBus, @Named("restContext") String restContext) {
+    public JavaParserWorkerImpl(ResourceProvider resourceProvider, EventBus eventBus, @Named("restContext") String restContext,
+                                @Named("workspaceId") String workspaceId) {
         this.resourceProvider = resourceProvider;
         this.restContext = restContext;
+        this.workspaceId = workspaceId;
         eventBus.addHandler(ProjectActionEvent.TYPE, this);
         messageFilter = new MessageFilter();
         callbacks = Collections.createStringMap();
@@ -124,6 +126,10 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
 
     @Override
     public void removeFanFromCache(String fqn) {
+        if (worker == null) {
+            return;
+        }
+        
         MessagesImpls.RemoveFqnMessageImpl message = MessagesImpls.RemoveFqnMessageImpl.make();
         message.setFqn(fqn);
         worker.postMessage(message.serialize());
@@ -131,7 +137,8 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
 
     /** {@inheritDoc} */
     @Override
-    public void parse(String content, String fileName, String fileId, String packageName,String projectId, WorkerCallback<IProblem> callback) {
+    public void parse(String content, String fileName, String fileId, String packageName, String projectId,
+                      WorkerCallback<IProblem> callback) {
         if (worker == null) {
             return;
         }
@@ -139,13 +146,14 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         MessagesImpls.ParseMessageImpl parseMessage = MessagesImpls.ParseMessageImpl.make();
         String uuid = UUID.uuid();
         callbacks.put(uuid, callback);
-        parseMessage.setSource(content).setFileName(fileName).setFileId(fileId).setId(uuid).setPackageName(packageName).setProjectId(projectId);
+        parseMessage.setSource(content).setFileName(fileName).setFileId(fileId).setId(uuid).setPackageName(packageName)
+                    .setProjectId(projectId);
         worker.postMessage(parseMessage.serialize());
     }
 
     /** {@inheritDoc} */
     @Override
-    public void computeCAProposals(String content, int offset, String fileName,String projectId, WorkerCallback<WorkerProposal> callback) {
+    public void computeCAProposals(String content, int offset, String fileName, String projectId, WorkerCallback<WorkerProposal> callback) {
         if (worker == null) {
             return;
         }
@@ -211,7 +219,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         MessagesImpls.ConfigMessageImpl config = MessagesImpls.ConfigMessageImpl.make();
         config.setRestContext(restContext);
         config.setVfsId(resourceProvider.getVfsInfo().getId());
-        config.setWsId("/" + Utils.getWorkspaceId());
+        config.setWsId("/" + workspaceId);
         config.setProjectName(event.getProject().getName());
         config.setJavaDocContext(""); //TODO configure doc context
         worker.postMessage(config.serialize());

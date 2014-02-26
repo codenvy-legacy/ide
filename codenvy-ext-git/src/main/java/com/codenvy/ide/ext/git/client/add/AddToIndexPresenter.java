@@ -27,11 +27,9 @@ import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -128,9 +126,9 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
         boolean update = view.isUpdated();
 
         try {
-            service.addWS(resourceProvider.getVfsInfo().getId(), project, update, getFilePatterns(), new RequestCallback<String>() {
+            service.addWS(resourceProvider.getVfsInfo().getId(), project, update, getFilePatterns(), new RequestCallback<Void>() {
                 @Override
-                protected void onSuccess(String result) {
+                protected void onSuccess(Void result) {
                     resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
                         @Override
                         public void onSuccess(Project result) {
@@ -151,39 +149,9 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
                 }
             });
         } catch (WebSocketException e) {
-            doAddREST(update);
-        }
-        view.close();
-    }
-
-    /** Perform adding to index (sends request over HTTP). */
-    private void doAddREST(boolean update) {
-        try {
-            service.add(resourceProvider.getVfsInfo().getId(), project, update, getFilePatterns(), new AsyncRequestCallback<String>() {
-                @Override
-                protected void onSuccess(String result) {
-                    resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
-                        @Override
-                        public void onSuccess(Project result) {
-                            Notification notification = new Notification(constant.addSuccess(), INFO);
-                            notificationManager.showNotification(notification);
-                        }
-
-                        @Override
-                        public void onFailure(Throwable caught) {
-                            Log.error(AddToIndexPresenter.class, "can not get project " + project.getName());
-                        }
-                    });
-                }
-
-                @Override
-                protected void onFailure(Throwable exception) {
-                    handleError(exception);
-                }
-            });
-        } catch (RequestException e) {
             handleError(e);
         }
+        view.close();
     }
 
     /**
@@ -206,7 +174,8 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
         String pattern = element.getPath().replaceFirst(projectPath, "");
         pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
 
-        return (pattern.length() == 0 || "/".equals(pattern)) ? new ArrayList<String>(Arrays.asList(".")) : new ArrayList<String>(Arrays.asList(pattern));
+        return (pattern.length() == 0 || "/".equals(pattern)) ? new ArrayList<String>(Arrays.asList("."))
+                                                              : new ArrayList<String>(Arrays.asList(pattern));
     }
 
     /**

@@ -21,53 +21,50 @@ import com.codenvy.dto.shared.DTO;
 
 import java.util.List;
 
-/**
- * @author <a href="mailto:dvishinskiy@codenvy.com">Dmitriy Vyshinskiy</a>
- * @version $Id: Status.java 68135 2011-04-08 14:23:36Z andrew00x $
- */
+/** @author Dmitriy Vyshinskiy */
 @DTO
 public interface Status {
     boolean isClean();
 
     void setClean(boolean isClean);
-    
+
     boolean isShortFormat();
-    
+
     void setShortFormat(boolean isShort);
 
     String getBranchName();
-    
+
     void setBranchName(String branchName);
 
     List<String> getAdded();
-    
+
     void setAdded(List<String> added);
 
     List<String> getChanged();
-    
+
     void setChanged(List<String> changed);
 
     List<String> getRemoved();
-    
+
     void setRemoved(List<String> removed);
 
     List<String> getMissing();
-    
+
     void setMissing(List<String> missing);
 
     List<String> getModified();
-    
+
     void setModified(List<String> modified);
 
     List<String> getUntracked();
-    
+
     void setUntracked(List<String> untracked);
 
     List<String> getUntrackedFolders();
-    
+
     void setUntrackedFolders(List<String> untrackedFolders);
 
     List<String> getConflicting();
-    
+
     void setConflicting(List<String> added);
 }

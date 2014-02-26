@@ -50,10 +50,6 @@ public class WorkspaceViewImpl extends LayoutPanel implements WorkspaceView {
     @UiField
     SimplePanel  statusPanel;
     @UiField
-    Button      btnLogin;
-    @UiField
-    Button      btnLogout;
-    @UiField
     Button      btnUpdate;
     ActionDelegate delegate;
 
@@ -95,25 +91,8 @@ public class WorkspaceViewImpl extends LayoutPanel implements WorkspaceView {
 
     /** {@inheritDoc} */
     @Override
-    public void setVisibleLoginButton(boolean visible) {
-        btnLogin.setVisible(visible);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setVisibleLogoutButton(boolean visible) {
-        btnLogout.setVisible(visible);
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void setUpdateButtonVisibility(boolean visible) {
         btnUpdate.setVisible(visible);
-    }
-
-    @UiHandler("btnLogin")
-    public void onLoginClicked(ClickEvent event) {
-        delegate.onLoginClicked();
     }
 
     @UiHandler("btnUpdate")

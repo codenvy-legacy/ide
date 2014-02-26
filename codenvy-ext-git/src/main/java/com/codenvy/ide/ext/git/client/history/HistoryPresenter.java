@@ -28,7 +28,6 @@ import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
@@ -37,8 +36,8 @@ import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -59,31 +58,24 @@ import static com.codenvy.ide.ext.git.shared.DiffRequest.DiffType.RAW;
  * Presenter for showing git history.
  *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Apr 29, 2011 2:57:17 PM anya $
  */
 @Singleton
 public class HistoryPresenter extends BasePresenter implements HistoryView.ActionDelegate {
-    protected enum DiffWith {
-        DIFF_WITH_INDEX,
-        DIFF_WITH_WORK_TREE,
-        DIFF_WITH_PREV_VERSION
-    }
-
-    private HistoryView             view;
-    private GitClientService        service;
-    private GitLocalizationConstant constant;
-    private GitResources            resources;
-    private ResourceProvider        resourceProvider;
-    private WorkspaceAgent          workspaceAgent;
+    private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
+    private       HistoryView             view;
+    private       GitClientService        service;
+    private       GitLocalizationConstant constant;
+    private       GitResources            resources;
+    private       ResourceProvider        resourceProvider;
+    private       WorkspaceAgent          workspaceAgent;
     /** If <code>true</code> then show all changes in project, if <code>false</code> then show changes of the selected resource. */
-    private boolean                 showChangesInProject;
-    private DiffWith                diffType;
+    private       boolean                 showChangesInProject;
+    private       DiffWith                diffType;
     private boolean isViewClosed = true;
     private Array<Revision>     revisions;
     private Revision            selectedRevision;
     private SelectionAgent      selectionAgent;
     private NotificationManager notificationManager;
-    private DtoFactory          dtoFactory;
 
     /**
      * Create presenter.
@@ -99,8 +91,9 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
     @Inject
     public HistoryPresenter(HistoryView view, GitClientService service, GitLocalizationConstant constant, GitResources resources,
                             ResourceProvider resourceProvider, WorkspaceAgent workspaceAgent, SelectionAgent selectionAgent,
-                            NotificationManager notificationManager, DtoFactory dtoFactory) {
+                            NotificationManager notificationManager, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.view.setDelegate(this);
         this.view.setTitle(constant.historyTitle());
         this.service = service;
@@ -110,7 +103,6 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
         this.workspaceAgent = workspaceAgent;
         this.selectionAgent = selectionAgent;
         this.notificationManager = notificationManager;
-        this.dtoFactory = dtoFactory;
     }
 
     /** Show dialog. */
@@ -142,29 +134,22 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
 
     /** Get the log of the commits. If successfully received, then display in revision grid, otherwise - show error in output panel. */
     private void getCommitsLog(@NotNull String projectId) {
-        try {
-            service.log(resourceProvider.getVfsInfo().getId(), projectId, false, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                @Override
-                protected void onSuccess(String result) {
-                    LogResponse logResponse = dtoFactory.createDtoFromJson(result, LogResponse.class);
-                    revisions = Collections.createArray(logResponse.getCommits());
-                    view.setRevisions(revisions);
-                }
+        service.log(resourceProvider.getVfsInfo().getId(), projectId, false,
+                    new AsyncRequestCallback<LogResponse>(dtoUnmarshallerFactory.newUnmarshaller(LogResponse.class)) {
+                        @Override
+                        protected void onSuccess(LogResponse result) {
+                            revisions = Collections.createArray(result.getCommits());
+                            view.setRevisions(revisions);
+                        }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    nothingToDisplay(null);
-                    String errorMessage = exception.getMessage() != null ? exception.getMessage() : constant.logFailed();
-                    Notification notification = new Notification(errorMessage, ERROR);
-                    notificationManager.showNotification(notification);
-                }
-            });
-        } catch (RequestException e) {
-            nothingToDisplay(null);
-            String errorMessage = e.getMessage() != null ? e.getMessage() : constant.logFailed();
-            Notification notification = new Notification(errorMessage, ERROR);
-            notificationManager.showNotification(notification);
-        }
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            nothingToDisplay(null);
+                            String errorMessage = exception.getMessage() != null ? exception.getMessage() : constant.logFailed();
+                            Notification notification = new Notification(errorMessage, ERROR);
+                            notificationManager.showNotification(notification);
+                        }
+                    });
     }
 
     /**
@@ -323,9 +308,11 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
 
         if (DiffWith.DIFF_WITH_INDEX.equals(diffType) || DiffWith.DIFF_WITH_WORK_TREE.equals(diffType)) {
             boolean isCached = DiffWith.DIFF_WITH_INDEX.equals(diffType);
-            doDiffWithNotCommited((pattern.length() > 0) ? new ArrayList<String>(Arrays.asList(pattern)) : new ArrayList<String>(), selectedRevision, isCached);
+            doDiffWithNotCommitted((pattern.length() > 0) ? new ArrayList<String>(Arrays.asList(pattern)) : new ArrayList<String>(),
+                                   selectedRevision, isCached);
         } else {
-            doDiffWithPrevVersion((pattern.length() > 0) ? new ArrayList<String>(Arrays.asList(pattern)) : new ArrayList<String>(), selectedRevision);
+            doDiffWithPrevVersion((pattern.length() > 0) ? new ArrayList<String>(Arrays.asList(pattern)) : new ArrayList<String>(),
+                                  selectedRevision);
         }
     }
 
@@ -339,38 +326,30 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
      * @param isCached
      *         if <code>true</code> compare with index, else - with working tree
      */
-    private void doDiffWithNotCommited(@NotNull List<String> filePatterns, @Nullable final Revision revision, final boolean isCached) {
+    private void doDiffWithNotCommitted(@NotNull List<String> filePatterns, @Nullable final Revision revision, final boolean isCached) {
         if (revision == null) {
             return;
         }
 
         String projectId = resourceProvider.getActiveProject().getId();
+        service.diff(resourceProvider.getVfsInfo().getId(), projectId, filePatterns, RAW, false, 0, revision.getId(), isCached,
+                     new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                         @Override
+                         protected void onSuccess(String result) {
+                             view.setDiffContext(result);
+                             String text = isCached ? constant.historyDiffIndexState() : constant.historyDiffTreeState();
+                             displayCommitA(revision);
+                             view.setCompareType(text);
+                         }
 
-        try {
-            service.diff(resourceProvider.getVfsInfo().getId(), projectId, filePatterns, RAW, false, 0, revision.getId(), isCached,
-                         new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                             @Override
-                             protected void onSuccess(String result) {
-                                 view.setDiffContext(result);
-                                 String text = isCached ? constant.historyDiffIndexState() : constant.historyDiffTreeState();
-                                 displayCommitA(revision);
-                                 view.setCompareType(text);
-                             }
-
-                             @Override
-                             protected void onFailure(Throwable exception) {
-                                 nothingToDisplay(revision);
-                                 String errorMessage = exception.getMessage() != null ? exception.getMessage() : constant.diffFailed();
-                                 Notification notification = new Notification(errorMessage, ERROR);
-                                 notificationManager.showNotification(notification);
-                             }
-                         });
-        } catch (RequestException e) {
-            nothingToDisplay(revision);
-            String errorMessage = e.getMessage() != null ? e.getMessage() : constant.diffFailed();
-            Notification notification = new Notification(errorMessage, ERROR);
-            notificationManager.showNotification(notification);
-        }
+                         @Override
+                         protected void onFailure(Throwable exception) {
+                             nothingToDisplay(revision);
+                             String errorMessage = exception.getMessage() != null ? exception.getMessage() : constant.diffFailed();
+                             Notification notification = new Notification(errorMessage, ERROR);
+                             notificationManager.showNotification(notification);
+                         }
+                     });
     }
 
     /**
@@ -390,30 +369,24 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
         if (index + 1 < revisions.size()) {
             final Revision revisionA = revisions.get(index + 1);
             String projectId = resourceProvider.getActiveProject().getId();
-            try {
-                service.diff(resourceProvider.getVfsInfo().getId(), projectId, filePatterns, RAW, false, 0, revisionA.getId(), revisionB.getId(),
-                             new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                                 @Override
-                                 protected void onSuccess(String result) {
-                                     view.setDiffContext(result);
-                                     displayCommitA(revisionA);
-                                     displayCommitB(revisionB);
-                                 }
+            service.diff(resourceProvider.getVfsInfo().getId(), projectId, filePatterns, RAW, false, 0, revisionA.getId(),
+                         revisionB.getId(),
+                         new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                             @Override
+                             protected void onSuccess(String result) {
+                                 view.setDiffContext(result);
+                                 displayCommitA(revisionA);
+                                 displayCommitB(revisionB);
+                             }
 
-                                 @Override
-                                 protected void onFailure(Throwable exception) {
-                                     nothingToDisplay(revisionB);
-                                     String errorMessage = exception.getMessage() != null ? exception.getMessage() : constant.diffFailed();
-                                     Notification notification = new Notification(errorMessage, ERROR);
-                                     notificationManager.showNotification(notification);
-                                 }
-                             });
-            } catch (RequestException e) {
-                nothingToDisplay(revisionB);
-                String errorMessage = e.getMessage() != null ? e.getMessage() : constant.diffFailed();
-                Notification notification = new Notification(errorMessage, ERROR);
-                notificationManager.showNotification(notification);
-            }
+                             @Override
+                             protected void onFailure(Throwable exception) {
+                                 nothingToDisplay(revisionB);
+                                 String errorMessage = exception.getMessage() != null ? exception.getMessage() : constant.diffFailed();
+                                 Notification notification = new Notification(errorMessage, ERROR);
+                                 notificationManager.showNotification(notification);
+                             }
+                         });
         } else {
             nothingToDisplay(revisionB);
         }
@@ -447,5 +420,11 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
     @Override
     public int getSize() {
         return 450;
+    }
+
+    protected enum DiffWith {
+        DIFF_WITH_INDEX,
+        DIFF_WITH_WORK_TREE,
+        DIFF_WITH_PREV_VERSION
     }
 }

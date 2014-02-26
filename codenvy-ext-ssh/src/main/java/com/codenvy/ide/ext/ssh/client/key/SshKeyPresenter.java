@@ -20,14 +20,12 @@ package com.codenvy.ide.ext.ssh.client.key;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.ssh.client.SshKeyService;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
 import com.codenvy.ide.ext.ssh.dto.PublicKey;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.StringUnmarshaller;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.loader.Loader;
-import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -43,12 +41,12 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 @Singleton
 public class SshKeyPresenter implements SshKeyView.ActionDelegate {
-    private SshKeyView view;
-    private DtoFactory dtoFactory;
-    private SshKeyService       service;
-    private EventBus            eventBus;
-    private NotificationManager notificationManager;
-    private Loader              loader;
+    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    private       SshKeyView             view;
+    private       SshKeyService          service;
+    private       EventBus               eventBus;
+    private       NotificationManager    notificationManager;
+    private       Loader                 loader;
 
     /**
      * Create presenter.
@@ -64,9 +62,9 @@ public class SshKeyPresenter implements SshKeyView.ActionDelegate {
                            EventBus eventBus,
                            Loader loader,
                            NotificationManager notificationManager,
-                           DtoFactory dtoFactory) {
+                           DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
-        this.dtoFactory = dtoFactory;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.view.setDelegate(this);
         this.service = service;
         this.eventBus = eventBus;
@@ -78,29 +76,22 @@ public class SshKeyPresenter implements SshKeyView.ActionDelegate {
     public void showDialog(@NotNull KeyItem keyItem) {
         view.addHostToTitle(keyItem.getHost());
 
-        try {
-            service.getPublicKey(keyItem, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                @Override
-                public void onSuccess(String result) {
-                    loader.hide();
-                    PublicKey key = dtoFactory.createDtoFromJson(result, PublicKey.class);
-//                    JSONObject jso = new JSONObject(result);
-//                    String key = jso.get("key").isString().stringValue();
-                    view.setKey(key.getKey());
-                    view.showDialog();
-                }
+        service.getPublicKey(keyItem, new AsyncRequestCallback<PublicKey>(dtoUnmarshallerFactory.newUnmarshaller(PublicKey.class)) {
+            @Override
+            public void onSuccess(PublicKey result) {
+                loader.hide();
+                view.setKey(result.getKey());
+                view.showDialog();
+            }
 
-                @Override
-                public void onFailure(Throwable exception) {
-                    loader.hide();
-                    Notification notification = new Notification(exception.getMessage(), ERROR);
-                    notificationManager.showNotification(notification);
-                    eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                }
-            });
-        } catch (RequestException e) {
-            e.printStackTrace();
-        }
+            @Override
+            public void onFailure(Throwable exception) {
+                loader.hide();
+                Notification notification = new Notification(exception.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
+                eventBus.fireEvent(new ExceptionThrownEvent(exception));
+            }
+        });
     }
 
     /** {@inheritDoc} */

@@ -37,20 +37,14 @@ import com.codenvy.ide.util.loging.Log;
 
 import java.util.Iterator;
 
-/**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
- */
+/** @author Evgen Vidolob */
 public class AnnotationRenderer implements AnnotationModelListener {
 
     private final PositionMigrator   positionMigrator;
+    private final StringMap<String>  decorations;
     private       TextEditorViewImpl editor;
-
-    private AnnotationModel annotationModel;
-
-    private final StringMap<String> decorations;
-
-    private ErrorRenderer renderer;
+    private       AnnotationModel    annotationModel;
+    private       ErrorRenderer      renderer;
 
     /** @param editor */
     public AnnotationRenderer(TextEditorViewImpl editor, StringMap<String> decorations, DtoFactory dtoFactory) {
@@ -73,8 +67,7 @@ public class AnnotationRenderer implements AnnotationModelListener {
             if (decorations.containsKey(annotation.getType())) {
                 Position position = annotationModel.getPosition(annotation);
                 AnnotationCode ac =
-                        new AnnotationCode(getDocumentPosition(position.offset), getDocumentPosition(position.length
-                                                                                                     + position.offset - 1),
+                        new AnnotationCode(getDocumentPosition(position.offset), getDocumentPosition(position.length + position.offset - 1),
                                            decorations.get(annotation.getType()));
                 annotations.add(ac);
             }

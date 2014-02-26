@@ -18,7 +18,6 @@
 package com.codenvy.ide.api.user;
 
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.http.client.RequestException;
 
 import java.util.Map;
 
@@ -33,9 +32,8 @@ public interface UserClientService {
      * com.codenvy.ide.api.user.User} interface.
      *
      * @param callback
-     * @throws RequestException
      */
-    void getUser(AsyncRequestCallback<String> callback) throws RequestException;
+    void getUser(AsyncRequestCallback<User> callback);
 
     /**
      * Updates user's attributes from information what contains into updateUserAttributes. If some attributes aren't exist then these
@@ -43,7 +41,6 @@ public interface UserClientService {
      *
      * @param updateUserAttributes
      * @param callback
-     * @throws RequestException
      */
-    void updateUserAttributes(Map<String, String> updateUserAttributes, AsyncRequestCallback<Void> callback) throws RequestException;
+    void updateUserAttributes(Map<String, String> updateUserAttributes, AsyncRequestCallback<Void> callback);
 }

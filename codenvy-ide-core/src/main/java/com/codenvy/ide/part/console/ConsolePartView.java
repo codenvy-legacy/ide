@@ -27,6 +27,10 @@ import com.codenvy.ide.api.parts.base.BaseActionDelegate;
  */
 public interface ConsolePartView extends View<ConsolePartView.ActionDelegate> {
     public interface ActionDelegate extends BaseActionDelegate {
+        /**
+         * Handle user clicks on clear console button.
+         */
+        void onClearClicked();
     }
 
     /**
@@ -47,4 +51,9 @@ public interface ConsolePartView extends View<ConsolePartView.ActionDelegate> {
 
     /** Clear console. Remove all messages. */
     void clear();
+    
+    /**
+     * Scroll to bottom of the view.
+     */
+    void scrollBottom();
 }

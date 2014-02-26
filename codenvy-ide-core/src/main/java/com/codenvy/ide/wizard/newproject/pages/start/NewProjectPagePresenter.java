@@ -26,7 +26,6 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
 import com.codenvy.ide.util.loging.Log;
@@ -61,23 +60,20 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
      * @param projectTypeDescriptorRegistry
      * @param resourceProvider
      * @param constant
-     * @param dtoFactory
      */
     @Inject
     public NewProjectPagePresenter(NewProjectPageView view,
                                    Resources resources,
                                    ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
                                    ResourceProvider resourceProvider,
-                                   CoreLocalizationConstant constant,
-                                   final DtoFactory dtoFactory) {
+                                   CoreLocalizationConstant constant) {
 
         super("Project Descriptions", resources.newResourceIcon());
-        resourceProvider.listProjects(new AsyncCallback<String>() {
+        resourceProvider.listProjects(new AsyncCallback<ItemList>() {
             @Override
-            public void onSuccess(String result) {
+            public void onSuccess(ItemList result) {
                 projectList = Collections.createArray();
-                ItemList itemList = dtoFactory.createDtoFromJson(result, ItemList.class);
-                for (Item item : itemList.getItems()) {
+                for (Item item : result.getItems()) {
                     projectList.add(item.getName());
                 }
                 hasProjectList = true;

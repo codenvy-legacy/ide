@@ -18,16 +18,13 @@
 package com.codenvy.ide.extension.builder.client;
 
 import com.codenvy.api.builder.dto.BuildOptions;
+import com.codenvy.api.builder.dto.BuildTaskDescriptor;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.MimeType;
-import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.ui.loader.Loader;
-import com.codenvy.ide.util.Utils;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -40,75 +37,70 @@ import com.google.inject.name.Named;
 @Singleton
 public class BuilderClientServiceImpl implements BuilderClientService {
     /** REST-service context. */
-    private final String baseUrl;
+    private final String              baseUrl;
     /** Loader to be displayed. */
-    private final Loader loader;
+    private final Loader              loader;
+    private final AsyncRequestFactory asyncRequestFactory;
 
-    private DtoFactory dtoFactory;
-
-    /**
-     * Create service.
-     *
-     * @param loader
-     *         loader to show on server request
-     */
+    /** Create service. */
     @Inject
-    public BuilderClientServiceImpl(@Named("restContext") String baseUrl, Loader loader, DtoFactory dtoFactory) {
-        this.baseUrl = baseUrl+ "/builder/" + Utils.getWorkspaceId();
+    public BuilderClientServiceImpl(@Named("restContext") String baseUrl, @Named("workspaceId") String workspaceId, Loader loader,
+                                    AsyncRequestFactory asyncRequestFactory) {
+        this.asyncRequestFactory = asyncRequestFactory;
+        this.baseUrl = baseUrl + "/builder/" + workspaceId;
         this.loader = loader;
-        this.dtoFactory = dtoFactory;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void build(String projectName, AsyncRequestCallback<String> callback) throws RequestException {
+    public void build(String projectName, AsyncRequestCallback<BuildTaskDescriptor> callback) {
         build(projectName, null, callback);
     }
 
     @Override
-    public void build(String projectName, BuildOptions buildOptions, AsyncRequestCallback<String> callback) throws RequestException {
+    public void build(String projectName, BuildOptions buildOptions, AsyncRequestCallback<BuildTaskDescriptor> callback) {
         final String requestUrl = baseUrl + "/build";
         String params = "project=" + projectName;
         callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-        AsyncRequest asyncRequest = AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params)
-                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON);
-        if (buildOptions != null) {
-            asyncRequest = asyncRequest.data(dtoFactory.toJson(buildOptions));
-        }
-        asyncRequest.send(callback);
-
+        asyncRequestFactory.createPostRequest(requestUrl + "?" + params, buildOptions)
+                           .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                           .send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void cancel(String buildId, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+    public void cancel(String buildId, AsyncRequestCallback<StringBuilder> callback) {
         final String requestUrl = baseUrl + "/cancel/" + buildId;
-        AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(loader)
-                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+        asyncRequestFactory.createGetRequest(requestUrl).loader(loader)
+                           .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                           .send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void status(Link link, AsyncRequestCallback<String> callback) throws RequestException {
+    public void status(Link link, AsyncRequestCallback<String> callback) {
         callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-        AsyncRequest.build(RequestBuilder.GET, link.getHref()).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
-                    .send(callback);
+        asyncRequestFactory.createGetRequest(link.getHref())
+                           .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                           .send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void log(Link link, AsyncRequestCallback<String> callback) throws RequestException {
-        AsyncRequest.build(RequestBuilder.GET, link.getHref()).loader(loader)
-                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+    public void log(Link link, AsyncRequestCallback<String> callback) {
+        asyncRequestFactory.createGetRequest(link.getHref()).loader(loader)
+                           .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                           .send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void result(String buildId, AsyncRequestCallback<String> callback) throws RequestException {
+    public void result(String buildId, AsyncRequestCallback<String> callback) {
         final String requestUrl = baseUrl + "/result/" + buildId;
         callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-        AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
-                    .send(callback);
+        asyncRequestFactory.createGetRequest(requestUrl)
+                           .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                           .send(callback);
     }
 
 }

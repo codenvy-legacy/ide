@@ -32,8 +32,8 @@ import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -49,24 +49,24 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 /**
  * This class controls launching extensions.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ExtensionsController.java Jul 3, 2013 3:07:52 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 public class ExtensionsController implements Notification.OpenNotificationHandler {
-    private WorkspaceAgent                 workspaceAgent;
-    private ResourceProvider               resourceProvider;
-    private ConsolePart                    console;
-    private ExtensionsClientService        service;
-    private ExtRuntimeLocalizationConstant constant;
-    private NotificationManager            notificationManager;
-    private Notification                   notification;
-    private DtoFactory                     dtoFactory;
-    private Project                        currentProject;
+    private final DtoFactory                     dtoFactory;
+    private final DtoUnmarshallerFactory         dtoUnmarshallerFactory;
+    private       WorkspaceAgent                 workspaceAgent;
+    private       ResourceProvider               resourceProvider;
+    private       ConsolePart                    console;
+    private       ExtensionsClientService        service;
+    private       ExtRuntimeLocalizationConstant constant;
+    private       NotificationManager            notificationManager;
+    private       Notification                   notification;
+    private       Project                        currentProject;
     /** Launched app. */
-    private ApplicationProcessDescriptor   applicationProcessDescriptor;
+    private       ApplicationProcessDescriptor   applicationProcessDescriptor;
     /** Is launching of any application in progress? */
-    private boolean                        isLaunchingInProgress;
+    private       boolean                        isLaunchingInProgress;
 
     /**
      * Create controller.
@@ -85,14 +85,17 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
      *         {@link ExtRuntimeLocalizationConstant}
      * @param notificationManager
      *         {@link NotificationManager}
-     * @param dtoFactory
-     *         {@link DtoFactory}
      */
     @Inject
-    protected ExtensionsController(ResourceProvider resourceProvider, EventBus eventBus, WorkspaceAgent workspaceAgent,
-                                   final ConsolePart console, ExtensionsClientService service,
-                                   ExtRuntimeLocalizationConstant constant, NotificationManager notificationManager,
-                                   DtoFactory dtoFactory) {
+    protected ExtensionsController(ResourceProvider resourceProvider,
+                                   EventBus eventBus,
+                                   WorkspaceAgent workspaceAgent,
+                                   final ConsolePart console,
+                                   ExtensionsClientService service,
+                                   ExtRuntimeLocalizationConstant constant,
+                                   NotificationManager notificationManager,
+                                   DtoFactory dtoFactory,
+                                   DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.resourceProvider = resourceProvider;
         this.workspaceAgent = workspaceAgent;
         this.console = console;
@@ -100,6 +103,7 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
         this.constant = constant;
         this.notificationManager = notificationManager;
         this.dtoFactory = dtoFactory;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
@@ -152,28 +156,22 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
         notification = new Notification(constant.extensionLaunching(currentProject.getName()), PROGRESS, this);
         notificationManager.showNotification(notification);
 
-        try {
-            service.launch(currentProject.getName(),
-                           new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                               @Override
-                               protected void onSuccess(String result) {
-                                   applicationProcessDescriptor =
-                                           dtoFactory.createDtoFromJson(result, ApplicationProcessDescriptor.class);
-                                   startCheckingStatus(applicationProcessDescriptor);
-                               }
+        service.launch(currentProject.getName(),
+                       new AsyncRequestCallback<ApplicationProcessDescriptor>(
+                               dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
+                           @Override
+                           protected void onSuccess(ApplicationProcessDescriptor result) {
+                               applicationProcessDescriptor = result;
+                               startCheckingStatus(applicationProcessDescriptor);
+                           }
 
-                               @Override
-                               protected void onFailure(Throwable exception) {
-                                   isLaunchingInProgress = false;
-                                   applicationProcessDescriptor = null;
-                                   onFail(constant.launchExtensionFailed(currentProject.getName()), exception);
-                               }
-                           });
-        } catch (RequestException e) {
-            isLaunchingInProgress = false;
-            applicationProcessDescriptor = null;
-            onFail(constant.launchExtensionFailed(currentProject.getName()), e);
-        }
+                           @Override
+                           protected void onFailure(Throwable exception) {
+                               isLaunchingInProgress = false;
+                               applicationProcessDescriptor = null;
+                               onFail(constant.launchExtensionFailed(currentProject.getName()), exception);
+                           }
+                       });
     }
 
     /** Get logs of the currently launched application. */
@@ -183,21 +181,17 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
             onFail(constant.getExtensionLogsFailed(), null);
         }
 
-        try {
-            service.getLogs(viewLogsLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                @Override
-                protected void onSuccess(String result) {
-                    console.printf(result);
-                }
+        service.getLogs(viewLogsLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+            @Override
+            protected void onSuccess(String result) {
+                console.printf(result);
+            }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    onFail(constant.getExtensionLogsFailed(), exception);
-                }
-            });
-        } catch (RequestException e) {
-            onFail(constant.getExtensionLogsFailed(), e);
-        }
+            @Override
+            protected void onFailure(Throwable exception) {
+                onFail(constant.getExtensionLogsFailed(), exception);
+            }
+        });
     }
 
     /** Stop the currently launched application. */
@@ -207,22 +201,18 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
             onFail(constant.stopExtensionFailed(currentProject.getName()), null);
         }
 
-        try {
-            service.stop(stopLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                @Override
-                protected void onSuccess(String result) {
-                    applicationProcessDescriptor = null;
-                    console.print(constant.extensionStopped(currentProject.getName()));
-                }
+        service.stop(stopLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+            @Override
+            protected void onSuccess(String result) {
+                applicationProcessDescriptor = null;
+                console.print(constant.extensionStopped(currentProject.getName()));
+            }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    onFail(constant.stopExtensionFailed(currentProject.getName()), exception);
-                }
-            });
-        } catch (RequestException e) {
-            onFail(constant.stopExtensionFailed(currentProject.getName()), e);
-        }
+            @Override
+            protected void onFailure(Throwable exception) {
+                onFail(constant.stopExtensionFailed(currentProject.getName()), exception);
+            }
+        });
     }
 
     private void afterApplicationLaunched(ApplicationProcessDescriptor appDescriptor) {
@@ -270,50 +260,38 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
         new Timer() {
             @Override
             public void run() {
-                try {
-                    service.getStatus(
-                            getAppLink(appDescriptor, "get status"),
-                            new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                                @Override
-                                protected void onSuccess(String response) {
-                                    ApplicationProcessDescriptor newAppDescriptor =
-                                            dtoFactory.createDtoFromJson(response,
-                                                                         ApplicationProcessDescriptor.class);
+                service.getStatus(getAppLink(appDescriptor, "get status"),
+                                  new AsyncRequestCallback<ApplicationProcessDescriptor>(
+                                          dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
+                                      @Override
+                                      protected void onSuccess(ApplicationProcessDescriptor response) {
+                                          ApplicationStatus status = response.getStatus();
+                                          if (status == ApplicationStatus.RUNNING) {
+                                              isLaunchingInProgress = false;
+                                              afterApplicationLaunched(response);
+                                          } else if (status == ApplicationStatus.STOPPED || status == ApplicationStatus.NEW) {
+                                              schedule(3000);
+                                          } else if (status == ApplicationStatus.CANCELLED) {
+                                              isLaunchingInProgress = false;
+                                              applicationProcessDescriptor = null;
+                                              onFail(constant.launchExtensionFailed(currentProject.getName()), null);
+                                          }
+                                      }
 
-                                    ApplicationStatus status = newAppDescriptor.getStatus();
-                                    if (status == ApplicationStatus.RUNNING) {
-                                        isLaunchingInProgress = false;
-                                        afterApplicationLaunched(newAppDescriptor);
-                                    } else if (status == ApplicationStatus.STOPPED || status == ApplicationStatus.NEW) {
-                                        schedule(3000);
-                                    } else if (status == ApplicationStatus.CANCELLED) {
-                                        isLaunchingInProgress = false;
-                                        applicationProcessDescriptor = null;
-                                        onFail(constant.launchExtensionFailed(currentProject.getName()), null);
-                                    }
-                                }
+                                      @Override
+                                      protected void onFailure(Throwable exception) {
+                                          isLaunchingInProgress = false;
+                                          applicationProcessDescriptor = null;
 
-                                @Override
-                                protected void onFailure(Throwable exception) {
-                                    isLaunchingInProgress = false;
-                                    applicationProcessDescriptor = null;
-
-                                    if (exception instanceof ServerException &&
-                                        ((ServerException)exception).getHTTPStatus() == 500) {
-                                        ServiceError e = dtoFactory
-                                                .createDtoFromJson(exception.getMessage(), ServiceError.class);
-                                        onFail(constant.launchExtensionFailed(currentProject.getName()) + ": " +
-                                               e.getMessage(), null);
-                                    } else {
-                                        onFail(constant.launchExtensionFailed(currentProject.getName()), exception);
-                                    }
-                                }
-                            });
-                } catch (RequestException e) {
-                    isLaunchingInProgress = false;
-                    applicationProcessDescriptor = null;
-                    onFail(constant.launchExtensionFailed(currentProject.getName()), e);
-                }
+                                          if (exception instanceof ServerException && ((ServerException)exception).getHTTPStatus() == 500) {
+                                              ServiceError e = dtoFactory.createDtoFromJson(exception.getMessage(), ServiceError.class);
+                                              onFail(constant.launchExtensionFailed(currentProject.getName()) + ": " + e.getMessage(),
+                                                     null);
+                                          } else {
+                                              onFail(constant.launchExtensionFailed(currentProject.getName()), exception);
+                                          }
+                                      }
+                                  });
             }
         }.run();
     }
