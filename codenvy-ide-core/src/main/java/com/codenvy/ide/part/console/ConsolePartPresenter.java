@@ -20,6 +20,9 @@ package com.codenvy.ide.part.console;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
+import com.codenvy.ide.workspace.WorkBenchPartControllerImpl;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -76,6 +79,7 @@ public class ConsolePartPresenter extends BasePresenter implements ConsolePartVi
         if (activePart == null || !activePart.equals(this)) {
             partStack.setActivePart(this);
         }
+        view.scrollBottom();
     }
 
 
@@ -87,11 +91,32 @@ public class ConsolePartPresenter extends BasePresenter implements ConsolePartVi
         if (activePart == null || !activePart.equals(this)) {
             partStack.setActivePart(this);
         }
+        view.scrollBottom();
     }
 
     /** {@inheritDoc} */
     @Override
     public void clear() {
         view.clear();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onClearClicked() {
+        clear();
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public void onOpen() {
+        super.onOpen();
+        Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
+
+            @Override
+            public boolean execute() {
+                view.scrollBottom();
+                return false;
+            }
+        }, WorkBenchPartControllerImpl.DURATION);
     }
 }
