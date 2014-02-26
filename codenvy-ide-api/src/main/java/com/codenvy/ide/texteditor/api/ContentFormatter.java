@@ -18,6 +18,7 @@
 package com.codenvy.ide.texteditor.api;
 
 import com.codenvy.ide.text.Document;
+import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.RegionImpl;
 
 /**
@@ -46,15 +47,5 @@ public interface ContentFormatter {
      * @param region
      *         the region within the document to be formatted
      */
-    void format(Document document, RegionImpl region);
-
-    //TODO
-//   /**
-//    * Returns the formatting strategy registered for the given content type.
-//    *
-//    * @param contentType the content type for which to look up the formatting strategy
-//    * @return the formatting strategy for the given content type, or
-//    *    <code>null</code> if there is no such strategy
-//    */
-//   IFormattingStrategy getFormattingStrategy(String contentType);
+    void format(Document document, Region region);
 }

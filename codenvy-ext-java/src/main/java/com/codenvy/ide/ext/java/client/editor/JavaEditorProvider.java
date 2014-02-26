@@ -26,6 +26,7 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.jdt.JavaPartitions;
 import com.codenvy.ide.text.DocumentFactory;
+import com.codenvy.ide.texteditor.api.ContentFormatter;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -44,6 +45,7 @@ public class JavaEditorProvider implements EditorProvider {
     private       Provider<CodenvyTextEditor> editorProvider;
     private       JavaParserWorker            worker;
     private FileSaveWatcher watcher;
+    private ContentFormatter                  contentFormatter;
 
     /**
      * @param resources
@@ -57,7 +59,8 @@ public class JavaEditorProvider implements EditorProvider {
                               NotificationManager notificationManager,
                               JavaParserWorker worker,
                               EventBus eventBus,
-                              FileSaveWatcher watcher) {
+                              FileSaveWatcher watcher,
+                              ContentFormatter contentFormatter) {
         super();
         this.activityManager = activityManager;
         this.editorProvider = editorProvider;
@@ -67,6 +70,7 @@ public class JavaEditorProvider implements EditorProvider {
                 new CompilationUnitDocumentProvider(resources.workspaceEditorCss(), JavaResources.INSTANCE.css(), documentFactory,
                                                     eventBus);
         this.notificationManager = notificationManager;
+        this.contentFormatter = contentFormatter;
     }
 
     /** {@inheritDoc} */
@@ -76,7 +80,7 @@ public class JavaEditorProvider implements EditorProvider {
         CodenvyTextEditor textEditor = editorProvider.get();
         JavaEditorConfiguration configuration =
                 new JavaEditorConfiguration(activityManager, JavaResources.INSTANCE, textEditor, JavaPartitions.JAVA_PARTITIONING,
-                                            worker);
+                                            worker, contentFormatter);
 
         textEditor.initialize(configuration, documentProvider, notificationManager);
         watcher.editorOpened(textEditor);

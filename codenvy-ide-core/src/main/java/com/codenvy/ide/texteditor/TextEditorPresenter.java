@@ -34,6 +34,7 @@ import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.annotation.AnnotationModel;
 import com.codenvy.ide.text.store.TextChange;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
+import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.TextListener;
 import com.codenvy.ide.texteditor.api.outline.OutlineModel;
 import com.codenvy.ide.texteditor.api.outline.OutlinePresenter;
@@ -176,6 +177,11 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
         super.initialize(configuration, documentProvider, notificationManager);
         editor = new TextEditorViewImpl(resources, userActivityManager, breakpointGutterManager, dtoFactory);
         editor.getTextListenerRegistrar().add(textListener);
+    }
+
+    @Override
+    public TextEditorPartView getView() {
+        return editor;
     }
 
     /** {@inheritDoc} */

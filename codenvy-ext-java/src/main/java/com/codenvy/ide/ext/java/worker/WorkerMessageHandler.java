@@ -17,7 +17,11 @@
  */
 package com.codenvy.ide.ext.java.worker;
 
+import com.codenvy.dto.server.JsonStringMapImpl;
+import com.codenvy.dto.shared.JsonStringMap;
+import com.codenvy.ide.collections.Jso;
 import com.codenvy.ide.collections.js.JsoArray;
+import com.codenvy.ide.collections.js.JsoStringMap;
 import com.codenvy.ide.ext.java.jdt.CUVariables;
 import com.codenvy.ide.ext.java.jdt.codeassistant.ContentAssistHistory;
 import com.codenvy.ide.ext.java.jdt.codeassistant.TemplateCompletionProposalComputer;
@@ -27,10 +31,12 @@ import com.codenvy.ide.ext.java.jdt.core.dom.AST;
 import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
 import com.codenvy.ide.ext.java.jdt.core.dom.ASTParser;
 import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.formatter.CodeFormatter;
 import com.codenvy.ide.ext.java.jdt.internal.codeassist.impl.AssistOptions;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.CompilerOptions;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.DefaultProblem;
+import com.codenvy.ide.ext.java.jdt.internal.corext.util.CodeFormatterUtil;
 import com.codenvy.ide.ext.java.jdt.templates.CodeTemplateContextType;
 import com.codenvy.ide.ext.java.jdt.templates.ContextTypeRegistry;
 import com.codenvy.ide.ext.java.jdt.templates.ElementTypeResolver;
@@ -48,11 +54,23 @@ import com.codenvy.ide.ext.java.jdt.templates.TypeResolver;
 import com.codenvy.ide.ext.java.jdt.templates.TypeVariableResolver;
 import com.codenvy.ide.ext.java.jdt.templates.VarResolver;
 import com.codenvy.ide.ext.java.messages.ConfigMessage;
+import com.codenvy.ide.ext.java.messages.FormatMessage;
 import com.codenvy.ide.ext.java.messages.ParseMessage;
 import com.codenvy.ide.ext.java.messages.Problem;
 import com.codenvy.ide.ext.java.messages.RemoveFqnMessage;
 import com.codenvy.ide.ext.java.messages.RoutingTypes;
 import com.codenvy.ide.ext.java.messages.impl.MessagesImpls;
+import com.codenvy.ide.text.edits.CopySourceEdit;
+import com.codenvy.ide.text.edits.CopyTargetEdit;
+import com.codenvy.ide.text.edits.CopyingRangeMarker;
+import com.codenvy.ide.text.edits.DeleteEdit;
+import com.codenvy.ide.text.edits.InsertEdit;
+import com.codenvy.ide.text.edits.MoveSourceEdit;
+import com.codenvy.ide.text.edits.MoveTargetEdit;
+import com.codenvy.ide.text.edits.MultiTextEdit;
+import com.codenvy.ide.text.edits.RangeMarker;
+import com.codenvy.ide.text.edits.ReplaceEdit;
+import com.codenvy.ide.text.edits.TextEdit;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.webworker.client.MessageEvent;
@@ -83,7 +101,7 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
 
     private WorkerCodeAssist workerCodeAssist;
 
-    public WorkerMessageHandler(JavaParserWorker worker) {
+    public WorkerMessageHandler(final JavaParserWorker worker) {
         this.worker = worker;
         instance = this;
         initOptions();
@@ -112,6 +130,86 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
                 WorkerTypeInfoStorage.get().removeFqn(message.fqn());
             }
         });
+
+        messageFilter.registerMessageRecipient(RoutingTypes.FORMAT, new MessageFilter.MessageRecipient<FormatMessage>() {
+            @Override
+            public void onMessageReceived(FormatMessage message) {
+                TextEdit edit =
+                        CodeFormatterUtil.format2(CodeFormatter.K_COMPILATION_UNIT, message.content(), 0, null,
+                                                  new HashMap<String, String>());
+                Jso textEditJso = convertTextEditToJso(edit);
+                MessagesImpls.FormatResultMessageImpl formatResultMes = MessagesImpls.FormatResultMessageImpl.make();
+                formatResultMes.setTextEdit(textEditJso);
+                formatResultMes.setId(message.id());
+                worker.sendMessage(formatResultMes.serialize());
+            }
+        });
+    }
+
+    private Jso convertTextEditToJso(TextEdit edit) {
+        Jso textEdit = Jso.create();
+        textEdit.addField("offSet", edit.getOffset());
+
+        if (edit.hasChildren()) {
+            textEdit.addField("children", convertChildrenTextEditToJso(edit.getChildren()));
+        }
+        if (!(edit instanceof InsertEdit || edit instanceof MoveTargetEdit || edit instanceof CopyTargetEdit)) {
+            textEdit.addField("length", edit.getLength());
+        }
+        if (edit instanceof ReplaceEdit) {
+            textEdit.addField("text", ((ReplaceEdit)edit).getText());
+            textEdit.addField("type", "ReplaceEdit");
+        } else if (edit instanceof DeleteEdit) {
+            textEdit.addField("type", "DeleteEdit");
+        } else if (edit instanceof InsertEdit) {
+            textEdit.addField("text", ((InsertEdit)edit).getText());
+            textEdit.addField("type", "InsertEdit");
+        } else if (edit instanceof CopyingRangeMarker) {
+            textEdit.addField("type", "CopyingRangeMarker");
+        } else if (edit instanceof CopySourceEdit) {
+            if (((CopySourceEdit)edit).getTargetEdit() != null) {
+                Jso copyTargetEdit = Jso.create();
+                copyTargetEdit.addField("offSet", ((CopySourceEdit)edit).getTargetEdit().getOffset());
+                textEdit.addField("CopyTargetEdit", copyTargetEdit);
+            }
+            textEdit.addField("type", "CopySourceEdit");
+        } else if (edit instanceof MoveSourceEdit) {
+            if(((MoveSourceEdit)edit).getTargetEdit() != null){
+                Jso moveTargetEdit = Jso.create();
+                moveTargetEdit.addField("offSet", ((MoveSourceEdit)edit).getTargetEdit().getOffset());
+                textEdit.addField("MoveTargetEdit", moveTargetEdit);
+            }
+            textEdit.addField("type", "MoveSourceEdit");
+        } else if (edit instanceof MoveTargetEdit) {
+            if(((MoveTargetEdit)edit).getSourceEdit()!= null){
+                Jso moveSourceEdit = Jso.create();
+                moveSourceEdit.addField("offSet", ((MoveTargetEdit)edit).getSourceEdit().getOffset());
+                moveSourceEdit.addField("length", ((MoveTargetEdit)edit).getSourceEdit().getLength());
+                textEdit.addField("MoveSourceEdit", moveSourceEdit);
+            }
+            textEdit.addField("type", "MoveTargetEdit");
+        } else if (edit instanceof MultiTextEdit) {
+            textEdit.addField("type", "MultiTextEdit");
+        } else if (edit instanceof RangeMarker) {
+            textEdit.addField("type", "RangeMarker");
+        } else if (edit instanceof CopyTargetEdit) {
+            Jso copySourceEdit = Jso.create();
+            copySourceEdit.addField("offSet", ((CopyTargetEdit)edit).getSourceEdit().getOffset());
+            copySourceEdit.addField("length", ((CopyTargetEdit)edit).getSourceEdit().getLength());
+
+            textEdit.addField("CopySourceEdit", copySourceEdit);
+            textEdit.addField("type", "CopyTargetEdit");
+        }
+        return textEdit;
+    }
+
+    private JsoArray<Jso>convertChildrenTextEditToJso(TextEdit [] childrensEdit){
+        JsoArray<Jso> edits = JsoArray.create();
+        for (TextEdit chEdit : childrensEdit) {
+            Jso child = convertTextEditToJso(chEdit);
+            edits.add(child);
+        }
+        return edits;
     }
 
     public static WorkerMessageHandler get() {

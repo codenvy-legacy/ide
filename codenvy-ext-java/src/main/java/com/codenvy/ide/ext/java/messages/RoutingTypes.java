@@ -33,5 +33,9 @@ public class RoutingTypes {
     public static final int OUTLINE_CODE_BLOCKS   = 8;
     public static final int COMPUTE_CORRECTION    = 9;
     public static final int REMOVE_FQN            = 10;
+    public static final int FORMAT                = 11;
+    public static final int FORMAT_RESULT         = 12;
+
+
 
 }
