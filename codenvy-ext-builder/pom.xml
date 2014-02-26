@@ -48,6 +48,11 @@
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.codenvy.platform-api-gwt-client</groupId>
+            <artifactId>codenvy-api-core-gwt-client</artifactId>
+            <version>${codenvy.platform-api-gwt-client.version}</version>
+        </dependency>
+        <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
             <version>${javax.validation.version}</version>
@@ -169,9 +174,9 @@
                 </dependencies>
                 <configuration>
                     <dtoPackages>
+                        <package>com.codenvy.api.core.rest.shared.dto</package>
                         <package>com.codenvy.api.builder.dto</package>
                         <package>com.codenvy.api.builder.internal.dto</package>
-                        <package>com.codenvy.api.core.rest.shared.dto</package>
                     </dtoPackages>
                     <outputDirectory>${dto-generator-out-directory}</outputDirectory>
                     <genClassName>com.codenvy.ide.extension.builder.dto.DtoClientImpls</genClassName>

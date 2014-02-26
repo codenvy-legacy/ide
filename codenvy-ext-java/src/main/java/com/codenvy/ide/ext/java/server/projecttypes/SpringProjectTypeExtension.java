@@ -19,7 +19,6 @@ package com.codenvy.ide.ext.java.server.projecttypes;
 
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
 import com.codenvy.api.project.server.ProjectTypeExtension;
-import com.codenvy.api.project.server.VfsPropertyValueProvider;
 import com.codenvy.api.project.shared.Attribute;
 import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
@@ -45,8 +44,11 @@ public class SpringProjectTypeExtension implements ProjectTypeExtension {
     @Override
     public List<Attribute> getPredefinedAttributes() {
         final List<Attribute> list = new ArrayList<>(2);
-        list.add(new Attribute("language", new VfsPropertyValueProvider("language", "java")));
-        list.add(new Attribute("runner.name", new VfsPropertyValueProvider("runner.name", "webapps")));
+        // TODO
+//        list.add(new Attribute("language", new VfsPropertyValueProvider("language", "java")));
+//        list.add(new Attribute("runner.name", new VfsPropertyValueProvider("runner.name", "webapps")));
+        list.add(new Attribute("language", "java"));
+        list.add(new Attribute("runner.name", "webapps"));
         return list;
     }
 

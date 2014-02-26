@@ -24,7 +24,7 @@ import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.api.vfs.server.VirtualFileSystemProvider;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
-import com.codenvy.api.vfs.shared.dto.Project;
+import com.codenvy.api.project.server.Project;
 import com.codenvy.ide.maven.tools.MavenUtils;
 
 import org.apache.maven.model.Model;
@@ -57,21 +57,22 @@ public class SourceFoldersValueProviderFactory implements ValueProviderFactory {
             @Override
             public List<String> getValues() {
                 final List<String> list = new ArrayList<>();
-                try {
-                    VirtualFileSystemProvider provider = registry.getProvider(project.getVfsId());
-                    MountPoint mountPoint = provider.getMountPoint(false);
-                    VirtualFile root = mountPoint.getRoot();
-                    VirtualFile projectFolder = root.getChild(project.getPath());
-                    VirtualFile mavenBuildDescriptor = projectFolder.getChild("pom.xml");
-                    VirtualFile antBuildDescriptor = projectFolder.getChild("build.xml");
-                    if (mavenBuildDescriptor != null) {
-                        list.addAll(getMavenSourceFolders(mavenBuildDescriptor));
-                    } else if (antBuildDescriptor != null) {
-                        list.addAll(getAntSourceFolders(antBuildDescriptor));
-                    }
-                } catch (VirtualFileSystemException | IOException e) {
-                    throw new IllegalStateException(e);
-                }
+                // TODO
+//                try {
+//                    VirtualFileSystemProvider provider = registry.getProvider(project.getVfsId());
+//                    MountPoint mountPoint = provider.getMountPoint(false);
+//                    VirtualFile root = mountPoint.getRoot();
+//                    VirtualFile projectFolder = root.getChild(project.getPath());
+//                    VirtualFile mavenBuildDescriptor = projectFolder.getChild("pom.xml");
+//                    VirtualFile antBuildDescriptor = projectFolder.getChild("build.xml");
+//                    if (mavenBuildDescriptor != null) {
+//                        list.addAll(getMavenSourceFolders(mavenBuildDescriptor));
+//                    } else if (antBuildDescriptor != null) {
+//                        list.addAll(getAntSourceFolders(antBuildDescriptor));
+//                    }
+//                } catch (VirtualFileSystemException | IOException e) {
+//                    throw new IllegalStateException(e);
+//                }
                 return list;
             }
 

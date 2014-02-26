@@ -17,13 +17,13 @@
  */
 package com.codenvy.builder.ant;
 
+import com.codenvy.api.builder.BuilderException;
 import com.codenvy.api.builder.dto.Dependency;
 import com.codenvy.api.builder.internal.BuildListener;
 import com.codenvy.api.builder.internal.BuildResult;
 import com.codenvy.api.builder.internal.BuildTask;
 import com.codenvy.api.builder.internal.Builder;
 import com.codenvy.api.builder.internal.BuilderConfiguration;
-import com.codenvy.api.builder.internal.BuilderException;
 import com.codenvy.api.builder.internal.BuilderTaskType;
 import com.codenvy.api.builder.internal.DependencyCollector;
 import com.codenvy.api.core.util.CommandLine;
