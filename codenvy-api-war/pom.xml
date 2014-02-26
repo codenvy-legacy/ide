@@ -100,11 +100,11 @@
             <artifactId>codenvy-ide-vfs-fs</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-runner-docker</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-runner-sdk</artifactId>
