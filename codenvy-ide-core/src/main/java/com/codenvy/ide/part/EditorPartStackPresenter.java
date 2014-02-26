@@ -173,6 +173,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
             int partIndex = parts.indexOf(part);
             view.removeTabButton(partIndex);
             parts.remove(part);
+            view.getContentPanel().setWidget(null);
             part.removePropertyListener(propertyListener);
             if (activePart == part) {
                 //select another part
