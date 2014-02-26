@@ -10,23 +10,23 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.server.internal.core.search.indexing;
 
+import com.codenvy.ide.ext.java.server.core.JavaCore;
+import com.codenvy.ide.ext.java.server.internal.core.JavaProject;
 import com.codenvy.ide.ext.java.server.core.search.IJavaSearchScope;
 import com.codenvy.ide.ext.java.server.core.search.SearchDocument;
 import com.codenvy.ide.ext.java.server.core.search.SearchEngine;
 import com.codenvy.ide.ext.java.server.core.search.SearchParticipant;
+import com.codenvy.ide.ext.java.server.internal.core.ClasspathEntry;
 import com.codenvy.ide.ext.java.server.internal.core.search.BasicSearchEngine;
 import com.codenvy.ide.ext.java.server.internal.core.search.PatternSearchJob;
 import com.codenvy.ide.ext.java.server.internal.core.search.processing.JobManager;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.compiler.CharOperation;
 import org.eclipse.jdt.internal.compiler.ISourceElementRequestor;
@@ -35,10 +35,8 @@ import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
 import org.eclipse.jdt.internal.compiler.util.SimpleLookupTable;
 import org.eclipse.jdt.internal.compiler.util.SimpleSet;
-import org.eclipse.jdt.internal.core.ClasspathEntry;
 import org.eclipse.jdt.internal.core.JavaModel;
 import org.eclipse.jdt.internal.core.JavaModelManager;
-import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jdt.internal.core.index.DiskIndex;
 import org.eclipse.jdt.internal.core.index.FileIndexLocation;
 import org.eclipse.jdt.internal.core.index.Index;
@@ -128,7 +126,7 @@ public class IndexManager extends JobManager implements IIndexConstants {
      * Note: the actual operation is performed in background
      */
     public void addBinary(IFile resource, IPath containerPath) {
-        if (JavaCore.getPlugin() == null) return;
+//        if (JavaCore.getPlugin() == null) return;
         SearchParticipant participant = SearchEngine.getDefaultSearchParticipant();
         SearchDocument document = participant.getDocument(resource.getFullPath().toString());
         IndexLocation indexLocation = computeIndexLocation(containerPath);
@@ -139,10 +137,10 @@ public class IndexManager extends JobManager implements IIndexConstants {
      * Trigger addition of a resource to an index
      * Note: the actual operation is performed in background
      */
-    public void addSource(IFile resource, IPath containerPath, SourceElementParser parser) {
-        if (JavaCore.getPlugin() == null) return;
+    public void addSource(java.nio.file.Path resource, IPath containerPath, SourceElementParser parser) {
+//        if (JavaCore.getPlugin() == null) return;
         SearchParticipant participant = SearchEngine.getDefaultSearchParticipant();
-        SearchDocument document = participant.getDocument(resource.getFullPath().toString());
+        SearchDocument document = participant.getDocument(resource.toAbsolutePath().toString());
         document.setParser(parser);
         IndexLocation indexLocation = computeIndexLocation(containerPath);
         scheduleDocumentIndexing(document, containerPath, indexLocation, participant);
@@ -258,7 +256,7 @@ public class IndexManager extends JobManager implements IIndexConstants {
         }
     }
 
-    public SourceElementParser getSourceElementParser(IJavaProject project, ISourceElementRequestor requestor) {
+    public SourceElementParser getSourceElementParser(JavaProject project, ISourceElementRequestor requestor) {
         // disable task tags to speed up parsing
         Map options = project.getOptions(true);
         options.put(JavaCore.COMPILER_TASK_TAGS, ""); //$NON-NLS-1$
@@ -565,18 +563,18 @@ public class IndexManager extends JobManager implements IIndexConstants {
      * Trigger addition of the entire content of a project
      * Note: the actual operation is performed in background
      */
-    public void indexAll(IProject project) {
-        if (JavaCore.getPlugin() == null) return;
+    public void indexAll(JavaProject project) {
+//        if (JavaCore.getPlugin() == null) return;
 
         // Also request indexing of binaries on the classpath
         // determine the new children
         try {
             JavaModel model = JavaModelManager.getJavaModelManager().getJavaModel();
-            JavaProject javaProject = (JavaProject)model.getJavaProject(project);
+//            JavaProject javaProject = (JavaProject)model.getJavaProject(project);
             // only consider immediate libraries - each project will do the same
             // NOTE: force to resolve CP variables before calling indexer - 19303, so that initializers
             // will be run in the current thread.
-            IClasspathEntry[] entries = javaProject.getResolvedClasspath();
+            IClasspathEntry[] entries = project.getResolvedClasspath();
             for (int i = 0; i < entries.length; i++) {
                 IClasspathEntry entry = entries[i];
                 if (entry.getEntryKind() == IClasspathEntry.CPE_LIBRARY)
@@ -646,14 +644,14 @@ public class IndexManager extends JobManager implements IIndexConstants {
      * Index the content of the given source folder.
      */
     public void indexSourceFolder(JavaProject javaProject, IPath sourceFolder, char[][] inclusionPatterns, char[][] exclusionPatterns) {
-        IProject project = javaProject.getProject();
+//        IProject project = javaProject.getProject();
         if (this.jobEnd > this.jobStart) {
             // skip it if a job to index the project is already in the queue
-            IndexRequest request = new IndexAllProject(project, this);
+            IndexRequest request = new IndexAllProject(javaProject, this);
             if (isJobWaiting(request)) return;
         }
 
-        request(new AddFolderToIndex(sourceFolder, project, inclusionPatterns, exclusionPatterns, this));
+        request(new AddFolderToIndex(sourceFolder, javaProject, inclusionPatterns, exclusionPatterns, this));
     }
 
     public synchronized void jobWasCancelled(IPath containerPath) {
@@ -717,17 +715,18 @@ public class IndexManager extends JobManager implements IIndexConstants {
 
         updateIndexState(indexLocation, REBUILDING_STATE);
         IndexRequest request = null;
-        if (target instanceof IProject) {
-            IProject p = (IProject)target;
-            if (JavaProject.hasJavaNature(p))
-                request = new IndexAllProject(p, this);
-//	} else if (target instanceof IFolder) {
-//		request = new IndexBinaryFolder((IFolder) target, this);
-//	} else if (target instanceof IFile) {
-//		request = new AddJarFileToIndex((IFile) target, null, this);
-        } else if (target instanceof File) {
-            request = new AddJarFileToIndex(containerPath, null, this);
-        }
+        //TODO
+//        if (target instanceof IProject) {
+//            IProject p = (IProject)target;
+//            if (JavaProject.hasJavaNature(p))
+//                request = new IndexAllProject(p, this);
+////	} else if (target instanceof IFolder) {
+////		request = new IndexBinaryFolder((IFolder) target, this);
+////	} else if (target instanceof IFile) {
+////		request = new AddJarFileToIndex((IFile) target, null, this);
+//        } else if (target instanceof File) {
+//            request = new AddJarFileToIndex(containerPath, null, this);
+//        }
         if (request != null)
             request(request);
     }
@@ -876,14 +875,14 @@ public class IndexManager extends JobManager implements IIndexConstants {
      */
     public void removeSourceFolderFromIndex(JavaProject javaProject, IPath sourceFolder, char[][] inclusionPatterns,
                                             char[][] exclusionPatterns) {
-        IProject project = javaProject.getProject();
+//        IProject project = javaProject.getProject();
         if (this.jobEnd > this.jobStart) {
             // skip it if a job to index the project is already in the queue
-            IndexRequest request = new IndexAllProject(project, this);
+            IndexRequest request = new IndexAllProject(javaProject, this);
             if (isJobWaiting(request)) return;
         }
 
-        request(new RemoveFolderFromIndex(sourceFolder, inclusionPatterns, exclusionPatterns, project, this));
+        request(new RemoveFolderFromIndex(sourceFolder, inclusionPatterns, exclusionPatterns, javaProject, this));
     }
 
     /**

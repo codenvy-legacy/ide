@@ -36,6 +36,40 @@
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-java</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>org.eclipse.core.jobs</artifactId>
+                    <groupId>org.eclipse.birt.runtime</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>org.eclipse.core.resources</artifactId>
+                    <groupId>org.eclipse.birt.runtime</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>org.eclipse.core.runtime</artifactId>
+                    <groupId>org.eclipse.birt.runtime</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>org.eclipse.equinox.common</artifactId>
+                    <groupId>org.eclipse.birt.runtime</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>org.eclipse.core.contenttype</artifactId>
+                    <groupId>org.eclipse.core</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>org.eclipse.text</artifactId>
+                    <groupId>org.eclipse.text</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>org.eclipse.jdt.core</artifactId>
+                    <groupId>org.eclipse.tycho</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>org.eclipse.osgi</artifactId>
+                    <groupId>org.eclipse.tycho</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
@@ -56,6 +90,11 @@
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-runner</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api-gwt-client</groupId>
+            <artifactId>codenvy-api-project-gwt-client</artifactId>
+            <version>${codenvy.platform-api-gwt-client.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.gwt.inject</groupId>

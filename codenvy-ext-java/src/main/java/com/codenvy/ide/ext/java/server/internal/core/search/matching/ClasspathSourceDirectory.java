@@ -10,26 +10,29 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.server.internal.core.search.matching;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
+import com.codenvy.ide.ext.java.jdt.internal.core.util.Util;
+import com.codenvy.ide.ext.java.server.internal.core.util.ResourceCompilationUnit;
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.internal.compiler.env.NameEnvironmentAnswer;
 import org.eclipse.jdt.internal.compiler.util.SimpleLookupTable;
 import org.eclipse.jdt.internal.core.builder.ClasspathLocation;
-import org.eclipse.jdt.internal.core.util.ResourceCompilationUnit;
-import org.eclipse.jdt.internal.core.util.Util;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class ClasspathSourceDirectory extends ClasspathLocation {
 
-    IContainer        sourceFolder;
+    File              sourceFolder;
     SimpleLookupTable directoryCache;
     SimpleLookupTable missingPackageHolder = new SimpleLookupTable();
     char[][] fullExclusionPatternChars;
     char[][] fulInclusionPatternChars;
 
-    ClasspathSourceDirectory(IContainer sourceFolder, char[][] fullExclusionPatternChars, char[][] fulInclusionPatternChars) {
+    ClasspathSourceDirectory(File sourceFolder, char[][] fullExclusionPatternChars, char[][] fulInclusionPatternChars) {
         this.sourceFolder = sourceFolder;
         this.directoryCache = new SimpleLookupTable(5);
         this.fullExclusionPatternChars = fullExclusionPatternChars;
@@ -46,73 +49,78 @@ public class ClasspathSourceDirectory extends ClasspathLocation {
         if (dirTable != null) return dirTable;
 
         try {
-            IResource container = this.sourceFolder.findMember(qualifiedPackageName); // this is a case-sensitive check
-            if (container instanceof IContainer) {
-                IResource[] members = ((IContainer)container).members();
+//            IResource container = this.sourceFolder.findMember(qualifiedPackageName); // this is a case-sensitive check
+            File container = new File(sourceFolder, qualifiedPackageName);
+            if (container.isDirectory()) {
                 dirTable = new SimpleLookupTable();
-                for (int i = 0, l = members.length; i < l; i++) {
-                    IResource m = members[i];
+                DirectoryStream<Path> members = Files.newDirectoryStream(container.toPath());
+                for (Path member : members) {
                     String name;
-                    if (m.getType() == IResource.FILE) {
-                        int index = Util.indexOfJavaLikeExtension(name = m.getName());
+                    if (!member.toFile().isDirectory()) {
+                        int index = Util.indexOfJavaLikeExtension(name = member.getFileName().toString());
                         if (index >= 0) {
-                            String fullPath = m.getFullPath().toString();
-						if (!org.eclipse.jdt.internal.compiler.util.Util.isExcluded(fullPath.toCharArray(), this.fulInclusionPatternChars, this.fullExclusionPatternChars, false/*not a folder path*/)) {
-							dirTable.put(name.substring(0, index), m);
-						}
-					}
-				}
-			}
-			this.directoryCache.put(qualifiedPackageName, dirTable);
-			return dirTable;
-		}
-	} catch(CoreException ignored) {
-		// treat as if missing
-	}
-	this.directoryCache.put(qualifiedPackageName, this.missingPackageHolder);
-	return null;
-}
+                            String fullPath = member.toAbsolutePath().toString();
+                            if (!org.eclipse.jdt.internal.compiler.util.Util
+                                    .isExcluded(fullPath.toCharArray(), this.fulInclusionPatternChars,
+                                                this.fullExclusionPatternChars, false/*not a folder path*/)) {
+                                dirTable.put(name.substring(0, index), member.toFile());
+                            }
+                        }
+                    }
+                    this.directoryCache.put(qualifiedPackageName, dirTable);
+                    return dirTable;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.directoryCache.put(qualifiedPackageName, this.missingPackageHolder);
+        return null;
+    }
 
-public boolean equals(Object o) {
-	if (this == o) return true;
-	if (!(o instanceof ClasspathSourceDirectory)) return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ClasspathSourceDirectory)) return false;
 
-	return this.sourceFolder.equals(((ClasspathSourceDirectory) o).sourceFolder);
-}
+        return this.sourceFolder.equals(((ClasspathSourceDirectory)o).sourceFolder);
+    }
 
-public NameEnvironmentAnswer findClass(String sourceFileWithoutExtension, String qualifiedPackageName, String qualifiedSourceFileWithoutExtension) {
-	SimpleLookupTable dirTable = directoryTable(qualifiedPackageName);
-	if (dirTable != null && dirTable.elementSize > 0) {
-		IFile file = (IFile) dirTable.get(sourceFileWithoutExtension);
-		if (file != null) {
-			return new NameEnvironmentAnswer(new ResourceCompilationUnit(file, file.getLocationURI()), null /* no access restriction */);
-		}
-	}
-	return null;
-}
+    public NameEnvironmentAnswer findClass(String sourceFileWithoutExtension, String qualifiedPackageName,
+                                           String qualifiedSourceFileWithoutExtension) {
+        SimpleLookupTable dirTable = directoryTable(qualifiedPackageName);
+        if (dirTable != null && dirTable.elementSize > 0) {
+            File file = (File)dirTable.get(sourceFileWithoutExtension);
+            if (file != null) {
+                return new NameEnvironmentAnswer(new ResourceCompilationUnit(file),
+                                                 null /* no access restriction */);
+            }
+        }
+        return null;
+    }
 
-public IPath getProjectRelativePath() {
-	return this.sourceFolder.getProjectRelativePath();
-}
+    public IPath getProjectRelativePath() {
+//	return this.sourceFolder.getProjectRelativePath();
+        throw new UnsupportedOperationException();
+    }
 
-public int hashCode() {
-	return this.sourceFolder == null ? super.hashCode() : this.sourceFolder.hashCode();
-}
+    public int hashCode() {
+        return this.sourceFolder == null ? super.hashCode() : this.sourceFolder.hashCode();
+    }
 
-public boolean isPackage(String qualifiedPackageName) {
-	return directoryTable(qualifiedPackageName) != null;
-}
+    public boolean isPackage(String qualifiedPackageName) {
+        return directoryTable(qualifiedPackageName) != null;
+    }
 
-public void reset() {
-	this.directoryCache = new SimpleLookupTable(5);
-}
+    public void reset() {
+        this.directoryCache = new SimpleLookupTable(5);
+    }
 
-public String toString() {
-	return "Source classpath directory " + this.sourceFolder.getFullPath().toString(); //$NON-NLS-1$
-}
+    public String toString() {
+        return "Source classpath directory " + this.sourceFolder.getPath(); //$NON-NLS-1$
+    }
 
-public String debugPathString() {
-	return this.sourceFolder.getFullPath().toString();
-}
+    public String debugPathString() {
+        return this.sourceFolder.getPath();
+    }
 
 }

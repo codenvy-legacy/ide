@@ -34,6 +34,7 @@ import com.codenvy.ide.ext.java.server.internal.core.search.HierarchyScope;
 import com.codenvy.ide.ext.java.server.internal.core.search.IndexQueryRequestor;
 import com.codenvy.ide.ext.java.server.internal.core.search.IndexSelector;
 import com.codenvy.ide.ext.java.server.internal.core.search.JavaSearchDocument;
+import com.codenvy.ide.ext.java.server.internal.core.util.HandleFactory;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -121,7 +122,6 @@ import org.eclipse.jdt.internal.core.hierarchy.HierarchyResolver;
 import org.eclipse.jdt.internal.core.index.Index;
 import org.eclipse.jdt.internal.core.search.indexing.IIndexConstants;
 import org.eclipse.jdt.internal.core.util.ASTNodeFinder;
-import org.eclipse.jdt.internal.core.util.HandleFactory;
 import org.eclipse.jdt.internal.core.util.Util;
 
 import java.io.IOException;
@@ -1338,8 +1338,7 @@ public void locateMatches(SearchDocument[] searchDocuments) throws CoreException
 				workingCopy = ((WorkingCopyDocument)searchDocument).workingCopy;
 				openable = (Openable) workingCopy;
 			} else {
-                // todo openable
-				openable = null;//this.handleFactory.createOpenable(pathString, this.scope);
+				openable = this.handleFactory.createOpenable(pathString, this.scope);
 			}
 //			if (openable == null) {
 //				if (this.progressMonitor != null) {

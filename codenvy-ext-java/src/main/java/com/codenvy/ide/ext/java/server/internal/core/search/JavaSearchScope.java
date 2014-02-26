@@ -10,38 +10,33 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.server.internal.core.search;
 
+import com.codenvy.ide.ext.java.server.core.JavaCore;
+import com.codenvy.ide.ext.java.server.internal.core.JavaProject;
+import com.codenvy.ide.ext.java.server.internal.core.ClasspathEntry;
+
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaElementDelta;
-import org.eclipse.jdt.core.IJavaModel;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.compiler.env.AccessRestriction;
 import org.eclipse.jdt.internal.compiler.env.AccessRule;
 import org.eclipse.jdt.internal.compiler.env.AccessRuleSet;
-import org.eclipse.jdt.internal.core.ClasspathEntry;
 import org.eclipse.jdt.internal.core.ExternalFoldersManager;
 import org.eclipse.jdt.internal.core.JavaElement;
 import org.eclipse.jdt.internal.core.JavaModel;
-import org.eclipse.jdt.internal.core.JavaModelManager;
-import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jdt.internal.core.PackageFragment;
 import org.eclipse.jdt.internal.core.PackageFragmentRoot;
 import org.eclipse.jdt.internal.core.util.Util;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Map;
 
 /**
  * A Java-specific scope for searching relative to one or more java elements.
@@ -91,7 +86,7 @@ public class JavaSearchScope extends AbstractJavaSearchScope {
     /**
      * Add java project all fragment roots to current java search scope.
      *
-     * @see #add(org.eclipse.jdt.internal.core.JavaProject, org.eclipse.core.runtime.IPath, int, java.util.HashSet, java.util.HashSet,
+     * @see #add(JavaProject, org.eclipse.core.runtime.IPath, int, java.util.HashSet, java.util.HashSet,
      * org.eclipse.jdt.core.IClasspathEntry)
      */
     public void add(JavaProject project, int includeMask, HashSet projectsToBeAdded) throws JavaModelException {
@@ -120,16 +115,16 @@ public class JavaSearchScope extends AbstractJavaSearchScope {
      */
     void add(JavaProject javaProject, IPath pathToAdd, int includeMask, HashSet projectsToBeAdded, HashSet visitedProjects,
              IClasspathEntry referringEntry) throws JavaModelException {
-        IProject project = javaProject.getProject();
-        if (!project.isAccessible() || !visitedProjects.add(project)) return;
+//        IProject project = javaProject.getProject();
+//        if (!project.isAccessible() || !visitedProjects.add(project)) return;
 
-        IPath projectPath = project.getFullPath();
+        IPath projectPath = javaProject.getFullPath();
         String projectPathString = projectPath.toString();
         addEnclosingProjectOrJar(projectPath);
 
         IClasspathEntry[] entries = javaProject.getResolvedClasspath();
-        IJavaModel model = javaProject.getJavaModel();
-        JavaModelManager.PerProjectInfo perProjectInfo = javaProject.getPerProjectInfo();
+//        IJavaModel model = javaProject.getJavaModel();
+//        JavaModelManager.PerProjectInfo perProjectInfo = javaProject.getPerProjectInfo();
         for (int i = 0, length = entries.length; i < length; i++) {
             IClasspathEntry entry = entries[i];
             AccessRuleSet access = null;
@@ -147,21 +142,21 @@ public class JavaSearchScope extends AbstractJavaSearchScope {
             switch (entry.getEntryKind()) {
                 case IClasspathEntry.CPE_LIBRARY:
                     IClasspathEntry rawEntry = null;
-                    Map rootPathToRawEntries = perProjectInfo.rootPathToRawEntries;
-                    if (rootPathToRawEntries != null) {
-                        rawEntry = (IClasspathEntry)rootPathToRawEntries.get(entry.getPath());
-                    }
-                    if (rawEntry == null) break;
+//                    Map rootPathToRawEntries = perProjectInfo.rootPathToRawEntries;
+//                    if (rootPathToRawEntries != null) {
+//                        rawEntry = (IClasspathEntry)rootPathToRawEntries.get(entry.getPath());
+//                    }
+//                    if (rawEntry == null) break;
                     rawKind:
-                    switch (rawEntry.getEntryKind()) {
+                    switch (cpEntry.getEntryKind()) {
                         case IClasspathEntry.CPE_LIBRARY:
                         case IClasspathEntry.CPE_VARIABLE:
                             if ((includeMask & APPLICATION_LIBRARIES) != 0) {
                                 IPath path = entry.getPath();
                                 if (pathToAdd == null || pathToAdd.equals(path)) {
-                                    Object target = JavaModel.getTarget(path, false/*don't check existence*/);
-                                    if (target instanceof IFolder) // case of an external folder
-                                        path = ((IFolder)target).getFullPath();
+//                                    Object target = JavaModel.getTarget(path, false/*don't check existence*/);
+//                                    if (target instanceof IFolder) // case of an external folder
+//                                        path = ((IFolder)target).getFullPath();
                                     String pathToString = path.getDevice() == null ? path.toString() : path.toOSString();
                                     add(projectPath.toString(), "", pathToString, false/*not a package*/, access); //$NON-NLS-1$
                                     addEnclosingProjectOrJar(entry.getPath());
@@ -195,16 +190,16 @@ public class JavaSearchScope extends AbstractJavaSearchScope {
                     }
                     break;
                 case IClasspathEntry.CPE_PROJECT:
-                    if ((includeMask & REFERENCED_PROJECTS) != 0) {
-                        IPath path = entry.getPath();
-                        if (pathToAdd == null || pathToAdd.equals(path)) {
-                            JavaProject referencedProject = (JavaProject)model.getJavaProject(path.lastSegment());
-                            if (!projectsToBeAdded
-                                    .contains(referencedProject)) { // do not recurse if depending project was used to create the scope
-                                add(referencedProject, null, includeMask, projectsToBeAdded, visitedProjects, cpEntry);
-                            }
-                        }
-                    }
+//                    if ((includeMask & REFERENCED_PROJECTS) != 0) {
+//                        IPath path = entry.getPath();
+//                        if (pathToAdd == null || pathToAdd.equals(path)) {
+//                            JavaProject referencedProject = (JavaProject)model.getJavaProject(path.lastSegment());
+//                            if (!projectsToBeAdded
+//                                    .contains(referencedProject)) { // do not recurse if depending project was used to create the scope
+//                                add(referencedProject, null, includeMask, projectsToBeAdded, visitedProjects, cpEntry);
+//                            }
+//                        }
+//                    }
                     break;
                 case IClasspathEntry.CPE_SOURCE:
                     if ((includeMask & SOURCES) != 0) {
@@ -570,79 +565,81 @@ public class JavaSearchScope extends AbstractJavaSearchScope {
      * @see AbstractSearchScope#processDelta(IJavaElementDelta)
      */
     public void processDelta(IJavaElementDelta delta, int eventType) {
-        switch (delta.getKind()) {
-            case IJavaElementDelta.CHANGED:
-                IJavaElementDelta[] children = delta.getAffectedChildren();
-                for (int i = 0, length = children.length; i < length; i++) {
-                    IJavaElementDelta child = children[i];
-                    processDelta(child, eventType);
-                }
-                break;
-            case IJavaElementDelta.REMOVED:
-                IJavaElement element = delta.getElement();
-                if (this.encloses(element)) {
-                    if (this.elements != null) {
-                        this.elements.remove(element);
-                    }
-                    String path = null;
-                    switch (element.getElementType()) {
-                        case IJavaElement.JAVA_PROJECT:
-                            path = ((IJavaProject)element).getProject().getFullPath().toString();
-                            break;
-                        case IJavaElement.PACKAGE_FRAGMENT_ROOT:
-                            path = ((IPackageFragmentRoot)element).getPath().toString();
-                            break;
-                        default:
-                            return;
-                    }
-                    for (int i = 0; i < this.pathsCount; i++) {
-                        if (this.relativePaths[i].equals(path)) {
-                            this.relativePaths[i] = null;
-                            rehash();
-                            break;
-                        }
-                    }
-                }
-                break;
-        }
+//        switch (delta.getKind()) {
+//            case IJavaElementDelta.CHANGED:
+//                IJavaElementDelta[] children = delta.getAffectedChildren();
+//                for (int i = 0, length = children.length; i < length; i++) {
+//                    IJavaElementDelta child = children[i];
+//                    processDelta(child, eventType);
+//                }
+//                break;
+//            case IJavaElementDelta.REMOVED:
+//                IJavaElement element = delta.getElement();
+//                if (this.encloses(element)) {
+//                    if (this.elements != null) {
+//                        this.elements.remove(element);
+//                    }
+//                    String path = null;
+//                    switch (element.getElementType()) {
+//                        case IJavaElement.JAVA_PROJECT:
+//                            path = ((IJavaProject)element).getProject().getFullPath().toString();
+//                            break;
+//                        case IJavaElement.PACKAGE_FRAGMENT_ROOT:
+//                            path = ((IPackageFragmentRoot)element).getPath().toString();
+//                            break;
+//                        default:
+//                            return;
+//                    }
+//                    for (int i = 0; i < this.pathsCount; i++) {
+//                        if (this.relativePaths[i].equals(path)) {
+//                            this.relativePaths[i] = null;
+//                            rehash();
+//                            break;
+//                        }
+//                    }
+//                }
+//                break;
+//        }
+        throw new UnsupportedOperationException();
     }
 
     /**
      * @see org.eclipse.jdt.internal.core.search.AbstractJavaSearchScope#packageFragmentRoot(String, int, String)
      */
     public IPackageFragmentRoot packageFragmentRoot(String resourcePathString, int jarSeparatorIndex, String jarPath) {
-        int index = -1;
-        boolean isJarFile = jarSeparatorIndex != -1;
-        if (isJarFile) {
-            // internal or external jar (case 3, 4, or 5)
-            String relativePath = resourcePathString.substring(jarSeparatorIndex + 1);
-            index = indexOf(jarPath, relativePath);
-        } else {
-            // resource in workspace (case 1 or 2)
-            index = indexOf(resourcePathString);
-        }
-        if (index >= 0) {
-            int idx = this.projectIndexes[index];
-            String projectPath = idx == -1 ? null : (String)this.projectPaths.get(idx);
-            if (projectPath != null) {
-                IJavaProject project = JavaCore.create(ResourcesPlugin.getWorkspace().getRoot().getProject(projectPath));
-                if (isJarFile) {
-                    IResource resource = JavaModel.getWorkspaceTarget(new Path(jarPath));
-                    if (resource != null)
-                        return project.getPackageFragmentRoot(resource);
-                    return project.getPackageFragmentRoot(jarPath);
-                }
-                Object target = JavaModel.getWorkspaceTarget(new Path(this.containerPaths[index] + '/' + this.relativePaths[index]));
-                if (target != null) {
-                    if (target instanceof IProject) {
-                        return project.getPackageFragmentRoot((IProject)target);
-                    }
-                    IJavaElement element = JavaModelManager.create((IResource)target, project);
-                    return (IPackageFragmentRoot)element.getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT);
-                }
-            }
-        }
-        return null;
+//        int index = -1;
+//        boolean isJarFile = jarSeparatorIndex != -1;
+//        if (isJarFile) {
+//            // internal or external jar (case 3, 4, or 5)
+//            String relativePath = resourcePathString.substring(jarSeparatorIndex + 1);
+//            index = indexOf(jarPath, relativePath);
+//        } else {
+//            // resource in workspace (case 1 or 2)
+//            index = indexOf(resourcePathString);
+//        }
+//        if (index >= 0) {
+//            int idx = this.projectIndexes[index];
+//            String projectPath = idx == -1 ? null : (String)this.projectPaths.get(idx);
+//            if (projectPath != null) {
+//                IJavaProject project = JavaCore.create(ResourcesPlugin.getWorkspace().getRoot().getProject(projectPath));
+//                if (isJarFile) {
+//                    IResource resource = JavaModel.getWorkspaceTarget(new Path(jarPath));
+//                    if (resource != null)
+//                        return project.getPackageFragmentRoot(resource);
+//                    return project.getPackageFragmentRoot(jarPath);
+//                }
+//                Object target = JavaModel.getWorkspaceTarget(new Path(this.containerPaths[index] + '/' + this.relativePaths[index]));
+//                if (target != null) {
+//                    if (target instanceof IProject) {
+//                        return project.getPackageFragmentRoot((IProject)target);
+//                    }
+//                    IJavaElement element = JavaModelManager.create((IResource)target, project);
+//                    return (IPackageFragmentRoot)element.getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT);
+//                }
+//            }
+//        }
+        throw new UnsupportedOperationException();
+//        return null;
     }
 
     private void rehash() {

@@ -32,6 +32,8 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.NameEnvironmentAnswer;
 import com.codenvy.ide.ext.java.shared.JavaType;
 import com.codenvy.ide.ext.java.shared.ShortTypeInfo;
+import com.codenvy.ide.ext.java.worker.env.BinaryType;
+import com.codenvy.ide.ext.java.worker.env.json.BinaryTypeJso;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -60,12 +62,8 @@ public class WorkerNameEnvironment implements INameEnvironment {
      *
      */
     public WorkerNameEnvironment(String restContext, String vfsId, String wsName) {
-        restServiceContext = restContext + "/code-assistant-java" + wsName;
+        restServiceContext = restContext + "/java-name-environment" + wsName;
         this.vfsId = vfsId;
-    }
-
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
     }
 
     private static String convertSearchFilterToModelFilter(int searchFilter) {
@@ -88,6 +86,10 @@ public class WorkerNameEnvironment implements INameEnvironment {
         }
     }
 
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
     /** {@inheritDoc} */
     @Override
     public NameEnvironmentAnswer findType(char[][] compoundTypeName) {
@@ -103,8 +105,27 @@ public class WorkerNameEnvironment implements INameEnvironment {
         }
 
         if (projectId != null) {
+            if (packages.contains(key)) {
+                return null;
+            }
+            StringBuilder builder = new StringBuilder();
+            for (char[] chars : compoundTypeName) {
+                builder.append(chars).append(',');
+            }
+            if (builder.length() > 1) builder.deleteCharAt(builder.length() - 1);
+            String url =
+                    restServiceContext + "/findTypeCompound?compoundTypeName=" + builder.toString() + "&projectid=" +
+                    projectId;
+            String result = runSyncReques(url);
+            if (result != null) {
+                Jso jso = Jso.deserialize(result);
+                BinaryType type = new BinaryType(jso.<BinaryTypeJso>cast());
+                WorkerTypeInfoStorage.get().putType(key, type);
 
-            return loadTypeInfo(key, projectId);
+                return new NameEnvironmentAnswer(type, null);
+            } else return null;
+//
+//            return loadTypeInfo(key, projectId);
         }
         return null;
     }
@@ -116,32 +137,32 @@ public class WorkerNameEnvironment implements INameEnvironment {
         return builder.toString();
     }
 
-    /**
-     * Load and store in TypeInfoStorage type info
-     *
-     * @param fqn
-     *         of the type
-     * @param projectId
-     *         project
-     */
-    public NameEnvironmentAnswer loadTypeInfo(final String fqn, String projectId) {
-        if (packages.contains(fqn)) {
-            return null;
-        }
-        String url =
-                restServiceContext + "/class-description?fqn=" + fqn + "&projectid=" + projectId +
-                "&vfsid=" + vfsId;
-        String result = runSyncReques(url);
-        if (result != null) {
-
-
-            Jso jso = Jso.deserialize(result);
-            BinaryTypeImpl type = new BinaryTypeImpl(jso);
-            WorkerTypeInfoStorage.get().putType(fqn, type);
-
-            return new NameEnvironmentAnswer(type, null);
-        } else return null;
-    }
+//    /**
+//     * Load and store in TypeInfoStorage type info
+//     *
+//     * @param fqn
+//     *         of the type
+//     * @param projectId
+//     *         project
+//     */
+//    public NameEnvironmentAnswer loadTypeInfo(final String fqn, String projectId) {
+//        if (packages.contains(fqn)) {
+//            return null;
+//        }
+//        String url =
+//                restServiceContext + "/class-description?fqn=" + fqn + "&projectid=" + projectId +
+//                "&vfsid=" + vfsId;
+//        String result = runSyncReques(url);
+//        if (result != null) {
+//
+//
+//            Jso jso = Jso.deserialize(result);
+//            BinaryTypeImpl type = new BinaryTypeImpl(jso);
+//            WorkerTypeInfoStorage.get().putType(fqn, type);
+//
+//            return new NameEnvironmentAnswer(type, null);
+//        } else return null;
+//    }
 
     /** {@inheritDoc} */
     @Override
@@ -164,7 +185,26 @@ public class WorkerNameEnvironment implements INameEnvironment {
                                              null);
         }
         if (projectId != null) {
-            return loadTypeInfo(key, projectId);
+            if (packages.contains(key)) {
+                return null;
+            }
+            StringBuilder builder = new StringBuilder();
+            for (char[] chars : packageName) {
+                builder.append(chars).append(',');
+            }
+            if (builder.length() > 1) builder.deleteCharAt(builder.length() - 1);
+
+            String url =
+                    restServiceContext + "/findType?packagename=" + builder.toString() + "&typename=" + new String(typeName) +
+                    "&projectid=" + projectId;
+            String result = runSyncReques(url);
+            if (result != null) {
+                Jso jso = Jso.deserialize(result);
+                BinaryType type = new BinaryType(jso.<BinaryTypeJso>cast());
+                WorkerTypeInfoStorage.get().putType(key, type);
+
+                return new NameEnvironmentAnswer(type, null);
+            } else return null;
         }
         return null;
     }
@@ -184,18 +224,27 @@ public class WorkerNameEnvironment implements INameEnvironment {
             if (packages.contains(p.toString())) {
                 return true;
             }
-            String url =
-                    restServiceContext + "/find-packages" + "?package=" + p.toString()
-                    + "&projectid=" + projectId + "&vfsid=" + vfsId;
-            String findPackage = runSyncReques(url);
-            if (findPackage != null) {
-                JSONArray jsonArray = JSONParser.parseLenient(findPackage).isArray();
-                for (int i = 0; i < jsonArray.size(); i++) {
-                    packages.add(jsonArray.get(i).isString().stringValue());
+            StringBuilder builder = new StringBuilder();
+            if (parentPackageName != null) {
+                for (char[] chars : parentPackageName) {
+                    builder.append(chars).append(',');
                 }
-                return jsonArray.size() > 0;
+                if (builder.length() > 1) builder.deleteCharAt(builder.length() - 1);
             }
-            return false;
+            String url =
+                    restServiceContext + "/package" + "?packagename=" + new String(packageName) + "&parent=" +
+                    builder.toString()
+                    + "&projectid=" + projectId;
+            String findPackage = runSyncReques(url);
+            return findPackage != null && Boolean.parseBoolean(findPackage);
+//            if (findPackage != null) {
+//                JSONArray jsonArray = JSONParser.parseLenient(findPackage).isArray();
+//                for (int i = 0; i < jsonArray.size(); i++) {
+//                    packages.add(jsonArray.get(i).isString().stringValue());
+//                }
+//                return jsonArray.size() > 0;
+//            }
+//            return false;
 
         } catch (Exception e) {
             e.printStackTrace();

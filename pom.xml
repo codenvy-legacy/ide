@@ -111,7 +111,7 @@
         <javax.ws.version>1.0</javax.ws.version>
         <jgit.version>2.3.1.201302201838-r</jgit.version>
         <jsch.version>0.1.44-1</jsch.version>
-        <junit.version>4.7</junit.version>
+        <junit.version>4.8.1</junit.version>
         <maven-model.version>3.0.5</maven-model.version>
         <maven.build.timestamp.format>dd.MM.yy HH:mm</maven.build.timestamp.format>
         <maven.compiler.source>1.7</maven.compiler.source>

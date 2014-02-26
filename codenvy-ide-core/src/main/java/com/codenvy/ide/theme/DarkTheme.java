@@ -123,7 +123,7 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getPartToolbarActive() {
-        return "414c5e";
+        return "#414c5e";
     }
 
     @Override

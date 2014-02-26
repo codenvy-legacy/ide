@@ -56,6 +56,7 @@ import com.codenvy.ide.ext.git.server.rest.TagListWriter;
 import com.codenvy.ide.ext.github.server.rest.GitHubService;
 import com.codenvy.ide.ext.java.jdi.server.DebuggerService;
 import com.codenvy.ide.ext.java.server.RestCodeAssistantJava;
+import com.codenvy.ide.ext.java.server.RestNameEnvironment;
 import com.codenvy.ide.ext.ssh.server.DummySshKeyStore;
 import com.codenvy.ide.ext.ssh.server.KeyService;
 import com.codenvy.ide.ext.ssh.server.SshKeyStore;
@@ -117,6 +118,7 @@ public class ApiModule extends AbstractModule {
         bind(DeployToApplicationServerRunner.class);
         bind(SDKRunner.class);
         bind(UserService.class);
+        bind(RestNameEnvironment.class);
         bind(RestCodeAssistantJava.class);
         bind(DebuggerService.class);
         bind(AsynchronousJobPool.class).to(CodenvyAsynchronousJobPool.class);

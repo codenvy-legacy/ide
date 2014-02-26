@@ -15,17 +15,14 @@ import com.codenvy.ide.ext.java.server.core.search.SearchDocument;
 import com.codenvy.ide.ext.java.server.core.search.SearchParticipant;
 import com.codenvy.ide.ext.java.server.internal.core.search.processing.JobManager;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.core.util.Util;
+
+import java.io.File;
 
 public class JavaSearchDocument extends SearchDocument {
 
-    private   IFile  file;
+    private   File  file;
     protected byte[] byteContents;
     protected char[] charContents;
 
@@ -42,7 +39,7 @@ public class JavaSearchDocument extends SearchDocument {
         if (this.byteContents != null) return this.byteContents;
         try {
             return Util.getResourceContentsAsByteArray(getFile());
-        } catch (JavaModelException e) {
+        } catch (Exception e) {
             if (org.eclipse.jdt.internal.core.search.BasicSearchEngine.VERBOSE ||
                 JobManager.VERBOSE) { // used during search and during indexing
                 e.printStackTrace();
@@ -55,7 +52,7 @@ public class JavaSearchDocument extends SearchDocument {
         if (this.charContents != null) return this.charContents;
         try {
             return Util.getResourceContentsAsCharArray(getFile());
-        } catch (JavaModelException e) {
+        } catch (Exception e) {
             if (BasicSearchEngine.VERBOSE || JobManager.VERBOSE) { // used during search and during indexing
                 e.printStackTrace();
             }
@@ -65,24 +62,15 @@ public class JavaSearchDocument extends SearchDocument {
 
     public String getEncoding() {
         // Return the encoding of the associated file
-        IFile resource = getFile();
+        File resource = getFile();
         if (resource != null) {
-            try {
-				return resource.getCharset();
-			}
-			catch(CoreException ce) {
-				try {
-					return ResourcesPlugin.getWorkspace().getRoot().getDefaultCharset();
-				} catch (CoreException e) {
-					// use no encoding
-				}
-			}
-		}
+            return "UTF-8"; //resource.getCharset();
+        }
 		return null;
 	}
-	private IFile getFile() {
+	private File getFile() {
 		if (this.file == null)
-			this.file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(getPath()));
+			this.file = new Path(getPath()).toFile();
 		return this.file;
 	}
 	public String toString() {
