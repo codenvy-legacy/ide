@@ -25,11 +25,9 @@ import com.codenvy.ide.ext.git.shared.ResetRequest;
 import com.codenvy.ide.ext.git.shared.Status;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -43,7 +41,6 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -62,12 +59,12 @@ public class ResetFilesPresenterTest extends BaseTest {
     @Override
     public void disarm() {
         super.disarm();
-
-        presenter = new ResetFilesPresenter(view, service, resourceProvider, constant, notificationManager, dtoFactory);
+        presenter =
+                new ResetFilesPresenter(view, service, resourceProvider, constant, notificationManager, dtoFactory, dtoUnmarshallerFactory);
+        when(dtoFactory.createDto(IndexFile.class)).thenReturn(mock(IndexFile.class));
     }
 
     @Test
-    @Ignore
     public void testShowDialogWhenStatusRequestIsSuccessful() throws Exception {
         final Status status = mock(Status.class);
         List<String> changes = new ArrayList<String>();
@@ -79,17 +76,17 @@ public class ResetFilesPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
+                AsyncRequestCallback<Status> callback = (AsyncRequestCallback<Status>)arguments[2];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, status);
                 return callback;
             }
-        }).when(service).status(anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).status(anyString(), anyString(), (AsyncRequestCallback<Status>)anyObject());
 
         presenter.showDialog();
 
         verify(resourceProvider).getActiveProject();
-        verify(service).status(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<String>)anyObject());
+        verify(service).status(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<Status>)anyObject());
         verify(view).setIndexedFiles((Array<IndexFile>)anyObject());
         verify(view).showDialog();
     }
@@ -100,35 +97,22 @@ public class ResetFilesPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
+                AsyncRequestCallback<Status> callback = (AsyncRequestCallback<Status>)arguments[2];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).status(anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).status(anyString(), anyString(), (AsyncRequestCallback<Status>)anyObject());
 
         presenter.showDialog();
 
         verify(resourceProvider).getActiveProject();
-        verify(service).status(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<String>)anyObject());
+        verify(service).status(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<Status>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).statusFailed();
     }
 
     @Test
-    public void testShowDialogWhenRequestExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(service).status(anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
-
-        presenter.showDialog();
-
-        verify(resourceProvider).getActiveProject();
-        verify(service).status(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<String>)anyObject());
-        verify(notificationManager).showNotification((Notification)anyObject());
-        verify(constant).statusFailed();
-    }
-
-    @Test
-    @Ignore
     public void testOnResetClickedWhenNothingToReset() throws Exception {
         final Status status = mock(Status.class);
         List<String> changes = new ArrayList<String>();
@@ -140,26 +124,24 @@ public class ResetFilesPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
+                AsyncRequestCallback<Status> callback = (AsyncRequestCallback<Status>)arguments[2];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, status);
                 return callback;
             }
-        }).when(service).status(anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).status(anyString(), anyString(), (AsyncRequestCallback<Status>)anyObject());
 
         presenter.showDialog();
         presenter.onResetClicked();
 
         verify(view).close();
         verify(service, never()).reset(eq(VFS_ID), eq(PROJECT_ID), anyString(), (ResetRequest.ResetType)anyObject(),
-                                       (AsyncRequestCallback<String>)anyObject());
+                                       (AsyncRequestCallback<Void>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).nothingToReset();
     }
 
     @Test
-    @Ignore
-    // TODO problem with native method into DTO object
     public void testOnResetClickedWhenResetRequestIsSuccessful() throws Exception {
         final Status status = mock(Status.class);
         List<String> changes = new ArrayList<String>();
@@ -172,23 +154,23 @@ public class ResetFilesPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
+                AsyncRequestCallback<Status> callback = (AsyncRequestCallback<Status>)arguments[2];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, status);
                 return callback;
             }
-        }).when(service).status(anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).status(anyString(), anyString(), (AsyncRequestCallback<Status>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[4];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, EMPTY_TEXT);
+                onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
         }).when(service).reset(anyString(), anyString(), anyString(), (ResetRequest.ResetType)anyObject(),
-                               (AsyncRequestCallback<String>)anyObject());
+                               (AsyncRequestCallback<Void>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -204,15 +186,13 @@ public class ResetFilesPresenterTest extends BaseTest {
         presenter.onResetClicked();
 
         verify(service).reset(eq(VFS_ID), eq(PROJECT_ID), anyString(), (ResetRequest.ResetType)anyObject(),
-                              (AsyncRequestCallback<String>)anyObject());
+                              (AsyncRequestCallback<Void>)anyObject());
         verify(view).close();
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).resetFilesSuccessfully();
     }
 
     @Test
-    @Ignore
-    // TODO problem with native method into DTO object
     public void testOnResetClickedWhenResetRequestIsFailed() throws Exception {
         final Status status = mock(Status.class);
         List<String> changes = new ArrayList<String>();
@@ -225,62 +205,29 @@ public class ResetFilesPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
+                AsyncRequestCallback<Status> callback = (AsyncRequestCallback<Status>)arguments[2];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, status);
                 return callback;
             }
-        }).when(service).status(anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).status(anyString(), anyString(), (AsyncRequestCallback<Status>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[4];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
         }).when(service).reset(anyString(), anyString(), anyString(), (ResetRequest.ResetType)anyObject(),
-                               (AsyncRequestCallback<String>)anyObject());
+                               (AsyncRequestCallback<Void>)anyObject());
 
         presenter.showDialog();
         presenter.onResetClicked();
 
         verify(service).reset(eq(VFS_ID), eq(PROJECT_ID), anyString(), (ResetRequest.ResetType)anyObject(),
-                              (AsyncRequestCallback<String>)anyObject());
-        verify(constant).resetFilesFailed();
-        verify(notificationManager).showNotification((Notification)anyObject());
-    }
-
-    @Test
-    @Ignore
-    // TODO problem with native method into DTO object
-    public void testOnResetClickedWhenRequestExceptionHappened() throws Exception {
-        final Status status = mock(Status.class);
-        List<String> changes = new ArrayList<String>();
-        changes.add("Change");
-        when(status.getAdded()).thenReturn(changes);
-        when(status.getChanged()).thenReturn(changes);
-        when(status.getRemoved()).thenReturn(changes);
-
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, status);
-                return callback;
-            }
-        }).when(service).status(anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
-        doThrow(RequestException.class).when(service).reset(anyString(), anyString(), anyString(), (ResetRequest.ResetType)anyObject(),
-                                                            (AsyncRequestCallback<String>)anyObject());
-
-        presenter.showDialog();
-        presenter.onResetClicked();
-
-        verify(service).reset(eq(VFS_ID), eq(PROJECT_ID), anyString(), (ResetRequest.ResetType)anyObject(),
-                              (AsyncRequestCallback<String>)anyObject());
+                              (AsyncRequestCallback<Void>)anyObject());
         verify(constant).resetFilesFailed();
         verify(notificationManager).showNotification((Notification)anyObject());
     }

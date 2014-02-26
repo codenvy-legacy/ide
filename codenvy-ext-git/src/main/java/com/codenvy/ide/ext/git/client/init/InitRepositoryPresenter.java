@@ -24,11 +24,9 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -96,9 +94,9 @@ public class InitRepositoryPresenter implements InitRepositoryView.ActionDelegat
         view.close();
 
         try {
-            service.initWS(resourceProvider.getVfsInfo().getId(), projectId, projectName, bare, new RequestCallback<String>() {
+            service.initWS(resourceProvider.getVfsInfo().getId(), projectId, projectName, bare, new RequestCallback<Void>() {
                 @Override
-                protected void onSuccess(String result) {
+                protected void onSuccess(Void result) {
                     onInitSuccess();
                 }
 
@@ -108,25 +106,6 @@ public class InitRepositoryPresenter implements InitRepositoryView.ActionDelegat
                 }
             });
         } catch (WebSocketException e) {
-            initRepositoryREST(projectId, projectName, bare);
-        }
-    }
-
-    /** Initialize of the repository (sends request over HTTP). */
-    private void initRepositoryREST(@NotNull String projectId, @NotNull String projectName, boolean bare) {
-        try {
-            service.init(resourceProvider.getVfsInfo().getId(), projectId, projectName, bare, new AsyncRequestCallback<String>() {
-                @Override
-                protected void onSuccess(String result) {
-                    onInitSuccess();
-                }
-
-                @Override
-                protected void onFailure(Throwable exception) {
-                    handleError(exception);
-                }
-            });
-        } catch (RequestException e) {
             handleError(e);
         }
     }

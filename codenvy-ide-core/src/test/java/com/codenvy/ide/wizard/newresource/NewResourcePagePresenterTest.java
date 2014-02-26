@@ -33,6 +33,7 @@ import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.wizard.NewResourceAgentImpl;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePagePresenter;
@@ -100,6 +101,8 @@ public class NewResourcePagePresenterTest {
     @Mock
     private EventBus                                       eventBus;
     @Mock
+    private AsyncRequestFactory                            asyncRequestFactory;
+    @Mock
     private NewResourceProvider                            selectedResource;
     @Mock
     private WizardContext                                  wizardContext;
@@ -126,8 +129,8 @@ public class NewResourcePagePresenterTest {
 
         when(resourceProvider.getActiveProject()).thenReturn(project);
 
-        presenter =
-                new NewResourcePagePresenter(resources, constant, view, newResourceAgent, resourceProvider, selectionAgent, editorAgent, loader, eventBus);
+        presenter = new NewResourcePagePresenter(resources, constant, view, newResourceAgent, resourceProvider, selectionAgent, editorAgent,
+                                                 loader, eventBus, asyncRequestFactory);
         presenter.setContext(wizardContext);
         presenter.setUpdateDelegate(delegate);
     }

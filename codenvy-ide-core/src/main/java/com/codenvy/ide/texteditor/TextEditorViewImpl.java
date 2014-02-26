@@ -88,6 +88,7 @@ import com.codenvy.ide.util.input.SignalEvent;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.RequiresResize;
 
 import java.util.Iterator;
 
@@ -104,7 +105,7 @@ import java.util.Iterator;
  * "user-select" CSS property. See
  * {@link CssUtils#setUserSelect(Element, boolean)}.
  */
-public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> implements TextEditorPartView {
+public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> implements TextEditorPartView, RequiresResize {
 
     public static final int ANIMATION_DURATION = 100;
     private static      int idCounter          = 0;
@@ -125,29 +126,29 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
     private final LeftGutterManager leftGutterManager;
     private final ListenerManager<ReadOnlyListener>  readOnlyListenerManager  = ListenerManager.create();
     private final ListenerManager<TextInputListener> textInputListenerManager = ListenerManager.create();
-    private final EditorActivityManager              editorActivityManager;
-    private final RenderTimeExecutor                 renderTimeExecutor;
-    private final com.codenvy.ide.Resources          resources;
-    private final UserActivityManager                userActivityManager;
-    private final OverviewRuler                      overviewRuller;
-    private       DocumentModel                      textStore;
-    private       UndoManager                        editorUndoManager;
-    private       LocalCursorController              localCursorController;
-    private       Renderer                           renderer;
-    private       SelectionManager                   selectionManager;
-    private       ViewportModel                      viewport;
-    private       boolean                            isReadOnly;
-    private       Document                           document;
-    private       SyntaxHighlighter                  syntaxHighlighter;
-    private       Parser                             parser;
-    private       CodeAssistantImpl                  codeAssistant;
-    private       VerticalRuler                      verticalRuler;
-    private       QuickAssistAssistant               quickAssistAssistant;
-    private       BreakpointGutterManager            breakpointGutterManager;
-    private       DtoFactory                         dtoFactory;
-    private       StringMap<Array<AutoEditStrategy>> autoEditStrategies;
-    private       String                             documentPartitioning;
     private       ContentFormatter                   contentFormatter;
+    private final EditorActivityManager     editorActivityManager;
+    private final RenderTimeExecutor        renderTimeExecutor;
+    private final com.codenvy.ide.Resources resources;
+    private final UserActivityManager       userActivityManager;
+    private final OverviewRuler             overviewRuller;
+    private       DocumentModel             textStore;
+    private       UndoManager               editorUndoManager;
+    private       LocalCursorController     localCursorController;
+    private       Renderer                  renderer;
+    private       SelectionManager          selectionManager;
+    private       ViewportModel             viewport;
+    private       boolean                   isReadOnly;
+    private       Document                  document;
+    private       SyntaxHighlighter         syntaxHighlighter;
+    private       Parser                    parser;
+    private       CodeAssistantImpl         codeAssistant;
+    private       VerticalRuler             verticalRuler;
+    private       QuickAssistAssistant      quickAssistAssistant;
+    private       BreakpointGutterManager   breakpointGutterManager;
+    private final DtoFactory dtoFactory;
+    private StringMap<Array<AutoEditStrategy>> autoEditStrategies;
+    private String                             documentPartitioning;
 
     public TextEditorViewImpl(com.codenvy.ide.Resources resources, UserActivityManager userActivityManager,
                               BreakpointGutterManager breakpointGutterManager, DtoFactory dtoFactory) {
@@ -832,6 +833,12 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         public Resources getResources() {
             return res;
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onResize() {
+        buffer.getView().onResize();
     }
 
 }

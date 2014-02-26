@@ -17,11 +17,12 @@
  */
 package com.codenvy.ide.ext.ssh.client;
 
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.ext.ssh.dto.GenKeyRequest;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
+import com.codenvy.ide.ext.ssh.dto.PublicKey;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.http.client.RequestException;
 
 import javax.validation.constraints.NotNull;
 
@@ -29,31 +30,32 @@ import javax.validation.constraints.NotNull;
  * The client service for working with ssh key.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: SshService May 18, 2011 4:49:49 PM evgen $
  */
 public interface SshKeyService {
-    
-     /**
-      * Get the list of SSH keys providers.
-      * 
+
+    /**
+     * Get the list of SSH keys providers.
+     *
      * @return {@link com.codenvy.ide.collections.StringMap}
      */
     StringMap<SshKeyProvider> getSshKeyProviders();
-     
-     /**
-      * Register SSH key provider
-      * 
-     * @param host host, for which to provide keys
-     * @param sshKeyProvider keys provider
+
+    /**
+     * Register SSH key provider
+     *
+     * @param host
+     *         host, for which to provide keys
+     * @param sshKeyProvider
+     *         keys provider
      */
     void registerSshKeyProvider(@NotNull String host, @NotNull SshKeyProvider sshKeyProvider);
-    
+
     /**
      * Receive all ssh key, stored on server
      *
      * @param callback
      */
-    void getAllKeys(@NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void getAllKeys(@NotNull AsyncRequestCallback<Array<KeyItem>> callback);
 
     /**
      * Generate new ssh key pare
@@ -61,9 +63,8 @@ public interface SshKeyService {
      * @param host
      *         for ssh key
      * @param callback
-     * @throws RequestException
      */
-    void generateKey(@NotNull String host, @NotNull AsyncRequestCallback<GenKeyRequest> callback) throws RequestException;
+    void generateKey(@NotNull String host, @NotNull AsyncRequestCallback<GenKeyRequest> callback);
 
     /**
      * Get public ssh key
@@ -72,7 +73,7 @@ public interface SshKeyService {
      *         to get public key
      * @param callback
      */
-    void getPublicKey(@NotNull KeyItem keyItem, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void getPublicKey(@NotNull KeyItem keyItem, @NotNull AsyncRequestCallback<PublicKey> callback);
 
     /**
      * Delete ssh key
@@ -81,5 +82,5 @@ public interface SshKeyService {
      *         to delete
      * @param callback
      */
-    void deleteKey(@NotNull KeyItem keyItem, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+    void deleteKey(@NotNull KeyItem keyItem, @NotNull AsyncRequestCallback<Void> callback);
 }

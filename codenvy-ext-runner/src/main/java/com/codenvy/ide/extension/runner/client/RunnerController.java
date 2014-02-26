@@ -35,8 +35,8 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -57,52 +57,52 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 @Singleton
 public class RunnerController implements Notification.OpenNotificationHandler {
-    private WorkspaceAgent               workspaceAgent;
-    private ResourceProvider             resourceProvider;
-    private ConsolePart                  console;
-    private RunnerClientService          service;
-    private RunnerLocalizationConstant   constant;
-    private NotificationManager          notificationManager;
-    private Notification                 notification;
-    private DtoFactory                   dtoFactory;
-    private Project                      currentProject;
+    private final DtoUnmarshallerFactory       dtoUnmarshallerFactory;
+    private final DtoFactory                   dtoFactory;
+    private       WorkspaceAgent               workspaceAgent;
+    private       ResourceProvider             resourceProvider;
+    private       ConsolePart                  console;
+    private       RunnerClientService          service;
+    private       RunnerLocalizationConstant   constant;
+    private       NotificationManager          notificationManager;
+    private       Notification                 notification;
+    private       Project                      currentProject;
     /** Launched app. */
-    private ApplicationProcessDescriptor applicationProcessDescriptor;
+    private       ApplicationProcessDescriptor applicationProcessDescriptor;
     /** Is launching of any application in progress? */
-    private boolean                      isLaunchingInProgress;
-    private ProjectRunCallback           runCallback;
+    private       boolean                      isLaunchingInProgress;
+    private       ProjectRunCallback           runCallback;
 
     /**
      * Create controller.
      *
      * @param resourceProvider
-     *         {@link ResourceProvider}
-     * @param workspaceAgent
-     *         {@link WorkspaceAgent}
+     *         {@link com.codenvy.ide.api.resources.ResourceProvider}
      * @param eventBus
-     *         {@link EventBus}
+     *         {@link com.google.web.bindery.event.shared.EventBus}
+     * @param workspaceAgent
+     *         {@link com.codenvy.ide.api.ui.workspace.WorkspaceAgent}
      * @param console
-     *         {@link ConsolePart}
+     *         {@link com.codenvy.ide.api.parts.ConsolePart}
      * @param service
-     *         {@link RunnerClientService}
+     *         {@link com.codenvy.ide.extension.runner.client.RunnerClientService}
      * @param constant
-     *         {@link RunnerLocalizationConstant}
+     *         {@link com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant}
      * @param notificationManager
-     *         {@link NotificationManager}
-     * @param dtoFactory
-     *         {@link DtoFactory}
+     *         {@link com.codenvy.ide.api.notification.NotificationManager}
      */
     @Inject
     public RunnerController(ResourceProvider resourceProvider, EventBus eventBus, WorkspaceAgent workspaceAgent,
                             final ConsolePart console, RunnerClientService service,
                             RunnerLocalizationConstant constant, NotificationManager notificationManager,
-                            DtoFactory dtoFactory) {
+                            DtoUnmarshallerFactory dtoUnmarshallerFactory, DtoFactory dtoFactory) {
         this.resourceProvider = resourceProvider;
         this.workspaceAgent = workspaceAgent;
         this.console = console;
         this.service = service;
         this.constant = constant;
         this.notificationManager = notificationManager;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.dtoFactory = dtoFactory;
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
@@ -223,28 +223,22 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     private void runActiveProject() {
-        try {
-            service.run(currentProject.getPath(),
-                        new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                            @Override
-                            protected void onSuccess(String result) {
-                                applicationProcessDescriptor =
-                                        dtoFactory.createDtoFromJson(result, ApplicationProcessDescriptor.class);
-                                startCheckingStatus(applicationProcessDescriptor);
-                            }
+        service.run(currentProject.getPath(),
+                    new AsyncRequestCallback<ApplicationProcessDescriptor>(
+                            dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
+                        @Override
+                        protected void onSuccess(ApplicationProcessDescriptor result) {
+                            applicationProcessDescriptor = result;
+                            startCheckingStatus(applicationProcessDescriptor);
+                        }
 
-                            @Override
-                            protected void onFailure(Throwable exception) {
-                                isLaunchingInProgress = false;
-                                applicationProcessDescriptor = null;
-                                onFail(constant.startApplicationFailed(currentProject.getName()), exception);
-                            }
-                        });
-        } catch (RequestException e) {
-            isLaunchingInProgress = false;
-            applicationProcessDescriptor = null;
-            onFail(constant.startApplicationFailed(currentProject.getName()), e);
-        }
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            isLaunchingInProgress = false;
+                            applicationProcessDescriptor = null;
+                            onFail(constant.startApplicationFailed(currentProject.getName()), exception);
+                        }
+                    });
     }
 
     /** Get logs of the currently launched application. */
@@ -254,21 +248,17 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             onFail(constant.getApplicationLogsFailed(), null);
         }
 
-        try {
-            service.getLogs(viewLogsLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                @Override
-                protected void onSuccess(String result) {
-                    console.printf(result);
-                }
+        service.getLogs(viewLogsLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+            @Override
+            protected void onSuccess(String result) {
+                console.printf(result);
+            }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    onFail(constant.getApplicationLogsFailed(), exception);
-                }
-            });
-        } catch (RequestException e) {
-            onFail(constant.getApplicationLogsFailed(), e);
-        }
+            @Override
+            protected void onFailure(Throwable exception) {
+                onFail(constant.getApplicationLogsFailed(), exception);
+            }
+        });
     }
 
     /** Stop the currently launched application. */
@@ -279,21 +269,17 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
 
         applicationProcessDescriptor = null;
-        try {
-            service.stop(stopLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                @Override
-                protected void onSuccess(String result) {
-                    console.print(constant.applicationStopped(currentProject.getName()));
-                }
+        service.stop(stopLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+            @Override
+            protected void onSuccess(String result) {
+                console.print(constant.applicationStopped(currentProject.getName()));
+            }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    onFail(constant.stopApplicationFailed(currentProject.getName()), exception);
-                }
-            });
-        } catch (RequestException e) {
-            onFail(constant.stopApplicationFailed(currentProject.getName()), e);
-        }
+            @Override
+            protected void onFailure(Throwable exception) {
+                onFail(constant.stopApplicationFailed(currentProject.getName()), exception);
+            }
+        });
     }
 
     private void afterApplicationLaunched(ApplicationProcessDescriptor appDescriptor) {
@@ -328,50 +314,41 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         new Timer() {
             @Override
             public void run() {
-                try {
-                    service.getStatus(
-                            getAppLink(appDescriptor, "get status"),
-                            new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                                @Override
-                                protected void onSuccess(String response) {
-                                    ApplicationProcessDescriptor newAppDescriptor =
-                                            dtoFactory.createDtoFromJson(response,
-                                                                         ApplicationProcessDescriptor.class);
+                service.getStatus(getAppLink(appDescriptor, "get status"),
+                                  new AsyncRequestCallback<ApplicationProcessDescriptor>(
+                                          dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
+                                      @Override
+                                      protected void onSuccess(ApplicationProcessDescriptor response) {
+                                          ApplicationProcessDescriptor newAppDescriptor = response;
+                                          ApplicationStatus status = newAppDescriptor.getStatus();
+                                          if (status == ApplicationStatus.RUNNING) {
+                                              isLaunchingInProgress = false;
+                                              afterApplicationLaunched(newAppDescriptor);
+                                          } else if (status == ApplicationStatus.STOPPED || status == ApplicationStatus.NEW) {
+                                              schedule(3000);
+                                          } else if (status == ApplicationStatus.CANCELLED) {
+                                              isLaunchingInProgress = false;
+                                              applicationProcessDescriptor = null;
+                                              onFail(constant.startApplicationFailed(currentProject.getName()), null);
+                                          }
+                                      }
 
-                                    ApplicationStatus status = newAppDescriptor.getStatus();
-                                    if (status == ApplicationStatus.RUNNING) {
-                                        isLaunchingInProgress = false;
-                                        afterApplicationLaunched(newAppDescriptor);
-                                    } else if (status == ApplicationStatus.STOPPED || status == ApplicationStatus.NEW) {
-                                        schedule(3000);
-                                    } else if (status == ApplicationStatus.CANCELLED) {
-                                        isLaunchingInProgress = false;
-                                        applicationProcessDescriptor = null;
-                                        onFail(constant.startApplicationFailed(currentProject.getName()), null);
-                                    }
-                                }
+                                      @Override
+                                      protected void onFailure(Throwable exception) {
+                                          isLaunchingInProgress = false;
+                                          applicationProcessDescriptor = null;
 
-                                @Override
-                                protected void onFailure(Throwable exception) {
-                                    isLaunchingInProgress = false;
-                                    applicationProcessDescriptor = null;
-
-                                    if (exception instanceof ServerException &&
-                                        ((ServerException)exception).getHTTPStatus() == 500) {
-                                        ServiceError e = dtoFactory
-                                                .createDtoFromJson(exception.getMessage(), ServiceError.class);
-                                        onFail(constant.startApplicationFailed(currentProject.getName()) + ": " +
-                                               e.getMessage(), null);
-                                    } else {
-                                        onFail(constant.startApplicationFailed(currentProject.getName()), exception);
-                                    }
-                                }
-                            });
-                } catch (RequestException e) {
-                    isLaunchingInProgress = false;
-                    applicationProcessDescriptor = null;
-                    onFail(constant.startApplicationFailed(currentProject.getName()), e);
-                }
+                                          if (exception instanceof ServerException &&
+                                              ((ServerException)exception).getHTTPStatus() == 500) {
+                                              ServiceError e = dtoFactory.createDtoFromJson(exception.getMessage(),
+                                                                                            ServiceError.class);
+                                              onFail(constant.startApplicationFailed(currentProject.getName()) + ": " +
+                                                     e.getMessage(), null);
+                                          } else {
+                                              onFail(constant.startApplicationFailed(currentProject.getName()), exception);
+                                          }
+                                      }
+                                  });
             }
         }.run();
     }

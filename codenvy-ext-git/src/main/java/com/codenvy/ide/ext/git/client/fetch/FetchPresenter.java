@@ -22,17 +22,15 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.StringUnmarshaller;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -51,17 +49,16 @@ import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_REMOTE;
  * Presenter for fetching changes from remote repository.
  *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Apr 20, 2011 1:33:17 PM anya $
  */
 @Singleton
 public class FetchPresenter implements FetchView.ActionDelegate {
-    private FetchView               view;
-    private GitClientService        service;
-    private ResourceProvider        resourceProvider;
-    private GitLocalizationConstant constant;
-    private Project                 project;
-    private NotificationManager     notificationManager;
-    private DtoFactory              dtoFactory;
+    private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
+    private       FetchView               view;
+    private       GitClientService        service;
+    private       ResourceProvider        resourceProvider;
+    private       GitLocalizationConstant constant;
+    private       Project                 project;
+    private       NotificationManager     notificationManager;
 
     /**
      * Create presenter.
@@ -74,14 +71,15 @@ public class FetchPresenter implements FetchView.ActionDelegate {
      */
     @Inject
     public FetchPresenter(FetchView view, GitClientService service, ResourceProvider resourceProvider,
-                          GitLocalizationConstant constant, NotificationManager notificationManager, DtoFactory dtoFactory) {
+                          GitLocalizationConstant constant, NotificationManager notificationManager,
+                          DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
         this.constant = constant;
         this.notificationManager = notificationManager;
-        this.dtoFactory = dtoFactory;
     }
 
     /** Show dialog. */
@@ -99,31 +97,24 @@ public class FetchPresenter implements FetchView.ActionDelegate {
     private void getRemotes() {
         final String projectId = project.getId();
 
-        try {
-            service.remoteList(resourceProvider.getVfsInfo().getId(), projectId, null, true,
-                               new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                                   @Override
-                                   protected void onSuccess(String result) {
-                                       Array<Remote> remotes = dtoFactory.createListDtoFromJson(result, Remote.class);
-                                       view.setRepositories(remotes);
-                                       getBranches(projectId, LIST_REMOTE);
-                                       view.setEnableFetchButton(!result.isEmpty());
-                                       view.showDialog();
-                                   }
+        service.remoteList(resourceProvider.getVfsInfo().getId(), projectId, null, true,
+                           new AsyncRequestCallback<Array<Remote>>(dtoUnmarshallerFactory.newArrayUnmarshaller(Remote.class)) {
+                               @Override
+                               protected void onSuccess(Array<Remote> result) {
+                                   view.setRepositories(result);
+                                   getBranches(projectId, LIST_REMOTE);
+                                   view.setEnableFetchButton(!result.isEmpty());
+                                   view.showDialog();
+                               }
 
-                                   @Override
-                                   protected void onFailure(Throwable exception) {
-                                       String errorMessage =
-                                               exception.getMessage() != null ? exception.getMessage() : constant.remoteListFailed();
-                                       Window.alert(errorMessage);
-                                       view.setEnableFetchButton(false);
-                                   }
-                               });
-        } catch (RequestException e) {
-            String errorMessage = e.getMessage() != null ? e.getMessage() : constant.remoteListFailed();
-            Window.alert(errorMessage);
-            view.setEnableFetchButton(false);
-        }
+                               @Override
+                               protected void onFailure(Throwable exception) {
+                                   String errorMessage =
+                                           exception.getMessage() != null ? exception.getMessage() : constant.remoteListFailed();
+                                   Window.alert(errorMessage);
+                                   view.setEnableFetchButton(false);
+                               }
+                           });
     }
 
     /**
@@ -135,41 +126,33 @@ public class FetchPresenter implements FetchView.ActionDelegate {
      *         is a remote mode
      */
     private void getBranches(@NotNull final String projectId, @NotNull final String remoteMode) {
-        try {
-            service.branchList(resourceProvider.getVfsInfo().getId(), projectId, remoteMode,
-                               new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                                   @Override
-                                   protected void onSuccess(String result) {
-                                       Array<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
-                                       if (LIST_REMOTE.equals(remoteMode)) {
-                                           view.setRemoteBranches(getRemoteBranchesToDisplay(view.getRepositoryName(), branches));
-                                           getBranches(projectId, LIST_LOCAL);
-                                       } else {
-                                           view.setLocalBranches(getLocalBranchesToDisplay(branches));
-                                           for (Branch branch : branches.asIterable()) {
-                                               if (branch.isActive()) {
-                                                   view.selectRemoteBranch(branch.getDisplayName());
-                                                   break;
-                                               }
+        service.branchList(resourceProvider.getVfsInfo().getId(), projectId, remoteMode,
+                           new AsyncRequestCallback<Array<Branch>>(dtoUnmarshallerFactory.newArrayUnmarshaller(Branch.class)) {
+                               @Override
+                               protected void onSuccess(Array<Branch> result) {
+                                   if (LIST_REMOTE.equals(remoteMode)) {
+                                       view.setRemoteBranches(getRemoteBranchesToDisplay(view.getRepositoryName(), result));
+                                       getBranches(projectId, LIST_LOCAL);
+                                   } else {
+                                       view.setLocalBranches(getLocalBranchesToDisplay(result));
+                                       for (Branch branch : result.asIterable()) {
+                                           if (branch.isActive()) {
+                                               view.selectRemoteBranch(branch.getDisplayName());
+                                               break;
                                            }
                                        }
                                    }
+                               }
 
-                                   @Override
-                                   protected void onFailure(Throwable exception) {
-                                       String errorMessage =
-                                               exception.getMessage() != null ? exception.getMessage() : constant.branchesListFailed();
-                                       Notification notification = new Notification(errorMessage, ERROR);
-                                       notificationManager.showNotification(notification);
-                                       view.setEnableFetchButton(false);
-                                   }
-                               });
-        } catch (RequestException e) {
-            String errorMessage = e.getMessage() != null ? e.getMessage() : constant.branchesListFailed();
-            Notification notification = new Notification(errorMessage, ERROR);
-            notificationManager.showNotification(notification);
-            view.setEnableFetchButton(false);
-        }
+                               @Override
+                               protected void onFailure(Throwable exception) {
+                                   String errorMessage =
+                                           exception.getMessage() != null ? exception.getMessage() : constant.branchesListFailed();
+                                   Notification notification = new Notification(errorMessage, ERROR);
+                                   notificationManager.showNotification(notification);
+                                   view.setEnableFetchButton(false);
+                               }
+                           });
     }
 
     /**
@@ -232,54 +215,34 @@ public class FetchPresenter implements FetchView.ActionDelegate {
         final String remoteUrl = view.getRepositoryUrl();
         String remoteName = view.getRepositoryName();
         boolean removeDeletedRefs = view.isRemoveDeletedRefs();
-        
-        try {
-            service.fetchWS(resourceProvider.getVfsInfo().getId(), project, remoteName, getRefs(), removeDeletedRefs, new RequestCallback<String>() {
-                @Override
-                protected void onSuccess(String result) {
-                    Notification notification = new Notification(constant.fetchSuccess(remoteUrl), INFO);
-                    notificationManager.showNotification(notification);
-                }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    handleError(exception, remoteUrl);
-                }
-            });
+        try {
+            service.fetchWS(resourceProvider.getVfsInfo().getId(), project, remoteName, getRefs(), removeDeletedRefs,
+                            new RequestCallback<String>() {
+                                @Override
+                                protected void onSuccess(String result) {
+                                    Notification notification = new Notification(constant.fetchSuccess(remoteUrl), INFO);
+                                    notificationManager.showNotification(notification);
+                                }
+
+                                @Override
+                                protected void onFailure(Throwable exception) {
+                                    handleError(exception, remoteUrl);
+                                }
+                            });
         } catch (WebSocketException e) {
-            doFetchREST(remoteName, removeDeletedRefs, remoteUrl);
-        }
-        view.close();
-    }
-
-    /** Perform fetch from remote repository (sends request over HTTP). */
-    private void doFetchREST(@NotNull String remoteName, boolean removeDeletedRefs, @NotNull final String remoteUrl) {
-        try {
-            service.fetch(resourceProvider.getVfsInfo().getId(), project, remoteName, getRefs(), removeDeletedRefs,
-                          new AsyncRequestCallback<String>() {
-                              @Override
-                              protected void onSuccess(String result) {
-                                  Notification notification = new Notification(constant.fetchSuccess(remoteUrl), INFO);
-                                  notificationManager.showNotification(notification);
-                              }
-
-                              @Override
-                              protected void onFailure(Throwable exception) {
-                                  handleError(exception, remoteUrl);
-                              }
-                          });
-        } catch (RequestException e) {
             handleError(e, remoteUrl);
         }
+        view.close();
     }
 
     /** @return list of refs to fetch */
     @NotNull
     private List<String> getRefs() {
-        if (view.isFetchAllBranches()){
+        if (view.isFetchAllBranches()) {
             return new ArrayList<String>();
         }
-        
+
         String localBranch = view.getLocalBranch();
         String remoteBranch = view.getRemoteBranch();
         String remoteName = view.getRepositoryName();

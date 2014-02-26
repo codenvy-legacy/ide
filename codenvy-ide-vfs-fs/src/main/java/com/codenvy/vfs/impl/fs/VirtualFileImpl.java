@@ -37,6 +37,7 @@ import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -139,6 +140,12 @@ public class VirtualFileImpl implements VirtualFile {
             mediaType = isFile() ? ContentTypeGuesser.guessContentType(ioFile) : Folder.FOLDER_MIME_TYPE;
         }
         return mediaType;
+    }
+
+    @Override
+    public VirtualFile setMediaType(String mediaType) throws VirtualFileSystemException {
+        mountPoint.setProperty(this, "vfs:mimeType", mediaType);
+        return this;
     }
 
     @Override

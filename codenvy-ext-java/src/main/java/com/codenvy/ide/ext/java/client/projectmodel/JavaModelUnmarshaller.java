@@ -27,6 +27,7 @@ import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.runtime.IStatus;
 import com.codenvy.ide.runtime.Status;
@@ -52,18 +53,20 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
     private static final String ID       = "id";
     private static final String PATH     = "path";
     private static final String NAME     = "name";
-    private JavaProject project;
-    private StringSet   sourceFolders;
-    private String      projectPath;
-    private Folder      root;
-    private EventBus    eventBus;
+    private final AsyncRequestFactory asyncRequestFactory;
+    private       JavaProject         project;
+    private       StringSet           sourceFolders;
+    private       String              projectPath;
+    private       Folder              root;
+    private       EventBus            eventBus;
 
-    public JavaModelUnmarshaller(Folder root, JavaProject project, EventBus eventBus) {
+    public JavaModelUnmarshaller(Folder root, JavaProject project, EventBus eventBus, AsyncRequestFactory asyncRequestFactory) {
         super();
         this.root = root;
+        this.eventBus = eventBus;
+        this.asyncRequestFactory = asyncRequestFactory;
         this.root.getChildren().clear();
         this.project = project;
-        this.eventBus = eventBus;
 
         sourceFolders = Collections.createStringSet();
         projectPath = project.getPath();
@@ -130,7 +133,7 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
                     childProject.getChildren().clear();
                     parseProjectStructure(itemObject.get(CHILDREN), childProject, childProject, childProject);
                 } else {
-                    childProject = new JavaProject(eventBus);
+                    childProject = new JavaProject(eventBus, asyncRequestFactory);
                     childProject.init(itemObject.get(ITEM).isObject());
                     parentFolderNonModelItems.addChild(childProject);
                     childProject.setProject(childProject);

@@ -41,7 +41,6 @@ import com.codenvy.ide.texteditor.api.outline.OutlinePresenter;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -49,10 +48,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import javax.validation.constraints.NotNull;
 
 
-/**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
- */
+/** @author Evgen Vidolob */
 public class TextEditorPresenter extends AbstractTextEditorPresenter implements FileEventHandler {
 
     private final TextListener textListener = new TextListener() {
@@ -111,6 +107,11 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
         });
     }
 
+    @Override
+    public Document getDocument() {
+        return document;
+    }
+
     /** {@inheritDoc} */
     @Override
     public void close(boolean save) {
@@ -152,9 +153,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
 
     @NotNull
     protected Widget getWidget() {
-        HTML h = new HTML();
-        h.getElement().appendChild(editor.getElement());
-        return h;
+        return new TextEditorViewResizable(editor);
     }
 
     /** {@inheritDoc} */

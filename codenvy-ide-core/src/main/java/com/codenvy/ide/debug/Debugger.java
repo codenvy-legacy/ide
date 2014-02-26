@@ -18,7 +18,6 @@
 package com.codenvy.ide.debug;
 
 import com.codenvy.ide.resources.model.File;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -33,9 +32,8 @@ public interface Debugger {
      * @param file
      * @param lineNumber
      * @param callback
-     * @throws RequestException
      */
-    void addBreakpoint(File file, int lineNumber, AsyncCallback<Breakpoint> callback) throws RequestException;
+    void addBreakpoint(File file, int lineNumber, AsyncCallback<Breakpoint> callback);
 
     /**
      * Deletes breakpoint on server.
@@ -43,7 +41,6 @@ public interface Debugger {
      * @param file
      * @param lineNumber
      * @param callback
-     * @throws RequestException
      */
-    void deleteBreakpoint(File file, int lineNumber, AsyncCallback<Void> callback) throws RequestException;
+    void deleteBreakpoint(File file, int lineNumber, AsyncCallback<Void> callback);
 }

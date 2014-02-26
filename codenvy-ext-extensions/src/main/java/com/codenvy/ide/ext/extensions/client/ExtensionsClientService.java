@@ -18,8 +18,8 @@
 package com.codenvy.ide.ext.extensions.client;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
+import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.http.client.RequestException;
 
 import javax.validation.constraints.NotNull;
 
@@ -37,11 +37,16 @@ public interface ExtensionsClientService {
      *         name of the extension project to launch
      * @param callback
      *         callback
-     * @throws RequestException
      */
-    void launch(@NotNull String projectName, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void launch(@NotNull String projectName, @NotNull AsyncRequestCallback<ApplicationProcessDescriptor> callback);
 
-    void getStatus(@NotNull Link link, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    /**
+     * Get status of Codenvy application.
+     *
+     * @param link
+     * @param callback
+     */
+    void getStatus(@NotNull Link link, @NotNull AsyncRequestCallback<ApplicationProcessDescriptor> callback);
 
     /**
      * Get logs of launched Codenvy application.
@@ -49,9 +54,8 @@ public interface ExtensionsClientService {
      * @param link
      * @param callback
      *         callback
-     * @throws RequestException
      */
-    void getLogs(@NotNull Link link, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void getLogs(@NotNull Link link, @NotNull AsyncRequestCallback<String> callback);
 
     /**
      * Stop Codenvy application.
@@ -59,7 +63,6 @@ public interface ExtensionsClientService {
      * @param link
      * @param callback
      *         callback
-     * @throws RequestException
      */
-    void stop(@NotNull Link link, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void stop(@NotNull Link link, @NotNull AsyncRequestCallback<String> callback);
 }

@@ -24,7 +24,6 @@ import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
-import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -34,7 +33,6 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  * Presenter for showing git url.
  *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Mar 24, 2011 9:07:58 AM anya $
  */
 @Singleton
 public class ShowProjectGitReadOnlyUrlPresenter implements ShowProjectGitReadOnlyUrlView.ActionDelegate {
@@ -69,27 +67,25 @@ public class ShowProjectGitReadOnlyUrlPresenter implements ShowProjectGitReadOnl
     public void showDialog() {
         String projectId = resourceProvider.getActiveProject().getId();
 
-        try {
-            service.getGitReadOnlyUrl(resourceProvider.getVfsInfo().getId(), projectId, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                @Override
-                protected void onSuccess(String result) {
-                    view.setUrl(result);
-                    view.showDialog();
-                }
+        service.getGitReadOnlyUrl(resourceProvider.getVfsInfo().getId(), projectId,
+                                  new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                                      @Override
+                                      protected void onSuccess(String result) {
+                                          view.setUrl(result);
+                                          view.showDialog();
+                                      }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    String errorMessage = exception.getMessage() != null && !exception.getMessage().isEmpty() ? exception.getMessage()
-                                                                                                              : constant.initFailed();
-                    Notification notification = new Notification(errorMessage, ERROR);
-                    notificationManager.showNotification(notification);
-                }
-            });
-        } catch (RequestException e) {
-            String errorMessage = e.getMessage() != null && !e.getMessage().isEmpty() ? e.getMessage() : constant.initFailed();
-            Notification notification = new Notification(errorMessage, ERROR);
-            notificationManager.showNotification(notification);
-        }
+                                      @Override
+                                      protected void onFailure(Throwable exception) {
+                                          String errorMessage =
+                                                  exception.getMessage() != null && !exception.getMessage().isEmpty() ? exception
+                                                          .getMessage()
+                                                                                                                      : constant
+                                                          .initFailed();
+                                          Notification notification = new Notification(errorMessage, ERROR);
+                                          notificationManager.showNotification(notification);
+                                      }
+                                  });
     }
 
     /** {@inheritDoc} */

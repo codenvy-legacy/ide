@@ -19,25 +19,27 @@ package com.codenvy.ide.resources.marshal;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONParser;
 import com.google.web.bindery.event.shared.EventBus;
 
-/** @version $Id:$ */
 public class ProjectUnmarshaller implements Unmarshallable<Project> {
-    private       Project  item;
-    private final EventBus eventBus;
+    private final EventBus            eventBus;
+    private final AsyncRequestFactory asyncRequestFactory;
+    private       Project             item;
 
-    public ProjectUnmarshaller(EventBus eventBus) {
+    public ProjectUnmarshaller(EventBus eventBus, AsyncRequestFactory asyncRequestFactory) {
         this.eventBus = eventBus;
+        this.asyncRequestFactory = asyncRequestFactory;
     }
 
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         try {
-            item = new Project(eventBus);
+            item = new Project(eventBus, asyncRequestFactory);
             item.init(JSONParser.parseLenient(response.getText()).isObject());
         } catch (Exception exc) {
             String message = "Can't parse item " + response.getText();

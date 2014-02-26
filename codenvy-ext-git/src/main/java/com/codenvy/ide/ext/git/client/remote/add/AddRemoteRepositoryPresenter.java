@@ -20,7 +20,6 @@ package com.codenvy.ide.ext.git.client.remote.add;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -71,22 +70,18 @@ public class AddRemoteRepositoryPresenter implements AddRemoteRepositoryView.Act
         String url = view.getUrl();
         final String projectId = resourceProvider.getActiveProject().getId();
 
-        try {
-            service.remoteAdd(resourceProvider.getVfsInfo().getId(), projectId, name, url, new AsyncRequestCallback<String>() {
-                @Override
-                protected void onSuccess(String result) {
-                    callback.onSuccess(null);
-                    view.close();
-                }
+        service.remoteAdd(resourceProvider.getVfsInfo().getId(), projectId, name, url, new AsyncRequestCallback<String>() {
+            @Override
+            protected void onSuccess(String result) {
+                callback.onSuccess(null);
+                view.close();
+            }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    callback.onFailure(exception);
-                }
-            });
-        } catch (RequestException e) {
-            callback.onFailure(e);
-        }
+            @Override
+            protected void onFailure(Throwable exception) {
+                callback.onFailure(exception);
+            }
+        });
     }
 
     /** {@inheritDoc} */

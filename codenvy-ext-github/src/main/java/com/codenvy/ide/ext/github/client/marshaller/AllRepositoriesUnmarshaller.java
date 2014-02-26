@@ -39,8 +39,7 @@ import java.util.Set;
 public class AllRepositoriesUnmarshaller implements Unmarshallable<StringMap<Array<GitHubRepository>>> {
     /** Repositories list. */
     private StringMap<Array<GitHubRepository>> repositories;
-
-    private DtoFactory dtoFactory;
+    private DtoFactory                         dtoFactory;
 
     public AllRepositoriesUnmarshaller(DtoFactory dtoFactory) {
         this.dtoFactory = dtoFactory;

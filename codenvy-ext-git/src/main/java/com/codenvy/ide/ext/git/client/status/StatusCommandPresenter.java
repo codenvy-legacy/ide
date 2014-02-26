@@ -26,7 +26,6 @@ import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
-import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -36,7 +35,6 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  * Handler to process actions with displaying the status of the Git work tree.
  *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Mar 28, 2011 3:58:20 PM anya $
  */
 @Singleton
 public class StatusCommandPresenter {
@@ -72,24 +70,19 @@ public class StatusCommandPresenter {
             return;
         }
 
-        try {
-            service.statusText(resourceProvider.getVfsInfo().getId(), project.getId(), false, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                @Override
-                protected void onSuccess(String result) {
-                    console.print(result);
-                }
+        service.statusText(resourceProvider.getVfsInfo().getId(), project.getId(), false,
+                           new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                               @Override
+                               protected void onSuccess(String result) {
+                                   console.print(result);
+                               }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    String errorMessage = exception.getMessage() != null ? exception.getMessage() : constant.statusFailed();
-                    Notification notification = new Notification(errorMessage, ERROR);
-                    notificationManager.showNotification(notification);
-                }
-            });
-        } catch (RequestException e) {
-            String errorMessage = (e.getMessage() != null) ? e.getMessage() : constant.statusFailed();
-            Notification notification = new Notification(errorMessage, ERROR);
-            notificationManager.showNotification(notification);
-        }
+                               @Override
+                               protected void onFailure(Throwable exception) {
+                                   String errorMessage = exception.getMessage() != null ? exception.getMessage() : constant.statusFailed();
+                                   Notification notification = new Notification(errorMessage, ERROR);
+                                   notificationManager.showNotification(notification);
+                               }
+                           });
     }
 }

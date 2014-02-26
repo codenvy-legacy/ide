@@ -17,20 +17,15 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.debug.expression;
 
-import com.codenvy.ide.api.notification.Notification;
-import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerClientService;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
-import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import javax.validation.constraints.NotNull;
-
-import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
  * Presenter for evaluating an expression.
@@ -43,17 +38,15 @@ public class EvaluateExpressionPresenter implements EvaluateExpressionView.Actio
     private DebuggerClientService           service;
     private DebuggerInfo                    debuggerInfo;
     private JavaRuntimeLocalizationConstant constant;
-    private NotificationManager             notificationManager;
 
     /** Create presenter. */
     @Inject
-    public EvaluateExpressionPresenter(EvaluateExpressionView view, DebuggerClientService service, JavaRuntimeLocalizationConstant constant,
-                                       NotificationManager notificationManager) {
+    public EvaluateExpressionPresenter(EvaluateExpressionView view, DebuggerClientService service,
+                                       JavaRuntimeLocalizationConstant constant) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
         this.constant = constant;
-        this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
@@ -82,26 +75,20 @@ public class EvaluateExpressionPresenter implements EvaluateExpressionView.Actio
     @Override
     public void onEvaluateClicked() {
         view.setEnableEvaluateButton(false);
-        try {
-            service.evaluateExpression(debuggerInfo.getId(), view.getExpression(),
-                                       new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                                           @Override
-                                           protected void onSuccess(String result) {
-                                               view.setResult(result);
-                                               view.setEnableEvaluateButton(true);
-                                           }
+        service.evaluateExpression(debuggerInfo.getId(), view.getExpression(),
+                                   new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                                       @Override
+                                       protected void onSuccess(String result) {
+                                           view.setResult(result);
+                                           view.setEnableEvaluateButton(true);
+                                       }
 
-                                           @Override
-                                           protected void onFailure(Throwable exception) {
-                                               view.setResult(constant.evaluateExpressionFailed(exception.getMessage()));
-                                               view.setEnableEvaluateButton(true);
-                                           }
-                                       });
-        } catch (RequestException e) {
-            Notification notification = new Notification(e.getMessage(), ERROR);
-            notificationManager.showNotification(notification);
-            view.setEnableEvaluateButton(true);
-        }
+                                       @Override
+                                       protected void onFailure(Throwable exception) {
+                                           view.setResult(constant.evaluateExpressionFailed(exception.getMessage()));
+                                           view.setEnableEvaluateButton(true);
+                                       }
+                                   });
     }
 
     /** {@inheritDoc} */

@@ -89,10 +89,10 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
     JavaRuntimeResources            res;
     @UiField(provided = true)
     Resources                       coreRes;
-    private SimpleList<Breakpoint>    breakpoints;
-    private Tree<Variable>            variables;
-    private DtoFactory                dtoFactory;
-    private TreeNodeElement<Variable> selectedVariable;
+    private final DtoFactory                dtoFactory;
+    private       SimpleList<Breakpoint>    breakpoints;
+    private       Tree<Variable>            variables;
+    private       TreeNodeElement<Variable> selectedVariable;
 
     /**
      * Create view.
@@ -106,8 +106,7 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
     @Inject
     protected DebuggerViewImpl(PartStackUIResources partStackUIResources, JavaRuntimeResources resources,
                                JavaRuntimeLocalizationConstant locale, Resources coreRes,
-                               VariableTreeNodeRenderer.Resources rendererResources,
-                               DtoFactory dtoFactory) {
+                               VariableTreeNodeRenderer.Resources rendererResources, DtoFactory dtoFactory) {
         super(partStackUIResources);
 
         this.locale = locale;
@@ -125,7 +124,7 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
             }
 
             public void onListItemDoubleClicked(Element listItemBase, Breakpoint itemData) {
-                // TODO: implement got to breakpoint source feature
+                // TODO: implement 'go to breakpoint source' feature
             }
         };
 

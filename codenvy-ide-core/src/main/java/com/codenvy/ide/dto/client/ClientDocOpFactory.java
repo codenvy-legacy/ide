@@ -14,7 +14,6 @@
 
 package com.codenvy.ide.dto.client;
 
-
 // TODO: These should be moved to an Editor2-specific package
 
 import com.codenvy.ide.dto.DocOp;
@@ -33,16 +32,14 @@ import static com.codenvy.ide.dto.DocOpComponent.Type.INSERT;
 import static com.codenvy.ide.dto.DocOpComponent.Type.RETAIN;
 import static com.codenvy.ide.dto.DocOpComponent.Type.RETAIN_LINE;
 
-/**
- */
 //FIXME : XXX
 public final class ClientDocOpFactory implements DocOpFactory {
 
     private static ClientDocOpFactory instance;
-    private DtoFactory factory;
+    private        DtoFactory         dtoFactory;
 
-    private ClientDocOpFactory(DtoFactory factory) {
-        this.factory = factory;
+    private ClientDocOpFactory(DtoFactory dtoFactory) {
+        this.dtoFactory = dtoFactory;
     }
 
     public static ClientDocOpFactory getInstance(DtoFactory factory) {
@@ -54,42 +51,41 @@ public final class ClientDocOpFactory implements DocOpFactory {
 
     @Override
     public Delete createDelete(String text) {
-        Delete del = factory.createDto(Delete.class);
+        Delete del = dtoFactory.createDto(Delete.class);
         del.setText(text);
         del.setType(DELETE);
-        return del;//(DocOpComponent.Delete)DtoClientImpls.DeleteImpl.make().setText(text).setType(DELETE);
+        return del;
     }
 
     @Override
     public DocOp createDocOp() {
-        DocOp docOp = factory.createDto(DocOp.class);
+        DocOp docOp = dtoFactory.createDto(DocOp.class);
         docOp.setComponents(new ArrayList<DocOpComponent>());
-        return docOp;//DtoClientImpls.DocOpImpl.make().setComponents(JsoArray.<DocOpComponent>create());
+        return docOp;
     }
 
     @Override
     public Insert createInsert(String text) {
-        Insert insert = factory.createDto(Insert.class);
+        Insert insert = dtoFactory.createDto(Insert.class);
         insert.setText(text);
         insert.setType(INSERT);
-        return insert;//(DocOpComponent.Insert)DtoClientImpls.InsertImpl.make().setText(text).setType(INSERT);
+        return insert;
     }
 
     @Override
     public Retain createRetain(int count, boolean hasTrailingNewline) {
-        Retain retain = factory.createDto(Retain.class);
+        Retain retain = dtoFactory.createDto(Retain.class);
         retain.setCount(count);
         retain.setTrailingNewline(hasTrailingNewline);
         retain.setType(RETAIN);
-        return retain;//(DocOpComponent.Retain)DtoClientImpls.RetainImpl.make().setCount(count).setHasTrailingNewline(isTrailingNewline)
-        // .setType(RETAIN);
+        return retain;
     }
 
     @Override
     public RetainLine createRetainLine(int lineCount) {
-        RetainLine retainLine = factory.createDto(RetainLine.class);
+        RetainLine retainLine = dtoFactory.createDto(RetainLine.class);
         retainLine.setLineCount(lineCount);
         retainLine.setType(RETAIN_LINE);
-        return retainLine;//(DocOpComponent.RetainLine)DtoClientImpls.RetainLineImpl.make().setLineCount(lineCount).setType(RETAIN_LINE);
+        return retainLine;
     }
 }

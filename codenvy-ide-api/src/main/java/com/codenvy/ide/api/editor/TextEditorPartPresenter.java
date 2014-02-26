@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.api.editor;
 
+import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.outline.OutlinePresenter;
 
 
@@ -41,6 +42,13 @@ public interface TextEditorPartPresenter extends EditorPartPresenter {
      * @return the document provider or <code>null</code> if none, e.g. after closing the editor
      */
     DocumentProvider getDocumentProvider();
+
+    /**
+     * Return this text editor document.
+     * Note than method return null until <code>PROP_INPUT</code>  property changed.
+     * @return the document of this editor or null if editor input not set.
+     */
+    Document getDocument();
 
     /**
      * Closes this text editor after optionally saving changes.

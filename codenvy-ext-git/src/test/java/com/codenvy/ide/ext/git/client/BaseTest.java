@@ -24,6 +24,7 @@ import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.VirtualFileSystemInfo;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
@@ -77,11 +78,11 @@ public abstract class BaseTest extends GwtTestWithMockito {
     protected SelectionAgent          selectionAgent;
     @Mock
     protected NotificationManager     notificationManager;
-
     @Mock
     protected DtoFactory              dtoFactory;
+    @Mock
+    protected DtoUnmarshallerFactory  dtoUnmarshallerFactory;
 
-    
     @Before
     public void disarm() {
         when(resourceProvider.getVfsInfo()).thenReturn(vfsInfo);

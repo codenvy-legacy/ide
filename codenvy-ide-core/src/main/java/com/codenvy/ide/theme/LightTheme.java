@@ -361,4 +361,14 @@ public class LightTheme implements Theme {
     public String getCellHoveredRow() {
         return "#eee";
     }
+
+    @Override
+    public String getMainMenuBkgColor() {
+        return "#f6f6f6";
+    }
+
+    @Override
+    public String getMainMenuFontColor() {
+        return "#222222";
+    }
 }

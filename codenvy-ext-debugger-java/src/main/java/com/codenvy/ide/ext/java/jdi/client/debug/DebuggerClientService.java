@@ -19,10 +19,12 @@ package com.codenvy.ide.ext.java.jdi.client.debug;
 
 import com.codenvy.ide.ext.java.jdi.shared.BreakPoint;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerEventList;
+import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
+import com.codenvy.ide.ext.java.jdi.shared.StackFrameDump;
 import com.codenvy.ide.ext.java.jdi.shared.UpdateVariableRequest;
+import com.codenvy.ide.ext.java.jdi.shared.Value;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.http.client.RequestException;
 
 import javax.validation.constraints.NotNull;
 
@@ -38,18 +40,16 @@ public interface DebuggerClientService {
      * @param host
      * @param port
      * @param callback
-     * @throws RequestException
      */
-    void connect(@NotNull String host, int port, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void connect(@NotNull String host, int port, @NotNull AsyncRequestCallback<DebuggerInfo> callback);
 
     /**
      * Disconnect debugger.
      *
      * @param id
      * @param callback
-     * @throws RequestException
      */
-    void disconnect(@NotNull String id, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+    void disconnect(@NotNull String id, @NotNull AsyncRequestCallback<Void> callback);
 
     /**
      * Adds breakpoint.
@@ -57,19 +57,16 @@ public interface DebuggerClientService {
      * @param id
      * @param breakPoint
      * @param callback
-     * @throws RequestException
      */
-    void addBreakpoint(@NotNull String id, @NotNull BreakPoint breakPoint, @NotNull AsyncRequestCallback<Void> callback)
-            throws RequestException;
+    void addBreakpoint(@NotNull String id, @NotNull BreakPoint breakPoint, @NotNull AsyncRequestCallback<Void> callback);
 
     /**
      * Returns list of breakpoints.
      *
      * @param id
      * @param callback
-     * @throws RequestException
      */
-    void getAllBreakpoints(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void getAllBreakpoints(@NotNull String id, @NotNull AsyncRequestCallback<String> callback);
 
     /**
      * Deletes breakpoint.
@@ -77,46 +74,40 @@ public interface DebuggerClientService {
      * @param id
      * @param breakPoint
      * @param callback
-     * @throws RequestException
      */
-    void deleteBreakpoint(@NotNull String id, @NotNull BreakPoint breakPoint, @NotNull AsyncRequestCallback<Void> callback)
-            throws RequestException;
+    void deleteBreakpoint(@NotNull String id, @NotNull BreakPoint breakPoint, @NotNull AsyncRequestCallback<Void> callback);
 
     /**
      * Remove all breakpoints.
      *
      * @param id
      * @param callback
-     * @throws RequestException
      */
-    void deleteAllBreakpoints(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void deleteAllBreakpoints(@NotNull String id, @NotNull AsyncRequestCallback<String> callback);
 
     /**
      * Checks event.
      *
      * @param id
      * @param callback
-     * @throws RequestException
      */
-    void checkEvents(@NotNull String id, @NotNull AsyncRequestCallback<DebuggerEventList> callback) throws RequestException;
+    void checkEvents(@NotNull String id, @NotNull AsyncRequestCallback<DebuggerEventList> callback);
 
     /**
      * Get dump of fields and local variable of current stack frame.
      *
      * @param id
      * @param callback
-     * @throws RequestException
      */
-    void getStackFrameDump(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void getStackFrameDump(@NotNull String id, @NotNull AsyncRequestCallback<StackFrameDump> callback);
 
     /**
      * Resume process.
      *
      * @param id
      * @param callback
-     * @throws RequestException
      */
-    void resume(@NotNull String id, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+    void resume(@NotNull String id, @NotNull AsyncRequestCallback<Void> callback);
 
     /**
      * Returns value of a variable.
@@ -124,9 +115,8 @@ public interface DebuggerClientService {
      * @param id
      * @param var
      * @param callback
-     * @throws RequestException
      */
-    void getValue(@NotNull String id, @NotNull Variable var, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void getValue(@NotNull String id, @NotNull Variable var, @NotNull AsyncRequestCallback<Value> callback);
 
     /**
      * Sets value of a variable.
@@ -134,37 +124,32 @@ public interface DebuggerClientService {
      * @param id
      * @param request
      * @param callback
-     * @throws RequestException
      */
-    void setValue(@NotNull String id, @NotNull UpdateVariableRequest request, @NotNull AsyncRequestCallback<Void> callback)
-            throws RequestException;
+    void setValue(@NotNull String id, @NotNull UpdateVariableRequest request, @NotNull AsyncRequestCallback<Void> callback);
 
     /**
      * Do step into.
      *
      * @param id
      * @param callback
-     * @throws RequestException
      */
-    void stepInto(@NotNull String id, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+    void stepInto(@NotNull String id, @NotNull AsyncRequestCallback<Void> callback);
 
     /**
      * Do step over.
      *
      * @param id
      * @param callback
-     * @throws RequestException
      */
-    void stepOver(@NotNull String id, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+    void stepOver(@NotNull String id, @NotNull AsyncRequestCallback<Void> callback);
 
     /**
      * Do step return.
      *
      * @param id
      * @param callback
-     * @throws RequestException
      */
-    void stepReturn(@NotNull String id, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+    void stepReturn(@NotNull String id, @NotNull AsyncRequestCallback<Void> callback);
 
     /**
      * Evaluate an expression.
@@ -172,8 +157,6 @@ public interface DebuggerClientService {
      * @param id
      * @param expression
      * @param callback
-     * @throws RequestException
      */
-    void evaluateExpression(@NotNull String id, @NotNull String expression, @NotNull AsyncRequestCallback<String> callback)
-            throws RequestException;
+    void evaluateExpression(@NotNull String id, @NotNull String expression, @NotNull AsyncRequestCallback<String> callback);
 }
