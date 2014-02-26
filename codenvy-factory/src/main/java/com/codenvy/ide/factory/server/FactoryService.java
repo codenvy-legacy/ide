@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.factory.server;
 
-import com.codenvy.api.factory.SimpleFactoryUrl;
+import com.codenvy.api.factory.dto.SimpleFactoryUrl;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.ide.commons.shared.ProjectType;
 import com.codenvy.organization.client.UserManager;

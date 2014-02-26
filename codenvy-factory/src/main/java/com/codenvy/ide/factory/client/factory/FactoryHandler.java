@@ -18,14 +18,16 @@
 package com.codenvy.ide.factory.client.factory;
 
 
-import com.codenvy.api.factory.AdvancedFactoryUrl;
-import com.codenvy.api.factory.SimpleFactoryUrl;
+import com.codenvy.api.factory.dto.AdvancedFactoryUrl;
+import com.codenvy.api.factory.dto.SimpleFactoryUrl;
 import com.codenvy.ide.factory.client.FactoryClientService;
 import com.codenvy.ide.factory.client.FactoryExtension;
 import com.codenvy.ide.factory.client.marshaller.ChildrenUnmarshallerWS;
 import com.codenvy.ide.factory.shared.AdvancedFactorySpec;
+import com.codenvy.ide.factory.shared.AdvancedFactoryUrlImpl;
 import com.codenvy.ide.factory.shared.CopySpec10;
 import com.codenvy.ide.factory.client.marshaller.AdvancedFactoryUrlUnmarshaller;
+import com.codenvy.ide.factory.shared.SimpleFactoryUrlImpl;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.http.client.RequestException;
@@ -142,30 +144,30 @@ public class FactoryHandler
     private void handleCopyProjects(Map<String, List<String>> parameterMap) {
         final String downloadUrl = getParamValue(DOWNLOAD_URL, parameterMap);
         final List<String> projects = parameterMap.get(PROJECT_ID);
-        
+
         try {
             FactoryClientService.getInstance()
-            .copyProjects(downloadUrl, projects,
-                          new RequestCallback<List<Item>>(new ChildrenUnmarshallerWS(new ArrayList<Item>())) {
-                @Override
-                protected void onSuccess(List<Item> result) {
-                    if (result.size() == 1) {
-                        IDE.fireEvent(new OpenProjectEvent((ProjectModel)result.get(0)));
-                    } else {
-                        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                            @Override
-                            public void execute() {
-                                IDE.fireEvent(new IDELoadCompleteEvent());
-                            }
-                        });
-                    }
-                }
-                
-                @Override
-                protected void onFailure(Throwable exception) {
-                    handleError(exception);
-                }
-            });
+                                .copyProjects(downloadUrl, projects,
+                                              new RequestCallback<List<Item>>(new ChildrenUnmarshallerWS(new ArrayList<Item>())) {
+                                                  @Override
+                                                  protected void onSuccess(List<Item> result) {
+                                                      if (result.size() == 1) {
+                                                          IDE.fireEvent(new OpenProjectEvent((ProjectModel)result.get(0)));
+                                                      } else {
+                                                          Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                                                              @Override
+                                                              public void execute() {
+                                                                  IDE.fireEvent(new IDELoadCompleteEvent());
+                                                              }
+                                                          });
+                                                      }
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      handleError(exception);
+                                                  }
+                                              });
         } catch (WebSocketException e) {
             handleError(e);
         }
@@ -180,7 +182,7 @@ public class FactoryHandler
         projectAttributes.put(PROJECT_TYPE, getParamValue(PROJECT_TYPE, parameterMap));
         projectAttributes.put(PROJECT_NAME, getParamValue(PROJECT_NAME, parameterMap));
 
-        factoryUrl = new SimpleFactoryUrl(getParamValue(FACTORY_VERSION, parameterMap),
+        factoryUrl = new SimpleFactoryUrlImpl(getParamValue(FACTORY_VERSION, parameterMap),
                                           getParamValue(VCS_TYPE, parameterMap),
                                           getParamValue(VCS_URL, parameterMap),
                                           getParamValue(COMMIT_ID, parameterMap),
@@ -215,7 +217,7 @@ public class FactoryHandler
      *         map, which contains all query parameters given by user
      */
     private void handleAdvancedFactory(Map<String, List<String>> parameterMap) {
-        final AdvancedFactoryUrlUnmarshaller unmarshaller = new AdvancedFactoryUrlUnmarshaller(new AdvancedFactoryUrl());
+        final AdvancedFactoryUrlUnmarshaller unmarshaller = new AdvancedFactoryUrlUnmarshaller(new AdvancedFactoryUrlImpl());
 
         try {
             FactoryClientService.getInstance().getFactory(getParamValue(ID, parameterMap),

@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.factory.client;
 
-import com.codenvy.api.factory.AdvancedFactoryUrl;
-import com.codenvy.api.factory.SimpleFactoryUrl;
+import com.codenvy.api.factory.dto.AdvancedFactoryUrl;
+import com.codenvy.api.factory.dto.SimpleFactoryUrl;
 import com.codenvy.ide.factory.shared.CopySpec10;
 import com.codenvy.ide.factory.client.marshaller.SimpleFactoryUrlMarshaller;
 import com.codenvy.ide.json.client.Jso;
