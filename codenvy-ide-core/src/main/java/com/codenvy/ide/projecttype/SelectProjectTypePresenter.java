@@ -101,9 +101,9 @@ public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionD
         ProjectDescriptor projectDescriptor = dtoFactory.createDto(ProjectDescriptor.class)
                                                         .withProjectTypeId(descriptor.getProjectTypeId())
                                                         .withProjectTypeName(descriptor.getProjectTypeName());
-        projectClientService.updateProject(project.getPath(), projectDescriptor, new AsyncRequestCallback<String>() {
+        projectClientService.updateProject(project.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
             @Override
-            protected void onSuccess(String result) {
+            protected void onSuccess(ProjectDescriptor result) {
                 view.close();
                 callback.onSuccess(project);
             }
