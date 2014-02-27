@@ -168,7 +168,6 @@ public class FactoryService {
                 publishWebsocketMessage(String.format(COMMIT_NOT_FOUND, factoryUrl.getCommitid()));
             } else {
                 LOG.warn(e.getLocalizedMessage(), e);
-                vfs.delete(projectId, null);
                 throw e;
             }
         } catch (Exception e) {
