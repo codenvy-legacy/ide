@@ -55,6 +55,7 @@
         font-size: fontMenuSize;
         font-weight: normal;
         font-style: normal;
+        vertical-align: middle;
     }
 
     .popupMenuDelimiter {
