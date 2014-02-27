@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.projecttype;
 
-import com.codenvy.api.project.gwt.client.ProjectClientService;
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
@@ -46,16 +46,16 @@ public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionD
     private       Project                       project;
     private       AsyncCallback<Project>        callback;
     private       ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
-    private       ProjectClientService          projectClientService;
+    private       ProjectServiceClient          projectServiceClient;
 
     @Inject
     public SelectProjectTypePresenter(SelectProjectTypeView view, CoreLocalizationConstant localizationConstant,
                                       ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
-                                      ProjectClientService projectClientService, DtoFactory dtoFactory) {
+                                      ProjectServiceClient projectServiceClient, DtoFactory dtoFactory) {
         this.view = view;
         this.localizationConstant = localizationConstant;
         this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
-        this.projectClientService = projectClientService;
+        this.projectServiceClient = projectServiceClient;
         this.dtoFactory = dtoFactory;
         view.setDelegate(this);
     }
@@ -101,7 +101,7 @@ public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionD
         ProjectDescriptor projectDescriptor = dtoFactory.createDto(ProjectDescriptor.class)
                                                         .withProjectTypeId(descriptor.getProjectTypeId())
                                                         .withProjectTypeName(descriptor.getProjectTypeName());
-        projectClientService.updateProject(project.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
+        projectServiceClient.updateProject(project.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
                 view.close();
