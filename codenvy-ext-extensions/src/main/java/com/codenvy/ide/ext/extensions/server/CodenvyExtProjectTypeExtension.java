@@ -48,10 +48,6 @@ public class CodenvyExtProjectTypeExtension implements ProjectTypeExtension {
     @Override
     public List<Attribute> getPredefinedAttributes() {
         final List<Attribute> list = new ArrayList<>(3);
-        // TODO
-//        list.add(new Attribute("language", new VfsPropertyValueProvider("language", "java")));
-//        list.add(new Attribute("builder.name", new VfsPropertyValueProvider("builder.name", "maven")));
-//        list.add(new Attribute("runner.name", new VfsPropertyValueProvider("runner.name", "sdk")));
         list.add(new Attribute("language", "java"));
         list.add(new Attribute("builder.name", "maven"));
         list.add(new Attribute("runner.name", "sdk"));

@@ -44,9 +44,6 @@ public class SpringProjectTypeExtension implements ProjectTypeExtension {
     @Override
     public List<Attribute> getPredefinedAttributes() {
         final List<Attribute> list = new ArrayList<>(2);
-        // TODO
-//        list.add(new Attribute("language", new VfsPropertyValueProvider("language", "java")));
-//        list.add(new Attribute("runner.name", new VfsPropertyValueProvider("runner.name", "webapps")));
         list.add(new Attribute("language", "java"));
         list.add(new Attribute("runner.name", "webapps"));
         return list;
