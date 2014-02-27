@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.wizard.newproject.pages.paas;
 
-import com.codenvy.api.project.gwt.client.ProjectClientService;
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
@@ -46,7 +46,7 @@ public class SelectPaasPagePresenter extends AbstractWizardPage implements Selec
 
     private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
     private       SelectPaasPageView     view;
-    private       ProjectClientService   projectService;
+    private       ProjectServiceClient   projectService;
     private       ResourceProvider       resourceProvider;
     private       PaaSAgentImpl          paasAgent;
     private       Array<PaaS>            paases;
@@ -54,12 +54,12 @@ public class SelectPaasPagePresenter extends AbstractWizardPage implements Selec
     @Inject
     public SelectPaasPagePresenter(SelectPaasPageView view,
                                    ResourceProvider resourceProvider,
-                                   ProjectClientService projectService,
+                                   ProjectServiceClient projectServiceClient,
                                    PaaSAgentImpl paasAgent,
                                    DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super("Select PaaS", null);
         this.view = view;
-        this.projectService = projectService;
+        this.projectService = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.view.setDelegate(this);
         this.resourceProvider = resourceProvider;

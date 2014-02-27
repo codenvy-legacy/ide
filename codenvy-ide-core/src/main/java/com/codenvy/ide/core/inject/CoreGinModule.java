@@ -17,10 +17,10 @@
  */
 package com.codenvy.ide.core.inject;
 
-import com.codenvy.api.project.gwt.client.ProjectClientService;
-import com.codenvy.api.project.gwt.client.ProjectClientServiceImpl;
-import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionClientService;
-import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionClientServiceImpl;
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.gwt.client.ProjectServiceClientImpl;
+import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClient;
+import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClientImpl;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.about.AboutView;
 import com.codenvy.ide.about.AboutViewImpl;
@@ -194,8 +194,8 @@ public class CoreGinModule extends AbstractGinModule {
         bind(MessageBus.class).to(MessageBusImpl.class).in(Singleton.class);
         // client services
         bind(UserClientService.class).to(UserClientServiceImpl.class).in(Singleton.class);
-        bind(ProjectClientService.class).to(ProjectClientServiceImpl.class).in(Singleton.class);
-        bind(ProjectTypeDescriptionClientService.class).to(ProjectTypeDescriptionClientServiceImpl.class).in(Singleton.class);
+        bind(ProjectServiceClient.class).to(ProjectServiceClientImpl.class).in(Singleton.class);
+        bind(ProjectTypeDescriptionServiceClient.class).to(ProjectTypeDescriptionServiceClientImpl.class).in(Singleton.class);
 
         apiBindingConfigure();
         resourcesAPIconfigure();

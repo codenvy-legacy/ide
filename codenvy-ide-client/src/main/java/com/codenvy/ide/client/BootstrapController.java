@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.client;
 
-import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionClientService;
+import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.theme.Style;
@@ -54,7 +54,7 @@ public class BootstrapController {
 
     private final DtoUnmarshallerFactory              dtoUnmarshallerFactory;
     private       PreferencesManagerImpl              preferencesManager;
-    private       ProjectTypeDescriptionClientService projectTypeDescriptionService;
+    private       ProjectTypeDescriptionServiceClient projectTypeDescriptionServiceClient;
     private       ProjectTypeDescriptorRegistry       projectTypeDescriptorRegistry;
     private       ThemeAgent                          themeAgent;
 
@@ -67,7 +67,8 @@ public class BootstrapController {
      * @param extensionInitializer
      * @param preferencesManager
      * @param userService
-     * @param projectTypeDescriptionService
+     * @param projectTypeDescriptionServiceClient
+     *
      * @param projectTypeDescriptorRegistry
      * @param resourceProvider
      * @param dtoRegistrar
@@ -80,14 +81,14 @@ public class BootstrapController {
                                final ExtensionInitializer extensionInitializer,
                                final PreferencesManagerImpl preferencesManager,
                                UserClientService userService,
-                               final ProjectTypeDescriptionClientService projectTypeDescriptionService,
+                               final ProjectTypeDescriptionServiceClient projectTypeDescriptionServiceClient,
                                final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
                                final ResourceProvider resourceProvider,
                                DtoRegistrar dtoRegistrar,
                                final ThemeAgent themeAgent,
                                DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.preferencesManager = preferencesManager;
-        this.projectTypeDescriptionService = projectTypeDescriptionService;
+        this.projectTypeDescriptionServiceClient = projectTypeDescriptionServiceClient;
         this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
         this.themeAgent = themeAgent;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
@@ -158,7 +159,7 @@ public class BootstrapController {
     }
 
     private void initializeProjectTypeDescriptorRegistry() {
-        projectTypeDescriptionService
+        projectTypeDescriptionServiceClient
                 .getProjectTypes(new AsyncRequestCallback<Array<ProjectTypeDescriptor>>(
                         dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectTypeDescriptor.class)) {
                     @Override

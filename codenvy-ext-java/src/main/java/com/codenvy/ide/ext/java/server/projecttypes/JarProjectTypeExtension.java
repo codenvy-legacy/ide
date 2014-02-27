@@ -19,7 +19,6 @@ package com.codenvy.ide.ext.java.server.projecttypes;
 
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
 import com.codenvy.api.project.server.ProjectTypeExtension;
-import com.codenvy.api.project.server.VfsPropertyValueProvider;
 import com.codenvy.api.project.shared.Attribute;
 import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
@@ -45,7 +44,7 @@ public class JarProjectTypeExtension implements ProjectTypeExtension {
     @Override
     public List<Attribute> getPredefinedAttributes() {
         final List<Attribute> list = new ArrayList<>(1);
-        list.add(new Attribute("language", new VfsPropertyValueProvider("language", "java")));
+        list.add(new Attribute("language", "java"));
         return list;
     }
 

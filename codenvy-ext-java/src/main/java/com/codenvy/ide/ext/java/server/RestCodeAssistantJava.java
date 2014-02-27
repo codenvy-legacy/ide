@@ -18,8 +18,8 @@
 package com.codenvy.ide.ext.java.server;
 
 import com.codenvy.api.builder.BuildStatus;
+import com.codenvy.api.builder.BuilderException;
 import com.codenvy.api.builder.dto.BuildTaskDescriptor;
-import com.codenvy.api.builder.internal.BuilderException;
 import com.codenvy.api.core.rest.HttpJsonHelper;
 import com.codenvy.api.core.rest.RemoteException;
 import com.codenvy.api.core.rest.shared.dto.Link;
