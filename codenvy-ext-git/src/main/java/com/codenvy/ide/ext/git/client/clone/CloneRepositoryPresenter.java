@@ -75,7 +75,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
     /** {@inheritDoc} */
     @Override
     public void onCloneClicked() {
-        String projectName = view.getProjectName();
+        final String projectName = view.getProjectName();
         final String remoteName = view.getRemoteName();
         final String remoteUri = view.getRemoteUri();
         notification = new Notification(constant.cloneStarted(projectName, remoteName), PROGRESS);

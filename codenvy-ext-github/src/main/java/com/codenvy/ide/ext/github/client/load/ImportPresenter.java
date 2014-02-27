@@ -280,7 +280,7 @@ public class ImportPresenter implements ImportView.ActionDelegate {
      * @param e
      *         exception what happened
      * @param remoteUri
-     *         rempote uri
+     *         remote uri
      */
     private void handleError(@NotNull Throwable e, @NotNull String remoteUri) {
         String errorMessage =

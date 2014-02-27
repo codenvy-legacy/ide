@@ -44,29 +44,29 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import javax.validation.constraints.NotNull;
 
-
 /**
  * Project Explorer display Project Model in a dedicated Part (view).
- * 
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ *
+ * @author Nikolay Zamosenchuk
  */
 @Singleton
 public class ProjectExplorerPartPresenter extends BasePresenter implements ProjectExplorerView.ActionDelegate, ProjectExplorerPart {
-    protected ProjectExplorerView      view;
-    protected EventBus                 eventBus;
-    private Resources                  resources;
-    private ResourceProvider           resourceProvider;
-    private ContextMenuPresenter       contextMenuPresenter;
-    private SelectProjectTypePresenter selectProjectTypePresenter;
+    protected ProjectExplorerView        view;
+    protected EventBus                   eventBus;
+    private   Resources                  resources;
+    private   ResourceProvider           resourceProvider;
+    private   ContextMenuPresenter       contextMenuPresenter;
+    private   SelectProjectTypePresenter selectProjectTypePresenter;
 
     /**
-     * Instantiates the ProjectExplorer Presenter
-     * 
+     * Instantiates the ProjectExplorer Presenter.
+     *
      * @param view
      * @param eventBus
      * @param resources
      * @param resourceProvider
      * @param contextMenuPresenter
+     * @param selectProjectTypePresenter
      */
     @Inject
     public ProjectExplorerPartPresenter(ProjectExplorerView view,
@@ -94,7 +94,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     /**
      * Sets content.
-     * 
+     *
      * @param resource
      */
     public void setContent(@NotNull Resource resource) {
@@ -148,7 +148,8 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         eventBus.addHandler(ResourceChangedEvent.TYPE, new ResourceChangedHandler() {
             @Override
             public void onResourceRenamed(ResourceChangedEvent event) {
-                if (event.getResource() instanceof Project && event.getResource().getParent().getId().equals(resourceProvider.getRootId())) {
+                if (event.getResource() instanceof Project &&
+                    event.getResource().getParent().getId().equals(resourceProvider.getRootId())) {
                     setContent(event.getResource().getParent());
                 } else {
                     updateItem(event.getResource().getParent());
@@ -162,10 +163,11 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
             @Override
             public void onResourceDeleted(ResourceChangedEvent event) {
-                if (event.getResource().getResourceType().equals(ItemType.PROJECT.value()))
+                if (event.getResource().getResourceType().equals(ItemType.PROJECT.value())) {
                     resourceProvider.showListProjects();
-                else
+                } else {
                     updateItem(event.getResource().getParent());
+                }
             }
 
             @Override
@@ -189,8 +191,9 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     /**
      * Update item in the project explorer.
-     * 
-     * @param resource the resource that need to be updated
+     *
+     * @param resource
+     *         the resource that need to be updated
      */
     private void updateItem(@NotNull Resource resource) {
         Project project = resource.getProject();
@@ -306,7 +309,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     /**
      * Check, whether project type is "undefined" and call {@link SelectProjectTypePresenter} to set it.
-     * 
+     *
      * @param project
      */
     private void processProject(Project project, AsyncCallback<Project> callback) {

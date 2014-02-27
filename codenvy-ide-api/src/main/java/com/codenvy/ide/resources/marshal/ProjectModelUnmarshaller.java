@@ -27,11 +27,10 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
-
 /**
  * Unmarshaller for {@link Project}
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public class ProjectModelUnmarshaller implements Unmarshallable<ProjectModelProviderAdapter> {
     private       ProjectModelProviderAdapter modelProviderAdapter;

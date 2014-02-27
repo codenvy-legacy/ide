@@ -418,18 +418,10 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
             asyncRequestFactory.createPostRequest(url, null).loader(loader).send(internalCallback);
         } else {
             activeProject.deleteChild(item, new AsyncCallback<Void>() {
-
-                @Override
-                public void onFailure(Throwable caught) {
-                    caught.printStackTrace();
-                    callback.onFailure(caught);
-                }
-
                 @Override
                 public void onSuccess(Void result) {
                     if (item instanceof Project && !(parent instanceof Project)) {
                         showListProjects();
-                        //TODO onSuccess
                         callback.onSuccess(item.toString());
                     } else if (parent instanceof Project) {
                         getProject(parent.getName(), new AsyncCallback<Project>() {
@@ -459,6 +451,12 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                             }
                         });
                     }
+                }
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    caught.printStackTrace();
+                    callback.onFailure(caught);
                 }
             });
         }

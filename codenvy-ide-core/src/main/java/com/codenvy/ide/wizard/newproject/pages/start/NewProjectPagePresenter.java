@@ -17,19 +17,19 @@
  */
 package com.codenvy.ide.wizard.newproject.pages.start;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
-import com.codenvy.api.vfs.shared.dto.Item;
-import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
@@ -58,36 +58,38 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
      * @param view
      * @param resources
      * @param projectTypeDescriptorRegistry
-     * @param resourceProvider
      * @param constant
+     * @param projectServiceClient
+     * @param dtoUnmarshallerFactory
      */
     @Inject
     public NewProjectPagePresenter(NewProjectPageView view,
                                    Resources resources,
                                    ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
-                                   ResourceProvider resourceProvider,
-                                   CoreLocalizationConstant constant) {
-
+                                   CoreLocalizationConstant constant,
+                                   ProjectServiceClient projectServiceClient,
+                                   DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super("Project Descriptions", resources.newResourceIcon());
-        resourceProvider.listProjects(new AsyncCallback<ItemList>() {
-            @Override
-            public void onSuccess(ItemList result) {
-                projectList = Collections.createArray();
-                for (Item item : result.getItems()) {
-                    projectList.add(item.getName());
-                }
-                hasProjectList = true;
-            }
+        projectServiceClient.getProjects(
+                new AsyncRequestCallback<Array<ProjectReference>>(dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectReference.class)) {
+                    @Override
+                    protected void onSuccess(Array<ProjectReference> result) {
+                        projectList = Collections.createArray();
+                        for (ProjectReference projectReference : result.asIterable()) {
+                            projectList.add(projectReference.getName());
+                        }
+                        hasProjectList = true;
+                    }
 
-            @Override
-            public void onFailure(Throwable caught) {
-                Log.error(NewProjectPagePresenter.class, caught);
-            }
-        });
+                    @Override
+                    protected void onFailure(Throwable throwable) {
+                        Log.error(NewProjectPagePresenter.class, throwable);
+                    }
+                });
 
+        this.view = view;
         this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
         this.constant = constant;
-        this.view = view;
         this.view.setDelegate(this);
     }
 
