@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
  * @author Alexander Garagatyi
  */
 public class GitRepositoryPrivacyChecker {
+    // TODO improve it to not match ssh url with some mistakes
     private static final Pattern SSH_URL = Pattern.compile("^(?:ssh://)?(?:\\w+@)([a-zA-Z-.]+)(?::(\\d+))?+(?:/|:)(.+)$");
     private final GitConnectionFactory gitConnectionFactory;
 
