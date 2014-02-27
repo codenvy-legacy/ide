@@ -47,8 +47,8 @@ public class WarProjectTypeExtension implements ProjectTypeExtension {
         // TODO
 //        list.add(new Attribute("language", new VfsPropertyValueProvider("language", "java")));
 //        list.add(new Attribute("runner.name", new VfsPropertyValueProvider("runner.name", "webapps")));
-        list.add(new Attribute("language", "language", "java"));
-        list.add(new Attribute("runner.name", "runner.name", "webapps"));
+        list.add(new Attribute("language", "java"));
+        list.add(new Attribute("runner.name", "webapps"));
         return list;
     }
 

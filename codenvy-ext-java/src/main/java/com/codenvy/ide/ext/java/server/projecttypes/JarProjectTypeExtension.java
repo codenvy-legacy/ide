@@ -46,7 +46,7 @@ public class JarProjectTypeExtension implements ProjectTypeExtension {
         final List<Attribute> list = new ArrayList<>(1);
         // TODO
 //        list.add(new Attribute("language", new VfsPropertyValueProvider("language", "java")));
-        list.add(new Attribute("language", "language", "java"));
+        list.add(new Attribute("language", "java"));
         return list;
     }
 

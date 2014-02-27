@@ -52,9 +52,9 @@ public class CodenvyExtProjectTypeExtension implements ProjectTypeExtension {
 //        list.add(new Attribute("language", new VfsPropertyValueProvider("language", "java")));
 //        list.add(new Attribute("builder.name", new VfsPropertyValueProvider("builder.name", "maven")));
 //        list.add(new Attribute("runner.name", new VfsPropertyValueProvider("runner.name", "sdk")));
-        list.add(new Attribute("language", "language", "java"));
-        list.add(new Attribute("builder.name", "builder.name", "maven"));
-        list.add(new Attribute("runner.name", "runner.name", "sdk"));
+        list.add(new Attribute("language", "java"));
+        list.add(new Attribute("builder.name", "maven"));
+        list.add(new Attribute("runner.name", "sdk"));
         return list;
     }
 
