@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.wizard.newresource.page;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.EditorAgent;
@@ -59,19 +60,20 @@ import static com.codenvy.ide.api.ui.wizard.newresource.NewResourceWizardKeys.RE
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public class NewResourcePagePresenter extends AbstractWizardPage implements ActionDelegate {
-    private final AsyncRequestFactory      asyncRequestFactory;
-    private       NewResourcePageView      view;
-    private       EditorAgent              editorAgent;
-    private       CoreLocalizationConstant constant;
-    private       NewResourceProvider      selectedResourceType;
-    private       boolean                  isResourceNameValid;
-    private       boolean                  hasSameResource;
-    private       Project                  project;
-    private       Folder                   parent;
-    private       Project                  treeStructure;
-    private       ResourceProvider         resourceProvider;
-    private       Loader                   loader;
-    private       EventBus                 eventBus;
+    private final AsyncRequestFactory asyncRequestFactory;
+    private final ProjectServiceClient projectServiceClient;
+    private NewResourcePageView      view;
+    private EditorAgent              editorAgent;
+    private CoreLocalizationConstant constant;
+    private NewResourceProvider      selectedResourceType;
+    private boolean                  isResourceNameValid;
+    private boolean                  hasSameResource;
+    private Project                  project;
+    private Folder                   parent;
+    private Project                  treeStructure;
+    private ResourceProvider         resourceProvider;
+    private Loader                   loader;
+    private EventBus                 eventBus;
 
     /** Create presenter. */
     @Inject
@@ -81,11 +83,14 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
                                     NewResourceAgentImpl newResourceAgent,
                                     com.codenvy.ide.api.resources.ResourceProvider resourceProvider,
                                     SelectionAgent selectionAgent,
-                                    EditorAgent editorAgent, Loader loader, EventBus eventBus, AsyncRequestFactory asyncRequestFactory) {
+                                    EditorAgent editorAgent, Loader loader, EventBus eventBus,
+                                    AsyncRequestFactory asyncRequestFactory,
+                                    ProjectServiceClient projectServiceClient) {
         super("Create a new resource", resources.newResourceIcon());
 
         this.view = view;
         this.asyncRequestFactory = asyncRequestFactory;
+        this.projectServiceClient = projectServiceClient;
         this.view.setDelegate(this);
         this.view.setResourceName("");
         this.editorAgent = editorAgent;
@@ -174,7 +179,7 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
 
     private void getProjectStructure() {
         try {
-            treeStructure = new Project(eventBus, asyncRequestFactory);
+            treeStructure = new Project(eventBus, asyncRequestFactory, projectServiceClient);
             treeStructure.setId(project.getId());
             treeStructure.setName(project.getName());
             treeStructure.setParent(project.getParent());

@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.java.client.projectmodel;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.collections.Array;
@@ -50,12 +51,14 @@ import javax.validation.constraints.NotNull;
  * @author Nikolay Zamosenchuk
  */
 public class JavaProject extends Project {
+    private final ProjectServiceClient projectServiceClient;
     /** Java-specific project description */
     private JavaProjectDescription description;
 
     /** @param eventBus */
-    protected JavaProject(EventBus eventBus, AsyncRequestFactory asyncRequestFactory) {
-        super(eventBus, asyncRequestFactory);
+    protected JavaProject(EventBus eventBus, AsyncRequestFactory asyncRequestFactory, ProjectServiceClient projectServiceClient) {
+        super(eventBus, asyncRequestFactory, projectServiceClient);
+        this.projectServiceClient = projectServiceClient;
         this.description = new JavaProjectDescription(this);
     }
 
@@ -74,7 +77,7 @@ public class JavaProject extends Project {
             AsyncRequestCallback<Folder> internalCallback =
                     new AsyncRequestCallback<Folder>(
                             new JavaModelUnmarshaller(folderToRefresh, (JavaProject)folderToRefresh.getProject(), eventBus,
-                                                      asyncRequestFactory)) {
+                                                      asyncRequestFactory, projectServiceClient)) {
                         @Override
                         protected void onSuccess(Folder refreshedRoot) {
                             callback.onSuccess(refreshedRoot);

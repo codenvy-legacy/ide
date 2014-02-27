@@ -44,7 +44,7 @@ public class JavaProjectTest {
     };
     @Mock
     private SourceFolder sourceFolder;
-    private JavaProject project = new JavaProject(null, null);
+    private JavaProject project = new JavaProject(null, null, null);
 
     @Before
     public void setUp() {

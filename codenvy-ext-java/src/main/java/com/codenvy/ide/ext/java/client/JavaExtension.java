@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.java.client;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -81,7 +82,8 @@ public class JavaExtension {
                          @Named("restContext") String restContext,
                          @Named("workspaceId") String workspaceId,
                          ActionManager actionManager,
-                         AsyncRequestFactory asyncRequestFactory) {
+                         AsyncRequestFactory asyncRequestFactory,
+                         ProjectServiceClient projectServiceClient) {
         this();
         this.resourceProvider = resourceProvider;
         this.notificationManager = notificationManager;
@@ -93,7 +95,7 @@ public class JavaExtension {
         editorRegistry.register(javaFile, javaEditorProvider);
         resourceProvider.registerFileType(javaFile);
 
-        resourceProvider.registerModelProvider("java", new JavaProjectModelProvider(eventBus, asyncRequestFactory));
+        resourceProvider.registerModelProvider("java", new JavaProjectModelProvider(eventBus, asyncRequestFactory, projectServiceClient));
 
         JavaResources.INSTANCE.css().ensureInjected();
 

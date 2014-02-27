@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.resources;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.ide.MimeType;
@@ -80,6 +81,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     private final   DtoUnmarshallerFactory   dtoUnmarshallerFactory;
     private final   DtoFactory               dtoFactory;
     private final   AsyncRequestFactory      asyncRequestFactory;
+    private final   ProjectServiceClient     projectServiceClient;
     protected       VirtualFileSystemInfo    vfsInfo;
     private         Loader                   loader;
     @SuppressWarnings("unused")
@@ -99,7 +101,8 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                                      @Named("workspaceId") String workspaceId,
                                      DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                      DtoFactory dtoFactory,
-                                     AsyncRequestFactory asyncRequestFactory) {
+                                     AsyncRequestFactory asyncRequestFactory,
+                                     ProjectServiceClient projectServiceClient) {
         super();
         this.genericModelProvider = genericModelProvider;
         this.eventBus = eventBus;
@@ -107,6 +110,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.dtoFactory = dtoFactory;
         this.asyncRequestFactory = asyncRequestFactory;
+        this.projectServiceClient = projectServiceClient;
         this.workspaceURL = restContext + "/vfs/" + workspaceId + "/v2";
         this.modelProviders = Collections.<ModelProvider>createStringMap();
         this.fileTypes = Collections.createIntegerMap();
@@ -175,7 +179,6 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                                 callback.onFailure(exception);
                             }
                         });
-
                     }
 
                     @Override
@@ -480,7 +483,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 rootFolder.setChildren(projects);
                 eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(null));
                 for (Item item : result.getItems()) {
-                    Project project = new Project(eventBus, asyncRequestFactory);
+                    Project project = new Project(eventBus, asyncRequestFactory, projectServiceClient);
                     project.init(JSONParser.parseStrict(dtoFactory.toJson(item)).isObject());
                     rootFolder.addChild(project);
                     eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));

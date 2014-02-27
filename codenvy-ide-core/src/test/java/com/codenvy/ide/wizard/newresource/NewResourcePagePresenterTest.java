@@ -17,9 +17,11 @@
  */
 package com.codenvy.ide.wizard.newresource;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.wizard.Wizard;
@@ -75,38 +77,40 @@ public class NewResourcePagePresenterTest {
     public static final boolean COMPLETED     = true;
     public static final String  RESOURCE_NAME = "resourceName";
     @Mock
-    private Resources                                      resources;
+    private Resources                resources;
     @Mock
-    private NewResourcePageView                            view;
+    private NewResourcePageView      view;
     @Mock
-    private NewResourceAgentImpl                           newResourceAgent;
+    private NewResourceAgentImpl     newResourceAgent;
     @Mock
-    private com.codenvy.ide.api.resources.ResourceProvider resourceProvider;
+    private ResourceProvider         resourceProvider;
     @Mock
-    private SelectionAgent                                 selectionAgent;
+    private SelectionAgent           selectionAgent;
     @Mock
-    private EditorAgent                                    editorAgent;
+    private EditorAgent              editorAgent;
     @Mock
-    private CoreLocalizationConstant                       constant;
+    private CoreLocalizationConstant constant;
     @Mock
-    private Wizard.UpdateDelegate                          delegate;
+    private Wizard.UpdateDelegate    delegate;
     @Mock
-    private Project                                        project;
+    private Project                  project;
     @Mock
-    private Folder                                         folder;
+    private Folder                   folder;
     @Mock
-    private File                                           file;
+    private File                     file;
     @Mock
-    private Loader                                         loader;
+    private Loader                   loader;
     @Mock
-    private EventBus                                       eventBus;
+    private EventBus                 eventBus;
     @Mock
-    private AsyncRequestFactory                            asyncRequestFactory;
+    private AsyncRequestFactory      asyncRequestFactory;
     @Mock
-    private NewResourceProvider                            selectedResource;
+    private NewResourceProvider      selectedResource;
     @Mock
-    private WizardContext                                  wizardContext;
-    private NewResourcePagePresenter                       presenter;
+    private WizardContext            wizardContext;
+    private NewResourcePagePresenter presenter;
+    @Mock
+    private ProjectServiceClient     projectServiceClient;
 
     @SuppressWarnings("unchecked")
     private void setUp(Resource resource, Array<NewResourceProvider> resourceDatas) {
@@ -130,7 +134,7 @@ public class NewResourcePagePresenterTest {
         when(resourceProvider.getActiveProject()).thenReturn(project);
 
         presenter = new NewResourcePagePresenter(resources, constant, view, newResourceAgent, resourceProvider, selectionAgent, editorAgent,
-                                                 loader, eventBus, asyncRequestFactory);
+                                                 loader, eventBus, asyncRequestFactory, projectServiceClient);
         presenter.setContext(wizardContext);
         presenter.setUpdateDelegate(delegate);
     }

@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.resources.model;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
@@ -58,14 +59,16 @@ public class Project extends Folder {
     protected       Loader                loader;
     protected       VirtualFileSystemInfo vfsInfo;
     private         ProjectDescription    description;
+    private         ProjectServiceClient  projectServiceClient;
 
     /**
      * Constructor for empty project. Used for serialization only.
      * <p/>
      * Not intended to be used by client.
      */
-    public Project(EventBus eventBus, AsyncRequestFactory asyncRequestFactory) {
+    public Project(EventBus eventBus, AsyncRequestFactory asyncRequestFactory, ProjectServiceClient projectServiceClient) {
         super(TYPE, PROJECT_MIME_TYPE);
+        this.projectServiceClient = projectServiceClient;
         this.description = new ProjectDescription(this);
         this.properties = Collections.<Property>createArray();
         this.eventBus = eventBus;
@@ -279,7 +282,7 @@ public class Project extends Folder {
     }
 
     /**
-     * Reads or Refreshes full Project Structure tree. This can be a costly operation, since
+     * Reads or Refreshes full Project Structure tree. This can be a costly operation.
      *
      * @param callback
      */
@@ -405,39 +408,24 @@ public class Project extends Folder {
         }
     }
 
-    /**
-     * @param file
-     * @param callback
-     * @throws ResourceException
-     */
     public void updateContent(final File file, final AsyncCallback<File> callback) {
         try {
             checkItemValid(file);
-            // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<Void> internalCallback = new AsyncRequestCallback<Void>() {
-                @Override
-                protected void onSuccess(Void result) {
-                    callback.onSuccess(file);
-                }
-
-                @Override
-                protected void onFailure(Throwable exception) {
-                    callback.onFailure(exception);
-                }
-            };
-
-            // TODO check with lock
-            String url = file.getLinkByRelation(Link.REL_CONTENT).getHref();
-            url += (file.isLocked()) ? "?lockToken=" + file.getLock().getLockToken() : "";
-            loader.setMessage("Updating content...");
-            asyncRequestFactory.createPostRequest(url, null)
-                               .data(file.getContent())
-                               .header(HTTPHeader.CONTENT_TYPE, file.getMimeType())
-                               .loader(loader)
-                               .send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);
         }
+
+        projectServiceClient.updateFile(file.getPath(), file.getContent(), file.getMimeType(), new AsyncRequestCallback<Void>() {
+            @Override
+            protected void onSuccess(Void result) {
+                callback.onSuccess(file);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                callback.onFailure(exception);
+            }
+        });
     }
 
     /**

@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.api.resources;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.ide.api.extension.SDK;
 import com.codenvy.ide.collections.Array;

@@ -111,16 +111,9 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                 setContent(event.getProject().getParent());
                 if (event.getProject() != null) {
                     processProject(event.getProject(), new AsyncCallback<Project>() {
-
-                        @Override
-                        public void onFailure(Throwable caught) {
-                            Log.error(ProjectExplorerPartPresenter.class, "Can not change project type.", caught);
-                        }
-
                         @Override
                         public void onSuccess(Project result) {
                             resourceProvider.getProject(result.getName(), new AsyncCallback<Project>() {
-
                                 @Override
                                 public void onFailure(Throwable caught) {
                                     Log.error(ProjectExplorerPartPresenter.class, "Can not get project.", caught);
@@ -131,12 +124,18 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                                 }
                             });
                         }
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            Log.error(ProjectExplorerPartPresenter.class, "Can not change project type.", caught);
+                        }
                     });
                 }
             }
 
             @Override
             public void onProjectDescriptionChanged(ProjectActionEvent event) {
+                // do nothing
             }
 
             @Override
@@ -265,41 +264,38 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     @Override
     public void onResourceOpened(Resource resource) {
         final AsyncCallback<Project> callback = new AsyncCallback<Project>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                Log.error(ProjectExplorerPartPresenter.class, "Can not change project type.", caught);
-            }
-
             @Override
             public void onSuccess(Project result) {
                 result.setVFSInfo(resourceProvider.getVfsInfo());
                 result.refreshTree(new AsyncCallback<Project>() {
+                    @Override
+                    public void onSuccess(Project result) {
+                    }
 
                     @Override
                     public void onFailure(Throwable caught) {
                         Log.error(ProjectExplorerPartPresenter.class, "Can not refresh project properties.", caught);
                     }
-
-                    @Override
-                    public void onSuccess(Project result) {
-                    }
                 });
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                Log.error(ProjectExplorerPartPresenter.class, "Can not change project type.", caught);
             }
         };
 
         if (resource.getResourceType().equals(Project.TYPE) && ((Project)resource).getProperties().isEmpty()) {
             ((Project)resource).setVFSInfo(resourceProvider.getVfsInfo());
             ((Project)resource).refreshProperties(new AsyncCallback<Project>() {
+                @Override
+                public void onSuccess(Project result) {
+                    processProject(result, callback);
+                }
 
                 @Override
                 public void onFailure(Throwable caught) {
                     Log.error(ProjectExplorerPartPresenter.class, "Can not get project's properties.", caught);
-                }
-
-                @Override
-                public void onSuccess(Project result) {
-                    processProject(result, callback);
                 }
             });
         } else if (resource.getResourceType().equals(Project.TYPE) && ((Project)resource).getProperties().size() > 0) {

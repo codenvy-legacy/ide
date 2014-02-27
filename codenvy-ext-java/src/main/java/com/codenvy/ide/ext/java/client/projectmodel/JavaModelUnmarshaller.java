@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.java.client.projectmodel;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringSet;
 import com.codenvy.ide.collections.StringSet.IterationCallback;
@@ -39,7 +40,6 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.web.bindery.event.shared.EventBus;
 
-
 /**
  * Recursively traverses the JSON Response to build Java project model
  *
@@ -53,18 +53,21 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
     private static final String ID       = "id";
     private static final String PATH     = "path";
     private static final String NAME     = "name";
-    private final AsyncRequestFactory asyncRequestFactory;
-    private       JavaProject         project;
-    private       StringSet           sourceFolders;
-    private       String              projectPath;
-    private       Folder              root;
-    private       EventBus            eventBus;
+    private final AsyncRequestFactory  asyncRequestFactory;
+    private final ProjectServiceClient projectServiceClient;
+    private       JavaProject          project;
+    private       StringSet            sourceFolders;
+    private       String               projectPath;
+    private       Folder               root;
+    private       EventBus             eventBus;
 
-    public JavaModelUnmarshaller(Folder root, JavaProject project, EventBus eventBus, AsyncRequestFactory asyncRequestFactory) {
+    public JavaModelUnmarshaller(Folder root, JavaProject project, EventBus eventBus, AsyncRequestFactory asyncRequestFactory,
+                                 ProjectServiceClient projectServiceClient) {
         super();
         this.root = root;
         this.eventBus = eventBus;
         this.asyncRequestFactory = asyncRequestFactory;
+        this.projectServiceClient = projectServiceClient;
         this.root.getChildren().clear();
         this.project = project;
 
@@ -133,7 +136,7 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
                     childProject.getChildren().clear();
                     parseProjectStructure(itemObject.get(CHILDREN), childProject, childProject, childProject);
                 } else {
-                    childProject = new JavaProject(eventBus, asyncRequestFactory);
+                    childProject = new JavaProject(eventBus, asyncRequestFactory, projectServiceClient);
                     childProject.init(itemObject.get(ITEM).isObject());
                     parentFolderNonModelItems.addChild(childProject);
                     childProject.setProject(childProject);

@@ -31,11 +31,10 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
-
 /**
- * Recursively traverses the JSon Response to build tree Folder model
+ * Recursively traverses the JSon Response to build tree Folder model.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public class FolderTreeUnmarshaller implements Unmarshallable<Folder> {
 
@@ -67,18 +66,12 @@ public class FolderTreeUnmarshaller implements Unmarshallable<Folder> {
         try {
             JSONObject object = JSONParser.parseLenient(response.getText()).isObject();
             getChildren(object.get(CHILDREN), parentFolder, parentProject);
-
         } catch (Exception exc) {
             String message = "Can't parse response " + response.getText();
             throw new UnmarshallerException(message, exc);
         }
     }
 
-    /**
-     * @param children
-     * @param parentFolder
-     * @param parentProject
-     */
     private void getChildren(JSONValue children, Folder parentFolder, Project parentProject) {
         JSONArray itemsArray = children.isArray();
 

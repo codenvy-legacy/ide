@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.resources.model;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.google.inject.Inject;
@@ -25,24 +26,26 @@ import com.google.web.bindery.event.shared.EventBus;
 /**
  * Model provider for generic Project
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public class GenericModelProvider implements ModelProvider {
 
     private final EventBus            eventBus;
     private final AsyncRequestFactory asyncRequestFactory;
+    private final ProjectServiceClient projectServiceClient;
 
     /** Creates GenericModel provider */
     @Inject
-    public GenericModelProvider(EventBus eventBus, AsyncRequestFactory asyncRequestFactory) {
+    public GenericModelProvider(EventBus eventBus, AsyncRequestFactory asyncRequestFactory, ProjectServiceClient projectServiceClient) {
         this.eventBus = eventBus;
         this.asyncRequestFactory = asyncRequestFactory;
+        this.projectServiceClient = projectServiceClient;
     }
 
     /** {@inheritDoc} */
     @Override
     public Project createProjectInstance() {
-        return new Project(eventBus, asyncRequestFactory);
+        return new Project(eventBus, asyncRequestFactory, projectServiceClient);
     }
 
 }
