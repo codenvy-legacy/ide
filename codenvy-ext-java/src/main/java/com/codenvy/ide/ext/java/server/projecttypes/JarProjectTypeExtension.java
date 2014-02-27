@@ -58,7 +58,7 @@ public class JarProjectTypeExtension implements ProjectTypeExtension {
 
         list.add(new ProjectTemplateDescription("zip",
                                                 "ANT JAR PROJECT",
-                                                "Simple JAR project which uses Ant build system",
+                                                "Simple JAR project which uses Ant build system.",
                                                 "templates/AntJar.zip"));
         return list;
     }
