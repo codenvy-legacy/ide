@@ -38,7 +38,7 @@ public class SupportControl extends SimpleControl implements IDEControl, Premium
         setEnabled(true);
         setImages(SamplesClientBundle.INSTANCE.contact(), SamplesClientBundle.INSTANCE.contactDisabled());
 
-        //getAttributes().put("onClick", "javascript:UserVoice.showPopupWidget();");
+        getAttributes().put("onClick", "javascript:UserVoice.showPopupWidget();");
     }
 
 
