@@ -32,6 +32,7 @@ import com.codenvy.ide.ext.java.jdt.internal.ui.text.SmartSemicolonAutoEditStrat
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.api.AutoEditStrategy;
+import com.codenvy.ide.texteditor.api.ContentFormatter;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
@@ -44,6 +45,8 @@ import com.codenvy.ide.texteditor.api.reconciler.Reconciler;
 import com.codenvy.ide.texteditor.api.reconciler.ReconcilerImpl;
 import com.codenvy.ide.util.executor.BasicIncrementalScheduler;
 import com.codenvy.ide.util.executor.UserActivityManager;
+
+import javax.validation.constraints.NotNull;
 
 
 /**
@@ -62,10 +65,11 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
     private JavaParserWorker        worker;
     private JavaResources           javaResources;
     private JavaProject             project;
+    private ContentFormatter        contentFormatter;
 
 
     public JavaEditorConfiguration(UserActivityManager manager, JavaResources resources, TextEditorPartPresenter javaEditor,
-                                   String documentPartitioning, JavaParserWorker worker) {
+                                   String documentPartitioning, JavaParserWorker worker, ContentFormatter contentFormatter) {
         super();
         this.manager = manager;
         this.javaEditor = javaEditor;
@@ -74,6 +78,7 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
         this.javaResources = resources;
         outlineModel = new OutlineModel(new JavaNodeRenderer(resources));
         reconcilerStrategy = new JavaReconcilerStrategy(javaEditor, worker, outlineModel);
+        this.contentFormatter = contentFormatter;
 
     }
 
@@ -161,5 +166,10 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
 
     public JavaProject getProject() {
         return project;
+    }
+
+    @Override
+    public ContentFormatter getContentFormatter(@NotNull TextEditorPartView view) {
+        return contentFormatter;
     }
 }

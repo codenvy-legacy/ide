@@ -22,11 +22,13 @@ import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.Jso;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.DefaultProblem;
 import com.codenvy.ide.ext.java.messages.CAProposalsComputedMessage;
+import com.codenvy.ide.ext.java.messages.FormatResultMessage;
 import com.codenvy.ide.ext.java.messages.Problem;
 import com.codenvy.ide.ext.java.messages.ProblemLocationMessage;
 import com.codenvy.ide.ext.java.messages.ProblemsMessage;
@@ -36,6 +38,19 @@ import com.codenvy.ide.ext.java.messages.WorkerProposal;
 import com.codenvy.ide.ext.java.messages.impl.MessagesImpls;
 import com.codenvy.ide.ext.java.messages.impl.OutlineUpdateMessage;
 import com.codenvy.ide.ext.java.messages.impl.WorkerCodeBlock;
+import com.codenvy.ide.text.edits.CopySourceEdit;
+import com.codenvy.ide.text.edits.CopyTargetEdit;
+import com.codenvy.ide.text.edits.CopyingRangeMarker;
+import com.codenvy.ide.text.edits.DeleteEdit;
+import com.codenvy.ide.text.edits.InsertEdit;
+import com.codenvy.ide.text.edits.MoveSourceEdit;
+import com.codenvy.ide.text.edits.MoveTargetEdit;
+import com.codenvy.ide.text.edits.MultiTextEdit;
+import com.codenvy.ide.text.edits.RangeMarker;
+import com.codenvy.ide.text.edits.ReplaceEdit;
+import com.codenvy.ide.text.edits.TextEdit;
+import com.codenvy.ide.text.edits.TextEditVisitor;
+import com.codenvy.ide.texteditor.api.TextEditorOperations;
 import com.codenvy.ide.util.UUID;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.webworker.client.ErrorEvent;
@@ -63,6 +78,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
     private       StringMap<WorkerCallback<?>> callbacks;
     private StringMap<ApplyCallback>                   applyCallback    = Collections.createStringMap();
     private StringMap<WorkerCallback<WorkerCodeBlock>> outlineCallbacks = Collections.createStringMap();
+    private StringMap<ApplyFormatCallback>                   applyFormatCallback    = Collections.createStringMap();
 
     @Inject
     public JavaParserWorkerImpl(ResourceProvider resourceProvider, EventBus eventBus, @Named("restContext") String restContext,
@@ -97,9 +113,111 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
                         handleUpdateOutline(message);
                     }
                 });
+        messageFilter
+                .registerMessageRecipient(RoutingTypes.FORMAT_RESULT, new MessageFilter.MessageRecipient<FormatResultMessage>() {
+                    @Override
+                    public void onMessageReceived(FormatResultMessage message) {
+                        handleFormatApplied(message);
+                    }
+                });
+    }
+    private void handleFormatApplied(FormatResultMessage message){
+        ApplyFormatCallback callback = applyFormatCallback.remove(message.id());
+        Jso textEditJso = message.textEdit();
+        TextEdit textEdit = convertTextEditFromJso(textEditJso);
+        callback.onApplyFormat(textEdit);
+    }
+    private TextEdit convertTextEditFromJso(Jso editJso) {
+        TextEdit textEdit = null;
+        int length;
+        String text;
 
+        int offSet = editJso.getFieldCastedToInteger("offSet");
+
+        String type = editJso.getStringField("type");
+
+        switch (type) {
+            case "ReplaceEdit":
+                text = editJso.getStringField("text");
+                length = editJso.getFieldCastedToInteger("length");
+                textEdit = new ReplaceEdit(offSet,length, text);
+                break;
+            case "DeleteEdit":
+                length = editJso.getFieldCastedToInteger("length");
+                textEdit = new DeleteEdit(offSet,length);
+                break;
+            case "InsertEdit":
+                text = editJso.getStringField("text");
+                textEdit = new InsertEdit(offSet, text);
+                break;
+            case "CopyingRangeMarker":
+                length = editJso.getFieldCastedToInteger("length");
+                textEdit = new CopyingRangeMarker(offSet,length);
+                break;
+            case "CopySourceEdit":
+                length = editJso.getFieldCastedToInteger("length");
+                Jso copyTargetEditJso = (Jso)editJso.getObjectField("CopyTargetEdit");
+                if (copyTargetEditJso != null) {
+                    int offSetCopyTargetEdit = copyTargetEditJso.getFieldCastedToInteger("offSet");
+
+                    CopyTargetEdit copyTargetEdit = new CopyTargetEdit(offSetCopyTargetEdit);
+                    textEdit = new CopySourceEdit(offSet, length, copyTargetEdit);
+                } else textEdit = new CopySourceEdit(offSet, length);
+                break;
+            case "MoveSourceEdit":
+                length = editJso.getFieldCastedToInteger("length");
+                Jso moveTargetEditJso = (Jso)editJso.getObjectField("MoveTargetEdit");
+                if (moveTargetEditJso != null) {
+                    int offSetMoveTargetEdit = moveTargetEditJso.getFieldCastedToInteger("offSet");
+                    MoveTargetEdit moveTargetEdit = new MoveTargetEdit(offSetMoveTargetEdit);
+                    textEdit = new MoveSourceEdit(offSet, length, moveTargetEdit);
+                } else textEdit = new MoveSourceEdit(offSet, length);
+                break;
+            case "MoveTargetEdit":
+                Jso moveSourceEditJso = (Jso)editJso.getObjectField("MoveSourceEdit");
+                if(moveSourceEditJso != null){
+                    int offSetMoveSourceEdit = moveSourceEditJso.getFieldCastedToInteger("offSet");
+                    int lengthMoveSourceEdit = moveSourceEditJso.getFieldCastedToInteger("length");
+                    MoveSourceEdit moveSourceEdit = new MoveSourceEdit(offSetMoveSourceEdit, lengthMoveSourceEdit);
+                    textEdit = new MoveTargetEdit(offSet, moveSourceEdit);
+                }else textEdit = new MoveTargetEdit(offSet);
+                break;
+            case "MultiTextEdit":
+                length = editJso.getFieldCastedToInteger("length");
+                textEdit = new MultiTextEdit(offSet, length);
+                break;
+            case "RangeMarker":
+                length = editJso.getFieldCastedToInteger("length");
+                textEdit = new RangeMarker(offSet,length);
+                break;
+            case "CopyTargetEdit":
+                Jso copySourceEditJso = (Jso)editJso.getObjectField("CopySourceEdit");
+                if(copySourceEditJso != null){
+                    int offSetCopySourceEdit = copySourceEditJso.getFieldCastedToInteger("offSet");
+                    int lengthCopySourceEdit = copySourceEditJso.getFieldCastedToInteger("length");
+
+                    CopySourceEdit copySourceEdit = new CopySourceEdit(offSetCopySourceEdit, lengthCopySourceEdit);
+                    textEdit = new CopyTargetEdit(offSet, copySourceEdit);
+                }else textEdit = new CopyTargetEdit(offSet);
+                break;
+        }
+
+        JsoArray children = editJso.getArrayField("children");
+
+        if (children != null) {
+            textEdit.addChildren(convertChildrenTextEditFromJso(children));
+        }
+        return textEdit;
     }
 
+    private TextEdit[] convertChildrenTextEditFromJso(JsoArray childrenJso){
+        TextEdit[] edits = null;
+        for (int i = 0; i<childrenJso.size();i++) {
+            Jso child =(Jso) childrenJso.get(i);
+            edits[i] = convertTextEditFromJso(child);
+        }
+        return edits;
+    }
     private void handleUpdateOutline(OutlineUpdateMessage message) {
         if (outlineCallbacks.containsKey(message.getFileId())) {
             WorkerCallback<WorkerCodeBlock> callback = outlineCallbacks.get(message.getFileId());
@@ -132,6 +250,15 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         
         MessagesImpls.RemoveFqnMessageImpl message = MessagesImpls.RemoveFqnMessageImpl.make();
         message.setFqn(fqn);
+        worker.postMessage(message.serialize());
+    }
+
+    @Override
+    public void format(int offset, int length, String content, ApplyFormatCallback callback) {
+        String uuid = UUID.uuid();
+        applyFormatCallback.put(uuid, callback);
+        MessagesImpls.FormatMessageImpl message = MessagesImpls.FormatMessageImpl.make();
+        message.setId(uuid).setOffset(offset).setLength(length).setContent(content);
         worker.postMessage(message.serialize());
     }
 

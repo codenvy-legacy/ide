@@ -28,6 +28,8 @@ import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentCommand;
 import com.codenvy.ide.text.DocumentImpl;
+import com.codenvy.ide.text.Region;
+import com.codenvy.ide.text.RegionImpl;
 import com.codenvy.ide.text.TextUtilities;
 import com.codenvy.ide.text.annotation.AnnotationModel;
 import com.codenvy.ide.text.store.DocumentModel;
@@ -35,6 +37,7 @@ import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.text.store.TextStoreMutator;
 import com.codenvy.ide.texteditor.api.AutoEditStrategy;
 import com.codenvy.ide.texteditor.api.BeforeTextListener;
+import com.codenvy.ide.texteditor.api.ContentFormatter;
 import com.codenvy.ide.texteditor.api.KeyListener;
 import com.codenvy.ide.texteditor.api.NativeKeyUpListener;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
@@ -123,6 +126,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
     private final LeftGutterManager leftGutterManager;
     private final ListenerManager<ReadOnlyListener>  readOnlyListenerManager  = ListenerManager.create();
     private final ListenerManager<TextInputListener> textInputListenerManager = ListenerManager.create();
+    private       ContentFormatter                   contentFormatter;
     private final EditorActivityManager     editorActivityManager;
     private final RenderTimeExecutor        renderTimeExecutor;
     private final com.codenvy.ide.Resources resources;
@@ -534,6 +538,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         StringMap<CodeAssistProcessor> processors = configuration.getContentAssistantProcessors(this);
         setDocumentPartitioning(configuration.getConfiguredDocumentPartitioning(this));
         Reconciler reconciler = configuration.getReconciler(this);
+        contentFormatter = configuration.getContentFormatter(this);
         if (reconciler != null) {
             reconciler.install(this);
         }
@@ -651,11 +656,19 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         if (TextEditorOperations.CODEASSIST_PROPOSALS == operation && codeAssistant != null) {
             return true;
         }
+
         if (TextEditorOperations.QUICK_ASSIST == operation && quickAssistAssistant != null) {
             return true;
         }
+
+        if (TextEditorOperations.FORMAT == operation && contentFormatter != null) {
+            return true;
+        }
+
+        throw new UnsupportedOperationException("Operation code: " + operation + " is not supported!");
         // TODO implement all code in TextEditorOperations
-        return false;
+
+
     }
 
     /** @see com.codenvy.ide.texteditor.api.TextEditorPartView#doOperation(int) */
@@ -672,6 +685,17 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
                     quickAssistAssistant.showPossibleQuickAssists();
                 }
                 break;
+            case TextEditorOperations.FORMAT:
+                if (contentFormatter != null){
+                    int lengthSelectedRange = selectionManager.getSelectionModel().getSelectedRange().getLength();
+                    int offset = selectionManager.getSelectionModel().getSelectedRange().getOffset();
+                    Region region = null;
+                    if (lengthSelectedRange > 0){
+                        region = new RegionImpl(offset, lengthSelectedRange);
+                    }
+                    else {region = new RegionImpl(0, getDocument().getLength());}
+                    contentFormatter.format(getDocument(),region);
+                }
             default:
                 throw new UnsupportedOperationException("Operation code: " + operation + " is not supported!");
         }
