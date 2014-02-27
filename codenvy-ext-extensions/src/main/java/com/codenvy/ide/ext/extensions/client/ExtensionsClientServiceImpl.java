@@ -64,7 +64,7 @@ public class ExtensionsClientServiceImpl implements ExtensionsClientService {
     public void launch(@NotNull String projectName, @NotNull AsyncRequestCallback<ApplicationProcessDescriptor> callback) {
         final String requestUrl = restContext + "/runner/" + workspaceId + "/run";
         String params = "project=" + projectName;
-        asyncRequestFactory.createPostRequest(requestUrl + "?" + params, null).send(callback);
+        asyncRequestFactory.createPostRequest(requestUrl + "?" + params, null).data("{}").header("content-type", "application/json").send(callback);
     }
 
     /** {@inheritDoc} */

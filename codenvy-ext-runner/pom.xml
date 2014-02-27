@@ -196,8 +196,8 @@
                     <dtoPackages>
                         <package>com.codenvy.api.core.rest.shared.dto</package>
                         <package>com.codenvy.api.project.shared.dto</package>
+                        <package>com.codenvy.api.builder.dto</package>
                         <package>com.codenvy.api.runner.dto</package>
-                        <package>com.codenvy.api.runner.internal.dto</package>
                     </dtoPackages>
                     <outputDirectory>${dto-generator-out-directory}</outputDirectory>
                     <genClassName>com.codenvy.ide.ext.extensions.client.dto.DtoClientImpls</genClassName>
