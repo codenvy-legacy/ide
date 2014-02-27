@@ -31,7 +31,7 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExten
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 21, 2012 11:36:05 AM anya $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class RollbackControl extends SimpleControl implements IDEControl, 
             ProjectOpenedHandler, ProjectClosedHandler {
     

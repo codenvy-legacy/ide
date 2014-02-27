@@ -39,7 +39,7 @@ import static com.codenvy.ide.factory.client.FactoryExtension.LOCALIZATION_CONST
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: FactoryUrlControl.java Jun 11, 2013 11:25:21 AM azatsarynnyy $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 @DisableInTempWorkspace
 public class FactoryUrlControl extends SimpleControl implements IDEControl, VfsChangedHandler, ProjectOpenedHandler,
                                                     ProjectClosedHandler {

@@ -73,7 +73,7 @@ public class VFSPermissionsCheckerTest {
         assertTrue(userPermissionsChecker.isAccessAllowed("", null, projectDirectory));
     }
 
-    /* If project has ALL permissions to "workspace/developer" group, user with role "developer" should have access */
+    /* If project has ALL permissions to "workspace/developer" group, user with role "workspace/developer" should have access */
     @Test
     public void testProjectWithWorkspaceDeveloperGroupAllPermissionsAndUserWithDeveloperRole()
             throws OrganizationServiceException, IOException, ServletException {
@@ -81,8 +81,8 @@ public class VFSPermissionsCheckerTest {
         PrincipalImpl userPrincipal = new PrincipalImpl("workspace/developer", Principal.Type.GROUP);
         createProjectACL(getPermissionsMap(userPrincipal, VirtualFileSystemInfo.BasicPermissions.ALL));
         //then
-        assertTrue(userPermissionsChecker.isAccessAllowed("user", getSetOfRoles("developer"), projectDirectory));
-        assertFalse(userPermissionsChecker.isAccessAllowed("user", getSetOfRoles("president"), projectDirectory));
+        assertTrue(userPermissionsChecker.isAccessAllowed("user", getSetOfRoles("workspace/developer"), projectDirectory));
+        assertFalse(userPermissionsChecker.isAccessAllowed("user", getSetOfRoles("workspace/president"), projectDirectory));
     }
 
     /* If project has ALL permissions to specific user, only this user should have access  */
@@ -92,8 +92,8 @@ public class VFSPermissionsCheckerTest {
         PrincipalImpl userPrincipal = new PrincipalImpl("user", Principal.Type.USER);
         createProjectACL(getPermissionsMap(userPrincipal, VirtualFileSystemInfo.BasicPermissions.ALL));
         //then
-        assertTrue(userPermissionsChecker.isAccessAllowed("user", getSetOfRoles("developer"), projectDirectory));
-        assertFalse(userPermissionsChecker.isAccessAllowed("ChuckNorris", getSetOfRoles("developer"), projectDirectory));
+        assertTrue(userPermissionsChecker.isAccessAllowed("user", getSetOfRoles("workspace/developer"), projectDirectory));
+        assertFalse(userPermissionsChecker.isAccessAllowed("ChuckNorris", getSetOfRoles("workspace/developer"), projectDirectory));
     }
 
     @Test
@@ -102,8 +102,8 @@ public class VFSPermissionsCheckerTest {
         PrincipalImpl userPrincipal = new PrincipalImpl("user", Principal.Type.USER);
         createWorkspaceACL(getPermissionsMap(userPrincipal, VirtualFileSystemInfo.BasicPermissions.ALL));
         //then
-        assertTrue(userPermissionsChecker.isAccessAllowed("user", getSetOfRoles("developer"), projectDirectory));
-        assertFalse(userPermissionsChecker.isAccessAllowed("ChuckNorris", getSetOfRoles("developer"), projectDirectory));
+        assertTrue(userPermissionsChecker.isAccessAllowed("user", getSetOfRoles("workspace/developer"), projectDirectory));
+        assertFalse(userPermissionsChecker.isAccessAllowed("ChuckNorris", getSetOfRoles("workspace/developer"), projectDirectory));
     }
 
     /* delete project acl file after test */

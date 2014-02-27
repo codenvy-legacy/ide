@@ -32,7 +32,7 @@ import org.exoplatform.ide.editor.client.api.EditorCapability;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Apr 13, 2012 1:43:52 PM anya $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class ToggleCommentControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler {
 
     public static final String ID = "Edit/Toggle Comment";

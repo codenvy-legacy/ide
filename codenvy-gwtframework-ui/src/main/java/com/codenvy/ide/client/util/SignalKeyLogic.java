@@ -42,6 +42,8 @@ public final class SignalKeyLogic {
      */
     public static final int IME_CODE = 229;
 
+    protected String operatingSystem = "Unknown OS";
+
     private static final String DELETE_KEY_IDENTIFIER = "U+007F";
 
     //TODO(danilatos): Use int map
@@ -68,15 +70,11 @@ public final class SignalKeyLogic {
     }
 
     public enum UserAgentType {
-        WEBKIT,
-        GECKO,
-        IE
+        WEBKIT, GECKO, IE
     }
 
     public enum OperatingSystem {
-        WINDOWS,
-        MAC,
-        LINUX
+        WINDOWS, MAC, LINUX
     }
 
     public static class Result {
@@ -90,7 +88,6 @@ public final class SignalKeyLogic {
 
     private final boolean commandIsCtrl;
 
-
     // Hack, get rid of this
     final boolean commandComboDoesntGiveKeypress;
 
@@ -103,6 +100,8 @@ public final class SignalKeyLogic {
         this.userAgent = userAgent;
         this.commandComboDoesntGiveKeypress = commandComboDoesntGiveKeypress;
         commandIsCtrl = os != OperatingSystem.MAC;
+        //For a correct determination os in debug mode
+        operatingSystem = getOperatingSystem();
     }
 
     public boolean commandIsCtrl() {
@@ -157,6 +156,7 @@ public final class SignalKeyLogic {
                 // us keypress events (though they happen after the dom is changed,
                 // for some things like delete. So not too useful). The number
                 // 63200 is known as the cutoff mark.
+                keyIdentifier = keyIdentifierModifierForWindowsChromeV32Bugs(keyIdentifier, keyCode, typeName);
                 if (typeInt == Event.ONKEYDOWN && computedKeyCode > 63200) {
                     result.type = null;
                     return;
@@ -195,7 +195,7 @@ public final class SignalKeyLogic {
                 } else if (computedKeyCode == KeyCodes.KEY_ESCAPE || "U+0010".equals(keyIdentifier)) {
                     type = KeySignalType.NOEFFECT;
                 } else if (computedKeyCode < 63200 && // if it's not a safari 3.0 non-input key (See (X) above)
-                           (typeInt == Event.ONKEYPRESS ||  // if it's a regular keypress
+                           (typeInt == Event.ONKEYPRESS || // if it's a regular keypress
                             startsWithUPlus || computedKeyCode == KeyCodes.KEY_ENTER)) {
                     type = KeySignalType.INPUT;
                     isActuallyCtrlInput = ctrlKey || (commandComboDoesntGiveKeypress && commandKey);
@@ -245,7 +245,8 @@ public final class SignalKeyLogic {
                     type = KeySignalType.DELETE;
                     // This 'keyCode' but not 'which' works very nicely for catching normal typing input keys,
                     // the only 'exceptions' I've seen so far are bksp & enter which have both
-                } else if (!hasKeyCodeButNotWhich || computedKeyCode == KeyCodes.KEY_ENTER || computedKeyCode == KeyCodes.KEY_TAB) {
+                } else if (!hasKeyCodeButNotWhich || computedKeyCode == KeyCodes.KEY_ENTER
+                           || computedKeyCode == KeyCodes.KEY_TAB) {
                     type = KeySignalType.INPUT;
                 } else if (computedKeyCode == KeyCodes.KEY_DELETE) {
                     type = KeySignalType.DELETE;
@@ -315,28 +316,28 @@ public final class SignalKeyLogic {
     }
 
     private static final boolean isInputKeyCodeIE(int keyCode) {
-    /*
-    DATA
-    ----
-    For KEYDOWN:
+      /*
+      DATA
+      ----
+      For KEYDOWN:
 
-    "Input"
-    48-57 (numbers)
-    65-90 (a-z)
-    96-111 (Numpad digits & other keys, with numlock off. with numlock on, they
-      behave like their corresponding keys on the rest of the keyboard)
-    186-192 219-222 (random non-alphanumeric next to letters on RHS + backtick)
-    229 Code that the input has passed to an IME
+      "Input"
+      48-57 (numbers)
+      65-90 (a-z)
+      96-111 (Numpad digits & other keys, with numlock off. with numlock on, they
+        behave like their corresponding keys on the rest of the keyboard)
+      186-192 219-222 (random non-alphanumeric next to letters on RHS + backtick)
+      229 Code that the input has passed to an IME
 
-    Non-"input"
-    < 48 ('0')
-    91-93 (Left & Right Win keys, ContextMenu key)
-    112-123 (F1-F12)
-    144-5 (NUMLOCK,SCROLL LOCK)
+      Non-"input"
+      < 48 ('0')
+      91-93 (Left & Right Win keys, ContextMenu key)
+      112-123 (F1-F12)
+      144-5 (NUMLOCK,SCROLL LOCK)
 
-    For KEYPRESS: only "input" things get this event! yay! not even backspace!
-    Well, one exception: ESCAPE
-    */
+      For KEYPRESS: only "input" things get this event! yay! not even backspace!
+      Well, one exception: ESCAPE
+      */
         // boundaries in keycode ranges where the keycode for a keydown is for an input
         // key. at "ON" it is, starting from the number going up, and the opposite for "OFF".
         final int A_ON = 48;
@@ -346,9 +347,7 @@ public final class SignalKeyLogic {
         final int E_ON = 186;
 
         return (keyCode == 9 || keyCode == 32 || keyCode == 13) || // And tab, enter & spacebar, of course!
-               (keyCode >= A_ON && keyCode < B_OFF) ||
-               (keyCode >= C_ON && keyCode < D_OFF) ||
-               (keyCode >= E_ON);
+               (keyCode >= A_ON && keyCode < B_OFF) || (keyCode >= C_ON && keyCode < D_OFF) || (keyCode >= E_ON);
     }
 
     /**
@@ -373,4 +372,43 @@ public final class SignalKeyLogic {
 
         return ret;
     }
+
+    /**
+     * Replace keyIdentifier bugs for Chrome
+     */
+    public String keyIdentifierModifierForWindowsChromeV32Bugs(String keyIdentifier, int keyCode, String typeName) {
+        if (operatingSystem.indexOf("Win") != -1) {
+            if (typeName.equalsIgnoreCase("keypress")) {
+                if (((keyCode == 46) && (keyIdentifier.equalsIgnoreCase("U+007F")))
+                    || ((keyCode == 39) && (keyIdentifier.equalsIgnoreCase("Right")))
+                    || ((keyCode == 34) && (keyIdentifier.equalsIgnoreCase("PageDown")))
+                    || ((keyCode == 40) && (keyIdentifier.equalsIgnoreCase("Down")))
+                    || ((keyCode == 38) && (keyIdentifier.equalsIgnoreCase("Up")))
+                    || ((keyCode == 37) && (keyIdentifier.equalsIgnoreCase("Left")))
+                    || ((keyCode == 36) && (keyIdentifier.equalsIgnoreCase("Home")))
+                    || ((keyCode == 35) && (keyIdentifier.equalsIgnoreCase("End")))
+                    || ((keyCode == 33) && (keyIdentifier.equalsIgnoreCase("PageUp")))) {
+
+                    StringBuilder newKeyIdentifier = new StringBuilder();
+                    String hexKeyCode = Integer.toHexString(keyCode).toUpperCase();
+                    int lengthHexKeyCode = hexKeyCode.length();
+
+                    newKeyIdentifier.append("U+");
+                    for (int n = (4 - lengthHexKeyCode); n > 0; n--) {
+                        newKeyIdentifier.append("0");
+                    }
+                    newKeyIdentifier.append(hexKeyCode);
+                    keyIdentifier = newKeyIdentifier.toString();
+                }
+            }
+        }
+        return keyIdentifier;
+    }
+
+    /**
+     * Get information of the browser as a string
+     */
+    protected static native String getOperatingSystem() /*-{
+        return navigator.appVersion;
+    }-*/;
 }

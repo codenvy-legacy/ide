@@ -18,9 +18,12 @@
 
 package com.codenvy.ide.factory.client.marshaller;
 
-import com.codenvy.api.factory.AdvancedFactoryUrl;
-import com.codenvy.api.factory.Variable;
+import com.codenvy.api.factory.dto.AdvancedFactoryUrl;
+import com.codenvy.api.factory.dto.Replacement;
+import com.codenvy.api.factory.dto.Variable;
 import com.codenvy.ide.factory.shared.AdvancedFactorySpec;
+import com.codenvy.ide.factory.shared.ReplacementImpl;
+import com.codenvy.ide.factory.shared.VariableImpl;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -133,7 +136,7 @@ public class AdvancedFactoryUrlUnmarshaller implements Unmarshallable<AdvancedFa
                 JSONObject variableObject = vars.get(i).isObject();
 
                 List<String> files = new ArrayList<String>();
-                List<Variable.Replacement> variableEntries = new ArrayList<Variable.Replacement>();
+                List<Replacement> variableEntries = new ArrayList<Replacement>();
 
                 JSONArray jsonFiles = variableObject.get("files").isArray();
                 for (int j = 0; j < jsonFiles.size(); j++) {
@@ -148,13 +151,13 @@ public class AdvancedFactoryUrlUnmarshaller implements Unmarshallable<AdvancedFa
 
                     if (entryObject.get("replacemode") != null && entryObject.get("replacemode").isString() != null) {
                         String replaceMode = entryObject.get("replacemode").isString().stringValue();
-                        variableEntries.add(new Variable.Replacement(find, replace, replaceMode));
+                        variableEntries.add(new ReplacementImpl(find, replace, replaceMode));
                     } else {
-                        variableEntries.add(new Variable.Replacement(find, replace));
+                        variableEntries.add(new ReplacementImpl(find, replace));
                     }
                 }
 
-                variables.add(new Variable(files, variableEntries));
+                variables.add(new VariableImpl(files, variableEntries));
             }
         }
 

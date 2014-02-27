@@ -29,7 +29,7 @@ import org.exoplatform.ide.git.client.reset.ResetToCommitEvent;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 14, 2011 5:58:58 PM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class ResetToCommitControl extends GitControl {
     public ResetToCommitControl() {
         super(GitExtension.MESSAGES.resetToCommitControlId());

@@ -38,7 +38,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: InitializeApplicationControl.java Jun 23, 2011 12:00:53 PM vereshchaka $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class InitializeApplicationControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler,
                                                                PropertiesChangedHandler {
 

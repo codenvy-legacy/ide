@@ -29,9 +29,9 @@ import org.exoplatform.ide.extension.samples.client.startpage.PremiumAccountInfo
  * @author Vladislav Zhukovskii
  */
 public class FeedbackControl extends SimpleControl implements IDEControl, PremiumAccountInfoReceivedHandler {
-    private static final String ID = "Help/Submit Feedback";
+    private static final String ID = "Help/Vote for Features";
 
-    private static final String TITLE = "Submit Feedback";
+    private static final String TITLE = "Vote for Features";
 
     public FeedbackControl() {
         super(ID);

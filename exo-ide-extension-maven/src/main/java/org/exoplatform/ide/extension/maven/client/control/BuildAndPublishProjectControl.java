@@ -27,7 +27,7 @@ import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: BuildAndPublishProjectControl.java Oct 18, 2012 vetal $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class BuildAndPublishProjectControl extends BuildProjectControlAbstract
 
 {

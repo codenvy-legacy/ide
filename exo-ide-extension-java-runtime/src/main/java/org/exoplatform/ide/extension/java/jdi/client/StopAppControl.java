@@ -31,7 +31,7 @@ import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class StopAppControl extends SimpleControl implements IDEControl, AppStartedHandler, AppStoppedHandler,
                                                              ProjectClosedHandler, ProjectOpenedHandler, ItemsSelectedHandler {
     public static final String  ID                = DebuggerExtension.LOCALIZATION_CONSTANT.stopAppControlId();

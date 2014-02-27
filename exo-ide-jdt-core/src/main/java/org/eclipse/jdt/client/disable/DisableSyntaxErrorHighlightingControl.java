@@ -33,7 +33,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
  *
  * @author <a href="mailto:vsvydenko@codenvy.com">Valeriy Svydenko</a>
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class DisableSyntaxErrorHighlightingControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler {
 
     private boolean isJavaProject = false;

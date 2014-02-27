@@ -35,7 +35,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHa
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class NewItemMenuGroup extends SimpleControl implements IDEControl, VfsChangedHandler,
                                                                ViewVisibilityChangedHandler {
 

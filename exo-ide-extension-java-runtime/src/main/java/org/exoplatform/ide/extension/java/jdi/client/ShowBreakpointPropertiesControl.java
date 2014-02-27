@@ -32,7 +32,7 @@ import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
 * @version $Id: ShowBreakpointPropertiesControl.java May 11, 2012 12:44:25 PM azatsarynnyy $
 */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class ShowBreakpointPropertiesControl extends SimpleControl implements IDEControl, ShowContextMenuHandler,
                                                                               DebuggerConnectedHandler, DebuggerDisconnectedHandler, AppStoppedHandler {
     /** Control's identifier. */

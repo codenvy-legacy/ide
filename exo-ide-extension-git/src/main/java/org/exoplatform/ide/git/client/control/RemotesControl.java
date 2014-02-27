@@ -28,7 +28,7 @@ import org.exoplatform.ide.git.client.remote.ShowRemotesEvent;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 18, 2011 10:21:02 AM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class RemotesControl extends GitControl {
     public RemotesControl() {
         super(GitExtension.MESSAGES.remotesControlId());

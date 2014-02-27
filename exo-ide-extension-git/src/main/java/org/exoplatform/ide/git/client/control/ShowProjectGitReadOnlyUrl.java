@@ -29,7 +29,7 @@ import org.exoplatform.ide.git.client.init.ShowProjectGitReadOnlyUrlEvent;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 18, 2011 10:21:02 AM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class ShowProjectGitReadOnlyUrl extends GitControl {
     public ShowProjectGitReadOnlyUrl() {
         super(GitExtension.MESSAGES.projectReadOnlyGitUrlId());

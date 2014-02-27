@@ -29,7 +29,7 @@ import org.exoplatform.ide.git.client.remove.RemoveFilesEvent;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 12, 2011 3:33:56 PM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class RemoveFilesControl extends GitControl {
     public RemoveFilesControl() {
         super(GitExtension.MESSAGES.removeControlId());

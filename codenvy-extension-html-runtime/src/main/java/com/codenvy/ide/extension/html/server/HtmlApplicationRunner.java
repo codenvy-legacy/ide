@@ -112,7 +112,7 @@ public class HtmlApplicationRunner implements ApplicationRunner {
         final String name = getApplicationName();
         try {
             final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
-            final String wsName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString();
+            final String wsName = EnvironmentContext.getCurrent().getWorkspaceName();
             final String userId = ConversationState.getCurrent().getIdentity().getUserId();
 
             applications.put(name, new RunnedApplication(name, expired, project.getName(), wsMountPath + project.getPath()));

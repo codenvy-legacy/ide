@@ -43,7 +43,7 @@ import java.util.List;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 8, 2011 2:12:50 PM anya $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class ProjectPaaSControl extends SimpleControl implements IDEControl,
          ProjectOpenedHandler, ProjectClosedHandler, FolderRefreshedHandler,
          ItemsSelectedHandler

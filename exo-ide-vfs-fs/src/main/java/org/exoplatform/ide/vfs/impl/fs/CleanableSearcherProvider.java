@@ -62,7 +62,7 @@ public class CleanableSearcherProvider implements SearcherProvider {
         CleanableSearcher searcher = instances.get(vfsIoRoot);
         if (searcher == null && create) {
             final EnvironmentContext context = EnvironmentContext.getCurrent();
-            final String workspaceId = (String)context.getVariable(EnvironmentContext.WORKSPACE_ID);
+            final String workspaceId = context.getWorkspaceId();
             if (workspaceId == null || workspaceId.isEmpty()) {
                 throw new VirtualFileSystemException("Unable create searcher. Workspace id is not set.");
             }

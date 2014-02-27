@@ -161,7 +161,7 @@ public class BuilderClient {
         URL url = new URL(baseURL + "/builder/maven/deploy");
         String buildId = run(url, vfs.exportZip(projectId));
         final String uniqueBuildID = UUID.randomUUID().toString();
-        final String wsName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString();
+        final String wsName = EnvironmentContext.getCurrent().getWorkspaceName();
         final String userId = ConversationState.getCurrent().getIdentity().getUserId();
         LOG.info("EVENT#build-started# PROJECT#" + projectName + "# TYPE#" + projectType + "# ID#" + uniqueBuildID + "#");
         LOG.info("EVENT#artifact-deployed# WS#" + wsName + "# USER#" + userId + "# PROJECT#" + projectName + "# TYPE#" + projectType + "# PAAS#LOCAL#");
@@ -430,7 +430,7 @@ public class BuilderClient {
      */
     private void startCheckingBuildStatus(final String buildId, final String projectName, final String projectType,
                                           final String uniqueBuildID) {
-        final String ws = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString();
+        final String ws = EnvironmentContext.getCurrent().getWorkspaceName();
         final String userId = ConversationState.getCurrent().getIdentity().getUserId();
         TimerTask task = new TimerTask() {
             @Override

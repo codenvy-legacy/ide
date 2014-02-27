@@ -81,8 +81,8 @@ public abstract class ResourcesBaseTest {
         eventListenerList = new EventListenerList();
         memoryContext = new MemoryFileSystemContext();
         EnvironmentContext env = EnvironmentContext.getCurrent();
-        env.setVariable(EnvironmentContext.WORKSPACE_ID, ID);
-        env.setVariable(EnvironmentContext.WORKSPACE_NAME, ID);
+        env.setWorkspaceId(ID);
+        env.setWorkspaceName(ID);
 
         virtualFileSystemRegistry.registerProvider(ID, new MemoryFileSystemProvider(ID, memoryContext));
         vfs = virtualFileSystemRegistry.getProvider(ID).newInstance(null, eventListenerList);
@@ -107,7 +107,7 @@ public abstract class ResourcesBaseTest {
         deployer.publish(new VirtualFileSystemApplication());
 
         // RUNTIME VARIABLES
-        ConversationState.setCurrent(new ConversationState(new Identity("ide", new ArrayList<MembershipEntry>(0), Arrays.asList("developer"))));
+        ConversationState.setCurrent(new ConversationState(new Identity("ide", new ArrayList<MembershipEntry>(0), Arrays.asList("workspace/developer"))));
         
 
     }

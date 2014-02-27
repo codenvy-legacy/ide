@@ -175,7 +175,7 @@ public class SSHKeyProcessor implements SSHKeyProcessorHandler, GenerateGitHubKe
     @Override
     public void onGenerateGitHubSshKey(GenerateGitHubKeyEvent event) {
         this.callback = sshKeyGeneratedCallback;
-        generateNewKeyPair(new GitUrlVendorInfo("github", "github.com", Arrays.asList("user", "repo"), false));
+        generateNewKeyPair(new GitUrlVendorInfo("github", "github.com", Arrays.asList("user", "repo", "write:public_key"), false));
     }
 
     Callback sshKeyGeneratedCallback = new Callback() {

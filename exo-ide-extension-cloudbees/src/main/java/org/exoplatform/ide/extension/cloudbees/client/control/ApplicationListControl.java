@@ -32,7 +32,7 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Sep 21, 2011 evgen $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class ApplicationListControl extends SimpleControl implements IDEControl, VfsChangedHandler {
 
     private VirtualFileSystemInfo vfsInfo;

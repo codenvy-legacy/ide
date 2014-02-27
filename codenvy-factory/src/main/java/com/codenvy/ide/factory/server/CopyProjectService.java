@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.factory.server;
 
-import com.codenvy.api.core.user.UserState;
 import com.codenvy.commons.env.EnvironmentContext;
+import com.codenvy.commons.user.User;
 
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -79,16 +79,15 @@ public class CopyProjectService {
     public List<Item> copyProjects(@QueryParam("downloadurl") String baseDownloadUrl, List<String> projects)
             throws VirtualFileSystemException,
                    IOException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID)
-                                                                          .toString()).newInstance(null, null);
+        VirtualFileSystem vfs = vfsRegistry.getProvider(EnvironmentContext.getCurrent().getWorkspaceId()).newInstance(null, null);
 
         String tmpWorkspace = baseDownloadUrl.substring(baseDownloadUrl.indexOf("tmp")).substring(0, baseDownloadUrl
                 .substring(baseDownloadUrl.indexOf("tmp")).indexOf("/"));
 
         String authToken = null;
-        UserState userState = UserState.get();
-        if (userState != null) {
-            authToken = (String)userState.getAttribute("token");
+        User user = EnvironmentContext.getCurrent().getUser();
+        if (user != null && user.getToken() != null) {
+            authToken = user.getToken();
         }
 
         List<Item> importedProjects = new ArrayList<>();

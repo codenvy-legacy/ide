@@ -31,7 +31,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 9:57:22 AM Mar 5, 2012 evgen $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class CleanProjectControl extends SimpleControl implements IDEControl, 
             ProjectOpenedHandler, ProjectClosedHandler {
 

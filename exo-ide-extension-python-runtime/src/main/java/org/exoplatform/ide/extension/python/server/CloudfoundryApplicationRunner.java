@@ -192,7 +192,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             final CloudFoundryApplication cfApp = createApplication(cloudfoundry, target, name, appDir, type);
             final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
 
-            String wsName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString();
+            String wsName = EnvironmentContext.getCurrent().getWorkspaceName();
             String userId = ConversationState.getCurrent().getIdentity().getUserId();
 
             applications.put(name, new Application(name, target, expired, projectName, wsName, userId));

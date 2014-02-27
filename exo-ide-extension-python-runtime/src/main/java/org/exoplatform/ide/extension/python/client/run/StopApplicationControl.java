@@ -34,7 +34,7 @@ import org.exoplatform.ide.extension.python.client.run.event.*;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 20, 2012 2:58:43 PM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class StopApplicationControl extends SimpleControl implements IDEControl, ProjectClosedHandler,
                                                                      ProjectOpenedHandler, ApplicationStartedHandler,
                                                                      ApplicationStoppedHandler {

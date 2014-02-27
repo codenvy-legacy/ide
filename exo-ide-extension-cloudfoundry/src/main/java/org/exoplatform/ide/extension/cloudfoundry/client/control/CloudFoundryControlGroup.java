@@ -29,7 +29,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudFoundryControl.java Jul 8, 2011 3:25:33 PM vereshchaka $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class CloudFoundryControlGroup extends SimpleControl implements IDEControl {
 
     private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.cloudFoundryControlId();

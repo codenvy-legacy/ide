@@ -42,7 +42,7 @@ import org.exoplatform.ide.extension.php.client.run.event.StopApplicationEvent;
  * @version $Id: StopApplicationControl.java Apr 17, 2013 4:10:52 PM azatsarynnyy $
  *
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class StopApplicationControl extends SimpleControl implements IDEControl, ProjectClosedHandler,
                                                                      ProjectOpenedHandler, ApplicationStartedHandler,
                                                                      ApplicationStoppedHandler {

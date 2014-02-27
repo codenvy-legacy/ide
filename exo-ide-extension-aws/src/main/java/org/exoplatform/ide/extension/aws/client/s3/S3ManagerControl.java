@@ -28,7 +28,7 @@ import org.exoplatform.ide.extension.aws.client.s3.events.ShowS3ManagerEvent;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: S3ManagerControl.java Sep 19, 2012 vetal $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class S3ManagerControl extends SimpleControl implements IDEControl
 
 {

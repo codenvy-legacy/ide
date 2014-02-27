@@ -17,11 +17,10 @@
  */
 package com.codenvy.ide.factory.client;
 
-import com.codenvy.api.factory.AdvancedFactoryUrl;
-import com.codenvy.api.factory.SimpleFactoryUrl;
+import com.codenvy.api.factory.dto.AdvancedFactoryUrl;
+import com.codenvy.api.factory.dto.SimpleFactoryUrl;
 import com.google.gwt.http.client.RequestException;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
@@ -112,8 +111,8 @@ public abstract class FactoryClientService {
      *
      * @param downloadUrl
      *         download url for the project
-     * @param projectId
-     *         ID of project to which should be copied
+     * @param projects
+     *         IDs of projects to which should be copied
      * @param callback
      *         callback
      * @throws WebSocketException

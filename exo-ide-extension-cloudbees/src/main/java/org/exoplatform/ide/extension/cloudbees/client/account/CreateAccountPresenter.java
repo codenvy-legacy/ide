@@ -303,7 +303,7 @@ public class CreateAccountPresenter implements CreateAccountHandler, ViewClosedH
             user.setFirst_name(display.getFirstNameField().getValue());
             user.setLast_name(display.getLastNameField().getValue());
             user.setPassword(display.getPasswordField().getValue());
-            user.setRole("admin");
+            user.setRole("workspace/admin");
         }
 
         AutoBean<CloudBeesUser> userBean = CloudBeesExtension.AUTO_BEAN_FACTORY.user();

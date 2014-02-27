@@ -52,7 +52,7 @@ public class AndroidRunnerService {
                       @FormParam("projecttype") String projectType) throws Exception {
         final ManymoApplication manymo = uploadApplication(apk, oauthToken);
 
-        LOG.info("EVENT#application-created# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
+        LOG.info("EVENT#application-created# WS#" + EnvironmentContext.getCurrent().getWorkspaceName()
                  + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + projectName + "# TYPE#" +
                  projectType + "# PAAS#Manymo#");
 

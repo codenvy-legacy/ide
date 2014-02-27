@@ -30,7 +30,7 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExten
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 14, 2012 11:34:04 AM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class LoginControl extends SimpleControl implements IDEControl, SetLoggedUserStateHandler {
     private static final String ID = "PaaS/Google App Engine/Login";
 

@@ -353,7 +353,7 @@ public class LocalFileSystem implements VirtualFileSystem {
                     new VirtualFileSystemInfoImpl(this.vfsId, false, true, VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL,
                                                   VirtualFileSystemInfo.ANY_PRINCIPAL, permissions, ACLCapability.MANAGE,
                                                   searcherProvider == null ? QueryCapability.NONE : QueryCapability.FULLTEXT,
-                                                  LinksHelper.createUrlTemplates(baseUri, EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString()),
+                                                  LinksHelper.createUrlTemplates(baseUri, EnvironmentContext.getCurrent().getWorkspaceName()),
                                                   (Folder)fromVirtualFile(mountPoint.getRoot(), true, PropertyFilter.ALL_FILTER));
         }
         return vfsInfo;
@@ -605,7 +605,7 @@ public class LocalFileSystem implements VirtualFileSystem {
                 String jRebelUsage = updated.hasProperty("jrebel") ? updated.getPropertyValue("jrebel") : "false";
                 VirtualFileSystemUser user = mountPoint.getCurrentVirtualFileSystemUser();
                 LOG.info("EVENT#jrebel-usage# WS#"
-                         + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString() + "# USER#"
+                         + EnvironmentContext.getCurrent().getWorkspaceName() + "# USER#"
                          + user.getUserId() + "# PROJECT#" + updated.getName() + "# TYPE#" + projectType + "# JREBEL#" + jRebelUsage + "#");
             }
         }
@@ -868,16 +868,16 @@ public class LocalFileSystem implements VirtualFileSystem {
             final long modified = virtualFile.getLastModificationDate();
             item = new FileImpl(vfsId, id, name, path, parentId, created, modified, FAKE_VERSION_ID, mediaType, length, locked,
                                 virtualFile.getProperties(propertyFilter),
-                                addLinks ? LinksHelper.createFileLinks(baseUri, EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString(), id, id, path, mediaType, locked, parentId) : null);
+                                addLinks ? LinksHelper.createFileLinks(baseUri, EnvironmentContext.getCurrent().getWorkspaceName(), id, id, path, mediaType, locked, parentId) : null);
         } else {
             if (virtualFile.isProject()) {
                 final String projectType = virtualFile.getPropertyValue("vfs:projectType");
                 item = new ProjectImpl(vfsId, id, name, mediaType, path, parentId, created, virtualFile.getProperties(propertyFilter),
-                                       addLinks ? LinksHelper.createProjectLinks(baseUri, EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString(), id, parentId) : null,
+                                       addLinks ? LinksHelper.createProjectLinks(baseUri, EnvironmentContext.getCurrent().getWorkspaceName(), id, parentId) : null,
                                        projectType == null ? "default" : projectType);
             } else {
                 item = new FolderImpl(vfsId, id, name, mediaType, path, parentId, created, virtualFile.getProperties(propertyFilter),
-                                      addLinks ? LinksHelper.createFolderLinks(baseUri, EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString(), id, isRoot, parentId) : null);
+                                      addLinks ? LinksHelper.createFolderLinks(baseUri, EnvironmentContext.getCurrent().getWorkspaceName(), id, isRoot, parentId) : null);
             }
         }
 

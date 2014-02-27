@@ -94,7 +94,7 @@ public class CloudBeesService {
         if (projectId != null && vfsId != null) {
             VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
             Project proj = (Project)vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
-            LOG.info("EVENT#application-created# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
+            LOG.info("EVENT#application-created# WS#" + EnvironmentContext.getCurrent().getWorkspaceName()
                      + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + proj.getName() + "# TYPE#" + proj.getProjectType()
                      + "# PAAS#CloudBees#");
         }

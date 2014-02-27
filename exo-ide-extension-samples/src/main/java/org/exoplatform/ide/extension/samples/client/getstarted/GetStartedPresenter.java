@@ -247,7 +247,7 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
      * @return <b>true</b> if user can write, <b>false</b> otherwise
      */
     public boolean isRoUser() {
-        return !IDE.user.getRoles().contains("developer") && !IDE.user.getRoles().contains("admin");
+        return !IDE.user.getRoles().contains("workspace/developer") && !IDE.user.getRoles().contains("workspace/admin");
     }
 
     /**

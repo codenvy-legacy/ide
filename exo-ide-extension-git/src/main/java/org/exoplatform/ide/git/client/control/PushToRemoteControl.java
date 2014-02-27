@@ -28,7 +28,7 @@ import org.exoplatform.ide.git.client.push.PushToRemoteEvent;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 4, 2011 9:27:56 AM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class PushToRemoteControl extends GitControl {
     public PushToRemoteControl() {
         super(GitExtension.MESSAGES.pushControlId());

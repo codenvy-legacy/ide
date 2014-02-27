@@ -1,6 +1,7 @@
 package com.codenvy.ide.factory.server;
 
-import com.codenvy.api.factory.Variable;
+import com.codenvy.api.factory.dto.Replacement;
+import com.codenvy.api.factory.dto.Variable;
 import com.codenvy.commons.lang.Deserializer;
 
 import org.slf4j.Logger;
@@ -53,7 +54,7 @@ public class VariableReplacer {
                                     replacementMap.put(file, container);
                                 }
 
-                                for (Variable.Replacement replacement : variable.getEntries()) {
+                                for (Replacement replacement : variable.getEntries()) {
                                     switch (replacement.getReplacemode()) {
                                         case "variable_singlepass":
                                             container.getVariableProps().put(replacement.getFind(), replacement.getReplace());

@@ -28,7 +28,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @version $
  */
 
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class QuickTextSearchControl extends TextInputControl implements IDEControl {
 
     public static final String ID = "Quick search";

@@ -30,7 +30,7 @@ import org.exoplatform.ide.extension.openshift.client.login.SwitchAccountEvent;
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: SwitchAccountControl.java Feb 7, 2012 2:11:44 PM azatsarynnyy $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class SwitchAccountControl extends AbstractOpenShiftControl {
 
     public SwitchAccountControl() {

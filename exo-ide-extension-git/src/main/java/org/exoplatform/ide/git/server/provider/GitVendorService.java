@@ -152,7 +152,7 @@ public abstract class GitVendorService {
      * @return true if ssh, otherwise false
      */
     public static boolean isVcsUrlIsSSH(String vcsUrl) {
-        return vcsUrl.matches("((git|ssh)://)?(.+@)([\\w\\d\\.]+):([\\d]+)?/*(.*)");
+        return vcsUrl.matches("^(?:ssh://)?(?:\\w+@)([a-zA-Z-.]+)(?::(\\d+))?+(?:/|:)(.+)$");
     }
 
     /**

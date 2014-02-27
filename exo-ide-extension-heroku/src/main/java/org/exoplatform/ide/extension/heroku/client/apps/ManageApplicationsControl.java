@@ -30,7 +30,7 @@ import org.exoplatform.ide.extension.heroku.client.control.AbstractHerokuControl
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Mar 14, 2012 5:15:04 PM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class ManageApplicationsControl extends AbstractHerokuControl {
 
     public ManageApplicationsControl() {

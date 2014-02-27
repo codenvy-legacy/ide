@@ -29,7 +29,7 @@ import org.exoplatform.ide.git.client.init.InitRepositoryEvent;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 23, 2011 5:36:00 PM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class InitRepositoryControl extends GitControl {
 
     public InitRepositoryControl() {

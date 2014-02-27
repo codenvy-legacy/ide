@@ -27,7 +27,7 @@ import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 @DisableInTempWorkspace
 public class InviteGoogleDevelopersControl extends SimpleControl implements IDEControl {
 

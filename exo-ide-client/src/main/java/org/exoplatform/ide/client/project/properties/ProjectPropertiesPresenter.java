@@ -262,7 +262,7 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
 
     private void onPropertySelected(Property property) {
         selectedProperty = property;
-        if (!IDE.user.getRoles().contains("developer") && !IDE.user.getRoles().contains("admin")) {
+        if (!IDE.user.getRoles().contains("workspace/developer") && !IDE.user.getRoles().contains("workspace/admin")) {
             display.setEditButtonEnabled(false);
             display.setDeleteButtonEnabled(false);
             return;

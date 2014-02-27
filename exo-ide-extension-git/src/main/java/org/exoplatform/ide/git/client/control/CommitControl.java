@@ -29,7 +29,7 @@ import org.exoplatform.ide.git.client.commit.CommitEvent;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 31, 2011 9:21:04 AM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class CommitControl extends GitControl {
     public CommitControl() {
         super(GitExtension.MESSAGES.commitControlId());
