@@ -84,6 +84,12 @@
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>
+	<dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>empty-extension</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>gin-tutorial</artifactId>
@@ -93,6 +99,12 @@
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>gist-extension</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+	<dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>helloworld-extension</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
@@ -356,6 +368,24 @@
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
                                     <destFileName>gist-extension.zip</destFileName>
+                                </artifactItem>
+				 <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>empty-extension</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>empty-extension.zip</destFileName>
+                                </artifactItem>
+				<artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>helloworld-extension</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>helloworld-extension.zip</destFileName>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>com.codenvy.ide</groupId>
