@@ -48,11 +48,18 @@ import org.eclipse.jdt.internal.compiler.util.ObjectVector;
 import org.eclipse.jdt.internal.core.JavaModelStatus;
 import org.eclipse.jdt.internal.core.OpenableElementInfo;
 import org.eclipse.jdt.internal.core.util.MementoTokenizer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -60,21 +67,40 @@ import java.util.Map;
  */
 public class JavaProject extends Openable implements IJavaProject {
 
-
+    private static final Logger LOG = LoggerFactory.getLogger(JavaProject.class);
     private VirtualFileImpl   project;
     private IClasspathEntry[] rawClassPath;
     private ResolvedClasspath resolvedClasspath;
 
-    public JavaProject(VirtualFileImpl project) {
+    public JavaProject(VirtualFileImpl project, String tempDir) {
         super(null);
         this.project = project;
+        List<IClasspathEntry> paths = new ArrayList<>();
         String[] values =
                 new String[]{"src/main/java", "src/test/java"};///project.getPropertyValues(foldersValueProviderFactory.getName());
-        rawClassPath = new IClasspathEntry[values.length + 1];
-        rawClassPath[0] = JavaCore.newContainerEntry(new Path("codenvy:Jre"));
+        paths.add(JavaCore.newContainerEntry(new Path("codenvy:Jre")));
 
-        for (int i = 0; i < values.length; i++) {
-            rawClassPath[i + 1] = JavaCore.newSourceEntry(new Path(project.getIoFile().getPath() + "/" + values[i]));
+        for (String value : values) {
+            paths.add(JavaCore.newSourceEntry(new Path(project.getIoFile().getPath() + "/" + value)));
+        }
+        try {
+            File depDir = new File(tempDir, project.getId());
+            if (depDir.exists()) {
+                DirectoryStream<java.nio.file.Path> deps =
+                        Files.newDirectoryStream(depDir.toPath(), new DirectoryStream.Filter<java.nio.file.Path>() {
+                            @Override
+                            public boolean accept(java.nio.file.Path entry) throws IOException {
+                                return entry.getFileName().toString().endsWith("jar");
+                            }
+                        });
+
+                for (java.nio.file.Path dep : deps) {
+                    paths.add(JavaCore.newLibraryEntry(new Path(dep.toAbsolutePath().toString()), null, null));
+                }
+            }
+            rawClassPath = paths.toArray(new IClasspathEntry[paths.size()]);
+        } catch (VirtualFileSystemException | IOException e) {
+            LOG.error("Can't find jar dependency's: ", e);
         }
 
     }
@@ -273,8 +299,8 @@ public class JavaProject extends Openable implements IJavaProject {
         return resolvedClasspath.resolvedClasspath;
     }
 
-    public ResolvedClasspath resolvedClasspath(){
-        return  resolvedClasspath;
+    public ResolvedClasspath resolvedClasspath() {
+        return resolvedClasspath;
     }
 
     /**
@@ -551,7 +577,7 @@ public class JavaProject extends Openable implements IJavaProject {
 
                 if (!retrieveExportedRoots) return;
                 if (referringEntry != null && !resolvedEntry.isExported()) return;
-                  //todo multiproject
+                //todo multiproject
 //                IResource member = workspaceRoot.findMember(entryPath);
 //                if (member != null && member.getType() == IResource.PROJECT) {// double check if bound to project (23977)
 //                    IProject requiredProjectRsc = (IProject)member;

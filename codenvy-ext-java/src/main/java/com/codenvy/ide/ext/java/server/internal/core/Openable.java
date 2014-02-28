@@ -26,4 +26,9 @@ public abstract class Openable extends org.eclipse.jdt.internal.core.Openable {
     protected Openable(JavaElement parent) {
         super(parent);
     }
+
+    @Override
+    public String toString() {
+        return String.valueOf(hashCode());
+    }
 }

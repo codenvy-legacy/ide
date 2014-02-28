@@ -59,7 +59,6 @@ import com.codenvy.ide.ext.git.server.rest.StatusPageWriter;
 import com.codenvy.ide.ext.git.server.rest.TagListWriter;
 import com.codenvy.ide.ext.github.server.rest.GitHubService;
 import com.codenvy.ide.ext.java.jdi.server.DebuggerService;
-import com.codenvy.ide.ext.java.server.RestCodeAssistantJava;
 import com.codenvy.ide.ext.java.server.RestNameEnvironment;
 import com.codenvy.ide.ext.ssh.server.DummySshKeyStore;
 import com.codenvy.ide.ext.ssh.server.KeyService;
@@ -125,7 +124,6 @@ public class ApiModule extends AbstractModule {
         bind(SDKRunner.class);
         bind(UserService.class);
         bind(RestNameEnvironment.class);
-        bind(RestCodeAssistantJava.class);
         bind(DebuggerService.class);
         bind(AsynchronousJobPool.class).to(CodenvyAsynchronousJobPool.class);
         bind(new PathKey<>(AsynchronousJobService.class, "/async/{ws-id}")).to(AsynchronousJobService.class);

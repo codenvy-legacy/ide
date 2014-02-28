@@ -17,10 +17,7 @@
  */
 package com.codenvy.ide.ext.java.eclipse;
 
-import com.codenvy.api.project.server.ProjectDescriptionFactory;
-import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
 import com.codenvy.api.project.server.ProjectTypeRegistry;
-import com.codenvy.api.project.server.ValueProviderFactory;
 import com.codenvy.api.project.shared.ProjectType;
 import com.codenvy.ide.ext.java.server.JsonUtil;
 import com.codenvy.ide.ext.java.server.internal.core.JavaProject;
@@ -44,7 +41,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,14 +55,12 @@ import static org.junit.Assert.assertTrue;
  * @author Evgen Vidolob
  */
 public class ClasspathTest extends LocalFileSystemTest{
-
-    private final byte[] existedFileContent = "existed file".getBytes();
+    private static final String TEMP_DIR = System.getProperty("java.io.tmpdir");
     private String folderPath;
     private String folderId;
 
 
     private byte[]                    zipProject;
-    private ProjectDescriptionFactory factory;
 
 
     @Before
@@ -81,9 +75,6 @@ public class ClasspathTest extends LocalFileSystemTest{
         launcher.service("POST", path, BASE_URI, headers, zipProject, null, null);
         ProjectTypeRegistry typeRegistry = new ProjectTypeRegistry();
         typeRegistry.registerProjectType(new ProjectType("test_type", "test type"));
-        factory = new ProjectDescriptionFactory(typeRegistry,
-                                                new ProjectTypeDescriptionRegistry(typeRegistry),
-                                                Collections.<ValueProviderFactory>emptySet());
 
     }
 
@@ -184,7 +175,7 @@ public class ClasspathTest extends LocalFileSystemTest{
     @Test
     public void testRawClasspath() throws Exception {
         VirtualFileImpl file = mountPoint.getVirtualFile("/project");
-        JavaProject project = new JavaProject(file);
+        JavaProject project = new JavaProject(file, TEMP_DIR);
         IClasspathEntry[] rawClasspath = project.getRawClasspath();
         Assert.assertEquals(3, rawClasspath.length);
     }
@@ -192,7 +183,7 @@ public class ClasspathTest extends LocalFileSystemTest{
     @Test
     public void testResolvedClasspath() throws Exception {
         VirtualFileImpl file = mountPoint.getVirtualFile("/project");
-        JavaProject project = new JavaProject(file);
+        JavaProject project = new JavaProject(file, TEMP_DIR);
         IClasspathEntry[] classpath = project.getResolvedClasspath();
         assertTrue(classpath.length > 3);
     }
@@ -205,7 +196,7 @@ public class ClasspathTest extends LocalFileSystemTest{
         indexManager.reset();
         thread.start();
         VirtualFileImpl file = mountPoint.getVirtualFile("/project");
-        JavaProject project = new JavaProject(file);
+        JavaProject project = new JavaProject(file, TEMP_DIR);
         indexManager.indexAll(project);
         indexManager.saveIndexes();
         assertTrue(indexManager.indexLocations.elementSize >0);
@@ -214,7 +205,7 @@ public class ClasspathTest extends LocalFileSystemTest{
     @Test
     public void testNameEnviroment() throws Exception {
         VirtualFileImpl file = mountPoint.getVirtualFile("/project");
-        JavaProject project = new JavaProject(file);
+        JavaProject project = new JavaProject(file, TEMP_DIR);
         JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(project, null);
         char[][] packages = new char[][]{TypeConstants.JAVA, TypeConstants.LANG};
         NameEnvironmentAnswer answer = environment.findType("String".toCharArray(), packages);
@@ -229,7 +220,7 @@ public class ClasspathTest extends LocalFileSystemTest{
     @Test
     public void testEnviromentSearchSource() throws Exception {
         VirtualFileImpl file = mountPoint.getVirtualFile("/project");
-        JavaProject project = new JavaProject(file);
+        JavaProject project = new JavaProject(file, TEMP_DIR);
         JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(project, null);
         char[][] packages = new char[][]{"com".toCharArray(), "codenvy".toCharArray(),"test".toCharArray()};
         NameEnvironmentAnswer answer = environment.findType("MyClass".toCharArray(), packages);
@@ -242,7 +233,7 @@ public class ClasspathTest extends LocalFileSystemTest{
     @Test
     public void testDoubleConstant() throws Exception {
         VirtualFileImpl file = mountPoint.getVirtualFile("/project");
-        JavaProject project = new JavaProject(file);
+        JavaProject project = new JavaProject(file, TEMP_DIR);
         JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(project, null);
         char[][] packages = new char[][]{"java".toCharArray(), "util".toCharArray()};
         NameEnvironmentAnswer answer = environment.findType("HashMap".toCharArray(), packages);
