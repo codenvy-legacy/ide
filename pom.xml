@@ -63,8 +63,10 @@
         <module>codenvy-sdk-tutorials/notification-api</module>
         <module>codenvy-sdk-tutorials/new-resource-wizard</module>
         <module>codenvy-sdk-tutorials/editor-api</module>
+	<module>codenvy-sdk-tutorials/empty-ext</module>
         <module>codenvy-sdk-tutorials/gin</module>
         <module>codenvy-sdk-tutorials/gist-ext</module>
+	<module>codenvy-sdk-tutorials/helloworld-ext</module>
         <module>codenvy-sdk-tutorials/wysiwyg-editor</module>
         <module>codenvy-application-war</module>
         <module>codenvy-sdk-private-dependencies</module>
