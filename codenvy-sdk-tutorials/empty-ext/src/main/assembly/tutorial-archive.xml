@@ -27,7 +27,6 @@
             <directory></directory>
             <excludes>
                 <exclude>**/target/**</exclude>
-                <exclude>**/assembly/**</exclude>
             </excludes>
         </fileSet>
     </fileSets>
