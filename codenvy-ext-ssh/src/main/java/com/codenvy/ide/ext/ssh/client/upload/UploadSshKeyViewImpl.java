@@ -133,11 +133,13 @@ public class UploadSshKeyViewImpl extends DialogBox implements UploadSshKeyView 
     @Override
     public void setAction(@NotNull String url) {
         uploadForm.setAction(url);
+        uploadForm.setMethod(FormPanel.METHOD_POST);
     }
 
     /** {@inheritDoc} */
     @Override
     public void submit() {
+        uploadForm.setEncoding(FormPanel.ENCODING_MULTIPART);
         uploadForm.submit();
     }
 

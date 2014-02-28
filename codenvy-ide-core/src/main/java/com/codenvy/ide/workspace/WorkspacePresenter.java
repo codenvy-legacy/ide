@@ -22,7 +22,6 @@ import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.menu.MainMenuPresenter;
-import com.codenvy.ide.notification.NotificationManagerImpl;
 import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.gwt.user.client.Window;
@@ -43,10 +42,10 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelegate, WorkspaceAgent {
-    private final WorkspaceView           view;
-    private final MainMenuPresenter       menu;
-    private final ToolbarPresenter        toolbarPresenter;
-    private       WorkBenchPresenter      workBenchPresenter;
+    private final WorkspaceView      view;
+    private final MainMenuPresenter  menu;
+    private final ToolbarPresenter   toolbarPresenter;
+    private       WorkBenchPresenter workBenchPresenter;
 
     /**
      * Instantiates Presenter
@@ -100,15 +99,6 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
     @Override
     public void removePart(PartPresenter part) {
         workBenchPresenter.removePart(part);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onLoginClicked() {
-        String href = Window.Location.getHref();
-        int index = href.indexOf("ide");
-        String url = href.substring(0, index);
-        Window.Location.replace(url + "site/index.html");
     }
 
     /** {@inheritDoc} */
