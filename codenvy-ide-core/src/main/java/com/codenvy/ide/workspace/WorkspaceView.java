@@ -19,7 +19,6 @@ package com.codenvy.ide.workspace;
 
 import com.codenvy.ide.api.mvp.View;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.FlowPanel;
 
 
 /**
@@ -30,9 +29,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 public interface WorkspaceView extends View<WorkspaceView.ActionDelegate> {
     /** Required for delegating functions in the view. */
     public interface ActionDelegate {
-        /** Performs any actions appropriate in response to the user having pressed the Login button */
-        void onLoginClicked();
-
         /** Performs any actions in response to click on Update button */
         void onUpdateClicked();
     }
