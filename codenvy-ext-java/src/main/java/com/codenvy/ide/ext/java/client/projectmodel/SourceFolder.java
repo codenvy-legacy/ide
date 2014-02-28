@@ -20,15 +20,11 @@ package com.codenvy.ide.ext.java.client.projectmodel;
 import com.codenvy.ide.resources.model.Folder;
 import com.google.gwt.json.client.JSONObject;
 
-/** @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> */
+/** @author Nikolay Zamosenchuk */
 public class SourceFolder extends Folder {
     public static final String TYPE = "java.sourcefolder";
-
     private String sourceFolderName;
 
-    /**
-     *
-     */
     protected SourceFolder() {
         super(TYPE, FOLDER_MIME_TYPE);
     }

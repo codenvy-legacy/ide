@@ -22,36 +22,27 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.marshal.JSONDeserializer;
 import com.google.gwt.json.client.JSONObject;
 
-
 /**
  * This is a derivative of {@link Resource}, that adds File-specific properties and methods to provide
  * an access to files stored on VFS.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public class File extends Resource {
     public static final String TYPE = "file";
-
     /** Id of version of file. */
     protected String versionId;
-
     /** Content length. */
     protected long length = -1;
-
     /** Date of last modification in long format. */
-    protected long lastModificationDate;
-
+    protected long    lastModificationDate;
     /** Locking flag. */
     protected boolean locked;
-
     /** content if retrieved */
-    private String content = null;
-
-    private boolean contentChanged = false;
-
+    private String      content        = null;
+    private boolean     contentChanged = false;
     private Array<File> versionHistory = Collections.<File>createArray();
-
-    private Lock lock = null;
+    private Lock        lock           = null;
 
     /** Empty instance of file. */
     protected File() {

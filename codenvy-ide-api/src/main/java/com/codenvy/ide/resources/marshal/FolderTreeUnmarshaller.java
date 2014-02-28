@@ -32,7 +32,7 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
 /**
- * Recursively traverses the JSon Response to build tree Folder model.
+ * Recursively traverses the JSON Response to build tree Folder model.
  *
  * @author Nikolay Zamosenchuk
  */
@@ -73,18 +73,18 @@ public class FolderTreeUnmarshaller implements Unmarshallable<Folder> {
     }
 
     private void getChildren(JSONValue children, Folder parentFolder, Project parentProject) {
-        JSONArray itemsArray = children.isArray();
+        JSONArray childrenArray = children.isArray();
 
-        for (int i = 0; i < itemsArray.size(); i++) {
-            JSONObject itemObject = itemsArray.get(i).isObject();
+        for (int i = 0; i < childrenArray.size(); i++) {
+            JSONObject childObject = childrenArray.get(i).isObject();
             // Get item
-            JSONObject item = itemObject.get(ITEM).isObject();
+            JSONObject childItem = childObject.get(ITEM).isObject();
 
-            String id = item.get(ID).isString().stringValue();
+            final String id = childItem.get(ID).isString().stringValue();
 
             String type = null;
-            if (item.get(TYPE).isNull() == null) {
-                type = item.get(TYPE).isString().stringValue();
+            if (childItem.get(TYPE).isNull() == null) {
+                type = childItem.get(TYPE).isString().stringValue();
             }
 
             // Project found in JSON Response
@@ -94,7 +94,6 @@ public class FolderTreeUnmarshaller implements Unmarshallable<Folder> {
             // Folder
             else if (Folder.TYPE.equalsIgnoreCase(type)) {
                 Folder folder;
-
                 // find if Folder Object already exists. This is a refresh usecase.
                 Resource existingFolder = parentFolder.findChildById(id);
                 // Make sure found resource is Folder
@@ -102,16 +101,16 @@ public class FolderTreeUnmarshaller implements Unmarshallable<Folder> {
                     // use existing folder instance as
                     folder = (Folder)existingFolder;
                 } else {
-                    folder = new Folder(item);
+                    folder = new Folder(childItem);
                     parentFolder.addChild(folder);
                     folder.setProject(parentProject);
                 }
                 // recursively get project
-                getChildren(itemObject.get(CHILDREN), folder, parentProject);
+                getChildren(childObject.get(CHILDREN), folder, parentProject);
             }
             // File
             else if (File.TYPE.equalsIgnoreCase(type)) {
-                File file = new File(item);
+                File file = new File(childItem);
                 parentFolder.addChild(file);
                 file.setProject(parentProject);
             } else {

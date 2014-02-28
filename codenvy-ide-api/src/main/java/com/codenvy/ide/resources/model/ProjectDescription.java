@@ -24,7 +24,6 @@ import com.codenvy.ide.collections.StringSet;
  * Description of the project.
  *
  * @author Nikolay Zamosenchuk
- * @author Artem Zatsarynnyy
  */
 public class ProjectDescription {
 
