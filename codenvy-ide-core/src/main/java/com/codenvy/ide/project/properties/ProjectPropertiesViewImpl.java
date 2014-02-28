@@ -79,7 +79,7 @@ public class ProjectPropertiesViewImpl extends DialogBox implements ProjectPrope
                                         ProjectPropertiesViewImplUiBinder uiBinder) {
         this.res = resources;
         this.locale = locale;
-        initPropertiesTable();
+        initPropertiesTable(resources);
 
         Widget widget = uiBinder.createAndBindUi(this);
 
@@ -93,9 +93,10 @@ public class ProjectPropertiesViewImpl extends DialogBox implements ProjectPrope
 
     /**
      * Initialize the properties table.
+     * @param resources
      */
-    private void initPropertiesTable() {
-        propertiesTable = new CellTable<Property>();
+    private void initPropertiesTable(Resources resources) {
+        propertiesTable = new CellTable<Property>(15, resources);
         Column<Property, String> nameColumn = new Column<Property, String>(new TextCell()) {
             @Override
             public String getValue(Property object) {
