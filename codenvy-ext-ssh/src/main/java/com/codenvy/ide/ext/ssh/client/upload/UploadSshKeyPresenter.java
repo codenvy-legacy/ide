@@ -22,7 +22,6 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.ssh.client.SshLocalizationConstant;
-import com.codenvy.ide.util.Utils;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -40,8 +39,8 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 @Singleton
 public class UploadSshKeyPresenter implements UploadSshKeyView.ActionDelegate {
-    private UploadSshKeyView view;
-    private String workspaceId;
+    private UploadSshKeyView        view;
+    private String                  workspaceId;
     private SshLocalizationConstant constant;
     private String                  restContext;
     private EventBus                eventBus;
@@ -49,8 +48,12 @@ public class UploadSshKeyPresenter implements UploadSshKeyView.ActionDelegate {
     private NotificationManager     notificationManager;
 
     @Inject
-    public UploadSshKeyPresenter(UploadSshKeyView view, SshLocalizationConstant constant, @Named("restContext") String restContext,
-                                 @Named("workspaceId") String workspaceId, EventBus eventBus, ConsolePart console,
+    public UploadSshKeyPresenter(UploadSshKeyView view,
+                                 SshLocalizationConstant constant,
+                                 @Named("restContext") String restContext,
+                                 @Named("workspaceId") String workspaceId,
+                                 EventBus eventBus,
+                                 ConsolePart console,
                                  NotificationManager notificationManager) {
         this.view = view;
         this.workspaceId = workspaceId;

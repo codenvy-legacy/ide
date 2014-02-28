@@ -24,7 +24,6 @@ import com.codenvy.ide.ext.ssh.dto.PublicKey;
 
 import org.apache.commons.fileupload.FileItem;
 
-import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -65,7 +64,6 @@ public class KeyService {
     /** Generate SSH key pair. */
     @POST
     @Path("gen")
-    @RolesAllowed({"developer"})
     @Consumes({MediaType.APPLICATION_JSON})
     public Response genKeyPair(GenKeyRequest request) {
         try {
@@ -83,8 +81,7 @@ public class KeyService {
     @POST
     @Path("add")
     @Consumes({MediaType.MULTIPART_FORM_DATA})
-    @RolesAllowed({"developer"})
-    public Response addPrivateKey(@Context SecurityContext security, @QueryParam("host") String host,
+    public Response addPrivateKey(@QueryParam("host") String host,
                                   Iterator<FileItem> iterator) {
         /*
          * XXX : Temporary turn-off don't work on demo site if (!security.isSecure()) { throw new
@@ -118,7 +115,6 @@ public class KeyService {
      * @see {@link SshKeyStore#getPublicKey(String)}
      */
     @GET
-    @RolesAllowed({"developer"})
     @Produces({MediaType.APPLICATION_JSON})
     public Response getPublicKey(@Context SecurityContext security, @QueryParam("host") String host) {
 
@@ -150,7 +146,6 @@ public class KeyService {
     /** Remove SSH keys. */
     @GET
     @Path("remove")
-    @RolesAllowed({"developer"})
     public String removeKeys(@QueryParam("host") String host, @QueryParam("callback") String calback) {
         try {
             keyStore.removeKeys(host);
@@ -165,7 +160,6 @@ public class KeyService {
 
     @GET
     @Path("all")
-    @RolesAllowed({"developer"})
     @Produces({MediaType.APPLICATION_JSON})
     public Response getKeys(@Context UriInfo uriInfo) {
         try {
