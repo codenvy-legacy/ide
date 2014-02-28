@@ -18,29 +18,18 @@
 package com.codenvy.ide.ext.java.worker;
 
 import com.codenvy.ide.collections.Jso;
-import com.codenvy.ide.ext.java.jdt.core.Flags;
-import com.codenvy.ide.ext.java.jdt.core.Signature;
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
 import com.codenvy.ide.ext.java.jdt.core.search.IJavaSearchConstants;
-import com.codenvy.ide.ext.java.jdt.env.BinaryTypeImpl;
-import com.codenvy.ide.ext.java.jdt.env.TypesListImpl;
 import com.codenvy.ide.ext.java.jdt.internal.codeassist.ISearchRequestor;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.AccessRestriction;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryMethod;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryType;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.NameEnvironmentAnswer;
 import com.codenvy.ide.ext.java.shared.JavaType;
-import com.codenvy.ide.ext.java.shared.ShortTypeInfo;
 import com.codenvy.ide.ext.java.worker.env.BinaryType;
 import com.codenvy.ide.ext.java.worker.env.json.BinaryTypeJso;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -268,77 +257,77 @@ public class WorkerNameEnvironment implements INameEnvironment {
      */
     @Override
     public void findConstructorDeclarations(char[] prefix, boolean camelCaseMatch, final ISearchRequestor requestor) {
-        int lastDotIndex = CharOperation.lastIndexOf('.', prefix);
-        char[] qualification, simpleName;
-        if (lastDotIndex < 0) {
-            qualification = null;
-            if (camelCaseMatch) {
-                simpleName = prefix;
-            } else {
-                simpleName = CharOperation.toLowerCase(prefix);
-            }
-        } else {
-            qualification = CharOperation.subarray(prefix, 0, lastDotIndex);
-            if (camelCaseMatch) {
-                simpleName = CharOperation.subarray(prefix, lastDotIndex + 1, prefix.length);
-            } else {
-                simpleName = CharOperation.toLowerCase(CharOperation.subarray(prefix, lastDotIndex + 1, prefix.length));
-            }
-        }
-        String url =
-                restServiceContext + "/classes-by-prefix" + "?prefix=" + new String(simpleName)
-                + "&projectid=" + projectId + "&vfsid=" + vfsId;
-        try {
-            List<IBinaryType> typesByNamePrefix =
-                    WorkerTypeInfoStorage.get().getTypesByNamePrefix(new String(prefix), qualification != null);
-            for (IBinaryType object : typesByNamePrefix) {
-                addConstructor((BinaryTypeImpl)object, requestor);
-            }
-            String typesJson = runSyncReques(url);
-            JSONArray typesFromServer = null;
-            if (typesJson != null) {
-                typesFromServer = JSONParser.parseLenient(typesJson).isArray();
-                for (int i = 0; i < typesFromServer.size(); i++) {
-                    JSONObject object = typesFromServer.get(i).isObject();
-                    BinaryTypeImpl type = new BinaryTypeImpl(object.getJavaScriptObject().<Jso>cast());
-                    if (WorkerTypeInfoStorage.get().containsKey(String.valueOf(type.getFqn()))) {
-                        continue;
-                    }
-                    WorkerTypeInfoStorage.get().putType(new String(type.getFqn()), type);
-                    addConstructor(type, requestor);
-                }
-            }
-
-        } catch (Exception e) {
-//            Log.error(getClass(), e);
-            //TODO log error
-        }
+//        int lastDotIndex = CharOperation.lastIndexOf('.', prefix);
+//        char[] qualification, simpleName;
+//        if (lastDotIndex < 0) {
+//            qualification = null;
+//            if (camelCaseMatch) {
+//                simpleName = prefix;
+//            } else {
+//                simpleName = CharOperation.toLowerCase(prefix);
+//            }
+//        } else {
+//            qualification = CharOperation.subarray(prefix, 0, lastDotIndex);
+//            if (camelCaseMatch) {
+//                simpleName = CharOperation.subarray(prefix, lastDotIndex + 1, prefix.length);
+//            } else {
+//                simpleName = CharOperation.toLowerCase(CharOperation.subarray(prefix, lastDotIndex + 1, prefix.length));
+//            }
+//        }
+//        String url =
+//                restServiceContext + "/classes-by-prefix" + "?prefix=" + new String(simpleName)
+//                + "&projectid=" + projectId + "&vfsid=" + vfsId;
+//        try {
+//            List<IBinaryType> typesByNamePrefix =
+//                    WorkerTypeInfoStorage.get().getTypesByNamePrefix(new String(prefix), qualification != null);
+//            for (IBinaryType object : typesByNamePrefix) {
+//                addConstructor((BinaryTypeImpl)object, requestor);
+//            }
+//            String typesJson = runSyncReques(url);
+//            JSONArray typesFromServer = null;
+//            if (typesJson != null) {
+//                typesFromServer = JSONParser.parseLenient(typesJson).isArray();
+//                for (int i = 0; i < typesFromServer.size(); i++) {
+//                    JSONObject object = typesFromServer.get(i).isObject();
+//                    BinaryTypeImpl type = new BinaryTypeImpl(object.getJavaScriptObject().<Jso>cast());
+//                    if (WorkerTypeInfoStorage.get().containsKey(String.valueOf(type.getFqn()))) {
+//                        continue;
+//                    }
+//                    WorkerTypeInfoStorage.get().putType(new String(type.getFqn()), type);
+//                    addConstructor(type, requestor);
+//                }
+//            }
+//
+//        } catch (Exception e) {
+////            Log.error(getClass(), e);
+//            //TODO log error
+//        }
     }
 
-    private void addConstructor(BinaryTypeImpl type, final ISearchRequestor requestor) {
-        IBinaryMethod[] methods = type.getMethods();
-        boolean hasConstructor = false;
-        if (methods != null) {
-            for (IBinaryMethod method : methods) {
-                if (!method.isConstructor()) {
-                    continue;
-                }
-                int parameterCount = Signature.getParameterCount(method.getMethodDescriptor());
-                char[][] parameterTypes = Signature.getParameterTypes(method.getMethodDescriptor());
-                requestor.acceptConstructor(method.getModifiers(), type.getSourceName(), parameterCount,
-                                            method.getMethodDescriptor(), parameterTypes, method.getArgumentNames(), type.getModifiers(),
-                                            Signature.getQualifier(type.getFqn()), 0, new String(type.getSourceName()), null);
-                hasConstructor = true;
-            }
-        }
-        if (!hasConstructor) {
-            requestor.acceptConstructor(Flags.AccPublic, type.getSourceName(), -1,
-                                        null, // signature is not used for source type
-                                        CharOperation.NO_CHAR_CHAR, CharOperation.NO_CHAR_CHAR, type.getModifiers(),
-                                        Signature.getQualifier(type.getFqn()), 0, new String(type.getSourceName()), null);
-        }
-
-    }
+//    private void addConstructor(BinaryTypeImpl type, final ISearchRequestor requestor) {
+//        IBinaryMethod[] methods = type.getMethods();
+//        boolean hasConstructor = false;
+//        if (methods != null) {
+//            for (IBinaryMethod method : methods) {
+//                if (!method.isConstructor()) {
+//                    continue;
+//                }
+//                int parameterCount = Signature.getParameterCount(method.getMethodDescriptor());
+//                char[][] parameterTypes = Signature.getParameterTypes(method.getMethodDescriptor());
+//                requestor.acceptConstructor(method.getModifiers(), type.getSourceName(), parameterCount,
+//                                            method.getMethodDescriptor(), parameterTypes, method.getArgumentNames(), type.getModifiers(),
+//                                            Signature.getQualifier(type.getFqn()), 0, new String(type.getSourceName()), null);
+//                hasConstructor = true;
+//            }
+//        }
+//        if (!hasConstructor) {
+//            requestor.acceptConstructor(Flags.AccPublic, type.getSourceName(), -1,
+//                                        null, // signature is not used for source type
+//                                        CharOperation.NO_CHAR_CHAR, CharOperation.NO_CHAR_CHAR, type.getModifiers(),
+//                                        Signature.getQualifier(type.getFqn()), 0, new String(type.getSourceName()), null);
+//        }
+//
+//    }
 
     /**
      * Find the packages that start with the given prefix. A valid prefix is a qualified name separated by periods (ex. java.util).
@@ -422,16 +411,16 @@ public class WorkerNameEnvironment implements INameEnvironment {
             String typesJson = runSyncReques(url);
             if (typesJson != null) {
 
-                TypesListImpl typesList = TypesListImpl.deserialize(typesJson);
+//                TypesListImpl typesList = TypesListImpl.deserialize(typesJson);
 
 
-                for (ShortTypeInfo info : typesList.getTypes()) {
-                    requestor.acceptType(info.getName().substring(0, info.getName().lastIndexOf(".")).toCharArray(),
-                                         info.getName().substring(info.getName().lastIndexOf(".") + 1).toCharArray(),
-                                         null,
-                                         info.getModifiers(),
-                                         null);
-                }
+//                for (ShortTypeInfo info : typesList.getTypes()) {
+//                    requestor.acceptType(info.getName().substring(0, info.getName().lastIndexOf(".")).toCharArray(),
+//                                         info.getName().substring(info.getName().lastIndexOf(".") + 1).toCharArray(),
+//                                         null,
+//                                         info.getModifiers(),
+//                                         null);
+//                }
             }
             WorkerTypeInfoStorage.get().setShortTypesInfo(typesJson);
         } catch (Throwable e) {
