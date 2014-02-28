@@ -59,7 +59,7 @@ public class RunnerClientServiceImpl implements RunnerClientService {
     public void run(String projectName, AsyncRequestCallback<ApplicationProcessDescriptor> callback) {
         final String requestUrl = baseUrl + "/runner/" + workspaceId + "/run";
         String params = "project=" + projectName;
-        asyncRequestFactory.createPostRequest(requestUrl + "?" + params, null).send(callback);
+        asyncRequestFactory.createPostRequest(requestUrl + "?" + params, null).data("{}").header("content-type", "application/json").send(callback);
     }
 
     /** {@inheritDoc} */

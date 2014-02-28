@@ -44,8 +44,6 @@ public class JarProjectTypeExtension implements ProjectTypeExtension {
     @Override
     public List<Attribute> getPredefinedAttributes() {
         final List<Attribute> list = new ArrayList<>(1);
-        // TODO
-//        list.add(new Attribute("language", new VfsPropertyValueProvider("language", "java")));
         list.add(new Attribute("language", "java"));
         return list;
     }
@@ -60,7 +58,7 @@ public class JarProjectTypeExtension implements ProjectTypeExtension {
 
         list.add(new ProjectTemplateDescription("zip",
                                                 "ANT JAR PROJECT",
-                                                "Simple JAR project which uses Ant build system",
+                                                "Simple JAR project which uses Ant build system.",
                                                 "templates/AntJar.zip"));
         return list;
     }
