@@ -22,7 +22,7 @@
     @external groovy-negative, groovy-positive, groovy-header, groovy-strong, groovy-em, groovy-link, groovy-error, groovy-invalidchar;
 
     .groovy-keyword {
-        color: ##A100EC;
+        color: #BB3A97;
     }
 
     .groovy-atom {
