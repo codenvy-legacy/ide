@@ -47,9 +47,9 @@ public class CodenvyExtProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public List<Attribute> getPredefinedAttributes() {
-        final List<Attribute> list = new ArrayList<>(3);
-
+        final List<Attribute> list = new ArrayList<>(4);
         list.add(new Attribute("language", "java"));
+        list.add(new Attribute("framework", "codenvy_sdk"));
         list.add(new Attribute("builder.name", "maven"));
         list.add(new Attribute("runner.name", "sdk"));
         return list;
