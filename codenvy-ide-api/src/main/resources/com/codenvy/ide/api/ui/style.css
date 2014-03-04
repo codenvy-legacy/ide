@@ -51,6 +51,11 @@
 @eval buttonTopColor com.codenvy.ide.api.ui.theme.Style.getButtonTopColor();
 @eval buttonColor com.codenvy.ide.api.ui.theme.Style.getButtonColor();
 
+/* notable button */
+@eval notableButtonTopColor com.codenvy.ide.api.ui.theme.Style.getNotableButtonTopColor();
+@eval notableButtonColor com.codenvy.ide.api.ui.theme.Style.getNotableButtonColor();
+
+
 /*input*/
 @eval inputBackground com.codenvy.ide.api.ui.theme.Style.getInputBackground();
 
