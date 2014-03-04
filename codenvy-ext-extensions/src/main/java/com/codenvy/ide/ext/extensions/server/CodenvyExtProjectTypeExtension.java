@@ -47,8 +47,9 @@ public class CodenvyExtProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public List<Attribute> getPredefinedAttributes() {
-        final List<Attribute> list = new ArrayList<>(3);
+        final List<Attribute> list = new ArrayList<>(4);
         list.add(new Attribute("language", "java"));
+        list.add(new Attribute("framework", "codenvy_sdk"));
         list.add(new Attribute("builder.name", "maven"));
         list.add(new Attribute("runner.name", "sdk"));
         return list;
@@ -56,11 +57,21 @@ public class CodenvyExtProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public List<ProjectTemplateDescription> getTemplates() {
-        final List<ProjectTemplateDescription> list = new ArrayList<>(1);
+        final List<ProjectTemplateDescription> list = new ArrayList<>(3);
         list.add(new ProjectTemplateDescription("zip",
                                                 "GIST EXAMPLE",
                                                 "Simple Codenvy extension project is demonstrating basic usage Codenvy API.",
                                                 baseUrl + "/gist-extension.zip"));
+        list.add(new ProjectTemplateDescription(
+                                                "zip",
+                                                "EMPTY EXTENSION PROJECT",
+                                                "This is a ready to use structure of a Codenvy extension with a minimal set of files and dependencies.",
+                                                baseUrl + "/empty-extension.zip"));
+        list.add(new ProjectTemplateDescription(
+                                                "zip",
+                                                "HELLO WORLD EXTENSION",
+                                                "This is a simple Codenvy Extension that prints Hello World in Output console and adds Hello World item to a content menu.",
+                                                baseUrl + "/helloworld-extension.zip"));
         return list;
     }
 }

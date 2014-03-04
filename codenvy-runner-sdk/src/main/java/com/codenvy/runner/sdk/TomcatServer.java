@@ -36,7 +36,6 @@ import javax.inject.Named;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -122,16 +121,6 @@ public class TomcatServer implements ApplicationServer {
     }
 
     protected void configureApiServices(java.io.File webapps, SDKRunnerConfiguration runnerConfiguration) throws IOException {
-        final java.io.File api = new java.io.File(webapps, "api");
-        ZipUtils.unzip(new java.io.File(webapps, "api.war"), api);
-        final Path buildersCfgPath = api.toPath().resolve("WEB-INF/classes/codenvy/builders.json");
-        final String builders = new String(Files.readAllBytes(buildersCfgPath), Charset.forName("UTF-8"))
-                .replace("${PORT}", Integer.toString(runnerConfiguration.getHttpPort()));
-        final Path runnersCfgPath = api.toPath().resolve("WEB-INF/classes/codenvy/runners.json");
-        final String runners = new String(Files.readAllBytes(runnersCfgPath), Charset.forName("UTF-8"))
-                .replace("${PORT}", Integer.toString(runnerConfiguration.getHttpPort()));
-        Files.write(buildersCfgPath, builders.getBytes());
-        Files.write(runnersCfgPath, runners.getBytes());
     }
 
     public int getMemSize() {
@@ -193,20 +182,19 @@ public class TomcatServer implements ApplicationServer {
         if (memory <= 0) {
             memory = getMemSize();
         }
-        final String catalinaOpts = String.format("export CATALINA_OPTS=\"-Xms%dm -Xmx%dm\"%n", memory, memory);
-        final int debugPort = runnerConfiguration.getDebugPort();
-        if (debugPort <= 0) {
-            return catalinaOpts;
-        }
         final StringBuilder export = new StringBuilder();
-        export.append(catalinaOpts);
-        /*
-        From catalina.sh:
-        -agentlib:jdwp=transport=$JPDA_TRANSPORT,address=$JPDA_ADDRESS,server=y,suspend=$JPDA_SUSPEND
-         */
-        export.append(String.format("export JPDA_ADDRESS=%d%n", debugPort));
-        export.append(String.format("export JPDA_TRANSPORT=%s%n", runnerConfiguration.getDebugTransport()));
-        export.append(String.format("export JPDA_SUSPEND=%s%n", runnerConfiguration.isDebugSuspend() ? "y" : "n"));
+        export.append(String.format("export CATALINA_OPTS=\"-Xms%dm -Xmx%dm\"%n", memory, memory));
+        export.append(String.format("export SERVER_PORT=%d%n", runnerConfiguration.getHttpPort()));
+        final int debugPort = runnerConfiguration.getDebugPort();
+        if (debugPort > 0) {
+            /*
+            From catalina.sh:
+            -agentlib:jdwp=transport=$JPDA_TRANSPORT,address=$JPDA_ADDRESS,server=y,suspend=$JPDA_SUSPEND
+             */
+            export.append(String.format("export JPDA_ADDRESS=%d%n", debugPort));
+            export.append(String.format("export JPDA_TRANSPORT=%s%n", runnerConfiguration.getDebugTransport()));
+            export.append(String.format("export JPDA_SUSPEND=%s%n", runnerConfiguration.isDebugSuspend() ? "y" : "n"));
+        }
         return export.toString();
     }
 
@@ -221,8 +209,7 @@ public class TomcatServer implements ApplicationServer {
     // Windows
 
     protected ApplicationProcess startWindows(java.io.File appDir, SDKRunnerConfiguration runnerConfiguration,
-                                              CodeServer.CodeServerProcess codeServerProcess,
-                                              StopCallback stopCallback) {
+                                              CodeServer.CodeServerProcess codeServerProcess, StopCallback stopCallback) {
         throw new UnsupportedOperationException();
     }
 
@@ -240,8 +227,7 @@ public class TomcatServer implements ApplicationServer {
         Process      process;
 
         TomcatProcess(int httpPort, List<java.io.File> logFiles, int debugPort, java.io.File startUpScriptFile, java.io.File workDir,
-                      CodeServer.CodeServerProcess codeServerProcess, StopCallback stopCallback,
-                      ExecutorService pidTaskExecutor) {
+                      CodeServer.CodeServerProcess codeServerProcess, StopCallback stopCallback, ExecutorService pidTaskExecutor) {
             this.httpPort = httpPort;
             this.logFiles = logFiles;
             this.debugPort = debugPort;
@@ -259,9 +245,7 @@ public class TomcatServer implements ApplicationServer {
             }
 
             try {
-                process = Runtime.getRuntime()
-                                 .exec(new CommandLine(startUpScriptFile.getAbsolutePath()).toShellCommand(), null,
-                                       workDir);
+                process = Runtime.getRuntime().exec(new CommandLine(startUpScriptFile.getAbsolutePath()).toShellCommand(), null, workDir);
                 pid = pidTaskExecutor.submit(new Callable<Integer>() {
                     @Override
                     public Integer call() throws Exception {

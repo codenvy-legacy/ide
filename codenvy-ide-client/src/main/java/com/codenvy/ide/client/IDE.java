@@ -21,6 +21,7 @@ package com.codenvy.ide.client;
 import com.codenvy.ide.client.inject.IDEInjector;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.RootPanel;
 
 
 /** The EntryPoint of the IDE application */
@@ -28,9 +29,15 @@ public class IDE implements EntryPoint {
     /** This is the entry point method. */
     @Override
     public void onModuleLoad() {
-        IDEInjector injector = GWT.create(IDEInjector.class);
-        // Force instance to be created
-        @SuppressWarnings("unused")
-        BootstrapController bootstrap = injector.getBootstrapController();
+        //TODO: with this try fix issue https://jira.codenvycorp.com/browse/IDEX-420
+        //TODO: after few hours investigation don't found reason why IDE load twice
+        //TODO: in devmode it not reproduce
+        if (RootPanel.getBodyElement().getId() == null || RootPanel.get().getElement().getId().isEmpty()) {
+            RootPanel.getBodyElement().setId("codenvy-ide-loaded");
+            IDEInjector injector = GWT.create(IDEInjector.class);
+            // Force instance to be created
+            @SuppressWarnings("unused")
+            BootstrapController bootstrap = injector.getBootstrapController();
+        }
     }
 }
