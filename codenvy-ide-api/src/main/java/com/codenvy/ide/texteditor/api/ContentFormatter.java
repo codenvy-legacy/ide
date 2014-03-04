@@ -19,7 +19,6 @@ package com.codenvy.ide.texteditor.api;
 
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
-import com.codenvy.ide.text.RegionImpl;
 
 /**
  * The interface of a document content formatter. The formatter formats ranges

@@ -220,7 +220,7 @@ public class StandardComponentInitializer {
 
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('s').build(), "save");
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('S').build(), "saveAll");
-        keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('F').build(), "formatter");
+        keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('F').build(), "format");
 
         actionManager.registerAction("newProject", newProjectAction);
         actionManager.registerAction("openProject", openProjectAction);

@@ -15,7 +15,7 @@ public interface FormatResultMessage extends Message{
 
     String id();
 
-     Jso textEdit();
+    Jso textEdit();
 
 
 }

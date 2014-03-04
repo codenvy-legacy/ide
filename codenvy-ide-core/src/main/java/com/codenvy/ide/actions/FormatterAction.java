@@ -7,7 +7,7 @@ import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.texteditor.api.TextEditorOperations;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
+
 import com.google.inject.Inject;
 
 /**

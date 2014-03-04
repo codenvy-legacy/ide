@@ -18,8 +18,8 @@
 package com.codenvy.ide.ext.java.client.editor;
 
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Jso;
 import com.codenvy.ide.collections.js.JsoArray;
+import com.codenvy.ide.collections.js.JsoStringMap;
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
 import com.codenvy.ide.ext.java.messages.ProblemLocationMessage;
 import com.codenvy.ide.ext.java.messages.ProposalAppliedMessage;
@@ -39,7 +39,7 @@ public interface JavaParserWorker {
     public interface ApplyCallback {
         void onApply(ProposalAppliedMessage message);
     }
-    public interface ApplyFormatCallback{
+    public interface FormatResultCallback {
         void onApplyFormat(TextEdit edit);
     }
 
@@ -57,6 +57,7 @@ public interface JavaParserWorker {
 
     void removeFanFromCache(String fqn);
 
-    void format(int offset, int length, String content, ApplyFormatCallback callback);
+    void format(int offset, int length, String content, FormatResultCallback callback);
+    void preferenceFormatsettings(JsoStringMap<String> settings);
 
 }

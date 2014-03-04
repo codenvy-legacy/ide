@@ -5,6 +5,7 @@ import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.edits.TextEdit;
 import com.codenvy.ide.texteditor.api.ContentFormatter;
+import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 
 /**
@@ -12,13 +13,13 @@ import com.google.inject.Inject;
  *
  * @author Roman Nikitenko
  */
-public class ContentFormatterImpl implements ContentFormatter, JavaParserWorker.ApplyFormatCallback{
+public class JavaFormatter implements ContentFormatter, JavaParserWorker.FormatResultCallback {
 
     private JavaParserWorker javaParserWorker;
     private Document document;
 
     @Inject
-    public ContentFormatterImpl(JavaParserWorker javaParserWorker){
+    public JavaFormatter(JavaParserWorker javaParserWorker){
         this.javaParserWorker = javaParserWorker;
     }
 
@@ -28,9 +29,9 @@ public class ContentFormatterImpl implements ContentFormatter, JavaParserWorker.
         int offset = region.getOffset();
         int length = region.getLength();
         try {
-            javaParserWorker.format(offset, length, doc.get(offset,length), ContentFormatterImpl.this);
+            javaParserWorker.format(offset, length, doc.get(offset,length), this);
         } catch (BadLocationException e) {
-            e.printStackTrace();
+            Log.error(getClass(), e);
         }
     }
 
@@ -39,7 +40,7 @@ public class ContentFormatterImpl implements ContentFormatter, JavaParserWorker.
         try {
             edit.apply(document);
         } catch (BadLocationException e) {
-            e.printStackTrace();
+            Log.error(getClass(), e);
         }
     }
 }

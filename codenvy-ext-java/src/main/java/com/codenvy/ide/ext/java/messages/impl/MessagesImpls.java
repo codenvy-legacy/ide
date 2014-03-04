@@ -27,7 +27,7 @@ public class MessagesImpls {
 
   private  MessagesImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "bc116b64d200090d15a521a9f35e42356372e0ff";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "185c22778cac6e382352212c8c6d7540523df655";
 
 
   public static class ApplyProposalMessageImpl extends com.google.gwt.webworker.client.messages.MessageImpl implements com.codenvy.ide.ext.java.messages.ApplyProposalMessage {
@@ -334,6 +334,20 @@ public class MessagesImpls {
     protected ConfigMessageImpl() {}
 
     @Override
+    public final native java.lang.String projectName() /*-{
+      return this["projectName"];
+    }-*/;
+
+    public final native ConfigMessageImpl setProjectName(java.lang.String projectName) /*-{
+      this["projectName"] = projectName;
+      return this;
+    }-*/;
+
+    public final native boolean hasProjectName() /*-{
+      return this.hasOwnProperty("projectName");
+    }-*/;
+
+    @Override
     public final native java.lang.String wsId() /*-{
       return this["wsId"];
     }-*/;
@@ -359,20 +373,6 @@ public class MessagesImpls {
 
     public final native boolean hasRestContext() /*-{
       return this.hasOwnProperty("restContext");
-    }-*/;
-
-    @Override
-    public final native java.lang.String projectName() /*-{
-      return this["projectName"];
-    }-*/;
-
-    public final native ConfigMessageImpl setProjectName(java.lang.String projectName) /*-{
-      this["projectName"] = projectName;
-      return this;
-    }-*/;
-
-    public final native boolean hasProjectName() /*-{
-      return this.hasOwnProperty("projectName");
     }-*/;
 
     @Override
@@ -604,6 +604,30 @@ public class MessagesImpls {
     public static native ParseMessageImpl make() /*-{
       return {
         _type: 2
+      };
+    }-*/;  }
+
+
+  public static class PreferenceFormatSetMessageImpl extends Jso implements com.codenvy.ide.ext.java.messages.PreferenceFormatSetMessage {
+    protected PreferenceFormatSetMessageImpl() {}
+
+    @Override
+    public final native com.codenvy.ide.collections.js.JsoStringMap<java.lang.String> settings() /*-{
+      return this["settings"];
+    }-*/;
+
+    public final native PreferenceFormatSetMessageImpl setSettings(com.codenvy.ide.collections.js.JsoStringMap<java.lang.String> settings) /*-{
+      this["settings"] = settings;
+      return this;
+    }-*/;
+
+    public final native boolean hasSettings() /*-{
+      return this.hasOwnProperty("settings");
+    }-*/;
+
+    public static native PreferenceFormatSetMessageImpl make() /*-{
+      return {
+
       };
     }-*/;  }
 

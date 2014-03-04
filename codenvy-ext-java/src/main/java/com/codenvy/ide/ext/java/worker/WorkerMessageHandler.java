@@ -56,6 +56,7 @@ import com.codenvy.ide.ext.java.jdt.templates.VarResolver;
 import com.codenvy.ide.ext.java.messages.ConfigMessage;
 import com.codenvy.ide.ext.java.messages.FormatMessage;
 import com.codenvy.ide.ext.java.messages.ParseMessage;
+import com.codenvy.ide.ext.java.messages.PreferenceFormatSetMessage;
 import com.codenvy.ide.ext.java.messages.Problem;
 import com.codenvy.ide.ext.java.messages.RemoveFqnMessage;
 import com.codenvy.ide.ext.java.messages.RoutingTypes;
@@ -79,6 +80,7 @@ import com.google.gwt.webworker.client.messages.MessageFilter;
 import com.google.gwt.webworker.client.messages.MessageImpl;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * @author Evgen Vidolob
@@ -88,8 +90,9 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
     private static WorkerMessageHandler      instance;
     private final  WorkerOutlineModelUpdater outlineModelUpdater;
     private        WorkerCorrectionProcessor correctionProcessor;
-    private        WorkerNameEnvironment          nameEnvironment;
+    private        WorkerNameEnvironment     nameEnvironment;
     private HashMap<String, String> options = new HashMap<String, String>();
+    private HashMap<String, String>            preferenceFormatSettings;
     private MessageFilter                      messageFilter;
     private JavaParserWorker                   worker;
     private ContentAssistHistory               contentAssistHistory;
@@ -134,16 +137,31 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
         messageFilter.registerMessageRecipient(RoutingTypes.FORMAT, new MessageFilter.MessageRecipient<FormatMessage>() {
             @Override
             public void onMessageReceived(FormatMessage message) {
-                TextEdit edit =
-                        CodeFormatterUtil.format2(CodeFormatter.K_COMPILATION_UNIT, message.content(), 0, null,
-                                                  new HashMap<String, String>());
-                Jso textEditJso = convertTextEditToJso(edit);
-                MessagesImpls.FormatResultMessageImpl formatResultMes = MessagesImpls.FormatResultMessageImpl.make();
-                formatResultMes.setTextEdit(textEditJso);
-                formatResultMes.setId(message.id());
-                worker.sendMessage(formatResultMes.serialize());
+                if (preferenceFormatSettings != null) {
+                    TextEdit edit =
+                            CodeFormatterUtil.format2(CodeFormatter.K_COMPILATION_UNIT, message.content(), 0, null,
+                                                      preferenceFormatSettings);
+                    Jso textEditJso = convertTextEditToJso(edit);
+                    MessagesImpls.FormatResultMessageImpl formatResultMes = MessagesImpls.FormatResultMessageImpl.make();
+                    formatResultMes.setTextEdit(textEditJso);
+                    formatResultMes.setId(message.id());
+                    worker.sendMessage(formatResultMes.serialize());
+                }
             }
         });
+        messageFilter.registerMessageRecipient(RoutingTypes.PREFERENCE_FORMAT_SETTINGS,
+                                               new MessageFilter.MessageRecipient<PreferenceFormatSetMessage>() {
+                                                   @Override
+                                                   public void onMessageReceived(PreferenceFormatSetMessage message) {
+                                                       JsoStringMap<String> settingsJso = message.settings();
+                                                       JsoArray<String> keys = settingsJso.getValues();
+                                                       Iterator<String> iterator = keys.asIterable().iterator();
+                                                       while (iterator.hasNext()){
+                                                           String key = iterator.next();
+                                                           preferenceFormatSettings.put(key, settingsJso.remove(key));
+                                                       }
+                                                   }
+                                               });
     }
 
     private Jso convertTextEditToJso(TextEdit edit) {
@@ -174,14 +192,14 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
             }
             textEdit.addField("type", "CopySourceEdit");
         } else if (edit instanceof MoveSourceEdit) {
-            if(((MoveSourceEdit)edit).getTargetEdit() != null){
+            if (((MoveSourceEdit)edit).getTargetEdit() != null) {
                 Jso moveTargetEdit = Jso.create();
                 moveTargetEdit.addField("offSet", ((MoveSourceEdit)edit).getTargetEdit().getOffset());
                 textEdit.addField("MoveTargetEdit", moveTargetEdit);
             }
             textEdit.addField("type", "MoveSourceEdit");
         } else if (edit instanceof MoveTargetEdit) {
-            if(((MoveTargetEdit)edit).getSourceEdit()!= null){
+            if (((MoveTargetEdit)edit).getSourceEdit() != null) {
                 Jso moveSourceEdit = Jso.create();
                 moveSourceEdit.addField("offSet", ((MoveTargetEdit)edit).getSourceEdit().getOffset());
                 moveSourceEdit.addField("length", ((MoveTargetEdit)edit).getSourceEdit().getLength());
@@ -203,7 +221,7 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
         return textEdit;
     }
 
-    private JsoArray<Jso>convertChildrenTextEditToJso(TextEdit [] childrensEdit){
+    private JsoArray<Jso> convertChildrenTextEditToJso(TextEdit[] childrensEdit) {
         JsoArray<Jso> edits = JsoArray.create();
         for (TextEdit chEdit : childrensEdit) {
             Jso child = convertTextEditToJso(chEdit);
@@ -311,7 +329,7 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
             Preferences preferences = new Preferences();
             // TODO use user name
             contentAssistHistory =
-                    ContentAssistHistory.load(preferences, Preferences.CODEASSIST_LRU_HISTORY +"change me" /*userInfo.getName()*/);
+                    ContentAssistHistory.load(preferences, Preferences.CODEASSIST_LRU_HISTORY + "change me" /*userInfo.getName()*/);
 
             if (contentAssistHistory == null)
                 contentAssistHistory = new ContentAssistHistory();
@@ -387,8 +405,8 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
     public static <M> JsoArray<M> from(M... array) {
         JsoArray<M> result = JsoArray.create();
         for (M s : array) {
-            if(s != null)
-              result.add(s);
+            if (s != null)
+                result.add(s);
         }
         return result;
     }

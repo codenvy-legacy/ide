@@ -56,6 +56,7 @@ import com.codenvy.ide.ext.git.server.rest.TagListWriter;
 import com.codenvy.ide.ext.github.server.rest.GitHubService;
 import com.codenvy.ide.ext.java.jdi.server.DebuggerService;
 import com.codenvy.ide.ext.java.server.RestCodeAssistantJava;
+import com.codenvy.ide.ext.java.server.format.FormatService;
 import com.codenvy.ide.ext.ssh.server.DummySshKeyStore;
 import com.codenvy.ide.ext.ssh.server.KeyService;
 import com.codenvy.ide.ext.ssh.server.SshKeyStore;
@@ -122,6 +123,7 @@ public class ApiModule extends AbstractModule {
         bind(AsynchronousJobPool.class).to(CodenvyAsynchronousJobPool.class);
         bind(new PathKey<>(AsynchronousJobService.class, "/async/{ws-id}")).to(AsynchronousJobService.class);
         bind(GitService.class);
+        bind(FormatService.class);
         bind(BranchListWriter.class).toInstance(new BranchListWriter());
         bind(CommitMessageWriter.class).toInstance(new CommitMessageWriter());
         bind(MergeResultWriter.class).toInstance(new MergeResultWriter());
