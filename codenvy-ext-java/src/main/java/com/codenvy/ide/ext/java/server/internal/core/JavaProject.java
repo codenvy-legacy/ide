@@ -17,6 +17,10 @@
  */
 package com.codenvy.ide.ext.java.server.internal.core;
 
+import com.codenvy.api.project.server.FolderEntry;
+import com.codenvy.api.project.server.Project;
+import com.codenvy.api.project.server.ProjectManager;
+import com.codenvy.api.project.shared.Attribute;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.ide.ext.java.server.core.JavaCore;
 import com.codenvy.vfs.impl.fs.VirtualFileImpl;
@@ -68,23 +72,36 @@ import java.util.Map;
 public class JavaProject extends Openable implements IJavaProject {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaProject.class);
-    private VirtualFileImpl   project;
-    private IClasspathEntry[] rawClassPath;
-    private ResolvedClasspath resolvedClasspath;
+    private final VirtualFileImpl   virtualFile;
+    private       Project           project;
+    private       IClasspathEntry[] rawClassPath;
+    private       ResolvedClasspath resolvedClasspath;
 
-    public JavaProject(VirtualFileImpl project, String tempDir) {
+    public JavaProject(Project project, String tempDir, ProjectManager projectManager, String ws) {
         super(null);
         this.project = project;
-        List<IClasspathEntry> paths = new ArrayList<>();
-        String[] values =
-                new String[]{"src/main/java", "src/test/java"};///project.getPropertyValues(foldersValueProviderFactory.getName());
-        paths.add(JavaCore.newContainerEntry(new Path("codenvy:Jre")));
-
-        for (String value : values) {
-            paths.add(JavaCore.newSourceEntry(new Path(project.getIoFile().getPath() + "/" + value)));
+        if (!(project.getBaseFolder().getVirtualFile() instanceof VirtualFileImpl)) {
+            throw new IllegalArgumentException("Project must be based on com.codenvy.vfs.impl.fs.VirtualFileImpl");
         }
+        virtualFile = (VirtualFileImpl)project.getBaseFolder().getVirtualFile();
+        List<IClasspathEntry> paths = new ArrayList<>();
         try {
-            File depDir = new File(tempDir, project.getId());
+            if (project.getBaseFolder().getParent().getPath().equals("/")) {
+                addSources(project, paths);
+            } else {
+                FolderEntry parentFolder = project.getBaseFolder().getParent();
+                Project parentProject = projectManager.getProject(ws, parentFolder.getPath());
+                for (Project module : parentProject.getModules()) {
+                    addSources(module, paths);
+                }
+            }
+        } catch (IOException e) {
+            LOG.error("Can't find sources folder attribute");
+        }
+
+        paths.add(JavaCore.newContainerEntry(new Path("codenvy:Jre")));
+        try {
+            File depDir = new File(tempDir, virtualFile.getId());
             if (depDir.exists()) {
                 DirectoryStream<java.nio.file.Path> deps =
                         Files.newDirectoryStream(depDir.toPath(), new DirectoryStream.Filter<java.nio.file.Path>() {
@@ -103,6 +120,15 @@ public class JavaProject extends Openable implements IJavaProject {
             LOG.error("Can't find jar dependency's: ", e);
         }
 
+    }
+
+    private void addSources(Project project, List<IClasspathEntry> paths) throws IOException {
+        Attribute attribute = project.getDescription().getAttribute("folders.source");
+        if (attribute != null) {
+            for (String path : attribute.getValues()) {
+                paths.add(JavaCore.newSourceEntry(new Path(virtualFile.getIoFile().getPath() + "/" + path)));
+            }
+        }
     }
 
     /**
@@ -329,15 +355,11 @@ public class JavaProject extends Openable implements IJavaProject {
     }
 
     public String getName() {
-        try {
-            return project.getName();
-        } catch (VirtualFileSystemException e) {
-            throw new UnsupportedOperationException(e);
-        }
+        return project.getName();
     }
 
     public IPath getFullPath() {
-        return new Path(project.getIoFile().getPath());
+        return new Path(virtualFile.getIoFile().getPath());
     }
 
     @Override
@@ -759,7 +781,7 @@ public class JavaProject extends Openable implements IJavaProject {
 
     public IPath getPath() {
         try {
-            return new Path(project.getPath());
+            return new Path(virtualFile.getPath());
         } catch (VirtualFileSystemException e) {
             e.printStackTrace();
             return null;

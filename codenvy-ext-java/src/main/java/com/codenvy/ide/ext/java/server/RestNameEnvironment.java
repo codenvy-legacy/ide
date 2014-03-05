@@ -24,20 +24,12 @@ import com.codenvy.api.core.rest.HttpJsonHelper;
 import com.codenvy.api.core.rest.RemoteException;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.Pair;
-import com.codenvy.api.vfs.server.MountPoint;
-import com.codenvy.api.vfs.server.VirtualFileSystem;
-import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
+import com.codenvy.api.project.server.AbstractVirtualFileEntry;
+import com.codenvy.api.project.server.ProjectManager;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
-import com.codenvy.api.vfs.shared.ItemType;
-import com.codenvy.api.vfs.shared.PropertyFilter;
-import com.codenvy.api.vfs.shared.dto.Item;
-import com.codenvy.api.vfs.shared.dto.ItemList;
-import com.codenvy.api.vfs.shared.dto.Project;
 import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.ide.ext.java.server.internal.core.JavaProject;
 import com.codenvy.ide.ext.java.server.internal.core.search.matching.JavaSearchNameEnvironment;
-import com.codenvy.vfs.impl.fs.FSMountPoint;
-import com.codenvy.vfs.impl.fs.VirtualFileImpl;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
@@ -96,13 +88,11 @@ public class RestNameEnvironment {
     private static final Logger LOG = LoggerFactory.getLogger(RestNameEnvironment.class);
 
     private static final String TEMP_DIR = System.getProperty("java.io.tmpdir");
-
+    @Inject
+    ProjectManager projectManager;
     @PathParam("ws-id")
     @Inject
     private String wsId;
-
-    @Inject
-    private VirtualFileSystemRegistry vfsRegistry;
 
     private static void removeRecursive(Path path) throws IOException {
         Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
@@ -135,36 +125,36 @@ public class RestNameEnvironment {
         });
     }
 
-    private FSMountPoint getMountPoint() throws VirtualFileSystemException {
-        MountPoint mountPoint = vfsRegistry.getProvider(wsId).getMountPoint(true);
-        if (mountPoint instanceof FSMountPoint) {
-            return (FSMountPoint)mountPoint;
-        } else throw new IllegalStateException("This service works only with FSMountPoint class");
-    }
+//    private FSMountPoint getMountPoint() throws VirtualFileSystemException {
+//        MountPoint mountPoint = vfsRegistry.getProvider(wsId).getMountPoint(true);
+//        if (mountPoint instanceof FSMountPoint) {
+//            return (FSMountPoint)mountPoint;
+//        } else throw new IllegalStateException("This service works only with FSMountPoint class");
+//    }
 
     @GET
     @Produces("application/json")
     @javax.ws.rs.Path("findTypeCompound")
-    public String findTypeCompound(@QueryParam("compoundTypeName") String compoundTypeName, @QueryParam("projectid") String projectId)
+    public String findTypeCompound(@QueryParam("compoundTypeName") String compoundTypeName, @QueryParam("projectpath") String projectPath)
             throws VirtualFileSystemException {
-        VirtualFileImpl project = getMountPoint().getVirtualFileById(projectId);
-        JavaProject javaProject = new JavaProject(project, TEMP_DIR);
+        com.codenvy.api.project.server.Project project = projectManager.getProject(wsId, projectPath);
+        JavaProject javaProject = new JavaProject(project, TEMP_DIR, projectManager, wsId);
         JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
 
         try {
             NameEnvironmentAnswer answer = environment.findType(getCharArrayFrom(compoundTypeName));
             if (answer == null && compoundTypeName.contains("$")) {
-                String innerName = compoundTypeName.substring(compoundTypeName.indexOf('$')+1, compoundTypeName.length());
+                String innerName = compoundTypeName.substring(compoundTypeName.indexOf('$') + 1, compoundTypeName.length());
                 compoundTypeName = compoundTypeName.substring(0, compoundTypeName.indexOf('$'));
                 answer = environment.findType(getCharArrayFrom(compoundTypeName));
-                if(!answer.isCompilationUnit()) return null;
+                if (!answer.isCompilationUnit()) return null;
                 ICompilationUnit compilationUnit = answer.getCompilationUnit();
                 CompilationUnit result = getCompilationUnit(javaProject, environment, compilationUnit);
                 AbstractTypeDeclaration o = (AbstractTypeDeclaration)result.types().get(0);
                 ITypeBinding typeBinding = o.resolveBinding();
 
                 for (ITypeBinding binding : typeBinding.getDeclaredTypes()) {
-                    if(binding.getBinaryName().endsWith(innerName)){
+                    if (binding.getBinaryName().endsWith(innerName)) {
                         typeBinding = binding;
                         break;
                     }
@@ -193,10 +183,10 @@ public class RestNameEnvironment {
     @Produces("application/json")
     @javax.ws.rs.Path("findType")
     public String findType(@QueryParam("typename") String typeName, @QueryParam("packagename") String packageName,
-                           @QueryParam("projectid") String projectId)
+                           @QueryParam("projectpath") String projectPath)
             throws VirtualFileSystemException {
-        VirtualFileImpl project = getMountPoint().getVirtualFileById(projectId);
-        JavaProject javaProject = new JavaProject(project, TEMP_DIR);
+        com.codenvy.api.project.server.Project project = projectManager.getProject(wsId, projectPath);
+        JavaProject javaProject = new JavaProject(project, TEMP_DIR, projectManager, wsId);
         JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
 
         NameEnvironmentAnswer answer = environment.findType(typeName.toCharArray(), getCharArrayFrom(packageName));
@@ -214,10 +204,10 @@ public class RestNameEnvironment {
     @javax.ws.rs.Path("package")
     @Produces("text/plain")
     public String isPackage(@QueryParam("packagename") String packageName, @QueryParam("parent") String parentPackageName,
-                            @QueryParam("projectid") String projectId)
+                            @QueryParam("projectpath") String projectPath)
             throws VirtualFileSystemException {
-        VirtualFileImpl project = getMountPoint().getVirtualFileById(projectId);
-        JavaProject javaProject = new JavaProject(project, TEMP_DIR);
+        com.codenvy.api.project.server.Project project = projectManager.getProject(wsId, projectPath);
+        JavaProject javaProject = new JavaProject(project, TEMP_DIR, projectManager, wsId);
         JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
         return String.valueOf(environment.isPackage(getCharArrayFrom(parentPackageName), packageName.toCharArray()));
     }
@@ -226,25 +216,19 @@ public class RestNameEnvironment {
     @GET
     @javax.ws.rs.Path("/update-dependencies")
     @Produces(MediaType.APPLICATION_JSON)
-    public void updateDependency(@QueryParam("vfsid") String vfsId,
-                                 @QueryParam("projectid") String projectId,
+    public void updateDependency(@QueryParam("projectpath") String projectPath,
                                  @Context UriInfo uriInfo)
             throws CodeAssistantException, VirtualFileSystemException, IOException, JsonException, BuilderException {
 
-        final VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        Item item = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
+        com.codenvy.api.project.server.Project project = projectManager.getProject(wsId, projectPath);
 
-        Project project;
-        String projectPath;
-        if (item.getItemType().equals(ItemType.PROJECT)) {
-            project = (Project)item;
-            projectPath = project.getPath();
-        } else {
-            LOG.warn("Item not a project ");
-            throw new CodeAssistantException(500, "Item not a project");
+
+        if (project == null) {
+            LOG.warn("Project doesn't exist in workspace: " + wsId + ", path: " + projectPath);
+            throw new CodeAssistantException(500, "Project doesn't exist");
         }
 
-        if (!hasPom(vfs, projectId)) {
+        if (!hasPom(project)) {
             LOG.warn("Doesn't have pom.xml file");
             throw new CodeAssistantException(500, "Doesn't have pom.xml file");
         }
@@ -263,7 +247,7 @@ public class RestNameEnvironment {
             if (buildStatus.getStatus() == BuildStatus.FAILED) {
                 buildFailed(buildStatus);
             }
-            File projectDepDir = new File(TEMP_DIR, projectId);
+            File projectDepDir = new File(TEMP_DIR, project.getBaseFolder().getVirtualFile().getId());
             if (projectDepDir.exists()) {
                 removeRecursive(projectDepDir.toPath());
             }
@@ -281,6 +265,7 @@ public class RestNameEnvironment {
         }
 
     }
+
 
     private InputStream doDownload(String downloadURL) throws MalformedURLException, IOException {
         HttpURLConnection http = null;
@@ -306,11 +291,11 @@ public class RestNameEnvironment {
 
     }
 
-    private boolean hasPom(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException {
-        ItemList children = vfs.getChildren(projectId, -1, 0, "file", false);
-        List<Item> items = children.getItems();
+    private boolean hasPom(com.codenvy.api.project.server.Project project) throws VirtualFileSystemException {
+
+        List<AbstractVirtualFileEntry> items = project.getBaseFolder().getChildren();
         for (int i = 0; i < items.size(); i++) {
-            Item f = items.get(i);
+            AbstractVirtualFileEntry f = items.get(i);
             if ("pom.xml".equals(f.getName()))
                 return true;
         }

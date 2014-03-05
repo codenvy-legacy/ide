@@ -27,7 +27,7 @@ public class MessagesImpls {
 
   private  MessagesImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "4d247eaf501a55a57dfe816fe0a0e97b13a79360";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "b23f462f5dc016079875ec50ce0c71b2cd394805";
 
 
   public static class ApplyProposalMessageImpl extends com.google.gwt.webworker.client.messages.MessageImpl implements com.codenvy.ide.ext.java.messages.ApplyProposalMessage {
@@ -146,6 +146,20 @@ public class MessagesImpls {
     protected ComputeCAProposalsMessageImpl() {}
 
     @Override
+    public final native java.lang.String projectPath() /*-{
+      return this["projectPath"];
+    }-*/;
+
+    public final native ComputeCAProposalsMessageImpl setProjectPath(java.lang.String projectPath) /*-{
+      this["projectPath"] = projectPath;
+      return this;
+    }-*/;
+
+    public final native boolean hasProjectPath() /*-{
+      return this.hasOwnProperty("projectPath");
+    }-*/;
+
+    @Override
     public final native java.lang.String docContent() /*-{
       return this["docContent"];
     }-*/;
@@ -199,20 +213,6 @@ public class MessagesImpls {
 
     public final native boolean hasId() /*-{
       return this.hasOwnProperty("id");
-    }-*/;
-
-    @Override
-    public final native java.lang.String projectId() /*-{
-      return this["projectId"];
-    }-*/;
-
-    public final native ComputeCAProposalsMessageImpl setProjectId(java.lang.String projectId) /*-{
-      this["projectId"] = projectId;
-      return this;
-    }-*/;
-
-    public final native boolean hasProjectId() /*-{
-      return this.hasOwnProperty("projectId");
     }-*/;
 
     public static native ComputeCAProposalsMessageImpl make() /*-{
@@ -296,20 +296,6 @@ public class MessagesImpls {
     }-*/;
 
     @Override
-    public final native java.lang.String id() /*-{
-      return this["id"];
-    }-*/;
-
-    public final native ComputeCorrMessageImpl setId(java.lang.String id) /*-{
-      this["id"] = id;
-      return this;
-    }-*/;
-
-    public final native boolean hasId() /*-{
-      return this.hasOwnProperty("id");
-    }-*/;
-
-    @Override
     public final native java.lang.String projectId() /*-{
       return this["projectId"];
     }-*/;
@@ -321,6 +307,20 @@ public class MessagesImpls {
 
     public final native boolean hasProjectId() /*-{
       return this.hasOwnProperty("projectId");
+    }-*/;
+
+    @Override
+    public final native java.lang.String id() /*-{
+      return this["id"];
+    }-*/;
+
+    public final native ComputeCorrMessageImpl setId(java.lang.String id) /*-{
+      this["id"] = id;
+      return this;
+    }-*/;
+
+    public final native boolean hasId() /*-{
+      return this.hasOwnProperty("id");
     }-*/;
 
     public static native ComputeCorrMessageImpl make() /*-{
@@ -389,20 +389,6 @@ public class MessagesImpls {
       return this.hasOwnProperty("restContext");
     }-*/;
 
-    @Override
-    public final native java.lang.String vfsId() /*-{
-      return this["vfsId"];
-    }-*/;
-
-    public final native ConfigMessageImpl setVfsId(java.lang.String vfsId) /*-{
-      this["vfsId"] = vfsId;
-      return this;
-    }-*/;
-
-    public final native boolean hasVfsId() /*-{
-      return this.hasOwnProperty("vfsId");
-    }-*/;
-
     public static native ConfigMessageImpl make() /*-{
       return {
         _type: 1
@@ -412,6 +398,20 @@ public class MessagesImpls {
 
   public static class ParseMessageImpl extends com.google.gwt.webworker.client.messages.MessageImpl implements com.codenvy.ide.ext.java.messages.ParseMessage {
     protected ParseMessageImpl() {}
+
+    @Override
+    public final native java.lang.String projectPath() /*-{
+      return this["projectPath"];
+    }-*/;
+
+    public final native ParseMessageImpl setProjectPath(java.lang.String projectPath) /*-{
+      this["projectPath"] = projectPath;
+      return this;
+    }-*/;
+
+    public final native boolean hasProjectPath() /*-{
+      return this.hasOwnProperty("projectPath");
+    }-*/;
 
     @Override
     public final native java.lang.String fileId() /*-{
@@ -425,34 +425,6 @@ public class MessagesImpls {
 
     public final native boolean hasFileId() /*-{
       return this.hasOwnProperty("fileId");
-    }-*/;
-
-    @Override
-    public final native java.lang.String fileName() /*-{
-      return this["fileName"];
-    }-*/;
-
-    public final native ParseMessageImpl setFileName(java.lang.String fileName) /*-{
-      this["fileName"] = fileName;
-      return this;
-    }-*/;
-
-    public final native boolean hasFileName() /*-{
-      return this.hasOwnProperty("fileName");
-    }-*/;
-
-    @Override
-    public final native java.lang.String id() /*-{
-      return this["id"];
-    }-*/;
-
-    public final native ParseMessageImpl setId(java.lang.String id) /*-{
-      this["id"] = id;
-      return this;
-    }-*/;
-
-    public final native boolean hasId() /*-{
-      return this.hasOwnProperty("id");
     }-*/;
 
     @Override
@@ -484,17 +456,31 @@ public class MessagesImpls {
     }-*/;
 
     @Override
-    public final native java.lang.String projectId() /*-{
-      return this["projectId"];
+    public final native java.lang.String fileName() /*-{
+      return this["fileName"];
     }-*/;
 
-    public final native ParseMessageImpl setProjectId(java.lang.String projectId) /*-{
-      this["projectId"] = projectId;
+    public final native ParseMessageImpl setFileName(java.lang.String fileName) /*-{
+      this["fileName"] = fileName;
       return this;
     }-*/;
 
-    public final native boolean hasProjectId() /*-{
-      return this.hasOwnProperty("projectId");
+    public final native boolean hasFileName() /*-{
+      return this.hasOwnProperty("fileName");
+    }-*/;
+
+    @Override
+    public final native java.lang.String id() /*-{
+      return this["id"];
+    }-*/;
+
+    public final native ParseMessageImpl setId(java.lang.String id) /*-{
+      this["id"] = id;
+      return this;
+    }-*/;
+
+    public final native boolean hasId() /*-{
+      return this.hasOwnProperty("id");
     }-*/;
 
     public static native ParseMessageImpl make() /*-{
@@ -656,20 +642,6 @@ public class MessagesImpls {
     }-*/;
 
     @Override
-    public final native java.lang.String getMarkerType() /*-{
-      return this["markerType"];
-    }-*/;
-
-    public final native ProblemLocationMessageImpl setMarkerType(java.lang.String markerType) /*-{
-      this["markerType"] = markerType;
-      return this;
-    }-*/;
-
-    public final native boolean hasMarkerType() /*-{
-      return this.hasOwnProperty("markerType");
-    }-*/;
-
-    @Override
     public final native int getProblemId() /*-{
       return this["problemId"];
     }-*/;
@@ -681,6 +653,20 @@ public class MessagesImpls {
 
     public final native boolean hasProblemId() /*-{
       return this.hasOwnProperty("problemId");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getMarkerType() /*-{
+      return this["markerType"];
+    }-*/;
+
+    public final native ProblemLocationMessageImpl setMarkerType(java.lang.String markerType) /*-{
+      this["markerType"] = markerType;
+      return this;
+    }-*/;
+
+    public final native boolean hasMarkerType() /*-{
+      return this.hasOwnProperty("markerType");
     }-*/;
 
     @Override
@@ -736,20 +722,6 @@ public class MessagesImpls {
     protected ProblemsMessageImpl() {}
 
     @Override
-    public final native java.lang.String id() /*-{
-      return this["id"];
-    }-*/;
-
-    public final native ProblemsMessageImpl setId(java.lang.String id) /*-{
-      this["id"] = id;
-      return this;
-    }-*/;
-
-    public final native boolean hasId() /*-{
-      return this.hasOwnProperty("id");
-    }-*/;
-
-    @Override
     public final native com.codenvy.ide.collections.Array<com.codenvy.ide.ext.java.messages.Problem> problems() /*-{
       return this["problems"];
     }-*/;
@@ -761,6 +733,20 @@ public class MessagesImpls {
 
     public final native boolean hasProblems() /*-{
       return this.hasOwnProperty("problems");
+    }-*/;
+
+    @Override
+    public final native java.lang.String id() /*-{
+      return this["id"];
+    }-*/;
+
+    public final native ProblemsMessageImpl setId(java.lang.String id) /*-{
+      this["id"] = id;
+      return this;
+    }-*/;
+
+    public final native boolean hasId() /*-{
+      return this.hasOwnProperty("id");
     }-*/;
 
     public static native ProblemsMessageImpl make() /*-{

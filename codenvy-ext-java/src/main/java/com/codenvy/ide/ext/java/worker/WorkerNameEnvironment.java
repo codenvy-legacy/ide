@@ -44,15 +44,13 @@ public class WorkerNameEnvironment implements INameEnvironment {
 
     private static Set<String> packages = new HashSet<String>();
     protected String restServiceContext;
-    private   String vfsId;
-    private   String projectId;
+    private   String projectPath;
 
     /**
      *
      */
-    public WorkerNameEnvironment(String restContext, String vfsId, String wsName) {
+    public WorkerNameEnvironment(String restContext, String wsName) {
         restServiceContext = restContext + "/java-name-environment" + wsName;
-        this.vfsId = vfsId;
     }
 
     private static String convertSearchFilterToModelFilter(int searchFilter) {
@@ -75,8 +73,8 @@ public class WorkerNameEnvironment implements INameEnvironment {
         }
     }
 
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
+    public void setProjectPath(String projectPath) {
+        this.projectPath = projectPath;
     }
 
     /** {@inheritDoc} */
@@ -93,7 +91,7 @@ public class WorkerNameEnvironment implements INameEnvironment {
             return new NameEnvironmentAnswer(WorkerTypeInfoStorage.get().getType(key), null);
         }
 
-        if (projectId != null) {
+        if (projectPath != null) {
             if (packages.contains(key)) {
                 return null;
             }
@@ -103,8 +101,8 @@ public class WorkerNameEnvironment implements INameEnvironment {
             }
             if (builder.length() > 1) builder.deleteCharAt(builder.length() - 1);
             String url =
-                    restServiceContext + "/findTypeCompound?compoundTypeName=" + builder.toString() + "&projectid=" +
-                    projectId;
+                    restServiceContext + "/findTypeCompound?compoundTypeName=" + builder.toString() + "&projectpath=" +
+                    projectPath;
             String result = runSyncReques(url);
             if (result != null) {
                 Jso jso = Jso.deserialize(result);
@@ -114,7 +112,7 @@ public class WorkerNameEnvironment implements INameEnvironment {
                 return new NameEnvironmentAnswer(type, null);
             } else return null;
 //
-//            return loadTypeInfo(key, projectId);
+//            return loadTypeInfo(key, projectPath);
         }
         return null;
     }
@@ -131,15 +129,15 @@ public class WorkerNameEnvironment implements INameEnvironment {
 //     *
 //     * @param fqn
 //     *         of the type
-//     * @param projectId
+//     * @param projectPath
 //     *         project
 //     */
-//    public NameEnvironmentAnswer loadTypeInfo(final String fqn, String projectId) {
+//    public NameEnvironmentAnswer loadTypeInfo(final String fqn, String projectPath) {
 //        if (packages.contains(fqn)) {
 //            return null;
 //        }
 //        String url =
-//                restServiceContext + "/class-description?fqn=" + fqn + "&projectid=" + projectId +
+//                restServiceContext + "/class-description?fqn=" + fqn + "&projectid=" + projectPath +
 //                "&vfsid=" + vfsId;
 //        String result = runSyncReques(url);
 //        if (result != null) {
@@ -167,13 +165,13 @@ public class WorkerNameEnvironment implements INameEnvironment {
         b.append(typeName);
         final String key = validateFqn(b);
         //TODO
-//      if (TypeInfoStorage.get().getPackages(projectId).contains(key))
+//      if (TypeInfoStorage.get().getPackages(projectPath).contains(key))
 //         return null;
         if (WorkerTypeInfoStorage.get().containsKey(key)) {
             return new NameEnvironmentAnswer(WorkerTypeInfoStorage.get().getType(key),
                                              null);
         }
-        if (projectId != null) {
+        if (projectPath != null) {
             if (packages.contains(key)) {
                 return null;
             }
@@ -185,7 +183,7 @@ public class WorkerNameEnvironment implements INameEnvironment {
 
             String url =
                     restServiceContext + "/findType?packagename=" + builder.toString() + "&typename=" + new String(typeName) +
-                    "&projectid=" + projectId;
+                    "&projectpath=" + projectPath;
             String result = runSyncReques(url);
             if (result != null) {
                 Jso jso = Jso.deserialize(result);
@@ -223,9 +221,13 @@ public class WorkerNameEnvironment implements INameEnvironment {
             String url =
                     restServiceContext + "/package" + "?packagename=" + new String(packageName) + "&parent=" +
                     builder.toString()
-                    + "&projectid=" + projectId;
+                    + "&projectpath=" + projectPath;
             String findPackage = runSyncReques(url);
-            return findPackage != null && Boolean.parseBoolean(findPackage);
+            boolean exist = findPackage != null && Boolean.parseBoolean(findPackage);
+            if(exist) {
+                packages.add(p.toString());
+            }
+            return exist;
 //            if (findPackage != null) {
 //                JSONArray jsonArray = JSONParser.parseLenient(findPackage).isArray();
 //                for (int i = 0; i < jsonArray.size(); i++) {
@@ -276,7 +278,7 @@ public class WorkerNameEnvironment implements INameEnvironment {
 //        }
 //        String url =
 //                restServiceContext + "/classes-by-prefix" + "?prefix=" + new String(simpleName)
-//                + "&projectid=" + projectId + "&vfsid=" + vfsId;
+//                + "&projectid=" + projectPath + "&vfsid=" + vfsId;
 //        try {
 //            List<IBinaryType> typesByNamePrefix =
 //                    WorkerTypeInfoStorage.get().getTypesByNamePrefix(new String(prefix), qualification != null);
@@ -387,47 +389,46 @@ public class WorkerNameEnvironment implements INameEnvironment {
         if (qualifiedName.length == 0) {
             return;
         }
-        String searchType = convertSearchFilterToModelFilter(searchFor);
-        String url = null;
-        if (searchType == null) {
-            int lastDotIndex = CharOperation.lastIndexOf('.', qualifiedName);
-            String typeSearch;
-            if (lastDotIndex < 0) {
-                typeSearch = "className";
-            } else {
-                typeSearch = "fqn";
-            }
-            url =
-                    restServiceContext + "/find-by-prefix/" + new String(qualifiedName) + "?where="
-                    + typeSearch + "&projectid=" + projectId + "&vfsid=" + vfsId;
-        } else {
-            url =
-                    restServiceContext + "/find-by-type/" + searchType + "?prefix="
-                    + new String(qualifiedName) + "&projectid=" + projectId + "&vfsid="
-                    + vfsId;
-        }
-        try {
-
-            String typesJson = runSyncReques(url);
-            if (typesJson != null) {
-
-//                TypesListImpl typesList = TypesListImpl.deserialize(typesJson);
-
-
-//                for (ShortTypeInfo info : typesList.getTypes()) {
-//                    requestor.acceptType(info.getName().substring(0, info.getName().lastIndexOf(".")).toCharArray(),
-//                                         info.getName().substring(info.getName().lastIndexOf(".") + 1).toCharArray(),
-//                                         null,
-//                                         info.getModifiers(),
-//                                         null);
-//                }
-            }
-            WorkerTypeInfoStorage.get().setShortTypesInfo(typesJson);
-        } catch (Throwable e) {
-//            Log.error(getClass(), e);
-            throw new RuntimeException(e);
-            //TODO log error
-        }
+//        String searchType = convertSearchFilterToModelFilter(searchFor);
+//        String url = null;
+//        if (searchType == null) {
+//            int lastDotIndex = CharOperation.lastIndexOf('.', qualifiedName);
+//            String typeSearch;
+//            if (lastDotIndex < 0) {
+//                typeSearch = "className";
+//            } else {
+//                typeSearch = "fqn";
+//            }
+//            url =
+//                    restServiceContext + "/find-by-prefix/" + new String(qualifiedName) + "?where="
+//                    + typeSearch + "&projectid=" + projectPath ;
+//        } else {
+//            url =
+//                    restServiceContext + "/find-by-type/" + searchType + "?prefix="
+//                    + new String(qualifiedName) + "&projectid=" + projectPath;
+//        }
+//        try {
+//
+//            String typesJson = runSyncReques(url);
+//            if (typesJson != null) {
+//
+////                TypesListImpl typesList = TypesListImpl.deserialize(typesJson);
+//
+//
+////                for (ShortTypeInfo info : typesList.getTypes()) {
+////                    requestor.acceptType(info.getName().substring(0, info.getName().lastIndexOf(".")).toCharArray(),
+////                                         info.getName().substring(info.getName().lastIndexOf(".") + 1).toCharArray(),
+////                                         null,
+////                                         info.getModifiers(),
+////                                         null);
+////                }
+//            }
+//            WorkerTypeInfoStorage.get().setShortTypesInfo(typesJson);
+//        } catch (Throwable e) {
+////            Log.error(getClass(), e);
+//            throw new RuntimeException(e);
+//            //TODO log error
+//        }
     }
 
     /**
