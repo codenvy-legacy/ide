@@ -28,9 +28,9 @@
       
       Dev Mode Parameters:  **-noserver -port 8080**
       
-      Start Page: **ide/_app/IDE.html**
+      Start Page: **ide/default**
 
-Open in browser * http://127.0.0.1:8080/ide/_app/IDE.html?gwt.codesvr=127.0.0.1:9997
+Open in browser * http://127.0.0.1:8080/ide/default?gwt.codesvr=127.0.0.1:9997
 
 ### Running in DevMode (with Eclipse and GWT plugins):
 
@@ -49,7 +49,7 @@ Open in browser * http://127.0.0.1:8080/ide/_app/IDE.html?gwt.codesvr=127.0.0.1:
 
       **GWT** tab:
       
-          URL: **ide/_app/IDE.html**, 
+          URL: **ide/default**, 
           Available modules: keep only **IDE - com.codenvy.ide**
 
       **Arguments** tab:
@@ -58,5 +58,5 @@ Open in browser * http://127.0.0.1:8080/ide/_app/IDE.html?gwt.codesvr=127.0.0.1:
           VM arguments: **-Xmx1024m -XX:MaxPermSize=1024m**
 
 
-6) Click **Debug** and Open in browser http://127.0.0.1:8080/ide/_app/IDE.html?gwt.codesvr=127.0.0.1:9997
+6) Click **Debug** and Open in browser http://127.0.0.1:8080/ide/default?gwt.codesvr=127.0.0.1:9997
 
