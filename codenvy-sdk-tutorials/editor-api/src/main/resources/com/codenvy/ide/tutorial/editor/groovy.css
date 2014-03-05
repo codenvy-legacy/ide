@@ -2,7 +2,7 @@
      * CODENVY CONFIDENTIAL
      * __________________
      *
-     * [2012] - [2013] Codenvy, S.A.
+     * [2012] - [2014] Codenvy, S.A.
      * All Rights Reserved.
      *
      * NOTICE:  All information contained herein is, and remains
@@ -22,7 +22,7 @@
     @external groovy-negative, groovy-positive, groovy-header, groovy-strong, groovy-em, groovy-link, groovy-error, groovy-invalidchar;
 
     .groovy-keyword {
-        color: #708;
+        color: #BB3A97;
     }
 
     .groovy-atom {
@@ -38,7 +38,7 @@
     }
 
     .groovy-variable {
-        color: black;
+        color: #007BB4;
     }
 
     .groovy-variable-2 {
@@ -50,11 +50,11 @@
     }
 
     .groovy-property {
-        color: black;
+        color: rgb(197, 70, 70);
     }
 
     .groovy-operator {
-        color: black;
+        color: #0074df;
     }
 
     .groovy-comment {
