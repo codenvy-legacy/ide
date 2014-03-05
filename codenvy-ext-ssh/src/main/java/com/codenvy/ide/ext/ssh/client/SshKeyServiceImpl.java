@@ -68,7 +68,7 @@ public class SshKeyServiceImpl implements SshKeyService {
 
     /** {@inheritDoc} */
     @Override
-    public void generateKey(@NotNull String host, @NotNull AsyncRequestCallback<GenKeyRequest> callback) {
+    public void generateKey(@NotNull String host, @NotNull AsyncRequestCallback<Void> callback) {
         String url = baseUrl + "/ssh-keys/" + workspaceId + "/gen";
 
         GenKeyRequest keyRequest = dtoFactory.createDto(GenKeyRequest.class).withHost(host);

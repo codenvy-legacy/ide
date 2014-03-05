@@ -136,9 +136,9 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     public void onGenerateClicked() {
         String host = Window.prompt(constant.hostNameField(), "");
         if (!host.isEmpty()) {
-            service.generateKey(host, new AsyncRequestCallback<GenKeyRequest>(dtoUnmarshallerFactory.newUnmarshaller(GenKeyRequest.class)) {
+            service.generateKey(host, new AsyncRequestCallback<Void>() {
                 @Override
-                protected void onSuccess(GenKeyRequest result) {
+                protected void onSuccess(Void result) {
                     refreshKeys();
                 }
 
