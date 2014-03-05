@@ -18,7 +18,6 @@
 package com.codenvy.ide.api.ui.theme;
 
 /**
- *
  * @author Evgen Vidolob
  */
 public interface Theme {
@@ -154,4 +153,8 @@ public interface Theme {
     String getMainMenuBkgColor();
 
     String getMainMenuFontColor();
+
+    String getNotableButtonTopColor();
+
+    String getNotableButtonColor();
 }
