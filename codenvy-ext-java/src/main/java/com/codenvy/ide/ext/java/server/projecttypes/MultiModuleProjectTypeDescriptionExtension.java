@@ -38,11 +38,7 @@ public class MultiModuleProjectTypeDescriptionExtension implements ProjectTypeDe
     @Override
     public List<ProjectType> getProjectTypes() {
         final List<ProjectType> list = new ArrayList<>(1);
-<<<<<<< HEAD
-        list.add(new ProjectType("maven_multi_module", "Maven Multi Module"));
-=======
         list.add(new ProjectType("maven_multi_module", "Maven Multi Module Project"));
->>>>>>> master
         return list;
     }
 

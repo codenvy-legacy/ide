@@ -39,11 +39,7 @@ public class MultiModuleProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public ProjectType getProjectType() {
-<<<<<<< HEAD
-        return new ProjectType("maven_multi_module", "Maven Multi Module");
-=======
         return new ProjectType("maven_multi_module", "Maven Multi Module Project");
->>>>>>> master
     }
 
     @Override
