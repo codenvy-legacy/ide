@@ -21,6 +21,10 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectServiceClientImpl;
 import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClientImpl;
+import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
+import com.codenvy.api.user.gwt.client.UserProfileServiceClientImpl;
+import com.codenvy.api.user.gwt.client.UserServiceClient;
+import com.codenvy.api.user.gwt.client.UserServiceClientImpl;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.about.AboutView;
 import com.codenvy.ide.about.AboutViewImpl;
@@ -59,7 +63,6 @@ import com.codenvy.ide.api.ui.workspace.EditorPartStack;
 import com.codenvy.ide.api.ui.workspace.PartStack;
 import com.codenvy.ide.api.ui.workspace.PartStackView;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
-import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.contexmenu.ContextMenuView;
 import com.codenvy.ide.contexmenu.ContextMenuViewImpl;
 import com.codenvy.ide.core.StandardComponentInitializer;
@@ -133,7 +136,6 @@ import com.codenvy.ide.toolbar.ToolbarView;
 import com.codenvy.ide.toolbar.ToolbarViewImpl;
 import com.codenvy.ide.ui.loader.IdeLoader;
 import com.codenvy.ide.ui.loader.Loader;
-import com.codenvy.ide.user.UserClientServiceImpl;
 import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.codenvy.ide.websocket.MessageBus;
@@ -193,7 +195,8 @@ public class CoreGinModule extends AbstractGinModule {
         bind(AsyncRequestFactory.class).in(Singleton.class);
         bind(MessageBus.class).to(MessageBusImpl.class).in(Singleton.class);
         // client services
-        bind(UserClientService.class).to(UserClientServiceImpl.class).in(Singleton.class);
+        bind(UserServiceClient.class).to(UserServiceClientImpl.class).in(Singleton.class);
+        bind(UserProfileServiceClient.class).to(UserProfileServiceClientImpl.class).in(Singleton.class);
         bind(ProjectServiceClient.class).to(ProjectServiceClientImpl.class).in(Singleton.class);
         bind(ProjectTypeDescriptionServiceClient.class).to(ProjectTypeDescriptionServiceClientImpl.class).in(Singleton.class);
 

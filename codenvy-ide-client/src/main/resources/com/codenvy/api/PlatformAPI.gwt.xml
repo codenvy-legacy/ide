@@ -41,5 +41,5 @@
     <source path='core'/>
     <source path='vfs'/>
     <source path='project'/>
-
+    <source path='user'/>
 </module>

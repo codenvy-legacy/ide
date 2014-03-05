@@ -59,6 +59,11 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-user</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-vfs</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
@@ -191,9 +196,14 @@
                         <artifactId>codenvy-api-project</artifactId>
                         <version>${com.codenvy.platform-api.version}</version>
                     </dependency>
-                    <dependency>
+                     <dependency>
                         <groupId>com.codenvy.platform-api</groupId>
                         <artifactId>codenvy-api-runner</artifactId>
+                        <version>${com.codenvy.platform-api.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.codenvy.platform-api</groupId>
+                        <artifactId>codenvy-api-user</artifactId>
                         <version>${com.codenvy.platform-api.version}</version>
                     </dependency>
                 </dependencies>
@@ -201,6 +211,7 @@
                     <dtoPackages>
                         <package>com.codenvy.api.core.rest.shared.dto</package>
                         <package>com.codenvy.api.project.shared.dto</package>
+                        <package>com.codenvy.api.user.shared.dto</package>
                         <package>com.codenvy.api.builder.dto</package>
                         <package>com.codenvy.api.runner.dto</package>
                     </dtoPackages>

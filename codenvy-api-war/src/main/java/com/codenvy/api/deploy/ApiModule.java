@@ -34,6 +34,9 @@ import com.codenvy.api.runner.RunnerAdminService;
 import com.codenvy.api.runner.RunnerSelectionStrategy;
 import com.codenvy.api.runner.RunnerService;
 import com.codenvy.api.runner.internal.SlaveRunnerService;
+import com.codenvy.api.user.server.TokenValidator;
+import com.codenvy.api.user.server.UserProfileService;
+import com.codenvy.api.user.server.UserService;
 import com.codenvy.api.vfs.server.ContentStreamWriter;
 import com.codenvy.api.vfs.server.RequestValidator;
 import com.codenvy.api.vfs.server.VirtualFileSystemFactory;
@@ -64,7 +67,6 @@ import com.codenvy.ide.ext.ssh.server.DummySshKeyStore;
 import com.codenvy.ide.ext.ssh.server.KeyService;
 import com.codenvy.ide.ext.ssh.server.SshKeyStore;
 import com.codenvy.ide.security.oauth.server.LabOAuthAuthenticatorProvider;
-import com.codenvy.ide.server.UserService;
 import com.codenvy.inject.DynaModule;
 import com.codenvy.runner.sdk.SDKRunner;
 import com.codenvy.runner.webapps.DeployToApplicationServerRunner;
@@ -123,6 +125,7 @@ public class ApiModule extends AbstractModule {
         bind(DeployToApplicationServerRunner.class);
         bind(SDKRunner.class);
         bind(UserService.class);
+        bind(UserProfileService.class);
         bind(RestCodeAssistantJava.class);
         bind(DebuggerService.class);
         bind(AsynchronousJobPool.class).to(CodenvyAsynchronousJobPool.class);
@@ -141,5 +144,6 @@ public class ApiModule extends AbstractModule {
         bind(OAuthTokenProvider.class).to(OAuthAuthenticatorTokenProvider.class);
         bind(OAuthAuthenticatorProvider.class).to(LabOAuthAuthenticatorProvider.class);
         bind(SshKeyStore.class).to(DummySshKeyStore.class);
+        bind(TokenValidator.class).to(TokenValidatorImpl.class);
     }
 }
