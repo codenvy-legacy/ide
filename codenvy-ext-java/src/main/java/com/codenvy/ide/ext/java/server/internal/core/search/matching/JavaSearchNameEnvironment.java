@@ -18,6 +18,7 @@ import com.codenvy.ide.ext.java.server.internal.core.PackageFragmentRoot;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageDeclaration;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
@@ -27,6 +28,7 @@ import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
 import org.eclipse.jdt.internal.compiler.env.INameEnvironment;
 import org.eclipse.jdt.internal.compiler.env.NameEnvironmentAnswer;
 import org.eclipse.jdt.internal.compiler.util.SuffixConstants;
+import org.eclipse.jdt.internal.core.INameEnvironmentWithProgress;
 import org.eclipse.jdt.internal.core.builder.ClasspathJar;
 import org.eclipse.jdt.internal.core.builder.ClasspathLocation;
 import org.eclipse.jdt.internal.core.util.Util;
@@ -38,7 +40,7 @@ import java.util.zip.ZipFile;
 /*
  * A name environment based on the classpath of a Java project.
  */
-public class JavaSearchNameEnvironment implements INameEnvironment, SuffixConstants {
+public class JavaSearchNameEnvironment implements INameEnvironment, SuffixConstants, INameEnvironmentWithProgress {
 
     ClasspathLocation[] locations;
 
@@ -208,4 +210,8 @@ public class JavaSearchNameEnvironment implements INameEnvironment, SuffixConsta
         return false;
     }
 
+    @Override
+    public void setMonitor(IProgressMonitor monitor) {
+
+    }
 }

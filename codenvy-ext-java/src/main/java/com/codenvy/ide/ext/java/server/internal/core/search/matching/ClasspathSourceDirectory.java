@@ -67,9 +67,9 @@ public class ClasspathSourceDirectory extends ClasspathLocation {
                             }
                         }
                     }
-                    this.directoryCache.put(qualifiedPackageName, dirTable);
-                    return dirTable;
                 }
+               this.directoryCache.put(qualifiedPackageName, dirTable);
+               return dirTable;
             }
         } catch (IOException e) {
             e.printStackTrace();

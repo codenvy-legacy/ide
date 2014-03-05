@@ -22,6 +22,7 @@ import com.codenvy.ide.collections.Jso;
 import com.codenvy.ide.collections.JsonObject;
 import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.ClassSignature;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.EnumConstantSignature;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.BooleanConstant;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.ByteConstant;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.CharConstant;
@@ -56,7 +57,12 @@ public class Util {
             return new ClassSignature(jso.getStringField("class").toCharArray());
         } else if (jso.hasOwnProperty("annotation")) {
             return new BinaryAnnotation(jso.getJsObjectField("annotation").<AnnotationJso>cast());
-        } else if(jso.hasOwnProperty("array")){
+        }else if(jso.hasOwnProperty("enum")){
+            JsonObject anEnum = jso.getObjectField("enum");
+            return new EnumConstantSignature(anEnum.getStringField("typeName").toCharArray(),
+                                             anEnum.getStringField("constantName").toCharArray());
+        }
+        else if(jso.hasOwnProperty("array")){
             JsoArray<JsonObject> array = jso.getArrayField("array");
             Object[] arr = new Object[array.size()];
             for (int i = 0; i < array.size(); i++) {

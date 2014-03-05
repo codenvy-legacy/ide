@@ -39,8 +39,20 @@ import com.codenvy.ide.ext.java.server.internal.core.search.matching.JavaSearchN
 import com.codenvy.vfs.impl.fs.FSMountPoint;
 import com.codenvy.vfs.impl.fs.VirtualFileImpl;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.core.dom.CodenvyCompilationUnitResolver;
+import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.ITypeBinding;
+import org.eclipse.jdt.internal.compiler.ast.CompilationUnitDeclaration;
 import org.eclipse.jdt.internal.compiler.env.IBinaryType;
+import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
 import org.eclipse.jdt.internal.compiler.env.NameEnvironmentAnswer;
+import org.eclipse.jdt.internal.compiler.lookup.SourceTypeBinding;
+import org.eclipse.jdt.internal.compiler.lookup.TypeBinding;
+import org.eclipse.jdt.internal.core.INameEnvironmentWithProgress;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +64,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
@@ -68,7 +81,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Rest service for {@link com.codenvy.ide.ext.java.worker.WorkerNameEnvironment}
@@ -89,6 +104,37 @@ public class RestNameEnvironment {
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
 
+    private static void removeRecursive(Path path) throws IOException {
+        Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+                    throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                // try to delete the file anyway, even if its attributes
+                // could not be read, since delete-only access is
+                // theoretically possible
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                if (exc == null) {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                } else {
+                    // directory iteration failed; propagate exception
+                    throw exc;
+                }
+            }
+        });
+    }
+
     private FSMountPoint getMountPoint() throws VirtualFileSystemException {
         MountPoint mountPoint = vfsRegistry.getProvider(wsId).getMountPoint(true);
         if (mountPoint instanceof FSMountPoint) {
@@ -105,10 +151,43 @@ public class RestNameEnvironment {
         JavaProject javaProject = new JavaProject(project, TEMP_DIR);
         JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
 
-        NameEnvironmentAnswer answer = environment.findType(getCharArrayFrom(compoundTypeName));
-        return processAnswer(answer);
-    }
+        try {
+            NameEnvironmentAnswer answer = environment.findType(getCharArrayFrom(compoundTypeName));
+            if (answer == null && compoundTypeName.contains("$")) {
+                String innerName = compoundTypeName.substring(compoundTypeName.indexOf('$')+1, compoundTypeName.length());
+                compoundTypeName = compoundTypeName.substring(0, compoundTypeName.indexOf('$'));
+                answer = environment.findType(getCharArrayFrom(compoundTypeName));
+                if(!answer.isCompilationUnit()) return null;
+                ICompilationUnit compilationUnit = answer.getCompilationUnit();
+                CompilationUnit result = getCompilationUnit(javaProject, environment, compilationUnit);
+                AbstractTypeDeclaration o = (AbstractTypeDeclaration)result.types().get(0);
+                ITypeBinding typeBinding = o.resolveBinding();
 
+                for (ITypeBinding binding : typeBinding.getDeclaredTypes()) {
+                    if(binding.getBinaryName().endsWith(innerName)){
+                        typeBinding = binding;
+                        break;
+                    }
+                }
+                Map<TypeBinding, ?> bindings = (Map<TypeBinding, ?>)result.getProperty("compilerBindingsToASTBindings");
+                SourceTypeBinding binding = null;
+                for (Map.Entry<TypeBinding, ?> entry : bindings.entrySet()) {
+                    if (entry.getValue().equals(typeBinding)) {
+                        binding = (SourceTypeBinding)entry.getKey();
+                        break;
+                    }
+                }
+                return TypeBindingConvetror.toJsonBinaryType(binding);
+            }
+
+            return processAnswer(answer, javaProject, environment);
+        } catch (JavaModelException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.error("Can't parse class: ", e);
+            }
+            throw new WebApplicationException();
+        }
+    }
 
     @GET
     @Produces("application/json")
@@ -121,7 +200,14 @@ public class RestNameEnvironment {
         JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
 
         NameEnvironmentAnswer answer = environment.findType(typeName.toCharArray(), getCharArrayFrom(packageName));
-        return processAnswer(answer);
+        try {
+            return processAnswer(answer, javaProject, environment);
+        } catch (JavaModelException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.error("Can't parse class: ", e);
+            }
+            throw new WebApplicationException();
+        }
     }
 
     @GET
@@ -152,13 +238,13 @@ public class RestNameEnvironment {
         String projectPath;
         if (item.getItemType().equals(ItemType.PROJECT)) {
             project = (Project)item;
-            projectPath= project.getPath();
+            projectPath = project.getPath();
         } else {
             LOG.warn("Item not a project ");
             throw new CodeAssistantException(500, "Item not a project");
         }
 
-        if (!hasPom(vfs, projectId)){
+        if (!hasPom(vfs, projectId)) {
             LOG.warn("Doesn't have pom.xml file");
             throw new CodeAssistantException(500, "Doesn't have pom.xml file");
         }
@@ -178,14 +264,14 @@ public class RestNameEnvironment {
                 buildFailed(buildStatus);
             }
             File projectDepDir = new File(TEMP_DIR, projectId);
-            if(projectDepDir.exists()){
+            if (projectDepDir.exists()) {
                 removeRecursive(projectDepDir.toPath());
             }
 
             projectDepDir.mkdirs();
             projectDepDir.deleteOnExit();
             Link downloadLink = findLink("download result", buildStatus.getLinks());
-            if(downloadLink != null){
+            if (downloadLink != null) {
                 InputStream stream = doDownload(downloadLink.getHref());
                 ZipUtils.unzip(stream, projectDepDir);
             }
@@ -194,45 +280,6 @@ public class RestNameEnvironment {
             LOG.error("Error", e);
         }
 
-    }
-
-    private static void removeRecursive(Path path) throws IOException
-    {
-        Files.walkFileTree(path, new SimpleFileVisitor<Path>()
-        {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
-                    throws IOException
-            {
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException
-            {
-                // try to delete the file anyway, even if its attributes
-                // could not be read, since delete-only access is
-                // theoretically possible
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException
-            {
-                if (exc == null)
-                {
-                    Files.delete(dir);
-                    return FileVisitResult.CONTINUE;
-                }
-                else
-                {
-                    // directory iteration failed; propagate exception
-                    throw exc;
-                }
-            }
-        });
     }
 
     private InputStream doDownload(String downloadURL) throws MalformedURLException, IOException {
@@ -274,7 +321,9 @@ public class RestNameEnvironment {
         if (buildStatus != null) {
             Link logLink = findLink("view build log", buildStatus.getLinks());
             LOG.error("Build failed see more detail here: " + logLink.getHref());
-            throw new BuilderException("Build failed see more detail here: <a href=\"" + logLink.getHref() +"\" target=\"_blank\">" + logLink.getHref() + "</a>");
+            throw new BuilderException(
+                    "Build failed see more detail here: <a href=\"" + logLink.getHref() + "\" target=\"_blank\">" + logLink.getHref() +
+                    "</a>");
         }
         throw new BuilderException("Build failed");
     }
@@ -325,16 +374,45 @@ public class RestNameEnvironment {
     }
 
 
-    private String processAnswer(NameEnvironmentAnswer answer) {
-        if(answer == null) return null;
+    private String processAnswer(NameEnvironmentAnswer answer, IJavaProject project, INameEnvironmentWithProgress environment)
+            throws JavaModelException {
+        if (answer == null) return null;
         if (answer.isBinaryType()) {
             IBinaryType binaryType = answer.getBinaryType();
-            return JsonUtil.toJsonBinaryType(binaryType);
+            return BinaryTypeConvector.toJsonBinaryType(binaryType);
+        } else if (answer.isCompilationUnit()) {
+            ICompilationUnit compilationUnit = answer.getCompilationUnit();
+            CompilationUnit result = getCompilationUnit(project, environment, compilationUnit);
+            AbstractTypeDeclaration o = (AbstractTypeDeclaration)result.types().get(0);
+            ITypeBinding typeBinding = o.resolveBinding();
+            Map<TypeBinding, ?> bindings = (Map<TypeBinding, ?>)result.getProperty("compilerBindingsToASTBindings");
+            SourceTypeBinding binding = null;
+            for (Map.Entry<TypeBinding, ?> entry : bindings.entrySet()) {
+                if (entry.getValue().equals(typeBinding)) {
+                    binding = (SourceTypeBinding)entry.getKey();
+                    break;
+                }
+            }
+
+            return TypeBindingConvetror.toJsonBinaryType(binding);
         }
-//        else if (answer.isCompilationUnit()) {
-//
-//        }
         return null;
+    }
+
+    private CompilationUnit getCompilationUnit(IJavaProject project, INameEnvironmentWithProgress environment,
+                                               ICompilationUnit compilationUnit) throws JavaModelException {
+        int flags = 0;
+        flags |= org.eclipse.jdt.core.ICompilationUnit.ENABLE_STATEMENTS_RECOVERY;
+        flags |= org.eclipse.jdt.core.ICompilationUnit.IGNORE_METHOD_BODIES;
+        flags |= org.eclipse.jdt.core.ICompilationUnit.ENABLE_BINDINGS_RECOVERY;
+        CompilationUnitDeclaration compilationUnitDeclaration =
+                CodenvyCompilationUnitResolver.resolve(compilationUnit, project, environment, new HashMap<String, String>(), flags, null);
+        return CodenvyCompilationUnitResolver.convert(
+                compilationUnitDeclaration,
+                compilationUnit.getContents(),
+                flags,
+                new NullProgressMonitor()
+                                                     );
     }
 
     private char[][] getCharArrayFrom(String list) {
@@ -346,6 +424,7 @@ public class RestNameEnvironment {
         }
         return arr;
     }
+
     /** Stream that automatically close HTTP connection when all data ends. */
     private static class HttpStream extends FilterInputStream {
         private final HttpURLConnection http;

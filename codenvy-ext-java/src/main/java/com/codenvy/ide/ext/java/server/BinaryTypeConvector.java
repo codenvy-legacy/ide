@@ -27,6 +27,7 @@ import com.google.gson.JsonPrimitive;
 
 import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.internal.compiler.env.ClassSignature;
+import org.eclipse.jdt.internal.compiler.env.EnumConstantSignature;
 import org.eclipse.jdt.internal.compiler.env.IBinaryAnnotation;
 import org.eclipse.jdt.internal.compiler.env.IBinaryElementValuePair;
 import org.eclipse.jdt.internal.compiler.env.IBinaryField;
@@ -48,7 +49,7 @@ import static org.eclipse.jdt.internal.compiler.lookup.TypeIds.T_short;
 /**
  * @author Evgen Vidolob
  */
-public class JsonUtil {
+public class BinaryTypeConvector {
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping().serializeNulls().create();
 
     public static String toJsonBinaryType(IBinaryType type) {
@@ -83,7 +84,7 @@ public class JsonUtil {
 
 
     private static JsonElement toJsonMethods(IBinaryMethod[] methods) {
-        if(methods == null) return JsonNull.INSTANCE;
+        if (methods == null) return JsonNull.INSTANCE;
         JsonArray jsonElements = new JsonArray();
         for (IBinaryMethod method : methods) {
             jsonElements.add(toJsonMethod(method));
@@ -122,7 +123,7 @@ public class JsonUtil {
     }
 
     private static JsonElement toJsonFields(IBinaryField[] fields) {
-        if(fields == null) return JsonNull.INSTANCE;
+        if (fields == null) return JsonNull.INSTANCE;
         JsonArray array = new JsonArray();
         for (IBinaryField field : fields) {
             array.add(toJsonField(field));
@@ -143,7 +144,7 @@ public class JsonUtil {
         return object;
     }
 
-    private static JsonElement toJsonConstant(Constant constant) {
+    public static JsonElement toJsonConstant(Constant constant) {
         if (constant == null) return JsonNull.INSTANCE;
         JsonObject con = new JsonObject();
         con.addProperty("typeId", constant.typeID());
@@ -165,11 +166,11 @@ public class JsonUtil {
                 val = new JsonPrimitive(constant.floatValue());
                 break;
             case T_double:
-                if(Constant.NotAConstant.equals(constant)) {
+                if (Constant.NotAConstant.equals(constant)) {
                     val = new JsonPrimitive("NaN");
                     con.addProperty("NotAConstant", 1);
-                }else {
-                  val = new JsonPrimitive(constant.doubleValue());
+                } else {
+                    val = new JsonPrimitive(constant.doubleValue());
                 }
                 break;
             case T_boolean:
@@ -189,7 +190,7 @@ public class JsonUtil {
     }
 
     private static JsonElement toJsonAnnotations(IBinaryAnnotation[] annotations) {
-        if(annotations == null) return JsonNull.INSTANCE;
+        if (annotations == null) return JsonNull.INSTANCE;
         JsonArray array = new JsonArray();
         for (IBinaryAnnotation annotation : annotations) {
             array.add(toJsonAnnotation(annotation));
@@ -206,7 +207,7 @@ public class JsonUtil {
     }
 
     private static JsonElement toJsonElementValuePairs(IBinaryElementValuePair[] elementValuePairs) {
-        if(elementValuePairs == null) return JsonNull.INSTANCE;
+        if (elementValuePairs == null) return JsonNull.INSTANCE;
         JsonArray array = new JsonArray();
         for (IBinaryElementValuePair pair : elementValuePairs) {
             array.add(toJsonElementValuePair(pair));
@@ -222,15 +223,21 @@ public class JsonUtil {
     }
 
     private static JsonElement toJsonDefaultValue(Object defaultValue) {
-        if(defaultValue == null) return JsonNull.INSTANCE;
+        if (defaultValue == null) return JsonNull.INSTANCE;
         JsonObject object = new JsonObject();
-        if(defaultValue instanceof Constant){
+        if (defaultValue instanceof Constant) {
             object.add("constant", toJsonConstant((Constant)defaultValue));
-        } else if(defaultValue instanceof ClassSignature) {
+        } else if (defaultValue instanceof ClassSignature) {
             object.addProperty("class", new String(((ClassSignature)defaultValue).getTypeName()));
-        } else if(defaultValue instanceof IBinaryAnnotation){
+        } else if (defaultValue instanceof IBinaryAnnotation) {
             object.add("annotation", toJsonAnnotation((IBinaryAnnotation)defaultValue));
-        }else if(defaultValue instanceof Object[]) {
+        } else if (defaultValue instanceof EnumConstantSignature) {
+            EnumConstantSignature signature = (EnumConstantSignature)defaultValue;
+            JsonObject enumSignature = new JsonObject();
+            enumSignature.addProperty("typeName", new String(signature.getTypeName()));
+            enumSignature.addProperty("constantName", new String(signature.getEnumConstantName()));
+            object.add("enum", enumSignature);
+        } else if (defaultValue instanceof Object[]) {
             JsonArray array = new JsonArray();
             for (Object o : (Object[])defaultValue) {
                 array.add(toJsonDefaultValue(o));
@@ -242,7 +249,7 @@ public class JsonUtil {
     }
 
     private static JsonElement toJsonMemberTypes(IBinaryNestedType[] memberTypes) {
-        if(memberTypes == null) return JsonNull.INSTANCE;
+        if (memberTypes == null) return JsonNull.INSTANCE;
         JsonArray array = new JsonArray();
         for (IBinaryNestedType type : memberTypes) {
             array.add(toJsonMemberType(type));
@@ -260,7 +267,7 @@ public class JsonUtil {
     }
 
     private static JsonElement toJsonMissingTypeNames(char[][][] missingTypeNames) {
-        if(missingTypeNames == null) return JsonNull.INSTANCE;
+        if (missingTypeNames == null) return JsonNull.INSTANCE;
         JsonArray array = new JsonArray();
         for (char[][] typeName : missingTypeNames) {
             array.add(toJsonArrayString(typeName));
@@ -270,7 +277,7 @@ public class JsonUtil {
 
 
     private static JsonElement toJsonArrayString(char[][] chars) {
-        if(chars == null) return JsonNull.INSTANCE;
+        if (chars == null) return JsonNull.INSTANCE;
         JsonArray array = new JsonArray();
         for (char[] aChar : chars) {
             array.add(new JsonPrimitive(new String(aChar)));
