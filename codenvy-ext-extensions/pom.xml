@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    CODENVY CONFIDENTIAL
-    __________________
+CODENVY CONFIDENTIAL
+__________________
 
-     [2012] - [2013] Codenvy, S.A.
-     All Rights Reserved.
+[2012] - [2013] Codenvy, S.A.
+All Rights Reserved.
 
-    NOTICE:  All information contained herein is, and remains
-    the property of Codenvy S.A. and its suppliers,
-    if any.  The intellectual and technical concepts contained
-    herein are proprietary to Codenvy S.A.
-    and its suppliers and may be covered by U.S. and Foreign Patents,
-    patents in process, and are protected by trade secret or copyright law.
-    Dissemination of this information or reproduction of this material
-    is strictly forbidden unless prior written permission is obtained
-    from Codenvy S.A..
+NOTICE: All information contained herein is, and remains
+the property of Codenvy S.A. and its suppliers,
+if any. The intellectual and technical concepts contained
+herein are proprietary to Codenvy S.A.
+and its suppliers and may be covered by U.S. and Foreign Patents,
+patents in process, and are protected by trade secret or copyright law.
+Dissemination of this information or reproduction of this material
+is strictly forbidden unless prior written permission is obtained
+from Codenvy S.A..
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -28,9 +28,6 @@
     <artifactId>codenvy-ext-extensions</artifactId>
     <packaging>jar</packaging>
     <name>Codenvy SDK :: Extensions</name>
-    <properties>
-        <dto-generator-out-directory>${project.build.directory}/generated-sources/dto/</dto-generator-out-directory>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
@@ -57,7 +54,7 @@
             <artifactId>codenvy-api-runner</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
-        <dependency>
+         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-user</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
@@ -66,6 +63,11 @@
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-vfs</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api-gwt-client</groupId>
+            <artifactId>codenvy-api-runner-gwt-client</artifactId>
+            <version>${codenvy.platform-api-gwt-client.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.validation</groupId>
@@ -143,83 +145,5 @@
                 <directory>src/test/resources</directory>
             </testResource>
         </testResources>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>add-source</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>${dto-generator-out-directory}</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>pre-compile</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.codenvy.platform-api</groupId>
-                <artifactId>codenvy-dto-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.codenvy.platform-api</groupId>
-                        <artifactId>codenvy-api-core</artifactId>
-                        <version>${com.codenvy.platform-api.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.codenvy.platform-api</groupId>
-                        <artifactId>codenvy-api-project</artifactId>
-                        <version>${com.codenvy.platform-api.version}</version>
-                    </dependency>
-                     <dependency>
-                        <groupId>com.codenvy.platform-api</groupId>
-                        <artifactId>codenvy-api-runner</artifactId>
-                        <version>${com.codenvy.platform-api.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.codenvy.platform-api</groupId>
-                        <artifactId>codenvy-api-user</artifactId>
-                        <version>${com.codenvy.platform-api.version}</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <dtoPackages>
-                        <package>com.codenvy.api.core.rest.shared.dto</package>
-                        <package>com.codenvy.api.project.shared.dto</package>
-                        <package>com.codenvy.api.user.shared.dto</package>
-                        <package>com.codenvy.api.builder.dto</package>
-                        <package>com.codenvy.api.runner.dto</package>
-                    </dtoPackages>
-                    <outputDirectory>${dto-generator-out-directory}</outputDirectory>
-                    <genClassName>com.codenvy.ide.ext.extensions.client.dto.DtoClientImpls</genClassName>
-                    <impl>client</impl>
-                </configuration>
-            </plugin>
-        </plugins>
     </build>
 </project>
