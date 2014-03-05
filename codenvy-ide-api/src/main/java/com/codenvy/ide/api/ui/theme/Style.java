@@ -18,9 +18,8 @@
 package com.codenvy.ide.api.ui.theme;
 
 /**
- * This class contains constants for style. Fields initialized from user preferences.
- * Static methods used for bridging with CssResources
- *
+ * This class contains constants for style. Fields initialized from user preferences. Static methods used for bridging with CssResources
+ * 
  * @author Evgen Vidolob
  */
 public class Style {
@@ -131,6 +130,14 @@ public class Style {
         return theme.getButtonColor();
     }
 
+    public static String getNotableButtonTopColor() {
+        return theme.getNotableButtonTopColor();
+    }
+
+    public static String getNotableButtonColor() {
+        return theme.getNotableButtonColor();
+    }
+
     public static String getInputBackground() {
         return theme.getInputBackground();
     }
@@ -163,7 +170,7 @@ public class Style {
         return theme.getEditorGutterColor();
     }
 
-    //syntax
+    // syntax
     public static String getEditorKeyWord() {
         return theme.getEditorKeyWord();
     }
@@ -273,6 +280,6 @@ public class Style {
     }
 
     public static String getMainMenuFontColor() {
-        return  theme.getMainMenuFontColor();
+        return theme.getMainMenuFontColor();
     }
 }

@@ -64,7 +64,7 @@ public interface SshKeyService {
      *         for ssh key
      * @param callback
      */
-    void generateKey(@NotNull String host, @NotNull AsyncRequestCallback<GenKeyRequest> callback);
+    void generateKey(@NotNull String host, @NotNull AsyncRequestCallback<Void> callback);
 
     /**
      * Get public ssh key

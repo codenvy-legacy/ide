@@ -43,8 +43,9 @@ public class WarProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public List<Attribute> getPredefinedAttributes() {
-        final List<Attribute> list = new ArrayList<>(2);
+        final List<Attribute> list = new ArrayList<>(3);
         list.add(new Attribute("language", "java"));
+        list.add(new Attribute("framework", "web_application"));
         list.add(new Attribute("runner.name", "webapps"));
         return list;
     }

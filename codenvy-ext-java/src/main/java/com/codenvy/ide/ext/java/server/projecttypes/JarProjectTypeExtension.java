@@ -43,8 +43,9 @@ public class JarProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public List<Attribute> getPredefinedAttributes() {
-        final List<Attribute> list = new ArrayList<>(1);
+        final List<Attribute> list = new ArrayList<>(2);
         list.add(new Attribute("language", "java"));
+        list.add(new Attribute("framework", "standalone"));
         return list;
     }
 
