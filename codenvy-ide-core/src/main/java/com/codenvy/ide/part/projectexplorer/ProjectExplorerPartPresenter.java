@@ -115,12 +115,12 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                         public void onSuccess(Project result) {
                             resourceProvider.getProject(result.getName(), new AsyncCallback<Project>() {
                                 @Override
-                                public void onFailure(Throwable caught) {
-                                    Log.error(ProjectExplorerPartPresenter.class, "Can not get project.", caught);
+                                public void onSuccess(Project result) {
                                 }
 
                                 @Override
-                                public void onSuccess(Project result) {
+                                public void onFailure(Throwable caught) {
+                                    Log.error(ProjectExplorerPartPresenter.class, "Can not get project.", caught);
                                 }
                             });
                         }

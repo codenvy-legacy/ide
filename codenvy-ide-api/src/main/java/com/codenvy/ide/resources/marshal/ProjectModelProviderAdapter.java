@@ -35,7 +35,6 @@ public class ProjectModelProviderAdapter {
     private final ResourceProvider resourceProvider;
     private       Project          project;
 
-    /** @param resourceProvider */
     public ProjectModelProviderAdapter(ResourceProvider resourceProvider) {
         this.resourceProvider = resourceProvider;
     }
@@ -44,7 +43,8 @@ public class ProjectModelProviderAdapter {
      * Initializes adapter by used just retrieved Project properties from backend.
      *
      * @param props
-     * @return
+     *         project properties
+     * @return new {@link Project} instance
      */
     public Project init(Array<Property> props) {
         String language = null;

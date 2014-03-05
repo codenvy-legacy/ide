@@ -17,17 +17,14 @@
  */
 package com.codenvy.ide.resources.model;
 
-
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 
-
 /**
  * Describe virtual file system and its capabilities.
  *
- * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: VirtualFileSystemInfo.java 79579 2012-02-17 13:27:25Z andrew00x $
+ * @author Andrey Parfonov
  */
 public class VirtualFileSystemInfo {
     /** ACL capabilities. */

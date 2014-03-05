@@ -20,11 +20,10 @@ package com.codenvy.ide.ext.java.client.projectmodel;
 import com.codenvy.ide.resources.model.Folder;
 import com.google.gwt.json.client.JSONObject;
 
-
 /**
  * Presents Java Package model
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public class Package extends Folder {
     public static final String TYPE = "java.package";

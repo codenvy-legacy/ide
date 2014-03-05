@@ -28,10 +28,12 @@ public class JavaModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(ProjectTypeDescriptionsExtension.class);
+        bind(MultiModuleProjectTypeDescriptionExtension.class);
 
         bind(JarProjectTypeExtension.class);
         bind(WarProjectTypeExtension.class);
         bind(SpringProjectTypeExtension.class);
+        bind(MultiModuleProjectTypeExtension.class);
 
         Multibinder<ValueProviderFactory> multiBinder = Multibinder.newSetBinder(binder(), ValueProviderFactory.class);
         multiBinder.addBinding().to(SourceFoldersValueProviderFactory.class);

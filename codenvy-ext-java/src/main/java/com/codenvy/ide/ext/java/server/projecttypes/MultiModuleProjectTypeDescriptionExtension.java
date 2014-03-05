@@ -29,31 +29,24 @@ import java.util.List;
 
 /** @author Artem Zatsarynnyy */
 @Singleton
-public class ProjectTypeDescriptionsExtension implements ProjectTypeDescriptionExtension {
+public class MultiModuleProjectTypeDescriptionExtension implements ProjectTypeDescriptionExtension {
     @Inject
-    public ProjectTypeDescriptionsExtension(ProjectTypeDescriptionRegistry registry) {
+    public MultiModuleProjectTypeDescriptionExtension(ProjectTypeDescriptionRegistry registry) {
         registry.registerDescription(this);
     }
 
     @Override
     public List<ProjectType> getProjectTypes() {
-        final List<ProjectType> list = new ArrayList<>(3);
-        list.add(new ProjectType("jar", "Java Library (JAR)"));
-        list.add(new ProjectType("war", "Java Web Application (WAR)"));
-        list.add(new ProjectType("spring", "Spring Application"));
+        final List<ProjectType> list = new ArrayList<>(1);
+        list.add(new ProjectType("maven_multi_module", "Maven Multi Module"));
         return list;
     }
 
     @Override
     public List<AttributeDescription> getAttributeDescriptions() {
-        final List<AttributeDescription> list = new ArrayList<>(7);
+        final List<AttributeDescription> list = new ArrayList<>(2);
         list.add(new AttributeDescription("language"));
-        list.add(new AttributeDescription("language.version"));
-        list.add(new AttributeDescription("framework"));
-        list.add(new AttributeDescription("exoide:classpath"));
-        list.add(new AttributeDescription("folders.source"));
         list.add(new AttributeDescription("builder.name"));
-        list.add(new AttributeDescription("runner.name"));
         return list;
     }
 }

@@ -18,6 +18,7 @@
 package com.codenvy.ide.resources;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.ide.MimeType;
@@ -211,7 +212,6 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void listProjects(final AsyncCallback<ItemList> callback) {
         // internal callback
@@ -236,8 +236,9 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
 
     /** {@inheritDoc} */
     @Override
-    public void createProject(String name, Array<Property> properties, final AsyncCallback<Project> callback) {
+    public void createProject(final String name, Array<Property> properties, final AsyncCallback<Project> callback) {
         final Folder rootFolder = vfsInfo.getRoot();
+
         // create internal wrapping Request Callback with proper Unmarshaller
         AsyncRequestCallback<ProjectModelProviderAdapter> internalCallback =
                 new AsyncRequestCallback<ProjectModelProviderAdapter>(new ProjectModelUnmarshaller(this)) {
@@ -267,7 +268,6 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                                 callback.onFailure(exception);
                             }
                         });
-
                     }
 
                     @Override
@@ -473,27 +473,47 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         }
         activeProject = null;
 
-        final Folder rootFolder = vfsInfo.getRoot();
-        rootFolder.getChildren().clear();
-
-        listProjects(new AsyncCallback<ItemList>() {
+        projectServiceClient.getProjects(new AsyncRequestCallback<Array<ProjectReference>>() {
             @Override
-            public void onSuccess(ItemList result) {
-                Array<Resource> projects = Collections.createArray();
-                rootFolder.setChildren(projects);
+            protected void onSuccess(Array<ProjectReference> result) {
+//                Array<Resource> projects = Collections.createArray();
+//                rootFolder.setChildren(projects);
                 eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(null));
-                for (Item item : result.getItems()) {
+                for (ProjectReference item : result.asIterable()) {
                     Project project = new Project(eventBus, asyncRequestFactory, projectServiceClient);
                     project.init(JSONParser.parseStrict(dtoFactory.toJson(item)).isObject());
-                    rootFolder.addChild(project);
+//                    rootFolder.addChild(project);
                     eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
                 }
             }
 
             @Override
-            public void onFailure(Throwable caught) {
-                Log.error(ResourceProviderComponent.class, "Can not get list of projects", caught);
+            protected void onFailure(Throwable exception) {
+                Log.error(ResourceProviderComponent.class, "Can not get list of projects", exception);
             }
         });
+
+//        final Folder rootFolder = vfsInfo.getRoot();
+//        rootFolder.getChildren().clear();
+
+//        listProjects(new AsyncCallback<ItemList>() {
+//            @Override
+//            public void onSuccess(ItemList result) {
+//                Array<Resource> projects = Collections.createArray();
+//                rootFolder.setChildren(projects);
+//                eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(null));
+//                for (Item item : result.getItems()) {
+//                    Project project = new Project(eventBus, asyncRequestFactory, projectServiceClient);
+//                    project.init(JSONParser.parseStrict(dtoFactory.toJson(item)).isObject());
+//                    rootFolder.addChild(project);
+//                    eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Throwable caught) {
+//                Log.error(ResourceProviderComponent.class, "Can not get list of projects", caught);
+//            }
+//        });
     }
 }

@@ -23,7 +23,7 @@ import com.codenvy.ide.resources.model.Project;
  * Model provider, is an entity responsible for creating a nature-specific project model.
  * Class itself creates an empty project of desired type.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public interface ModelProvider {
     /**
