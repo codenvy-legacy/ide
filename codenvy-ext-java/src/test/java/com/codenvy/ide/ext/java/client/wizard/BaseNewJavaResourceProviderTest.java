@@ -19,6 +19,7 @@ package com.codenvy.ide.ext.java.client.wizard;
 
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.ext.java.client.BaseTest;
 import com.codenvy.ide.ext.java.client.projectmodel.CompilationUnit;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
@@ -62,6 +63,8 @@ public abstract class BaseNewJavaResourceProviderTest extends BaseTest {
     protected com.codenvy.ide.ext.java.client.projectmodel.Package javaPackage;
     @Mock
     protected Folder                                               folder;
+    @Mock
+    protected IconRegistry                                         iconRegistry;
     protected TestPackage                                          testPackage;
     protected String                                               resourceName;
     protected AbstractNewJavaResourceProvider                      provider;

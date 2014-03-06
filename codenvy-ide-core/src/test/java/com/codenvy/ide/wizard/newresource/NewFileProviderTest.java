@@ -43,7 +43,7 @@ public class NewFileProviderTest extends BaseNewResourceProviderTest {
 
     @Before
     public void setUp() {
-        newResourceProvider = new NewFileProvider(resources);
+        newResourceProvider = new NewFileProvider(iconRegistry);
         textFileName = RESOURCE_NAME;
     }
 

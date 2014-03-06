@@ -18,14 +18,13 @@
 package com.codenvy.ide.extension.runner.client;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
+import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.http.client.RequestException;
 
 /**
  * Client service for Runner.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: RunnerClientService.java Jul 3, 2013 12:48:08 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 public interface RunnerClientService {
 
@@ -35,10 +34,8 @@ public interface RunnerClientService {
      * @param projectName
      *         name of the project to run
      * @param callback
-     *         callback
-     * @throws RequestException
      */
-    public void run(String projectName, AsyncRequestCallback<String> callback) throws RequestException;
+    public void run(String projectName, AsyncRequestCallback<ApplicationProcessDescriptor> callback);
 
     /**
      * Get status of app.
@@ -47,9 +44,8 @@ public interface RunnerClientService {
      *         link to get application's status
      * @param callback
      *         callback
-     * @throws RequestException
      */
-    public void getStatus(Link link, AsyncRequestCallback<String> callback) throws RequestException;
+    public void getStatus(Link link, AsyncRequestCallback<ApplicationProcessDescriptor> callback);
 
     /**
      * Retrieve logs from application server where app is launched.
@@ -57,10 +53,8 @@ public interface RunnerClientService {
      * @param link
      *         link to retrieve logs
      * @param callback
-     *         callback
-     * @throws RequestException
      */
-    public void getLogs(Link link, AsyncRequestCallback<String> callback) throws RequestException;
+    public void getLogs(Link link, AsyncRequestCallback<String> callback);
 
     /**
      * Stop application server where app is launched.
@@ -68,8 +62,6 @@ public interface RunnerClientService {
      * @param link
      *         link to stop an app
      * @param callback
-     *         callback
-     * @throws RequestException
      */
-    public void stop(Link link, AsyncRequestCallback<String> callback) throws RequestException;
+    public void stop(Link link, AsyncRequestCallback<String> callback);
 }

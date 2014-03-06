@@ -18,10 +18,12 @@ import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.MouseEvent;
 import elemental.html.AnchorElement;
-import elemental.html.DivElement;
 import elemental.html.Element;
+import elemental.html.ImageElement;
 import elemental.html.SpanElement;
 
+import com.codenvy.ide.api.ui.IconRegistry;
+import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
@@ -32,13 +34,17 @@ import com.codenvy.ide.ui.tree.TreeNodeMutator;
 import com.codenvy.ide.util.CssUtils;
 import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.Image;
 
 
 /** Renderer for nodes in the file tree. */
 public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
 
-    public static FileTreeNodeRenderer create(Resources res) {
-        return new FileTreeNodeRenderer(res);
+    private static IconRegistry iconRegistry;
+
+    public static FileTreeNodeRenderer create(Resources res, IconRegistry iconRegistry) {
+        FileTreeNodeRenderer.iconRegistry = iconRegistry;
+        return new FileTreeNodeRenderer(res, iconRegistry);
     }
 
     public interface Css extends TreeNodeMutator.Css {
@@ -95,13 +101,18 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
      *         an optional listener to be attached to the anchor. If not given, the
      *         label will not be an anchor.
      */
-    public static SpanElement renderNodeContents(Css css, String name, boolean isFile, EventListener mouseDownListener,
+    public static SpanElement renderNodeContents(Css css, String name, Resource item, EventListener mouseDownListener,
                                                  boolean renderIcon) {
 
         SpanElement root = Elements.createSpanElement(css.root());
+        Image image = detectIcon(item);
+
         if (renderIcon) {
-            DivElement icon = Elements.createDivElement(css.icon());
-            icon.addClassName(isFile ? css.file() : css.folder());
+            ImageElement icon = Elements.createImageElement();
+            icon.setSrc(image.getUrl());
+            icon.setHeight(16);
+            icon.setWidth(16);
+            icon.addClassName(css.icon());
             root.appendChild(icon);
         }
 
@@ -119,6 +130,27 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
         root.appendChild(label);
 
         return root;
+    }
+
+    private static Image detectIcon(Resource item) {
+        Project project = item.getProject();
+        Image icon = null;
+        if (project == null) return  iconRegistry.getDefaultIcon();
+        String projectTypeId = project.getDescription().getProjectTypeId();
+        if (item instanceof Project)
+            icon = iconRegistry.getIcon(projectTypeId + ".projecttype.small.icon");
+        else if (item instanceof Folder)
+            icon = iconRegistry.getIcon(projectTypeId + ".folder.small.icon");
+        else if (item instanceof File) {
+            String[] split = item.getName().split("\\.");
+            String ext = split[split.length - 1];
+            icon = iconRegistry.getIcon(projectTypeId + "/" + ext + ".file.small.icon");
+        }
+        if (icon == null)
+            icon = iconRegistry.getDefaultIcon();
+
+        return icon;
+
     }
 
     private final EventListener mouseDownListener = new EventListener() {
@@ -144,7 +176,8 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
 
     private final Resources res;
 
-    private FileTreeNodeRenderer(Resources resources) {
+    private FileTreeNodeRenderer(Resources resources, IconRegistry iconRegistry) {
+        this.iconRegistry = iconRegistry;
         this.res = resources;
         this.css = res.workspaceNavigationFileTreeNodeRendererCss();
     }
@@ -156,33 +189,33 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
 
     @Override
     public SpanElement renderNodeContents(Resource data) {
-        return renderNodeContents(css, data.getName(), data.isFile(), mouseDownListener, true);
+        return renderNodeContents(css, data.getName(), data, mouseDownListener, true);
     }
 
     @Override
     public void updateNodeContents(TreeNodeElement<Resource> treeNode) {
-        if (treeNode.getData() instanceof Project) {
-            // Update folder icon based on icon state.
-            Element icon = treeNode.getNodeLabel().getFirstChildElement();
-            icon.setClassName(css.icon());
-            if (treeNode.isOpen()) {
-                icon.addClassName(css.projectOpen());
-            } else {
-                icon.addClassName(css.project());
-            }
-        } else if (treeNode.getData() instanceof Folder) {
-            // Update folder icon based on icon state.
-            Element icon = treeNode.getNodeLabel().getFirstChildElement();
-            icon.setClassName(css.icon());
+//        if (treeNode.getData() instanceof Project) {
+//            // Update folder icon based on icon state.
+//            Element icon = treeNode.getNodeLabel().getFirstChildElement();
+//            icon.setClassName(css.icon());
+//            if (treeNode.isOpen()) {
+//                icon.addClassName(css.projectOpen());
+//            } else {
+//                icon.addClassName(css.project());
+//            }
+//        } else if (treeNode.getData() instanceof Folder) {
+//            // Update folder icon based on icon state.
+//            Element icon = treeNode.getNodeLabel().getFirstChildElement();
+//            icon.setClassName(css.icon());
             //      if (treeNode.getData().isLoading()) {
             //        icon.addClassName(css.folderLoading());
             //      } else
-            if (treeNode.isOpen()) {
-                icon.addClassName(css.folderOpen());
-            } else {
-                icon.addClassName(css.folder());
-            }
+//            if (treeNode.isOpen()) {
+//                icon.addClassName(css.folderOpen());
+//            } else {
+//                icon.addClassName(css.folder());
+//            }
 
-        }
+//        }
     }
 }

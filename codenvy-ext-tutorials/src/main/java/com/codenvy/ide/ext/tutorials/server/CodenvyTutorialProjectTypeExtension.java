@@ -19,7 +19,6 @@ package com.codenvy.ide.ext.tutorials.server;
 
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
 import com.codenvy.api.project.server.ProjectTypeExtension;
-import com.codenvy.api.project.server.VfsPropertyValueProvider;
 import com.codenvy.api.project.shared.Attribute;
 import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
@@ -28,16 +27,21 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /** @author Artem Zatsarynnyy */
 @Singleton
 public class CodenvyTutorialProjectTypeExtension implements ProjectTypeExtension {
     private String baseUrl;
 
+    private Map<String, String> icons = new HashMap<>();
+
     @Inject
     public CodenvyTutorialProjectTypeExtension(@Named("extension-url") String baseUrl, ProjectTypeDescriptionRegistry registry) {
         this.baseUrl = baseUrl;
+        icons.put("codenvy_tutorial.projecttype.big.icon", "codenvy-tutorial/codenvy.jpg");
         registry.registerProjectType(this);
     }
 
@@ -48,10 +52,11 @@ public class CodenvyTutorialProjectTypeExtension implements ProjectTypeExtension
 
     @Override
     public List<Attribute> getPredefinedAttributes() {
-        final List<Attribute> list = new ArrayList<>(3);
-        list.add(new Attribute("language", new VfsPropertyValueProvider("language", "java")));
-        list.add(new Attribute("builder.name", new VfsPropertyValueProvider("builder.name", "maven")));
-        list.add(new Attribute("runner.name", new VfsPropertyValueProvider("runner.name", "sdk")));
+        final List<Attribute> list = new ArrayList<>(4);
+        list.add(new Attribute("language", "java"));
+        list.add(new Attribute("framework", "codenvy_sdk"));
+        list.add(new Attribute("builder.name", "maven"));
+        list.add(new Attribute("runner.name", "sdk"));
         return list;
     }
 
@@ -99,4 +104,11 @@ public class CodenvyTutorialProjectTypeExtension implements ProjectTypeExtension
                                                 baseUrl + "/gin-tutorial.zip"));
         return list;
     }
+
+    @Override
+    public Map<String, String> getIconRegistry() {
+        return icons;
+    }
+
+
 }

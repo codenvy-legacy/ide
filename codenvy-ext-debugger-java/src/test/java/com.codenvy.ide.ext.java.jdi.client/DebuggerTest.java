@@ -35,7 +35,6 @@ import com.codenvy.ide.ext.java.jdi.shared.Variable;
 import com.codenvy.ide.extension.runner.client.RunnerController;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
@@ -54,7 +53,6 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -65,10 +63,8 @@ import static org.mockito.Mockito.when;
  * @author Artem Zatsarynnyy
  */
 public class DebuggerTest extends BaseTest {
-
     private static final String DEBUG_HOST = "localhost";
     private static final int    DEBUG_PORT = 8000;
-    private static final String TEST_JSON  = "test_json";
     private static final String VM_NAME    = "vm_name";
     private static final String VM_VERSION = "vm_version";
     private static final String MIME_TYPE  = "application/java";
@@ -100,36 +96,31 @@ public class DebuggerTest extends BaseTest {
         super.setUp();
         when(applicationProcessDescriptor.getDebugHost()).thenReturn(DEBUG_HOST);
         when(applicationProcessDescriptor.getDebugPort()).thenReturn(DEBUG_PORT);
-
-        DebuggerInfo debuggerInfoMock = mock(DebuggerInfo.class);
-        when(dtoFactory.createDtoFromJson(TEST_JSON, DebuggerInfo.class)).thenReturn(debuggerInfoMock);
-        when(debuggerInfoMock.getVmName()).thenReturn(VM_NAME);
-        when(debuggerInfoMock.getVmVersion()).thenReturn(VM_VERSION);
-
         when(file.getMimeType()).thenReturn(MIME_TYPE);
-
         when(dtoFactory.createDto(Location.class)).thenReturn(mock(Location.class));
         when(dtoFactory.createDto(BreakPoint.class)).thenReturn(mock(BreakPoint.class));
-
         when(resolverFactory.getResolver(anyString())).thenReturn(mock(FqnResolver.class));
     }
 
     @Test
     public void testConnectDebuggerRequestIsSuccessful() throws Exception {
+        final DebuggerInfo debuggerInfoMock = mock(DebuggerInfo.class);
+        when(debuggerInfoMock.getVmName()).thenReturn(VM_NAME);
+        when(debuggerInfoMock.getVmVersion()).thenReturn(VM_VERSION);
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
+                AsyncRequestCallback<DebuggerInfo> callback = (AsyncRequestCallback<DebuggerInfo>)arguments[2];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, TEST_JSON);
+                onSuccess.invoke(callback, debuggerInfoMock);
                 return callback;
             }
-        }).when(service).connect(anyString(), anyInt(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).connect(anyString(), anyInt(), (AsyncRequestCallback<DebuggerInfo>)anyObject());
 
         presenter.attachDebugger(applicationProcessDescriptor);
 
-        verify(service).connect(eq(DEBUG_HOST), eq(DEBUG_PORT), (AsyncRequestCallback<String>)anyObject());
+        verify(service).connect(eq(DEBUG_HOST), eq(DEBUG_PORT), (AsyncRequestCallback<DebuggerInfo>)anyObject());
         verify(console).print(constants.debuggerConnected(anyString()));
 
         verifySetEnableButtons(DISABLE_BUTTON);
@@ -144,26 +135,16 @@ public class DebuggerTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
+                AsyncRequestCallback<DebuggerInfo> callback = (AsyncRequestCallback<DebuggerInfo>)arguments[2];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).connect(anyString(), anyInt(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).connect(anyString(), anyInt(), (AsyncRequestCallback<DebuggerInfo>)anyObject());
 
         presenter.attachDebugger(applicationProcessDescriptor);
 
-        verify(service).connect(eq(DEBUG_HOST), eq(DEBUG_PORT), (AsyncRequestCallback<String>)anyObject());
-        verify(notificationManager).showNotification((Notification)anyObject());
-    }
-
-    @Test
-    public void testConnectDebuggerRequestExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(service).connect(anyString(), anyInt(),
-                                                              (AsyncRequestCallback<String>)anyObject());
-
-        presenter.attachDebugger(applicationProcessDescriptor);
-
+        verify(service).connect(eq(DEBUG_HOST), eq(DEBUG_PORT), (AsyncRequestCallback<DebuggerInfo>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
     }
 
@@ -214,16 +195,6 @@ public class DebuggerTest extends BaseTest {
     }
 
     @Test
-    public void testDisconnectDebuggerRequestExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(service).disconnect(anyString(), (AsyncRequestCallback<Void>)anyObject());
-
-        presenter.onDisconnectButtonClicked();
-
-        verify(service).disconnect(anyString(), (AsyncRequestCallback<Void>)anyObject());
-        verify(notificationManager).showNotification((Notification)anyObject());
-    }
-
-    @Test
     public void testResumeRequestIsSuccessful() throws Exception {
         doAnswer(new Answer() {
             @Override
@@ -257,16 +228,6 @@ public class DebuggerTest extends BaseTest {
                 return callback;
             }
         }).when(service).resume(anyString(), (AsyncRequestCallback<Void>)anyObject());
-
-        presenter.onResumeButtonClicked();
-
-        verify(service).resume(anyString(), (AsyncRequestCallback<Void>)anyObject());
-        verify(notificationManager).showNotification((Notification)anyObject());
-    }
-
-    @Test
-    public void testResumeRequestExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(service).resume(anyString(), (AsyncRequestCallback<Void>)anyObject());
 
         presenter.onResumeButtonClicked();
 
@@ -316,16 +277,6 @@ public class DebuggerTest extends BaseTest {
     }
 
     @Test
-    public void testStepIntoRequestExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(service).stepInto(anyString(), (AsyncRequestCallback<Void>)anyObject());
-
-        presenter.onStepIntoButtonClicked();
-
-        verify(service).stepInto(anyString(), (AsyncRequestCallback<Void>)anyObject());
-        verify(notificationManager).showNotification((Notification)anyObject());
-    }
-
-    @Test
     public void testStepOverRequestIsSuccessful() throws Exception {
         doAnswer(new Answer() {
             @Override
@@ -359,16 +310,6 @@ public class DebuggerTest extends BaseTest {
                 return callback;
             }
         }).when(service).stepOver(anyString(), (AsyncRequestCallback<Void>)anyObject());
-
-        presenter.onStepOverButtonClicked();
-
-        verify(service).stepOver(anyString(), (AsyncRequestCallback<Void>)anyObject());
-        verify(notificationManager).showNotification((Notification)anyObject());
-    }
-
-    @Test
-    public void testStepOverRequestExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(service).stepOver(anyString(), (AsyncRequestCallback<Void>)anyObject());
 
         presenter.onStepOverButtonClicked();
 
@@ -418,16 +359,6 @@ public class DebuggerTest extends BaseTest {
     }
 
     @Test
-    public void testStepReturnRequestExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(service).stepReturn(anyString(), (AsyncRequestCallback<Void>)anyObject());
-
-        presenter.onStepReturnButtonClicked();
-
-        verify(service).stepReturn(anyString(), (AsyncRequestCallback<Void>)anyObject());
-        verify(notificationManager).showNotification((Notification)anyObject());
-    }
-
-    @Test
     public void testAddBreakpointRequestIsSuccessful() throws Exception {
         doAnswer(new Answer() {
             @Override
@@ -466,16 +397,6 @@ public class DebuggerTest extends BaseTest {
     }
 
     @Test
-    public void testAddBreakpointRequestExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(service).addBreakpoint(anyString(), (BreakPoint)anyObject(),
-                                                                    (AsyncRequestCallback<Void>)anyObject());
-        presenter.addBreakpoint(file, anyInt(), asyncCallbackBreakpoint);
-
-        verify(service).addBreakpoint(anyString(), (BreakPoint)anyObject(), (AsyncRequestCallback<Void>)anyObject());
-        verify(notificationManager).showNotification((Notification)anyObject());
-    }
-
-    @Test
     public void testRemoveBreakpointRequestIsSuccessful() throws Exception {
         doAnswer(new Answer() {
             @Override
@@ -511,16 +432,6 @@ public class DebuggerTest extends BaseTest {
 
         verify(service).deleteBreakpoint(anyString(), (BreakPoint)anyObject(), (AsyncRequestCallback<Void>)anyObject());
         verify(asyncCallbackVoid).onFailure((Throwable)anyObject());
-    }
-
-    @Test
-    public void testRemoveBreakpointRequestExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(service).deleteBreakpoint(anyString(), (BreakPoint)anyObject(),
-                                                                       (AsyncRequestCallback<Void>)anyObject());
-        presenter.deleteBreakpoint(file, anyInt(), asyncCallbackVoid);
-
-        verify(service).deleteBreakpoint(anyString(), (BreakPoint)anyObject(), (AsyncRequestCallback<Void>)anyObject());
-        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test

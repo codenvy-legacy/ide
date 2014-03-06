@@ -18,15 +18,13 @@
 package com.codenvy.ide.user;
 
 import com.codenvy.ide.MimeType;
+import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.json.JsonHelper;
-import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.ui.loader.Loader;
-import com.codenvy.ide.util.Utils;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -42,30 +40,34 @@ import java.util.Map;
 public class UserClientServiceImpl implements UserClientService {
     private static final String GET_USER               = "/get";
     private static final String UPDATE_USER_ATTRIBUTES = "/update";
-    private String baseUrl;
-    private Loader loader;
+    private final AsyncRequestFactory asyncRequestFactory;
+    private       String              baseUrl;
+    private       Loader              loader;
 
     @Inject
-    protected UserClientServiceImpl(@Named("restContext") String baseUrl, Loader loader) {
-        this.baseUrl = baseUrl + "/user/" + Utils.getWorkspaceId();
+    protected UserClientServiceImpl(@Named("restContext") String baseUrl, @Named("workspaceId") String workspaceId, Loader loader,
+                                    AsyncRequestFactory asyncRequestFactory) {
+        this.asyncRequestFactory = asyncRequestFactory;
+        this.baseUrl = baseUrl + "/user/" + workspaceId;
         this.loader = loader;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void getUser(AsyncRequestCallback<String> callback) throws RequestException {
+    public void getUser(AsyncRequestCallback<User> callback) {
         final String requestUrl = baseUrl + GET_USER;
-
-        AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(loader).send(callback);
+        asyncRequestFactory.createGetRequest(requestUrl).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void updateUserAttributes(Map<String, String> updateUserAttributes, AsyncRequestCallback<Void> callback)
-            throws RequestException {
+    public void updateUserAttributes(Map<String, String> updateUserAttributes, AsyncRequestCallback<Void> callback) {
         final String requestUrl = baseUrl + UPDATE_USER_ATTRIBUTES;
-        String updateAttributesData = JsonHelper.toJson(updateUserAttributes);
-        AsyncRequest.build(RequestBuilder.POST, requestUrl).loader(loader).header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-                    .data(updateAttributesData).send(callback);
+        final String updateAttributesData = JsonHelper.toJson(updateUserAttributes);
+        asyncRequestFactory.createPostRequest(requestUrl, null)
+                           .loader(loader)
+                           .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+                           .data(updateAttributesData)
+                           .send(callback);
     }
 }

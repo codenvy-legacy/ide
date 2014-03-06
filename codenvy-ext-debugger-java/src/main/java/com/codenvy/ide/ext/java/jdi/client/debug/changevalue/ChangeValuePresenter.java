@@ -26,7 +26,6 @@ import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
 import com.codenvy.ide.ext.java.jdi.shared.UpdateVariableRequest;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -42,16 +41,16 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 @Singleton
 public class ChangeValuePresenter implements ChangeValueView.ActionDelegate {
-    private ChangeValueView                 view;
-    private DtoFactory                      dtoFactory;
+    private final DtoFactory                      dtoFactory;
+    private       ChangeValueView                 view;
     /** Variable to change its value. */
-    private Variable                        variable;
+    private       Variable                        variable;
     /** Connected debugger information. */
-    private DebuggerInfo                    debuggerInfo;
-    private DebuggerClientService           service;
-    private JavaRuntimeLocalizationConstant constant;
-    private NotificationManager             notificationManager;
-    private AsyncCallback<String>           callback;
+    private       DebuggerInfo                    debuggerInfo;
+    private       DebuggerClientService           service;
+    private       JavaRuntimeLocalizationConstant constant;
+    private       NotificationManager             notificationManager;
+    private       AsyncCallback<String>           callback;
 
     /** Create presenter. */
     @Inject
@@ -93,25 +92,19 @@ public class ChangeValuePresenter implements ChangeValueView.ActionDelegate {
         updateVariableRequest.setVariablePath(variable.getVariablePath());
         updateVariableRequest.setExpression(newValue);
 
-        try {
-            service.setValue(debuggerInfo.getId(), updateVariableRequest, new AsyncRequestCallback<Void>() {
-                @Override
-                protected void onSuccess(Void result) {
-                    callback.onSuccess(newValue);
-                }
+        service.setValue(debuggerInfo.getId(), updateVariableRequest, new AsyncRequestCallback<Void>() {
+            @Override
+            protected void onSuccess(Void result) {
+                callback.onSuccess(newValue);
+            }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    Notification notification = new Notification(exception.getMessage(), ERROR);
-                    notificationManager.showNotification(notification);
-                    callback.onFailure(exception);
-                }
-            });
-        } catch (RequestException e) {
-            Notification notification = new Notification(e.getMessage(), ERROR);
-            notificationManager.showNotification(notification);
-            callback.onFailure(e);
-        }
+            @Override
+            protected void onFailure(Throwable exception) {
+                Notification notification = new Notification(exception.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
+                callback.onFailure(exception);
+            }
+        });
 
         view.close();
     }

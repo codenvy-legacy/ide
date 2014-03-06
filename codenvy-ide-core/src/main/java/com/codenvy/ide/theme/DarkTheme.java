@@ -88,12 +88,12 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getInactiveTabBackground() {
-        return "#5a5c5c";
+        return "#484848";
     }
 
     @Override
     public String getActiveTabBackground() {
-        return "#2d2f30";
+        return "#5a5c5c";
     }
 
     @Override
@@ -329,5 +329,25 @@ public class DarkTheme implements Theme {
     @Override
     public String getCellHoveredRow() {
         return getHoverBackgroundColor();
+    }
+
+    @Override
+    public String getMainMenuBkgColor() {
+        return "#404040";
+    }
+
+    @Override
+    public String getMainMenuFontColor() {
+        return "#dbdbdb";
+    }
+
+    @Override
+    public String getNotableButtonTopColor() {
+        return "#dbdbdb";
+    }
+
+    @Override
+    public String getNotableButtonColor() {
+        return "#2d6ba3";
     }
 }

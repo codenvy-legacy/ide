@@ -84,6 +84,7 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
         initSshKeyTable(res);
 
         initWidget(ourUiBinder.createAndBindUi(this));
+        btnUpload.setVisible(false);//TODO: temporary hide Upload button
     }
 
     /** Creates table what contains list of available ssh keys. */

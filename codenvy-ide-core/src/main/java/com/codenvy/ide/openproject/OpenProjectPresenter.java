@@ -22,7 +22,6 @@ import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -36,8 +35,7 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
-    private OpenProjectView view;
-    private DtoFactory dtoFactory;
+    private OpenProjectView  view;
     private ResourceProvider resourceProvider;
     private String selectedProject = null;
 
@@ -48,11 +46,8 @@ public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
      * @param resourceProvider
      */
     @Inject
-    protected OpenProjectPresenter(OpenProjectView view,
-                                   ResourceProvider resourceProvider,
-                                   DtoFactory dtoFactory) {
+    protected OpenProjectPresenter(OpenProjectView view, ResourceProvider resourceProvider) {
         this.view = view;
-        this.dtoFactory = dtoFactory;
         this.view.setDelegate(this);
         this.resourceProvider = resourceProvider;
 
@@ -96,12 +91,11 @@ public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
 
     /** Show dialog. */
     public void showDialog() {
-        resourceProvider.listProjects(new AsyncCallback<String>() {
+        resourceProvider.listProjects(new AsyncCallback<ItemList>() {
             @Override
-            public void onSuccess(String result) {
+            public void onSuccess(ItemList result) {
                 Array<String> array = Collections.createArray();
-                ItemList itemList = dtoFactory.createDtoFromJson(result, ItemList.class);
-                for(Item item : itemList.getItems()) {
+                for (Item item : result.getItems()) {
                     array.add(item.getName());
                 }
                 view.setProjects(array);

@@ -1545,12 +1545,12 @@ public class FSMountPoint implements MountPoint {
     }
 
 
-    private void setProperty(VirtualFileImpl virtualFile, String name, String value) throws VirtualFileSystemException {
+    void setProperty(VirtualFileImpl virtualFile, String name, String value) throws VirtualFileSystemException {
         setProperty(virtualFile, name, value == null ? null : new String[]{value});
     }
 
 
-    private void setProperty(VirtualFileImpl virtualFile, String name, String... value) throws VirtualFileSystemException {
+    void setProperty(VirtualFileImpl virtualFile, String name, String... value) throws VirtualFileSystemException {
         final int index = virtualFile.getInternalPath().hashCode() & MASK;
         final PathLockFactory.PathLock lock = pathLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {

@@ -24,7 +24,6 @@ import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.ssh.client.SshKeyService;
 import com.codenvy.ide.ext.ssh.client.SshLocalizationConstant;
 import com.codenvy.ide.ext.ssh.client.SshResources;
@@ -33,10 +32,9 @@ import com.codenvy.ide.ext.ssh.client.upload.UploadSshKeyPresenter;
 import com.codenvy.ide.ext.ssh.dto.GenKeyRequest;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.StringUnmarshaller;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -51,22 +49,20 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  * The presenter for managing ssh keys.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: SshKeyManagerPresenter May 18, 2011 10:16:44 AM evgen $
  */
 @Singleton
 public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter implements SshKeyManagerView.ActionDelegate {
-    public static final String GITHUB_HOST = "github.com"; 
-
-    private SshKeyManagerView       view;
-    private SshKeyService           service;
-    private SshLocalizationConstant constant;
-    private EventBus                eventBus;
-    private UserClientService       userService;
-    private Loader                  loader;
-    private SshKeyPresenter         sshKeyPresenter;
-    private UploadSshKeyPresenter   uploadSshKeyPresenter;
-    private NotificationManager     notificationManager;
-    private DtoFactory              dtoFactory;
+    public static final String GITHUB_HOST = "github.com";
+    private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
+    private       SshKeyManagerView       view;
+    private       SshKeyService           service;
+    private       SshLocalizationConstant constant;
+    private       EventBus                eventBus;
+    private       UserClientService       userService;
+    private       Loader                  loader;
+    private       SshKeyPresenter         sshKeyPresenter;
+    private       UploadSshKeyPresenter   uploadSshKeyPresenter;
+    private       NotificationManager     notificationManager;
 
     /**
      * Create presenter.
@@ -90,10 +86,11 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
                                   SshKeyPresenter sshKeyPresenter,
                                   UploadSshKeyPresenter uploadSshKeyPresenter,
                                   NotificationManager notificationManager,
-                                  DtoFactory dtoFactory) {
+                                  DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(constant.sshManagerTitle(), resources.sshKeyManager());
 
         this.view = view;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.view.setDelegate(this);
         this.service = service;
         this.constant = constant;
@@ -103,7 +100,6 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
         this.sshKeyPresenter = sshKeyPresenter;
         this.uploadSshKeyPresenter = uploadSshKeyPresenter;
         this.notificationManager = notificationManager;
-        this.dtoFactory = dtoFactory;
     }
 
     /** {@inheritDoc} */
@@ -117,25 +113,21 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     public void onDeleteClicked(@NotNull KeyItem key) {
         boolean needToDelete = Window.confirm(constant.deleteSshKeyQuestion(key.getHost()));
         if (needToDelete) {
-            try {
-                service.deleteKey(key, new AsyncRequestCallback<Void>() {
-                    @Override
-                    public void onSuccess(Void result) {
-                        loader.hide();
-                        refreshKeys();
-                    }
+            service.deleteKey(key, new AsyncRequestCallback<Void>() {
+                @Override
+                public void onSuccess(Void result) {
+                    loader.hide();
+                    refreshKeys();
+                }
 
-                    @Override
-                    public void onFailure(Throwable exception) {
-                        loader.hide();
-                        Notification notification = new Notification(exception.getMessage(), ERROR);
-                        notificationManager.showNotification(notification);
-                        eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    }
-                });
-            } catch (RequestException e) {
-                e.printStackTrace();
-            }
+                @Override
+                public void onFailure(Throwable exception) {
+                    loader.hide();
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
+                    eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                }
+            });
         }
     }
 
@@ -144,25 +136,19 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     public void onGenerateClicked() {
         String host = Window.prompt(constant.hostNameField(), "");
         if (!host.isEmpty()) {
-            try {
-                service.generateKey(host, new AsyncRequestCallback<GenKeyRequest>() {
-                    @Override
-                    protected void onSuccess(GenKeyRequest result) {
-                        refreshKeys();
-                    }
+            service.generateKey(host, new AsyncRequestCallback<Void>() {
+                @Override
+                protected void onSuccess(Void result) {
+                    refreshKeys();
+                }
 
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        Notification notification = new Notification(exception.getMessage(), ERROR);
-                        notificationManager.showNotification(notification);
-                        eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    }
-                });
-            } catch (RequestException e) {
-                Notification notification = new Notification(e.getMessage(), ERROR);
-                notificationManager.showNotification(notification);
-                eventBus.fireEvent(new ExceptionThrownEvent(e));
-            }
+                @Override
+                protected void onFailure(Throwable exception) {
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
+                    eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                }
+            });
         }
     }
 
@@ -175,115 +161,91 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     /** {@inheritDoc} */
     @Override
     public void onGenerateGithubKeyClicked() {
-        try {
-            service.getAllKeys(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                @Override
-                public void onSuccess(String result) {
-                    boolean githubKeyExists = false;
-                    Array<KeyItem> keys = dtoFactory.createListDtoFromJson(result, KeyItem.class);
-
-                    for (int i = 0; i < keys.size(); i++) {
-                        KeyItem key = keys.get(i);
-                        if (key.getHost().contains("github.com")) {
-                            githubKeyExists = true;
-                            break;
-                        }
-                    }
-
-                    if (!githubKeyExists) {
-                        loader.hide();
-                        boolean needToCreate = Window.confirm(constant.githubSshKeyLabel());
-                        if (needToCreate) {
-                            loader.show();
-                            try {
-                                StringUnmarshaller unmarshaller = new StringUnmarshaller();
-
-                                userService.getUser(new AsyncRequestCallback<String>(unmarshaller) {
-                                    @Override
-                                    protected void onSuccess(String result) {
-                                        User user = dtoFactory.createDtoFromJson(result, User.class);
-                                        if (service.getSshKeyProviders().containsKey(GITHUB_HOST)) {
-                                            service.getSshKeyProviders().get(GITHUB_HOST)
-                                                   .generateKey(user.getUserId(), new AsyncRequestCallback<Void>() {
-                                                       @Override
-                                                       public void onSuccess(Void result) {
-                                                           loader.hide();
-                                                           refreshKeys();
-                                                       }
-
-                                                       @Override
-                                                       public void onFailure(Throwable exception) {
-                                                           loader.hide();
-                                                           getFailedKey();
-                                                       }
-                                                   });
-                                        } else {
-                                            Notification notification = new Notification(constant.sshKeysProviderNotFound(GITHUB_HOST), ERROR);
-                                            notificationManager.showNotification(notification);
-                                        }
-                                    }
-
-                                    @Override
-                                    protected void onFailure(Throwable exception) {
-                                        Log.error(SshKeyManagerPresenter.class, exception);
-                                    }
-                                });
-                            } catch (RequestException e) {
-                                Log.error(SshKeyManagerPresenter.class, e);
-                            }
-                        }
-                    } else {
-                        loader.hide();
+        service.getAllKeys(new AsyncRequestCallback<Array<KeyItem>>(dtoUnmarshallerFactory.newArrayUnmarshaller(KeyItem.class)) {
+            @Override
+            public void onSuccess(Array<KeyItem> result) {
+                boolean githubKeyExists = false;
+                for (int i = 0; i < result.size(); i++) {
+                    KeyItem key = result.get(i);
+                    if (key.getHost().contains("github.com")) {
+                        githubKeyExists = true;
+                        break;
                     }
                 }
 
-                @Override
-                public void onFailure(Throwable caught) {
+                if (!githubKeyExists) {
                     loader.hide();
-                    Notification notification = new Notification(constant.getSshKeyFailed(), ERROR);
-                    notificationManager.showNotification(notification);
+                    boolean needToCreate = Window.confirm(constant.githubSshKeyLabel());
+                    if (needToCreate) {
+                        loader.show();
+                        userService.getUser(new AsyncRequestCallback<User>(dtoUnmarshallerFactory.newUnmarshaller(User.class)) {
+                            @Override
+                            protected void onSuccess(User result) {
+                                if (service.getSshKeyProviders().containsKey(GITHUB_HOST)) {
+                                    service.getSshKeyProviders().get(GITHUB_HOST)
+                                           .generateKey(result.getUserId(), new AsyncRequestCallback<Void>() {
+                                               @Override
+                                               public void onSuccess(Void result) {
+                                                   loader.hide();
+                                                   refreshKeys();
+                                               }
+
+                                               @Override
+                                               public void onFailure(Throwable exception) {
+                                                   loader.hide();
+                                                   getFailedKey();
+                                               }
+                                           });
+                                } else {
+                                    Notification notification = new Notification(constant.sshKeysProviderNotFound(GITHUB_HOST), ERROR);
+                                    notificationManager.showNotification(notification);
+                                }
+                            }
+
+                            @Override
+                            protected void onFailure(Throwable exception) {
+                                Log.error(SshKeyManagerPresenter.class, exception);
+                            }
+                        });
+                    }
+                } else {
+                    loader.hide();
                 }
-            });
-        } catch (RequestException e) {
-            e.printStackTrace();
-        }
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                loader.hide();
+                Notification notification = new Notification(constant.getSshKeyFailed(), ERROR);
+                notificationManager.showNotification(notification);
+            }
+        });
     }
-
-   
-
-  
-
- 
 
     /** Need to remove failed uploaded keys from local storage if they can't be uploaded to github */
     private void getFailedKey() {
-        try {
-            service.getAllKeys(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                @Override
-                public void onSuccess(String result) {
-                    Array<KeyItem> keys = dtoFactory.createListDtoFromJson(result, KeyItem.class);
-                    for (int i = 0; i < keys.size(); i++) {
-                        KeyItem key = keys.get(i);
-                        if (key.getHost().equals("github.com")) {
-                            removeFailedKey(key);
-                            return;
-                        }
+        service.getAllKeys(new AsyncRequestCallback<Array<KeyItem>>(dtoUnmarshallerFactory.newArrayUnmarshaller(KeyItem.class)) {
+            @Override
+            public void onSuccess(Array<KeyItem> result) {
+                for (int i = 0; i < result.size(); i++) {
+                    KeyItem key = result.get(i);
+                    if (key.getHost().equals("github.com")) {
+                        removeFailedKey(key);
+                        return;
                     }
-                    refreshKeys();
                 }
+                refreshKeys();
+            }
 
-                @Override
-                public void onFailure(Throwable exception) {
-                    loader.hide();
-                    refreshKeys();
-                    Notification notification = new Notification(exception.getMessage(), ERROR);
-                    notificationManager.showNotification(notification);
-                    eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                }
-            });
-        } catch (RequestException e) {
-            e.printStackTrace();
-        }
+            @Override
+            public void onFailure(Throwable exception) {
+                loader.hide();
+                refreshKeys();
+                Notification notification = new Notification(exception.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
+                eventBus.fireEvent(new ExceptionThrownEvent(exception));
+            }
+        });
     }
 
     /**
@@ -293,25 +255,20 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
      *         failed key
      */
     private void removeFailedKey(@NotNull KeyItem key) {
-        try {
-            service.deleteKey(key, new AsyncRequestCallback<Void>() {
-                @Override
-                public void onFailure(Throwable caught) {
-                    Notification notification = new Notification(constant.deleteSshKeyFailed(), ERROR);
-                    notificationManager.showNotification(notification);
-                    refreshKeys();
-                }
+        service.deleteKey(key, new AsyncRequestCallback<Void>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                Notification notification = new Notification(constant.deleteSshKeyFailed(), ERROR);
+                notificationManager.showNotification(notification);
+                refreshKeys();
+            }
 
-                @Override
-                public void onSuccess(Void result) {
-                    refreshKeys();
-                }
-            });
-        } catch (RequestException e) {
-            e.printStackTrace();
-        }
+            @Override
+            public void onSuccess(Void result) {
+                refreshKeys();
+            }
+        });
     }
-
 
     /** {@inheritDoc} */
     @Override
@@ -334,25 +291,20 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
 
     /** Refresh ssh keys. */
     private void refreshKeys() {
-        try {
-            service.getAllKeys(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                @Override
-                public void onSuccess(String result) {
-                    loader.hide();
-                    Array<KeyItem> keys = dtoFactory.createListDtoFromJson(result, KeyItem.class);
-                    view.setKeys(keys);
-                }
+        service.getAllKeys(new AsyncRequestCallback<Array<KeyItem>>(dtoUnmarshallerFactory.newArrayUnmarshaller(KeyItem.class)) {
+            @Override
+            public void onSuccess(Array<KeyItem> result) {
+                loader.hide();
+                view.setKeys(result);
+            }
 
-                @Override
-                public void onFailure(Throwable exception) {
-                    loader.hide();
-                    Notification notification = new Notification(exception.getMessage(), ERROR);
-                    notificationManager.showNotification(notification);
-                    eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                }
-            });
-        } catch (RequestException e) {
-            e.printStackTrace();
-        }
+            @Override
+            public void onFailure(Throwable exception) {
+                loader.hide();
+                Notification notification = new Notification(exception.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
+                eventBus.fireEvent(new ExceptionThrownEvent(exception));
+            }
+        });
     }
 }

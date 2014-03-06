@@ -142,6 +142,12 @@ public class VirtualFileImpl implements VirtualFile {
     }
 
     @Override
+    public VirtualFile setMediaType(String mediaType) throws VirtualFileSystemException {
+        mountPoint.setProperty(this, "vfs:mimeType", mediaType);
+        return this;
+    }
+
+    @Override
     public long getCreationDate() throws VirtualFileSystemException {
         // Creation date is not accessible over JDK API. May be done when switch to JDK7.
         // But even after switch to JDK7 creation date may not be available from underlying file system.

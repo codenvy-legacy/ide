@@ -20,6 +20,7 @@ package com.codenvy.ide.wizard.newresource;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
@@ -39,11 +40,13 @@ import static com.codenvy.ide.resources.model.Folder.TYPE;
  */
 public class NewFolderProvider extends NewResourceProvider {
     private SelectionAgent selectionAgent;
+    private IconRegistry iconRegistry;
 
     @Inject
-    public NewFolderProvider(Resources resources, SelectionAgent selectionAgent) {
-        super("Folder", "Folder", resources.folder(), null);
+    public NewFolderProvider(Resources resources, SelectionAgent selectionAgent, IconRegistry iconRegistry) {
+        super("Folder", "Folder", iconRegistry.getIcon("default.folder.small.icon"), null);
         this.selectionAgent = selectionAgent;
+        this.iconRegistry = iconRegistry;
     }
 
     /** {@inheritDoc} */

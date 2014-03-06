@@ -19,7 +19,6 @@ package com.codenvy.ide.workspace;
 
 import com.codenvy.ide.api.mvp.View;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.FlowPanel;
 
 
 /**
@@ -30,9 +29,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 public interface WorkspaceView extends View<WorkspaceView.ActionDelegate> {
     /** Required for delegating functions in the view. */
     public interface ActionDelegate {
-        /** Performs any actions appropriate in response to the user having pressed the Login button */
-        void onLoginClicked();
-
         /** Performs any actions in response to click on Update button */
         void onUpdateClicked();
     }
@@ -48,22 +44,6 @@ public interface WorkspaceView extends View<WorkspaceView.ActionDelegate> {
 
     /** @return status panel */
     AcceptsOneWidget getStatusPanel();
-
-    /**
-     * Sets whether Login button is visible.
-     *
-     * @param visible
-     *         <code>true</code> to visible the button, <code>false</code> to disable it
-     */
-    void setVisibleLoginButton(boolean visible);
-
-    /**
-     * Sets whether Logout button is visible.
-     *
-     * @param visible
-     *         <code>true</code> to visible the button, <code>false</code> to disable it
-     */
-    void setVisibleLogoutButton(boolean visible);
 
     /**
      * Sets whether 'Update extension' button is visible.

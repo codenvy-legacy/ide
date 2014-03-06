@@ -24,7 +24,6 @@ import com.codenvy.ide.ext.java.jdi.shared.UpdateVariableRequest;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
 import com.codenvy.ide.ext.java.jdi.shared.VariablePath;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
@@ -41,7 +40,6 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -157,17 +155,4 @@ public class ChangeVariableValueTest extends BaseTest {
         verify(view).close();
     }
 
-    @Test
-    public void testChangeValueRequestExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(service).setValue(anyString(), (UpdateVariableRequest)anyObject(),
-                                                               (AsyncRequestCallback<Void>)anyObject());
-
-        presenter.showDialog(debuggerInfo, var, asyncCallback);
-        presenter.onChangeClicked();
-
-        verify(service).setValue(anyString(), (UpdateVariableRequest)anyObject(), (AsyncRequestCallback<Void>)anyObject());
-        verify(asyncCallback).onFailure((RequestException)anyObject());
-        verify(notificationManager).showNotification((Notification)anyObject());
-        verify(view).close();
-    }
 }

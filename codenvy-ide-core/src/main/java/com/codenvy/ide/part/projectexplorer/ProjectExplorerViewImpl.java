@@ -21,6 +21,7 @@ import elemental.html.DragEvent;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.base.BaseView;
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.tree.FileTreeNodeRenderer;
@@ -40,6 +41,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.ActionDelegate> implements ProjectExplorerView {
     protected Tree<Resource> tree;
+    private IconRegistry iconRegistry;
 
     /**
      * Create view.
@@ -47,9 +49,10 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
      * @param resources
      */
     @Inject
-    public ProjectExplorerViewImpl(Resources resources) {
+    public ProjectExplorerViewImpl(Resources resources, IconRegistry iconRegistry) {
         super(resources);
-        tree = Tree.create(resources, new ResourceTreeNodeDataAdapter(), FileTreeNodeRenderer.create(resources));
+        this.iconRegistry = iconRegistry;
+        tree = Tree.create(resources, new ResourceTreeNodeDataAdapter(), FileTreeNodeRenderer.create(resources, iconRegistry));
         container.add(tree.asWidget());
     }
 

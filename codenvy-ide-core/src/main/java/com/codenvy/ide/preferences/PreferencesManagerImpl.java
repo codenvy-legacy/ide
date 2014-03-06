@@ -19,10 +19,8 @@ package com.codenvy.ide.preferences;
 
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.user.UserClientService;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -38,11 +36,8 @@ import java.util.Map;
 @Singleton
 public class PreferencesManagerImpl implements PreferencesManager {
     private Map<String, String> persistedPreferences;
-
     private Map<String, String> changedPreferences;
-
-    private UserClientService userService;
-    private DtoFactory        dtoFactory;
+    private UserClientService   userService;
 
     /**
      * Create preferences.
@@ -50,9 +45,7 @@ public class PreferencesManagerImpl implements PreferencesManager {
      * @param userService
      */
     @Inject
-    protected PreferencesManagerImpl(UserClientService userService,
-                                     DtoFactory dtoFactory) {
-        this.dtoFactory = dtoFactory;
+    protected PreferencesManagerImpl(UserClientService userService) {
         this.persistedPreferences = new HashMap<String, String>();
         this.changedPreferences = new HashMap<String, String>();
         this.userService = userService;
@@ -88,24 +81,20 @@ public class PreferencesManagerImpl implements PreferencesManager {
         Map<String, String> attributes = new HashMap<String, String>();
         attributes.putAll(changedPreferences);
 
-        try {
-            userService.updateUserAttributes(attributes, new AsyncRequestCallback<Void>() {
-                @Override
-                protected void onSuccess(Void result) {
-                    persistedPreferences.putAll(changedPreferences);
-                    changedPreferences.clear();
-                    callback.onSuccess(result);
-                }
+        userService.updateUserAttributes(attributes, new AsyncRequestCallback<Void>() {
+            @Override
+            protected void onSuccess(Void result) {
+                persistedPreferences.putAll(changedPreferences);
+                changedPreferences.clear();
+                callback.onSuccess(result);
+            }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    callback.onFailure(exception);
-                    Log.error(PreferencesManagerImpl.class, exception);
-                }
-            });
-        } catch (RequestException e) {
-            Log.error(PreferencesManagerImpl.class, e);
-        }
+            @Override
+            protected void onFailure(Throwable exception) {
+                callback.onFailure(exception);
+                Log.error(PreferencesManagerImpl.class, exception);
+            }
+        });
     }
 
     /**

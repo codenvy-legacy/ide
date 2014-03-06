@@ -71,45 +71,49 @@ public class NewProjectPagePresenterTest {
     public static final boolean IS_COMPLETED     = true;
     public static final boolean IS_NOT_COMPLETED = false;
     public static final boolean AVAILABLE        = true;
-    public static       String  items            =
-            "{\"numItems\":1,\"hasMoreItems\":false,\"items\":[{\"projectType\":\"War\",\"mimeType\":\"text/vnd.ideproject+directory\"," +
-            "\"creationDate\":-1,\"links\":null,\"vfsId\":null,\"itemType\":\"PROJECT\",\"parentId\":\"ZGV2LW1vbml0OnJvb3Q\"," +
-            "\"name\":\"g1\",\"properties\":null,\"permissions\":null,\"id\":\"ZGV2LW1vbml0Oi9nMQ\",\"path\":\"/g1\"}]}";
     @Mock
-    private NewProjectPageView            view;
+    private       NewProjectPageView            view;
     @Mock
-    private Resources                     resources;
+    private       Resources                     resources;
     @Mock
-    private ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
+    private       ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
     @Mock
-    private PaaSAgentImpl                 paasAgent;
+    private       PaaSAgentImpl                 paasAgent;
     @Mock
-    private ResourceProvider              resourceProvider;
+    private       ResourceProvider              resourceProvider;
     @Mock
-    private CoreLocalizationConstant      constant;
+    private       CoreLocalizationConstant      constant;
     @Mock
-    private WizardContext                 wizardContext;
+    private       WizardContext                 wizardContext;
     @Mock
-    private ProjectTypeDescriptor         projectTypeDescriptor;
+    private       ProjectTypeDescriptor         projectTypeDescriptor;
     @Mock
-    private PaaS                          paas;
+    private       PaaS                          paas;
     @Mock
-    private UpdateDelegate                delegate;
+    private       UpdateDelegate                delegate;
     @Mock
-    private DtoFactory                    dtoFactory;
-    private NewProjectPagePresenter       presenter;
+    private       DtoFactory                    dtoFactory;
+    private       NewProjectPagePresenter       presenter;
 
     /** Prepare test when project list is come. */
     private void setUpWithProjects() {
+        Item item = mock(Item.class);
+        final ItemList itemList = mock(ItemList.class);
+        when(dtoFactory.createDtoFromJson(anyString(), eq(ItemList.class))).thenReturn(itemList);
+        ArrayList<Item> list = new ArrayList<>();
+        list.add(item);
+        when(itemList.getItems()).thenReturn(list);
+        when(item.getName()).thenReturn(PROJECT_NAME);
+
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 Object[] arguments = invocationOnMock.getArguments();
-                AsyncCallback<String> callback = (AsyncCallback<String>)arguments[0];
-                callback.onSuccess(items);
+                AsyncCallback<ItemList> callback = (AsyncCallback<ItemList>)arguments[0];
+                callback.onSuccess(itemList);
                 return null;
             }
-        }).when(resourceProvider).listProjects((AsyncCallback<String>)anyObject());
+        }).when(resourceProvider).listProjects((AsyncCallback<ItemList>)anyObject());
 
         setUp();
     }
@@ -130,7 +134,7 @@ public class NewProjectPagePresenterTest {
         Array<PaaS> paases = Collections.createArray(paas);
         when(paasAgent.getPaaSes()).thenReturn(paases);
 
-        presenter = new NewProjectPagePresenter(view, resources, projectTypeDescriptorRegistry, resourceProvider, constant, dtoFactory);
+        presenter = new NewProjectPagePresenter(view, resources, projectTypeDescriptorRegistry, resourceProvider, constant);
         presenter.setContext(wizardContext);
         presenter.setUpdateDelegate(delegate);
     }

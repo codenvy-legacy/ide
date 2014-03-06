@@ -28,12 +28,11 @@ import com.codenvy.ide.ext.git.shared.RepoInfo;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.StringUnmarshaller;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.codenvy.ide.websocket.rest.StringUnmarshallerWS;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -52,24 +51,25 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 @Singleton
 public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDelegate {
     public static final String DEFAULT_REPO_NAME = "origin";
-    private CloneRepositoryView     view;
-    private GitClientService        service;
-    private ResourceProvider        resourceProvider;
-    private GitLocalizationConstant constant;
-    private NotificationManager     notificationManager;
-    private Notification            notification;
-    private DtoFactory              dtoFactory;
+    private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
+    private       CloneRepositoryView     view;
+    private       GitClientService        service;
+    private       ResourceProvider        resourceProvider;
+    private       GitLocalizationConstant constant;
+    private       NotificationManager     notificationManager;
+    private       Notification            notification;
 
     @Inject
     public CloneRepositoryPresenter(CloneRepositoryView view, GitClientService service, ResourceProvider resourceProvider,
-                                    GitLocalizationConstant constant, NotificationManager notificationManager, DtoFactory dtoFactory) {
+                                    GitLocalizationConstant constant, NotificationManager notificationManager,
+                                    DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
         this.constant = constant;
         this.notificationManager = notificationManager;
-        this.dtoFactory = dtoFactory;
     }
 
     /** {@inheritDoc} */
@@ -99,7 +99,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
     }
 
     /**
-     * Get the necessary parameters values and clone repository (over WebSocket or HTTP).
+     * Get the necessary parameters values and clone repository.
      *
      * @param remoteUri
      *         the location of the remote repository
@@ -111,56 +111,23 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
     private void cloneRepository(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
         try {
             service.cloneRepositoryWS(resourceProvider.getVfsInfo().getId(), project, remoteUri, remoteName,
-                                      new RequestCallback<String>(new StringUnmarshallerWS()) {
+                                      new RequestCallback<RepoInfo>(dtoUnmarshallerFactory.newWSUnmarshaller(RepoInfo.class)) {
                                           @Override
-                                          protected void onSuccess(String result) {
-                                              RepoInfo repository = dtoFactory.createDtoFromJson(result, RepoInfo.class);
-                                              onCloneSuccess(repository, project);
+                                          protected void onSuccess(RepoInfo result) {
+                                              onCloneSuccess(result, project);
                                           }
 
                                           @Override
                                           protected void onFailure(Throwable exception) {
                                               resourceProvider.showListProjects();
                                               handleError(exception, remoteUri);
-
                                           }
                                       });
         } catch (WebSocketException e) {
-            cloneRepositoryREST(remoteUri, remoteName, project);
-        }
-        view.close();
-    }
-
-    /**
-     * Get the necessary parameters values and call the clone repository method (over HTTP).
-     *
-     * @param remoteUri
-     *         the location of the remote repository
-     * @param remoteName
-     *         remote name instead of "origin"
-     * @param project
-     *         folder (root of GIT repository)
-     */
-    private void cloneRepositoryREST(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
-        try {
-            service.cloneRepository(resourceProvider.getVfsInfo().getId(), project, remoteUri, remoteName,
-                                    new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                                        @Override
-                                        protected void onSuccess(String result) {
-                                            RepoInfo repository = dtoFactory.createDtoFromJson(result, RepoInfo.class);
-                                            onCloneSuccess(repository, project);
-                                        }
-
-                                        @Override
-                                        protected void onFailure(Throwable exception) {
-                                            resourceProvider.showListProjects();
-                                            handleError(exception, remoteUri);
-                                        }
-                                    });
-        } catch (RequestException e) {
             resourceProvider.showListProjects();
             handleError(e, remoteUri);
         }
+        view.close();
     }
 
     /**

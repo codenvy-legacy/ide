@@ -23,7 +23,6 @@ import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
@@ -37,7 +36,6 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -111,16 +109,4 @@ public class DeleteRepositoryPresenterTest extends BaseTest {
         verify(eventBus).fireEvent((ExceptionThrownEvent)anyObject());
     }
 
-    @Test
-    public void testDeleteRepositoryWhenRequestExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(service).deleteRepository(anyString(), anyString(), (AsyncRequestCallback<Void>)anyObject());
-
-        presenter.deleteRepository();
-
-        verify(resourceProvider).getActiveProject();
-        verify(project).getPath();
-        verify(service).deleteRepository(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<Void>)anyObject());
-        verify(notificationManager).showNotification((Notification)anyObject());
-        verify(eventBus).fireEvent((ExceptionThrownEvent)anyObject());
-    }
 }

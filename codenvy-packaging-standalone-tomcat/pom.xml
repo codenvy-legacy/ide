@@ -23,7 +23,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M10-SNAPSHOT</version>
+        <version>3.0.0-M11-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-packaging-standalone-tomcat</artifactId>
     <packaging>pom</packaging>
@@ -84,6 +84,12 @@
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>
+	<dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>empty-extension</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>gin-tutorial</artifactId>
@@ -93,6 +99,12 @@
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>gist-extension</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+	<dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>helloworld-extension</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
@@ -357,6 +369,24 @@
                                     <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
                                     <destFileName>gist-extension.zip</destFileName>
                                 </artifactItem>
+				 <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>empty-extension</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>empty-extension.zip</destFileName>
+                                </artifactItem>
+				<artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>helloworld-extension</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>helloworld-extension.zip</destFileName>
+                                </artifactItem>
                                 <artifactItem>
                                     <groupId>com.codenvy.ide</groupId>
                                     <artifactId>wysiwyg-editor-tutorial</artifactId>
@@ -451,6 +481,7 @@
                                     <fileset dir="${basedir}/src/main/resources/tomcat" />
                                 </copy>
                                 <chmod dir="${project.build.directory}/tomcat-ide/bin" includes="**/*.sh" perm="+x" />
+                                <move file="${project.build.directory}/tomcat-ide/bin/catalina.sh" tofile="${project.build.directory}/tomcat-ide/bin/codenvy.sh"/>
                                 <!-- Copy resources to re-build Codenvy IDE with 3rd-party extensions. -->
                                 <copy overwrite="true" todir="${project.build.directory}/tomcat-ide/sdk-resources">
                                     <fileset dir="${project.build.directory}/../../codenvy-application-war" includes="src/**, pom.xml" />

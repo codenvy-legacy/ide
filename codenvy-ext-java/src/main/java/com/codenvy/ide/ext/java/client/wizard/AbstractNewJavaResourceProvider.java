@@ -19,6 +19,7 @@ package com.codenvy.ide.ext.java.client.wizard;
 
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.java.client.projectmodel.CompilationUnit;
@@ -29,6 +30,7 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Image;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -42,6 +44,7 @@ public abstract class AbstractNewJavaResourceProvider extends NewResourceProvide
     public static final String TYPE_CONTENT = "\n{\n}";
     private SelectionAgent selectionAgent;
 
+
     /**
      * Create wizard's data.
      *
@@ -54,8 +57,11 @@ public abstract class AbstractNewJavaResourceProvider extends NewResourceProvide
      * @param extension
      *         extension of a resource type
      */
-    public AbstractNewJavaResourceProvider(@NotNull String id, @NotNull String title, @Nullable ImageResource icon,
-                                           @Nullable String extension, @NotNull SelectionAgent selectionAgent) {
+    public AbstractNewJavaResourceProvider(@NotNull String id,
+                                           @NotNull String title,
+                                           @Nullable Image icon,
+                                           @Nullable String extension,
+                                           @NotNull SelectionAgent selectionAgent) {
         super(id, title, icon, extension);
         this.selectionAgent = selectionAgent;
     }

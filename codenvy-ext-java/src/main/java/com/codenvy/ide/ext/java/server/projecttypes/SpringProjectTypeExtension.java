@@ -19,7 +19,6 @@ package com.codenvy.ide.ext.java.server.projecttypes;
 
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
 import com.codenvy.api.project.server.ProjectTypeExtension;
-import com.codenvy.api.project.server.VfsPropertyValueProvider;
 import com.codenvy.api.project.shared.Attribute;
 import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
@@ -27,13 +26,24 @@ import com.codenvy.api.project.shared.ProjectType;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /** @author Artem Zatsarynnyy */
 @Singleton
 public class SpringProjectTypeExtension implements ProjectTypeExtension {
+
+    private Map<String, String> icons = new HashMap<>();
+
     @Inject
     public SpringProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
+        icons.put("spring.projecttype.big.icon", "java-extension/Spring-Logo.png");
+        icons.put("spring.projecttype.small.icon", "java-extension/Spring-Logo.png");
+        icons.put("spring.folder.small.icon", "java-extension/package.gif");
+        icons.put("spring/java.file.small.icon", "java-extension/java-class.png");
+        icons.put("java.class", "java-extension/java-class.png");
+        icons.put("java.package", "java-extension/package.gif");
         registry.registerProjectType(this);
     }
 
@@ -44,9 +54,10 @@ public class SpringProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public List<Attribute> getPredefinedAttributes() {
-        final List<Attribute> list = new ArrayList<>(2);
-        list.add(new Attribute("language", new VfsPropertyValueProvider("language", "java")));
-        list.add(new Attribute("runner.name", new VfsPropertyValueProvider("runner.name", "webapps")));
+        final List<Attribute> list = new ArrayList<>(3);
+        list.add(new Attribute("language", "java"));
+        list.add(new Attribute("framework", "spring"));
+        list.add(new Attribute("runner.name", "webapps"));
         return list;
     }
 
@@ -64,4 +75,11 @@ public class SpringProjectTypeExtension implements ProjectTypeExtension {
                                                 "templates/AntSpring.zip"));
         return list;
     }
+
+    @Override
+    public Map<String, String> getIconRegistry() {
+        return icons;
+    }
+
+
 }

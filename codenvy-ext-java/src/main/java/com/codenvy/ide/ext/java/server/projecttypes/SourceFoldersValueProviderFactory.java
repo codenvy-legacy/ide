@@ -17,14 +17,13 @@
  */
 package com.codenvy.ide.ext.java.server.projecttypes;
 
+import com.codenvy.api.project.server.AbstractVirtualFileEntry;
+import com.codenvy.api.project.server.Project;
 import com.codenvy.api.project.server.ValueProviderFactory;
 import com.codenvy.api.project.shared.ValueProvider;
-import com.codenvy.api.vfs.server.MountPoint;
 import com.codenvy.api.vfs.server.VirtualFile;
-import com.codenvy.api.vfs.server.VirtualFileSystemProvider;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
-import com.codenvy.api.vfs.shared.dto.Project;
 import com.codenvy.ide.maven.tools.MavenUtils;
 
 import org.apache.maven.model.Model;
@@ -57,17 +56,13 @@ public class SourceFoldersValueProviderFactory implements ValueProviderFactory {
             @Override
             public List<String> getValues() {
                 final List<String> list = new ArrayList<>();
+                AbstractVirtualFileEntry mavenBuildDescriptor = project.getBaseFolder().getChild("pom.xml");
+                AbstractVirtualFileEntry antBuildDescriptor = project.getBaseFolder().getChild("build.xml");
                 try {
-                    VirtualFileSystemProvider provider = registry.getProvider(project.getVfsId());
-                    MountPoint mountPoint = provider.getMountPoint(false);
-                    VirtualFile root = mountPoint.getRoot();
-                    VirtualFile projectFolder = root.getChild(project.getPath());
-                    VirtualFile mavenBuildDescriptor = projectFolder.getChild("pom.xml");
-                    VirtualFile antBuildDescriptor = projectFolder.getChild("build.xml");
                     if (mavenBuildDescriptor != null) {
-                        list.addAll(getMavenSourceFolders(mavenBuildDescriptor));
+                        list.addAll(getMavenSourceFolders(mavenBuildDescriptor.getVirtualFile()));
                     } else if (antBuildDescriptor != null) {
-                        list.addAll(getAntSourceFolders(antBuildDescriptor));
+                        list.addAll(getAntSourceFolders(antBuildDescriptor.getVirtualFile()));
                     }
                 } catch (VirtualFileSystemException | IOException e) {
                     throw new IllegalStateException(e);
@@ -84,6 +79,7 @@ public class SourceFoldersValueProviderFactory implements ValueProviderFactory {
 
     private List<String> getAntSourceFolders(VirtualFile buildXml) throws VirtualFileSystemException {
         List<String> list = new ArrayList<>(1);
+        // TODO: temporary hardcoded
         list.add("src");
         return list;
     }

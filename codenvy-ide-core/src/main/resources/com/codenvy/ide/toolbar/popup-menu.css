@@ -21,7 +21,7 @@
       ****************************************************************************************/
 
     .popupMenuMain {
-        background-color: tabsPanelBackground;
+        background-color: mainMenuBkgColor;
         position: absolute;
     }
 
@@ -49,12 +49,13 @@
     .popupMenuSubMenuField,
     .popupMenuSubMenuFieldOver,
     .popupMenuSubMenuFieldDisabled {
-        height: 25px;
+        height: 21px;
         cursor: default;
         font-family: mainFontFamily;
-        font-size: secondaryTextFontSize;
+        font-size: fontMenuSize;
         font-weight: normal;
         font-style: normal;
+        vertical-align: middle;
     }
 
     .popupMenuDelimiter {
@@ -64,6 +65,8 @@
         font-size: secondaryTextFontSize;
         font-weight: normal;
         font-style: normal;
+        padding-left: 4px;
+        padding-right: 4px;
     }
 
     .popupMenuCheckField,
@@ -127,7 +130,4 @@
         height: 7px;
     }
 
-    .popupMenuDelimiter {
-        padding-left: 4px;
-        padding-right: 4px;
-    }
+

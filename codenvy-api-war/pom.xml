@@ -23,7 +23,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M10-SNAPSHOT</version>
+        <version>3.0.0-M11-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-api-war</artifactId>
     <packaging>war</packaging>
@@ -100,11 +100,11 @@
             <artifactId>codenvy-ide-vfs-fs</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-runner-docker</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-runner-sdk</artifactId>

@@ -29,11 +29,10 @@ import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Link;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.runtime.IStatus;
-import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
@@ -55,8 +54,8 @@ public class JavaProject extends Project {
     private JavaProjectDescription description;
 
     /** @param eventBus */
-    protected JavaProject(EventBus eventBus) {
-        super(eventBus);
+    protected JavaProject(EventBus eventBus, AsyncRequestFactory asyncRequestFactory) {
+        super(eventBus, asyncRequestFactory);
         this.description = new JavaProjectDescription(this);
     }
 
@@ -74,7 +73,8 @@ public class JavaProject extends Project {
             // create internal wrapping Request Callback with proper Unmarshaller
             AsyncRequestCallback<Folder> internalCallback =
                     new AsyncRequestCallback<Folder>(
-                            new JavaModelUnmarshaller(folderToRefresh, (JavaProject)folderToRefresh.getProject(), eventBus)) {
+                            new JavaModelUnmarshaller(folderToRefresh, (JavaProject)folderToRefresh.getProject(), eventBus,
+                                                      asyncRequestFactory)) {
                         @Override
                         protected void onSuccess(Folder refreshedRoot) {
                             callback.onSuccess(refreshedRoot);
@@ -88,7 +88,7 @@ public class JavaProject extends Project {
 
             String url = vfsInfo.getUrlTemplates().get(Link.REL_TREE).getHref();
             url = URL.decode(url).replace("[id]", folderToRefresh.getId());
-            AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(loader).send(internalCallback);
+            asyncRequestFactory.createGetRequest(URL.encode(url)).loader(loader).send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);
         }
@@ -156,7 +156,7 @@ public class JavaProject extends Project {
             String urlString = URL.decode(url).replace("[name]", path);
             urlString = URL.encode(urlString);
             loader.setMessage("Creating new package...");
-            AsyncRequest.build(RequestBuilder.POST, urlString).loader(loader).send(internalCallback);
+            asyncRequestFactory.createPostRequest(urlString, null).loader(loader).send(internalCallback);
 
         } catch (Exception e) {
             callback.onFailure(e);
@@ -232,8 +232,8 @@ public class JavaProject extends Project {
             url = URL.decode(url).replace("[name]", name);
             url = URL.encode(url);
             loader.setMessage("Creating new compilation unit...");
-            AsyncRequest.build(RequestBuilder.POST, url).data(content).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JAVA)
-                        .loader(loader).send(internalCallback);
+            asyncRequestFactory.createPostRequest(url, null).data(content).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JAVA)
+                               .loader(loader).send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);
         }
@@ -313,7 +313,7 @@ public class JavaProject extends Project {
             String urlString = URL.decode(url).replace("[name]", name);
             urlString = URL.encode(urlString);
             loader.setMessage("Creating new source folder...");
-            AsyncRequest.build(RequestBuilder.POST, urlString).loader(loader).send(internalCallback);
+            asyncRequestFactory.createPostRequest(urlString, null).loader(loader).send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);
         }

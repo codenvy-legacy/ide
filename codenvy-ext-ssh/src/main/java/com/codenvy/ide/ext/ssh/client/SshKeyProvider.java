@@ -26,7 +26,6 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
  * </code>
  * 
  * @author <a href="mailto:ashumilova@codenvy.com">Ann Shumilova</a>
- * @version $Id:
  *
  */
 public interface SshKeyProvider {

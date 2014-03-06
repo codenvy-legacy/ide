@@ -27,7 +27,7 @@
     </parent>
     <groupId>com.codenvy.ide</groupId>
     <artifactId>codenvy-ide-parent</artifactId>
-    <version>3.0.0-M10-SNAPSHOT</version>
+    <version>3.0.0-M11-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Codenvy :: Parent</name>
     <modules>
@@ -63,8 +63,10 @@
         <module>codenvy-sdk-tutorials/notification-api</module>
         <module>codenvy-sdk-tutorials/new-resource-wizard</module>
         <module>codenvy-sdk-tutorials/editor-api</module>
+	<module>codenvy-sdk-tutorials/empty-ext</module>
         <module>codenvy-sdk-tutorials/gin</module>
         <module>codenvy-sdk-tutorials/gist-ext</module>
+	<module>codenvy-sdk-tutorials/helloworld-ext</module>
         <module>codenvy-sdk-tutorials/wysiwyg-editor</module>
         <module>codenvy-application-war</module>
         <module>codenvy-sdk-private-dependencies</module>
@@ -86,10 +88,10 @@
         <ch.qos.logback.version>1.0.13</ch.qos.logback.version>
         <codenvy.ide-codeassistant-index.version>20120627</codenvy.ide-codeassistant-index.version>
         <codenvy.platform-api-gwt-client.version>0.1.1-SNAPSHOT</codenvy.platform-api-gwt-client.version>
-        <com.codenvy.commons.version>0.15.0-SNAPSHOT</com.codenvy.commons.version>
-        <com.codenvy.organization.version>0.12.0-SNAPSHOT</com.codenvy.organization.version>
-        <com.codenvy.platform-api.version>0.9.0-SNAPSHOT</com.codenvy.platform-api.version>
-        <com.codenvy.security.version>0.2.0-SNAPSHOT</com.codenvy.security.version>
+        <com.codenvy.commons.version>0.16.0-SNAPSHOT</com.codenvy.commons.version>
+        <com.codenvy.organization.version>0.14.0-SNAPSHOT</com.codenvy.organization.version>
+        <com.codenvy.platform-api.version>0.10.0-SNAPSHOT</com.codenvy.platform-api.version>
+        <com.codenvy.security.version>0.3.0-SNAPSHOT</com.codenvy.security.version>
         <commons-codec.version>1.6</commons-codec.version>
         <commons-fileupload.version>1.2.1</commons-fileupload.version>
         <commons-io.version>2.4</commons-io.version>
