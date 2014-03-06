@@ -66,7 +66,6 @@ public class WorkBenchPresenter implements Presenter {
                               OutlinePart outlinePart,
                               ConsolePart consolePart,
                               ProjectExplorerPart projectExplorerPart,
-                              WelcomePart welcomePart,
                               SearchPart searchPart,
                               NotificationManager notificationManager) {
         this.view = view;
@@ -90,7 +89,7 @@ public class WorkBenchPresenter implements Presenter {
                 stackPresenterFactory.create(toolingView, new WorkBenchPartControllerImpl(view.splitPanel, view.toolPanel));
         partStacks.put(PartStackType.TOOLING.toString(), toolingPartStack);
 
-        openPart(welcomePart, PartStackType.EDITING);
+//        openPart(welcomePart, PartStackType.EDITING);
         openPart(outlinePart, PartStackType.TOOLING);
         openPart(projectExplorerPart, PartStackType.NAVIGATION);
         openPart(consolePart, PartStackType.INFORMATION);

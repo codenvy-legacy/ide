@@ -226,7 +226,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(WizardDialogView.class).to(WizardDialogViewImpl.class);
         // Parts
         bind(ConsolePart.class).to(ConsolePartPresenter.class).in(Singleton.class);
-        bind(WelcomePart.class).to(WelcomePartPresenter.class).in(Singleton.class);
         bind(OutlinePart.class).to(OutlinePartPresenter.class).in(Singleton.class);
         bind(SearchPart.class).to(SearchPartPresenter.class).in(Singleton.class);
         bind(ProjectExplorerPart.class).to(ProjectExplorerPartPresenter.class).in(Singleton.class);
