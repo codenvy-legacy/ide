@@ -17,11 +17,11 @@
  */
 package com.codenvy.ide.ext.ssh.client.manage;
 
+import com.codenvy.api.user.gwt.client.UserServiceClient;
+import com.codenvy.api.user.shared.dto.User;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.ui.preferences.AbstractPreferencesPagePresenter;
-import com.codenvy.ide.api.user.User;
-import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.ssh.client.SshKeyService;
@@ -58,7 +58,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     private       SshKeyService           service;
     private       SshLocalizationConstant constant;
     private       EventBus                eventBus;
-    private       UserClientService       userService;
+    private       UserServiceClient       userService;
     private       Loader                  loader;
     private       SshKeyPresenter         sshKeyPresenter;
     private       UploadSshKeyPresenter   uploadSshKeyPresenter;
@@ -82,7 +82,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
                                   SshLocalizationConstant constant,
                                   EventBus eventBus,
                                   Loader loader,
-                                  UserClientService userService,
+                                  UserServiceClient userService,
                                   SshKeyPresenter sshKeyPresenter,
                                   UploadSshKeyPresenter uploadSshKeyPresenter,
                                   NotificationManager notificationManager,
@@ -178,12 +178,12 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
                     boolean needToCreate = Window.confirm(constant.githubSshKeyLabel());
                     if (needToCreate) {
                         loader.show();
-                        userService.getUser(new AsyncRequestCallback<User>(dtoUnmarshallerFactory.newUnmarshaller(User.class)) {
+                        userService.getCurrentUser(new AsyncRequestCallback<User>(dtoUnmarshallerFactory.newUnmarshaller(User.class)) {
                             @Override
                             protected void onSuccess(User result) {
                                 if (service.getSshKeyProviders().containsKey(GITHUB_HOST)) {
                                     service.getSshKeyProviders().get(GITHUB_HOST)
-                                           .generateKey(result.getUserId(), new AsyncRequestCallback<Void>() {
+                                           .generateKey(result.getId(), new AsyncRequestCallback<Void>() {
                                                @Override
                                                public void onSuccess(Void result) {
                                                    loader.hide();

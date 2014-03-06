@@ -34,6 +34,9 @@ import com.codenvy.api.runner.RunnerAdminService;
 import com.codenvy.api.runner.RunnerSelectionStrategy;
 import com.codenvy.api.runner.RunnerService;
 import com.codenvy.api.runner.internal.SlaveRunnerService;
+import com.codenvy.api.user.server.TokenValidator;
+import com.codenvy.api.user.server.UserProfileService;
+import com.codenvy.api.user.server.UserService;
 import com.codenvy.api.vfs.server.ContentStreamWriter;
 import com.codenvy.api.vfs.server.RequestValidator;
 import com.codenvy.api.vfs.server.VirtualFileSystemFactory;
@@ -60,11 +63,10 @@ import com.codenvy.ide.ext.git.server.rest.TagListWriter;
 import com.codenvy.ide.ext.github.server.rest.GitHubService;
 import com.codenvy.ide.ext.java.jdi.server.DebuggerService;
 import com.codenvy.ide.ext.java.server.RestNameEnvironment;
-import com.codenvy.ide.ext.ssh.server.DummySshKeyStore;
 import com.codenvy.ide.ext.ssh.server.KeyService;
 import com.codenvy.ide.ext.ssh.server.SshKeyStore;
+import com.codenvy.ide.ext.ssh.server.UserProfileSshKeyStore;
 import com.codenvy.ide.security.oauth.server.LabOAuthAuthenticatorProvider;
-import com.codenvy.ide.server.UserService;
 import com.codenvy.inject.DynaModule;
 import com.codenvy.runner.sdk.SDKRunner;
 import com.codenvy.runner.webapps.DeployToApplicationServerRunner;
@@ -123,6 +125,7 @@ public class ApiModule extends AbstractModule {
         bind(DeployToApplicationServerRunner.class);
         bind(SDKRunner.class);
         bind(UserService.class);
+        bind(UserProfileService.class);
         bind(RestNameEnvironment.class);
         bind(DebuggerService.class);
         bind(AsynchronousJobPool.class).to(CodenvyAsynchronousJobPool.class);
@@ -137,9 +140,10 @@ public class ApiModule extends AbstractModule {
         bind(GitHubService.class);
         bind(GitConnectionFactory.class).to(NativeGitConnectionFactory.class);
         bind(KeyService.class);
+        bind(SshKeyStore.class).to(UserProfileSshKeyStore.class);
         bind(OAuthAuthenticationService.class);
         bind(OAuthTokenProvider.class).to(OAuthAuthenticatorTokenProvider.class);
         bind(OAuthAuthenticatorProvider.class).to(LabOAuthAuthenticatorProvider.class);
-        bind(SshKeyStore.class).to(DummySshKeyStore.class);
+        bind(TokenValidator.class).to(TokenValidatorImpl.class);
     }
 }

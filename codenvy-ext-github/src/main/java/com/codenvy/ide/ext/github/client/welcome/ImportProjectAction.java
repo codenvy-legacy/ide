@@ -17,9 +17,9 @@
  */
 package com.codenvy.ide.ext.github.client.welcome;
 
+import com.codenvy.api.user.gwt.client.UserServiceClient;
+import com.codenvy.api.user.shared.dto.User;
 import com.codenvy.ide.api.parts.WelcomeItemAction;
-import com.codenvy.ide.api.user.User;
-import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.ext.github.client.GitHubLocalizationConstant;
 import com.codenvy.ide.ext.github.client.GitHubResources;
 import com.codenvy.ide.ext.github.client.load.ImportPresenter;
@@ -41,7 +41,7 @@ public class ImportProjectAction implements WelcomeItemAction {
     private       GitHubLocalizationConstant constant;
     private       GitHubResources            resources;
     private       ImportPresenter            importPresenter;
-    private       UserClientService          service;
+    private       UserServiceClient          service;
 
     /**
      * Create action.
@@ -53,7 +53,7 @@ public class ImportProjectAction implements WelcomeItemAction {
     public ImportProjectAction(GitHubLocalizationConstant constant,
                                GitHubResources resources,
                                ImportPresenter importPresenter,
-                               UserClientService service,
+                               UserServiceClient service,
                                DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.constant = constant;
         this.resources = resources;
@@ -83,7 +83,7 @@ public class ImportProjectAction implements WelcomeItemAction {
     /** {@inheritDoc} */
     @Override
     public void execute() {
-        service.getUser(new AsyncRequestCallback<User>(dtoUnmarshallerFactory.newUnmarshaller(User.class)) {
+        service.getCurrentUser(new AsyncRequestCallback<User>(dtoUnmarshallerFactory.newUnmarshaller(User.class)) {
             @Override
             protected void onSuccess(User result) {
                 importPresenter.showDialog(result);

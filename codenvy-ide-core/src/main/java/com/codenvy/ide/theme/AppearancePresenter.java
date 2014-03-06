@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.theme;
 
+import com.codenvy.api.user.shared.dto.Profile;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.ui.preferences.AbstractPreferencesPagePresenter;
@@ -55,14 +56,14 @@ public class AppearancePresenter extends AbstractPreferencesPagePresenter implem
     public void doApply() {
         if (isDirty()) {
             preferencesManager.setPreference("Theme", themeId);
-            preferencesManager.flushPreferences(new AsyncCallback<Void>() {
+            preferencesManager.flushPreferences(new AsyncCallback<Profile>() {
                 @Override
                 public void onFailure(Throwable caught) {
                     // ignore
                 }
 
                 @Override
-                public void onSuccess(Void result) {
+                public void onSuccess(Profile result) {
                     if (Window.confirm("Restart Codenvy to activate changes in Appearances?")) {
                         Window.Location.reload();
                     }
