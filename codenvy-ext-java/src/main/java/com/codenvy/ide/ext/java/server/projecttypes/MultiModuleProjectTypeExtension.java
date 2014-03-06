@@ -27,7 +27,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /** @author Artem Zatsarynnyy */
 @Singleton
@@ -53,5 +55,10 @@ public class MultiModuleProjectTypeExtension implements ProjectTypeExtension {
     @Override
     public List<ProjectTemplateDescription> getTemplates() {
         return Collections.emptyList();
+    }
+
+    @Override
+    public Map<String, String> getIconRegistry() {
+        return new HashMap<>(0);
     }
 }
