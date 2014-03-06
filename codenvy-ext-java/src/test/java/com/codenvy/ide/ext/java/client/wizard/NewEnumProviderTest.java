@@ -25,7 +25,7 @@ package com.codenvy.ide.ext.java.client.wizard;
 public class NewEnumProviderTest extends BaseNewJavaFileProviderTest {
     @Override
     public void setUp() {
-        provider = new NewEnumProvider(selectionAgent);
+        provider = new NewEnumProvider(selectionAgent, iconRegistry);
         content = "package mypackage;\n" +
                   "\n" +
                   "public enum resourceName\n" +

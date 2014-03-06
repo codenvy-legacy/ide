@@ -20,6 +20,7 @@ package com.codenvy.ide.client;
 import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.theme.Style;
 import com.codenvy.ide.api.ui.theme.Theme;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
@@ -43,6 +44,7 @@ import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -56,7 +58,8 @@ public class BootstrapController {
     private       PreferencesManagerImpl              preferencesManager;
     private       ProjectTypeDescriptionServiceClient projectTypeDescriptionServiceClient;
     private       ProjectTypeDescriptorRegistry       projectTypeDescriptorRegistry;
-    private       ThemeAgent                          themeAgent;
+    private       IconRegistry                        iconRegistry;
+    private ThemeAgent themeAgent;
 
     /**
      * Create controller.
@@ -83,6 +86,7 @@ public class BootstrapController {
                                UserClientService userService,
                                final ProjectTypeDescriptionServiceClient projectTypeDescriptionServiceClient,
                                final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
+                               final IconRegistry iconRegistry,
                                final ResourceProvider resourceProvider,
                                DtoRegistrar dtoRegistrar,
                                final ThemeAgent themeAgent,
@@ -90,6 +94,7 @@ public class BootstrapController {
         this.preferencesManager = preferencesManager;
         this.projectTypeDescriptionServiceClient = projectTypeDescriptionServiceClient;
         this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
+        this.iconRegistry = iconRegistry;
         this.themeAgent = themeAgent;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
 
@@ -107,6 +112,7 @@ public class BootstrapController {
                       }).inject();
 
         dtoRegistrar.registerDtoProviders();
+        registerDefaultIcon();
         userService.getUser(new AsyncRequestCallback<User>(dtoUnmarshallerFactory.newUnmarshaller(User.class)) {
             @Override
             protected void onSuccess(final User user) {
@@ -165,6 +171,7 @@ public class BootstrapController {
                     @Override
                     protected void onSuccess(Array<ProjectTypeDescriptor> result) {
                         projectTypeDescriptorRegistry.registerDescriptors(result);
+                        registerIcons(result);
                     }
 
                     @Override
@@ -172,6 +179,21 @@ public class BootstrapController {
                         Log.error(BootstrapController.class, exception);
                     }
                 });
+    }
+
+    private void registerIcons(Array<ProjectTypeDescriptor> result) {
+        for (int i=0; i < result.size(); i++){
+            ProjectTypeDescriptor projectTypeDescriptor = result.get(i);
+            iconRegistry.registerIcons(projectTypeDescriptor.getIconRegistry());
+        }
+    }
+
+    private void registerDefaultIcon() {
+        Map<String, String> icons = new HashMap<String, String>();
+        icons.put("default.projecttype.small.icon", "default/project.png");
+        icons.put("default.folder.small.icon", "default/folder.gif");
+        icons.put("default.file.small.icon", "default/file.png");
+        iconRegistry.registerIcons(icons);
     }
 
 }

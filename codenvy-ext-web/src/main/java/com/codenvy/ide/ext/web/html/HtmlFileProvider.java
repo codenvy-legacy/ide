@@ -18,6 +18,7 @@
 package com.codenvy.ide.ext.web.html;
 
 import com.codenvy.ide.MimeType;
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.ext.web.WebExtensionResource;
 import com.codenvy.ide.resources.model.File;
@@ -48,8 +49,8 @@ public class HtmlFileProvider extends NewResourceProvider {
                              "</html>";
 
     @Inject
-    public HtmlFileProvider(WebExtensionResource resources) {
-        super("HTML file", "HTML file", resources.html(), "html");
+    public HtmlFileProvider(IconRegistry iconRegistry) {
+        super("HTML file", "HTML file", iconRegistry.getIcon("web.html.file.small.icon"), "html");
     }
 
     /** {@inheritDoc} */

@@ -25,7 +25,7 @@ package com.codenvy.ide.ext.java.client.wizard;
 public class NewAnnotationProviderTest extends BaseNewJavaFileProviderTest {
     @Override
     public void setUp() {
-        provider = new NewAnnotationProvider(selectionAgent);
+        provider = new NewAnnotationProvider(selectionAgent, iconRegistry);
         content = "package mypackage;\n" +
                   "\n" +
                   "public @interface resourceName\n" +

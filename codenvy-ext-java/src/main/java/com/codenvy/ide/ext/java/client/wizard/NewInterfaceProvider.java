@@ -18,6 +18,7 @@
 package com.codenvy.ide.ext.java.client.wizard;
 
 import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.resources.model.Folder;
@@ -35,9 +36,12 @@ import javax.validation.constraints.NotNull;
  */
 public class NewInterfaceProvider extends AbstractNewJavaResourceProvider {
 
+    private IconRegistry iconRegistry;
+
     @Inject
-    public NewInterfaceProvider(SelectionAgent selectionAgent) {
-        super("Java Interface", "Java Interface", JavaResources.INSTANCE.interfaceItem(), "java", selectionAgent);
+    public NewInterfaceProvider(SelectionAgent selectionAgent, IconRegistry iconRegistry) {
+        super("Java Interface", "Java Interface", iconRegistry.getIcon("java.class"), "java", selectionAgent);
+        this.iconRegistry = iconRegistry;
     }
 
     /** {@inheritDoc} */

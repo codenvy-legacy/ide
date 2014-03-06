@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
 public class NewFolderProviderTest extends BaseNewResourceProviderTest {
     @Before
     public void setUp() {
-        newResourceProvider = new NewFolderProvider(resources, selectionAgent);
+        newResourceProvider = new NewFolderProvider(resources, selectionAgent, iconRegistry);
         when(folder.getResourceType()).thenReturn(TYPE);
     }
 

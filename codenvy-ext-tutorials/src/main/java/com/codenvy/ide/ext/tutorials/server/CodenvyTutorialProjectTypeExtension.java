@@ -27,16 +27,21 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /** @author Artem Zatsarynnyy */
 @Singleton
 public class CodenvyTutorialProjectTypeExtension implements ProjectTypeExtension {
     private String baseUrl;
 
+    private Map<String, String> icons = new HashMap<>();
+
     @Inject
     public CodenvyTutorialProjectTypeExtension(@Named("extension-url") String baseUrl, ProjectTypeDescriptionRegistry registry) {
         this.baseUrl = baseUrl;
+        icons.put("codenvy_tutorial.projecttype.big.icon", "codenvy-tutorial/codenvy.jpg");
         registry.registerProjectType(this);
     }
 
@@ -99,4 +104,11 @@ public class CodenvyTutorialProjectTypeExtension implements ProjectTypeExtension
                                                 baseUrl + "/gin-tutorial.zip"));
         return list;
     }
+
+    @Override
+    public Map<String, String> getIconRegistry() {
+        return icons;
+    }
+
+
 }

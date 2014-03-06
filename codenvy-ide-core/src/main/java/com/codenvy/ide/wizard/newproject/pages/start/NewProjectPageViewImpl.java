@@ -20,6 +20,7 @@ package com.codenvy.ide.wizard.newproject.pages.start;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.gwt.core.client.GWT;
@@ -27,7 +28,6 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -65,6 +65,7 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
     final   Resources                res;
     @UiField(provided = true)
     final   CoreLocalizationConstant locale;
+    private IconRegistry             iconRegistry;
     private ActionDelegate           delegate;
     private Array<ToggleButton>      projectTypeButtons;
 
@@ -75,9 +76,10 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
      * @param locale
      */
     @Inject
-    protected NewProjectPageViewImpl(Resources resource, CoreLocalizationConstant locale) {
+    protected NewProjectPageViewImpl(Resources resource, CoreLocalizationConstant locale, IconRegistry iconRegistry) {
         this.res = resource;
         this.locale = locale;
+        this.iconRegistry = iconRegistry;
 
         initWidget(uiBinder.createAndBindUi(this));
     }
@@ -107,10 +109,12 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
             final ProjectTypeDescriptor projectTypeData = projectTypes.get(i);
 
             // TODO: add project type icon
-            ImageResource icon = null;//projectTypeData.getIcon();
+            Image icon = iconRegistry.getIcon(projectTypeData.getProjectTypeId() + ".projecttype.big.icon");
+            if (icon == null) icon = iconRegistry.getDefaultIcon();
+            icon.setSize("92px", "92px");
             final ToggleButton btn;
             if (icon != null) {
-                btn = new ToggleButton(new Image(icon));
+                btn = new ToggleButton(icon);
             } else {
                 btn = new ToggleButton();
             }
