@@ -191,7 +191,7 @@ public class BootstrapController {
     private void registerDefaultIcon() {
         Map<String, String> icons = new HashMap<String, String>();
         icons.put("default.projecttype.small.icon", "default/project.png");
-        icons.put("default.folder.small.icon", "default/folder.gif");
+        icons.put("default.folder.small.icon", "default/folder.png");
         icons.put("default.file.small.icon", "default/file.png");
         iconRegistry.registerIcons(icons);
     }
