@@ -36,6 +36,7 @@ import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestFactory;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.wizard.NewResourceAgentImpl;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePagePresenter;
@@ -70,7 +71,7 @@ import static org.mockito.Mockito.when;
 /**
  * Testing {@link NewResourcePagePresenter} functionality.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
 @RunWith(MockitoJUnitRunner.class)
 public class NewResourcePagePresenterTest {
@@ -111,6 +112,8 @@ public class NewResourcePagePresenterTest {
     private NewResourcePagePresenter presenter;
     @Mock
     private ProjectServiceClient     projectServiceClient;
+    @Mock
+    private DtoUnmarshallerFactory   dtoUnmarshallerFactory;
 
     @SuppressWarnings("unchecked")
     private void setUp(Resource resource, Array<NewResourceProvider> resourceDatas) {
@@ -134,7 +137,7 @@ public class NewResourcePagePresenterTest {
         when(resourceProvider.getActiveProject()).thenReturn(project);
 
         presenter = new NewResourcePagePresenter(resources, constant, view, newResourceAgent, resourceProvider, selectionAgent, editorAgent,
-                                                 loader, eventBus, asyncRequestFactory, projectServiceClient);
+                                                 eventBus, asyncRequestFactory, projectServiceClient, dtoUnmarshallerFactory);
         presenter.setContext(wizardContext);
         presenter.setUpdateDelegate(delegate);
     }

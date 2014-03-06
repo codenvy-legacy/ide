@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.resources.model;
 
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.marshal.JSONDeserializer;
@@ -29,11 +30,9 @@ import com.google.gwt.json.client.JSONObject;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public class Folder extends Resource {
-    public static final String FOLDER_MIME_TYPE = "text/directory";
-
-    public static final String TYPE = "folder";
-
-    private Array<Resource> children = Collections.<Resource>createArray();
+    public static final String          FOLDER_MIME_TYPE = "text/directory";
+    public static final String          TYPE             = "folder";
+    private             Array<Resource> children         = Collections.<Resource>createArray();
 
     /**
      * Empty instance of Folder.
@@ -49,9 +48,19 @@ public class Folder extends Resource {
         this.mimeType = mimeType;
     }
 
+    public Folder(ItemReference itemReference) {
+        this();
+        init(itemReference);
+    }
+
     public Folder(JSONObject itemObject) {
         this();
         init(itemObject);
+    }
+
+    public void init(ItemReference itemReference) {
+        name = itemReference.getName();
+        mimeType = itemReference.getMediaType();
     }
 
     public void init(JSONObject itemObject) {
@@ -111,13 +120,13 @@ public class Folder extends Resource {
     /**
      * Looks for the Child Resource, without recursive calls.
      *
-     * @param id
+     * @param name
      * @return resource or null if not found
      */
-    public Resource findChildById(String id) {
+    public Resource findChildByName(String name) {
         for (int i = 0; i < children.size(); i++) {
             Resource child = children.get(i);
-            if (child.getId().equals(id)) {
+            if (child.getName().equals(name)) {
                 return child;
             }
         }

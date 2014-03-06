@@ -17,11 +17,11 @@
  */
 package com.codenvy.ide.ext.java.client.projectmodel;
 
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.resources.model.Folder;
-import com.google.gwt.json.client.JSONObject;
 
 /**
- * Presents Java Package model
+ * Presents Java Package model.
  *
  * @author Nikolay Zamosenchuk
  */
@@ -34,13 +34,13 @@ public class Package extends Folder {
     }
 
     /**
-     * Init Java Package from JSon Object
+     * Init Java Package from {@link ItemReference}.
      *
-     * @param itemObject
+     * @param itemReference
      */
-    protected Package(JSONObject itemObject, String name) {
+    protected Package(ItemReference itemReference, String name) {
         this();
-        init(itemObject);
+        init(itemReference);
         this.name = name;
     }
 
@@ -53,5 +53,4 @@ public class Package extends Folder {
             return "/" + name.replace(".", "/");
         }
     }
-
 }

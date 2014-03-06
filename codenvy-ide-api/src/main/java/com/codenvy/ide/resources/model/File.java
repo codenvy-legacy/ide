@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.resources.model;
 
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.marshal.JSONDeserializer;
@@ -52,6 +53,11 @@ public class File extends Resource {
     /** For extending classes */
     protected File(String itemType) {
         super(itemType);
+    }
+
+    public File(ItemReference itemReference) {
+        this();
+        init(itemReference);
     }
 
     public File(JSONObject itemObject) {
@@ -144,6 +150,13 @@ public class File extends Resource {
         fixMimeType();
     }
 
+    public void init(ItemReference itemReference) {
+        name = itemReference.getName();
+        mimeType = itemReference.getMediaType();
+        this.contentChanged = false;
+        fixMimeType();
+    }
+
     /** @return the content if already retrieved */
     public String getContent() {
         return content;
@@ -181,7 +194,9 @@ public class File extends Resource {
     }
 
     /**
-     * @param set
+     * Set lock.
+     *
+     * @param lock
      *         lock object
      */
     public void setLock(Lock lock) {

@@ -43,6 +43,7 @@ import com.codenvy.ide.ext.java.client.wizard.NewPackageProvider;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -83,7 +84,8 @@ public class JavaExtension {
                          @Named("workspaceId") String workspaceId,
                          ActionManager actionManager,
                          AsyncRequestFactory asyncRequestFactory,
-                         ProjectServiceClient projectServiceClient) {
+                         ProjectServiceClient projectServiceClient,
+                         DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this();
         this.resourceProvider = resourceProvider;
         this.notificationManager = notificationManager;
@@ -95,7 +97,8 @@ public class JavaExtension {
         editorRegistry.register(javaFile, javaEditorProvider);
         resourceProvider.registerFileType(javaFile);
 
-        resourceProvider.registerModelProvider("java", new JavaProjectModelProvider(eventBus, asyncRequestFactory, projectServiceClient));
+        resourceProvider.registerModelProvider("java", new JavaProjectModelProvider(eventBus, asyncRequestFactory, projectServiceClient,
+                                                                                    dtoUnmarshallerFactory));
 
         JavaResources.INSTANCE.css().ensureInjected();
 

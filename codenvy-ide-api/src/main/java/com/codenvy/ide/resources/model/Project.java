@@ -18,7 +18,8 @@
 package com.codenvy.ide.resources.model;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.api.project.shared.dto.TreeElement;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
@@ -32,6 +33,7 @@ import com.codenvy.ide.resources.marshal.JSONSerializer;
 import com.codenvy.ide.resources.marshal.PropertyUnmarshaller;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.rest.Unmarshallable;
@@ -43,6 +45,9 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Represents Project model. Responsible for deserialization of JSon String to generate it' own project model.
  *
@@ -51,23 +56,30 @@ import com.google.web.bindery.event.shared.EventBus;
 public class Project extends Folder {
     public static final String PROJECT_MIME_TYPE = "text/vnd.ideproject+directory";
     public static final String TYPE              = "project";
-    protected final EventBus              eventBus;
-    protected final AsyncRequestFactory   asyncRequestFactory;
+    protected final EventBus                  eventBus;
+    protected final AsyncRequestFactory       asyncRequestFactory;
     /** Properties. */
-    protected       Array<Property>       properties;
-    protected       Loader                loader;
-    protected       VirtualFileSystemInfo vfsInfo;
-    private         ProjectDescription    description;
-    private         ProjectServiceClient  projectServiceClient;
+    protected       Array<Property>           properties;
+    protected       Map<String, List<String>> attributes;
+    protected       Loader                    loader;
+    protected       VirtualFileSystemInfo     vfsInfo;
+    private         ProjectDescription        description;
+    private         ProjectServiceClient      projectServiceClient;
+    private final   DtoUnmarshallerFactory    dtoUnmarshallerFactory;
+    private String projectTypeId;
 
     /**
      * Constructor for empty project. Used for serialization only.
      * <p/>
      * Not intended to be used by client.
      */
-    public Project(EventBus eventBus, AsyncRequestFactory asyncRequestFactory, ProjectServiceClient projectServiceClient) {
+    public Project(EventBus eventBus,
+                   AsyncRequestFactory asyncRequestFactory,
+                   ProjectServiceClient projectServiceClient,
+                   DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(TYPE, PROJECT_MIME_TYPE);
         this.projectServiceClient = projectServiceClient;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.description = new ProjectDescription(this);
         this.properties = Collections.<Property>createArray();
         this.eventBus = eventBus;
@@ -76,8 +88,21 @@ public class Project extends Folder {
         this.loader = new EmptyLoader();
     }
 
-    public void init(ProjectDescriptor projectDescriptor) {
-        // TODO
+    public void setAttributes(Map<String, List<String>> attributes) {
+        this.attributes = attributes;
+    }
+
+    public String getAttributeValue(String attributeName) {
+        return attributes.get(attributeName).get(0);
+    }
+
+    public List<String> getAttributeValues(String attributeName) {
+        return attributes.get(attributeName);
+    }
+
+    public void init(ItemReference itemReference) {
+        name = itemReference.getName();
+        mimeType = itemReference.getMediaType();
     }
 
     @Override
@@ -321,27 +346,20 @@ public class Project extends Folder {
      *         callback
      */
     public void refreshTree(final Folder root, final AsyncCallback<Folder> callback) {
-        try {
-            // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<Folder> internalCallback =
-                    new AsyncRequestCallback<Folder>(new FolderTreeUnmarshaller(root, root.getProject())) {
-                        @Override
-                        protected void onSuccess(Folder refreshedRoot) {
-                            callback.onSuccess(refreshedRoot);
-                        }
+        projectServiceClient.getTree(root.getPath(), -1,
+                                     new AsyncRequestCallback<TreeElement>(dtoUnmarshallerFactory.newUnmarshaller(TreeElement.class)) {
+            @Override
+            protected void onSuccess(TreeElement result) {
+                FolderTreeUnmarshaller unmarshaller = new FolderTreeUnmarshaller(root, root.getProject());
+                unmarshaller.unmarshal(result);
+                callback.onSuccess(unmarshaller.getPayload());
+            }
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            callback.onFailure(exception);
-                        }
-                    };
-
-            String url = vfsInfo.getUrlTemplates().get(Link.REL_TREE).getHref();
-            url = URL.decode(url).replace("[id]", root.getId());
-            asyncRequestFactory.createGetRequest(URL.encode(url)).loader(loader).send(internalCallback);
-        } catch (Exception e) {
-            callback.onFailure(e);
-        }
+            @Override
+            protected void onFailure(Throwable exception) {
+                callback.onFailure(exception);
+            }
+        });
     }
 
     /**
@@ -737,5 +755,14 @@ public class Project extends Folder {
             throw new Exception("Resource is out of the project's scope. Project : " + getName() + ", resource path is : "
                                 + resource.getPath());
         }
+    }
+
+    // TODO
+    public void setProjectType(String projectTypeId) {
+        this.projectTypeId = projectTypeId;
+    }
+
+    String getProjectTypeId() {
+        return projectTypeId;
     }
 }

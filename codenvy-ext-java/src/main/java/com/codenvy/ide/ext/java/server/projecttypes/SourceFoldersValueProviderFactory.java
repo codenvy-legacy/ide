@@ -78,18 +78,21 @@ public class SourceFoldersValueProviderFactory implements ValueProviderFactory {
     }
 
     private List<String> getAntSourceFolders(VirtualFile buildXml) throws VirtualFileSystemException {
+        final String defaultSourceDirectoryPath = "src";
         List<String> list = new ArrayList<>(1);
-        // TODO: temporary hardcoded
-        list.add("src");
+        list.add(defaultSourceDirectoryPath);
         return list;
     }
 
     private List<String> getMavenSourceFolders(VirtualFile pomXml) throws VirtualFileSystemException, IOException {
+        final String defaultSourceDirectoryPath = "src/main/java";
+        final String defaultTestSourceDirectoryPath = "src/main/java";
+
         Model model = MavenUtils.readModel(pomXml.getContent().getStream());
         List<String> list = MavenUtils.getSourceDirectories(model);
         if (list.isEmpty()) {
-            // add at least one 'default' source folder
-            list.add("src/main/java");
+            list.add(defaultSourceDirectoryPath);
+            list.add(defaultTestSourceDirectoryPath);
         }
         return list;
     }

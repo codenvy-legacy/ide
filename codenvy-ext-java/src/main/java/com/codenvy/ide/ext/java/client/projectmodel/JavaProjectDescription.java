@@ -24,9 +24,6 @@ import com.codenvy.ide.resources.model.ProjectDescription;
 public class JavaProjectDescription extends ProjectDescription {
 
     public static final String ATTRIBUTE_SOURCE_FOLDERS = "folders.source";
-    //TODO Remove this, when project attributes are ready:
-    public static final String DEFAULT_SOURCE_DIR       = "src/main/java";
-    public static final String DEFAULT_TEST_SOURCE_DIR  = "src/test/java";
 
     /** @param project */
     public JavaProjectDescription(JavaProject project) {
@@ -35,14 +32,6 @@ public class JavaProjectDescription extends ProjectDescription {
 
     /** @return The set of Project's source folders or empty set. */
     public StringSet getSourceFolders() {
-        StringSet sourceFolders = asStringSet(ATTRIBUTE_SOURCE_FOLDERS);
-
-        //TODO Remove this, when project attributes are ready:
-        if (sourceFolders.isEmpty()) {
-            sourceFolders.add(DEFAULT_SOURCE_DIR);
-            sourceFolders.add(DEFAULT_TEST_SOURCE_DIR);
-        }
-
-        return sourceFolders;
+        return asStringSet(ATTRIBUTE_SOURCE_FOLDERS);
     }
 }

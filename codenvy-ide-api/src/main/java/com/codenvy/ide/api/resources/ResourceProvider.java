@@ -17,8 +17,6 @@
  */
 package com.codenvy.ide.api.resources;
 
-import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.ide.api.extension.SDK;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.File;
@@ -77,13 +75,6 @@ public interface ResourceProvider {
      * @param callback
      */
     public void createProject(String name, Array<Property> properties, AsyncCallback<Project> callback);
-
-    /**
-     * Experimental and to be changed: List all projects stored on vfs
-     *
-     * @param callback
-     */
-    public void listProjects(AsyncCallback<ItemList> callback);
 
     /** Reads already stored projects and shows them in project explorer. */
     public void showListProjects();

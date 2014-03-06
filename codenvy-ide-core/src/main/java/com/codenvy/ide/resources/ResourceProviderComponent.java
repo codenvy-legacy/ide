@@ -18,9 +18,8 @@
 package com.codenvy.ide.resources;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectReference;
-import com.codenvy.api.vfs.shared.dto.Item;
-import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
@@ -55,7 +54,6 @@ import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.http.client.URL;
-import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -72,19 +70,20 @@ import com.google.web.bindery.event.shared.EventBus;
 public class ResourceProviderComponent implements ResourceProvider, Component {
     /** Used for compatibility with IDE-VFS 1.x */
     private static final String DEPRECATED_PROJECT_TYPE = "deprecated.project.type";
-    protected final ModelProvider            genericModelProvider;
+    protected final ModelProvider                 genericModelProvider;
     /** Fully qualified URL to root folder of VFS */
-    private final   String                   workspaceURL;
-    private final   StringMap<ModelProvider> modelProviders;
-    private final   IntegerMap<FileType>     fileTypes;
-    private final   EventBus                 eventBus;
-    private final   FileType                 defaultFile;
-    private final   DtoUnmarshallerFactory   dtoUnmarshallerFactory;
-    private final   DtoFactory               dtoFactory;
-    private final   AsyncRequestFactory      asyncRequestFactory;
-    private final   ProjectServiceClient     projectServiceClient;
-    protected       VirtualFileSystemInfo    vfsInfo;
-    private         Loader                   loader;
+    private final   String                        workspaceURL;
+    private final   StringMap<ModelProvider>      modelProviders;
+    private final   IntegerMap<FileType>          fileTypes;
+    private final   EventBus                      eventBus;
+    private final   FileType                      defaultFile;
+    private final   DtoUnmarshallerFactory        dtoUnmarshallerFactory;
+    private final   DtoFactory                    dtoFactory;
+    private final   AsyncRequestFactory           asyncRequestFactory;
+    private final   ProjectServiceClient          projectServiceClient;
+    private final   ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
+    protected       VirtualFileSystemInfo         vfsInfo;
+    private         Loader                        loader;
     @SuppressWarnings("unused")
     private boolean initialized = false;
     private Project activeProject;
@@ -103,7 +102,8 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                                      DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                      DtoFactory dtoFactory,
                                      AsyncRequestFactory asyncRequestFactory,
-                                     ProjectServiceClient projectServiceClient) {
+                                     ProjectServiceClient projectServiceClient,
+                                     ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry) {
         super();
         this.genericModelProvider = genericModelProvider;
         this.eventBus = eventBus;
@@ -112,6 +112,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         this.dtoFactory = dtoFactory;
         this.asyncRequestFactory = asyncRequestFactory;
         this.projectServiceClient = projectServiceClient;
+        this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
         this.workspaceURL = restContext + "/vfs/" + workspaceId + "/v2";
         this.modelProviders = Collections.<ModelProvider>createStringMap();
         this.fileTypes = Collections.createIntegerMap();
@@ -147,51 +148,51 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     /** {@inheritDoc} */
     @Override
     public void getProject(final String name, final AsyncCallback<Project> callback) {
-        // create internal wrapping Request Callback with proper Unmarshaller
-        AsyncRequestCallback<ProjectModelProviderAdapter> internalCallback =
-                new AsyncRequestCallback<ProjectModelProviderAdapter>(new ProjectModelUnmarshaller(this)) {
+        projectServiceClient.getProject(name, new AsyncRequestCallback<ProjectDescriptor>(
+                dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
+            @Override
+            protected void onSuccess(ProjectDescriptor result) {
+                Folder rootFolder = vfsInfo.getRoot();
+
+                final String language = result.getAttributes().get("language").get(0);
+                Project project = getModelProvider(language).createProjectInstance();
+                project.setAttributes(result.getAttributes());
+
+                project.setProjectType(result.getProjectTypeId());
+
+                project.setName(name);
+                project.setParent(rootFolder);
+                project.setProject(project);
+                project.setVFSInfo(vfsInfo);
+
+                rootFolder.getChildren().clear();
+                rootFolder.addChild(project);
+                if (activeProject != null) {
+                    eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
+                }
+
+                activeProject = project;
+
+                // get project structure
+                project.refreshTree(new AsyncCallback<Project>() {
                     @Override
-                    protected void onSuccess(ProjectModelProviderAdapter result) {
-                        Folder rootFolder = vfsInfo.getRoot();
-
-                        Project project = result.getProject();
-                        project.setParent(rootFolder);
-                        project.setProject(project);
-                        project.setVFSInfo(vfsInfo);
-
-                        rootFolder.getChildren().clear();
-                        rootFolder.addChild(project);
-                        if (activeProject != null) {
-                            eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
-                        }
-
-                        activeProject = project;
-
-                        // get project structure
-                        project.refreshTree(new AsyncCallback<Project>() {
-                            @Override
-                            public void onSuccess(Project project) {
-                                eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
-                                callback.onSuccess(project);
-                            }
-
-                            @Override
-                            public void onFailure(Throwable exception) {
-                                callback.onFailure(exception);
-                            }
-                        });
+                    public void onSuccess(Project project) {
+                        eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
+                        callback.onSuccess(project);
                     }
 
                     @Override
-                    protected void onFailure(Throwable exception) {
+                    public void onFailure(Throwable exception) {
                         callback.onFailure(exception);
                     }
-                };
+                });
+            }
 
-        // get Project Item by path
-        String url = vfsInfo.getUrlTemplates().get((Link.REL_ITEM_BY_PATH)).getHref() + "?itemType=" + Project.TYPE;
-        url = URL.decode(url).replace("[path]", name);
-        asyncRequestFactory.createGetRequest(URL.encode(url)).loader(loader).send(internalCallback);
+            @Override
+            protected void onFailure(Throwable exception) {
+                callback.onFailure(exception);
+            }
+        });
     }
 
     public void getFolder(final Folder folder, final AsyncCallback<Folder> callback) {
@@ -199,7 +200,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
             @Override
             public void onSuccess(Folder result) {
                 eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(result));
-                Resource f = result.findChildById(folder.getId());
+                Resource f = result.findChildByName(folder.getName());
                 if (f != null && !f.getId().equals(result.getId())) {
                     eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(f));
                 }
@@ -210,28 +211,6 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 callback.onFailure(exception);
             }
         });
-    }
-
-    @Override
-    public void listProjects(final AsyncCallback<ItemList> callback) {
-        // internal callback
-        AsyncRequestCallback<ItemList> internalCallback =
-                new AsyncRequestCallback<ItemList>(dtoUnmarshallerFactory.newUnmarshaller(ItemList.class)) {
-                    @Override
-                    protected void onSuccess(ItemList result) {
-                        callback.onSuccess(result);
-                    }
-
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        callback.onFailure(exception);
-                    }
-                };
-
-        String param = "propertyFilter=*&itemType=" + Project.TYPE;
-        asyncRequestFactory.createGetRequest(vfsInfo.getRoot().getLinkByRelation(Link.REL_CHILDREN).getHref() + "?" + param)
-                           .loader(loader).send(internalCallback);
-
     }
 
     /** {@inheritDoc} */
@@ -473,47 +452,28 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         }
         activeProject = null;
 
-        projectServiceClient.getProjects(new AsyncRequestCallback<Array<ProjectReference>>() {
-            @Override
-            protected void onSuccess(Array<ProjectReference> result) {
-//                Array<Resource> projects = Collections.createArray();
-//                rootFolder.setChildren(projects);
-                eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(null));
-                for (ProjectReference item : result.asIterable()) {
-                    Project project = new Project(eventBus, asyncRequestFactory, projectServiceClient);
-                    project.init(JSONParser.parseStrict(dtoFactory.toJson(item)).isObject());
-//                    rootFolder.addChild(project);
-                    eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
-                }
-            }
+        final Folder rootFolder = vfsInfo.getRoot();
+        rootFolder.getChildren().clear();
 
-            @Override
-            protected void onFailure(Throwable exception) {
-                Log.error(ResourceProviderComponent.class, "Can not get list of projects", exception);
-            }
-        });
+        projectServiceClient.getProjects(
+                new AsyncRequestCallback<Array<ProjectReference>>(dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectReference.class)) {
+                    @Override
+                    protected void onSuccess(Array<ProjectReference> result) {
+                        eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(null));
+                        for (ProjectReference item : result.asIterable()) {
+                            Project project = new Project(eventBus, asyncRequestFactory, projectServiceClient, dtoUnmarshallerFactory);
+                            project.setName(item.getName());
+                            project.setProjectType(item.getProjectTypeId());
 
-//        final Folder rootFolder = vfsInfo.getRoot();
-//        rootFolder.getChildren().clear();
+                            rootFolder.addChild(project);
+                            eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
+                        }
+                    }
 
-//        listProjects(new AsyncCallback<ItemList>() {
-//            @Override
-//            public void onSuccess(ItemList result) {
-//                Array<Resource> projects = Collections.createArray();
-//                rootFolder.setChildren(projects);
-//                eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(null));
-//                for (Item item : result.getItems()) {
-//                    Project project = new Project(eventBus, asyncRequestFactory, projectServiceClient);
-//                    project.init(JSONParser.parseStrict(dtoFactory.toJson(item)).isObject());
-//                    rootFolder.addChild(project);
-//                    eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable caught) {
-//                Log.error(ResourceProviderComponent.class, "Can not get list of projects", caught);
-//            }
-//        });
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        Log.error(ResourceProviderComponent.class, "Can not get list of projects", exception);
+                    }
+                });
     }
 }

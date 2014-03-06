@@ -110,12 +110,13 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             public void onProjectOpened(ProjectActionEvent event) {
                 setContent(event.getProject().getParent());
                 if (event.getProject() != null) {
-                    processProject(event.getProject(), new AsyncCallback<Project>() {
+                    checkProjectType(event.getProject(), new AsyncCallback<Project>() {
                         @Override
                         public void onSuccess(Project result) {
                             resourceProvider.getProject(result.getName(), new AsyncCallback<Project>() {
                                 @Override
                                 public void onSuccess(Project result) {
+                                    // do nothing
                                 }
 
                                 @Override
@@ -290,7 +291,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             ((Project)resource).refreshProperties(new AsyncCallback<Project>() {
                 @Override
                 public void onSuccess(Project result) {
-                    processProject(result, callback);
+                    checkProjectType(result, callback);
                 }
 
                 @Override
@@ -299,7 +300,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                 }
             });
         } else if (resource.getResourceType().equals(Project.TYPE) && ((Project)resource).getProperties().size() > 0) {
-            processProject((Project)resource, callback);
+            checkProjectType((Project)resource, callback);
         }
     }
 
@@ -308,7 +309,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
      *
      * @param project
      */
-    private void processProject(Project project, AsyncCallback<Project> callback) {
+    private void checkProjectType(Project project, AsyncCallback<Project> callback) {
         project.setVFSInfo(resourceProvider.getVfsInfo());
         String projectType = (String)project.getPropertyValue("vfs:projectType");
         if (projectType != null && projectType.equals("undefined") && !project.getChildren().isEmpty()) {
