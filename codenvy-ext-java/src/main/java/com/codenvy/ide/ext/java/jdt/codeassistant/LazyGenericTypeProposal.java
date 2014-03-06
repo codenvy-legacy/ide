@@ -16,9 +16,10 @@ import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.ext.java.jdt.core.CompletionProposal;
 import com.codenvy.ide.ext.java.jdt.core.Signature;
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
-import com.codenvy.ide.ext.java.jdt.env.BinaryTypeImpl;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryType;
 import com.codenvy.ide.ext.java.worker.WorkerTypeInfoStorage;
+import com.codenvy.ide.ext.java.worker.env.BinaryType;
+import com.codenvy.ide.ext.java.worker.env.json.BinaryTypeJso;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
@@ -366,7 +367,7 @@ public final class LazyGenericTypeProposal extends LazyJavaTypeCompletionProposa
                 for (int i = 0; i < array.size(); i++) {
                     Jso obj = (Jso)array.get(i);
                     if (fqn.equals(obj.getStringField("name"))) {
-                        type = new BinaryTypeImpl(obj);
+                        type = new BinaryType(obj.<BinaryTypeJso>cast());
                         break;
                     }
                 }

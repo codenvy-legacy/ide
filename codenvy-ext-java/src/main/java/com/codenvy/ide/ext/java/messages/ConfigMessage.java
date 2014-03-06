@@ -29,8 +29,6 @@ public interface ConfigMessage extends Message{
 
     String restContext();
 
-    String vfsId();
-
     String wsId();
 
     String projectName();
