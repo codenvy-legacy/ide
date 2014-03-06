@@ -92,13 +92,13 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
             @Override
             public void onMessageReceived(ConfigMessage config) {
                 nameEnvironment =
-                        new WorkerNameEnvironment(config.restContext(), config.vfsId(), config.wsId());
+                        new WorkerNameEnvironment(config.restContext(), config.wsId());
                 projectName = config.projectName();
                 WorkerProposalApplier applier = new WorkerProposalApplier(WorkerMessageHandler.this.worker, messageFilter);
                 workerCodeAssist =
                         new WorkerCodeAssist(WorkerMessageHandler.this.worker, messageFilter, applier, nameEnvironment,
                                              templateCompletionProposalComputer,
-                                             config.javaDocContext(), config.vfsId());
+                                             config.javaDocContext());
                 correctionProcessor = new WorkerCorrectionProcessor(WorkerMessageHandler.this.worker, messageFilter, applier);
             }
         };
@@ -157,7 +157,7 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
 
             @Override
             public void onSuccess() {
-                nameEnvironment.setProjectId(message.projectId());
+                nameEnvironment.setProjectPath(message.projectPath());
                 cuVar = new CUVariables(message.fileName(), message.packageName(), projectName);
 
                 ASTParser parser = ASTParser.newParser(AST.JLS3);

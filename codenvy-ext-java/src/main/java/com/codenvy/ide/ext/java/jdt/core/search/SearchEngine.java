@@ -18,9 +18,6 @@
 package com.codenvy.ide.ext.java.jdt.core.search;
 
 import com.codenvy.ide.ext.java.jdt.core.IPackageFragment;
-import com.codenvy.ide.ext.java.jdt.core.dom.Modifier;
-import com.codenvy.ide.ext.java.shared.ShortTypeInfo;
-import com.codenvy.ide.ext.java.shared.TypesList;
 
 import java.util.ArrayList;
 
@@ -91,21 +88,21 @@ public class SearchEngine {
 //         });
     }
 
-    /** @param result */
-    private void typeListReceived(TypesList result) {
-        index++;
-        for (ShortTypeInfo typeInfo : result.getTypes()) {
-            Type type = new Type(typeInfo);
-            if (!Modifier.isPublic(typeInfo.getModifiers())) {
-                if (!currentPackage.getElementName().equals(type.getPackageFragment().getElementName()))
-                    continue;
-            }
-            typesFound.add(new JavaSearchTypeNameMatch(type, typeInfo.getModifiers()));
-        }
-        if (index < allTypes.length)
-            getTypes(allTypes[index]);
-        else
-            callback.searchFinished(typesFound);
-    }
+//    /** @param result */
+//    private void typeListReceived(TypesList result) {
+//        index++;
+//        for (ShortTypeInfo typeInfo : result.getTypes()) {
+//            Type type = new Type(typeInfo);
+//            if (!Modifier.isPublic(typeInfo.getModifiers())) {
+//                if (!currentPackage.getElementName().equals(type.getPackageFragment().getElementName()))
+//                    continue;
+//            }
+//            typesFound.add(new JavaSearchTypeNameMatch(type, typeInfo.getModifiers()));
+//        }
+//        if (index < allTypes.length)
+//            getTypes(allTypes[index]);
+//        else
+//            callback.searchFinished(typesFound);
+//    }
 
 }

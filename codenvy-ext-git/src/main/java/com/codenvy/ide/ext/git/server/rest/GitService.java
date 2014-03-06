@@ -28,6 +28,7 @@ import com.codenvy.api.vfs.server.exceptions.PermissionDeniedException;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.shared.ItemType;
 import com.codenvy.api.vfs.shared.PropertyFilter;
+import com.codenvy.api.vfs.shared.dto.Folder;
 import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.api.vfs.shared.dto.Property;
@@ -38,38 +39,7 @@ import com.codenvy.ide.ext.git.server.GitConnectionFactory;
 import com.codenvy.ide.ext.git.server.GitException;
 import com.codenvy.ide.ext.git.server.InfoPage;
 import com.codenvy.ide.ext.git.server.LogPage;
-import com.codenvy.ide.ext.git.shared.AddRequest;
-import com.codenvy.ide.ext.git.shared.Branch;
-import com.codenvy.ide.ext.git.shared.BranchCheckoutRequest;
-import com.codenvy.ide.ext.git.shared.BranchCreateRequest;
-import com.codenvy.ide.ext.git.shared.BranchDeleteRequest;
-import com.codenvy.ide.ext.git.shared.BranchListRequest;
-import com.codenvy.ide.ext.git.shared.CloneRequest;
-import com.codenvy.ide.ext.git.shared.CommitRequest;
-import com.codenvy.ide.ext.git.shared.Commiters;
-import com.codenvy.ide.ext.git.shared.DiffRequest;
-import com.codenvy.ide.ext.git.shared.FetchRequest;
-import com.codenvy.ide.ext.git.shared.GitUser;
-import com.codenvy.ide.ext.git.shared.InitRequest;
-import com.codenvy.ide.ext.git.shared.LogRequest;
-import com.codenvy.ide.ext.git.shared.MergeRequest;
-import com.codenvy.ide.ext.git.shared.MergeResult;
-import com.codenvy.ide.ext.git.shared.MoveRequest;
-import com.codenvy.ide.ext.git.shared.PullRequest;
-import com.codenvy.ide.ext.git.shared.PushRequest;
-import com.codenvy.ide.ext.git.shared.Remote;
-import com.codenvy.ide.ext.git.shared.RemoteAddRequest;
-import com.codenvy.ide.ext.git.shared.RemoteListRequest;
-import com.codenvy.ide.ext.git.shared.RemoteUpdateRequest;
-import com.codenvy.ide.ext.git.shared.RepoInfo;
-import com.codenvy.ide.ext.git.shared.ResetRequest;
-import com.codenvy.ide.ext.git.shared.Revision;
-import com.codenvy.ide.ext.git.shared.RmRequest;
-import com.codenvy.ide.ext.git.shared.Status;
-import com.codenvy.ide.ext.git.shared.Tag;
-import com.codenvy.ide.ext.git.shared.TagCreateRequest;
-import com.codenvy.ide.ext.git.shared.TagDeleteRequest;
-import com.codenvy.ide.ext.git.shared.TagListRequest;
+import com.codenvy.ide.ext.git.shared.*;
 import com.codenvy.ide.maven.tools.MavenUtils;
 import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
@@ -94,6 +64,7 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -271,11 +242,15 @@ public class GitService {
                     propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("builder.name")
                                                  .withValue(new ArrayList<String>(Arrays.asList("maven"))));
                     processMultiModuleMavenProject(vfs, projectId);
+
                 } else if (!isProjectTypePropertySet(vfs.getItem(projectId, false))) {
                     Property projectTypeProperty = DtoFactory.getInstance().createDto(Property.class).withName("vfs:projectType")
                                                              .withValue(new ArrayList<String>(Arrays.asList("undefined")));
                     propertiesList.add(projectTypeProperty);
                 }
+                Folder codenvyFolder = vfs.createFolder(projectId, ".codenvy");
+                vfs.createFile(codenvyFolder.getId(), "project", MediaType.APPLICATION_JSON_TYPE,
+                               new ByteArrayInputStream("{}".getBytes()));
                 vfs.updateItem(projectId, propertiesList, null);
                 break;
             }
@@ -333,6 +308,9 @@ public class GitService {
                                                  .withValue(new ArrayList<String>(Arrays.asList("maven"))));
                     vfs.updateItem(folder.getId(), propertiesList, null);
                     found = true;
+                    Folder codenvyFolder = vfs.createFolder(folder.getId(), ".codenvy");
+                    vfs.createFile(codenvyFolder.getId(), "project", MediaType.APPLICATION_JSON_TYPE,
+                                   new ByteArrayInputStream("{}".getBytes()));
                     break;
                 }
             }

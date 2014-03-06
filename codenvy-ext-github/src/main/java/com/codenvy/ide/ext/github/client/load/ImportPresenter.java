@@ -17,10 +17,10 @@
  */
 package com.codenvy.ide.ext.github.client.load;
 
+import com.codenvy.api.user.shared.dto.User;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
@@ -122,7 +122,7 @@ public class ImportPresenter implements ImportView.ActionDelegate {
                 Log.error(ImportPresenter.class, "Can't generate ssh key", exception);
             }
         };
-        gitHubSshKeyProvider.generateKey(user.getUserId(), callback);
+        gitHubSshKeyProvider.generateKey(user.getId(), callback);
     }
 
     /** Get the list of all authorized user's repositories. */

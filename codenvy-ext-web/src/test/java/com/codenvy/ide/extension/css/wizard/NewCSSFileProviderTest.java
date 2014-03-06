@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.extension.css.wizard;
 
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.ext.web.WebExtensionResource;
 import com.codenvy.ide.ext.web.css.CssFileProvider;
 import com.codenvy.ide.resources.model.File;
@@ -62,12 +63,14 @@ public class NewCSSFileProviderTest {
     private Throwable               throwable;
     @Mock
     private WebExtensionResource    resource;
+    @Mock
+    private IconRegistry            iconRegistry;
     private CssFileProvider         newCSSFileProvider;
     private String                  cssFileName;
 
     @Before
     public void setUp() {
-        newCSSFileProvider = new CssFileProvider(resource);
+        newCSSFileProvider = new CssFileProvider(iconRegistry);
         cssFileName = RESOURCE_NAME + '.' + newCSSFileProvider.getExtension();
     }
 

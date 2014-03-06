@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.tutorial.editor.provider;
 
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
@@ -39,8 +40,8 @@ public class NewGroovyFileProvider extends NewResourceProvider {
     private EditorTutorialResource resource;
 
     @Inject
-    public NewGroovyFileProvider(EditorTutorialResource resource) {
-        super("Groovy file", "Groovy file", resource.groovyFile(), "groovy");
+    public NewGroovyFileProvider(EditorTutorialResource resource, IconRegistry iconRegistry) {
+        super("Groovy file", "Groovy file", iconRegistry.getDefaultIcon(), "groovy");
         this.resource = resource;
     }
 

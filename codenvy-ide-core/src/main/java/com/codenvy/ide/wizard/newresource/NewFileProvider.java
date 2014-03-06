@@ -19,6 +19,7 @@ package com.codenvy.ide.wizard.newresource;
 
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
@@ -38,8 +39,8 @@ import javax.validation.constraints.NotNull;
 public class NewFileProvider extends NewResourceProvider {
 
     @Inject
-    public NewFileProvider(Resources resources) {
-        super("File", "File", resources.file(), "");
+    public NewFileProvider(IconRegistry iconRegistry) {
+        super("File", "File", iconRegistry.getIcon("default.file") , "");
     }
 
     /** {@inheritDoc} */

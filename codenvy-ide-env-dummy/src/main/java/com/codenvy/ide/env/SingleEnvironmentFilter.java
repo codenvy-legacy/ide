@@ -70,6 +70,6 @@ public class SingleEnvironmentFilter implements Filter {
     }
 
     protected User getUser(HttpServletRequest httpRequest) {
-        return new UserImpl("ide", "dummy_token", Arrays.asList("developer", "admin"));
+        return new UserImpl("ide", "dummy_token", Arrays.asList("developer", "admin", "system/admin", "system/manager", "user"));
     }
 }

@@ -371,4 +371,14 @@ public class LightTheme implements Theme {
     public String getMainMenuFontColor() {
         return "#222222";
     }
+
+    @Override
+    public String getNotableButtonTopColor() {
+        return "#dbdbdb";
+    }
+
+    @Override
+    public String getNotableButtonColor() {
+        return "#2d6ba3";
+    }
 }

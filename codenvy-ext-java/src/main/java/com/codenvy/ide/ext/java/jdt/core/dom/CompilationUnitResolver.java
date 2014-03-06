@@ -36,6 +36,7 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.util.HashtableOfObject;
 import com.codenvy.ide.ext.java.jdt.internal.core.CancelableProblemFactory;
 import com.codenvy.ide.ext.java.jdt.internal.core.util.BindingKeyResolver;
 import com.codenvy.ide.ext.java.jdt.internal.core.util.CommentRecorderParser;
+import com.codenvy.ide.util.ExceptionUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -1216,6 +1217,8 @@ class CompilationUnitResolver extends Compiler {
             this.handleInternalException(e, unit, null);
             throw e; // rethrow
         } catch (RuntimeException e) {
+            String traceAsString = ExceptionUtils.getStackTraceAsString(e);
+            invokeBrowserLogger(traceAsString);
             this.handleInternalException(e, unit, null);
             throw e; // rethrow
         } finally {
@@ -1228,6 +1231,13 @@ class CompilationUnitResolver extends Compiler {
             // this.reset();
         }
     }
+
+    private static native void invokeBrowserLogger(Object o) /*-{
+        if (console && console["error"]) {
+            console["error"](o);
+        }
+        return;
+    }-*/;
 
     /*
      * Internal API used to resolve a given compilation unit. Can run a subset of the compilation process

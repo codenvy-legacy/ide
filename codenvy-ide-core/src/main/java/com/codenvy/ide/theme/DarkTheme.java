@@ -123,7 +123,7 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getPartToolbarActive() {
-        return "414c5e";
+        return "#414c5e";
     }
 
     @Override
@@ -339,5 +339,15 @@ public class DarkTheme implements Theme {
     @Override
     public String getMainMenuFontColor() {
         return "#dbdbdb";
+    }
+
+    @Override
+    public String getNotableButtonTopColor() {
+        return "#dbdbdb";
+    }
+
+    @Override
+    public String getNotableButtonColor() {
+        return "#2d6ba3";
     }
 }

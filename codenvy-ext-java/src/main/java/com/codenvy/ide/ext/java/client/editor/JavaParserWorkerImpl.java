@@ -137,7 +137,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
 
     /** {@inheritDoc} */
     @Override
-    public void parse(String content, String fileName, String fileId, String packageName, String projectId,
+    public void parse(String content, String fileName, String fileId, String packageName, String projectPath,
                       WorkerCallback<IProblem> callback) {
         if (worker == null) {
             return;
@@ -147,13 +147,13 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         String uuid = UUID.uuid();
         callbacks.put(uuid, callback);
         parseMessage.setSource(content).setFileName(fileName).setFileId(fileId).setId(uuid).setPackageName(packageName)
-                    .setProjectId(projectId);
+                    .setProjectPath(projectPath);
         worker.postMessage(parseMessage.serialize());
     }
 
     /** {@inheritDoc} */
     @Override
-    public void computeCAProposals(String content, int offset, String fileName, String projectId, WorkerCallback<WorkerProposal> callback) {
+    public void computeCAProposals(String content, int offset, String fileName, String projectPath, WorkerCallback<WorkerProposal> callback) {
         if (worker == null) {
             return;
         }
@@ -161,7 +161,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         MessagesImpls.ComputeCAProposalsMessageImpl computeMessage = MessagesImpls.ComputeCAProposalsMessageImpl.make();
         String uuid = UUID.uuid();
         callbacks.put(uuid, callback);
-        computeMessage.setDocContent(content).setOffset(offset).setFileName(fileName).setId(uuid).setProjectId(projectId);
+        computeMessage.setDocContent(content).setOffset(offset).setFileName(fileName).setId(uuid).setProjectPath(projectPath);
         worker.postMessage(computeMessage.serialize());
     }
 
@@ -218,7 +218,6 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
 
         MessagesImpls.ConfigMessageImpl config = MessagesImpls.ConfigMessageImpl.make();
         config.setRestContext(restContext);
-        config.setVfsId(resourceProvider.getVfsInfo().getId());
         config.setWsId("/" + workspaceId);
         config.setProjectName(event.getProject().getName());
         config.setJavaDocContext(""); //TODO configure doc context

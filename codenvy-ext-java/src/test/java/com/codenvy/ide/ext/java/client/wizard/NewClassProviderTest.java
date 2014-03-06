@@ -25,7 +25,7 @@ package com.codenvy.ide.ext.java.client.wizard;
 public class NewClassProviderTest extends BaseNewJavaFileProviderTest {
     @Override
     public void setUp() {
-        provider = new NewClassProvider(selectionAgent);
+        provider = new NewClassProvider(selectionAgent, iconRegistry);
         content = "package mypackage;\n" +
                   "\n" +
                   "public class resourceName\n" +

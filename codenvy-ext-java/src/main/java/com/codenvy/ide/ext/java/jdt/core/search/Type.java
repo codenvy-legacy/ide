@@ -21,8 +21,9 @@ import com.codenvy.ide.ext.java.jdt.core.IJavaElement;
 import com.codenvy.ide.ext.java.jdt.core.IPackageFragment;
 import com.codenvy.ide.ext.java.jdt.core.IType;
 import com.codenvy.ide.ext.java.jdt.core.Signature;
+import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
 import com.codenvy.ide.ext.java.jdt.env.PackageFragment;
-import com.codenvy.ide.ext.java.shared.ShortTypeInfo;
+import com.codenvy.ide.ext.java.worker.env.BinaryType;
 
 
 /**
@@ -31,14 +32,14 @@ import com.codenvy.ide.ext.java.shared.ShortTypeInfo;
  */
 public class Type implements IType {
 
-    private ShortTypeInfo typeInfo;
+    private BinaryType typeInfo;
 
     private PackageFragment packageFragment;
 
     private String name;
 
     /** @param typeInfo */
-    public Type(ShortTypeInfo typeInfo) {
+    public Type(BinaryType typeInfo) {
         this.typeInfo = typeInfo;
     }
 
@@ -46,7 +47,8 @@ public class Type implements IType {
     @Override
     public String getElementName() {
         if (name == null) {
-            name = Signature.getSimpleName(typeInfo.getName());
+            char[][] chars = CharOperation.splitOn('/', typeInfo.getName());
+            name = new String(Signature.getSimpleName(Signature.toQualifiedName(chars)));
             if (name.contains("."))
                 name = name.substring(name.lastIndexOf('.'));
         }
@@ -68,7 +70,7 @@ public class Type implements IType {
     /** @see com.codenvy.ide.ext.java.jdt.core.IType#getFullyQualifiedName() */
     @Override
     public String getFullyQualifiedName() {
-        return typeInfo.getName();
+        return getElementName();
     }
 
     /** @see com.codenvy.ide.ext.java.jdt.core.IType#getFullyQualifiedName(char) */

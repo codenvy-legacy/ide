@@ -26,13 +26,24 @@ import com.codenvy.api.project.shared.ProjectType;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /** @author Artem Zatsarynnyy */
 @Singleton
 public class WarProjectTypeExtension implements ProjectTypeExtension {
+
+    private Map<String, String> icons = new HashMap<>();
+
     @Inject
     public WarProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
+        icons.put("war.projecttype.big.icon", "java-extension/web_app_big.png");
+        icons.put("war.projecttype.small.icon", "java-extension/web_app_big.png");
+        icons.put("war.folder.small.icon", "java-extension/package.gif");
+        icons.put("war/java.file.small.icon", "java-extension/java-class.png");
+        icons.put("java.class", "java-extension/java-class.png");
+        icons.put("java.package", "java-extension/package.gif");
         registry.registerProjectType(this);
     }
 
@@ -47,6 +58,8 @@ public class WarProjectTypeExtension implements ProjectTypeExtension {
         list.add(new Attribute("language", "java"));
         list.add(new Attribute("framework", "web_application"));
         list.add(new Attribute("runner.name", "webapps"));
+        //TODO
+        list.add(new Attribute("builder.name","maven"));
         return list;
     }
 
@@ -59,4 +72,11 @@ public class WarProjectTypeExtension implements ProjectTypeExtension {
                                                 "templates/MavenWar.zip"));
         return list;
     }
+
+    @Override
+    public Map<String, String> getIconRegistry() {
+        return icons;
+    }
+
+
 }

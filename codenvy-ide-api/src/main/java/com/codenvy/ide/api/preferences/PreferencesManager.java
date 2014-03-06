@@ -18,6 +18,8 @@
 package com.codenvy.ide.api.preferences;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.codenvy.api.user.shared.dto.Profile;
+
 
 /**
  * Manager for preferences.
@@ -58,5 +60,5 @@ public interface PreferencesManager {
      *
      * @param callback
      */
-    void flushPreferences(AsyncCallback<Void> callback);
+    void flushPreferences(AsyncCallback<Profile> callback);
 }

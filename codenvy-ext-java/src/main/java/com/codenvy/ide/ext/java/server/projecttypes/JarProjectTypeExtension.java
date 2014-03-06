@@ -26,13 +26,25 @@ import com.codenvy.api.project.shared.ProjectType;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /** @author Artem Zatsarynnyy */
 @Singleton
 public class JarProjectTypeExtension implements ProjectTypeExtension {
+
+    private Map<String, String> icons = new HashMap<>();
+
+
     @Inject
     public JarProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
+        icons.put("jar.projecttype.big.icon", "java-extension/jar_64.png");
+        icons.put("jar.projecttype.small.icon", "java-extension/jar.png");
+        icons.put("jar.folder.small.icon", "java-extension/package.gif");
+        icons.put("jar/java.file.small.icon", "java-extension/java-class.png");
+        icons.put("java.class", "java-extension/java-class.png");
+        icons.put("java.package", "java-extension/package.gif");
         registry.registerProjectType(this);
     }
 
@@ -46,6 +58,7 @@ public class JarProjectTypeExtension implements ProjectTypeExtension {
         final List<Attribute> list = new ArrayList<>(2);
         list.add(new Attribute("language", "java"));
         list.add(new Attribute("framework", "standalone"));
+        list.add(new Attribute("builder.name","maven"));
         return list;
     }
 
@@ -56,11 +69,17 @@ public class JarProjectTypeExtension implements ProjectTypeExtension {
                                                 "MAVEN JAR PROJECT",
                                                 "Simple JAR project which uses Maven build system.",
                                                 "templates/MavenJar.zip"));
-
-        list.add(new ProjectTemplateDescription("zip",
-                                                "ANT JAR PROJECT",
-                                                "Simple JAR project which uses Ant build system.",
-                                                "templates/AntJar.zip"));
+//TODO:temporary unregist Ant project
+//        list.add(new ProjectTemplateDescription("zip",
+//                                                "ANT JAR PROJECT",
+//                                                "Simple JAR project which uses Ant build system.",
+//                                                "templates/AntJar.zip"));
         return list;
     }
+
+    @Override
+    public Map<String, String> getIconRegistry() {
+        return icons;
+    }
+
 }

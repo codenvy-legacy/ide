@@ -51,9 +51,11 @@
     <inherits name='com.codenvy.api.Builder'/>
     <inherits name='com.codenvy.api.Project'/>
     <inherits name='com.codenvy.api.Runner'/>
+    <inherits name='com.codenvy.api.User'/>
     <inherits name='com.codenvy.api.VFS'/>
 
     <inherits name="com.codenvy.ide.ui.CodenvyUI"/>
+    <inherits name="com.codenvy.api.Project"/>
 
     <stylesheet src="IDE.css"/>
 
