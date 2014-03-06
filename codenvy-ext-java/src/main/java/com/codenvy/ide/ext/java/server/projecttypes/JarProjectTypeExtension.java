@@ -46,6 +46,7 @@ public class JarProjectTypeExtension implements ProjectTypeExtension {
         final List<Attribute> list = new ArrayList<>(2);
         list.add(new Attribute("language", "java"));
         list.add(new Attribute("framework", "standalone"));
+        list.add(new Attribute("builder.name","maven"));
         return list;
     }
 

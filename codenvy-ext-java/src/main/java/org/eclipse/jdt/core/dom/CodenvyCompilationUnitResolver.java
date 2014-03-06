@@ -285,11 +285,11 @@ public class CodenvyCompilationUnitResolver extends CompilationUnitResolver {
     }
 
     public static CompilationUnit convert(CompilationUnitDeclaration compilationUnitDeclaration, char[] contents, int flags,
-                                          NullProgressMonitor nullProgressMonitor) {
+                                          Map<String, String> options) {
         DefaultBindingResolver.BindingTables bindingTables = new DefaultBindingResolver.BindingTables();
 
-        CompilationUnit compilationUnit = convert(compilationUnitDeclaration, contents, AST.JLS4, new HashMap(), true, null, bindingTables, flags,
-                                          nullProgressMonitor, true);
+        CompilationUnit compilationUnit = convert(compilationUnitDeclaration, contents, AST.JLS4, options, true, null, bindingTables, flags,
+                                          new NullProgressMonitor(), true);
         compilationUnit.setProperty("compilerBindingsToASTBindings", new HashMap(bindingTables.compilerBindingsToASTBindings));
         return compilationUnit;
     }

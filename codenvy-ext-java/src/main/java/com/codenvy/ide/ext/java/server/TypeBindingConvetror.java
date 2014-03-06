@@ -134,7 +134,7 @@ public class TypeBindingConvetror {
         }else if(defaultValue instanceof FieldBinding){
             FieldBinding signature = (FieldBinding)defaultValue;
             JsonObject enumSignature = new JsonObject();
-            enumSignature.addProperty("typeName", new String(signature.type.constantPoolName()));
+            enumSignature.addProperty("typeName", new String(signature.type.signature()));
             enumSignature.addProperty("constantName", new String(signature.name));
             object.add("enum", enumSignature);
         }else

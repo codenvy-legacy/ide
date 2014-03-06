@@ -28,16 +28,23 @@ import com.codenvy.api.project.server.AbstractVirtualFileEntry;
 import com.codenvy.api.project.server.ProjectManager;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.commons.lang.ZipUtils;
+import com.codenvy.ide.ext.java.jdt.core.JavaCore;
+import com.codenvy.ide.ext.java.jdt.internal.codeassist.impl.AssistOptions;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.CompilerOptions;
 import com.codenvy.ide.ext.java.server.internal.core.JavaProject;
 import com.codenvy.ide.ext.java.server.internal.core.search.matching.JavaSearchNameEnvironment;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
+import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
 import org.eclipse.jdt.core.dom.CodenvyCompilationUnitResolver;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.ITypeBinding;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.internal.compiler.ast.CompilationUnitDeclaration;
 import org.eclipse.jdt.internal.compiler.env.IBinaryType;
 import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
@@ -88,6 +95,25 @@ public class RestNameEnvironment {
     private static final Logger LOG = LoggerFactory.getLogger(RestNameEnvironment.class);
 
     private static final String TEMP_DIR = System.getProperty("java.io.tmpdir");
+
+    private static Map<String, String> options = new HashMap<>();
+
+    static {
+        options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_7);
+        options.put(JavaCore.CORE_ENCODING, "UTF-8");
+        options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
+        options.put(CompilerOptions.OPTION_TargetPlatform, JavaCore.VERSION_1_7);
+        options.put(AssistOptions.OPTION_PerformVisibilityCheck, AssistOptions.ENABLED);
+        options.put(CompilerOptions.OPTION_ReportUnusedLocal, CompilerOptions.WARNING);
+        options.put(CompilerOptions.OPTION_TaskTags, CompilerOptions.WARNING);
+        options.put(CompilerOptions.OPTION_ReportUnusedPrivateMember, CompilerOptions.WARNING);
+        options.put(CompilerOptions.OPTION_SuppressWarnings, CompilerOptions.DISABLED);
+        options.put(JavaCore.COMPILER_TASK_TAGS, "TODO,FIXME,XXX");
+        options.put(JavaCore.COMPILER_PB_UNUSED_PARAMETER_INCLUDE_DOC_COMMENT_REFERENCE, JavaCore.ENABLED);
+        options.put(JavaCore.COMPILER_DOC_COMMENT_SUPPORT, JavaCore.ENABLED);
+        options.put(CompilerOptions.OPTION_Process_Annotations, JavaCore.DISABLED);
+    }
+
     @Inject
     ProjectManager projectManager;
     @PathParam("ws-id")
@@ -368,17 +394,18 @@ public class RestNameEnvironment {
         } else if (answer.isCompilationUnit()) {
             ICompilationUnit compilationUnit = answer.getCompilationUnit();
             CompilationUnit result = getCompilationUnit(project, environment, compilationUnit);
-            AbstractTypeDeclaration o = (AbstractTypeDeclaration)result.types().get(0);
-            ITypeBinding typeBinding = o.resolveBinding();
+
+            BindingASTVisitor visitor = new BindingASTVisitor();
+            result.accept(visitor);
             Map<TypeBinding, ?> bindings = (Map<TypeBinding, ?>)result.getProperty("compilerBindingsToASTBindings");
             SourceTypeBinding binding = null;
             for (Map.Entry<TypeBinding, ?> entry : bindings.entrySet()) {
-                if (entry.getValue().equals(typeBinding)) {
+                if (entry.getValue().equals(visitor.typeBinding)) {
                     binding = (SourceTypeBinding)entry.getKey();
                     break;
                 }
             }
-
+            if(binding == null) return null;
             return TypeBindingConvetror.toJsonBinaryType(binding);
         }
         return null;
@@ -390,14 +417,13 @@ public class RestNameEnvironment {
         flags |= org.eclipse.jdt.core.ICompilationUnit.ENABLE_STATEMENTS_RECOVERY;
         flags |= org.eclipse.jdt.core.ICompilationUnit.IGNORE_METHOD_BODIES;
         flags |= org.eclipse.jdt.core.ICompilationUnit.ENABLE_BINDINGS_RECOVERY;
+        HashMap<String, String> opts = new HashMap<>(options);
         CompilationUnitDeclaration compilationUnitDeclaration =
-                CodenvyCompilationUnitResolver.resolve(compilationUnit, project, environment, new HashMap<String, String>(), flags, null);
+                CodenvyCompilationUnitResolver.resolve(compilationUnit, project, environment, opts, flags, null);
         return CodenvyCompilationUnitResolver.convert(
                 compilationUnitDeclaration,
                 compilationUnit.getContents(),
-                flags,
-                new NullProgressMonitor()
-                                                     );
+                flags, opts);
     }
 
     private char[][] getCharArrayFrom(String list) {
@@ -459,6 +485,30 @@ public class RestNameEnvironment {
                 http.disconnect();
                 closed = true;
             }
+        }
+    }
+
+    private static class BindingASTVisitor extends ASTVisitor {
+        ITypeBinding typeBinding;
+
+        public boolean visit(AnnotationTypeDeclaration annotationTypeDeclaration) {
+            typeBinding = annotationTypeDeclaration.resolveBinding();
+            return false;
+        }
+
+        public boolean visit(AnonymousClassDeclaration anonymousClassDeclaration) {
+            typeBinding = anonymousClassDeclaration.resolveBinding();
+            return false;
+        }
+
+        public boolean visit(TypeDeclaration typeDeclaration) {
+            typeBinding = typeDeclaration.resolveBinding();
+            return false;
+        }
+
+        public boolean visit(EnumDeclaration enumDeclaration) {
+            typeBinding = enumDeclaration.resolveBinding();
+            return false;
         }
     }
 }

@@ -126,7 +126,7 @@ public class JavaProject extends Openable implements IJavaProject {
         Attribute attribute = project.getDescription().getAttribute("folders.source");
         if (attribute != null) {
             for (String path : attribute.getValues()) {
-                paths.add(JavaCore.newSourceEntry(new Path(virtualFile.getIoFile().getPath() + "/" + path)));
+                paths.add(JavaCore.newSourceEntry(new Path(((VirtualFileImpl)project.getBaseFolder().getVirtualFile()).getIoFile().getPath() + "/" + path)));
             }
         }
     }
@@ -562,14 +562,14 @@ public class JavaProject extends Openable implements IJavaProject {
             // source folder
             case IClasspathEntry.CPE_SOURCE:
 
-                if (projectPath.isPrefixOf(entryPath)) {
-                    Object target = JavaModelManager.getTarget(entryPath, true/*check existency*/);
-                    if (target == null) return;
+//                if (projectPath.isPrefixOf(entryPath)) {
+                    Object target1 = JavaModelManager.getTarget(entryPath, true/*check existency*/);
+                    if (target1 == null) return;
 
-                    if (target instanceof File && ((File)target).isDirectory()) {
-                        root = getPackageFragmentRoot((File)target);
+                    if (target1 instanceof File && ((File)target1).isDirectory()) {
+                        root = getPackageFragmentRoot((File)target1);
                     }
-                }
+//                }
                 break;
 
             // internal/external JAR or folder
