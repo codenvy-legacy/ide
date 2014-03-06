@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * {@link ProjectTypeDescriptionExtension} to register project types.
@@ -58,4 +59,6 @@ public class ProjectTypeDescriptionsExtension implements ProjectTypeDescriptionE
         list.add(new AttributeDescription("runner.name"));
         return list;
     }
+
+   
 }

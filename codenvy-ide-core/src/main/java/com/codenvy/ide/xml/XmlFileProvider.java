@@ -19,6 +19,7 @@ package com.codenvy.ide.xml;
 
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
@@ -41,8 +42,8 @@ public class XmlFileProvider extends NewResourceProvider {
                              "</xml>";
 
     @Inject
-    public XmlFileProvider(Resources resources) {
-        super("Xml file", "Xml file", resources.xmlFile(), "xml");
+    public XmlFileProvider(IconRegistry iconRegistry) {
+        super("Xml file", "Xml file", iconRegistry.getIcon("default.xml"), "xml");
     }
 
     /** {@inheritDoc} */

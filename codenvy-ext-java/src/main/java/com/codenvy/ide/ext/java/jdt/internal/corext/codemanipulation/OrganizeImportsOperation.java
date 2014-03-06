@@ -29,7 +29,6 @@ import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ImportRewrite;
 import com.codenvy.ide.ext.java.jdt.core.search.SearchEngine;
 import com.codenvy.ide.ext.java.jdt.core.search.SearchEngine.SearchCallback;
 import com.codenvy.ide.ext.java.jdt.core.search.TypeNameMatch;
-import com.codenvy.ide.ext.java.jdt.env.PackageFragment;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.ASTNodes;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.Bindings;
 import com.codenvy.ide.ext.java.jdt.internal.corext.dom.ScopeAnalyzer;
@@ -142,7 +141,8 @@ public class OrganizeImportsOperation {
 
             fAnalyzer = new ScopeAnalyzer(root);
 
-            fCurrPackage = new PackageFragment(root.getPackage().getName());
+            //todo create package fragment
+            fCurrPackage = null; //= new PackageFragment(root.getPackage().getName());
 
             fAllowDefaultPackageImports = false;
             //            cu.getJavaProject().getOption(JavaCore.COMPILER_SOURCE, true).equals(JavaCore.VERSION_1_3);

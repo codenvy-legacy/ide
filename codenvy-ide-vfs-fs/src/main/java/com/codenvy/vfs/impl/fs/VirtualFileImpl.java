@@ -141,7 +141,7 @@ public class VirtualFileImpl implements VirtualFile {
         return mediaType;
     }
 
-    @Override
+//    @Override
     public VirtualFile setMediaType(String mediaType) throws VirtualFileSystemException {
         mountPoint.setProperty(this, "vfs:mimeType", mediaType);
         return this;

@@ -34,6 +34,6 @@ public interface ComputeCAProposalsMessage extends Message {
 
     String id();
 
-    String projectId();
+    String projectPath();
 
 }

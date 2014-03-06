@@ -50,6 +50,7 @@
     margin: 0px 0px -1px 1px;
     display: inline-block;
     background-position: center center;
+    padding: 0px 3px 0px 3px;
 }
 
 .label, .nodeNameInput {

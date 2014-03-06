@@ -18,6 +18,7 @@
 package com.codenvy.ide.ext.web.css;
 
 import com.codenvy.ide.MimeType;
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.ext.web.WebExtensionResource;
 import com.codenvy.ide.resources.model.File;
@@ -38,8 +39,8 @@ import javax.validation.constraints.NotNull;
 public class CssFileProvider extends NewResourceProvider {
 
     @Inject
-    public CssFileProvider(WebExtensionResource resources) {
-        super("Css css", "Css css", resources.css(), "css");
+    public CssFileProvider(IconRegistry iconRegistry) {
+        super("Css css", "Css css", iconRegistry.getIcon("web.css.file.small.icon"), "css");
     }
 
     /** {@inheritDoc} */

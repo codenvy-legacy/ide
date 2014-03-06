@@ -53,7 +53,7 @@ import com.codenvy.ide.ext.git.server.GitConnectionFactory;
 import com.codenvy.ide.ext.git.server.nativegit.NativeGitConnectionFactory;
 import com.codenvy.ide.ext.git.server.rest.GitService;
 import com.codenvy.ide.ext.github.server.rest.GitHubService;
-import com.codenvy.ide.ext.java.server.RestCodeAssistantJava;
+import com.codenvy.ide.ext.java.server.RestNameEnvironment;
 import com.codenvy.ide.ext.ssh.server.KeyService;
 import com.codenvy.ide.ext.ssh.server.SshKeyStore;
 import com.codenvy.ide.ext.ssh.server.UserProfileSshKeyStore;
@@ -114,7 +114,7 @@ public class ApiModule extends AbstractModule {
         bind(SlaveRunnerService.class);
         bind(DeployToApplicationServerRunner.class);
         bind(UserService.class);
-        bind(RestCodeAssistantJava.class);
+        bind(RestNameEnvironment.class);
         bind(AsynchronousJobPool.class).to(CodenvyAsynchronousJobPool.class);
         bind(new PathKey<>(AsynchronousJobService.class, "/async/{ws-id}")).to(AsynchronousJobService.class);
         bind(GitService.class);
