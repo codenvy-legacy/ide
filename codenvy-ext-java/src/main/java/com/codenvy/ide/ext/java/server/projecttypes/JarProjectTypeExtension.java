@@ -69,11 +69,11 @@ public class JarProjectTypeExtension implements ProjectTypeExtension {
                                                 "MAVEN JAR PROJECT",
                                                 "Simple JAR project which uses Maven build system.",
                                                 "templates/MavenJar.zip"));
-
-        list.add(new ProjectTemplateDescription("zip",
-                                                "ANT JAR PROJECT",
-                                                "Simple JAR project which uses Ant build system.",
-                                                "templates/AntJar.zip"));
+//TODO:temporary unregist Ant project
+//        list.add(new ProjectTemplateDescription("zip",
+//                                                "ANT JAR PROJECT",
+//                                                "Simple JAR project which uses Ant build system.",
+//                                                "templates/AntJar.zip"));
         return list;
     }
 

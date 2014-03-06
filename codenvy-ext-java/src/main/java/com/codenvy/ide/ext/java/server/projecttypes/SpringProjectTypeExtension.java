@@ -58,6 +58,8 @@ public class SpringProjectTypeExtension implements ProjectTypeExtension {
         list.add(new Attribute("language", "java"));
         list.add(new Attribute("framework", "spring"));
         list.add(new Attribute("runner.name", "webapps"));
+        //TODO
+        list.add(new Attribute("builder.name","maven"));
         return list;
     }
 
@@ -69,10 +71,11 @@ public class SpringProjectTypeExtension implements ProjectTypeExtension {
                                                 "Simple Spring project which uses Maven build system.",
                                                 "templates/MavenSpring.zip"));
 
-        list.add(new ProjectTemplateDescription("zip",
-                                                "ANT SPRING APPLICATION",
-                                                "Simple Spring project which uses Ant build system.",
-                                                "templates/AntSpring.zip"));
+//TODO:temporary unregist Ant project
+//        list.add(new ProjectTemplateDescription("zip",
+//                                                "ANT SPRING APPLICATION",
+//                                                "Simple Spring project which uses Ant build system.",
+//                                                "templates/AntSpring.zip"));
         return list;
     }
 

@@ -58,6 +58,8 @@ public class WarProjectTypeExtension implements ProjectTypeExtension {
         list.add(new Attribute("language", "java"));
         list.add(new Attribute("framework", "web_application"));
         list.add(new Attribute("runner.name", "webapps"));
+        //TODO
+        list.add(new Attribute("builder.name","maven"));
         return list;
     }
 
