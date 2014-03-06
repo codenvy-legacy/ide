@@ -340,4 +340,14 @@ public class DarkTheme implements Theme {
     public String getMainMenuFontColor() {
         return "#dbdbdb";
     }
+
+    @Override
+    public String getNotableButtonTopColor() {
+        return "#dbdbdb";
+    }
+
+    @Override
+    public String getNotableButtonColor() {
+        return "#2d6ba3";
+    }
 }
