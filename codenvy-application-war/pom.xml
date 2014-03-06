@@ -135,6 +135,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-user</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.codenvy.platform-api-gwt-client</groupId>
             <artifactId>codenvy-api-project-gwt-client</artifactId>
             <version>${codenvy.platform-api-gwt-client.version}</version>
@@ -163,12 +168,6 @@
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-project</artifactId>
-            <version>${com.codenvy.platform-api.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.platform-api</groupId>
-            <artifactId>codenvy-api-user</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
             <scope>provided</scope>
         </dependency>
@@ -303,7 +302,7 @@
                             </tasks>
                         </configuration>
                     </execution>
-                     <execution>
+                    <execution>
                         <id>buildnumber</id>
                         <phase>compile</phase>
                         <goals>
@@ -311,8 +310,7 @@
                         </goals>
                         <configuration>
                             <tasks>
-                                <echo append="false" file="${project.build.directory}/classes/com/codenvy/ide/BuildInfo.properties">
-                                    revision = ${revision}
+                                <echo append="false" file="${project.build.directory}/classes/com/codenvy/ide/BuildInfo.properties">revision = ${revision}
                                     buildTime = ${timestamp}
                                     version = ${project.version}</echo>
                             </tasks>
