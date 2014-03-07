@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- * 
- *  [2012] - [2013] Codenvy, S.A. 
+ *
+ *  [2012] - [2013] Codenvy, S.A.
  *  All Rights Reserved.
- * 
+ *
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -15,27 +15,15 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.security.jaas;
+package com.codenvy.ide.security.oauth.server;
 
-import java.security.Principal;
-
-/** @author andrew00x */
-public class UserPrincipal implements Principal {
-    private final String name;
-
-    public UserPrincipal(String name) {
-        this.name = name;
+@SuppressWarnings("serial")
+public final class OAuthAuthenticationException extends Exception {
+    public OAuthAuthenticationException(String message) {
+        super(message);
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public String toString() {
-        return "UserPrincipal{" +
-               "name='" + name + '\'' +
-               '}';
+    public OAuthAuthenticationException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

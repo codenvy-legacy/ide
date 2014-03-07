@@ -63,10 +63,10 @@
         <module>codenvy-sdk-tutorials/notification-api</module>
         <module>codenvy-sdk-tutorials/new-resource-wizard</module>
         <module>codenvy-sdk-tutorials/editor-api</module>
-	<module>codenvy-sdk-tutorials/empty-ext</module>
+        <module>codenvy-sdk-tutorials/empty-ext</module>
         <module>codenvy-sdk-tutorials/gin</module>
         <module>codenvy-sdk-tutorials/gist-ext</module>
-	<module>codenvy-sdk-tutorials/helloworld-ext</module>
+        <module>codenvy-sdk-tutorials/helloworld-ext</module>
         <module>codenvy-sdk-tutorials/wysiwyg-editor</module>
         <module>codenvy-application-war</module>
         <module>codenvy-sdk-private-dependencies</module>
@@ -89,7 +89,6 @@
         <codenvy.ide-codeassistant-index.version>20120627</codenvy.ide-codeassistant-index.version>
         <codenvy.platform-api-gwt-client.version>0.1.1-SNAPSHOT</codenvy.platform-api-gwt-client.version>
         <com.codenvy.commons.version>0.16.0-SNAPSHOT</com.codenvy.commons.version>
-        <com.codenvy.organization.version>0.14.0-SNAPSHOT</com.codenvy.organization.version>
         <com.codenvy.platform-api.version>0.10.0-SNAPSHOT</com.codenvy.platform-api.version>
         <com.codenvy.security.version>0.3.0-SNAPSHOT</com.codenvy.security.version>
         <commons-codec.version>1.6</commons-codec.version>
@@ -101,6 +100,7 @@
         <exo.product.name>codenvy-ide</exo.product.name>
         <failsafe.plugin.version>2.6</failsafe.plugin.version>
         <gin.version>2.1.2</gin.version>
+        <google.api.client.version>1.9.0-beta</google.api.client.version>
         <gson.version>2.1</gson.version>
         <guava.version>12.0.1</guava.version>
         <gwt-test-utils.version>0.45</gwt-test-utils.version>
