@@ -29,7 +29,7 @@ import org.exoplatform.ide.git.client.history.ShowInHistoryEvent;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 29, 2011 3:04:01 PM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class ShowHistoryControl extends GitControl {
     public ShowHistoryControl() {
         super(GitExtension.MESSAGES.historyControlId());

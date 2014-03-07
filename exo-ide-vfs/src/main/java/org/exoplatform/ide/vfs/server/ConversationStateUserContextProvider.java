@@ -40,11 +40,11 @@ public class ConversationStateUserContextProvider implements VirtualFileSystemUs
                 return new VirtualFileSystemUser(VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL, Collections.<String>emptySet());
             }
             final Identity identity = cs.getIdentity();
-            final Set<String > groups = new HashSet<String>(2);
-            if (identity.getRoles().contains("developer")) {
+            final Set<String > groups = new HashSet<>(2);
+            if (identity.getRoles().contains("workspace/developer")) {
                 groups.add("workspace/developer");
             }
-            if (identity.getRoles().contains("admin")) {
+            if (identity.getRoles().contains("workspace/admin")) {
                 groups.add("workspace/admin");
             }
             return new VirtualFileSystemUser(identity.getUserId(), groups);

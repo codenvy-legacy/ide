@@ -34,7 +34,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class SendCodePointerControl extends SimpleControl implements IDEControl, ViewActivatedHandler, ProjectOpenedHandler,
                                                                      CollaborationChangedHandler {
 

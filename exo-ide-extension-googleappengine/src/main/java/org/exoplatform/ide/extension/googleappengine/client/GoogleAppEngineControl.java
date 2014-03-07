@@ -25,7 +25,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 16, 2012 5:38:16 PM anya $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class GoogleAppEngineControl extends SimpleControl implements IDEControl {
 
     private static final String ID    = "PaaS/Google App Engine";

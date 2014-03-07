@@ -402,7 +402,7 @@ public final class ResourcesPlugin {
      *         plug-in class.
      */
     public static IWorkspace getWorkspace() {
-        Object tenantName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID); 
+        Object tenantName = EnvironmentContext.getCurrent().getWorkspaceId();
         if (tenantName != null) {
             if (workspaceMap.containsKey(tenantName)) {
                 return workspaceMap.get(tenantName);
@@ -425,8 +425,8 @@ public final class ResourcesPlugin {
     }
 
     public static void addWorkspace(IWorkspace workspace) {
-        Object tenantName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
-        workspaceMap.put((String)tenantName, workspace);
+        String tenantName = EnvironmentContext.getCurrent().getWorkspaceId();
+        workspaceMap.put(tenantName, workspace);
     }
 
     //	/**

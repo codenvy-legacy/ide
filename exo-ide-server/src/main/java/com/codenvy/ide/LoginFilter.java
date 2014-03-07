@@ -65,7 +65,7 @@ public class LoginFilter implements Filter {
         final HttpServletResponse httpResp = (HttpServletResponse)response;
         
         IdentityRegistry identityRegistry =  (IdentityRegistry)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(IdentityRegistry.class);
-        List<String> roles = Arrays.asList("admin", "developer");
+        List<String> roles = Arrays.asList("workspace/admin", "workspace/developer");
         identityRegistry.register((new Identity("tmp-user125",
                                                                         new HashSet<MembershipEntry>(), roles)));
         

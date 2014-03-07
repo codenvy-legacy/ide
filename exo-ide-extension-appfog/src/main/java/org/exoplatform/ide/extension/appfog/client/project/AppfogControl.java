@@ -37,7 +37,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class AppfogControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
         ProjectClosedHandler, FolderRefreshedHandler {
     

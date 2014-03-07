@@ -28,7 +28,7 @@ import org.exoplatform.ide.extension.appfog.client.apps.ShowApplicationsEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class ApplicationsControl extends AbstractAppfogControl {
     public ApplicationsControl() {
         super(AppfogExtension.LOCALIZATION_CONSTANT.appsControlId());

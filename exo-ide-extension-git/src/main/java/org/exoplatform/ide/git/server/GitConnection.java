@@ -17,36 +17,7 @@
  */
 package org.exoplatform.ide.git.server;
 
-import org.exoplatform.ide.git.shared.AddRequest;
-import org.exoplatform.ide.git.shared.Branch;
-import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
-import org.exoplatform.ide.git.shared.BranchCreateRequest;
-import org.exoplatform.ide.git.shared.BranchDeleteRequest;
-import org.exoplatform.ide.git.shared.BranchListRequest;
-import org.exoplatform.ide.git.shared.CloneRequest;
-import org.exoplatform.ide.git.shared.CommitRequest;
-import org.exoplatform.ide.git.shared.DiffRequest;
-import org.exoplatform.ide.git.shared.FetchRequest;
-import org.exoplatform.ide.git.shared.GitUser;
-import org.exoplatform.ide.git.shared.InitRequest;
-import org.exoplatform.ide.git.shared.LogRequest;
-import org.exoplatform.ide.git.shared.MergeRequest;
-import org.exoplatform.ide.git.shared.MergeResult;
-import org.exoplatform.ide.git.shared.MoveRequest;
-import org.exoplatform.ide.git.shared.PullRequest;
-import org.exoplatform.ide.git.shared.PushRequest;
-import org.exoplatform.ide.git.shared.Remote;
-import org.exoplatform.ide.git.shared.RemoteAddRequest;
-import org.exoplatform.ide.git.shared.RemoteListRequest;
-import org.exoplatform.ide.git.shared.RemoteUpdateRequest;
-import org.exoplatform.ide.git.shared.ResetRequest;
-import org.exoplatform.ide.git.shared.Revision;
-import org.exoplatform.ide.git.shared.RmRequest;
-import org.exoplatform.ide.git.shared.Status;
-import org.exoplatform.ide.git.shared.Tag;
-import org.exoplatform.ide.git.shared.TagCreateRequest;
-import org.exoplatform.ide.git.shared.TagDeleteRequest;
-import org.exoplatform.ide.git.shared.TagListRequest;
+import org.exoplatform.ide.git.shared.*;
 
 import java.net.URISyntaxException;
 import java.util.List;
@@ -194,6 +165,16 @@ public interface GitConnection {
      * @see LogRequest
      */
     LogPage log(LogRequest request) throws GitException;
+
+    /**
+     * List references in a remote repository.
+     *
+     * @param request ls-remote request
+     * @return list references in a remote repository.
+     * @throws GitException if any error occurs
+     * @see LsRemoteRequest
+     */
+    List<RemoteReference> lsRemote(LsRemoteRequest request) throws GitException;
 
     /**
      * Merge commits.

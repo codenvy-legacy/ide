@@ -28,7 +28,7 @@ import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class BuildControl extends SimpleControl implements IDEControl {
 
     /** @param id */

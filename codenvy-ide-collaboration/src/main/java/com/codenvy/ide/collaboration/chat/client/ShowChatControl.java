@@ -34,7 +34,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class ShowChatControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler,
                                                               CollaborationChangedHandler {
     public static final String ID = "View/Collaboration";

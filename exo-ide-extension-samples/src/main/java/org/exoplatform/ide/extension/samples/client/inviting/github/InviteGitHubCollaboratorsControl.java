@@ -35,7 +35,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 @DisableInTempWorkspace
 public class InviteGitHubCollaboratorsControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
                                                                                ProjectClosedHandler, FolderRefreshedHandler {

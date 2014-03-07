@@ -46,7 +46,7 @@ import java.util.List;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class SaveFileAsControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
                                                                 ItemsSelectedHandler, VfsChangedHandler, ViewVisibilityChangedHandler {
 

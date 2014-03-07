@@ -29,7 +29,7 @@ import org.exoplatform.ide.git.client.delete.DeleteRepositoryEvent;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 21, 2011 5:40:27 PM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class DeleteRepositoryControl extends GitControl {
 
     public DeleteRepositoryControl() {

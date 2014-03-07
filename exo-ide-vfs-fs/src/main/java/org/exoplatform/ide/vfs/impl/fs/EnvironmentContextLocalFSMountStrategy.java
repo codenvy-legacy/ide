@@ -26,7 +26,7 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
- * @see org.exoplatform.ide.commons.EnvironmentContext
+ * @see com.codenvy.commons.env.EnvironmentContext
  * @see MountPoint
  * @see LocalFileSystem
  */
@@ -55,7 +55,7 @@ public class EnvironmentContextLocalFSMountStrategy implements LocalFSMountStrat
     public java.io.File getMountPath(String workspaceId) throws VirtualFileSystemException {
         final EnvironmentContext context = EnvironmentContext.getCurrent();
         if (workspaceId == null) {
-            workspaceId = (String)context.getVariable(EnvironmentContext.WORKSPACE_ID);
+            workspaceId = context.getWorkspaceId();
         }
         if (workspaceId == null || workspaceId.isEmpty()) {
             throw new VirtualFileSystemException("Unable get mount path for virtual file system. Workspace id is not set.");

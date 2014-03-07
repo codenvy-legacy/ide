@@ -68,6 +68,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -161,14 +162,16 @@ public abstract class LocalFileSystemTest extends TestCase {
 
         // RUNTIME VARIABLES
         Identity identity = new Identity("admin");
-        identity.setRoles(Arrays.asList("developer"));
+        identity.setRoles(Arrays.asList("workspace/developer"));
         ConversationState user = new ConversationState(identity);
         ConversationState.setCurrent(user);
 
         EnvironmentContext env = EnvironmentContext.getCurrent();
-        env.setVariable(EnvironmentContext.VFS_ROOT_DIR, root);
-        env.setVariable(EnvironmentContext.WORKSPACE_ID, MY_WORKSPACE_ID);
-        env.setVariable(EnvironmentContext.WORKSPACE_NAME, MY_WORKSPACE_ID);
+        Method method = env.getClass().getDeclaredMethod("setVariable", String.class, Object.class);
+        method.setAccessible(true);
+        method.invoke(env, EnvironmentContext.VFS_ROOT_DIR, root);
+        env.setWorkspaceId(MY_WORKSPACE_ID);
+        env.setWorkspaceName(MY_WORKSPACE_ID);
     }
 
     // Directory "fs-root" in "target" folder of maven project.

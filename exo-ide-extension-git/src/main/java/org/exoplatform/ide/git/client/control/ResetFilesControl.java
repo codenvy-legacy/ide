@@ -29,7 +29,7 @@ import org.exoplatform.ide.git.client.reset.ResetFilesEvent;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 13, 2011 4:00:45 PM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class ResetFilesControl extends GitControl {
     public ResetFilesControl() {
         super(GitExtension.MESSAGES.resetFilesControlId());

@@ -65,7 +65,7 @@ public class KeyService {
     /** Generate SSH key pair. */
     @POST
     @Path("gen")
-    @RolesAllowed({"developer"})
+    @RolesAllowed({"workspace/developer"})
     @Consumes({MediaType.APPLICATION_JSON})
     public void genKeyPair(GenKeyRequest request) throws SshKeyStoreException {
         keyStore.genKeyPair(request.getHost(), request.getComment(), request.getPassphrase());
@@ -75,7 +75,7 @@ public class KeyService {
     @POST
     @Path("add")
     @Consumes({MediaType.MULTIPART_FORM_DATA})
-    @RolesAllowed({"developer"})
+    @RolesAllowed({"workspace/developer"})
     public Response addPrivateKey(@HeaderParam(HTTPHeader.CONTENT_LENGTH) Long length,
                                   @QueryParam("host") String host,
                                   Iterator<FileItem> iterator) throws SshKeyStoreException {
@@ -118,7 +118,7 @@ public class KeyService {
      * @see {@link SshKeyStore#getPublicKey(String)}
      */
     @GET
-    @RolesAllowed({"developer"})
+    @RolesAllowed({"workspace/developer"})
     @Produces({MediaType.APPLICATION_JSON})
     public PublicKey getPublicKey(@QueryParam("host") String host) throws SshKeyStoreException {
         SshKey publicKey = keyStore.getPublicKey(host);
@@ -133,7 +133,7 @@ public class KeyService {
     /** Remove SSH keys. */
     @POST
     @Path("remove")
-    @RolesAllowed({"developer"})
+    @RolesAllowed({"workspace/developer"})
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
     public void removeKeys(@FormParam("host") String host) throws SshKeyStoreException {
         keyStore.removeKeys(host);
@@ -141,7 +141,7 @@ public class KeyService {
 
     @GET
     @Path("all")
-    @RolesAllowed({"developer"})
+    @RolesAllowed({"workspace/developer"})
     @Produces({MediaType.APPLICATION_JSON})
     public ListKeyItem getKeys() throws SshKeyStoreException {
         Set<String> hosts = keyStore.getAll();

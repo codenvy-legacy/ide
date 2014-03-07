@@ -29,7 +29,7 @@ import org.exoplatform.ide.git.client.merge.MergeEvent;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 20, 2011 12:31:07 PM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class MergeControl extends GitControl {
     public MergeControl() {
         super(GitExtension.MESSAGES.mergeControlId());

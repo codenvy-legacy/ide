@@ -71,8 +71,8 @@ public abstract class ResourcesBaseTest {
         eventListenerList = new EventListenerList();
         memoryContext = new MemoryFileSystemContext();
         EnvironmentContext env = EnvironmentContext.getCurrent();
-        env.setVariable(EnvironmentContext.WORKSPACE_ID, ID);
-        env.setVariable(EnvironmentContext.WORKSPACE_NAME, ID);
+        env.setWorkspaceId(ID);
+        env.setWorkspaceName(ID);
 
         virtualFileSystemRegistry.registerProvider(ID, new MemoryFileSystemProvider(ID, memoryContext));
         vfs = virtualFileSystemRegistry.getProvider(ID).newInstance(null, eventListenerList);

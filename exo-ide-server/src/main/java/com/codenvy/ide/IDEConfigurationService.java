@@ -89,7 +89,7 @@ public class IDEConfigurationService {
     public Map<String, Object> inializationParameters(@Context UriInfo uriInfo, @Context HttpServletRequest request) {
 
         try {
-            String vfsId = (String)EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
+            String vfsId = EnvironmentContext.getCurrent().getWorkspaceId();
             Map<String, Object> result = new HashMap<String, Object>();
             ConversationState curentState = ConversationState.getCurrent();
             Identity identity = curentState.getIdentity();
@@ -136,14 +136,14 @@ public class IDEConfigurationService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"developer"})
+    @RolesAllowed({"workspace/developer"})
     public String getConfiguration() {
         return "{}"; // TODO: small hack add for supporting previous version of IDE. In 1.2 changed structure of user settings
     }
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"developer"})
+    @RolesAllowed({"workspace/developer"})
     public void setConfiguration(String body) throws IOException {
         // not impl yet
     }

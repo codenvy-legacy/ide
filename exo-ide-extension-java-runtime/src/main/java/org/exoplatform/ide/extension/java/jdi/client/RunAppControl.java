@@ -37,7 +37,7 @@ import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class RunAppControl extends SimpleControl implements IDEControl,
                                                             ProjectOpenedHandler,
                                                             AppStartedHandler, AppStoppedHandler, ItemsSelectedHandler {

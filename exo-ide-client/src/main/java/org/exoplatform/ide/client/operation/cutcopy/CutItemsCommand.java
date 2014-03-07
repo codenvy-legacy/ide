@@ -42,7 +42,7 @@ import java.util.List;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class CutItemsCommand extends SimpleControl implements IDEControl, VfsChangedHandler, ItemsSelectedHandler,
                                                               ViewActivatedHandler {
 

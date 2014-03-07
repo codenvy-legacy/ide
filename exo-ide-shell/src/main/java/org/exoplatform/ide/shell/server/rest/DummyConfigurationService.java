@@ -40,7 +40,7 @@ public class DummyConfigurationService {
     @GET
     @Path("/init")
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"developer"})
+    @RolesAllowed({"workspace/developer"})
     public Map<String, Object> inializationParameters(@Context UriInfo uriInfo, @Context HttpServletRequest request) {
 
         Map<String, Object> result = new HashMap<String, Object>();

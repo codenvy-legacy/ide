@@ -27,7 +27,7 @@ import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class CreatePackageControl extends JavaControl {
 
     private static final String ID = "File/New/New Package";

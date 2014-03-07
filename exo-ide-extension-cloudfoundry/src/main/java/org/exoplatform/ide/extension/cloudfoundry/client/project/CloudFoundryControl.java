@@ -41,7 +41,7 @@ import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExte
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 2, 2011 5:39:01 PM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class CloudFoundryControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
                                                       ProjectClosedHandler, FolderRefreshedHandler {
     private static final String CF_ID     = "Project/PaaS/CloudFoundry";

@@ -31,7 +31,7 @@ import org.exoplatform.ide.client.framework.job.Job;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Sep 16, 2011 evgen $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class ProgressNotificationControl extends StatusTextControl implements IDEControl {
 
     public static final String ID = "__request-notification-control";

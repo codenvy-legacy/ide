@@ -81,7 +81,7 @@ public class CLIResourceFactory {
                     CLIResource cli = sub.get(method);
                     if (cli != null) {
                         CLIResource copy = CLIResource.newInstance(cli);
-                        copy.setPath(copy.getPath().replace("{ws-name}", EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString()));
+                        copy.setPath(copy.getPath().replace("{ws-name}", EnvironmentContext.getCurrent().getWorkspaceName()));
                         return copy;
                     }
                 }

@@ -29,7 +29,7 @@ import org.exoplatform.ide.extension.logreader.client.event.ShowLogReaderEvent;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class LogReaderControl extends SimpleControl implements IDEControl {
     /** Control ID. */
     public static final String ID = "View/Log";

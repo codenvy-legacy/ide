@@ -27,7 +27,7 @@ import org.exoplatform.ide.extension.appfog.client.AppfogExtension;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class AppfogControlGroup extends SimpleControl implements IDEControl {
 
     private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.appfogControlId();

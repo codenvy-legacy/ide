@@ -131,7 +131,7 @@ public class ExpressService {
             properties.add(isGitRepositoryProperty);
             vfs.updateItem(projectId, properties, null);
         }
-        LOG.info("EVENT#application-created# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
+        LOG.info("EVENT#application-created# WS#" + EnvironmentContext.getCurrent().getWorkspaceName()
                  + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
                  + "# PAAS#OpenShift#");
         return application;

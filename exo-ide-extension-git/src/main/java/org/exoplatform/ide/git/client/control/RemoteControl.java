@@ -26,7 +26,7 @@ import org.exoplatform.ide.git.client.GitExtension;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class RemoteControl extends GitControl {
     public RemoteControl() {
         super(GitExtension.MESSAGES.remoteControlId());

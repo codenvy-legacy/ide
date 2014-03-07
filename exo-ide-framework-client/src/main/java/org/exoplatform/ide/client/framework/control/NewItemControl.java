@@ -27,7 +27,7 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class NewItemControl extends SimpleControl implements IDEControl {
 
     private String mimeType;

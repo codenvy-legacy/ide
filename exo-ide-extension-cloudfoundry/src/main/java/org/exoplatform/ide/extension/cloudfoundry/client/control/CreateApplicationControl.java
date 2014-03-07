@@ -42,7 +42,7 @@ import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExte
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateApplicationControl.java Jul 7, 2011 5:32:27 PM vereshchaka $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class CreateApplicationControl extends AbstractCloudFoundryControl implements ProjectOpenedHandler,
                                                                          ProjectClosedHandler, PropertiesChangedHandler {
 

@@ -34,7 +34,7 @@ import org.exoplatform.ide.extension.python.client.run.event.ApplicationStartedH
 import org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedEvent;
 import org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedHandler;
 
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class ShowLogsControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
                                                               ApplicationStartedHandler, ApplicationStoppedHandler {
     private static final String ID = "Run/Python Logs";

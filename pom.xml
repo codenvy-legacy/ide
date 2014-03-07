@@ -8,7 +8,7 @@
     </parent>
     <groupId>org.exoplatform.ide</groupId>
     <artifactId>exo-ide-parent</artifactId>
-    <version>2.11.3-SNAPSHOT</version>
+    <version>2.12.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Codenvy IDE :: Parent</name>
     <modules>
@@ -88,12 +88,12 @@
         <aws-java-sdk.version>1.3.17</aws-java-sdk.version>
         <chromattic.version>1.1.0-beta6</chromattic.version>
         <cloudbees-api-client.version>1.5.4</cloudbees-api-client.version>
-        <codenvy.commons.version>0.14.0</codenvy.commons.version>
-        <codenvy.factory.version>0.5.1</codenvy.factory.version>
+        <codenvy.commons.version>0.15.0</codenvy.commons.version>
+        <codenvy.factory.version>0.6.0</codenvy.factory.version>
         <codenvy.ide-codeassistant-index.version>20120627</codenvy.ide-codeassistant-index.version>
-        <codenvy.organization.version>0.11.0</codenvy.organization.version>
-        <codenvy.platform-api.version>0.8.2</codenvy.platform-api.version>
-        <codenvy.security.version>0.1.0</codenvy.security.version>
+        <codenvy.organization.version>0.12.0</codenvy.organization.version>
+        <codenvy.platform-api.version>0.9.0</codenvy.platform-api.version>
+        <codenvy.security.version>0.2.0</codenvy.security.version>
         <commons-codec.version>1.6</commons-codec.version>
         <commons-compress.version>1.0</commons-compress.version>
         <commons-configuration.version>1.8</commons-configuration.version>
@@ -102,7 +102,7 @@
         <commons-lang.version>2.6</commons-lang.version>
         <crash.version>1.0.0-beta21</crash.version>
         <easymock.version>3.1</easymock.version>
-        <everrest.assured>0.15</everrest.assured>
+        <everrest.assured>0.17</everrest.assured>
         <everrest.version>1.1.9</everrest.version>
         <fest-assert.version>1.4</fest-assert.version>
         <gdata.version>1.47.1</gdata.version>

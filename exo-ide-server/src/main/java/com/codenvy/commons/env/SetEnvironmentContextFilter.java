@@ -15,38 +15,17 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide;
+package com.codenvy.commons.env;
 
-import com.codenvy.commons.env.EnvironmentContext;
-
-import javax.servlet.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.exoplatform.services.security.ConversationState;
-import org.exoplatform.services.security.Identity;
-import org.exoplatform.services.security.MembershipEntry;
-
-import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.organization.client.WorkspaceManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
 import com.codenvy.organization.model.Workspace;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.util.*;
 
 public class SetEnvironmentContextFilter implements Filter {
     private Map<String, Object> env;
@@ -54,28 +33,25 @@ public class SetEnvironmentContextFilter implements Filter {
 
     /** Set current {@link EnvironmentContext} */
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-                                                                                             ServletException {
+                                                                                                     ServletException {
         try {
             String url = ((HttpServletRequest)request).getRequestURI();
-            if (url.contains("/rest/") || url.contains("/websocket/"))
-            {
+            if (url.contains("/rest/") || url.contains("/websocket/")) {
                 String[] split = url.split("/");
                 String ws = split[3];
-                if (ws.equals("ide"))
-                {
+                if (ws.equals("ide")) {
                     chain.doFilter(request, response);
                     return;
                 }
-                if (workspaceManager != null)
-                {
+                if (workspaceManager != null) {
                     try {
                         Workspace workspace = workspaceManager.getWorkspaceByName(ws);
                         EnvironmentContext environment = EnvironmentContext.getCurrent();
                         for (Map.Entry<String, Object> entry : env.entrySet()) {
                             environment.setVariable(entry.getKey(), entry.getValue());
                         }
-                        environment.setVariable(EnvironmentContext.WORKSPACE_NAME, ws);
-                        environment.setVariable(EnvironmentContext.WORKSPACE_ID, ws);
+                        environment.setWorkspaceName(ws);
+                        environment.setWorkspaceId(ws);
                         chain.doFilter(request, response);
                     } catch (OrganizationServiceException e) {
                         HttpServletResponse httpResponse = (HttpServletResponse)response;

@@ -208,7 +208,7 @@ public class AppEngineClient {
             Project project = (Project) vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
             if (ProjectType.JAVA == getApplicationType(vfs, project) && binaries != null) {
                 LOG.info("EVENT#application-created# WS#"
-                        + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME) + "# USER#" + userId
+                        + EnvironmentContext.getCurrent().getWorkspaceName() + "# USER#" + userId
                         + "# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
                         + "# PAAS#GAE#");
             }
@@ -358,7 +358,7 @@ public class AppEngineClient {
                     writeProjectProperty(vfs, projectId, "gae-target", app.getServer());
                 }
                 LOG.info("EVENT#application-created# WS#"
-                         + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME) + "# USER#" + userId
+                         + EnvironmentContext.getCurrent().getWorkspaceName() + "# USER#" + userId
                          + "# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
                          + "# PAAS#GAE#");
                 return app;
@@ -383,7 +383,7 @@ public class AppEngineClient {
                     writeProjectProperty(vfs, projectId, "gae-target", app.getServer());
                 }
                 LOG.info("EVENT#application-created# WS#"
-                         + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME) + "# USER#" + userId
+                         + EnvironmentContext.getCurrent().getWorkspaceName() + "# USER#" + userId
                          + "# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
                          + "# PAAS#GAE#");
                 return app;

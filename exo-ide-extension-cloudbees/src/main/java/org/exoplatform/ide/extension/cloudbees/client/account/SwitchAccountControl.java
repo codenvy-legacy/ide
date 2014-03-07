@@ -33,7 +33,7 @@ import org.exoplatform.ide.extension.cloudbees.client.login.LoginEvent;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 5, 2012 5:02:29 PM anya $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class SwitchAccountControl extends SimpleControl implements IDEControl, VfsChangedHandler {
     private static final String ID = CloudBeesExtension.LOCALIZATION_CONSTANT.controlSwitchAccountId();
 

@@ -29,7 +29,7 @@ import org.exoplatform.ide.git.client.status.ShowWorkTreeStatusEvent;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 28, 2011 2:57:35 PM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class ShowStatusControl extends GitControl {
     public ShowStatusControl() {
         super(GitExtension.MESSAGES.statusControlId());

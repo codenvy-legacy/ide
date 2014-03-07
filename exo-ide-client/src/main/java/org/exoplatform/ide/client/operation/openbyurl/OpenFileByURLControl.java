@@ -46,7 +46,7 @@ import java.util.List;
  * @version $
  */
 
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class OpenFileByURLControl extends SimpleControl implements IDEControl, VfsChangedHandler, ItemsSelectedHandler,
                                                                    ViewVisibilityChangedHandler {
 

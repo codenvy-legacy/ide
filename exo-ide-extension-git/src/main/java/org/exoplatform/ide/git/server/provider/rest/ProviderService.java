@@ -45,7 +45,7 @@ public class ProviderService {
      */
     @GET
     @Path("info")
-    @RolesAllowed({"developer"})
+    @RolesAllowed({"workspace/developer"})
     @Produces(MediaType.APPLICATION_JSON)
     public GitUrlVendorInfo getInfoForVcsUrl(@QueryParam("vcsurl") String vcsUrl) throws ProviderException {
         GitVendorService gitService = gitProvider.getGitServiceByUrlMatch(vcsUrl);
@@ -65,7 +65,7 @@ public class ProviderService {
      */
     @POST
     @Path("{vendor-name}/ssh/upload")
-    @RolesAllowed({"developer"})
+    @RolesAllowed({"workspace/developer"})
     public void uploadNewPublicKey(@PathParam("vendor-name") String vendorName) throws ProviderException, SshKeyStoreException {
         GitVendorService gitService = gitProvider.getGitService(vendorName);
         if (gitService == null) {

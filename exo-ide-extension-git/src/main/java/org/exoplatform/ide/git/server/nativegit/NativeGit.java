@@ -19,7 +19,6 @@ package org.exoplatform.ide.git.server.nativegit;
 
 import org.exoplatform.ide.git.server.GitException;
 import org.exoplatform.ide.git.server.nativegit.commands.*;
-import org.exoplatform.services.security.ConversationState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,6 +117,11 @@ public class NativeGit {
     /** @return log command */
     public LogCommand createLogCommand() {
         return new LogCommand(repository);
+    }
+
+    /** @return ls-remote command */
+    public LsRemoteCommand createLsRemoteCommand() {
+        return new LsRemoteCommand(repository);
     }
 
     /** @return add command */

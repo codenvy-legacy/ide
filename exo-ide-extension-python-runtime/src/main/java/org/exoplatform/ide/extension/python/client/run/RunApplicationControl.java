@@ -42,7 +42,7 @@ import org.exoplatform.ide.extension.python.client.run.event.RunApplicationEvent
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 20, 2012 2:58:43 PM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class RunApplicationControl extends SimpleControl implements IDEControl,
         ProjectClosedHandler, ProjectOpenedHandler, ApplicationStartedHandler, ApplicationStoppedHandler {
     

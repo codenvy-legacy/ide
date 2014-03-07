@@ -29,7 +29,7 @@ import org.exoplatform.ide.git.client.clone.CloneRepositoryEvent;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 22, 2011 3:49:23 PM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class CloneRepositoryControl extends GitControl {
 
     public CloneRepositoryControl() {

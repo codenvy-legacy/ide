@@ -109,8 +109,8 @@ public abstract class MemoryFileSystemTest extends TestCase {
         ConversationState user = new ConversationState(new Identity("john"));
         ConversationState.setCurrent(user);
         EnvironmentContext env = EnvironmentContext.getCurrent();
-        env.setVariable(EnvironmentContext.WORKSPACE_ID, MY_WORKSPACE_ID);
-        env.setVariable(EnvironmentContext.WORKSPACE_NAME, MY_WORKSPACE_ID);
+        env.setWorkspaceId(MY_WORKSPACE_ID);
+        env.setWorkspaceName(MY_WORKSPACE_ID);
     }
 
     /** @see junit.framework.TestCase#tearDown() */

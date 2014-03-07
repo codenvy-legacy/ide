@@ -17,22 +17,18 @@
  */
 package com.codenvy.ide.everrest;
 
-import com.codenvy.api.core.user.UserState;
 import com.codenvy.commons.env.EnvironmentContext;
-
 import org.everrest.core.impl.EverrestConfiguration;
 import org.everrest.core.impl.async.AsynchronousJob;
 import org.everrest.core.impl.async.AsynchronousJobPool;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.*;
-
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
-
 
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
@@ -67,14 +63,14 @@ public class CodenvyAsynchronousJobPool extends AsynchronousJobPool implements C
         final String internalJobUri =
                 UriBuilder.fromPath("/").path(CodenvyAsynchronousJobService.class)
                           .path(CodenvyAsynchronousJobService.class, "get")
-                          .build(EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME), job.getJobId()).toString();
+                          .build(EnvironmentContext.getCurrent().getWorkspaceName(), job.getJobId()).toString();
         job.getContext().put("internal-uri", internalJobUri);
     }
 
     @Override
     protected UriBuilder getAsynchronousJobUriBuilder(AsynchronousJob job) {
         return UriBuilder.fromPath("/")
-                         .path((String)EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME))
+                         .path(EnvironmentContext.getCurrent().getWorkspaceName())
                          .path(asynchronousServicePath).path("/").path(Long.toString(job.getJobId()));
     }
 
@@ -86,15 +82,13 @@ public class CodenvyAsynchronousJobPool extends AsynchronousJobPool implements C
     private static class CallableWrapper implements Callable<Object> {
         private final EnvironmentContext envContext;
         private final ConversationState  conversationState;
-        private final UserState          userState;
         private final Callable<Object>   callable;
         private       Object             loggerContext;
 
         public CallableWrapper(Callable<Object> callable) {
             this.callable = callable;
             conversationState = ConversationState.getCurrent();
-            userState = UserState.get();
-            envContext = EnvironmentContext.getCurrent();
+            envContext = new EnvironmentContext(EnvironmentContext.getCurrent());
             if (setUpLogger) {
                 try {
                     loggerContext = mdc_getCopyOfContextMap.invoke(null);
@@ -108,7 +102,6 @@ public class CodenvyAsynchronousJobPool extends AsynchronousJobPool implements C
         public Object call() throws Exception {
             ConversationState.setCurrent(conversationState == null
                                          ? new ConversationState(new Identity(IdentityConstants.ANONIM)) : conversationState);
-            UserState.set(userState == null ? UserState.get() : userState);
             EnvironmentContext.setCurrent(envContext);
             if (loggerContext != null) {
                 try {
@@ -121,7 +114,6 @@ public class CodenvyAsynchronousJobPool extends AsynchronousJobPool implements C
                 return callable.call();
             } finally {
                 EnvironmentContext.reset();
-                UserState.reset();
                 ConversationState.setCurrent(null);
                 if (loggerContext != null) {
                     try {

@@ -153,7 +153,7 @@ public class AppfogService {
         String projectId = params.get("projectid");
         if (projectId != null) {
             Project proj = (Project)vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
-            LOG.info("EVENT#application-created# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
+            LOG.info("EVENT#application-created# WS#" + EnvironmentContext.getCurrent().getWorkspaceName()
                      + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + proj.getName() + "# TYPE#" + proj.getProjectType()
                      + "# PAAS#Appfog#");
         }

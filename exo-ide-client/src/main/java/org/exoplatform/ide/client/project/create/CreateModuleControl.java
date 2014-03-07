@@ -34,7 +34,7 @@ import org.exoplatform.ide.vfs.shared.Item;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class CreateModuleControl extends SimpleControl implements IDEControl, ItemsSelectedHandler {
 
     public static final String ID = "Project/New/Create Module...";

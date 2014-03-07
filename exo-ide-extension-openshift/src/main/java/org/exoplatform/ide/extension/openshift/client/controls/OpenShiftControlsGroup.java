@@ -29,7 +29,7 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 9, 2011 4:58:20 PM anya $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed({"workspace/developer"})
 public class OpenShiftControlsGroup extends SimpleControl implements IDEControl {
 
     public OpenShiftControlsGroup() {

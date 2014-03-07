@@ -29,7 +29,7 @@ import org.exoplatform.ide.extension.aws.client.AWSExtension;
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: EC2ManagerControl.java Sep 21, 2012 9:55:35 AM azatsarynnyy $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class EC2ManagerControl extends SimpleControl implements IDEControl {
     private static final String ID = AWSExtension.LOCALIZATION_CONSTANT.ec2ManagementControlId();
 

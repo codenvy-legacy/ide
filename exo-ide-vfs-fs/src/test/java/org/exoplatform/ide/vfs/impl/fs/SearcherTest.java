@@ -33,6 +33,7 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 
 import java.io.ByteArrayInputStream;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -98,7 +99,10 @@ public class SearcherTest extends LocalFileSystemTest {
         virtualFileSystemRegistry.registerProvider(MY_WORKSPACE_ID, provider);
         // set up index directory
         EnvironmentContext env = EnvironmentContext.getCurrent();
-        env.setVariable(EnvironmentContext.VFS_INDEX_DIR, root.getParentFile());
+
+        Method method = env.getClass().getDeclaredMethod("setVariable", String.class, Object.class);
+        method.setAccessible(true);
+        method.invoke(env, EnvironmentContext.VFS_INDEX_DIR, root.getParentFile());
 
         // Touch Searcher to initialize it.
         searcher = (CleanableSearcher)searcherProvider.getSearcher(mountPoint, true);

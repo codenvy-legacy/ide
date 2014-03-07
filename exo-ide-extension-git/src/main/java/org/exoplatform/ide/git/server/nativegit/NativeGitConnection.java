@@ -278,6 +278,29 @@ public class NativeGitConnection implements GitConnection {
         return new LogPage(nativeGit.createLogCommand().execute());
     }
 
+    /** @see org.exoplatform.ide.git.server.GitConnection#lsRemote(org.exoplatform.ide.git.shared.LsRemoteRequest) */
+    @Override
+    public List<RemoteReference> lsRemote(LsRemoteRequest request) throws GitException {
+        LsRemoteCommand command = nativeGit.createLsRemoteCommand().setRemoteUrl(request.getRemoteUrl());
+        if (request.isUseAuthorization()) {
+            executeWithCredentials(command, request.getRemoteUrl());
+        } else {
+            //create empty credentials
+            CredentialItem.Username username = new CredentialItem.Username();
+            username.setValue("");
+            CredentialItem.Password password = new CredentialItem.Password();
+            password.setValue("");
+            //set up empty credentials
+            command.setAskPassScriptPath(credentialsLoader.createGitAskPassScript(username, password).toString());
+            if (!nativeGit.getRepository().exists()) {
+                nativeGit.getRepository().mkdirs();
+            }
+
+            command.execute();
+        }
+        return command.getRemoteReferences();
+    }
+
     /** @see org.exoplatform.ide.git.server.GitConnection#merge(org.exoplatform.ide.git.shared.MergeRequest) */
     @Override
     public MergeResult merge(MergeRequest request) throws GitException {

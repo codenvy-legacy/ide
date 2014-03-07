@@ -31,7 +31,7 @@ import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuildProjectControl.java Feb 17, 2012 3:51:08 PM azatsarynnyy $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class BuildProjectControl extends BuildProjectControlAbstract implements IDEControl, ProjectClosedHandler,
                                                                                 ProjectOpenedHandler {
     public static final String ID = BuilderExtension.LOCALIZATION_CONSTANT.buildProjectControlId();

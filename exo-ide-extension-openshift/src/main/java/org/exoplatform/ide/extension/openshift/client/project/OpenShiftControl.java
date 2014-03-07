@@ -37,7 +37,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 5, 2011 9:55:32 AM anya $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class OpenShiftControl extends SimpleControl implements IDEControl,
         ProjectOpenedHandler, ProjectClosedHandler, FolderRefreshedHandler {
     

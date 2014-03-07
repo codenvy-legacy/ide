@@ -38,7 +38,7 @@ import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-@RolesAllowed("developer")
+@RolesAllowed({"workspace/developer"})
 public class PaaSManyMoAndroid extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
                                                                     BuildProjectHandler, ProjectBuiltHandler {
     public static final String ID = "PaaS/ManyMo Android/Deploy";
