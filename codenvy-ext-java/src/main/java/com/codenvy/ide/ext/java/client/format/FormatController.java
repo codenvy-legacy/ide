@@ -1,7 +1,10 @@
 package com.codenvy.ide.ext.java.client.format;
 
+import elemental.js.util.Json;
+
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
+import com.codenvy.ide.collections.Jso;
 import com.codenvy.ide.collections.js.JsoStringMap;
 import com.codenvy.ide.ext.java.client.editor.JavaParserWorker;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -38,12 +41,12 @@ public class FormatController {
         });
     }
     private void getFormattingCodenvySettings(){
-        service.formattingCodenvySettings(new AsyncRequestCallback<JsoStringMap<String>>() {
+        service.formattingCodenvySettings(new AsyncRequestCallback<String>(new com.codenvy.ide.rest.StringUnmarshaller()) {
             @Override
-            protected void onSuccess(JsoStringMap<String> result) {
-                worker.preferenceFormatsettings(result);
+            protected void onSuccess(String result) {
+                JsoStringMap<String> mapSettings = Jso.deserialize(result).cast();
+                worker.preferenceFormatsettings(mapSettings);
             }
-
             @Override
             protected void onFailure(Throwable throwable) {
 

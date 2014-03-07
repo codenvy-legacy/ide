@@ -18,7 +18,9 @@
 package com.codenvy.ide.preferences;
 
 import com.codenvy.ide.api.preferences.PreferencesManager;
-import com.codenvy.ide.api.user.UserClientService;
+import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
+import com.codenvy.api.user.gwt.client.UserServiceClient;
+import com.codenvy.api.user.shared.dto.Profile;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -35,9 +37,9 @@ import java.util.Map;
  */
 @Singleton
 public class PreferencesManagerImpl implements PreferencesManager {
-    private Map<String, String> persistedPreferences;
-    private Map<String, String> changedPreferences;
-    private UserClientService   userService;
+    private Map<String, String>      persistedPreferences;
+    private Map<String, String>      changedPreferences;
+    private UserProfileServiceClient userProfileService;
 
     /**
      * Create preferences.
@@ -45,10 +47,10 @@ public class PreferencesManagerImpl implements PreferencesManager {
      * @param userService
      */
     @Inject
-    protected PreferencesManagerImpl(UserClientService userService) {
+    protected PreferencesManagerImpl(UserProfileServiceClient userProfileService) {
         this.persistedPreferences = new HashMap<String, String>();
         this.changedPreferences = new HashMap<String, String>();
-        this.userService = userService;
+        this.userProfileService = userProfileService;
     }
 
     /** {@inheritDoc} */
@@ -77,13 +79,13 @@ public class PreferencesManagerImpl implements PreferencesManager {
 
     /** {@inheritDoc} */
     @Override
-    public void flushPreferences(final AsyncCallback<Void> callback) {
+    public void flushPreferences(final AsyncCallback<Profile> callback) {
         Map<String, String> attributes = new HashMap<String, String>();
         attributes.putAll(changedPreferences);
 
-        userService.updateUserAttributes(attributes, new AsyncRequestCallback<Void>() {
+       userProfileService.updatePreferences(attributes, new AsyncRequestCallback<Profile>() {
             @Override
-            protected void onSuccess(Void result) {
+            protected void onSuccess(Profile result) {
                 persistedPreferences.putAll(changedPreferences);
                 changedPreferences.clear();
                 callback.onSuccess(result);

@@ -146,12 +146,6 @@ public class StandardComponentInitializer {
     private ToolbarPresenter toolbarPresenter;
 
     @Inject
-    private WelcomePart welcomePart;
-
-    @Inject
-    private WelcomeLocalizationConstant welcomeConstant;
-
-    @Inject
     private CreateProjectAction createProjectAction;
 
     @Inject
@@ -269,11 +263,6 @@ public class StandardComponentInitializer {
         toolbarGroup.add(changeResourceGroup);
 
         toolbarPresenter.bindMainGroup(toolbarGroup);
-
-        welcomePart.addItem(createProjectAction);
-        welcomePart.addItem(showDocumentationAction);
-        welcomePart.addItem(inviteAction);
-        welcomePart.addItem(connectSupportAction);
 
         DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_MAIN_CONTEXT_MENU);
         contextMenuGroup.add(newGroup);

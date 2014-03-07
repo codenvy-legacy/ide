@@ -36,5 +36,5 @@ public interface ParseMessage extends Message {
 
     String packageName();
 
-    String projectId();
+    String projectPath();
 }

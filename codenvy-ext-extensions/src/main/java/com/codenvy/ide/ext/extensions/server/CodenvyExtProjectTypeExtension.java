@@ -27,16 +27,25 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /** @author Artem Zatsarynnyy */
 @Singleton
 public class CodenvyExtProjectTypeExtension implements ProjectTypeExtension {
+    private final Map<String, String> icons = new HashMap<>();
     private String baseUrl;
 
     @Inject
     public CodenvyExtProjectTypeExtension(@Named("extension-url") String baseUrl, ProjectTypeDescriptionRegistry registry) {
         this.baseUrl = baseUrl;
+        icons.put("codenvy_extension.projecttype.big.icon", "codenvy-ext/codenvy.jpg");
+        icons.put("war.projecttype.small.icon", "java-extension/web_app_big.png");
+        icons.put("war.folder.small.icon", "java-extension/package.gif");
+        icons.put("war.file.small.icon", "java-extension/java-class.png");
+        icons.put("java.class", "java-extension/java-class.png");
+        icons.put("java.package", "java-extension/package.gif");
         registry.registerProjectType(this);
     }
 
@@ -74,4 +83,11 @@ public class CodenvyExtProjectTypeExtension implements ProjectTypeExtension {
                                                 baseUrl + "/helloworld-extension.zip"));
         return list;
     }
+
+    @Override
+    public Map<String, String> getIconRegistry() {
+        return icons;
+    }
+
+
 }

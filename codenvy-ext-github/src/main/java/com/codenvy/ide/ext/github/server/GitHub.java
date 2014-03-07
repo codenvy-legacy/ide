@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.ext.github.server;
 
+import com.codenvy.api.user.server.dao.UserDao;
+import com.codenvy.api.user.server.exception.UserException;
 import com.codenvy.commons.json.JsonHelper;
 import com.codenvy.commons.json.JsonNameConventions;
 import com.codenvy.commons.json.JsonParseException;
@@ -43,6 +45,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -94,19 +97,22 @@ public class GitHub extends GitVendorService {
 
     /** Name of the link for the next page. */
     private static final String META_NEXT = "next";
+    
+    private final UserDao userDao;
 
     // TODO(GUICE): better name for properties ??
     @Inject
     public GitHub(@Named("github.user") String myGitHubUser,
                   OAuthTokenProvider oauthTokenProvider,
                   SshKeyStore sshKeyStore,
-                  @Named("github.vendorOAuthScopes") String[] vendorOAuthScopes) {
+                  @Named("github.vendorOAuthScopes") String[] vendorOAuthScopes, UserDao userDao) {
 
         super("github", "github.com", ".*github\\.com.*", vendorOAuthScopes, true, sshKeyStore);
 
         this.myGitHubUser = myGitHubUser;
         this.oauthTokenProvider = oauthTokenProvider;
         this.sshKeyStore = sshKeyStore;
+        this.userDao = userDao;
     }
 
     /**
@@ -630,5 +636,17 @@ public class GitHub extends GitVendorService {
         }
 
         return oauthToken.toString();
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    protected String getUserId() {
+        String id = super.getUserId();
+        try {
+            id = userDao.getByAlias(id).getId();
+        } catch (UserException e) {
+            return id;
+        }
+        return id;
     }
 }

@@ -26,13 +26,24 @@ import com.codenvy.api.project.shared.ProjectType;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /** @author Artem Zatsarynnyy */
 @Singleton
 public class SpringProjectTypeExtension implements ProjectTypeExtension {
+
+    private Map<String, String> icons = new HashMap<>();
+
     @Inject
     public SpringProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
+        icons.put("spring.projecttype.big.icon", "java-extension/Spring-Logo.png");
+        icons.put("spring.projecttype.small.icon", "java-extension/Spring-Logo.png");
+        icons.put("spring.folder.small.icon", "java-extension/package.gif");
+        icons.put("spring/java.file.small.icon", "java-extension/java-class.png");
+        icons.put("java.class", "java-extension/java-class.png");
+        icons.put("java.package", "java-extension/package.gif");
         registry.registerProjectType(this);
     }
 
@@ -47,6 +58,8 @@ public class SpringProjectTypeExtension implements ProjectTypeExtension {
         list.add(new Attribute("language", "java"));
         list.add(new Attribute("framework", "spring"));
         list.add(new Attribute("runner.name", "webapps"));
+        //TODO
+        list.add(new Attribute("builder.name","maven"));
         return list;
     }
 
@@ -58,10 +71,18 @@ public class SpringProjectTypeExtension implements ProjectTypeExtension {
                                                 "Simple Spring project which uses Maven build system.",
                                                 "templates/MavenSpring.zip"));
 
-        list.add(new ProjectTemplateDescription("zip",
-                                                "ANT SPRING APPLICATION",
-                                                "Simple Spring project which uses Ant build system.",
-                                                "templates/AntSpring.zip"));
+//TODO:temporary unregist Ant project
+//        list.add(new ProjectTemplateDescription("zip",
+//                                                "ANT SPRING APPLICATION",
+//                                                "Simple Spring project which uses Ant build system.",
+//                                                "templates/AntSpring.zip"));
         return list;
     }
+
+    @Override
+    public Map<String, String> getIconRegistry() {
+        return icons;
+    }
+
+
 }

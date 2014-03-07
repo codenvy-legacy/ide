@@ -20,6 +20,7 @@ package com.codenvy.ide.ext.java.worker;
 import com.codenvy.dto.server.JsonStringMapImpl;
 import com.codenvy.dto.shared.JsonStringMap;
 import com.codenvy.ide.collections.Jso;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.collections.js.JsoStringMap;
 import com.codenvy.ide.ext.java.jdt.CUVariables;
@@ -113,13 +114,13 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
             @Override
             public void onMessageReceived(ConfigMessage config) {
                 nameEnvironment =
-                        new WorkerNameEnvironment(config.restContext(), config.vfsId(), config.wsId());
+                        new WorkerNameEnvironment(config.restContext(), config.wsId());
                 projectName = config.projectName();
                 WorkerProposalApplier applier = new WorkerProposalApplier(WorkerMessageHandler.this.worker, messageFilter);
                 workerCodeAssist =
                         new WorkerCodeAssist(WorkerMessageHandler.this.worker, messageFilter, applier, nameEnvironment,
                                              templateCompletionProposalComputer,
-                                             config.javaDocContext(), config.vfsId());
+                                             config.javaDocContext());
                 correctionProcessor = new WorkerCorrectionProcessor(WorkerMessageHandler.this.worker, messageFilter, applier);
             }
         };
@@ -154,12 +155,12 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
                                                    @Override
                                                    public void onMessageReceived(PreferenceFormatSetMessage message) {
                                                        JsoStringMap<String> settingsJso = message.settings();
-                                                       JsoArray<String> keys = settingsJso.getValues();
-                                                       Iterator<String> iterator = keys.asIterable().iterator();
-                                                       while (iterator.hasNext()){
-                                                           String key = iterator.next();
-                                                           preferenceFormatSettings.put(key, settingsJso.remove(key));
-                                                       }
+                                                       settingsJso.iterate(new StringMap.IterationCallback<String>() {
+                                                           @Override
+                                                           public void onIteration(String key, String value) {
+                                                               preferenceFormatSettings.put(key,value);
+                                                           }
+                                                       });
                                                    }
                                                });
     }
@@ -273,7 +274,7 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
 
             @Override
             public void onSuccess() {
-                nameEnvironment.setProjectId(message.projectId());
+                nameEnvironment.setProjectPath(message.projectPath());
                 cuVar = new CUVariables(message.fileName(), message.packageName(), projectName);
 
                 ASTParser parser = ASTParser.newParser(AST.JLS3);

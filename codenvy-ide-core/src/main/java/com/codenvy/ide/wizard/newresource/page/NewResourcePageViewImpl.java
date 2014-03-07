@@ -36,6 +36,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -54,68 +55,67 @@ public class NewResourcePageViewImpl extends Composite implements NewResourcePag
     interface NewResourceViewUiBinder extends UiBinder<Widget, NewResourcePageViewImpl> {
     }
 
-    private static NewResourceViewUiBinder                    uiBinder         = GWT.create(NewResourceViewUiBinder.class);
+    private static NewResourceViewUiBinder uiBinder = GWT.create(NewResourceViewUiBinder.class);
 
     @UiField
-    ScrollPanel                                               resources;
+    ScrollPanel resources;
     @UiField(provided = true)
-    Resources                                                 res;
+    Resources   res;
     @UiField
-    TextBox                                                   resourceName;
+    TextBox     resourceName;
     @UiField
-    ListBox                                                   parent;
-    private ActionDelegate                                    delegate;
-    private SimpleList<NewResourceProvider>                   list;
+    ListBox     parent;
+    private ActionDelegate                  delegate;
+    private SimpleList<NewResourceProvider> list;
     private SimpleList.ListItemRenderer<NewResourceProvider>  listItemRenderer =
-                                                                                 new SimpleList.ListItemRenderer<NewResourceProvider>() {
-                                                                                     @Override
-                                                                                     public void render(Element itemElement,
-                                                                                                        NewResourceProvider itemData) {
-                                                                                         TableCellElement label =
-                                                                                                                  Elements.createTDElement();
+            new SimpleList.ListItemRenderer<NewResourceProvider>() {
+                @Override
+                public void render(Element itemElement,
+                                   NewResourceProvider itemData) {
+                    TableCellElement label =
+                            Elements.createTDElement();
 
-                                                                                         SafeHtmlBuilder sb = new SafeHtmlBuilder();
-                                                                                         // Add icon
-                                                                                         sb.appendHtmlConstant("<table><tr><td>");
-                                                                                         ImageResource icon = itemData.getIcon();
-                                                                                         if (icon != null) {
-                                                                                             sb.appendHtmlConstant("<img src=\""
-                                                                                                                   + icon.getSafeUri()
-                                                                                                                         .asString()
-                                                                                                                   + "\">");
-                                                                                         }
-                                                                                         sb.appendHtmlConstant("</td>");
+                    SafeHtmlBuilder sb = new SafeHtmlBuilder();
+                    // Add icon
+                    sb.appendHtmlConstant("<table><tr><td>");
+                    Image icon = itemData.getIcon();
+                    if (icon != null) {
+                        sb.appendHtmlConstant("<img src=\""
+                                              + icon.getUrl()
+                                              + "\">");
+                    }
+                    sb.appendHtmlConstant("</td>");
 
-                                                                                         // Add title
-                                                                                         sb.appendHtmlConstant("<td>");
-                                                                                         sb.appendEscaped(itemData.getTitle());
-                                                                                         sb.appendHtmlConstant("</td></tr></table>");
+                    // Add title
+                    sb.appendHtmlConstant("<td>");
+                    sb.appendEscaped(itemData.getTitle());
+                    sb.appendHtmlConstant("</td></tr></table>");
 
-                                                                                         label.setInnerHTML(sb.toSafeHtml().asString());
+                    label.setInnerHTML(sb.toSafeHtml().asString());
 
-                                                                                         itemElement.appendChild(label);
-                                                                                     }
+                    itemElement.appendChild(label);
+                }
 
-                                                                                     @Override
-                                                                                     public Element createElement() {
-                                                                                         return Elements.createTRElement();
-                                                                                     }
-                                                                                 };
+                @Override
+                public Element createElement() {
+                    return Elements.createTRElement();
+                }
+            };
     private SimpleList.ListEventDelegate<NewResourceProvider> listDelegate     =
-                                                                                 new SimpleList.ListEventDelegate<NewResourceProvider>() {
-                                                                                     public void onListItemClicked(Element itemElement,
-                                                                                                                   NewResourceProvider itemData) {
-                                                                                         delegate.onResourceTypeSelected(itemData);
-                                                                                     }
+            new SimpleList.ListEventDelegate<NewResourceProvider>() {
+                public void onListItemClicked(Element itemElement,
+                                              NewResourceProvider itemData) {
+                    delegate.onResourceTypeSelected(itemData);
+                }
 
-                                                                                     public void onListItemDoubleClicked(Element listItemBase,
-                                                                                                                         NewResourceProvider itemData) {
-                                                                                     }
-                                                                                 };
+                public void onListItemDoubleClicked(Element listItemBase,
+                                                    NewResourceProvider itemData) {
+                }
+            };
 
     /**
      * Create view.
-     * 
+     *
      * @param resources
      */
     @Inject

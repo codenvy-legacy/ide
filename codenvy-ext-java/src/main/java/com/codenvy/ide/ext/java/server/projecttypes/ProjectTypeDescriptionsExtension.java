@@ -25,7 +25,9 @@ import com.codenvy.api.project.shared.ProjectType;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * {@link ProjectTypeDescriptionExtension} to register project types.
@@ -34,8 +36,13 @@ import java.util.List;
  */
 @Singleton
 public class ProjectTypeDescriptionsExtension implements ProjectTypeDescriptionExtension {
+
+    private Map<String, String> icons = new HashMap<>();
+
+
     @Inject
     public ProjectTypeDescriptionsExtension(ProjectTypeDescriptionRegistry registry) {
+        icons.put("war.projecttype.big.icon", "java-extension/web_app_big.png");
         registry.registerDescription(this);
     }
 
@@ -54,7 +61,6 @@ public class ProjectTypeDescriptionsExtension implements ProjectTypeDescriptionE
         list.add(new AttributeDescription("language"));
         list.add(new AttributeDescription("language.version"));
         list.add(new AttributeDescription("framework"));
-        list.add(new AttributeDescription("exoide:classpath"));
         list.add(new AttributeDescription("folders.source"));
         list.add(new AttributeDescription("builder.name"));
         list.add(new AttributeDescription("runner.name"));

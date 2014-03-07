@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.extension;
 
+import com.codenvy.api.user.shared.dto.Profile;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.preferences.PreferencesManager;
@@ -65,14 +66,14 @@ public class ExtensionManagerPresenter extends AbstractPreferencesPagePresenter 
             jso.addField(ed.getId(), ed.isEnabled());
         }
         preferencesManager.setPreference("ExtensionsPreferences", jso.serialize());
-        preferencesManager.flushPreferences(new AsyncCallback<Void>() {
+        preferencesManager.flushPreferences(new AsyncCallback<Profile>() {
             @Override
             public void onFailure(Throwable caught) {
                 Log.error(ExtensionManagerPresenter.class, caught);
             }
 
             @Override
-            public void onSuccess(Void result) {
+            public void onSuccess(Profile result) {
                 if (Window.confirm("Restart Codenvy to activate changes in Extensions?")) {
                     Window.Location.reload();
                 }

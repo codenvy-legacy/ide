@@ -18,6 +18,7 @@
 package com.codenvy.ide.ext.java.client.wizard;
 
 import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.resources.model.Folder;
@@ -36,8 +37,8 @@ import javax.validation.constraints.NotNull;
 public class NewAnnotationProvider extends AbstractNewJavaResourceProvider {
 
     @Inject
-    public NewAnnotationProvider(SelectionAgent selectionAgent) {
-        super("Java Annotation", "Java Annotation", JavaResources.INSTANCE.annotationItem(), "java", selectionAgent);
+    public NewAnnotationProvider(SelectionAgent selectionAgent, IconRegistry iconRegistry) {
+        super("Java Annotation", "Java Annotation", iconRegistry.getIcon("java.class"), "java", selectionAgent);
     }
 
     /** {@inheritDoc} */

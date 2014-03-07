@@ -696,6 +696,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
                     else {region = new RegionImpl(0, getDocument().getLength());}
                     contentFormatter.format(getDocument(),region);
                 }
+                break;
             default:
                 throw new UnsupportedOperationException("Operation code: " + operation + " is not supported!");
         }

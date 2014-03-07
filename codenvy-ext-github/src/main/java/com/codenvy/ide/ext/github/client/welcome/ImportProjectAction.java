@@ -17,16 +17,16 @@
  */
 package com.codenvy.ide.ext.github.client.welcome;
 
-import com.codenvy.ide.api.parts.WelcomeItemAction;
-import com.codenvy.ide.api.user.User;
-import com.codenvy.ide.api.user.UserClientService;
+import com.codenvy.api.user.gwt.client.UserServiceClient;
+import com.codenvy.api.user.shared.dto.User;
+import com.codenvy.ide.api.ui.action.Action;
+import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.github.client.GitHubLocalizationConstant;
 import com.codenvy.ide.ext.github.client.GitHubResources;
 import com.codenvy.ide.ext.github.client.load.ImportPresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -36,12 +36,12 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class ImportProjectAction implements WelcomeItemAction {
+public class ImportProjectAction extends Action {
     private final DtoUnmarshallerFactory     dtoUnmarshallerFactory;
     private       GitHubLocalizationConstant constant;
     private       GitHubResources            resources;
     private       ImportPresenter            importPresenter;
-    private       UserClientService          service;
+    private       UserServiceClient          service;
 
     /**
      * Create action.
@@ -53,7 +53,7 @@ public class ImportProjectAction implements WelcomeItemAction {
     public ImportProjectAction(GitHubLocalizationConstant constant,
                                GitHubResources resources,
                                ImportPresenter importPresenter,
-                               UserClientService service,
+                               UserServiceClient service,
                                DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.constant = constant;
         this.resources = resources;
@@ -62,28 +62,9 @@ public class ImportProjectAction implements WelcomeItemAction {
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
     }
 
-    /** {@inheritDoc} */
     @Override
-    public String getTitle() {
-        return constant.welcomeImportTitle();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getCaption() {
-        return constant.welcomeImportText();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public ImageResource getIcon() {
-        return resources.importFromGithub();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void execute() {
-        service.getUser(new AsyncRequestCallback<User>(dtoUnmarshallerFactory.newUnmarshaller(User.class)) {
+    public void actionPerformed(ActionEvent e) {
+        service.getCurrentUser(new AsyncRequestCallback<User>(dtoUnmarshallerFactory.newUnmarshaller(User.class)) {
             @Override
             protected void onSuccess(User result) {
                 importPresenter.showDialog(result);

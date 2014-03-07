@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.git.client.remote;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
@@ -75,11 +76,11 @@ public class RemoteViewImpl extends DialogBox implements RemoteView {
      * @param locale
      */
     @Inject
-    protected RemoteViewImpl(GitResources resources, GitLocalizationConstant locale) {
+    protected RemoteViewImpl(GitResources resources, GitLocalizationConstant locale, Resources ideResources) {
         this.res = resources;
         this.locale = locale;
 
-        initRepositoriesTable();
+        initRepositoriesTable(ideResources);
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 
@@ -87,9 +88,10 @@ public class RemoteViewImpl extends DialogBox implements RemoteView {
         this.setWidget(widget);
     }
 
-    /** Initialize the columns of the grid. */
-    private void initRepositoriesTable() {
-        repositories = new CellTable<Remote>();
+    /** Initialize the columns of the grid.
+     * @param ideResources*/
+    private void initRepositoriesTable(Resources ideResources) {
+        repositories = new CellTable<Remote>(15, ideResources);
 
         Column<Remote, String> nameColumn = new Column<Remote, String>(new TextCell()) {
             @Override

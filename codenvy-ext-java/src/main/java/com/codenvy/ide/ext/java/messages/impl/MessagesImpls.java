@@ -27,7 +27,7 @@ public class MessagesImpls {
 
   private  MessagesImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "185c22778cac6e382352212c8c6d7540523df655";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "41df79c5613c95d6e85073efb4bec04ddb838fbf";
 
 
   public static class ApplyProposalMessageImpl extends com.google.gwt.webworker.client.messages.MessageImpl implements com.codenvy.ide.ext.java.messages.ApplyProposalMessage {
@@ -146,6 +146,20 @@ public class MessagesImpls {
     protected ComputeCAProposalsMessageImpl() {}
 
     @Override
+    public final native java.lang.String projectPath() /*-{
+      return this["projectPath"];
+    }-*/;
+
+    public final native ComputeCAProposalsMessageImpl setProjectPath(java.lang.String projectPath) /*-{
+      this["projectPath"] = projectPath;
+      return this;
+    }-*/;
+
+    public final native boolean hasProjectPath() /*-{
+      return this.hasOwnProperty("projectPath");
+    }-*/;
+
+    @Override
     public final native java.lang.String docContent() /*-{
       return this["docContent"];
     }-*/;
@@ -157,20 +171,6 @@ public class MessagesImpls {
 
     public final native boolean hasDocContent() /*-{
       return this.hasOwnProperty("docContent");
-    }-*/;
-
-    @Override
-    public final native java.lang.String projectId() /*-{
-      return this["projectId"];
-    }-*/;
-
-    public final native ComputeCAProposalsMessageImpl setProjectId(java.lang.String projectId) /*-{
-      this["projectId"] = projectId;
-      return this;
-    }-*/;
-
-    public final native boolean hasProjectId() /*-{
-      return this.hasOwnProperty("projectId");
     }-*/;
 
     @Override
@@ -389,20 +389,6 @@ public class MessagesImpls {
       return this.hasOwnProperty("javaDocContext");
     }-*/;
 
-    @Override
-    public final native java.lang.String vfsId() /*-{
-      return this["vfsId"];
-    }-*/;
-
-    public final native ConfigMessageImpl setVfsId(java.lang.String vfsId) /*-{
-      this["vfsId"] = vfsId;
-      return this;
-    }-*/;
-
-    public final native boolean hasVfsId() /*-{
-      return this.hasOwnProperty("vfsId");
-    }-*/;
-
     public static native ConfigMessageImpl make() /*-{
       return {
         _type: 1
@@ -518,6 +504,20 @@ public class MessagesImpls {
     protected ParseMessageImpl() {}
 
     @Override
+    public final native java.lang.String projectPath() /*-{
+      return this["projectPath"];
+    }-*/;
+
+    public final native ParseMessageImpl setProjectPath(java.lang.String projectPath) /*-{
+      this["projectPath"] = projectPath;
+      return this;
+    }-*/;
+
+    public final native boolean hasProjectPath() /*-{
+      return this.hasOwnProperty("projectPath");
+    }-*/;
+
+    @Override
     public final native java.lang.String fileId() /*-{
       return this["fileId"];
     }-*/;
@@ -560,20 +560,6 @@ public class MessagesImpls {
     }-*/;
 
     @Override
-    public final native java.lang.String projectId() /*-{
-      return this["projectId"];
-    }-*/;
-
-    public final native ParseMessageImpl setProjectId(java.lang.String projectId) /*-{
-      this["projectId"] = projectId;
-      return this;
-    }-*/;
-
-    public final native boolean hasProjectId() /*-{
-      return this.hasOwnProperty("projectId");
-    }-*/;
-
-    @Override
     public final native java.lang.String fileName() /*-{
       return this["fileName"];
     }-*/;
@@ -608,7 +594,7 @@ public class MessagesImpls {
     }-*/;  }
 
 
-  public static class PreferenceFormatSetMessageImpl extends Jso implements com.codenvy.ide.ext.java.messages.PreferenceFormatSetMessage {
+  public static class PreferenceFormatSetMessageImpl extends com.google.gwt.webworker.client.messages.MessageImpl implements com.codenvy.ide.ext.java.messages.PreferenceFormatSetMessage {
     protected PreferenceFormatSetMessageImpl() {}
 
     @Override
@@ -627,7 +613,7 @@ public class MessagesImpls {
 
     public static native PreferenceFormatSetMessageImpl make() /*-{
       return {
-
+        _type: 13
       };
     }-*/;  }
 

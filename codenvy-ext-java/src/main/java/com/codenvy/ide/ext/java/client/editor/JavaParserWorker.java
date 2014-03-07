@@ -43,9 +43,9 @@ public interface JavaParserWorker {
         void onApplyFormat(TextEdit edit);
     }
 
-    void parse(String content, String fileName, String fileId, String packageName, String projectId, WorkerCallback<IProblem> callback);
+    void parse(String content, String fileName, String fileId, String packageName, String projectPath, WorkerCallback<IProblem> callback);
 
-    void computeCAProposals(String content, int offset, String fileName,String projectId, WorkerCallback<WorkerProposal> callback);
+    void computeCAProposals(String content, int offset, String fileName,String projectPath, WorkerCallback<WorkerProposal> callback);
 
     void applyCAProposal(String id, ApplyCallback callback);
 

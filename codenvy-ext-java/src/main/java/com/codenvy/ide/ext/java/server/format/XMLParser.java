@@ -14,22 +14,23 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Roman Nikitenko
  */
 public class XMLParser extends DefaultHandler {
 
-    private JsoStringMap<String>settings;
+    private Map settings;
 
-    public JsoStringMap<String> getSettings() {
+    public Map getSettings() {
         return settings;
     }
 
     @Override
     public void startDocument()
             throws SAXException {
-        settings = JsoStringMap.create();
+        settings = new HashMap<String,String>();
     }
 
     @Override
