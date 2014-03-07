@@ -616,6 +616,7 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
                                               new JsPopUpOAuthWindow().withOauthProvider("github")
                                                                       .withScope("repo")
                                                                       .withScope("user")
+                                                                      .withScope("write:public_key")
                                                                       .withCallback(callback)
                                                                       .login();
                                           } else if (folder != null) {
