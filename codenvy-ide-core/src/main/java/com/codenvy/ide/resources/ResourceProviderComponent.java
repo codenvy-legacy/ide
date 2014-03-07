@@ -143,10 +143,9 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
 
                 final String language = result.getAttributes().get("language").get(0);
                 Project project = getModelProvider(language).createProjectInstance();
+                project.setId(result.getId());
                 project.setAttributes(result.getAttributes());
-
                 project.setProjectType(result.getProjectTypeId());
-
                 project.setName(name);
                 project.setParent(rootFolder);
                 project.setProject(project);
@@ -210,6 +209,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
                 Project project = new Project(eventBus, asyncRequestFactory, projectServiceClient, dtoUnmarshallerFactory);
+                project.setId(result.getId());
                 project.setAttributes(result.getAttributes());
                 project.setProjectType(result.getProjectTypeId());
                 project.setName(name);
