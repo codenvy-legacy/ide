@@ -28,9 +28,7 @@ import java.util.List;
  * @author Nikolay Zamosenchuk
  */
 public class ProjectDescription {
-
-    public static final String PROPERTY_PROJECT_TYPE = "vfs:projectType";
-    public static final String ATTR_LANGUAGE         = "language";
+    public static final String ATTR_LANGUAGE = "language";
     protected Project project;
 
     public ProjectDescription(Project project) {

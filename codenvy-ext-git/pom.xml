@@ -86,6 +86,11 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api-gwt-client</groupId>
+            <artifactId>codenvy-api-project-gwt-client</artifactId>
+            <version>${codenvy.platform-api-gwt-client.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api-gwt-client</groupId>
             <artifactId>codenvy-gwt-client-commons</artifactId>
             <version>${codenvy.platform-api-gwt-client.version}</version>
             <exclusions>
@@ -250,9 +255,6 @@
                         <artifactId>codenvy-ext-git</artifactId>
                         <version>${project.version}</version>
                     </dependency>
-                    <!--
-                Other dependencies if DTOs from current project need them.
-                -->
                 </dependencies>
             </plugin>
         </plugins>

@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.ext.github.client.load;
 
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.user.shared.dto.User;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
@@ -33,11 +35,12 @@ import com.codenvy.ide.ext.github.client.GitHubClientService;
 import com.codenvy.ide.ext.github.client.GitHubSshKeyProvider;
 import com.codenvy.ide.ext.github.client.marshaller.AllRepositoriesUnmarshaller;
 import com.codenvy.ide.ext.github.shared.GitHubRepository;
+import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.server.Constants;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
@@ -73,7 +76,7 @@ public class ImportPresenter implements ImportView.ActionDelegate {
     private       NotificationManager                notificationManager;
     private       Notification                       notification;
     private       GitHubSshKeyProvider               gitHubSshKeyProvider;
-
+    private       ProjectTypeDescriptorRegistry      projectTypeDescriptorRegistry;
 
     /**
      * Create presenter.
@@ -82,8 +85,13 @@ public class ImportPresenter implements ImportView.ActionDelegate {
      * @param service
      * @param gitService
      * @param eventBus
+     * @param gitConstant
      * @param resourceProvider
      * @param notificationManager
+     * @param gitHubSshKeyProvider
+     * @param dtoFactory
+     * @param dtoUnmarshallerFactory
+     * @param projectTypeDescriptorRegistry
      */
     @Inject
     public ImportPresenter(ImportView view,
@@ -95,10 +103,12 @@ public class ImportPresenter implements ImportView.ActionDelegate {
                            NotificationManager notificationManager,
                            GitHubSshKeyProvider gitHubSshKeyProvider,
                            DtoFactory dtoFactory,
-                           DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+                           DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                           ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry) {
         this.view = view;
         this.dtoFactory = dtoFactory;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
         this.view.setDelegate(this);
         this.service = service;
         this.gitService = gitService;
@@ -200,8 +210,13 @@ public class ImportPresenter implements ImportView.ActionDelegate {
                 notification = new Notification(gitConstant.cloneStarted(projectName, remoteUri), PROGRESS);
                 notificationManager.showNotification(notification);
 
+                ProjectTypeDescriptor unknownProjectTypeDescriptor = projectTypeDescriptorRegistry.getDescriptor(Constants.UNKNOWN_ID);
+                ProjectDescriptor projectDescriptor = dtoFactory.createDto(ProjectDescriptor.class)
+                                                                .withProjectTypeId(unknownProjectTypeDescriptor.getProjectTypeId())
+                                                                .withProjectTypeName(unknownProjectTypeDescriptor.getProjectTypeName());
+
                 final String finalRemoteUri = remoteUri;
-                resourceProvider.createProject(projectName, Collections.<Property>createArray(), new AsyncCallback<Project>() {
+                resourceProvider.createProject(projectName, projectDescriptor, new AsyncCallback<Project>() {
                     @Override
                     public void onSuccess(Project result) {
                         cloneRepository(finalRemoteUri, projectName, result);

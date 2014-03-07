@@ -17,22 +17,22 @@
  */
 package com.codenvy.ide.ext.git.client.clone;
 
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.RepoInfo;
+import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Property;
-import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.server.Constants;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
-import com.codenvy.ide.websocket.rest.StringUnmarshallerWS;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -51,20 +51,29 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 @Singleton
 public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDelegate {
     public static final String DEFAULT_REPO_NAME = "origin";
-    private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
-    private       CloneRepositoryView     view;
-    private       GitClientService        service;
-    private       ResourceProvider        resourceProvider;
-    private       GitLocalizationConstant constant;
-    private       NotificationManager     notificationManager;
-    private       Notification            notification;
+    private final DtoUnmarshallerFactory        dtoUnmarshallerFactory;
+    private final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
+    private       CloneRepositoryView           view;
+    private       GitClientService              service;
+    private       ResourceProvider              resourceProvider;
+    private       GitLocalizationConstant       constant;
+    private       NotificationManager           notificationManager;
+    private       Notification                  notification;
+    private       DtoFactory                    dtoFactory;
 
     @Inject
-    public CloneRepositoryPresenter(CloneRepositoryView view, GitClientService service, ResourceProvider resourceProvider,
-                                    GitLocalizationConstant constant, NotificationManager notificationManager,
-                                    DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+    public CloneRepositoryPresenter(CloneRepositoryView view,
+                                    GitClientService service,
+                                    ResourceProvider resourceProvider,
+                                    GitLocalizationConstant constant,
+                                    NotificationManager notificationManager,
+                                    DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                                    ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
+                                    DtoFactory dtoFactory) {
         this.view = view;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
+        this.dtoFactory = dtoFactory;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
@@ -81,7 +90,12 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
         notification = new Notification(constant.cloneStarted(projectName, remoteName), PROGRESS);
         notificationManager.showNotification(notification);
 
-        resourceProvider.createProject(projectName, Collections.<Property>createArray(), new AsyncCallback<Project>() {
+        ProjectTypeDescriptor unknownProjectTypeDescriptor = projectTypeDescriptorRegistry.getDescriptor(Constants.UNKNOWN_ID);
+        ProjectDescriptor projectDescriptor = dtoFactory.createDto(ProjectDescriptor.class);
+        projectDescriptor.setProjectTypeId(unknownProjectTypeDescriptor.getProjectTypeId());
+        projectDescriptor.setProjectTypeName(unknownProjectTypeDescriptor.getProjectTypeName());
+
+        resourceProvider.createProject(projectName, projectDescriptor, new AsyncCallback<Project>() {
             @Override
             public void onSuccess(Project result) {
                 cloneRepository(remoteUri, remoteName, result);

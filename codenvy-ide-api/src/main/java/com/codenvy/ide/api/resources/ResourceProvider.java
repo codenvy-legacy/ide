@@ -17,11 +17,10 @@
  */
 package com.codenvy.ide.api.resources;
 
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.extension.SDK;
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.resources.model.VirtualFileSystemInfo;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -68,13 +67,13 @@ public interface ResourceProvider {
     public void getProject(String name, AsyncCallback<Project> callback);
 
     /**
-     * Creates new empty project based on provided properties (Project Description).
+     * Creates new project based on provided {@link ProjectDescriptor}.
      *
      * @param name
-     * @param properties
+     * @param projectDescriptor
      * @param callback
      */
-    public void createProject(String name, Array<Property> properties, AsyncCallback<Project> callback);
+    public void createProject(String name, ProjectDescriptor projectDescriptor, AsyncCallback<Project> callback);
 
     /** Reads already stored projects and shows them in project explorer. */
     public void showListProjects();
