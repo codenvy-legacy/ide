@@ -102,14 +102,13 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
     /** {@inheritDoc} */
     @Override
     public void focusComponent() {
-        this.projectTypeDescriptors = projectTypeDescriptorRegistry.getDescriptors();
-        Array<ProjectTypeDescriptor> descriptorsArray = Collections.createArray();
-        for (ProjectTypeDescriptor descriptor : projectTypeDescriptors.asIterable()) {
+        projectTypeDescriptors = Collections.createArray();
+        for (ProjectTypeDescriptor descriptor : projectTypeDescriptorRegistry.getDescriptors().asIterable()) {
             if (descriptor.getTemplates() != null && descriptor.getTemplates().size() > 0) {
-                descriptorsArray.add(descriptor);
+                projectTypeDescriptors.add(descriptor);
             }
         }
-        this.view.setProjectTypes(descriptorsArray);
+        this.view.setProjectTypes(projectTypeDescriptors);
 
         if (!projectTypeDescriptors.isEmpty()) {
             onProjectTypeSelected(0);
