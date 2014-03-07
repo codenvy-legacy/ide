@@ -21,6 +21,7 @@ import com.codenvy.api.project.server.ProjectTypeDescriptionExtension;
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
 import com.codenvy.api.project.shared.AttributeDescription;
 import com.codenvy.api.project.shared.ProjectType;
+import com.codenvy.ide.ext.java.shared.Constants;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -38,15 +39,15 @@ public class MultiModuleProjectTypeDescriptionExtension implements ProjectTypeDe
     @Override
     public List<ProjectType> getProjectTypes() {
         final List<ProjectType> list = new ArrayList<>(1);
-        list.add(new ProjectType("maven_multi_module", "Maven Multi Module Project"));
+        list.add(new ProjectType(Constants.MULTI_MODULE_ID, Constants.MULTI_MODULE_NAME));
         return list;
     }
 
     @Override
     public List<AttributeDescription> getAttributeDescriptions() {
         final List<AttributeDescription> list = new ArrayList<>(2);
-        list.add(new AttributeDescription("language"));
-        list.add(new AttributeDescription("builder.name"));
+        list.add(new AttributeDescription(Constants.LANGUAGE));
+        list.add(new AttributeDescription(Constants.BUILDER_NAME));
         return list;
     }
 }

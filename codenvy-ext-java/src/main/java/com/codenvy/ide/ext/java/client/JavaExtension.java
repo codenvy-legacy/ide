@@ -60,8 +60,6 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
 /** @author Evgen Vidolob */
 @Extension(title = "Java syntax highlighting and code autocompletion.", version = "3.0.0")
 public class JavaExtension {
-    public static final String WAR_PROJECT_TYPE_ID    = "war";
-    public static final String SPRING_PROJECT_TYPE_ID = "spring";
     private ResourceProvider    resourceProvider;
     private NotificationManager notificationManager;
     private String              restContext;

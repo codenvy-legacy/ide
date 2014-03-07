@@ -17,13 +17,11 @@
  */
 package com.codenvy.ide.ext.java.server.projecttypes;
 
-import com.codenvy.api.project.server.AbstractVirtualFileEntry;
+import com.codenvy.api.project.server.FileEntry;
 import com.codenvy.api.project.server.Project;
 import com.codenvy.api.project.server.ValueProviderFactory;
 import com.codenvy.api.project.shared.ValueProvider;
-import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.ide.maven.tools.MavenUtils;
 
 import org.apache.maven.model.Model;
@@ -35,19 +33,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@link ValueProviderFactory} implementation for 'folders.source' attribute.
+ * {@link ValueProviderFactory} implementation for 'builder.maven.source_folders' attribute.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class SourceFoldersValueProviderFactory implements ValueProviderFactory {
+public class MavenSourceFoldersValueProviderFactory implements ValueProviderFactory {
 
     @Inject
     private VirtualFileSystemRegistry registry;
 
     @Override
     public String getName() {
-        return "folders.source";
+        return "builder.maven.source_folders";
     }
 
     @Override
@@ -56,39 +54,29 @@ public class SourceFoldersValueProviderFactory implements ValueProviderFactory {
             @Override
             public List<String> getValues() {
                 final List<String> list = new ArrayList<>();
-                AbstractVirtualFileEntry mavenBuildDescriptor = project.getBaseFolder().getChild("pom.xml");
-                AbstractVirtualFileEntry antBuildDescriptor = project.getBaseFolder().getChild("build.xml");
+                FileEntry buildDescriptor = (FileEntry)project.getBaseFolder().getChild("pom.xml");
                 try {
-                    if (mavenBuildDescriptor != null) {
-                        list.addAll(getMavenSourceFolders(mavenBuildDescriptor.getVirtualFile()));
-                    } else if (antBuildDescriptor != null) {
-                        list.addAll(getAntSourceFolders(antBuildDescriptor.getVirtualFile()));
+                    if (buildDescriptor != null) {
+                        list.addAll(getSourceFolders(buildDescriptor));
                     }
-                } catch (VirtualFileSystemException | IOException e) {
+                    return list;
+                } catch (IOException e) {
                     throw new IllegalStateException(e);
                 }
-                return list;
             }
 
             @Override
             public void setValues(List<String> strings) {
-                // Nothing to do
+                // nothing to do
             }
         };
     }
 
-    private List<String> getAntSourceFolders(VirtualFile buildXml) throws VirtualFileSystemException {
-        final String defaultSourceDirectoryPath = "src";
-        List<String> list = new ArrayList<>(1);
-        list.add(defaultSourceDirectoryPath);
-        return list;
-    }
-
-    private List<String> getMavenSourceFolders(VirtualFile pomXml) throws VirtualFileSystemException, IOException {
+    private List<String> getSourceFolders(FileEntry pomXml) throws IOException {
         final String defaultSourceDirectoryPath = "src/main/java";
-        final String defaultTestSourceDirectoryPath = "src/main/java";
+        final String defaultTestSourceDirectoryPath = "src/test/java";
 
-        Model model = MavenUtils.readModel(pomXml.getContent().getStream());
+        Model model = MavenUtils.readModel(pomXml.getInputStream());
         List<String> list = MavenUtils.getSourceDirectories(model);
         if (list.isEmpty()) {
             list.add(defaultSourceDirectoryPath);

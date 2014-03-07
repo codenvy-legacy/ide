@@ -22,6 +22,7 @@ import com.codenvy.api.project.server.ProjectTypeExtension;
 import com.codenvy.api.project.shared.Attribute;
 import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
+import com.codenvy.ide.ext.tutorials.shared.Constants;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -47,16 +48,16 @@ public class CodenvyTutorialProjectTypeExtension implements ProjectTypeExtension
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType("codenvy_tutorial", "Codenvy tutorial");
+        return new ProjectType(Constants.TUTORIAL_ID, Constants.TUTORIAL_NAME);
     }
 
     @Override
     public List<Attribute> getPredefinedAttributes() {
         final List<Attribute> list = new ArrayList<>(4);
-        list.add(new Attribute("language", "java"));
-        list.add(new Attribute("framework", "codenvy_sdk"));
-        list.add(new Attribute("builder.name", "maven"));
-        list.add(new Attribute("runner.name", "sdk"));
+        list.add(new Attribute(Constants.LANGUAGE, "java"));
+        list.add(new Attribute(Constants.FRAMEWORK, "codenvy_sdk"));
+        list.add(new Attribute(Constants.BUILDER_NAME, "maven"));
+        list.add(new Attribute(Constants.RUNNER_NAME, "sdk"));
         return list;
     }
 

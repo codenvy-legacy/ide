@@ -17,13 +17,13 @@
  */
 package com.codenvy.ide.ext.java.client.projectmodel;
 
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringSet;
+import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.ide.resources.model.ProjectDescription;
 
 /** @author Nikolay Zamosenchuk */
 public class JavaProjectDescription extends ProjectDescription {
-
-    public static final String ATTRIBUTE_SOURCE_FOLDERS = "folders.source";
 
     /** @param project */
     public JavaProjectDescription(JavaProject project) {
@@ -32,6 +32,11 @@ public class JavaProjectDescription extends ProjectDescription {
 
     /** @return The set of Project's source folders or empty set. */
     public StringSet getSourceFolders() {
-        return asStringSet(ATTRIBUTE_SOURCE_FOLDERS);
+        final String builderName = project.getAttributeValue(Constants.BUILDER_NAME);
+        if (builderName != null) {
+            final String sourceFolders = Constants.BUILDER_SOURCE_FOLDERS.replace("${builder}", builderName);
+            return asStringSet(sourceFolders);
+        }
+        return Collections.createStringSet();
     }
 }

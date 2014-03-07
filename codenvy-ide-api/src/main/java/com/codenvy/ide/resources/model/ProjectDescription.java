@@ -30,7 +30,7 @@ import java.util.List;
 public class ProjectDescription {
 
     public static final String PROPERTY_PROJECT_TYPE = "vfs:projectType";
-    public static final String PROPERTY_LANGUAGE     = "language";
+    public static final String ATTR_LANGUAGE         = "language";
     protected Project project;
 
     public ProjectDescription(Project project) {
@@ -52,8 +52,10 @@ public class ProjectDescription {
     protected StringSet asStringSet(String attributeName) {
         StringSet values = Collections.createStringSet();
         List<String> attributeValues = project.getAttributeValues(attributeName);
-        for (String value : attributeValues) {
-            values.add(value);
+        if (attributeValues != null) {
+            for (String value : attributeValues) {
+                values.add(value);
+            }
         }
         return values;
     }

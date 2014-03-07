@@ -34,7 +34,6 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_WINDOW;
 @Singleton
 @Extension(title = "Codenvy tutorial projects", version = "3.0.0")
 public class TutorialsExtension {
-    public static final String TUTORIAL_PROJECT_TYPE_ID = "codenvy_tutorial";
     /** Default name of the file that contains tutorial description. */
     public static final String DEFAULT_README_FILE_NAME = "guide.html";
 

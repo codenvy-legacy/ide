@@ -24,14 +24,12 @@ import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
+import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
 import com.codenvy.ide.extension.runner.client.RunnerController;
 import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import static com.codenvy.ide.ext.java.client.JavaExtension.SPRING_PROJECT_TYPE_ID;
-import static com.codenvy.ide.ext.java.client.JavaExtension.WAR_PROJECT_TYPE_ID;
 
 /**
  * Action to run project on runner in debug mode.
@@ -71,7 +69,7 @@ public class DebugAction extends Action {
         Project activeProject = resourceProvider.getActiveProject();
         if (activeProject != null) {
             final String projectTypeId = activeProject.getDescription().getProjectTypeId();
-            e.getPresentation().setVisible(projectTypeId.equals(SPRING_PROJECT_TYPE_ID) || projectTypeId.equals(WAR_PROJECT_TYPE_ID));
+            e.getPresentation().setVisible(projectTypeId.equals(Constants.SPRING_ID) || projectTypeId.equals(Constants.WAR_ID));
             e.getPresentation().setEnabled(!runnerController.isAnyAppLaunched());
         } else {
             e.getPresentation().setEnabledAndVisible(false);
