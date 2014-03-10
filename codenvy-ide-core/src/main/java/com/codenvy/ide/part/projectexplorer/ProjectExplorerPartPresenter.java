@@ -287,20 +287,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             }
         };
 
-        if (resource.getResourceType().equals(Project.TYPE) && ((Project)resource).getProperties().isEmpty()) {
-            ((Project)resource).setVFSInfo(resourceProvider.getVfsInfo());
-            ((Project)resource).refreshProperties(new AsyncCallback<Project>() {
-                @Override
-                public void onSuccess(Project result) {
-                    checkProjectType(result, callback);
-                }
-
-                @Override
-                public void onFailure(Throwable caught) {
-                    Log.error(ProjectExplorerPartPresenter.class, "Can not get project's properties.", caught);
-                }
-            });
-        } else if (resource.getResourceType().equals(Project.TYPE) && ((Project)resource).getProperties().size() > 0) {
+        if (resource.getResourceType().equals(Project.TYPE)) {
             checkProjectType((Project)resource, callback);
         }
     }
@@ -309,6 +296,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
      * Check, whether project type is "unknown" and call {@link SelectProjectTypePresenter} to set it.
      *
      * @param project
+     * @param callback
      */
     private void checkProjectType(Project project, AsyncCallback<Project> callback) {
         project.setVFSInfo(resourceProvider.getVfsInfo());

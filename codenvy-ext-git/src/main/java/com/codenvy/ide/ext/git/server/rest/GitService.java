@@ -341,9 +341,11 @@ public class GitService {
                                                  .withValue(new ArrayList<>(Arrays.asList("maven"))));
                     vfs.updateItem(folder.getId(), propertiesList, null);
                     found = true;
+
+                    final String propertyFileContent = "{\"type\":\"" + Constants.UNKNOWN_ID + "\"}";
                     Folder codenvyFolder = vfs.createFolder(folder.getId(), ".codenvy");
                     vfs.createFile(codenvyFolder.getId(), "project", MediaType.APPLICATION_JSON_TYPE,
-                                   new ByteArrayInputStream("{}".getBytes()));
+                                   new ByteArrayInputStream(propertyFileContent.getBytes()));
                     break;
                 }
             }
