@@ -19,6 +19,7 @@ package com.codenvy.ide.wizard.newproject.pages.start;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectReference;
+import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
@@ -32,6 +33,8 @@ import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+
+import java.util.List;
 
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
@@ -104,12 +107,13 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
     public void focusComponent() {
         projectTypeDescriptors = Collections.createArray();
         for (ProjectTypeDescriptor descriptor : projectTypeDescriptorRegistry.getDescriptors().asIterable()) {
-            if (descriptor.getTemplates() != null && descriptor.getTemplates().size() > 0) {
+            List<ProjectTemplateDescriptor> templates = descriptor.getTemplates();
+            if (templates != null && templates.size() > 0) {
                 projectTypeDescriptors.add(descriptor);
             }
         }
-        this.view.setProjectTypes(projectTypeDescriptors);
 
+        view.setProjectTypes(projectTypeDescriptors);
         if (!projectTypeDescriptors.isEmpty()) {
             onProjectTypeSelected(0);
         }
@@ -154,7 +158,8 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
     @Override
     public void onProjectTypeSelected(int id) {
         view.selectProjectType(id);
-        wizardContext.putData(PROJECT_TYPE, projectTypeDescriptors.get(id));
+        if (!projectTypeDescriptors.isEmpty())
+            wizardContext.putData(PROJECT_TYPE, projectTypeDescriptors.get(id));
         delegate.updateControls();
     }
 
