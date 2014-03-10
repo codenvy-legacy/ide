@@ -31,7 +31,7 @@ import java.util.Map;
 @Singleton
 public class IconRegistryImpl implements IconRegistry {
 
-    private Map<String, String> icons = new HashMap<String, String>();
+    private Map<String, String> icons = new HashMap<>();
 
     @Override
     public Image getIcon(String iconId) {

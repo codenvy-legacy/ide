@@ -271,18 +271,35 @@
                             <goal>compile</goal>
                             <!--<goal>test</goal>-->
                         </goals>
-                        <configuration>
-                            <extraJvmArgs>-Xss512m -Xmx2048m -XX:MaxPermSize=1024m</extraJvmArgs>
-                            <modules>
-                                <module>${ide.module}</module>
-                                <module>com.codenvy.ide.ext.java.JavaParserWorker</module>
-                            </modules>
-                            <logLevel>INFO</logLevel>
-                            <!--<style>PRETTY</style>-->
-                            <!--<enableClosureCompiler>true</enableClosureCompiler>-->
-                        </configuration>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.google.gwt</groupId>
+                        <artifactId>gwt-codeserver</artifactId>
+                        <version>${gwt.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.google.gwt</groupId>
+                        <artifactId>gwt-dev</artifactId>
+                        <version>${gwt.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.google.gwt</groupId>
+                        <artifactId>gwt-user</artifactId>
+                        <version>${gwt.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <extraJvmArgs>-Xss512m -Xmx2048m -XX:MaxPermSize=1024m</extraJvmArgs>
+                    <modules>
+                        <module>${ide.module}</module>
+                        <module>com.codenvy.ide.ext.java.JavaParserWorker</module>
+                    </modules>
+                    <logLevel>INFO</logLevel>
+                    <!--<style>PRETTY</style>-->
+                    <!--<enableClosureCompiler>true</enableClosureCompiler>-->
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

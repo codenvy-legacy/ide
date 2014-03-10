@@ -54,7 +54,7 @@ from Codenvy S.A..
             <artifactId>codenvy-api-runner</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-user</artifactId>
             <version>${com.codenvy.platform-api.version}</version>

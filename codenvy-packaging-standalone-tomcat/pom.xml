@@ -84,7 +84,7 @@
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>
-	<dependency>
+        <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>empty-extension</artifactId>
             <version>${project.version}</version>
@@ -102,7 +102,7 @@
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
-	<dependency>
+        <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>helloworld-extension</artifactId>
             <version>${project.version}</version>
@@ -137,12 +137,6 @@
             <artifactId>wysiwyg-editor-tutorial</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.organization</groupId>
-            <artifactId>codenvy-organization-packaging-api-war</artifactId>
-            <version>${com.codenvy.organization.version}</version>
-            <type>war</type>
         </dependency>
         <dependency>
             <groupId>com.jcraft</groupId>
@@ -357,7 +351,7 @@
                                     <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
                                     <destFileName>gist-extension.zip</destFileName>
                                 </artifactItem>
-				 <artifactItem>
+                                <artifactItem>
                                     <groupId>com.codenvy.ide</groupId>
                                     <artifactId>empty-extension</artifactId>
                                     <type>zip</type>
@@ -366,7 +360,7 @@
                                     <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
                                     <destFileName>empty-extension.zip</destFileName>
                                 </artifactItem>
-				<artifactItem>
+                                <artifactItem>
                                     <groupId>com.codenvy.ide</groupId>
                                     <artifactId>helloworld-extension</artifactId>
                                     <type>zip</type>
@@ -451,7 +445,7 @@
                                     <fileset dir="${basedir}/src/main/resources/tomcat" />
                                 </copy>
                                 <chmod dir="${project.build.directory}/tomcat-ide/bin" includes="**/*.sh" perm="+x" />
-                                <move file="${project.build.directory}/tomcat-ide/bin/catalina.sh" tofile="${project.build.directory}/tomcat-ide/bin/codenvy.sh"/>
+                                <move file="${project.build.directory}/tomcat-ide/bin/catalina.sh" tofile="${project.build.directory}/tomcat-ide/bin/codenvy.sh" />
                                 <!-- Copy resources to re-build Codenvy IDE with 3rd-party extensions. -->
                                 <copy overwrite="true" todir="${project.build.directory}/tomcat-ide/sdk-resources">
                                     <fileset dir="${project.build.directory}/../../codenvy-application-war" includes="src/**, pom.xml" />
@@ -468,7 +462,6 @@
                                 </war>
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${org.exoplatform.ide.version}.war" overwrite="true" tofile="${project.build.directory}/tomcat-ide/webapps/git.war" />
                                 <copy file="${project.build.directory}/packager-conf/war/codenvy-api-war-${project.version}.war" overwrite="true" tofile="${project.build.directory}/tomcat-ide/webapps/api.war" />
-                                <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war" overwrite="true" tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" />
                                 <unzip dest="${project.build.directory}/tomcat-ide" src="${project.build.directory}/repo.zip" />
                                 <chmod dir="${project.build.directory}/tomcat-ide" includes="*.sh" perm="+x" />
                             </target>
