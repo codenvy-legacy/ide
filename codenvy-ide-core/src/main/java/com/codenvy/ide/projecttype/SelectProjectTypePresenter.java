@@ -32,7 +32,12 @@ import com.google.inject.Singleton;
 
 import javax.validation.constraints.NotNull;
 
-/** @author Ann Shumilova */
+/**
+ * Helps to update project type.
+ *
+ * @author Ann Shumilova
+ * @author Artem Zatsarynnyy
+ */
 @Singleton
 public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionDelegate {
 
@@ -71,10 +76,10 @@ public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionD
     public void onOkClicked() {
         final String selectedProjectTypeId = view.getSelectedProjectTypeId();
         final ProjectTypeDescriptor descriptor = projectTypeDescriptorRegistry.getDescriptor(selectedProjectTypeId);
-        updateProject(descriptor);
+        updateProjectWithDescriptor(descriptor);
     }
 
-    private void updateProject(ProjectTypeDescriptor descriptor) {
+    private void updateProjectWithDescriptor(ProjectTypeDescriptor descriptor) {
         ProjectDescriptor projectDescriptor = dtoFactory.createDto(ProjectDescriptor.class)
                                                         .withProjectTypeId(descriptor.getProjectTypeId())
                                                         .withProjectTypeName(descriptor.getProjectTypeName());

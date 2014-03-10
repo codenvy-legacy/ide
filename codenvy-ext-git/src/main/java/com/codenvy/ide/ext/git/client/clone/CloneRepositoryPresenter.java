@@ -18,21 +18,16 @@
 package com.codenvy.ide.ext.git.client.clone;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.RepoInfo;
 import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
-import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.server.Constants;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
@@ -54,17 +49,15 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 @Singleton
 public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDelegate {
     public static final String DEFAULT_REPO_NAME = "origin";
-    private final DtoUnmarshallerFactory        dtoUnmarshallerFactory;
-    private final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
-    private final ProjectServiceClient          projectServiceClient;
-    private final SelectProjectTypePresenter    selectProjectTypePresenter;
-    private       CloneRepositoryView           view;
-    private       GitClientService              service;
-    private       ResourceProvider              resourceProvider;
-    private       GitLocalizationConstant       constant;
-    private       NotificationManager           notificationManager;
-    private       Notification                  notification;
-    private       DtoFactory                    dtoFactory;
+    private final DtoUnmarshallerFactory     dtoUnmarshallerFactory;
+    private final ProjectServiceClient       projectServiceClient;
+    private final SelectProjectTypePresenter selectProjectTypePresenter;
+    private       CloneRepositoryView        view;
+    private       GitClientService           service;
+    private       ResourceProvider           resourceProvider;
+    private       GitLocalizationConstant    constant;
+    private       NotificationManager        notificationManager;
+    private       Notification               notification;
 
     @Inject
     public CloneRepositoryPresenter(CloneRepositoryView view,
@@ -73,14 +66,10 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
                                     GitLocalizationConstant constant,
                                     NotificationManager notificationManager,
                                     DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                                    ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
-                                    DtoFactory dtoFactory,
                                     ProjectServiceClient projectServiceClient,
                                     SelectProjectTypePresenter selectProjectTypePresenter) {
         this.view = view;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
-        this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
-        this.dtoFactory = dtoFactory;
         this.projectServiceClient = projectServiceClient;
         this.selectProjectTypePresenter = selectProjectTypePresenter;
         this.view.setDelegate(this);
@@ -99,24 +88,18 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
         notification = new Notification(constant.cloneStarted(projectName, remoteName), PROGRESS);
         notificationManager.showNotification(notification);
 
-        ProjectTypeDescriptor unknownProjectTypeDescriptor = projectTypeDescriptorRegistry.getDescriptor(Constants.UNKNOWN_ID);
-        ProjectDescriptor projectDescriptor = dtoFactory.createDto(ProjectDescriptor.class);
-        projectDescriptor.setProjectTypeId(unknownProjectTypeDescriptor.getProjectTypeId());
-        projectDescriptor.setProjectTypeName(unknownProjectTypeDescriptor.getProjectTypeName());
-
         projectServiceClient.createFolder(projectName, new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
-                Project stubProject = new Project(null, null, null, null);
-                stubProject.setName(projectName);
-                cloneRepository(remoteUri, remoteName, stubProject);
+                Project project = new Project(null, null, null, null);
+                project.setName(projectName);
+                cloneRepository(remoteUri, remoteName, project);
             }
 
             @Override
             protected void onFailure(Throwable exception) {
-                String errorMessage = (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                                                                                                              : constant
-                                              .cloneFailed(remoteUri);
+                String errorMessage = (exception.getMessage() != null && exception.getMessage().length() > 0)
+                                      ? exception.getMessage() : constant.cloneFailed(remoteUri);
                 notification.setStatus(FINISHED);
                 notification.setType(ERROR);
                 notification.setMessage(errorMessage);
@@ -163,26 +146,26 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      *         {@link Project} to clone
      */
     private void onCloneSuccess(@NotNull final RepoInfo gitRepositoryInfo, @NotNull final Project project) {
-        selectProjectTypePresenter.showDialog(project, new AsyncCallback<Project>() {
+        resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
             @Override
             public void onSuccess(Project result) {
-                resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
-                    @Override
-                    public void onSuccess(Project result) {
-                        notification.setStatus(FINISHED);
-                        notification.setMessage(constant.cloneSuccess(gitRepositoryInfo.getRemoteUri()));
-                    }
-
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        Log.error(CloneRepositoryPresenter.class, "can not get project " + project.getName());
-                    }
-                });
+                notification.setStatus(FINISHED);
+                notification.setMessage(constant.cloneSuccess(gitRepositoryInfo.getRemoteUri()));
             }
 
             @Override
             public void onFailure(Throwable caught) {
-                Log.error(CloneRepositoryPresenter.class, caught);
+                selectProjectTypePresenter.showDialog(project, new AsyncCallback<Project>() {
+                    @Override
+                    public void onSuccess(Project result) {
+                        onCloneSuccess(gitRepositoryInfo, project);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        Log.error(CloneRepositoryPresenter.class, "can not set type for project " + project.getName());
+                    }
+                });
             }
         });
     }
@@ -196,8 +179,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      *         remote uri
      */
     private void handleError(@NotNull Throwable e, @NotNull String remoteUri) {
-        String errorMessage =
-                (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : constant.cloneFailed(remoteUri);
+        String errorMessage = (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : constant.cloneFailed(remoteUri);
         notification.setStatus(FINISHED);
         notification.setType(ERROR);
         notification.setMessage(errorMessage);

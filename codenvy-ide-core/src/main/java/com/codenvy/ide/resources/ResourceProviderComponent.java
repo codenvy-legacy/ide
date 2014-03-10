@@ -36,17 +36,14 @@ import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.resources.marshal.VFSInfoUnmarshaller;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
-import com.codenvy.ide.resources.model.Link;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.resources.model.VirtualFileSystemInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Callback;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -61,8 +58,6 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class ResourceProviderComponent implements ResourceProvider, Component {
-    /** Used for compatibility with IDE-VFS 1.x */
-    private static final String DEPRECATED_PROJECT_TYPE = "deprecated.project.type";
     protected final ModelProvider            genericModelProvider;
     /** Fully qualified URL to root folder of VFS */
     private final   String                   workspaceURL;
@@ -74,7 +69,6 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     private final   AsyncRequestFactory      asyncRequestFactory;
     private final   ProjectServiceClient     projectServiceClient;
     protected       VirtualFileSystemInfo    vfsInfo;
-    private         Loader                   loader;
     @SuppressWarnings("unused")
     private boolean initialized = false;
     private Project activeProject;
@@ -85,7 +79,6 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
      */
     @Inject
     public ResourceProviderComponent(ModelProvider genericModelProvider,
-                                     Loader loader,
                                      EventBus eventBus,
                                      @Named("defaultFileType") FileType defaultFile,
                                      @Named("restContext") String restContext,
@@ -103,7 +96,6 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         this.workspaceURL = restContext + "/vfs/" + workspaceId + "/v2";
         this.modelProviders = Collections.<ModelProvider>createStringMap();
         this.fileTypes = Collections.createIntegerMap();
-        this.loader = loader;
     }
 
     @Override
@@ -323,10 +315,6 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
 
     }
 
-    /**
-     * @param name
-     * @return
-     */
     private String getFileExtension(String name) {
         int lastDotPos = name.lastIndexOf('.');
         //file has no extension

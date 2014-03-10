@@ -54,7 +54,7 @@ import static org.mockito.Mockito.when;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-// TODO: need to review it
+// TODO: need to review this tests when migration to project API finished
 @Ignore
 public class CloneRepositoryPresenterTest extends BaseTest {
     @Mock
@@ -78,8 +78,7 @@ public class CloneRepositoryPresenterTest extends BaseTest {
         super.disarm();
 
         presenter = new CloneRepositoryPresenter(view, service, resourceProvider, constant, notificationManager, dtoUnmarshallerFactory,
-                                                 projectTypeDescriptorRegistry, dtoFactory, projectServiceClient,
-                                                 selectProjectTypePresenter);
+                                                 projectServiceClient, selectProjectTypePresenter);
 
         when(view.getProjectName()).thenReturn(PROJECT_NAME);
         when(view.getRemoteName()).thenReturn(REMOTE_NAME);

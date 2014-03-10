@@ -276,7 +276,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
                     @Override
                     public void onFailure(Throwable caught) {
-                        Log.error(ProjectExplorerPartPresenter.class, "Can not refresh project properties.", caught);
+                        Log.error(ProjectExplorerPartPresenter.class, "Can not refresh project tree.", caught);
                     }
                 });
             }
