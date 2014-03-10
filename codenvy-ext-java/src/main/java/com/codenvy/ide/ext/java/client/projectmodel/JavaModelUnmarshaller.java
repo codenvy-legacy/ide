@@ -80,10 +80,10 @@ public class JavaModelUnmarshaller {
     }
 
     /**
-     * Parse project structure and build Java project model
+     * Parse project structure and build Java project model.
      *
      * @param children
-     *         the json array to parse
+     *         children to parse
      * @param parentFolder
      *         the folder to add children's that part of java model
      * @param parentFolderNonModelItems

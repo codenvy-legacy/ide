@@ -353,7 +353,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     public void delete(final Resource item, final AsyncCallback<String> callback) {
         final Folder parent = item.getParent();
         if (activeProject == null) {
-            AsyncRequestCallback<Void> internalCallback = new AsyncRequestCallback<Void>() {
+            projectServiceClient.delete(item.getPath(), new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     // remove from the list of child
@@ -366,15 +366,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 protected void onFailure(Throwable exception) {
                     callback.onFailure(exception);
                 }
-            };
-            // TODO check with lock
-            String url = item.getLinkByRelation(Link.REL_DELETE).getHref();
-
-            if (File.TYPE.equals(item.getResourceType()) && ((File)item).isLocked()) {
-                url = URL.decode(url).replace("[lockToken]", ((File)item).getLock().getLockToken());
-            }
-            loader.setMessage("Deleting item...");
-            asyncRequestFactory.createPostRequest(url, null).loader(loader).send(internalCallback);
+            });
         } else {
             activeProject.deleteChild(item, new AsyncCallback<Void>() {
                 @Override

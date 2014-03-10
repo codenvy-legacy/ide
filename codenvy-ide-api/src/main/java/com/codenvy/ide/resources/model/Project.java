@@ -58,6 +58,7 @@ public class Project extends Folder {
     public static final String TYPE              = "project";
     protected final EventBus                  eventBus;
     protected final AsyncRequestFactory       asyncRequestFactory;
+    private final   DtoUnmarshallerFactory    dtoUnmarshallerFactory;
     /** Properties. */
     protected       Array<Property>           properties;
     protected       Map<String, List<String>> attributes;
@@ -65,8 +66,7 @@ public class Project extends Folder {
     protected       VirtualFileSystemInfo     vfsInfo;
     private         ProjectDescription        description;
     private         ProjectServiceClient      projectServiceClient;
-    private final   DtoUnmarshallerFactory    dtoUnmarshallerFactory;
-    private String projectTypeId;
+    private         String                    projectTypeId;
 
     /**
      * Constructor for empty project. Used for serialization only.
@@ -116,7 +116,6 @@ public class Project extends Folder {
         properties = JSONDeserializer.PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
         links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
 //        projectType = (itemObject.get("projectType") != null) ? itemObject.get("projectType").isString().stringValue() : null;
-        // TODO Unmarshall children
     }
 
     public void setVFSInfo(VirtualFileSystemInfo vfsInfo) {
@@ -348,18 +347,18 @@ public class Project extends Folder {
     public void refreshTree(final Folder root, final AsyncCallback<Folder> callback) {
         projectServiceClient.getTree(root.getPath(), -1,
                                      new AsyncRequestCallback<TreeElement>(dtoUnmarshallerFactory.newUnmarshaller(TreeElement.class)) {
-            @Override
-            protected void onSuccess(TreeElement result) {
-                FolderTreeUnmarshaller unmarshaller = new FolderTreeUnmarshaller(root, root.getProject());
-                unmarshaller.unmarshal(result);
-                callback.onSuccess(unmarshaller.getPayload());
-            }
+                                         @Override
+                                         protected void onSuccess(TreeElement result) {
+                                             FolderTreeUnmarshaller unmarshaller = new FolderTreeUnmarshaller(root, root.getProject());
+                                             unmarshaller.unmarshal(result);
+                                             callback.onSuccess(unmarshaller.getPayload());
+                                         }
 
-            @Override
-            protected void onFailure(Throwable exception) {
-                callback.onFailure(exception);
-            }
-        });
+                                         @Override
+                                         protected void onFailure(Throwable exception) {
+                                             callback.onFailure(exception);
+                                         }
+                                     });
     }
 
     /**

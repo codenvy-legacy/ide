@@ -41,6 +41,7 @@ import com.codenvy.ide.ext.git.server.InfoPage;
 import com.codenvy.ide.ext.git.server.LogPage;
 import com.codenvy.ide.ext.git.shared.*;
 import com.codenvy.ide.maven.tools.MavenUtils;
+import com.codenvy.ide.server.Constants;
 import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
 import com.codenvy.organization.model.User;
@@ -182,7 +183,7 @@ public class GitService {
     public RepoInfo clone(final CloneRequest request) throws URISyntaxException, GitException, VirtualFileSystemException {
         long start = System.currentTimeMillis();
         // On-the-fly resolving of repository's working directory.
-        request.setWorkingDir(resolveLocalPath(request.getWorkingDir()));
+        request.setWorkingDir(resolveLocalPathByPath(request.getWorkingDir()));
         LOG.info("Repository clone from '" + request.getRemoteUri() + "' to '" + request.getWorkingDir() + "' started");
         GitConnection gitConnection = getGitConnection();
         try {
@@ -212,8 +213,8 @@ public class GitService {
 
         if (value == null || !value.equals("true")) {
             Property isGitRepositoryProperty = DtoFactory.getInstance().createDto(Property.class).withName("isGitRepository")
-                                                         .withValue(new ArrayList<String>(Arrays.asList("true")));
-            List<Property> propertiesList = new ArrayList<Property>(1);
+                                                         .withValue(new ArrayList<>(Arrays.asList("true")));
+            List<Property> propertiesList = new ArrayList<>(1);
             propertiesList.add(isGitRepositoryProperty);
             vfs.updateItem(projectId, propertiesList, null);
         }
@@ -230,29 +231,32 @@ public class GitService {
         for (Item file : files.getItems()) {
             if ("pom.xml".equals(file.getName())) {
                 boolean isMultiModule = isMultiModule(vfs.getContent(file.getId()));
-                List<Property> propertiesList = new ArrayList<Property>();
+                List<Property> propertiesList = new ArrayList<>();
+                String propertyFileContent = "";
                 if (isMultiModule) {
                     Property projectTypeProperty = DtoFactory.getInstance().createDto(Property.class).withName("vfs:projectType")
                                                              .withValue(new ArrayList<String>(Arrays.asList("Multiple Module Project")));
                     propertiesList.add(projectTypeProperty);
                     propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("language")
-                                                 .withValue(new ArrayList<String>(Arrays.asList("java"))));
+                                                 .withValue(new ArrayList<>(Arrays.asList("java"))));
                     propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("vfs:mimeType")
-                                                 .withValue(new ArrayList<String>(Arrays.asList("text/vnd.ideproject+directory"))));
+                                                 .withValue(new ArrayList<>(Arrays.asList("text/vnd.ideproject+directory"))));
                     propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("builder.name")
-                                                 .withValue(new ArrayList<String>(Arrays.asList("maven"))));
+                                                 .withValue(new ArrayList<>(Arrays.asList("maven"))));
                     processMultiModuleMavenProject(vfs, projectId);
 
+                    propertyFileContent = "{\"type\":\"maven_multi_module\",\"properties\":[{\"name\":\"builder.name\",\"value\":[\"maven\"]}]}";
                 } else if (!isProjectTypePropertySet(vfs.getItem(projectId, false))) {
                     Property projectTypeProperty = DtoFactory.getInstance().createDto(Property.class).withName("vfs:projectType")
-                                                             .withValue(new ArrayList<String>(Arrays.asList("undefined")));
+                                                             .withValue(new ArrayList<>(Arrays.asList(Constants.UNKNOWN_ID)));
                     propertiesList.add(projectTypeProperty);
+
+                    propertyFileContent = "{\"type\":\"" + Constants.UNKNOWN_ID + "\"}";
                 }
+
                 Folder codenvyFolder = vfs.createFolder(projectId, ".codenvy");
-                final String content =
-                        "{\"type\":\"maven_multi_module\",\"properties\":[{\"name\":\"builder.name\",\"value\":[\"maven\"]}}";
                 vfs.createFile(codenvyFolder.getId(), "project", MediaType.APPLICATION_JSON_TYPE,
-                               new ByteArrayInputStream(content.getBytes()));
+                               new ByteArrayInputStream(propertyFileContent.getBytes()));
                 vfs.updateItem(projectId, propertiesList, null);
                 break;
             }
@@ -296,18 +300,17 @@ public class GitService {
             boolean found = false;
             for (Item file : files.getItems()) {
                 if ("pom.xml".equals(file.getName()) && !isProjectTypePropertySet(folder)) {
-                    
-                    List<Property> propertiesList = new ArrayList<Property>();
+                    List<Property> propertiesList = new ArrayList<>();
                     Property projectTypeProperty =
                             DtoFactory.getInstance().createDto(Property.class).withName("vfs:projectType")
-                                      .withValue(new ArrayList<String>(Arrays.asList("undefined")));
+                                      .withValue(new ArrayList<>(Arrays.asList("undefined")));
                     propertiesList.add(projectTypeProperty);
                     propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("vfs:mimeType")
-                                                 .withValue(new ArrayList<String>(Arrays.asList("text/vnd.ideproject+directory"))));
+                                                 .withValue(new ArrayList<>(Arrays.asList("text/vnd.ideproject+directory"))));
                     propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("isGitRepository")
-                                                 .withValue(new ArrayList<String>(Arrays.asList("true"))));
+                                                 .withValue(new ArrayList<>(Arrays.asList("true"))));
                     propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("builder.name")
-                                                 .withValue(new ArrayList<String>(Arrays.asList("maven"))));
+                                                 .withValue(new ArrayList<>(Arrays.asList("maven"))));
                     vfs.updateItem(folder.getId(), propertiesList, null);
                     found = true;
                     Folder codenvyFolder = vfs.createFolder(folder.getId(), ".codenvy");
@@ -321,10 +324,11 @@ public class GitService {
             }
         }
     }
-    
+
     private boolean isProjectTypePropertySet(Item item) {
         for (Property property : item.getProperties()) {
-            if ("vfs:projectType".equals(property.getName()) && property.getValue().size() > 0 && !"deprecated.project.type".equals(property.getValue().get(0))) {
+            if ("vfs:projectType".equals(property.getName()) && property.getValue().size() > 0 &&
+                !"deprecated.project.type".equals(property.getValue().get(0))) {
                 return true;
             }
         }
@@ -642,6 +646,15 @@ public class GitService {
         vfs.updateItem(project.getId(), propertiesNew, null);
     }
 
+    // TODO: this is temporary method
+    private Item getGitProjectByPath(VirtualFileSystem vfs, String projectPath) throws VirtualFileSystemException {
+        Item project = vfs.getItemByPath(projectPath, null, false, PropertyFilter.ALL_FILTER);
+        Item parent = vfs.getItem(project.getParentId(), false, PropertyFilter.ALL_FILTER);
+        if (parent.getItemType().equals(ItemType.PROJECT)) // MultiModule project
+            return parent;
+        return project;
+    }
+
     private Item getGitProject(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException {
         Item project = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
         Item parent = vfs.getItem(project.getParentId(), false, PropertyFilter.ALL_FILTER);
@@ -649,7 +662,6 @@ public class GitService {
             return parent;
         return project;
     }
-
 
     protected boolean isGitRepository() throws VirtualFileSystemException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
@@ -664,6 +676,22 @@ public class GitService {
         }
 
         return value != null && value.equals("true");
+    }
+
+    // TODO: this is temporary method
+    protected String resolveLocalPathByPath(String folderPath) throws VirtualFileSystemException {
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+        if (vfs == null) {
+            throw new VirtualFileSystemException(
+                    "Can't resolve path on the Local File System : Virtual file system not initialized");
+        }
+        Item gitProject = getGitProjectByPath(vfs, folderPath);
+
+        projectId = gitProject.getId();
+
+        final MountPoint mountPoint = vfs.getMountPoint();
+        final VirtualFile virtualFile = mountPoint.getVirtualFileById(gitProject.getId());
+        return localPathResolver.resolve(virtualFile);
     }
 
     protected String resolveLocalPath(String projId) throws VirtualFileSystemException {

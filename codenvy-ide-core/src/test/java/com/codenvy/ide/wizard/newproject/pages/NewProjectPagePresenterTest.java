@@ -19,6 +19,7 @@ package com.codenvy.ide.wizard.newproject.pages;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectReference;
+import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
@@ -45,6 +46,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.codenvy.ide.api.ui.wizard.Wizard.UpdateDelegate;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
@@ -125,6 +128,10 @@ public class NewProjectPagePresenterTest {
         final Array<ProjectReference> itemList = Collections.createArray();
         itemList.add(item);
         when(item.getName()).thenReturn(PROJECT_NAME);
+
+        List<ProjectTemplateDescriptor> templates = new ArrayList<>(0);
+        templates.add(mock(ProjectTemplateDescriptor.class));
+        when(projectTypeDescriptor.getTemplates()).thenReturn(templates);
 
         Array<ProjectTypeDescriptor> projectTypes = Collections.createArray(projectTypeDescriptor);
         when(projectTypeDescriptorRegistry.getDescriptors()).thenReturn(projectTypes);

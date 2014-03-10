@@ -78,7 +78,6 @@ public class JavaProject extends Project {
     @Override
     public void refreshTree(final Folder root, final AsyncCallback<Folder> callback) {
         final Folder folderToRefresh = (root instanceof Package && root.getParent() != null) ? root.getParent() : root;
-
         projectServiceClient.getTree(root.getPath(), -1,
                                      new AsyncRequestCallback<TreeElement>(dtoUnmarshallerFactory.newUnmarshaller(TreeElement.class)) {
                                          @Override

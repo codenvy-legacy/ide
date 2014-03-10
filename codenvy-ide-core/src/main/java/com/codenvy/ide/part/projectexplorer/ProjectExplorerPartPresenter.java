@@ -306,7 +306,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     }
 
     /**
-     * Check, whether project type is "undefined" and call {@link SelectProjectTypePresenter} to set it.
+     * Check, whether project type is "unknown" and call {@link SelectProjectTypePresenter} to set it.
      *
      * @param project
      */
