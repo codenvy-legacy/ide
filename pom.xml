@@ -109,8 +109,6 @@
         <maven.build.timestamp.format>dd.MM.yy HH:mm</maven.build.timestamp.format>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
-        <maven.releases.repo.url>https://maven.codenvycorp.com/content/repositories/codenvy-private-releases/</maven.releases.repo.url>
-        <maven.snapshots.repo.url>https://maven.codenvycorp.com/content/repositories/codenvy-private-snapshots/</maven.snapshots.repo.url>
         <mockito.version>1.9.5</mockito.version>
         <org.apache.lucene.version>2.9.4</org.apache.lucene.version>
         <org.easytesting.fest-assert.version>1.4</org.easytesting.fest-assert.version>
