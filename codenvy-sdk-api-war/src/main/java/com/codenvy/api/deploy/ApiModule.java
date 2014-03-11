@@ -34,6 +34,8 @@ import com.codenvy.api.runner.RunnerAdminService;
 import com.codenvy.api.runner.RunnerSelectionStrategy;
 import com.codenvy.api.runner.RunnerService;
 import com.codenvy.api.runner.internal.SlaveRunnerService;
+import com.codenvy.api.user.server.TokenValidator;
+import com.codenvy.api.user.server.UserProfileService;
 import com.codenvy.api.user.server.UserService;
 import com.codenvy.api.vfs.server.ContentStreamWriter;
 import com.codenvy.api.vfs.server.RequestValidator;
@@ -48,6 +50,7 @@ import com.codenvy.api.vfs.server.exceptions.PermissionDeniedExceptionMapper;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemRuntimeExceptionMapper;
 import com.codenvy.api.vfs.server.observation.EventListenerList;
 import com.codenvy.api.vfs.server.search.SearcherProvider;
+import com.codenvy.ide.env.TokenValidatorImpl;
 import com.codenvy.ide.everrest.CodenvyAsynchronousJobPool;
 import com.codenvy.ide.ext.git.server.GitConnectionFactory;
 import com.codenvy.ide.ext.git.server.nativegit.NativeGitConnectionFactory;
@@ -114,6 +117,7 @@ public class ApiModule extends AbstractModule {
         bind(SlaveRunnerService.class);
         bind(DeployToApplicationServerRunner.class);
         bind(UserService.class);
+        bind(UserProfileService.class);
         bind(RestNameEnvironment.class);
         bind(AsynchronousJobPool.class).to(CodenvyAsynchronousJobPool.class);
         bind(new PathKey<>(AsynchronousJobService.class, "/async/{ws-id}")).to(AsynchronousJobService.class);
@@ -121,9 +125,10 @@ public class ApiModule extends AbstractModule {
         bind(GitHubService.class);
         bind(GitConnectionFactory.class).to(NativeGitConnectionFactory.class);
         bind(KeyService.class);
+        bind(SshKeyStore.class).to(UserProfileSshKeyStore.class);
         bind(OAuthAuthenticationService.class);
         bind(OAuthTokenProvider.class).to(OAuthAuthenticatorTokenProvider.class);
         bind(OAuthAuthenticatorProvider.class).to(LabOAuthAuthenticatorProvider.class);
-        bind(SshKeyStore.class).to(UserProfileSshKeyStore.class);
+        bind(TokenValidator.class).to(TokenValidatorImpl.class);
     }
 }

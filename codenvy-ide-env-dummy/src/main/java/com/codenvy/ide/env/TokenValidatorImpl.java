@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.api.deploy;
+package com.codenvy.ide.env;
 
 import com.codenvy.api.user.server.TokenValidator;
 import com.codenvy.api.user.server.exception.UserException;
