@@ -36,6 +36,7 @@ import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -155,7 +156,17 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     /** {@inheritDoc} */
     @Override
     public void onUploadClicked() {
-        uploadSshKeyPresenter.showDialog();
+        uploadSshKeyPresenter.showDialog(new AsyncCallback<Void>() {
+            
+            @Override
+            public void onSuccess(Void result) {
+                refreshKeys();
+            }
+            
+            @Override
+            public void onFailure(Throwable caught) {
+            }
+        });
     }
 
     /** {@inheritDoc} */
