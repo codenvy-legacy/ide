@@ -47,23 +47,18 @@ import com.google.web.bindery.event.shared.EventBus;
 import javax.validation.constraints.NotNull;
 
 
-/**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
- */
+/** @author Evgen Vidolob */
 @Singleton
 public class EditorAgentImpl implements EditorAgent {
 
     private final StringMap<EditorPartPresenter> openedEditors;
-
     /** Used to notify {@link EditorAgentImpl} that editor has closed */
-    private final EditorPartCloseHandler editorClosed = new EditorPartCloseHandler() {
+    private final EditorPartCloseHandler   editorClosed             = new EditorPartCloseHandler() {
         @Override
         public void onClose(EditorPartPresenter editor) {
             editorClosed(editor);
         }
     };
-
     private final ActivePartChangedHandler activePartChangedHandler = new ActivePartChangedHandler() {
         @Override
         public void onActivePartChanged(ActivePartChangedEvent event) {
@@ -73,8 +68,7 @@ public class EditorAgentImpl implements EditorAgent {
             }
         }
     };
-
-    private final FileEventHandler fileEventHandler = new FileEventHandler() {
+    private final FileEventHandler         fileEventHandler         = new FileEventHandler() {
         @Override
         public void onFileOperation(final FileEvent event) {
             if (event.getOperationType() == FileOperation.OPEN) {
@@ -84,6 +78,82 @@ public class EditorAgentImpl implements EditorAgent {
             }
         }
     };
+    private final WorkspaceAgent      workspace;
+    private final EventBus            eventBus;
+    private       EditorRegistry      editorRegistry;
+    private       ResourceProvider    provider;
+    private       EditorPartPresenter activeEditor;
+
+    @Inject
+    public EditorAgentImpl(EventBus eventBus, EditorRegistry editorRegistry, ResourceProvider provider,
+                           final WorkspaceAgent workspace) {
+        super();
+        this.eventBus = eventBus;
+        this.editorRegistry = editorRegistry;
+        this.provider = provider;
+        this.workspace = workspace;
+        openedEditors = Collections.createStringMap();
+
+        bind();
+    }
+
+    protected void bind() {
+        eventBus.addHandler(ActivePartChangedEvent.TYPE, activePartChangedHandler);
+        eventBus.addHandler(FileEvent.TYPE, fileEventHandler);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void openEditor(@NotNull final File file) {
+        if (openedEditors.containsKey(file.getPath())) {
+            workspace.setActivePart(openedEditors.get(file.getPath()));
+        } else {
+            FileType fileType = provider.getFileType(file);
+            EditorProvider editorProvider = editorRegistry.getDefaultEditor(fileType);
+            EditorPartPresenter editor = editorProvider.getEditor();
+            try {
+                editor.init(new EditorInputImpl(file));
+                editor.addCloseHandler(editorClosed);
+            } catch (EditorInitException e) {
+                Log.error(getClass(), e);
+            }
+            workspace.openPart(editor, PartStackType.EDITING);
+            openedEditors.put(file.getPath(), editor);
+        }
+    }
+
+    /** @param editor */
+    protected void editorClosed(EditorPartPresenter editor) {
+        if (activeEditor == editor) {
+            activeEditor = null;
+        }
+        //call close() method
+        if (editor instanceof TextEditorPresenter) {
+            ((TextEditorPresenter)editor).close(false);
+        }
+        Array<String> keys = openedEditors.getKeys();
+        for (int i = 0; i < keys.size(); i++) {
+            String fileId = keys.get(i);
+            // same instance
+            if (openedEditors.get(fileId) == editor) {
+                openedEditors.remove(fileId);
+                return;
+            }
+        }
+
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public StringMap<EditorPartPresenter> getOpenedEditors() {
+        return openedEditors;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public EditorPartPresenter getActiveEditor() {
+        return activeEditor;
+    }
 
     /**
      *
@@ -126,86 +196,5 @@ public class EditorAgentImpl implements EditorAgent {
         public void setFile(File file) {
             this.file = file;
         }
-    }
-
-    private EditorRegistry editorRegistry;
-
-    private ResourceProvider provider;
-
-    private final WorkspaceAgent workspace;
-
-    private EditorPartPresenter activeEditor;
-
-    private final EventBus eventBus;
-
-    @Inject
-    public EditorAgentImpl(EventBus eventBus, EditorRegistry editorRegistry, ResourceProvider provider,
-                           final WorkspaceAgent workspace) {
-        super();
-        this.eventBus = eventBus;
-        this.editorRegistry = editorRegistry;
-        this.provider = provider;
-        this.workspace = workspace;
-        openedEditors = Collections.createStringMap();
-
-        bind();
-    }
-
-    protected void bind() {
-        eventBus.addHandler(ActivePartChangedEvent.TYPE, activePartChangedHandler);
-        eventBus.addHandler(FileEvent.TYPE, fileEventHandler);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void openEditor(@NotNull final File file) {
-        if (openedEditors.containsKey(file.getId())) {
-            workspace.setActivePart(openedEditors.get(file.getId()));
-        } else {
-            FileType fileType = provider.getFileType(file);
-            EditorProvider editorProvider = editorRegistry.getDefaultEditor(fileType);
-            EditorPartPresenter editor = editorProvider.getEditor();
-            try {
-                editor.init(new EditorInputImpl(file));
-                editor.addCloseHandler(editorClosed);
-            } catch (EditorInitException e) {
-                Log.error(getClass(), e);
-            }
-            workspace.openPart(editor, PartStackType.EDITING);
-            openedEditors.put(file.getId(), editor);
-        }
-    }
-
-    /** @param editor */
-    protected void editorClosed(EditorPartPresenter editor) {
-        if (activeEditor == editor) {
-            activeEditor = null;
-        }
-        //call close() method
-        if(editor instanceof TextEditorPresenter){
-            ((TextEditorPresenter)editor).close(false);
-        }
-        Array<String> keys = openedEditors.getKeys();
-        for (int i = 0; i < keys.size(); i++) {
-            String fileId = keys.get(i);
-            // same instance
-            if (openedEditors.get(fileId) == editor) {
-                openedEditors.remove(fileId);
-                return;
-            }
-        }
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public StringMap<EditorPartPresenter> getOpenedEditors() {
-        return openedEditors;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public EditorPartPresenter getActiveEditor() {
-        return activeEditor;
     }
 }

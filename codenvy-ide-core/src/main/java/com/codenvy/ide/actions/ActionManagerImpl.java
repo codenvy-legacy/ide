@@ -63,6 +63,11 @@ public class ActionManagerImpl implements ActionManager {
         DefaultActionGroup window = new DefaultActionGroup("Window", true, this);
         registerAction(IdeActions.GROUP_WINDOW, window);
         mainMenu.add(window);
+        
+        DefaultActionGroup help = new DefaultActionGroup("Help", true, this);
+        registerAction(IdeActions.GROUP_HELP, help);
+        Constraints afterWindow = new Constraints(Anchor.AFTER, IdeActions.GROUP_WINDOW);
+        mainMenu.add(help, afterWindow);
 
         DefaultActionGroup project = new DefaultActionGroup("Project", true, this);
         registerAction(IdeActions.GROUP_PROJECT, project);

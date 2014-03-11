@@ -17,13 +17,14 @@
  */
 package com.codenvy.ide.openproject;
 
-import com.codenvy.api.vfs.shared.dto.Item;
-import com.codenvy.api.vfs.shared.dto.ItemList;
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -32,27 +33,30 @@ import com.google.inject.Singleton;
 /**
  * Provides opening project.
  *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
 @Singleton
 public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
-    private OpenProjectView view;
-    private DtoFactory dtoFactory;
-    private ResourceProvider resourceProvider;
+    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    private final ProjectServiceClient   projectServiceClient;
+    private       OpenProjectView        view;
+    private       ResourceProvider       resourceProvider;
     private String selectedProject = null;
 
     /**
-     * Create OpenProjectPresenter.
+     * Create presenter.
      *
      * @param view
      * @param resourceProvider
+     * @param dtoUnmarshallerFactory
+     * @param projectServiceClient
      */
     @Inject
-    protected OpenProjectPresenter(OpenProjectView view,
-                                   ResourceProvider resourceProvider,
-                                   DtoFactory dtoFactory) {
+    protected OpenProjectPresenter(OpenProjectView view, ResourceProvider resourceProvider, DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                                   ProjectServiceClient projectServiceClient) {
         this.view = view;
-        this.dtoFactory = dtoFactory;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.projectServiceClient = projectServiceClient;
         this.view.setDelegate(this);
         this.resourceProvider = resourceProvider;
 
@@ -96,22 +100,22 @@ public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
 
     /** Show dialog. */
     public void showDialog() {
-        resourceProvider.listProjects(new AsyncCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
-                Array<String> array = Collections.createArray();
-                ItemList itemList = dtoFactory.createDtoFromJson(result, ItemList.class);
-                for(Item item : itemList.getItems()) {
-                    array.add(item.getName());
-                }
-                view.setProjects(array);
-                view.showDialog();
-            }
+        projectServiceClient.getProjects(
+                new AsyncRequestCallback<Array<ProjectReference>>(dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectReference.class)) {
+                    @Override
+                    protected void onSuccess(Array<ProjectReference> result) {
+                        Array<String> array = Collections.createArray();
+                        for (ProjectReference projectReference : result.asIterable()) {
+                            array.add(projectReference.getName());
+                        }
+                        view.setProjects(array);
+                        view.showDialog();
+                    }
 
-            @Override
-            public void onFailure(Throwable caught) {
-                Log.error(OpenProjectPresenter.class, "Can not get list of projects", caught);
-            }
-        });
+                    @Override
+                    protected void onFailure(Throwable throwable) {
+                        Log.error(OpenProjectPresenter.class, "Can not get list of projects", throwable);
+                    }
+                });
     }
 }

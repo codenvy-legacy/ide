@@ -24,6 +24,6 @@ mvn clean install
       GWT Module Onload: com.codenvy.ide.client
       VM Options: -Xmx1024m
       Dev Mode Parameters:  -noserver -port 8080
-      Start Page: ide/_app/IDE.html
+      Start Page: ide/default
 
-Open in browser http://127.0.0.1:8080/ide/_app/IDE.html?gwt.codesvr=127.0.0.1:9997
+Open in browser http://127.0.0.1:8080/ide/default?gwt.codesvr=127.0.0.1:9997

@@ -17,10 +17,11 @@
  */
 package com.codenvy.ide.ext.tutorials.server;
 
+import com.codenvy.api.project.server.ProjectTypeDescriptionExtension;
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
 import com.codenvy.api.project.shared.AttributeDescription;
 import com.codenvy.api.project.shared.ProjectType;
-import com.codenvy.api.project.shared.ProjectTypeDescriptionExtension;
+import com.codenvy.ide.ext.tutorials.shared.Constants;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,18 +43,21 @@ public class ProjectTypeDescriptionsExtension implements ProjectTypeDescriptionE
     @Override
     public List<ProjectType> getProjectTypes() {
         final List<ProjectType> list = new ArrayList<>(1);
-        list.add(new ProjectType("codenvy_tutorial", "Codenvy tutorial"));
+        list.add(new ProjectType(Constants.TUTORIAL_ID, Constants.TUTORIAL_NAME));
         return list;
     }
 
     @Override
     public List<AttributeDescription> getAttributeDescriptions() {
-        final List<AttributeDescription> list = new ArrayList<>(5);
-        list.add(new AttributeDescription("language"));
-        list.add(new AttributeDescription("exoide:classpath"));
-        list.add(new AttributeDescription("folders.source"));
-        list.add(new AttributeDescription("builder.name"));
-        list.add(new AttributeDescription("runner.name"));
+        final List<AttributeDescription> list = new ArrayList<>(6);
+        list.add(new AttributeDescription(Constants.LANGUAGE));
+        list.add(new AttributeDescription(Constants.LANGUAGE_VERSION));
+        list.add(new AttributeDescription(Constants.FRAMEWORK));
+        list.add(new AttributeDescription(Constants.BUILDER_NAME));
+        list.add(new AttributeDescription(Constants.BUILDER_MAVEN_SOURCE_FOLDERS));
+        list.add(new AttributeDescription(Constants.RUNNER_NAME));
         return list;
     }
+
+
 }

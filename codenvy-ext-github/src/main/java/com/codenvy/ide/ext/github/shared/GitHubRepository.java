@@ -23,7 +23,6 @@ import com.codenvy.dto.shared.DTO;
  * GitHub repository, taken from API v3.
  *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Mar 29, 2012 12:41:47 PM anya $
  */
 @DTO
 public interface GitHubRepository {

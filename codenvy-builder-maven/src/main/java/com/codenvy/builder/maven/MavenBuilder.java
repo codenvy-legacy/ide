@@ -17,18 +17,18 @@
  */
 package com.codenvy.builder.maven;
 
+import com.codenvy.api.builder.BuilderException;
 import com.codenvy.api.builder.dto.Dependency;
 import com.codenvy.api.builder.internal.BuildLogger;
 import com.codenvy.api.builder.internal.BuildResult;
 import com.codenvy.api.builder.internal.Builder;
 import com.codenvy.api.builder.internal.BuilderConfiguration;
-import com.codenvy.api.builder.internal.BuilderException;
 import com.codenvy.api.builder.internal.DelegateBuildLogger;
 import com.codenvy.api.builder.internal.DependencyCollector;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.builder.maven.dto.MavenDependency;
-import com.codenvy.ide.maven.tools.MavenUtils;
 import com.codenvy.dto.server.DtoFactory;
+import com.codenvy.ide.maven.tools.MavenUtils;
 
 import org.apache.maven.model.Model;
 import org.slf4j.Logger;
@@ -118,7 +118,7 @@ public class MavenBuilder extends Builder {
                 } else {
                     commandLine.add("clean", "install");
                 }
-                if (config.getRequest().isDeployJarWithDependencies()) {
+                if (config.getRequest().isIncludeDependencies()) {
                     try {
                         Files.write(new java.io.File(config.getWorkDir(), ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES_FILE).toPath(),
                                     ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES.getBytes());

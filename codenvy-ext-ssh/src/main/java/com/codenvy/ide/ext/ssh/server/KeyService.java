@@ -24,7 +24,6 @@ import com.codenvy.ide.ext.ssh.dto.PublicKey;
 
 import org.apache.commons.fileupload.FileItem;
 
-import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -37,8 +36,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -47,7 +46,7 @@ import java.util.Set;
 
 /**
  * REST interface to SshKeyProvider.
- *
+ * 
  * @author andrew00x
  */
 @Path("ssh-keys/{ws-id}")
@@ -55,7 +54,7 @@ public class KeyService {
     private final SshKeyStore keyStore;
 
     @PathParam("ws-id")
-    private String wsId;
+    private String            wsId;
 
     @Inject
     public KeyService(SshKeyStore keyStore) {
@@ -65,7 +64,6 @@ public class KeyService {
     /** Generate SSH key pair. */
     @POST
     @Path("gen")
-    @RolesAllowed({"developer"})
     @Consumes({MediaType.APPLICATION_JSON})
     public Response genKeyPair(GenKeyRequest request) {
         try {
@@ -83,8 +81,7 @@ public class KeyService {
     @POST
     @Path("add")
     @Consumes({MediaType.MULTIPART_FORM_DATA})
-    @RolesAllowed({"developer"})
-    public Response addPrivateKey(@Context SecurityContext security, @QueryParam("host") String host,
+    public Response addPrivateKey(@QueryParam("host") String host,
                                   Iterator<FileItem> iterator) {
         /*
          * XXX : Temporary turn-off don't work on demo site if (!security.isSecure()) { throw new
@@ -113,14 +110,13 @@ public class KeyService {
 
     /**
      * Get public key.
-     *
+     * 
      * @see {@link SshKeyStore#genKeyPair(String, String, String)}
      * @see {@link SshKeyStore#getPublicKey(String)}
      */
     @GET
-    @RolesAllowed({"developer"})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getPublicKey(@Context SecurityContext security, @QueryParam("host") String host) {
+    public Response getPublicKey(@QueryParam("host") String host) {
 
         /*
          * XXX : Temporary turn-off don't work on demo site if (!security.isSecure()) { throw new
@@ -150,7 +146,6 @@ public class KeyService {
     /** Remove SSH keys. */
     @GET
     @Path("remove")
-    @RolesAllowed({"developer"})
     public String removeKeys(@QueryParam("host") String host, @QueryParam("callback") String calback) {
         try {
             keyStore.removeKeys(host);
@@ -165,7 +160,6 @@ public class KeyService {
 
     @GET
     @Path("all")
-    @RolesAllowed({"developer"})
     @Produces({MediaType.APPLICATION_JSON})
     public Response getKeys(@Context UriInfo uriInfo) {
         try {
@@ -177,11 +171,12 @@ public class KeyService {
                     String getPublicKeyUrl = null;
                     if (publicKeyExists) {
                         getPublicKeyUrl =
-                                uriInfo.getBaseUriBuilder().path(getClass()).queryParam("host", host).build(wsId).toString();
+                                          uriInfo.getBaseUriBuilder().path(getClass()).queryParam("host", host).build(wsId).toString();
                     }
                     String removeKeysUrl =
-                            uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "removeKeys").queryParam("host", host)
-                                   .build(wsId).toString();
+                                           uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "removeKeys")
+                                                  .queryParam("host", host)
+                                                  .build(wsId).toString();
                     result.add(DtoFactory.getInstance().createDto(KeyItem.class).withHost(host).withPublicKeyUrl(getPublicKeyUrl)
                                          .withRemoteKeyUrl(removeKeysUrl));
                 }

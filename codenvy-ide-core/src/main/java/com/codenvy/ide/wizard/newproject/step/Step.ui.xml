@@ -2,6 +2,8 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:style>
         @eval brColor com.codenvy.ide.api.ui.theme.Style.getWizardStepsBorderColor();
+        @eval stepBtnBgColor com.codenvy.ide.api.ui.theme.Style.getNotableButtonColor();
+        @eval stepBtnTextColor com.codenvy.ide.api.ui.theme.Style.getNotableButtonTopColor();
         .mainPanel{
             height: 42px;
             width: 100%;
@@ -16,7 +18,8 @@
             vertical-align: middle;
             text-align: center;
             border-radius: 3px;
-            background: none repeat scroll 0% 0% rgb(45, 107, 163);
+            background: none repeat scroll 0% 0% stepBtnBgColor;
+            color: stepBtnTextColor;
             border: 1px solid brColor;
             margin-top:  7px;
             line-height: 24px;

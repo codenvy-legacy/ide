@@ -34,6 +34,8 @@ public interface IdeActions {
     String GROUP_WINDOW = "WindowGroup";
 
     String GROUP_PROJECT = "ProjectGroup";
+    
+    String GROUP_HELP = "HelpGroup";
 
     String GROUP_PROJECT_PAAS = "ProjectPaaSGroup";
 

@@ -19,9 +19,6 @@ package com.codenvy.vfs.impl.fs;
 
 import junit.framework.TestCase;
 
-import com.codenvy.api.core.user.User;
-import com.codenvy.api.core.user.UserImpl;
-import com.codenvy.api.core.user.UserState;
 import com.codenvy.api.vfs.server.URLHandlerFactorySetup;
 import com.codenvy.api.vfs.server.VirtualFileSystemApplication;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
@@ -35,6 +32,8 @@ import com.codenvy.api.vfs.shared.dto.Principal;
 import com.codenvy.api.vfs.shared.dto.Project;
 import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo;
+import com.codenvy.commons.env.EnvironmentContext;
+import com.codenvy.commons.user.UserImpl;
 
 import org.apache.commons.codec.binary.Base64;
 import org.everrest.core.RequestHandler;
@@ -157,12 +156,7 @@ public abstract class LocalFileSystemTest extends TestCase {
         deployer.publish(new VirtualFileSystemApplication());
 
         // RUNTIME VARIABLES
-        User user = new UserImpl("admin", Arrays.asList("developer"));
-        UserState.set(new UserState(user));
-//        EnvironmentContext env = EnvironmentContext.getCurrent();
-//        env.setVariable(EnvironmentContext.VFS_ROOT_DIR, root);
-//        env.setVariable(EnvironmentContext.WORKSPACE_ID, MY_WORKSPACE_ID);
-//        env.setVariable(EnvironmentContext.WORKSPACE_NAME, MY_WORKSPACE_ID);
+        EnvironmentContext.getCurrent().setUser(new UserImpl("admin", null, Arrays.asList("developer")));
     }
 
     // Directory "fs-root" in "target" folder of builder project.

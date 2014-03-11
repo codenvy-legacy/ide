@@ -37,7 +37,7 @@ public class NewPackageProviderTest extends BaseNewJavaResourceProviderTest {
 
     @Override
     public void setUp() {
-        provider = new NewPackageProvider(selectionAgent);
+        provider = new NewPackageProvider(selectionAgent, iconRegistry);
         super.setUp();
     }
 

@@ -35,7 +35,6 @@ public class ProjectModelProviderAdapter {
     private final ResourceProvider resourceProvider;
     private       Project          project;
 
-    /** @param resourceProvider */
     public ProjectModelProviderAdapter(ResourceProvider resourceProvider) {
         this.resourceProvider = resourceProvider;
     }
@@ -44,14 +43,15 @@ public class ProjectModelProviderAdapter {
      * Initializes adapter by used just retrieved Project properties from backend.
      *
      * @param props
-     * @return
+     *         project properties
+     * @return new {@link Project} instance
      */
     public Project init(Array<Property> props) {
         String language = null;
         if (props != null) {
             for (int i = 0; i < props.size(); i++) {
                 Property p = props.get(i);
-                if (ProjectDescription.PROPERTY_LANGUAGE.equals(p.getName())) {
+                if (ProjectDescription.ATTR_LANGUAGE.equals(p.getName())) {
                     if (p.getValue().get(0) != null) {
                         language = p.getValue().get(0).toString();
                     }

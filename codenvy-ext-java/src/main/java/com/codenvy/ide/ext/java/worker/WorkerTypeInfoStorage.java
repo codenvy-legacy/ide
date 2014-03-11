@@ -20,9 +20,9 @@ package com.codenvy.ide.ext.java.worker;
 import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.ext.java.jdt.core.IType;
 import com.codenvy.ide.ext.java.jdt.core.Signature;
-import com.codenvy.ide.ext.java.jdt.env.BinaryTypeImpl;
-import com.codenvy.ide.ext.java.jdt.env.TypeImpl;
+import com.codenvy.ide.ext.java.jdt.core.search.Type;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryType;
+import com.codenvy.ide.ext.java.worker.env.BinaryType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,8 +83,8 @@ public class WorkerTypeInfoStorage {
     }
 
     public IType getTypeByFqn(String fqn) {
-        BinaryTypeImpl type = (BinaryTypeImpl)getType(fqn);
-        return type != null ? new TypeImpl(type) : null;
+        BinaryType type = (BinaryType)getType(fqn);
+        return type != null ? new Type(type) : null;
     }
 
     public void setShortTypesInfo(String shortTypesInfo) {

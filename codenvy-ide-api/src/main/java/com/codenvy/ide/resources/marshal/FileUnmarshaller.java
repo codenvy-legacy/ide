@@ -23,11 +23,10 @@ import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONParser;
 
-
 /**
  * Unmarsheller for {@link File}
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public class FileUnmarshaller implements Unmarshallable<File> {
     private File item;

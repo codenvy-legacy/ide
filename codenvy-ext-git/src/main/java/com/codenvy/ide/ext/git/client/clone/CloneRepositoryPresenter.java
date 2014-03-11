@@ -17,23 +17,20 @@
  */
 package com.codenvy.ide.ext.git.client.clone;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.RepoInfo;
+import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.StringUnmarshaller;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
-import com.codenvy.ide.websocket.rest.StringUnmarshallerWS;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -52,45 +49,57 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 @Singleton
 public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDelegate {
     public static final String DEFAULT_REPO_NAME = "origin";
-    private CloneRepositoryView     view;
-    private GitClientService        service;
-    private ResourceProvider        resourceProvider;
-    private GitLocalizationConstant constant;
-    private NotificationManager     notificationManager;
-    private Notification            notification;
-    private DtoFactory              dtoFactory;
+    private final DtoUnmarshallerFactory     dtoUnmarshallerFactory;
+    private final ProjectServiceClient       projectServiceClient;
+    private final SelectProjectTypePresenter selectProjectTypePresenter;
+    private       CloneRepositoryView        view;
+    private       GitClientService           service;
+    private       ResourceProvider           resourceProvider;
+    private       GitLocalizationConstant    constant;
+    private       NotificationManager        notificationManager;
+    private       Notification               notification;
 
     @Inject
-    public CloneRepositoryPresenter(CloneRepositoryView view, GitClientService service, ResourceProvider resourceProvider,
-                                    GitLocalizationConstant constant, NotificationManager notificationManager, DtoFactory dtoFactory) {
+    public CloneRepositoryPresenter(CloneRepositoryView view,
+                                    GitClientService service,
+                                    ResourceProvider resourceProvider,
+                                    GitLocalizationConstant constant,
+                                    NotificationManager notificationManager,
+                                    DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                                    ProjectServiceClient projectServiceClient,
+                                    SelectProjectTypePresenter selectProjectTypePresenter) {
         this.view = view;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.projectServiceClient = projectServiceClient;
+        this.selectProjectTypePresenter = selectProjectTypePresenter;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
         this.constant = constant;
         this.notificationManager = notificationManager;
-        this.dtoFactory = dtoFactory;
     }
 
     /** {@inheritDoc} */
     @Override
     public void onCloneClicked() {
-        String projectName = view.getProjectName();
+        final String projectName = view.getProjectName();
         final String remoteName = view.getRemoteName();
         final String remoteUri = view.getRemoteUri();
         notification = new Notification(constant.cloneStarted(projectName, remoteName), PROGRESS);
         notificationManager.showNotification(notification);
 
-        resourceProvider.createProject(projectName, Collections.<Property>createArray(), new AsyncCallback<Project>() {
+        projectServiceClient.createFolder(projectName, new AsyncRequestCallback<Void>() {
             @Override
-            public void onSuccess(Project result) {
-                cloneRepository(remoteUri, remoteName, result);
+            protected void onSuccess(Void result) {
+                Project project = new Project(null, null, null, null);
+                project.setName(projectName);
+                cloneRepository(remoteUri, remoteName, project);
             }
 
             @Override
-            public void onFailure(Throwable caught) {
-                String errorMessage = (caught.getMessage() != null && caught.getMessage().length() > 0) ? caught.getMessage()
-                                                                                                        : constant.cloneFailed(remoteUri);
+            protected void onFailure(Throwable exception) {
+                String errorMessage = (exception.getMessage() != null && exception.getMessage().length() > 0)
+                                      ? exception.getMessage() : constant.cloneFailed(remoteUri);
                 notification.setStatus(FINISHED);
                 notification.setType(ERROR);
                 notification.setMessage(errorMessage);
@@ -99,7 +108,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
     }
 
     /**
-     * Get the necessary parameters values and clone repository (over WebSocket or HTTP).
+     * Get the necessary parameters values and clone repository.
      *
      * @param remoteUri
      *         the location of the remote repository
@@ -111,56 +120,23 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
     private void cloneRepository(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
         try {
             service.cloneRepositoryWS(resourceProvider.getVfsInfo().getId(), project, remoteUri, remoteName,
-                                      new RequestCallback<String>(new StringUnmarshallerWS()) {
+                                      new RequestCallback<RepoInfo>(dtoUnmarshallerFactory.newWSUnmarshaller(RepoInfo.class)) {
                                           @Override
-                                          protected void onSuccess(String result) {
-                                              RepoInfo repository = dtoFactory.createDtoFromJson(result, RepoInfo.class);
-                                              onCloneSuccess(repository, project);
+                                          protected void onSuccess(RepoInfo result) {
+                                              onCloneSuccess(result, project);
                                           }
 
                                           @Override
                                           protected void onFailure(Throwable exception) {
                                               resourceProvider.showListProjects();
                                               handleError(exception, remoteUri);
-
                                           }
                                       });
         } catch (WebSocketException e) {
-            cloneRepositoryREST(remoteUri, remoteName, project);
-        }
-        view.close();
-    }
-
-    /**
-     * Get the necessary parameters values and call the clone repository method (over HTTP).
-     *
-     * @param remoteUri
-     *         the location of the remote repository
-     * @param remoteName
-     *         remote name instead of "origin"
-     * @param project
-     *         folder (root of GIT repository)
-     */
-    private void cloneRepositoryREST(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
-        try {
-            service.cloneRepository(resourceProvider.getVfsInfo().getId(), project, remoteUri, remoteName,
-                                    new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                                        @Override
-                                        protected void onSuccess(String result) {
-                                            RepoInfo repository = dtoFactory.createDtoFromJson(result, RepoInfo.class);
-                                            onCloneSuccess(repository, project);
-                                        }
-
-                                        @Override
-                                        protected void onFailure(Throwable exception) {
-                                            resourceProvider.showListProjects();
-                                            handleError(exception, remoteUri);
-                                        }
-                                    });
-        } catch (RequestException e) {
             resourceProvider.showListProjects();
             handleError(e, remoteUri);
         }
+        view.close();
     }
 
     /**
@@ -179,7 +155,17 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
 
             @Override
             public void onFailure(Throwable caught) {
-                Log.error(CloneRepositoryPresenter.class, "can not get project " + project.getName());
+                selectProjectTypePresenter.showDialog(project, new AsyncCallback<Project>() {
+                    @Override
+                    public void onSuccess(Project result) {
+                        onCloneSuccess(gitRepositoryInfo, project);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        Log.error(CloneRepositoryPresenter.class, "can not set type for project " + project.getName());
+                    }
+                });
             }
         });
     }
@@ -193,8 +179,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      *         remote uri
      */
     private void handleError(@NotNull Throwable e, @NotNull String remoteUri) {
-        String errorMessage =
-                (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : constant.cloneFailed(remoteUri);
+        String errorMessage = (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : constant.cloneFailed(remoteUri);
         notification.setStatus(FINISHED);
         notification.setType(ERROR);
         notification.setMessage(errorMessage);

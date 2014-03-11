@@ -17,20 +17,27 @@
  */
 package com.codenvy.ide.part.console;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
+import com.codenvy.ide.api.parts.base.ToolButton;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+
 /**
  * Implements {@link ConsolePartView}.
- *
+ * 
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
@@ -41,12 +48,29 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
     private static ConsolePartViewImplUiBinder uiBinder = GWT.create(ConsolePartViewImplUiBinder.class);
 
     @UiField
-    FlowPanel consoleArea;
+    FlowPanel                                  consoleArea;
+    @UiField
+    ScrollPanel                                scrollPanel;
 
     @Inject
-    public ConsolePartViewImpl(PartStackUIResources resources) {
+    public ConsolePartViewImpl(PartStackUIResources resources, Resources coreResources) {
         super(resources);
         container.add(uiBinder.createAndBindUi(this));
+
+        ToolButton clearButton = new ToolButton(new Image(coreResources.clear()));
+        clearButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onClearClicked();
+            }
+        });
+        toolBar.addEast(clearButton, 20);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setDelegate(ActionDelegate delegate) {
+        this.delegate = delegate;
     }
 
     /** {@inheritDoc} */
@@ -59,5 +83,11 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
     @Override
     public void clear() {
         consoleArea.clear();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void scrollBottom() {
+        scrollPanel.getElement().setScrollTop(scrollPanel.getElement().getScrollHeight());
     }
 }

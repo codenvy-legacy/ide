@@ -33,10 +33,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <generated.sources.directory>${project.build.directory}/generated-sources/gen</generated.sources.directory>
-
-        <!-- GWT -->
-        <gwt.version>2.6.0-rc3</gwt.version>
-        <gwt.maven.plugin.version>2.6.0-rc3</gwt.maven.plugin.version>
     </properties>
 
     <!--

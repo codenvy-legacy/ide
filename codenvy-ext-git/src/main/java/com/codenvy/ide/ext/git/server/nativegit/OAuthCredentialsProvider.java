@@ -17,10 +17,10 @@
  */
 package com.codenvy.ide.ext.git.server.nativegit;
 
-import com.codenvy.api.core.user.UserState;
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.ide.ext.git.server.GitException;
-import com.codenvy.security.oauth.OAuthTokenProvider;
-import com.codenvy.security.shared.Token;
+import com.codenvy.ide.security.oauth.server.OAuthTokenProvider;
+import com.codenvy.ide.security.oauth.shared.Token;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +38,8 @@ import java.util.regex.Pattern;
 @Singleton
 public class OAuthCredentialsProvider implements CredentialsProvider {
     public static final String WSO_2_URL_STRING =
-        "(http|https)://((([0-9a-fA-F]{32}(:x-oauth-basic)?)|([0-9a-zA-Z-_.]+))@)?git\\.cloudpreview\\.wso2\\.com" +
-        "(:[0-9]{1,5})?/.+\\.git";
+            "(http|https)://((([0-9a-fA-F]{32}(:x-oauth-basic)?)|([0-9a-zA-Z-_.]+))@)?git\\.cloudpreview\\.wso2\\.com" +
+            "(:[0-9]{1,5})?/.+\\.git";
 
     public static final Pattern WSO_2_URL_PATTERN = Pattern.compile(WSO_2_URL_STRING);
 
@@ -58,7 +58,7 @@ public class OAuthCredentialsProvider implements CredentialsProvider {
         }
         Token token;
         try {
-            token = tokenProvider.getToken("wso2", UserState.get().getUser().getName());
+            token = tokenProvider.getToken("wso2", EnvironmentContext.getCurrent().getUser().getName());
         } catch (IOException e) {
             LOG.error("Can't get token", e);
             return false;

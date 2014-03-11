@@ -118,6 +118,11 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api-gwt-client</groupId>
+            <artifactId>codenvy-api-user-gwt-client</artifactId>
+            <version>${codenvy.platform-api-gwt-client.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api-gwt-client</groupId>
             <artifactId>codenvy-gwt-client-commons</artifactId>
             <version>${codenvy.platform-api-gwt-client.version}</version>
         </dependency>
@@ -131,11 +136,6 @@
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jgit</groupId>
-            <artifactId>org.eclipse.jgit.http.server</artifactId>
-            <version>${jgit.version}</version>
         </dependency>
         <dependency>
             <groupId>org.reflections</groupId>

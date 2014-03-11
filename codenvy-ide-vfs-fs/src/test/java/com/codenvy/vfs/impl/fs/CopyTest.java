@@ -17,13 +17,12 @@
  */
 package com.codenvy.vfs.impl.fs;
 
-import com.codenvy.api.core.user.User;
-import com.codenvy.api.core.user.UserImpl;
-import com.codenvy.api.core.user.UserState;
 import com.codenvy.api.vfs.shared.ExitCodes;
 import com.codenvy.api.vfs.shared.ItemType;
 import com.codenvy.api.vfs.shared.dto.Principal;
 import com.codenvy.api.vfs.shared.dto.Project;
+import com.codenvy.commons.env.EnvironmentContext;
+import com.codenvy.commons.user.UserImpl;
 import com.codenvy.dto.server.DtoFactory;
 
 import org.everrest.core.impl.ContainerResponse;
@@ -132,8 +131,7 @@ public class CopyTest extends LocalFileSystemTest {
         // Destination resource is protected but set user who has permits as current.
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String requestPath = SERVICE_URI + "copy/" + fileId + '?' + "parentId=" + protectedDestinationId;
-        User user = new UserImpl("andrew");
-        UserState.set(new UserState(user));
+        EnvironmentContext.getCurrent().setUser(new UserImpl("andrew"));
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
         log.info(new String(writer.getBody()));
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());

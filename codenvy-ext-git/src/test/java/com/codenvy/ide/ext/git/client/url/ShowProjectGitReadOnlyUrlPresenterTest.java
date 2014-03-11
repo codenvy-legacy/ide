@@ -20,7 +20,6 @@ package com.codenvy.ide.ext.git.client.url;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Test;
@@ -34,7 +33,6 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -87,19 +85,6 @@ public class ShowProjectGitReadOnlyUrlPresenterTest extends BaseTest {
                 return callback;
             }
         }).when(service).getGitReadOnlyUrl(anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
-
-        presenter.showDialog();
-
-        verify(resourceProvider).getActiveProject();
-        verify(service).getGitReadOnlyUrl(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<String>)anyObject());
-        verify(notificationManager).showNotification((Notification)anyObject());
-        verify(constant).initFailed();
-    }
-
-    @Test
-    public void testShowDialogWhenRequestExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(service)
-                .getGitReadOnlyUrl(anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog();
 

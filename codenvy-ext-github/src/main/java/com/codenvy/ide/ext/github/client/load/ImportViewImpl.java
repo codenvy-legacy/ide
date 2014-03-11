@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.github.client.load;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.github.client.GitHubLocalizationConstant;
 import com.codenvy.ide.ext.github.client.GitHubResources;
@@ -83,10 +84,10 @@ public class ImportViewImpl extends DialogBox implements ImportView {
      * @param locale
      */
     @Inject
-    protected ImportViewImpl(GitHubResources resources, GitHubLocalizationConstant locale) {
+    protected ImportViewImpl(GitHubResources resources, GitHubLocalizationConstant locale, Resources ideResources) {
         this.res = resources;
         this.locale = locale;
-        createRepositoriesTable();
+        createRepositoriesTable(ideResources);
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 
@@ -94,9 +95,10 @@ public class ImportViewImpl extends DialogBox implements ImportView {
         this.setWidget(widget);
     }
 
-    /** Creates table what contains list of available repositories. */
-    private void createRepositoriesTable() {
-        repositories = new CellTable<ProjectData>();
+    /** Creates table what contains list of available repositories.
+     * @param ideResources*/
+    private void createRepositoriesTable(Resources ideResources) {
+        repositories = new CellTable<ProjectData>(15, ideResources);
 
         Column<ProjectData, ImageResource> iconColumn = new Column<ProjectData, ImageResource>(new ImageResourceCell()) {
             @Override

@@ -19,6 +19,7 @@ package com.codenvy.ide.wizard.newresource;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
@@ -51,6 +52,8 @@ public abstract class BaseNewResourceProviderTest {
     protected Folder                  folder;
     @Mock
     protected AsyncCallback<Resource> callback;
+    @Mock
+    protected IconRegistry            iconRegistry;
     @Mock
     protected Resources               resources;
     @Mock

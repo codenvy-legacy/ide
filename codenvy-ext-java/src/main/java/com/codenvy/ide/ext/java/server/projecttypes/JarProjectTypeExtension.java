@@ -18,33 +18,68 @@
 package com.codenvy.ide.ext.java.server.projecttypes;
 
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
-import com.codenvy.api.project.server.VfsPropertyValueProvider;
+import com.codenvy.api.project.server.ProjectTypeExtension;
 import com.codenvy.api.project.shared.Attribute;
+import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
-import com.codenvy.api.project.shared.ProjectTypeExtension;
+import com.codenvy.ide.ext.java.shared.Constants;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /** @author Artem Zatsarynnyy */
 @Singleton
 public class JarProjectTypeExtension implements ProjectTypeExtension {
+
+    private Map<String, String> icons = new HashMap<>();
+
     @Inject
     public JarProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
+        icons.put("jar.projecttype.big.icon", "java-extension/jar_64.png");
+        icons.put("jar.projecttype.small.icon", "java-extension/jar.png");
+        icons.put("jar.folder.small.icon", "java-extension/package.gif");
+        icons.put("jar/java.file.small.icon", "java-extension/java-class.png");
+        icons.put("java.class", "java-extension/java-class.png");
+        icons.put("java.package", "java-extension/package.gif");
         registry.registerProjectType(this);
     }
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType("jar", "Java Library (JAR)");
+        return new ProjectType(Constants.JAR_ID, Constants.JAR_NAME);
     }
 
     @Override
     public List<Attribute> getPredefinedAttributes() {
-        final List<Attribute> list = new ArrayList<>(1);
-        list.add(new Attribute("language", new VfsPropertyValueProvider("language", "java")));
+        final List<Attribute> list = new ArrayList<>(3);
+        list.add(new Attribute(Constants.LANGUAGE, "java"));
+        list.add(new Attribute(Constants.FRAMEWORK, "standalone"));
+        list.add(new Attribute(Constants.BUILDER_NAME, "maven"));
         return list;
     }
+
+    @Override
+    public List<ProjectTemplateDescription> getTemplates() {
+        final List<ProjectTemplateDescription> list = new ArrayList<>(2);
+        list.add(new ProjectTemplateDescription("zip",
+                                                "MAVEN JAR PROJECT",
+                                                "Simple JAR project which uses Maven build system.",
+                                                "templates/MavenJar.zip"));
+//TODO:temporary unregist Ant project
+//        list.add(new ProjectTemplateDescription("zip",
+//                                                "ANT JAR PROJECT",
+//                                                "Simple JAR project which uses Ant build system.",
+//                                                "templates/AntJar.zip"));
+        return list;
+    }
+
+    @Override
+    public Map<String, String> getIconRegistry() {
+        return icons;
+    }
+
 }

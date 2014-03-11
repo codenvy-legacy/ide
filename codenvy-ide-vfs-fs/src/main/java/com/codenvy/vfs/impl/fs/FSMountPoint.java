@@ -43,7 +43,6 @@ import com.codenvy.api.vfs.server.util.ZipContent;
 import com.codenvy.api.vfs.shared.PropertyFilter;
 import com.codenvy.api.vfs.shared.dto.AccessControlEntry;
 import com.codenvy.api.vfs.shared.dto.Principal;
-import com.codenvy.api.vfs.shared.dto.Project;
 import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo;
 import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
@@ -1010,11 +1009,6 @@ public class FSMountPoint implements MountPoint {
             final FileOutputStream out = new FileOutputStream(zipFile);
             try {
                 final ZipOutputStream zipOut = new ZipOutputStream(out);
-
-                if (virtualFile.isProject() && virtualFile.getChild(".project") == null) {
-                    zipOut.putNextEntry(new ZipEntry(".project"));
-                    zipOut.write(JsonHelper.toJson(virtualFile.getProperties(PropertyFilter.ALL_FILTER)).getBytes());
-                }
                 final LinkedList<VirtualFile> q = new LinkedList<>();
                 q.add(virtualFile);
                 final int zipEntryNameTrim = virtualFile.getInternalPath().length();
@@ -1109,29 +1103,6 @@ public class FSMountPoint implements MountPoint {
                         final java.io.File dir = new java.io.File(current.getIoFile(), name);
                         if (!(dir.exists() || dir.mkdir())) {
                             throw new VirtualFileSystemException(String.format("Unable create directory '%s' ", newPath));
-                        }
-                    } else if (".project".equals(name)) {
-                        final List<Property> properties = DtoFactory.getInstance().createListDtoFromJson(noCloseZip, Property.class);
-                        if (!properties.isEmpty()) {
-                            boolean hasMimeType = false;
-                            for (int i = 0, size = properties.size(); i < size && !hasMimeType; i++) {
-                                Property property = properties.get(i);
-                                if ("vfs:mimeType".equals(property.getName()) &&
-                                    !(property.getValue() == null || property.getValue().isEmpty())) {
-                                    hasMimeType = true;
-                                }
-                            }
-                            if (!hasMimeType) {
-                                properties.add(DtoFactory.getInstance().createDto(Property.class)
-                                                         .withName("vfs:mimeType")
-                                                         .withValue(Collections.singletonList(Project.PROJECT_MIME_TYPE)));
-                            }
-                            updateProperties(current, properties, null);
-                        } else {
-                            properties.add(DtoFactory.getInstance().createDto(Property.class)
-                                                     .withName("vfs:mimeType")
-                                                     .withValue(Collections.singletonList(Project.PROJECT_MIME_TYPE)));
-                            updateProperties(current, properties, null);
                         }
                     } else {
                         final VirtualFileImpl file =
@@ -1545,12 +1516,12 @@ public class FSMountPoint implements MountPoint {
     }
 
 
-    private void setProperty(VirtualFileImpl virtualFile, String name, String value) throws VirtualFileSystemException {
+    void setProperty(VirtualFileImpl virtualFile, String name, String value) throws VirtualFileSystemException {
         setProperty(virtualFile, name, value == null ? null : new String[]{value});
     }
 
 
-    private void setProperty(VirtualFileImpl virtualFile, String name, String... value) throws VirtualFileSystemException {
+    void setProperty(VirtualFileImpl virtualFile, String name, String... value) throws VirtualFileSystemException {
         final int index = virtualFile.getInternalPath().hashCode() & MASK;
         final PathLockFactory.PathLock lock = pathLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {

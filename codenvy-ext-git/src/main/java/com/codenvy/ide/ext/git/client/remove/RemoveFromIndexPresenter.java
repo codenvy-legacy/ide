@@ -29,7 +29,6 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
@@ -121,33 +120,29 @@ public class RemoveFromIndexPresenter implements RemoveFromIndexView.ActionDeleg
     /** {@inheritDoc} */
     @Override
     public void onRemoveClicked() {
-        try {
-            service.remove(resourceProvider.getVfsInfo().getId(), project.getId(), getFilePatterns(), view.isRemoved(),
-                           new AsyncRequestCallback<String>() {
-                               @Override
-                               protected void onSuccess(String result) {
-                                   resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
-                                       @Override
-                                       public void onSuccess(Project result) {
-                                           Notification notification = new Notification(constant.removeFilesSuccessfull(), INFO);
-                                           notificationManager.showNotification(notification);
-                                       }
+        service.remove(resourceProvider.getVfsInfo().getId(), project.getId(), getFilePatterns(), view.isRemoved(),
+                       new AsyncRequestCallback<String>() {
+                           @Override
+                           protected void onSuccess(String result) {
+                               resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
+                                   @Override
+                                   public void onSuccess(Project result) {
+                                       Notification notification = new Notification(constant.removeFilesSuccessfull(), INFO);
+                                       notificationManager.showNotification(notification);
+                                   }
 
-                                       @Override
-                                       public void onFailure(Throwable caught) {
-                                           Log.error(RemoveFromIndexPresenter.class, "can not get project " + project.getName());
-                                       }
-                                   });
-                               }
+                                   @Override
+                                   public void onFailure(Throwable caught) {
+                                       Log.error(RemoveFromIndexPresenter.class, "can not get project " + project.getName());
+                                   }
+                               });
+                           }
 
-                               @Override
-                               protected void onFailure(Throwable exception) {
-                                   handleError(exception);
-                               }
-                           });
-        } catch (RequestException e) {
-            handleError(e);
-        }
+                           @Override
+                           protected void onFailure(Throwable exception) {
+                               handleError(exception);
+                           }
+                       });
         view.close();
     }
 

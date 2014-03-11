@@ -68,7 +68,7 @@ public class GitExtension {
                         ShowBranchesAction showBranchesAction, ShowMergeAction showMergeAction, ResetFilesAction resetFilesAction,
                         ShowStatusAction showStatusAction, ShowGitUrlAction showGitUrlAction, ShowRemoteAction showRemoteAction,
                         PushAction pushAction, FetchAction fetchAction, PullAction pullAction, GitLocalizationConstant constant,
-                        HistoryAction historyAction, WelcomePart welcomePart, CloneProjectAction cloneProjectAction) {
+                        HistoryAction historyAction, CloneProjectAction cloneProjectAction) {
         resources.gitCSS().ensureInjected();
 
         DefaultActionGroup mainMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_MENU);
@@ -134,6 +134,6 @@ public class GitExtension {
         actionManager.registerAction("GitRemote", showRemoteAction);
         remoteGroup.add(showRemoteAction);
 
-        welcomePart.addItem(cloneProjectAction);
+       
     }
 }

@@ -106,22 +106,6 @@
                                     <destFileName>api.war</destFileName>
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>org.exoplatform.ide</groupId>
-                                    <artifactId>exo-ide-codeassistant-storage</artifactId>
-                                    <type>war</type>
-                                    <version>${org.exoplatform.ide.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/webapps</outputDirectory>
-                                    <destFileName>codeassistant-storage.war</destFileName>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.codenvy.organization</groupId>
-                                    <artifactId>codenvy-organization-packaging-api-war</artifactId>
-                                    <type>war</type>
-                                    <version>${com.codenvy.organization.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/webapps</outputDirectory>
-                                    <destFileName>userdb.war</destFileName>
-                                </artifactItem>
-                                <artifactItem>
                                     <groupId>org.slf4j</groupId>
                                     <artifactId>slf4j-api</artifactId>
                                     <version>${org.slf4j.version}</version>

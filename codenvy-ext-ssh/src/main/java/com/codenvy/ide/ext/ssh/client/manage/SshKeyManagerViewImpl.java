@@ -23,11 +23,13 @@ import com.codenvy.ide.ext.ssh.client.SshLocalizationConstant;
 import com.codenvy.ide.ext.ssh.client.SshResources;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
 import com.google.gwt.cell.client.ButtonCell;
+import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -41,12 +43,13 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import javax.validation.constraints.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * The implementation of {@link SshKeyManagerView}.
- *
+ * 
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
@@ -57,22 +60,22 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
     private static SshKeyManagerViewImplUiBinder ourUiBinder = GWT.create(SshKeyManagerViewImplUiBinder.class);
 
     @UiField
-    Button             btnGenerate;
+    Button                                       btnGenerate;
     @UiField
-    Button             btnUpload;
+    Button                                       btnUpload;
     @UiField
-    PushButton         btnGenerateGithubKey;
+    PushButton                                   btnGenerateGithubKey;
     @UiField(provided = true)
-    CellTable<KeyItem> keys;
+    CellTable<KeyItem>                           keys;
     @UiField(provided = true)
-    final   SshResources            res;
+    final SshResources                           res;
     @UiField(provided = true)
-    final   SshLocalizationConstant locale;
-    private ActionDelegate          delegate;
+    final SshLocalizationConstant                locale;
+    private ActionDelegate                       delegate;
 
     /**
      * Create view.
-     *
+     * 
      * @param resources
      * @param locale
      */
@@ -104,6 +107,14 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
                     return "View";
                 } else {
                     return "";
+                }
+            }
+
+            /** {@inheritDoc} */
+            @Override
+            public void render(Context context, KeyItem object, SafeHtmlBuilder sb) {
+                if (object != null && object.getPublicKeyUrl() != null) {
+                    super.render(context, object, sb);
                 }
             }
         };

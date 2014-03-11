@@ -22,6 +22,7 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Image;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -33,10 +34,10 @@ import javax.validation.constraints.NotNull;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public abstract class NewResourceProvider {
-    private String        id;
-    private String        title;
-    private ImageResource icon;
-    private String        extension;
+    private String id;
+    private String title;
+    private Image  icon;
+    private String extension;
 
     /**
      * Create wizard's data.
@@ -52,7 +53,7 @@ public abstract class NewResourceProvider {
      */
     public NewResourceProvider(@NotNull String id,
                                @NotNull String title,
-                               @Nullable ImageResource icon,
+                               @Nullable Image icon,
                                @Nullable String extension) {
         this.id = id;
         this.title = title;
@@ -74,7 +75,7 @@ public abstract class NewResourceProvider {
 
     /** @return the resource's icon, or <code>null</code> if it is not */
     @Nullable
-    public ImageResource getIcon() {
+    public Image getIcon() {
         return icon;
     }
 

@@ -17,11 +17,9 @@
  */
 package com.codenvy.ide.ext.java.jdi.client;
 
-import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.ext.java.jdi.client.debug.expression.EvaluateExpressionPresenter;
 import com.codenvy.ide.ext.java.jdi.client.debug.expression.EvaluateExpressionView;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Test;
@@ -37,7 +35,6 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -147,18 +144,4 @@ public class EvaluateExpressionTest extends BaseTest {
         verify(view).setEnableEvaluateButton(eq(!DISABLE_BUTTON));
     }
 
-    @Test
-    public void testEvaluateExpressionRequestExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(service).evaluateExpression(anyString(), anyString(),
-                                                                         (AsyncRequestCallback<String>)anyObject());
-        when(view.getExpression()).thenReturn(EXPRESSION);
-
-        presenter.showDialog(debuggerInfo);
-        presenter.onEvaluateClicked();
-
-        verify(view, atLeastOnce()).setEnableEvaluateButton(eq(DISABLE_BUTTON));
-        verify(service).evaluateExpression(eq(DEBUGGER_ID), eq(EXPRESSION), (AsyncRequestCallback<String>)anyObject());
-        verify(notificationManager).showNotification((Notification)anyObject());
-        verify(view).setEnableEvaluateButton(eq(!DISABLE_BUTTON));
-    }
 }

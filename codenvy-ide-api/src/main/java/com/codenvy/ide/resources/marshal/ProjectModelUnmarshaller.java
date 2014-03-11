@@ -27,11 +27,10 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
-
 /**
- * Unmarshaller for {@link Project}
+ * Unmarshaller for {@link Project}.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public class ProjectModelUnmarshaller implements Unmarshallable<ProjectModelProviderAdapter> {
     private       ProjectModelProviderAdapter modelProviderAdapter;
@@ -45,7 +44,6 @@ public class ProjectModelUnmarshaller implements Unmarshallable<ProjectModelProv
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         try {
-            // Read Primary nature of the project
             JSONObject jsonObject = JSONParser.parseLenient(response.getText()).isObject();
             Array<Property> properties = JSONDeserializer.PROPERTY_DESERIALIZER.toList(jsonObject.get("properties"));
 

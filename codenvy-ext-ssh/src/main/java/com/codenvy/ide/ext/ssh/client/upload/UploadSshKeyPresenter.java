@@ -22,7 +22,7 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.ssh.client.SshLocalizationConstant;
-import com.codenvy.ide.util.Utils;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -41,16 +41,24 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 @Singleton
 public class UploadSshKeyPresenter implements UploadSshKeyView.ActionDelegate {
     private UploadSshKeyView        view;
+    private String                  workspaceId;
     private SshLocalizationConstant constant;
     private String                  restContext;
     private EventBus                eventBus;
     private ConsolePart             console;
     private NotificationManager     notificationManager;
+    private AsyncCallback<Void>     callback;
 
     @Inject
-    public UploadSshKeyPresenter(UploadSshKeyView view, SshLocalizationConstant constant, @Named("restContext") String restContext,
-                                 EventBus eventBus, ConsolePart console, NotificationManager notificationManager) {
+    public UploadSshKeyPresenter(UploadSshKeyView view,
+                                 SshLocalizationConstant constant,
+                                 @Named("restContext") String restContext,
+                                 @Named("workspaceId") String workspaceId,
+                                 EventBus eventBus,
+                                 ConsolePart console,
+                                 NotificationManager notificationManager) {
         this.view = view;
+        this.workspaceId = workspaceId;
         this.view.setDelegate(this);
         this.constant = constant;
         this.restContext = restContext;
@@ -60,7 +68,8 @@ public class UploadSshKeyPresenter implements UploadSshKeyView.ActionDelegate {
     }
 
     /** Show dialog. */
-    public void showDialog() {
+    public void showDialog(@NotNull AsyncCallback<Void> callback) {
+        this.callback = callback;
         view.setMessage("");
         view.setHost("");
         view.setEnabledUploadButton(false);
@@ -82,7 +91,7 @@ public class UploadSshKeyPresenter implements UploadSshKeyView.ActionDelegate {
             return;
         }
         view.setEncoding(FormPanel.ENCODING_MULTIPART);
-        view.setAction(restContext + "/ssh-keys/" + Utils.getWorkspaceId() + "/add?host=" + host);
+        view.setAction(restContext + "/ssh-keys/" + workspaceId + "/add?host=" + host);
         view.submit();
     }
 
@@ -91,14 +100,15 @@ public class UploadSshKeyPresenter implements UploadSshKeyView.ActionDelegate {
     public void onSubmitComplete(@NotNull String result) {
         if (result.isEmpty()) {
             UploadSshKeyPresenter.this.view.close();
+            callback.onSuccess(null);
         } else {
             if (result.startsWith("<pre>") && result.endsWith("</pre>")) {
                 result = result.substring(5, (result.length() - 6));
             }
-            eventBus.fireEvent(new ExceptionThrownEvent(result));
             console.print(result);
             Notification notification = new Notification(result, ERROR);
             notificationManager.showNotification(notification);
+            callback.onFailure(new Throwable(result));
         }
     }
 

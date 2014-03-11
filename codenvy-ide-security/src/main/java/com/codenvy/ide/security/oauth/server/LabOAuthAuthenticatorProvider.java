@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.security.oauth.server;
 
-import com.codenvy.security.oauth.*;
 import com.google.api.client.auth.oauth2.MemoryCredentialStore;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.json.jackson.JacksonFactory;
@@ -33,7 +32,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Grub all implementations of OAuthAuthenticator from eXo container. */
 @Singleton
 public class LabOAuthAuthenticatorProvider implements OAuthAuthenticatorProvider {
 
@@ -47,12 +45,12 @@ public class LabOAuthAuthenticatorProvider implements OAuthAuthenticatorProvider
         GitHubOAuthAuthenticator gitHubOAuthAuthenticator =
                 new GitHubOAuthAuthenticator(new MemoryCredentialStore(),
                                              getClientSecrets("github_client_secrets.json"));
-        GoogleOAuthAuthenticator googleOAuthAuthenticator =
-                new GoogleOAuthAuthenticator(new MemoryCredentialStore(),
-                                             getClientSecrets("google_client_secrets.json"));
+//        GoogleOAuthAuthenticator googleOAuthAuthenticator =
+//                new GoogleOAuthAuthenticator(new MemoryCredentialStore(),
+//                                             getClientSecrets("google_client_secrets.json"));
 
         authenticators.put(gitHubOAuthAuthenticator.getOAuthProvider(), gitHubOAuthAuthenticator);
-        authenticators.put(googleOAuthAuthenticator.getOAuthProvider(), googleOAuthAuthenticator);
+//        authenticators.put(googleOAuthAuthenticator.getOAuthProvider(), googleOAuthAuthenticator);
 
         try {
             WSO2OAuthAuthenticator wso2OAuthAuthenticator =

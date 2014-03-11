@@ -19,13 +19,12 @@ package com.codenvy.ide.wizard.newproject.pages.template;
 
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.collections.Array;
 
 /**
  * The view of {@link ChooseTemplatePagePresenter}.
  *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
 public interface ChooseTemplatePageView extends View<ChooseTemplatePageView.ActionDelegate> {
     /** Needs for delegate some function into TemplatePage view. */

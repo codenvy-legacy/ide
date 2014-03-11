@@ -22,13 +22,13 @@ import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
+import com.codenvy.ide.ext.tutorials.shared.Constants;
 import com.codenvy.ide.resources.model.File;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.DEFAULT_README_FILE_NAME;
-import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.TUTORIAL_PROJECT_TYPE_ID;
 
 /**
  * Controls a tutorial page state: can shows or hides it. Automatically shows a tutorial page when project has opened
@@ -54,7 +54,7 @@ public class GuidePageController {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
                 if (event.getProject() != null &&
-                    event.getProject().getDescription().getProjectTypeId().equals(TUTORIAL_PROJECT_TYPE_ID)) {
+                    event.getProject().getDescription().getProjectTypeId().equals(Constants.TUTORIAL_ID)) {
                     openTutorialPage();
                 }
             }
@@ -62,7 +62,7 @@ public class GuidePageController {
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
                 if (event.getProject() != null &&
-                    event.getProject().getDescription().getProjectTypeId().equals(TUTORIAL_PROJECT_TYPE_ID)) {
+                    event.getProject().getDescription().getProjectTypeId().equals(Constants.TUTORIAL_ID)) {
                     closeTutorialPage();
                 }
             }

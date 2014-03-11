@@ -18,6 +18,7 @@
 package com.codenvy.ide.ext.web.js;
 
 import com.codenvy.ide.MimeType;
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.ext.web.WebExtensionResource;
 import com.codenvy.ide.resources.model.File;
@@ -40,8 +41,8 @@ public class JsFileProvider extends NewResourceProvider {
     private String content = "/** Created with Codenvy IDE */";
 
     @Inject
-    public JsFileProvider(WebExtensionResource resources) {
-        super("JavaScript file", "JavaScript file", resources.js(), "js");
+    public JsFileProvider(IconRegistry iconRegistry) {
+        super("JavaScript file", "JavaScript file", iconRegistry.getIcon("web/js.file.small.icon"), "js");
     }
 
     /** {@inheritDoc} */

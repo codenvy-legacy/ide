@@ -48,7 +48,7 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor {
     /** {@inheritDoc} */
     @Override
     public void computeCompletionProposals(TextEditorPartView view, int offset, final CodeAssistCallback callback) {
-        worker.computeCAProposals(view.getDocument().get(), offset, editor.getEditorInput().getFile().getName(), editor.getEditorInput().getFile().getProject().getId(),
+        worker.computeCAProposals(view.getDocument().get(), offset, editor.getEditorInput().getFile().getName(), editor.getEditorInput().getFile().getProject().getPath(),
                                   new JavaParserWorker.WorkerCallback<WorkerProposal>() {
                                       @Override
                                       public void onResult(Array<WorkerProposal> problems) {

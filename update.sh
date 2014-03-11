@@ -14,7 +14,7 @@ deleteFileIfExists() {
     echo "upload new tomcat..."
     scp -i ~/.ssh/${SSH_KEY_NAME} codenvy-packaging-standalone-tomcat/target/${filename} ${SSH_AS_USER_NAME}@${AS_IP}:${home}
     echo "stoping tomcat"
-    ssh -i ~/.ssh/${SSH_KEY_NAME} ${SSH_AS_USER_NAME}@${AS_IP} "cd ${home}/ide/bin/;if [ -f catalina.sh ]; then ./catalina.sh stop -force; fi"
+    ssh -i ~/.ssh/${SSH_KEY_NAME} ${SSH_AS_USER_NAME}@${AS_IP} "cd ${home}/ide/bin/;if [ -f codenvy.sh ]; then ./codenvy.sh stop -force; fi"
     echo "clean up"
     ssh -i ~/.ssh/${SSH_KEY_NAME} ${SSH_AS_USER_NAME}@${AS_IP} "rm -rf ${home}/ide/*"
     echo "unpack new tomcat..."
@@ -23,7 +23,7 @@ deleteFileIfExists() {
     echo "install deps..."
     ssh -i ~/.ssh/${SSH_KEY_NAME} ${SSH_AS_USER_NAME}@${AS_IP} "cd ${home}/ide;./install.sh /home/cl-server/.m2/repository"
     echo "start new tomcat... on ${AS_IP}"
-    ssh -i ~/.ssh/${SSH_KEY_NAME} ${SSH_AS_USER_NAME}@${AS_IP} "cd ${home}/ide/bin;./catalina.sh start"
+    ssh -i ~/.ssh/${SSH_KEY_NAME} ${SSH_AS_USER_NAME}@${AS_IP} "cd ${home}/ide/bin;./codenvy.sh start"
 
     AS_STATE='Starting'
     testfile=/tmp/catalina.out

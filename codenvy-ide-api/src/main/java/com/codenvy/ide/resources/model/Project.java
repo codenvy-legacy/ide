@@ -17,61 +17,97 @@
  */
 package com.codenvy.ide.resources.model;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.api.project.shared.dto.TreeElement;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.resources.marshal.FileContentUnmarshaller;
 import com.codenvy.ide.resources.marshal.FileUnmarshaller;
 import com.codenvy.ide.resources.marshal.FolderTreeUnmarshaller;
 import com.codenvy.ide.resources.marshal.FolderUnmarshaller;
 import com.codenvy.ide.resources.marshal.JSONDeserializer;
 import com.codenvy.ide.resources.marshal.JSONSerializer;
 import com.codenvy.ide.resources.marshal.PropertyUnmarshaller;
-import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.AsyncRequestFactory;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.loader.EmptyLoader;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
+import java.util.List;
+import java.util.Map;
+
 /**
- * Represents Project  model. Responsible for deserialization of JSon String to generate it' own project model
+ * Represents Project model. Responsible for deserialization of JSon String to generate it' own project model.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public class Project extends Folder {
     public static final String PROJECT_MIME_TYPE = "text/vnd.ideproject+directory";
     public static final String TYPE              = "project";
-    private         ProjectDescription    description;
+    protected final EventBus                  eventBus;
+    protected final AsyncRequestFactory       asyncRequestFactory;
+    private final   DtoUnmarshallerFactory    dtoUnmarshallerFactory;
     /** Properties. */
-    protected       Array<Property>       properties;
-    protected       Loader                loader;
-    protected final EventBus              eventBus;
-    protected       VirtualFileSystemInfo vfsInfo;
+    protected       Array<Property>           properties;
+    protected       Map<String, List<String>> attributes;
+    protected       Loader                    loader;
+    protected       VirtualFileSystemInfo     vfsInfo;
+    private         ProjectDescription        description;
+    private         ProjectServiceClient      projectServiceClient;
+    private         String                    projectTypeId;
 
     /**
      * Constructor for empty project. Used for serialization only.
      * <p/>
      * Not intended to be used by client.
      */
-    public Project(EventBus eventBus) {
+    public Project(EventBus eventBus,
+                   AsyncRequestFactory asyncRequestFactory,
+                   ProjectServiceClient projectServiceClient,
+                   DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(TYPE, PROJECT_MIME_TYPE);
+        this.projectServiceClient = projectServiceClient;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.description = new ProjectDescription(this);
         this.properties = Collections.<Property>createArray();
         this.eventBus = eventBus;
+        this.asyncRequestFactory = asyncRequestFactory;
         // TODO : receive it in some way
         this.loader = new EmptyLoader();
+    }
+
+    public void setAttributes(Map<String, List<String>> attributes) {
+        this.attributes = attributes;
+    }
+
+    public Map<String, List<String>> getAttributes() {
+        return attributes;
+    }
+
+    public String getAttributeValue(String attributeName) {
+        return attributes.get(attributeName).get(0);
+    }
+
+    public List<String> getAttributeValues(String attributeName) {
+        return attributes.get(attributeName);
+    }
+
+    public void init(ItemReference itemReference) {
+        id = itemReference.getId();
+        name = itemReference.getName();
+        mimeType = itemReference.getMediaType();
     }
 
     @Override
@@ -85,7 +121,6 @@ public class Project extends Folder {
         properties = JSONDeserializer.PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
         links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
 //        projectType = (itemObject.get("projectType") != null) ? itemObject.get("projectType").isString().stringValue() : null;
-        // TODO Unmarshall children
     }
 
     public void setVFSInfo(VirtualFileSystemInfo vfsInfo) {
@@ -184,24 +219,27 @@ public class Project extends Folder {
      * Create new file.
      *
      * @param parent
+     *         parent folder
      * @param name
+     *         file name
      * @param content
+     *         file content
      * @param mimeType
+     *         file content media type
      * @param callback
-     * @throws ResourceException
+     *         callback
      */
     public void createFile(final Folder parent, final String name, String content, String mimeType, final AsyncCallback<File> callback) {
         try {
             checkItemValid(parent);
 
-            // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<File> internalCallback = new AsyncRequestCallback<File>(new FileUnmarshaller()) {
+            projectServiceClient.createFile(parent.getPath(), name, content, mimeType, new AsyncRequestCallback<Void>() {
                 @Override
-                protected void onSuccess(final File newFile) {
+                protected void onSuccess(Void result) {
                     refreshTree(parent, new AsyncCallback<Folder>() {
                         @Override
                         public void onSuccess(Folder result) {
-                            File file = (File)result.findResourceById(newFile.getId());
+                            File file = (File)result.findChildByName(name);
                             file.getParent().setTag(parent.getTag());
                             eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(file));
                             callback.onSuccess(file);
@@ -218,14 +256,7 @@ public class Project extends Folder {
                 protected void onFailure(Throwable exception) {
                     callback.onFailure(exception);
                 }
-            };
-
-            String url = parent.getLinkByRelation(Link.REL_CREATE_FILE).getHref();
-            url = URL.decode(url).replace("[name]", name);
-            url = URL.encode(url);
-            loader.setMessage("Creating new file...");
-            AsyncRequest.build(RequestBuilder.POST, url).data(content).header(HTTPHeader.CONTENT_TYPE, mimeType)
-                        .loader(loader).send(internalCallback);
+            });
         } catch (Exception e) {
             callback.onFailure(e);
         }
@@ -235,22 +266,23 @@ public class Project extends Folder {
      * Create new Folder.
      *
      * @param parent
+     *         parent folder
      * @param name
+     *         new folder name
      * @param callback
-     * @throws ResourceException
+     *         callback
      */
     public void createFolder(final Folder parent, final String name, final AsyncCallback<Folder> callback) {
         try {
             checkItemValid(parent);
 
-            // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<Folder> internalCallback = new AsyncRequestCallback<Folder>(new FolderUnmarshaller()) {
+            projectServiceClient.createFolder(parent.getPath() + '/' + name, new AsyncRequestCallback<Void>() {
                 @Override
-                protected void onSuccess(final Folder newFolder) {
+                protected void onSuccess(Void result) {
                     refreshTree(parent, new AsyncCallback<Folder>() {
                         @Override
                         public void onSuccess(Folder result) {
-                            Folder folder = (Folder)result.findResourceById(newFolder.getId());
+                            Folder folder = (Folder)result.findChildByName(name);
                             eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(folder));
                             callback.onSuccess(folder);
                         }
@@ -266,22 +298,17 @@ public class Project extends Folder {
                 protected void onFailure(Throwable exception) {
                     callback.onFailure(exception);
                 }
-            };
-
-            String url = parent.getLinkByRelation(Link.REL_CREATE_FOLDER).getHref();
-            String urlString = URL.decode(url).replace("[name]", name);
-            urlString = URL.encode(urlString);
-            loader.setMessage("Creating new folder...");
-            AsyncRequest.build(RequestBuilder.POST, urlString).loader(loader).send(internalCallback);
+            });
         } catch (Exception e) {
             callback.onFailure(e);
         }
     }
 
     /**
-     * Reads or Refreshes full Project Structure tree. This can be a costly operation, since
+     * Reads or Refreshes full Project Structure tree. This can be a costly operation.
      *
      * @param callback
+     *         callback
      */
     public void refreshTree(final AsyncCallback<Project> callback) {
         refreshTree(this, new AsyncCallback<Folder>() {
@@ -303,50 +330,44 @@ public class Project extends Folder {
      * need to refresh the tree of the folders, since new folders may have been created by the server-side.
      *
      * @param root
-     * @param newFolderId
+     *         root folder to refresh
      * @param callback
+     *         callback
      */
     public void refreshTree(final Folder root, final AsyncCallback<Folder> callback) {
-        try {
-            // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<Folder> internalCallback =
-                    new AsyncRequestCallback<Folder>(new FolderTreeUnmarshaller(root, root.getProject())) {
-                        @Override
-                        protected void onSuccess(Folder refreshedRoot) {
-                            callback.onSuccess(refreshedRoot);
-                        }
+        projectServiceClient.getTree(root.getPath(), -1,
+                                     new AsyncRequestCallback<TreeElement>(dtoUnmarshallerFactory.newUnmarshaller(TreeElement.class)) {
+                                         @Override
+                                         protected void onSuccess(TreeElement result) {
+                                             FolderTreeUnmarshaller unmarshaller = new FolderTreeUnmarshaller(root, root.getProject());
+                                             unmarshaller.unmarshal(result);
+                                             callback.onSuccess(unmarshaller.getPayload());
+                                         }
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            callback.onFailure(exception);
-                        }
-                    };
-
-            String url = vfsInfo.getUrlTemplates().get(Link.REL_TREE).getHref();
-            url = URL.decode(url).replace("[id]", root.getId());
-            AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(loader).send(internalCallback);
-        } catch (Exception e) {
-            callback.onFailure(e);
-        }
+                                         @Override
+                                         protected void onFailure(Throwable exception) {
+                                             callback.onFailure(exception);
+                                         }
+                                     });
     }
 
     /**
-     * Delete child resource
+     * Delete child resource.
      *
      * @param resource
+     *         resource to delete its child
      * @param callback
-     * @throws ResourceException
+     *         callback
      */
     public void deleteChild(final Resource resource, final AsyncCallback<Void> callback) {
         try {
             checkItemValid(resource);
-            final Folder parent = resource.getParent();
-            // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<Void> internalCallback = new AsyncRequestCallback<Void>() {
+
+            projectServiceClient.delete(resource.getPath(), new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     // remove from the list of child
-                    parent.removeChild(resource);
+                    resource.getParent().removeChild(resource);
                     eventBus.fireEvent(ResourceChangedEvent.createResourceDeletedEvent(resource));
                     callback.onSuccess(result);
                 }
@@ -355,27 +376,21 @@ public class Project extends Folder {
                 protected void onFailure(Throwable exception) {
                     callback.onFailure(exception);
                 }
-            };
-
-            // TODO check with lock
-            String url = resource.getLinkByRelation(Link.REL_DELETE).getHref();
-
-            if (File.TYPE.equals(resource.getResourceType()) && ((File)resource).isLocked()) {
-                url = URL.decode(url).replace("[lockToken]", ((File)resource).getLock().getLockToken());
-            }
-            loader.setMessage("Deleting item...");
-            AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(internalCallback);
+            });
         } catch (Exception e) {
             callback.onFailure(e);
         }
     }
 
     /**
+     * Get file content.
+     *
      * @param file
+     *         file to get its content
      * @param callback
-     * @throws ResourceException
+     *         callback
      */
-    public void getContent(File file, final AsyncCallback<File> callback) {
+    public void getContent(final File file, final AsyncCallback<File> callback) {
         try {
             checkItemValid(file);
 
@@ -385,37 +400,36 @@ public class Project extends Folder {
                 return;
             }
 
-            // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<File> internalCallback = new AsyncRequestCallback<File>(new FileContentUnmarshaller(file)) {
+            projectServiceClient.getFileContent(file.getPath(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
-                protected void onSuccess(File result) {
-                    callback.onSuccess(result);
+                protected void onSuccess(String result) {
+                    file.setContent(result);
+                    callback.onSuccess(file);
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
                     callback.onFailure(exception);
                 }
-            };
-
-            String url = file.getLinkByRelation(Link.REL_CONTENT).getHref();
-            loader.setMessage("Loading content...");
-            AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(internalCallback);
+            });
         } catch (Exception e) {
             callback.onFailure(e);
         }
     }
 
     /**
+     * Update file content.
+     *
      * @param file
+     *         file to update its content
      * @param callback
-     * @throws ResourceException
+     *         callback
      */
     public void updateContent(final File file, final AsyncCallback<File> callback) {
         try {
             checkItemValid(file);
-            // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<Void> internalCallback = new AsyncRequestCallback<Void>() {
+
+            projectServiceClient.updateFile(file.getPath(), file.getContent(), file.getMimeType(), new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     callback.onSuccess(file);
@@ -425,23 +439,19 @@ public class Project extends Folder {
                 protected void onFailure(Throwable exception) {
                     callback.onFailure(exception);
                 }
-            };
-
-            // TODO check with lock
-            String url = file.getLinkByRelation(Link.REL_CONTENT).getHref();
-            url += (file.isLocked()) ? "?lockToken=" + file.getLock().getLockToken() : "";
-            loader.setMessage("Updating content...");
-            AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.CONTENT_TYPE, file.getMimeType())
-                        .data(file.getContent()).loader(loader).send(internalCallback);
+            });
         } catch (Exception e) {
             callback.onFailure(e);
         }
     }
 
     /**
+     * Lock file.
+     *
      * @param file
+     *         file to lock
      * @param callback
-     * @throws ResourceException
+     *         callback
      */
     public void lock(File file, final AsyncCallback<String> callback) {
         try {
@@ -461,17 +471,21 @@ public class Project extends Folder {
 
             String url = file.getLinkByRelation(Link.REL_LOCK).getHref();
             loader.setMessage("Locking file...");
-            AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(internalCallback);
+            asyncRequestFactory.createPostRequest(url, null).loader(loader).send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);
         }
     }
 
     /**
+     * Unlock file.
+     *
      * @param file
+     *         file to unlock
      * @param lockToken
+     *         lock token
      * @param callback
-     * @throws ResourceException
+     *         callback
      */
     public void unlock(File file, String lockToken, final AsyncCallback<Void> callback) {
         try {
@@ -492,18 +506,23 @@ public class Project extends Folder {
             String url = file.getLinkByRelation(Link.REL_UNLOCK).getHref();
             url = URL.decode(url).replace("[lockToken]", lockToken);
             loader.setMessage("Unlocking file...");
-            AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(internalCallback);
+            asyncRequestFactory.createPostRequest(url, null).loader(loader).send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);
         }
     }
 
     /**
+     * Move resource to new destination.
+     *
      * @param source
+     *         source resource to move
      * @param destination
+     *         destination for moved resource
      * @param lockToken
+     *         lock token
      * @param callback
-     * @throws ResourceException
+     *         callback
      */
     public void move(final Resource source, final Folder destination, String lockToken, final AsyncCallback<Resource> callback) {
         try {
@@ -535,51 +554,62 @@ public class Project extends Folder {
             }
             url = URL.encode(url);
             loader.setMessage("Moving item...");
-            AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(internalCallback);
+            asyncRequestFactory.createPostRequest(url, null).loader(loader).send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);
         }
     }
 
     /**
+     * Copy resource.
+     *
      * @param source
+     *         resource to copy
      * @param destination
+     *         destination folder
      * @param callback
-     * @throws ResourceException
+     *         callback
      */
     public void copy(final Resource source, final Folder destination, final AsyncCallback<Resource> callback) {
         callback.onFailure(new Exception("copy not supported"));
     }
 
     /**
-     * @param item
-     * @param mediaType
-     * @param newname
-     * @param lockToken
+     * Rename resource.
+     *
+     * @param resource
+     *         resource to rename
+     * @param newName
+     *         new name for resource
      * @param callback
-     * @throws RequestException
+     *         callback
      */
-    public void rename(final Resource resource, final String newname, final AsyncCallback<Resource> callback) {
+    public void rename(final Resource resource, final String newName, final AsyncCallback<Resource> callback) {
         try {
             checkItemValid(resource);
-            Unmarshallable<Resource> unmarshaller = (Unmarshallable<Resource>)((resource instanceof File) ? new FileUnmarshaller() : new FolderUnmarshaller());
+            Unmarshallable<Resource> unmarshaller =
+                    (Unmarshallable<Resource>)((resource instanceof File) ? new FileUnmarshaller() : new FolderUnmarshaller());
             // internal call back
             AsyncRequestCallback<Resource> internalCallback = new AsyncRequestCallback<Resource>(unmarshaller) {
                 @Override
                 protected void onSuccess(Resource result) {
                     final String id = result.getId();
-                    final Folder folderToRefresh = (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId())) ? (Project)resource : resource.getParent();
+                    final Folder folderToRefresh =
+                            (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId()))
+                            ? (Project)resource : resource.getParent();
                     //Renamed the project:
-                    if (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId())){
+                    if (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId())) {
                         ((Project)resource).setName(result.getName());
                         ((Project)resource).setId(result.getId());
                         ((Project)resource).getLinks().putAll(result.getLinks());
                     }
-                    
+
                     refreshTree(folderToRefresh, new AsyncCallback<Folder>() {
                         @Override
                         public void onSuccess(Folder result) {
-                            Resource renamed = (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId())) ? resource : result.findResourceById(id);
+                            Resource renamed =
+                                    (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId()))
+                                    ? resource : result.findResourceById(id);
                             renamed.getParent().setTag(folderToRefresh.getTag());
                             eventBus.fireEvent(ResourceChangedEvent.createResourceRenamedEvent(renamed));
                             callback.onSuccess(renamed);
@@ -601,9 +631,7 @@ public class Project extends Folder {
             String url = resource.getLinkByRelation(Link.REL_RENAME).getHref();
             url = URL.decode(url);
             url = url.replace("mediaType=[mediaType]", "");
-            url =
-                    (newname != null && !newname.isEmpty()) ? url.replace("[newname]", newname) : url.replace(
-                            "newname=[newname]", "");
+            url = (newName != null && !newName.isEmpty()) ? url.replace("[newname]", newName) : url.replace("newname=[newname]", "");
 
             if (File.TYPE.equals(resource.getResourceType()) && ((File)resource).isLocked()) {
                 url = URL.decode(url).replace("[lockToken]", ((File)resource).getLock().getLockToken());
@@ -613,16 +641,13 @@ public class Project extends Folder {
             url = url.replaceAll("&&", "&");
             url = URL.encode(url);
             loader.setMessage("Renaming item...");
-            AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(internalCallback);
+            asyncRequestFactory.createPostRequest(url, null).loader(loader).send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);
         }
     }
 
-    /**
-     * @param callback
-     * @throws ResourceException
-     */
+    /** @param callback */
     public void flushProjectProperties(final AsyncCallback<Project> callback) {
         try {
             AsyncRequestCallback<Void> internalCallback = new AsyncRequestCallback<Void>() {
@@ -640,10 +665,10 @@ public class Project extends Folder {
 
             String url = this.getLinkByRelation(Link.REL_SELF).getHref();
             loader.setMessage("Updating item...");
-            AsyncRequest.build(RequestBuilder.POST, url)
-                        .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(getProperties()).toString())
-                        .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
-                        .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).loader(loader).send(internalCallback);
+            asyncRequestFactory.createPostRequest(url, null)
+                               .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(getProperties()).toString())
+                               .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                               .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).loader(loader).send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);
         }
@@ -653,44 +678,39 @@ public class Project extends Folder {
      * Reads or Refreshes all project properties.
      *
      * @param callback
+     *         callback
      */
     public void refreshProperties(final AsyncCallback<Project> callback) {
-        try {
-            final Array<Property> currentProperties = properties;
+        final Array<Property> currentProperties = properties;
 
-            AsyncRequestCallback<Array<Property>> internalCallback =
-                    new AsyncRequestCallback<Array<Property>>(new PropertyUnmarshaller()) {
-                        @Override
-                        protected void onSuccess(Array<Property> properties) {
-                            // Update properties on client-side Object
-                            currentProperties.clear();
-                            currentProperties.addAll(properties);
+        AsyncRequestCallback<Array<Property>> internalCallback =
+                new AsyncRequestCallback<Array<Property>>(new PropertyUnmarshaller()) {
+                    @Override
+                    protected void onSuccess(Array<Property> properties) {
+                        // Update properties on client-side Object
+                        currentProperties.clear();
+                        currentProperties.addAll(properties);
 
-                            eventBus.fireEvent(ProjectActionEvent.createProjectDescriptionChangedEvent(project));
+                        eventBus.fireEvent(ProjectActionEvent.createProjectDescriptionChangedEvent(project));
 
-                            callback.onSuccess(Project.this);
-                        }
+                        callback.onSuccess(Project.this);
+                    }
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            callback.onFailure(exception);
-                        }
-                    };
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        callback.onFailure(exception);
+                    }
+                };
 
-            // get JSON for this Project
-            String url = vfsInfo.getUrlTemplates().get(Link.REL_ITEM).getHref();
-            url = URL.decode(url).replace("[id]", id);
-            AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(loader).send(internalCallback);
-        } catch (RequestException e) {
-            callback.onFailure(e);
-        }
+        // get JSON for this Project
+        String url = vfsInfo.getUrlTemplates().get(Link.REL_ITEM).getHref();
+        url = URL.decode(url).replace("[id]", id);
+        asyncRequestFactory.createGetRequest(URL.encode(url)).loader(loader).send(internalCallback);
     }
 
     /**
-     * @param source
-     * @param destination
      * @param callback
-     * @throws ResourceException
+     *         callback
      */
     public void search(final AsyncCallback<Array<Resource>> callback) {
         callback.onFailure(new Exception("Operation not currently supported"));
@@ -702,7 +722,7 @@ public class Project extends Folder {
      * Check if resource belongs to this project
      *
      * @param resource
-     * @throws ResourceException
+     *         resource to check
      */
     protected void checkItemValid(final Resource resource) throws Exception {
         if (resource == null) {
@@ -712,5 +732,14 @@ public class Project extends Folder {
             throw new Exception("Resource is out of the project's scope. Project : " + getName() + ", resource path is : "
                                 + resource.getPath());
         }
+    }
+
+    // TODO
+    public void setProjectType(String projectTypeId) {
+        this.projectTypeId = projectTypeId;
+    }
+
+    String getProjectTypeId() {
+        return projectTypeId;
     }
 }

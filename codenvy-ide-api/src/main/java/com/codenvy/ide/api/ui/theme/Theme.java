@@ -18,7 +18,6 @@
 package com.codenvy.ide.api.ui.theme;
 
 /**
- *
  * @author Evgen Vidolob
  */
 public interface Theme {
@@ -150,4 +149,12 @@ public interface Theme {
     String getCellKeyboardSelectedRowColor();
 
     String getCellHoveredRow();
+
+    String getMainMenuBkgColor();
+
+    String getMainMenuFontColor();
+
+    String getNotableButtonTopColor();
+
+    String getNotableButtonColor();
 }
