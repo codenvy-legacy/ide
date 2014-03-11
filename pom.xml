@@ -27,7 +27,7 @@
     </parent>
     <groupId>com.codenvy.ide</groupId>
     <artifactId>codenvy-ide-parent</artifactId>
-    <version>3.0.0-M11</version>
+    <version>3.0.0-M12-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Codenvy :: Parent</name>
     <modules>
@@ -73,7 +73,7 @@
     <scm>
         <connection>scm:git:git@github.com:codenvy/ide.git</connection>
         <developerConnection>scm:git:git@github.com:codenvy/ide.git</developerConnection>
-        <tag>3.0.0-M11</tag>
+        <tag>HEAD</tag>
     </scm>
     <properties>
         <ant.version>1.9.1</ant.version>
