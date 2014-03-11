@@ -70,8 +70,7 @@ public class RenameResourcePresenter implements RenameResourceView.ActionDelegat
         view.setName(resource.getName());
         view.setEnableRenameButton(false);
         view.showDialog();
-        String namePart =
-                          (resource instanceof File) ? resource.getName().substring(0, resource.getName().lastIndexOf("."))
+        String namePart = (resource instanceof File) ? resource.getName().substring(0, resource.getName().lastIndexOf("."))
                               : resource.getName();
         view.selectText(namePart);
     }
