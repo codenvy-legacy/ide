@@ -99,6 +99,11 @@ public class JavaModelUnmarshaller {
             ItemReference item = itemObject.getNode();
             String itemName = item.getName();
 
+            // skip hidden files/folders
+            if (itemName.startsWith(".")) {
+                continue;
+            }
+
             final String type = item.getType();
 
             if (Project.TYPE.equalsIgnoreCase(type)) {
@@ -222,20 +227,6 @@ public class JavaModelUnmarshaller {
             default:
                 return false;
         }
-    }
-
-    private void getProjectDescriptor(String path, final AsyncCallback callback) {
-        projectServiceClient.getProject(path, new AsyncRequestCallback<ProjectDescriptor>() {
-            @Override
-            protected void onSuccess(ProjectDescriptor result) {
-                callback.onSuccess(result);
-            }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                callback.onFailure(exception);
-            }
-        });
     }
 
     public Folder getPayload() {

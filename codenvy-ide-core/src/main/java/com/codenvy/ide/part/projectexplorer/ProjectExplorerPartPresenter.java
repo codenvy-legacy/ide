@@ -274,7 +274,11 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     /** {@inheritDoc} */
     @Override
-    public void onResourceOpened(Resource resource) {
+    public void onResourceOpened(final Resource resource) {
+        // TODO: temporary fix Java project tree
+        if (resource.getId().equals(resourceProvider.getActiveProject().getId())) {
+            return;
+        }
         final AsyncCallback<Project> callback = new AsyncCallback<Project>() {
             @Override
             public void onSuccess(Project result) {
@@ -326,6 +330,30 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             });
         } else if (projectTypeId.equals(Constants.UNKNOWN_ID) && !project.getChildren().isEmpty()) {
             selectProjectTypePresenter.showDialog(project, callback);
+        } else {
+            projectServiceClient.getProject(project.getPath(), new AsyncRequestCallback<ProjectDescriptor>(
+                    dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
+                @Override
+                protected void onSuccess(ProjectDescriptor result) {
+                    project.setProjectType(result.getProjectTypeId());
+                    project.setAttributes(result.getAttributes());
+
+                    project.refreshTree(new AsyncCallback<Project>() {
+                        @Override
+                        public void onSuccess(Project result) {
+                        }
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            Log.error(ProjectExplorerPartPresenter.class, "Can not refresh project tree.", caught);
+                        }
+                    });
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                }
+            });
         }
     }
 
