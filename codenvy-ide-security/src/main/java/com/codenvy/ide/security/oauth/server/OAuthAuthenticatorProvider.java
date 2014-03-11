@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- * 
- *  [2012] - [2013] Codenvy, S.A. 
+ *
+ *  [2012] - [2013] Codenvy, S.A.
  *  All Rights Reserved.
- * 
+ *
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -15,27 +15,17 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.security.jaas;
+package com.codenvy.ide.security.oauth.server;
 
-import java.security.Principal;
+/** Allow store and provide services which implementations of OAuthAuthenticator. */
+public interface OAuthAuthenticatorProvider {
 
-/** @author andrew00x */
-public class RolePrincipal implements Principal {
-    private final String name;
-
-    public RolePrincipal(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public String toString() {
-        return "RolePrincipal{" +
-               "name='" + name + '\'' +
-               '}';
-    }
+    /**
+     * Get authentication service by name.
+     *
+     * @param oauthProviderName
+     *         name of OAuth provider
+     * @return OAuthAuthenticator instance or <code>null</code> if specified OAuth provider is not supported
+     */
+    OAuthAuthenticator getAuthenticator(String oauthProviderName);
 }

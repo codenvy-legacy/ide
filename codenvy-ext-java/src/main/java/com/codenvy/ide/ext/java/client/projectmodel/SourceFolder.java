@@ -17,30 +17,26 @@
  */
 package com.codenvy.ide.ext.java.client.projectmodel;
 
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.resources.model.Folder;
-import com.google.gwt.json.client.JSONObject;
 
-/** @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> */
+/** @author Nikolay Zamosenchuk */
 public class SourceFolder extends Folder {
     public static final String TYPE = "java.sourcefolder";
-
     private String sourceFolderName;
 
-    /**
-     *
-     */
     protected SourceFolder() {
         super(TYPE, FOLDER_MIME_TYPE);
     }
 
     /**
-     * Init Java Source Folder from JSon Object
+     * Init Java Source Folder from {@link ItemReference}.
      *
-     * @param itemObject
+     * @param itemReference
      */
-    protected SourceFolder(JSONObject itemObject, String name) {
+    protected SourceFolder(ItemReference itemReference, String name) {
         this();
-        init(itemObject);
+        init(itemReference);
         sourceFolderName = name;
     }
 
@@ -56,8 +52,8 @@ public class SourceFolder extends Folder {
         return parent.getPath() + "/" + getName();
     }
 
-    public void init(JSONObject object, String projectPath) {
+    public void init(ItemReference object, String projectPath) {
         init(object);
-        sourceFolderName = object.get("name").isString().stringValue();
+        sourceFolderName = object.getName();
     }
 }

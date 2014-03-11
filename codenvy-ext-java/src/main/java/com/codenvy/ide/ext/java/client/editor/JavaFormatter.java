@@ -29,7 +29,7 @@ public class JavaFormatter implements ContentFormatter, JavaParserWorker.FormatR
         int offset = region.getOffset();
         int length = region.getLength();
         try {
-            javaParserWorker.format(offset, length, doc.get(offset,length), this);
+            javaParserWorker.format(offset, length, doc.get(0, doc.getLength()), this);
         } catch (BadLocationException e) {
             Log.error(getClass(), e);
         }

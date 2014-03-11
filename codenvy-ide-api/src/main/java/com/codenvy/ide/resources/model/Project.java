@@ -17,12 +17,14 @@
  */
 package com.codenvy.ide.resources.model;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.api.project.shared.dto.TreeElement;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.resources.marshal.FileContentUnmarshaller;
 import com.codenvy.ide.resources.marshal.FileUnmarshaller;
 import com.codenvy.ide.resources.marshal.FolderTreeUnmarshaller;
 import com.codenvy.ide.resources.marshal.FolderUnmarshaller;
@@ -31,6 +33,7 @@ import com.codenvy.ide.resources.marshal.JSONSerializer;
 import com.codenvy.ide.resources.marshal.PropertyUnmarshaller;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.rest.Unmarshallable;
@@ -39,39 +42,67 @@ import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
+import java.util.List;
+import java.util.Map;
+
 /**
- * Represents Project  model. Responsible for deserialization of JSon String to generate it' own project model
+ * Represents Project model. Responsible for deserialization of JSon String to generate it' own project model.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public class Project extends Folder {
     public static final String PROJECT_MIME_TYPE = "text/vnd.ideproject+directory";
     public static final String TYPE              = "project";
-    protected final EventBus              eventBus;
-    protected final AsyncRequestFactory   asyncRequestFactory;
+    protected final EventBus                  eventBus;
+    protected final AsyncRequestFactory       asyncRequestFactory;
     /** Properties. */
-    protected       Array<Property>       properties;
-    protected       Loader                loader;
-    protected       VirtualFileSystemInfo vfsInfo;
-    private         ProjectDescription    description;
+    protected       Array<Property>           properties;
+    protected       Map<String, List<String>> attributes;
+    protected       Loader                    loader;
+    protected       VirtualFileSystemInfo     vfsInfo;
+    private         ProjectDescription        description;
+    private         ProjectServiceClient      projectServiceClient;
+    private final   DtoUnmarshallerFactory    dtoUnmarshallerFactory;
+    private String projectTypeId;
 
     /**
      * Constructor for empty project. Used for serialization only.
      * <p/>
      * Not intended to be used by client.
      */
-    public Project(EventBus eventBus, AsyncRequestFactory asyncRequestFactory) {
+    public Project(EventBus eventBus,
+                   AsyncRequestFactory asyncRequestFactory,
+                   ProjectServiceClient projectServiceClient,
+                   DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(TYPE, PROJECT_MIME_TYPE);
+        this.projectServiceClient = projectServiceClient;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.description = new ProjectDescription(this);
         this.properties = Collections.<Property>createArray();
         this.eventBus = eventBus;
         this.asyncRequestFactory = asyncRequestFactory;
         // TODO : receive it in some way
         this.loader = new EmptyLoader();
+    }
+
+    public void setAttributes(Map<String, List<String>> attributes) {
+        this.attributes = attributes;
+    }
+
+    public String getAttributeValue(String attributeName) {
+        return attributes.get(attributeName).get(0);
+    }
+
+    public List<String> getAttributeValues(String attributeName) {
+        return attributes.get(attributeName);
+    }
+
+    public void init(ItemReference itemReference) {
+        name = itemReference.getName();
+        mimeType = itemReference.getMediaType();
     }
 
     @Override
@@ -184,11 +215,15 @@ public class Project extends Folder {
      * Create new file.
      *
      * @param parent
+     *         parent folder
      * @param name
+     *         file name
      * @param content
+     *         file content
      * @param mimeType
+     *         file content media type
      * @param callback
-     * @throws ResourceException
+     *         callback
      */
     public void createFile(final Folder parent, final String name, String content, String mimeType, final AsyncCallback<File> callback) {
         try {
@@ -235,9 +270,11 @@ public class Project extends Folder {
      * Create new Folder.
      *
      * @param parent
+     *         parent folder
      * @param name
+     *         new folder name
      * @param callback
-     * @throws ResourceException
+     *         callback
      */
     public void createFolder(final Folder parent, final String name, final AsyncCallback<Folder> callback) {
         try {
@@ -279,9 +316,10 @@ public class Project extends Folder {
     }
 
     /**
-     * Reads or Refreshes full Project Structure tree. This can be a costly operation, since
+     * Reads or Refreshes full Project Structure tree. This can be a costly operation.
      *
      * @param callback
+     *         callback
      */
     public void refreshTree(final AsyncCallback<Project> callback) {
         refreshTree(this, new AsyncCallback<Folder>() {
@@ -303,38 +341,34 @@ public class Project extends Folder {
      * need to refresh the tree of the folders, since new folders may have been created by the server-side.
      *
      * @param root
+     *         root folder to refresh
      * @param callback
+     *         callback
      */
     public void refreshTree(final Folder root, final AsyncCallback<Folder> callback) {
-        try {
-            // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<Folder> internalCallback =
-                    new AsyncRequestCallback<Folder>(new FolderTreeUnmarshaller(root, root.getProject())) {
-                        @Override
-                        protected void onSuccess(Folder refreshedRoot) {
-                            callback.onSuccess(refreshedRoot);
-                        }
+        projectServiceClient.getTree(root.getPath(), -1,
+                                     new AsyncRequestCallback<TreeElement>(dtoUnmarshallerFactory.newUnmarshaller(TreeElement.class)) {
+            @Override
+            protected void onSuccess(TreeElement result) {
+                FolderTreeUnmarshaller unmarshaller = new FolderTreeUnmarshaller(root, root.getProject());
+                unmarshaller.unmarshal(result);
+                callback.onSuccess(unmarshaller.getPayload());
+            }
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            callback.onFailure(exception);
-                        }
-                    };
-
-            String url = vfsInfo.getUrlTemplates().get(Link.REL_TREE).getHref();
-            url = URL.decode(url).replace("[id]", root.getId());
-            asyncRequestFactory.createGetRequest(URL.encode(url)).loader(loader).send(internalCallback);
-        } catch (Exception e) {
-            callback.onFailure(e);
-        }
+            @Override
+            protected void onFailure(Throwable exception) {
+                callback.onFailure(exception);
+            }
+        });
     }
 
     /**
-     * Delete child resource
+     * Delete child resource.
      *
      * @param resource
+     *         resource to delete its child
      * @param callback
-     * @throws ResourceException
+     *         callback
      */
     public void deleteChild(final Resource resource, final AsyncCallback<Void> callback) {
         try {
@@ -370,11 +404,14 @@ public class Project extends Folder {
     }
 
     /**
+     * Get file content.
+     *
      * @param file
+     *         file to get its content
      * @param callback
-     * @throws ResourceException
+     *         callback
      */
-    public void getContent(File file, final AsyncCallback<File> callback) {
+    public void getContent(final File file, final AsyncCallback<File> callback) {
         try {
             checkItemValid(file);
 
@@ -384,37 +421,36 @@ public class Project extends Folder {
                 return;
             }
 
-            // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<File> internalCallback = new AsyncRequestCallback<File>(new FileContentUnmarshaller(file)) {
+            projectServiceClient.getFileContent(file.getPath(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
-                protected void onSuccess(File result) {
-                    callback.onSuccess(result);
+                protected void onSuccess(String result) {
+                    file.setContent(result);
+                    callback.onSuccess(file);
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
                     callback.onFailure(exception);
                 }
-            };
-
-            String url = file.getLinkByRelation(Link.REL_CONTENT).getHref();
-            loader.setMessage("Loading content...");
-            asyncRequestFactory.createGetRequest(url).loader(loader).send(internalCallback);
+            });
         } catch (Exception e) {
             callback.onFailure(e);
         }
     }
 
     /**
+     * Update file content.
+     *
      * @param file
+     *         file to update its content
      * @param callback
-     * @throws ResourceException
+     *         callback
      */
     public void updateContent(final File file, final AsyncCallback<File> callback) {
         try {
             checkItemValid(file);
-            // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<Void> internalCallback = new AsyncRequestCallback<Void>() {
+
+            projectServiceClient.updateFile(file.getPath(), file.getContent(), file.getMimeType(), new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     callback.onSuccess(file);
@@ -424,26 +460,19 @@ public class Project extends Folder {
                 protected void onFailure(Throwable exception) {
                     callback.onFailure(exception);
                 }
-            };
-
-            // TODO check with lock
-            String url = file.getLinkByRelation(Link.REL_CONTENT).getHref();
-            url += (file.isLocked()) ? "?lockToken=" + file.getLock().getLockToken() : "";
-            loader.setMessage("Updating content...");
-            asyncRequestFactory.createPostRequest(url, null)
-                               .data(file.getContent())
-                               .header(HTTPHeader.CONTENT_TYPE, file.getMimeType())
-                               .loader(loader)
-                               .send(internalCallback);
+            });
         } catch (Exception e) {
             callback.onFailure(e);
         }
     }
 
     /**
+     * Lock file.
+     *
      * @param file
+     *         file to lock
      * @param callback
-     * @throws ResourceException
+     *         callback
      */
     public void lock(File file, final AsyncCallback<String> callback) {
         try {
@@ -470,10 +499,14 @@ public class Project extends Folder {
     }
 
     /**
+     * Unlock file.
+     *
      * @param file
+     *         file to unlock
      * @param lockToken
+     *         lock token
      * @param callback
-     * @throws ResourceException
+     *         callback
      */
     public void unlock(File file, String lockToken, final AsyncCallback<Void> callback) {
         try {
@@ -501,11 +534,16 @@ public class Project extends Folder {
     }
 
     /**
+     * Move resource to new destination.
+     *
      * @param source
+     *         source resource to move
      * @param destination
+     *         destination for moved resource
      * @param lockToken
+     *         lock token
      * @param callback
-     * @throws ResourceException
+     *         callback
      */
     public void move(final Resource source, final Folder destination, String lockToken, final AsyncCallback<Resource> callback) {
         try {
@@ -544,21 +582,30 @@ public class Project extends Folder {
     }
 
     /**
+     * Copy resource.
+     *
      * @param source
+     *         resource to copy
      * @param destination
+     *         destination folder
      * @param callback
-     * @throws ResourceException
+     *         callback
      */
     public void copy(final Resource source, final Folder destination, final AsyncCallback<Resource> callback) {
         callback.onFailure(new Exception("copy not supported"));
     }
 
     /**
+     * Rename resource.
+     *
      * @param resource
-     * @param newname
+     *         resource to rename
+     * @param newName
+     *         new name for resource
      * @param callback
+     *         callback
      */
-    public void rename(final Resource resource, final String newname, final AsyncCallback<Resource> callback) {
+    public void rename(final Resource resource, final String newName, final AsyncCallback<Resource> callback) {
         try {
             checkItemValid(resource);
             Unmarshallable<Resource> unmarshaller =
@@ -606,7 +653,7 @@ public class Project extends Folder {
             url = URL.decode(url);
             url = url.replace("mediaType=[mediaType]", "");
             url =
-                    (newname != null && !newname.isEmpty()) ? url.replace("[newname]", newname) : url.replace(
+                    (newName != null && !newName.isEmpty()) ? url.replace("[newname]", newName) : url.replace(
                             "newname=[newname]", "");
 
             if (File.TYPE.equals(resource.getResourceType()) && ((File)resource).isLocked()) {
@@ -623,10 +670,7 @@ public class Project extends Folder {
         }
     }
 
-    /**
-     * @param callback
-     * @throws ResourceException
-     */
+    /** @param callback */
     public void flushProjectProperties(final AsyncCallback<Project> callback) {
         try {
             AsyncRequestCallback<Void> internalCallback = new AsyncRequestCallback<Void>() {
@@ -657,6 +701,7 @@ public class Project extends Folder {
      * Reads or Refreshes all project properties.
      *
      * @param callback
+     *         callback
      */
     public void refreshProperties(final AsyncCallback<Project> callback) {
         final Array<Property> currentProperties = properties;
@@ -688,7 +733,7 @@ public class Project extends Folder {
 
     /**
      * @param callback
-     * @throws ResourceException
+     *         callback
      */
     public void search(final AsyncCallback<Array<Resource>> callback) {
         callback.onFailure(new Exception("Operation not currently supported"));
@@ -700,7 +745,7 @@ public class Project extends Folder {
      * Check if resource belongs to this project
      *
      * @param resource
-     * @throws ResourceException
+     *         resource to check
      */
     protected void checkItemValid(final Resource resource) throws Exception {
         if (resource == null) {
@@ -710,5 +755,14 @@ public class Project extends Folder {
             throw new Exception("Resource is out of the project's scope. Project : " + getName() + ", resource path is : "
                                 + resource.getPath());
         }
+    }
+
+    // TODO
+    public void setProjectType(String projectTypeId) {
+        this.projectTypeId = projectTypeId;
+    }
+
+    String getProjectTypeId() {
+        return projectTypeId;
     }
 }

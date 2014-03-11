@@ -23,11 +23,10 @@ import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.extensions.client.ExtRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.extensions.client.ExtRuntimeResources;
 import com.codenvy.ide.ext.extensions.client.ExtensionsController;
+import com.codenvy.ide.ext.extensions.shared.Constants;
 import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE_ID;
 
 /**
  * Action to launch Codenvy application with custom extension.
@@ -60,7 +59,7 @@ public class LaunchAction extends Action {
     public void update(ActionEvent e) {
         Project activeProject = resourceProvider.getActiveProject();
         if (activeProject != null) {
-            e.getPresentation().setVisible(activeProject.getDescription().getProjectTypeId().equals(CODENVY_EXTENSION_PROJECT_TYPE_ID) ||
+            e.getPresentation().setVisible(activeProject.getDescription().getProjectTypeId().equals(Constants.CODENVY_EXTENSION_ID) ||
                                            activeProject.getDescription().getProjectTypeId().equals("codenvy_tutorial"));
             e.getPresentation().setEnabled(!controller.isAnyAppLaunched());
         } else {

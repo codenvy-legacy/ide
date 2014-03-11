@@ -17,8 +17,6 @@
  */
 package com.codenvy.ide.ext.java.worker;
 
-import com.codenvy.dto.server.JsonStringMapImpl;
-import com.codenvy.dto.shared.JsonStringMap;
 import com.codenvy.ide.collections.Jso;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.collections.js.JsoArray;
@@ -81,7 +79,7 @@ import com.google.gwt.webworker.client.messages.MessageFilter;
 import com.google.gwt.webworker.client.messages.MessageImpl;
 
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author Evgen Vidolob
@@ -92,8 +90,8 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
     private final  WorkerOutlineModelUpdater outlineModelUpdater;
     private        WorkerCorrectionProcessor correctionProcessor;
     private        WorkerNameEnvironment     nameEnvironment;
-    private HashMap<String, String> options = new HashMap<String, String>();
-    private HashMap<String, String>            preferenceFormatSettings;
+    private HashMap<String, String> options                  = new HashMap<String, String>();
+    private Map<String, String>     preferenceFormatSettings = new HashMap<String, String>();
     private MessageFilter                      messageFilter;
     private JavaParserWorker                   worker;
     private ContentAssistHistory               contentAssistHistory;
@@ -102,8 +100,7 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
     private String                             projectName;
     private CUVariables                        cuVar;
     private TemplateCompletionProposalComputer templateCompletionProposalComputer;
-
-    private WorkerCodeAssist workerCodeAssist;
+    private WorkerCodeAssist                   workerCodeAssist;
 
     public WorkerMessageHandler(final JavaParserWorker worker) {
         this.worker = worker;
@@ -139,9 +136,16 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
             @Override
             public void onMessageReceived(FormatMessage message) {
                 if (preferenceFormatSettings != null) {
-                    TextEdit edit =
-                            CodeFormatterUtil.format2(CodeFormatter.K_COMPILATION_UNIT, message.content(), 0, null,
-                                                      preferenceFormatSettings);
+                    TextEdit edit;
+                    if (message.offset() == 0) {
+                        edit =
+                                CodeFormatterUtil.format2(CodeFormatter.K_COMPILATION_UNIT, message.content(), 0, null,
+                                                          preferenceFormatSettings);
+                    } else {
+                        edit =
+                                CodeFormatterUtil.format2(CodeFormatter.K_COMPILATION_UNIT, message.content(), message.offset(),
+                                                          message.length(), 0, null, preferenceFormatSettings);
+                    }
                     Jso textEditJso = convertTextEditToJso(edit);
                     MessagesImpls.FormatResultMessageImpl formatResultMes = MessagesImpls.FormatResultMessageImpl.make();
                     formatResultMes.setTextEdit(textEditJso);
@@ -158,7 +162,7 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
                                                        settingsJso.iterate(new StringMap.IterationCallback<String>() {
                                                            @Override
                                                            public void onIteration(String key, String value) {
-                                                               preferenceFormatSettings.put(key,value);
+                                                               preferenceFormatSettings.put(key, value);
                                                            }
                                                        });
                                                    }

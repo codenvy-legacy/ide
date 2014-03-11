@@ -36,7 +36,6 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_MAIN_MENU;
 @Singleton
 @Extension(title = "Codenvy extensions", version = "3.0.0")
 public class ExtRuntimeExtension {
-    public static final String CODENVY_EXTENSION_PROJECT_TYPE_ID = "codenvy_extension";
 
     @Inject
     public ExtRuntimeExtension(ExtRuntimeLocalizationConstant localizationConstants,

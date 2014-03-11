@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.java.client;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -43,6 +44,7 @@ import com.codenvy.ide.ext.java.client.wizard.NewPackageProvider;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -59,8 +61,6 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
 /** @author Evgen Vidolob */
 @Extension(title = "Java syntax highlighting and code autocompletion.", version = "3.0.0")
 public class JavaExtension {
-    public static final String WAR_PROJECT_TYPE_ID    = "war";
-    public static final String SPRING_PROJECT_TYPE_ID = "spring";
     private ResourceProvider    resourceProvider;
     private NotificationManager notificationManager;
     private String              restContext;
@@ -83,6 +83,8 @@ public class JavaExtension {
                          @Named("workspaceId") String workspaceId,
                          ActionManager actionManager,
                          AsyncRequestFactory asyncRequestFactory,
+                         ProjectServiceClient projectServiceClient,
+                         DtoUnmarshallerFactory dtoUnmarshallerFactory,
                          FormatController formatController) {
         this();
         this.resourceProvider = resourceProvider;
@@ -95,7 +97,8 @@ public class JavaExtension {
         editorRegistry.register(javaFile, javaEditorProvider);
         resourceProvider.registerFileType(javaFile);
 
-        resourceProvider.registerModelProvider("java", new JavaProjectModelProvider(eventBus, asyncRequestFactory));
+        resourceProvider.registerModelProvider("java", new JavaProjectModelProvider(eventBus, asyncRequestFactory, projectServiceClient,
+                                                                                    dtoUnmarshallerFactory));
 
         JavaResources.INSTANCE.css().ensureInjected();
 

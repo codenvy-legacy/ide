@@ -22,6 +22,7 @@ import com.codenvy.api.project.server.ProjectTypeExtension;
 import com.codenvy.api.project.shared.Attribute;
 import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
+import com.codenvy.ide.ext.extensions.shared.Constants;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -51,16 +52,16 @@ public class CodenvyExtProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType("codenvy_extension", "Codenvy extension");
+        return new ProjectType(Constants.CODENVY_EXTENSION_ID, Constants.CODENVY_EXTENSION_NAME);
     }
 
     @Override
     public List<Attribute> getPredefinedAttributes() {
         final List<Attribute> list = new ArrayList<>(4);
-        list.add(new Attribute("language", "java"));
-        list.add(new Attribute("framework", "codenvy_sdk"));
-        list.add(new Attribute("builder.name", "maven"));
-        list.add(new Attribute("runner.name", "sdk"));
+        list.add(new Attribute(Constants.LANGUAGE, "java"));
+        list.add(new Attribute(Constants.FRAMEWORK, "codenvy_sdk"));
+        list.add(new Attribute(Constants.BUILDER_NAME, "maven"));
+        list.add(new Attribute(Constants.RUNNER_NAME, "sdk"));
         return list;
     }
 
@@ -71,13 +72,11 @@ public class CodenvyExtProjectTypeExtension implements ProjectTypeExtension {
                                                 "GIST EXAMPLE",
                                                 "Simple Codenvy extension project is demonstrating basic usage Codenvy API.",
                                                 baseUrl + "/gist-extension.zip"));
-        list.add(new ProjectTemplateDescription(
-                                                "zip",
+        list.add(new ProjectTemplateDescription("zip",
                                                 "EMPTY EXTENSION PROJECT",
                                                 "This is a ready to use structure of a Codenvy extension with a minimal set of files and dependencies.",
                                                 baseUrl + "/empty-extension.zip"));
-        list.add(new ProjectTemplateDescription(
-                                                "zip",
+        list.add(new ProjectTemplateDescription("zip",
                                                 "HELLO WORLD EXTENSION",
                                                 "This is a simple Codenvy Extension that prints Hello World in Output console and adds Hello World item to a content menu.",
                                                 baseUrl + "/helloworld-extension.zip"));

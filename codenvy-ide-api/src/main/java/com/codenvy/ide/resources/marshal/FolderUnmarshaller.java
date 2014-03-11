@@ -23,11 +23,10 @@ import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONParser;
 
-
 /**
  * Unmarshaller for {@link Folder}
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public class FolderUnmarshaller implements Unmarshallable<Folder> {
     private Folder item;

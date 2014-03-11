@@ -26,6 +26,7 @@ import com.codenvy.ide.ext.java.jdi.client.actions.DebugAction;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
 import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolverFactory;
 import com.codenvy.ide.ext.java.jdi.client.fqn.JavaFqnResolver;
+import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -35,8 +36,6 @@ import static com.codenvy.ide.api.ui.action.Anchor.AFTER;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_CONTEXT_MENU;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_MAIN_MENU;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_TOOLBAR;
-import static com.codenvy.ide.ext.java.client.JavaExtension.WAR_PROJECT_TYPE_ID;
-import static com.codenvy.ide.ext.java.client.JavaExtension.SPRING_PROJECT_TYPE_ID;
 
 /**
  * Extension allows debug Java web applications.
@@ -72,8 +71,8 @@ public class JavaRuntimeExtension {
         DefaultActionGroup runContextGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_CONTEXT_MENU);
         runContextGroup.add(debugAction);
 
-        debuggerManager.registeredDebugger(WAR_PROJECT_TYPE_ID, debuggerPresenter);
-        debuggerManager.registeredDebugger(SPRING_PROJECT_TYPE_ID, debuggerPresenter);
+        debuggerManager.registeredDebugger(Constants.WAR_ID, debuggerPresenter);
+        debuggerManager.registeredDebugger(Constants.SPRING_ID, debuggerPresenter);
         resolverFactory.addResolver(APPLICATION_JAVA, javaFqnResolver);
     }
 }

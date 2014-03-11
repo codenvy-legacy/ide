@@ -15,27 +15,17 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.security.jaas;
+package com.codenvy.ide.server;
 
-import java.security.Principal;
+import com.codenvy.inject.DynaModule;
+import com.google.inject.AbstractModule;
 
-/** @author andrew00x */
-public class UserPrincipal implements Principal {
-    private final String name;
-
-    public UserPrincipal(String name) {
-        this.name = name;
-    }
-
+/** @author Artem Zatsarynnyy */
+@DynaModule
+public class CoreModule extends AbstractModule {
     @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public String toString() {
-        return "UserPrincipal{" +
-               "name='" + name + '\'' +
-               '}';
+    protected void configure() {
+        bind(ProjectTypeDescriptionsExtension.class);
+        bind(UnknownProjectTypeExtension.class);
     }
 }

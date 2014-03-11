@@ -12,7 +12,6 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Map;
 
@@ -33,7 +32,7 @@ public class FormatService {
             SAXParser parser = factory.newSAXParser();
             parser.parse(getClass().getResourceAsStream("codenvy-codestyle-eclipse_.xml"), parserXML);
         } catch (ParserConfigurationException | SAXException | IOException e) {
-            LOG.error("It is not possible to parse file codenvy-codestyle-eclipse_.xml", e);
+            LOG.error("It is not possible to parse file 'codenvy-codestyle-eclipse_.xml'", e);
         }
         return parserXML.getSettings();
     }

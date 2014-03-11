@@ -37,7 +37,7 @@ import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/** @author Andrey Plotnikov */
 @Singleton
 public class DeleteResourceAction extends Action {
     private SelectionAgent           selectionAgent;
@@ -77,25 +77,9 @@ public class DeleteResourceAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        Project activeProject = resourceProvider.getActiveProject();
         Selection<Resource> selection = (Selection<Resource>)selectionAgent.getSelection();
         Resource resource = selection.getFirstElement();
         delete(resource);
-//
-//        if (activeProject != null) {
-//        } else {
-//            resourceProvider.getProject(resource.getName(), new AsyncCallback<Project>() {
-//                @Override
-//                public void onSuccess(Project result) {
-//                    delete(result);
-//                }
-//
-//                @Override
-//                public void onFailure(Throwable caught) {
-//                    showErrorMessage(caught);
-//                }
-//            });
-//        }
     }
 
     /**

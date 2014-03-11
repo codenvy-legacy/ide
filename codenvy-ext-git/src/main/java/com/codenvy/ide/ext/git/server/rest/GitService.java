@@ -249,8 +249,10 @@ public class GitService {
                     propertiesList.add(projectTypeProperty);
                 }
                 Folder codenvyFolder = vfs.createFolder(projectId, ".codenvy");
+                final String content =
+                        "{\"type\":\"maven_multi_module\",\"properties\":[{\"name\":\"builder.name\",\"value\":[\"maven\"]}}";
                 vfs.createFile(codenvyFolder.getId(), "project", MediaType.APPLICATION_JSON_TYPE,
-                               new ByteArrayInputStream("{}".getBytes()));
+                               new ByteArrayInputStream(content.getBytes()));
                 vfs.updateItem(projectId, propertiesList, null);
                 break;
             }

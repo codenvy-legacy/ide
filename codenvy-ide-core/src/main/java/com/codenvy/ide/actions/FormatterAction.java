@@ -39,12 +39,11 @@ public class FormatterAction extends Action {
     @Override
     public void update(ActionEvent e) {
         editor = editorAgent.getActiveEditor();
-
         boolean isCanDoOperation = false;
 
         if (editor instanceof CodenvyTextEditor) {
             isCanDoOperation = ((CodenvyTextEditor)editor).getView().canDoOperation(TextEditorOperations.FORMAT);
-            e.getPresentation().setEnabled(isCanDoOperation);
         }
+        e.getPresentation().setEnabled(isCanDoOperation);
     }
 }

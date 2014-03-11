@@ -31,11 +31,7 @@ import static com.codenvy.ide.resources.marshal.JSONDeserializer.BOOLEAN_DESERIA
 import static com.codenvy.ide.resources.marshal.JSONDeserializer.LINK_DESERIALIZER;
 import static com.codenvy.ide.resources.marshal.JSONDeserializer.STRING_DESERIALIZER;
 
-
-/**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: VFSInfoUnmarshaller Feb 2, 2011 2:16:15 PM evgen $
- */
+/** @author Evgen Vidolob */
 public class VFSInfoUnmarshaller implements Unmarshallable<VirtualFileSystemInfo> {
     private VirtualFileSystemInfo virtualFileSystemInfo;
 

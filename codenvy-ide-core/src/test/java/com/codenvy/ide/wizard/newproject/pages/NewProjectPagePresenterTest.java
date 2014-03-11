@@ -17,24 +17,25 @@
  */
 package com.codenvy.ide.wizard.newproject.pages;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
-import com.codenvy.api.vfs.shared.dto.Item;
-import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.paas.PaaS;
-import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.wizard.newproject.PaaSAgentImpl;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageView;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,7 +44,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
-import java.util.ArrayList;
+import java.lang.reflect.Method;
 
 import static com.codenvy.ide.api.ui.wizard.Wizard.UpdateDelegate;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
@@ -72,60 +73,57 @@ public class NewProjectPagePresenterTest {
     public static final boolean IS_NOT_COMPLETED = false;
     public static final boolean AVAILABLE        = true;
     @Mock
-    private       NewProjectPageView            view;
+    private NewProjectPageView            view;
     @Mock
-    private       Resources                     resources;
+    private Resources                     resources;
     @Mock
-    private       ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
+    private ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
     @Mock
-    private       PaaSAgentImpl                 paasAgent;
+    private PaaSAgentImpl                 paasAgent;
     @Mock
-    private       ResourceProvider              resourceProvider;
+    private CoreLocalizationConstant      constant;
     @Mock
-    private       CoreLocalizationConstant      constant;
+    private WizardContext                 wizardContext;
     @Mock
-    private       WizardContext                 wizardContext;
+    private ProjectTypeDescriptor         projectTypeDescriptor;
     @Mock
-    private       ProjectTypeDescriptor         projectTypeDescriptor;
+    private PaaS                          paas;
     @Mock
-    private       PaaS                          paas;
+    private UpdateDelegate                delegate;
     @Mock
-    private       UpdateDelegate                delegate;
+    private DtoFactory                    dtoFactory;
+    private NewProjectPagePresenter       presenter;
     @Mock
-    private       DtoFactory                    dtoFactory;
-    private       NewProjectPagePresenter       presenter;
+    private ProjectServiceClient          projectServiceClient;
+    @Mock
+    private DtoUnmarshallerFactory        dtoUnmarshallerFactory;
 
     /** Prepare test when project list is come. */
     private void setUpWithProjects() {
-        Item item = mock(Item.class);
-        final ItemList itemList = mock(ItemList.class);
-        when(dtoFactory.createDtoFromJson(anyString(), eq(ItemList.class))).thenReturn(itemList);
-        ArrayList<Item> list = new ArrayList<>();
-        list.add(item);
-        when(itemList.getItems()).thenReturn(list);
+        ProjectReference item = mock(ProjectReference.class);
+        final Array<ProjectReference> itemList = Collections.createArray();
+        itemList.add(item);
         when(item.getName()).thenReturn(PROJECT_NAME);
 
         doAnswer(new Answer() {
             @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Object[] arguments = invocationOnMock.getArguments();
-                AsyncCallback<ItemList> callback = (AsyncCallback<ItemList>)arguments[0];
-                callback.onSuccess(itemList);
-                return null;
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<Array<ProjectReference>> callback = (AsyncRequestCallback<Array<ProjectReference>>)arguments[0];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, itemList);
+                return callback;
             }
-        }).when(resourceProvider).listProjects((AsyncCallback<ItemList>)anyObject());
+        }).when(projectServiceClient).getProjects((AsyncRequestCallback<Array<ProjectReference>>)anyObject());
 
         setUp();
     }
 
     /** Prepare test when project list is not come. */
     private void setUp() {
-        Item item = mock(Item.class);
-        ItemList itemList = mock(ItemList.class);
-        when(dtoFactory.createDtoFromJson(anyString(), eq(ItemList.class))).thenReturn(itemList);
-        ArrayList<Item> list = new ArrayList<>();
-        list.add(item);
-        when(itemList.getItems()).thenReturn(list);
+        ProjectReference item = mock(ProjectReference.class);
+        final Array<ProjectReference> itemList = Collections.createArray();
+        itemList.add(item);
         when(item.getName()).thenReturn(PROJECT_NAME);
 
         Array<ProjectTypeDescriptor> projectTypes = Collections.createArray(projectTypeDescriptor);
@@ -134,7 +132,8 @@ public class NewProjectPagePresenterTest {
         Array<PaaS> paases = Collections.createArray(paas);
         when(paasAgent.getPaaSes()).thenReturn(paases);
 
-        presenter = new NewProjectPagePresenter(view, resources, projectTypeDescriptorRegistry, resourceProvider, constant);
+        presenter = new NewProjectPagePresenter(view, resources, projectTypeDescriptorRegistry, constant, projectServiceClient,
+                                                dtoUnmarshallerFactory);
         presenter.setContext(wizardContext);
         presenter.setUpdateDelegate(delegate);
     }

@@ -28,6 +28,7 @@ import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentCommand;
 import com.codenvy.ide.text.DocumentImpl;
+import com.codenvy.ide.text.Position;
 import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.RegionImpl;
 import com.codenvy.ide.text.TextUtilities;
@@ -687,10 +688,11 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
                 break;
             case TextEditorOperations.FORMAT:
                 if (contentFormatter != null){
-                    int lengthSelectedRange = selectionManager.getSelectionModel().getSelectedRange().getLength();
-                    int offset = selectionManager.getSelectionModel().getSelectedRange().getOffset();
-                    Region region = null;
-                    if (lengthSelectedRange > 0){
+                    Position selectedRange = selectionManager.getSelectionModel().getSelectedRange();
+                    int lengthSelectedRange = selectedRange.getLength();
+                    int offset =              selectedRange.getOffset();
+                    Region region;
+                    if (lengthSelectedRange > 0 && offset >= 0){
                         region = new RegionImpl(offset, lengthSelectedRange);
                     }
                     else {region = new RegionImpl(0, getDocument().getLength());}

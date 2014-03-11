@@ -196,9 +196,9 @@ public class GitClientServiceImpl implements GitClientService {
     public void cloneRepositoryWS(@NotNull String vfsId, @NotNull Project project, @NotNull String remoteUri, @NotNull String remoteName,
                                   @NotNull RequestCallback<RepoInfo> callback) throws WebSocketException {
         CloneRequest cloneRequest = dtoFactory.createDto(CloneRequest.class).withRemoteName(remoteName).withRemoteUri(remoteUri)
-                                              .withWorkingDir(project.getId());
+                                              .withWorkingDir(project.getPath());
 
-        String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
+        String params = "?vfsid=" + vfsId + "&projectid=" + project.getPath()/*project.getId()*/;
         callback.setStatusHandler(new CloneRequestStatusHandler(project.getName(), remoteUri, eventBus, constant));
 
         String url = gitServicePath + CLONE + params;

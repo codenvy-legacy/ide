@@ -21,6 +21,7 @@ import com.codenvy.api.project.server.ProjectTypeDescriptionExtension;
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
 import com.codenvy.api.project.shared.AttributeDescription;
 import com.codenvy.api.project.shared.ProjectType;
+import com.codenvy.ide.ext.java.shared.Constants;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -29,16 +30,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * {@link ProjectTypeDescriptionExtension} to register project types.
- *
- * @author Artem Zatsarynnyy
- */
+/** @author Artem Zatsarynnyy */
 @Singleton
 public class ProjectTypeDescriptionsExtension implements ProjectTypeDescriptionExtension {
 
     private Map<String, String> icons = new HashMap<>();
-
 
     @Inject
     public ProjectTypeDescriptionsExtension(ProjectTypeDescriptionRegistry registry) {
@@ -49,21 +45,21 @@ public class ProjectTypeDescriptionsExtension implements ProjectTypeDescriptionE
     @Override
     public List<ProjectType> getProjectTypes() {
         final List<ProjectType> list = new ArrayList<>(3);
-        list.add(new ProjectType("jar", "Java Library (JAR)"));
-        list.add(new ProjectType("war", "Java Web Application (WAR)"));
-        list.add(new ProjectType("spring", "Spring Application"));
+        list.add(new ProjectType(Constants.JAR_ID, Constants.JAR_NAME));
+        list.add(new ProjectType(Constants.WAR_ID, Constants.WAR_NAME));
+        list.add(new ProjectType(Constants.SPRING_ID, Constants.SPRING_NAME));
         return list;
     }
 
     @Override
     public List<AttributeDescription> getAttributeDescriptions() {
         final List<AttributeDescription> list = new ArrayList<>(7);
-        list.add(new AttributeDescription("language"));
-        list.add(new AttributeDescription("language.version"));
-        list.add(new AttributeDescription("framework"));
-        list.add(new AttributeDescription("folders.source"));
-        list.add(new AttributeDescription("builder.name"));
-        list.add(new AttributeDescription("runner.name"));
+        list.add(new AttributeDescription(Constants.LANGUAGE));
+        list.add(new AttributeDescription(Constants.LANGUAGE_VERSION));
+        list.add(new AttributeDescription(Constants.FRAMEWORK));
+        list.add(new AttributeDescription(Constants.BUILDER_NAME));
+        list.add(new AttributeDescription(Constants.BUILDER_SOURCE_FOLDERS));
+        list.add(new AttributeDescription(Constants.RUNNER_NAME));
         return list;
     }
 }

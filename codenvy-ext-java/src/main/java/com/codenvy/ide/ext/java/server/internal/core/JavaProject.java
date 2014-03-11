@@ -23,6 +23,7 @@ import com.codenvy.api.project.server.ProjectManager;
 import com.codenvy.api.project.shared.Attribute;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.ide.ext.java.server.core.JavaCore;
+import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.vfs.impl.fs.VirtualFileImpl;
 
 import org.eclipse.core.resources.IProject;
@@ -123,10 +124,15 @@ public class JavaProject extends Openable implements IJavaProject {
     }
 
     private void addSources(Project project, List<IClasspathEntry> paths) throws IOException {
-        Attribute attribute = project.getDescription().getAttribute("folders.source");
-        if (attribute != null) {
-            for (String path : attribute.getValues()) {
-                paths.add(JavaCore.newSourceEntry(new Path(((VirtualFileImpl)project.getBaseFolder().getVirtualFile()).getIoFile().getPath() + "/" + path)));
+        final String builderName = project.getDescription().getAttributeValue(Constants.BUILDER_NAME);
+        if (builderName != null) {
+            final String sourceFolders = Constants.BUILDER_SOURCE_FOLDERS.replace("${builder}", builderName);
+            Attribute attribute = project.getDescription().getAttribute(sourceFolders);
+            if (attribute != null) {
+                for (String path : attribute.getValues()) {
+                    paths.add(JavaCore.newSourceEntry(
+                            new Path(((VirtualFileImpl)project.getBaseFolder().getVirtualFile()).getIoFile().getPath() + "/" + path)));
+                }
             }
         }
     }

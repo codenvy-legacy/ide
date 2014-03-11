@@ -21,12 +21,12 @@ import com.codenvy.api.project.server.ProjectTypeDescriptionExtension;
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
 import com.codenvy.api.project.shared.AttributeDescription;
 import com.codenvy.api.project.shared.ProjectType;
+import com.codenvy.ide.ext.extensions.shared.Constants;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * {@link ProjectTypeDescriptionExtension} to register project types.
@@ -43,22 +43,21 @@ public class ProjectTypeDescriptionsExtension implements ProjectTypeDescriptionE
     @Override
     public List<ProjectType> getProjectTypes() {
         final List<ProjectType> list = new ArrayList<>(1);
-        list.add(new ProjectType("codenvy_extension", "Codenvy extension"));
+        list.add(new ProjectType(Constants.CODENVY_EXTENSION_ID, Constants.CODENVY_EXTENSION_NAME));
         return list;
     }
 
     @Override
     public List<AttributeDescription> getAttributeDescriptions() {
-        final List<AttributeDescription> list = new ArrayList<>(7);
-        list.add(new AttributeDescription("language"));
-        list.add(new AttributeDescription("language.version"));
-        list.add(new AttributeDescription("framework"));
-        list.add(new AttributeDescription("exoide:classpath"));
-        list.add(new AttributeDescription("folders.source"));
-        list.add(new AttributeDescription("builder.name"));
-        list.add(new AttributeDescription("runner.name"));
+        final List<AttributeDescription> list = new ArrayList<>(6);
+        list.add(new AttributeDescription(Constants.LANGUAGE));
+        list.add(new AttributeDescription(Constants.LANGUAGE_VERSION));
+        list.add(new AttributeDescription(Constants.FRAMEWORK));
+        list.add(new AttributeDescription(Constants.BUILDER_NAME));
+        list.add(new AttributeDescription(Constants.BUILDER_SOURCE_FOLDERS));
+        list.add(new AttributeDescription(Constants.RUNNER_NAME));
         return list;
     }
 
-   
+
 }
