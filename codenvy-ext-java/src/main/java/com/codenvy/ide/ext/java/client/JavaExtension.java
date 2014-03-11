@@ -33,6 +33,7 @@ import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.ext.java.client.editor.JavaEditorProvider;
+import com.codenvy.ide.ext.java.client.format.FormatController;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProjectModelProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewAnnotationProvider;
@@ -83,7 +84,8 @@ public class JavaExtension {
                          ActionManager actionManager,
                          AsyncRequestFactory asyncRequestFactory,
                          ProjectServiceClient projectServiceClient,
-                         DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+                         DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                         FormatController formatController) {
         this();
         this.resourceProvider = resourceProvider;
         this.notificationManager = notificationManager;

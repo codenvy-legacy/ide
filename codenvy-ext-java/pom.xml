@@ -402,6 +402,11 @@
                     <artifactId>guava</artifactId>
                     <version>12.0.1</version>
                 </dependency>
+                <dependency>
+                    <groupId>com.google.gwt</groupId>
+                    <artifactId>gwt-user</artifactId>
+                    <version>${gwt.version}</version>
+                </dependency>
             </dependencies>
         </profile>
     </profiles>

@@ -17,8 +17,6 @@
  */
 package com.codenvy.ide.part.projectexplorer;
 
-import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.vfs.shared.ItemType;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -36,8 +34,6 @@ import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.server.Constants;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
@@ -56,14 +52,12 @@ import javax.validation.constraints.NotNull;
  */
 @Singleton
 public class ProjectExplorerPartPresenter extends BasePresenter implements ProjectExplorerView.ActionDelegate, ProjectExplorerPart {
-    private final ProjectServiceClient       projectServiceClient;
-    private final DtoUnmarshallerFactory     dtoUnmarshallerFactory;
-    protected     ProjectExplorerView        view;
-    protected     EventBus                   eventBus;
-    private       Resources                  resources;
-    private       ResourceProvider           resourceProvider;
-    private       ContextMenuPresenter       contextMenuPresenter;
-    private       SelectProjectTypePresenter selectProjectTypePresenter;
+    protected ProjectExplorerView        view;
+    protected EventBus                   eventBus;
+    private   Resources                  resources;
+    private   ResourceProvider           resourceProvider;
+    private   ContextMenuPresenter       contextMenuPresenter;
+    private   SelectProjectTypePresenter selectProjectTypePresenter;
 
     /**
      * Instantiates the ProjectExplorer Presenter.
@@ -81,15 +75,11 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                                         Resources resources,
                                         ResourceProvider resourceProvider,
                                         ContextMenuPresenter contextMenuPresenter,
-                                        SelectProjectTypePresenter selectProjectTypePresenter,
-                                        ProjectServiceClient projectServiceClient,
-                                        DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+                                        SelectProjectTypePresenter selectProjectTypePresenter) {
         this.view = view;
         this.eventBus = eventBus;
         this.resources = resources;
         this.resourceProvider = resourceProvider;
-        this.projectServiceClient = projectServiceClient;
-        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.view.setTitle("Project Explorer");
         this.contextMenuPresenter = contextMenuPresenter;
         this.selectProjectTypePresenter = selectProjectTypePresenter;
@@ -286,7 +276,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
                     @Override
                     public void onFailure(Throwable caught) {
-                        Log.error(ProjectExplorerPartPresenter.class, "Can not refresh project tree.", caught);
+                        Log.error(ProjectExplorerPartPresenter.class, "Can not refresh project properties.", caught);
                     }
                 });
             }
@@ -297,36 +287,34 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             }
         };
 
-        if (resource.getResourceType().equals(Project.TYPE)) {
+        if (resource.getResourceType().equals(Project.TYPE) && ((Project)resource).getProperties().isEmpty()) {
+            ((Project)resource).setVFSInfo(resourceProvider.getVfsInfo());
+            ((Project)resource).refreshProperties(new AsyncCallback<Project>() {
+                @Override
+                public void onSuccess(Project result) {
+                    checkProjectType(result, callback);
+                }
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    Log.error(ProjectExplorerPartPresenter.class, "Can not get project's properties.", caught);
+                }
+            });
+        } else if (resource.getResourceType().equals(Project.TYPE) && ((Project)resource).getProperties().size() > 0) {
             checkProjectType((Project)resource, callback);
         }
     }
 
     /**
-     * Check, whether project type is "unknown" and call {@link SelectProjectTypePresenter} to set it.
+     * Check, whether project type is "undefined" and call {@link SelectProjectTypePresenter} to set it.
      *
      * @param project
-     * @param callback
      */
-    private void checkProjectType(final Project project, final AsyncCallback<Project> callback) {
+    private void checkProjectType(Project project, AsyncCallback<Project> callback) {
         project.setVFSInfo(resourceProvider.getVfsInfo());
         final String projectTypeId = project.getDescription().getProjectTypeId();
-        if (projectTypeId == null) {
-            projectServiceClient.getProject(project.getPath(), new AsyncRequestCallback<ProjectDescriptor>(
-                    dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
-                @Override
-                protected void onSuccess(ProjectDescriptor result) {
-                    project.setProjectType(result.getProjectTypeId());
-                    checkProjectType(project, callback);
-                }
-
-                @Override
-                protected void onFailure(Throwable exception) {
-                }
-            });
-        } else if (projectTypeId.equals(Constants.UNKNOWN_ID) && !project.getChildren().isEmpty()) {
+        if (projectTypeId != null && projectTypeId.equals(Constants.UNKNOWN_ID) && !project.getChildren().isEmpty()) {
             selectProjectTypePresenter.showDialog(project, callback);
         }
     }
-
 }

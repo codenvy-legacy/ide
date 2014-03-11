@@ -56,12 +56,7 @@ public class JavaProject extends Project {
     /** Java-specific project description */
     private       JavaProjectDescription description;
 
-    /**
-     * @param eventBus
-     * @param asyncRequestFactory
-     * @param projectServiceClient
-     * @param dtoUnmarshallerFactory
-     */
+    /** @param eventBus */
     protected JavaProject(EventBus eventBus,
                           AsyncRequestFactory asyncRequestFactory,
                           ProjectServiceClient projectServiceClient,
@@ -82,6 +77,7 @@ public class JavaProject extends Project {
     @Override
     public void refreshTree(final Folder root, final AsyncCallback<Folder> callback) {
         final Folder folderToRefresh = (root instanceof Package && root.getParent() != null) ? root.getParent() : root;
+
         projectServiceClient.getTree(root.getPath(), -1,
                                      new AsyncRequestCallback<TreeElement>(dtoUnmarshallerFactory.newUnmarshaller(TreeElement.class)) {
                                          @Override

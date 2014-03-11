@@ -21,6 +21,7 @@ import com.codenvy.ide.MimeType;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.actions.CloseProjectAction;
 import com.codenvy.ide.actions.DeleteResourceAction;
+import com.codenvy.ide.actions.FormatterAction;
 import com.codenvy.ide.actions.NavigateToFileAction;
 import com.codenvy.ide.actions.NewProjectAction;
 import com.codenvy.ide.actions.NewResourceAction;
@@ -175,6 +176,9 @@ public class StandardComponentInitializer {
     @Inject
     private Provider<SelectPaasPagePresenter> selectPaasPagePresenterProvider;
 
+    @Inject
+    private FormatterAction formatterAction;
+
     /** Instantiates {@link StandardComponentInitializer} an creates standard content. */
     @Inject
     public StandardComponentInitializer() {
@@ -208,6 +212,7 @@ public class StandardComponentInitializer {
 
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('s').build(), "save");
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('S').build(), "saveAll");
+        keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('F').build(), "format");
 
         actionManager.registerAction("newProject", newProjectAction);
         actionManager.registerAction("openProject", openProjectAction);
@@ -235,9 +240,11 @@ public class StandardComponentInitializer {
         actionManager.registerAction("saveGroup", saveGroup);
         actionManager.registerAction("save", saveAction);
         actionManager.registerAction("saveAll", saveAllAction);
+        actionManager.registerAction("format", formatterAction);
         saveGroup.addSeparator();
         saveGroup.add(saveAction);
         saveGroup.add(saveAllAction);
+        saveGroup.add(formatterAction);
         toolbarGroup.addSeparator();
         toolbarGroup.add(saveGroup);
         toolbarGroup.addSeparator();

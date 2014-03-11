@@ -17,22 +17,18 @@
  */
 package com.codenvy.ide.ext.git.client.clone;
 
-import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.ext.git.shared.RepoInfo;
-import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
 import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -54,8 +50,6 @@ import static org.mockito.Mockito.when;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-// TODO: need to review this tests when migration to project API finished
-@Ignore
 public class CloneRepositoryPresenterTest extends BaseTest {
     @Mock
     private CloneRepositoryView           view;
@@ -68,17 +62,13 @@ public class CloneRepositoryPresenterTest extends BaseTest {
     private ProjectTypeDescriptor         unknownProjectTypeDescriptor;
     @Mock
     private DtoFactory                    dtoFactory;
-    @Mock
-    private ProjectServiceClient          projectServiceClient;
-    @Mock
-    private SelectProjectTypePresenter    selectProjectTypePresenter;
 
     @Override
     public void disarm() {
         super.disarm();
 
         presenter = new CloneRepositoryPresenter(view, service, resourceProvider, constant, notificationManager, dtoUnmarshallerFactory,
-                                                 projectServiceClient, selectProjectTypePresenter);
+                                                 projectTypeDescriptorRegistry, dtoFactory);
 
         when(view.getProjectName()).thenReturn(PROJECT_NAME);
         when(view.getRemoteName()).thenReturn(REMOTE_NAME);
@@ -96,12 +86,11 @@ public class CloneRepositoryPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, (Void)null);
+                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[2];
+                callback.onSuccess(project);
                 return callback;
             }
-        }).when(projectServiceClient).createFolder(anyString(), (AsyncRequestCallback<Void>)anyObject());
+        }).when(resourceProvider).createProject(anyString(), (ProjectDescriptor)anyObject(), (AsyncCallback<Project>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -128,7 +117,7 @@ public class CloneRepositoryPresenterTest extends BaseTest {
         verify(view).getProjectName();
         verify(view).getRemoteName();
         verify(view).getRemoteUri();
-        verify(projectServiceClient).createFolder(eq(PROJECT_NAME), (AsyncRequestCallback<Void>)anyObject());
+        verify(resourceProvider).createProject(eq(PROJECT_NAME), (ProjectDescriptor)anyObject(), (AsyncCallback<Project>)anyObject());
         verify(service).cloneRepositoryWS(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME), (RequestCallback<RepoInfo>)anyObject());
         verify(constant).cloneSuccess(eq(REMOTE_URI));
         verify(notificationManager).showNotification((Notification)anyObject());
