@@ -92,6 +92,10 @@ public class Project extends Folder {
         this.attributes = attributes;
     }
 
+    public Map<String, List<String>> getAttributes() {
+        return attributes;
+    }
+
     public String getAttributeValue(String attributeName) {
         return attributes.get(attributeName).get(0);
     }
@@ -101,6 +105,7 @@ public class Project extends Folder {
     }
 
     public void init(ItemReference itemReference) {
+        id = itemReference.getId();
         name = itemReference.getName();
         mimeType = itemReference.getMediaType();
     }
