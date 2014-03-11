@@ -25,6 +25,7 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -42,6 +43,7 @@ import javax.validation.constraints.NotNull;
 public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionDelegate {
 
     private final DtoFactory                    dtoFactory;
+    private final DtoUnmarshallerFactory        dtoUnmarshallerFactory;
     private       SelectProjectTypeView         view;
     private       CoreLocalizationConstant      localizationConstant;
     private       Project                       project;
@@ -52,12 +54,14 @@ public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionD
     @Inject
     public SelectProjectTypePresenter(SelectProjectTypeView view, CoreLocalizationConstant localizationConstant,
                                       ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
-                                      ProjectServiceClient projectServiceClient, DtoFactory dtoFactory) {
+                                      ProjectServiceClient projectServiceClient, DtoFactory dtoFactory,
+                                      DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
         this.localizationConstant = localizationConstant;
         this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
         this.projectServiceClient = projectServiceClient;
         this.dtoFactory = dtoFactory;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         view.setDelegate(this);
     }
 
@@ -82,10 +86,15 @@ public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionD
     private void updateProjectWithDescriptor(ProjectTypeDescriptor descriptor) {
         ProjectDescriptor projectDescriptor = dtoFactory.createDto(ProjectDescriptor.class)
                                                         .withProjectTypeId(descriptor.getProjectTypeId())
-                                                        .withProjectTypeName(descriptor.getProjectTypeName());
-        projectServiceClient.updateProject(project.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
+                                                        .withProjectTypeName(descriptor.getProjectTypeName())
+                                                        .withAttributes(project.getAttributes());
+        projectServiceClient.updateProject(project.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(
+                dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
+                project.setId(result.getId());
+                project.setProjectType(result.getProjectTypeId());
+                project.setAttributes(result.getAttributes());
                 view.close();
                 callback.onSuccess(project);
             }
