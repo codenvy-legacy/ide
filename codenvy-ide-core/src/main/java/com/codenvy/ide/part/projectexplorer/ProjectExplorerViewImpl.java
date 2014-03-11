@@ -96,6 +96,8 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
             @Override
             public void onNodeExpanded(TreeNodeElement<Resource> node) {
                 delegate.onResourceOpened(node.getData());
+                // TODO: temporary fix Java project tree
+                delegate.onResourceSelected(node.getData());
             }
 
             @Override
