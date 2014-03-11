@@ -20,14 +20,14 @@ package com.codenvy.ide.ext.tutorials.shared;
 /** @author Artem Zatsarynnyy */
 public interface Constants {
     // project type ids
-    final String TUTORIAL_ID            = "codenvy_tutorial";
+    final String TUTORIAL_ID                  = "codenvy_tutorial";
     // project type names
-    final String TUTORIAL_NAME          = "Codenvy tutorial";
+    final String TUTORIAL_NAME                = "Codenvy tutorial";
     // project attribute names
-    final String LANGUAGE               = "language";
-    final String LANGUAGE_VERSION       = "language.version";
-    final String FRAMEWORK              = "framework";
-    final String BUILDER_NAME           = "builder.name";
-    final String BUILDER_SOURCE_FOLDERS = "builder.${builder}.source_folders";
-    final String RUNNER_NAME            = "runner.name";
+    final String LANGUAGE                     = "language";
+    final String LANGUAGE_VERSION             = "language.version";
+    final String FRAMEWORK                    = "framework";
+    final String BUILDER_NAME                 = "builder.name";
+    final String BUILDER_MAVEN_SOURCE_FOLDERS = "builder.maven.source_folders";
+    final String RUNNER_NAME                  = "runner.name";
 }

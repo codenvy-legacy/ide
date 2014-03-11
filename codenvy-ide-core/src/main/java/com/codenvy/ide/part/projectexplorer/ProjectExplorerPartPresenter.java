@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.part.projectexplorer;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.vfs.shared.ItemType;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -34,6 +36,8 @@ import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.server.Constants;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
@@ -52,12 +56,14 @@ import javax.validation.constraints.NotNull;
  */
 @Singleton
 public class ProjectExplorerPartPresenter extends BasePresenter implements ProjectExplorerView.ActionDelegate, ProjectExplorerPart {
-    protected ProjectExplorerView        view;
-    protected EventBus                   eventBus;
-    private   Resources                  resources;
-    private   ResourceProvider           resourceProvider;
-    private   ContextMenuPresenter       contextMenuPresenter;
-    private   SelectProjectTypePresenter selectProjectTypePresenter;
+    private final ProjectServiceClient       projectServiceClient;
+    private final DtoUnmarshallerFactory     dtoUnmarshallerFactory;
+    protected     ProjectExplorerView        view;
+    protected     EventBus                   eventBus;
+    private       Resources                  resources;
+    private       ResourceProvider           resourceProvider;
+    private       ContextMenuPresenter       contextMenuPresenter;
+    private       SelectProjectTypePresenter selectProjectTypePresenter;
 
     /**
      * Instantiates the ProjectExplorer Presenter.
@@ -75,11 +81,15 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                                         Resources resources,
                                         ResourceProvider resourceProvider,
                                         ContextMenuPresenter contextMenuPresenter,
-                                        SelectProjectTypePresenter selectProjectTypePresenter) {
+                                        SelectProjectTypePresenter selectProjectTypePresenter,
+                                        ProjectServiceClient projectServiceClient,
+                                        DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
         this.eventBus = eventBus;
         this.resources = resources;
         this.resourceProvider = resourceProvider;
+        this.projectServiceClient = projectServiceClient;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.view.setTitle("Project Explorer");
         this.contextMenuPresenter = contextMenuPresenter;
         this.selectProjectTypePresenter = selectProjectTypePresenter;
@@ -298,11 +308,25 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
      * @param project
      * @param callback
      */
-    private void checkProjectType(Project project, AsyncCallback<Project> callback) {
+    private void checkProjectType(final Project project, final AsyncCallback<Project> callback) {
         project.setVFSInfo(resourceProvider.getVfsInfo());
         final String projectTypeId = project.getDescription().getProjectTypeId();
-        if (projectTypeId != null && projectTypeId.equals(Constants.UNKNOWN_ID) && !project.getChildren().isEmpty()) {
+        if (projectTypeId == null) {
+            projectServiceClient.getProject(project.getPath(), new AsyncRequestCallback<ProjectDescriptor>(
+                    dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
+                @Override
+                protected void onSuccess(ProjectDescriptor result) {
+                    project.setProjectType(result.getProjectTypeId());
+                    checkProjectType(project, callback);
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                }
+            });
+        } else if (projectTypeId.equals(Constants.UNKNOWN_ID) && !project.getChildren().isEmpty()) {
             selectProjectTypePresenter.showDialog(project, callback);
         }
     }
+
 }

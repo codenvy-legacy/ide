@@ -58,7 +58,8 @@ public class ProjectTypeDescriptionsExtension implements ProjectTypeDescriptionE
         list.add(new AttributeDescription(Constants.LANGUAGE_VERSION));
         list.add(new AttributeDescription(Constants.FRAMEWORK));
         list.add(new AttributeDescription(Constants.BUILDER_NAME));
-        list.add(new AttributeDescription(Constants.BUILDER_SOURCE_FOLDERS));
+        list.add(new AttributeDescription(Constants.BUILDER_ANT_SOURCE_FOLDERS));
+        list.add(new AttributeDescription(Constants.BUILDER_MAVEN_SOURCE_FOLDERS));
         list.add(new AttributeDescription(Constants.RUNNER_NAME));
         return list;
     }

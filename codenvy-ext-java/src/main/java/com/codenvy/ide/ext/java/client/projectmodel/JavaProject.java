@@ -57,7 +57,12 @@ public class JavaProject extends Project {
     /** Java-specific project description */
     private       JavaProjectDescription description;
 
-    /** @param eventBus */
+    /**
+     * @param eventBus
+     * @param asyncRequestFactory
+     * @param projectServiceClient
+     * @param dtoUnmarshallerFactory
+     */
     protected JavaProject(EventBus eventBus,
                           AsyncRequestFactory asyncRequestFactory,
                           ProjectServiceClient projectServiceClient,
