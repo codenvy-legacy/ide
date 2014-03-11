@@ -118,16 +118,16 @@ public abstract class AbstractNewJavaResourceProvider extends NewResourceProvide
     /** {@inheritDoc} */
     @Override
     public boolean inContext() {
-        Selection<?> selection = selectionAgent.getSelection();
-        if (selection != null) {
-            if (selectionAgent.getSelection().getFirstElement() instanceof Resource) {
-                Resource resource = (Resource)selectionAgent.getSelection().getFirstElement();
-                if (resource.isFile()) {
-                    resource = resource.getParent();
-                }
-                return resource instanceof com.codenvy.ide.ext.java.client.projectmodel.Package || resource instanceof SourceFolder;
-            }
-        }
-        return false;
+//        Selection<?> selection = selectionAgent.getSelection();
+//        if (selection != null) {
+//            if (selectionAgent.getSelection().getFirstElement() instanceof Resource) {
+//                Resource resource = (Resource)selectionAgent.getSelection().getFirstElement();
+//                if (resource.isFile()) {
+//                    resource = resource.getParent();
+//                }
+//                return resource instanceof com.codenvy.ide.ext.java.client.projectmodel.Package || resource instanceof SourceFolder;
+//            }
+//        }
+        return true;
     }
 }
