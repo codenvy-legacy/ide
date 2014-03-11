@@ -151,6 +151,7 @@ public class File extends Resource {
     }
 
     public void init(ItemReference itemReference) {
+        id = itemReference.getId();
         name = itemReference.getName();
         mimeType = itemReference.getMediaType();
         this.contentChanged = false;

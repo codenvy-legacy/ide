@@ -35,7 +35,6 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.runtime.IStatus;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -116,7 +115,7 @@ public class JavaProject extends Project {
      *         the name of new package
      * @param callback
      */
-    public void createPackage(@NotNull final Folder parent, String name, final AsyncCallback<Package> callback) {
+    public void createPackage(@NotNull final Folder parent, final String name, final AsyncCallback<Package> callback) {
         try {
             checkItemValid(parent);
             final Folder checkedParent = checkParent(parent);
@@ -126,13 +125,13 @@ public class JavaProject extends Project {
             }
             Folder foundParent = findFolderParent(checkedParent, name);
             final Folder folderParent = foundParent == null ? checkedParent : foundParent;
-            String packagePartName = (foundParent == null) ? name : name.substring(folderParent.getName().length() + 1);
 
-            final String path = packagePartName.replaceAll("\\.", "/");
-            // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<Package> internalCallback = new AsyncRequestCallback<Package>(new PackageUnmarshaller()) {
+            projectServiceClient.createFolder(parent.getPath() + '/' + name, new AsyncRequestCallback<Void>() {
                 @Override
-                protected void onSuccess(final Package pack) {
+                protected void onSuccess(Void result) {
+                    final Package pack = new Package();
+                    pack.setName(name);
+
                     pack.setParent(checkedParent);
                     pack.setProject(JavaProject.this);
                     checkedParent.addChild(pack);
@@ -162,12 +161,7 @@ public class JavaProject extends Project {
                 protected void onFailure(Throwable exception) {
                     callback.onFailure(exception);
                 }
-            };
-            String url = folderParent.getLinkByRelation(Link.REL_CREATE_FOLDER).getHref();
-            String urlString = URL.decode(url).replace("[name]", path);
-            urlString = URL.encode(urlString);
-            loader.setMessage("Creating new package...");
-            asyncRequestFactory.createPostRequest(urlString, null).loader(loader).send(internalCallback);
+            });
 
         } catch (Exception e) {
             callback.onFailure(e);
@@ -319,10 +313,8 @@ public class JavaProject extends Project {
     @Override
     public void createFile(Folder parent, String name, String content, String mimeType, final AsyncCallback<File> callback) {
         if (parent instanceof SourceFolder || parent instanceof Package) {
-
             if (MimeType.APPLICATION_JAVA.equals(mimeType)) {
                 createCompilationUnit(parent, name, content, new AsyncCallback<CompilationUnit>() {
-
                     @Override
                     public void onSuccess(CompilationUnit result) {
                         callback.onSuccess(result);
@@ -340,14 +332,8 @@ public class JavaProject extends Project {
         super.createFile(parent, name, content, mimeType, callback);
     }
 
-    /**
-     * @param parent
-     * @param name
-     * @param callback
-     */
     private void createFolderAsPackage(Folder parent, String name, final AsyncCallback<Folder> callback) {
         createPackage((SourceFolder)parent, name.replaceAll("/", "."), new AsyncCallback<Package>() {
-
             @Override
             public void onFailure(Throwable caught) {
                 callback.onFailure(caught);

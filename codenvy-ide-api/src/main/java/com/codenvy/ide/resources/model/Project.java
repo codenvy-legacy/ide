@@ -228,14 +228,13 @@ public class Project extends Folder {
         try {
             checkItemValid(parent);
 
-            // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<File> internalCallback = new AsyncRequestCallback<File>(new FileUnmarshaller()) {
+            projectServiceClient.createFile(parent.getPath(), name, content, mimeType, new AsyncRequestCallback<Void>() {
                 @Override
-                protected void onSuccess(final File newFile) {
+                protected void onSuccess(Void result) {
                     refreshTree(parent, new AsyncCallback<Folder>() {
                         @Override
                         public void onSuccess(Folder result) {
-                            File file = (File)result.findResourceById(newFile.getId());
+                            File file = (File)result.findChildByName(name);
                             file.getParent().setTag(parent.getTag());
                             eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(file));
                             callback.onSuccess(file);
@@ -252,14 +251,7 @@ public class Project extends Folder {
                 protected void onFailure(Throwable exception) {
                     callback.onFailure(exception);
                 }
-            };
-
-            String url = parent.getLinkByRelation(Link.REL_CREATE_FILE).getHref();
-            url = URL.decode(url).replace("[name]", name);
-            url = URL.encode(url);
-            loader.setMessage("Creating new file...");
-            asyncRequestFactory.createPostRequest(url, null).data(content).header(HTTPHeader.CONTENT_TYPE, mimeType)
-                               .loader(loader).send(internalCallback);
+            });
         } catch (Exception e) {
             callback.onFailure(e);
         }
@@ -279,14 +271,13 @@ public class Project extends Folder {
         try {
             checkItemValid(parent);
 
-            // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<Folder> internalCallback = new AsyncRequestCallback<Folder>(new FolderUnmarshaller()) {
+            projectServiceClient.createFolder(parent.getPath() + '/' + name, new AsyncRequestCallback<Void>() {
                 @Override
-                protected void onSuccess(final Folder newFolder) {
+                protected void onSuccess(Void result) {
                     refreshTree(parent, new AsyncCallback<Folder>() {
                         @Override
                         public void onSuccess(Folder result) {
-                            Folder folder = (Folder)result.findResourceById(newFolder.getId());
+                            Folder folder = (Folder)result.findChildByName(name);
                             eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(folder));
                             callback.onSuccess(folder);
                         }
@@ -302,13 +293,7 @@ public class Project extends Folder {
                 protected void onFailure(Throwable exception) {
                     callback.onFailure(exception);
                 }
-            };
-
-            String url = parent.getLinkByRelation(Link.REL_CREATE_FOLDER).getHref();
-            String urlString = URL.decode(url).replace("[name]", name);
-            urlString = URL.encode(urlString);
-            loader.setMessage("Creating new folder...");
-            asyncRequestFactory.createPostRequest(urlString, null).loader(loader).send(internalCallback);
+            });
         } catch (Exception e) {
             callback.onFailure(e);
         }
@@ -372,13 +357,12 @@ public class Project extends Folder {
     public void deleteChild(final Resource resource, final AsyncCallback<Void> callback) {
         try {
             checkItemValid(resource);
-            final Folder parent = resource.getParent();
-            // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<Void> internalCallback = new AsyncRequestCallback<Void>() {
+
+            projectServiceClient.delete(resource.getPath(), new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     // remove from the list of child
-                    parent.removeChild(resource);
+                    resource.getParent().removeChild(resource);
                     eventBus.fireEvent(ResourceChangedEvent.createResourceDeletedEvent(resource));
                     callback.onSuccess(result);
                 }
@@ -387,16 +371,7 @@ public class Project extends Folder {
                 protected void onFailure(Throwable exception) {
                     callback.onFailure(exception);
                 }
-            };
-
-            // TODO check with lock
-            String url = resource.getLinkByRelation(Link.REL_DELETE).getHref();
-
-            if (File.TYPE.equals(resource.getResourceType()) && ((File)resource).isLocked()) {
-                url = URL.decode(url).replace("[lockToken]", ((File)resource).getLock().getLockToken());
-            }
-            loader.setMessage("Deleting item...");
-            asyncRequestFactory.createPostRequest(url, null).loader(loader).send(internalCallback);
+            });
         } catch (Exception e) {
             callback.onFailure(e);
         }
@@ -651,9 +626,7 @@ public class Project extends Folder {
             String url = resource.getLinkByRelation(Link.REL_RENAME).getHref();
             url = URL.decode(url);
             url = url.replace("mediaType=[mediaType]", "");
-            url =
-                    (newName != null && !newName.isEmpty()) ? url.replace("[newname]", newName) : url.replace(
-                            "newname=[newname]", "");
+            url = (newName != null && !newName.isEmpty()) ? url.replace("[newname]", newName) : url.replace("newname=[newname]", "");
 
             if (File.TYPE.equals(resource.getResourceType()) && ((File)resource).isLocked()) {
                 url = URL.decode(url).replace("[lockToken]", ((File)resource).getLock().getLockToken());

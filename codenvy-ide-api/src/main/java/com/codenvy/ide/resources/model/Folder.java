@@ -59,6 +59,7 @@ public class Folder extends Resource {
     }
 
     public void init(ItemReference itemReference) {
+        id = itemReference.getId();
         name = itemReference.getName();
         mimeType = itemReference.getMediaType();
     }
