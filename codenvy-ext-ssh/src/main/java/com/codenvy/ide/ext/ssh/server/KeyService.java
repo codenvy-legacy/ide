@@ -36,8 +36,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -46,7 +46,7 @@ import java.util.Set;
 
 /**
  * REST interface to SshKeyProvider.
- *
+ * 
  * @author andrew00x
  */
 @Path("ssh-keys/{ws-id}")
@@ -54,7 +54,7 @@ public class KeyService {
     private final SshKeyStore keyStore;
 
     @PathParam("ws-id")
-    private String wsId;
+    private String            wsId;
 
     @Inject
     public KeyService(SshKeyStore keyStore) {
@@ -110,13 +110,13 @@ public class KeyService {
 
     /**
      * Get public key.
-     *
+     * 
      * @see {@link SshKeyStore#genKeyPair(String, String, String)}
      * @see {@link SshKeyStore#getPublicKey(String)}
      */
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getPublicKey(@Context SecurityContext security, @QueryParam("host") String host) {
+    public Response getPublicKey(@QueryParam("host") String host) {
 
         /*
          * XXX : Temporary turn-off don't work on demo site if (!security.isSecure()) { throw new
@@ -171,11 +171,12 @@ public class KeyService {
                     String getPublicKeyUrl = null;
                     if (publicKeyExists) {
                         getPublicKeyUrl =
-                                uriInfo.getBaseUriBuilder().path(getClass()).queryParam("host", host).build(wsId).toString();
+                                          uriInfo.getBaseUriBuilder().path(getClass()).queryParam("host", host).build(wsId).toString();
                     }
                     String removeKeysUrl =
-                            uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "removeKeys").queryParam("host", host)
-                                   .build(wsId).toString();
+                                           uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "removeKeys")
+                                                  .queryParam("host", host)
+                                                  .build(wsId).toString();
                     result.add(DtoFactory.getInstance().createDto(KeyItem.class).withHost(host).withPublicKeyUrl(getPublicKeyUrl)
                                          .withRemoteKeyUrl(removeKeysUrl));
                 }

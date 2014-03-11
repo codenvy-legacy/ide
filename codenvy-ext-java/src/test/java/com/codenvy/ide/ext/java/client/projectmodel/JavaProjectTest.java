@@ -32,7 +32,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-/** @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a> */
+/** @author Evgen Vidolob */
 @RunWith(MockitoJUnitRunner.class)
 public class JavaProjectTest {
 
@@ -44,17 +44,17 @@ public class JavaProjectTest {
     };
     @Mock
     private SourceFolder sourceFolder;
-    private JavaProject project = new JavaProject(null, null);
+    private JavaProject project = new JavaProject(null, null, null, null);
 
     @Before
     public void setUp() {
-        Array<Resource> childrens = Collections.createArray();
+        Array<Resource> children = Collections.createArray();
         for (String pack : packages) {
             Package p = Mockito.mock(Package.class);
             Mockito.when(p.getName()).thenReturn(pack);
-            childrens.add(p);
+            children.add(p);
         }
-        Mockito.when(sourceFolder.getChildren()).thenReturn(childrens);
+        Mockito.when(sourceFolder.getChildren()).thenReturn(children);
         when(sourceFolder.getName()).thenReturn("src/main/java");
     }
 

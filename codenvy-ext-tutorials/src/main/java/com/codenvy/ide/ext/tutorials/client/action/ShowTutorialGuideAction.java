@@ -23,11 +23,10 @@ import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.tutorials.client.GuidePageController;
 import com.codenvy.ide.ext.tutorials.client.TutorialsLocalizationConstant;
 import com.codenvy.ide.ext.tutorials.client.TutorialsResources;
+import com.codenvy.ide.ext.tutorials.shared.Constants;
 import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.TUTORIAL_PROJECT_TYPE_ID;
 
 /**
  * Action to open a tutorial guide.
@@ -62,7 +61,7 @@ public class ShowTutorialGuideAction extends Action {
     public void update(ActionEvent e) {
         Project activeProject = resourceProvider.getActiveProject();
         if (activeProject != null) {
-            e.getPresentation().setEnabledAndVisible(activeProject.getDescription().getProjectTypeId().equals(TUTORIAL_PROJECT_TYPE_ID));
+            e.getPresentation().setEnabledAndVisible(activeProject.getDescription().getProjectTypeId().equals(Constants.TUTORIAL_ID));
         } else {
             e.getPresentation().setEnabledAndVisible(false);
         }

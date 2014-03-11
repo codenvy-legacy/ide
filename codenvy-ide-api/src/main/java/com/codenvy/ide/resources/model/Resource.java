@@ -24,7 +24,7 @@ import com.codenvy.ide.collections.StringMap;
  * Resource's superclass.
  * Not intended to be extended by client code. Use File, Folder and Project as superclass.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public abstract class Resource {
     /** Id of object. */

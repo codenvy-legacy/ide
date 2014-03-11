@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.java.client.projectmodel;
 
+import com.codenvy.api.project.shared.dto.TreeElement;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.java.client.BaseTest;
@@ -24,18 +25,13 @@ import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Resource;
 import com.google.common.collect.Lists;
-import com.google.gwt.http.client.Response;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Spy;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,35 +40,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/** @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a> */
+/** @author Evgen Vidolob */
 public class ModelUnmarshallerTest extends BaseTest {
 
-    private static String projectJs;
     @Spy
-    private JavaProject project = new JavaProject(null, null);
+    private JavaProject project = new JavaProject(null, null, null, null);
     @Mock
     private JavaProjectDescription projectDescription;
     @Mock
-    private Response               response;
-
-    @BeforeClass
-    public static void init() {
-        InputStream stream = Thread.currentThread().getContextClassLoader()
-                      .getResourceAsStream("com/codenvy/ide/ext/java/client/projectmodel/project.js");
-        try {
-            projectJs = IOUtils.toString(stream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
+    private TreeElement            treeElement;
 
     @Before
     public void setUp() {
@@ -80,7 +56,7 @@ public class ModelUnmarshallerTest extends BaseTest {
         when(project.getPath()).thenReturn("/SpringProject");
         when(projectDescription.getSourceFolders()).thenReturn(
                 Collections.createStringSet("src/main/java", "src/main/resources", "src/test/java", "src/test/resources"));
-        when(response.getText()).thenReturn(projectJs);
+//        when(response.getText()).thenReturn(projectJs);
     }
 
     @Test
@@ -112,8 +88,8 @@ public class ModelUnmarshallerTest extends BaseTest {
         SourceFolder sourceFolder = (SourceFolder)allValues.get(3);
         ArrayList<Resource> packages = Lists.newArrayList(sourceFolder.getChildren().asIterable());
         Package pack = (Package)packages.get(5);
-        ArrayList<Resource> childrens = Lists.newArrayList(pack.getChildren().asIterable());
-        assertThat(childrens).onProperty("name").contains("void");
+        ArrayList<Resource> children = Lists.newArrayList(pack.getChildren().asIterable());
+        assertThat(children).onProperty("name").contains("void");
     }
 
     @Test
@@ -122,8 +98,8 @@ public class ModelUnmarshallerTest extends BaseTest {
         SourceFolder sourceFolder = (SourceFolder)allValues.get(3);
         ArrayList<Resource> packages = Lists.newArrayList(sourceFolder.getChildren().asIterable());
         Package pack = (Package)packages.get(5);
-        ArrayList<Resource> childrens = Lists.newArrayList(pack.getChildren().asIterable());
-        assertThat(childrens).onProperty("resourceType").containsOnly(File.TYPE, CompilationUnit.TYPE, Folder.TYPE);
+        ArrayList<Resource> children = Lists.newArrayList(pack.getChildren().asIterable());
+        assertThat(children).onProperty("resourceType").containsOnly(File.TYPE, CompilationUnit.TYPE, Folder.TYPE);
     }
 
     /**
@@ -131,11 +107,11 @@ public class ModelUnmarshallerTest extends BaseTest {
      * @throws UnmarshallerException
      */
     private List<Resource> parseProject() throws UnmarshallerException {
-        JavaModelUnmarshaller unmarshaller = new JavaModelUnmarshaller(project, project, null, null);
-        unmarshaller.unmarshal(response);
-        ArgumentCaptor<Resource> childrens = ArgumentCaptor.forClass(Resource.class);
-        verify(project, times(7)).addChild(childrens.capture());
-        List<Resource> allValues = childrens.getAllValues();
+        JavaModelUnmarshaller unmarshaller = new JavaModelUnmarshaller(project, project, null, null, null, null);
+        unmarshaller.unmarshal(treeElement);
+        ArgumentCaptor<Resource> children = ArgumentCaptor.forClass(Resource.class);
+        verify(project, times(7)).addChild(children.capture());
+        List<Resource> allValues = children.getAllValues();
         return allValues;
     }
 }

@@ -28,8 +28,10 @@
     <inherits name="com.google.gwt.inject.Inject"/>
     <inherits name="com.codenvy.ide.Core"/>
     <inherits name="com.google.gwt.webworker.WebWorker"/>
+    <inherits name="com.codenvy.api.Project"/>
 
     <source path="client"/>
+    <source path="shared"/>
     <source path="worker"/>
     <source path="jdt"/>
 </module>

@@ -19,13 +19,13 @@ package com.codenvy.ide.client;
 
 import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
+import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
+import com.codenvy.api.user.shared.dto.Profile;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.theme.Style;
 import com.codenvy.ide.api.ui.theme.Theme;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
-import com.codenvy.ide.api.user.User;
-import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
@@ -83,7 +83,7 @@ public class BootstrapController {
                                final StyleInjector styleInjector,
                                final ExtensionInitializer extensionInitializer,
                                final PreferencesManagerImpl preferencesManager,
-                               UserClientService userService,
+                               final UserProfileServiceClient userProfileService,
                                final ProjectTypeDescriptionServiceClient projectTypeDescriptionServiceClient,
                                final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
                                final IconRegistry iconRegistry,
@@ -113,10 +113,10 @@ public class BootstrapController {
 
         dtoRegistrar.registerDtoProviders();
         registerDefaultIcon();
-        userService.getUser(new AsyncRequestCallback<User>(dtoUnmarshallerFactory.newUnmarshaller(User.class)) {
+        userProfileService.getCurrentProfile(null, new AsyncRequestCallback<Profile>(dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
             @Override
-            protected void onSuccess(final User user) {
-                Map<String, String> attributes = user.getProfileAttributes();
+            protected void onSuccess(final Profile profile) {
+                Map<String, String> attributes = profile.getPreferences();
                 preferencesManager.load(attributes);
 
                 setTheme();

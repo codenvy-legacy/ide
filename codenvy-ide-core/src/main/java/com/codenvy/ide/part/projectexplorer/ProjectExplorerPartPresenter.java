@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.part.projectexplorer;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.vfs.shared.ItemType;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -34,6 +36,9 @@ import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.server.Constants;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -44,29 +49,31 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import javax.validation.constraints.NotNull;
 
-
 /**
  * Project Explorer display Project Model in a dedicated Part (view).
- * 
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ *
+ * @author Nikolay Zamosenchuk
  */
 @Singleton
 public class ProjectExplorerPartPresenter extends BasePresenter implements ProjectExplorerView.ActionDelegate, ProjectExplorerPart {
-    protected ProjectExplorerView      view;
-    protected EventBus                 eventBus;
-    private Resources                  resources;
-    private ResourceProvider           resourceProvider;
-    private ContextMenuPresenter       contextMenuPresenter;
-    private SelectProjectTypePresenter selectProjectTypePresenter;
+    private final ProjectServiceClient       projectServiceClient;
+    private final DtoUnmarshallerFactory     dtoUnmarshallerFactory;
+    protected     ProjectExplorerView        view;
+    protected     EventBus                   eventBus;
+    private       Resources                  resources;
+    private       ResourceProvider           resourceProvider;
+    private       ContextMenuPresenter       contextMenuPresenter;
+    private       SelectProjectTypePresenter selectProjectTypePresenter;
 
     /**
-     * Instantiates the ProjectExplorer Presenter
-     * 
+     * Instantiates the ProjectExplorer Presenter.
+     *
      * @param view
      * @param eventBus
      * @param resources
      * @param resourceProvider
      * @param contextMenuPresenter
+     * @param selectProjectTypePresenter
      */
     @Inject
     public ProjectExplorerPartPresenter(ProjectExplorerView view,
@@ -74,11 +81,15 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                                         Resources resources,
                                         ResourceProvider resourceProvider,
                                         ContextMenuPresenter contextMenuPresenter,
-                                        SelectProjectTypePresenter selectProjectTypePresenter) {
+                                        SelectProjectTypePresenter selectProjectTypePresenter,
+                                        ProjectServiceClient projectServiceClient,
+                                        DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
         this.eventBus = eventBus;
         this.resources = resources;
         this.resourceProvider = resourceProvider;
+        this.projectServiceClient = projectServiceClient;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.view.setTitle("Project Explorer");
         this.contextMenuPresenter = contextMenuPresenter;
         this.selectProjectTypePresenter = selectProjectTypePresenter;
@@ -94,7 +105,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     /**
      * Sets content.
-     * 
+     *
      * @param resource
      */
     public void setContent(@NotNull Resource resource) {
@@ -110,26 +121,25 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             public void onProjectOpened(ProjectActionEvent event) {
                 setContent(event.getProject().getParent());
                 if (event.getProject() != null) {
-                    processProject(event.getProject(), new AsyncCallback<Project>() {
-
-                        @Override
-                        public void onFailure(Throwable caught) {
-                            Log.error(ProjectExplorerPartPresenter.class, "Can not change project type.", caught);
-                        }
-
+                    checkProjectType(event.getProject(), new AsyncCallback<Project>() {
                         @Override
                         public void onSuccess(Project result) {
                             resourceProvider.getProject(result.getName(), new AsyncCallback<Project>() {
+                                @Override
+                                public void onSuccess(Project result) {
+                                    // do nothing
+                                }
 
                                 @Override
                                 public void onFailure(Throwable caught) {
                                     Log.error(ProjectExplorerPartPresenter.class, "Can not get project.", caught);
                                 }
-
-                                @Override
-                                public void onSuccess(Project result) {
-                                }
                             });
+                        }
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            Log.error(ProjectExplorerPartPresenter.class, "Can not change project type.", caught);
                         }
                     });
                 }
@@ -137,6 +147,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
             @Override
             public void onProjectDescriptionChanged(ProjectActionEvent event) {
+                // do nothing
             }
 
             @Override
@@ -148,7 +159,8 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         eventBus.addHandler(ResourceChangedEvent.TYPE, new ResourceChangedHandler() {
             @Override
             public void onResourceRenamed(ResourceChangedEvent event) {
-                if (event.getResource() instanceof Project && event.getResource().getParent().getId().equals(resourceProvider.getRootId())) {
+                if (event.getResource() instanceof Project &&
+                    event.getResource().getParent().getId().equals(resourceProvider.getRootId())) {
                     setContent(event.getResource().getParent());
                 } else {
                     updateItem(event.getResource().getParent());
@@ -162,10 +174,11 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
             @Override
             public void onResourceDeleted(ResourceChangedEvent event) {
-                if (event.getResource().getResourceType().equals(ItemType.PROJECT.value()))
+                if (event.getResource().getResourceType().equals(ItemType.PROJECT.value())) {
                     resourceProvider.showListProjects();
-                else
+                } else {
                     updateItem(event.getResource().getParent());
+                }
             }
 
             @Override
@@ -189,8 +202,9 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     /**
      * Update item in the project explorer.
-     * 
-     * @param resource the resource that need to be updated
+     *
+     * @param resource
+     *         the resource that need to be updated
      */
     private void updateItem(@NotNull Resource resource) {
         Project project = resource.getProject();
@@ -262,58 +276,57 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     @Override
     public void onResourceOpened(Resource resource) {
         final AsyncCallback<Project> callback = new AsyncCallback<Project>() {
+            @Override
+            public void onSuccess(Project result) {
+                result.setVFSInfo(resourceProvider.getVfsInfo());
+                result.refreshTree(new AsyncCallback<Project>() {
+                    @Override
+                    public void onSuccess(Project result) {
+                    }
+
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        Log.error(ProjectExplorerPartPresenter.class, "Can not refresh project tree.", caught);
+                    }
+                });
+            }
 
             @Override
             public void onFailure(Throwable caught) {
                 Log.error(ProjectExplorerPartPresenter.class, "Can not change project type.", caught);
             }
-
-            @Override
-            public void onSuccess(Project result) {
-                result.setVFSInfo(resourceProvider.getVfsInfo());
-                result.refreshTree(new AsyncCallback<Project>() {
-
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        Log.error(ProjectExplorerPartPresenter.class, "Can not refresh project properties.", caught);
-                    }
-
-                    @Override
-                    public void onSuccess(Project result) {
-                    }
-                });
-            }
         };
 
-        if (resource.getResourceType().equals(Project.TYPE) && ((Project)resource).getProperties().isEmpty()) {
-            ((Project)resource).setVFSInfo(resourceProvider.getVfsInfo());
-            ((Project)resource).refreshProperties(new AsyncCallback<Project>() {
-
-                @Override
-                public void onFailure(Throwable caught) {
-                    Log.error(ProjectExplorerPartPresenter.class, "Can not get project's properties.", caught);
-                }
-
-                @Override
-                public void onSuccess(Project result) {
-                    processProject(result, callback);
-                }
-            });
-        } else if (resource.getResourceType().equals(Project.TYPE) && ((Project)resource).getProperties().size() > 0) {
-            processProject((Project)resource, callback);
+        if (resource.getResourceType().equals(Project.TYPE)) {
+            checkProjectType((Project)resource, callback);
         }
     }
 
     /**
-     * Check, whether project type is "undefined" and call {@link SelectProjectTypePresenter} to set it.
-     * 
+     * Check, whether project type is "unknown" and call {@link SelectProjectTypePresenter} to set it.
+     *
      * @param project
+     * @param callback
      */
-    private void processProject(Project project, AsyncCallback<Project> callback) {
+    private void checkProjectType(final Project project, final AsyncCallback<Project> callback) {
         project.setVFSInfo(resourceProvider.getVfsInfo());
-        String projectType = (String)project.getPropertyValue("vfs:projectType");
-        if (projectType != null && projectType.equals("undefined") && !project.getChildren().isEmpty()) {
+        final String projectTypeId = project.getDescription().getProjectTypeId();
+        if (projectTypeId == null) {
+            projectServiceClient.getProject(project.getPath(), new AsyncRequestCallback<ProjectDescriptor>(
+                    dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
+                @Override
+                protected void onSuccess(ProjectDescriptor result) {
+                    project.setProjectType(result.getProjectTypeId());
+                    checkProjectType(project, callback);
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                }
+            });
+        } else if (projectTypeId.equals(Constants.UNKNOWN_ID) && !project.getChildren().isEmpty()) {
             selectProjectTypePresenter.showDialog(project, callback);
         }
     }
+
 }

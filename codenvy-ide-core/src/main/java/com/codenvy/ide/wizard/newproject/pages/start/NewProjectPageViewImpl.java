@@ -107,8 +107,6 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
         //create button for each available wizard
         for (int i = 0; i < projectTypes.size(); i++) {
             final ProjectTypeDescriptor projectTypeData = projectTypes.get(i);
-
-            // TODO: add project type icon
             Image icon = iconRegistry.getIcon(projectTypeData.getProjectTypeId() + ".projecttype.big.icon");
             if (icon == null) icon = iconRegistry.getDefaultIcon();
             icon.setSize("92px", "92px");

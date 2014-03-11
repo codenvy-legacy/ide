@@ -21,11 +21,9 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -34,9 +32,12 @@ import com.google.inject.Singleton;
 
 import javax.validation.constraints.NotNull;
 
-import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PROJECT_TYPE;
-
-/** @author Ann Shumilova */
+/**
+ * Helps to update project type.
+ *
+ * @author Ann Shumilova
+ * @author Artem Zatsarynnyy
+ */
 @Singleton
 public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionDelegate {
 
@@ -75,29 +76,10 @@ public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionD
     public void onOkClicked() {
         final String selectedProjectTypeId = view.getSelectedProjectTypeId();
         final ProjectTypeDescriptor descriptor = projectTypeDescriptorRegistry.getDescriptor(selectedProjectTypeId);
-
-        Property projectProperty = project.getProperty(PROPERTY_PROJECT_TYPE);
-        if (projectProperty != null) {
-            projectProperty.setValue(Collections.createArray(descriptor.getProjectTypeId()));
-        } else {
-            project.getProperties().add(new Property(PROPERTY_PROJECT_TYPE, descriptor.getProjectTypeId()));
-        }
-
-        project.flushProjectProperties(new AsyncCallback<Project>() {
-            @Override
-            public void onSuccess(Project result) {
-                updateProject(descriptor);
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                Log.error(SelectProjectTypePresenter.class, "Can not save project properties.", caught);
-                callback.onFailure(caught);
-            }
-        });
+        updateProjectWithDescriptor(descriptor);
     }
 
-    private void updateProject(ProjectTypeDescriptor descriptor) {
+    private void updateProjectWithDescriptor(ProjectTypeDescriptor descriptor) {
         ProjectDescriptor projectDescriptor = dtoFactory.createDto(ProjectDescriptor.class)
                                                         .withProjectTypeId(descriptor.getProjectTypeId())
                                                         .withProjectTypeName(descriptor.getProjectTypeName());

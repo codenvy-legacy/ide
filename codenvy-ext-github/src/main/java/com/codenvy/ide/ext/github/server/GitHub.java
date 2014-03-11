@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.ext.github.server;
 
+import com.codenvy.api.user.server.dao.UserDao;
+import com.codenvy.api.user.server.exception.UserException;
 import com.codenvy.commons.json.JsonHelper;
 import com.codenvy.commons.json.JsonNameConventions;
 import com.codenvy.commons.json.JsonParseException;
@@ -34,8 +36,8 @@ import com.codenvy.ide.ext.ssh.server.SshKeyStore;
 import com.codenvy.ide.ext.ssh.server.SshKeyStoreException;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.HTTPMethod;
-import com.codenvy.security.oauth.OAuthTokenProvider;
-import com.codenvy.security.shared.Token;
+import com.codenvy.ide.security.oauth.server.OAuthTokenProvider;
+import com.codenvy.ide.security.oauth.shared.Token;
 
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.slf4j.Logger;
@@ -43,6 +45,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -95,18 +98,21 @@ public class GitHub extends GitVendorService {
     /** Name of the link for the next page. */
     private static final String META_NEXT = "next";
 
+    private final UserDao userDao;
+
     // TODO(GUICE): better name for properties ??
     @Inject
     public GitHub(@Named("github.user") String myGitHubUser,
                   OAuthTokenProvider oauthTokenProvider,
                   SshKeyStore sshKeyStore,
-                  @Named("github.vendorOAuthScopes") String[] vendorOAuthScopes) {
+                  @Named("github.vendorOAuthScopes") String[] vendorOAuthScopes, UserDao userDao) {
 
         super("github", "github.com", ".*github\\.com.*", vendorOAuthScopes, true, sshKeyStore);
 
         this.myGitHubUser = myGitHubUser;
         this.oauthTokenProvider = oauthTokenProvider;
         this.sshKeyStore = sshKeyStore;
+        this.userDao = userDao;
     }
 
     /**
@@ -630,5 +636,17 @@ public class GitHub extends GitVendorService {
         }
 
         return oauthToken.toString();
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    protected String getUserId() {
+        String id = super.getUserId();
+        try {
+            id = userDao.getByAlias(id).getId();
+        } catch (UserException e) {
+            return id;
+        }
+        return id;
     }
 }

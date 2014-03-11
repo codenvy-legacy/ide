@@ -17,10 +17,11 @@
  */
 package com.codenvy.ide.ext.github.client.load;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.user.shared.dto.User;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
@@ -33,8 +34,9 @@ import com.codenvy.ide.ext.github.client.GitHubClientService;
 import com.codenvy.ide.ext.github.client.GitHubSshKeyProvider;
 import com.codenvy.ide.ext.github.client.marshaller.AllRepositoriesUnmarshaller;
 import com.codenvy.ide.ext.github.shared.GitHubRepository;
+import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
+import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -62,6 +64,8 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 public class ImportPresenter implements ImportView.ActionDelegate {
     private final DtoFactory                         dtoFactory;
     private final DtoUnmarshallerFactory             dtoUnmarshallerFactory;
+    private final ProjectServiceClient               projectServiceClient;
+    private final SelectProjectTypePresenter         selectProjectTypePresenter;
     private       ImportView                         view;
     private       GitHubClientService                service;
     private       GitClientService                   gitService;
@@ -73,7 +77,7 @@ public class ImportPresenter implements ImportView.ActionDelegate {
     private       NotificationManager                notificationManager;
     private       Notification                       notification;
     private       GitHubSshKeyProvider               gitHubSshKeyProvider;
-
+    private       ProjectTypeDescriptorRegistry      projectTypeDescriptorRegistry;
 
     /**
      * Create presenter.
@@ -82,8 +86,15 @@ public class ImportPresenter implements ImportView.ActionDelegate {
      * @param service
      * @param gitService
      * @param eventBus
+     * @param gitConstant
      * @param resourceProvider
      * @param notificationManager
+     * @param gitHubSshKeyProvider
+     * @param dtoFactory
+     * @param dtoUnmarshallerFactory
+     * @param projectTypeDescriptorRegistry
+     * @param projectServiceClient
+     * @param selectProjectTypePresenter
      */
     @Inject
     public ImportPresenter(ImportView view,
@@ -95,10 +106,16 @@ public class ImportPresenter implements ImportView.ActionDelegate {
                            NotificationManager notificationManager,
                            GitHubSshKeyProvider gitHubSshKeyProvider,
                            DtoFactory dtoFactory,
-                           DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+                           DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                           ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
+                           ProjectServiceClient projectServiceClient,
+                           SelectProjectTypePresenter selectProjectTypePresenter) {
         this.view = view;
         this.dtoFactory = dtoFactory;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
+        this.projectServiceClient = projectServiceClient;
+        this.selectProjectTypePresenter = selectProjectTypePresenter;
         this.view.setDelegate(this);
         this.service = service;
         this.gitService = gitService;
@@ -122,7 +139,7 @@ public class ImportPresenter implements ImportView.ActionDelegate {
                 Log.error(ImportPresenter.class, "Can't generate ssh key", exception);
             }
         };
-        gitHubSshKeyProvider.generateKey(user.getUserId(), callback);
+        gitHubSshKeyProvider.generateKey(user.getId(), callback);
     }
 
     /** Get the list of all authorized user's repositories. */
@@ -201,17 +218,18 @@ public class ImportPresenter implements ImportView.ActionDelegate {
                 notificationManager.showNotification(notification);
 
                 final String finalRemoteUri = remoteUri;
-                resourceProvider.createProject(projectName, Collections.<Property>createArray(), new AsyncCallback<Project>() {
+                projectServiceClient.createFolder(projectName, new AsyncRequestCallback<Void>() {
                     @Override
-                    public void onSuccess(Project result) {
-                        cloneRepository(finalRemoteUri, projectName, result);
+                    protected void onSuccess(Void result) {
+                        Project project = new Project(null, null, null, null);
+                        project.setName(projectName);
+                        cloneRepository(finalRemoteUri, projectName, project);
                     }
 
                     @Override
-                    public void onFailure(Throwable caught) {
-                        String errorMessage =
-                                (caught.getMessage() != null && caught.getMessage().length() > 0) ? caught.getMessage()
-                                                                                                  : gitConstant.cloneFailed(finalRemoteUri);
+                    protected void onFailure(Throwable exception) {
+                        String errorMessage = (exception.getMessage() != null && exception.getMessage().length() > 0)
+                                              ? exception.getMessage() : gitConstant.cloneFailed(finalRemoteUri);
                         notification.setStatus(FINISHED);
                         notification.setType(ERROR);
                         notification.setMessage(errorMessage);
@@ -269,7 +287,17 @@ public class ImportPresenter implements ImportView.ActionDelegate {
 
             @Override
             public void onFailure(Throwable caught) {
-                Log.error(ImportPresenter.class, "Can not get project " + project.getName());
+                selectProjectTypePresenter.showDialog(project, new AsyncCallback<Project>() {
+                    @Override
+                    public void onSuccess(Project result) {
+                        onCloneSuccess(gitRepositoryInfo, project);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        Log.error(ImportPresenter.class, "can not set type for project " + project.getName());
+                    }
+                });
             }
         });
     }
@@ -280,7 +308,7 @@ public class ImportPresenter implements ImportView.ActionDelegate {
      * @param e
      *         exception what happened
      * @param remoteUri
-     *         rempote uri
+     *         remote uri
      */
     private void handleError(@NotNull Throwable e, @NotNull String remoteUri) {
         String errorMessage =

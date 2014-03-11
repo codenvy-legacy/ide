@@ -17,10 +17,11 @@
  */
 package com.codenvy.ide.wizard.newresource.page;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.TreeElement;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
@@ -30,17 +31,15 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.marshal.FolderTreeUnmarshaller;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
-import com.codenvy.ide.resources.model.Link;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
-import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.NewResourceAgentImpl;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePageView.ActionDelegate;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -60,6 +59,8 @@ import static com.codenvy.ide.api.ui.wizard.newresource.NewResourceWizardKeys.RE
  */
 public class NewResourcePagePresenter extends AbstractWizardPage implements ActionDelegate {
     private final AsyncRequestFactory      asyncRequestFactory;
+    private final ProjectServiceClient     projectServiceClient;
+    private final DtoUnmarshallerFactory   dtoUnmarshallerFactory;
     private       NewResourcePageView      view;
     private       EditorAgent              editorAgent;
     private       CoreLocalizationConstant constant;
@@ -69,8 +70,6 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
     private       Project                  project;
     private       Folder                   parent;
     private       Project                  treeStructure;
-    private       ResourceProvider         resourceProvider;
-    private       Loader                   loader;
     private       EventBus                 eventBus;
 
     /** Create presenter. */
@@ -81,17 +80,20 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
                                     NewResourceAgentImpl newResourceAgent,
                                     com.codenvy.ide.api.resources.ResourceProvider resourceProvider,
                                     SelectionAgent selectionAgent,
-                                    EditorAgent editorAgent, Loader loader, EventBus eventBus, AsyncRequestFactory asyncRequestFactory) {
+                                    EditorAgent editorAgent, EventBus eventBus,
+                                    AsyncRequestFactory asyncRequestFactory,
+                                    ProjectServiceClient projectServiceClient,
+                                    DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super("Create a new resource", resources.newResourceIcon());
 
         this.view = view;
         this.asyncRequestFactory = asyncRequestFactory;
+        this.projectServiceClient = projectServiceClient;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.view.setDelegate(this);
         this.view.setResourceName("");
         this.editorAgent = editorAgent;
         this.constant = constant;
-        this.resourceProvider = resourceProvider;
-        this.loader = loader;
         this.eventBus = eventBus;
 
         Array<NewResourceProvider> newResources = newResourceAgent.getResources();
@@ -173,33 +175,27 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
     }
 
     private void getProjectStructure() {
-        try {
-            treeStructure = new Project(eventBus, asyncRequestFactory);
-            treeStructure.setId(project.getId());
-            treeStructure.setName(project.getName());
-            treeStructure.setParent(project.getParent());
-            treeStructure.setMimeType(project.getMimeType());
-            AsyncRequestCallback<Folder> callback =
-                    new AsyncRequestCallback<Folder>(new FolderTreeUnmarshaller(treeStructure, treeStructure)) {
-                        @Override
-                        protected void onSuccess(Folder refreshedRoot) {
-                            Array<String> paths = Collections.createArray();
-                            view.setPackages(getPackages(paths, treeStructure.getChildren()));
-                            view.selectPackage(paths.indexOf(getDisplayPath(parent.getPath())));
-                        }
+        treeStructure = new Project(eventBus, asyncRequestFactory, projectServiceClient, dtoUnmarshallerFactory);
+        treeStructure.setId(project.getId());
+        treeStructure.setName(project.getName());
+        treeStructure.setParent(project.getParent());
+        treeStructure.setMimeType(project.getMimeType());
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            Log.error(NewResourcePagePresenter.class, exception);
-                        }
-                    };
+        projectServiceClient.getTree(project.getPath(), -1,
+                                     new AsyncRequestCallback<TreeElement>(dtoUnmarshallerFactory.newUnmarshaller(TreeElement.class)) {
+                                         @Override
+                                         protected void onSuccess(TreeElement result) {
+                                             new FolderTreeUnmarshaller(treeStructure, treeStructure).unmarshal(result);
+                                             Array<String> paths = Collections.createArray();
+                                             view.setPackages(getPackages(paths, treeStructure.getChildren()));
+                                             view.selectPackage(paths.indexOf(getDisplayPath(parent.getPath())));
+                                         }
 
-            String url = resourceProvider.getVfsInfo().getUrlTemplates().get(Link.REL_TREE).getHref();
-            url = URL.decode(url).replace("[id]", project.getId());
-            asyncRequestFactory.createGetRequest(URL.encode(url)).loader(loader).send(callback);
-        } catch (Exception e) {
-            Log.error(NewResourcePagePresenter.class, e);
-        }
+                                         @Override
+                                         protected void onFailure(Throwable exception) {
+                                             Log.error(NewResourcePagePresenter.class, exception);
+                                         }
+                                     });
     }
 
     private Array<String> getPackages(Array<String> paths, Array<Resource> children) {

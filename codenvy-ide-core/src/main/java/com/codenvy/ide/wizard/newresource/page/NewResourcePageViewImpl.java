@@ -80,7 +80,7 @@ public class NewResourcePageViewImpl extends Composite implements NewResourcePag
                     sb.appendHtmlConstant("<table><tr><td>");
                     Image icon = itemData.getIcon();
                     if (icon != null) {
-                        sb.appendHtmlConstant("<img src=\""
+                        sb.appendHtmlConstant("<img height=\"16\" width=\"16\" src=\""
                                               + icon.getUrl()
                                               + "\">");
                     }

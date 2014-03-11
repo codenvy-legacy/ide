@@ -17,14 +17,14 @@
  */
 package com.codenvy.ide.ext.java.client.projectmodel;
 
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
-import com.google.gwt.json.client.JSONObject;
 
 /**
- * Java Compilation unit is a .java file that contains top level class and can be compiled
+ * Java Compilation unit is a *.java file that contains top level class and can be compiled
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public class CompilationUnit extends File {
     public static final String TYPE = "java.compilationUnit";
@@ -37,11 +37,11 @@ public class CompilationUnit extends File {
     /**
      * Constructor for unmarshalling
      *
-     * @param itemObject
+     * @param itemReference
      */
-    protected CompilationUnit(JSONObject itemObject) {
+    protected CompilationUnit(ItemReference itemReference) {
         this();
-        init(itemObject);
+        init(itemReference);
     }
 
     /**

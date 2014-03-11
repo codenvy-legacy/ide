@@ -22,6 +22,7 @@ import com.codenvy.api.project.server.ProjectTypeExtension;
 import com.codenvy.api.project.shared.Attribute;
 import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
+import com.codenvy.ide.ext.java.shared.Constants;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -49,15 +50,16 @@ public class SpringProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType("spring", "Spring Application");
+        return new ProjectType(Constants.SPRING_ID, Constants.SPRING_NAME);
     }
 
     @Override
     public List<Attribute> getPredefinedAttributes() {
-        final List<Attribute> list = new ArrayList<>(3);
-        list.add(new Attribute("language", "java"));
-        list.add(new Attribute("framework", "spring"));
-        list.add(new Attribute("runner.name", "webapps"));
+        final List<Attribute> list = new ArrayList<>(4);
+        list.add(new Attribute(Constants.LANGUAGE, "java"));
+        list.add(new Attribute(Constants.FRAMEWORK, "spring"));
+        list.add(new Attribute(Constants.RUNNER_NAME, "webapps"));
+        list.add(new Attribute(Constants.BUILDER_NAME, "maven"));
         return list;
     }
 
@@ -69,10 +71,11 @@ public class SpringProjectTypeExtension implements ProjectTypeExtension {
                                                 "Simple Spring project which uses Maven build system.",
                                                 "templates/MavenSpring.zip"));
 
-        list.add(new ProjectTemplateDescription("zip",
-                                                "ANT SPRING APPLICATION",
-                                                "Simple Spring project which uses Ant build system.",
-                                                "templates/AntSpring.zip"));
+//TODO:temporary unregist Ant project
+//        list.add(new ProjectTemplateDescription("zip",
+//                                                "ANT SPRING APPLICATION",
+//                                                "Simple Spring project which uses Ant build system.",
+//                                                "templates/AntSpring.zip"));
         return list;
     }
 

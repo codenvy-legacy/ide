@@ -20,16 +20,15 @@ package com.codenvy.ide.resources.model;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringSet;
 
+import java.util.List;
+
 /**
  * Description of the project.
  *
  * @author Nikolay Zamosenchuk
- * @author Artem Zatsarynnyy
  */
 public class ProjectDescription {
-
-    public static final String PROPERTY_PROJECT_TYPE = "vfs:projectType";
-    public static final String PROPERTY_LANGUAGE     = "language";
+    public static final String ATTR_LANGUAGE = "language";
     protected Project project;
 
     public ProjectDescription(Project project) {
@@ -38,22 +37,24 @@ public class ProjectDescription {
 
     /** @return project type id */
     public String getProjectTypeId() {
-        return (String)project.getPropertyValue(PROPERTY_PROJECT_TYPE);
+        return project.getProjectTypeId();
     }
 
     /**
-     * Get property values as {@link StringSet}.
+     * Get attribute values as {@link StringSet}.
      *
-     * @param propertyName
-     *         property name
-     * @return {@link StringSet} of property values
+     * @param attributeName
+     *         attribute name
+     * @return {@link StringSet} of attribute values or empty {@link StringSet} if no values
      */
-    protected StringSet asStringSet(String propertyName) {
-        Property property = project.getProperty(propertyName);
-        StringSet natures = Collections.createStringSet();
-        if (property != null) {
-            natures.addAll(property.getValue());
+    protected StringSet asStringSet(String attributeName) {
+        StringSet values = Collections.createStringSet();
+        List<String> attributeValues = project.getAttributeValues(attributeName);
+        if (attributeValues != null) {
+            for (String value : attributeValues) {
+                values.add(value);
+            }
         }
-        return natures;
+        return values;
     }
 }

@@ -25,7 +25,7 @@ import com.codenvy.ide.ext.github.shared.GitHubRepository;
 import com.codenvy.ide.ext.github.shared.GitHubRepositoryList;
 import com.codenvy.ide.ext.github.shared.GitHubUser;
 import com.codenvy.ide.ext.ssh.server.SshKeyStoreException;
-import com.codenvy.security.oauth.OAuthTokenProvider;
+import com.codenvy.ide.security.oauth.server.OAuthTokenProvider;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;

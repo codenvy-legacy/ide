@@ -44,7 +44,6 @@
         <module>codenvy-sdk-api-war</module>
         <module>codenvy-runner-sdk</module>
         <module>codenvy-runner-webapps</module>
-        <module>codenvy-api-war</module>
         <module>codenvy-ext-builder</module>
         <module>codenvy-ext-runner</module>
         <module>codenvy-ext-web</module>
@@ -63,15 +62,13 @@
         <module>codenvy-sdk-tutorials/notification-api</module>
         <module>codenvy-sdk-tutorials/new-resource-wizard</module>
         <module>codenvy-sdk-tutorials/editor-api</module>
-	<module>codenvy-sdk-tutorials/empty-ext</module>
+        <module>codenvy-sdk-tutorials/empty-ext</module>
         <module>codenvy-sdk-tutorials/gin</module>
         <module>codenvy-sdk-tutorials/gist-ext</module>
-	<module>codenvy-sdk-tutorials/helloworld-ext</module>
+        <module>codenvy-sdk-tutorials/helloworld-ext</module>
         <module>codenvy-sdk-tutorials/wysiwyg-editor</module>
-        <module>codenvy-application-war</module>
         <module>codenvy-sdk-private-dependencies</module>
         <module>codenvy-sdk-tools</module>
-        <module>codenvy-packaging-standalone-tomcat</module>
     </modules>
     <scm>
         <connection>scm:git:git@github.com:codenvy/ide2.git</connection>
@@ -89,9 +86,7 @@
         <codenvy.ide-codeassistant-index.version>20120627</codenvy.ide-codeassistant-index.version>
         <codenvy.platform-api-gwt-client.version>0.1.1-SNAPSHOT</codenvy.platform-api-gwt-client.version>
         <com.codenvy.commons.version>0.16.0-SNAPSHOT</com.codenvy.commons.version>
-        <com.codenvy.organization.version>0.14.0-SNAPSHOT</com.codenvy.organization.version>
         <com.codenvy.platform-api.version>0.10.0-SNAPSHOT</com.codenvy.platform-api.version>
-        <com.codenvy.security.version>0.3.0-SNAPSHOT</com.codenvy.security.version>
         <commons-codec.version>1.6</commons-codec.version>
         <commons-fileupload.version>1.2.1</commons-fileupload.version>
         <commons-io.version>2.4</commons-io.version>
@@ -101,12 +96,12 @@
         <exo.product.name>codenvy-ide</exo.product.name>
         <failsafe.plugin.version>2.6</failsafe.plugin.version>
         <gin.version>2.1.2</gin.version>
+        <google.api.client.version>1.9.0-beta</google.api.client.version>
         <gson.version>2.1</gson.version>
         <guava.version>12.0.1</guava.version>
-        <gwt-test-utils.version>0.45</gwt-test-utils.version>
-        <gwt.maven.plugin.version>2.5.1</gwt.maven.plugin.version>
+        <gwt-test-utils.version>0.47</gwt-test-utils.version>
         <gwt.test.skip>true</gwt.test.skip>
-        <gwt.version>2.5.1</gwt.version>
+        <gwt.version>2.6.0</gwt.version>
         <javax.annotation.version>1.0</javax.annotation.version>
         <javax.validation.version>1.0.0.GA</javax.validation.version>
         <javax.ws.rs.version>1.0</javax.ws.rs.version>
@@ -132,6 +127,7 @@
         <tomcat.version>7.0.50</tomcat.version>
         <version.animal-sniffer.enforcer-rule>1.8</version.animal-sniffer.enforcer-rule>
         <version.enforcer.plugin>1.2</version.enforcer.plugin>
+        <version.gwt.plugin>2.6.0</version.gwt.plugin>
     </properties>
     <build>
         <pluginManagement>

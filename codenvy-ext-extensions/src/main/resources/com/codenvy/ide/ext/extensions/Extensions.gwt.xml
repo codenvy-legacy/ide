@@ -31,4 +31,5 @@
     <inherits name='com.codenvy.api.Runner'/>
 
     <source path="client"/>
+    <source path="shared"/>
 </module>

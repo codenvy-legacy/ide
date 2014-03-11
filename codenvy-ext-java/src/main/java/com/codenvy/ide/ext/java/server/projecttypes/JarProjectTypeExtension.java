@@ -22,6 +22,7 @@ import com.codenvy.api.project.server.ProjectTypeExtension;
 import com.codenvy.api.project.shared.Attribute;
 import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
+import com.codenvy.ide.ext.java.shared.Constants;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -36,7 +37,6 @@ public class JarProjectTypeExtension implements ProjectTypeExtension {
 
     private Map<String, String> icons = new HashMap<>();
 
-
     @Inject
     public JarProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
         icons.put("jar.projecttype.big.icon", "java-extension/jar_64.png");
@@ -50,15 +50,15 @@ public class JarProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType("jar", "Java Library (JAR)");
+        return new ProjectType(Constants.JAR_ID, Constants.JAR_NAME);
     }
 
     @Override
     public List<Attribute> getPredefinedAttributes() {
-        final List<Attribute> list = new ArrayList<>(2);
-        list.add(new Attribute("language", "java"));
-        list.add(new Attribute("framework", "standalone"));
-        list.add(new Attribute("builder.name","maven"));
+        final List<Attribute> list = new ArrayList<>(3);
+        list.add(new Attribute(Constants.LANGUAGE, "java"));
+        list.add(new Attribute(Constants.FRAMEWORK, "standalone"));
+        list.add(new Attribute(Constants.BUILDER_NAME, "maven"));
         return list;
     }
 
@@ -69,11 +69,11 @@ public class JarProjectTypeExtension implements ProjectTypeExtension {
                                                 "MAVEN JAR PROJECT",
                                                 "Simple JAR project which uses Maven build system.",
                                                 "templates/MavenJar.zip"));
-
-        list.add(new ProjectTemplateDescription("zip",
-                                                "ANT JAR PROJECT",
-                                                "Simple JAR project which uses Ant build system.",
-                                                "templates/AntJar.zip"));
+//TODO:temporary unregist Ant project
+//        list.add(new ProjectTemplateDescription("zip",
+//                                                "ANT JAR PROJECT",
+//                                                "Simple JAR project which uses Ant build system.",
+//                                                "templates/AntJar.zip"));
         return list;
     }
 
