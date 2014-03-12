@@ -57,8 +57,8 @@ public class ShowGitUrlAction extends Action {
         e.getPresentation().setVisible(activeProject != null);
 
         if (activeProject != null) {
-            boolean isGitRepository = activeProject.getProperty(GIT_REPOSITORY_PROP) != null;
-            e.getPresentation().setEnabled(isGitRepository);
+//            boolean isGitRepository = activeProject.getProperty(GIT_REPOSITORY_PROP) != null;
+            e.getPresentation().setEnabled(true);
         }
     }
 }
