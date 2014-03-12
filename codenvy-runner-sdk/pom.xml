@@ -23,7 +23,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M11-SNAPSHOT</version>
+        <version>3.0.0-M12-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-runner-sdk</artifactId>
     <packaging>jar</packaging>
@@ -104,14 +104,6 @@
                                     <version>${project.version}</version>
                                     <outputDirectory>${project.build.directory}/classes/tomcat-resources/webapps</outputDirectory>
                                     <destFileName>api.war</destFileName>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.exoplatform.ide</groupId>
-                                    <artifactId>exo-ide-codeassistant-storage</artifactId>
-                                    <type>war</type>
-                                    <version>${org.exoplatform.ide.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/webapps</outputDirectory>
-                                    <destFileName>codeassistant-storage.war</destFileName>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.slf4j</groupId>

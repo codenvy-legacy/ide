@@ -149,6 +149,7 @@ public class UploadSshKeyViewImpl extends DialogBox implements UploadSshKeyView 
         file = new FileUpload();
         file.setHeight("22px");
         file.setWidth("100%");
+        file.setName("file");
         file.addChangeHandler(new ChangeHandler() {
             @Override
             public void onChange(ChangeEvent event) {
