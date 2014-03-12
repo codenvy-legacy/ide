@@ -91,9 +91,9 @@
         <codenvy.commons.version>0.15.0</codenvy.commons.version>
         <codenvy.factory.version>0.6.0</codenvy.factory.version>
         <codenvy.ide-codeassistant-index.version>20120627</codenvy.ide-codeassistant-index.version>
-        <codenvy.organization.version>0.12.1-SNAPSHOT</codenvy.organization.version>
-        <codenvy.platform-api.version>0.9.1-SNAPSHOT</codenvy.platform-api.version>
-        <codenvy.security.version>0.2.1-SNAPSHOT</codenvy.security.version>
+        <codenvy.organization.version>0.12.1</codenvy.organization.version>
+        <codenvy.platform-api.version>0.9.1</codenvy.platform-api.version>
+        <codenvy.security.version>0.2.1</codenvy.security.version>
         <commons-codec.version>1.6</commons-codec.version>
         <commons-compress.version>1.0</commons-compress.version>
         <commons-configuration.version>1.8</commons-configuration.version>
