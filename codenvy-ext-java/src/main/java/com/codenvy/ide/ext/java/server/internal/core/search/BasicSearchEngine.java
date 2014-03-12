@@ -11,7 +11,6 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.server.internal.core.search;
 
-import com.codenvy.ide.ext.java.server.internal.core.JavaProject;
 import com.codenvy.ide.ext.java.server.core.search.IJavaSearchConstants;
 import com.codenvy.ide.ext.java.server.core.search.IJavaSearchScope;
 import com.codenvy.ide.ext.java.server.core.search.SearchDocument;
@@ -19,6 +18,8 @@ import com.codenvy.ide.ext.java.server.core.search.SearchParticipant;
 import com.codenvy.ide.ext.java.server.core.search.SearchPattern;
 import com.codenvy.ide.ext.java.server.core.search.SearchRequestor;
 import com.codenvy.ide.ext.java.server.core.search.TypeNameMatch;
+import com.codenvy.ide.ext.java.server.internal.core.JavaModelManager;
+import com.codenvy.ide.ext.java.server.internal.core.JavaProject;
 import com.codenvy.ide.ext.java.server.internal.core.search.indexing.IndexManager;
 import com.codenvy.ide.ext.java.server.internal.core.search.matching.ConstructorDeclarationPattern;
 import com.codenvy.ide.ext.java.server.internal.core.search.matching.DeclarationOfAccessedFieldsPattern;
@@ -75,7 +76,6 @@ import org.eclipse.jdt.internal.compiler.problem.ProblemReporter;
 import org.eclipse.jdt.internal.core.CompilationUnit;
 import org.eclipse.jdt.internal.core.DefaultWorkingCopyOwner;
 import org.eclipse.jdt.internal.core.JavaElement;
-import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.internal.core.search.indexing.IIndexConstants;
 import org.eclipse.jdt.internal.core.util.Messages;
 import org.eclipse.jdt.internal.core.util.Util;
@@ -112,20 +112,21 @@ public class BasicSearchEngine {
      * For tracing purpose.
      */
     public static boolean VERBOSE = false;
+    private IndexManager indexManager;
 
     /*
      * Creates a new search basic engine.
      */
-    public BasicSearchEngine() {
+    public BasicSearchEngine(IndexManager indexManager) {
         // will use working copies of PRIMARY owner
+        this.indexManager = indexManager;
     }
 
-    /**
-     * @see org.eclipse.jdt.core.search.SearchEngine#SearchEngine(org.eclipse.jdt.core.ICompilationUnit[]) for detailed comment.
-     */
-    public BasicSearchEngine(ICompilationUnit[] workingCopies) {
-        this.workingCopies = workingCopies;
-    }
+//    /**
+//     * @see org.eclipse.jdt.core.search.SearchEngine#SearchEngine(org.eclipse.jdt.core.ICompilationUnit[]) for detailed comment.
+//     */
+//    public BasicSearchEngine() {
+//    }
 
     char convertTypeKind(int typeDeclarationKind) {
         switch (typeDeclarationKind) {
@@ -142,12 +143,12 @@ public class BasicSearchEngine {
         }
     }
 
-    /**
-     * @see org.eclipse.jdt.core.search.SearchEngine#SearchEngine(org.eclipse.jdt.core.WorkingCopyOwner) for detailed comment.
-     */
-    public BasicSearchEngine(WorkingCopyOwner workingCopyOwner) {
-        this.workingCopyOwner = workingCopyOwner;
-    }
+//    /**
+//     * @see org.eclipse.jdt.core.search.SearchEngine#SearchEngine(org.eclipse.jdt.core.WorkingCopyOwner) for detailed comment.
+//     */
+//    public BasicSearchEngine(WorkingCopyOwner workingCopyOwner) {
+//        this.workingCopyOwner = workingCopyOwner;
+//    }
 
     /**
      * @see org.eclipse.jdt.core.search.SearchEngine#createHierarchyScope(org.eclipse.jdt.core.IType) for detailed comment.
@@ -181,67 +182,68 @@ public class BasicSearchEngine {
     }
 
     /**
-	 * @see org.eclipse.jdt.core.search.SearchEngine#createJavaSearchScope(org.eclipse.jdt.core.IJavaElement[], boolean) for detailed comment.
-	 */
-	public static IJavaSearchScope createJavaSearchScope(IJavaElement[] elements, boolean includeReferencedProjects) {
-		int includeMask = IJavaSearchScope.SOURCES | IJavaSearchScope.APPLICATION_LIBRARIES | IJavaSearchScope.SYSTEM_LIBRARIES;
-		if (includeReferencedProjects) {
-			includeMask |= IJavaSearchScope.REFERENCED_PROJECTS;
-		}
-		return createJavaSearchScope(elements, includeMask);
-	}
+     * @see org.eclipse.jdt.core.search.SearchEngine#createJavaSearchScope(org.eclipse.jdt.core.IJavaElement[],
+     * boolean) for detailed comment.
+     */
+    public static IJavaSearchScope createJavaSearchScope(IJavaElement[] elements, boolean includeReferencedProjects) {
+        int includeMask = IJavaSearchScope.SOURCES | IJavaSearchScope.APPLICATION_LIBRARIES | IJavaSearchScope.SYSTEM_LIBRARIES;
+        if (includeReferencedProjects) {
+            includeMask |= IJavaSearchScope.REFERENCED_PROJECTS;
+        }
+        return createJavaSearchScope(elements, includeMask);
+    }
 
-	/**
-	 * @see org.eclipse.jdt.core.search.SearchEngine#createJavaSearchScope(org.eclipse.jdt.core.IJavaElement[], int) for detailed comment.
-	 */
-	public static IJavaSearchScope createJavaSearchScope(IJavaElement[] elements, int includeMask) {
-		HashSet projectsToBeAdded = new HashSet(2);
-		for (int i = 0, length = elements.length; i < length; i++) {
-			IJavaElement element = elements[i];
-			if (element instanceof JavaProject) {
-				projectsToBeAdded.add(element);
-			}
-		}
-		JavaSearchScope scope = new JavaSearchScope();
-		for (int i = 0, length = elements.length; i < length; i++) {
-			IJavaElement element = elements[i];
-			if (element != null) {
-				try {
-					if (projectsToBeAdded.contains(element)) {
-						scope.add((JavaProject)element, includeMask, projectsToBeAdded);
-					} else {
-						scope.add(element);
-					}
-				} catch (JavaModelException e) {
-					// ignore
-				}
-			}
-		}
-		return scope;
-	}
+    /**
+     * @see org.eclipse.jdt.core.search.SearchEngine#createJavaSearchScope(org.eclipse.jdt.core.IJavaElement[], int) for detailed comment.
+     */
+    public static IJavaSearchScope createJavaSearchScope(IJavaElement[] elements, int includeMask) {
+        HashSet projectsToBeAdded = new HashSet(2);
+        for (int i = 0, length = elements.length; i < length; i++) {
+            IJavaElement element = elements[i];
+            if (element instanceof JavaProject) {
+                projectsToBeAdded.add(element);
+            }
+        }
+        JavaSearchScope scope = new JavaSearchScope();
+        for (int i = 0, length = elements.length; i < length; i++) {
+            IJavaElement element = elements[i];
+            if (element != null) {
+                try {
+                    if (projectsToBeAdded.contains(element)) {
+                        scope.add((JavaProject)element, includeMask, projectsToBeAdded);
+                    } else {
+                        scope.add(element);
+                    }
+                } catch (JavaModelException e) {
+                    // ignore
+                }
+            }
+        }
+        return scope;
+    }
 
-	/**
-	 * @see org.eclipse.jdt.core.search.SearchEngine#createTypeNameMatch(org.eclipse.jdt.core.IType, int) for detailed comment.
-	 */
-	public static TypeNameMatch createTypeNameMatch(IType type, int modifiers) {
-		return new JavaSearchTypeNameMatch(type, modifiers);
-	}
+    /**
+     * @see org.eclipse.jdt.core.search.SearchEngine#createTypeNameMatch(org.eclipse.jdt.core.IType, int) for detailed comment.
+     */
+    public static TypeNameMatch createTypeNameMatch(IType type, int modifiers) {
+        return new JavaSearchTypeNameMatch(type, modifiers);
+    }
 
-	/**
-	 * @see org.eclipse.jdt.core.search.SearchEngine#createWorkspaceScope() for detailed comment.
-	 */
-	public static IJavaSearchScope createWorkspaceScope() {
+    /**
+     * @see org.eclipse.jdt.core.search.SearchEngine#createWorkspaceScope() for detailed comment.
+     */
+    public static IJavaSearchScope createWorkspaceScope() {
         //TODO
         throw new UnsupportedOperationException();
 //		return JavaModelManager.getJavaModelManager().getWorkspaceScope();
     }
 
-	/**
-	 * Searches for matches to a given query. Search queries can be created using helper
-	 * methods (from a String pattern or a Java element) and encapsulate the description of what is
-	 * being searched (for example, search method declarations in a case sensitive way).
-	 *
-	 * @param scope the search result has to be limited to the given scope
+    /**
+     * Searches for matches to a given query. Search queries can be created using helper
+     * methods (from a String pattern or a Java element) and encapsulate the description of what is
+     * being searched (for example, search method declarations in a case sensitive way).
+     *
+     * @param scope the search result has to be limited to the given scope
 	 * @param requestor a callback object to which each match is reported
 	 */
 	void findMatches(SearchPattern pattern, SearchParticipant[] participants, IJavaSearchScope scope, SearchRequestor requestor, IProgressMonitor monitor) throws
@@ -261,8 +263,6 @@ public class BasicSearchEngine {
 			int length = participants.length;
 			if (monitor != null)
 				monitor.beginTask(Messages.engine_searching, 100 * length);
-            //todo index manager
-			IndexManager indexManager =  IndexManager.getInstance();//JavaModelManager.getIndexManager();
 			requestor.beginReporting();
 			for (int i = 0; i < length; i++) {
 				if (monitor != null && monitor.isCanceled()) throw new OperationCanceledException();
@@ -275,7 +275,7 @@ public class BasicSearchEngine {
 					requestor.enterParticipant(participant);
 					PathCollector pathCollector = new PathCollector();
 					indexManager.performConcurrentJob(
-						new PatternSearchJob(pattern, participant, scope, pathCollector),
+						new PatternSearchJob(pattern, participant, scope, pathCollector, indexManager),
 						IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,
 						monitor==null ? null : new SubProgressMonitor(monitor, 50));
 					if (monitor != null && monitor.isCanceled()) throw new OperationCanceledException();
@@ -311,8 +311,8 @@ public class BasicSearchEngine {
 	 * @return a new default Java search participant
 	 * @since 3.0
 	 */
-	public static SearchParticipant getDefaultSearchParticipant() {
-		return new JavaSearchParticipant();
+	public static SearchParticipant getDefaultSearchParticipant(IndexManager indexManager) {
+		return new JavaSearchParticipant(indexManager);
 	}
 
 	/**
@@ -614,8 +614,6 @@ public class BasicSearchEngine {
 		if (validatedTypeMatchRule == -1) return; // invalid match rule => return no results
 
 		// Create pattern
-        //todo index manager
-		IndexManager indexManager = null;//JavaModelManager.getIndexManager();
 		final ConstructorDeclarationPattern pattern = new ConstructorDeclarationPattern(
 				packageName,
 				typeName,
@@ -712,9 +710,9 @@ public class BasicSearchEngine {
 			indexManager.performConcurrentJob(
 				new PatternSearchJob(
 					pattern,
-					getDefaultSearchParticipant(), // Java search only
+					getDefaultSearchParticipant(indexManager), // Java search only
 					scope,
-					searchRequestor),
+					searchRequestor, indexManager),
 				waitingPolicy,
 				progressMonitor == null ? null : new SubProgressMonitor(progressMonitor, 1000-copiesLength));
 
@@ -962,8 +960,6 @@ public class BasicSearchEngine {
             Util.verbose(buffer.toString());
         }
 
-        //todo index manager
-        IndexManager indexManager = null;//JavaModelManager.getIndexManager();
         final TypeDeclarationPattern pattern = new SecondaryTypeDeclarationPattern();
 
         // Get working copy path(s). Store in a single string in case of only one to optimize comparison in requestor
@@ -1047,9 +1043,9 @@ public class BasicSearchEngine {
             indexManager.performConcurrentJob(
                     new PatternSearchJob(
                             pattern,
-                            getDefaultSearchParticipant(), // Java search only
+                            getDefaultSearchParticipant(indexManager), // Java search only
                             createJavaSearchScope(sourceFolders),
-                            searchRequestor),
+                            searchRequestor, indexManager),
                     waitForIndexes
                     ? IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH
                     : IJavaSearchConstants.FORCE_IMMEDIATE_SEARCH,
@@ -1104,9 +1100,6 @@ public class BasicSearchEngine {
         }
         if (validatedTypeMatchRule == -1) return; // invalid match rule => return no results
 
-        // Create pattern
-        //todo index manager
-        IndexManager indexManager = null;//JavaModelManager.getIndexManager();
         final char typeSuffix;
         switch (searchFor) {
             case IJavaSearchConstants.CLASS:
@@ -1228,9 +1221,9 @@ public class BasicSearchEngine {
             indexManager.performConcurrentJob(
                     new PatternSearchJob(
                             pattern,
-                            getDefaultSearchParticipant(), // Java search only
+                            getDefaultSearchParticipant(indexManager), // Java search only
                             scope,
-                            searchRequestor),
+                            searchRequestor, indexManager),
                     waitingPolicy,
                     progressMonitor == null ? null : new SubProgressMonitor(progressMonitor, 1000 - copiesLength));
 
@@ -1389,8 +1382,6 @@ public class BasicSearchEngine {
             Util.verbose("	- search for: " + searchFor); //$NON-NLS-1$
             Util.verbose("	- scope: " + scope); //$NON-NLS-1$
         }
-        //todo index manager
-        IndexManager indexManager = null;//JavaModelManager.getIndexManager();
 
         // Create pattern
         final char typeSuffix;
@@ -1501,9 +1492,9 @@ public class BasicSearchEngine {
             indexManager.performConcurrentJob(
                     new PatternSearchJob(
                             pattern,
-                            getDefaultSearchParticipant(), // Java search only
+                            getDefaultSearchParticipant(indexManager), // Java search only
                             scope,
-                            searchRequestor),
+                            searchRequestor, indexManager),
                     waitingPolicy,
                     progressMonitor == null ? null : new SubProgressMonitor(progressMonitor, 100));
 
@@ -1631,7 +1622,7 @@ public class BasicSearchEngine {
 					if (VERBOSE) {
 						Util.verbose("Searching for " + pattern + " in " + resource.getFullPath()); //$NON-NLS-1$//$NON-NLS-2$
 					}
-					SearchParticipant participant = getDefaultSearchParticipant();
+					SearchParticipant participant = getDefaultSearchParticipant(indexManager);
 					SearchDocument[] documents = MatchLocator.addWorkingCopies(
                             pattern,
                             new SearchDocument[]{new JavaSearchDocument(enclosingElement.getPath().toString(), participant)},
@@ -1649,7 +1640,7 @@ public class BasicSearchEngine {
 			} else {
 				search(
 					pattern,
-					new SearchParticipant[] {getDefaultSearchParticipant()},
+					new SearchParticipant[] {getDefaultSearchParticipant(indexManager)},
 					scope,
 					requestor,
 					monitor);

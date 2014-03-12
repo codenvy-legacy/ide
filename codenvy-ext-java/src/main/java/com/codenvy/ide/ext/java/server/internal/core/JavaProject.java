@@ -23,6 +23,7 @@ import com.codenvy.api.project.server.ProjectManager;
 import com.codenvy.api.project.shared.Attribute;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.ide.ext.java.server.core.JavaCore;
+import com.codenvy.ide.ext.java.server.internal.core.search.indexing.IndexManager;
 import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.vfs.impl.fs.VirtualFileImpl;
 
@@ -36,6 +37,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jdt.core.IBuffer;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaModel;
 import org.eclipse.jdt.core.IJavaModelStatus;
@@ -51,7 +53,9 @@ import org.eclipse.jdt.core.WorkingCopyOwner;
 import org.eclipse.jdt.core.eval.IEvaluationContext;
 import org.eclipse.jdt.internal.compiler.util.ObjectVector;
 import org.eclipse.jdt.internal.core.JavaModelStatus;
+import org.eclipse.jdt.internal.core.NameLookup;
 import org.eclipse.jdt.internal.core.OpenableElementInfo;
+import org.eclipse.jdt.internal.core.SearchableEnvironment;
 import org.eclipse.jdt.internal.core.util.MementoTokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,14 +77,17 @@ import java.util.Map;
 public class JavaProject extends Openable implements IJavaProject {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaProject.class);
-    private final VirtualFileImpl   virtualFile;
-    private       Project           project;
-    private       IClasspathEntry[] rawClassPath;
-    private       ResolvedClasspath resolvedClasspath;
+    private final VirtualFileImpl virtualFile;
+    private       Project         project;
+    private Map<String, String> options;
+    private IClasspathEntry[] rawClassPath;
+    private ResolvedClasspath resolvedClasspath;
+    private IndexManager      indexManager;
 
-    public JavaProject(Project project, String tempDir, ProjectManager projectManager, String ws) {
+    public JavaProject(Project project, String tempDir, ProjectManager projectManager, String ws, Map<String, String> options) {
         super(null);
         this.project = project;
+        this.options = options;
         if (!(project.getBaseFolder().getVirtualFile() instanceof VirtualFileImpl)) {
             throw new IllegalArgumentException("Project must be based on com.codenvy.vfs.impl.fs.VirtualFileImpl");
         }
@@ -101,7 +108,9 @@ public class JavaProject extends Openable implements IJavaProject {
         }
 
         paths.add(JavaCore.newContainerEntry(new Path("codenvy:Jre")));
+        String path = "";
         try {
+            path = virtualFile.getPath();
             File depDir = new File(tempDir, virtualFile.getId());
             if (depDir.exists()) {
                 DirectoryStream<java.nio.file.Path> deps =
@@ -121,6 +130,12 @@ public class JavaProject extends Openable implements IJavaProject {
             LOG.error("Can't find jar dependency's: ", e);
         }
 
+        indexManager = new IndexManager(tempDir + "/" + ws + path + "/");
+//        Thread thread = new Thread(indexManager, "index thread");
+        indexManager.reset();
+//        thread.start();
+        indexManager.indexAll(this);
+        indexManager.saveIndexes();
     }
 
     private void addSources(Project project, List<IClasspathEntry> paths) throws IOException {
@@ -133,6 +148,11 @@ public class JavaProject extends Openable implements IJavaProject {
                     paths.add(JavaCore.newSourceEntry(
                             new Path(((VirtualFileImpl)project.getBaseFolder().getVirtualFile()).getIoFile().getPath() + "/" + path)));
                 }
+            }
+        } else{
+            String s = ((VirtualFileImpl)project.getBaseFolder().getVirtualFile()).getIoFile().getPath() + "/src/main/java";
+            if(new File(s).exists()) {
+                paths.add(JavaCore.newSourceEntry(new Path(s)));
             }
         }
     }
@@ -670,11 +690,11 @@ public class JavaProject extends Openable implements IJavaProject {
 
     @Override
     public String getOption(String optionName, boolean inheritJavaCoreOptions) {
-        return null;
+        return options.get(optionName);
     }
 
     public Map getOptions(boolean b) {
-        return new HashMap();
+        return options;
     }
 
     @Override
@@ -836,7 +856,7 @@ public class JavaProject extends Openable implements IJavaProject {
 
     @Override
     public void close() throws JavaModelException {
-
+       indexManager.shutdown();
     }
 
     @Override
@@ -906,6 +926,17 @@ public class JavaProject extends Openable implements IJavaProject {
         }
     }
 
+    public IndexManager getIndexManager() {
+        return indexManager;
+    }
+
+    public NameLookup newNameLookup(ICompilationUnit[] workingCopies) {
+        return null;
+    }
+
+    public SearchableEnvironment newSearchableNameEnvironment(ICompilationUnit[] workingCopies) {
+        return null;
+    }
 
     public static class ResolvedClasspath {
         IClasspathEntry[] resolvedClasspath;

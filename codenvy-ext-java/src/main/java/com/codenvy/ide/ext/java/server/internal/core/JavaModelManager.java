@@ -21,7 +21,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.WorkingCopyOwner;
+import org.eclipse.jdt.internal.core.DefaultWorkingCopyOwner;
 import org.eclipse.jdt.internal.core.util.Messages;
 
 import java.io.File;
@@ -222,6 +225,14 @@ public class JavaModelManager {
         if (this.invalidArchives != null) {
             this.invalidArchives.add(path);
         }
+    }
+
+    public ICompilationUnit[] getWorkingCopies(DefaultWorkingCopyOwner primary, boolean b) {
+        return null;
+    }
+
+    public ICompilationUnit[] getWorkingCopies(WorkingCopyOwner workingCopyOwner, boolean b) {
+        return null;
     }
 
     /**

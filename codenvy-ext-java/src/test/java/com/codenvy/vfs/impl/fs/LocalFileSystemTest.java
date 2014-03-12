@@ -46,8 +46,8 @@ import org.everrest.core.impl.ResourceBinderImpl;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.everrest.core.tools.DependencySupplierImpl;
 import org.everrest.core.tools.ResourceLauncher;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
@@ -94,9 +94,9 @@ public abstract class LocalFileSystemTest {
         clazz.getClassLoader().setPackageAssertionStatus(clazz.getPackage().getName(), true);
     }
 
-    protected String ROOT_ID;
+    protected static String ROOT_ID;
     @Rule
-    public TestName name = new TestName();
+    public static TestName name = new TestName();
 
     static {
         // enable assertion to test state of some components.
@@ -113,22 +113,22 @@ public abstract class LocalFileSystemTest {
         }
     };
 
-    protected final String BASE_URI              = "http://localhost/service";
-    protected final String SERVICE_URI           = BASE_URI + "/vfs/my-ws/v2/";
-    protected final String DEFAULT_CONTENT       = "__TEST__";
-    protected final byte[] DEFAULT_CONTENT_BYTES = DEFAULT_CONTENT.getBytes();
+    protected static final String BASE_URI              = "http://localhost/service";
+    protected static final String SERVICE_URI           = BASE_URI + "/vfs/my-ws/v2/";
+    protected static final String DEFAULT_CONTENT       = "__TEST__";
+    protected static final byte[] DEFAULT_CONTENT_BYTES = DEFAULT_CONTENT.getBytes();
 
-    protected Logger log = LoggerFactory.getLogger(getClass());
+    protected static Logger log = LoggerFactory.getLogger(LocalFileSystemTest.class);
 
-    protected String                  testRootPath;
-    protected ResourceLauncher        launcher;
-    protected java.io.File            root;
-    protected FSMountPoint            mountPoint;
-    protected LocalFileSystemProvider provider;
-    protected java.io.File            testFsIoRoot;
+    protected static String                  testRootPath;
+    protected static ResourceLauncher        launcher;
+    protected static java.io.File            root;
+    protected static FSMountPoint            mountPoint;
+    protected static LocalFileSystemProvider provider;
+    protected static java.io.File            testFsIoRoot;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeClass
+    public static void setUp() throws Exception {
 
         System.setProperty("org.exoplatform.mimetypes", "conf/mimetypes.properties");
         // root directory for ALL virtual file systems
@@ -139,7 +139,7 @@ public abstract class LocalFileSystemTest {
         testRootPath = '/' + testName;
         // backend for test virtual filesystem
         testFsIoRoot = WorkspaceHashLocalFSMountStrategy.calculateDirPath(root, MY_WORKSPACE_ID);
-        assertTrue(new java.io.File(testFsIoRoot, testName).mkdirs());
+//        assertTrue(new java.io.File(testFsIoRoot, testName).mkdirs());
 
         provider = new LocalFileSystemProvider(MY_WORKSPACE_ID, new WorkspaceHashLocalFSMountStrategy(root), null);
         provider.mount(testFsIoRoot);
@@ -172,7 +172,7 @@ public abstract class LocalFileSystemTest {
 
     // Directory "fs-root" in "target" folder of builder project.
     // It is root where all (but we have only one at the in test) virtual filesystems are bound.
-    private java.io.File createRootDirectory() throws Exception {
+    private static java.io.File createRootDirectory() throws Exception {
         java.io.File root = new java.io.File(
                 new java.io.File(Thread.currentThread().getContextClassLoader().getResource(".").toURI()).getParentFile(),
                 "fs-root");
@@ -183,8 +183,8 @@ public abstract class LocalFileSystemTest {
     }
 
     /** @see junit.framework.TestCase#tearDown() */
-    @After
-    public void tearDown() throws Exception {
+    @AfterClass
+    public static void tearDown() throws Exception {
         //assertTrue("Unable unmount local filesystem. ", provider.umount(testFsIoRoot));
         virtualFileSystemRegistry.unregisterProvider(MY_WORKSPACE_ID);
         assertFalse("Unable unmount local filesystem. ", provider.isMounted());
@@ -194,7 +194,7 @@ public abstract class LocalFileSystemTest {
     }
 
     // Copied from LocalFileSystem#virtualFileToId and adopted for tests.
-    protected String pathToId(String path) {
+    protected static String pathToId(String path) {
         if ("/".equals(path)) {
             return ROOT_ID;
         }
@@ -206,7 +206,7 @@ public abstract class LocalFileSystemTest {
         }
     }
 
-    protected java.io.File getIoFile(String vfsPath) {
+    protected static java.io.File getIoFile(String vfsPath) {
         return new java.io.File(testFsIoRoot, vfsPath);
     }
 
@@ -228,7 +228,7 @@ public abstract class LocalFileSystemTest {
         return newPath;
     }
 
-    protected String createDirectory(String parent, String name) {
+    protected static String createDirectory(String parent, String name) {
         String newPath = parent + '/' + name;
         assertTrue(String.format("File %s already exists. ", newPath), getIoFile(newPath).mkdirs());
         return newPath;

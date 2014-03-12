@@ -16,6 +16,7 @@ import com.codenvy.ide.ext.java.server.core.search.SearchParticipant;
 import com.codenvy.ide.ext.java.server.core.search.SearchPattern;
 import com.codenvy.ide.ext.java.server.core.search.SearchRequestor;
 import com.codenvy.ide.ext.java.server.internal.core.search.indexing.BinaryIndexer;
+import com.codenvy.ide.ext.java.server.internal.core.search.indexing.IndexManager;
 import com.codenvy.ide.ext.java.server.internal.core.search.indexing.SourceIndexer;
 import com.codenvy.ide.ext.java.server.internal.core.search.matching.MatchLocator;
 
@@ -38,70 +39,75 @@ import org.eclipse.jdt.internal.core.index.IndexLocation;
  */
 public class JavaSearchParticipant extends SearchParticipant {
 
-	private ThreadLocal indexSelector = new ThreadLocal();
+    private ThreadLocal indexSelector = new ThreadLocal();
+    private IndexManager indexManager;
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.core.search.SearchParticipant#beginSearching()
-	 */
-	public void beginSearching() {
-		super.beginSearching();
-		this.indexSelector.set(null);
-	}
+    public JavaSearchParticipant(IndexManager indexManager) {
+        this.indexManager = indexManager;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.core.search.SearchParticipant#doneSearching()
-	 */
-	public void doneSearching() {
-		this.indexSelector.set(null);
-		super.doneSearching();
-	}
+    /* (non-Javadoc)
+         * @see org.eclipse.jdt.core.search.SearchParticipant#beginSearching()
+         */
+    public void beginSearching() {
+        super.beginSearching();
+        this.indexSelector.set(null);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.core.search.SearchParticipant#getName()
-	 */
-	public String getDescription() {
-		return "Java"; //$NON-NLS-1$
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.jdt.core.search.SearchParticipant#doneSearching()
+     */
+    public void doneSearching() {
+        this.indexSelector.set(null);
+        super.doneSearching();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.core.search.SearchParticipant#getDocument(String)
-	 */
-	public SearchDocument getDocument(String documentPath) {
-		return new JavaSearchDocument(documentPath, this);
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.jdt.core.search.SearchParticipant#getName()
+     */
+    public String getDescription() {
+        return "Java"; //$NON-NLS-1$
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.core.search.SearchParticipant#indexDocument(SearchDocument)
-	 */
-	public void indexDocument(SearchDocument document, IPath indexPath) {
-		// TODO must verify that the document + indexPath match, when this is not called from scheduleDocumentIndexing
-		document.removeAllIndexEntries(); // in case the document was already indexed
+    /* (non-Javadoc)
+     * @see org.eclipse.jdt.core.search.SearchParticipant#getDocument(String)
+     */
+    public SearchDocument getDocument(String documentPath) {
+        return new JavaSearchDocument(documentPath, this);
+    }
 
-		String documentPath = document.getPath();
-		if (com.codenvy.ide.ext.java.server.internal.core.search.Util.isJavaLikeFileName(documentPath)) {
-			new SourceIndexer(document).indexDocument();
-		} else if (org.eclipse.jdt.internal.compiler.util.Util.isClassFileName(documentPath)) {
-			new BinaryIndexer(document).indexDocument();
-		}
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.jdt.core.search.SearchParticipant#indexDocument(SearchDocument)
+     */
+    public void indexDocument(SearchDocument document, IPath indexPath) {
+        // TODO must verify that the document + indexPath match, when this is not called from scheduleDocumentIndexing
+        document.removeAllIndexEntries(); // in case the document was already indexed
 
-	/* (non-Javadoc)
-	 * @see SearchParticipant#locateMatches(SearchDocument[], SearchPattern, IJavaSearchScope, SearchRequestor, IProgressMonitor)
-	 */
-	public void locateMatches(SearchDocument[] indexMatches, SearchPattern pattern,
-			IJavaSearchScope scope, SearchRequestor requestor, IProgressMonitor monitor) throws CoreException {
+        String documentPath = document.getPath();
+        if (com.codenvy.ide.ext.java.server.internal.core.search.Util.isJavaLikeFileName(documentPath)) {
+            new SourceIndexer(document).indexDocument();
+        } else if (org.eclipse.jdt.internal.compiler.util.Util.isClassFileName(documentPath)) {
+            new BinaryIndexer(document).indexDocument();
+        }
+    }
 
-		MatchLocator matchLocator =
-			new MatchLocator(
-				pattern,
-				requestor,
-				scope,
-				monitor
-		);
+    /* (non-Javadoc)
+     * @see SearchParticipant#locateMatches(SearchDocument[], SearchPattern, IJavaSearchScope, SearchRequestor, IProgressMonitor)
+     */
+    public void locateMatches(SearchDocument[] indexMatches, SearchPattern pattern,
+                              IJavaSearchScope scope, SearchRequestor requestor, IProgressMonitor monitor) throws CoreException {
+
+        MatchLocator matchLocator =
+                new MatchLocator(
+                        pattern,
+                        requestor,
+                        scope,
+                        monitor
+                );
 
 		/* eliminating false matches and locating them */
-		if (monitor != null && monitor.isCanceled()) throw new OperationCanceledException();
-		matchLocator.locateMatches(indexMatches);
+        if (monitor != null && monitor.isCanceled()) throw new OperationCanceledException();
+        matchLocator.locateMatches(indexMatches);
 	}
 
 	/* (non-Javadoc)
@@ -110,7 +116,7 @@ public class JavaSearchParticipant extends SearchParticipant {
 	public IPath[] selectIndexes(SearchPattern pattern, IJavaSearchScope scope) {
 		IndexSelector selector = (IndexSelector) this.indexSelector.get();
 		if (selector == null) {
-			selector = new IndexSelector(scope, pattern);
+			selector = new IndexSelector(scope, pattern, indexManager);
 			this.indexSelector.set(selector);
 		}
 		IndexLocation[] urls = selector.getIndexLocations();
@@ -124,7 +130,7 @@ public class JavaSearchParticipant extends SearchParticipant {
 	public IndexLocation[] selectIndexURLs(SearchPattern pattern, IJavaSearchScope scope) {
 		IndexSelector selector = (IndexSelector) this.indexSelector.get();
 		if (selector == null) {
-			selector = new IndexSelector(scope, pattern);
+			selector = new IndexSelector(scope, pattern, indexManager);
 			this.indexSelector.set(selector);
 		}
 		return selector.getIndexLocations();

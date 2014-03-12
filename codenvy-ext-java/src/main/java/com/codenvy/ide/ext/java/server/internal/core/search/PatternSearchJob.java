@@ -35,14 +35,17 @@ public class PatternSearchJob implements IJob {
     protected IJavaSearchScope    scope;
     protected SearchParticipant   participant;
     protected IndexQueryRequestor requestor;
-    protected boolean             areIndexesReady;
+    private IndexManager indexManager;
+    protected boolean areIndexesReady;
     protected long executionTime = 0;
 
-    public PatternSearchJob(SearchPattern pattern, SearchParticipant participant, IJavaSearchScope scope, IndexQueryRequestor requestor) {
+    public PatternSearchJob(SearchPattern pattern, SearchParticipant participant, IJavaSearchScope scope, IndexQueryRequestor requestor,
+                            IndexManager indexManager) {
         this.pattern = pattern;
         this.participant = participant;
         this.scope = scope;
         this.requestor = requestor;
+        this.indexManager = indexManager;
     }
 
     public boolean belongsTo(String jobFamily) {
@@ -99,7 +102,7 @@ public class PatternSearchJob implements IJob {
 			indexLocations[i] = new FileIndexLocation(paths[i].toFile(), true);
 		}
 	}
-	Index[] indexes = IndexManager.getInstance().getIndexes(indexLocations, progressMonitor);
+	Index[] indexes = indexManager.getIndexes(indexLocations, progressMonitor);
 	this.areIndexesReady = indexes.length == length;
 	return indexes;
 }
