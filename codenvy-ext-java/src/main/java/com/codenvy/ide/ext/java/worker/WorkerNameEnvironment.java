@@ -20,11 +20,9 @@ package com.codenvy.ide.ext.java.worker;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Jso;
 import com.codenvy.ide.collections.js.JsoArray;
-import com.codenvy.ide.ext.java.jdt.core.search.IJavaSearchConstants;
 import com.codenvy.ide.ext.java.jdt.internal.codeassist.ISearchRequestor;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.NameEnvironmentAnswer;
-import com.codenvy.ide.ext.java.shared.JavaType;
 import com.codenvy.ide.ext.java.worker.env.BinaryType;
 import com.codenvy.ide.ext.java.worker.env.Util;
 import com.codenvy.ide.ext.java.worker.env.json.BinaryTypeJso;
@@ -52,26 +50,6 @@ public class WorkerNameEnvironment implements INameEnvironment {
      */
     public WorkerNameEnvironment(String restContext, String wsName) {
         restServiceContext = restContext + "/java-name-environment" + wsName;
-    }
-
-    private static String convertSearchFilterToModelFilter(int searchFilter) {
-        switch (searchFilter) {
-            case IJavaSearchConstants.CLASS:
-                return JavaType.CLASS.name();
-            case IJavaSearchConstants.INTERFACE:
-                return JavaType.INTERFACE.name();
-            case IJavaSearchConstants.ENUM:
-                return JavaType.ENUM.name();
-            case IJavaSearchConstants.ANNOTATION_TYPE:
-                return JavaType.ANNOTATION.name();
-            // TODO
-            // case IJavaSearchConstants.CLASS_AND_ENUM:
-            // return NameLookup.ACCEPT_CLASSES | NameLookup.ACCEPT_ENUMS;
-            // case IJavaSearchConstants.CLASS_AND_INTERFACE:
-            // return NameLookup.ACCEPT_CLASSES | NameLookup.ACCEPT_INTERFACES;
-            default:
-                return null;
-        }
     }
 
     public void setProjectPath(String projectPath) {
@@ -112,8 +90,6 @@ public class WorkerNameEnvironment implements INameEnvironment {
 
                 return new NameEnvironmentAnswer(type, null);
             } else return null;
-//
-//            return loadTypeInfo(key, projectPath);
         }
         return null;
     }
@@ -124,33 +100,6 @@ public class WorkerNameEnvironment implements INameEnvironment {
         }
         return builder.toString();
     }
-
-//    /**
-//     * Load and store in TypeInfoStorage type info
-//     *
-//     * @param fqn
-//     *         of the type
-//     * @param projectPath
-//     *         project
-//     */
-//    public NameEnvironmentAnswer loadTypeInfo(final String fqn, String projectPath) {
-//        if (packages.contains(fqn)) {
-//            return null;
-//        }
-//        String url =
-//                restServiceContext + "/class-description?fqn=" + fqn + "&projectid=" + projectPath +
-//                "&vfsid=" + vfsId;
-//        String result = runSyncRequest(url);
-//        if (result != null) {
-//
-//
-//            Jso jso = Jso.deserialize(result);
-//            BinaryTypeImpl type = new BinaryTypeImpl(jso);
-//            WorkerTypeInfoStorage.get().putType(fqn, type);
-//
-//            return new NameEnvironmentAnswer(type, null);
-//        } else return null;
-//    }
 
     /** {@inheritDoc} */
     @Override
@@ -165,9 +114,6 @@ public class WorkerNameEnvironment implements INameEnvironment {
         }
         b.append(typeName);
         final String key = validateFqn(b);
-        //TODO
-//      if (TypeInfoStorage.get().getPackages(projectPath).contains(key))
-//         return null;
         if (WorkerTypeInfoStorage.get().containsKey(key)) {
             return new NameEnvironmentAnswer(WorkerTypeInfoStorage.get().getType(key),
                                              null);
@@ -229,14 +175,6 @@ public class WorkerNameEnvironment implements INameEnvironment {
                 packages.add(p.toString());
             }
             return exist;
-//            if (findPackage != null) {
-//                JSONArray jsonArray = JSONParser.parseLenient(findPackage).isArray();
-//                for (int i = 0; i < jsonArray.size(); i++) {
-//                    packages.add(jsonArray.get(i).isString().stringValue());
-//                }
-//                return jsonArray.size() > 0;
-//            }
-//            return false;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -280,31 +218,6 @@ public class WorkerNameEnvironment implements INameEnvironment {
 
     }
 
-//    private void addConstructor(BinaryTypeImpl type, final ISearchRequestor requestor) {
-//        IBinaryMethod[] methods = type.getMethods();
-//        boolean hasConstructor = false;
-//        if (methods != null) {
-//            for (IBinaryMethod method : methods) {
-//                if (!method.isConstructor()) {
-//                    continue;
-//                }
-//                int parameterCount = Signature.getParameterCount(method.getMethodDescriptor());
-//                char[][] parameterTypes = Signature.getParameterTypes(method.getMethodDescriptor());
-//                requestor.acceptConstructor(method.getModifiers(), type.getSourceName(), parameterCount,
-//                                            method.getMethodDescriptor(), parameterTypes, method.getArgumentNames(), type.getModifiers(),
-//                                            Signature.getQualifier(type.getFqn()), 0, new String(type.getSourceName()), null);
-//                hasConstructor = true;
-//            }
-//        }
-//        if (!hasConstructor) {
-//            requestor.acceptConstructor(Flags.AccPublic, type.getSourceName(), -1,
-//                                        null, // signature is not used for source type
-//                                        CharOperation.NO_CHAR_CHAR, CharOperation.NO_CHAR_CHAR, type.getModifiers(),
-//                                        Signature.getQualifier(type.getFqn()), 0, new String(type.getSourceName()), null);
-//        }
-//
-//    }
-
     /**
      * Find the packages that start with the given prefix. A valid prefix is a qualified name separated by periods (ex. java.util).
      * The packages found are passed to: ISearchRequestor.acceptPackage(char[][] packageName)
@@ -326,13 +239,6 @@ public class WorkerNameEnvironment implements INameEnvironment {
         if (status == 200) {
             return xmlhttp.getResponseText();
         } else {
-//            String message = null;
-//            if (status == 204) {
-//                message = "no content";
-//            } else {
-//                message = xmlhttp.getResponseText();
-//            }
-            //throw new RuntimeException("Server return " + message);
             // server not find info
             return null;
         }
