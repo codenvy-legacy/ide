@@ -55,7 +55,7 @@ public class LightTheme implements Theme {
     private static String hoverBackground = "#D4E8FF";
 
     private static String selectionBackground = "#C3DEFF";
-    private String partBackground = "#ffffff";
+    private        String partBackground      = "#ffffff";
 
     @Override
     public String getId() {
@@ -380,5 +380,10 @@ public class LightTheme implements Theme {
     @Override
     public String getNotableButtonColor() {
         return "#2d6ba3";
+    }
+
+    @Override
+    public String getTabBorderShadow() {
+        return "rgba(198, 205, 209, 0.5)";
     }
 }

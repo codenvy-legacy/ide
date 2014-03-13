@@ -157,4 +157,6 @@ public interface Theme {
     String getNotableButtonTopColor();
 
     String getNotableButtonColor();
+
+    String getTabBorderShadow();
 }

@@ -32,6 +32,7 @@ import com.codenvy.ide.api.resources.FileEvent.FileOperation;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.contexmenu.ContextMenuPresenter;
+import com.codenvy.ide.project.properties.ProjectPropertiesLocalizationConstant;
 import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
@@ -49,6 +50,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import javax.validation.constraints.NotNull;
 
+
 /**
  * Project Explorer display Project Model in a dedicated Part (view).
  *
@@ -56,17 +58,18 @@ import javax.validation.constraints.NotNull;
  */
 @Singleton
 public class ProjectExplorerPartPresenter extends BasePresenter implements ProjectExplorerView.ActionDelegate, ProjectExplorerPart {
-    private final ProjectServiceClient       projectServiceClient;
-    private final DtoUnmarshallerFactory     dtoUnmarshallerFactory;
-    protected     ProjectExplorerView        view;
-    protected     EventBus                   eventBus;
-    private       Resources                  resources;
-    private       ResourceProvider           resourceProvider;
-    private       ContextMenuPresenter       contextMenuPresenter;
-    private       SelectProjectTypePresenter selectProjectTypePresenter;
+    private final ProjectServiceClient                  projectServiceClient;
+    private final DtoUnmarshallerFactory                dtoUnmarshallerFactory;
+    protected     ProjectExplorerView                   view;
+    protected     EventBus                              eventBus;
+    private       Resources                             resources;
+    private       ResourceProvider                      resourceProvider;
+    private       ContextMenuPresenter                  contextMenuPresenter;
+    private       SelectProjectTypePresenter            selectProjectTypePresenter;
+    private       ProjectPropertiesLocalizationConstant projectPropertiesLocalizationConstant;
 
     /**
-     * Instantiates the ProjectExplorer Presenter.
+     * Instantiates the ProjectExplorer Presenter
      *
      * @param view
      * @param eventBus
@@ -74,6 +77,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
      * @param resourceProvider
      * @param contextMenuPresenter
      * @param selectProjectTypePresenter
+     * @param projectPropertiesLocalizationConstant
      */
     @Inject
     public ProjectExplorerPartPresenter(ProjectExplorerView view,
@@ -82,6 +86,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                                         ResourceProvider resourceProvider,
                                         ContextMenuPresenter contextMenuPresenter,
                                         SelectProjectTypePresenter selectProjectTypePresenter,
+                                        ProjectPropertiesLocalizationConstant projectPropertiesLocalizationConstant,
                                         ProjectServiceClient projectServiceClient,
                                         DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
@@ -90,9 +95,10 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         this.resourceProvider = resourceProvider;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
-        this.view.setTitle("Project Explorer");
+        this.view.setTitle(projectPropertiesLocalizationConstant.propertyViewTitle());
         this.contextMenuPresenter = contextMenuPresenter;
         this.selectProjectTypePresenter = selectProjectTypePresenter;
+        this.projectPropertiesLocalizationConstant = projectPropertiesLocalizationConstant;
 
         bind();
     }
@@ -220,13 +226,13 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     /** {@inheritDoc} */
     @Override
     public String getTitle() {
-        return "Project Explorer";
+        return projectPropertiesLocalizationConstant.explorerButtonTitle();
     }
 
     /** {@inheritDoc} */
     @Override
     public ImageResource getTitleImage() {
-        return resources.projectExplorer();
+        return null;
     }
 
     /** {@inheritDoc} */

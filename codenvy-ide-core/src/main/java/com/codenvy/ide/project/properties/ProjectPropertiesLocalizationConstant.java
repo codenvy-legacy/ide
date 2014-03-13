@@ -21,7 +21,7 @@ import com.google.gwt.i18n.client.Messages;
 
 /**
  * Localization for project properties.
- * 
+ *
  * @author Ann Shumilova
  */
 public interface ProjectPropertiesLocalizationConstant extends Messages {
@@ -79,4 +79,10 @@ public interface ProjectPropertiesLocalizationConstant extends Messages {
 
     @Key("add.property.failed")
     String addPropertyFailed(String property);
+
+    @Key("explorer.button.title")
+    String explorerButtonTitle();
+
+    @Key("property.view.title")
+    String propertyViewTitle();
 }
