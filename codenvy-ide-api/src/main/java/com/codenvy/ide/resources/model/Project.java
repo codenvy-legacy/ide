@@ -97,7 +97,11 @@ public class Project extends Folder {
     }
 
     public String getAttributeValue(String attributeName) {
-        return attributes.get(attributeName).get(0);
+        List<String> attributesValue = getAttributeValues(attributeName);
+        if (attributesValue != null) {
+            return attributesValue.get(0);
+        }
+        return null;
     }
 
     public List<String> getAttributeValues(String attributeName) {
