@@ -160,7 +160,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             @Override
             public void onResourceRenamed(ResourceChangedEvent event) {
                 if (event.getResource() instanceof Project &&
-                    event.getResource().getParent().getId().equals(resourceProvider.getRootId())) {
+                        event.getResource().getParent().getId().equals(resourceProvider.getRootId())) {
                     setContent(event.getResource().getParent());
                 } else {
                     updateItem(event.getResource().getParent());
@@ -233,7 +233,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     @Override
     public String getTitleToolTip() {
         return "This View helps you to do basic operation with your projects. Following features are currently available:"
-               + "\n\t- view project's tree" + "\n\t- select and open project's file";
+                + "\n\t- view project's tree" + "\n\t- select and open project's file";
     }
 
     @Override
