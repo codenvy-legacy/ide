@@ -355,4 +355,9 @@ public class DarkTheme implements Theme {
     public String getTabBorderShadow() {
         return "rgba(188, 195, 199, 0.5)";
     }
+
+    @Override
+    public String getButtonTextShadow() {
+        return "rgba(0, 0, 0, 1)";
+    }
 }

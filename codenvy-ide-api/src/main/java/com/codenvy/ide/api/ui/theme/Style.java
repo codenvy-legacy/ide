@@ -286,4 +286,8 @@ public class Style {
     public static String getTabBorderShadow() {
         return theme.getTabBorderShadow();
     }
+
+    public static String getButtonTextShadow() {
+        return theme.getButtonTextShadow();
+    }
 }

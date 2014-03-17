@@ -95,7 +95,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         this.resourceProvider = resourceProvider;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
-        this.view.setTitle(projectPropertiesLocalizationConstant.propertyViewTitle());
+        this.view.setTitle(projectPropertiesLocalizationConstant.projectExplorerTitleBarText());
         this.contextMenuPresenter = contextMenuPresenter;
         this.selectProjectTypePresenter = selectProjectTypePresenter;
         this.projectPropertiesLocalizationConstant = projectPropertiesLocalizationConstant;
@@ -226,7 +226,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     /** {@inheritDoc} */
     @Override
     public String getTitle() {
-        return projectPropertiesLocalizationConstant.explorerButtonTitle();
+        return projectPropertiesLocalizationConstant.projectExplorerButtonTitle();
     }
 
     /** {@inheritDoc} */

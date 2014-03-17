@@ -386,4 +386,9 @@ public class LightTheme implements Theme {
     public String getTabBorderShadow() {
         return "rgba(198, 205, 209, 0.5)";
     }
+
+    @Override
+    public String getButtonTextShadow() {
+        return "rgba(188, 195, 199, 0.5)";
+    }
 }

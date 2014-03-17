@@ -80,9 +80,9 @@ public interface ProjectPropertiesLocalizationConstant extends Messages {
     @Key("add.property.failed")
     String addPropertyFailed(String property);
 
-    @Key("explorer.button.title")
-    String explorerButtonTitle();
+    @Key("projectExplorer.button.title")
+    String projectExplorerButtonTitle();
 
-    @Key("property.view.title")
-    String propertyViewTitle();
+    @Key("projectExplorer.titleBar.text")
+    String projectExplorerTitleBarText();
 }
