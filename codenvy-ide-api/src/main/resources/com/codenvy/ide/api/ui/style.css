@@ -27,8 +27,6 @@
 @eval highlightFocus com.codenvy.ide.api.ui.theme.Style.getHighlightFocus();
 
 @eval hoverBackgroundColor com.codenvy.ide.api.ui.theme.Style.getHoverBackgroundColor();
-@eval lightGreyBackground com.codenvy.ide.api.ui.theme.Style.getLightGreyBackground();
-@eval barBackgroundColor com.codenvy.ide.api.ui.theme.Style.getBarBackgroundColor();
 
 @eval partBackground com.codenvy.ide.api.ui.theme.Style.getPartBackground();
 @eval partToolbar com.codenvy.ide.api.ui.theme.Style.getPartToolbar();
@@ -37,14 +35,10 @@
 
 @eval consolePanelColor com.codenvy.ide.api.ui.theme.Style.getConsolePanelColor();
 
-    /* Indicates a completed action. Preferred text color is lightTextColor. */
-@eval completedBackgroundColor com.codenvy.ide.api.ui.theme.Style.getCompletedBackgroundColor();
     /* Background color for an item selected with the keyboard */
 @eval keyboardSelectionBackgroundColor com.codenvy.ide.api.ui.theme.Style.getKeyboardSelectionBackgroundColor();
-@eval anchorColor com.codenvy.ide.api.ui.theme.Style.getAnchorColor();
 
     /* Tree */
-@eval hoverBackground com.codenvy.ide.api.ui.theme.Style.getHoverBackground();
 @eval selectionBackground com.codenvy.ide.api.ui.theme.Style.getSelectionBackground();
 
 /* Button */
@@ -103,8 +97,6 @@
 
 @eval mainFontColor com.codenvy.ide.api.ui.theme.Style.getMainFontColor();
 @eval welcomeFontColor com.codenvy.ide.api.ui.theme.Style.getWelcomeFontColor();
-@eval lightTextColor com.codenvy.ide.api.ui.theme.Style.getLightTextColor();
-@eval lightestTextColor com.codenvy.ide.api.ui.theme.Style.getLightestTextColor();
 @eval radioButtonBackgroundColor com.codenvy.ide.api.ui.theme.Style.getRadioButtonBackgroundColor();
 @eval disabledMenuItemColor com.codenvy.ide.api.ui.theme.Style.getDeisabledMenuColor();
 

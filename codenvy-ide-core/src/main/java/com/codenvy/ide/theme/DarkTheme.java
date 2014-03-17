@@ -41,44 +41,10 @@ public class DarkTheme implements Theme {
         return "#D4E8FF";
     }
 
-    @Override
-    public String getLightTextColor() {
-        return "#999";
-    }
-
-    @Override
-    public String getLightestTextColor() {
-        return "#BCBCBC";
-    }
-
-    @Override
-    public String getLightGreyBackground() {
-        return "#F1F1F1";
-    }
-
-    @Override
-    public String getBarBackgroundColor() {
-        return "#f5f5f5";
-    }
-
-    @Override
-    public String getCompletedBackgroundColor() {
-        return "#f9edbe";
-    }
 
     @Override
     public String getKeyboardSelectionBackgroundColor() {
         return "#2f65ca";
-    }
-
-    @Override
-    public String getAnchorColor() {
-        return "#1155CC";
-    }
-
-    @Override
-    public String getHoverBackground() {
-        return "#86acc9";
     }
 
     @Override
@@ -99,11 +65,6 @@ public class DarkTheme implements Theme {
     @Override
     public String getTabsPanelBackground() {
         return "#5a5c5c";
-    }
-
-    @Override
-    public String getHighlightFocus() {
-        return "#92c1f0";
     }
 
     @Override
