@@ -108,7 +108,7 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getTabBorderColor() {
-        return "#1f1f1f";
+        return "#232323";
     }
 
     @Override
@@ -168,12 +168,12 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getEditorBackgroundColor() {
-        return "#2b2b2b";
+        return "#383838";
     }
 
     @Override
     public String getEditorCurrentLineColor() {
-        return "#323232";
+        return "#424242";
     }
 
     @Override
@@ -349,5 +349,10 @@ public class DarkTheme implements Theme {
     @Override
     public String getNotableButtonColor() {
         return "#2d6ba3";
+    }
+
+    @Override
+    public String getTabBorderShadow() {
+        return "rgba(188, 195, 199, 0.5)";
     }
 }
