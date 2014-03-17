@@ -37,22 +37,29 @@ public class JsEditorProvider implements EditorProvider {
     private       Provider<CodenvyTextEditor> editorProvider;
     private final NotificationManager         notificationManager;
 
+    /**
+     * JS editor configuration.
+     */
+    private Provider<JsEditorConfiguration> jsEditorConfigurationProvider;
+
     /** @param documentProvider */
     @Inject
     public JsEditorProvider(DocumentProvider documentProvider,
                             Provider<CodenvyTextEditor> editorProvider,
-                            NotificationManager notificationManager) {
+                            NotificationManager notificationManager,
+                            Provider<JsEditorConfiguration> jsEditorConfigurationProvider) {
         super();
         this.documentProvider = documentProvider;
         this.editorProvider = editorProvider;
         this.notificationManager = notificationManager;
+        this.jsEditorConfigurationProvider = jsEditorConfigurationProvider;
     }
 
     /** {@inheritDoc} */
     @Override
     public EditorPartPresenter getEditor() {
         CodenvyTextEditor textEditor = editorProvider.get();
-        textEditor.initialize(new JsEditorConfiguration(), documentProvider, notificationManager);
+        textEditor.initialize(jsEditorConfigurationProvider.get(), documentProvider, notificationManager);
         return textEditor;
     }
 }
