@@ -20,7 +20,6 @@ package com.codenvy.vfs.impl.fs;
 import com.codenvy.api.vfs.server.VirtualFileSystemImpl;
 import com.codenvy.api.vfs.server.VirtualFileSystemUserContext;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
-import com.codenvy.api.vfs.server.observation.EventListenerList;
 import com.codenvy.api.vfs.server.search.SearcherProvider;
 import com.codenvy.api.vfs.server.util.LinksHelper;
 import com.codenvy.api.vfs.shared.PropertyFilter;
@@ -41,24 +40,17 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  */
 public class LocalFileSystem extends VirtualFileSystemImpl {
-    final String            vfsId;
-    final URI               baseUri;
-    final EventListenerList listeners;
-    final FSMountPoint      mountPoint;
-    final SearcherProvider  searcherProvider;
+    final String vfsId;
+    final URI    baseUri;
 
     public LocalFileSystem(String vfsId,
                            URI baseUri,
-                           EventListenerList listeners,
                            VirtualFileSystemUserContext userContext,
                            FSMountPoint mountPoint,
                            SearcherProvider searcherProvider) {
-        super(vfsId, baseUri, listeners, userContext, mountPoint, searcherProvider);
+        super(vfsId, baseUri, userContext, mountPoint, searcherProvider);
         this.vfsId = vfsId;
         this.baseUri = baseUri;
-        this.listeners = listeners;
-        this.mountPoint = mountPoint;
-        this.searcherProvider = searcherProvider;
     }
 
     @Override

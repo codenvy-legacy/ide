@@ -28,7 +28,6 @@ import com.codenvy.api.vfs.server.exceptions.InvalidArgumentException;
 import com.codenvy.api.vfs.server.exceptions.ItemNotFoundException;
 import com.codenvy.api.vfs.server.exceptions.PermissionDeniedException;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
-import com.codenvy.api.vfs.shared.ItemType;
 import com.codenvy.api.vfs.shared.PropertyFilter;
 import com.codenvy.api.vfs.shared.dto.Folder;
 import com.codenvy.api.vfs.shared.dto.Item;
@@ -228,7 +227,7 @@ public class GitService {
     }
 
     private void setGitRepositoryProp(String projectId) throws VirtualFileSystemException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
         Item project = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
         String value = null;
         for (Property property : project.getProperties()) {
@@ -253,7 +252,7 @@ public class GitService {
      * @throws VirtualFileSystemException
      */
     private void determineProjectType() throws VirtualFileSystemException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
         ItemList files = vfs.getChildren(projectId, -1, 0, "file", false, PropertyFilter.NONE_FILTER);
         for (Item file : files.getItems()) {
             if ("pom.xml".equals(file.getName())) {
@@ -612,7 +611,7 @@ public class GitService {
     @Path("read-only-url")
     @GET
     public String readOnlyGitUrl(@Context UriInfo uriInfo) throws VirtualFileSystemException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
         return gitUrlResolver.resolve(uriInfo, vfs, projectId);
     }
 
@@ -631,7 +630,7 @@ public class GitService {
     @GET
     @Path("delete-repository")
     public void deleteRepository(@Context UriInfo uriInfo) throws VirtualFileSystemException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
         Item project = getGitProject(vfs, projectId);
         String path2gitFolder = project.getPath() + "/.git";
         Item gitItem = vfs.getItemByPath(path2gitFolder, null, false, PropertyFilter.NONE_FILTER);
@@ -651,21 +650,21 @@ public class GitService {
     private Item getGitProjectByPath(VirtualFileSystem vfs, String projectPath) throws VirtualFileSystemException {
         Item project = vfs.getItemByPath(projectPath, null, false, PropertyFilter.ALL_FILTER);
         Item parent = vfs.getItem(project.getParentId(), false, PropertyFilter.ALL_FILTER);
-        if (parent.getItemType().equals(ItemType.PROJECT)) // MultiModule project
-            return parent;
+//        if (parent.getItemType().equals(ItemType.PROJECT)) // MultiModule project
+//            return parent;
         return project;
     }
 
     private Item getGitProject(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException {
         Item project = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
         Item parent = vfs.getItem(project.getParentId(), false, PropertyFilter.ALL_FILTER);
-        if (parent.getItemType().equals(ItemType.PROJECT)) // MultiModule project
-            return parent;
+//        if (parent.getItemType().equals(ItemType.PROJECT)) // MultiModule project
+//            return parent;
         return project;
     }
 
     protected boolean isGitRepository() throws VirtualFileSystemException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
         Item project = getGitProject(vfs, projectId);
 
         String value = null;
@@ -681,7 +680,7 @@ public class GitService {
 
     // TODO: this is temporary method
     protected String resolveLocalPathByPath(String folderPath) throws VirtualFileSystemException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
         if (vfs == null) {
             throw new VirtualFileSystemException(
                     "Can't resolve path on the Local File System : Virtual file system not initialized");
@@ -696,7 +695,7 @@ public class GitService {
     }
 
     protected String resolveLocalPath(String projId) throws VirtualFileSystemException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
         if (vfs == null) {
             throw new VirtualFileSystemException(
                     "Can't resolve path on the Local File System : Virtual file system not initialized");

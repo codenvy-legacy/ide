@@ -180,7 +180,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
             @Override
             public void onResourceDeleted(ResourceChangedEvent event) {
-                if (event.getResource().getResourceType().equals(ItemType.PROJECT.value())) {
+                if (event.getResource() instanceof Project) {
                     resourceProvider.showListProjects();
                 } else {
                     updateItem(event.getResource().getParent());

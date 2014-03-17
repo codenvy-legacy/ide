@@ -17,6 +17,7 @@
  */
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.util.Pair;
 import com.codenvy.api.vfs.server.ContentStream;
 import com.codenvy.api.vfs.server.LazyIterator;
@@ -36,6 +37,13 @@ import com.codenvy.api.vfs.server.exceptions.NotSupportedException;
 import com.codenvy.api.vfs.server.exceptions.PermissionDeniedException;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemRuntimeException;
+import com.codenvy.api.vfs.server.observation.CreateEvent;
+import com.codenvy.api.vfs.server.observation.DeleteEvent;
+import com.codenvy.api.vfs.server.observation.MoveEvent;
+import com.codenvy.api.vfs.server.observation.RenameEvent;
+import com.codenvy.api.vfs.server.observation.UpdateACLEvent;
+import com.codenvy.api.vfs.server.observation.UpdateContentEvent;
+import com.codenvy.api.vfs.server.observation.UpdatePropertiesEvent;
 import com.codenvy.api.vfs.server.search.SearcherProvider;
 import com.codenvy.api.vfs.server.util.DeleteOnCloseFileInputStream;
 import com.codenvy.api.vfs.server.util.NotClosableInputStream;
@@ -46,7 +54,6 @@ import com.codenvy.api.vfs.shared.dto.Principal;
 import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo;
 import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
-import com.codenvy.commons.json.JsonHelper;
 import com.codenvy.commons.lang.NameGenerator;
 import com.codenvy.commons.lang.cache.Cache;
 import com.codenvy.commons.lang.cache.LoadingValueSLRUCache;
@@ -256,6 +263,7 @@ public class FSMountPoint implements MountPoint {
 
     private final String           workspaceId;
     private final java.io.File     ioRoot;
+    private final EventService     eventService;
     private final SearcherProvider searcherProvider;
 
     /* NOTE -- This does not related to virtual file system locking in any kind. -- */
@@ -285,9 +293,10 @@ public class FSMountPoint implements MountPoint {
      *         virtual file system API.
      */
     @SuppressWarnings("unchecked")
-    FSMountPoint(String workspaceId, java.io.File ioRoot, SearcherProvider searcherProvider) {
+    FSMountPoint(String workspaceId, java.io.File ioRoot, EventService eventService, SearcherProvider searcherProvider) {
         this.workspaceId = workspaceId;
         this.ioRoot = ioRoot;
+        this.eventService = eventService;
         this.searcherProvider = searcherProvider;
 
         root = new VirtualFileImpl(ioRoot, Path.ROOT, pathToId(Path.ROOT), this);
@@ -310,10 +319,12 @@ public class FSMountPoint implements MountPoint {
         userContext = VirtualFileSystemUserContext.newInstance();
     }
 
+    @Override
     public String getWorkspaceId() {
         return workspaceId;
     }
 
+    @Override
     public VirtualFileImpl getRoot() {
         return root;
     }
@@ -324,6 +335,16 @@ public class FSMountPoint implements MountPoint {
             return root;
         }
         return doGetVirtualFile(idToPath(id));
+    }
+
+    @Override
+    public SearcherProvider getSearcherProvider() {
+        return searcherProvider;
+    }
+
+    @Override
+    public EventService getEventService() {
+        return eventService;
     }
 
     @Override
@@ -520,7 +541,7 @@ public class FSMountPoint implements MountPoint {
                     LOG.error(e.getMessage(), e);
                 }
             }
-
+            eventService.publish(new CreateEvent(workspaceId, newVirtualFile.getPath()));
             return newVirtualFile;
         } finally {
             parentLock.release();
@@ -563,19 +584,9 @@ public class FSMountPoint implements MountPoint {
 
             // Return first created folder, e.g. assume we need create: folder1/folder2/folder3 in specified folder.
             // If folder1 already exists then return folder2 as first created in hierarchy.
-            return new VirtualFileImpl(newIoFile, newPath, pathToId(newPath), this);
-        } finally {
-            parentLock.release();
-        }
-    }
-
-
-    VirtualFileImpl createProject(VirtualFileImpl parent, String name, List<Property> properties) throws VirtualFileSystemException {
-        final PathLockFactory.PathLock parentLock = pathLockFactory.getLock(parent.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
-        try {
-            final VirtualFileImpl project = createFolder(parent, name);
-            updateProperties(project, properties, null);
-            return project;
+            final VirtualFileImpl newVirtualFile = new VirtualFileImpl(newIoFile, newPath, pathToId(newPath), this);
+            eventService.publish(new CreateEvent(workspaceId, newVirtualFile.getPath()));
+            return newVirtualFile;
         } finally {
             parentLock.release();
         }
@@ -605,7 +616,7 @@ public class FSMountPoint implements MountPoint {
                 throw new ItemAlreadyExistException(String.format("Item '%s' already exists. ", newPath));
             }
             doCopy(source, destination);
-
+            eventService.publish(new CreateEvent(workspaceId, destination.getPath()));
             return destination;
         } finally {
             if (sourceLock != null) {
@@ -701,16 +712,17 @@ public class FSMountPoint implements MountPoint {
         if (virtualFile.isRoot()) {
             throw new InvalidArgumentException("Unable rename root folder. ");
         }
+        final String sourcePath = virtualFile.getPath();
         final VirtualFileImpl parent = getParent(virtualFile);
         final PathLockFactory.PathLock parentLock =
                 pathLockFactory.getLock(parent.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {
             if (!hasPermission(virtualFile, BasicPermissions.WRITE, true)) {
                 throw new PermissionDeniedException(
-                        String.format("Unable rename item '%s'. Operation not permitted. ", virtualFile.getPath()));
+                        String.format("Unable rename item '%s'. Operation not permitted. ", sourcePath));
             }
             if (virtualFile.isFile() && !validateLockTokenIfLocked(virtualFile, lockToken)) {
-                throw new LockException(String.format("Unable rename file '%s'. File is locked. ", virtualFile.getPath()));
+                throw new LockException(String.format("Unable rename file '%s'. File is locked. ", sourcePath));
             }
             final String name = virtualFile.getName();
             final VirtualFileImpl renamed;
@@ -733,7 +745,7 @@ public class FSMountPoint implements MountPoint {
                     LOG.warn("Unable to set timestamp to '{}'. ", virtualFile.getIoFile());
                 }
             }
-
+            eventService.publish(new RenameEvent(workspaceId, renamed.getPath(), sourcePath));
             return renamed;
         } finally {
             parentLock.release();
@@ -742,6 +754,8 @@ public class FSMountPoint implements MountPoint {
 
 
     VirtualFileImpl move(VirtualFileImpl source, VirtualFileImpl parent, String lockToken) throws VirtualFileSystemException {
+        final String sourcePath = source.getPath();
+        final String parentPath = parent.getPath();
         if (source.isRoot()) {
             throw new InvalidArgumentException("Unable move root folder. ");
         }
@@ -753,7 +767,7 @@ public class FSMountPoint implements MountPoint {
         }
         if (source.isFolder() && parent.getInternalPath().isChild(source.getInternalPath())) {
             throw new InvalidArgumentException(String.format("Unable move item '%s' to '%s'. Item may not have itself as parent. ",
-                                                             source.getPath(), parent.getPath()));
+                                                             sourcePath, parentPath));
         }
 
         PathLockFactory.PathLock sourceLock = null;
@@ -764,12 +778,12 @@ public class FSMountPoint implements MountPoint {
 
             if (!(hasPermission(source, BasicPermissions.WRITE, true) && hasPermission(parent, BasicPermissions.WRITE, true))) {
                 throw new PermissionDeniedException(
-                        String.format("Unable move item '%s' to %s. Operation not permitted. ", source.getPath(), parent.getPath()));
+                        String.format("Unable move item '%s' to %s. Operation not permitted. ", sourcePath, parentPath));
             }
             // Even we check lock before delete original file check it here also to have better behaviour.
             // Prevent even copy original file if we already know it is locked.
             if (source.isFile() && !validateLockTokenIfLocked(source, lockToken)) {
-                throw new LockException(String.format("Unable move file '%s'. File is locked. ", source.getPath()));
+                throw new LockException(String.format("Unable move file '%s'. File is locked. ", sourcePath));
             }
             final Path newPath = parent.getInternalPath().newPath(source.getName());
             VirtualFileImpl destination =
@@ -780,7 +794,7 @@ public class FSMountPoint implements MountPoint {
             // use copy and delete
             doCopy(source, destination);
             doDelete(source, lockToken);
-
+            eventService.publish(new MoveEvent(workspaceId, destination.getPath(), sourcePath));
             return destination;
         } finally {
             if (sourceLock != null) {
@@ -862,6 +876,7 @@ public class FSMountPoint implements MountPoint {
                     LOG.error(e.getMessage(), e);
                 }
             }
+            eventService.publish(new UpdateContentEvent(workspaceId, virtualFile.getPath()));
         } finally {
             lock.release();
         }
@@ -893,17 +908,20 @@ public class FSMountPoint implements MountPoint {
         if (virtualFile.isRoot()) {
             throw new InvalidArgumentException("Unable delete root folder. ");
         }
+        final String myPath = virtualFile.getPath();
+        final boolean isFolder = virtualFile.isFolder();
         final PathLockFactory.PathLock lock = pathLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {
             if (!hasPermission(virtualFile, BasicPermissions.WRITE, true)) {
                 throw new PermissionDeniedException(
-                        String.format("Unable delete item '%s'. Operation not permitted. ", virtualFile.getPath()));
+                        String.format("Unable delete item '%s'. Operation not permitted. ", myPath));
             }
             if (virtualFile.isFile() && !validateLockTokenIfLocked(virtualFile, lockToken)) {
-                throw new LockException(String.format("Unable delete item '%s'. Item is locked. ", virtualFile.getPath()));
+                throw new LockException(String.format("Unable delete item '%s'. Item is locked. ", myPath));
             }
 
             doDelete(virtualFile, lockToken);
+            eventService.publish(new DeleteEvent(workspaceId, myPath));
         } finally {
             lock.release();
         }
@@ -1037,10 +1055,6 @@ public class FSMountPoint implements MountPoint {
                                 zipOut.closeEntry();
                             } else if (current.isFolder()) {
                                 zipOut.putNextEntry(new ZipEntry(zipEntryName + '/'));
-                                if (current.isProject() && current.getChild(".project") == null) {
-                                    zipOut.putNextEntry(new ZipEntry(zipEntryName + "/.project"));
-                                    zipOut.write(JsonHelper.toJson(current.getProperties(PropertyFilter.ALL_FILTER)).getBytes());
-                                }
                                 q.add(current);
                                 zipOut.closeEntry();
                             }
@@ -1359,6 +1373,7 @@ public class FSMountPoint implements MountPoint {
             if (!virtualFile.getIoFile().setLastModified(System.currentTimeMillis())) {
                 LOG.warn("Unable to set timestamp to '{}'. ", virtualFile.getIoFile());
             }
+            eventService.publish(new UpdateACLEvent(workspaceId, virtualFile.getPath()));
         } finally {
             lock.release();
         }
@@ -1471,6 +1486,7 @@ public class FSMountPoint implements MountPoint {
             if (!virtualFile.getIoFile().setLastModified(System.currentTimeMillis())) {
                 LOG.warn("Unable to set timestamp to '{}'. ", virtualFile.getIoFile());
             }
+            eventService.publish(new UpdatePropertiesEvent(workspaceId, virtualFile.getPath()));
         } finally {
             lock.release();
         }
