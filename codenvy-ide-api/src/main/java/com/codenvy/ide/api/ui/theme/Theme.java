@@ -359,4 +359,13 @@ public interface Theme {
     String getNotableButtonTopColor();
 
     String getNotableButtonColor();
+
+    /**
+     * @return the color of border shadow
+     */
+    String getTabBorderShadow();
+    /**
+     * @return the color of button "text-shadow"
+     */
+    String getButtonTextShadow();
 }

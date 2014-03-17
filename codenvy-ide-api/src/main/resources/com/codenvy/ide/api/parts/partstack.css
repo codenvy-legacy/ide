@@ -23,7 +23,7 @@
 
 .ide-PartStack .ide-PartStack-Tabs {
     /* panel where tab-buttons created*/
-    background: tabsPanelBackground;
+    background: editorBackgroundColor;
     border-bottom: 1px solid tabBorder;
 }
 
@@ -73,7 +73,7 @@
     /* tab that is currently selected (active) */
     cursor: default;
     /*font-weight: bold;*/
-    padding: 3px;
+    /*padding: 3px;*/
     border: 1px solid tabBorder;
     border-bottom: 2px solid activeTabBackground;
     background: activeTabBackground;
@@ -91,43 +91,49 @@
     -webkit-transform: rotate(270deg);
     -moz-transform: rotate(270deg);
     transform: rotate(270deg);
-    transform-origin: 8px 8px;
-    -webkit-transform-origin: 8px 8px; /* Safari and Chrome */
-    -moz-transform-origin: 8px 8px; /* Firefox */
+    transform-origin: 9px 9px;
+    -webkit-transform-origin: 9px 9px; /* Safari and Chrome */
+    -moz-transform-origin: 9px 9px; /* Firefox */
     position: absolute;
-
+    border-right: none !important;
+    border-left: 1px solid tabBorder;
+    box-shadow: -1px -1px 0px 0px tabBorderShadow;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 .ide-PartStack-Tab-Label {
     /* margin between text and image */
     margin-right: 4px;
     margin-left: 4px;
-    white-space: nowrap;
-
+    text-shadow: 0px 1px 0px buttonTextShadow;
+    position: relative;
+    top: 2px;
 }
 
 .ide-PartStack-Tab-Right {
     -webkit-transform: rotate(90deg);
     -moz-transform: rotate(90deg);
     transform: rotate(90deg);
-    transform-origin: 13px 8px;
-    -webkit-transform-origin: 13px 8px; /* Safari and Chrome */
-    -moz-transform-origin: 13px 8px; /* Firefox */
+    transform-origin: 8px 9px;
+    -webkit-transform-origin: 8px 9px; /* Safari and Chrome */
+    -moz-transform-origin: 8px 9px; /* Firefox */
     position: absolute;
-    margin-left: 0 !important;
+    /*margin-left: 0 !important;*/
+    box-shadow: 1px -1px 0px 0px tabBorderShadow;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 .ide-PartStack-Tab-Below {
     /* tab button */
-    margin-left: 3px;
-    background: inactiveTabBackground;
-    border: 1px solid tabBorder;
+    border-right: 1px solid tabBorder;
+    box-shadow: 1px 0px 0px 0px tabBorderShadow;
     cursor: pointer;
     cursor: hand;
-    position: relative;
     display: inline-block;
-    height: 18px;
-    top: 1px;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 .ide-PartStack-Tool-Tab-selected {
@@ -136,8 +142,8 @@
     /*font-weight: bold;*/
     /*padding: 3px;*/
     /*border-top: 2px solid activeTabBackground;*/
-    border: 1px solid tabBorder !important;
-    background-color: activeTabBackground !important;
+    /*border: 1px solid tabBorder !important;*/
+    /*background-color: activeTabBackground !important;*/
 }
 
 .ide-PartStack-Content {
@@ -148,18 +154,18 @@
 
 .ide-PartStack-Tool-Tab {
     /* tab button */
-    margin-left: 1px;
     /*margin-top: 3px;*/
-    background: inactiveTabBackground;
     /*border-radius: 4px 4px 0 0;*/
     /*-moz-border-radius: 4px 4px 0 0;*/
     /*-webkit-border-radius: 4px 4px 0 0;*/
-    border: 1px solid tabBorder;
+    border-right: 1px solid tabBorder;
     /*padding: 3px;*/
     cursor: pointer;
     cursor: hand;
-    position: relative;
+    /*position: relative;*/
+    margin-top: -1px;
     height: 18px;
+    font-size: 11px;
     display: inline-block;
 }
 
@@ -181,3 +187,8 @@
     line-height: 16px;
 }
 
+.ide-image-icon-minimize {
+    height: 56%;
+    width: 70%;
+    margin: 22% 15%;
+}
