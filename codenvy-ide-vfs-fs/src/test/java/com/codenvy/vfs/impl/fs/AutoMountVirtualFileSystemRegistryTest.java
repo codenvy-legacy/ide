@@ -17,6 +17,7 @@
  */
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.vfs.server.VirtualFileSystemProvider;
 
 /**
@@ -26,7 +27,7 @@ public class AutoMountVirtualFileSystemRegistryTest extends LocalFileSystemTest 
     public void testAutoMount() throws Exception {
         // new registry without any registered vfs providers
         AutoMountVirtualFileSystemRegistry registry =
-                new AutoMountVirtualFileSystemRegistry(new WorkspaceHashLocalFSMountStrategy(root), null);
+                new AutoMountVirtualFileSystemRegistry(new WorkspaceHashLocalFSMountStrategy(root), new EventService(), null);
         final VirtualFileSystemProvider fileSystemProvider = registry.getProvider(MY_WORKSPACE_ID);
         assertEquals(MY_WORKSPACE_ID, fileSystemProvider.getWorkspaceId());
     }

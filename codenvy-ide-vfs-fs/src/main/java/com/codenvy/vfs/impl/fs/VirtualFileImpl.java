@@ -31,7 +31,6 @@ import com.codenvy.api.vfs.shared.PropertyFilter;
 import com.codenvy.api.vfs.shared.dto.AccessControlEntry;
 import com.codenvy.api.vfs.shared.dto.Folder;
 import com.codenvy.api.vfs.shared.dto.Principal;
-import com.codenvy.api.vfs.shared.dto.Project;
 import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo;
 
@@ -98,11 +97,6 @@ public class VirtualFileImpl implements VirtualFile {
     @Override
     public boolean isFolder() throws VirtualFileSystemException {
         return getIoFile().isDirectory();
-    }
-
-    @Override
-    public boolean isProject() throws VirtualFileSystemException {
-        return isFolder() && Project.PROJECT_MIME_TYPE.equals(getMediaType());
     }
 
     @Override
@@ -290,11 +284,6 @@ public class VirtualFileImpl implements VirtualFile {
         return mountPoint.createFolder(this, name);
     }
 
-    @Override
-    public VirtualFile createProject(String name, List<Property> properties) throws VirtualFileSystemException {
-        return mountPoint.createProject(this, name, properties);
-    }
-
     //
 
     @Override
@@ -315,18 +304,13 @@ public class VirtualFileImpl implements VirtualFile {
     @Override
     public int compareTo(VirtualFile other) {
         // To get nice order of items:
-        // 1. Projects
-        // 2. Regular folders
-        // 3. Files
+        // 1. Regular folders
+        // 2. Files
         if (other == null) {
             throw new NullPointerException();
         }
         try {
-            if (isProject()) {
-                return other.isProject() ? getName().compareTo(other.getName()) : -1;
-            } else if (other.isProject()) {
-                return 1;
-            } else if (isFolder()) {
+            if (isFolder()) {
                 return other.isFolder() ? getName().compareTo(other.getName()) : -1;
             } else if (other.isFolder()) {
                 return 1;

@@ -46,7 +46,7 @@ public class UpdateDependencyAction extends Action {
         if (activeProject != null) {
             // TODO: read attribute value
             // it doesn't work now cause builder.name is calculated attribute
-            final String builder = (String)activeProject.getPropertyValue("builder.name");
+            final String builder = (String)activeProject.getAttributeValue("builder.name");
             if ("maven".equals(builder)) {
                 e.getPresentation().setVisible(true);
                 e.getPresentation().setEnabled(true);

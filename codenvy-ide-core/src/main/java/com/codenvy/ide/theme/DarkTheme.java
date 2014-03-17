@@ -179,7 +179,7 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getEditorDef() {
-        return "#00f";
+        return "#A7E600";
     }
 
     @Override

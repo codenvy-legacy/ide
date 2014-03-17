@@ -19,7 +19,6 @@ package com.codenvy.vfs.impl.fs;
 
 import com.codenvy.api.vfs.shared.dto.Folder;
 import com.codenvy.api.vfs.shared.dto.Principal;
-import com.codenvy.api.vfs.shared.dto.Project;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.commons.user.UserImpl;
 import com.codenvy.dto.server.DtoFactory;
@@ -28,7 +27,6 @@ import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -46,20 +44,12 @@ public class CreateTest extends LocalFileSystemTest {
 
     private String fileId;
 
-    private String projectId;
-    private String projectPath;
-
     @Override
     public void setUp() throws Exception {
         super.setUp();
         folderPath = createDirectory(testRootPath, "CreateTest_Folder");
         protectedFolderPath = createDirectory(testRootPath, "CreateTest_ProtectedFolder");
         String filePath = createFile(testRootPath, "CreateTest_File", DEFAULT_CONTENT_BYTES);
-        projectPath = createDirectory(testRootPath, "CreateTest_Project");
-
-        Map<String, String[]> projectProperties = new HashMap<>(1);
-        projectProperties.put("vfs:mimeType", new String[]{Project.PROJECT_MIME_TYPE});
-        writeProperties(projectPath, projectProperties);
 
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(2);
         Principal user = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
@@ -71,7 +61,6 @@ public class CreateTest extends LocalFileSystemTest {
         folderId = pathToId(folderPath);
         protectedFolderId = pathToId(protectedFolderPath);
         fileId = pathToId(filePath);
-        projectId = pathToId(projectPath);
     }
 
     public void testCreateFile() throws Exception {
@@ -297,50 +286,5 @@ public class CreateTest extends LocalFileSystemTest {
         assertEquals(folderPath + "/testCreateFolderHierarchy2/1/2/3/4/5", ((Folder)response.getEntity()).getPath());
         String expectedPath = folderPath + '/' + name;
         assertTrue("Folder was not created in expected location. ", exists(expectedPath));
-    }
-
-    public void testCreateProject() throws Exception {
-        // Type of project submitted in body.
-        String name = "testCreateProject";
-        String properties = "[{\"name\":\"vfs:projectType\", \"value\":[\"java\"]}]";
-        //
-        String requestPath = SERVICE_URI + "project/" + folderId + '?' + "name=" + name;
-        Map<String, List<String>> h = new HashMap<>(1);
-        h.put("Content-Type", Arrays.asList("application/json"));
-        ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, properties.getBytes(), null);
-        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
-        String expectedPath = folderPath + '/' + name;
-        assertTrue("Project was not created in expected location. ", exists(expectedPath));
-        Map<String, String[]> expectedProperties = new HashMap<>(2);
-        expectedProperties.put("vfs:mimeType", new String[]{Project.PROJECT_MIME_TYPE});
-        expectedProperties.put("vfs:projectType", new String[]{"java"});
-        validateProperties(expectedPath, expectedProperties);
-    }
-
-    public void testCreateProject2() throws Exception {
-        // Type of project submitted in URL.
-        String name = "testCreateProject2";
-        String requestPath = SERVICE_URI + "project/" + folderId + '?' + "name=" + name + '&' + "type=" + "java";
-        ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
-        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
-        String expectedPath = folderPath + '/' + name;
-        assertTrue("Project was not created in expected location. ", exists(expectedPath));
-        Map<String, String[]> expectedProperties = new HashMap<>(2);
-        expectedProperties.put("vfs:mimeType", new String[]{Project.PROJECT_MIME_TYPE});
-        expectedProperties.put("vfs:projectType", new String[]{"java"});
-        validateProperties(expectedPath, expectedProperties);
-    }
-
-    public void testCreateProjectInProject() throws Exception {
-        String name = "testCreateProjectInProject";
-        String requestPath = SERVICE_URI + "project/" + projectId + '?' + "name=" + name + '&' + "type=" + "java";
-        ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
-        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
-        String expectedPath = projectPath + '/' + name;
-        assertTrue("Project was not created in expected location. ", exists(expectedPath));
-        Map<String, String[]> expectedProperties = new HashMap<>(2);
-        expectedProperties.put("vfs:mimeType", new String[]{Project.PROJECT_MIME_TYPE});
-        expectedProperties.put("vfs:projectType", new String[]{"java"});
-        validateProperties(expectedPath, expectedProperties);
     }
 }

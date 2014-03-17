@@ -17,12 +17,12 @@
  */
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.vfs.server.VirtualFileSystem;
 import com.codenvy.api.vfs.server.VirtualFileSystemProvider;
 import com.codenvy.api.vfs.server.VirtualFileSystemUserContext;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemRuntimeException;
-import com.codenvy.api.vfs.server.observation.EventListenerList;
 import com.codenvy.api.vfs.server.search.Searcher;
 import com.codenvy.api.vfs.server.search.SearcherProvider;
 
@@ -42,6 +42,7 @@ public class LocalFileSystemProvider extends VirtualFileSystemProvider {
 
     private final String                       workspaceId;
     private final LocalFSMountStrategy         mountStrategy;
+    private final EventService                 eventService;
     private final SearcherProvider             searcherProvider;
     private final MountPointRef                mountRef;
     private final VirtualFileSystemUserContext userContext;
@@ -55,8 +56,11 @@ public class LocalFileSystemProvider extends VirtualFileSystemProvider {
      *         SearcherProvider or {@code null}
      * @see LocalFileSystemProvider
      */
-    public LocalFileSystemProvider(String workspaceId, LocalFSMountStrategy mountStrategy, SearcherProvider searcherProvider) {
-        this(workspaceId, mountStrategy, searcherProvider, VirtualFileSystemUserContext.newInstance());
+    public LocalFileSystemProvider(String workspaceId,
+                                   LocalFSMountStrategy mountStrategy,
+                                   EventService eventService,
+                                   SearcherProvider searcherProvider) {
+        this(workspaceId, mountStrategy, eventService, searcherProvider, VirtualFileSystemUserContext.newInstance());
     }
 
 
@@ -71,11 +75,13 @@ public class LocalFileSystemProvider extends VirtualFileSystemProvider {
      */
     protected LocalFileSystemProvider(String workspaceId,
                                       LocalFSMountStrategy mountStrategy,
+                                      EventService eventService,
                                       SearcherProvider searcherProvider,
                                       VirtualFileSystemUserContext userContext) {
         super(workspaceId);
         this.workspaceId = workspaceId;
         this.mountStrategy = mountStrategy;
+        this.eventService = eventService;
         this.searcherProvider = searcherProvider;
         this.userContext = userContext;
         this.mountRef = new MountPointRef();
@@ -83,10 +89,9 @@ public class LocalFileSystemProvider extends VirtualFileSystemProvider {
 
     /** Get new instance of LocalFileSystem. If virtual file system is not mounted yet if mounted automatically when used first time. */
     @Override
-    public VirtualFileSystem newInstance(URI baseUri, EventListenerList listeners) throws VirtualFileSystemException {
+    public VirtualFileSystem newInstance(URI baseUri) throws VirtualFileSystemException {
         return new LocalFileSystem(workspaceId,
                                    baseUri == null ? URI.create("") : baseUri,
-                                   listeners,
                                    userContext,
                                    getMountPoint(true),
                                    searcherProvider);
@@ -120,7 +125,7 @@ public class LocalFileSystemProvider extends VirtualFileSystemProvider {
      * @see VirtualFileSystem
      */
     public void mount(java.io.File ioFile) throws VirtualFileSystemException {
-        if (!mountRef.maybeSet(new FSMountPoint(getWorkspaceId(), ioFile, searcherProvider))) {
+        if (!mountRef.maybeSet(new FSMountPoint(getWorkspaceId(), ioFile, eventService, searcherProvider))) {
             throw new VirtualFileSystemException(String.format("Local filesystem '%s' already mounted. ", ioFile));
         }
     }
@@ -141,7 +146,7 @@ public class LocalFileSystemProvider extends VirtualFileSystemProvider {
                 // critical error cannot continue
                 throw new VirtualFileSystemRuntimeException(String.format("Virtual filesystem '%s' is not available. ", workspaceId));
             }
-            FSMountPoint newMount = new FSMountPoint(workspaceId, workspaceMountPoint, searcherProvider);
+            FSMountPoint newMount = new FSMountPoint(workspaceId, workspaceMountPoint, eventService, searcherProvider);
             if (mountRef.maybeSet(newMount)) {
                 if (!(workspaceMountPoint.exists() || workspaceMountPoint.mkdirs())) {
                     LOG.error("Unable create directory {}", workspaceMountPoint);
