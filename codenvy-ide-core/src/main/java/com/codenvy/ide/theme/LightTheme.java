@@ -26,37 +26,6 @@ public class LightTheme implements Theme {
 
     public static final String DEFAULT_THEME_ID = "LightTheme";
 
-    private static String tabBorderColor = "#bdbdbd";
-
-    private static String inactiveTabBackground = "#d6d6d6";
-
-    private static String activeTabBackground = "#ffffff";
-
-    private static String tabsPanelBackground = "#f6f6f6";
-
-    private static String highlightFocus = "#92c1f0";
-
-    private static String hoverBackgroundColor = "#D4E8FF";
-
-    private static String lightTextColor = "#999";
-
-    private static String lightestTextColor = "#BCBCBC";
-
-    private static String lightGreyBackground = "#F1F1F1";
-
-    private static String barBackgroundColor = "#f5f5f5";
-
-    private static String completedBackgroundColor = "#f9edbe";
-
-    private static String keyboardSelectionBackgroundColor = "#C3DEFF";
-
-    private static String anchorColor = "#1155CC";
-
-    private static String hoverBackground = "#D4E8FF";
-
-    private static String selectionBackground = "#C3DEFF";
-    private String partBackground = "#ffffff";
-
     @Override
     public String getId() {
         return DEFAULT_THEME_ID;
@@ -69,82 +38,42 @@ public class LightTheme implements Theme {
 
     @Override
     public String getHoverBackgroundColor() {
-        return hoverBackground;
-    }
-
-    @Override
-    public String getLightTextColor() {
-        return lightTextColor;
-    }
-
-    @Override
-    public String getLightestTextColor() {
-        return lightestTextColor;
-    }
-
-    @Override
-    public String getLightGreyBackground() {
-        return lightGreyBackground;
-    }
-
-    @Override
-    public String getBarBackgroundColor() {
-        return barBackgroundColor;
-    }
-
-    @Override
-    public String getCompletedBackgroundColor() {
-        return completedBackgroundColor;
+        return "#D4E8FF";
     }
 
     @Override
     public String getKeyboardSelectionBackgroundColor() {
-        return keyboardSelectionBackgroundColor;
-    }
-
-    @Override
-    public String getAnchorColor() {
-        return anchorColor;
-    }
-
-    @Override
-    public String getHoverBackground() {
-        return hoverBackgroundColor;
+        return "#C3DEFF";
     }
 
     @Override
     public String getSelectionBackground() {
-        return selectionBackground;
+        return "#C3DEFF";
     }
 
     @Override
     public String getInactiveTabBackground() {
-        return inactiveTabBackground;
+        return "#d6d6d6";
     }
 
     @Override
     public String getActiveTabBackground() {
-        return activeTabBackground;
+        return "#ffffff";
     }
 
     @Override
     public String getTabsPanelBackground() {
-        return tabsPanelBackground;
-    }
-
-    @Override
-    public String getHighlightFocus() {
-        return highlightFocus;
+        return "#f6f6f6";
     }
 
     @Override
     public String getTabBorderColor() {
-        return tabBorderColor;
+        return "#bdbdbd";
     }
 
     @Override
     public String getPartBackground() {
-        return partBackground;
+        return "#ffffff";
     }
 
     @Override

@@ -140,11 +140,6 @@
     background-color: activeTabBackground !important;
 }
 
-/*.ide-PartStack-focused .ide-PartStack-Tab-selected-Below {*/
-/*background: highlightFocus;*/
-/*border-top: 2px solid highlightFocus;*/
-/*}*/
-
 .ide-PartStack-Content {
     background-color: partBackground;
     width: 100%;
