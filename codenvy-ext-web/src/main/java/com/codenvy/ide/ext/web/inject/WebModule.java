@@ -19,11 +19,15 @@
 package com.codenvy.ide.ext.web.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
+import com.codenvy.ide.ext.web.html.editor.EmptyProcessor;
+import com.codenvy.ide.ext.web.html.editor.HTMLCodeAssistProcessor;
 import com.codenvy.ide.ext.web.html.editor.HTMLEditorConfigurationProvider;
 import com.codenvy.ide.ext.web.html.editor.HtmlEditorConfiguration;
+import com.codenvy.ide.ext.web.js.editor.JsCodeAssistProcessor;
 import com.codenvy.ide.ext.web.js.editor.JsEditorConfiguration;
 import com.codenvy.ide.ext.web.js.editor.JsEditorConfigurationProvider;
 import com.google.gwt.inject.client.AbstractGinModule;
+import com.google.gwt.inject.client.multibindings.GinMultibinder;
 import com.google.inject.Singleton;
 
 /**
@@ -38,6 +42,13 @@ public class WebModule extends AbstractGinModule {
         protected void configure() {
             bind(HtmlEditorConfiguration.class).toProvider(HTMLEditorConfigurationProvider.class).in(Singleton.class);
             bind(JsEditorConfiguration.class).toProvider(JsEditorConfigurationProvider.class).in(Singleton.class);
+
+            GinMultibinder<HTMLCodeAssistProcessor> binderHtmlProcessors = GinMultibinder.newSetBinder(binder(), HTMLCodeAssistProcessor.class);
+            binderHtmlProcessors.addBinding().to(EmptyProcessor.class);
+
+            GinMultibinder<JsCodeAssistProcessor> binderJsProcessors = GinMultibinder.newSetBinder(binder(), JsCodeAssistProcessor.class);
+            binderJsProcessors.addBinding().to(com.codenvy.ide.ext.web.js.editor.EmptyProcessor.class);
+
         }
 
 }
