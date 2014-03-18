@@ -19,6 +19,7 @@ package com.codenvy.ide.api.editor;
 
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
+import com.codenvy.ide.texteditor.api.TextEditorPartView;
 
 import javax.validation.constraints.NotNull;
 
@@ -40,4 +41,10 @@ public interface CodenvyTextEditor extends TextEditorPartPresenter {
      */
     void initialize(@NotNull TextEditorConfiguration configuration, @NotNull DocumentProvider documentProvider,
                     @NotNull NotificationManager notificationManager);
+
+    /**
+     * @return the text editor view implementation
+     * //todo need to introduce more simple way to use TextEditorPartView interface
+     */
+    TextEditorPartView getView();
 }

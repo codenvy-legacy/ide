@@ -19,7 +19,7 @@ package com.codenvy.ide.api.ui.theme;
 
 /**
  * This class contains constants for style. Fields initialized from user preferences. Static methods used for bridging with CssResources
- * 
+ *
  * @author Evgen Vidolob
  */
 public class Style {
@@ -249,5 +249,13 @@ public class Style {
 
     public static String getMainMenuFontColor() {
         return theme.getMainMenuFontColor();
+    }
+
+    public static String getTabBorderShadow() {
+        return theme.getTabBorderShadow();
+    }
+
+    public static String getButtonTextShadow() {
+        return theme.getButtonTextShadow();
     }
 }

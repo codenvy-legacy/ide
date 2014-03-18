@@ -96,8 +96,23 @@ public class Project extends Folder {
         return attributes;
     }
 
+    /**
+     * Check if the given attribute is present.
+     *
+     * @param name
+     *         name of the attribute
+     * @return <code>true</code> if attribute is present and <code>false</code> otherwise
+     */
+    public boolean hasAttribute(String name) {
+        return getAttributeValues(name) != null;
+    }
+
     public String getAttributeValue(String attributeName) {
-        return attributes.get(attributeName).get(0);
+        List<String> attributesValue = getAttributeValues(attributeName);
+        if (attributesValue != null) {
+            return attributesValue.get(0);
+        }
+        return null;
     }
 
     public List<String> getAttributeValues(String attributeName) {

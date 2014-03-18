@@ -75,6 +75,9 @@ public interface PartStackUIResources extends ClientBundle {
 
         @ClassName("ide-button-micro")
         String ideButtonMicro();
+
+        @ClassName("ide-image-icon-minimize")
+        String ideImageIconMinimize();
     }
 
     @Source({"partstack.css", "com/codenvy/ide/api/ui/style.css"})
