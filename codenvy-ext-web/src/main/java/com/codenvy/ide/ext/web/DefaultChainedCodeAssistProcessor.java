@@ -46,11 +46,15 @@ public abstract class DefaultChainedCodeAssistProcessor implements CodeAssistPro
     private Set<? extends CodeAssistProcessor> codeAssistProcessors;
 
     /**
-     * Default constructor.
+     * Allow to set processors.
+     *
+     * @param codeAssistProcessors
+     *         the expected processors
      */
-    public DefaultChainedCodeAssistProcessor(Set<? extends CodeAssistProcessor> codeAssistProcessors) {
+    protected void setProcessors(Set<? extends CodeAssistProcessor> codeAssistProcessors) {
         this.codeAssistProcessors = codeAssistProcessors;
     }
+
 
     /** {@inheritDoc} */
     @Override
