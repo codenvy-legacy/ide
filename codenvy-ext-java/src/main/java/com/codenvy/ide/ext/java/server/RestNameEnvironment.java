@@ -83,6 +83,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Rest service for {@link com.codenvy.ide.ext.java.worker.WorkerNameEnvironment}
@@ -97,6 +98,8 @@ public class RestNameEnvironment {
     private static final String TEMP_DIR = System.getProperty("java.io.tmpdir");
 
     private static Map<String, String> options = new HashMap<>();
+
+    private static ConcurrentHashMap<String, JavaProject> cache = new ConcurrentHashMap<>();
 
     static {
         options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_7);
@@ -116,6 +119,7 @@ public class RestNameEnvironment {
 
     @Inject
     ProjectManager projectManager;
+
     @PathParam("ws-id")
     @Inject
     private String wsId;
@@ -151,20 +155,12 @@ public class RestNameEnvironment {
         });
     }
 
-//    private FSMountPoint getMountPoint() throws VirtualFileSystemException {
-//        MountPoint mountPoint = vfsRegistry.getProvider(wsId).getMountPoint(true);
-//        if (mountPoint instanceof FSMountPoint) {
-//            return (FSMountPoint)mountPoint;
-//        } else throw new IllegalStateException("This service works only with FSMountPoint class");
-//    }
-
     @GET
-    @Produces("application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @javax.ws.rs.Path("findTypeCompound")
     public String findTypeCompound(@QueryParam("compoundTypeName") String compoundTypeName, @QueryParam("projectpath") String projectPath)
             throws VirtualFileSystemException {
-        com.codenvy.api.project.server.Project project = projectManager.getProject(wsId, projectPath);
-        JavaProject javaProject = new JavaProject(project, TEMP_DIR, projectManager, wsId);
+        JavaProject javaProject = getJavaProject(projectPath);
         JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
 
         try {
@@ -205,14 +201,25 @@ public class RestNameEnvironment {
         }
     }
 
+    private JavaProject getJavaProject(String projectPath) {
+        String key = wsId + projectPath;
+        if(cache.containsKey(key)) {
+            return cache.get(key);
+        }
+
+        com.codenvy.api.project.server.Project project = projectManager.getProject(wsId, projectPath);
+        JavaProject javaProject = new JavaProject(project, TEMP_DIR, projectManager, wsId, new HashMap<>(options));
+        cache.put(key, javaProject);
+        return javaProject;
+    }
+
     @GET
-    @Produces("application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @javax.ws.rs.Path("findType")
     public String findType(@QueryParam("typename") String typeName, @QueryParam("packagename") String packageName,
                            @QueryParam("projectpath") String projectPath)
             throws VirtualFileSystemException {
-        com.codenvy.api.project.server.Project project = projectManager.getProject(wsId, projectPath);
-        JavaProject javaProject = new JavaProject(project, TEMP_DIR, projectManager, wsId);
+        JavaProject javaProject = getJavaProject(projectPath);
         JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
 
         NameEnvironmentAnswer answer = environment.findType(typeName.toCharArray(), getCharArrayFrom(packageName));
@@ -232,10 +239,47 @@ public class RestNameEnvironment {
     public String isPackage(@QueryParam("packagename") String packageName, @QueryParam("parent") String parentPackageName,
                             @QueryParam("projectpath") String projectPath)
             throws VirtualFileSystemException {
-        com.codenvy.api.project.server.Project project = projectManager.getProject(wsId, projectPath);
-        JavaProject javaProject = new JavaProject(project, TEMP_DIR, projectManager, wsId);
+        JavaProject javaProject = getJavaProject(projectPath);
         JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
         return String.valueOf(environment.isPackage(getCharArrayFrom(parentPackageName), packageName.toCharArray()));
+    }
+
+    @GET
+    @javax.ws.rs.Path("findConstructor")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String findConstructorDeclarations(@QueryParam("prefix") String prefix, @QueryParam("camelcase") boolean camelCaseMatch, @QueryParam("projectpath") String projectPath){
+        JavaProject javaProject = getJavaProject(projectPath);
+        JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
+        JsonSearchRequester searchRequester = new JsonSearchRequester();
+        environment.findConstructorDeclarations(prefix.toCharArray(), camelCaseMatch, searchRequester, null);
+        return searchRequester.toJsonString();
+    }
+
+    @GET
+    @javax.ws.rs.Path("findTypes")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String findTypes(@QueryParam("qualifiedname") String qualifiedName, @QueryParam("findmembers") boolean findMembers,
+                            @QueryParam("camelcase")  boolean camelCaseMatch,
+                            @QueryParam("searchfor") int searchFor,
+                            @QueryParam("projectpath") String projectPath){
+        JavaProject javaProject = getJavaProject(projectPath);
+        JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
+        JsonSearchRequester searchRequester = new JsonSearchRequester();
+        environment.findTypes(qualifiedName.toCharArray(), findMembers, camelCaseMatch, searchFor, searchRequester);
+        return searchRequester.toJsonString();
+    }
+
+    @GET
+    @javax.ws.rs.Path("findExactTypes")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String findExactTypes(@QueryParam("missingsimplename") String missingSimpleName, @QueryParam("findmembers") boolean findMembers,
+                            @QueryParam("searchfor") int searchFor,
+                            @QueryParam("projectpath") String projectPath){
+        JavaProject javaProject = getJavaProject(projectPath);
+        JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
+        JsonSearchRequester searchRequester = new JsonSearchRequester();
+        environment.findExactTypes(missingSimpleName.toCharArray(), findMembers, searchFor, searchRequester);
+        return searchRequester.toJsonString();
     }
 
     /** Get list of all package names in project */
@@ -284,12 +328,14 @@ public class RestNameEnvironment {
             if (downloadLink != null) {
                 InputStream stream = doDownload(downloadLink.getHref());
                 ZipUtils.unzip(stream, projectDepDir);
+                JavaProject javaProject = cache.remove(wsId + projectPath);
+                if(javaProject != null) {
+                    javaProject.close();
+                }
             }
-
-        } catch (IOException e) {
+        } catch (IOException | JavaModelException e) {
             LOG.error("Error", e);
         }
-
     }
 
 

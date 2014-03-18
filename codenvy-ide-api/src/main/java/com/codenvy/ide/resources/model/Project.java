@@ -652,5 +652,4 @@ public class Project extends Folder {
     String getProjectTypeId() {
         return projectTypeId;
     }
-
 }

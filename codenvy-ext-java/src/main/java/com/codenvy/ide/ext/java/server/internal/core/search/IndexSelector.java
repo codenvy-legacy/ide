@@ -51,14 +51,16 @@ import java.util.LinkedHashSet;
 public class IndexSelector {
     IJavaSearchScope searchScope;
     SearchPattern    pattern;
-    IndexLocation[]  indexLocations; // cache of the keys for looking index up
+    private IndexManager indexManager;
+    IndexLocation[] indexLocations; // cache of the keys for looking index up
 
     public IndexSelector(
             IJavaSearchScope searchScope,
-            SearchPattern pattern) {
+            SearchPattern pattern, IndexManager indexManager) {
 
         this.searchScope = searchScope;
         this.pattern = pattern;
+        this.indexManager = indexManager;
     }
 
     /**
@@ -104,7 +106,7 @@ public class IndexSelector {
 
     private static boolean canSeeFocus(IJavaElement focus, JavaProject javaProject, char[][][] focusQualifiedNames) {
         try {
-		if (focus == null) return false;
+            if (focus == null) return false;
 		if (focus.equals(javaProject)) return true;
 
 		if (focus instanceof JarPackageFragmentRoot) {
@@ -198,7 +200,6 @@ private static IJavaElement[] getFocusedElementsAndTypes(SearchPattern pattern, 
  */
 private void initializeIndexLocations() {
 	IPath[] projectsAndJars = this.searchScope.enclosingProjectsAndJars();
-	IndexManager manager = IndexManager.getInstance();//JavaModelManager.getIndexManager();
 	// use a linked set to preserve the order during search: see bug 348507
 	LinkedHashSet locations = new LinkedHashSet();
 	IJavaElement focus = MatchLocator.projectOrJarFocus(this.pattern);
@@ -208,7 +209,7 @@ private void initializeIndexLocations() {
 			Object target = new File(path.toOSString());//JavaModel.getTarget(path, false/*don't check existence*/);
 			if (target instanceof IFolder) // case of an external folder
 				path = ((IFolder) target).getFullPath();
-			locations.add(manager.computeIndexLocation(path));
+			locations.add(indexManager.computeIndexLocation(path));
 		}
 	} else {
 		try {
@@ -234,7 +235,7 @@ private void initializeIndexLocations() {
 				if (project != null) {
 					visitedProjects.add(project);
 					if (canSeeFocus(focuses, project, focusQualifiedNames)) {
-						locations.add(manager.computeIndexLocation(path));
+						locations.add(indexManager.computeIndexLocation(path));
 						projectsCanSeeFocus[projectIndex++] = project;
 					}
 				} else {
@@ -251,7 +252,7 @@ private void initializeIndexLocations() {
 							Object target = JavaModel.getTarget(path, false/*don't check existence*/);
 							if (target instanceof IFolder) // case of an external folder
 								path = ((IFolder) target).getFullPath();
-							locations.add(manager.computeIndexLocation(path));
+							locations.add(indexManager.computeIndexLocation(path));
 						}
 					}
 				}
@@ -271,7 +272,7 @@ private void initializeIndexLocations() {
 									Object target = JavaModel.getTarget(path, false/*don't check existence*/);
 									if (target instanceof IFolder) // case of an external folder
 										path = ((IFolder) target).getFullPath();
-									locations.add(manager.computeIndexLocation(path));
+									locations.add(indexManager.computeIndexLocation(path));
 								}
 							}
 						}

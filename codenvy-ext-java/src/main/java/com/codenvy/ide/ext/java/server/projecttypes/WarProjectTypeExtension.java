@@ -39,12 +39,7 @@ public class WarProjectTypeExtension implements ProjectTypeExtension {
 
     @Inject
     public WarProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
-        icons.put("war.projecttype.big.icon", "java-extension/web_app_big.png");
-        icons.put("war.projecttype.small.icon", "java-extension/web_app_big.png");
-        icons.put("war.folder.small.icon", "java-extension/package.gif");
-        icons.put("war/java.file.small.icon", "java-extension/java-class.png");
-        icons.put("java.class", "java-extension/java-class.png");
-        icons.put("java.package", "java-extension/package.gif");
+
         registry.registerProjectType(this);
     }
 
@@ -71,11 +66,6 @@ public class WarProjectTypeExtension implements ProjectTypeExtension {
                                                 "Java Web project.",
                                                 "templates/MavenWar.zip"));
         return list;
-    }
-
-    @Override
-    public Map<String, String> getIconRegistry() {
-        return icons;
     }
 
 

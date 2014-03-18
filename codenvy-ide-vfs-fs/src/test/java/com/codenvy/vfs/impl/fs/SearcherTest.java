@@ -17,6 +17,7 @@
  */
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.api.vfs.shared.dto.ItemList;
 
@@ -92,7 +93,8 @@ public class SearcherTest extends LocalFileSystemTest {
         assertFalse(provider.isMounted());
         virtualFileSystemRegistry.unregisterProvider(MY_WORKSPACE_ID);
         // create new one
-        provider = new LocalFileSystemProvider(MY_WORKSPACE_ID, new WorkspaceHashLocalFSMountStrategy(root), searcherProvider);
+        provider = new LocalFileSystemProvider(MY_WORKSPACE_ID, new WorkspaceHashLocalFSMountStrategy(root), new EventService(),
+                                               searcherProvider);
         provider.mount(testFsIoRoot);
         mountPoint = provider.getMountPoint(true);
         virtualFileSystemRegistry.registerProvider(MY_WORKSPACE_ID, provider);

@@ -65,6 +65,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     private       ResourceProvider           resourceProvider;
     private       ContextMenuPresenter       contextMenuPresenter;
     private       SelectProjectTypePresenter selectProjectTypePresenter;
+    private       ProjectPropertiesLocalizationConstant projectPropertiesLocalizationConstant;
 
     /**
      * Instantiates the ProjectExplorer Presenter.
@@ -75,6 +76,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
      * @param resourceProvider
      * @param contextMenuPresenter
      * @param selectProjectTypePresenter
+     * @param projectPropertiesLocalizationConstant
      */
     @Inject
     public ProjectExplorerPartPresenter(ProjectExplorerView view,
@@ -83,6 +85,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                                         ResourceProvider resourceProvider,
                                         ContextMenuPresenter contextMenuPresenter,
                                         SelectProjectTypePresenter selectProjectTypePresenter,
+                                        ProjectPropertiesLocalizationConstant projectPropertiesLocalizationConstant,
                                         ProjectServiceClient projectServiceClient,
                                         DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
@@ -91,9 +94,10 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         this.resourceProvider = resourceProvider;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
-        this.view.setTitle("Project Explorer");
+        this.view.setTitle(projectPropertiesLocalizationConstant.projectExplorerTitleBarText());
         this.contextMenuPresenter = contextMenuPresenter;
         this.selectProjectTypePresenter = selectProjectTypePresenter;
+        this.projectPropertiesLocalizationConstant = projectPropertiesLocalizationConstant;
 
         bind();
     }
@@ -121,6 +125,15 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
                 setContent(event.getProject().getParent());
+                if (event.getProject() != null) {
+                    checkProjectType(event.getProject(), new AsyncCallback<Project>() {
+                        @Override
+                        public void onSuccess(Project result) {
+                            resourceProvider.getProject(result.getName(), new AsyncCallback<Project>() {
+                                @Override
+                                public void onSuccess(Project result) {
+                                    // do nothing
+                                }
 
                 checkProjectType(event.getProject(), new AsyncCallback<Project>() {
                     @Override
@@ -171,7 +184,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
             @Override
             public void onResourceDeleted(ResourceChangedEvent event) {
-                if (event.getResource().getResourceType().equals(Project.TYPE)) {
+                if (event.getResource() instanceof Project) {
                     resourceProvider.showListProjects();
                 } else {
                     updateItem(event.getResource().getParent());
@@ -217,20 +230,20 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     /** {@inheritDoc} */
     @Override
     public String getTitle() {
-        return "Project Explorer";
+        return projectPropertiesLocalizationConstant.projectExplorerButtonTitle();
     }
 
     /** {@inheritDoc} */
     @Override
     public ImageResource getTitleImage() {
-        return resources.projectExplorer();
+        return null;
     }
 
     /** {@inheritDoc} */
     @Override
     public String getTitleToolTip() {
         return "This View helps you to do basic operation with your projects. Following features are currently available:"
-               + "\n\t- view project's tree" + "\n\t- select and open project's file";
+                + "\n\t- view project's tree" + "\n\t- select and open project's file";
     }
 
     @Override

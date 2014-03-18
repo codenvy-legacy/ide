@@ -18,10 +18,12 @@
 package com.codenvy.ide.theme;
 
 import com.codenvy.ide.api.ui.theme.Theme;
+import com.google.inject.Singleton;
 
 /**
  * @author Evgen Vidolob
  */
+@Singleton
 public class DarkTheme implements Theme {
 
     public static final String DARK_THEME_ID = "DarkTheme";
@@ -41,44 +43,10 @@ public class DarkTheme implements Theme {
         return "#D4E8FF";
     }
 
-    @Override
-    public String getLightTextColor() {
-        return "#999";
-    }
-
-    @Override
-    public String getLightestTextColor() {
-        return "#BCBCBC";
-    }
-
-    @Override
-    public String getLightGreyBackground() {
-        return "#F1F1F1";
-    }
-
-    @Override
-    public String getBarBackgroundColor() {
-        return "#f5f5f5";
-    }
-
-    @Override
-    public String getCompletedBackgroundColor() {
-        return "#f9edbe";
-    }
 
     @Override
     public String getKeyboardSelectionBackgroundColor() {
         return "#2f65ca";
-    }
-
-    @Override
-    public String getAnchorColor() {
-        return "#1155CC";
-    }
-
-    @Override
-    public String getHoverBackground() {
-        return "#86acc9";
     }
 
     @Override
@@ -102,13 +70,8 @@ public class DarkTheme implements Theme {
     }
 
     @Override
-    public String getHighlightFocus() {
-        return "#92c1f0";
-    }
-
-    @Override
     public String getTabBorderColor() {
-        return "#1f1f1f";
+        return "#232323";
     }
 
     @Override
@@ -168,12 +131,12 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getEditorBackgroundColor() {
-        return "#2b2b2b";
+        return "#383838";
     }
 
     @Override
     public String getEditorCurrentLineColor() {
-        return "#323232";
+        return "#424242";
     }
 
     @Override
@@ -218,7 +181,7 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getEditorDef() {
-        return "#00f";
+        return "#A7E600";
     }
 
     @Override
@@ -349,5 +312,15 @@ public class DarkTheme implements Theme {
     @Override
     public String getNotableButtonColor() {
         return "#2d6ba3";
+    }
+
+    @Override
+    public String getTabBorderShadow() {
+        return "rgba(188, 195, 199, 0.5)";
+    }
+
+    @Override
+    public String getButtonTextShadow() {
+        return "rgba(0, 0, 0, 1)";
     }
 }

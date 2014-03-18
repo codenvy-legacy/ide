@@ -23,6 +23,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IJavaModelStatusConstants;
 import org.eclipse.jdt.core.JavaModelException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,10 +38,14 @@ import java.nio.file.Files;
  */
 public class Util {
 
+    /** Logger. */
+    private static final Logger LOG = LoggerFactory.getLogger(Util.class);
+
     /**
      * Returns true if the given name ends with one of the known java like extension.
      * (implementation is not creating extra strings)
      */
+
     public final static boolean isJavaLikeFileName(String name) {
         if (name == null) return false;
         return indexOfJavaLikeExtension(name) != -1;
@@ -53,7 +59,8 @@ public class Util {
     public static int indexOfJavaLikeExtension(String fileName) {
         int fileNameLength = fileName.length();
         char[][] javaLikeExtensions = getJavaLikeExtensions();
-        extensions: for (int i = 0, length = javaLikeExtensions.length; i < length; i++) {
+        extensions:
+        for (int i = 0, length = javaLikeExtensions.length; i < length; i++) {
             char[] extension = javaLikeExtensions[i];
             int extensionLength = extension.length;
             int extensionStart = fileNameLength - extensionLength;
@@ -182,5 +189,9 @@ public class Util {
             }
         }
 
+    }
+
+    public static void log(Throwable e, String s) {
+        LOG.error(s, e);
     }
 }

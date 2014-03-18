@@ -58,8 +58,4 @@ public class MultiModuleProjectTypeExtension implements ProjectTypeExtension {
         return Collections.emptyList();
     }
 
-    @Override
-    public Map<String, String> getIconRegistry() {
-        return new HashMap<>(0);
-    }
 }

@@ -33,7 +33,6 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.InsertPanel;
@@ -79,17 +78,9 @@ public class PartStackViewImpl extends Composite implements PartStackView {
 //        parent = new DockLayoutPanel(Style.Unit.PX);
         this.tabsPanel = tabsPanel;
         contentPanel = new SimplePanel();
-
-        if (tabPosition == BELOW) {
-            HTML w = new HTML();
-            w.setWidth("21px");
-            w.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
-            tabsPanel.add(w);
+        if (tabPosition == LEFT) {
+            top = 26;
         }
-        if (tabPosition == RIGHT) {
-            top = 6;
-        }
-
         contentPanel.setStyleName(resources.partStackCss().idePartStackContent());
         initWidget(contentPanel);
 

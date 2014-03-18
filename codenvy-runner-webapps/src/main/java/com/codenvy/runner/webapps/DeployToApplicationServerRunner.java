@@ -17,6 +17,7 @@
  */
 package com.codenvy.runner.webapps;
 
+import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.api.runner.RunnerException;
@@ -66,8 +67,9 @@ public class DeployToApplicationServerRunner extends Runner {
                                            @Named("runner.java_webapp.host_name") String hostName,
                                            ResourceAllocators allocators,
                                            CustomPortService portService,
-                                           Set<ApplicationServer> serverSet) {
-        super(deployDirectoryRoot, cleanupDelay, allocators);
+                                           Set<ApplicationServer> serverSet,
+                                           EventService eventService) {
+        super(deployDirectoryRoot, cleanupDelay, allocators, eventService);
         this.hostName = hostName;
         this.portService = portService;
         this.servers = new HashMap<>();

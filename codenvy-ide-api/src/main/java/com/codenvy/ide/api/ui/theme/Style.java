@@ -19,7 +19,7 @@ package com.codenvy.ide.api.ui.theme;
 
 /**
  * This class contains constants for style. Fields initialized from user preferences. Static methods used for bridging with CssResources
- * 
+ *
  * @author Evgen Vidolob
  */
 public class Style {
@@ -34,36 +34,8 @@ public class Style {
         return theme.getHoverBackgroundColor();
     }
 
-    public static String getLightTextColor() {
-        return theme.getLightTextColor();
-    }
-
-    public static String getLightestTextColor() {
-        return theme.getLightestTextColor();
-    }
-
-    public static String getLightGreyBackground() {
-        return theme.getLightGreyBackground();
-    }
-
-    public static String getBarBackgroundColor() {
-        return theme.getBarBackgroundColor();
-    }
-
-    public static String getCompletedBackgroundColor() {
-        return theme.getCompletedBackgroundColor();
-    }
-
     public static String getKeyboardSelectionBackgroundColor() {
         return theme.getKeyboardSelectionBackgroundColor();
-    }
-
-    public static String getAnchorColor() {
-        return theme.getAnchorColor();
-    }
-
-    public static String getHoverBackground() {
-        return theme.getHoverBackground();
     }
 
     public static String getSelectionBackground() {
@@ -80,10 +52,6 @@ public class Style {
 
     public static String getTabsPanelBackground() {
         return theme.getTabsPanelBackground();
-    }
-
-    public static String getHighlightFocus() {
-        return theme.getHighlightFocus();
     }
 
     public static String getTabBorderColor() {
@@ -281,5 +249,13 @@ public class Style {
 
     public static String getMainMenuFontColor() {
         return theme.getMainMenuFontColor();
+    }
+
+    public static String getTabBorderShadow() {
+        return theme.getTabBorderShadow();
+    }
+
+    public static String getButtonTextShadow() {
+        return theme.getButtonTextShadow();
     }
 }

@@ -25,6 +25,7 @@ import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClientImpl;
 import com.codenvy.api.user.gwt.client.UserServiceClient;
 import com.codenvy.api.user.gwt.client.UserServiceClientImpl;
+import com.codenvy.ide.api.ui.theme.Theme;
 import com.codenvy.ide.core.IconRegistryImpl;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.about.AboutView;
@@ -131,6 +132,8 @@ import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.theme.AppearancePresenter;
 import com.codenvy.ide.theme.AppearanceView;
 import com.codenvy.ide.theme.AppearanceViewImpl;
+import com.codenvy.ide.theme.DarkTheme;
+import com.codenvy.ide.theme.LightTheme;
 import com.codenvy.ide.theme.ThemeAgentImpl;
 import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
@@ -257,6 +260,10 @@ public class CoreGinModule extends AbstractGinModule {
         GinMultibinder<PreferencesPagePresenter> prefBinder = GinMultibinder.newSetBinder(binder(), PreferencesPagePresenter.class);
         prefBinder.addBinding().to(AppearancePresenter.class);
         prefBinder.addBinding().to(ExtensionManagerPresenter.class);
+
+        GinMultibinder<Theme> themeBinder = GinMultibinder.newSetBinder(binder(), Theme.class);
+        themeBinder.addBinding().to(DarkTheme.class);
+        themeBinder.addBinding().to(LightTheme.class);
 
         // Resources
         bind(PartStackUIResources.class).to(Resources.class).in(Singleton.class);

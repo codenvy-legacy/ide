@@ -11,13 +11,13 @@
 package com.codenvy.ide.ext.java.server.internal.core.search.indexing;
 
 import com.codenvy.ide.ext.java.server.internal.core.JavaProject;
+import com.codenvy.ide.ext.java.server.internal.core.search.processing.JobManager;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.internal.compiler.SourceElementParser;
 import org.eclipse.jdt.internal.core.index.Index;
 import org.eclipse.jdt.internal.core.search.indexing.ReadWriteMonitor;
-import org.eclipse.jdt.internal.core.search.processing.JobManager;
 import org.eclipse.jdt.internal.core.util.Util;
 
 import java.io.File;

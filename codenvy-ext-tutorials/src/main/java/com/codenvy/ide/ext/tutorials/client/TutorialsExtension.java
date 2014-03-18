@@ -24,6 +24,9 @@ import com.codenvy.ide.ext.tutorials.client.action.ShowTutorialGuideAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_WINDOW;
 
 /**
@@ -43,6 +46,9 @@ public class TutorialsExtension {
                               ActionManager actionManager,
                               ShowTutorialGuideAction showAction) {
         resources.tutorialsCss().ensureInjected();
+
+        Map<String, String> icons = new HashMap<>(1);
+        icons.put("codenvy_tutorial.projecttype.big.icon", "codenvy-tutorial/codenvy.jpg");
 
         // register actions
         DefaultActionGroup windowMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_WINDOW);

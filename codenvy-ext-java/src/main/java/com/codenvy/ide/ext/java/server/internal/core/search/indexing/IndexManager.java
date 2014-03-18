@@ -11,12 +11,12 @@
 package com.codenvy.ide.ext.java.server.internal.core.search.indexing;
 
 import com.codenvy.ide.ext.java.server.core.JavaCore;
-import com.codenvy.ide.ext.java.server.internal.core.JavaProject;
 import com.codenvy.ide.ext.java.server.core.search.IJavaSearchScope;
 import com.codenvy.ide.ext.java.server.core.search.SearchDocument;
 import com.codenvy.ide.ext.java.server.core.search.SearchEngine;
 import com.codenvy.ide.ext.java.server.core.search.SearchParticipant;
 import com.codenvy.ide.ext.java.server.internal.core.ClasspathEntry;
+import com.codenvy.ide.ext.java.server.internal.core.JavaProject;
 import com.codenvy.ide.ext.java.server.internal.core.search.BasicSearchEngine;
 import com.codenvy.ide.ext.java.server.internal.core.search.PatternSearchJob;
 import com.codenvy.ide.ext.java.server.internal.core.search.processing.JobManager;
@@ -36,7 +36,6 @@ import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
 import org.eclipse.jdt.internal.compiler.util.SimpleLookupTable;
 import org.eclipse.jdt.internal.compiler.util.SimpleSet;
 import org.eclipse.jdt.internal.core.JavaModel;
-import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.internal.core.index.DiskIndex;
 import org.eclipse.jdt.internal.core.index.FileIndexLocation;
 import org.eclipse.jdt.internal.core.index.Index;
@@ -60,47 +59,44 @@ import java.util.zip.CRC32;
 
 public class IndexManager extends JobManager implements IIndexConstants {
 
-    public static final  Integer SAVED_STATE                          = new Integer(0);
-    public static final  Integer UPDATING_STATE                       = new Integer(1);
-    public static final  Integer UNKNOWN_STATE                        = new Integer(2);
-    public static final  Integer REBUILDING_STATE                     = new Integer(3);
-    public static final  Integer REUSE_STATE                          = new Integer(4);
+    public static final  Integer           SAVED_STATE                          = new Integer(0);
+    public static final  Integer           UPDATING_STATE                       = new Integer(1);
+    public static final  Integer           UNKNOWN_STATE                        = new Integer(2);
+    public static final  Integer           REBUILDING_STATE                     = new Integer(3);
+    public static final  Integer           REUSE_STATE                          = new Integer(4);
     // should JDT manage (update, delete as needed) pre-built indexes?
-    public static final  String  MANAGE_PRODUCT_INDEXES_PROPERTY      = "jdt.core.manageProductIndexes"; //$NON-NLS-1$
-    private static final boolean IS_MANAGING_PRODUCT_INDEXES_PROPERTY = Boolean.getBoolean(MANAGE_PRODUCT_INDEXES_PROPERTY);
+    public static final  String            MANAGE_PRODUCT_INDEXES_PROPERTY      = "jdt.core.manageProductIndexes"; //$NON-NLS-1$
+    private static final boolean           IS_MANAGING_PRODUCT_INDEXES_PROPERTY = Boolean.getBoolean(MANAGE_PRODUCT_INDEXES_PROPERTY);
     // Debug
-    public static        boolean DEBUG                                = true;
-    private static IndexManager instance;
+    public static        boolean           DEBUG                                = true;
     // key = containerPath, value = indexLocation path
     // indexLocation path is created by appending an index file name to the getJavaPluginWorkingLocation() path
-    public  SimpleLookupTable indexLocations            = new SimpleLookupTable();
+    public               SimpleLookupTable indexLocations                       = new SimpleLookupTable();
     // key = indexLocation path, value = an index
-    private SimpleLookupTable indexes                   = new SimpleLookupTable();
+    private              SimpleLookupTable indexes                              = new SimpleLookupTable();
     /* need to save ? */
-    private boolean           needToSave                = false;
-    private IPath             javaPluginLocation        = null;
+    private              boolean           needToSave                           = false;
+    private              IPath             javaPluginLocation                   = null;
     /* can only replace a current state if its less than the new one */
     // key = indexLocation path, value = index state integer
-    private SimpleLookupTable indexStates               = null;
-    private File              indexNamesMapFile         = new File(getSavedIndexesDirectory(), "indexNamesMap.txt");
+    private              SimpleLookupTable indexStates                          = null;
+    private File indexNamesMapFile;
     //$NON-NLS-1$
-    private File              savedIndexNamesFile       =
-            new File(getSavedIndexesDirectory(), "savedIndexNames.txt");
+    private File savedIndexNamesFile;
     //$NON-NLS-1$
-    private File              participantIndexNamesFile =
-            new File(getSavedIndexesDirectory(), "participantsIndexNames.txt");
+    private File participantIndexNamesFile;
     //$NON-NLS-1$
-    private boolean           javaLikeNamesChanged      = true;
+    private boolean           javaLikeNamesChanged   = true;
     // search participants who register indexes with the index manager
-    private SimpleLookupTable participantsContainers    = null;
-    private boolean           participantUpdated        = false;
+    private SimpleLookupTable participantsContainers = null;
+    private boolean           participantUpdated     = false;
+    private String indexLocation;
 
-    public static IndexManager getInstance() {
-        return instance;
-    }
-
-    public IndexManager() {
-        instance = this;
+    public IndexManager(String indexLocation) {
+        this.indexLocation = indexLocation;
+        indexNamesMapFile = new File(getSavedIndexesDirectory(), "indexNamesMap.txt");
+        savedIndexNamesFile = new File(getSavedIndexesDirectory(), "savedIndexNames.txt");
+        participantIndexNamesFile = new File(getSavedIndexesDirectory(), "participantsIndexNames.txt");
     }
 
     public synchronized void aboutToUpdateIndex(IPath containerPath, Integer newIndexState) {
@@ -127,7 +123,7 @@ public class IndexManager extends JobManager implements IIndexConstants {
      */
     public void addBinary(IFile resource, IPath containerPath) {
 //        if (JavaCore.getPlugin() == null) return;
-        SearchParticipant participant = SearchEngine.getDefaultSearchParticipant();
+        SearchParticipant participant = SearchEngine.getDefaultSearchParticipant(this);
         SearchDocument document = participant.getDocument(resource.getFullPath().toString());
         IndexLocation indexLocation = computeIndexLocation(containerPath);
         scheduleDocumentIndexing(document, containerPath, indexLocation, participant);
@@ -139,7 +135,7 @@ public class IndexManager extends JobManager implements IIndexConstants {
      */
     public void addSource(java.nio.file.Path resource, IPath containerPath, SourceElementParser parser) {
 //        if (JavaCore.getPlugin() == null) return;
-        SearchParticipant participant = SearchEngine.getDefaultSearchParticipant();
+        SearchParticipant participant = SearchEngine.getDefaultSearchParticipant(this);
         SearchDocument document = participant.getDocument(resource.toAbsolutePath().toString());
         document.setParser(parser);
         IndexLocation indexLocation = computeIndexLocation(containerPath);
@@ -152,7 +148,7 @@ public class IndexManager extends JobManager implements IIndexConstants {
     public void cleanUpIndexes() {
         SimpleSet knownPaths = new SimpleSet();
         IJavaSearchScope scope = BasicSearchEngine.createWorkspaceScope();
-        PatternSearchJob job = new PatternSearchJob(null, SearchEngine.getDefaultSearchParticipant(), scope, null);
+        PatternSearchJob job = new PatternSearchJob(null, SearchEngine.getDefaultSearchParticipant(this), scope, null, this);
         Index[] selectedIndexes = job.getIndexes(null);
         for (int i = 0, l = selectedIndexes.length; i < l; i++) {
             IndexLocation IndexLocation = selectedIndexes[i].getIndexLocation();
@@ -260,7 +256,7 @@ public class IndexManager extends JobManager implements IIndexConstants {
         // disable task tags to speed up parsing
         Map options = project.getOptions(true);
         options.put(JavaCore.COMPILER_TASK_TAGS, ""); //$NON-NLS-1$
-
+        try{
         SourceElementParser parser = new IndexingParser(
                 requestor,
                 new DefaultProblemFactory(Locale.getDefault()),
@@ -275,6 +271,10 @@ public class IndexManager extends JobManager implements IIndexConstants {
         parser.javadocParser.reportProblems = false;
 
         return parser;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -497,13 +497,13 @@ public class IndexManager extends JobManager implements IIndexConstants {
     private IPath getJavaPluginWorkingLocation() {
         if (this.javaPluginLocation != null) return this.javaPluginLocation;
 
-        IPath stateLocation = new Path("/home/evgen/tmp/indexes"); //JavaCore.getPlugin().getStateLocation();
+        IPath stateLocation = new Path(indexLocation); //JavaCore.getPlugin().getStateLocation();
         return this.javaPluginLocation = stateLocation;
     }
 
     private File getSavedIndexesDirectory() {
 //        return new File(getJavaPluginWorkingLocation().toOSString());
-        return new File("/home/evgen/tmp/indexes");
+        return new File(indexLocation);
     }
 
     /*
@@ -569,7 +569,7 @@ public class IndexManager extends JobManager implements IIndexConstants {
         // Also request indexing of binaries on the classpath
         // determine the new children
         try {
-            JavaModel model = JavaModelManager.getJavaModelManager().getJavaModel();
+//            JavaModel model = JavaModelManager.getJavaModelManager().getJavaModel();
 //            JavaProject javaProject = (JavaProject)model.getJavaProject(project);
             // only consider immediate libraries - each project will do the same
             // NOTE: force to resolve CP variables before calling indexer - 19303, so that initializers

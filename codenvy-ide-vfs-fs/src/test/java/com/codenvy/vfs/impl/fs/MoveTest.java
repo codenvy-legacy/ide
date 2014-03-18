@@ -18,9 +18,7 @@
 package com.codenvy.vfs.impl.fs;
 
 import com.codenvy.api.vfs.shared.ExitCodes;
-import com.codenvy.api.vfs.shared.ItemType;
 import com.codenvy.api.vfs.shared.dto.Principal;
-import com.codenvy.api.vfs.shared.dto.Project;
 import com.codenvy.dto.server.DtoFactory;
 
 import org.everrest.core.impl.ContainerResponse;
@@ -47,18 +45,12 @@ public class MoveTest extends LocalFileSystemTest {
     private final String protectedFolderName      = "MoveTest_ProtectedFolder";
     private final String protectedChildFolderName = "MoveTest_ProtectedChildFolder";
     private final String lockedChildFolderName    = "MoveTest_LockedChildFolder";
-    private final String projectName              = "MoveTest_Project";
-
-    private Map<String, String[]> projectProperties;
 
     private String destinationPath;
     private String destinationId;
 
     private String protectedDestinationPath;
     private String protectedDestinationId;
-
-    private String destinationProjectPath;
-    private String destinationProjectId;
 
     private String fileId;
     private String filePath;
@@ -80,9 +72,6 @@ public class MoveTest extends LocalFileSystemTest {
 
     private String folderId;
     private String folderPath;
-
-    private String projectId;
-    private String projectPath;
 
     private Map<String, String[]> properties;
 
@@ -111,8 +100,6 @@ public class MoveTest extends LocalFileSystemTest {
         createTree(protectedChildFolderPath, 6, 4, properties);
         lockedChildFolderPath = createDirectory(testRootPath, lockedChildFolderName);
         createTree(lockedChildFolderPath, 6, 4, properties);
-        projectPath = createDirectory(testRootPath, projectName);
-        createTree(projectPath, 6, 4, null);
 
         List<String> l = flattenDirectory(protectedChildFolderPath);
         // Find one child in the list and remove write permission for 'admin'.
@@ -128,19 +115,12 @@ public class MoveTest extends LocalFileSystemTest {
 
         destinationPath = createDirectory(testRootPath, "MoveTest_Destination");
         protectedDestinationPath = createDirectory(testRootPath, "MoveTest_ProtectedDestination");
-        destinationProjectPath = createDirectory(testRootPath, "MoveTest_DestinationProject");
 
         createLock(lockedFilePath, lockToken, Long.MAX_VALUE);
 
         writePermissions(protectedDestinationPath, permissions);
         writePermissions(protectedFilePath, permissions);
         writePermissions(protectedFolderPath, permissions);
-
-        projectProperties = new HashMap<>(2);
-        projectProperties.put("vfs:mimeType", new String[]{Project.PROJECT_MIME_TYPE});
-        projectProperties.put("vfs:projectType", new String[]{"java"});
-        writeProperties(projectPath, projectProperties);
-        writeProperties(destinationProjectPath, projectProperties);
 
         fileId = pathToId(filePath);
         lockedFileId = pathToId(lockedFilePath);
@@ -149,15 +129,9 @@ public class MoveTest extends LocalFileSystemTest {
         protectedFolderId = pathToId(protectedFolderPath);
         protectedChildFolderId = pathToId(protectedChildFolderPath);
         lockedChildFolderId = pathToId(lockedChildFolderPath);
-        projectId = pathToId(projectPath);
 
         destinationId = pathToId(destinationPath);
         protectedDestinationId = pathToId(protectedDestinationPath);
-        destinationProjectId = pathToId(destinationProjectPath);
-
-        // check we see items as projects
-        assertEquals(ItemType.PROJECT, getItem(projectId).getItemType());
-        assertEquals(ItemType.PROJECT, getItem(destinationProjectId).getItemType());
     }
 
     public void testMoveFile() throws Exception {
@@ -308,44 +282,4 @@ public class MoveTest extends LocalFileSystemTest {
         assertTrue(String.format("Missed items: %s", sourceBefore), sourceBefore.isEmpty());
     }
 
-    public void testMoveProject() throws Exception {
-        List<String> before = flattenDirectory(projectPath);
-        ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-        String requestPath = SERVICE_URI + "move/" + projectId + '?' + "parentId=" + destinationId;
-        final long start = System.currentTimeMillis();
-        ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
-        final long end = System.currentTimeMillis();
-        log.info(">>>>> Move tree time: {}ms", (end - start));
-        log.info(new String(writer.getBody()));
-        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
-        String expectedPath = destinationPath + '/' + projectName;
-        assertFalse("Source project must be removed. ", exists(projectPath));
-        assertTrue("Not found project in destination location. ", exists(expectedPath));
-        List<String> after = flattenDirectory(expectedPath);
-        before.removeAll(after);
-        assertTrue(String.format("Missed items: %s", before), before.isEmpty());
-        assertNull("Properties must be removed. ", readProperties(projectPath));  // check source removed
-        validateProperties(expectedPath, projectProperties); // check properties of moved item
-    }
-
-    public void testMoveProjectToProject() throws Exception {
-        List<String> before = flattenDirectory(projectPath);
-        ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-        String requestPath = SERVICE_URI + "move/" + projectId + '?' + "parentId=" + destinationProjectId;
-        final long start = System.currentTimeMillis();
-        ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
-        final long end = System.currentTimeMillis();
-        log.info(">>>>> Move tree time: {}ms", (end - start));
-        log.info(new String(writer.getBody()));
-        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
-        String expectedPath = destinationProjectPath + '/' + projectName;
-        assertFalse("Source project must be removed. ", exists(projectPath));
-        assertTrue("Not found project in destination location. ", exists(expectedPath));
-        List<String> after = flattenDirectory(expectedPath);
-        before.removeAll(after);
-        assertTrue(String.format("Missed items: %s", before), before.isEmpty());
-        assertNull("Properties must be removed. ", readProperties(projectPath));  // check source removed
-        validateProperties(expectedPath, projectProperties); // check properties of moved item
-        validateProperties(destinationProjectPath, projectProperties);  // check destination project
-    }
 }

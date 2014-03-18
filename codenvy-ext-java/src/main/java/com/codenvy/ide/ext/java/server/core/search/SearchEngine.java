@@ -15,6 +15,7 @@ import com.codenvy.ide.ext.java.server.internal.core.search.BasicSearchEngine;
 import com.codenvy.ide.ext.java.server.internal.core.search.IRestrictedAccessTypeRequestor;
 import com.codenvy.ide.ext.java.server.internal.core.search.TypeNameMatchRequestorWrapper;
 import com.codenvy.ide.ext.java.server.internal.core.search.TypeNameRequestorWrapper;
+import com.codenvy.ide.ext.java.server.internal.core.search.indexing.IndexManager;
 import com.codenvy.ide.ext.java.server.internal.core.search.matching.DeclarationOfAccessedFieldsPattern;
 import com.codenvy.ide.ext.java.server.internal.core.search.matching.DeclarationOfReferencedMethodsPattern;
 import com.codenvy.ide.ext.java.server.internal.core.search.matching.DeclarationOfReferencedTypesPattern;
@@ -24,11 +25,9 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.Flags;
-import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.IWorkingCopy;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.WorkingCopyOwner;
@@ -52,7 +51,9 @@ import org.eclipse.jdt.internal.compiler.env.AccessRestriction;
  */
 public class SearchEngine {
 
-	/**
+    private IndexManager indexManager;
+
+    /**
 	 * Internal adapter class.
 	 * @deprecated marking deprecated as it uses deprecated ISearchPattern
 	 */
@@ -130,57 +131,58 @@ public class SearchEngine {
     /**
      * Creates a new search engine.
      */
-    public SearchEngine() {
-        this.basicEngine = new BasicSearchEngine();
+    public SearchEngine(IndexManager indexManager) {
+        this.indexManager = indexManager;
+        this.basicEngine = new BasicSearchEngine(indexManager);
     }
+//
+//    /**
+//     * Creates a new search engine with a list of working copies that will take precedence over
+//     * their original compilation units in the subsequent search operations.
+//     * <p>
+//     * Note that passing an empty working copy will be as if the original compilation
+//     * unit had been deleted.</p>
+//     * <p>
+//     * Since 3.0 the given working copies take precedence over primary working copies (if any).
+//     *
+//     * @param workingCopies the working copies that take precedence over their original compilation units
+//     * @since 3.0
+//     */
+//    public SearchEngine(ICompilationUnit[] workingCopies, IndexManager indexManager) {
+//        this.basicEngine = new BasicSearchEngine(indexManager);
+//    }
 
-    /**
-     * Creates a new search engine with a list of working copies that will take precedence over
-     * their original compilation units in the subsequent search operations.
-     * <p>
-     * Note that passing an empty working copy will be as if the original compilation
-     * unit had been deleted.</p>
-     * <p>
-     * Since 3.0 the given working copies take precedence over primary working copies (if any).
-     *
-     * @param workingCopies the working copies that take precedence over their original compilation units
-     * @since 3.0
-     */
-    public SearchEngine(ICompilationUnit[] workingCopies) {
-        this.basicEngine = new BasicSearchEngine(workingCopies);
-    }
-
-    /**
-     * Creates a new search engine with a list of working copies that will take precedence over
-     * their original compilation units in the subsequent search operations.
-     * <p>
-     * Note that passing an empty working copy will be as if the original compilation
-     * unit had been deleted.</p>
-     * <p>
-     * Since 3.0 the given working copies take precedence over primary working copies (if any).
-     *
-     * @param workingCopies the working copies that take precedence over their original compilation units
-     * @since 2.0
-     * @deprecated Use {@link #SearchEngine(org.eclipse.jdt.core.ICompilationUnit[])} instead.
-     */
-    public SearchEngine(IWorkingCopy[] workingCopies) {
-        int length = workingCopies.length;
-        ICompilationUnit[] units = new ICompilationUnit[length];
-        System.arraycopy(workingCopies, 0, units, 0, length);
-        this.basicEngine = new BasicSearchEngine(units);
-    }
-
-    /**
-     * Creates a new search engine with the given working copy owner.
-     * The working copies owned by this owner will take precedence over
-     * the primary compilation units in the subsequent search operations.
-     *
-     * @param workingCopyOwner the owner of the working copies that take precedence over their original compilation units
-     * @since 3.0
-     */
-    public SearchEngine(WorkingCopyOwner workingCopyOwner) {
-        this.basicEngine = new BasicSearchEngine(workingCopyOwner);
-    }
+//    /**
+//     * Creates a new search engine with a list of working copies that will take precedence over
+//     * their original compilation units in the subsequent search operations.
+//     * <p>
+//     * Note that passing an empty working copy will be as if the original compilation
+//     * unit had been deleted.</p>
+//     * <p>
+//     * Since 3.0 the given working copies take precedence over primary working copies (if any).
+//     *
+//     * @param workingCopies the working copies that take precedence over their original compilation units
+//     * @since 2.0
+//     * @deprecated Use {@link #SearchEngine(org.eclipse.jdt.core.ICompilationUnit[])} instead.
+//     */
+//    public SearchEngine(IWorkingCopy[] workingCopies) {
+//        int length = workingCopies.length;
+//        ICompilationUnit[] units = new ICompilationUnit[length];
+//        System.arraycopy(workingCopies, 0, units, 0, length);
+//        this.basicEngine = new BasicSearchEngine(units);
+//    }
+//
+//    /**
+//     * Creates a new search engine with the given working copy owner.
+//     * The working copies owned by this owner will take precedence over
+//     * the primary compilation units in the subsequent search operations.
+//     *
+//     * @param workingCopyOwner the owner of the working copies that take precedence over their original compilation units
+//     * @since 3.0
+//     */
+//    public SearchEngine(WorkingCopyOwner workingCopyOwner) {
+//        this.basicEngine = new BasicSearchEngine(workingCopyOwner);
+//    }
 
     /**
      * Returns a Java search scope limited to the hierarchy of the given type.
@@ -473,8 +475,8 @@ public class SearchEngine {
 	 * @return a new default Java search participant
 	 * @since 3.0
 	 */
-	public static SearchParticipant getDefaultSearchParticipant() {
-		return BasicSearchEngine.getDefaultSearchParticipant();
+	public static SearchParticipant getDefaultSearchParticipant(IndexManager indexManager) {
+		return BasicSearchEngine.getDefaultSearchParticipant(indexManager);
 	}
 
 	/**
@@ -520,7 +522,7 @@ public class SearchEngine {
 				: SearchPattern.R_EXACT_MATCH;
 			search(
 				SearchPattern.createPattern(patternString, searchFor, limitTo, matchMode | SearchPattern.R_CASE_SENSITIVE),
-				new SearchParticipant[] {getDefaultSearchParticipant()},
+				new SearchParticipant[] {getDefaultSearchParticipant(indexManager)},
 				scope,
 				new ResultCollectorAdapter(resultCollector),
 				resultCollector.getProgressMonitor());
@@ -581,7 +583,7 @@ public class SearchEngine {
 		try {
 			search(
 				((SearchPatternAdapter)searchPattern).pattern,
-				new SearchParticipant[] {getDefaultSearchParticipant()},
+				new SearchParticipant[] {getDefaultSearchParticipant(indexManager)},
 				scope,
 				new ResultCollectorAdapter(resultCollector),
 				resultCollector.getProgressMonitor());

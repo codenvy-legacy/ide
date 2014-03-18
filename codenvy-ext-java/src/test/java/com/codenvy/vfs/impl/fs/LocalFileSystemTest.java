@@ -17,16 +17,15 @@
  */
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.vfs.server.URLHandlerFactorySetup;
 import com.codenvy.api.vfs.server.VirtualFileSystemApplication;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
-import com.codenvy.api.vfs.server.observation.EventListenerList;
 import com.codenvy.api.vfs.shared.ItemType;
 import com.codenvy.api.vfs.shared.dto.File;
 import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.api.vfs.shared.dto.Link;
-import com.codenvy.api.vfs.shared.dto.Project;
 import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo;
 import com.codenvy.commons.user.UserImpl;
@@ -46,8 +45,8 @@ import org.everrest.core.impl.ResourceBinderImpl;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.everrest.core.tools.DependencySupplierImpl;
 import org.everrest.core.tools.ResourceLauncher;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
@@ -87,21 +86,20 @@ import static org.junit.Assert.fail;
 
 public abstract class LocalFileSystemTest {
     protected static final String                    MY_WORKSPACE_ID           = "my-ws";
-    protected static       EventListenerList         eventListenerList         = new EventListenerList();
     protected static       VirtualFileSystemRegistry virtualFileSystemRegistry = new VirtualFileSystemRegistry();
 
     private static void enableAssertion(Class<?> clazz) {
         clazz.getClassLoader().setPackageAssertionStatus(clazz.getPackage().getName(), true);
     }
 
-    protected String ROOT_ID;
+    protected static String ROOT_ID;
     @Rule
-    public TestName name = new TestName();
+    public static TestName name = new TestName();
 
     static {
         // enable assertion to test state of some components.
         enableAssertion(FSMountPoint.class);
-        URLHandlerFactorySetup.setup(virtualFileSystemRegistry, eventListenerList);
+        URLHandlerFactorySetup.setup(virtualFileSystemRegistry);
     }
 
 
@@ -113,22 +111,22 @@ public abstract class LocalFileSystemTest {
         }
     };
 
-    protected final String BASE_URI              = "http://localhost/service";
-    protected final String SERVICE_URI           = BASE_URI + "/vfs/my-ws/v2/";
-    protected final String DEFAULT_CONTENT       = "__TEST__";
-    protected final byte[] DEFAULT_CONTENT_BYTES = DEFAULT_CONTENT.getBytes();
+    protected static final String BASE_URI              = "http://localhost/service";
+    protected static final String SERVICE_URI           = BASE_URI + "/vfs/my-ws/v2/";
+    protected static final String DEFAULT_CONTENT       = "__TEST__";
+    protected static final byte[] DEFAULT_CONTENT_BYTES = DEFAULT_CONTENT.getBytes();
 
-    protected Logger log = LoggerFactory.getLogger(getClass());
+    protected static Logger log = LoggerFactory.getLogger(LocalFileSystemTest.class);
 
-    protected String                  testRootPath;
-    protected ResourceLauncher        launcher;
-    protected java.io.File            root;
-    protected FSMountPoint            mountPoint;
-    protected LocalFileSystemProvider provider;
-    protected java.io.File            testFsIoRoot;
+    protected static String                  testRootPath;
+    protected static ResourceLauncher        launcher;
+    protected static java.io.File            root;
+    protected static FSMountPoint            mountPoint;
+    protected static LocalFileSystemProvider provider;
+    protected static java.io.File            testFsIoRoot;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeClass
+    public static void setUp() throws Exception {
 
         System.setProperty("org.exoplatform.mimetypes", "conf/mimetypes.properties");
         // root directory for ALL virtual file systems
@@ -139,9 +137,9 @@ public abstract class LocalFileSystemTest {
         testRootPath = '/' + testName;
         // backend for test virtual filesystem
         testFsIoRoot = WorkspaceHashLocalFSMountStrategy.calculateDirPath(root, MY_WORKSPACE_ID);
-        assertTrue(new java.io.File(testFsIoRoot, testName).mkdirs());
+//        assertTrue(new java.io.File(testFsIoRoot, testName).mkdirs());
 
-        provider = new LocalFileSystemProvider(MY_WORKSPACE_ID, new WorkspaceHashLocalFSMountStrategy(root), null);
+        provider = new LocalFileSystemProvider(MY_WORKSPACE_ID, new WorkspaceHashLocalFSMountStrategy(root), new EventService(), null);
         provider.mount(testFsIoRoot);
         mountPoint = provider.getMountPoint(true);
         ROOT_ID = mountPoint.getRoot().getId();
@@ -149,7 +147,7 @@ public abstract class LocalFileSystemTest {
 
         DependencySupplierImpl dependencies = new DependencySupplierImpl();
         dependencies.addComponent(VirtualFileSystemRegistry.class, virtualFileSystemRegistry);
-        dependencies.addComponent(EventListenerList.class, eventListenerList);
+        dependencies.addComponent(EventService.class, mountPoint.getEventService());
         ResourceBinder resources = new ResourceBinderImpl();
         ProviderBinder providers = new ApplicationProviderBinder();
         RequestHandler requestHandler =
@@ -172,7 +170,7 @@ public abstract class LocalFileSystemTest {
 
     // Directory "fs-root" in "target" folder of builder project.
     // It is root where all (but we have only one at the in test) virtual filesystems are bound.
-    private java.io.File createRootDirectory() throws Exception {
+    private static java.io.File createRootDirectory() throws Exception {
         java.io.File root = new java.io.File(
                 new java.io.File(Thread.currentThread().getContextClassLoader().getResource(".").toURI()).getParentFile(),
                 "fs-root");
@@ -183,8 +181,8 @@ public abstract class LocalFileSystemTest {
     }
 
     /** @see junit.framework.TestCase#tearDown() */
-    @After
-    public void tearDown() throws Exception {
+    @AfterClass
+    public static void tearDown() throws Exception {
         //assertTrue("Unable unmount local filesystem. ", provider.umount(testFsIoRoot));
         virtualFileSystemRegistry.unregisterProvider(MY_WORKSPACE_ID);
         assertFalse("Unable unmount local filesystem. ", provider.isMounted());
@@ -194,7 +192,7 @@ public abstract class LocalFileSystemTest {
     }
 
     // Copied from LocalFileSystem#virtualFileToId and adopted for tests.
-    protected String pathToId(String path) {
+    protected static String pathToId(String path) {
         if ("/".equals(path)) {
             return ROOT_ID;
         }
@@ -206,7 +204,7 @@ public abstract class LocalFileSystemTest {
         }
     }
 
-    protected java.io.File getIoFile(String vfsPath) {
+    protected static java.io.File getIoFile(String vfsPath) {
         return new java.io.File(testFsIoRoot, vfsPath);
     }
 
@@ -228,7 +226,7 @@ public abstract class LocalFileSystemTest {
         return newPath;
     }
 
-    protected String createDirectory(String parent, String name) {
+    protected static String createDirectory(String parent, String name) {
         String newPath = parent + '/' + name;
         assertTrue(String.format("File %s already exists. ", newPath), getIoFile(newPath).mkdirs());
         return newPath;
@@ -680,19 +678,6 @@ public abstract class LocalFileSystemTest {
             assertEquals(UriBuilder.fromPath(SERVICE_URI).path("uploadfile").path(item.getId()).build().toString(),
                          link.getHref());
 
-            link = links.get(Link.REL_CREATE_PROJECT);
-            if (item instanceof Project) {
-                assertNull(String.format("'%s' link not allowed for project. ", Link.REL_CREATE_PROJECT), link);
-            } else {
-                assertNotNull(String.format("'%s' link not found. ", Link.REL_CREATE_PROJECT), link);
-                assertEquals(MediaType.APPLICATION_JSON, link.getType());
-                assertEquals(Link.REL_CREATE_PROJECT, link.getRel());
-                assertEquals(
-                        UriBuilder.fromPath(SERVICE_URI).path("project").path(item.getId()).queryParam("name", "[name]")
-                                  .queryParam("type", "[type]").build().toString(),
-                        link.getHref());
-            }
-
             link = links.get(Link.REL_EXPORT);
             assertNotNull(String.format("'%s' link not found. ", Link.REL_EXPORT), link);
             assertEquals("application/zip", link.getType());
@@ -767,13 +752,6 @@ public abstract class LocalFileSystemTest {
         assertEquals(Link.REL_CREATE_FOLDER, template.getRel());
         assertEquals(UriBuilder.fromPath(SERVICE_URI).path("folder").path("[parentId]").queryParam("name", "[name]")
                                .build().toString(), template.getHref());
-
-        template = templates.get(Link.REL_CREATE_PROJECT);
-        assertNotNull("'" + Link.REL_CREATE_PROJECT + "' template not found. ", template);
-        assertEquals(MediaType.APPLICATION_JSON, template.getType());
-        assertEquals(Link.REL_CREATE_PROJECT, template.getRel());
-        assertEquals(UriBuilder.fromPath(SERVICE_URI).path("project").path("[parentId]").queryParam("name", "[name]")
-                               .queryParam("type", "[type]").build().toString(), template.getHref());
 
         template = templates.get(Link.REL_LOCK);
         assertNotNull("'" + Link.REL_LOCK + "' template not found. ", template);

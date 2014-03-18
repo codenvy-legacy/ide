@@ -150,7 +150,7 @@ public class TypeBindingConvetror {
     }
 
     private static JsonElement toJsonParametersName(AbstractMethodDeclaration parameters) {
-        if (parameters.arguments == null) return JsonNull.INSTANCE;
+        if (parameters==null || parameters.arguments == null) return JsonNull.INSTANCE;
         JsonArray array = new JsonArray();
 
         for (Argument parameter : parameters.arguments) {

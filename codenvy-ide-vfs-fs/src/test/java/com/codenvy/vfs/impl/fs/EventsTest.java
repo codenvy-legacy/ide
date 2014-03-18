@@ -17,11 +17,15 @@
  */
 package com.codenvy.vfs.impl.fs;
 
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
-import com.codenvy.api.vfs.server.observation.ChangeEvent;
-import com.codenvy.api.vfs.server.observation.ChangeEvent.ChangeType;
-import com.codenvy.api.vfs.server.observation.ChangeEventFilter;
-import com.codenvy.api.vfs.server.observation.EventListener;
+import com.codenvy.api.core.notification.EventSubscriber;
+import com.codenvy.api.vfs.server.observation.CreateEvent;
+import com.codenvy.api.vfs.server.observation.DeleteEvent;
+import com.codenvy.api.vfs.server.observation.MoveEvent;
+import com.codenvy.api.vfs.server.observation.RenameEvent;
+import com.codenvy.api.vfs.server.observation.UpdateACLEvent;
+import com.codenvy.api.vfs.server.observation.UpdateContentEvent;
+import com.codenvy.api.vfs.server.observation.UpdatePropertiesEvent;
+import com.codenvy.api.vfs.server.observation.VirtualFileEvent;
 
 import org.everrest.core.impl.ContainerResponse;
 
@@ -47,8 +51,7 @@ public class EventsTest extends LocalFileSystemTest {
     private String destinationFolderId;
     private String destinationFolderPath;
 
-    private ChangeEventFilter filter;
-    private Listener          listener;
+    private List<VirtualFileEvent> events;
 
     @Override
     public void setUp() throws Exception {
@@ -59,35 +62,57 @@ public class EventsTest extends LocalFileSystemTest {
         fileProperties.put("vfs:mimeType", new String[]{"text/plain"});
         writeProperties(filePath, fileProperties);
         destinationFolderPath = createDirectory(testRootPath, "EventsTest_DestinationFolder");
-
-        listener = new Listener();
-        filter = ChangeEventFilter.ANY_FILTER;
-        eventListenerList.addEventListener(filter, listener);
-
         folderId = pathToId(folderPath);
         fileId = pathToId(filePath);
         destinationFolderId = pathToId(destinationFolderPath);
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        assertTrue("Unable remove listener. ", eventListenerList.removeEventListener(filter, listener));
-        super.tearDown();
-    }
-
-    private class Listener implements EventListener {
-        final List<ChangeEvent> events = new ArrayList<>();
-
-        @Override
-        public void handleEvent(ChangeEvent event) throws VirtualFileSystemException {
-            events.add(event);
-        }
+        events = new ArrayList<>();
+        mountPoint.getEventService().subscribe(new EventSubscriber<CreateEvent>() {
+            @Override
+            public void onEvent(CreateEvent event) {
+                events.add(event);
+            }
+        });
+        mountPoint.getEventService().subscribe(new EventSubscriber<MoveEvent>() {
+            @Override
+            public void onEvent(MoveEvent event) {
+                events.add(event);
+            }
+        });
+        mountPoint.getEventService().subscribe(new EventSubscriber<RenameEvent>() {
+            @Override
+            public void onEvent(RenameEvent event) {
+                events.add(event);
+            }
+        });
+        mountPoint.getEventService().subscribe(new EventSubscriber<DeleteEvent>() {
+            @Override
+            public void onEvent(DeleteEvent event) {
+                events.add(event);
+            }
+        });
+        mountPoint.getEventService().subscribe(new EventSubscriber<UpdateContentEvent>() {
+            @Override
+            public void onEvent(UpdateContentEvent event) {
+                events.add(event);
+            }
+        });
+        mountPoint.getEventService().subscribe(new EventSubscriber<UpdatePropertiesEvent>() {
+            @Override
+            public void onEvent(UpdatePropertiesEvent event) {
+                events.add(event);
+            }
+        });
+        mountPoint.getEventService().subscribe(new EventSubscriber<UpdateACLEvent>() {
+            @Override
+            public void onEvent(UpdateACLEvent event) {
+                events.add(event);
+            }
+        });
     }
 
     public void testCreateFile() throws Exception {
         String name = "testCreateFile";
         String content = "test create file";
-        String contentType = "text/plain;charset=utf8";
         String requestPath = SERVICE_URI + "file/" + folderId + '?' + "name=" + name;
         Map<String, List<String>> headers = new HashMap<>(1);
         headers.put("Content-Type", Arrays.asList("text/plain;charset=utf8"));
@@ -96,11 +121,10 @@ public class EventsTest extends LocalFileSystemTest {
 
         String expectedPath = folderPath + '/' + name;
         assertEquals(content, new String(readFile(expectedPath)));
-        assertEquals(1, listener.events.size());
-        ChangeEvent event = listener.events.get(0);
-        assertEquals(ChangeType.CREATED, event.getType());
-        assertEquals(expectedPath, event.getItemPath());
-        assertEquals(contentType, event.getMimeType());
+        assertEquals(1, events.size());
+        VirtualFileEvent event = events.get(0);
+        assertEquals(VirtualFileEvent.ChangeType.CREATED, event.getType());
+        assertEquals(expectedPath, event.getPath());
     }
 
     public void testCreateFolder() throws Exception {
@@ -111,10 +135,10 @@ public class EventsTest extends LocalFileSystemTest {
 
         String expectedPath = folderPath + '/' + name;
         assertTrue(exists(expectedPath));
-        assertEquals(1, listener.events.size());
-        ChangeEvent event = listener.events.get(0);
-        assertEquals(ChangeType.CREATED, event.getType());
-        assertEquals(expectedPath, event.getItemPath());
+        assertEquals(1, events.size());
+        VirtualFileEvent event = events.get(0);
+        assertEquals(VirtualFileEvent.ChangeType.CREATED, event.getType());
+        assertEquals(expectedPath, event.getPath());
     }
 
     public void testCopy() throws Exception {
@@ -125,11 +149,10 @@ public class EventsTest extends LocalFileSystemTest {
 
         String expectedPath = destinationFolderPath + '/' + fileName;
         assertTrue(exists(expectedPath));
-        assertEquals(1, listener.events.size());
-        ChangeEvent event = listener.events.get(0);
-        assertEquals(ChangeType.CREATED, event.getType());
-        assertEquals(expectedPath, event.getItemPath());
-        assertEquals("text/plain", event.getMimeType());
+        assertEquals(1, events.size());
+        VirtualFileEvent event = events.get(0);
+        assertEquals(VirtualFileEvent.ChangeType.CREATED, event.getType());
+        assertEquals(expectedPath, event.getPath());
     }
 
     public void testMove() throws Exception {
@@ -141,12 +164,11 @@ public class EventsTest extends LocalFileSystemTest {
         String expectedPath = destinationFolderPath + '/' + fileName;
         assertTrue(exists(expectedPath));
         assertFalse(exists(filePath));
-        assertEquals(1, listener.events.size());
-        ChangeEvent event = listener.events.get(0);
-        assertEquals(ChangeType.MOVED, event.getType());
-        assertEquals(expectedPath, event.getItemPath());
-        assertEquals(filePath, event.getOldItemPath());
-        assertEquals("text/plain", event.getMimeType());
+        assertEquals(1, events.size());
+        VirtualFileEvent event = events.get(0);
+        assertEquals(VirtualFileEvent.ChangeType.MOVED, event.getType());
+        assertEquals(expectedPath, event.getPath());
+        assertEquals(filePath, ((MoveEvent)event).getOldPath());
     }
 
     public void testUpdateContent() throws Exception {
@@ -158,11 +180,10 @@ public class EventsTest extends LocalFileSystemTest {
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, content.getBytes(), null);
         assertEquals(204, response.getStatus());
 
-        assertEquals(1, listener.events.size());
-        ChangeEvent event = listener.events.get(0);
-        assertEquals(ChangeType.CONTENT_UPDATED, event.getType());
-        assertEquals(filePath, event.getItemPath());
-        assertEquals("application/xml", event.getMimeType());
+        assertEquals(1, events.size());
+        VirtualFileEvent event = events.get(0);
+        assertEquals(VirtualFileEvent.ChangeType.CONTENT_UPDATED, event.getType());
+        assertEquals(filePath, event.getPath());
     }
 
     public void testUpdateProperties() throws Exception {
@@ -173,11 +194,10 @@ public class EventsTest extends LocalFileSystemTest {
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, properties.getBytes(), null);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
 
-        assertEquals(1, listener.events.size());
-        ChangeEvent event = listener.events.get(0);
-        assertEquals(ChangeType.PROPERTIES_UPDATED, event.getType());
-        assertEquals(filePath, event.getItemPath());
-        assertEquals("text/plain", event.getMimeType());
+        assertEquals(1, events.size());
+        VirtualFileEvent event = events.get(0);
+        assertEquals(VirtualFileEvent.ChangeType.PROPERTIES_UPDATED, event.getType());
+        assertEquals(filePath, event.getPath());
     }
 
     public void testUpdateAcl() throws Exception {
@@ -189,10 +209,10 @@ public class EventsTest extends LocalFileSystemTest {
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, acl.getBytes(), null);
         assertEquals("Error: " + response.getEntity(), 204, response.getStatus());
 
-        assertEquals(1, listener.events.size());
-        ChangeEvent event = listener.events.get(0);
-        assertEquals(ChangeType.ACL_UPDATED, event.getType());
-        assertEquals(filePath, event.getItemPath());
+        assertEquals(1, events.size());
+        VirtualFileEvent event = events.get(0);
+        assertEquals(VirtualFileEvent.ChangeType.ACL_UPDATED, event.getType());
+        assertEquals(filePath, event.getPath());
     }
 
     public void testDelete() throws Exception {
@@ -201,11 +221,10 @@ public class EventsTest extends LocalFileSystemTest {
         assertEquals("Error: " + response.getEntity(), 204, response.getStatus());
 
         assertFalse(exists(filePath));
-        assertEquals(1, listener.events.size());
-        ChangeEvent event = listener.events.get(0);
-        assertEquals(ChangeType.DELETED, event.getType());
-        assertEquals(filePath, event.getItemPath());
-        assertEquals("text/plain", event.getMimeType());
+        assertEquals(1, events.size());
+        VirtualFileEvent event = events.get(0);
+        assertEquals(VirtualFileEvent.ChangeType.DELETED, event.getType());
+        assertEquals(filePath, event.getPath());
     }
 
     public void testRename() throws Exception {
@@ -217,11 +236,10 @@ public class EventsTest extends LocalFileSystemTest {
         String expectedPath = testRootPath + '/' + "_FILE_NEW_NAME_";
         assertTrue(exists(expectedPath));
         assertFalse(exists(filePath));
-        assertEquals(1, listener.events.size());
-        ChangeEvent event = listener.events.get(0);
-        assertEquals(ChangeType.RENAMED, event.getType());
-        assertEquals(expectedPath, event.getItemPath());
-        assertEquals("text/plain", event.getMimeType());
-        assertEquals(filePath, event.getOldItemPath());
+        assertEquals(1, events.size());
+        VirtualFileEvent event = events.get(0);
+        assertEquals(VirtualFileEvent.ChangeType.RENAMED, event.getType());
+        assertEquals(expectedPath, event.getPath());
+        assertEquals(filePath, ((RenameEvent)event).getOldPath());
     }
 }
