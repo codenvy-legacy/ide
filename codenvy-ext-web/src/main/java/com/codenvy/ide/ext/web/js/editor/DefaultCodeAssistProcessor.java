@@ -27,6 +27,7 @@ import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -42,11 +43,12 @@ import java.util.Set;
 public class DefaultCodeAssistProcessor extends DefaultChainedCodeAssistProcessor {
 
     /**
-     * JS code assist processors.
+     * Javascript code assist processors.(as it's optional it can't be in constructor)
      */
     @Inject(optional = true)
-    public DefaultCodeAssistProcessor(Set<JsCodeAssistProcessor> jsCodeAssistProcessors) {
-        super(jsCodeAssistProcessors);
+    protected void injectProcessors(Set<JsCodeAssistProcessor> jsCodeAssistProcessors) {
+        setProcessors(jsCodeAssistProcessors);
     }
+
 
 }

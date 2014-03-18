@@ -22,6 +22,7 @@ import com.codenvy.ide.ext.web.DefaultChainedCodeAssistProcessor;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.annotation.PostConstruct;
 import java.util.Set;
 
 /**
@@ -34,11 +35,11 @@ import java.util.Set;
 public class DefaultCodeAssistProcessor extends DefaultChainedCodeAssistProcessor {
 
     /**
-     * HTML code assist processors.
+     * HTML code assist processors.(as it's optional it can't be in constructor)
      */
     @Inject(optional = true)
-    public DefaultCodeAssistProcessor(Set<HTMLCodeAssistProcessor> htmlCodeAssistProcessors) {
-        super(htmlCodeAssistProcessors);
+    protected void injectProcessors(Set<HTMLCodeAssistProcessor> htmlCodeAssistProcessors) {
+        setProcessors(htmlCodeAssistProcessors);
     }
 
 }
