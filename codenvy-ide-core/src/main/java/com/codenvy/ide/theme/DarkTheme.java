@@ -18,10 +18,12 @@
 package com.codenvy.ide.theme;
 
 import com.codenvy.ide.api.ui.theme.Theme;
+import com.google.inject.Singleton;
 
 /**
  * @author Evgen Vidolob
  */
+@Singleton
 public class DarkTheme implements Theme {
 
     public static final String DARK_THEME_ID = "DarkTheme";

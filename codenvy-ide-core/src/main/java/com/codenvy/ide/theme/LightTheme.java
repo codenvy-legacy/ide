@@ -18,17 +18,19 @@
 package com.codenvy.ide.theme;
 
 import com.codenvy.ide.api.ui.theme.Theme;
+import com.google.inject.Singleton;
 
 /**
  * @author Evgen Vidolob
  */
+@Singleton
 public class LightTheme implements Theme {
 
-    public static final String DEFAULT_THEME_ID = "LightTheme";
+    public static final String LIGHT_THEME_ID = "LightTheme";
 
     @Override
     public String getId() {
-        return DEFAULT_THEME_ID;
+        return LIGHT_THEME_ID;
     }
 
     @Override

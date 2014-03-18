@@ -103,6 +103,12 @@ public class CodenvyTutorialProjectTypeExtension implements ProjectTypeExtension
                                                 "GIN TUTORIAL",
                                                 "The following tutorial will take you through simple example to learn how to use GIN with Codenvy API.",
                                                 baseUrl + "/gin-tutorial.zip"));
+        list.add(new ProjectTemplateDescription("zip",
+                                                "THEME API TUTORIAL",
+                                                "The following tutorial will take you through simple example to learn how to use Theme with Codenvy API.",
+                                                baseUrl + "/theme-tutorial.zip"));
+
+
         return list;
     }
 
