@@ -37,14 +37,12 @@ import java.util.Map;
 public class CodenvyTutorialProjectTypeExtension implements ProjectTypeExtension {
     private String baseUrl;
 
-    private Map<String, String> icons = new HashMap<>();
-
     @Inject
     public CodenvyTutorialProjectTypeExtension(@Named("extension-url") String baseUrl, ProjectTypeDescriptionRegistry registry) {
         this.baseUrl = baseUrl;
-        icons.put("codenvy_tutorial.projecttype.big.icon", "codenvy-tutorial/codenvy.jpg");
         registry.registerProjectType(this);
     }
+
 
     @Override
     public ProjectType getProjectType() {
@@ -111,11 +109,4 @@ public class CodenvyTutorialProjectTypeExtension implements ProjectTypeExtension
 
         return list;
     }
-
-    @Override
-    public Map<String, String> getIconRegistry() {
-        return icons;
-    }
-
-
 }
