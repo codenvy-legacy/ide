@@ -34,6 +34,7 @@ import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.contexmenu.ContextMenuPresenter;
 import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
 import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -120,34 +121,31 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
                 setContent(event.getProject().getParent());
-                if (event.getProject() != null) {
-                    checkProjectType(event.getProject(), new AsyncCallback<Project>() {
-                        @Override
-                        public void onSuccess(Project result) {
-                            resourceProvider.getProject(result.getName(), new AsyncCallback<Project>() {
-                                @Override
-                                public void onSuccess(Project result) {
-                                    // do nothing
-                                }
 
-                                @Override
-                                public void onFailure(Throwable caught) {
-                                    Log.error(ProjectExplorerPartPresenter.class, "Can not get project.", caught);
-                                }
-                            });
-                        }
+                checkProjectType(event.getProject(), new AsyncCallback<Project>() {
+                    @Override
+                    public void onSuccess(Project result) {
+                        resourceProvider.getProject(result.getName(), new AsyncCallback<Project>() {
+                            @Override
+                            public void onSuccess(Project result) {
+                            }
 
-                        @Override
-                        public void onFailure(Throwable caught) {
-                            Log.error(ProjectExplorerPartPresenter.class, "Can not change project type.", caught);
-                        }
-                    });
-                }
+                            @Override
+                            public void onFailure(Throwable caught) {
+                                Log.error(ProjectExplorerPartPresenter.class, "Can not get project.", caught);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        Log.error(ProjectExplorerPartPresenter.class, "Can not change project type.", caught);
+                    }
+                });
             }
 
             @Override
             public void onProjectDescriptionChanged(ProjectActionEvent event) {
-                // do nothing
             }
 
             @Override
@@ -169,12 +167,11 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
             @Override
             public void onResourceMoved(ResourceChangedEvent event) {
-                // TODO handle it
             }
 
             @Override
             public void onResourceDeleted(ResourceChangedEvent event) {
-                if (event.getResource().getResourceType().equals(ItemType.PROJECT.value())) {
+                if (event.getResource().getResourceType().equals(Project.TYPE)) {
                     resourceProvider.showListProjects();
                 } else {
                     updateItem(event.getResource().getParent());
@@ -275,34 +272,41 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     /** {@inheritDoc} */
     @Override
     public void onResourceOpened(final Resource resource) {
-        // TODO: temporary fix Java project tree
-        if (resource.getId().equals(resourceProvider.getActiveProject().getId())) {
-            return;
+        if (resource instanceof Folder && (((Folder)resource).getChildren().isEmpty())) {
+            resource.getProject().refreshChildren((Folder)resource, new AsyncCallback<Folder>() {
+                @Override
+                public void onSuccess(Folder result) {
+                }
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    Log.error(ProjectExplorerPartPresenter.class, "Can not refresh folder tree.", caught);
+                }
+            });
         }
-        final AsyncCallback<Project> callback = new AsyncCallback<Project>() {
-            @Override
-            public void onSuccess(Project result) {
-                result.setVFSInfo(resourceProvider.getVfsInfo());
-                result.refreshTree(new AsyncCallback<Project>() {
-                    @Override
-                    public void onSuccess(Project result) {
-                    }
-
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        Log.error(ProjectExplorerPartPresenter.class, "Can not refresh project tree.", caught);
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                Log.error(ProjectExplorerPartPresenter.class, "Can not change project type.", caught);
-            }
-        };
 
         if (resource.getResourceType().equals(Project.TYPE)) {
-            checkProjectType((Project)resource, callback);
+            checkProjectType((Project)resource, new AsyncCallback<Project>() {
+                @Override
+                public void onSuccess(Project result) {
+                    result.setVFSInfo(resourceProvider.getVfsInfo());
+                    result.refreshTree(new AsyncCallback<Project>() {
+                        @Override
+                        public void onSuccess(Project result) {
+                        }
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            Log.error(ProjectExplorerPartPresenter.class, "Can not refresh project tree.", caught);
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    Log.error(ProjectExplorerPartPresenter.class, "Can not refresh project tree.", caught);
+                }
+            });
         }
     }
 
@@ -328,7 +332,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                 protected void onFailure(Throwable exception) {
                 }
             });
-        } else if (projectTypeId.equals(Constants.UNKNOWN_ID) && !project.getChildren().isEmpty()) {
+        } else if (projectTypeId.equals(Constants.UNKNOWN_ID)/* && !project.getChildren().isEmpty()*/) {
             selectProjectTypePresenter.showDialog(project, callback);
         } else {
             projectServiceClient.getProject(project.getPath(), new AsyncRequestCallback<ProjectDescriptor>(
@@ -338,16 +342,16 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                     project.setProjectType(result.getProjectTypeId());
                     project.setAttributes(result.getAttributes());
 
-                    project.refreshTree(new AsyncCallback<Project>() {
-                        @Override
-                        public void onSuccess(Project result) {
-                        }
-
-                        @Override
-                        public void onFailure(Throwable caught) {
-                            Log.error(ProjectExplorerPartPresenter.class, "Can not refresh project tree.", caught);
-                        }
-                    });
+//                    project.refreshTree(new AsyncCallback<Project>() {
+//                        @Override
+//                        public void onSuccess(Project result) {
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Throwable caught) {
+//                            Log.error(ProjectExplorerPartPresenter.class, "Can not refresh project tree.", caught);
+//                        }
+//                    });
                 }
 
                 @Override

@@ -119,7 +119,7 @@ public class Folder extends Resource {
     }
 
     /**
-     * Looks for the Child Resource, without recursive calls.
+     * Looks for the child resource, without recursive calls.
      *
      * @param name
      * @return resource or null if not found

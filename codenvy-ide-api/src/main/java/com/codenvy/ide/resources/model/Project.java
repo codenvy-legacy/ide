@@ -25,9 +25,7 @@ import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.resources.marshal.FileUnmarshaller;
 import com.codenvy.ide.resources.marshal.FolderTreeUnmarshaller;
-import com.codenvy.ide.resources.marshal.FolderUnmarshaller;
 import com.codenvy.ide.resources.marshal.JSONDeserializer;
 import com.codenvy.ide.resources.marshal.JSONSerializer;
 import com.codenvy.ide.resources.marshal.PropertyUnmarshaller;
@@ -36,7 +34,6 @@ import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.StringUnmarshaller;
-import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.loader.EmptyLoader;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.loging.Log;
@@ -45,6 +42,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -73,33 +71,67 @@ public class Project extends Folder {
      * <p/>
      * Not intended to be used by client.
      */
-    public Project(EventBus eventBus,
-                   AsyncRequestFactory asyncRequestFactory,
-                   ProjectServiceClient projectServiceClient,
+    public Project(EventBus eventBus, AsyncRequestFactory asyncRequestFactory, ProjectServiceClient projectServiceClient,
                    DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(TYPE, PROJECT_MIME_TYPE);
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.description = new ProjectDescription(this);
         this.properties = Collections.<Property>createArray();
+        this.attributes = new HashMap<>();
         this.eventBus = eventBus;
         this.asyncRequestFactory = asyncRequestFactory;
         // TODO : receive it in some way
         this.loader = new EmptyLoader();
     }
 
-    public void setAttributes(Map<String, List<String>> attributes) {
-        this.attributes = attributes;
-    }
-
+    /**
+     * Other attributes.
+     *
+     * @return attributes
+     */
     public Map<String, List<String>> getAttributes() {
         return attributes;
     }
 
-    public String getAttributeValue(String attributeName) {
-        return attributes.get(attributeName).get(0);
+    public void setAttributes(Map<String, List<String>> attributes) {
+        this.attributes = attributes;
     }
 
+    /**
+     * Check if the given attribute is present.
+     *
+     * @param name
+     *         name of the attribute
+     * @return <code>true</code> if attribute is present and <code>false</code> otherwise
+     */
+    public boolean hasAttribute(String name) {
+        return getAttributeValues(name) != null;
+    }
+
+    /**
+     * Get value of attribute <code>name</code>. It is shortcut for:
+     *
+     * @param name
+     *         attribute name
+     * @return value of attribute with specified name or <code>null</code> if attribute does not exists
+     */
+    public String getAttributeValue(String attributeName) {
+        List<String> attributeValues = getAttributeValues(attributeName);
+        if (attributeValues != null) {
+            return attributeValues.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * Get attribute values.
+     *
+     * @param name
+     *         attribute name
+     * @return {@link List} of attribute values or <code>null</code> if attribute does not exists
+     * @see #getAttributeValue(String)
+     */
     public List<String> getAttributeValues(String attributeName) {
         return attributes.get(attributeName);
     }
@@ -351,6 +383,43 @@ public class Project extends Folder {
                                      });
     }
 
+    public void refreshChildren(final Folder root, final AsyncCallback<Folder> callback) {
+        projectServiceClient.getChildren(root.getPath(), new AsyncRequestCallback<Array<ItemReference>>(
+                dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class)) {
+            @Override
+            protected void onSuccess(Array<ItemReference> children) {
+                root.setChildren(Collections.<Resource>createArray());
+                for (ItemReference child : children.asIterable()) {
+                    switch (child.getType()) {
+                        case File.TYPE:
+                            File file = new File(child);
+                            file.setProject(Project.this);
+                            root.addChild(file);
+                            break;
+                        case Folder.TYPE:
+                            Folder folder = new Folder(child);
+                            folder.setProject(Project.this);
+                            root.addChild(folder);
+                            break;
+                        case Project.TYPE:
+                            Log.error(this.getClass(), "Unsupported operation. Unmarshalling a child projects is not supported");
+                            break;
+                        default:
+                            Log.error(this.getClass(), "Unsupported Resource type: " + child.getType());
+                    }
+                }
+
+                eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(root));
+                callback.onSuccess(root);
+            }
+
+            @Override
+            protected void onFailure(Throwable throwable) {
+                callback.onFailure(throwable);
+            }
+        });
+    }
+
     /**
      * Delete child resource.
      *
@@ -446,73 +515,6 @@ public class Project extends Folder {
     }
 
     /**
-     * Lock file.
-     *
-     * @param file
-     *         file to lock
-     * @param callback
-     *         callback
-     */
-    public void lock(File file, final AsyncCallback<String> callback) {
-        try {
-            checkItemValid(file);
-            // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<String> internalCallback = new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-                @Override
-                protected void onSuccess(String result) {
-                    callback.onSuccess(result);
-                }
-
-                @Override
-                protected void onFailure(Throwable exception) {
-                    callback.onFailure(exception);
-                }
-            };
-
-            String url = file.getLinkByRelation(Link.REL_LOCK).getHref();
-            loader.setMessage("Locking file...");
-            asyncRequestFactory.createPostRequest(url, null).loader(loader).send(internalCallback);
-        } catch (Exception e) {
-            callback.onFailure(e);
-        }
-    }
-
-    /**
-     * Unlock file.
-     *
-     * @param file
-     *         file to unlock
-     * @param lockToken
-     *         lock token
-     * @param callback
-     *         callback
-     */
-    public void unlock(File file, String lockToken, final AsyncCallback<Void> callback) {
-        try {
-            checkItemValid(file);
-            // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<Void> internalCallback = new AsyncRequestCallback<Void>() {
-                @Override
-                protected void onSuccess(Void result) {
-                    callback.onSuccess(result);
-                }
-
-                @Override
-                protected void onFailure(Throwable exception) {
-                    callback.onFailure(exception);
-                }
-            };
-
-            String url = file.getLinkByRelation(Link.REL_UNLOCK).getHref();
-            url = URL.decode(url).replace("[lockToken]", lockToken);
-            loader.setMessage("Unlocking file...");
-            asyncRequestFactory.createPostRequest(url, null).loader(loader).send(internalCallback);
-        } catch (Exception e) {
-            callback.onFailure(e);
-        }
-    }
-
-    /**
      * Move resource to new destination.
      *
      * @param source
@@ -525,39 +527,7 @@ public class Project extends Folder {
      *         callback
      */
     public void move(final Resource source, final Folder destination, String lockToken, final AsyncCallback<Resource> callback) {
-        try {
-            checkItemValid(source);
-            checkItemValid(destination);
-
-            AsyncRequestCallback<Void> internalCallback = new AsyncRequestCallback<Void>() {
-                @Override
-                protected void onSuccess(Void result) {
-                    // TODO : check consistency
-                    source.getParent().removeChild(source);
-                    destination.addChild(source);
-
-                    eventBus.fireEvent(ResourceChangedEvent.createResourceMovedEvent(source));
-                    callback.onSuccess(source);
-                }
-
-                @Override
-                protected void onFailure(Throwable exception) {
-                    callback.onFailure(exception);
-                }
-            };
-
-            // TODO check with locks
-            String url = source.getLinkByRelation(Link.REL_MOVE).getHref();
-            url = URL.decode(url).replace("[parentId]", destination.getId());
-            if (File.TYPE.equals(source.getResourceType()) && ((File)source).isLocked()) {
-                url = URL.decode(url).replace("[lockToken]", ((File)source).getLock().getLockToken());
-            }
-            url = URL.encode(url);
-            loader.setMessage("Moving item...");
-            asyncRequestFactory.createPostRequest(url, null).loader(loader).send(internalCallback);
-        } catch (Exception e) {
-            callback.onFailure(e);
-        }
+        callback.onFailure(new Exception("Move operation not currently supported"));
     }
 
     /**
@@ -571,7 +541,7 @@ public class Project extends Folder {
      *         callback
      */
     public void copy(final Resource source, final Folder destination, final AsyncCallback<Resource> callback) {
-        callback.onFailure(new Exception("copy not supported"));
+        callback.onFailure(new Exception("Copy operation not currently supported"));
     }
 
     /**
@@ -585,66 +555,7 @@ public class Project extends Folder {
      *         callback
      */
     public void rename(final Resource resource, final String newName, final AsyncCallback<Resource> callback) {
-        try {
-            checkItemValid(resource);
-            Unmarshallable<Resource> unmarshaller =
-                    (Unmarshallable<Resource>)((resource instanceof File) ? new FileUnmarshaller() : new FolderUnmarshaller());
-            // internal call back
-            AsyncRequestCallback<Resource> internalCallback = new AsyncRequestCallback<Resource>(unmarshaller) {
-                @Override
-                protected void onSuccess(Resource result) {
-                    final String id = result.getId();
-                    final Folder folderToRefresh =
-                            (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId()))
-                            ? (Project)resource : resource.getParent();
-                    //Renamed the project:
-                    if (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId())) {
-                        ((Project)resource).setName(result.getName());
-                        ((Project)resource).setId(result.getId());
-                        ((Project)resource).getLinks().putAll(result.getLinks());
-                    }
-
-                    refreshTree(folderToRefresh, new AsyncCallback<Folder>() {
-                        @Override
-                        public void onSuccess(Folder result) {
-                            Resource renamed =
-                                    (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId()))
-                                    ? resource : result.findResourceById(id);
-                            renamed.getParent().setTag(folderToRefresh.getTag());
-                            eventBus.fireEvent(ResourceChangedEvent.createResourceRenamedEvent(renamed));
-                            callback.onSuccess(renamed);
-                        }
-
-                        @Override
-                        public void onFailure(Throwable caught) {
-                            Log.error(Project.class, callback);
-                        }
-                    });
-                }
-
-                @Override
-                protected void onFailure(Throwable exception) {
-                    callback.onFailure(exception);
-                }
-            };
-
-            String url = resource.getLinkByRelation(Link.REL_RENAME).getHref();
-            url = URL.decode(url);
-            url = url.replace("mediaType=[mediaType]", "");
-            url = (newName != null && !newName.isEmpty()) ? url.replace("[newname]", newName) : url.replace("newname=[newname]", "");
-
-            if (File.TYPE.equals(resource.getResourceType()) && ((File)resource).isLocked()) {
-                url = URL.decode(url).replace("[lockToken]", ((File)resource).getLock().getLockToken());
-            }
-
-            url = url.replace("?&", "?");
-            url = url.replaceAll("&&", "&");
-            url = URL.encode(url);
-            loader.setMessage("Renaming item...");
-            asyncRequestFactory.createPostRequest(url, null).loader(loader).send(internalCallback);
-        } catch (Exception e) {
-            callback.onFailure(e);
-        }
+        callback.onFailure(new Exception("Rename operation not currently supported"));
     }
 
     /** @param callback */
@@ -734,7 +645,6 @@ public class Project extends Folder {
         }
     }
 
-    // TODO
     public void setProjectType(String projectTypeId) {
         this.projectTypeId = projectTypeId;
     }
@@ -742,4 +652,5 @@ public class Project extends Folder {
     String getProjectTypeId() {
         return projectTypeId;
     }
+
 }

@@ -51,6 +51,8 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.resources.model.ProjectDescription.LANGUAGE_ATTRIBUTE;
+
 /**
  * Implementation of Resource Provider
  *
@@ -113,9 +115,8 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                     @Override
                     protected void onFailure(Throwable exception) {
                         // notify Component failed
-                        callback.onFailure(new ComponentException(
-                                "Failed to start Resource Manager. Cause:" + exception.getMessage(),
-                                ResourceProviderComponent.this));
+                        callback.onFailure(new ComponentException("Failed to start Resource Provider. Cause:" + exception.getMessage(),
+                                                                  ResourceProviderComponent.this));
                         Log.error(ResourceProviderComponent.class, exception);
                     }
                 };
@@ -133,8 +134,8 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
             protected void onSuccess(ProjectDescriptor result) {
                 Folder rootFolder = vfsInfo.getRoot();
 
-                final String language = result.getAttributes().get("language").get(0);
-                Project project = getModelProvider(language).createProjectInstance();
+                final String language = result.getAttributes().get(LANGUAGE_ATTRIBUTE).get(0);
+                final Project project = getModelProvider(language).createProjectInstance();
                 project.setId(result.getId());
                 project.setAttributes(result.getAttributes());
                 project.setProjectType(result.getProjectTypeId());
@@ -152,9 +153,22 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 activeProject = project;
 
                 // get project structure
-                project.refreshTree(new AsyncCallback<Project>() {
+//                project.refreshTree(new AsyncCallback<Project>() {
+//                    @Override
+//                    public void onSuccess(Project project) {
+//                        eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
+//                        callback.onSuccess(project);
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Throwable exception) {
+//                        callback.onFailure(exception);
+//                    }
+//                });
+
+                project.refreshChildren(project, new AsyncCallback<Folder>() {
                     @Override
-                    public void onSuccess(Project project) {
+                    public void onSuccess(Folder result) {
                         eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
                         callback.onSuccess(project);
                     }
@@ -416,7 +430,6 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 new AsyncRequestCallback<Array<ProjectReference>>(dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectReference.class)) {
                     @Override
                     protected void onSuccess(Array<ProjectReference> result) {
-                        eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(null));
                         for (ProjectReference item : result.asIterable()) {
                             Project project = new Project(eventBus, asyncRequestFactory, projectServiceClient, dtoUnmarshallerFactory);
                             project.setName(item.getName());

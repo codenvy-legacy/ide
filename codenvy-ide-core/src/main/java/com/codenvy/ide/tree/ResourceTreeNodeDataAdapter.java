@@ -35,7 +35,8 @@ public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource> {
 
     @Override
     public boolean hasChildren(Resource data) {
-        return data.isFolder() && ((Folder)data).getChildren().size() > 0;
+//        return data.isFolder() && ((Folder)data).getChildren().size() > 0;
+        return data.isFolder();
     }
 
     @Override
@@ -69,8 +70,6 @@ public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource> {
 
     @Override
     public void setNodeName(Resource data, String name) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -80,7 +79,6 @@ public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource> {
 
     @Override
     public Resource getDragDropTarget(Resource data) {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -108,13 +106,13 @@ public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource> {
             Folder localRoot = (Folder)root;
             for (int i = 0; i < relativeNodePath.size(); i++) {
                 if (localRoot != null) {
-                    Resource findResourceById = localRoot.findResourceById(relativeNodePath.get(i));
-                    if (findResourceById instanceof Folder) {
-                        localRoot = (Folder)findResourceById;
+                    Resource foundResource = localRoot.findResourceById(relativeNodePath.get(i));
+                    if (foundResource instanceof Folder) {
+                        localRoot = (Folder)foundResource;
                     }
-                    if (findResourceById instanceof File) {
+                    if (foundResource instanceof File) {
                         if (i == (relativeNodePath.size() - 1)) {
-                            return findResourceById;
+                            return foundResource;
                         }
                     }
                 }
