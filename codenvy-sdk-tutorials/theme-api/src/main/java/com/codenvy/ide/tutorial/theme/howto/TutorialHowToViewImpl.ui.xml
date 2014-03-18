@@ -15,19 +15,13 @@
   ~ is strictly forbidden unless prior written permission is obtained
   ~ from Codenvy S.A..
   -->
-<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
-    <id>parts-api-tutorial</id>
-    <formats>
-        <format>zip</format>
-    </formats>
-    <includeBaseDirectory>false</includeBaseDirectory>
-    <fileSets>
-        <fileSet>
-            <directory></directory>
-            <excludes>
-                <exclude>**/target/**</exclude>
-            </excludes>
-        </fileSet>
-    </fileSets>
-</assembly>
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <g:HTMLPanel>
+        <p>Tutorial How-To</p>
+        <p>
+           To use new theme go to 'Window' -> 'Preferences' menu, select Appearance section and select new theme.
+        </p>
+    </g:HTMLPanel>
+</ui:UiBinder>

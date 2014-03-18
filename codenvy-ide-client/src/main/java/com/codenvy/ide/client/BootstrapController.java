@@ -171,7 +171,6 @@ public class BootstrapController {
                     @Override
                     protected void onSuccess(Array<ProjectTypeDescriptor> result) {
                         projectTypeDescriptorRegistry.registerDescriptors(result);
-                        registerIcons(result);
                     }
 
                     @Override
@@ -181,12 +180,7 @@ public class BootstrapController {
                 });
     }
 
-    private void registerIcons(Array<ProjectTypeDescriptor> result) {
-        for (int i=0; i < result.size(); i++){
-            ProjectTypeDescriptor projectTypeDescriptor = result.get(i);
-            iconRegistry.registerIcons(projectTypeDescriptor.getIconRegistry());
-        }
-    }
+
 
     private void registerDefaultIcon() {
         Map<String, String> icons = new HashMap<String, String>();

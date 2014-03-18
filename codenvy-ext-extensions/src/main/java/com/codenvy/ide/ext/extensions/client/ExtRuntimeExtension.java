@@ -18,6 +18,7 @@
 package com.codenvy.ide.ext.extensions.client;
 
 import com.codenvy.ide.api.extension.Extension;
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.ext.extensions.client.actions.GetLogsAction;
@@ -25,6 +26,9 @@ import com.codenvy.ide.ext.extensions.client.actions.LaunchAction;
 import com.codenvy.ide.ext.extensions.client.actions.StopAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_MAIN_MENU;
 
@@ -42,7 +46,15 @@ public class ExtRuntimeExtension {
                                ActionManager actionManager,
                                LaunchAction launchAction,
                                GetLogsAction getLogsAction,
-                               StopAction stopAction) {
+                               StopAction stopAction,
+                               IconRegistry iconRegistry) {
+        Map<String, String> icons = new HashMap<>();
+        icons.put("codenvy_extension.projecttype.big.icon", "codenvy-ext/codenvy.jpg");
+        icons.put("war.projecttype.small.icon", "java-extension/web_app_big.png");
+        icons.put("war.folder.small.icon", "java-extension/package.gif");
+        icons.put("war.file.small.icon", "java-extension/java-class.png");
+        icons.put("java.class", "java-extension/java-class.png");
+        icons.put("java.package", "java-extension/package.gif");
         // register actions
         DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
 
