@@ -20,6 +20,7 @@ package com.codenvy.ide.ext.java.server;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -42,7 +43,7 @@ public class JsonSearchRequester implements ISearchRequestor {
         constructor.addProperty("modifiers", modifiers);
         constructor.addProperty("simpleTypeName", new String(simpleTypeName));
         constructor.addProperty("parameterCount", parameterCount);
-        constructor.addProperty("signature", new String(signature));
+        constructor.add("signature", signature == null ? JsonNull.INSTANCE : new JsonPrimitive(new String(signature)));
         constructor.add("parameterTypes", BinaryTypeConvector.toJsonArrayString(parameterTypes));
         constructor.add("parameterNames", BinaryTypeConvector.toJsonArrayString(parameterNames));
         constructor.addProperty("typeModifiers", typeModifiers);
