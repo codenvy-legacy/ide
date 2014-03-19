@@ -20,7 +20,6 @@ import com.codenvy.ide.ext.java.jdt.core.Signature;
 import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryMethod;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryType;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.env.ICompilationUnit;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.NameEnvironmentAnswer;
 
@@ -1481,9 +1480,8 @@ public class InternalCompletionProposal extends CompletionProposal {
 //         {
 //            paramTypeNames[i] = new String(Signature.toCharArray(types[i]));
 //         }
-            // TODO
-            return false;
-            // return internalCompletionContext.extendedContext.canUseDiamond(paramTypeNames,declarationType);
+            return true;
+//            return internalCompletionContext.extendedContext.canUseDiamond(paramTypeNames,declarationType);
         } else {
             return false;
         }
