@@ -52,7 +52,6 @@
         <module>codenvy-ext-git</module>
         <module>codenvy-ext-ssh</module>
         <module>codenvy-ext-github</module>
-        <module>codenvy-ext-extensions</module>
         <module>codenvy-ide-security</module>
         <module>codenvy-ide-client</module>
         <module>codenvy-ext-tutorials</module>

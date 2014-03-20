@@ -15,35 +15,30 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.extensions.server;
+package com.codenvy.ide.server;
 
 import com.codenvy.api.project.server.ProjectTypeDescriptionExtension;
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
 import com.codenvy.api.project.shared.AttributeDescription;
 import com.codenvy.api.project.shared.ProjectType;
-import com.codenvy.ide.ext.extensions.shared.Constants;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * {@link ProjectTypeDescriptionExtension} to register project types.
- *
- * @author Artem Zatsarynnyy
- */
+/** @author Artem Zatsarynnyy */
 @Singleton
-public class ProjectTypeDescriptionsExtension implements ProjectTypeDescriptionExtension {
+public class CodenvyPluginProjectTypeDescriptionExtension implements ProjectTypeDescriptionExtension {
     @Inject
-    public ProjectTypeDescriptionsExtension(ProjectTypeDescriptionRegistry registry) {
+    public CodenvyPluginProjectTypeDescriptionExtension(ProjectTypeDescriptionRegistry registry) {
         registry.registerDescription(this);
     }
 
     @Override
     public List<ProjectType> getProjectTypes() {
         final List<ProjectType> list = new ArrayList<>(1);
-        list.add(new ProjectType(Constants.CODENVY_EXTENSION_ID, Constants.CODENVY_EXTENSION_NAME));
+        list.add(new ProjectType(Constants.CODENVY_PLUGIN_ID, Constants.CODENVY_PLUGIN_NAME));
         return list;
     }
 

@@ -15,37 +15,34 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.extensions.server;
+package com.codenvy.ide.server;
 
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
 import com.codenvy.api.project.server.ProjectTypeExtension;
 import com.codenvy.api.project.shared.Attribute;
 import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
-import com.codenvy.ide.ext.extensions.shared.Constants;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /** @author Artem Zatsarynnyy */
 @Singleton
-public class CodenvyExtProjectTypeExtension implements ProjectTypeExtension {
+public class CodenvyPluginProjectTypeExtension implements ProjectTypeExtension {
     private String baseUrl;
 
     @Inject
-    public CodenvyExtProjectTypeExtension(@Named("extension-url") String baseUrl, ProjectTypeDescriptionRegistry registry) {
+    public CodenvyPluginProjectTypeExtension(@Named("extension-url") String baseUrl, ProjectTypeDescriptionRegistry registry) {
         this.baseUrl = baseUrl;
         registry.registerProjectType(this);
     }
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType(Constants.CODENVY_EXTENSION_ID, Constants.CODENVY_EXTENSION_NAME);
+        return new ProjectType(Constants.CODENVY_PLUGIN_ID, Constants.CODENVY_PLUGIN_NAME);
     }
 
     @Override
