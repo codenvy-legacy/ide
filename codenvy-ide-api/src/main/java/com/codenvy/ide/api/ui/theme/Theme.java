@@ -53,18 +53,30 @@ public interface Theme {
      * @return the color
      */
     String getSelectionBackground();
-
+    
     /**
      * Background color for inactive(not selected part button)
      * @return the color
      */
     String getInactiveTabBackground();
+    
+    /**
+     * Border color for inactive(not selected part button)
+     * @return the color
+     */
+    String getInactiveTabBorderColor();
 
     /**
      * Background color for active (selected part button)
      * @return the color
      */
     String getActiveTabBackground();
+    
+    /**
+     * Border color for active (selected part button)
+     * @return the color
+     */
+    String getActiveTabBorderColor();
 
     /**
      * Background color of part stack panel(where placed part button)
