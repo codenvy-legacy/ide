@@ -43,7 +43,7 @@ public class Util {
 
     public static char[][] arrayStringToCharArray(Array<String> strings) {
         if (strings == null) return null;
-
+        if(strings.size() == 0) return null;
         char[][] result = new char[strings.size()][];
         for (int i = 0; i < strings.size(); i++) {
             result[i] = strings.get(i).toCharArray();

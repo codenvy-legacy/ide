@@ -48,7 +48,6 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.LookupEnvironment;
  * The class was introduced in 3.0 as a more evolvable replacement for the <code>ICompletionRequestor</code> interface.
  * </p>
  *
- * @see ICodeAssist
  */
 public abstract class CompletionRequestor {
 
