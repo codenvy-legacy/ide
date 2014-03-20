@@ -66,6 +66,7 @@
         <module>codenvy-sdk-tutorials/gin</module>
         <module>codenvy-sdk-tutorials/gist-ext</module>
         <module>codenvy-sdk-tutorials/helloworld-ext</module>
+        <module>codenvy-sdk-tutorials/icons-regitry-api</module>
         <module>codenvy-sdk-tutorials/wysiwyg-editor</module>
         <module>codenvy-sdk-private-dependencies</module>
         <module>codenvy-sdk-tools</module>

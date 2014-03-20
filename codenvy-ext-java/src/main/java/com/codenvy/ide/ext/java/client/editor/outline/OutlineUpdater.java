@@ -39,6 +39,7 @@ public class OutlineUpdater implements JavaParserWorker.WorkerCallback<WorkerCod
         worker.addOutlineUpdateHandler(fileId, this);
         root = JavaCodeBlock.make();
         root.setType(CodeBlock.ROOT_TYPE);
+        root.setOffset(0);
         root.setChildren(Collections.<JavaCodeBlock>createArray());
         outlineModel.updateRoot(root);
     }
