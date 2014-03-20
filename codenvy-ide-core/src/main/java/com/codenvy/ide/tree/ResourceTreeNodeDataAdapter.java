@@ -22,10 +22,10 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
+import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.ui.tree.NodeDataAdapter;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
-
 
 public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource> {
     @Override
@@ -35,7 +35,9 @@ public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource> {
 
     @Override
     public boolean hasChildren(Resource data) {
-//        return data.isFolder() && ((Folder)data).getChildren().size() > 0;
+        if (data instanceof Project) {
+            return data.getProject() != null;
+        }
         return data.isFolder();
     }
 
