@@ -113,7 +113,7 @@ public class ResetToCommitPresenter implements ResetToCommitView.ActionDelegate 
                       new AsyncRequestCallback<Void>() {
                           @Override
                           protected void onSuccess(Void result) {
-                              resourceProvider.getActiveProject().refreshTree(new AsyncCallback<Project>() {
+                              resourceProvider.getActiveProject().refreshChildren(new AsyncCallback<Project>() {
                                   @Override
                                   public void onSuccess(Project result) {
                                       Notification notification = new Notification(constant.resetSuccessfully(), INFO);

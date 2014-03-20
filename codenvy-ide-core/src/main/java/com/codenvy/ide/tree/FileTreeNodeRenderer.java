@@ -136,7 +136,7 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
         Project project = item.getProject();
         Image icon = null;
         if (project == null) return  iconRegistry.getDefaultIcon();
-        String projectTypeId = project.getDescription().getProjectTypeId();
+        final String projectTypeId = project.getDescription().getProjectTypeId();
         if (item instanceof Project)
             icon = iconRegistry.getIcon(projectTypeId + ".projecttype.small.icon");
         else if (item instanceof Folder)
@@ -146,11 +146,10 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
             String ext = split[split.length - 1];
             icon = iconRegistry.getIcon(projectTypeId + "/" + ext + ".file.small.icon");
         }
-        if (icon == null)
+        if (icon == null) {
             icon = iconRegistry.getDefaultIcon();
-
+        }
         return icon;
-
     }
 
     private final EventListener mouseDownListener = new EventListener() {

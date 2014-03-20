@@ -19,7 +19,9 @@ package com.codenvy.ide.ext.java.client.projectmodel;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.TreeElement;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringSet;
 import com.codenvy.ide.collections.StringSet.IterationCallback;
@@ -39,7 +41,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import java.util.List;
 
 /**
- * Recursively traverses the {@link TreeElement} to build Java project model.
+ * Recursively traverses the folder's children to build Java project model.
  *
  * @author Evgen Vidolob
  */
@@ -75,129 +77,144 @@ public class JavaModelUnmarshaller {
         });
     }
 
-    public void unmarshal(TreeElement response) {
-        parseProjectStructure(response.getChildren(), root, root, project);
+    public void unmarshalChildren(Array<ItemReference> children, Array<ProjectDescriptor> modules) {
+        parseChildren(children, root, root, modules, project);
     }
 
-    /**
-     * Parse project structure and build Java project model.
-     *
-     * @param children
-     *         children to parse
-     * @param parentFolder
-     *         the folder to add children's that part of java model
-     * @param parentFolderNonModelItems
-     *         the folder to add children's that not part of java model
-     * @param project
-     *         the project for that building java model
-     */
-    private void parseProjectStructure(List<TreeElement> children, Folder parentFolder, Folder parentFolderNonModelItems, Project project) {
-        for (TreeElement itemObject : children) {
-            ItemReference item = itemObject.getNode();
-            String itemName = item.getName();
+    public void unmarshalTree(List<TreeElement> children) {
+        for (TreeElement treeElement : children) {
+            ItemReference item = treeElement.getNode();
+            if (item.getType().equals(Folder.TYPE) && treeElement.getChildren().size() == 1 && item.getChildrenCount() == 1) {
+                unmarshalTree(treeElement.getChildren());
+            } else {
+                final String itemPath = item.getPath();
+                String packageName = itemPath.replace(root.getPath(), "").replaceAll("/", ".");
+                packageName = packageName.startsWith(".") ? packageName.replaceFirst(".", "") : packageName;
+                parseFolderItem(item, root, new Package(item, packageName), project);
+            }
+        }
+    }
 
-            // skip hidden files/folders
-            if (itemName.startsWith(".")) {
+    private void parseChildren(Array<ItemReference> children, Folder parentFolder, Folder parentFolderNonModelItems,
+                               Array<ProjectDescriptor> modules, Project project) {
+        for (ItemReference item : children.asIterable()) {
+            // skip hidden items
+            if (item.getName().startsWith(".")) {
                 continue;
             }
 
-            final String type = item.getType();
-
-            if (Project.TYPE.equalsIgnoreCase(type)) {
-                Project childProject;
-                Resource existingProject = parentFolder.findChildByName(itemName);
-                if (existingProject == null) {
-                    existingProject = project.findChildByName(itemName);
-                }
-                if (existingProject == null) {
-                    existingProject = parentFolderNonModelItems.findChildByName(itemName);
-                }
-
-                // Make sure found resource is Project
-                if (existingProject != null && existingProject instanceof Project) {
-                    // use existing folder instance as is
-                    childProject = (Project)existingProject;
-                    childProject.getChildren().clear();
-                    parseProjectStructure(itemObject.getChildren(), childProject, childProject, childProject);
-                } else {
-                    childProject = new JavaProject(eventBus, asyncRequestFactory, projectServiceClient, dtoUnmarshallerFactory);
-                    childProject.init(itemObject.getNode());
-                    parentFolderNonModelItems.addChild(childProject);
-                    childProject.setProject(childProject);
-                    parseProjectStructure(itemObject.getChildren(), childProject, childProject, childProject);
-                }
-            } else if (Folder.TYPE.equalsIgnoreCase(type)) {
-                Folder folder;
-                Resource existingFolder = parentFolder.findChildByName(itemName);
-                if (existingFolder == null) {
-                    existingFolder = project.findChildByName(itemName);
-                }
-                if (existingFolder == null) {
-                    existingFolder = parentFolderNonModelItems.findChildByName(itemName);
-                }
-
-                // Make sure found resource is Folder
-                if (existingFolder != null && existingFolder instanceof Folder) {
-                    // use existing folder instance as is
-                    folder = (Folder)existingFolder;
-                    folder.getChildren().clear();
-                    if (folder instanceof Package) {
-                        parseProjectStructure(itemObject.getChildren(), folder.getParent(), folder, project);
+            switch (item.getType()) {
+                case File.TYPE:
+                    File file;
+                    // check if parent of this file is package and file has valid JAVA name,
+                    // then add as compilation unit else as regular file
+                    if (parentFolderNonModelItems instanceof Package && isCompilationUnitName(item.getName())) {
+                        file = new CompilationUnit(item);
                     } else {
-                        parseProjectStructure(itemObject.getChildren(), folder, folder, project);
+                        file = new File(item);
                     }
-                } else {
-                    final String path = item.getPath();
-                    final String name = item.getName();
-                    // create new source folder
-                    if (sourceFolders.contains(path)) {
-                        folder = new SourceFolder(item, name);
-                        parentFolder.addChild(folder);
-                        folder.setProject(project);
-                        sourceFolders.remove(path);
-                        parseProjectStructure(itemObject.getChildren(), folder, folder, project);
+                    parentFolderNonModelItems.addChild(file);
+                    file.setProject(project);
+                    break;
+                case Folder.TYPE:
+                    if (isProject(item, modules)) {
+                        parseProjectItem(item, parentFolder, parentFolderNonModelItems, project, modules);
+                    } else {
+                        parseFolderItem(item, parentFolder, parentFolderNonModelItems, project);
                     }
-                    // add package or regular folder
-                    else {
-                        String packageName = name;
-                        // filter folders with invalid names for java packages
-                        if ((parentFolder instanceof SourceFolder || parentFolder instanceof Package) && isPackageNameValid(packageName)) {
-                            if (parentFolder instanceof SourceFolder) {
-                                sourceFolders.remove(path);
-                            }
-                            packageName = path.replace(parentFolder.getPath(), "").replaceAll("/", ".");
-                            packageName = packageName.startsWith(".") ? packageName.replaceFirst(".", "") : packageName;
-                            folder = new Package(item, packageName);
+                    break;
+                default:
+                    Log.error(this.getClass(), "Unsupported resource type: " + item.getType());
+            }
+        }
+    }
 
-                            if (itemObject.getChildren().size() == 1
-                                && itemObject.getChildren().get(0).getNode().getType().equalsIgnoreCase(Folder.TYPE)) {
-                                parseProjectStructure(itemObject.getChildren(), parentFolder, folder, project);
-                            } else {
-                                parentFolder.addChild(folder);
-                                folder.setProject(project);
-                                parseProjectStructure(itemObject.getChildren(), folder, folder, project);
-                            }
-                        } else {
-                            folder = new Folder(item);
-                            parentFolderNonModelItems.addChild(folder);
-                            folder.setProject(project);
-                            parseProjectStructure(itemObject.getChildren(), folder, folder, project);
-                        }
+    private boolean isProject(ItemReference item, Array<ProjectDescriptor> modules) {
+        for (ProjectDescriptor moduleDescriptor : modules.asIterable()) {
+            if (moduleDescriptor.getName().equals(item.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void parseProjectItem(ItemReference item, Folder parentFolder, Folder parentFolderNonModelItems, Project project,
+                                  Array<ProjectDescriptor> modules) {
+        Project childProject;
+        Resource existingProject = parentFolder.findChildByName(item.getName());
+        if (existingProject == null) {
+            existingProject = project.findChildByName(item.getName());
+        }
+        if (existingProject == null) {
+            existingProject = parentFolderNonModelItems.findChildByName(item.getName());
+        }
+
+        // Make sure found resource is Project
+        if (existingProject != null && existingProject instanceof Project) {
+            // use existing folder instance as is
+            childProject = (Project)existingProject;
+            childProject.getChildren().clear();
+        } else {
+            childProject = new JavaProject(eventBus, asyncRequestFactory, projectServiceClient, dtoUnmarshallerFactory);
+            childProject.init(item);
+
+            for (ProjectDescriptor moduleDescriptor : modules.asIterable()) {
+                if (moduleDescriptor.getName().equals(item.getName())) {
+                    childProject.setAttributes(moduleDescriptor.getAttributes());
+                    childProject.setProjectType(moduleDescriptor.getProjectTypeId());
+                    break;
+                }
+            }
+
+            parentFolderNonModelItems.addChild(childProject);
+            childProject.setProject(childProject);
+        }
+    }
+
+    private void parseFolderItem(ItemReference item, Folder parentFolder, Folder parentFolderNonModelItems, Project project) {
+        Folder folder;
+        Resource existingFolder = parentFolder.findChildByName(item.getName());
+        if (existingFolder == null) {
+            existingFolder = project.findChildByName(item.getName());
+        }
+        if (existingFolder == null) {
+            existingFolder = parentFolderNonModelItems.findChildByName(item.getName());
+        }
+
+        // Make sure found resource is Folder
+        if (existingFolder != null && existingFolder instanceof Folder) {
+            // use existing folder instance as is
+            folder = (Folder)existingFolder;
+            folder.getChildren().clear();
+        } else {
+            final String path = item.getPath();
+            final String name = item.getName();
+            // create new source folder
+            if (sourceFolders.contains(path)) {
+                folder = new SourceFolder(item, name);
+                parentFolder.addChild(folder);
+                folder.setProject(project);
+                sourceFolders.remove(path);
+            }
+            // add package or regular folder
+            else {
+                String packageName = name;
+                // filter folders with invalid names for java packages
+                if ((parentFolder instanceof SourceFolder || parentFolder instanceof Package) &&
+                    isPackageNameValid(packageName)) {
+                    if (parentFolder instanceof SourceFolder) {
+                        sourceFolders.remove(path);
                     }
-                }
-            } else if (File.TYPE.equalsIgnoreCase(type)) {
-                File file;
-                // check if parent of this file is package and file has valid java name,
-                // then add as compilation unit else as regular file
-                if (parentFolderNonModelItems instanceof Package && isCompilationUnitName(item.getName())) {
-                    file = new CompilationUnit(item);
+                    packageName = path.replace(parentFolder.getPath(), "").replaceAll("/", ".");
+                    packageName = packageName.startsWith(".") ? packageName.replaceFirst(".", "") : packageName;
+                    folder = new Package(item, packageName);
+                    parentFolder.addChild(folder);
+                    folder.setProject(project);
                 } else {
-                    file = new File(item);
+                    folder = new Folder(item);
+                    parentFolderNonModelItems.addChild(folder);
+                    folder.setProject(project);
                 }
-                parentFolderNonModelItems.addChild(file);
-                file.setProject(project);
-            } else {
-                Log.error(this.getClass(), "Unsupported Resource type: " + type);
             }
         }
     }

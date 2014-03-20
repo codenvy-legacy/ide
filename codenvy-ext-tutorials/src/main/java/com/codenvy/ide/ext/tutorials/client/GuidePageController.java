@@ -87,6 +87,9 @@ public class GuidePageController {
     }
 
     private boolean isTutorialContainsGuide() {
-        return resourceProvider.getActiveProject().findResourceByName(DEFAULT_README_FILE_NAME, File.TYPE) != null;
+        if (resourceProvider.getActiveProject() != null) {
+            return resourceProvider.getActiveProject().findResourceByName(DEFAULT_README_FILE_NAME, File.TYPE) != null;
+        }
+        return false;
     }
 }

@@ -23,11 +23,10 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.marshal.JSONDeserializer;
 import com.google.gwt.json.client.JSONObject;
 
-
 /**
  * Represents the folder containing {@link Resource}s.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public class Folder extends Resource {
     public static final String          FOLDER_MIME_TYPE = "text/directory";
@@ -70,11 +69,6 @@ public class Folder extends Resource {
         if (itemObject.get("mimeType").isString() != null) {
             mimeType = itemObject.get("mimeType").isString().stringValue();
         }
-        //path = itemObject.get("path").isString().stringValue();
-        // no longer exists
-        //      parentId =
-        //         (itemObject.get("parentId").isNull() != null) ? null : itemObject.get("parentId").isString().stringValue();
-        creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
         links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
     }
 
@@ -119,7 +113,7 @@ public class Folder extends Resource {
     }
 
     /**
-     * Looks for the Child Resource, without recursive calls.
+     * Looks for the child resource, without recursive calls.
      *
      * @param name
      * @return resource or null if not found

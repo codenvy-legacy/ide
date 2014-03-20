@@ -124,8 +124,9 @@ public class StandardComponentInitializer {
     @Inject
     private ShowProjectPropertiesAction showProjectPropertiesAction;
 
-    @Inject
-    private NavigateToFileAction navigateToFileAction;
+    // Temporary disable 'Navigate To File' feature
+//    @Inject
+//    private NavigateToFileAction navigateToFileAction;
 
     @Inject
     @MainToolbar
@@ -206,8 +207,8 @@ public class StandardComponentInitializer {
         actionManager.registerAction("newProject", newProjectAction);
         actionManager.registerAction("openProject", openProjectAction);
 
-        actionManager.registerAction("navigateToFile", navigateToFileAction);
-        keyBinding.getGlobal().addKey(new KeyBuilder().action().alt().charCode('n').build(), "navigateToFile");
+//        actionManager.registerAction("navigateToFile", navigateToFileAction);
+//        keyBinding.getGlobal().addKey(new KeyBuilder().action().alt().charCode('n').build(), "navigateToFile");
 
         DefaultActionGroup toolbarGroup = new DefaultActionGroup(actionManager);
         toolbarGroup.addSeparator();
@@ -220,7 +221,7 @@ public class StandardComponentInitializer {
         toolbarGroup.addSeparator();
         fileGroup.add(newGroup);
         fileGroup.add(openProjectAction);
-        fileGroup.add(navigateToFileAction);
+//        fileGroup.add(navigateToFileAction);
 //        fileGroup.add(renameResourceAction);
         actionManager.registerAction("newResource", newFileAction);
         newGroup.add(newFileAction);

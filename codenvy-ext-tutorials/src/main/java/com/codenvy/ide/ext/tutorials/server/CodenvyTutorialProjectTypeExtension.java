@@ -28,9 +28,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /** @author Artem Zatsarynnyy */
 @Singleton
@@ -79,7 +77,8 @@ public class CodenvyTutorialProjectTypeExtension implements ProjectTypeExtension
 
         list.add(new ProjectTemplateDescription("zip",
                                                 "NEW RESOURCE WIZARD TUTORIAL",
-                                                "The following tutorial will take you through simple example to learn how to implement a new resource wizard.",
+                                                "The following tutorial will take you through simple example to learn how to implement a " +
+                                                "new resource wizard.",
                                                 baseUrl + "/new-resource-wizard-tutorial.zip"));
 
         list.add(new ProjectTemplateDescription("zip",
@@ -94,17 +93,25 @@ public class CodenvyTutorialProjectTypeExtension implements ProjectTypeExtension
 
         list.add(new ProjectTemplateDescription("zip",
                                                 "WYSIWYG EDITOR TUTORIAL",
-                                                "The following tutorial will take you through simple example to learn how to implement WYSIWYG editor.",
+                                                "The following tutorial will take you through simple example to learn how to implement " +
+                                                "WYSIWYG editor.",
                                                 baseUrl + "/wysiwyg-editor-tutorial.zip"));
 
         list.add(new ProjectTemplateDescription("zip",
                                                 "GIN TUTORIAL",
-                                                "The following tutorial will take you through simple example to learn how to use GIN with Codenvy API.",
+                                                "The following tutorial will take you through simple example to learn how to use GIN with" +
+                                                " Codenvy API.",
                                                 baseUrl + "/gin-tutorial.zip"));
         list.add(new ProjectTemplateDescription("zip",
                                                 "THEME API TUTORIAL",
-                                                "The following tutorial will take you through simple example to learn how to use Theme with Codenvy API.",
+                                                "The following tutorial will take you through simple example to learn how to use Theme " +
+                                                "with Codenvy API.",
                                                 baseUrl + "/theme-api-tutorial.zip"));
+        list.add(new ProjectTemplateDescription("zip",
+                                                "Icon Registry API TUTORIAL",
+                                                "The following tutorial will take you through simple example to learn how to use " +
+                                                "IconRegistry.",
+                                                baseUrl + "/icons-registry-api-tutorial.zip"));
 
 
         return list;
