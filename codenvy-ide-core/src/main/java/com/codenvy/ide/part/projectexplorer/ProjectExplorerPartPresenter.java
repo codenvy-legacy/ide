@@ -123,7 +123,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             public void onProjectOpened(ProjectActionEvent event) {
                 setContent(event.getProject().getParent());
 
-                // TODO: avoid asking to select project type when show list of all projects
+                // TODO: avoid asking project type while show list of all projects
 //                checkProjectType(event.getProject(), new AsyncCallback<Project>() {
 //                    @Override
 //                    public void onSuccess(Project result) {
@@ -185,12 +185,15 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
             @Override
             public void onResourceTreeRefreshed(ResourceChangedEvent event) {
-                if (event.getResource() instanceof Project && event.getResource().getProject() != null) {
-                    view.updateItem(event.getResource().getProject(), event.getResource());
-                } else if (event.getResource().getProject() != null) {
-                    Resource oldResource = event.getResource().getProject().findResourceById(event.getResource().getId());
+                final Resource resource = event.getResource();
+                if (resource instanceof Project && resource.getProject() != null) {
+                    view.updateItem(resource.getProject(), resource);
+                } else if (resource instanceof Folder && ((Folder)resource).getChildren().isEmpty()) {
+                    return;
+                } else if (resource.getProject() != null) {
+                    Resource oldResource = resource.getProject().findResourceById(resource.getId());
                     if (oldResource != null) {
-                        view.updateItem(oldResource, event.getResource());
+                        view.updateItem(oldResource, resource);
                     }
                 }
             }
