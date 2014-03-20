@@ -36,6 +36,7 @@ public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource> {
     @Override
     public boolean hasChildren(Resource data) {
         if (data instanceof Project) {
+            // hide expand arrow for project when list with all projects displayed
             return data.getProject() != null;
         }
         return data.isFolder();
