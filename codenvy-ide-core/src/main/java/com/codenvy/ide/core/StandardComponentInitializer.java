@@ -19,7 +19,19 @@ package com.codenvy.ide.core;
 
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.actions.*;
+import com.codenvy.ide.actions.CloseProjectAction;
+import com.codenvy.ide.actions.DeleteResourceAction;
+import com.codenvy.ide.actions.FormatterAction;
+import com.codenvy.ide.actions.NavigateToFileAction;
+import com.codenvy.ide.actions.NewProjectAction;
+import com.codenvy.ide.actions.NewResourceAction;
+import com.codenvy.ide.actions.OpenProjectAction;
+import com.codenvy.ide.actions.RenameResourceAction;
+import com.codenvy.ide.actions.SaveAction;
+import com.codenvy.ide.actions.SaveAllAction;
+import com.codenvy.ide.actions.ShowAboutAction;
+import com.codenvy.ide.actions.ShowPreferencesAction;
+import com.codenvy.ide.actions.ShowProjectPropertiesAction;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -146,9 +158,8 @@ public class StandardComponentInitializer {
     @Inject
     private DeleteResourceAction deleteResourceAction;
 
-    // Temporary disable 'Rename' feature
-//    @Inject
-//    private RenameResourceAction renameResourceAction;
+    @Inject
+    private RenameResourceAction renameResourceAction;
 
     @Inject
     private CloseProjectAction closeProjectAction;
@@ -221,7 +232,7 @@ public class StandardComponentInitializer {
         fileGroup.add(newGroup);
         fileGroup.add(openProjectAction);
         fileGroup.add(navigateToFileAction);
-//        fileGroup.add(renameResourceAction);
+        fileGroup.add(renameResourceAction);
         actionManager.registerAction("newResource", newFileAction);
         newGroup.add(newFileAction);
 
@@ -243,7 +254,7 @@ public class StandardComponentInitializer {
         actionManager.registerAction("changeResourceGroup", changeResourceGroup);
         actionManager.registerAction("closeProject", closeProjectAction);
         actionManager.registerAction("deleteItem", deleteResourceAction);
-//        actionManager.registerAction("renameResource", renameResourceAction);
+        actionManager.registerAction("renameResource", renameResourceAction);
         changeResourceGroup.add(closeProjectAction);
         changeResourceGroup.add(deleteResourceAction);
         changeResourceGroup.addSeparator();
@@ -259,7 +270,7 @@ public class StandardComponentInitializer {
         resourceOperation.addSeparator();
         actionManager.registerAction("resourceOperation", resourceOperation);
         resourceOperation.add(deleteResourceAction);
-//        resourceOperation.add(renameResourceAction);
+        resourceOperation.add(renameResourceAction);
         contextMenuGroup.add(resourceOperation);
 
         DefaultActionGroup closeProjectGroup = new DefaultActionGroup(actionManager);
