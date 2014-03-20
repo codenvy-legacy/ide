@@ -29,10 +29,12 @@ import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEventHandler;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.ext.java.client.editor.JavaEditorProvider;
+import com.codenvy.ide.ext.java.client.format.FormatController;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProjectModelProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewAnnotationProvider;
@@ -50,6 +52,9 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
@@ -83,13 +88,38 @@ public class JavaExtension {
                          ActionManager actionManager,
                          AsyncRequestFactory asyncRequestFactory,
                          ProjectServiceClient projectServiceClient,
-                         DtoUnmarshallerFactory dtoUnmarshallerFactory) {
-        this();
+                         IconRegistry iconRegistry,
+                         DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                         FormatController formatController) {
         this.resourceProvider = resourceProvider;
         this.notificationManager = notificationManager;
         this.restContext = restContext;
         this.workspaceId = workspaceId;
         this.asyncRequestFactory = asyncRequestFactory;
+
+        Map<String, String> icons = new HashMap<>();
+        icons.put("jar.projecttype.big.icon", "java-extension/jar_64.png");
+        icons.put("jar.projecttype.small.icon", "java-extension/jar.png");
+        icons.put("jar.folder.small.icon", "java-extension/package.gif");
+        icons.put("jar/java.file.small.icon", "java-extension/java-class.png");
+        icons.put("java.class", "java-extension/java-class.png");
+        icons.put("java.package", "java-extension/package.gif");
+        icons.put("spring.projecttype.big.icon", "java-extension/Spring-Logo.png");
+        icons.put("spring.projecttype.small.icon", "java-extension/Spring-Logo.png");
+        icons.put("spring.folder.small.icon", "java-extension/package.gif");
+        icons.put("spring/java.file.small.icon", "java-extension/java-class.png");
+        icons.put("java.class", "java-extension/java-class.png");
+        icons.put("java.package", "java-extension/package.gif");
+        icons.put("war.projecttype.big.icon", "java-extension/web_app_big.png");
+        icons.put("war.projecttype.small.icon", "java-extension/web_app_big.png");
+        icons.put("war.folder.small.icon", "java-extension/package.gif");
+        icons.put("war/java.file.small.icon", "java-extension/java-class.png");
+        icons.put("java.class", "java-extension/java-class.png");
+        icons.put("java.package", "java-extension/package.gif");
+
+
+        iconRegistry.registerIcons(icons);
+
 
         FileType javaFile = new FileType(JavaResources.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
         editorRegistry.register(javaFile, javaEditorProvider);

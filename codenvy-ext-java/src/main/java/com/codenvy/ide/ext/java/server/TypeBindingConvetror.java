@@ -206,7 +206,7 @@ public class TypeBindingConvetror {
                    field.genericSignature() == null ? JsonNull.INSTANCE : new JsonPrimitive(new String(field.genericSignature())));
         object.add("name", field.name == null ? JsonNull.INSTANCE : new JsonPrimitive(new String(field.name)));
         object.addProperty("tagBits", String.valueOf(field.tagBits));
-        object.add("typeName", field.type == null ? JsonNull.INSTANCE : new JsonPrimitive(new String(field.type.constantPoolName())));
+        object.add("typeName", field.type == null ? JsonNull.INSTANCE : new JsonPrimitive(new String(field.type.signature())));
         object.add("annotations", toJsonAnnotations(field.getAnnotations()));
         return object;
     }

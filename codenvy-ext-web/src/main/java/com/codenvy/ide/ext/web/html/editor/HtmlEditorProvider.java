@@ -2,7 +2,7 @@
  * CODENVY CONFIDENTIAL
  * __________________
  *
- * [2012] - [2013] Codenvy, S.A.
+ * [2012] - [2014] Codenvy, S.A.
  * All Rights Reserved.
  *
  * NOTICE:  All information contained herein is, and remains
@@ -37,22 +37,29 @@ public class HtmlEditorProvider implements EditorProvider {
     private       Provider<CodenvyTextEditor> editorProvider;
     private final NotificationManager         notificationManager;
 
+    /**
+     * HTML editor configuration.
+     */
+    private Provider<HtmlEditorConfiguration> htmlEditorConfigurationProvider;
+
     /** @param documentProvider */
     @Inject
     public HtmlEditorProvider(DocumentProvider documentProvider,
                               Provider<CodenvyTextEditor> editorProvider,
-                              NotificationManager notificationManager) {
+                              NotificationManager notificationManager,
+                              Provider<HtmlEditorConfiguration> htmlEditorConfigurationProvider) {
         super();
         this.documentProvider = documentProvider;
         this.editorProvider = editorProvider;
         this.notificationManager = notificationManager;
+        this.htmlEditorConfigurationProvider = htmlEditorConfigurationProvider;
     }
 
     /** {@inheritDoc} */
     @Override
     public EditorPartPresenter getEditor() {
         CodenvyTextEditor textEditor = editorProvider.get();
-        textEditor.initialize(new HtmlEditorConfiguration(), documentProvider, notificationManager);
+        textEditor.initialize(htmlEditorConfigurationProvider.get(), documentProvider, notificationManager);
         return textEditor;
     }
 }

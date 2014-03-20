@@ -290,7 +290,26 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
         final Link appLink = getAppLink(appDescriptor, "web url");
         if (appLink != null) {
-            final String url = appLink.getHref();
+            String url = appLink.getHref();
+
+            final Link codeServerLink = getAppLink(appDescriptor, "code server");
+            if (codeServerLink != null) {
+                StringBuilder urlBuilder = new StringBuilder();
+                urlBuilder.append(url);
+                final String codeServerHref = codeServerLink.getHref();
+                final int colon = codeServerHref.lastIndexOf(':');
+                if (colon > 0) {
+                    urlBuilder.append("?h=");
+                    urlBuilder.append(codeServerHref.substring(0, colon));
+                    urlBuilder.append("&p=");
+                    urlBuilder.append(codeServerHref.substring(colon + 1));
+                } else {
+                    urlBuilder.append("?h=");
+                    urlBuilder.append(codeServerHref);
+                }
+                url = urlBuilder.toString();
+            }
+
             console.print(constant.applicationStartedOnUrl(currentProject.getName(),
                                                            "<a href=\"" + url + "\" target=\"_blank\">" + url + "</a>"));
         }

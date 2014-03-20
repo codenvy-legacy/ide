@@ -19,7 +19,6 @@ package com.codenvy.ide.ext.java.client.wizard;
 
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.java.client.projectmodel.CompilationUnit;
@@ -28,7 +27,6 @@ import com.codenvy.ide.ext.java.client.projectmodel.SourceFolder;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Image;
 
@@ -43,7 +41,6 @@ import javax.validation.constraints.NotNull;
 public abstract class AbstractNewJavaResourceProvider extends NewResourceProvider {
     public static final String TYPE_CONTENT = "\n{\n}";
     private SelectionAgent selectionAgent;
-
 
     /**
      * Create wizard's data.
@@ -80,18 +77,17 @@ public abstract class AbstractNewJavaResourceProvider extends NewResourceProvide
      */
     protected void createFile(@NotNull String name, @NotNull Folder parent, @NotNull Project project,
                               @NotNull final AsyncCallback<Resource> callback, @NotNull String content) {
-        ((JavaProject)project)
-                .createCompilationUnit(parent, createResourceName(name), content, new AsyncCallback<CompilationUnit>() {
-                    @Override
-                    public void onSuccess(CompilationUnit result) {
-                        callback.onSuccess(result);
-                    }
+        ((JavaProject)project).createCompilationUnit(parent, createResourceName(name), content, new AsyncCallback<CompilationUnit>() {
+            @Override
+            public void onSuccess(CompilationUnit result) {
+                callback.onSuccess(result);
+            }
 
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        callback.onFailure(caught);
-                    }
-                });
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
+            }
+        });
     }
 
     /** @return file name with extension(".java") */
@@ -107,27 +103,28 @@ public abstract class AbstractNewJavaResourceProvider extends NewResourceProvide
         for (SourceFolder sourceFolder : sourceFolders.asIterable()) {
             if (parent.getPath().startsWith(sourceFolder.getPath())) {
                 String packageName = parent.getPath().replaceFirst(sourceFolder.getPath(), "");
-                packageName = packageName.startsWith("/") ? packageName.replaceFirst("/", "").replaceAll("/", ".") : packageName.replaceAll("/", ".");
-                return "package " + packageName + ";\n\n";  
+                packageName = packageName.startsWith("/") ? packageName.replaceFirst("/", "").replaceAll("/", ".")
+                                                          : packageName.replaceAll("/", ".");
+                return "package " + packageName + ";\n\n";
             }
         }
-        
+
         return "";
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public boolean inContext() {
-//        Selection<?> selection = selectionAgent.getSelection();
-//        if (selection != null) {
-//            if (selectionAgent.getSelection().getFirstElement() instanceof Resource) {
-//                Resource resource = (Resource)selectionAgent.getSelection().getFirstElement();
-//                if (resource.isFile()) {
-//                    resource = resource.getParent();
-//                }
-//                return resource instanceof com.codenvy.ide.ext.java.client.projectmodel.Package || resource instanceof SourceFolder;
-//            }
-//        }
+        Selection<?> selection = selectionAgent.getSelection();
+        if (selection != null) {
+            if (selectionAgent.getSelection().getFirstElement() instanceof Resource) {
+                Resource resource = (Resource)selectionAgent.getSelection().getFirstElement();
+                if (resource.isFile()) {
+                    resource = resource.getParent();
+                }
+                return resource instanceof com.codenvy.ide.ext.java.client.projectmodel.Package || resource instanceof SourceFolder;
+            }
+        }
         return true;
     }
 }

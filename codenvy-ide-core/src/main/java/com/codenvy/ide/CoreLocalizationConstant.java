@@ -117,4 +117,12 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("createProjectFromTemplate.privateDescription")
     String createProjectFromTemplatePrivateDescription();
 
+    @Key("format.name")
+    String formatName();
+
+    @Key("format.description")
+    String formatDescription();
+
+
+
 }

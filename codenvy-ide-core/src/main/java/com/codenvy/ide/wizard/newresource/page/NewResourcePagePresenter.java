@@ -185,9 +185,10 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
                                      new AsyncRequestCallback<TreeElement>(dtoUnmarshallerFactory.newUnmarshaller(TreeElement.class)) {
                                          @Override
                                          protected void onSuccess(TreeElement result) {
-                                             new FolderTreeUnmarshaller(treeStructure, treeStructure).unmarshal(result);
+                                             FolderTreeUnmarshaller unmarshaller = new FolderTreeUnmarshaller(treeStructure, treeStructure);
+                                             unmarshaller.unmarshal(result);
                                              Array<String> paths = Collections.createArray();
-                                             view.setPackages(getPackages(paths, treeStructure.getChildren()));
+                                             view.setPackages(getPackages(paths, unmarshaller.getPayload().getChildren()));
                                              view.selectPackage(paths.indexOf(getDisplayPath(parent.getPath())));
                                          }
 

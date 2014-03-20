@@ -25,8 +25,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
-
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/** @author Andrey Plotnikov */
 public class PropertyUnmarshaller implements Unmarshallable<Array<Property>> {
     protected Array<Property> properties;
 

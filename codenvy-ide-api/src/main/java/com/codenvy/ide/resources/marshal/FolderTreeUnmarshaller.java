@@ -76,7 +76,7 @@ public class FolderTreeUnmarshaller {
                 parentFolder.addChild(file);
                 file.setProject(parentProject);
             } else {
-                Log.error(this.getClass(), "Unsupported Resource type: " + type);
+                Log.error(this.getClass(), "Unsupported resource type: " + type);
             }
         }
     }

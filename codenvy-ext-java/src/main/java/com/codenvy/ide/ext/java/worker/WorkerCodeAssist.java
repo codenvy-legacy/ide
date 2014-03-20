@@ -26,6 +26,7 @@ import com.codenvy.ide.ext.java.jdt.codeassistant.JavaContentAssistInvocationCon
 import com.codenvy.ide.ext.java.jdt.codeassistant.LazyGenericTypeProposal;
 import com.codenvy.ide.ext.java.jdt.codeassistant.TemplateCompletionProposalComputer;
 import com.codenvy.ide.ext.java.jdt.codeassistant.api.JavaCompletionProposal;
+import com.codenvy.ide.ext.java.jdt.core.CompletionProposal;
 import com.codenvy.ide.ext.java.jdt.core.IJavaElement;
 import com.codenvy.ide.ext.java.jdt.core.IType;
 import com.codenvy.ide.ext.java.jdt.core.JavaCore;
@@ -148,6 +149,35 @@ public class WorkerCodeAssist {
         CompletionProposalCollector collector =
                 //TODO receive vfs id
                 new FillArgumentNamesCompletionProposalCollector(unit, document, offset, projectPath, docContext, vfsId);
+
+        collector
+                .setAllowsRequiredProposals(
+                        CompletionProposal.CONSTRUCTOR_INVOCATION,
+                        CompletionProposal.TYPE_REF, true);
+        collector.setAllowsRequiredProposals(CompletionProposal.ANONYMOUS_CLASS_CONSTRUCTOR_INVOCATION,
+                                             CompletionProposal.TYPE_REF, true);
+        collector.setAllowsRequiredProposals(CompletionProposal.ANONYMOUS_CLASS_DECLARATION,
+                                             CompletionProposal.TYPE_REF,
+                                             true);
+
+        collector.setIgnored(CompletionProposal.ANNOTATION_ATTRIBUTE_REF, false);
+        collector.setIgnored(CompletionProposal.ANONYMOUS_CLASS_DECLARATION, false);
+        collector.setIgnored(CompletionProposal.ANONYMOUS_CLASS_CONSTRUCTOR_INVOCATION, false);
+        collector.setIgnored(CompletionProposal.FIELD_REF, false);
+        collector.setIgnored(CompletionProposal.FIELD_REF_WITH_CASTED_RECEIVER, false);
+        collector.setIgnored(CompletionProposal.KEYWORD, false);
+        collector.setIgnored(CompletionProposal.LABEL_REF, false);
+        collector.setIgnored(CompletionProposal.LOCAL_VARIABLE_REF, false);
+        collector.setIgnored(CompletionProposal.METHOD_DECLARATION, false);
+        collector.setIgnored(CompletionProposal.METHOD_NAME_REFERENCE, false);
+        collector.setIgnored(CompletionProposal.METHOD_REF, false);
+        collector.setIgnored(CompletionProposal.CONSTRUCTOR_INVOCATION, false);
+        collector.setIgnored(CompletionProposal.METHOD_REF_WITH_CASTED_RECEIVER, false);
+        collector.setIgnored(CompletionProposal.PACKAGE_REF, false);
+        collector.setIgnored(CompletionProposal.POTENTIAL_METHOD_DECLARATION, false);
+        collector.setIgnored(CompletionProposal.VARIABLE_DECLARATION, false);
+        collector.setIgnored(CompletionProposal.TYPE_REF, false);
+
         CompletionEngine e = new CompletionEngine(nameEnvironment, collector, JavaCore.getOptions());
         try {
             e.complete(new com.codenvy.ide.ext.java.jdt.compiler.batch.CompilationUnit(

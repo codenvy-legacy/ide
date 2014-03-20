@@ -28,11 +28,7 @@ import com.codenvy.ide.ext.java.jdt.internal.compiler.parser.TerminalTokens;
 import com.codenvy.ide.runtime.IStatus;
 import com.codenvy.ide.runtime.Status;
 
-
-/**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
- */
+/** @author Evgen Vidolob */
 public class JavaConventions {
 
     private static final char DOT = '.';

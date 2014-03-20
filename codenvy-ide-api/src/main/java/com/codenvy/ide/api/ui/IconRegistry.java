@@ -22,13 +22,31 @@ import com.google.gwt.user.client.ui.Image;
 import java.util.Map;
 
 /**
+ * Provide  possibility to define images for UI in IDE extensions.
+ *
  * @author Vitaly Parfonov
  */
 public interface IconRegistry {
 
+    /**
+     * @param iconId
+     * @return Image GWT widget
+     */
     Image getIcon(String iconId);
 
+    /**
+     * @return default icon, can be useful if don't find icon by id
+     */
     Image getDefaultIcon();
 
+    /**
+     * @param iconRegistry
+     */
     void registerIcons(Map<String, String> iconRegistry);
+
+    /**
+     * @param iconId some id
+     * @param iconPath path to the image
+     */
+    void registerIcon(String iconId, String iconPath);
 }
