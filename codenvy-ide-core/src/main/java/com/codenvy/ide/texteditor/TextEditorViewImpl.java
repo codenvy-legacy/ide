@@ -666,8 +666,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
             return true;
         }
 
-        throw new UnsupportedOperationException("Operation code: " + operation + " is not supported!");
-        // TODO implement all code in TextEditorOperations
+        return false;
 
 
     }
