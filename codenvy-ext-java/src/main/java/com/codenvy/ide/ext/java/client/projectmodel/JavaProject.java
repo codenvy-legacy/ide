@@ -36,6 +36,7 @@ import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.runtime.IStatus;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
@@ -58,12 +59,6 @@ public class JavaProject extends Project {
     /** Java-specific project description */
     private       JavaProjectDescription description;
 
-    /**
-     * @param eventBus
-     * @param asyncRequestFactory
-     * @param projectServiceClient
-     * @param dtoUnmarshallerFactory
-     */
     protected JavaProject(EventBus eventBus,
                           AsyncRequestFactory asyncRequestFactory,
                           ProjectServiceClient projectServiceClient,
@@ -82,46 +77,19 @@ public class JavaProject extends Project {
 
     /** {@inheritDoc} */
     @Override
-    public void refreshTree(final Folder root, final AsyncCallback<Folder> callback) {
-        final Folder folderToRefresh = (root instanceof Package && root.getParent() != null) ? root.getParent() : root;
-        projectServiceClient.getTree(folderToRefresh.getPath(), -1,
-                                     new AsyncRequestCallback<TreeElement>(dtoUnmarshallerFactory.newUnmarshaller(TreeElement.class)) {
-                                         @Override
-                                         protected void onSuccess(TreeElement result) {
-                                             JavaModelUnmarshaller unmarshaller =
-                                                     new JavaModelUnmarshaller(folderToRefresh, (JavaProject)folderToRefresh.getProject(),
-                                                                               eventBus, asyncRequestFactory, projectServiceClient,
-                                                                               dtoUnmarshallerFactory);
-                                             unmarshaller.unmarshal(result);
-                                             callback.onSuccess(unmarshaller.getPayload());
-                                         }
-
-                                         @Override
-                                         protected void onFailure(Throwable exception) {
-                                             callback.onFailure(exception);
-                                         }
-                                     });
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void refreshChildren(final Folder root, final AsyncCallback<Folder> callback) {
         final Folder folderToRefresh = (root instanceof Package && root.getParent() != null) ? root.getParent() : root;
-
-        // update root's children
-        // unmarshal Array<ItemReference>
-        projectServiceClient.getChildren(root.getPath(), new AsyncRequestCallback<Array<ItemReference>>(
-                dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class)) {
+        final Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
+        projectServiceClient.getChildren(root.getPath(), new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
             @Override
             protected void onSuccess(final Array<ItemReference> children) {
                 // check if sub-modules exists
-                if (Project.TYPE.equals(root.getResourceType())) {
-                    // TODO: sub-projects may exist in some sub-folders. For example, EverREST project
-                    projectServiceClient.getModules(root.getPath(), new AsyncRequestCallback<Array<ProjectDescriptor>>(
-                            dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectDescriptor.class)) {
+                if (Project.TYPE.equals(folderToRefresh.getResourceType())) {
+                    final Unmarshallable<Array<ProjectDescriptor>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectDescriptor.class);
+                    projectServiceClient.getModules(root.getPath(), new AsyncRequestCallback<Array<ProjectDescriptor>>(unmarshaller) {
                         @Override
                         protected void onSuccess(Array<ProjectDescriptor> modules) {
-                            onChildrenRefreshed(root, folderToRefresh, children, modules, callback);
+                            onChildrenRefreshed(folderToRefresh, children, modules, callback);
                         }
 
                         @Override
@@ -131,23 +99,20 @@ public class JavaProject extends Project {
                     });
                 }
                 // for flat mode package presentation
-                else if ((root instanceof SourceFolder || root instanceof Package) && children.size() == 1 &&
-                         children.get(0).getType().equals(Folder.TYPE)) {
-                    projectServiceClient.getTree(folderToRefresh.getPath(), -1,
-                                                 new AsyncRequestCallback<TreeElement>(
-                                                         dtoUnmarshallerFactory.newUnmarshaller(TreeElement.class)) {
+                else if ((folderToRefresh instanceof SourceFolder || folderToRefresh instanceof Package) &&
+                         children.size() == 1 && children.get(0).getType().equals(Folder.TYPE)) {
+                    final Unmarshallable<TreeElement> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(TreeElement.class);
+                    projectServiceClient.getTree(root.getPath(), -1,
+                                                 new AsyncRequestCallback<TreeElement>(unmarshaller) {
                                                      @Override
                                                      protected void onSuccess(TreeElement result) {
-                                                         JavaModelUnmarshaller2 unmarshaller = new JavaModelUnmarshaller2(folderToRefresh,
-                                                                                                                          (JavaProject)folderToRefresh.getProject(),
-                                                                                                                          eventBus,
-                                                                                                                          asyncRequestFactory,
-                                                                                                                          projectServiceClient,
-                                                                                                                          dtoUnmarshallerFactory);
+                                                         JavaModelUnmarshaller unmarshaller =
+                                                                 new JavaModelUnmarshaller(root,
+                                                                                           (JavaProject)folderToRefresh.getProject(),
+                                                                                           eventBus, asyncRequestFactory,
+                                                                                           projectServiceClient, dtoUnmarshallerFactory);
                                                          unmarshaller.unmarshalTree(result.getChildren());
-
-                                                         eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(root));
-                                                         callback.onSuccess(root);
+                                                         callback.onSuccess(unmarshaller.getPayload());
                                                      }
 
                                                      @Override
@@ -157,7 +122,7 @@ public class JavaProject extends Project {
                                                  });
 
                 } else {
-                    onChildrenRefreshed(root, folderToRefresh, children, Collections.<ProjectDescriptor>createArray(), callback);
+                    onChildrenRefreshed(root, children, Collections.<ProjectDescriptor>createArray(), callback);
                 }
             }
 
@@ -168,24 +133,18 @@ public class JavaProject extends Project {
         });
     }
 
-    private void onChildrenRefreshed(Folder root, Folder folderToRefresh, Array<ItemReference> children, Array<ProjectDescriptor> modules,
+    private void onChildrenRefreshed(Folder folderToRefresh, Array<ItemReference> children, Array<ProjectDescriptor> modules,
                                      AsyncCallback<Folder> callback) {
-        JavaModelUnmarshaller2 unmarshaller = new JavaModelUnmarshaller2(folderToRefresh,
-                                                                         (JavaProject)folderToRefresh.getProject(),
-                                                                         eventBus,
-                                                                         asyncRequestFactory,
-                                                                         projectServiceClient,
-                                                                         dtoUnmarshallerFactory);
-        unmarshaller.unmarshal(children, modules);
-
-        eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(root));
-        callback.onSuccess(root);
+        JavaModelUnmarshaller unmarshaller = new JavaModelUnmarshaller(folderToRefresh, (JavaProject)folderToRefresh.getProject(),
+                                                                       eventBus, asyncRequestFactory, projectServiceClient,
+                                                                       dtoUnmarshallerFactory);
+        unmarshaller.unmarshalChildren(children, modules);
+        callback.onSuccess(unmarshaller.getPayload());
     }
 
     /**
      * Create new Java package.
-     * This method check package name, and if name not valid call <code>onFailure</code> callback method with
-     * JavaModelException
+     * This method check package name, and if name not valid call <code>onFailure</code> callback method with JavaModelException.
      *
      * @param parent
      *         the source folder where create package
@@ -213,10 +172,8 @@ public class JavaProject extends Project {
                     pack.setParent(checkedParent);
                     pack.setProject(JavaProject.this);
                     checkedParent.addChild(pack);
-                    // TODO workaround for a unified view for packages
-                    // SourceFolder sourceFolder = getSourceFolder(pack);
                     // refresh tree, cause additional hierarchy folders my have been created
-                    refreshTree(folderParent, new AsyncCallback<Folder>() {
+                    refreshChildren(folderParent, new AsyncCallback<Folder>() {
                         @Override
                         public void onSuccess(Folder result) {
                             eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(result));
@@ -229,7 +186,6 @@ public class JavaProject extends Project {
 
                         @Override
                         public void onFailure(Throwable exception) {
-                            exception.printStackTrace();
                             callback.onFailure(exception);
                         }
                     });
@@ -247,25 +203,11 @@ public class JavaProject extends Project {
     }
 
     /**
-     * Return a source folder for a chosen resource.
-     *
-     * @param folder
-     *         folder for which a source folder needs to be found
-     * @return a source folder
-     */
-    private SourceFolder getSourceFolder(@NotNull Folder folder) {
-        if (folder instanceof SourceFolder) {
-            return (SourceFolder)folder;
-        }
-        return getSourceFolder(folder.getParent());
-    }
-
-    /**
      * Create new Compilation Unit (Java file).
-     * Compilation unit may created only in Packages or SourceFolder's.
+     * Compilation unit may created only in Packages or SourceFolders.
      *
      * @param parent
-     *         the parent, must be instance of Package or SourceFolder.
+     *         the parent, must be instance of Package or SourceFolder
      * @param name
      *         the name of new compilation unit
      * @param content
@@ -283,14 +225,11 @@ public class JavaProject extends Project {
                     final CompilationUnit newCU = new CompilationUnit();
                     newCU.setName(name);
                     newCU.setMimeType(MimeType.APPLICATION_JAVA);
-
                     newCU.setParent(checkedParent);
                     newCU.setProject(JavaProject.this);
                     checkedParent.addChild(newCU);
-                    // TODO workaround for a unified view for packages
-                    SourceFolder sourceFolder = getSourceFolder(newCU.getParent());
                     // refresh tree, cause additional hierarchy folders my have been created
-                    refreshTree(checkedParent, new AsyncCallback<Folder>() {
+                    refreshChildren(checkedParent, new AsyncCallback<Folder>() {
                         @Override
                         public void onSuccess(Folder result) {
                             eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(result));
@@ -300,7 +239,6 @@ public class JavaProject extends Project {
 
                         @Override
                         public void onFailure(Throwable exception) {
-                            exception.printStackTrace();
                             callback.onFailure(exception);
                         }
                     });
@@ -411,7 +349,7 @@ public class JavaProject extends Project {
     }
 
     private void createFolderAsPackage(Folder parent, String name, final AsyncCallback<Folder> callback) {
-        createPackage((SourceFolder)parent, name.replaceAll("/", "."), new AsyncCallback<Package>() {
+        createPackage(parent, name.replaceAll("/", "."), new AsyncCallback<Package>() {
             @Override
             public void onFailure(Throwable caught) {
                 callback.onFailure(caught);

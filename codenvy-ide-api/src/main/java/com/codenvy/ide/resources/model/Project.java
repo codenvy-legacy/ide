@@ -19,13 +19,11 @@ package com.codenvy.ide.resources.model;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
-import com.codenvy.api.project.shared.dto.TreeElement;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.resources.marshal.FolderTreeUnmarshaller;
 import com.codenvy.ide.resources.marshal.JSONDeserializer;
 import com.codenvy.ide.resources.marshal.JSONSerializer;
 import com.codenvy.ide.resources.marshal.PropertyUnmarshaller;
@@ -34,6 +32,7 @@ import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.StringUnmarshaller;
+import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.loader.EmptyLoader;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.loging.Log;
@@ -47,7 +46,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Represents Project model. Responsible for deserialization of JSon String to generate it' own project model.
+ * Represents Project model.
  *
  * @author Nikolay Zamosenchuk
  */
@@ -57,7 +56,6 @@ public class Project extends Folder {
     protected final EventBus                  eventBus;
     protected final AsyncRequestFactory       asyncRequestFactory;
     private final   DtoUnmarshallerFactory    dtoUnmarshallerFactory;
-    /** Properties. */
     protected       Array<Property>           properties;
     protected       Map<String, List<String>> attributes;
     protected       Loader                    loader;
@@ -81,8 +79,30 @@ public class Project extends Folder {
         this.attributes = new HashMap<>();
         this.eventBus = eventBus;
         this.asyncRequestFactory = asyncRequestFactory;
-        // TODO : receive it in some way
         this.loader = new EmptyLoader();
+    }
+
+    public void init(ItemReference itemReference) {
+        id = itemReference.getId();
+        name = itemReference.getName();
+        mimeType = itemReference.getMediaType();
+    }
+
+    @Override
+    public void init(JSONObject itemObject) {
+        id = itemObject.get("id").isString().stringValue();
+        name = itemObject.get("name").isString().stringValue();
+        mimeType = itemObject.get("mimeType").isString().stringValue();
+        properties = JSONDeserializer.PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
+        links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
+    }
+
+    public void setVFSInfo(VirtualFileSystemInfo vfsInfo) {
+        this.vfsInfo = vfsInfo;
+    }
+
+    public ProjectDescription getDescription() {
+        return description;
     }
 
     /**
@@ -134,33 +154,6 @@ public class Project extends Folder {
      */
     public List<String> getAttributeValues(String attributeName) {
         return attributes.get(attributeName);
-    }
-
-    public void init(ItemReference itemReference) {
-        id = itemReference.getId();
-        name = itemReference.getName();
-        mimeType = itemReference.getMediaType();
-    }
-
-    @Override
-    public void init(JSONObject itemObject) {
-        id = itemObject.get("id").isString().stringValue();
-        name = itemObject.get("name").isString().stringValue();
-        mimeType = itemObject.get("mimeType").isString().stringValue();
-        //path = itemObject.get("path").isString().stringValue();
-        //parentId = itemObject.get("parentId").isString().stringValue();
-        creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
-        properties = JSONDeserializer.PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
-        links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
-//        projectType = (itemObject.get("projectType") != null) ? itemObject.get("projectType").isString().stringValue() : null;
-    }
-
-    public void setVFSInfo(VirtualFileSystemInfo vfsInfo) {
-        this.vfsInfo = vfsInfo;
-    }
-
-    public ProjectDescription getDescription() {
-        return description;
     }
 
     /**
@@ -268,7 +261,7 @@ public class Project extends Folder {
             projectServiceClient.createFile(parent.getPath(), name, content, mimeType, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
-                    refreshTree(parent, new AsyncCallback<Folder>() {
+                    refreshChildren(parent, new AsyncCallback<Folder>() {
                         @Override
                         public void onSuccess(Folder result) {
                             File file = (File)result.findChildByName(name);
@@ -311,7 +304,7 @@ public class Project extends Folder {
             projectServiceClient.createFolder(parent.getPath() + '/' + name, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
-                    refreshTree(parent, new AsyncCallback<Folder>() {
+                    refreshChildren(parent, new AsyncCallback<Folder>() {
                         @Override
                         public void onSuccess(Folder result) {
                             Folder folder = (Folder)result.findChildByName(name);
@@ -337,13 +330,13 @@ public class Project extends Folder {
     }
 
     /**
-     * Reads or Refreshes full Project Structure tree. This can be a costly operation.
+     * Refreshes project's children.
      *
      * @param callback
      *         callback
      */
-    public void refreshTree(final AsyncCallback<Project> callback) {
-        refreshTree(this, new AsyncCallback<Folder>() {
+    public void refreshChildren(final AsyncCallback<Project> callback) {
+        refreshChildren(this, new AsyncCallback<Folder>() {
             @Override
             public void onSuccess(Folder result) {
                 eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(Project.this));
@@ -351,66 +344,48 @@ public class Project extends Folder {
             }
 
             @Override
-            public void onFailure(Throwable exception) {
-                callback.onFailure(exception);
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
             }
         });
     }
 
     /**
-     * If new folder created with relative path, but not the name, i.e. "new_parent/parent/parentC/newFolder", then
-     * need to refresh the tree of the folders, since new folders may have been created by the server-side.
+     * Refreshes folder's children.
      *
-     * @param root
-     *         root folder to refresh
+     * @param folderToRefresh
+     *         folder to refresh
      * @param callback
      *         callback
      */
-    public void refreshTree(final Folder root, final AsyncCallback<Folder> callback) {
-        projectServiceClient.getTree(root.getPath(), -1,
-                                     new AsyncRequestCallback<TreeElement>(dtoUnmarshallerFactory.newUnmarshaller(TreeElement.class)) {
-                                         @Override
-                                         protected void onSuccess(TreeElement result) {
-                                             FolderTreeUnmarshaller unmarshaller = new FolderTreeUnmarshaller(root, root.getProject());
-                                             unmarshaller.unmarshal(result);
-                                             callback.onSuccess(unmarshaller.getPayload());
-                                         }
-
-                                         @Override
-                                         protected void onFailure(Throwable exception) {
-                                             callback.onFailure(exception);
-                                         }
-                                     });
-    }
-
-    public void refreshChildren(final Folder root, final AsyncCallback<Folder> callback) {
-        projectServiceClient.getChildren(root.getPath(), new AsyncRequestCallback<Array<ItemReference>>(
-                dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class)) {
+    public void refreshChildren(final Folder folderToRefresh, final AsyncCallback<Folder> callback) {
+        final Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
+        projectServiceClient.getChildren(folderToRefresh.getPath(), new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
             @Override
             protected void onSuccess(Array<ItemReference> children) {
-                root.setChildren(Collections.<Resource>createArray());
+                folderToRefresh.setChildren(Collections.<Resource>createArray());
                 for (ItemReference child : children.asIterable()) {
+                    // skip hidden items
+                    if (child.getName().startsWith(".")) {
+                        continue;
+                    }
+
                     switch (child.getType()) {
                         case File.TYPE:
                             File file = new File(child);
                             file.setProject(Project.this);
-                            root.addChild(file);
+                            folderToRefresh.addChild(file);
                             break;
                         case Folder.TYPE:
                             Folder folder = new Folder(child);
                             folder.setProject(Project.this);
-                            root.addChild(folder);
-                            break;
-                        case Project.TYPE:
-                            Log.error(this.getClass(), "Unsupported operation. Unmarshalling a child projects is not supported");
+                            folderToRefresh.addChild(folder);
                             break;
                         default:
-                            Log.error(this.getClass(), "Unsupported Resource type: " + child.getType());
+                            Log.error(this.getClass(), "Unsupported resource type: " + child.getType());
                     }
                 }
-
-                eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(root));
-                callback.onSuccess(root);
+                callback.onSuccess(folderToRefresh);
             }
 
             @Override

@@ -42,6 +42,7 @@ import com.codenvy.ide.resources.model.VirtualFileSystemInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.regexp.shared.RegExp;
@@ -128,8 +129,8 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     /** {@inheritDoc} */
     @Override
     public void getProject(final String name, final AsyncCallback<Project> callback) {
-        projectServiceClient.getProject(name, new AsyncRequestCallback<ProjectDescriptor>(
-                dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
+        final Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
+        projectServiceClient.getProject(name, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
                 Folder rootFolder = vfsInfo.getRoot();
@@ -139,7 +140,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 project.setId(result.getId());
                 project.setAttributes(result.getAttributes());
                 project.setProjectType(result.getProjectTypeId());
-                project.setName(name);
+                project.setName(result.getName());
                 project.setParent(rootFolder);
                 project.setProject(project);
                 project.setVFSInfo(vfsInfo);
@@ -152,23 +153,9 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
 
                 activeProject = project;
 
-                // get project structure
-//                project.refreshTree(new AsyncCallback<Project>() {
-//                    @Override
-//                    public void onSuccess(Project project) {
-//                        eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
-//                        callback.onSuccess(project);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Throwable exception) {
-//                        callback.onFailure(exception);
-//                    }
-//                });
-
-                project.refreshChildren(project, new AsyncCallback<Folder>() {
+                project.refreshChildren(new AsyncCallback<Project>() {
                     @Override
-                    public void onSuccess(Folder result) {
+                    public void onSuccess(Project result) {
                         eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
                         callback.onSuccess(project);
                     }
@@ -188,7 +175,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     }
 
     public void getFolder(final Folder folder, final AsyncCallback<Folder> callback) {
-        activeProject.refreshTree(folder, new AsyncCallback<Folder>() {
+        activeProject.refreshChildren(folder, new AsyncCallback<Folder>() {
             @Override
             public void onSuccess(Folder result) {
                 eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(result));
@@ -209,9 +196,8 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     @Override
     public void createProject(final String name, ProjectDescriptor projectDescriptor, final AsyncCallback<Project> callback) {
         final Folder rootFolder = vfsInfo.getRoot();
-
-        projectServiceClient.createProject(name, projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(
-                dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
+        final Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
+        projectServiceClient.createProject(name, projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
                 Project project = new Project(eventBus, asyncRequestFactory, projectServiceClient, dtoUnmarshallerFactory);
@@ -229,7 +215,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 activeProject = project;
 
                 // get project structure
-                project.refreshTree(new AsyncCallback<Project>() {
+                project.refreshChildren(new AsyncCallback<Project>() {
                     @Override
                     public void onSuccess(Project project) {
                         eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));

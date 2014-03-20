@@ -18,32 +18,20 @@
 package com.codenvy.ide.resources.model;
 
 import com.codenvy.api.project.shared.dto.ItemReference;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.resources.marshal.JSONDeserializer;
-import com.google.gwt.json.client.JSONObject;
 
 /**
- * This is a derivative of {@link Resource}, that adds File-specific properties and methods to provide
- * an access to files stored on VFS.
+ * This is a derivative of {@link Resource}, that adds File-specific
+ * properties and methods to provide an access to files stored on VFS.
  *
  * @author Nikolay Zamosenchuk
  */
 public class File extends Resource {
-    public static final String TYPE = "file";
-    /** Id of version of file. */
-    protected String versionId;
+    public static final String  TYPE           = "file";
     /** Content length. */
-    protected long length = -1;
-    /** Date of last modification in long format. */
-    protected long    lastModificationDate;
-    /** Locking flag. */
-    protected boolean locked;
+    protected           long    length         = -1;
     /** content if retrieved */
-    private String      content        = null;
-    private boolean     contentChanged = false;
-    private Array<File> versionHistory = Collections.<File>createArray();
-    private Lock        lock           = null;
+    private             String  content        = null;
+    private             boolean contentChanged = false;
 
     /** Empty instance of file. */
     protected File() {
@@ -60,24 +48,6 @@ public class File extends Resource {
         init(itemReference);
     }
 
-    public File(JSONObject itemObject) {
-        this();
-        init(itemObject);
-    }
-
-    /** @return version id */
-    public String getVersionId() {
-        return versionId;
-    }
-
-    /**
-     * @param versionId
-     *         the version id
-     */
-    public void setVersionId(String versionId) {
-        this.versionId = versionId;
-    }
-
     /** @return content length */
     public long getLength() {
         return length;
@@ -89,32 +59,6 @@ public class File extends Resource {
      */
     public void setLength(long length) {
         this.length = length;
-    }
-
-    /** @return date of last modification */
-    public long getLastModificationDate() {
-        return lastModificationDate;
-    }
-
-    /**
-     * @param lastModificationDate
-     *         the date of last modification
-     */
-    public void setLastModificationDate(long lastModificationDate) {
-        this.lastModificationDate = lastModificationDate;
-    }
-
-    /** @return <code>true</code> if object locked and <code>false</code> otherwise */
-    public boolean isLocked() {
-        return locked;
-    }
-
-    /**
-     * @param locked
-     *         locking flag. Must be <code>true</code> if object locked and <code>false</code> otherwise
-     */
-    public void setLocked(boolean locked) {
-        this.locked = locked;
     }
 
     // ===
@@ -130,26 +74,10 @@ public class File extends Resource {
     }
 
     /**
-     * Init from JSONObject
+     * Initialize from {@link ItemReference}.
      *
-     * @param itemObject
+     * @param itemReference
      */
-    public void init(JSONObject itemObject) {
-        id = itemObject.get("id").isString().stringValue();
-        name = itemObject.get("name").isString().stringValue();
-        mimeType = itemObject.get("mimeType").isString().stringValue();
-        //path = itemObject.get("path").isString().stringValue();
-        //parentId = itemObject.get("parentId").isString().stringValue();
-        creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
-        links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
-        versionId = itemObject.get("versionId").isString().stringValue();
-        length = (long)itemObject.get("length").isNumber().doubleValue();
-        lastModificationDate = (long)itemObject.get("lastModificationDate").isNumber().doubleValue();
-        locked = itemObject.get("locked").isBoolean().booleanValue();
-        this.contentChanged = false;
-        fixMimeType();
-    }
-
     public void init(ItemReference itemReference) {
         id = itemReference.getId();
         name = itemReference.getName();
@@ -171,39 +99,6 @@ public class File extends Resource {
         this.content = content;
     }
 
-    /** @return the history */
-    public Array<File> getVersionHistory() {
-        return versionHistory;
-    }
-
-    /**
-     * @param versionHistory
-     *         set history
-     */
-    public void setVersionHistory(Array<File> versionHistory) {
-        this.versionHistory = versionHistory;
-    }
-
-    /** Clear history */
-    public void clearVersionHistory() {
-        this.versionHistory = Collections.createArray();
-    }
-
-    /** @return lock object */
-    public Lock getLock() {
-        return lock;
-    }
-
-    /**
-     * Set lock.
-     *
-     * @param lock
-     *         lock object
-     */
-    public void setLock(Lock lock) {
-        this.lock = lock;
-    }
-
     /** @return the contentChanged */
     public boolean isContentChanged() {
         return contentChanged;
@@ -215,11 +110,6 @@ public class File extends Resource {
      */
     public void setContentChanged(boolean contentChanged) {
         this.contentChanged = contentChanged;
-    }
-
-    /** @return true if phantom file representing the version */
-    public boolean isVersion() {
-        return versionId == null ? false : !versionId.equals("0");
     }
 
     /** {@inheritDoc} */

@@ -30,7 +30,7 @@ public class JavaProjectDescription extends ProjectDescription {
         super(project);
     }
 
-    /** @return The set of Project's source folders or empty set. */
+    /** @return set of Project's source folders or empty set */
     public StringSet getSourceFolders() {
         final String builderName = project.getAttributeValue(Constants.BUILDER_NAME);
         if (builderName != null) {

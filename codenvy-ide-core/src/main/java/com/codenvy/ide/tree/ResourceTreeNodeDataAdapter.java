@@ -105,15 +105,13 @@ public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource> {
         if (root instanceof Folder) {
             Folder localRoot = (Folder)root;
             for (int i = 0; i < relativeNodePath.size(); i++) {
-                if (localRoot != null) {
-                    Resource foundResource = localRoot.findResourceById(relativeNodePath.get(i));
-                    if (foundResource instanceof Folder) {
-                        localRoot = (Folder)foundResource;
-                    }
-                    if (foundResource instanceof File) {
-                        if (i == (relativeNodePath.size() - 1)) {
-                            return foundResource;
-                        }
+                Resource foundResource = localRoot.findResourceById(relativeNodePath.get(i));
+                if (foundResource instanceof Folder) {
+                    localRoot = (Folder)foundResource;
+                }
+                if (foundResource instanceof File) {
+                    if (i == (relativeNodePath.size() - 1)) {
+                        return foundResource;
                     }
                 }
             }
