@@ -42,12 +42,16 @@
         font-size: fontSize;
     }
 
-.gwt-ListBox{
+.gwt-ListBox {
     color: mainFontColor;
-    background-color: partBackground;
-    border: 1px solid tabBorder;
-    border-radius: 2px;
-    font-size: fontSize
+    background-color: boxBackgroundColor;
+    border: 1px solid boxBorderColor;
+    border-radius: 1px;
+    box-shadow: boxInnerShadow, boxOuterShadow;
+    font-family: mainFontFamily;
+    font-size: boxFontSize;
+    font-weight: bold;
+    text-shadow: boxTextShadow;
 }
 
 .gwt-RadioButton label {
