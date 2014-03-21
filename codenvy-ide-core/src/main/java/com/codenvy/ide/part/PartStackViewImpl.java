@@ -287,4 +287,10 @@ public class PartStackViewImpl extends Composite implements PartStackView {
             }
         }
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public void clearContentPanel() {
+        getContentPanel().setWidget(null);
+    }
 }

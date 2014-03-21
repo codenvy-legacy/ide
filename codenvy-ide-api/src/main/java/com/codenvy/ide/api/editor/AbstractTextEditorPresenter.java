@@ -48,6 +48,11 @@ public abstract class AbstractTextEditorPresenter extends AbstractEditorPresente
         this.notificationManager = notificationManager;
     }
 
+    @Override
+    public TextEditorConfiguration getConfiguration() {
+        return configuration;
+    }
+
     /** {@inheritDoc} */
     @Override
     public DocumentProvider getDocumentProvider() {
