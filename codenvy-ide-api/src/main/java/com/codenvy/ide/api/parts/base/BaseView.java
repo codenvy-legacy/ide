@@ -53,8 +53,8 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
         //this hack used for adding box shadow effect to toolbar
         toolBar.getElement().getParentElement().getStyle().setOverflow(Style.Overflow.VISIBLE);
 
-        Image minimize=new Image(resources.minimize());
-        minimize.addStyleName(resources.partStackCss().ideImageIconMinimize());
+        Image minimize = new Image(resources.minimize());
+        minimize.getElement().setAttribute("id", "minimize");
         ToolButton toolButton = new ToolButton(minimize);
         toolButton.addClickHandler(new ClickHandler() {
             @Override
@@ -80,6 +80,7 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
         Label l = new Label(title, false);
         l.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
         l.getElement().getStyle().setLineHeight(20, Style.Unit.PX);
+        l.getElement().getStyle().setMarginLeft(4, Style.Unit.PX);
         l.getElement().getStyle().setVerticalAlign(Style.VerticalAlign.MIDDLE);
         toolBar.addWest(l, 100);
     }
