@@ -45,9 +45,17 @@ public class Style {
     public static String getInactiveTabBackground() {
         return theme.getInactiveTabBackground();
     }
+    
+    public static String getInactiveTabBorderColor() {
+        return theme.getInactiveTabBorderColor();
+    }
 
     public static String getActiveTabBackground() {
         return theme.getActiveTabBackground();
+    }
+    
+    public static String getActiveTabBorderColor() {
+        return theme.getActiveTabBorderColor();
     }
 
     public static String getTabsPanelBackground() {

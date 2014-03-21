@@ -52,15 +52,25 @@ public class LightTheme implements Theme {
     public String getSelectionBackground() {
         return "#C3DEFF";
     }
-
+    
     @Override
     public String getInactiveTabBackground() {
         return "#d6d6d6";
+    }
+    
+    @Override
+    public String getInactiveTabBorderColor() {
+        return "#353535";
     }
 
     @Override
     public String getActiveTabBackground() {
         return "#ffffff";
+    }
+    
+    @Override
+    public String getActiveTabBorderColor() {
+        return "#232323";
     }
 
     @Override

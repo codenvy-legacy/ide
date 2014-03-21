@@ -51,17 +51,27 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getSelectionBackground() {
-        return "#2f65ca";
+        return "#256c9f";
     }
-
+    
     @Override
     public String getInactiveTabBackground() {
         return "#484848";
+    }
+    
+    @Override
+    public String getInactiveTabBorderColor() {
+        return "#353535";
     }
 
     @Override
     public String getActiveTabBackground() {
         return "#5a5c5c";
+    }
+    
+    @Override
+    public String getActiveTabBorderColor() {
+        return "#232323";
     }
 
     @Override

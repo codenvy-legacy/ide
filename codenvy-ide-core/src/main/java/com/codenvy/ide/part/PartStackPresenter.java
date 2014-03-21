@@ -263,6 +263,15 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             }
         });
     }
+    
+    /**
+     * Returns the list of parts.
+     * 
+     * @return {@link Array} array of parts
+     */
+    protected Array<PartPresenter> getParts() {
+        return parts;
+    }
 
     /** {@inheritDoc} */
     @Override

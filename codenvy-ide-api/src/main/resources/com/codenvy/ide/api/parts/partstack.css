@@ -169,6 +169,85 @@
     display: inline-block;
 }
 
+.ide-PartStack-Tab-Right-Button {
+    margin-right: 6px;
+    height: 16px;
+    float: right;
+}
+
+.ide-PartStack-Tab-Button {
+    margin-left: 3px;
+    margin-top: 3px;
+    background: inactiveTabBackground;
+    border: 1px solid inactiveTabBorderColor;
+    cursor: pointer;
+    cursor: hand;
+    position: relative;
+    display: inline-block;
+    height: 15px;
+    padding: 3px;
+}
+
+.ide-PartStack-Tab-Button img {
+    vertical-align: bottom;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2px;
+    display: block;
+}
+
+.ide-PartStack-Tab-Button:hover {
+    border: 1px solid activeTabBorderColor !important;
+    background-color: activeTabBackground !important;
+}
+
+.ide-PartStack-Tab-Button-selected {
+    border: 1px solid activeTabBorderColor !important;
+    background-color: activeTabBackground !important;
+    border-bottom: none !important;
+    height: 16px;
+}
+
+.ide-PartStack-Multiple-Tabs-Container {
+	background-color: activeTabBackground;
+	border: 1px solid activeTabBorderColor;
+	border-top : none;
+	padding: 6 0;
+}
+
+.ide-PartStack-Multiple-Tabs-Item {
+	font-family: mainFontFamily;
+	font-size: 11pt;
+	color : #d4d4d4;
+    text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5);
+	height: 18px;
+	line-height: 18px;
+	margin-bottom: 2px;
+	padding: 0 sideBarHorizontalPadding;
+}
+
+.ide-PartStack-Multiple-Tabs-Item:hover {
+	background-color: selectionBackground;
+	cursor: pointer;
+	opacity: 0.5;
+	filter: alpha(opacity=50); /* For IE8 and earlier */
+}
+
+.ide-PartStack-Multiple-Tabs-Item .CloseButton {
+    /* change cursor for close button */
+    cursor: default;
+    opacity: 0.5;
+    vertical-align: middle;
+    margin-left: 6px;
+    margin-top: 6px; 
+    float:right;
+}
+
+.ide-PartStack-Multiple-Tabs-Item .CloseButton:hover {
+    /* hihglight on hover */
+    opacity: 1;
+}
+
 .ide-Base-Part-Toolbar {
     /*background: -webkit-linear-gradient(top, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);*/
     /*background: -moz-linear-gradient(top, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);*/
