@@ -121,8 +121,8 @@ public class StandardComponentInitializer {
     @Inject
     private ShowAboutAction showAboutAction;
 
-    @Inject
-    private ShowProjectPropertiesAction showProjectPropertiesAction;
+//    @Inject
+//    private ShowProjectPropertiesAction showProjectPropertiesAction;
 
     // Temporary disable 'Navigate To File' feature
 //    @Inject
@@ -195,8 +195,8 @@ public class StandardComponentInitializer {
         help.add(showAboutAction);
 
         DefaultActionGroup project = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_PROJECT);
-        actionManager.registerAction("showProjectProperties", showProjectPropertiesAction);
-        project.add(showProjectPropertiesAction);
+//        actionManager.registerAction("showProjectProperties", showProjectPropertiesAction);
+//        project.add(showProjectPropertiesAction);
 
         DefaultActionGroup fileGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_FILE);
 
