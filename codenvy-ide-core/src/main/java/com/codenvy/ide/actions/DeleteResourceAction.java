@@ -65,13 +65,8 @@ public class DeleteResourceAction extends Action {
         if (s != null && s.getFirstElement() instanceof Resource) {
             e.getPresentation().setVisible(true);
             Selection<Resource> selection = (Selection<Resource>)s;
-            Project activeProject = resourceProvider.getActiveProject();
-            if (activeProject != null) {
-                Resource resource = selection.getFirstElement();
-                e.getPresentation().setEnabled(resource != null);
-            } else {
-                e.getPresentation().setEnabled(false);
-            }
+            Resource resource = selection.getFirstElement();
+            e.getPresentation().setEnabled(resource != null);
         } else
             e.getPresentation().setVisible(false);
     }
@@ -100,6 +95,7 @@ public class DeleteResourceAction extends Action {
                 @Override
                 public void onSuccess(String result) {
                     // do nothing
+                    resourceProvider.showListProjects();
                 }
 
                 @Override

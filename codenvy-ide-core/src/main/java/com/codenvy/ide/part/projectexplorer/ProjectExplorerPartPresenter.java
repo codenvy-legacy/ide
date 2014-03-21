@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.part.projectexplorer;
 
-import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
@@ -35,7 +34,6 @@ import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.server.Constants;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
@@ -112,7 +110,10 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
-                setContent(event.getProject().getParent());
+                if (event.getProject() != null)
+                    setContent(event.getProject().getParent());
+                else
+                    setContent(null);
 
                 // TODO: avoid asking project type while show list of all projects
 //                checkProjectType(event.getProject(), new AsyncCallback<Project>() {
