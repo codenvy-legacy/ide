@@ -50,7 +50,8 @@ import com.google.inject.Inject;
  * @version $Id:
  */
 public class EditorPartStackView extends ResizeComposite implements PartStackView {
-
+    private static final int          COUNTING_ERROR      = 10;
+    
     private static PartStackUiBinder     uiBinder            = GWT.create(PartStackUiBinder.class);
     private ActionDelegate               delegate;
 
@@ -326,7 +327,7 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
      */
     private void processPanelSize() {
         boolean activeTabIsVisible = true;
-        int width = listTabsButton.isVisible() ? listTabsButton.getOffsetWidth() : 10;
+        int width = listTabsButton.isVisible() ? listTabsButton.getOffsetWidth() : COUNTING_ERROR;
         
         for (int i = 0; i < tabsPanel.getWidgetCount(); i++) {
             //Do not count list buttons width
@@ -347,7 +348,7 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
         }
         listTabsButton.setVisible(width > tabsPanel.getOffsetWidth());
 
-        width = 10;
+        width = COUNTING_ERROR;
         if (listTabsButton.isVisible()) {
             for (int i = 0; i < tabsPanel.getWidgetCount(); i++) {
                 width += tabsPanel.getWidget(i).getOffsetWidth();
@@ -366,5 +367,11 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
      */
     public void setShowListButtonHandler(ShowListButtonClickHandler handler) {
         this.showListButtonClickHandler = handler;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void clearContentPanel() {
+        getContentPanel().setWidget(null);
     }
 }

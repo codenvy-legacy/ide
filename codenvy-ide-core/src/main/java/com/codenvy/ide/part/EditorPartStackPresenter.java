@@ -187,7 +187,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
             parts.remove(part);
             part.removePropertyListener(propertyListener);
             if (activePart == part) {
-                view.getContentPanel().setWidget(null);
+                view.clearContentPanel();
                 //select another part
                 setActivePart(parts.isEmpty() ? null : parts.get(parts.size() - 1));
             }
