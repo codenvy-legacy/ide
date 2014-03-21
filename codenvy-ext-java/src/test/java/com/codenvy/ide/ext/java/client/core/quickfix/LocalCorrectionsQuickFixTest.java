@@ -69,7 +69,6 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
         when(activeFle.getProject()).thenReturn(project);
         when(activeFle.getName()).thenReturn("TestClass.java");
         when(activeFle.getPath()).thenReturn("/MyProject/src/main/java/my/test/TestClass.java");
-        when(project.hasProperty(anyString())).thenReturn(false);
         when(project.getPath()).thenReturn("/MyProject/src/main/java/my/test");
 
         when(cuVariables.getFileName()).thenReturn("TestClass.java");

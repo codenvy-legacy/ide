@@ -54,14 +54,12 @@ import javax.validation.constraints.NotNull;
  */
 @Singleton
 public class ProjectExplorerPartPresenter extends BasePresenter implements ProjectExplorerView.ActionDelegate, ProjectExplorerPart {
-    private final ProjectServiceClient                  projectServiceClient;
-    private final DtoUnmarshallerFactory                dtoUnmarshallerFactory;
-    protected     ProjectExplorerView                   view;
-    protected     EventBus                              eventBus;
-    private       ResourceProvider                      resourceProvider;
-    private       ContextMenuPresenter                  contextMenuPresenter;
-    private       SelectProjectTypePresenter            selectProjectTypePresenter;
-    private       ProjectPropertiesLocalizationConstant projectPropertiesLocalizationConstant;
+    protected ProjectExplorerView                   view;
+    protected EventBus                              eventBus;
+    private   ResourceProvider                      resourceProvider;
+    private   ContextMenuPresenter                  contextMenuPresenter;
+    private   SelectProjectTypePresenter            selectProjectTypePresenter;
+    private   ProjectPropertiesLocalizationConstant projectPropertiesLocalizationConstant;
 
     /**
      * Instantiates the ProjectExplorer Presenter.
@@ -72,9 +70,6 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
      * @param contextMenuPresenter
      * @param selectProjectTypePresenter
      * @param projectPropertiesLocalizationConstant
-     *
-     * @param projectServiceClient
-     * @param dtoUnmarshallerFactory
      */
     @Inject
     public ProjectExplorerPartPresenter(ProjectExplorerView view,
@@ -82,14 +77,10 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                                         ResourceProvider resourceProvider,
                                         ContextMenuPresenter contextMenuPresenter,
                                         SelectProjectTypePresenter selectProjectTypePresenter,
-                                        ProjectPropertiesLocalizationConstant projectPropertiesLocalizationConstant,
-                                        ProjectServiceClient projectServiceClient,
-                                        DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+                                        ProjectPropertiesLocalizationConstant projectPropertiesLocalizationConstant) {
         this.view = view;
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
-        this.projectServiceClient = projectServiceClient;
-        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.view.setTitle(projectPropertiesLocalizationConstant.projectExplorerTitleBarText());
         this.contextMenuPresenter = contextMenuPresenter;
         this.selectProjectTypePresenter = selectProjectTypePresenter;

@@ -187,17 +187,6 @@ public class Project extends Folder {
     }
 
     /**
-     * Check does item has property with specified name.
-     *
-     * @param name
-     *         name of property
-     * @return <code>true</code> if item has property <code>name</code> and <code>false</code> otherwise
-     */
-    public boolean hasProperty(String name) {
-        return getProperty(name) != null;
-    }
-
-    /**
      * Get value of property <code>name</code>. It is shortcut for:
      * <pre>
      *    String name = ...
@@ -218,22 +207,6 @@ public class Project extends Folder {
         Property p = getProperty(name);
         if (p != null) {
             return p.getValue().get(0);
-        }
-        return null;
-    }
-
-    /**
-     * Get set of property values
-     *
-     * @param name
-     *         property name
-     * @return set of property values or <code>null</code> if property does not exists
-     * @see #getPropertyValue(String)
-     */
-    public Array<String> getPropertyValues(String name) {
-        Property p = getProperty(name);
-        if (p != null) {
-            return p.getValue().copy();
         }
         return null;
     }
