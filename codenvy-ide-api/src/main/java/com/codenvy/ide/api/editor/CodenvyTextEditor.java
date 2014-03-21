@@ -47,4 +47,9 @@ public interface CodenvyTextEditor extends TextEditorPartPresenter {
      * //todo need to introduce more simple way to use TextEditorPartView interface
      */
     TextEditorPartView getView();
+
+    /**
+     * @return the text editor configuration
+     */
+    TextEditorConfiguration getConfiguration();
 }
