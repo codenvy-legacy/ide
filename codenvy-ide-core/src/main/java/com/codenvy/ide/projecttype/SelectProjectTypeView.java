@@ -56,11 +56,11 @@ public interface SelectProjectTypeView extends View<SelectProjectTypeView.Action
     void clearTypes();
 
     /**
-     * Returns chosen project's type ID.
+     * Returns chosen project type descriptor.
      *
-     * @return {@link String} project's type ID
+     * @return chosen {@link ProjectTypeDescriptor}
      */
-    String getSelectedProjectTypeId();
+    ProjectTypeDescriptor getSelectedProjectType();
 
     /** Close dialog. */
     void close();

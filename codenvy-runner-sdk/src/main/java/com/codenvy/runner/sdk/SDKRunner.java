@@ -17,6 +17,7 @@
  */
 package com.codenvy.runner.sdk;
 
+import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.api.core.util.LineConsumer;
@@ -85,8 +86,9 @@ public class SDKRunner extends Runner {
                      LocalFSMountStrategy mountStrategy,
                      CustomPortService portService,
                      Set<ApplicationServer> appServers,
-                     ResourceAllocators allocators) {
-        super(deployDirectoryRoot, cleanupDelay, allocators);
+                     ResourceAllocators allocators,
+                     EventService eventService) {
+        super(deployDirectoryRoot, cleanupDelay, allocators, eventService);
         this.codeServerBindAddress = codeServerBindAddress;
         this.hostName = hostName;
         this.mountStrategy = mountStrategy;
@@ -161,7 +163,7 @@ public class SDKRunner extends Runner {
         }
 
         final String workspace = sdkRunnerCfg.getRequest().getWorkspace();
-        final String project = sdkRunnerCfg.getRequest().getProject();
+        final String project = sdkRunnerCfg.getRequest().getProject().substring(1);
         final Path projectSourcesPath;
         try {
             projectSourcesPath = mountStrategy.getMountPath(workspace).toPath().resolve(project);

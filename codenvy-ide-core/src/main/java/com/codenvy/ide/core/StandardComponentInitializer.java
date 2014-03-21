@@ -19,17 +19,7 @@ package com.codenvy.ide.core;
 
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.actions.CloseProjectAction;
-import com.codenvy.ide.actions.DeleteResourceAction;
-import com.codenvy.ide.actions.NavigateToFileAction;
-import com.codenvy.ide.actions.NewProjectAction;
-import com.codenvy.ide.actions.NewResourceAction;
-import com.codenvy.ide.actions.OpenProjectAction;
-import com.codenvy.ide.actions.SaveAction;
-import com.codenvy.ide.actions.SaveAllAction;
-import com.codenvy.ide.actions.ShowAboutAction;
-import com.codenvy.ide.actions.ShowPreferencesAction;
-import com.codenvy.ide.actions.ShowProjectPropertiesAction;
+import com.codenvy.ide.actions.*;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -127,15 +117,16 @@ public class StandardComponentInitializer {
 
     @Inject
     private ShowPreferencesAction showPreferencesAction;
-    
+
     @Inject
     private ShowAboutAction showAboutAction;
 
     @Inject
     private ShowProjectPropertiesAction showProjectPropertiesAction;
 
-    @Inject
-    private NavigateToFileAction navigateToFileAction;
+    // Temporary disable 'Navigate To File' feature
+//    @Inject
+//    private NavigateToFileAction navigateToFileAction;
 
     @Inject
     @MainToolbar
@@ -175,6 +166,9 @@ public class StandardComponentInitializer {
     @Inject
     private Provider<SelectPaasPagePresenter> selectPaasPagePresenterProvider;
 
+    @Inject
+    private FormatterAction formatterAction;
+
     /** Instantiates {@link StandardComponentInitializer} an creates standard content. */
     @Inject
     public StandardComponentInitializer() {
@@ -195,7 +189,7 @@ public class StandardComponentInitializer {
         DefaultActionGroup window = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_WINDOW);
         actionManager.registerAction("showPreferences", showPreferencesAction);
         window.add(showPreferencesAction);
-        
+
         DefaultActionGroup help = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_HELP);
         actionManager.registerAction("showAbout", showAboutAction);
         help.add(showAboutAction);
@@ -208,12 +202,13 @@ public class StandardComponentInitializer {
 
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('s').build(), "save");
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('S').build(), "saveAll");
+        keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('F').build(), "format");
 
         actionManager.registerAction("newProject", newProjectAction);
         actionManager.registerAction("openProject", openProjectAction);
 
-        actionManager.registerAction("navigateToFile", navigateToFileAction);
-        keyBinding.getGlobal().addKey(new KeyBuilder().action().alt().charCode('n').build(), "navigateToFile");
+//        actionManager.registerAction("navigateToFile", navigateToFileAction);
+//        keyBinding.getGlobal().addKey(new KeyBuilder().action().alt().charCode('n').build(), "navigateToFile");
 
         DefaultActionGroup toolbarGroup = new DefaultActionGroup(actionManager);
         toolbarGroup.addSeparator();
@@ -226,7 +221,7 @@ public class StandardComponentInitializer {
         toolbarGroup.addSeparator();
         fileGroup.add(newGroup);
         fileGroup.add(openProjectAction);
-        fileGroup.add(navigateToFileAction);
+//        fileGroup.add(navigateToFileAction);
 //        fileGroup.add(renameResourceAction);
         actionManager.registerAction("newResource", newFileAction);
         newGroup.add(newFileAction);
@@ -235,9 +230,11 @@ public class StandardComponentInitializer {
         actionManager.registerAction("saveGroup", saveGroup);
         actionManager.registerAction("save", saveAction);
         actionManager.registerAction("saveAll", saveAllAction);
+        actionManager.registerAction("format", formatterAction);
         saveGroup.addSeparator();
         saveGroup.add(saveAction);
         saveGroup.add(saveAllAction);
+        saveGroup.add(formatterAction);
         toolbarGroup.addSeparator();
         toolbarGroup.add(saveGroup);
         toolbarGroup.addSeparator();

@@ -60,6 +60,7 @@ public class WorkerOutlineModelUpdater {
         if (this.root == null) {
             root = WorkerCodeBlock.make();
 //            root.setType(CodeBlock.ROOT_TYPE);
+            root.setOffset(0);
             root.setChildren(JsoArray.<WorkerCodeBlock>create());
         }
 
@@ -100,6 +101,8 @@ public class WorkerOutlineModelUpdater {
                 imports.setChildren(JsoArray.<WorkerCodeBlock>create());
                 imports.setType(BlockTypes.IMPORTS.getType());
                 imports.setName("import declarations");
+                imports.setOffset(node.getStartPosition());
+                imports.setLength(0);
                 childrens.add(imports);
             }
             WorkerCodeBlock c = createCodeBlock(BlockTypes.IMPORT.getType(), node.getStartPosition(), node.getLength());

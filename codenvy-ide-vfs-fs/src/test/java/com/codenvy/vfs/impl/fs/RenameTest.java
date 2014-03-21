@@ -18,11 +18,7 @@
 package com.codenvy.vfs.impl.fs;
 
 import com.codenvy.api.vfs.shared.ExitCodes;
-import com.codenvy.api.vfs.shared.ItemType;
-import com.codenvy.api.vfs.shared.dto.Folder;
-import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.api.vfs.shared.dto.Principal;
-import com.codenvy.api.vfs.shared.dto.Project;
 import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
 import com.codenvy.dto.server.DtoFactory;
 
@@ -50,9 +46,6 @@ public class RenameTest extends LocalFileSystemTest {
 
     private String folderId;
     private String folderPath;
-
-    private String projectId;
-    private String projectPath;
 
     private String protectedFolderId;
     private String protectedFolderPath;
@@ -84,12 +77,6 @@ public class RenameTest extends LocalFileSystemTest {
         createTree(protectedFolderPath, 6, 4, properties);
         writeProperties(protectedFolderPath, properties);
 
-        projectPath = createDirectory(testRootPath, "RenameTest_Project");
-        createTree(projectPath, 6, 4, properties);
-        Map<String, String[]> projectProperties = new HashMap<>(1);
-        projectProperties.put("vfs:mimeType", new String[]{Project.PROJECT_MIME_TYPE});
-        writeProperties(projectPath, projectProperties);
-
         createLock(lockedFilePath, lockToken, Long.MAX_VALUE);
 
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(2);
@@ -105,11 +92,6 @@ public class RenameTest extends LocalFileSystemTest {
         protectedFileId = pathToId(protectedFilePath);
         folderId = pathToId(folderPath);
         protectedFolderId = pathToId(protectedFolderPath);
-        projectId = pathToId(projectPath);
-        //
-        Item item = getItem(projectId);
-        assertEquals(Project.PROJECT_MIME_TYPE, item.getMimeType());
-        assertTrue("Folder must be converted to Project. ", ItemType.PROJECT == item.getItemType());
     }
 
     public void testRenameFile() throws Exception {
@@ -237,37 +219,5 @@ public class RenameTest extends LocalFileSystemTest {
         expectedProperties.put("vfs:mimeType", new String[]{"text/directory+FOO"});
         validateProperties(expectedPath, expectedProperties, false); // media type updated only for current folder
         validateProperties(expectedPath, properties, true);
-    }
-
-    public void testConvertFolderToProject() throws Exception {
-        final String newMediaType = "text/vnd.ideproject%2Bdirectory"; // text/vnd.ideproject+directory
-        String path = SERVICE_URI + "rename/" + folderId + '?' + "mediaType=" + newMediaType;
-        ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
-        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
-        assertTrue(exists(folderPath));
-        Map<String, String[]> expectedProperties = new HashMap<>(1);
-        expectedProperties.put("vfs:mimeType", new String[]{Project.PROJECT_MIME_TYPE});
-        validateProperties(folderPath, expectedProperties, false); // media type updated only for current folder
-        validateProperties(folderPath, properties, true);
-
-        Item project = getItem(folderId);
-        assertEquals(Project.PROJECT_MIME_TYPE, project.getMimeType());
-        assertTrue("Folder must be converted to Project. ", ItemType.PROJECT == project.getItemType());
-    }
-
-    public void testConvertProjectToFolder() throws Exception {
-        final String newMediaType = Folder.FOLDER_MIME_TYPE;
-        String path = SERVICE_URI + "rename/" + projectId + '?' + "mediaType=" + newMediaType;
-        ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
-        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
-        assertTrue(exists(projectPath));
-        Map<String, String[]> expectedProperties = new HashMap<>(1);
-        expectedProperties.put("vfs:mimeType", new String[]{Folder.FOLDER_MIME_TYPE});
-        validateProperties(projectPath, expectedProperties, false); // media type updated only for current folder
-
-        // Project becomes to regular folder.
-        Item project = getItem(projectId);
-        assertEquals(Folder.FOLDER_MIME_TYPE, project.getMimeType());
-        assertTrue("Project must be converted to Folder. ", ItemType.FOLDER == project.getItemType());
     }
 }

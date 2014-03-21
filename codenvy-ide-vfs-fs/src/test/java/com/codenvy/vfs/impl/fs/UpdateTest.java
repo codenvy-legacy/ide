@@ -17,11 +17,8 @@
  */
 package com.codenvy.vfs.impl.fs;
 
-import com.codenvy.api.vfs.shared.ItemType;
-import com.codenvy.api.vfs.shared.dto.Folder;
 import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.api.vfs.shared.dto.Principal;
-import com.codenvy.api.vfs.shared.dto.Project;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.commons.user.UserImpl;
 import com.codenvy.dto.server.DtoFactory;
@@ -195,49 +192,5 @@ public class UpdateTest extends LocalFileSystemTest {
 
         Item item = getItem(protectedFileId);
         assertNull(getPropertyValue(item, "MyProperty"));
-    }
-
-    public void testUpdatePropertiesAndChangeFolderType() throws Exception {
-        String requestPath = SERVICE_URI + "item/" + folderId;
-        String properties = "[{\"name\":\"vfs:mimeType\", \"value\":[\"text/vnd.ideproject+directory\"]}]";
-        Map<String, List<String>> h = new HashMap<>(1);
-        h.put("Content-Type", Arrays.asList("application/json"));
-        ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-        ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, properties.getBytes(), writer, null);
-        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
-
-        Map<String, String[]> expectedProperties = new HashMap<>(1);
-        expectedProperties.put("vfs:mimeType", new String[]{Project.PROJECT_MIME_TYPE});
-        validateProperties(folderPath, expectedProperties);
-
-        Item item = getItem(folderId);
-        assertEquals(ItemType.PROJECT, item.getItemType());
-        assertEquals(Project.PROJECT_MIME_TYPE, item.getMimeType());
-    }
-
-    public void testUpdatePropertiesAndChangeFolderType2() throws Exception {
-        Map<String, String[]> props = new HashMap<>(1);
-        props.put("vfs:mimeType", new String[]{Project.PROJECT_MIME_TYPE});
-        writeProperties(folderPath, props);
-        Item item = getItem(folderId);
-        assertEquals(ItemType.PROJECT, item.getItemType());
-        assertEquals(Project.PROJECT_MIME_TYPE, item.getMimeType());
-
-        String requestPath = SERVICE_URI + "item/" + folderId;
-        String properties = "[{\"name\":\"vfs:mimeType\", \"value\":[\"text/directory\"]}]";
-        Map<String, List<String>> h = new HashMap<>(1);
-        h.put("Content-Type", Arrays.asList("application/json"));
-        ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-        ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, properties.getBytes(), writer, null);
-        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
-
-        Map<String, String[]> expectedProperties = new HashMap<>(1);
-        expectedProperties.put("vfs:mimeType", new String[]{Folder.FOLDER_MIME_TYPE});
-        validateProperties(folderPath, expectedProperties);
-
-        item = getItem(folderId);
-        assertEquals(ItemType.FOLDER, item.getItemType());
-        assertEquals(Folder.FOLDER_MIME_TYPE, item.getMimeType());
-
     }
 }

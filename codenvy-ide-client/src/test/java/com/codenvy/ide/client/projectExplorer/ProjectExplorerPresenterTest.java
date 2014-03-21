@@ -20,6 +20,7 @@ package com.codenvy.ide.client.projectExplorer;
 import com.codenvy.ide.part.projectexplorer.ProjectExplorerPartPresenter;
 import com.codenvy.ide.part.projectexplorer.ProjectExplorerView;
 import com.codenvy.ide.part.projectexplorer.ProjectExplorerView.ActionDelegate;
+import com.codenvy.ide.project.properties.ProjectPropertiesLocalizationConstant;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
@@ -49,6 +50,9 @@ public class ProjectExplorerPresenterTest {
 
     @Spy
     EventBus eventBus = new SimpleEventBus();
+
+    @Mock
+    ProjectPropertiesLocalizationConstant projectPropertiesLocalizationConstant;
 
     @InjectMocks
     ProjectExplorerPartPresenter explorerPresenter;

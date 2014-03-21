@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.server.internal.core.search.processing;
 
+import com.codenvy.ide.ext.java.server.internal.core.search.Util;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -18,7 +20,6 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.internal.core.search.processing.IJob;
 import org.eclipse.jdt.internal.core.util.Messages;
-import org.eclipse.jdt.internal.core.util.Util;
 
 public abstract class JobManager implements Runnable {
 

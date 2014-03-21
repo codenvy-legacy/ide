@@ -17,6 +17,7 @@
  */
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.vfs.server.VirtualFileSystemProvider;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
@@ -36,12 +37,15 @@ import java.io.File;
 @Singleton
 public class AutoMountVirtualFileSystemRegistry extends VirtualFileSystemRegistry {
     private final LocalFSMountStrategy mountStrategy;
+    private final EventService         eventService;
     private final SearcherProvider     searcherProvider;
 
     @Inject
     public AutoMountVirtualFileSystemRegistry(LocalFSMountStrategy mountStrategy,
+                                              EventService eventService,
                                               @Nullable SearcherProvider searcherProvider) {
         this.mountStrategy = mountStrategy;
+        this.eventService = eventService;
         this.searcherProvider = searcherProvider;
     }
 
@@ -53,6 +57,6 @@ public class AutoMountVirtualFileSystemRegistry extends VirtualFileSystemRegistr
                 return null;
             }
         }
-        return new LocalFileSystemProvider(vfsId, mountStrategy, searcherProvider);
+        return new LocalFileSystemProvider(vfsId, mountStrategy, eventService, searcherProvider);
     }
 }

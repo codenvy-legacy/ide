@@ -61,25 +61,25 @@ public class DeleteResourceAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        Project activeProject = resourceProvider.getActiveProject();
-        Selection<Resource> selection = (Selection<Resource>)selectionAgent.getSelection();
-        if (activeProject != null && selection != null) {
+        Selection<?> s = selectionAgent.getSelection();
+        if (s != null && s.getFirstElement() instanceof Resource) {
+            e.getPresentation().setVisible(true);
+            Selection<Resource> selection = (Selection<Resource>)s;
             Resource resource = selection.getFirstElement();
             e.getPresentation().setEnabled(resource != null);
-        } else if (activeProject == null && selection != null) {
-            Resource resource = selection.getFirstElement();
-            e.getPresentation().setEnabled(resource != null);
-        } else {
-            e.getPresentation().setEnabled(false);
-        }
+        } else
+            e.getPresentation().setVisible(false);
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        Selection<Resource> selection = (Selection<Resource>)selectionAgent.getSelection();
-        Resource resource = selection.getFirstElement();
-        delete(resource);
+        Selection<?> s = selectionAgent.getSelection();
+        if (s != null && s.getFirstElement() instanceof Resource) {
+            Selection<Resource> selection = (Selection<Resource>)s;
+            Resource resource = selection.getFirstElement();
+            delete(resource);
+        }
     }
 
     /**
@@ -95,6 +95,7 @@ public class DeleteResourceAction extends Action {
                 @Override
                 public void onSuccess(String result) {
                     // do nothing
+                    resourceProvider.showListProjects();
                 }
 
                 @Override

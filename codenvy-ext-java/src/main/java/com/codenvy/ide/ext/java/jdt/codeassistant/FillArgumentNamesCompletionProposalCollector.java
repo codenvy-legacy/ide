@@ -108,7 +108,6 @@ public final class FillArgumentNamesCompletionProposalCollector extends Completi
         // String sourceVersion;
         //
         // sourceVersion= JavaCore.getOption(JavaCore.COMPILER_SOURCE);
-        // TODO
         return true;
     }
 }

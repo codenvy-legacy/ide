@@ -15,6 +15,7 @@ import com.codenvy.ide.ext.java.server.core.search.IJavaSearchScope;
 import com.codenvy.ide.ext.java.server.core.search.SearchEngine;
 import com.codenvy.ide.ext.java.server.core.search.SearchParticipant;
 import com.codenvy.ide.ext.java.server.core.search.SearchPattern;
+import com.codenvy.ide.ext.java.server.internal.core.JavaProject;
 import com.codenvy.ide.ext.java.server.internal.core.search.IndexQueryRequestor;
 import com.codenvy.ide.ext.java.server.internal.core.search.JavaSearchParticipant;
 import com.codenvy.ide.ext.java.server.internal.core.search.PathCollector;
@@ -45,7 +46,6 @@ import org.eclipse.jdt.internal.compiler.lookup.CompilationUnitScope;
 import org.eclipse.jdt.internal.compiler.lookup.MethodScope;
 import org.eclipse.jdt.internal.compiler.lookup.ReferenceBinding;
 import org.eclipse.jdt.internal.compiler.problem.AbortCompilation;
-import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jdt.internal.core.Openable;
 import org.eclipse.jdt.internal.core.SourceType;
 import org.eclipse.jdt.internal.core.search.indexing.IIndexConstants;
@@ -300,9 +300,9 @@ protected String[] getPathsOfDeclaringType() {
 	indexManager.performConcurrentJob(
 		new PatternSearchJob(
 			searchPattern,
-			new JavaSearchParticipant(),
+			new JavaSearchParticipant(indexManager),
 			scope,
-			searchRequestor),
+			searchRequestor, indexManager),
 		IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,
 		this.progressMonitor == null ? null : new SubProgressMonitor(this.progressMonitor, 100));
 	return pathCollector.getPaths();

@@ -23,17 +23,12 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.1-M11-SNAPSHOT</version>
+        <version>3.0.0-M12-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ext-tutorials</artifactId>
     <packaging>jar</packaging>
     <name>Codenvy Extension :: Tutorials</name>
     <dependencies>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-extensions</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-java</artifactId>

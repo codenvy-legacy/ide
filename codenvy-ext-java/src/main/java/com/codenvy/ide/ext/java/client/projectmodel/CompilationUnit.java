@@ -22,7 +22,7 @@ import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 
 /**
- * Java Compilation unit is a *.java file that contains top level class and can be compiled
+ * Java Compilation unit is a java file that contains top level class and can be compiled.
  *
  * @author Nikolay Zamosenchuk
  */

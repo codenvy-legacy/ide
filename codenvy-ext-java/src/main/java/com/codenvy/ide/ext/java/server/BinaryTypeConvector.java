@@ -276,7 +276,7 @@ public class BinaryTypeConvector {
     }
 
 
-    private static JsonElement toJsonArrayString(char[][] chars) {
+    public static JsonElement toJsonArrayString(char[][] chars) {
         if (chars == null) return JsonNull.INSTANCE;
         JsonArray array = new JsonArray();
         for (char[] aChar : chars) {

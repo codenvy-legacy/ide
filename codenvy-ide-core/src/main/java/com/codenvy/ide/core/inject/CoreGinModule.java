@@ -25,7 +25,6 @@ import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClientImpl;
 import com.codenvy.api.user.gwt.client.UserServiceClient;
 import com.codenvy.api.user.gwt.client.UserServiceClientImpl;
-import com.codenvy.ide.core.IconRegistryImpl;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.about.AboutView;
 import com.codenvy.ide.about.AboutViewImpl;
@@ -43,7 +42,6 @@ import com.codenvy.ide.api.parts.OutlinePart;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.parts.SearchPart;
-import com.codenvy.ide.api.parts.WelcomePart;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ModelProvider;
@@ -54,6 +52,7 @@ import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
+import com.codenvy.ide.api.ui.theme.Theme;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
 import com.codenvy.ide.api.ui.wizard.DefaultWizard;
 import com.codenvy.ide.api.ui.wizard.DefaultWizardFactory;
@@ -67,6 +66,7 @@ import com.codenvy.ide.api.ui.workspace.PartStackView;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.contexmenu.ContextMenuView;
 import com.codenvy.ide.contexmenu.ContextMenuViewImpl;
+import com.codenvy.ide.core.IconRegistryImpl;
 import com.codenvy.ide.core.StandardComponentInitializer;
 import com.codenvy.ide.core.editor.DefaultEditorProvider;
 import com.codenvy.ide.core.editor.EditorAgentImpl;
@@ -128,9 +128,13 @@ import com.codenvy.ide.selection.SelectionAgentImpl;
 import com.codenvy.ide.text.DocumentFactory;
 import com.codenvy.ide.text.DocumentFactoryImpl;
 import com.codenvy.ide.texteditor.TextEditorPresenter;
+import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesView;
+import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesViewImpl;
 import com.codenvy.ide.theme.AppearancePresenter;
 import com.codenvy.ide.theme.AppearanceView;
 import com.codenvy.ide.theme.AppearanceViewImpl;
+import com.codenvy.ide.theme.DarkTheme;
+import com.codenvy.ide.theme.LightTheme;
 import com.codenvy.ide.theme.ThemeAgentImpl;
 import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
@@ -142,7 +146,6 @@ import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.MessageBusImpl;
-import com.codenvy.ide.welcome.WelcomePartPresenter;
 import com.codenvy.ide.welcome.WelcomePartView;
 import com.codenvy.ide.welcome.WelcomePartViewImpl;
 import com.codenvy.ide.wizard.NewResourceAgentImpl;
@@ -258,6 +261,10 @@ public class CoreGinModule extends AbstractGinModule {
         prefBinder.addBinding().to(AppearancePresenter.class);
         prefBinder.addBinding().to(ExtensionManagerPresenter.class);
 
+        GinMultibinder<Theme> themeBinder = GinMultibinder.newSetBinder(binder(), Theme.class);
+        themeBinder.addBinding().to(DarkTheme.class);
+        themeBinder.addBinding().to(LightTheme.class);
+
         // Resources
         bind(PartStackUIResources.class).to(Resources.class).in(Singleton.class);
         // Views
@@ -290,6 +297,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(NavigateToFileView.class).to(NavigateToFileViewImpl.class).in(Singleton.class);
         bind(RenameResourceView.class).to(RenameResourceViewImpl.class).in(Singleton.class);
         bind(AboutView.class).to(AboutViewImpl.class);
+        bind(ListOpenedFilesView.class).to(ListOpenedFilesViewImpl.class);
 
         bind(ExtensionManagerView.class).to(ExtensionManagerViewImpl.class).in(Singleton.class);
         bind(AppearanceView.class).to(AppearanceViewImpl.class).in(Singleton.class);

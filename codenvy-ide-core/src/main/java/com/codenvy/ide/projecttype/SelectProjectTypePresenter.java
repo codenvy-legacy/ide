@@ -26,6 +26,7 @@ import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -78,8 +79,8 @@ public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionD
     /** {@inheritDoc} */
     @Override
     public void onOkClicked() {
-        final String selectedProjectTypeId = view.getSelectedProjectTypeId();
-        final ProjectTypeDescriptor descriptor = projectTypeDescriptorRegistry.getDescriptor(selectedProjectTypeId);
+        final ProjectTypeDescriptor selectedProjectType = view.getSelectedProjectType();
+        final ProjectTypeDescriptor descriptor = projectTypeDescriptorRegistry.getDescriptor(selectedProjectType.getProjectTypeId());
         updateProjectWithDescriptor(descriptor);
     }
 
@@ -88,8 +89,8 @@ public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionD
                                                         .withProjectTypeId(descriptor.getProjectTypeId())
                                                         .withProjectTypeName(descriptor.getProjectTypeName())
                                                         .withAttributes(project.getAttributes());
-        projectServiceClient.updateProject(project.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(
-                dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
+        final Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
+        projectServiceClient.updateProject(project.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
                 project.setId(result.getId());

@@ -17,6 +17,7 @@
  */
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.server.search.SearcherProvider;
@@ -35,9 +36,10 @@ public class LocalFileSystemRegistryPlugin {
     public LocalFileSystemRegistryPlugin(@Named("vfs.local.id") String[] ids,
                                          LocalFSMountStrategy mountStrategy,
                                          VirtualFileSystemRegistry registry,
+                                         EventService eventService,
                                          @Nullable SearcherProvider searcherProvider) throws VirtualFileSystemException {
         for (String id : ids) {
-            registry.registerProvider(id, new LocalFileSystemProvider(id, mountStrategy, searcherProvider));
+            registry.registerProvider(id, new LocalFileSystemProvider(id, mountStrategy, eventService, searcherProvider));
         }
     }
 }

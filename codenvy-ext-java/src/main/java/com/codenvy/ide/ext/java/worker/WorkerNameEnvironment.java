@@ -17,15 +17,14 @@
  */
 package com.codenvy.ide.ext.java.worker;
 
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Jso;
-import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
-import com.codenvy.ide.ext.java.jdt.core.search.IJavaSearchConstants;
+import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.ext.java.jdt.internal.codeassist.ISearchRequestor;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.env.AccessRestriction;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment;
 import com.codenvy.ide.ext.java.jdt.internal.compiler.env.NameEnvironmentAnswer;
-import com.codenvy.ide.ext.java.shared.JavaType;
 import com.codenvy.ide.ext.java.worker.env.BinaryType;
+import com.codenvy.ide.ext.java.worker.env.Util;
 import com.codenvy.ide.ext.java.worker.env.json.BinaryTypeJso;
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -51,26 +50,6 @@ public class WorkerNameEnvironment implements INameEnvironment {
      */
     public WorkerNameEnvironment(String restContext, String wsName) {
         restServiceContext = restContext + "/java-name-environment" + wsName;
-    }
-
-    private static String convertSearchFilterToModelFilter(int searchFilter) {
-        switch (searchFilter) {
-            case IJavaSearchConstants.CLASS:
-                return JavaType.CLASS.name();
-            case IJavaSearchConstants.INTERFACE:
-                return JavaType.INTERFACE.name();
-            case IJavaSearchConstants.ENUM:
-                return JavaType.ENUM.name();
-            case IJavaSearchConstants.ANNOTATION_TYPE:
-                return JavaType.ANNOTATION.name();
-            // TODO
-            // case IJavaSearchConstants.CLASS_AND_ENUM:
-            // return NameLookup.ACCEPT_CLASSES | NameLookup.ACCEPT_ENUMS;
-            // case IJavaSearchConstants.CLASS_AND_INTERFACE:
-            // return NameLookup.ACCEPT_CLASSES | NameLookup.ACCEPT_INTERFACES;
-            default:
-                return null;
-        }
     }
 
     public void setProjectPath(String projectPath) {
@@ -103,7 +82,7 @@ public class WorkerNameEnvironment implements INameEnvironment {
             String url =
                     restServiceContext + "/findTypeCompound?compoundTypeName=" + builder.toString() + "&projectpath=" +
                     projectPath;
-            String result = runSyncReques(url);
+            String result = runSyncRequest(url);
             if (result != null) {
                 Jso jso = Jso.deserialize(result);
                 BinaryType type = new BinaryType(jso.<BinaryTypeJso>cast());
@@ -111,8 +90,6 @@ public class WorkerNameEnvironment implements INameEnvironment {
 
                 return new NameEnvironmentAnswer(type, null);
             } else return null;
-//
-//            return loadTypeInfo(key, projectPath);
         }
         return null;
     }
@@ -123,33 +100,6 @@ public class WorkerNameEnvironment implements INameEnvironment {
         }
         return builder.toString();
     }
-
-//    /**
-//     * Load and store in TypeInfoStorage type info
-//     *
-//     * @param fqn
-//     *         of the type
-//     * @param projectPath
-//     *         project
-//     */
-//    public NameEnvironmentAnswer loadTypeInfo(final String fqn, String projectPath) {
-//        if (packages.contains(fqn)) {
-//            return null;
-//        }
-//        String url =
-//                restServiceContext + "/class-description?fqn=" + fqn + "&projectid=" + projectPath +
-//                "&vfsid=" + vfsId;
-//        String result = runSyncReques(url);
-//        if (result != null) {
-//
-//
-//            Jso jso = Jso.deserialize(result);
-//            BinaryTypeImpl type = new BinaryTypeImpl(jso);
-//            WorkerTypeInfoStorage.get().putType(fqn, type);
-//
-//            return new NameEnvironmentAnswer(type, null);
-//        } else return null;
-//    }
 
     /** {@inheritDoc} */
     @Override
@@ -164,9 +114,6 @@ public class WorkerNameEnvironment implements INameEnvironment {
         }
         b.append(typeName);
         final String key = validateFqn(b);
-        //TODO
-//      if (TypeInfoStorage.get().getPackages(projectPath).contains(key))
-//         return null;
         if (WorkerTypeInfoStorage.get().containsKey(key)) {
             return new NameEnvironmentAnswer(WorkerTypeInfoStorage.get().getType(key),
                                              null);
@@ -184,7 +131,7 @@ public class WorkerNameEnvironment implements INameEnvironment {
             String url =
                     restServiceContext + "/findType?packagename=" + builder.toString() + "&typename=" + new String(typeName) +
                     "&projectpath=" + projectPath;
-            String result = runSyncReques(url);
+            String result = runSyncRequest(url);
             if (result != null) {
                 Jso jso = Jso.deserialize(result);
                 BinaryType type = new BinaryType(jso.<BinaryTypeJso>cast());
@@ -222,20 +169,12 @@ public class WorkerNameEnvironment implements INameEnvironment {
                     restServiceContext + "/package" + "?packagename=" + new String(packageName) + "&parent=" +
                     builder.toString()
                     + "&projectpath=" + projectPath;
-            String findPackage = runSyncReques(url);
+            String findPackage = runSyncRequest(url);
             boolean exist = findPackage != null && Boolean.parseBoolean(findPackage);
-            if(exist) {
+            if (exist) {
                 packages.add(p.toString());
             }
             return exist;
-//            if (findPackage != null) {
-//                JSONArray jsonArray = JSONParser.parseLenient(findPackage).isArray();
-//                for (int i = 0; i < jsonArray.size(); i++) {
-//                    packages.add(jsonArray.get(i).isString().stringValue());
-//                }
-//                return jsonArray.size() > 0;
-//            }
-//            return false;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -259,77 +198,30 @@ public class WorkerNameEnvironment implements INameEnvironment {
      */
     @Override
     public void findConstructorDeclarations(char[] prefix, boolean camelCaseMatch, final ISearchRequestor requestor) {
-//        int lastDotIndex = CharOperation.lastIndexOf('.', prefix);
-//        char[] qualification, simpleName;
-//        if (lastDotIndex < 0) {
-//            qualification = null;
-//            if (camelCaseMatch) {
-//                simpleName = prefix;
-//            } else {
-//                simpleName = CharOperation.toLowerCase(prefix);
-//            }
-//        } else {
-//            qualification = CharOperation.subarray(prefix, 0, lastDotIndex);
-//            if (camelCaseMatch) {
-//                simpleName = CharOperation.subarray(prefix, lastDotIndex + 1, prefix.length);
-//            } else {
-//                simpleName = CharOperation.toLowerCase(CharOperation.subarray(prefix, lastDotIndex + 1, prefix.length));
-//            }
-//        }
-//        String url =
-//                restServiceContext + "/classes-by-prefix" + "?prefix=" + new String(simpleName)
-//                + "&projectid=" + projectPath + "&vfsid=" + vfsId;
-//        try {
-//            List<IBinaryType> typesByNamePrefix =
-//                    WorkerTypeInfoStorage.get().getTypesByNamePrefix(new String(prefix), qualification != null);
-//            for (IBinaryType object : typesByNamePrefix) {
-//                addConstructor((BinaryTypeImpl)object, requestor);
-//            }
-//            String typesJson = runSyncReques(url);
-//            JSONArray typesFromServer = null;
-//            if (typesJson != null) {
-//                typesFromServer = JSONParser.parseLenient(typesJson).isArray();
-//                for (int i = 0; i < typesFromServer.size(); i++) {
-//                    JSONObject object = typesFromServer.get(i).isObject();
-//                    BinaryTypeImpl type = new BinaryTypeImpl(object.getJavaScriptObject().<Jso>cast());
-//                    if (WorkerTypeInfoStorage.get().containsKey(String.valueOf(type.getFqn()))) {
-//                        continue;
-//                    }
-//                    WorkerTypeInfoStorage.get().putType(new String(type.getFqn()), type);
-//                    addConstructor(type, requestor);
-//                }
-//            }
-//
-//        } catch (Exception e) {
-////            Log.error(getClass(), e);
-//            //TODO log error
-//        }
-    }
 
-//    private void addConstructor(BinaryTypeImpl type, final ISearchRequestor requestor) {
-//        IBinaryMethod[] methods = type.getMethods();
-//        boolean hasConstructor = false;
-//        if (methods != null) {
-//            for (IBinaryMethod method : methods) {
-//                if (!method.isConstructor()) {
-//                    continue;
-//                }
-//                int parameterCount = Signature.getParameterCount(method.getMethodDescriptor());
-//                char[][] parameterTypes = Signature.getParameterTypes(method.getMethodDescriptor());
-//                requestor.acceptConstructor(method.getModifiers(), type.getSourceName(), parameterCount,
-//                                            method.getMethodDescriptor(), parameterTypes, method.getArgumentNames(), type.getModifiers(),
-//                                            Signature.getQualifier(type.getFqn()), 0, new String(type.getSourceName()), null);
-//                hasConstructor = true;
-//            }
-//        }
-//        if (!hasConstructor) {
-//            requestor.acceptConstructor(Flags.AccPublic, type.getSourceName(), -1,
-//                                        null, // signature is not used for source type
-//                                        CharOperation.NO_CHAR_CHAR, CharOperation.NO_CHAR_CHAR, type.getModifiers(),
-//                                        Signature.getQualifier(type.getFqn()), 0, new String(type.getSourceName()), null);
-//        }
-//
-//    }
+        String url =
+                restServiceContext + "/findConstructor" + "?prefix=" + new String(prefix) + "&camelcase=" + camelCaseMatch
+                + "&projectpath=" + projectPath;
+        String cons = runSyncRequest(url);
+        if (cons != null) {
+            JsoArray<Jso> constructors = Jso.deserialize(cons).cast();
+            for (Jso jso : constructors.asIterable()) {
+                char[][] parameterTypes = Util.arrayStringToCharArray((Array<String>)jso.getJsObjectField("parameterTypes"));
+                char[][] parameterNames = Util.arrayStringToCharArray((Array<String>)jso.getJsObjectField("parameterNames"));
+                String signature = jso.getStringField("signature");
+                char[] sig = null;
+                if(signature != null) {
+                   sig = signature.toCharArray();
+                }
+                requestor.acceptConstructor(jso.getIntField("modifiers"), jso.getStringField("simpleTypeName").toCharArray(),
+                                            jso.getIntField("parameterCount"), sig,
+                                            parameterTypes, parameterNames, jso.getIntField("typeModifiers"),
+                                            jso.getStringField("packageName").toCharArray(), jso.getIntField("extraFlags"), "from server",
+                                            null);
+            }
+        }
+
+    }
 
     /**
      * Find the packages that start with the given prefix. A valid prefix is a qualified name separated by periods (ex. java.util).
@@ -346,19 +238,12 @@ public class WorkerNameEnvironment implements INameEnvironment {
 
     }
 
-    private String runSyncReques(String url) {
+    private String runSyncRequest(String url) {
         XmlHttpWraper xmlhttp = nativeRunSyncReques(url);
         int status = xmlhttp.getStatusCode();
         if (status == 200) {
             return xmlhttp.getResponseText();
         } else {
-//            String message = null;
-//            if (status == 204) {
-//                message = "no content";
-//            } else {
-//                message = xmlhttp.getResponseText();
-//            }
-            //throw new RuntimeException("Server return " + message);
             // server not find info
             return null;
         }
@@ -384,51 +269,25 @@ public class WorkerNameEnvironment implements INameEnvironment {
      * This method can not be used to find member types... member types are found relative to their enclosing type.
      */
     @Override
-    public void findTypes(char[] qualifiedName, boolean b, boolean camelCaseMatch, int searchFor,
+    public void findTypes(char[] qualifiedName, boolean findMembers, boolean camelCaseMatch, int searchFor,
                           final ISearchRequestor requestor) {
         if (qualifiedName.length == 0) {
             return;
         }
-//        String searchType = convertSearchFilterToModelFilter(searchFor);
-//        String url = null;
-//        if (searchType == null) {
-//            int lastDotIndex = CharOperation.lastIndexOf('.', qualifiedName);
-//            String typeSearch;
-//            if (lastDotIndex < 0) {
-//                typeSearch = "className";
-//            } else {
-//                typeSearch = "fqn";
-//            }
-//            url =
-//                    restServiceContext + "/find-by-prefix/" + new String(qualifiedName) + "?where="
-//                    + typeSearch + "&projectid=" + projectPath ;
-//        } else {
-//            url =
-//                    restServiceContext + "/find-by-type/" + searchType + "?prefix="
-//                    + new String(qualifiedName) + "&projectid=" + projectPath;
-//        }
-//        try {
-//
-//            String typesJson = runSyncReques(url);
-//            if (typesJson != null) {
-//
-////                TypesListImpl typesList = TypesListImpl.deserialize(typesJson);
-//
-//
-////                for (ShortTypeInfo info : typesList.getTypes()) {
-////                    requestor.acceptType(info.getName().substring(0, info.getName().lastIndexOf(".")).toCharArray(),
-////                                         info.getName().substring(info.getName().lastIndexOf(".") + 1).toCharArray(),
-////                                         null,
-////                                         info.getModifiers(),
-////                                         null);
-////                }
-//            }
-//            WorkerTypeInfoStorage.get().setShortTypesInfo(typesJson);
-//        } catch (Throwable e) {
-////            Log.error(getClass(), e);
-//            throw new RuntimeException(e);
-//            //TODO log error
-//        }
+        String url =
+                restServiceContext + "/findTypes" + "?qualifiedname=" + new String(qualifiedName) + "&camelcase=" + camelCaseMatch
+                + "&findmembers=" + findMembers + "&searchfor=" + searchFor
+                + "&projectpath=" + projectPath;
+        String res = runSyncRequest(url);
+        if (res != null) {
+            JsoArray<Jso> types = Jso.deserialize(res).cast();
+            for (Jso jso : types.asIterable()) {
+                char[][] enclosingTypeNames = Util.arrayStringToCharArray((Array<String>)jso.getJsObjectField("enclosingTypeNames"));
+                requestor.acceptType(jso.getStringField("packageName").toCharArray(), jso.getStringField("typeName").toCharArray(),
+                                     enclosingTypeNames, jso.getIntField("modifiers"), null);
+            }
+        }
+
     }
 
     /**
@@ -445,28 +304,23 @@ public class WorkerNameEnvironment implements INameEnvironment {
      * types are found relative to their enclosing type.
      */
     @Override
-    public void findExactTypes(final char[] missingSimpleName, boolean b, int type, final ISearchRequestor storage) {
-        findTypes(missingSimpleName, b, false, type, new ISearchRequestor() {
-
-            @Override
-            public void acceptType(char[] packageName, char[] typeName, char[][] enclosingTypeNames, int modifiers,
-                                   AccessRestriction accessRestriction) {
-                if (CharOperation.equals(missingSimpleName, typeName)) {
-                    storage.acceptType(packageName, typeName, enclosingTypeNames, modifiers, accessRestriction);
-                }
+    public void findExactTypes(char[] missingSimpleName, boolean findMembers, int searchFor, final ISearchRequestor storage) {
+        if (missingSimpleName.length == 0) {
+            return;
+        }
+        String url =
+                restServiceContext + "/findExactTypes" + "?missingsimplename=" + new String(missingSimpleName)
+                + "&findmembers=" + findMembers + "&searchfor=" + searchFor
+                + "&projectpath=" + projectPath;
+        String res = runSyncRequest(url);
+        if (res != null) {
+            JsoArray<Jso> types = Jso.deserialize(res).cast();
+            for (Jso jso : types.asIterable()) {
+                char[][] enclosingTypeNames = Util.arrayStringToCharArray((Array<String>)jso.getJsObjectField("enclosingTypeNames"));
+                storage.acceptType(jso.getStringField("packageName").toCharArray(), jso.getStringField("typeName").toCharArray(),
+                                     enclosingTypeNames, jso.getIntField("modifiers"), null);
             }
-
-            @Override
-            public void acceptPackage(char[] packageName) {
-            }
-
-            @Override
-            public void acceptConstructor(int modifiers, char[] simpleTypeName, int parameterCount, char[] signature,
-                                          char[][] parameterTypes, char[][] parameterNames, int typeModifiers, char[] packageName,
-                                          int extraFlags,
-                                          String path, AccessRestriction access) {
-            }
-        });
+        }
     }
 
     private static final class XmlHttpWraper extends JavaScriptObject {

@@ -18,8 +18,10 @@
 package com.codenvy.ide.ext.java.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
+import com.codenvy.ide.ext.java.client.editor.JavaFormatter;
 import com.codenvy.ide.ext.java.client.editor.JavaParserWorker;
 import com.codenvy.ide.ext.java.client.editor.JavaParserWorkerImpl;
+import com.codenvy.ide.texteditor.api.ContentFormatter;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
@@ -31,5 +33,6 @@ public class JavaGinModule extends AbstractGinModule {
     @Override
     protected void configure() {
         bind(JavaParserWorker.class).to(JavaParserWorkerImpl.class).in(Singleton.class);
+        bind(ContentFormatter.class).to(JavaFormatter.class);
     }
 }

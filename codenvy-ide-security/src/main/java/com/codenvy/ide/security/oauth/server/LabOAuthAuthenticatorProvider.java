@@ -24,6 +24,8 @@ import com.google.api.client.json.jackson.JacksonFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,18 +41,18 @@ public class LabOAuthAuthenticatorProvider implements OAuthAuthenticatorProvider
 
     private final Map<String, OAuthAuthenticator> authenticators;
 
-    public LabOAuthAuthenticatorProvider() {
-        authenticators = new HashMap<String, OAuthAuthenticator>();
+    private final String keyFolder;
+
+    @Inject
+    public LabOAuthAuthenticatorProvider(@Named("security.local.oauth-keyFolder") String keyFolder) {
+        this.keyFolder = keyFolder;
+        authenticators = new HashMap<>();
 
         GitHubOAuthAuthenticator gitHubOAuthAuthenticator =
                 new GitHubOAuthAuthenticator(new MemoryCredentialStore(),
                                              getClientSecrets("github_client_secrets.json"));
-//        GoogleOAuthAuthenticator googleOAuthAuthenticator =
-//                new GoogleOAuthAuthenticator(new MemoryCredentialStore(),
-//                                             getClientSecrets("google_client_secrets.json"));
 
         authenticators.put(gitHubOAuthAuthenticator.getOAuthProvider(), gitHubOAuthAuthenticator);
-//        authenticators.put(googleOAuthAuthenticator.getOAuthProvider(), googleOAuthAuthenticator);
 
         try {
             WSO2OAuthAuthenticator wso2OAuthAuthenticator =
@@ -68,7 +70,7 @@ public class LabOAuthAuthenticatorProvider implements OAuthAuthenticatorProvider
     }
 
     private GoogleClientSecrets getClientSecrets(String fileName) {
-        File clientSecrets = new File(System.getProperty("codenvy.local.conf.dir"), fileName);
+        File clientSecrets = new File(keyFolder, fileName);
         if (!clientSecrets.exists() || clientSecrets.isDirectory()) {
             LOG.warn("Client secrets file " + clientSecrets.getAbsolutePath() + " not found or is a directory", fileName);
             throw new RuntimeException("Client secrets file " + clientSecrets.getAbsolutePath() + " not found or is a "

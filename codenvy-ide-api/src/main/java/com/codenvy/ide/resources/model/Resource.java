@@ -41,9 +41,6 @@ public abstract class Resource {
 
     protected Object tags;
 
-    /** Creation date in long format. */
-    protected long creationDate;
-
     /** Links. */
     protected StringMap<Link> links;
 
@@ -112,19 +109,6 @@ public abstract class Resource {
         } else {
             return name;
         }
-    }
-
-    /** @return creation date */
-    public long getCreationDate() {
-        return creationDate;
-    }
-
-    /**
-     * @param creationDate
-     *         the creation date
-     */
-    public void setCreationDate(long creationDate) {
-        this.creationDate = creationDate;
     }
 
     /** @return media type */

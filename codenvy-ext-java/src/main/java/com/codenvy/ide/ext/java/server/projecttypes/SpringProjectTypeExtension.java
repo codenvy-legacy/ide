@@ -39,12 +39,6 @@ public class SpringProjectTypeExtension implements ProjectTypeExtension {
 
     @Inject
     public SpringProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
-        icons.put("spring.projecttype.big.icon", "java-extension/Spring-Logo.png");
-        icons.put("spring.projecttype.small.icon", "java-extension/Spring-Logo.png");
-        icons.put("spring.folder.small.icon", "java-extension/package.gif");
-        icons.put("spring/java.file.small.icon", "java-extension/java-class.png");
-        icons.put("java.class", "java-extension/java-class.png");
-        icons.put("java.package", "java-extension/package.gif");
         registry.registerProjectType(this);
     }
 
@@ -79,10 +73,7 @@ public class SpringProjectTypeExtension implements ProjectTypeExtension {
         return list;
     }
 
-    @Override
-    public Map<String, String> getIconRegistry() {
-        return icons;
-    }
+
 
 
 }

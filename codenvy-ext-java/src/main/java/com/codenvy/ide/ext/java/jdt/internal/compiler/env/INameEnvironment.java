@@ -73,7 +73,7 @@ public interface INameEnvironment {
      * <p/>
      * This method can not be used to find member types... member types are found relative to their enclosing type.
      */
-    void findTypes(char[] qualifiedName, boolean b, boolean camelCaseMatch, int searchFor, final ISearchRequestor requestor);
+    void findTypes(char[] qualifiedName, boolean findMembers, boolean camelCaseMatch, int searchFor, final ISearchRequestor requestor);
 
     /**
      * Find the packages that start with the given prefix. A valid prefix is a qualified name separated by periods (ex. java.util).
@@ -91,6 +91,19 @@ public interface INameEnvironment {
      */
     void findConstructorDeclarations(char[] prefix, boolean camelCaseMatch, final ISearchRequestor requestor);
 
-    void findExactTypes(char[] missingSimpleName, boolean b, int type, ISearchRequestor storage);
+    /**
+     * Find the top-level types that are defined
+     * in the current environment and whose simple name matches the given name.
+     *
+     * The types found are passed to one of the following methods (if additional
+     * information is known about the types):
+     *    ISearchRequestor.acceptType(char[][] packageName, char[] typeName)
+     *    ISearchRequestor.acceptClass(char[][] packageName, char[] typeName, int modifiers)
+     *    ISearchRequestor.acceptInterface(char[][] packageName, char[] typeName, int modifiers)
+     *
+     * This method can not be used to find member types... member
+     * types are found relative to their enclosing type.
+     */
+    void findExactTypes(char[] missingSimpleName, boolean findMembers, int searchFor, ISearchRequestor storage);
 
 }

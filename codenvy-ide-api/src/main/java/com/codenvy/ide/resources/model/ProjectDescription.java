@@ -28,7 +28,7 @@ import java.util.List;
  * @author Nikolay Zamosenchuk
  */
 public class ProjectDescription {
-    public static final String ATTR_LANGUAGE = "language";
+    public static final String LANGUAGE_ATTRIBUTE = "language";
     protected Project project;
 
     public ProjectDescription(Project project) {

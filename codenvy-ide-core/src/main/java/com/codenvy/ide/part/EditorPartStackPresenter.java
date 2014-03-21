@@ -25,10 +25,15 @@ import com.codenvy.ide.api.event.ResourceChangedHandler;
 import com.codenvy.ide.api.ui.workspace.EditorPartStack;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackView;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.texteditor.TextEditorPresenter;
+import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesPresenter;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
@@ -43,8 +48,10 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @Singleton
-public class EditorPartStackPresenter extends PartStackPresenter implements EditorPartStack {
-
+public class EditorPartStackPresenter extends PartStackPresenter implements EditorPartStack, ShowListButtonClickHandler {
+    
+    private ListOpenedFilesPresenter listOpenedFilesPresenter;
+    
     /**
      * @param view
      * @param eventBus
@@ -52,9 +59,14 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
     @Inject
     public EditorPartStackPresenter(@Named("editorPartStack") PartStackView view,
                                     EventBus eventBus,
-                                    PartStackEventHandler partStackEventHandler) {
+                                    PartStackEventHandler partStackEventHandler, ListOpenedFilesPresenter listOpenedFilesPresenter) {
         super(eventBus, partStackEventHandler, view, null);
         partsClosable = true;
+        this.listOpenedFilesPresenter = listOpenedFilesPresenter;
+        
+        if (view instanceof EditorPartStackView){
+            ((EditorPartStackView)view).setShowListButtonHandler(this);
+        }
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
@@ -173,12 +185,25 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
             int partIndex = parts.indexOf(part);
             view.removeTabButton(partIndex);
             parts.remove(part);
-            view.getContentPanel().setWidget(null);
             part.removePropertyListener(propertyListener);
             if (activePart == part) {
+                view.clearContentPanel();
                 //select another part
                 setActivePart(parts.isEmpty() ? null : parts.get(parts.size() - 1));
             }
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onShowListClicked(int x, int y, AsyncCallback<Void> callback) {
+        Array<File> openedFiles = Collections.createArray();
+        for (PartPresenter part : getParts().asIterable()) {
+            if (part instanceof EditorPartPresenter) {
+                openedFiles.add(((EditorPartPresenter)part).getEditorInput().getFile());
+            }
+        }
+
+        listOpenedFilesPresenter.showDialog(openedFiles, x, y, callback);
     }
 }

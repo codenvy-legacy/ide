@@ -51,4 +51,7 @@ public interface AutocompleteBox {
 
     /** Shows component (if hidden) and updates proposals list. */
     void positionAndShow(CompletionProposal[] items);
+
+    /** Shows component with loader image*/
+    void showLoader();
 }

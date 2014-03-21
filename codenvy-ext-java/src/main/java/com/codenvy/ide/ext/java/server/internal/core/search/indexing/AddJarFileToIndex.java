@@ -13,6 +13,7 @@ package com.codenvy.ide.ext.java.server.internal.core.search.indexing;
 import com.codenvy.ide.ext.java.server.core.search.IJavaSearchScope;
 import com.codenvy.ide.ext.java.server.core.search.SearchEngine;
 import com.codenvy.ide.ext.java.server.core.search.SearchParticipant;
+import com.codenvy.ide.ext.java.server.internal.core.JavaModelManager;
 import com.codenvy.ide.ext.java.server.internal.core.search.JavaSearchDocument;
 import com.codenvy.ide.ext.java.server.internal.core.search.processing.JobManager;
 
@@ -28,7 +29,6 @@ import org.eclipse.jdt.internal.compiler.parser.TerminalTokens;
 import org.eclipse.jdt.internal.compiler.util.SimpleLookupTable;
 import org.eclipse.jdt.internal.compiler.util.SuffixConstants;
 import org.eclipse.jdt.internal.compiler.util.Util;
-import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.internal.core.index.Index;
 import org.eclipse.jdt.internal.core.index.IndexLocation;
 import org.eclipse.jdt.internal.core.search.indexing.ReadWriteMonitor;
@@ -214,7 +214,7 @@ class AddJarFileToIndex extends IndexRequest {
 
 				// Index the jar for the first time or reindex the jar in case the previous index file has been corrupted
 				// index already existed: recreate it so that we forget about previous entries
-				SearchParticipant participant = SearchEngine.getDefaultSearchParticipant();
+				SearchParticipant participant = SearchEngine.getDefaultSearchParticipant(manager);
 				if (!this.manager.resetIndex(this.containerPath)) {
 					// failed to recreate index, see 73330
 					this.manager.removeIndex(this.containerPath);

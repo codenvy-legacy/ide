@@ -20,7 +20,6 @@ package com.codenvy.ide.extension.runner.client.actions;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.ide.extension.runner.client.RunnerController;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
@@ -58,8 +57,8 @@ public class RunAction extends Action {
     public void update(ActionEvent e) {
         Project activeProject = resourceProvider.getActiveProject();
         if (activeProject != null) {
-            final String projectTypeId = activeProject.getDescription().getProjectTypeId();
-            e.getPresentation().setVisible(projectTypeId.equals(Constants.SPRING_ID) || projectTypeId.equals(Constants.WAR_ID));
+            // If project has defined a runner, let see the action
+            e.getPresentation().setVisible(activeProject.getAttributeValue("runner.name") != null);
             e.getPresentation().setEnabled(!runnerController.isAnyAppLaunched());
         } else {
             e.getPresentation().setEnabledAndVisible(false);

@@ -131,6 +131,11 @@ public class EditorTextStoreMutator implements TextStoreMutator {
             int lineOffset = document.getLineOffset(lineNumber);
             documentCommand.initialize(lineOffset + column, 0, text);
             editor.customizeDocumentCommand(documentCommand);
+            if(documentCommand.length != 0){
+                DeleteEdit deleteEdit = new DeleteEdit(documentCommand.offset, documentCommand.length);
+                deleteEdit.apply(document);
+            }
+
             InsertEdit insert = new InsertEdit(documentCommand.offset, documentCommand.text);
             insert.apply(document);
             textChange = TextChange.createInsertion(line, lineNumber, column, line, lineNumber, text);

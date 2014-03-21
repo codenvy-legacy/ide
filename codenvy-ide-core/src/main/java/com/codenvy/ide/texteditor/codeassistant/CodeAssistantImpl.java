@@ -192,6 +192,9 @@ public class CodeAssistantImpl implements CodeAssistant {
     }
 
     private void scheduleRequestCodeassistant() {
+        if(!box.isShowing()){
+            box.showLoader();
+        }
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 
             @Override
@@ -222,7 +225,6 @@ public class CodeAssistantImpl implements CodeAssistant {
     /** @see com.codenvy.ide.texteditor.api.codeassistant.CodeAssistant#showPossibleCompletions() */
     @Override
     public String showPossibleCompletions() {
-        //TODO introduce async API
         scheduleRequestCodeassistant();
 
         return lastErrorMessage;

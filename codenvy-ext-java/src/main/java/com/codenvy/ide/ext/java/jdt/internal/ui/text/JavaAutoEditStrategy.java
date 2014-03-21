@@ -1348,8 +1348,9 @@ public class JavaAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
             }
         } else if (c.text.length() == 1)
             smartIndentOnKeypress(d, c);
-        else if (c.text.length() > 1)
-            smartPaste(d, c); // no smart backspace for paste
+        //todo there bug with paste
+//        else if (c.text.length() > 1)
+//            smartPaste(d, c); // no smart backspace for paste
 
     }
 

@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.part;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.ui.workspace.PartStackView;
 import com.codenvy.ide.collections.Array;
@@ -32,6 +33,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
@@ -48,48 +50,87 @@ import com.google.inject.Inject;
  * @version $Id:
  */
 public class EditorPartStackView extends ResizeComposite implements PartStackView {
-    private static PartStackUiBinder uiBinder = GWT.create(PartStackUiBinder.class);
-    private ActionDelegate delegate;
+    private static final int          COUNTING_ERROR      = 10;
+    
+    private static PartStackUiBinder     uiBinder            = GWT.create(PartStackUiBinder.class);
+    private ActionDelegate               delegate;
 
-    private final PartStackUIResources resources;
+    private final PartStackUIResources   partStackUIResources;
 
-    private TabButton activeTab;
+    private final Resources              resources;
 
-    private boolean focused;
+    private TabButton                    activeTab;
+
+    private boolean                      focused;
 
     // DOM Handler
     private final FocusRequestDOMHandler focusRequestHandler = new FocusRequestDOMHandler();
 
-    private HandlerRegistration focusRequestHandlerRegistration;
+    private HandlerRegistration          focusRequestHandlerRegistration;
 
     // list of tabs
-    private final Array<TabButton> tabs = Collections.createArray();
+    private final Array<TabButton>       tabs                = Collections.createArray();
 
     @UiField
-    DockLayoutPanel parent;
+    DockLayoutPanel                      parent;
 
     @UiField
-    FlowPanel tabsPanel;
+    FlowPanel                            tabsPanel;
 
     @UiField
-    SimpleLayoutPanel contentPanel;
+    SimpleLayoutPanel                    contentPanel;
+
+    private ListButton                   listTabsButton;
+
+    private ShowListButtonClickHandler   showListButtonClickHandler;
+
 
     interface PartStackUiBinder extends UiBinder<Widget, EditorPartStackView> {
     }
 
     /**
      * Create View
-     *
+     * 
      * @param partStackResources
      */
     @Inject
-    public EditorPartStackView(PartStackUIResources partStackResources) {
-        resources = partStackResources;
+    public EditorPartStackView(PartStackUIResources partStackResources, Resources resources) {
+        this.resources = resources;
+        this.partStackUIResources = partStackResources;
         initWidget(uiBinder.createAndBindUi(this));
 
-        parent.setStyleName(resources.partStackCss().idePartStack());
-        tabsPanel.setStyleName(resources.partStackCss().idePartStackTabs());
-        contentPanel.setStyleName(resources.partStackCss().idePartStackEditorContent());
+        parent.setStyleName(partStackResources.partStackCss().idePartStack());
+        tabsPanel.setStyleName(partStackResources.partStackCss().idePartStackTabs());
+        contentPanel.setStyleName(partStackResources.partStackCss().idePartStackEditorContent());
+
+        listTabsButton = new ListButton(new Image(resources.listOpenedEditors()), "Show list");
+
+        listTabsButton.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                listTabsButton.addStyleName(partStackUIResources.partStackCss().idePartStackTabButtonSelected());
+                int x = listTabsButton.getAbsoluteLeft() + listTabsButton.getOffsetWidth();
+                int y = listTabsButton.getAbsoluteTop() + listTabsButton.getOffsetHeight();
+                showListButtonClickHandler.onShowListClicked(x, y, new AsyncCallback<Void>() {
+
+                    @Override
+                    public void onSuccess(Void result) {
+                        listTabsButton.removeStyleName(partStackUIResources.partStackCss().idePartStackTabButtonSelected());
+                    }
+
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        listTabsButton.removeStyleName(partStackUIResources.partStackCss().idePartStackTabButtonSelected());
+                    }
+                });
+            }
+        });
+
+
+        tabsPanel.add(listTabsButton);
+        listTabsButton.setVisible(false);
+
 
         addFocusRequestHandler();
     }
@@ -122,13 +163,14 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
     @Override
     public void setActiveTabButton(int index) {
         if (activeTab != null) {
-            activeTab.removeStyleName(resources.partStackCss().idePartStackTabSelected());
+            activeTab.removeStyleName(partStackUIResources.partStackCss().idePartStackTabSelected());
         }
 
         if (index >= 0 && index < tabs.size()) {
             activeTab = tabs.get(index);
-            activeTab.addStyleName(resources.partStackCss().idePartStackTabSelected());
+            activeTab.addStyleName(partStackUIResources.partStackCss().idePartStackTabSelected());
         }
+        processPanelSize();
     }
 
     /** {@inheritDoc} */
@@ -149,10 +191,10 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
 
         // if focused already, then remove DOM handler
         if (focused) {
-            parent.addStyleName(resources.partStackCss().idePartStackFocused());
+            parent.addStyleName(partStackUIResources.partStackCss().idePartStackFocused());
             removeFocusRequestHandler();
         } else {
-            parent.removeStyleName(resources.partStackCss().idePartStackFocused());
+            parent.removeStyleName(partStackUIResources.partStackCss().idePartStackFocused());
             addFocusRequestHandler();
         }
     }
@@ -181,15 +223,15 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
     /** Special button for tab title. */
     private class TabButton extends Composite implements PartStackView.TabItem {
 
-        private Image image;
+        private Image       image;
 
-        private FlowPanel tabItem;
+        private FlowPanel   tabItem;
 
         private InlineLabel tabItemTittle;
 
         /**
          * Create button.
-         *
+         * 
          * @param icon
          * @param title
          * @param toolTip
@@ -199,15 +241,15 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
             tabItem = new FlowPanel();
             tabItem.setTitle(toolTip);
             initWidget(tabItem);
-            this.setStyleName(resources.partStackCss().idePartStackTab());
+            this.setStyleName(partStackUIResources.partStackCss().idePartStackTab());
             if (icon != null) {
                 tabItem.add(icon);
             }
             tabItemTittle = new InlineLabel(title);
             tabItem.add(tabItemTittle);
             if (closable) {
-                image = new Image(resources.close());
-                image.setStyleName(resources.partStackCss().idePartStackTabCloseButton());
+                image = new Image(partStackUIResources.close());
+                image.setStyleName(partStackUIResources.partStackCss().idePartStackTabCloseButton());
                 tabItem.add(image);
                 addHandlers();
             }
@@ -233,6 +275,35 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
         }
     }
 
+    /** Button for listing all opened tabs. */
+    private class ListButton extends Composite implements PartStackView.TabItem {
+
+        private FlowPanel tabItem;
+
+        public ListButton(Image icon, String toolTip) {
+            tabItem = new FlowPanel();
+            tabItem.setTitle(toolTip);
+            initWidget(tabItem);
+            this.setStyleName(partStackUIResources.partStackCss().idePartStackTabButton());
+            this.addStyleName(partStackUIResources.partStackCss().idePartStackTabRightButton());
+            setWidth("32px");
+            if (icon != null) {
+                tabItem.add(icon);
+            }
+        }
+
+        @Override
+        public HandlerRegistration addClickHandler(ClickHandler handler) {
+            return addDomHandler(handler, ClickEvent.getType());
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public HandlerRegistration addCloseHandler(CloseHandler<TabItem> handler) {
+            return null;
+        }
+    }
+
     /** Notifies delegated handler */
     private final class FocusRequestDOMHandler implements MouseDownHandler {
         @Override
@@ -241,5 +312,66 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
                 delegate.onRequestFocus();
             }
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onResize() {
+        super.onResize();
+        processPanelSize();
+    }
+
+    /**
+     * This method analyzes the tabs panel size and the size of its components and 
+     * displays the show list button, when all tabs can not be placed.
+     */
+    private void processPanelSize() {
+        boolean activeTabIsVisible = true;
+        int width = listTabsButton.isVisible() ? listTabsButton.getOffsetWidth() : COUNTING_ERROR;
+        
+        for (int i = 0; i < tabsPanel.getWidgetCount(); i++) {
+            //Do not count list buttons width
+            if (tabsPanel.getWidget(i) instanceof ListButton) {
+                continue;
+            }
+            width += tabsPanel.getWidget(i).getOffsetWidth();
+            //Check whether active tab is visible
+            if (tabsPanel.getWidget(i) instanceof TabButton && ((TabButton)tabsPanel.getWidget(i)) == activeTab
+                && width > tabsPanel.getOffsetWidth()) {
+                activeTabIsVisible = false;
+            }
+        }
+        
+        //Move not visible active tab to the first place
+        if (!activeTabIsVisible) {
+            tabsPanel.insert(activeTab, 0);
+        }
+        listTabsButton.setVisible(width > tabsPanel.getOffsetWidth());
+
+        width = COUNTING_ERROR;
+        if (listTabsButton.isVisible()) {
+            for (int i = 0; i < tabsPanel.getWidgetCount(); i++) {
+                width += tabsPanel.getWidget(i).getOffsetWidth();
+                if (width > tabsPanel.getOffsetWidth() && i >= 1) {
+                    tabsPanel.insert(listTabsButton, i - 1);
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Sets the handler for list all tabs button click event.
+     * 
+     * @param handler
+     */
+    public void setShowListButtonHandler(ShowListButtonClickHandler handler) {
+        this.showListButtonClickHandler = handler;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void clearContentPanel() {
+        getContentPanel().setWidget(null);
     }
 }

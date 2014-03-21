@@ -981,9 +981,9 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
         int startOffset = TextUtilities.getOffset(doc, getBaseLineNumber(), getBaseColumn());
         int endOffset = TextUtilities.getOffset(doc, getCursorLineNumber(), getCursorColumn());
         if (startOffset > endOffset) {
-            return new com.codenvy.ide.text.Position(startOffset, startOffset - endOffset);
+            return new com.codenvy.ide.text.Position(endOffset, startOffset - endOffset);
         } else {
-            return new com.codenvy.ide.text.Position(endOffset, endOffset - startOffset);
+            return new com.codenvy.ide.text.Position(startOffset, endOffset - startOffset);
         }
     }
 

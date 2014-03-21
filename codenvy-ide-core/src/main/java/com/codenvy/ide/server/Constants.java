@@ -20,7 +20,16 @@ package com.codenvy.ide.server;
 /** @author Artem Zatsarynnyy */
 public interface Constants {
     // project type ids
-    final String UNKNOWN_ID   = "unknown";
+    final String UNKNOWN_ID                   = "unknown";
+    final String CODENVY_PLUGIN_ID            = "codenvy_extension";
     // project type names
-    final String UNKNOWN_NAME = "Unknown project type";
+    final String UNKNOWN_NAME                 = "Unknown project type";
+    final String CODENVY_PLUGIN_NAME          = "Codenvy extension";
+    // project attribute names
+    final String LANGUAGE                     = "language";
+    final String LANGUAGE_VERSION             = "language.version";
+    final String FRAMEWORK                    = "framework";
+    final String BUILDER_NAME                 = "builder.name";
+    final String BUILDER_MAVEN_SOURCE_FOLDERS = "builder.maven.source_folders";
+    final String RUNNER_NAME                  = "runner.name";
 }
