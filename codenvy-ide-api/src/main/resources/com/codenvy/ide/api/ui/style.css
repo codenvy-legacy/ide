@@ -68,7 +68,7 @@
 @eval editorDefaultFontColor com.codenvy.ide.api.ui.theme.Style.getEditorDefaultFontColor();
 @eval editorSelectionColor com.codenvy.ide.api.ui.theme.Style.getEditorSelectionColor();
 @eval editorInactiveSelectionColor com.codenvy.ide.api.ui.theme.Style.getEditorInactiveSelectionColor();
-@eval editoGutterColor com.codenvy.ide.api.ui.theme.Style.getEditorGutterColor();
+@eval editorGutterColor com.codenvy.ide.api.ui.theme.Style.getEditorGutterColor();
 
 /* Sizes */
 @def dividerThickness 1px;
