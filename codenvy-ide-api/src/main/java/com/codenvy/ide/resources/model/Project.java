@@ -132,7 +132,7 @@ public class Project extends Folder {
     /**
      * Get value of attribute <code>name</code>. It is shortcut for:
      *
-     * @param name
+     * @param attributeName
      *         attribute name
      * @return value of attribute with specified name or <code>null</code> if attribute does not exists
      */
@@ -503,7 +503,46 @@ public class Project extends Folder {
      *         callback
      */
     public void rename(final Resource resource, final String newName, final AsyncCallback<Resource> callback) {
-        callback.onFailure(new Exception("Rename operation not currently supported"));
+        try {
+            checkItemValid(resource);
+
+            projectServiceClient.rename(resource.getPath(), newName, resource.getMimeType(), new AsyncRequestCallback<Void>() {
+                @Override
+                protected void onSuccess(Void result) {
+                    final Folder folderToRefresh =
+                            (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId()))
+                            ? (Project)resource : resource.getParent();
+                    if (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId())) {
+                        resource.setName(newName);
+//                        resource.setId(resource.getId());
+                    }
+
+                    refreshChildren(folderToRefresh, new AsyncCallback<Folder>() {
+                        @Override
+                        public void onSuccess(Folder result) {
+                            Resource renamed =
+                                    (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId()))
+                                    ? resource : result.findChildByName(newName);
+                            renamed.getParent().setTag(folderToRefresh.getTag());
+                            eventBus.fireEvent(ResourceChangedEvent.createResourceRenamedEvent(renamed));
+                            callback.onSuccess(renamed);
+                        }
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            Log.error(Project.class, callback);
+                        }
+                    });
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    callback.onFailure(exception);
+                }
+            });
+        } catch (Exception e) {
+            callback.onFailure(e);
+        }
     }
 
     /** @param callback */
