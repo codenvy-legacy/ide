@@ -169,6 +169,9 @@ public class StandardComponentInitializer {
     @Inject
     private FormatterAction formatterAction;
 
+    @Inject
+    private UploadFileAction uploadFileAction;
+
     /** Instantiates {@link StandardComponentInitializer} an creates standard content. */
     @Inject
     public StandardComponentInitializer() {
@@ -206,6 +209,7 @@ public class StandardComponentInitializer {
 
         actionManager.registerAction("newProject", newProjectAction);
         actionManager.registerAction("openProject", openProjectAction);
+        actionManager.registerAction("uploadFile", uploadFileAction);
 
 //        actionManager.registerAction("navigateToFile", navigateToFileAction);
 //        keyBinding.getGlobal().addKey(new KeyBuilder().action().alt().charCode('n').build(), "navigateToFile");
@@ -221,6 +225,7 @@ public class StandardComponentInitializer {
         toolbarGroup.addSeparator();
         fileGroup.add(newGroup);
         fileGroup.add(openProjectAction);
+        fileGroup.add(uploadFileAction);
 //        fileGroup.add(navigateToFileAction);
 //        fileGroup.add(renameResourceAction);
         actionManager.registerAction("newResource", newFileAction);
