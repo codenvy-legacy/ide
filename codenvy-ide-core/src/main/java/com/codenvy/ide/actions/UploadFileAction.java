@@ -21,23 +21,28 @@ package com.codenvy.ide.actions;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.upload.UploadFilePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Upload file Action
+ *
  * @author Roman Nikitenko
  */
 @Singleton
 public class UploadFileAction extends Action {
 
+    private UploadFilePresenter presenter;
     @Inject
-    public UploadFileAction(CoreLocalizationConstant localization){
+    public UploadFileAction(UploadFilePresenter presenter, CoreLocalizationConstant localization){
         super(localization.uploadFileName(), localization.uploadFileDescription(), null);
+        this.presenter = presenter;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        presenter.showDialog();
     }
 }

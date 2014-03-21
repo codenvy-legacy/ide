@@ -142,6 +142,8 @@ import com.codenvy.ide.toolbar.ToolbarView;
 import com.codenvy.ide.toolbar.ToolbarViewImpl;
 import com.codenvy.ide.ui.loader.IdeLoader;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.upload.UploadFileView;
+import com.codenvy.ide.upload.UploadFileViewImpl;
 import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.codenvy.ide.websocket.MessageBus;
@@ -288,6 +290,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(NewResourcePageView.class).to(NewResourcePageViewImpl.class);
         bind(NewProjectPageView.class).to(NewProjectPageViewImpl.class);
         bind(OpenProjectView.class).to(OpenProjectViewImpl.class);
+        bind(UploadFileView.class).to(UploadFileViewImpl.class);
         bind(ProjectPropertiesView.class).to(ProjectPropertiesViewImpl.class);
         bind(EditPropertyView.class).to(EditPropertyViewImpl.class).in(Singleton.class);
         bind(AddNewPropertyView.class).to(AddNewPropertyViewImpl.class).in(Singleton.class);
