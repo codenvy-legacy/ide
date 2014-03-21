@@ -121,6 +121,7 @@ public class StandardComponentInitializer {
     @Inject
     private ShowAboutAction showAboutAction;
 
+    // Temporary disable 'Project Properties' feature
 //    @Inject
 //    private ShowProjectPropertiesAction showProjectPropertiesAction;
 
