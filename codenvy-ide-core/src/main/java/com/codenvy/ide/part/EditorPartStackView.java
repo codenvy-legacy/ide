@@ -316,8 +316,8 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
     /** {@inheritDoc} */
     @Override
     public void onResize() {
-        processPanelSize();
         super.onResize();
+        processPanelSize();
     }
 
     /**
@@ -326,8 +326,8 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
      */
     private void processPanelSize() {
         boolean activeTabIsVisible = true;
-        int width = listTabsButton.isVisible() ? listTabsButton.getOffsetWidth() : 0;
-
+        int width = listTabsButton.isVisible() ? listTabsButton.getOffsetWidth() : 10;
+        
         for (int i = 0; i < tabsPanel.getWidgetCount(); i++) {
             //Do not count list buttons width
             if (tabsPanel.getWidget(i) instanceof ListButton) {
@@ -338,17 +338,16 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
             if (tabsPanel.getWidget(i) instanceof TabButton && ((TabButton)tabsPanel.getWidget(i)) == activeTab
                 && width > tabsPanel.getOffsetWidth()) {
                 activeTabIsVisible = false;
-                break;
             }
         }
+        
         //Move not visible active tab to the first place
         if (!activeTabIsVisible) {
-            tabsPanel.remove(activeTab);
             tabsPanel.insert(activeTab, 0);
         }
         listTabsButton.setVisible(width > tabsPanel.getOffsetWidth());
 
-        width = 0;
+        width = 10;
         if (listTabsButton.isVisible()) {
             for (int i = 0; i < tabsPanel.getWidgetCount(); i++) {
                 width += tabsPanel.getWidget(i).getOffsetWidth();
