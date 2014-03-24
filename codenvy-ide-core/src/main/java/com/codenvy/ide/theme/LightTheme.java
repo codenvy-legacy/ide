@@ -369,6 +369,11 @@ public class LightTheme implements Theme {
     }
 
     @Override
+    public String getBoxBackgroundColorDisabled() {
+        return getTabsPanelBackground();
+    }
+
+    @Override
     public String getBoxTextShadow() {
         return "0px 1px 0px #ffffff";
     }

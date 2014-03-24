@@ -56,16 +56,17 @@ public interface Theme {
      * @return the color
      */
     String getSelectionBackground();
-    
+
     /**
      * Background color for inactive(not selected part button)
      * 
      * @return the color
      */
     String getInactiveTabBackground();
-    
+
     /**
      * Border color for inactive(not selected part button)
+     * 
      * @return the color
      */
     String getInactiveTabBorderColor();
@@ -76,9 +77,10 @@ public interface Theme {
      * @return the color
      */
     String getActiveTabBackground();
-    
+
     /**
      * Border color for active (selected part button)
+     * 
      * @return the color
      */
     String getActiveTabBorderColor();
@@ -457,4 +459,5 @@ public interface Theme {
 
     String getBoxTextShadow();
 
+    String getBoxBackgroundColorDisabled();
 }

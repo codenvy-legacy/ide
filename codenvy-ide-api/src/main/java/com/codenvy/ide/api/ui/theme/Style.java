@@ -295,6 +295,10 @@ public class Style {
         return theme.getBoxBackgroundColor();
     }
 
+    public static String getBoxBackgroundColorDisabled() {
+        return theme.getBoxBackgroundColorDisabled();
+    }
+
     public static String getBoxTextShadow() {
         return theme.getBoxTextShadow();
     }
