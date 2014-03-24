@@ -54,6 +54,10 @@
     text-shadow: boxTextShadow;
 }
 
+.gwt-ListBox[disabled] {
+    background-color: boxBackgroundColorDisabled;
+}
+
 .gwt-RadioButton label {
     display: inline-block;
     cursor: pointer;
@@ -102,7 +106,7 @@
 }
 
 .gwt-TextBox[disabled], .gwt-PasswordTextBox[disabled]{
-    background-color: tabsPanelBackground;
+    background-color: boxBackgroundColorDisabled;
 }
 
 .gwt-Button, button{
