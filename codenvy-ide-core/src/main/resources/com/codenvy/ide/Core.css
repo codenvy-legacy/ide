@@ -43,8 +43,8 @@
     }
 
 .gwt-ListBox {
-    color: mainFontColor;
     background-color: boxBackgroundColor;
+    color: mainFontColor;
     border: 1px solid boxBorderColor;
     border-radius: 1px;
     box-shadow: boxInnerShadow, boxOuterShadow;
@@ -90,12 +90,15 @@
     background: radial-gradient(ellipse at center, windowContentBackground 35%,radioButtonBackgroundColor 40%); /* W3C*/
 }
 
-.gwt-TextBox, .gwt-PasswordTextBox{
-    background-color: inputBackground;
+.gwt-TextBox, .gwt-PasswordTextBox {
+    background-color: boxBackgroundColor;
     color: mainFontColor;
-    border: 1px solid tabBorder;
-    border-radius: 2px;
-    font-size: fontSize;
+    border: 1px solid boxBorderColor;
+    border-radius: 1px;
+    box-shadow: boxInnerShadow, boxOuterShadow;
+    font-family: mainFontFamily;
+    font-size: boxFontSize;
+    text-shadow: boxTextShadow;
 }
 
 .gwt-TextBox[disabled], .gwt-PasswordTextBox[disabled]{
