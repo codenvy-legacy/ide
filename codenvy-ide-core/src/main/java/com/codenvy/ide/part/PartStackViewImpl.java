@@ -176,7 +176,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
         private FlowPanel   tabItem;
         private InlineLabel tabItemTittle;
         private Image       icon;
-        String title;
+
         /**
          * Create button.
          *
@@ -186,7 +186,6 @@ public class PartStackViewImpl extends Composite implements PartStackView {
          * @param closable
          */
         public TabButton(Image icon, String title, String toolTip, boolean closable) {
-            this.title=title;
             this.icon = icon;
             tabItem = new FlowPanel();
             tabItem.setTitle(toolTip);
@@ -227,56 +226,44 @@ public class PartStackViewImpl extends Composite implements PartStackView {
 
         @Override
         protected void onLoad() {
+            final int padding = 15;//div(button) padding(see "partstack.css")
+            final int margin = 8;//text margin(see "partstack.css")
+            final int marginPicture = 4;//picture margin(see "partstack.css")
+            int offsetWidth;
             super.onLoad();
-//            int offsetWidth = getElement().getOffsetWidth();
-            int offsetWidth=1;
-            if(title!=null){
-                offsetWidth=title.length();
-                offsetWidth =(int)(offsetWidth*2.5+2);
-            }
             if (tabPosition == RIGHT) {
-                int padding;
+                tabItem.addStyleName(resources.partStackCss().idePartStackTabRight());
+                offsetWidth = getElement().getOffsetWidth();
                 if (icon != null) {
-                    getElement().getStyle().setWidth((int)(offsetWidth*2.5) + 12, Style.Unit.PX);
-                    padding = 12;
+                    getElement().getStyle().setWidth(offsetWidth - padding * 2 - marginPicture, Style.Unit.PX);
+                    offsetWidth -= marginPicture;
                 } else {
-                    getElement().getStyle().setWidth((int)(offsetWidth*2.5), Style.Unit.PX);
-                    padding = 0;
+                    getElement().getStyle().setWidth(offsetWidth - padding * 2, Style.Unit.PX);
                 }
                 if (first) {
                     first = false;
-                } else {
-                    top +=offsetWidth + padding;
                 }
-
-                tabItem.addStyleName(resources.partStackCss().idePartStackTabRight());
                 getElement().getStyle().setTop(top, Style.Unit.PX);
+                if (!first) {
+                    top += (offsetWidth - margin * 2);
+                }
             } else if (tabPosition == LEFT) {
+                tabItem.addStyleName(resources.partStackCss().idePartStackTabLeft());
+                offsetWidth = getElement().getOffsetWidth();
                 int topPadding;
                 if (icon != null) {
-                    getElement().getStyle().setWidth((int)(offsetWidth*2.5) + 16, Style.Unit.PX);
-                    topPadding = 16;
+                    getElement().getStyle().setWidth((offsetWidth - padding * 2), Style.Unit.PX);
+                    offsetWidth -= marginPicture;
                 } else {
-                    getElement().getStyle().setWidth((int)(offsetWidth*2.5), Style.Unit.PX);
-                    topPadding = 1;
+                    getElement().getStyle().setWidth((offsetWidth - padding * 2), Style.Unit.PX);
                 }
                 if (first) {
-                    if (icon != null) {
-                        top += (int)(offsetWidth*2.5) + 28;
-                    } else {
-                        top += (int)(offsetWidth*2.5) + 14;
-                    }
                     first = false;
-                } else {
-                    top += (offsetWidth*2.5) + topPadding;
                 }
-
-                tabItem.addStyleName(resources.partStackCss().idePartStackTabLeft());
-//                tabItem.getElement().getStyle().setWidth(offsetWidth, Style.Unit.PX);
+                top += offsetWidth - margin * 2;
                 tabItem.getElement().getStyle().setTop(top, Style.Unit.PX);
             } else {
                 tabItem.addStyleName(resources.partStackCss().idePartStackTabBelow());
-
             }
         }
 

@@ -54,7 +54,7 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
         toolBar.getElement().getParentElement().getStyle().setOverflow(Style.Overflow.VISIBLE);
 
         Image minimize = new Image(resources.minimize());
-        minimize.getElement().setAttribute("id", "minimize");
+        minimize.getElement().setAttribute("name", "minimize");
         ToolButton toolButton = new ToolButton(minimize);
         toolButton.addClickHandler(new ClickHandler() {
             @Override

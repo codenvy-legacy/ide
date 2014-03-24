@@ -52,22 +52,20 @@
 
 }
 
-#minimize {
-    height: 56%;
-    width: 68%;
-    margin: 22% 16%;
+img[name="minimize"] {
+    margin: 19% 22%;
 }
 
-.ide-rotate-0 #minimize {
+.ide-rotate-0 img[name="minimize"] {
 }
 
-.ide-rotate-270 #minimize {
-    -webkit-transform: rotate(270deg);
-    -moz-transform: rotate(270deg);
-    transform: rotate(270deg);
+.ide-rotate-90 img[name="minimize"] {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    transform: rotate(90deg);
 }
 
-.ide-rotate-180 #minimize {
+.ide-rotate-180 img[name="minimize"] {
     -webkit-transform: rotate(180deg);
     -moz-transform: rotate(180deg);
     transform: rotate(180deg);

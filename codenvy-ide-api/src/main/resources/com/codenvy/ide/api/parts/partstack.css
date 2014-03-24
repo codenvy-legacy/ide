@@ -103,6 +103,7 @@
     box-shadow: -1px -1px 0px 0px tabBorderShadow;
     padding-left: 15px;
     padding-right: 15px;
+    white-space: nowrap;
 }
 
 .ide-PartStack-Tab-Label {
@@ -112,6 +113,7 @@
     text-shadow: 0px 1px 0px buttonTextShadow;
     position: relative;
     top: 12%;
+    white-space: nowrap;
 }
 
 .ide-PartStack-Tab-Right {
@@ -127,6 +129,7 @@
     box-shadow: 1px -1px 0px 0px tabBorderShadow;
     padding-left: 15px;
     padding-right: 15px;
+    white-space: nowrap;
 }
 
 .ide-PartStack-Tab-Below {

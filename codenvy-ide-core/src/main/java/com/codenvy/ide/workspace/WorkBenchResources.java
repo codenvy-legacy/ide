@@ -39,8 +39,8 @@ public interface WorkBenchResources extends ClientBundle {
         @ClassName("ide-rotate-0")
         String ideRotate0();
 
-        @ClassName("ide-rotate-270")
-        String ideRotate270();
+        @ClassName("ide-rotate-90")
+        String ideRotate90();
 
         @ClassName("ide-rotate-180")
         String ideRotate180();
