@@ -20,6 +20,7 @@ package com.codenvy.ide.projecttype;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -47,6 +48,7 @@ public class SelectProjectTypeViewImpl extends DialogBox implements SelectProjec
     @UiField
     Button  btnCancel;
     private ActionDelegate delegate;
+    private Array<ProjectTypeDescriptor> projectTypes = Collections.createArray();
 
     @Inject
     protected SelectProjectTypeViewImpl(CoreLocalizationConstant localizationConstant, SelectProjectTypeViewImplUiBinder uiBinder) {
@@ -64,13 +66,15 @@ public class SelectProjectTypeViewImpl extends DialogBox implements SelectProjec
     /** {@inheritDoc} */
     @Override
     public void setTypes(Array<ProjectTypeDescriptor> types) {
-        for (ProjectTypeDescriptor type : types.asIterable()) {
-            projectTypeField.addItem(type.getProjectTypeId());
+        projectTypes.addAll(types);
+        for (ProjectTypeDescriptor type : projectTypes.asIterable()) {
+            projectTypeField.addItem(type.getProjectTypeName());
         }
     }
 
     @Override
     public void clearTypes() {
+        projectTypes.clear();
         projectTypeField.clear();
     }
 
@@ -99,9 +103,9 @@ public class SelectProjectTypeViewImpl extends DialogBox implements SelectProjec
 
     /** {@inheritDoc} */
     @Override
-    public String getSelectedProjectTypeId() {
+    public ProjectTypeDescriptor getSelectedProjectType() {
         final int index = projectTypeField.getSelectedIndex();
-        return index != -1 ? projectTypeField.getItemText(index) : "";
+        return projectTypes.get(index);
     }
 
     /** {@inheritDoc} */

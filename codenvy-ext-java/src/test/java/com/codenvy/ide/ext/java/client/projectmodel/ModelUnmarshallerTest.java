@@ -17,7 +17,9 @@
  */
 package com.codenvy.ide.ext.java.client.projectmodel;
 
-import com.codenvy.api.project.shared.dto.TreeElement;
+import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.java.client.BaseTest;
@@ -47,8 +49,7 @@ public class ModelUnmarshallerTest extends BaseTest {
     private JavaProject project = new JavaProject(null, null, null, null);
     @Mock
     private JavaProjectDescription projectDescription;
-    @Mock
-    private TreeElement            treeElement;
+    private Array<ItemReference>   itemReferenceArray;
 
     @Before
     public void setUp() {
@@ -56,7 +57,6 @@ public class ModelUnmarshallerTest extends BaseTest {
         when(project.getPath()).thenReturn("/SpringProject");
         when(projectDescription.getSourceFolders()).thenReturn(
                 Collections.createStringSet("src/main/java", "src/main/resources", "src/test/java", "src/test/resources"));
-//        when(response.getText()).thenReturn(projectJs);
     }
 
     @Test
@@ -102,13 +102,9 @@ public class ModelUnmarshallerTest extends BaseTest {
         assertThat(children).onProperty("resourceType").containsOnly(File.TYPE, CompilationUnit.TYPE, Folder.TYPE);
     }
 
-    /**
-     * @return
-     * @throws UnmarshallerException
-     */
     private List<Resource> parseProject() throws UnmarshallerException {
         JavaModelUnmarshaller unmarshaller = new JavaModelUnmarshaller(project, project, null, null, null, null);
-        unmarshaller.unmarshal(treeElement);
+        unmarshaller.unmarshalChildren(Collections.<ItemReference>createArray(), Collections.<ProjectDescriptor>createArray());
         ArgumentCaptor<Resource> children = ArgumentCaptor.forClass(Resource.class);
         verify(project, times(7)).addChild(children.capture());
         List<Resource> allValues = children.getAllValues();

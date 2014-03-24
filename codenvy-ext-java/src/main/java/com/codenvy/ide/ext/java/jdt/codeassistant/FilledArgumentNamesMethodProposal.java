@@ -35,14 +35,15 @@ public final class FilledArgumentNamesMethodProposal extends JavaMethodCompletio
     @Override
     public void apply(Document document, char trigger, int offset) {
         super.apply(document, trigger, offset);
-        // int baseOffset= getReplacementOffset();
-        // String replacement= getReplacementString();
+        int baseOffset= getReplacementOffset();
+        String replacement= getReplacementString();
         //
-        // if (fArgumentOffsets != null && getTextViewer() != null) {
+        if (fArgumentOffsets != null) {
         // try {
         // LinkedModeModel model= new LinkedModeModel();
         // for (int i= 0; i != fArgumentOffsets.length; i++) {
         // LinkedPositionGroup group= new LinkedPositionGroup();
+            fSelectedRegion = new RegionImpl(baseOffset + fArgumentOffsets[0], 0);
         // group.addPosition(new LinkedPosition(document, baseOffset + fArgumentOffsets[i], fArgumentLengths[i],
         // LinkedPositionGroup.NO_STOP));
         // model.addGroup(group);
@@ -67,9 +68,9 @@ public final class FilledArgumentNamesMethodProposal extends JavaMethodCompletio
         // JavaPlugin.log(e);
         // openErrorDialog(e);
         // }
-        // } else {
-        // fSelectedRegion= new Region(baseOffset + replacement.length(), 0);
-        // }
+        } else {
+        fSelectedRegion= new RegionImpl(baseOffset + replacement.length(), 0);
+        }
     }
 
     /*

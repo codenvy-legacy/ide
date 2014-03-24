@@ -27,7 +27,7 @@
     </parent>
     <groupId>com.codenvy.ide</groupId>
     <artifactId>codenvy-ide-parent</artifactId>
-    <version>3.0.0-M12-SNAPSHOT</version>
+    <version>3.0.0-M14-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Codenvy :: Parent</name>
     <modules>
@@ -52,12 +52,12 @@
         <module>codenvy-ext-git</module>
         <module>codenvy-ext-ssh</module>
         <module>codenvy-ext-github</module>
-        <module>codenvy-ext-extensions</module>
         <module>codenvy-ide-security</module>
         <module>codenvy-ide-client</module>
         <module>codenvy-ext-tutorials</module>
         <module>codenvy-sdk-tutorials/action-api</module>
         <module>codenvy-sdk-tutorials/wizard-api</module>
+        <module>codenvy-sdk-tutorials/theme-api</module>
         <module>codenvy-sdk-tutorials/parts-api</module>
         <module>codenvy-sdk-tutorials/notification-api</module>
         <module>codenvy-sdk-tutorials/new-resource-wizard</module>
@@ -66,8 +66,8 @@
         <module>codenvy-sdk-tutorials/gin</module>
         <module>codenvy-sdk-tutorials/gist-ext</module>
         <module>codenvy-sdk-tutorials/helloworld-ext</module>
+        <module>codenvy-sdk-tutorials/icons-regitry-api</module>
         <module>codenvy-sdk-tutorials/wysiwyg-editor</module>
-        <module>codenvy-sdk-private-dependencies</module>
         <module>codenvy-sdk-tools</module>
     </modules>
     <scm>
@@ -82,8 +82,8 @@
         <buildnumber.plugin.version>1.1</buildnumber.plugin.version>
         <ch.qos.logback.version>1.0.13</ch.qos.logback.version>
         <codenvy.platform-api-gwt-client.version>0.3.0-SNAPSHOT</codenvy.platform-api-gwt-client.version>
-        <com.codenvy.commons.version>0.17.0-SNAPSHOT</com.codenvy.commons.version>
-        <com.codenvy.platform-api.version>0.11.0-SNAPSHOT</com.codenvy.platform-api.version>
+        <com.codenvy.commons.version>0.18.0-SNAPSHOT</com.codenvy.commons.version>
+        <com.codenvy.platform-api.version>0.12.0-SNAPSHOT</com.codenvy.platform-api.version>
         <commons-codec.version>1.6</commons-codec.version>
         <commons-fileupload.version>1.2.1</commons-fileupload.version>
         <commons-io.version>2.4</commons-io.version>

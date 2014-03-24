@@ -208,8 +208,13 @@ public class WorkerNameEnvironment implements INameEnvironment {
             for (Jso jso : constructors.asIterable()) {
                 char[][] parameterTypes = Util.arrayStringToCharArray((Array<String>)jso.getJsObjectField("parameterTypes"));
                 char[][] parameterNames = Util.arrayStringToCharArray((Array<String>)jso.getJsObjectField("parameterNames"));
+                String signature = jso.getStringField("signature");
+                char[] sig = null;
+                if(signature != null) {
+                   sig = signature.toCharArray();
+                }
                 requestor.acceptConstructor(jso.getIntField("modifiers"), jso.getStringField("simpleTypeName").toCharArray(),
-                                            jso.getIntField("parameterCount"), jso.getStringField("signature").toCharArray(),
+                                            jso.getIntField("parameterCount"), sig,
                                             parameterTypes, parameterNames, jso.getIntField("typeModifiers"),
                                             jso.getStringField("packageName").toCharArray(), jso.getIntField("extraFlags"), "from server",
                                             null);

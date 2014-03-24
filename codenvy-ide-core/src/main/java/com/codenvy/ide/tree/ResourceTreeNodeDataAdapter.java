@@ -22,10 +22,10 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
+import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.ui.tree.NodeDataAdapter;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
-
 
 public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource> {
     @Override
@@ -35,7 +35,12 @@ public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource> {
 
     @Override
     public boolean hasChildren(Resource data) {
-        return data.isFolder() && ((Folder)data).getChildren().size() > 0;
+        // TODO: need to find another solution
+        // hide 'expand arrow' for project when all projects are displayed
+        if (data instanceof Project) {
+            return data.getProject() != null;
+        }
+        return data.isFolder();
     }
 
     @Override
@@ -69,8 +74,6 @@ public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource> {
 
     @Override
     public void setNodeName(Resource data, String name) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -80,7 +83,6 @@ public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource> {
 
     @Override
     public Resource getDragDropTarget(Resource data) {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -107,15 +109,13 @@ public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource> {
         if (root instanceof Folder) {
             Folder localRoot = (Folder)root;
             for (int i = 0; i < relativeNodePath.size(); i++) {
-                if (localRoot != null) {
-                    Resource findResourceById = localRoot.findResourceById(relativeNodePath.get(i));
-                    if (findResourceById instanceof Folder) {
-                        localRoot = (Folder)findResourceById;
-                    }
-                    if (findResourceById instanceof File) {
-                        if (i == (relativeNodePath.size() - 1)) {
-                            return findResourceById;
-                        }
+                Resource foundResource = localRoot.findResourceById(relativeNodePath.get(i));
+                if (foundResource instanceof Folder) {
+                    localRoot = (Folder)foundResource;
+                }
+                if (foundResource instanceof File) {
+                    if (i == (relativeNodePath.size() - 1)) {
+                        return foundResource;
                     }
                 }
             }

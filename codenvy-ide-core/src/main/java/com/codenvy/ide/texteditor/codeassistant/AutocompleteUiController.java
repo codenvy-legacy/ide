@@ -53,32 +53,8 @@ public class AutocompleteUiController implements AutocompleteBox {
     /**
      *
      */
-    private static final int DELAY_MILLIS = 2000;
-
-    public interface Resources extends SimpleList.Resources, Popup.Resources {
-        @Source("AutocompleteComponent.css")
-        Css autocompleteComponentCss();
-    }
-
-    public interface Css extends CssResource {
-        String cappedProposalLabel();
-
-        String proposalIcon();
-
-        String proposalLabel();
-
-        String proposalGroup();
-
-        String container();
-
-        String items();
-
-        String hint();
-
-        int maxHeight();
-    }
-
-    private final SimpleList.ListItemRenderer<CompletionProposal> listItemRenderer =
+    private static final int                                             DELAY_MILLIS     = 2000;
+    private final        SimpleList.ListItemRenderer<CompletionProposal> listItemRenderer =
             new SimpleList.ListItemRenderer<CompletionProposal>() {
                 @Override
                 public void render(Element itemElement, CompletionProposal itemData) {
@@ -99,7 +75,26 @@ public class AutocompleteUiController implements AutocompleteBox {
                     return Elements.createTRElement();
                 }
             };
+    private final AutoHideController             autoHideController;
+    private final Css                            css;
+    private final SimpleList<CompletionProposal> list;
+    private final TextEditorViewImpl             editor;
+    private final Element                        box;
+    private final Element                        container;
+    private final Element                        hint;
+    private final Resources                      resources;
+    private Timer infoTimer = new Timer() {
 
+        @Override
+        public void run() {
+            if (list.getSelectionModel().getSelectedItem() != null) {
+                CompletionProposal item = list.getSelectionModel().getSelectedItem();
+                Widget widget = item.getAdditionalProposalInfo();
+                showPopup(widget);
+            }
+        }
+    };
+    private Events delegate;
     private final SimpleList.ListEventDelegate<CompletionProposal> listDelegate =
             new SimpleList.ListEventDelegate<CompletionProposal>() {
 
@@ -119,50 +114,16 @@ public class AutocompleteUiController implements AutocompleteBox {
                     delegate.onSelect(itemData);
                 }
             };
-
-    private Timer infoTimer = new Timer() {
-
-        @Override
-        public void run() {
-            if (list.getSelectionModel().getSelectedItem() != null) {
-                CompletionProposal item = list.getSelectionModel().getSelectedItem();
-                Widget widget = item.getAdditionalProposalInfo();
-                showPopup(widget);
-            }
-        }
-    };
-
-    private final AutoHideController autoHideController;
-
-    private final Css css;
-
-    private final SimpleList<CompletionProposal> list;
-
-    private Events delegate;
-
-    private final TextEditorViewImpl editor;
-
-    private final Element box;
-
-    private final Element container;
-
-    private final Element hint;
-
     /** Will be non-null when the popup is showing */
     private ReadOnlyAnchor anchor;
-
     /**
      * True to force the layout above the anchor, false to layout below. This
      * should be set when showing from the hidden state. It's used to keep
      * the position consistent while the box is visible.
      */
-    private boolean positionAbove;
-
-    private final Resources resources;
-
-    private Positioner positioner;
-
-    private Popup infoPopup;
+    private boolean        positionAbove;
+    private Positioner     positioner;
+    private Popup          infoPopup;
 
     public AutocompleteUiController(TextEditorViewImpl editor, Resources res) {
         this.editor = editor;
@@ -374,6 +335,37 @@ public class AutocompleteUiController implements AutocompleteBox {
         ensureRootElementWillBeOnScreen(showingFromHidden);
     }
 
+    @Override
+    public void showLoader() {
+        this.anchor = editor.getSelection().getCursorAnchor();
+
+        boolean showingFromHidden = !autoHideController.isShowing();
+        if (showingFromHidden) {
+            list.getSelectionModel().clearSelection();
+        }
+
+        final Array<CompletionProposal> itemsToDisplay = JsoArray.<CompletionProposal>create();
+        String hintText = "Processing...";//items.getHint();
+
+        list.render(itemsToDisplay);
+
+        if (list.getSelectionModel().getSelectedItem() == null) {
+            list.getSelectionModel().setSelectedItem(0);
+            infoTimer.cancel();
+            infoTimer.schedule(DELAY_MILLIS);
+        }
+
+        hint.setTextContent(hintText);
+        CssUtils.setDisplayVisibility2(hint, true);
+        CssUtils.setDisplayVisibility2(container, false);
+
+        autoHideController.show();
+
+        editor.getBuffer().addAnchoredElement(anchor, box);
+
+        ensureRootElementWillBeOnScreen(showingFromHidden);
+    }
+
     private void ensureRootElementWillBeOnScreen(boolean showingFromHidden) {
         // Remove any max-heights so we can get its desired height
         container.getStyle().removeProperty("max-height");
@@ -426,5 +418,28 @@ public class AutocompleteUiController implements AutocompleteBox {
 
     SimpleList<CompletionProposal> getList() {
         return list;
+    }
+
+    public interface Resources extends SimpleList.Resources, Popup.Resources {
+        @Source("AutocompleteComponent.css")
+        Css autocompleteComponentCss();
+    }
+
+    public interface Css extends CssResource {
+        String cappedProposalLabel();
+
+        String proposalIcon();
+
+        String proposalLabel();
+
+        String proposalGroup();
+
+        String container();
+
+        String items();
+
+        String hint();
+
+        int maxHeight();
     }
 }

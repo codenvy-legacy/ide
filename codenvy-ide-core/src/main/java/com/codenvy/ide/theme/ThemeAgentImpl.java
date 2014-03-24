@@ -22,8 +22,10 @@ import com.codenvy.ide.api.ui.theme.ThemeAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
+import com.google.inject.Inject;
 
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 /**
  * Implementation of ThemeAgent
@@ -33,13 +35,16 @@ public class ThemeAgentImpl  implements ThemeAgent{
 
     private StringMap<Theme> themes = Collections.createStringMap();
 
-    private final Theme defaultTheme = new DarkTheme();
+    private final Theme defaultTheme;
 
     private String currentThemeId;
 
-    public ThemeAgentImpl() {
-        addTheme(defaultTheme);
-        addTheme(new LightTheme());
+    @Inject
+    public ThemeAgentImpl(Set<Theme> theme, DarkTheme darkTheme) {
+        defaultTheme = darkTheme;
+        for (Theme t : theme) {
+            addTheme(t);
+        }
     }
 
     @Override

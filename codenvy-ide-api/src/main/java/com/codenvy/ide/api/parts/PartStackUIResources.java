@@ -73,6 +73,21 @@ public interface PartStackUIResources extends ClientBundle {
         @ClassName("ide-PartStack-Tool-Tab-selected")
         String idePartStackToolTabSelected();
 
+        @ClassName("ide-PartStack-Tab-Right-Button")
+        String idePartStackTabRightButton();
+        
+        @ClassName("ide-PartStack-Tab-Button")
+        String idePartStackTabButton();
+        
+        @ClassName("ide-PartStack-Tab-Button-selected")
+        String idePartStackTabButtonSelected();
+        
+        @ClassName("ide-PartStack-Multiple-Tabs-Container")
+        String idePartStackMultipleTabsContainer();
+        
+        @ClassName("ide-PartStack-Multiple-Tabs-Item")
+        String idePartStackMultipleTabsItem();
+        
         @ClassName("ide-button-micro")
         String ideButtonMicro();
     }

@@ -58,4 +58,9 @@ public class IconRegistryImpl implements IconRegistry {
     public void registerIcons(Map<String, String> iconRegistry) {
         icons.putAll(iconRegistry);
     }
+
+    @Override
+    public void registerIcon(String iconId, String iconPath) {
+        icons.put(iconId, iconPath);
+    }
 }

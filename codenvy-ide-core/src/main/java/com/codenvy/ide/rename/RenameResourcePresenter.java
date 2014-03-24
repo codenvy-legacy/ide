@@ -35,7 +35,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
  * Presenter for changing resource's name.
- * 
+ *
  * @author Ann Shumilova
  */
 @Singleton
@@ -62,8 +62,9 @@ public class RenameResourcePresenter implements RenameResourceView.ActionDelegat
 
     /**
      * Perform the resource renaming.
-     * 
-     * @param resource to rename
+     *
+     * @param resource
+     *         resource to rename
      */
     public void renameResource(@NotNull Resource resource) {
         this.resource = resource;
@@ -71,7 +72,7 @@ public class RenameResourcePresenter implements RenameResourceView.ActionDelegat
         view.setEnableRenameButton(false);
         view.showDialog();
         String namePart = (resource instanceof File) ? resource.getName().substring(0, resource.getName().lastIndexOf("."))
-                              : resource.getName();
+                                                     : resource.getName();
         view.selectText(namePart);
     }
 
@@ -80,7 +81,6 @@ public class RenameResourcePresenter implements RenameResourceView.ActionDelegat
     public void onRenameClicked() {
         String newName = view.getName();
         resourceProvider.getActiveProject().rename(resource, newName, new AsyncCallback<Resource>() {
-
             @Override
             public void onSuccess(Resource result) {
                 if (result instanceof File) {
@@ -98,12 +98,12 @@ public class RenameResourcePresenter implements RenameResourceView.ActionDelegat
                     for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
                         //Find parent of the opened file by it's old id:
                         Folder parent = getParentById(resource.getId(), editor.getEditorInput().getFile());
-                        if (parent != null){
+                        if (parent != null) {
                             //New path of the file:
                             String path = editor.getEditorInput().getFile().getPath().replaceFirst(parent.getPath(), result.getPath());
                             Resource updatedResource = findResourceByPath((Folder)result, path);
                             if (updatedResource != null && (updatedResource instanceof File)) {
-                                editor.getEditorInput().setFile((File)updatedResource); 
+                                editor.getEditorInput().setFile((File)updatedResource);
                             }
                         }
                     }
@@ -116,40 +116,44 @@ public class RenameResourcePresenter implements RenameResourceView.ActionDelegat
                 notificationManager.showNotification(notification);
             }
         });
-        
+
         view.close();
     }
-    
+
     /**
      * Find parent of the resource by id going to upper levels.
-     * 
-     * @param id parent's id
-     * @param resource resource for which to find parent
+     *
+     * @param id
+     *         parent's id
+     * @param resource
+     *         resource for which to find parent
      * @return {@link Folder} found parent or <code>null</code>
      */
-    private Folder getParentById(String id, Resource resource){
+    private Folder getParentById(String id, Resource resource) {
         Folder parent = resource.getParent();
-        while (parent != null){
-            if (parent.getId().equals(id)){
+        while (parent != null) {
+            if (parent.getId().equals(id)) {
                 return parent;
             }
             parent = parent.getParent();
         }
         return null;
     }
-    
+
     /**
      * Find resource by its path.
-     * 
-     * @param parent parent to start search
-     * @param path path of the resource
+     *
+     * @param parent
+     *         parent to start search
+     * @param path
+     *         path of the resource
      * @return {@link Resource} found resource or <code>null</code>
      */
-    private Resource findResourceByPath(Folder parent, String path){
+    private Resource findResourceByPath(Folder parent, String path) {
         String[] names = path.split("/");
         for (int i = 0; i < names.length; i++) {
             for (Resource child : parent.getChildren().asIterable()) {
-                if ((i == (names.length -1)) && child.getName().equals(names[i])) {
+                if ((i == (names.length - 1)) && child.getName().equals(names[i])) {
                     return child;
                 } else if (child instanceof Folder && child.getName().equals(names[i])) {
                     parent = (Folder)child;
@@ -159,7 +163,7 @@ public class RenameResourcePresenter implements RenameResourceView.ActionDelegat
         }
         return null;
     }
-    
+
 
     /** {@inheritDoc} */
     @Override

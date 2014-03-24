@@ -39,12 +39,6 @@ public class JarProjectTypeExtension implements ProjectTypeExtension {
 
     @Inject
     public JarProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
-        icons.put("jar.projecttype.big.icon", "java-extension/jar_64.png");
-        icons.put("jar.projecttype.small.icon", "java-extension/jar.png");
-        icons.put("jar.folder.small.icon", "java-extension/package.gif");
-        icons.put("jar/java.file.small.icon", "java-extension/java-class.png");
-        icons.put("java.class", "java-extension/java-class.png");
-        icons.put("java.package", "java-extension/package.gif");
         registry.registerProjectType(this);
     }
 
@@ -77,9 +71,6 @@ public class JarProjectTypeExtension implements ProjectTypeExtension {
         return list;
     }
 
-    @Override
-    public Map<String, String> getIconRegistry() {
-        return icons;
-    }
+
 
 }

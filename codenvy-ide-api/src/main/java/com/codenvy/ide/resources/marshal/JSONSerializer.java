@@ -29,11 +29,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 
-
-/**
- * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: JSONSerializer.java 75889 2011-11-01 10:42:51Z anya $
- */
+/** @author Andrey Parfonov */
 public abstract class JSONSerializer<O> {
     // --------- Common serializers. -------------
     public static final JSONSerializer<String> STRING_SERIALIZER = new JSONSerializer<String>() {

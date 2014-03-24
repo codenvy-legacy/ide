@@ -18,10 +18,12 @@
 package com.codenvy.ide.theme;
 
 import com.codenvy.ide.api.ui.theme.Theme;
+import com.google.inject.Singleton;
 
 /**
  * @author Evgen Vidolob
  */
+@Singleton
 public class DarkTheme implements Theme {
 
     public static final String DARK_THEME_ID = "DarkTheme";
@@ -49,17 +51,27 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getSelectionBackground() {
-        return "#2f65ca";
+        return "#256c9f";
     }
-
+    
     @Override
     public String getInactiveTabBackground() {
         return "#484848";
+    }
+    
+    @Override
+    public String getInactiveTabBorderColor() {
+        return "#353535";
     }
 
     @Override
     public String getActiveTabBackground() {
         return "#5a5c5c";
+    }
+    
+    @Override
+    public String getActiveTabBorderColor() {
+        return "#232323";
     }
 
     @Override

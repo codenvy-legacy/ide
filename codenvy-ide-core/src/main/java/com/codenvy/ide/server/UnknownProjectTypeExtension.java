@@ -52,10 +52,4 @@ public class UnknownProjectTypeExtension implements ProjectTypeExtension {
     public List<ProjectTemplateDescription> getTemplates() {
         return Collections.emptyList();
     }
-
-    @Override
-    public Map<String, String> getIconRegistry() {
-        return Collections.emptyMap();
-    }
-
 }

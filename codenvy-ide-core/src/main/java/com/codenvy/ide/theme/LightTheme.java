@@ -18,17 +18,19 @@
 package com.codenvy.ide.theme;
 
 import com.codenvy.ide.api.ui.theme.Theme;
+import com.google.inject.Singleton;
 
 /**
  * @author Evgen Vidolob
  */
+@Singleton
 public class LightTheme implements Theme {
 
-    public static final String DEFAULT_THEME_ID = "LightTheme";
+    public static final String LIGHT_THEME_ID = "LightTheme";
 
     @Override
     public String getId() {
-        return DEFAULT_THEME_ID;
+        return LIGHT_THEME_ID;
     }
 
     @Override
@@ -50,15 +52,25 @@ public class LightTheme implements Theme {
     public String getSelectionBackground() {
         return "#C3DEFF";
     }
-
+    
     @Override
     public String getInactiveTabBackground() {
         return "#d6d6d6";
+    }
+    
+    @Override
+    public String getInactiveTabBorderColor() {
+        return "#353535";
     }
 
     @Override
     public String getActiveTabBackground() {
         return "#ffffff";
+    }
+    
+    @Override
+    public String getActiveTabBorderColor() {
+        return "#232323";
     }
 
     @Override
