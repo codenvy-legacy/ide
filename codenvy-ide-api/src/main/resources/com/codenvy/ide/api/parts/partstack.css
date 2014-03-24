@@ -37,20 +37,23 @@
     margin-left: 3px;
     margin-top: 3px;
     background: inactiveTabBackground;
-    /*border: 1px solid inactiveTabBackground;*/
-    padding: 3px;
+    border: 1px solid inactiveTabBorderColor;
+    padding: 3px 16px;
     cursor: pointer;
     cursor: hand;
     position: relative;
     display: inline-block;
-    height: 15px;
+    height: 14px;
 }
 
 .ide-PartStack .ide-PartStack-Tab span {
     /* margin between text and image */
-    margin-right: 4px;
-    margin-left: 4px;
+    margin-right: 6px;
+   /*  margin-left: 4px; */
     white-space: nowrap;
+    font-size: 11pt;
+    line-height: 14px;
+    text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5);
 }
 
 .ide-PartStack .ide-PartStack-Tab img {
@@ -75,7 +78,7 @@
     /*font-weight: bold;*/
     /*padding: 3px;*/
     border: 1px solid tabBorder;
-    border-bottom: 2px solid activeTabBackground;
+    height: 16px;
     background: activeTabBackground;
 }
 

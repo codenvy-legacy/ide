@@ -141,7 +141,7 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getEditorBackgroundColor() {
-        return "#383838";
+        return "#373737";
     }
 
     @Override

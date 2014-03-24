@@ -188,12 +188,10 @@
 
 .hsplitter, .gwt-SplitLayoutPanel-HDragger {
     background: tabBorder;  /*Old browsers */
-    background: linear-gradient(to right, tabBorder 0%, tabBorder 10%,tabsPanelBackground 10%,tabsPanelBackground 90%,tabBorder 91%,tabBorder 100%); /* W3C */
 }
 
 .vsplitter, .gwt-SplitLayoutPanel-VDragger {
     background: tabBorder;  /*Old browsers */
-    background: linear-gradient(to bottom, tabBorder 0%,tabBorder 10%,tabsPanelBackground 10%,tabsPanelBackground 90%,tabBorder 91%,tabBorder 100%); /* W3C */
 }
 
 
