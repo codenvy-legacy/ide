@@ -78,9 +78,6 @@ public class PartStackViewImpl extends Composite implements PartStackView {
 //        parent = new DockLayoutPanel(Style.Unit.PX);
         this.tabsPanel = tabsPanel;
         contentPanel = new SimplePanel();
-        if (tabPosition == LEFT) {
-            top = 26;
-        }
         contentPanel.setStyleName(resources.partStackCss().idePartStackContent());
         initWidget(contentPanel);
 
@@ -229,49 +226,44 @@ public class PartStackViewImpl extends Composite implements PartStackView {
 
         @Override
         protected void onLoad() {
+            final int padding = 15;//div(button) padding(see "partstack.css")
+            final int margin = 8;//text margin(see "partstack.css")
+            final int marginPicture = 4;//picture margin(see "partstack.css")
+            int offsetWidth;
             super.onLoad();
-
-
-            int offsetWidth = getElement().getOffsetWidth();
             if (tabPosition == RIGHT) {
-                int padding;
-                if (icon != null) {
-                    getElement().getStyle().setWidth(offsetWidth + 16, Style.Unit.PX);
-                    padding = 0;
-                } else {
-                    padding = 16;
-                    getElement().getStyle().setWidth(offsetWidth, Style.Unit.PX);
-                }
-
-                getElement().getStyle().setTop(top, Style.Unit.PX);
-
-                top += offsetWidth - padding;
                 tabItem.addStyleName(resources.partStackCss().idePartStackTabRight());
-            } else if (tabPosition == LEFT) {
-                int topPadding;
+                offsetWidth = getElement().getOffsetWidth();
                 if (icon != null) {
-                    getElement().getStyle().setWidth(offsetWidth + 15, Style.Unit.PX);
-                    topPadding = 6;
+                    getElement().getStyle().setWidth(offsetWidth - padding * 2 - marginPicture, Style.Unit.PX);
+                    offsetWidth -= marginPicture;
                 } else {
-                    topPadding = 16;
+                    getElement().getStyle().setWidth(offsetWidth - padding * 2, Style.Unit.PX);
                 }
                 if (first) {
-                    if (icon != null) {
-                        top += offsetWidth + 2;
-                    } else {
-                        top += offsetWidth - 15;
-                    }
                     first = false;
-                } else {
-                    top += offsetWidth - topPadding;
                 }
-
+                getElement().getStyle().setTop(top, Style.Unit.PX);
+                if (!first) {
+                    top += (offsetWidth - margin * 2);
+                }
+            } else if (tabPosition == LEFT) {
                 tabItem.addStyleName(resources.partStackCss().idePartStackTabLeft());
-//                tabItem.getElement().getStyle().setWidth(offsetWidth, Style.Unit.PX);
+                offsetWidth = getElement().getOffsetWidth();
+                int topPadding;
+                if (icon != null) {
+                    getElement().getStyle().setWidth((offsetWidth - padding * 2), Style.Unit.PX);
+                    offsetWidth -= marginPicture;
+                } else {
+                    getElement().getStyle().setWidth((offsetWidth - padding * 2), Style.Unit.PX);
+                }
+                if (first) {
+                    first = false;
+                }
+                top += offsetWidth - margin * 2;
                 tabItem.getElement().getStyle().setTop(top, Style.Unit.PX);
             } else {
                 tabItem.addStyleName(resources.partStackCss().idePartStackTabBelow());
-
             }
         }
 

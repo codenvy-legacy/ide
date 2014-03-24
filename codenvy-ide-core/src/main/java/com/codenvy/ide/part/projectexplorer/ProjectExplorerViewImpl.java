@@ -32,6 +32,7 @@ import com.codenvy.ide.util.input.SignalEvent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+
 /**
  * Tree-based Project Explorer view.
  *

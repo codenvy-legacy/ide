@@ -54,7 +54,9 @@
 }
 
 .ide-PartStack .ide-PartStack-Tab img {
-    vertical-align: bottom;
+    /*vertical-align: bottom;*/
+    vertical-align: middle;
+
 }
 
 .ide-PartStack .ide-PartStack-Tab .CloseButton {
@@ -91,15 +93,17 @@
     -webkit-transform: rotate(270deg);
     -moz-transform: rotate(270deg);
     transform: rotate(270deg);
-    transform-origin: 9px 9px;
-    -webkit-transform-origin: 9px 9px; /* Safari and Chrome */
-    -moz-transform-origin: 9px 9px; /* Firefox */
-    position: absolute;
+    transform-origin: 8px 9px;
+    -webkit-transform-origin: 8px 9px; /* Safari and Chrome */
+    -moz-transform-origin: 8px 9px; /* Firefox */
+    /*position: absolute;*/
+    position: relative;
     border-right: none !important;
     border-left: 1px solid tabBorder;
     box-shadow: -1px -1px 0px 0px tabBorderShadow;
     padding-left: 15px;
     padding-right: 15px;
+    white-space: nowrap;
 }
 
 .ide-PartStack-Tab-Label {
@@ -108,7 +112,8 @@
     margin-left: 4px;
     text-shadow: 0px 1px 0px buttonTextShadow;
     position: relative;
-    top: 2px;
+    top: 12%;
+    white-space: nowrap;
 }
 
 .ide-PartStack-Tab-Right {
@@ -118,11 +123,13 @@
     transform-origin: 8px 9px;
     -webkit-transform-origin: 8px 9px; /* Safari and Chrome */
     -moz-transform-origin: 8px 9px; /* Firefox */
-    position: absolute;
+    /*position: absolute;*/
+    position: relative;
     /*margin-left: 0 !important;*/
     box-shadow: 1px -1px 0px 0px tabBorderShadow;
     padding-left: 15px;
     padding-right: 15px;
+    white-space: nowrap;
 }
 
 .ide-PartStack-Tab-Below {
@@ -131,7 +138,8 @@
     box-shadow: 1px 0px 0px 0px tabBorderShadow;
     cursor: pointer;
     cursor: hand;
-    display: inline-block;
+    position: relative;
+    margin-top: -1px;
     padding-left: 15px;
     padding-right: 15px;
 }
@@ -163,7 +171,7 @@
     cursor: pointer;
     cursor: hand;
     /*position: relative;*/
-    margin-top: -1px;
+    /*margin-top: -1px;*/
     height: 18px;
     font-size: 11px;
     display: inline-block;
@@ -265,8 +273,3 @@
     line-height: 16px;
 }
 
-.ide-image-icon-minimize {
-    height: 56%;
-    width: 70%;
-    margin: 22% 15%;
-}
