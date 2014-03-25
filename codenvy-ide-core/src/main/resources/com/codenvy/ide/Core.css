@@ -44,7 +44,7 @@
 
 .gwt-ListBox {
     background-color: boxBackgroundColor;
-    color: mainFontColor;
+    color: boxTextColor;
     border: 1px solid boxBorderColor;
     border-radius: 1px;
     box-shadow: boxInnerShadow, boxOuterShadow;
@@ -96,7 +96,7 @@
 
 .gwt-TextBox, .gwt-PasswordTextBox {
     background-color: boxBackgroundColor;
-    color: mainFontColor;
+    color: boxTextColor;
     border: 1px solid boxBorderColor;
     border-radius: 1px;
     box-shadow: boxInnerShadow, boxOuterShadow;
