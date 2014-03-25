@@ -28,11 +28,9 @@ import com.codenvy.api.project.server.AbstractVirtualFileEntry;
 import com.codenvy.api.project.server.ProjectManager;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.commons.lang.ZipUtils;
-import com.codenvy.ide.ext.java.jdt.core.JavaCore;
-import com.codenvy.ide.ext.java.jdt.internal.codeassist.impl.AssistOptions;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.CompilerOptions;
 import com.codenvy.ide.ext.java.server.internal.core.JavaProject;
 import com.codenvy.ide.ext.java.server.internal.core.search.matching.JavaSearchNameEnvironment;
+import com.google.inject.name.Named;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
@@ -75,15 +73,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Rest service for {@link com.codenvy.ide.ext.java.worker.WorkerNameEnvironment}
@@ -95,65 +87,19 @@ public class RestNameEnvironment {
     /** Logger. */
     private static final Logger LOG = LoggerFactory.getLogger(RestNameEnvironment.class);
 
-    private static final String TEMP_DIR = System.getProperty("java.io.tmpdir");
-
-    private static Map<String, String> options = new HashMap<>();
-
-    private static ConcurrentHashMap<String, JavaProject> cache = new ConcurrentHashMap<>();
-
-    static {
-        options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_7);
-        options.put(JavaCore.CORE_ENCODING, "UTF-8");
-        options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
-        options.put(CompilerOptions.OPTION_TargetPlatform, JavaCore.VERSION_1_7);
-        options.put(AssistOptions.OPTION_PerformVisibilityCheck, AssistOptions.ENABLED);
-        options.put(CompilerOptions.OPTION_ReportUnusedLocal, CompilerOptions.WARNING);
-        options.put(CompilerOptions.OPTION_TaskTags, CompilerOptions.WARNING);
-        options.put(CompilerOptions.OPTION_ReportUnusedPrivateMember, CompilerOptions.WARNING);
-        options.put(CompilerOptions.OPTION_SuppressWarnings, CompilerOptions.DISABLED);
-        options.put(JavaCore.COMPILER_TASK_TAGS, "TODO,FIXME,XXX");
-        options.put(JavaCore.COMPILER_PB_UNUSED_PARAMETER_INCLUDE_DOC_COMMENT_REFERENCE, JavaCore.ENABLED);
-        options.put(JavaCore.COMPILER_DOC_COMMENT_SUPPORT, JavaCore.ENABLED);
-        options.put(CompilerOptions.OPTION_Process_Annotations, JavaCore.DISABLED);
-    }
+    @Inject
+    private ProjectManager projectManager;
 
     @Inject
-    ProjectManager projectManager;
+    private JavaProjectService javaProjectService;
+
+    @Inject
+    @Named("project.temp")
+    private String temp;
 
     @PathParam("ws-id")
     @Inject
     private String wsId;
-
-    private static void removeRecursive(Path path) throws IOException {
-        Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
-                    throws IOException {
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-                // try to delete the file anyway, even if its attributes
-                // could not be read, since delete-only access is
-                // theoretically possible
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                if (exc == null) {
-                    Files.delete(dir);
-                    return FileVisitResult.CONTINUE;
-                } else {
-                    // directory iteration failed; propagate exception
-                    throw exc;
-                }
-            }
-        });
-    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -202,15 +148,7 @@ public class RestNameEnvironment {
     }
 
     private JavaProject getJavaProject(String projectPath) {
-        String key = wsId + projectPath;
-        if(cache.containsKey(key)) {
-            return cache.get(key);
-        }
-
-        com.codenvy.api.project.server.Project project = projectManager.getProject(wsId, projectPath);
-        JavaProject javaProject = new JavaProject(project, TEMP_DIR, projectManager, wsId, new HashMap<>(options));
-        cache.put(key, javaProject);
-        return javaProject;
+        return javaProjectService.getOrCreateJavaProject(wsId, projectPath);
     }
 
     @GET
@@ -317,9 +255,9 @@ public class RestNameEnvironment {
             if (buildStatus.getStatus() == BuildStatus.FAILED) {
                 buildFailed(buildStatus);
             }
-            File projectDepDir = new File(TEMP_DIR, project.getBaseFolder().getVirtualFile().getId());
+            File projectDepDir = new File(temp, project.getBaseFolder().getVirtualFile().getId());
             if (projectDepDir.exists()) {
-                removeRecursive(projectDepDir.toPath());
+                JavaProjectService.removeRecursive(projectDepDir.toPath());
             }
 
             projectDepDir.mkdirs();
@@ -328,12 +266,9 @@ public class RestNameEnvironment {
             if (downloadLink != null) {
                 InputStream stream = doDownload(downloadLink.getHref());
                 ZipUtils.unzip(stream, projectDepDir);
-                JavaProject javaProject = cache.remove(wsId + projectPath);
-                if(javaProject != null) {
-                    javaProject.close();
-                }
+                javaProjectService.removeProject(wsId, projectPath);
             }
-        } catch (IOException | JavaModelException e) {
+        } catch (IOException e) {
             LOG.error("Error", e);
         }
     }
@@ -463,7 +398,7 @@ public class RestNameEnvironment {
         flags |= org.eclipse.jdt.core.ICompilationUnit.ENABLE_STATEMENTS_RECOVERY;
         flags |= org.eclipse.jdt.core.ICompilationUnit.IGNORE_METHOD_BODIES;
         flags |= org.eclipse.jdt.core.ICompilationUnit.ENABLE_BINDINGS_RECOVERY;
-        HashMap<String, String> opts = new HashMap<>(options);
+        HashMap<String, String> opts = new HashMap<>(javaProjectService.getOptions());
         CompilationUnitDeclaration compilationUnitDeclaration =
                 CodenvyCompilationUnitResolver.resolve(compilationUnit, project, environment, opts, flags, null);
         return CodenvyCompilationUnitResolver.convert(
