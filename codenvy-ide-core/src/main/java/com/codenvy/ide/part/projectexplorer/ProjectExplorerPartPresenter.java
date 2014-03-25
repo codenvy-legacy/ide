@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.part.projectexplorer;
 
-import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
@@ -35,7 +34,6 @@ import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.server.Constants;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
@@ -54,14 +52,12 @@ import javax.validation.constraints.NotNull;
  */
 @Singleton
 public class ProjectExplorerPartPresenter extends BasePresenter implements ProjectExplorerView.ActionDelegate, ProjectExplorerPart {
-    private final ProjectServiceClient                  projectServiceClient;
-    private final DtoUnmarshallerFactory                dtoUnmarshallerFactory;
-    protected     ProjectExplorerView                   view;
-    protected     EventBus                              eventBus;
-    private       ResourceProvider                      resourceProvider;
-    private       ContextMenuPresenter                  contextMenuPresenter;
-    private       SelectProjectTypePresenter            selectProjectTypePresenter;
-    private       ProjectPropertiesLocalizationConstant projectPropertiesLocalizationConstant;
+    protected ProjectExplorerView                   view;
+    protected EventBus                              eventBus;
+    private   ResourceProvider                      resourceProvider;
+    private   ContextMenuPresenter                  contextMenuPresenter;
+    private   SelectProjectTypePresenter            selectProjectTypePresenter;
+    private   ProjectPropertiesLocalizationConstant projectPropertiesLocalizationConstant;
 
     /**
      * Instantiates the ProjectExplorer Presenter.
@@ -72,9 +68,6 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
      * @param contextMenuPresenter
      * @param selectProjectTypePresenter
      * @param projectPropertiesLocalizationConstant
-     *
-     * @param projectServiceClient
-     * @param dtoUnmarshallerFactory
      */
     @Inject
     public ProjectExplorerPartPresenter(ProjectExplorerView view,
@@ -82,14 +75,10 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                                         ResourceProvider resourceProvider,
                                         ContextMenuPresenter contextMenuPresenter,
                                         SelectProjectTypePresenter selectProjectTypePresenter,
-                                        ProjectPropertiesLocalizationConstant projectPropertiesLocalizationConstant,
-                                        ProjectServiceClient projectServiceClient,
-                                        DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+                                        ProjectPropertiesLocalizationConstant projectPropertiesLocalizationConstant) {
         this.view = view;
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
-        this.projectServiceClient = projectServiceClient;
-        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.view.setTitle(projectPropertiesLocalizationConstant.projectExplorerTitleBarText());
         this.contextMenuPresenter = contextMenuPresenter;
         this.selectProjectTypePresenter = selectProjectTypePresenter;
@@ -121,7 +110,10 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
-                setContent(event.getProject().getParent());
+                if (event.getProject() != null)
+                    setContent(event.getProject().getParent());
+                else
+                    setContent(null);
 
                 // TODO: avoid asking project type while show list of all projects
 //                checkProjectType(event.getProject(), new AsyncCallback<Project>() {

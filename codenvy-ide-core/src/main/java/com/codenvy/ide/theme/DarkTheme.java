@@ -53,12 +53,12 @@ public class DarkTheme implements Theme {
     public String getSelectionBackground() {
         return "#256c9f";
     }
-    
+
     @Override
     public String getInactiveTabBackground() {
         return "#484848";
     }
-    
+
     @Override
     public String getInactiveTabBorderColor() {
         return "#353535";
@@ -68,7 +68,7 @@ public class DarkTheme implements Theme {
     public String getActiveTabBackground() {
         return "#5a5c5c";
     }
-    
+
     @Override
     public String getActiveTabBorderColor() {
         return "#232323";
@@ -141,7 +141,7 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getEditorBackgroundColor() {
-        return "#383838";
+        return "#373737";
     }
 
     @Override
@@ -332,5 +332,20 @@ public class DarkTheme implements Theme {
     @Override
     public String getButtonTextShadow() {
         return "rgba(0, 0, 0, 1)";
+    }
+
+    @Override
+    public String getTreeTextFileColor() {
+        return "#dbdbdb";
+    }
+
+    @Override
+    public String getTreeTextFolderColor() {
+        return "#888888";
+    }
+
+    @Override
+    public String getTreeTextShadow() {
+        return "rgba(0, 0, 0, 0.5)";
     }
 }
