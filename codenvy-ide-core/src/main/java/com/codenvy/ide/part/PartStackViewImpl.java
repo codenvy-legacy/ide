@@ -226,9 +226,9 @@ public class PartStackViewImpl extends Composite implements PartStackView {
 
         @Override
         protected void onLoad() {
-            final int padding = 15;//div(button) padding(see "partstack.css")
-            final int margin = 8;//text margin(see "partstack.css")
-            final int marginPicture = 4;//picture margin(see "partstack.css")
+            final int padding = 15;//div(button) padding
+            final int margin = 8;//text margin
+            final int marginPicture = 4;//picture margin
             int offsetWidth;
             super.onLoad();
             if (tabPosition == RIGHT) {
@@ -250,7 +250,6 @@ public class PartStackViewImpl extends Composite implements PartStackView {
             } else if (tabPosition == LEFT) {
                 tabItem.addStyleName(resources.partStackCss().idePartStackTabLeft());
                 offsetWidth = getElement().getOffsetWidth();
-                int topPadding;
                 if (icon != null) {
                     getElement().getStyle().setWidth((offsetWidth - padding * 2), Style.Unit.PX);
                     offsetWidth -= marginPicture;

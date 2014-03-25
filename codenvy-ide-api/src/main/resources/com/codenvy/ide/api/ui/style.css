@@ -50,6 +50,9 @@
 /* Tree */
 @eval hoverBackground com.codenvy.ide.api.ui.theme.Style.getHoverBackground();
 @eval selectionBackground com.codenvy.ide.api.ui.theme.Style.getSelectionBackground();
+@eval treeTextFileColor com.codenvy.ide.api.ui.theme.Style.getTreeTextFileColor();
+@eval treeTextFolderColor com.codenvy.ide.api.ui.theme.Style.getTreeTextFolderColor();
+@eval treeTextShadow com.codenvy.ide.api.ui.theme.Style.getTreeTextShadow();
 
 /* Button */
 @eval buttonTopColor com.codenvy.ide.api.ui.theme.Style.getButtonTopColor();
@@ -95,6 +98,7 @@
 /* Fonts */
 @def alternativeFontFamily "Helvetica Neue", "Myriad Pro","open sans", arial, sans-serif;
 @def fileTreeFontFamily "Helvetica Neue", "Myriad Pro","Lucida Grande", Verdana, Arial;
+@def fileTreeFontFamilyFile "Helvetica Neue Regular", "Myriad Pro","Lucida Grande", Verdana, Arial;
 @def mainFontFamily "Helvetica Neue", "Myriad Pro", arial, Verdana, Verdana, sans-serif;
 @def editorLineHeight 15px;
 @def editorFontFamily 'Andale Mono', monospace;

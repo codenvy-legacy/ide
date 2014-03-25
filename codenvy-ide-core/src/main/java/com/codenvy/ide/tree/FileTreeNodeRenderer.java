@@ -64,6 +64,12 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
 
         String label();
 
+        String folderFont();
+
+        String fileFont();
+
+        String defaultFont();
+
         String root();
 
         @Override
@@ -125,6 +131,13 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
             label = Elements.createSpanElement(css.label());
         }
 
+        if (item.isFolder()) {
+            label.addClassName(css.folderFont());
+        } else if (item.isFile()) {
+            label.addClassName(css.fileFont());
+        } else {
+            label.addClassName(css.defaultFont());
+        }
         label.setTextContent(name);
 
         root.appendChild(label);
@@ -135,7 +148,7 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
     private static Image detectIcon(Resource item) {
         Project project = item.getProject();
         Image icon = null;
-        if (project == null) return  iconRegistry.getDefaultIcon();
+        if (project == null) return iconRegistry.getDefaultIcon();
         final String projectTypeId = project.getDescription().getProjectTypeId();
         if (item instanceof Project)
             icon = iconRegistry.getIcon(projectTypeId + ".projecttype.small.icon");
@@ -206,9 +219,9 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
 //            // Update folder icon based on icon state.
 //            Element icon = treeNode.getNodeLabel().getFirstChildElement();
 //            icon.setClassName(css.icon());
-            //      if (treeNode.getData().isLoading()) {
-            //        icon.addClassName(css.folderLoading());
-            //      } else
+        //      if (treeNode.getData().isLoading()) {
+        //        icon.addClassName(css.folderLoading());
+        //      } else
 //            if (treeNode.isOpen()) {
 //                icon.addClassName(css.folderOpen());
 //            } else {

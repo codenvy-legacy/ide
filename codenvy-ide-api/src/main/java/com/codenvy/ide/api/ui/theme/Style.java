@@ -45,7 +45,7 @@ public class Style {
     public static String getInactiveTabBackground() {
         return theme.getInactiveTabBackground();
     }
-    
+
     public static String getInactiveTabBorderColor() {
         return theme.getInactiveTabBorderColor();
     }
@@ -53,7 +53,7 @@ public class Style {
     public static String getActiveTabBackground() {
         return theme.getActiveTabBackground();
     }
-    
+
     public static String getActiveTabBorderColor() {
         return theme.getActiveTabBorderColor();
     }
@@ -265,5 +265,17 @@ public class Style {
 
     public static String getButtonTextShadow() {
         return theme.getButtonTextShadow();
+    }
+
+    public static String getTreeTextFileColor() {
+        return theme.getTreeTextFileColor();
+    }
+
+    public static String getTreeTextFolderColor() {
+        return theme.getTreeTextFolderColor();
+    }
+
+    public static String getTreeTextShadow() {
+        return theme.getTreeTextShadow();
     }
 }

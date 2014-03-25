@@ -52,12 +52,12 @@ public class LightTheme implements Theme {
     public String getSelectionBackground() {
         return "#C3DEFF";
     }
-    
+
     @Override
     public String getInactiveTabBackground() {
         return "#d6d6d6";
     }
-    
+
     @Override
     public String getInactiveTabBorderColor() {
         return "#353535";
@@ -67,7 +67,7 @@ public class LightTheme implements Theme {
     public String getActiveTabBackground() {
         return "#ffffff";
     }
-    
+
     @Override
     public String getActiveTabBorderColor() {
         return "#232323";
@@ -331,5 +331,20 @@ public class LightTheme implements Theme {
     @Override
     public String getButtonTextShadow() {
         return "rgba(188, 195, 199, 0.5)";
+    }
+
+    @Override
+    public String getTreeTextFileColor() {
+        return "#7b7b7b";
+    }
+
+    @Override
+    public String getTreeTextFolderColor() {
+        return "#606060";
+    }
+
+    @Override
+    public String getTreeTextShadow() {
+        return "rgba(255, 255, 255, 0.5)";
     }
 }
