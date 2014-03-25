@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * @author andrew00x
  */
-public class Dockerfile {
+public class DockerImage {
     private String                     from;
     private List<String>               maintainer;
     private List<String>               run;
