@@ -133,18 +133,20 @@ public class MavenBuilder extends Builder {
                     final SourceManagerListener sourceListener = new SourceManagerListener() {
                         @Override
                         public void afterDownload(SourceManagerEvent event) {
-                            try {
-                                final String packaging = MavenUtils.getModel(workDir).getPackaging();
-                                if (packaging == null || "jar".equals(packaging)) {
-                                    Files.write(new java.io.File(workDir, ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES_FILE).toPath(),
-                                                ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES.getBytes());
-                                    commandLine.add("assembly:single");
-                                    commandLine.addPair("-Ddescriptor", ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES_FILE);
+                            if (workDir.equals(event.getWorkDir())) {
+                                try {
+                                    final String packaging = MavenUtils.getModel(workDir).getPackaging();
+                                    if (packaging == null || "jar".equals(packaging)) {
+                                        Files.write(new java.io.File(workDir, ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES_FILE).toPath(),
+                                                    ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES.getBytes());
+                                        commandLine.add("assembly:single");
+                                        commandLine.addPair("-Ddescriptor", ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES_FILE);
+                                    }
+                                } catch (IOException e) {
+                                    throw new IllegalStateException(e);
+                                } finally {
+                                    sourcesManager.removeListener(this);
                                 }
-                            } catch (IOException e) {
-                                throw new IllegalStateException(e);
-                            } finally {
-                                sourcesManager.removeListener(this);
                             }
                         }
                     };
