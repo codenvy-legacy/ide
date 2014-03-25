@@ -377,7 +377,19 @@ public interface Theme {
      */
     String getTabBorderShadow();
     /**
-     * @return the color of button "text-shadow"
+     * @return the color of button text-shadow
      */
     String getButtonTextShadow();
+    /**
+     * @return the color of tree file text
+     */
+    String getTreeTextFileColor();
+    /**
+     * @return the color of tree folder text
+     */
+    String getTreeTextFolderColor();
+    /**
+     * @return the color of tree text-shadow
+     */
+    String getTreeTextShadow();
 }
