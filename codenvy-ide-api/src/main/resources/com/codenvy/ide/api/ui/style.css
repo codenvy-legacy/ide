@@ -77,6 +77,7 @@
 @eval boxBorderColor com.codenvy.ide.api.ui.theme.Style.getBoxBorderColor();
 @eval boxBackgroundColor com.codenvy.ide.api.ui.theme.Style.getBoxBackgroundColor();
 @eval boxBackgroundColorDisabled com.codenvy.ide.api.ui.theme.Style.getBoxBackgroundColorDisabled();
+@eval boxTextColor com.codenvy.ide.api.ui.theme.Style.getBoxTextColor();
 @eval boxTextShadow com.codenvy.ide.api.ui.theme.Style.getBoxTextShadow();
 @eval boxInnerShadow com.codenvy.ide.api.ui.theme.Style.getBoxInnerShadow();
 @eval boxOuterShadow com.codenvy.ide.api.ui.theme.Style.getBoxOuterShadow();
