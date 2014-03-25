@@ -85,10 +85,21 @@ public class JavaSearchNameEnvironment implements INameEnvironment, SuffixConsta
     }
 
     public void cleanup() {
-        for (int i = 0, length = this.locations.length; i < length; i++) {
-            this.locations[i].cleanup();
+        for (ClasspathLocation location : this.locations) {
+            location.cleanup();
         }
     }
+
+    /**
+     * reset only source locations
+     */
+    public void reset() {
+        for (ClasspathLocation location : this.locations) {
+            if (location instanceof ClasspathSourceDirectory)
+                location.cleanup();
+        }
+    }
+
 
     private void computeClasspathLocations(JavaProject javaProject) {
 
