@@ -354,6 +354,12 @@ public class LightTheme implements Theme {
     }
 
     @Override
+    public String getBoxTextColor() {
+        return "#606060";
+    }
+
+
+    @Override
     public String getBoxInnerShadow() {
         return "0px 1px 2px 0px #777777 inset";
     }

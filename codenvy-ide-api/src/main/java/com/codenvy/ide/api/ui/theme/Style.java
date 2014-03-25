@@ -283,6 +283,10 @@ public class Style {
         return theme.getBoxBorderColor();
     }
 
+    public static String getBoxTextColor() {
+        return theme.getBoxTextColor();
+    }
+
     public static String getBoxInnerShadow() {
         return theme.getBoxInnerShadow();
     }

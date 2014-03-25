@@ -355,6 +355,11 @@ public class DarkTheme implements Theme {
     }
 
     @Override
+    public String getBoxTextColor() {
+        return "dbdbdb"; // same as main editor color ATM for dark
+    }
+
+    @Override
     public String getBoxInnerShadow() {
         return "0px 1px 2px 0px rgba(0, 0, 0, 0.19) inset";
     }
