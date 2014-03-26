@@ -422,9 +422,10 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 new AsyncRequestCallback<Array<ProjectReference>>(dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectReference.class)) {
                     @Override
                     protected void onSuccess(Array<ProjectReference> result) {
-                        if (result.isEmpty())
-                            eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(null));//TODO
-                        
+                        if (result.isEmpty()) {
+                            eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(null));
+                        }
+
                         for (ProjectReference item : result.asIterable()) {
                             Project project = new Project(eventBus, asyncRequestFactory, projectServiceClient, dtoUnmarshallerFactory);
                             project.setName(item.getName());
