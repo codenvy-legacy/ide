@@ -163,7 +163,7 @@ public class SDKRunner extends Runner {
         }
 
         final String workspace = sdkRunnerCfg.getRequest().getWorkspace();
-        final String project = sdkRunnerCfg.getRequest().getProject();
+        final String project = sdkRunnerCfg.getRequest().getProject().substring(1);
         final Path projectSourcesPath;
         try {
             projectSourcesPath = mountStrategy.getMountPath(workspace).toPath().resolve(project);

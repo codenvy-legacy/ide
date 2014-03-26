@@ -17,31 +17,35 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.fqn;
 
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Singleton;
 
 import javax.validation.constraints.NotNull;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: 5:05:01 PM Mar 28, 2012 evgen $
+ * @author Evgen Vidolob
  */
 @Singleton
 public class JavaFqnResolver implements FqnResolver {
-    /** Default Maven 'sourceDirectory' value */
-    private static final String DEFAULT_SOURCE_FOLDER = "src/main/java";
-
     /** {@inheritDoc} */
     @NotNull
     @Override
-    public String resolveFqn(@NotNull File file) {
-        Project project = file.getProject();
-        String sourcePath = project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder") : DEFAULT_SOURCE_FOLDER;
+    public String resolveFqn(@NotNull final File file) {
+        final JavaProject project = (JavaProject)file.getProject();
+        Array<String> sourceFolders = project.getDescription().getSourceFolders().getKeys();
 
-        String pack = file.getPath().substring((project.getPath() + "/" + sourcePath + "/").length());
-        pack = pack.replaceAll("/", ".");
-        pack = pack.substring(0, pack.lastIndexOf('.'));
-        return pack;
+        String fqn = "";
+        for (String sourceFolder : sourceFolders.asIterable()) {
+            if (file.getPath().startsWith(project.getPath() + "/" + sourceFolder)) {
+                fqn = file.getPath().substring((project.getPath() + "/" + sourceFolder + "/").length());
+                break;
+            }
+        }
+
+        fqn = fqn.replaceAll("/", ".");
+        fqn = fqn.substring(0, fqn.lastIndexOf('.'));
+        return fqn;
     }
 }

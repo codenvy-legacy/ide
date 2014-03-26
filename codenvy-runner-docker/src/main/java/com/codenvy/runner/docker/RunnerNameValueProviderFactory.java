@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- *
- *  [2012] - [2014] Codenvy, S.A.
+ * 
+ *  [2012] - [2014] Codenvy, S.A. 
  *  All Rights Reserved.
- *
+ * 
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -15,28 +15,30 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.server.projecttypes;
+package com.codenvy.runner.docker;
 
-import com.codenvy.api.project.server.FileEntry;
+import com.codenvy.api.project.server.FolderEntry;
 import com.codenvy.api.project.server.Project;
 import com.codenvy.api.project.server.ValueProviderFactory;
 import com.codenvy.api.project.shared.ValueProvider;
 
 import javax.inject.Singleton;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * {@link com.codenvy.api.project.server.ValueProviderFactory} implementation for 'builder.ant.source_folders' attribute.
- *
- * @author Artem Zatsarynnyy
+ * @author andrew00x
  */
 @Singleton
-public class AntSourceFoldersValueProviderFactory implements ValueProviderFactory {
+public class RunnerNameValueProviderFactory implements ValueProviderFactory {
+    // List of "known" dockerfiles that we expect to find in root folder of project.
+    // Decide to use DockerRunner if find any of this file in root directory of project.
+    private static final String[] DOCKER_FILES = new String[]{"run.dc5y", "debug.dc5y"};
 
     @Override
     public String getName() {
-        return "builder.ant.source_folders";
+        return com.codenvy.api.runner.internal.Constants.RUNNER_CUSTOM_LAUNCHER;
     }
 
     @Override
@@ -44,26 +46,19 @@ public class AntSourceFoldersValueProviderFactory implements ValueProviderFactor
         return new ValueProvider() {
             @Override
             public List<String> getValues() {
-                final List<String> list = new ArrayList<>();
-                FileEntry buildDescriptor = (FileEntry)project.getBaseFolder().getChild("build.xml");
-                if (buildDescriptor != null) {
-                    list.addAll(getAntSourceFolders(buildDescriptor));
+                final FolderEntry projectFolder = project.getBaseFolder();
+                for (String fName : DOCKER_FILES) {
+                    if (projectFolder.getChild(fName) != null) {
+                        return Arrays.asList("docker");
+                    }
                 }
-                return list;
+                return Collections.emptyList();
             }
 
             @Override
-            public void setValues(List<String> strings) {
-                // nothing to do
+            public void setValues(List<String> value) {
+                // noop
             }
         };
     }
-
-    private List<String> getAntSourceFolders(FileEntry buildXml) {
-        final String defaultSourceDirectoryPath = "src";
-        List<String> list = new ArrayList<>(1);
-        list.add(defaultSourceDirectoryPath);
-        return list;
-    }
-
 }

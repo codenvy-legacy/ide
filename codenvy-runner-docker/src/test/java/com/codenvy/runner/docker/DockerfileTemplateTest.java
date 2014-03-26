@@ -37,7 +37,7 @@ public class DockerfileTemplateTest {
                           "MAINTAINER Codenvy Corp\n" +
                           "ADD hello.jar /tmp/hello.jar\n" +
                           "CMD /bin/bash -cl \"java -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n -classpath /tmp/hello.jar test.Main name=andrew\"\n";
-        DockerfileTemplate template = DockerfileTemplate.of(templateContent);
+        DockerfileTemplate template = DockerfileTemplate.from("test", templateContent);
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("from", "base");
         parameters.put("app", "hello.jar");

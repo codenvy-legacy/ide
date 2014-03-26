@@ -938,6 +938,14 @@ public class JavaProject extends Openable implements IJavaProject {
         return null;
     }
 
+    public String getVfsId() {
+        try {
+            return project.getBaseFolder().getVirtualFile().getId();
+        } catch (VirtualFileSystemException e) {
+            return null;
+        }
+    }
+
     public static class ResolvedClasspath {
         IClasspathEntry[] resolvedClasspath;
         IJavaModelStatus                unresolvedEntryStatus     = JavaModelStatus.VERIFIED_OK;

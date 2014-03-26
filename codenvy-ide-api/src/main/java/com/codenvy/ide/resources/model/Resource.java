@@ -163,11 +163,10 @@ public abstract class Resource {
     /**
      * Set parent Project
      *
-     * @param proj
+     * @param project
      */
-    public void setProject(Project proj) {
-        this.project = proj;
-
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     /**

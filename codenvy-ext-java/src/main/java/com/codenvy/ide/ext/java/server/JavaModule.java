@@ -2,7 +2,7 @@
  * CODENVY CONFIDENTIAL
  * __________________
  *
- * [2012] - [2013] Codenvy, S.A.
+ * [2012] - [2014] Codenvy, S.A.
  * All Rights Reserved.
  *
  * NOTICE:  All information contained herein is, and remains
@@ -15,16 +15,20 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.jdi.client.fqn;
+package com.codenvy.ide.ext.java.server;
 
-import com.codenvy.ide.resources.model.File;
-
-import javax.validation.constraints.NotNull;
+import com.codenvy.inject.DynaModule;
+import com.google.inject.AbstractModule;
+import com.google.inject.name.Names;
 
 /**
  * @author Evgen Vidolob
  */
-public interface FqnResolver {
-    @NotNull
-    String resolveFqn(@NotNull File file);
+@DynaModule
+public class JavaModule extends AbstractModule {
+    @Override
+    protected void configure() {
+        bind(RestNameEnvironment.class);
+        bindConstant().annotatedWith(Names.named("project.temp")).to(System.getProperty("java.io.tmpdir"));
+    }
 }

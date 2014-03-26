@@ -195,12 +195,14 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     /** {@inheritDoc} */
     @Override
     public void createProject(final String name, ProjectDescriptor projectDescriptor, final AsyncCallback<Project> callback) {
-        final Folder rootFolder = vfsInfo.getRoot();
         final Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
         projectServiceClient.createProject(name, projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
-                Project project = new Project(eventBus, asyncRequestFactory, projectServiceClient, dtoUnmarshallerFactory);
+                Folder rootFolder = vfsInfo.getRoot();
+
+                final String language = result.getAttributes().get(LANGUAGE_ATTRIBUTE).get(0);
+                final Project project = getModelProvider(language).createProjectInstance();
                 project.setId(result.getId());
                 project.setAttributes(result.getAttributes());
                 project.setProjectType(result.getProjectTypeId());
@@ -208,6 +210,9 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 project.setParent(rootFolder);
                 project.setProject(project);
                 project.setVFSInfo(vfsInfo);
+
+                rootFolder.getChildren().clear();
+                rootFolder.addChild(project);
 
                 if (activeProject != null) {
                     eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
@@ -412,10 +417,14 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         final Folder rootFolder = vfsInfo.getRoot();
         rootFolder.getChildren().clear();
 
+
         projectServiceClient.getProjects(
                 new AsyncRequestCallback<Array<ProjectReference>>(dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectReference.class)) {
                     @Override
                     protected void onSuccess(Array<ProjectReference> result) {
+                        if (result.isEmpty())
+                            eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(null));//TODO
+                        
                         for (ProjectReference item : result.asIterable()) {
                             Project project = new Project(eventBus, asyncRequestFactory, projectServiceClient, dtoUnmarshallerFactory);
                             project.setName(item.getName());

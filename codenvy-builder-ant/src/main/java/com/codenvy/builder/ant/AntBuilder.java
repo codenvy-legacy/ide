@@ -180,16 +180,20 @@ public class AntBuilder extends Builder {
                     return new BuildResult(false);
                 }
                 final BuildResult result = new BuildResult(true);
+                boolean isJar = false;
                 for (AntEvent event : server.receiver.events) {
                     if (event.isPack()) {
                         final java.io.File file = event.getPack();
                         if (file.exists()) {
+                            isJar = "jar".equals(event.getPacking());
                             result.getResults().add(file);
                         }
                     }
                 }
-                if (config.getRequest().isIncludeDependencies()) {
-                    //get all needed dependencies from classpath
+                if (isJar && config.getRequest().isIncludeDependencies()) {
+                    result.getResults().clear();
+                    // Get all needed dependencies from classpath. Do that only for jar files. We need to have single jar that contains all
+                    // dependencies of project otherwise we won't be able to run application on runner side.
                     final Set<java.io.File> classpath = new LinkedHashSet<>();
                     for (AntEvent event : server.receiver.events) {
                         if (event.isPack()) {
@@ -204,6 +208,7 @@ public class AntBuilder extends Builder {
                     } catch (IOException e) {
                         throw new BuilderException("It is not possible to create jar with dependencies", e);
                     }
+                    result.getResults().add(jarWithDependencies);
                 }
                 return result;
             } else if (config.getTaskType() == BuilderTaskType.LIST_DEPS
@@ -444,6 +449,7 @@ public class AntBuilder extends Builder {
 
         java.io.File[] classpath;
         java.io.File   pack;
+        String         packaging;
 
         AntEvent(AntMessage message) {
             this.message = message;
@@ -453,6 +459,7 @@ public class AntBuilder extends Builder {
                 if ("javac".equals(antTask) && text != null && text.startsWith("Compilation argument")) {
                     classpath = parseClasspath(text);
                 } else if ("jar".equals(antTask) || "war".equals(antTask) || "ear".equals(antTask) || "zip".equals(antTask)) {
+                    packaging = antTask;
                     // Ant send messages in format: Building jar|war|ear|zip: <absolute path to file>. Try to get this path.
                     if (text != null && (text.startsWith("Building jar: ") || text.startsWith("Building war: ")
                                          || text.startsWith("Building ear: ") || text.startsWith("Building zip: "))) {
@@ -485,6 +492,10 @@ public class AntBuilder extends Builder {
         // Get jar|war|ear|zip file if this event related to pack ant-task
         java.io.File getPack() {
             return pack;
+        }
+
+        String getPacking() {
+            return packaging;
         }
 
         // Get classpath if this event related to compile ant-task
