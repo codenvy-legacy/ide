@@ -346,7 +346,7 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
         if (!activeTabIsVisible) {
             tabsPanel.insert(activeTab, 0);
         }
-        listTabsButton.setVisible(width > tabsPanel.getOffsetWidth());
+        listTabsButton.setVisible(width > tabsPanel.getOffsetWidth() && tabsPanel.getOffsetWidth() > 0);
 
         width = COUNTING_ERROR;
         if (listTabsButton.isVisible()) {
