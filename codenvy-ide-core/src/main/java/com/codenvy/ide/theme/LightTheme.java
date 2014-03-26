@@ -347,4 +347,8 @@ public class LightTheme implements Theme {
     public String getTreeTextShadow() {
         return "rgba(255, 255, 255, 0.5)";
     }
+
+    public String getButtonHoverTextColor() {
+        return "#000000";
+    }
 }

@@ -278,4 +278,8 @@ public class Style {
     public static String getTreeTextShadow() {
         return theme.getTreeTextShadow();
     }
+
+    public static String getButtonHoverTextColor() {
+        return theme.getButtonHoverTextColor();
+    }
 }

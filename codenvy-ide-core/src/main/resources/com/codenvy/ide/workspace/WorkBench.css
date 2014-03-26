@@ -25,7 +25,6 @@
 .ide-work-bench-tool-panel-left {
     /* panel where tab-buttons created*/
     background: tabsPanelBackground;
-    /*border-right: 1px solid tabBorder;*/
     margin-left: -1px;
     width: 17px;
     border-right: 1px solid tabBorderShadow;
@@ -36,7 +35,6 @@
 .ide-work-bench-tool-panel-right {
     /* panel where tab-buttons created*/
     background: tabsPanelBackground;
-    /*border-left: 1px solid tabBorder;*/
     width: 17px;
     margin-left: -1px;
     border-left: 1px solid tabBorderShadow;
@@ -47,7 +45,6 @@
 .ide-work-bench-tool-panel-bottom {
     /* panel where tab-buttons created*/
     background: tabsPanelBackground;
-    /*border-top: 1px solid tabBorder;*/
     height: 17px;
     margin-top: -1px;
     border-top: 1px solid tabBorderShadow;

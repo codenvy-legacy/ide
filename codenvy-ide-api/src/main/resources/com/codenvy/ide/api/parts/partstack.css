@@ -49,7 +49,6 @@
 .ide-PartStack .ide-PartStack-Tab span {
     /* margin between text and image */
     margin-right: 6px;
-    /*  margin-left: 4px; */
     white-space: nowrap;
     font-size: 11pt;
     line-height: 14px;
@@ -77,8 +76,6 @@
 .ide-PartStack .ide-PartStack-Tab-selected {
     /* tab that is currently selected (active) */
     cursor: default;
-    /*font-weight: bold;*/
-    /*padding: 3px;*/
     border: 1px solid tabBorder;
     height: 16px;
     background: activeTabBackground;
@@ -126,9 +123,7 @@
     transform-origin: 8px 9px;
     -webkit-transform-origin: 8px 9px; /* Safari and Chrome */
     -moz-transform-origin: 8px 9px; /* Firefox */
-    /*position: absolute;*/
     position: relative;
-    /*margin-left: 0 !important;*/
     box-shadow: 1px -1px 0px 0px tabBorderShadow;
     padding-left: 15px;
     padding-right: 15px;
@@ -151,11 +146,7 @@
 .ide-PartStack-Tool-Tab-selected {
     /* tab that is currently selected (active) */
     cursor: default;
-    /*font-weight: bold;*/
-    /*padding: 3px;*/
-    /*border-top: 2px solid activeTabBackground;*/
-    /*border: 1px solid tabBorder !important;*/
-    /*background-color: activeTabBackground !important;*/
+    color: inherit !important;
 }
 
 .ide-PartStack-Content {
@@ -166,19 +157,16 @@
 
 .ide-PartStack-Tool-Tab {
     /* tab button */
-    /*margin-top: 3px;*/
-    /*border-radius: 4px 4px 0 0;*/
-    /*-moz-border-radius: 4px 4px 0 0;*/
-    /*-webkit-border-radius: 4px 4px 0 0;*/
     border-right: 1px solid tabBorder;
-    /*padding: 3px;*/
     cursor: pointer;
     cursor: hand;
-    /*position: relative;*/
-    /*margin-top: -1px;*/
     height: 18px;
     font-size: 11px;
     display: inline-block;
+}
+
+.ide-PartStack-Tool-Tab:hover {
+    color: buttonHoverTextColor;
 }
 
 .ide-PartStack-Tab-Right-Button {
@@ -260,15 +248,11 @@
 }
 
 .ide-Base-Part-Toolbar {
-    /*background: -webkit-linear-gradient(top, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);*/
-    /*background: -moz-linear-gradient(top, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);*/
-    /*background: linear-gradient(to bottom, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);*/
     background-color: partToolbar;
     border-bottom: 1px solid tabBorder;
     box-shadow: 0px 2px 5px 0px partToolbarShadow;
     padding-left: 3px;
     padding-right: 5px;
-    /*border-left: 1px solid  rgb(150, 150, 150);*/
 }
 
 .ide-button-micro {

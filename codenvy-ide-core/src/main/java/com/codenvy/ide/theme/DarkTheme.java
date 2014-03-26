@@ -348,4 +348,8 @@ public class DarkTheme implements Theme {
     public String getTreeTextShadow() {
         return "rgba(0, 0, 0, 0.5)";
     }
+
+    public String getButtonHoverTextColor() {
+        return "#ffffff";
+    }
 }
