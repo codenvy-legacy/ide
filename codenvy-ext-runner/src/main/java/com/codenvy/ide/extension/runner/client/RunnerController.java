@@ -365,7 +365,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     afterApplicationLaunched(newAppDescriptor);
                 } else if (status == ApplicationStatus.STOPPED || status == ApplicationStatus.NEW) {
                     isLaunchingInProgress = false;
-                    applicationProcessDescriptor = null;
                     console.print(constant.applicationStopped(currentProject.getName()));
                     getLogs();
                     try {
@@ -373,6 +372,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     } catch (WebSocketException e) {
                         Log.error(RunnerController.class, e);
                     }
+                    applicationProcessDescriptor = null;
                 } else if (status == ApplicationStatus.CANCELLED) {
                     isLaunchingInProgress = false;
                     applicationProcessDescriptor = null;
