@@ -72,6 +72,10 @@ public class LightTheme implements Theme {
     public String getActiveTabBorderColor() {
         return "#232323";
     }
+    
+    public String getTabFontColor() {
+        return "#989898";
+    }
 
     @Override
     public String getTabsPanelBackground() {
