@@ -39,7 +39,7 @@ public class MultiModuleProjectTypeDescriptionExtension implements ProjectTypeDe
     @Override
     public List<ProjectType> getProjectTypes() {
         final List<ProjectType> list = new ArrayList<>(1);
-        list.add(new ProjectType(Constants.MULTI_MODULE_ID, Constants.MULTI_MODULE_NAME));
+        list.add(new ProjectType(Constants.MULTI_MODULE_ID, Constants.MULTI_MODULE_NAME, Constants.JAVA_CATEGORY));
         return list;
     }
 
