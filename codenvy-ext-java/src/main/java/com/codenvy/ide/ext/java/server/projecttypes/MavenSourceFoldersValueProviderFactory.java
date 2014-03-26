@@ -21,12 +21,10 @@ import com.codenvy.api.project.server.FileEntry;
 import com.codenvy.api.project.server.Project;
 import com.codenvy.api.project.server.ValueProviderFactory;
 import com.codenvy.api.project.shared.ValueProvider;
-import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.ide.maven.tools.MavenUtils;
 
 import org.apache.maven.model.Model;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,9 +37,6 @@ import java.util.List;
  */
 @Singleton
 public class MavenSourceFoldersValueProviderFactory implements ValueProviderFactory {
-
-    @Inject
-    private VirtualFileSystemRegistry registry;
 
     @Override
     public String getName() {
