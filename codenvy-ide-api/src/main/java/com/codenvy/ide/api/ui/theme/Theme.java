@@ -21,7 +21,6 @@ package com.codenvy.ide.api.ui.theme;
  * Theme is a collection of colors, fonts and supporting data that may be used by plugins to help provide uniform look and feel to their
  * components. <b>Note:</b><br/>
  * In this interface color means CSS color i.e : #eeeeee, rgb(1,1,1), rgba(1,1,1,1), red etc.
- * 
  * @author Evgen Vidolob
  */
 public interface Theme {
@@ -228,203 +227,174 @@ public interface Theme {
 
     /**
      * Background color of the gutter (left or right vertical panels in editor)
-     * 
      * @return the color
      */
     String getEditorGutterColor();
 
     /**
      * Color of key word token, produced by Codemirror parser
-     * 
      * @return the color
      */
     String getEditorKeyWord();
 
     /**
      * Color of atom token, produced by Codemirror parser
-     * 
      * @return the color
      */
     String getEditorAtom();
 
     /**
      * Color of number token, produced by Codemirror parser
-     * 
      * @return the color
      */
     String getEditorNumber();
 
     /**
      * Color of def token, produced by Codemirror parser
-     * 
      * @return the color
      */
     String getEditorDef();
 
     /**
      * Color of variable token, produced by Codemirror parser
-     * 
      * @return the color
      */
     String getEditorVariable();
 
     /**
      * Color of variable2 token, produced by Codemirror parser
-     * 
      * @return the color
      */
     String getEditorVariable2();
 
     /**
      * Color of property token, produced by Codemirror parser
-     * 
      * @return the color
      */
     String getEditorProperty();
 
     /**
      * Color of operator token, produced by Codemirror parser
-     * 
      * @return the color
      */
     String getEditorOperator();
 
     /**
      * Color of comment token, produced by Codemirror parser
-     * 
      * @return the color
      */
     String getEditorComment();
 
     /**
      * Color of string token, produced by Codemirror parser
-     * 
      * @return the color
      */
     String getEditorString();
 
     /**
      * Color of meta token, produced by Codemirror parser
-     * 
      * @return the color
      */
     String getEditorMeta();
 
     /**
      * Color of error token, produced by Codemirror parser
-     * 
      * @return the color
      */
     String getEditorError();
 
     /**
      * Color of builtin token, produced by Codemirror parser
-     * 
      * @return the color
      */
     String getEditorBuiltin();
 
     /**
      * Color of tag token, produced by Codemirror parser
-     * 
      * @return the color
      */
     String getEditorTag();
 
     /**
      * Color of attribute token, produced by Codemirror parser
-     * 
      * @return the color
      */
     String getEditorAttribute();
 
     /**
      * Color of string2 token, produced by Codemirror parser
-     * 
      * @return the color
      */
     String getEditorString2();
 
     /**
      * Background color of the window widget(used in new project wizard)
-     * 
      * @return the color
      */
     String getWindowContentBackground();
 
     /**
      * Background color of the window header (used in new project wizard)
-     * 
      * @return the color
      */
     String getWindowHeaderBackground();
 
     /**
      * New Project wizard steps background color(used in new project wizard, left vertical panel)
-     * 
      * @return the color
      */
     String getWizardStepsColor();
 
     /**
      * Border color of the steps panel in new project wizard
-     * 
      * @return the color
      */
     String getWizardStepsBorderColor();
 
     /**
      * Font color for welcome page text
-     * 
      * @return the color
      */
     String getWelcomeFontColor();
 
     /**
      * Font color for console text
-     * 
      * @return the color
      */
     String getConsolePanelColor();
 
     /**
      * Background color for odd rows in Cell Widgets
-     * 
      * @return the color
      */
     String getCellOddRowColor();
 
     /**
      * Background color for odd rows in Cell Widgets
-     * 
      * @return the color
      */
     String getCellOddEvenColor();
 
     /**
      * Background color for keyboard selected rows in Cell Widgets
-     * 
      * @return the color
      */
     String getCellKeyboardSelectedRowColor();
 
     /**
      * Background color for hovered rows in Cell Widgets
-     * 
      * @return
      */
     String getCellHoveredRow();
 
     /**
      * Background color of menu items
-     * 
      * @return the color
      */
     String getMainMenuBkgColor();
 
     /**
      * Font color for menu item text
-     * 
      * @return the color
      */
     String getMainMenuFontColor();
@@ -437,12 +407,10 @@ public interface Theme {
      * @return the color of border shadow
      */
     String getTabBorderShadow();
-
     /**
      * @return the color of button text-shadow
      */
     String getButtonTextShadow();
-
     /**
      * @return the color of tree file text
      */
@@ -455,6 +423,11 @@ public interface Theme {
      * @return the color of tree text-shadow
      */
     String getTreeTextShadow();
+
+    /**
+     * @return the color of button text if hover
+     */
+    String getButtonHoverTextColor();
 
     /* Boxes (listbox, textbox) properties */
 
