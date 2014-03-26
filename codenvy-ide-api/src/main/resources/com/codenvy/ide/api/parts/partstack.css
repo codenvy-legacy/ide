@@ -49,7 +49,7 @@
 .ide-PartStack .ide-PartStack-Tab span {
     /* margin between text and image */
     margin-right: 6px;
-   /*  margin-left: 4px; */
+    /*  margin-left: 4px; */
     white-space: nowrap;
     font-size: 11pt;
     line-height: 14px;
@@ -96,9 +96,9 @@
     -webkit-transform: rotate(270deg);
     -moz-transform: rotate(270deg);
     transform: rotate(270deg);
-    transform-origin: 8px 9px;
-    -webkit-transform-origin: 8px 9px; /* Safari and Chrome */
-    -moz-transform-origin: 8px 9px; /* Firefox */
+    transform-origin: 9px 9px;
+    -webkit-transform-origin: 9px 9px; /* Safari and Chrome */
+    -moz-transform-origin: 9px 9px; /* Firefox */
     /*position: absolute;*/
     position: relative;
     border-right: none !important;
@@ -115,7 +115,7 @@
     margin-left: 4px;
     text-shadow: 0px 1px 0px buttonTextShadow;
     position: relative;
-    top: 12%;
+    top: 14%;
     white-space: nowrap;
 }
 
@@ -132,13 +132,14 @@
     box-shadow: 1px -1px 0px 0px tabBorderShadow;
     padding-left: 15px;
     padding-right: 15px;
+    margin-top: -1px;
     white-space: nowrap;
 }
 
 .ide-PartStack-Tab-Below {
     /* tab button */
     border-right: 1px solid tabBorder;
-    box-shadow: 1px 0px 0px 0px tabBorderShadow;
+    box-shadow: 1px 1px 0px 0px tabBorderShadow;
     cursor: pointer;
     cursor: hand;
     position: relative;
@@ -220,27 +221,27 @@
 }
 
 .ide-PartStack-Multiple-Tabs-Container {
-	background-color: activeTabBackground;
-	border: 1px solid activeTabBorderColor;
-	border-top : none;
-	padding: 6 0;
+    background-color: activeTabBackground;
+    border: 1px solid activeTabBorderColor;
+    border-top: none;
+    padding: 6 0;
 }
 
 .ide-PartStack-Multiple-Tabs-Item {
-	font-family: mainFontFamily;
-	font-size: 11pt;
-	color : #d4d4d4;
+    font-family: mainFontFamily;
+    font-size: 11pt;
+    color: #d4d4d4;
     text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5);
-	height: 18px;
-	line-height: 18px;
-	margin-bottom: 2px;
-	padding: 0 sideBarHorizontalPadding;
+    height: 18px;
+    line-height: 18px;
+    margin-bottom: 2px;
+    padding: 0 sideBarHorizontalPadding;
 }
 
 .ide-PartStack-Multiple-Tabs-Item:hover {
-	background-color: selectionBackground;
-	cursor: pointer;
-	opacity: 0.5;
+    background-color: selectionBackground;
+    cursor: pointer;
+    opacity: 0.5;
 }
 
 .ide-PartStack-Multiple-Tabs-Item .CloseButton {
@@ -249,8 +250,8 @@
     opacity: 0.5;
     vertical-align: middle;
     margin-left: 6px;
-    margin-top: 6px; 
-    float:right;
+    margin-top: 6px;
+    float: right;
 }
 
 .ide-PartStack-Multiple-Tabs-Item .CloseButton:hover {

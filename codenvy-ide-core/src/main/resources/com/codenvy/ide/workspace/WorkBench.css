@@ -26,30 +26,38 @@
     /* panel where tab-buttons created*/
     background: tabsPanelBackground;
     /*border-right: 1px solid tabBorder;*/
-    width: 16px;
+    margin-left: -1px;
+    width: 17px;
     border-right: 1px solid tabBorderShadow;
     box-shadow: 1px 0px 0px 0px tabBorder;
+    z-index: 5;
 }
 
 .ide-work-bench-tool-panel-right {
     /* panel where tab-buttons created*/
     background: tabsPanelBackground;
     /*border-left: 1px solid tabBorder;*/
-    width: 16px;
-    margin-left: 1px;
+    width: 17px;
+    margin-left: -1px;
     border-left: 1px solid tabBorderShadow;
     box-shadow: -1px 0px 0px 0px tabBorder;
+    z-index: 5;
 }
 
 .ide-work-bench-tool-panel-bottom {
     /* panel where tab-buttons created*/
     background: tabsPanelBackground;
     /*border-top: 1px solid tabBorder;*/
-    height: 16px;
-    margin-top: 1px;
+    height: 17px;
+    margin-top: -1px;
     border-top: 1px solid tabBorderShadow;
     box-shadow: 0px -1px 0px 0px tabBorder;
+    z-index: 4;
 
+}
+
+.ide-work-bench-parent-panel > div {
+    overflow: visible !important;
 }
 
 img[name="workBenchIconMinimize"] {
