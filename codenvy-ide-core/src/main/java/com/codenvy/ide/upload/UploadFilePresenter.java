@@ -17,9 +17,22 @@
  */
 package com.codenvy.ide.upload;
 
+import com.codenvy.api.vfs.server.VirtualFileSystem;
+import com.codenvy.api.vfs.server.VirtualFileSystemFactory;
+import com.codenvy.api.vfs.server.VirtualFileSystemImpl;
+import com.codenvy.api.vfs.shared.dto.Link;
+import com.codenvy.ide.api.selection.Selection;
+import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Roman Nikitenko.
@@ -27,19 +40,78 @@ import javax.validation.constraints.NotNull;
 public class UploadFilePresenter implements UploadFileView.ActionDelegate {
 
     private UploadFileView view;
+    private SelectionAgent selectionAgent;
+    private String restContext;
+    private String workspaceId;
 
     @Inject
-    public UploadFilePresenter(UploadFileView view){
+    public UploadFilePresenter(UploadFileView view,
+                               @Named("restContext") String restContext,
+                               @Named("workspaceId") String workspaceId,
+                               SelectionAgent selectionAgent) {
+        this.restContext = restContext;
+        this.workspaceId = workspaceId;
+        this.selectionAgent = selectionAgent;
         this.view = view;
+        this.view.setDelegate(this);
+        this.view.setEnabledUploadButton(false);
+        this.view.setEnabledMimeType(false);
+
     }
 
     /** Show dialog. */
-    public void showDialog(){
+    public void showDialog() {
         view.showDialog();
     }
 
     @Override
     public void onCancelClicked() {
+        view.close();
+    }
 
+    @Override
+    public void onSubmitComplete(@NotNull String result) {
+        view.close();
+    }
+
+    @Override
+    public void onUploadClicked() {
+        view.setEncoding(FormPanel.ENCODING_MULTIPART);
+        String parentId = getParentId();
+        view.setAction(restContext + "/project/" + workspaceId + "/uploadfile/" + parentId);
+        view.submit();
+
+    }
+
+    @Override
+    public void onFileNameChanged() {
+        String fileName = view.getFileName();
+        boolean enabled = !fileName.isEmpty();
+        view.setEnabledUploadButton(enabled);
+        view.setEnabledMimeType(enabled);
+        view.setSupportedMimeTypes(getSupportedMimeTypes());
+    }
+
+    private List<String> getSupportedMimeTypes() {
+        List<String> mimeTypeList = new ArrayList<String>();
+//        for (FileType fileType : fileTypes) {
+//            mimeTypeList.add(fileType.getMimeType());
+//        }
+        //temporary code
+        mimeTypeList.add("application/xml");
+        mimeTypeList.add("application/atom+xml");
+        mimeTypeList.add("application/json");
+
+        return mimeTypeList;
+    }
+
+    private String getParentId(){
+        Selection<?> select = selectionAgent.getSelection();
+        Resource resource = null;
+        if (select != null && select.getFirstElement() instanceof Resource) {
+            Selection<Resource> selection = (Selection<Resource>)select;
+            resource = selection.getFirstElement();
+        }
+        return resource.getId();
     }
 }

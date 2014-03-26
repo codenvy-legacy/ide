@@ -17,13 +17,47 @@
  */
 package com.codenvy.ide.upload;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.user.client.ui.IsWidget;
+
+import javax.validation.constraints.NotNull;
+import java.util.List;
+
 /**
  * @author Roman Nikitenko.
  */
-public interface UploadFileView {
+public interface UploadFileView extends IsWidget {
+
     public interface ActionDelegate {
         void onCancelClicked();
+        void onSubmitComplete(@NotNull String result);
+        void onUploadClicked();
+        void onFileNameChanged();
     }
     /** Show dialog. */
     void showDialog();
+
+    /** Close dialog */
+    public void close();
+
+    public void setDelegate(ActionDelegate delegate);
+
+    void setEnabledUploadButton(boolean enabled);
+
+    public void onCancelClicked(ClickEvent event);
+
+    public void onUploadClicked(ClickEvent event);
+
+    public void setEncoding(@NotNull String encodingType);
+
+    public void setAction(@NotNull String url);
+
+    public void submit();
+
+    public void setEnabledMimeType(boolean enabled);
+
+    public void setSupportedMimeTypes(List<String> items);
+
+    @NotNull
+    String getFileName();
 }

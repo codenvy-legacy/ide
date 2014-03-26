@@ -19,11 +19,14 @@
 package com.codenvy.ide.actions;
 
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.upload.UploadFilePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Upload file Action
@@ -34,15 +37,40 @@ import com.google.inject.Singleton;
 public class UploadFileAction extends Action {
 
     private UploadFilePresenter presenter;
+    private boolean enabled = false;
+
     @Inject
-    public UploadFileAction(UploadFilePresenter presenter, CoreLocalizationConstant localization){
-        super(localization.uploadFileName(), localization.uploadFileDescription(), null);
+    public UploadFileAction(UploadFilePresenter presenter, CoreLocalizationConstant locale, EventBus eventBus) {
+        super(locale.uploadFileName(), locale.uploadFileDescription(), null);
         this.presenter = presenter;
+
+        eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
+            @Override
+            public void onProjectOpened(ProjectActionEvent event) {
+                enabled = true;
+            }
+
+            @Override
+            public void onProjectClosed(ProjectActionEvent event) {
+                enabled = false;
+            }
+
+            @Override
+            public void onProjectDescriptionChanged(ProjectActionEvent event) {
+
+            }
+        });
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
         presenter.showDialog();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void update(ActionEvent event) {
+        event.getPresentation().setEnabled(enabled);
     }
 }
