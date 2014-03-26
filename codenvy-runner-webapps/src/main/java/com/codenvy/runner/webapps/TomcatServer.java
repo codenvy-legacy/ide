@@ -24,7 +24,6 @@ import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.ApplicationLogger;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.api.runner.internal.DeploymentSources;
-import com.codenvy.api.runner.internal.DeploymentSourcesValidator;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.commons.lang.NamedThreadFactory;
 import com.codenvy.commons.lang.ZipUtils;
@@ -79,17 +78,15 @@ public class TomcatServer implements ApplicationServer {
             "  </Service>\n" +
             "</Server>\n";
     /** Validator to validate deployment sources. */
-    private final DeploymentSourcesValidator appValidator;
-    private final ExecutorService            pidTaskExecutor;
-    private final int                        memSize;
-    private final java.io.File               tomcatHome;
+    private final ExecutorService pidTaskExecutor;
+    private final int             memSize;
+    private final java.io.File    tomcatHome;
 
     @Inject
     public TomcatServer(@Named(MEM_SIZE_PARAMETER) int memSize,
                         @Named(TOMCAT_HOME_PARAMETER) java.io.File tomcatHome) {
         this.memSize = memSize;
         this.tomcatHome = tomcatHome;
-        this.appValidator = new JavaWebApplicationValidator();
         this.pidTaskExecutor = Executors.newCachedThreadPool(new NamedThreadFactory("TomcatServer-", true));
     }
 
@@ -104,7 +101,6 @@ public class TomcatServer implements ApplicationServer {
                                      ApplicationServerRunnerConfiguration runnerConfiguration,
                                      StopCallback stopCallback) throws RunnerException {
         final java.io.File myTomcatHome = getTomcatHome();
-        validate(toDeploy);
         try {
             final Path tomcatPath = Files.createDirectory(appDir.toPath().resolve("tomcat"));
             IoUtil.copy(myTomcatHome, tomcatPath.toFile(), null);
@@ -128,12 +124,6 @@ public class TomcatServer implements ApplicationServer {
             return startUnix(appDir, runnerConfiguration, stopCallback);
         } else {
             return startWindows(appDir, runnerConfiguration, stopCallback);
-        }
-    }
-
-    protected void validate(DeploymentSources toDeploy) throws RunnerException {
-        if (!appValidator.isValid(toDeploy)) {
-            throw new RunnerException(String.format("Invalid deployment. Cannot deploy this application in %s server", getName()));
         }
     }
 

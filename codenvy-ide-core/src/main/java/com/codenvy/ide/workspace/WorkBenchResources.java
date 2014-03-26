@@ -41,6 +41,9 @@ public interface WorkBenchResources extends ClientBundle {
 
         @ClassName("ide-rotate-180")
         String ideRotate180();
+
+        @ClassName("ide-work-bench-parent-panel")
+        String ideWorkBenchParentPanel();
     }
 
     @Source({"WorkBench.css", "com/codenvy/ide/api/ui/style.css"})

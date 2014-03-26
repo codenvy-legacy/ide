@@ -29,14 +29,24 @@
         .space {
             margin-right: 20px;
         }
-        .bottomPanel{
+
+        .bottomPanel {
             border-right: 1px solid tabBorder;
             border-left: 1px solid tabBorder;
             background-color: conColor;
             border-bottom: 1px solid tabBorder;
         }
+
+        .toolbarPanel {
+            margin-top: 0;
+            z-index: 6;
+        }
+
+        .dockLayoutPanel > div {
+            overflow: visible !important;
+        }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="100%" height="100%">
+    <g:DockLayoutPanel unit="PX" width="100%" height="100%" addStyleNames="{style.dockLayoutPanel}">
         <g:north size="21">
             <g:DockLayoutPanel>
                 <g:east size="170">
@@ -50,8 +60,8 @@
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>
-        <g:north size="30">
-            <g:SimplePanel width="100%" ui:field="toolbarPanel"/>
+        <g:north size="29">
+            <g:SimplePanel width="100%" height="30" ui:field="toolbarPanel" addStyleNames="{style.toolbarPanel}"/>
         </g:north>
         <g:south size="22">
             <g:SimplePanel width="100%" ui:field="statusPanel" addStyleNames="{style.bottomPanel}"/>

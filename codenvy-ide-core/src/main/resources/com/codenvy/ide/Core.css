@@ -42,12 +42,20 @@
         font-size: fontSize;
     }
 
-.gwt-ListBox{
-    color: mainFontColor;
-    background-color: partBackground;
-    border: 1px solid tabBorder;
-    border-radius: 2px;
-    font-size: fontSize
+.gwt-ListBox {
+    background-color: boxBackgroundColor;
+    color: boxTextColor;
+    border: 1px solid boxBorderColor;
+    border-radius: 1px;
+    box-shadow: boxInnerShadow, boxOuterShadow;
+    font-family: mainFontFamily;
+    font-size: boxFontSize;
+    font-weight: bold;
+    text-shadow: boxTextShadow;
+}
+
+.gwt-ListBox[disabled] {
+    background-color: boxBackgroundColorDisabled;
 }
 
 .gwt-RadioButton label {
@@ -86,16 +94,19 @@
     background: radial-gradient(ellipse at center, windowContentBackground 35%,radioButtonBackgroundColor 40%); /* W3C*/
 }
 
-.gwt-TextBox, .gwt-PasswordTextBox{
-    background-color: inputBackground;
-    color: mainFontColor;
-    border: 1px solid tabBorder;
-    border-radius: 2px;
-    font-size: fontSize;
+.gwt-TextBox, .gwt-PasswordTextBox {
+    background-color: boxBackgroundColor;
+    color: boxTextColor;
+    border: 1px solid boxBorderColor;
+    border-radius: 1px;
+    box-shadow: boxInnerShadow, boxOuterShadow;
+    font-family: mainFontFamily;
+    font-size: boxFontSize;
+    text-shadow: boxTextShadow;
 }
 
 .gwt-TextBox[disabled], .gwt-PasswordTextBox[disabled]{
-    background-color: tabsPanelBackground;
+    background-color: boxBackgroundColorDisabled;
 }
 
 .gwt-Button, button{

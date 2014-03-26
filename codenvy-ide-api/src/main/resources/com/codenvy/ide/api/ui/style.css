@@ -57,6 +57,7 @@
 /* Button */
 @eval buttonTopColor com.codenvy.ide.api.ui.theme.Style.getButtonTopColor();
 @eval buttonColor com.codenvy.ide.api.ui.theme.Style.getButtonColor();
+@eval buttonHoverTextColor com.codenvy.ide.api.ui.theme.Style.getButtonHoverTextColor();
 
 /* notable button */
 @eval notableButtonTopColor com.codenvy.ide.api.ui.theme.Style.getNotableButtonTopColor();
@@ -72,6 +73,15 @@
 @eval editorSelectionColor com.codenvy.ide.api.ui.theme.Style.getEditorSelectionColor();
 @eval editorInactiveSelectionColor com.codenvy.ide.api.ui.theme.Style.getEditorInactiveSelectionColor();
 @eval editoGutterColor com.codenvy.ide.api.ui.theme.Style.getEditorGutterColor();
+
+/* Listbox, TextBox... */
+@eval boxBorderColor com.codenvy.ide.api.ui.theme.Style.getBoxBorderColor();
+@eval boxBackgroundColor com.codenvy.ide.api.ui.theme.Style.getBoxBackgroundColor();
+@eval boxBackgroundColorDisabled com.codenvy.ide.api.ui.theme.Style.getBoxBackgroundColorDisabled();
+@eval boxTextColor com.codenvy.ide.api.ui.theme.Style.getBoxTextColor();
+@eval boxTextShadow com.codenvy.ide.api.ui.theme.Style.getBoxTextShadow();
+@eval boxInnerShadow com.codenvy.ide.api.ui.theme.Style.getBoxInnerShadow();
+@eval boxOuterShadow com.codenvy.ide.api.ui.theme.Style.getBoxOuterShadow();
 
 /* Sizes */
 @def dividerThickness 1px;
@@ -94,6 +104,7 @@
 @def secondaryTextFontSize 11px;
 @def largeLabel 14px;
 @def largeDropdownLabel 12px;
+@def boxFontSize 12px;
 
 /* Fonts */
 @def alternativeFontFamily "Helvetica Neue", "Myriad Pro","open sans", arial, sans-serif;
@@ -109,6 +120,7 @@
 @def fontMenuSize 12px;
 
 @eval mainFontColor com.codenvy.ide.api.ui.theme.Style.getMainFontColor();
+@eval tabFontColor com.codenvy.ide.api.ui.theme.Style.getTabFontColor();
 @eval welcomeFontColor com.codenvy.ide.api.ui.theme.Style.getWelcomeFontColor();
 @eval lightTextColor com.codenvy.ide.api.ui.theme.Style.getLightTextColor();
 @eval lightestTextColor com.codenvy.ide.api.ui.theme.Style.getLightestTextColor();

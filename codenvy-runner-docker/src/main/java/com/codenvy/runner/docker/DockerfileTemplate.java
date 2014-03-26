@@ -68,54 +68,67 @@ import java.util.regex.Pattern;
  *
  * @author andrew00x
  */
-public class DockerfileTemplate {
+class DockerfileTemplate {
     private final static Pattern TEMPLATE_PATTERN = Pattern.compile("\\$[^\\$^\\$]+\\$");
 
-    public static DockerfileTemplate of(java.io.File pattern) {
+    static DockerfileTemplate from(java.io.File template) {
+        if (template == null) {
+            throw new IllegalArgumentException("null value is not allowed");
+        }
+        return new DockerfileTemplate(template);
+    }
+
+    static DockerfileTemplate from(String name, String pattern) {
         if (pattern == null) {
             throw new IllegalArgumentException("null value is not allowed");
         }
-        return new DockerfileTemplate(pattern);
+        return new DockerfileTemplate(name, pattern);
     }
 
-    public static DockerfileTemplate of(String pattern) {
-        if (pattern == null) {
-            throw new IllegalArgumentException("null value is not allowed");
-        }
-        return new DockerfileTemplate(pattern);
-    }
-
-    private final java.io.File        patternFile;
-    private final String              patternString;
+    private final String              name;
+    private final java.io.File        templateFile;
+    private final String              templateString;
     private final Map<String, Object> parameters;
 
-    public DockerfileTemplate setParameter(String name, Object value) {
+    String getName() {
+        return name;
+    }
+
+    java.io.File getFile() {
+        return templateFile;
+    }
+
+    DockerfileTemplate setParameter(String name, Object value) {
         parameters.put(name, value);
         return this;
     }
 
-    public DockerfileTemplate setParameters(Map<String, ?> parameters) {
+    DockerfileTemplate setParameters(Map<String, ?> parameters) {
         this.parameters.putAll(parameters);
         return this;
     }
 
-    public Object getParameter(String name) {
+    Object getParameter(String name) {
         return parameters.get(name);
     }
 
-    public DockerfileTemplate clearParameters() {
+    DockerfileTemplate clearParameters() {
         parameters.clear();
         return this;
     }
 
-    public void writeDockerfile(java.io.File path) throws IOException {
+    void writeDockerfile(java.io.File path) throws IOException {
         try (FileWriter output = new FileWriter(path)) {
             writeDockerfile(output);
         }
     }
 
-    public void writeDockerfile(Appendable output) throws IOException {
-        try (Reader input = patternString == null ? new FileReader(patternFile) : new StringReader(patternString)) {
+    Reader getReader() throws IOException {
+        return templateString == null ? new FileReader(templateFile) : new StringReader(templateString);
+    }
+
+    void writeDockerfile(Appendable output) throws IOException {
+        try (Reader input = getReader()) {
             StringBuilder buf = null;
             for (String line : CharStreams.readLines(input)) {
                 final Matcher matcher = TEMPLATE_PATTERN.matcher(line);
@@ -143,15 +156,17 @@ public class DockerfileTemplate {
         }
     }
 
-    private DockerfileTemplate(java.io.File pattern) {
-        this.patternFile = pattern;
-        this.patternString = null;
+    private DockerfileTemplate(java.io.File template) {
+        this.name = template.getName();
+        this.templateFile = template;
+        this.templateString = null;
         this.parameters = new LinkedHashMap<>();
     }
 
-    private DockerfileTemplate(String pattern) {
-        this.patternFile = null;
-        this.patternString = pattern;
+    private DockerfileTemplate(String name, String template) {
+        this.name = name;
+        this.templateFile = null;
+        this.templateString = template;
         this.parameters = new LinkedHashMap<>();
     }
 }
