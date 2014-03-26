@@ -77,7 +77,7 @@ public abstract class BaseDockerRunner extends Runner {
     private static final Pattern DEBUG_PORT_PATTERN =
             Pattern.compile("APPLICATION_PORT_([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-6][0-5][0-5][0-3][0-5])_DEBUG");
 
-    private final Map<String, ImageUsage> dockerImageUsage;
+    private final Map<String, ImageUsage> dockerImageUsages;
     private final String                  hostName;
     private final CustomPortService       portService;
 
@@ -90,7 +90,7 @@ public abstract class BaseDockerRunner extends Runner {
         super(deployDirectoryRoot, cleanupDelay, allocators, eventService);
         this.hostName = hostName;
         this.portService = portService;
-        this.dockerImageUsage = new HashMap<>();
+        this.dockerImageUsages = new HashMap<>();
     }
 
     @Override
@@ -216,16 +216,25 @@ public abstract class BaseDockerRunner extends Runner {
                                                       String tag,
                                                       java.io.File dockerFile,
                                                       java.io.File applicationFile) throws IOException, RunnerException {
-        String dockerImageId = null;
-        final Image[] images = connector.listImages();
-        for (int i = 0, l = images.length; i < l && dockerImageId == null; i++) {
-            Image image = images[i];
-            if (dockerRepoName.equals(image.getRepository()) && tag.equals(image.getTag())) {
-                dockerImageId = image.getId();
+        final String dockerImageName = dockerRepoName + ':' + tag;
+        ImageUsage imageUsage = dockerImageUsages.get(dockerImageName);
+        if (imageUsage != null) {
+            Image image = null;
+            final Image[] images = connector.listImages();
+            for (int i = 0, l = images.length; i < l && image == null; i++) {
+                // We'll get short form of image id if create new image .
+                // Unfortunately we'll get long form of id if get list of existed images.
+                // That's why use 'startsWith' instead of 'equals'.
+                if (images[i].getId().startsWith(imageUsage.image)) {
+                    image = images[i];
+                }
+            }
+            if (image == null) {
+                dockerImageUsages.remove(dockerImageName);
+                imageUsage = null;
             }
         }
-        final String dockerImageName = dockerRepoName + ':' + tag;
-        if (dockerImageId == null) {
+        if (imageUsage == null) {
             final StringBuilder output = new StringBuilder();
             connector.createImage(dockerFile, applicationFile, dockerRepoName, tag, output);
             final String buildLog = output.toString();
@@ -235,6 +244,7 @@ public abstract class BaseDockerRunner extends Runner {
                     throw new RunnerException(String.format("Error building Docker container, response from Docker API:\n%s\n", buildLog));
                 }
             }
+            String imageId = null;
             final Matcher matcher = BUILD_LOG_PATTERN.matcher(buildLog);
             if (matcher.find()) {
                 do {
@@ -244,20 +254,17 @@ public abstract class BaseDockerRunner extends Runner {
                         while (endSize < msg.length() && Character.digit(msg.charAt(endSize), 16) != -1) {
                             endSize++;
                         }
-                        dockerImageId = msg.substring(29, endSize);
+                        imageId = msg.substring(29, endSize);
                     }
                 } while (matcher.find());
             }
-            if (dockerImageId == null) {
+            if (imageId == null) {
                 throw new RunnerException("Invalid response from Docker API, can't get ID of newly created image");
             }
-            LOG.debug("Create new image {}, id {}", dockerImageName, dockerImageId);
+            LOG.debug("Create new image {}, id {}", dockerImageName, imageId);
+            dockerImageUsages.put(dockerImageName, imageUsage = new ImageUsage(imageId));
         } else {
-            LOG.debug("Image {} exists, id {}", dockerImageName, dockerImageId);
-        }
-        ImageUsage imageUsage = dockerImageUsage.get(dockerImageName);
-        if (imageUsage == null) {
-            dockerImageUsage.put(dockerImageName, imageUsage = new ImageUsage(dockerImageId));
+            LOG.debug("Image {} exists, id {}", dockerImageName, imageUsage.image);
         }
         return imageUsage;
     }
@@ -289,18 +296,6 @@ public abstract class BaseDockerRunner extends Runner {
 
         synchronized int dec() {
             return --count;
-        }
-
-        synchronized int count() {
-            return count;
-        }
-
-        @Override
-        public String toString() {
-            return "ImageUsage{" +
-                   "image='" + image + '\'' +
-                   ", count=" + count +
-                   '}';
         }
     }
 

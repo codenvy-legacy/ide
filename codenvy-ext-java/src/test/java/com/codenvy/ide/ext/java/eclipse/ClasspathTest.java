@@ -57,7 +57,7 @@ public class ClasspathTest extends LocalFileSystemTest{
         headers.put("Content-Type", Arrays.asList("application/zip"));
         launcher.service("POST", path, BASE_URI, headers, zipProject, null, null);
         ProjectTypeRegistry typeRegistry = new ProjectTypeRegistry();
-        typeRegistry.registerProjectType(new ProjectType("test_type", "test type"));
+        typeRegistry.registerProjectType(new ProjectType("test_type", "test type", "test category"));
 
     }
 

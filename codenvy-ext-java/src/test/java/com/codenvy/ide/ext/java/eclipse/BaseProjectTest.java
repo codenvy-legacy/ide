@@ -54,7 +54,7 @@ public class BaseProjectTest extends LocalFileSystemTest {
     @BeforeClass
     public static void init() throws Exception {
         ProjectTypeRegistry typeRegistry = new ProjectTypeRegistry();
-        typeRegistry.registerProjectType(new ProjectType("test_type", "test type"));
+        typeRegistry.registerProjectType(new ProjectType("test_type", "test type", "test category"));
         ProjectTypeDescriptionRegistry ptdr = new ProjectTypeDescriptionRegistry(typeRegistry);
         Set<ValueProviderFactory> vpf = Collections.EMPTY_SET;
         pm = new ProjectManager(typeRegistry, ptdr, vpf, virtualFileSystemRegistry);
