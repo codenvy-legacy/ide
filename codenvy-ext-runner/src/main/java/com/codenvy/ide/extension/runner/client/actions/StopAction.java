@@ -59,7 +59,8 @@ public class StopAction extends Action {
         Project activeProject = resourceProvider.getActiveProject();
         if (activeProject != null) {
             // If project has defined a runner, let see the action
-            e.getPresentation().setVisible(activeProject.getAttributeValue("runner.name") != null);
+            e.getPresentation().setVisible(activeProject.getAttributeValue("runner.name") != null
+                                           || activeProject.getAttributeValue("runner.user_defined_launcher") != null);
             e.getPresentation().setEnabled(controller.isAnyAppLaunched());
         } else {
             e.getPresentation().setEnabledAndVisible(false);

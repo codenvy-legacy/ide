@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- * 
- *  [2012] - [2013] Codenvy, S.A. 
- *  All Rights Reserved.
- * 
+ *
+ * [2012] - [2014] Codenvy, S.A.
+ * All Rights Reserved.
+ *
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -15,21 +15,20 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.runner.docker;
+package com.codenvy.ide.ext.java.server;
 
-import com.codenvy.api.project.server.ValueProviderFactory;
-import com.codenvy.api.runner.internal.Runner;
 import com.codenvy.inject.DynaModule;
 import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.Multibinder;
+import com.google.inject.name.Names;
 
-/** @author andrew00x */
+/**
+ * @author Evgen Vidolob
+ */
 @DynaModule
-public class DockerRunnerModule extends AbstractModule {
+public class JavaModule extends AbstractModule {
     @Override
     protected void configure() {
-        Multibinder.newSetBinder(binder(), Runner.class).addBinding().to(DockerRunner.class);
-        Multibinder.newSetBinder(binder(), ValueProviderFactory.class).addBinding().to(RunnerNameValueProviderFactory.class);
-        bind(EmbeddedDockerRunnerRegistryPlugin.class).asEagerSingleton();
+        bind(RestNameEnvironment.class);
+        bindConstant().annotatedWith(Names.named("project.temp")).to(System.getProperty("java.io.tmpdir"));
     }
 }

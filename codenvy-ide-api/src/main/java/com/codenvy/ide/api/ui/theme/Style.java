@@ -19,7 +19,7 @@ package com.codenvy.ide.api.ui.theme;
 
 /**
  * This class contains constants for style. Fields initialized from user preferences. Static methods used for bridging with CssResources
- *
+ * 
  * @author Evgen Vidolob
  */
 public class Style {
@@ -53,6 +53,10 @@ public class Style {
     public static String getActiveTabBackground() {
         return theme.getActiveTabBackground();
     }
+    
+    public static String getTabFontColor() {
+        return theme.getTabFontColor();
+    }
 
     public static String getActiveTabBorderColor() {
         return theme.getActiveTabBorderColor();
@@ -85,7 +89,7 @@ public class Style {
     public static String getMainFontColor() {
         return theme.getMainFontColor();
     }
-
+    
     public static String getRadioButtonBackgroundColor() {
         return theme.getRadioButtonBackgroundColor();
     }
@@ -277,6 +281,34 @@ public class Style {
 
     public static String getTreeTextShadow() {
         return theme.getTreeTextShadow();
+    }
+
+    public static String getBoxBorderColor() {
+        return theme.getBoxBorderColor();
+    }
+
+    public static String getBoxTextColor() {
+        return theme.getBoxTextColor();
+    }
+
+    public static String getBoxInnerShadow() {
+        return theme.getBoxInnerShadow();
+    }
+
+    public static String getBoxOuterShadow() {
+        return theme.getBoxOuterShadow();
+    }
+
+    public static String getBoxBackgroundColor() {
+        return theme.getBoxBackgroundColor();
+    }
+
+    public static String getBoxBackgroundColorDisabled() {
+        return theme.getBoxBackgroundColorDisabled();
+    }
+
+    public static String getBoxTextShadow() {
+        return theme.getBoxTextShadow();
     }
 
     public static String getButtonHoverTextColor() {
