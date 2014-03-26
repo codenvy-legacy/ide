@@ -145,6 +145,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
     }
 
     private void refreshPath(Folder rootFolder, final String pathToRefresh, final AsyncCallback<Resource> callback) {
+        // Avoid redundant requests. Use cached project structure.
         if (!rootFolder.getChildren().isEmpty()) {
             for (Resource child : rootFolder.getChildren().asIterable()) {
                 if (pathToRefresh.equals(child.getPath())) {
