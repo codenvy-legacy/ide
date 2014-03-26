@@ -57,6 +57,7 @@
 /* Button */
 @eval buttonTopColor com.codenvy.ide.api.ui.theme.Style.getButtonTopColor();
 @eval buttonColor com.codenvy.ide.api.ui.theme.Style.getButtonColor();
+@eval buttonHoverTextColor com.codenvy.ide.api.ui.theme.Style.getButtonHoverTextColor();
 
 /* notable button */
 @eval notableButtonTopColor com.codenvy.ide.api.ui.theme.Style.getNotableButtonTopColor();
@@ -119,6 +120,7 @@
 @def fontMenuSize 12px;
 
 @eval mainFontColor com.codenvy.ide.api.ui.theme.Style.getMainFontColor();
+@eval tabFontColor com.codenvy.ide.api.ui.theme.Style.getTabFontColor();
 @eval welcomeFontColor com.codenvy.ide.api.ui.theme.Style.getWelcomeFontColor();
 @eval lightTextColor com.codenvy.ide.api.ui.theme.Style.getLightTextColor();
 @eval lightestTextColor com.codenvy.ide.api.ui.theme.Style.getLightestTextColor();

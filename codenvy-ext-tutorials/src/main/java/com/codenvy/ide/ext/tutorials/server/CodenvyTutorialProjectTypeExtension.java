@@ -44,7 +44,7 @@ public class CodenvyTutorialProjectTypeExtension implements ProjectTypeExtension
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType(Constants.TUTORIAL_ID, Constants.TUTORIAL_NAME);
+        return new ProjectType(Constants.TUTORIAL_ID, Constants.TUTORIAL_NAME, Constants.CODENVY_TUTORIAL_CATEGORY);
     }
 
     @Override

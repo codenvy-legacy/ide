@@ -44,7 +44,7 @@ public class JarProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType(Constants.JAR_ID, Constants.JAR_NAME);
+        return new ProjectType(Constants.JAR_ID, Constants.JAR_NAME, Constants.JAVA_CATEGORY);
     }
 
     @Override

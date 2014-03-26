@@ -44,7 +44,7 @@ public class SpringProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType(Constants.SPRING_ID, Constants.SPRING_NAME);
+        return new ProjectType(Constants.SPRING_ID, Constants.SPRING_NAME, Constants.JAVA_CATEGORY);
     }
 
     @Override

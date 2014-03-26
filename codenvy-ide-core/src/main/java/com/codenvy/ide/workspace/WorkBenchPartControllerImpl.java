@@ -28,7 +28,7 @@ import com.google.gwt.user.client.ui.SplitLayoutPanel;
  */
 public class WorkBenchPartControllerImpl implements WorkBenchPartController {
 
-    public static final int  DURATION = 800;
+    public static final int  DURATION = 200;
     private SplitLayoutPanel splitLayoutPanel;
 
     private SimplePanel      widget;

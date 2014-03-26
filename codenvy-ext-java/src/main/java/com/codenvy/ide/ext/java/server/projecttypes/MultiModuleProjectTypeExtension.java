@@ -28,9 +28,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /** @author Artem Zatsarynnyy */
 @Singleton
@@ -42,7 +40,7 @@ public class MultiModuleProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType(Constants.MULTI_MODULE_ID, Constants.MULTI_MODULE_NAME);
+        return new ProjectType(Constants.MULTI_MODULE_ID, Constants.MULTI_MODULE_NAME, Constants.JAVA_CATEGORY);
     }
 
     @Override
