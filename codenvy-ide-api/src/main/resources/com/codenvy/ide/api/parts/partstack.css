@@ -44,6 +44,11 @@
     position: relative;
     display: inline-block;
     height: 14px;
+    color: tabFontColor;
+}
+
+.ide-PartStack .ide-PartStack-Tab:hover {
+    color: mainFontColor;
 }
 
 .ide-PartStack .ide-PartStack-Tab span {
@@ -51,7 +56,7 @@
     margin-right: 6px;
    /*  margin-left: 4px; */
     white-space: nowrap;
-    font-size: 11pt;
+    font-size: 11px;
     line-height: 14px;
     text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5);
 }
@@ -82,6 +87,7 @@
     border: 1px solid tabBorder;
     height: 16px;
     background: activeTabBackground;
+    color: mainFontColor;
 }
 
 .ide-PartStack-focused {
@@ -228,12 +234,11 @@
 
 .ide-PartStack-Multiple-Tabs-Item {
 	font-family: mainFontFamily;
-	font-size: 11pt;
+	font-size: 11px;
 	color : #d4d4d4;
     text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5);
 	height: 18px;
 	line-height: 18px;
-	margin-bottom: 2px;
 	padding: 0 sideBarHorizontalPadding;
 }
 

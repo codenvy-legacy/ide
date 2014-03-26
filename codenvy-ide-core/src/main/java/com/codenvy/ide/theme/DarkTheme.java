@@ -73,6 +73,11 @@ public class DarkTheme implements Theme {
     public String getActiveTabBorderColor() {
         return "#232323";
     }
+    
+    @Override
+    public String getTabFontColor() {
+        return "#989898";
+    }
 
     @Override
     public String getTabsPanelBackground() {

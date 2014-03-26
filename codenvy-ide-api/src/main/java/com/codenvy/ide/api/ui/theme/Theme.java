@@ -84,6 +84,13 @@ public interface Theme {
      * @return the color
      */
     String getActiveTabBorderColor();
+    
+    /**
+     * Font color for active(slected) tab.
+     * 
+     * @return the color
+     */
+    String getTabFontColor();
 
     /**
      * Background color of part stack panel(where placed part button)

@@ -53,6 +53,10 @@ public class Style {
     public static String getActiveTabBackground() {
         return theme.getActiveTabBackground();
     }
+    
+    public static String getTabFontColor() {
+        return theme.getTabFontColor();
+    }
 
     public static String getActiveTabBorderColor() {
         return theme.getActiveTabBorderColor();
@@ -85,7 +89,7 @@ public class Style {
     public static String getMainFontColor() {
         return theme.getMainFontColor();
     }
-
+    
     public static String getRadioButtonBackgroundColor() {
         return theme.getRadioButtonBackgroundColor();
     }
