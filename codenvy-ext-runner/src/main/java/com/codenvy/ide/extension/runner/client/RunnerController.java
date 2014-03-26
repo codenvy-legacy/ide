@@ -364,6 +364,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     isLaunchingInProgress = false;
                     afterApplicationLaunched(newAppDescriptor);
                 } else if (status == ApplicationStatus.STOPPED || status == ApplicationStatus.NEW) {
+                    isLaunchingInProgress = false;
+                    applicationProcessDescriptor = null;
                     console.print(constant.applicationStopped(currentProject.getName()));
                     getLogs();
                     try {
