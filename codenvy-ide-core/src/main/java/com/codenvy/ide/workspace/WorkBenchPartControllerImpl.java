@@ -22,21 +22,21 @@ import com.google.gwt.user.client.ui.SplitLayoutPanel;
 
 /**
  * Implementation of WorkBenchPartController, used with SplitLayoutPanel as container
- *
+ * 
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
 public class WorkBenchPartControllerImpl implements WorkBenchPartController {
 
-    public static final int DURATION = 300;
+    public static final int  DURATION = 200;
     private SplitLayoutPanel splitLayoutPanel;
 
-    private SimplePanel widget;
+    private SimplePanel      widget;
 
     public WorkBenchPartControllerImpl(SplitLayoutPanel splitLayoutPanel, SimplePanel widget) {
         this.splitLayoutPanel = splitLayoutPanel;
         this.widget = widget;
-        setHidden(true);
+        splitLayoutPanel.setWidgetHidden(widget, true);
     }
 
     /** {@inheritDoc} */
@@ -55,7 +55,10 @@ public class WorkBenchPartControllerImpl implements WorkBenchPartController {
     /** {@inheritDoc} */
     @Override
     public void setHidden(boolean hidden) {
-        splitLayoutPanel.setWidgetHidden(widget, hidden);
+        if (!hidden) {
+            splitLayoutPanel.setWidgetHidden(widget, hidden);
+        }
+        splitLayoutPanel.setWidgetSize(widget, hidden ? 0 : getSize());
         splitLayoutPanel.animate(DURATION);
     }
 }

@@ -21,10 +21,12 @@ package com.codenvy.ide.server;
 public interface Constants {
     // project type ids
     final String UNKNOWN_ID                   = "unknown";
+    final String UNKNOWN_CATEGORY             = UNKNOWN_ID;
     final String CODENVY_PLUGIN_ID            = "codenvy_extension";
     // project type names
     final String UNKNOWN_NAME                 = "Unknown project type";
     final String CODENVY_PLUGIN_NAME          = "Codenvy extension";
+    final String CODENVY_CATEGORY             = "Condevy";
     // project attribute names
     final String LANGUAGE                     = "language";
     final String LANGUAGE_VERSION             = "language.version";

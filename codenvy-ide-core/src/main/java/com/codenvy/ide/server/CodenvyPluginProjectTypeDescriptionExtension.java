@@ -38,7 +38,7 @@ public class CodenvyPluginProjectTypeDescriptionExtension implements ProjectType
     @Override
     public List<ProjectType> getProjectTypes() {
         final List<ProjectType> list = new ArrayList<>(1);
-        list.add(new ProjectType(Constants.CODENVY_PLUGIN_ID, Constants.CODENVY_PLUGIN_NAME));
+        list.add(new ProjectType(Constants.CODENVY_PLUGIN_ID, Constants.CODENVY_PLUGIN_NAME, Constants.CODENVY_CATEGORY));
         return list;
     }
 
