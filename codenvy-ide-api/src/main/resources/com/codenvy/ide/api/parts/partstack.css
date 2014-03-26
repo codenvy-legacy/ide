@@ -28,7 +28,7 @@
 }
 
 .ide-PartStack .ide-PartStack-Editor-Content {
-    border: 2px solid activeTabBackground;
+    border: 3px solid activeTabBackground;
     background-color: activeTabBackground;
 }
 
