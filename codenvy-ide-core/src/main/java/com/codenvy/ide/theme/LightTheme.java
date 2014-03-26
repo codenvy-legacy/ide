@@ -387,4 +387,8 @@ public class LightTheme implements Theme {
     public String getBoxTextShadow() {
         return "0px 1px 0px #ffffff";
     }
+
+    public String getButtonHoverTextColor() {
+        return "#000000";
+    }
 }

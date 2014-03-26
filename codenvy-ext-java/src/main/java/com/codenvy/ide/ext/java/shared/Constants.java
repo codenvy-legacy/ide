@@ -29,6 +29,8 @@ public interface Constants {
     final String WAR_NAME                     = "Java Web Application (WAR)";
     final String SPRING_NAME                  = "Spring Application";
     final String MULTI_MODULE_NAME            = "Maven Multi Module Project";
+    // project categories
+    final String JAVA_CATEGORY                = "Java";
     // project attribute names
     final String LANGUAGE                     = "language";
     final String LANGUAGE_VERSION             = "language.version";

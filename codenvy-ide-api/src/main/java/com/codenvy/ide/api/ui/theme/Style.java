@@ -310,4 +310,8 @@ public class Style {
     public static String getBoxTextShadow() {
         return theme.getBoxTextShadow();
     }
+
+    public static String getButtonHoverTextColor() {
+        return theme.getButtonHoverTextColor();
+    }
 }

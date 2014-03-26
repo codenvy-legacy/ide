@@ -43,7 +43,7 @@ public class ProjectTypeDescriptionsExtension implements ProjectTypeDescriptionE
     @Override
     public List<ProjectType> getProjectTypes() {
         final List<ProjectType> list = new ArrayList<>(1);
-        list.add(new ProjectType(Constants.TUTORIAL_ID, Constants.TUTORIAL_NAME));
+        list.add(new ProjectType(Constants.TUTORIAL_ID, Constants.TUTORIAL_NAME,Constants.CODENVY_TUTORIAL_CATEGORY));
         return list;
     }
 

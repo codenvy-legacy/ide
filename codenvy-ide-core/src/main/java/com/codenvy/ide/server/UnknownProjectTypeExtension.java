@@ -27,7 +27,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /** @author Artem Zatsarynnyy */
 @Singleton
@@ -40,7 +39,7 @@ public class UnknownProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType(Constants.UNKNOWN_ID, Constants.UNKNOWN_NAME);
+        return new ProjectType(Constants.UNKNOWN_ID, Constants.UNKNOWN_NAME, Constants.UNKNOWN_CATEGORY);
     }
 
     @Override
