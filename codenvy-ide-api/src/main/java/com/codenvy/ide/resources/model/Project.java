@@ -147,7 +147,7 @@ public class Project extends Folder {
     /**
      * Get attribute values.
      *
-     * @param name
+     * @param attributeName
      *         attribute name
      * @return {@link List} of attribute values or <code>null</code> if attribute does not exists
      * @see #getAttributeValue(String)
@@ -354,7 +354,7 @@ public class Project extends Folder {
                             folderToRefresh.addChild(folder);
                             break;
                         default:
-                            Log.error(this.getClass(), "Unsupported resource type: " + child.getType());
+                            Log.error(Project.class, "Unsupported resource type: " + child.getType());
                     }
                 }
                 callback.onSuccess(folderToRefresh);

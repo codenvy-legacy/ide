@@ -20,6 +20,7 @@ package com.codenvy.ide.navigation;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
@@ -162,6 +163,7 @@ public class NavigateToFileViewImpl extends DialogBox implements NavigateToFileV
                 /** {@inheritDoc} */
                 @Override
                 public void onFailure(Throwable caught) {
+                    Log.error(NavigateToFileViewImpl.class, "Failed to search files.");
                 }
             });
         }

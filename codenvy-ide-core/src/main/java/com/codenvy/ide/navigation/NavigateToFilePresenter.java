@@ -17,8 +17,6 @@
  */
 package com.codenvy.ide.navigation;
 
-import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.api.project.gwt.client.QueryExpression;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEvent.FileOperation;
@@ -29,13 +27,24 @@ import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.rest.Unmarshallable;
+import com.codenvy.ide.util.loging.Log;
+import com.codenvy.ide.websocket.Message;
+import com.codenvy.ide.websocket.MessageBuilder;
+import com.codenvy.ide.websocket.MessageBus;
+import com.codenvy.ide.websocket.WebSocketException;
+import com.codenvy.ide.websocket.rest.RequestCallback;
+import com.codenvy.ide.websocket.rest.Unmarshallable;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
+
+import static com.codenvy.ide.MimeType.APPLICATION_JSON;
+import static com.codenvy.ide.rest.HTTPHeader.ACCEPT;
+import static com.google.gwt.http.client.RequestBuilder.GET;
 
 /**
  * Presenter for file navigation (find file by name and open it).
@@ -49,19 +58,21 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
     private       NavigateToFileView       view;
     private       ResourceProvider         resourceProvider;
     private       EventBus                 eventBus;
-    private final ProjectServiceClient     projectServiceClient;
+    private final MessageBus               wsMessageBus;
     private final DtoUnmarshallerFactory   dtoUnmarshallerFactory;
     private       Project                  activeProject;
     private       StringMap<ItemReference> itemReferences;
+    final private String                   SEARCH_URL;
 
     @Inject
-    public NavigateToFilePresenter(NavigateToFileView view, ResourceProvider resourceProvider, EventBus eventBus,
-                                   ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+    public NavigateToFilePresenter(NavigateToFileView view, ResourceProvider resourceProvider, EventBus eventBus, MessageBus wsMessageBus,
+                                   @Named("workspaceId") String workspaceId, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.resourceProvider = resourceProvider;
         this.view = view;
         this.eventBus = eventBus;
-        this.projectServiceClient = projectServiceClient;
+        this.wsMessageBus = wsMessageBus;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        SEARCH_URL = "/project/" + workspaceId + "/search";
         view.setDelegate(this);
     }
 
@@ -93,62 +104,70 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
         });
     }
 
-    // TODO make search via WebSocket
     private void search(String fileName, final AsyncCallback<Array<ItemReference>> callback) {
-        QueryExpression expression = new QueryExpression().setPath(activeProject.getPath()).setName(fileName);
-        final Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
-        projectServiceClient.search(expression, new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
-            @Override
-            protected void onSuccess(Array<ItemReference> itemReferenceArray) {
-                callback.onSuccess(itemReferenceArray);
-            }
+        final String url = SEARCH_URL + activeProject.getPath() + "?name=" + fileName;
+        Message message = new MessageBuilder(GET, url).header(ACCEPT, APPLICATION_JSON).build();
+        Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newWSArrayUnmarshaller(ItemReference.class);
+        try {
+            wsMessageBus.send(message, new RequestCallback<Array<ItemReference>>(unmarshaller) {
+                @Override
+                protected void onSuccess(Array<ItemReference> result) {
+                    callback.onSuccess(result);
+                }
 
-            @Override
-            protected void onFailure(Throwable throwable) {
-                callback.onFailure(throwable);
-            }
-        });
+                @Override
+                protected void onFailure(Throwable exception) {
+                    callback.onFailure(exception);
+                }
+            });
+        } catch (WebSocketException e) {
+            callback.onFailure(e);
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public void onFileSelected() {
+        view.close();
+
         final ItemReference itemToOpen = itemReferences.get(view.getItemPath());
-
-        final String relativePath = itemToOpen.getPath().substring(activeProject.getPath().length() + 1,
-                                                                   itemToOpen.getPath().length() - itemToOpen.getName().length());
-
-        refreshPath(activeProject, relativePath, new AsyncCallback<Folder>() {
+        refreshPath(activeProject, itemToOpen.getPath(), new AsyncCallback<Resource>() {
             @Override
-            public void onSuccess(Folder result) {
-                File fileToOpen = (File)result.findChildByName(itemToOpen.getName());
-                view.close();
-                eventBus.fireEvent(new FileEvent(fileToOpen, FileOperation.OPEN));
+            public void onSuccess(Resource result) {
+                eventBus.fireEvent(new FileEvent((File)result, FileOperation.OPEN));
             }
 
             @Override
             public void onFailure(Throwable caught) {
+                Log.error(NavigateToFilePresenter.class, "Unable to open a file " + itemToOpen.getName());
             }
         });
     }
 
-    private void refreshPath(Folder rootFolder, final String pathToRefresh, final AsyncCallback<Folder> callback) {
-        final String childFolderName = pathToRefresh.split("/")[0];
-        final Folder childFolder = (Folder)rootFolder.findChildByName(childFolderName);
-        activeProject.refreshChildren(childFolder, new AsyncCallback<Folder>() {
-            @Override
-            public void onSuccess(Folder result) {
-                final String path = pathToRefresh.substring(childFolder.getName().length() + 1);
-                if (path.isEmpty()) {
-                    callback.onSuccess(result);
-                } else {
-                    refreshPath(childFolder, path, callback);
+    private void refreshPath(Folder rootFolder, final String pathToRefresh, final AsyncCallback<Resource> callback) {
+        if (!rootFolder.getChildren().isEmpty()) {
+            for (Resource child : rootFolder.getChildren().asIterable()) {
+                if (pathToRefresh.equals(child.getPath())) {
+                    callback.onSuccess(child);
+                    break;
+                } else if (pathToRefresh.startsWith(child.getPath())) {
+                    refreshPath((Folder)child, pathToRefresh, callback);
+                    break;
                 }
             }
+        } else {
+            activeProject.refreshChildren(rootFolder, new AsyncCallback<Folder>() {
+                @Override
+                public void onSuccess(Folder result) {
+                    refreshPath(result, pathToRefresh, callback);
+                }
 
-            @Override
-            public void onFailure(Throwable caught) {
-            }
-        });
+                @Override
+                public void onFailure(Throwable caught) {
+                    callback.onFailure(caught);
+                }
+            });
+        }
     }
+
 }
