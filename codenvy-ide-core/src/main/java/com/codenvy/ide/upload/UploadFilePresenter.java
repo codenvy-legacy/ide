@@ -22,7 +22,6 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.resources.model.Folder;
-import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -80,15 +79,16 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
     @Override
     public void onSubmitComplete(@NotNull String result) {
         view.close();
-        resourceProvider.getActiveProject().refreshChildren(new AsyncCallback<Project>() {
+        Folder folder = getParent();
+        resourceProvider.getActiveProject().refreshChildren(folder, new AsyncCallback<Folder>() {
             @Override
             public void onFailure(Throwable caught) {
                 Log.error(UploadFilePresenter.class, caught);
             }
 
             @Override
-            public void onSuccess(Project result) {
-               eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(result));
+            public void onSuccess(Folder result) {
+                eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(result));
             }
         });
 
@@ -118,9 +118,9 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
      * @return the selected resource or
      * the parent folder if the file has been allocated
      */
-    private Resource getParent() {
+    private Folder getParent() {
         Selection<?> select = selectionAgent.getSelection();
-        Resource parent = null;
+        Folder parent = null;
 
         if (select != null && select.getFirstElement() instanceof Resource) {
             Selection<Resource> selection = (Selection<Resource>)select;
@@ -128,7 +128,7 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
 
             if (resource.isFile()) {
                 parent = resource.getParent();
-            } else parent = resource;
+            } else parent = (Folder) resource;
         }
         return parent;
     }
