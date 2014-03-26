@@ -22,6 +22,7 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.actions.CloseProjectAction;
 import com.codenvy.ide.actions.DeleteResourceAction;
 import com.codenvy.ide.actions.FormatterAction;
+import com.codenvy.ide.actions.NavigateToFileAction;
 import com.codenvy.ide.actions.NewProjectAction;
 import com.codenvy.ide.actions.NewResourceAction;
 import com.codenvy.ide.actions.OpenProjectAction;
@@ -135,9 +136,8 @@ public class StandardComponentInitializer {
 //    @Inject
 //    private ShowProjectPropertiesAction showProjectPropertiesAction;
 
-    // Temporary disable 'Navigate To File' feature
-//    @Inject
-//    private NavigateToFileAction navigateToFileAction;
+    @Inject
+    private NavigateToFileAction navigateToFileAction;
 
     @Inject
     @MainToolbar
@@ -217,8 +217,8 @@ public class StandardComponentInitializer {
         actionManager.registerAction("newProject", newProjectAction);
         actionManager.registerAction("openProject", openProjectAction);
 
-//        actionManager.registerAction("navigateToFile", navigateToFileAction);
-//        keyBinding.getGlobal().addKey(new KeyBuilder().action().alt().charCode('n').build(), "navigateToFile");
+        actionManager.registerAction("navigateToFile", navigateToFileAction);
+        keyBinding.getGlobal().addKey(new KeyBuilder().action().alt().charCode('n').build(), "navigateToFile");
 
         DefaultActionGroup toolbarGroup = new DefaultActionGroup(actionManager);
         toolbarGroup.addSeparator();
@@ -231,7 +231,7 @@ public class StandardComponentInitializer {
         toolbarGroup.addSeparator();
         fileGroup.add(newGroup);
         fileGroup.add(openProjectAction);
-//        fileGroup.add(navigateToFileAction);
+        fileGroup.add(navigateToFileAction);
         fileGroup.add(renameResourceAction);
         actionManager.registerAction("newResource", newFileAction);
         newGroup.add(newFileAction);

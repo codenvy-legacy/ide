@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.navigation;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
@@ -25,6 +26,7 @@ import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
@@ -56,8 +58,7 @@ public class NavigateToFileTest {
     public static final String  FILE_1_IN_FOLDER_NAME    = "file1.txt";
     public static final String  FILE_2_IN_FOLDER_NAME    = "file2.html";
     public static final String  FILE_IN_ROOT_NAME    = "pom.xml";
-    
-    
+
     @Mock
     private NavigateToFileView      view;
     @Mock
@@ -67,7 +68,11 @@ public class NavigateToFileTest {
     @Mock
     private EventBus eventBus;
     private NavigateToFilePresenter presenter;
-    
+    @Mock
+    private ProjectServiceClient projectServiceClient;
+    @Mock
+    private DtoUnmarshallerFactory dtoUnmarshallerFactory;
+
     @Before
     public void setUp() {
         Array<Resource> children = Collections.createArray();
@@ -93,14 +98,14 @@ public class NavigateToFileTest {
         when(resourceProvider.getActiveProject()).thenReturn(project);
         when(project.getChildren()).thenReturn(children);
         
-        presenter = new NavigateToFilePresenter(view, resourceProvider, eventBus);
+        presenter = new NavigateToFilePresenter(view, resourceProvider, eventBus, projectServiceClient, dtoUnmarshallerFactory);
     }
     
     @Test
     public void testShowDialog() throws Exception {
         presenter.showDialog();
         
-        verify(view).setFiles((Array<String>)anyObject());
+//        verify(view).setFiles((Array<String>)anyObject());
         verify(view).showDialog();
         verify(view).clearInput();
         verify(view).focusInput();
@@ -110,10 +115,10 @@ public class NavigateToFileTest {
     public void testOnFileSelected() throws Exception {
         presenter.showDialog();
         String displayName = FILE_IN_ROOT_NAME + " ("+ PROJECT_NAME + ")";
-        when(view.getFile()).thenReturn(displayName);
+        when(view.getItemPath()).thenReturn(displayName);
         
         presenter.onFileSelected();
-        verify(view).getFile();
+        verify(view).getItemPath();
         verify(view).close();
         verify(view).clearInput();
         verify(eventBus).fireEvent((FileEvent)anyObject());

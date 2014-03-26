@@ -342,7 +342,6 @@ public class Project extends Folder {
                     if (child.getName().startsWith(".")) {
                         continue;
                     }
-
                     switch (child.getType()) {
                         case File.TYPE:
                             File file = new File(child);
