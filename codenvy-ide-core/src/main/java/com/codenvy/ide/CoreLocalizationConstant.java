@@ -138,15 +138,6 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("uploadButton")
     String uploadButton();
 
-    @Key("browseButton")
-    String browseButton();
-
     @Key("openFileFieldTitle")
     String openFileFieldTitle();
-
-    @Key("mimeType")
-    String mimeType();
-
-
-
 }

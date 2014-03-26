@@ -17,47 +17,86 @@
  */
 package com.codenvy.ide.upload;
 
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
+ * The view of {@link UploadFilePresenter}.
+ *
  * @author Roman Nikitenko.
  */
 public interface UploadFileView extends IsWidget {
 
     public interface ActionDelegate {
+        /**
+         * Performs any actions appropriate in response
+         * to the user having pressed the Cancel button.
+         */
         void onCancelClicked();
+
+        /**
+         * Performs any actions appropriate in response
+         * to submit operation is completed.
+         *
+         * @param result
+         *         result of submit operation
+         */
         void onSubmitComplete(@NotNull String result);
+
+        /**
+         * Performs any actions appropriate in response
+         * to the user having pressed the Upload button.
+         */
         void onUploadClicked();
+
+        /**
+         * Performs any actions appropriate in response
+         * to the user having changed file name field.
+         */
         void onFileNameChanged();
     }
+
     /** Show dialog. */
     void showDialog();
 
     /** Close dialog */
     public void close();
 
+    /**
+     * Sets the delegate
+     * to receive events from this view.
+     */
     public void setDelegate(ActionDelegate delegate);
 
+    /**
+     * Change the enable state of the upload button.
+     *
+     * @param enabled
+     *         <code>true</code> to enable the button, <code>false</code> to disable it
+     */
     void setEnabledUploadButton(boolean enabled);
 
-    public void onCancelClicked(ClickEvent event);
-
-    public void onUploadClicked(ClickEvent event);
-
+    /**
+     * Sets the encoding used for submitting form.
+     *
+     * @param encodingType
+     *         the form's encoding
+     */
     public void setEncoding(@NotNull String encodingType);
 
+    /**
+     * Sets the 'action' associated with form. This is the URL to which it will be submitted.
+     *
+     * @param url
+     *         the form's action
+     */
     public void setAction(@NotNull String url);
 
+    /** Submits the form. */
     public void submit();
 
-    public void setEnabledMimeType(boolean enabled);
-
-    public void setSupportedMimeTypes(List<String> items);
-
+    /** @return file name */
     @NotNull
     String getFileName();
 }

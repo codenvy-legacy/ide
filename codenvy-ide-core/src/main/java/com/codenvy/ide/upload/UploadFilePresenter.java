@@ -17,46 +17,51 @@
  */
 package com.codenvy.ide.upload;
 
-import com.codenvy.api.vfs.server.VirtualFileSystem;
-import com.codenvy.api.vfs.server.VirtualFileSystemFactory;
-import com.codenvy.api.vfs.server.VirtualFileSystemImpl;
-import com.codenvy.api.vfs.shared.dto.Link;
+import com.codenvy.ide.api.event.ResourceChangedEvent;
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.http.client.RequestException;
+import com.codenvy.ide.util.loging.Log;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import com.google.web.bindery.event.shared.EventBus;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
+ * The purpose of this class is upload file
+ *
  * @author Roman Nikitenko.
  */
 public class UploadFilePresenter implements UploadFileView.ActionDelegate {
 
-    private UploadFileView view;
-    private SelectionAgent selectionAgent;
-    private String restContext;
-    private String workspaceId;
+    private UploadFileView   view;
+    private SelectionAgent   selectionAgent;
+    private ResourceProvider resourceProvider;
+    private String           restContext;
+    private String           workspaceId;
+    private EventBus         eventBus;
 
     @Inject
     public UploadFilePresenter(UploadFileView view,
                                @Named("restContext") String restContext,
                                @Named("workspaceId") String workspaceId,
-                               SelectionAgent selectionAgent) {
+                               SelectionAgent selectionAgent,
+                               ResourceProvider resourceProvider,
+                               EventBus eventBus) {
+
         this.restContext = restContext;
         this.workspaceId = workspaceId;
         this.selectionAgent = selectionAgent;
+        this.resourceProvider = resourceProvider;
+        this.eventBus = eventBus;
         this.view = view;
         this.view.setDelegate(this);
         this.view.setEnabledUploadButton(false);
-        this.view.setEnabledMimeType(false);
-
     }
 
     /** Show dialog. */
@@ -64,54 +69,67 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
         view.showDialog();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCancelClicked() {
         view.close();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onSubmitComplete(@NotNull String result) {
         view.close();
+        resourceProvider.getActiveProject().refreshChildren(getParent(), new AsyncCallback<Folder>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                Log.error(UploadFilePresenter.class, caught);
+            }
+
+            @Override
+            public void onSuccess(Folder result) {
+                eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(result));
+            }
+        });
+
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onUploadClicked() {
         view.setEncoding(FormPanel.ENCODING_MULTIPART);
-        String parentId = getParentId();
-        view.setAction(restContext + "/project/" + workspaceId + "/uploadfile/" + parentId);
+        view.setAction(restContext + "/vfs/" + workspaceId + "/v2/uploadfile/" + getParent().getId());
         view.submit();
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onFileNameChanged() {
         String fileName = view.getFileName();
         boolean enabled = !fileName.isEmpty();
         view.setEnabledUploadButton(enabled);
-        view.setEnabledMimeType(enabled);
-        view.setSupportedMimeTypes(getSupportedMimeTypes());
     }
 
-    private List<String> getSupportedMimeTypes() {
-        List<String> mimeTypeList = new ArrayList<String>();
-//        for (FileType fileType : fileTypes) {
-//            mimeTypeList.add(fileType.getMimeType());
-//        }
-        //temporary code
-        mimeTypeList.add("application/xml");
-        mimeTypeList.add("application/atom+xml");
-        mimeTypeList.add("application/json");
-
-        return mimeTypeList;
-    }
-
-    private String getParentId(){
+    /**
+     * Gets the parent folder.
+     *
+     * @return the selected folder or
+     * the parent folder if the file has been allocated
+     */
+    private Folder getParent() {
         Selection<?> select = selectionAgent.getSelection();
-        Resource resource = null;
+        Folder parentFolder = null;
+
         if (select != null && select.getFirstElement() instanceof Resource) {
             Selection<Resource> selection = (Selection<Resource>)select;
-            resource = selection.getFirstElement();
+            Resource resource = selection.getFirstElement();
+
+            if (resource.isFolder()) {
+                parentFolder = (Folder)resource;
+            } else {
+                parentFolder = resource.getParent();
+            }
         }
-        return resource.getId();
+        return parentFolder;
     }
 }

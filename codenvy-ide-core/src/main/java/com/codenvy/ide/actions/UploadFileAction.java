@@ -19,14 +19,14 @@
 package com.codenvy.ide.actions;
 
 import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.api.event.ProjectActionEvent;
-import com.codenvy.ide.api.event.ProjectActionHandler;
+import com.codenvy.ide.api.selection.Selection;
+import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.upload.UploadFilePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Upload file Action
@@ -37,29 +37,15 @@ import com.google.web.bindery.event.shared.EventBus;
 public class UploadFileAction extends Action {
 
     private UploadFilePresenter presenter;
-    private boolean enabled = false;
+    private SelectionAgent      selectionAgent;
 
     @Inject
-    public UploadFileAction(UploadFilePresenter presenter, CoreLocalizationConstant locale, EventBus eventBus) {
+    public UploadFileAction(UploadFilePresenter presenter,
+                            CoreLocalizationConstant locale,
+                            SelectionAgent selectionAgent) {
         super(locale.uploadFileName(), locale.uploadFileDescription(), null);
         this.presenter = presenter;
-
-        eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
-            @Override
-            public void onProjectOpened(ProjectActionEvent event) {
-                enabled = true;
-            }
-
-            @Override
-            public void onProjectClosed(ProjectActionEvent event) {
-                enabled = false;
-            }
-
-            @Override
-            public void onProjectDescriptionChanged(ProjectActionEvent event) {
-
-            }
-        });
+        this.selectionAgent = selectionAgent;
     }
 
     /** {@inheritDoc} */
@@ -71,6 +57,10 @@ public class UploadFileAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent event) {
-        event.getPresentation().setEnabled(enabled);
+        Selection<?> select = selectionAgent.getSelection();
+
+        if (select != null && select.getFirstElement() instanceof Resource) {
+            event.getPresentation().setEnabled(true);
+        } else event.getPresentation().setEnabled(false);
     }
 }

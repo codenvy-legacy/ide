@@ -28,44 +28,41 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import javax.validation.constraints.NotNull;
-import java.util.Collections;
-import java.util.List;
 
 /**
+ * The implementation of {@link UploadFileView}.
+ *
  * @author Roman Nikitenko.
  */
-public class UploadFileViewImpl extends DialogBox implements UploadFileView{
+public class UploadFileViewImpl extends DialogBox implements UploadFileView {
 
     public interface UploadFileViewBinder extends UiBinder<Widget, UploadFileViewImpl> {
     }
 
-    CoreLocalizationConstant locale;
-    FileUpload               file;
+    private FileUpload     file;
     private ActionDelegate delegate;
 
     @UiField
-    Button    btnCancel;
+    Button btnCancel;
 
     @UiField
-    Button    btnUpload;
+    Button btnUpload;
 
     @UiField
     FormPanel uploadForm;
 
-    @UiField
-    ListBox mimeTypeListBox;
-
+    /**
+     * Create view.
+     */
     @Inject
-    public UploadFileViewImpl(UploadFileViewBinder uploadFileViewBinder, CoreLocalizationConstant localization) {
-        this.locale = localization;
+    public UploadFileViewImpl(UploadFileViewBinder uploadFileViewBinder, CoreLocalizationConstant locale) {
+
         this.setText(locale.uploadFileTitle());
         setWidget(uploadFileViewBinder.createAndBindUi(this));
-        uploadForm.setTitle("gfd");
         bind();
     }
 
@@ -79,6 +76,7 @@ public class UploadFileViewImpl extends DialogBox implements UploadFileView{
         });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog() {
         file = new FileUpload();
@@ -117,44 +115,36 @@ public class UploadFileViewImpl extends DialogBox implements UploadFileView{
 
     /** {@inheritDoc} */
     @Override
-    public void setDelegate(ActionDelegate delegate){
+    public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setEnabledUploadButton(boolean enabled) {
         btnUpload.setEnabled(enabled);
     }
 
-    @Override
-    public void setEnabledMimeType(boolean enabled) {
-        mimeTypeListBox.setEnabled(enabled);
-    }
-
-    @Override
-    public void setSupportedMimeTypes(List<String> items) {
-        Collections.sort(items);
-        for (String value : items) {
-            mimeTypeListBox.addItem(value);
-        }
-    }
-
+    /** {@inheritDoc} */
     @Override
     public void setEncoding(@NotNull String encodingType) {
         uploadForm.setEncoding(encodingType);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setAction(@NotNull String url) {
         uploadForm.setAction(url);
         uploadForm.setMethod(FormPanel.METHOD_POST);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void submit() {
         uploadForm.submit();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getFileName() {
         return file.getName();

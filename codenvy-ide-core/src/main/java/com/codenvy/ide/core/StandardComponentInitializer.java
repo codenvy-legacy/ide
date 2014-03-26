@@ -30,6 +30,7 @@ import com.codenvy.ide.actions.SaveAction;
 import com.codenvy.ide.actions.SaveAllAction;
 import com.codenvy.ide.actions.ShowAboutAction;
 import com.codenvy.ide.actions.ShowPreferencesAction;
+import com.codenvy.ide.actions.UploadFileAction;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
