@@ -45,6 +45,7 @@
         <module>codenvy-runner-sdk</module>
         <module>codenvy-runner-webapps</module>
         <module>codenvy-ext-builder</module>
+        <module>codenvy-ext-maven</module>
         <module>codenvy-ext-runner</module>
         <module>codenvy-ext-web</module>
         <module>codenvy-ext-java</module>

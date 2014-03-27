@@ -17,9 +17,9 @@
  */
 package com.codenvy.ide.extension.builder.client.inject;
 
+import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
+import com.codenvy.api.builder.gwt.client.BuilderServiceClientImpl;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.extension.builder.client.BuilderClientService;
-import com.codenvy.ide.extension.builder.client.BuilderClientServiceImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
@@ -29,6 +29,6 @@ public class BuilderGinModule extends AbstractGinModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
-        bind(BuilderClientService.class).to(BuilderClientServiceImpl.class).in(Singleton.class);
+        bind(BuilderServiceClient.class).to(BuilderServiceClientImpl.class).in(Singleton.class);
     }
 }
