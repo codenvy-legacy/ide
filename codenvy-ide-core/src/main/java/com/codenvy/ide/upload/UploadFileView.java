@@ -29,31 +29,21 @@ import javax.validation.constraints.NotNull;
 public interface UploadFileView extends IsWidget {
 
     public interface ActionDelegate {
-        /**
-         * Performs any actions appropriate in response
-         * to the user having pressed the Cancel button.
-         */
+        /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
         void onCancelClicked();
 
         /**
-         * Performs any actions appropriate in response
-         * to submit operation is completed.
+         * Performs any actions appropriate in response to submit operation is completed.
          *
          * @param result
          *         result of submit operation
          */
         void onSubmitComplete(@NotNull String result);
 
-        /**
-         * Performs any actions appropriate in response
-         * to the user having pressed the Upload button.
-         */
+        /** Performs any actions appropriate in response to the user having pressed the Upload button. */
         void onUploadClicked();
 
-        /**
-         * Performs any actions appropriate in response
-         * to the user having changed file name field.
-         */
+        /** Performs any actions appropriate in response to the user having changed file name field. */
         void onFileNameChanged();
     }
 
@@ -61,13 +51,10 @@ public interface UploadFileView extends IsWidget {
     void showDialog();
 
     /** Close dialog */
-    public void close();
+    void close();
 
-    /**
-     * Sets the delegate
-     * to receive events from this view.
-     */
-    public void setDelegate(ActionDelegate delegate);
+    /** Sets the delegate to receive events from this view. */
+    void setDelegate(ActionDelegate delegate);
 
     /**
      * Change the enable state of the upload button.
@@ -83,7 +70,7 @@ public interface UploadFileView extends IsWidget {
      * @param encodingType
      *         the form's encoding
      */
-    public void setEncoding(@NotNull String encodingType);
+    void setEncoding(@NotNull String encodingType);
 
     /**
      * Sets the 'action' associated with form. This is the URL to which it will be submitted.
@@ -91,10 +78,10 @@ public interface UploadFileView extends IsWidget {
      * @param url
      *         the form's action
      */
-    public void setAction(@NotNull String url);
+    void setAction(@NotNull String url);
 
     /** Submits the form. */
-    public void submit();
+    void submit();
 
     /** @return file name */
     @NotNull

@@ -55,9 +55,7 @@ public class UploadFileViewImpl extends DialogBox implements UploadFileView {
     @UiField
     FormPanel uploadForm;
 
-    /**
-     * Create view.
-     */
+    /** Create view. */
     @Inject
     public UploadFileViewImpl(UploadFileViewBinder uploadFileViewBinder, CoreLocalizationConstant locale) {
 

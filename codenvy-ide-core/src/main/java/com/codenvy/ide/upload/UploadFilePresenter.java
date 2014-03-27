@@ -98,6 +98,8 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
     @Override
     public void onUploadClicked() {
         view.setEncoding(FormPanel.ENCODING_MULTIPART);
+
+        //TODO Temporarily used vfs service. Should be changed to api service.
         view.setAction(restContext + "/vfs/" + workspaceId + "/v2/uploadfile/" + getParent().getId());
         view.submit();
 
@@ -128,7 +130,7 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
 
             if (resource.isFile()) {
                 parent = resource.getParent();
-            } else parent = (Folder) resource;
+            } else parent = (Folder)resource;
         }
         return parent;
     }
