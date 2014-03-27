@@ -58,8 +58,9 @@ public class UploadFileAction extends Action {
     @Override
     public void update(ActionEvent event) {
         Selection<?> select = selectionAgent.getSelection();
+        Selection<Resource> selection = (Selection<Resource>)select;
 
-        if (select != null && select.getFirstElement() instanceof Resource) {
+        if (selection.getFirstElement().getId() != null && select.getFirstElement() instanceof Resource) {
             event.getPresentation().setEnabled(true);
         } else event.getPresentation().setEnabled(false);
     }
