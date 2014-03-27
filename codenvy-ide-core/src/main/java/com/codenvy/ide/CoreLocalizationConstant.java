@@ -123,6 +123,21 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("format.description")
     String formatDescription();
 
+    @Key("uploadFile.name")
+    String uploadFileName();
 
+    @Key("uploadFile.description")
+    String uploadFileDescription();
 
+    @Key("uploadFile.title")
+    String uploadFileTitle();
+
+    @Key("cancelButton")
+    String cancelButton();
+
+    @Key("uploadButton")
+    String uploadButton();
+
+    @Key("openFileFieldTitle")
+    String openFileFieldTitle();
 }
