@@ -60,7 +60,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
     private       EventBus                 eventBus;
     private final MessageBus               wsMessageBus;
     private final DtoUnmarshallerFactory   dtoUnmarshallerFactory;
-    private       Project                  activeProject;
+    private       Project                  rootProject;
     private       StringMap<ItemReference> itemReferences;
     final private String                   SEARCH_URL;
 
@@ -78,8 +78,10 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
 
     /** Show dialog with view for navigation. */
     public void showDialog() {
+        // Get root-project path in order to allow to search for files
+        // in the entire project, not just in the current sub-module.
+        rootProject = getRootProject(resourceProvider.getActiveProject());
         itemReferences = Collections.createStringMap();
-        activeProject = resourceProvider.getActiveProject();
         view.showDialog();
         view.clearInput();
         view.focusInput();
@@ -106,9 +108,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
     }
 
     private void search(String fileName, final AsyncCallback<Array<ItemReference>> callback) {
-        // Get root-project path in order to allow to search for files
-        // in the entire project, not just in the current sub-module.
-        final String url = SEARCH_URL + getRootProjectPath(activeProject) + "?name=" + fileName;
+        final String url = SEARCH_URL + rootProject.getPath() + "?name=" + fileName;
         Message message = new MessageBuilder(GET, url).header(ACCEPT, APPLICATION_JSON).build();
         Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newWSArrayUnmarshaller(ItemReference.class);
         try {
@@ -128,12 +128,13 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
         }
     }
 
-    private String getRootProjectPath(Project project) {
-        final int secondSlashPos = project.getPath().indexOf('/', 1);
-        if (secondSlashPos == -1) {
-            return project.getPath();
+    /** Makes sense for multi-module projects. */
+    private Project getRootProject(Project project) {
+        Folder parentFolder = project;
+        while (!resourceProvider.getRootId().equals(parentFolder.getParent().getId())) {
+            parentFolder = parentFolder.getParent();
         }
-        return project.getPath().substring(0, secondSlashPos);
+        return (Project)parentFolder;
     }
 
     /** {@inheritDoc} */
@@ -142,7 +143,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
         view.close();
 
         final ItemReference itemToOpen = itemReferences.get(view.getItemPath());
-        refreshPath(activeProject, itemToOpen.getPath(), new AsyncCallback<Resource>() {
+        refreshPath(rootProject, itemToOpen.getPath(), new AsyncCallback<Resource>() {
             @Override
             public void onSuccess(Resource result) {
                 eventBus.fireEvent(new FileEvent((File)result, FileOperation.OPEN));
@@ -168,7 +169,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
                 }
             }
         } else {
-            activeProject.refreshChildren(rootFolder, new AsyncCallback<Folder>() {
+            rootProject.refreshChildren(rootFolder, new AsyncCallback<Folder>() {
                 @Override
                 public void onSuccess(Folder result) {
                     refreshPath(result, pathToRefresh, callback);
