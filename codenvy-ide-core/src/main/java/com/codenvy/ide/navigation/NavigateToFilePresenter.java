@@ -108,8 +108,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
     private void search(String fileName, final AsyncCallback<Array<ItemReference>> callback) {
         // Get root-project path in order to allow to search for files
         // in the entire project, not just in the current sub-module.
-        final String rootProjectPath = activeProject.getPath().substring(0, activeProject.getPath().indexOf('/', 1));
-        final String url = SEARCH_URL + rootProjectPath + "?name=" + fileName;
+        final String url = SEARCH_URL + getRootProjectPath(activeProject) + "?name=" + fileName;
         Message message = new MessageBuilder(GET, url).header(ACCEPT, APPLICATION_JSON).build();
         Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newWSArrayUnmarshaller(ItemReference.class);
         try {
@@ -127,6 +126,14 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
         } catch (WebSocketException e) {
             callback.onFailure(e);
         }
+    }
+
+    private String getRootProjectPath(Project project) {
+        final int secondSlashPos = project.getPath().indexOf('/', 1);
+        if (secondSlashPos == -1) {
+            return project.getPath();
+        }
+        return project.getPath().substring(0, secondSlashPos);
     }
 
     /** {@inheritDoc} */
