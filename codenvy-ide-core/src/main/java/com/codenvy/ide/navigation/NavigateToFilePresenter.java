@@ -88,7 +88,8 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
     /** {@inheritDoc} */
     @Override
     public void onRequestSuggestions(String query, final AsyncCallback<Array<ItemReference>> callback) {
-        search(query, new AsyncCallback<Array<ItemReference>>() {
+        // add '*' to allow search files by first letters
+        search(query + "*", new AsyncCallback<Array<ItemReference>>() {
             @Override
             public void onSuccess(Array<ItemReference> result) {
                 for (ItemReference item : result.asIterable()) {

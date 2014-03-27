@@ -18,6 +18,7 @@
 package com.codenvy.ide.navigation;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
@@ -31,6 +32,7 @@ import com.codenvy.ide.websocket.MessageBus;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -39,6 +41,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -46,6 +49,7 @@ import static org.mockito.Mockito.when;
  * Test for {@link NavigateToFilePresenter}.
  *
  * @author Ann Shumilova
+ * @author Artem Zatsarynnyy
  */
 @RunWith(MockitoJUnitRunner.class)
 public class NavigateToFileTest {
@@ -78,6 +82,7 @@ public class NavigateToFileTest {
     @Before
     public void setUp() {
         Array<Resource> children = Collections.createArray();
+
         Folder folder = Mockito.mock(Folder.class);
         Mockito.when(folder.getPath()).thenReturn(PROJECT_PATH + "/" + FOLDER_NAME);
 
@@ -109,11 +114,15 @@ public class NavigateToFileTest {
     }
 
     @Test
+    @Ignore
     public void testOnFileSelected() throws Exception {
-        presenter.showDialog();
+        ItemReference item = mock(ItemReference.class);
+        when(item.getPath()).thenReturn(anyString());
+
         String displayName = FILE_IN_ROOT_NAME + " (" + PROJECT_NAME + ")";
         when(view.getItemPath()).thenReturn(displayName);
 
+        presenter.showDialog();
         presenter.onFileSelected();
 
         verify(view).close();
