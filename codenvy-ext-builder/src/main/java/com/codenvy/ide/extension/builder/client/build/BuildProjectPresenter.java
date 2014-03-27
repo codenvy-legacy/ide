@@ -81,15 +81,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
 
     /**
      * Create presenter.
-     *
-     * @param eventBus
-     * @param resourceProvider
-     * @param console
-     * @param service
-     * @param constant
-     * @param workspaceAgent
-     * @param messageBus
-     * @param notificationManager
      */
     @Inject
     protected BuildProjectPresenter(EventBus eventBus,
@@ -140,11 +131,17 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                       new AsyncRequestCallback<BuildTaskDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(BuildTaskDescriptor.class)) {
                           @Override
                           protected void onSuccess(BuildTaskDescriptor result) {
-                              startCheckingStatus(result);
-                              setBuildInProgress(true);
-                              String message = constant.buildStarted(projectToBuild.getName());
-                              notification = new Notification(message, PROGRESS, BuildProjectPresenter.this);
-                              notificationManager.showNotification(notification);
+                              if (result.getStatus() == BuildStatus.SUCCESSFUL) {
+                                  String message = constant.buildFinished(projectToBuild.getName());
+                                  notification = new Notification(message, FINISHED, BuildProjectPresenter.this);
+                                  notificationManager.showNotification(notification);
+                              } else {
+                                  startCheckingStatus(result);
+                                  setBuildInProgress(true);
+                                  String message = constant.buildStarted(projectToBuild.getName());
+                                  notification = new Notification(message, PROGRESS, BuildProjectPresenter.this);
+                                  notificationManager.showNotification(notification);
+                              }
                           }
 
                           @Override

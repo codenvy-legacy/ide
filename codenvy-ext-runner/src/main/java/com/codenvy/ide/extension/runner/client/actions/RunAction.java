@@ -39,7 +39,9 @@ public class RunAction extends Action {
     private       RunnerController runnerController;
 
     @Inject
-    public RunAction(RunnerController runnerController, RunnerResources resources, ResourceProvider resourceProvider,
+    public RunAction(RunnerController runnerController,
+                     RunnerResources resources,
+                     ResourceProvider resourceProvider,
                      RunnerLocalizationConstant localizationConstants) {
         super(localizationConstants.runAppActionText(), localizationConstants.runAppActionDescription(), resources.launchApp());
         this.runnerController = runnerController;
