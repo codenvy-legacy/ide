@@ -18,6 +18,7 @@
 package com.codenvy.ide.extension.maven.client.build;
 
 import com.codenvy.ide.api.mvp.View;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 
 import javax.validation.constraints.NotNull;
 
@@ -36,6 +37,12 @@ public interface MavenBuildView extends View<MavenBuildView.ActionDelegate> {
         /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
         void onCancelClicked();
 
+        void onSkipTestValueChange(ValueChangeEvent<Boolean> event);
+
+        void onUpdateSnapshotValueChange(ValueChangeEvent<Boolean> event);
+
+        void onOfflineValueChange(ValueChangeEvent<Boolean> event);
+
     }
 
     /** @return entered buildCommand */
@@ -49,14 +56,6 @@ public interface MavenBuildView extends View<MavenBuildView.ActionDelegate> {
      *         text what need to insert
      */
     void setBuildCommand(@NotNull String message);
-
-    /**
-     * Change the enable state of the maven command field.
-     *
-     * @param enable
-     *         <code>true</code> to enable the button, <code>false</code> to disable it
-     */
-    void setEnableMavenCommandField(boolean enable);
 
 
     /** Close dialog. */

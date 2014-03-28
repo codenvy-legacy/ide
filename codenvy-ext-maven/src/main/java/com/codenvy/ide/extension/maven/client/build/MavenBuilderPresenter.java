@@ -29,6 +29,7 @@ import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
 import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.websocket.MessageBus;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -67,6 +68,7 @@ public class MavenBuilderPresenter extends BuildProjectPresenter
               dtoFactory, dtoUnmarshallerFactory);
         this.view = view;
         this.view.setDelegate(this);
+        this.view.setBuildCommand("clean install");
     }
 
 
@@ -97,7 +99,7 @@ public class MavenBuilderPresenter extends BuildProjectPresenter
                         String[] split = str.split("=");
                         options.put(split[0], split[1]);
                     } else
-                        options.put(str, "");
+                        options.put(str, null);
                 } else {
                     targets.add(str);
                 }
@@ -113,4 +115,37 @@ public class MavenBuilderPresenter extends BuildProjectPresenter
         view.close();
     }
 
+    @Override
+    public void onSkipTestValueChange(ValueChangeEvent<Boolean> event) {
+        if (event.getValue()) {
+            String command = view.getBuildCommand().concat(" -Dmaven.test.skip");
+            view.setBuildCommand(command.replaceAll("\\s+", " "));
+        } else {
+            String buildCommand = view.getBuildCommand();
+            view.setBuildCommand(buildCommand.replaceAll("-Dmaven.test.skip", "").replaceAll("\\s+", " ")); //TODO: need improve it
+        }
+    }
+
+    @Override
+    public void onUpdateSnapshotValueChange(ValueChangeEvent<Boolean> event) {
+        if (event.getValue()) {
+            String command = view.getBuildCommand().concat(" -U");
+            view.setBuildCommand(command.replaceAll("\\s+", " "));
+        } else {
+            String buildCommand = view.getBuildCommand();
+            view.setBuildCommand(buildCommand.replaceAll("-U", "").replaceAll("--update-snapshots", "").replaceAll("\\s+", " ")); //TODO: need improve it
+        }
+    }
+
+
+    @Override
+    public void onOfflineValueChange(ValueChangeEvent<Boolean> event) {
+        if (event.getValue()) {
+            String command = view.getBuildCommand().concat(" -o");
+            view.setBuildCommand(command.replaceAll("\\s+", " "));
+        } else {
+            String buildCommand = view.getBuildCommand();
+            view.setBuildCommand(buildCommand.replaceAll("-o", "").replaceAll("--offline", "").replaceAll("\\s+", " ")); //TODO: need improve it
+        }
+    }
 }

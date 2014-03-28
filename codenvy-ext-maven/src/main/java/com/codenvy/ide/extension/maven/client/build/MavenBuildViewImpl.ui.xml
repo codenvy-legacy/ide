@@ -47,15 +47,18 @@
         </g:south>
         <g:center>
             <g:DockLayoutPanel unit="PX" width="100%" height="100%" styleName="{style.spacing}">
-                <g:north size="25.0">
+                <g:north size="30.0">
+                    <g:TextBox ui:field="buildCommand" width="350px" height="25px"/>
+                </g:north>
+                <g:north size="30.0">
                     <g:CheckBox ui:field="skipTest" HTML="{locale.skipTest}"/>
                 </g:north>
-                <g:north size="25.0">
-                    <g:CheckBox ui:field="enableCommand" HTML="{locale.mavenCommand}"/>
+                <g:north size="30.0">
+                    <g:CheckBox ui:field="updateSnapshot" HTML="{locale.updateSnapshot}" title="{locale.updateSnapshotDesc}"/>
                 </g:north>
-                <g:center>
-                    <g:TextBox ui:field="buildCommand" width="350px" height="25px"/>
-                </g:center>
+                <g:north size="30.0">
+                    <g:CheckBox ui:field="offline" HTML="{locale.offlineMode}" />
+                </g:north>
             </g:DockLayoutPanel>
         </g:center>
     </g:DockLayoutPanel>

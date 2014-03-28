@@ -37,10 +37,6 @@ public interface MavenLocalizationConstant extends Messages {
     @Key("control.buildProject.description")
     String buildProjectControlDescription();
 
-    /* Messages */
-    @Key("messages.buildInProgress")
-    String buildInProgress(String project);
-
     @Key("messages.buildSuccess")
     String buildSuccess();
 
@@ -51,35 +47,19 @@ public interface MavenLocalizationConstant extends Messages {
     @DefaultMessage("Cancel")
     String buttonCancel();
 
-    @Key("messages.selectedItemsFail")
-    String selectedItemsFail();
-
-    @Key("messages.mavenCommand")
-    @DefaultMessage("Maven Command (by default \"clean install\")")
-    String mavenCommand();
-
-    @Key("messages.downloadArtifact")
-    String downloadArtifact(String url);
-
-    @Key("messages.dependencyForYourPom")
-    String dependencyForYourPom(String dependency);
-
-    @Key("messages.failGetBuildResult")
-    String failGetBuildResult();
-
-    @Key("buildProject.outputClear")
-    String outputClear();
-
-    /* InitRequestHandler */
-    @Key("build.started")
-    String buildStarted(String project);
-
-    @Key("build.finished")
-    String buildFinished(String project);
-
     @Key("maven.build.skipTest")
-    @DefaultMessage("Skip Test (-Dmaven.test.skip=true)")
+    @DefaultMessage("Skip Test (-Dmaven.test.skip)")
     String skipTest();
+
+    @Key("maven.build.updateSnapshot")
+    @DefaultMessage("Update Snapshot (-U,--update-snapshots)")
+    String updateSnapshot();
+
+
+    @Key("maven.build.updateSnapshot.desc")
+    @DefaultMessage("Forces a check for updated releases \n" +
+                    "and snapshots on remote repositories")
+    String updateSnapshotDesc();
 
     @Key("maven.build.start")
     @DefaultMessage("Start build")
@@ -88,4 +68,9 @@ public interface MavenLocalizationConstant extends Messages {
     @Key("maven.builder.title")
     @DefaultMessage("Maven Builder")
     String mavenBuilder();
+
+    @Key("maven.builder.offline-mode")
+    @DefaultMessage("Work offline (-o,--offline)")
+    String offlineMode();
+
 }

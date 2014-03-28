@@ -22,7 +22,6 @@ import com.codenvy.ide.extension.maven.client.MavenResources;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -30,7 +29,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
-
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -44,7 +42,7 @@ import javax.validation.constraints.NotNull;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class MavenBuildViewImpl extends Window  implements MavenBuildView {
+public class MavenBuildViewImpl extends Window implements MavenBuildView {
     @Override
     protected void onClose() {
 
@@ -58,7 +56,9 @@ public class MavenBuildViewImpl extends Window  implements MavenBuildView {
     @UiField
     CheckBox skipTest;
     @UiField
-    CheckBox enableCommand;
+    CheckBox updateSnapshot;
+    @UiField
+    CheckBox offline;
     @UiField
     TextBox  buildCommand;
     @UiField
@@ -84,11 +84,24 @@ public class MavenBuildViewImpl extends Window  implements MavenBuildView {
         Widget widget = ourUiBinder.createAndBindUi(this);
         this.setTitle(locale.mavenBuilder());
         this.setWidget(widget);
-        setEnableMavenCommandField(false);
-        enableCommand.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+        skipTest.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
             @Override
-            public void onValueChange(ValueChangeEvent<Boolean> booleanValueChangeEvent) {
-                 setEnableMavenCommandField(booleanValueChangeEvent.getValue());
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                delegate.onSkipTestValueChange(event);
+            }
+        });
+
+        updateSnapshot.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                delegate.onUpdateSnapshotValueChange(event);
+            }
+        });
+
+        offline.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                delegate.onOfflineValueChange(event);
             }
         });
     }
@@ -105,15 +118,6 @@ public class MavenBuildViewImpl extends Window  implements MavenBuildView {
     public void setBuildCommand(@NotNull String buildCommand) {
         this.buildCommand.setText(buildCommand);
     }
-
-
-
-    /** {@inheritDoc} */
-    @Override
-    public void setEnableMavenCommandField(boolean enable) {
-        buildCommand.setEnabled(enable);
-    }
-
 
     /** {@inheritDoc} */
     @Override
