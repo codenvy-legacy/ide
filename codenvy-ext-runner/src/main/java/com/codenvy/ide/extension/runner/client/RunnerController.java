@@ -22,6 +22,7 @@ import com.codenvy.api.core.rest.shared.dto.ServiceError;
 import com.codenvy.api.runner.ApplicationStatus;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.api.runner.dto.RunOptions;
+import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.api.runner.internal.dto.DebugMode;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
@@ -62,11 +63,10 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private final DtoUnmarshallerFactory       dtoUnmarshallerFactory;
     private final DtoFactory                   dtoFactory;
     private       MessageBus                   messageBus;
-    private       EventBus                     eventBus;
     private       WorkspaceAgent               workspaceAgent;
     private       ResourceProvider             resourceProvider;
     private       ConsolePart                  console;
-    private       RunnerClientService          service;
+    private       RunnerServiceClient          service;
     private       RunnerLocalizationConstant   constant;
     private       NotificationManager          notificationManager;
     private       Notification                 notification;
@@ -91,7 +91,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      * @param console
      *         {@link com.codenvy.ide.api.parts.ConsolePart}
      * @param service
-     *         {@link com.codenvy.ide.extension.runner.client.RunnerClientService}
+     *         {@link com.codenvy.api.runner.gwt.client.RunnerServiceClient}
      * @param constant
      *         {@link com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant}
      * @param notificationManager
@@ -102,14 +102,13 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                             EventBus eventBus,
                             WorkspaceAgent workspaceAgent,
                             final ConsolePart console,
-                            RunnerClientService service,
+                            RunnerServiceClient service,
                             RunnerLocalizationConstant constant,
                             NotificationManager notificationManager,
                             DtoUnmarshallerFactory dtoUnmarshallerFactory,
                             DtoFactory dtoFactory,
                             MessageBus messageBus) {
         this.resourceProvider = resourceProvider;
-        this.eventBus = eventBus;
         this.workspaceAgent = workspaceAgent;
         this.console = console;
         this.service = service;
@@ -118,7 +117,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.dtoFactory = dtoFactory;
         this.messageBus = messageBus;
-
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
@@ -142,7 +140,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             public void onProjectDescriptionChanged(ProjectActionEvent event) {
             }
         });
-
     }
 
     /**

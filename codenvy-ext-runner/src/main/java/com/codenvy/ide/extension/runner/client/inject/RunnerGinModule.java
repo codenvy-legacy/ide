@@ -17,23 +17,18 @@
  */
 package com.codenvy.ide.extension.runner.client.inject;
 
+import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
+import com.codenvy.api.runner.gwt.client.RunnerServiceClientImpl;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.extension.runner.client.RunnerClientService;
-import com.codenvy.ide.extension.runner.client.RunnerClientServiceImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
-/**
- * GIN module for Runner extension.
- *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: RunnerGinModule.java Jul 2, 2013 4:44:09 PM azatsarynnyy $
- */
+/** @author Artem Zatsarynnyy */
 @ExtensionGinModule
 public class RunnerGinModule extends AbstractGinModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
-        bind(RunnerClientService.class).to(RunnerClientServiceImpl.class).in(Singleton.class);
+        bind(RunnerServiceClient.class).to(RunnerServiceClientImpl.class).in(Singleton.class);
     }
 }
