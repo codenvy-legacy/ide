@@ -23,6 +23,7 @@
 
     .notificationPanel {
         cursor: pointer;
+        padding-left: 2px;
     }
 
     .statusPanel {
@@ -53,4 +54,9 @@
 
     .unread {
         /*opacity: 0.7;*/
+    }
+
+    .invertColor{
+        -webkit-filter: invert(completedInvertColor);
+        filter: invert(completedInvertColor);
     }

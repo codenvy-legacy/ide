@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- * 
- * [2012] - [2013] Codenvy, S.A. 
+ *
+ * [2012] - [2013] Codenvy, S.A.
  * All Rights Reserved.
- * 
+ *
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -131,6 +131,10 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
      */
     private void changeImage(@NotNull ImageResource icon) {
         Image messageIcon = new Image(icon);
+        if(resources.progress().equals(icon)){
+            messageIcon.setSize("16", "16");
+            messageIcon.addStyleName(resources.notificationCss().invertColor());
+        }
         iconPanel.setWidget(messageIcon);
     }
 

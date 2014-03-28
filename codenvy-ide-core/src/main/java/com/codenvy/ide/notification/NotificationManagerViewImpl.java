@@ -58,6 +58,7 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
     FlowPanel statusPanel = new FlowPanel();
 
     SimplePanel iconPanel;
+    Resources   resources;
 
 
     @UiField(provided = true)
@@ -75,6 +76,7 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
                                        Resources resources) {
         super(partStackUIResources);
         //TODO:need improve this
+        this.resources = resources;
         iconPanel = new SimplePanel();
         iconPanel.addStyleName(resources.notificationCss().statusPanel());
         count.addStyleName(resources.notificationCss().statusPanel());
@@ -112,6 +114,8 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
         Image icon;
         if (status.equals(IN_PROGRESS)) {
             icon = new Image(res.progress());
+            icon.setSize("16", "16");
+            icon.addStyleName(resources.notificationCss().invertColor());
         } else if (status.equals(EMPTY)) {
             icon = new Image(res.message());
         } else {

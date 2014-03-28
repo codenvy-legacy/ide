@@ -27,7 +27,6 @@ import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
 import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
-import com.codenvy.ide.extension.maven.client.MavenLocalizationConstant;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.websocket.MessageBus;
 import com.google.inject.Inject;
@@ -44,12 +43,10 @@ import java.util.Map;
  *
  * @author Artem Zatsarynnyy
  */
-//TODO: need rework for using websocket wait for server side
 @Singleton
 public class MavenBuilderPresenter extends BuildProjectPresenter
         implements Notification.OpenNotificationHandler, MavenBuildView.ActionDelegate {
     private       MavenBuildView            view;
-    private final MavenLocalizationConstant constant;
 
     /**
      * Create presenter.
@@ -61,7 +58,6 @@ public class MavenBuilderPresenter extends BuildProjectPresenter
                                     ConsolePart console,
                                     BuilderServiceClient service,
                                     BuilderLocalizationConstant constant,
-                                    MavenLocalizationConstant mavenConstant,
                                     WorkspaceAgent workspaceAgent,
                                     MessageBus messageBus,
                                     NotificationManager notificationManager,
@@ -71,7 +67,6 @@ public class MavenBuilderPresenter extends BuildProjectPresenter
               dtoFactory, dtoUnmarshallerFactory);
         this.view = view;
         this.view.setDelegate(this);
-        this.constant = mavenConstant;
     }
 
 
@@ -82,13 +77,15 @@ public class MavenBuilderPresenter extends BuildProjectPresenter
 
     @Override
     public void onStartBuildClicked() {
-        String buildCommand = view.getBuildCommand();
-        if (buildCommand == null || buildCommand.isEmpty()) {
-            buildActiveProject(null);
-        } else {
-            BuildOptions buildOptions = dtoFactory.createDto(BuildOptions.class);
-            buildOptions.setSkipTest(view.isSkipTestSelected());
+        buildActiveProject(getBuildOptions());
+        view.close();
+    }
 
+    private BuildOptions getBuildOptions() {//TODO : need create smarter parser for command line
+        BuildOptions buildOptions = dtoFactory.createDto(BuildOptions.class);
+        buildOptions.setSkipTest(view.isSkipTestSelected());
+        String buildCommand = view.getBuildCommand();
+        if (buildCommand != null && !buildCommand.isEmpty()) {
             Map<String, String> options = new HashMap<>();
             List<String> targets = new ArrayList<>();
 
@@ -107,9 +104,8 @@ public class MavenBuilderPresenter extends BuildProjectPresenter
             }
             buildOptions.setOptions(options);
             buildOptions.setTargets(targets);
-            buildActiveProject(buildOptions);
         }
-        view.close();
+        return buildOptions;
     }
 
     @Override

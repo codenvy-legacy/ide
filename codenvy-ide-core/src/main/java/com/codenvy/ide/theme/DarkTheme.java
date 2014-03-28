@@ -73,7 +73,7 @@ public class DarkTheme implements Theme {
     public String getActiveTabBorderColor() {
         return "#232323";
     }
-    
+
     @Override
     public String getTabFontColor() {
         return "#989898";
@@ -389,7 +389,13 @@ public class DarkTheme implements Theme {
         return "0px 1px 0px rgba(46, 46, 46, 0.5)";
     }
 
+    @Override
     public String getButtonHoverTextColor() {
         return "#ffffff";
+    }
+
+    @Override
+    public String getCompletedInvertColor() {
+        return "0%";
     }
 }

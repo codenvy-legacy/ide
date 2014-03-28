@@ -314,4 +314,8 @@ public class Style {
     public static String getButtonHoverTextColor() {
         return theme.getButtonHoverTextColor();
     }
+
+    public static String getCompletedInvertColor() {
+        return theme.getCompletedInvertColor();
+    }
 }

@@ -23,6 +23,7 @@ import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.extension.maven.client.MavenLocalizationConstant;
 import com.codenvy.ide.extension.maven.client.MavenResources;
 import com.codenvy.ide.extension.maven.client.build.MavenBuilderPresenter;
+import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -57,6 +58,18 @@ public class MavenBuildAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        e.getPresentation().setEnabled(resourceProvider.getActiveProject() != null);
+        Project activeProject = resourceProvider.getActiveProject();
+        if (activeProject != null) {
+            final String builder = activeProject.getAttributeValue("builder.name");
+            if ("maven".equals(builder)) {
+                e.getPresentation().setVisible(true);
+                e.getPresentation().setEnabled(true);
+            } else {
+                e.getPresentation().setVisible(false);
+                e.getPresentation().setEnabled(false);
+            }
+        } else {
+            e.getPresentation().setEnabledAndVisible(false);
+        }
     }
 }

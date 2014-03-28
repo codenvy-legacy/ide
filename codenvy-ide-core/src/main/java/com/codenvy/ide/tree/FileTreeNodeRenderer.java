@@ -145,7 +145,7 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
         return root;
     }
 
-    private static Image detectIcon(Resource item) {
+    private static Image detectIcon(Resource item) {//===
         Project project = item.getProject();
         Image icon = null;
         if (project == null) return iconRegistry.getDefaultIcon();

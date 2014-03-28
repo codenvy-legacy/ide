@@ -32,13 +32,13 @@
         <g:center>
             <g:SplitLayoutPanel ui:field="splitPanel" width="100%" height="100%">
                 <g:south size="0">
-                    <g:SimplePanel ui:field="infoPanel" width="100%" height="100%" addStyleNames="{res.workBenchCss.ideRotate90}"/>
+                    <g:SimplePanel ui:field="infoPanel" width="100%" height="100%" addStyleNames="{res.workBenchCss.ideWorkBenchSplitPanelBottom}"/>
                 </g:south>
                 <g:west size="0">
-                    <g:SimplePanel ui:field="navPanel" width="100%" height="100%" addStyleNames="{res.workBenchCss.ideRotate180}"/>
+                    <g:SimplePanel ui:field="navPanel" width="100%" height="100%"/>
                 </g:west>
                 <g:east size="0">
-                    <g:SimplePanel ui:field="toolPanel" width="100%" height="100%"/>
+                    <g:SimplePanel ui:field="toolPanel" width="100%" height="100%" addStyleNames="{res.workBenchCss.ideWorkBenchSplitPanelRight}"/>
                 </g:east>
                 <g:center>
                     <g:ScrollPanel ui:field="editorPanel"/>
