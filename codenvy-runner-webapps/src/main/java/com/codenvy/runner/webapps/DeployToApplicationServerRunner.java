@@ -102,7 +102,7 @@ public class DeployToApplicationServerRunner extends Runner {
                 configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class).withRel("web url")
                                                        .withHref(String.format("http://%s:%d", hostName, httpPort)));
                 final DebugMode debugMode = request.getDebugMode();
-                if (debugMode != null) {
+                if (debugMode != null && debugMode.getMode() != null) {
                     configuration.setDebugHost(hostName);
                     configuration.setDebugPort(portService.acquire());
                     configuration.setDebugTransport(DEBUG_TRANSPORT_PROTOCOL);
