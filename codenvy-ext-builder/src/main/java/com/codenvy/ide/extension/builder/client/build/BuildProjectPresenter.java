@@ -20,6 +20,7 @@ package com.codenvy.ide.extension.builder.client.build;
 import com.codenvy.api.builder.BuildStatus;
 import com.codenvy.api.builder.dto.BuildOptions;
 import com.codenvy.api.builder.dto.BuildTaskDescriptor;
+import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
@@ -28,7 +29,6 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.extension.builder.client.BuilderClientService;
 import com.codenvy.ide.extension.builder.client.BuilderExtension;
 import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
 import com.codenvy.ide.resources.model.Project;
@@ -60,24 +60,25 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 //TODO: need rework for using websocket wait for server side
 @Singleton
 public class BuildProjectPresenter implements Notification.OpenNotificationHandler {
-    private final EventBus                    eventBus;
-    private final ResourceProvider            resourceProvider;
-    private final ConsolePart                 console;
-    private final BuilderClientService        service;
-    private final BuilderLocalizationConstant constant;
-    private final WorkspaceAgent              workspaceAgent;
-    private final MessageBus                  messageBus;
-    private final NotificationManager         notificationManager;
-    private final DtoFactory                  dtoFactory;
-    private final DtoUnmarshallerFactory      dtoUnmarshallerFactory;
+    protected final EventBus         eventBus;
+    protected final ResourceProvider resourceProvider;
+    protected final ConsolePart      console;
+
+    protected final BuilderServiceClient        service;
+    protected final BuilderLocalizationConstant constant;
+    protected final WorkspaceAgent              workspaceAgent;
+    protected final MessageBus                  messageBus;
+    protected final NotificationManager         notificationManager;
+    protected final DtoFactory                  dtoFactory;
+    protected final DtoUnmarshallerFactory      dtoUnmarshallerFactory;
     /** Handler for processing Maven build status which is received over WebSocket connection. */
-    private       SubscriptionHandler<String> buildStatusHandler;
+    protected       SubscriptionHandler<String> buildStatusHandler;
     /** Build of another project is performed. */
-    private boolean isBuildInProgress = false;
+    protected boolean isBuildInProgress = false;
     /** Project for build. */
-    private Project              projectToBuild;
-    private RequestStatusHandler statusHandler;
-    private Notification         notification;
+    protected Project              projectToBuild;
+    protected RequestStatusHandler statusHandler;
+    protected Notification         notification;
 
     /**
      * Create presenter.
@@ -86,7 +87,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     protected BuildProjectPresenter(EventBus eventBus,
                                     ResourceProvider resourceProvider,
                                     ConsolePart console,
-                                    BuilderClientService service,
+                                    BuilderServiceClient service,
                                     BuilderLocalizationConstant constant,
                                     WorkspaceAgent workspaceAgent,
                                     MessageBus messageBus,

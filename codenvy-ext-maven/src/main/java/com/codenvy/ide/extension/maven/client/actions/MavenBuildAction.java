@@ -15,33 +15,35 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.extension.builder.client.actions;
+package com.codenvy.ide.extension.maven.client.actions;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
-import com.codenvy.ide.extension.builder.client.BuilderResources;
-import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
+import com.codenvy.ide.extension.maven.client.MavenLocalizationConstant;
+import com.codenvy.ide.extension.maven.client.MavenResources;
+import com.codenvy.ide.extension.maven.client.build.MavenBuilderPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Action to build current project and get resulting artifact coordinates.
+ * Action to build current project.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class BuildAndPublishAction extends Action {
+public class MavenBuildAction extends Action {
 
     private final ResourceProvider      resourceProvider;
-    private       BuildProjectPresenter presenter;
+    private       MavenBuilderPresenter presenter;
 
     @Inject
-    public BuildAndPublishAction(BuildProjectPresenter presenter, BuilderResources resources,
-                                 BuilderLocalizationConstant localizationConstant, ResourceProvider resourceProvider) {
-        super(localizationConstant.buildAndPublishProjectControlText(),
-              localizationConstant.buildAndPublishProjectControlDescription(), resources.buildAndPublish());
+    public MavenBuildAction(MavenBuilderPresenter presenter,
+                            MavenResources resources,
+                            MavenLocalizationConstant localizationConstant,
+                            ResourceProvider resourceProvider) {
+        super(localizationConstant.buildProjectControlTitle(),
+              localizationConstant.buildProjectControlDescription(), resources.build());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }
@@ -49,7 +51,7 @@ public class BuildAndPublishAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        presenter.buildActiveProject();
+        presenter.showDialog();
     }
 
     /** {@inheritDoc} */

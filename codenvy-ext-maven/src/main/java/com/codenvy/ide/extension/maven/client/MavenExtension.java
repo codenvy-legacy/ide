@@ -15,13 +15,12 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.extension.builder.client;
+package com.codenvy.ide.extension.maven.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.extension.builder.client.actions.BuildAction;
-import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
+import com.codenvy.ide.extension.maven.client.actions.MavenBuildAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -35,7 +34,7 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
  */
 @Singleton
 @Extension(title = "Building project", version = "3.0.0")
-public class BuilderExtension {
+public class MavenExtension {
     public static final String PROJECT_BUILD_GROUP_MAIN_MENU   = "ProjectBuildGroup";
     /** Channel for the messages containing status of the Maven build job. */
     public static final String BUILD_STATUS_CHANNEL            = "builder:status:";
@@ -46,15 +45,17 @@ public class BuilderExtension {
      *
      */
     @Inject
-    public BuilderExtension(BuilderLocalizationConstant localizationConstants,
-                            ActionManager actionManager,
-                            BuildAction buildAction) {
+    public MavenExtension(MavenLocalizationConstant localizationConstants,
+                          ActionManager actionManager,
+                          MavenBuildAction buildAction) {
         // register actions
         actionManager.registerAction(localizationConstants.buildProjectControlId(), buildAction);
+//        actionManager.registerAction(localizationConstants.buildAndPublishProjectControlId(), buildAndPublishAction);
 
         // compose action group
         DefaultActionGroup buildGroup = new DefaultActionGroup(PROJECT_BUILD_GROUP_MAIN_MENU, false, actionManager);
         buildGroup.add(buildAction);
+//        buildGroup.add(buildAndPublishAction);
 
         // add action group to 'Project' menu
         DefaultActionGroup projectMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_PROJECT);

@@ -15,20 +15,20 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.extension.builder.client.inject;
+package com.codenvy.ide.extension.maven.client.inject;
 
-import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
-import com.codenvy.api.builder.gwt.client.BuilderServiceClientImpl;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
+import com.codenvy.ide.extension.maven.client.build.MavenBuildView;
+import com.codenvy.ide.extension.maven.client.build.MavenBuildViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 @ExtensionGinModule
-public class BuilderGinModule extends AbstractGinModule {
+public class MavenGinModule extends AbstractGinModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
-        bind(BuilderServiceClient.class).to(BuilderServiceClientImpl.class).in(Singleton.class);
+        bind(MavenBuildView.class).to(MavenBuildViewImpl.class).in(Singleton.class);
     }
 }

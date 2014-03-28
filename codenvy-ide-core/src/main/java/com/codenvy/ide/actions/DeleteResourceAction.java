@@ -62,12 +62,11 @@ public class DeleteResourceAction extends Action {
     public void update(ActionEvent e) {
         Selection<?> s = selectionAgent.getSelection();
         if (s != null && s.getFirstElement() instanceof Resource) {
-            e.getPresentation().setVisible(true);
             Selection<Resource> selection = (Selection<Resource>)s;
             Resource resource = selection.getFirstElement();
             e.getPresentation().setEnabled(resource != null);
         } else
-            e.getPresentation().setVisible(false);
+            e.getPresentation().setEnabled(false);
     }
 
     /** {@inheritDoc} */
