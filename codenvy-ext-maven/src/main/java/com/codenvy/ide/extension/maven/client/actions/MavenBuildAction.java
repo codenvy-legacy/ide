@@ -62,11 +62,9 @@ public class MavenBuildAction extends Action {
         if (activeProject != null) {
             final String builder = activeProject.getAttributeValue("builder.name");
             if ("maven".equals(builder)) {
-                e.getPresentation().setVisible(true);
-                e.getPresentation().setEnabled(true);
+                e.getPresentation().setEnabledAndVisible(true);
             } else {
-                e.getPresentation().setVisible(false);
-                e.getPresentation().setEnabled(false);
+                e.getPresentation().setEnabledAndVisible(false);
             }
         } else {
             e.getPresentation().setEnabledAndVisible(false);

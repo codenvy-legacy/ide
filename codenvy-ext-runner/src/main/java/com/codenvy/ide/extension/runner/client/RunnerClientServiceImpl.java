@@ -19,6 +19,7 @@ package com.codenvy.ide.extension.runner.client;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
+import com.codenvy.api.runner.dto.RunOptions;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.ui.loader.Loader;
@@ -56,10 +57,11 @@ public class RunnerClientServiceImpl implements RunnerClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void run(String projectName, AsyncRequestCallback<ApplicationProcessDescriptor> callback) {
+    public void run(String projectName, RunOptions runOptions, AsyncRequestCallback<ApplicationProcessDescriptor> callback) {
         final String requestUrl = baseUrl + "/runner/" + workspaceId + "/run";
         String params = "project=" + projectName;
-        asyncRequestFactory.createPostRequest(requestUrl + "?" + params, null).data("{}").header("content-type", "application/json").send(callback);
+        asyncRequestFactory.createPostRequest(requestUrl + "?" + params, runOptions)
+                           .send(callback);
     }
 
     /** {@inheritDoc} */

@@ -21,6 +21,8 @@ import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.rest.shared.dto.ServiceError;
 import com.codenvy.api.runner.ApplicationStatus;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
+import com.codenvy.api.runner.dto.RunOptions;
+import com.codenvy.api.runner.internal.dto.DebugMode;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.notification.Notification;
@@ -28,12 +30,9 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
@@ -43,7 +42,6 @@ import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.StringUnmarshallerWS;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -142,7 +140,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
             @Override
             public void onProjectDescriptionChanged(ProjectActionEvent event) {
-                // do nothing
             }
         });
 
@@ -191,56 +188,15 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         notification = new Notification(constant.applicationStarting(currentProject.getName()), PROGRESS, RunnerController.this);
         notificationManager.showNotification(notification);
 
-        writeProperties(debug, new AsyncCallback<Project>() {
-            @Override
-            public void onSuccess(Project result) {
-                runActiveProject();
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                isLaunchingInProgress = false;
-                onFail(constant.startApplicationFailed(currentProject.getName()), caught);
-            }
-        });
-    }
-
-    private void writeProperties(boolean debug, final AsyncCallback<Project> callback) {
-        Project activeProject = resourceProvider.getActiveProject();
-        final String runnerName = (String)activeProject.getPropertyValue("runner.name");
-        if (runnerName != null) {
-            final String debugModePropertyName = "runner." + runnerName + ".debugmode";
-
-            Array<Property> projectProperties = Collections.createArray(activeProject.getProperties().asIterable());
-            Property property = activeProject.getProperty(debugModePropertyName);
-            if (property == null) {
-                property = new Property();
-                property.setName(debugModePropertyName);
-                projectProperties.add(property);
-            }
-
-            property.setValue(debug ? Collections.<String>createArray("default") : null);
-
-            activeProject.getProperties().clear();
-            activeProject.getProperties().addAll(projectProperties);
-            activeProject.flushProjectProperties(new AsyncCallback<Project>() {
-                @Override
-                public void onSuccess(Project result) {
-                    callback.onSuccess(result);
-                }
-
-                @Override
-                public void onFailure(Throwable caught) {
-                    callback.onFailure(caught);
-                }
-            });
-        } else {
-            callback.onSuccess(null);
+        RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
+        if (debug) {
+            runOptions.setDebugMode(dtoFactory.createDto(DebugMode.class).withMode("default"));
         }
+        runActiveProject(runOptions);
     }
 
-    private void runActiveProject() {
-        service.run(currentProject.getPath(),
+    private void runActiveProject(RunOptions runOptions) {
+        service.run(currentProject.getPath(), runOptions,
                     new AsyncRequestCallback<ApplicationProcessDescriptor>(
                             dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
                         @Override

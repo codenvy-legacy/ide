@@ -88,8 +88,6 @@ import static com.codenvy.ide.ext.java.jdi.shared.DebuggerEvent.STEP;
 @Singleton
 public class DebuggerPresenter extends BasePresenter implements DebuggerView.ActionDelegate, Debugger {
     private static final String TITLE                  = "Debug";
-    /** Period for checking debugger events. */
-    private static final int    CHECK_EVENTS_PERIOD_MS = 2000;
     private final DtoFactory                             dtoFactory;
     private final DtoUnmarshallerFactory                 dtoUnmarshallerFactory;
     /** Channel identifier to receive events from debugger over WebSocket. */
@@ -360,7 +358,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                                           Notification notification = new Notification(exception.getMessage(), ERROR);
                                           notificationManager.showNotification(notification);
                                       }
-                                  });
+                                  }
+                                 );
     }
 
     /** Change enable state of all buttons (except Disconnect button) on Debugger panel. */
@@ -503,20 +502,21 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     public void onExpandVariablesTree() {
         List<Variable> rootVariables = selectedVariable.getVariables();
         if (rootVariables.size() == 0) {
-            service.getValue(debuggerInfo.getId(), selectedVariable, new AsyncRequestCallback<Value>() {
-                @Override
-                protected void onSuccess(Value result) {
-                    List<Variable> variables = result.getVariables();
-                    view.setVariablesIntoSelectedVariable(variables);
-                    view.updateSelectedVariable();
-                }
+            service.getValue(debuggerInfo.getId(), selectedVariable,
+                             new AsyncRequestCallback<Value>(dtoUnmarshallerFactory.newUnmarshaller(Value.class)) {
+                                 @Override
+                                 protected void onSuccess(Value result) {
+                                     List<Variable> variables = result.getVariables();
+                                     view.setVariablesIntoSelectedVariable(variables);
+                                     view.updateSelectedVariable();
+                                 }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    Notification notification = new Notification(exception.getMessage(), ERROR);
-                    notificationManager.showNotification(notification);
-                }
-            });
+                                 @Override
+                                 protected void onFailure(Throwable exception) {
+                                     Notification notification = new Notification(exception.getMessage(), ERROR);
+                                     notificationManager.showNotification(notification);
+                                 }
+                             });
         }
     }
 
@@ -578,7 +578,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                                 Notification notification = new Notification(exception.getMessage(), ERROR);
                                 notificationManager.showNotification(notification);
                             }
-                        });
+                        }
+                       );
     }
 
     private void disconnectDebugger() {

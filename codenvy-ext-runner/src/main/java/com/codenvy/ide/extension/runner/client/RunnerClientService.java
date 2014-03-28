@@ -19,6 +19,7 @@ package com.codenvy.ide.extension.runner.client;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
+import com.codenvy.api.runner.dto.RunOptions;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 
 /**
@@ -33,9 +34,11 @@ public interface RunnerClientService {
      *
      * @param projectName
      *         name of the project to run
+     * @param runOptions
+     *         options to configure run process
      * @param callback
      */
-    public void run(String projectName, AsyncRequestCallback<ApplicationProcessDescriptor> callback);
+    public void run(String projectName, RunOptions runOptions, AsyncRequestCallback<ApplicationProcessDescriptor> callback);
 
     /**
      * Get status of app.
