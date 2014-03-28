@@ -136,6 +136,9 @@ public class NotificationItem extends Composite implements Notification.Notifica
      */
     private void changeImage(@NotNull ImageResource icon) {
         Image messageIcon = new Image(icon);
+        if (resources.progress().equals(icon)) {
+            messageIcon.setSize("16", "16");
+        }
         iconPanel.setWidget(messageIcon);
     }
 

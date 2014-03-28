@@ -72,7 +72,7 @@ public class LightTheme implements Theme {
     public String getActiveTabBorderColor() {
         return "#232323";
     }
-    
+
     public String getTabFontColor() {
         return "#989898";
     }
@@ -390,5 +390,10 @@ public class LightTheme implements Theme {
 
     public String getButtonHoverTextColor() {
         return "#000000";
+    }
+
+    @Override
+    public String getCompletedInvertColor() {
+        return "100%";
     }
 }

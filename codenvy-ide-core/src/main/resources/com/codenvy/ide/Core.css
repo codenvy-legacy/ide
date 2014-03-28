@@ -340,4 +340,5 @@ class for the document-level scrollbars. */
     border: 1px solid tabBorder;
     border-radius: 3px;
     background-color: partBackground;
+    z-index: 7;
 }

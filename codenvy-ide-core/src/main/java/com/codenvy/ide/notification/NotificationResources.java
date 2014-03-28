@@ -41,6 +41,8 @@ public interface NotificationResources extends ClientBundle {
         String statusPanel();
 
         String right25px();
+
+        String invertColor();
     }
 
     @Source({"notification.css", "com/codenvy/ide/api/ui/style.css"})

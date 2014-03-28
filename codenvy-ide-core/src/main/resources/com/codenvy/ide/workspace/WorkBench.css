@@ -58,17 +58,18 @@
 }
 
 img[name="workBenchIconMinimize"] {
-    margin: 19% 22%;
+    margin: 22% 20%;
 }
 
-.ide-rotate-90 img[name="workBenchIconMinimize"] {
-    -webkit-transform: rotate(90deg);
-    -moz-transform: rotate(90deg);
-    transform: rotate(90deg);
-}
 
-.ide-rotate-180 img[name="workBenchIconMinimize"] {
+.ide-work-bench-split-panel-right img[name="workBenchIconMinimize"] {
     -webkit-transform: rotate(180deg);
     -moz-transform: rotate(180deg);
     transform: rotate(180deg);
+}
+
+.ide-work-bench-split-panel-bottom img[name="workBenchIconMinimize"] {
+    -webkit-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    transform: rotate(270deg);
 }

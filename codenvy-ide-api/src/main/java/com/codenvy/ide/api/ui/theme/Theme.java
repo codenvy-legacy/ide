@@ -447,7 +447,7 @@ public interface Theme {
 
     /**
      * Return the exterior shadow property for boxes.
-     * 
+     *
      * @return the exterior shadow
      */
     String getBoxOuterShadow();
@@ -459,4 +459,9 @@ public interface Theme {
     String getBoxTextShadow();
 
     String getBoxBackgroundColorDisabled();
+
+    /**
+     * @return the percentage of color inversion
+     */
+    String getCompletedInvertColor();
 }
