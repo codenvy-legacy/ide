@@ -57,7 +57,7 @@ public class BaseProjectTest extends LocalFileSystemTest {
         typeRegistry.registerProjectType(new ProjectType("test_type", "test type", "test category"));
         ProjectTypeDescriptionRegistry ptdr = new ProjectTypeDescriptionRegistry(typeRegistry);
         Set<ValueProviderFactory> vpf = Collections.EMPTY_SET;
-        pm = new ProjectManager(typeRegistry, ptdr, vpf, virtualFileSystemRegistry);
+        pm = new ProjectManager(typeRegistry, ptdr, vpf, virtualFileSystemRegistry, mountPoint.getEventService());
         folderPath = createDirectory("/", "project");
         URL testproject = Thread.currentThread().getContextClassLoader().getResource("projects/testproject");
         zipProject = zipFolder(testproject.getFile());
