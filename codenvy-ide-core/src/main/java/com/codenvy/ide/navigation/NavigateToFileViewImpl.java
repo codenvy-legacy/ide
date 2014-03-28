@@ -30,7 +30,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.user.client.ui.Widget;
@@ -168,30 +167,12 @@ public class NavigateToFileViewImpl extends DialogBox implements NavigateToFileV
             });
         }
 
-        /**
-         * Returns the formed display name of the item.
-         *
-         * @param item
-         *         item to display
-         * @return formed display name
-         */
+        /** Returns the formed display name of the item. */
         private String getDisplayName(ItemReference item) {
             final String itemName = item.getName();
             final String itemPath = item.getPath().replaceFirst("/", "");
-            return itemName + "   (" + itemPath.substring(0, itemPath.length() - itemName.length() - 1) + ")";
-        }
-    }
+            String displayString = itemName + "   (" + itemPath.substring(0, itemPath.length() - itemName.length() - 1) + ")";
 
-    private class FilesSuggestOracle extends MultiWordSuggestOracle {
-        /** {@inheritDoc} */
-        @Override
-        public boolean isDisplayStringHTML() {
-            return true;
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        protected MultiWordSuggestion createSuggestion(String replacementString, String displayString) {
             String[] parts = displayString.split(" ");
             if (parts.length > 1) {
                 displayString = parts[0];
@@ -201,7 +182,7 @@ public class NavigateToFileViewImpl extends DialogBox implements NavigateToFileV
                 }
                 displayString += "</span>";
             }
-            return super.createSuggestion(replacementString, displayString);
+            return displayString;
         }
     }
 }

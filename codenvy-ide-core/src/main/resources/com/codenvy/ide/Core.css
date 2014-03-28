@@ -341,3 +341,54 @@ class for the document-level scrollbars. */
     border-radius: 3px;
     background-color: partBackground;
 }
+
+/* Style for SuggestBox */
+.gwt-SuggestBoxPopup .suggestPopupTopLeft {
+    background: dialogTopLeft url("");
+}
+.gwt-SuggestBoxPopup .suggestPopupTopLeftInner {
+    width: 2px;
+    height: 2px;
+}
+.gwt-SuggestBoxPopup .suggestPopupTopCenter {
+    background: dialogTopCenter url("");
+}
+.gwt-SuggestBoxPopup .suggestPopupTopRight {
+    background: dialogTopRight url("");
+}
+.gwt-SuggestBoxPopup .suggestPopupTopRightInner {
+    width: 2px;
+    height: 2px;
+}
+.gwt-SuggestBoxPopup .suggestPopupMiddleLeft {
+    background: dialogMiddleLeft url("");
+}
+.gwt-SuggestBoxPopup .suggestPopupContent {
+    background-color: partBackground;
+}
+.gwt-SuggestBoxPopup .suggestPopupMiddleRight {
+    background: dialogMiddleRight url("");
+}
+.gwt-SuggestBoxPopup .suggestPopupBottomLeft {
+    background: dialogBottomLeft url("");
+}
+.gwt-SuggestBoxPopup .suggestPopupBottomLeftInner {
+    width: 2px;
+    height: 2px;
+}
+.gwt-SuggestBoxPopup .suggestPopupBottomCenter {
+    background: dialogBottomCenter url("");
+}
+.gwt-SuggestBoxPopup .suggestPopupBottomRight {
+    background: dialogBottomRight url("");
+}
+.gwt-SuggestBoxPopup .suggestPopupBottomRightInner {
+    width: 2px;
+    height: 2px;
+}
+.gwt-SuggestBoxPopup .item {
+    color: boxTextColor;
+}
+.gwt-SuggestBoxPopup .item-selected {
+    background-color: keyboardSelectionBackgroundColor;
+}
