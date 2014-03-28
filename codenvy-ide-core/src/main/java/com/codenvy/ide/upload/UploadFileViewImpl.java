@@ -43,8 +43,8 @@ public class UploadFileViewImpl extends DialogBox implements UploadFileView {
     public interface UploadFileViewBinder extends UiBinder<Widget, UploadFileViewImpl> {
     }
 
-    private FileUpload     file;
-    private ActionDelegate delegate;
+    FileUpload     file;
+    ActionDelegate delegate;
 
     @UiField
     Button btnCancel;

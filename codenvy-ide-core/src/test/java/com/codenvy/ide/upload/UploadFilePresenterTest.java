@@ -39,6 +39,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
+ * Testing {@link UploadFilePresenter} functionality.
+ *
  * @author Roman Nikitenko.
  */
 @RunWith(MockitoJUnitRunner.class)
