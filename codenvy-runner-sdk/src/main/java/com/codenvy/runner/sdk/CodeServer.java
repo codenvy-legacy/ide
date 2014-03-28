@@ -65,8 +65,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
- * GWT code server. Concrete implementations provide an implementation of methods
- * thereby controlling how the GWT code server will run, stop, get log files content.
+ * GWT code server.
  *
  * @author Artem Zatsarynnyy
  */

@@ -35,11 +35,6 @@
         <generated.sources.directory>${project.build.directory}/generated-sources/gen</generated.sources.directory>
     </properties>
 
-    <!--
-        IMPORTANT!
-        Make sure that the same 'private' dependencies is present in
-        codenvy-sdk-private-dependencies/pom.xml
-    -->
     <dependencies>
         <dependency>
             <groupId>com.google.gwt</groupId>
