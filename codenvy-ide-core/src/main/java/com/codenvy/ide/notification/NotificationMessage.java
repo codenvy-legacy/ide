@@ -133,6 +133,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
         Image messageIcon = new Image(icon);
         if(resources.progress().equals(icon)){
             messageIcon.setSize("16", "16");
+            messageIcon.addStyleName(resources.notificationCss().invertColor());
         }
         iconPanel.setWidget(messageIcon);
     }

@@ -51,12 +51,10 @@ public class BuilderExtension {
                             BuildAction buildAction) {
         // register actions
         actionManager.registerAction(localizationConstants.buildProjectControlId(), buildAction);
-//        actionManager.registerAction(localizationConstants.buildAndPublishProjectControlId(), buildAndPublishAction);
 
         // compose action group
         DefaultActionGroup buildGroup = new DefaultActionGroup(PROJECT_BUILD_GROUP_MAIN_MENU, false, actionManager);
         buildGroup.add(buildAction);
-//        buildGroup.add(buildAndPublishAction);
 
         // add action group to 'Project' menu
         DefaultActionGroup projectMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_PROJECT);

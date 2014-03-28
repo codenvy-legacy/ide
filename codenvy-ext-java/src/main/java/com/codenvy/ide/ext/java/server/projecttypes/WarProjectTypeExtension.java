@@ -45,7 +45,7 @@ public class WarProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType("war", "Java Web Application (WAR)");
+        return new ProjectType("war", "Java Web Application (WAR)", Constants.JAVA_CATEGORY);
     }
 
     @Override
