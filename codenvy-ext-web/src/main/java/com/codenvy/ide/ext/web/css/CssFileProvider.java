@@ -26,6 +26,7 @@ import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 
 import javax.validation.constraints.NotNull;
@@ -38,9 +39,13 @@ import javax.validation.constraints.NotNull;
  */
 public class CssFileProvider extends NewResourceProvider {
 
+    protected CssFileProvider(String name, Image icon, String extension) {
+        super(name, name, icon, extension);
+    }
+
     @Inject
     public CssFileProvider(IconRegistry iconRegistry) {
-        super("Css css", "Css css", iconRegistry.getIcon("web.css.file.small.icon"), "css");
+        this("Css css", iconRegistry.getIcon("web.css.file.small.icon"), "css");
     }
 
     /** {@inheritDoc} */
