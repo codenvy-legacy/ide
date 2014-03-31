@@ -18,7 +18,6 @@
 package com.codenvy.ide.navigation;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
@@ -32,7 +31,6 @@ import com.codenvy.ide.websocket.MessageBus;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -66,9 +64,9 @@ public class NavigateToFileTest {
     @Mock
     private NavigateToFileView      view;
     @Mock
-    private Project                 project;
-    @Mock
     private ResourceProvider        resourceProvider;
+    @Mock
+    private Project                 project;
     @Mock
     private EventBus                eventBus;
     private NavigateToFilePresenter presenter;
@@ -100,16 +98,16 @@ public class NavigateToFileTest {
 
         Folder parentFolder = mock(Folder.class);
         when(parentFolder.getId()).thenReturn(VFS_ID);
+
+        when(project.getChildren()).thenReturn(children);
         when(project.getParent()).thenReturn(parentFolder);
         when(resourceProvider.getActiveProject()).thenReturn(project);
         when(resourceProvider.getRootId()).thenReturn(VFS_ID);
-        when(project.getChildren()).thenReturn(children);
 
         presenter = new NavigateToFilePresenter(view, resourceProvider, eventBus, messageBus, anyString(), dtoUnmarshallerFactory);
     }
 
     @Test
-    @Ignore
     public void testShowDialog() throws Exception {
         presenter.showDialog();
 
@@ -119,13 +117,12 @@ public class NavigateToFileTest {
     }
 
     @Test
-    @Ignore
     public void testOnFileSelected() throws Exception {
-        ItemReference item = mock(ItemReference.class);
-        when(item.getPath()).thenReturn(anyString());
-
         String displayName = FILE_IN_ROOT_NAME + " (" + PROJECT_NAME + ")";
         when(view.getItemPath()).thenReturn(displayName);
+        File file = mock(File.class);
+        when(file.getPath()).thenReturn(displayName);
+        project.getChildren().add(file);
 
         presenter.showDialog();
         presenter.onFileSelected();

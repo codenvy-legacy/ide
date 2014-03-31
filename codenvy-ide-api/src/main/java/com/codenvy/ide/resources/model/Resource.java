@@ -174,7 +174,7 @@ public abstract class Resource {
      *
      * @return
      */
-    public final Folder getParent() {
+    public Folder getParent() {
         return parent;
     }
 

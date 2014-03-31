@@ -23,7 +23,6 @@ import com.codenvy.ide.api.resources.FileEvent.FileOperation;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
@@ -55,14 +54,13 @@ import static com.google.gwt.http.client.RequestBuilder.GET;
 @Singleton
 public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegate {
 
-    private       NavigateToFileView       view;
-    private       ResourceProvider         resourceProvider;
-    private       EventBus                 eventBus;
-    private final MessageBus               wsMessageBus;
-    private final DtoUnmarshallerFactory   dtoUnmarshallerFactory;
-    private       Project                  rootProject;
-    private       StringMap<ItemReference> itemReferences;
-    final private String                   SEARCH_URL;
+    private       NavigateToFileView     view;
+    private       ResourceProvider       resourceProvider;
+    private       EventBus               eventBus;
+    private final MessageBus             wsMessageBus;
+    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    private       Project                rootProject;
+    final private String                 SEARCH_URL;
 
     @Inject
     public NavigateToFilePresenter(NavigateToFileView view, ResourceProvider resourceProvider, EventBus eventBus, MessageBus wsMessageBus,
@@ -81,7 +79,6 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
         // Get root-project path in order to allow to search for files
         // in the entire project, not just in the current sub-module.
         rootProject = getRootProject(resourceProvider.getActiveProject());
-        itemReferences = Collections.createStringMap();
         view.showDialog();
         view.clearInput();
         view.focusInput();
@@ -89,15 +86,19 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
 
     /** {@inheritDoc} */
     @Override
-    public void onRequestSuggestions(String query, final AsyncCallback<Array<ItemReference>> callback) {
+    public void onRequestSuggestions(String query, final AsyncCallback<Array<String>> callback) {
         // add '*' to allow search files by first letters
         search(query + "*", new AsyncCallback<Array<ItemReference>>() {
             @Override
             public void onSuccess(Array<ItemReference> result) {
+                Array<String> suggestions = Collections.createArray();
                 for (ItemReference item : result.asIterable()) {
-                    itemReferences.put(item.getPath(), item);
+                    // skip hidden items
+                    if (!item.getPath().contains("/.")) {
+                        suggestions.add(item.getPath());
+                    }
                 }
-                callback.onSuccess(result);
+                callback.onSuccess(suggestions);
             }
 
             @Override
@@ -142,8 +143,8 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
     public void onFileSelected() {
         view.close();
 
-        final ItemReference itemToOpen = itemReferences.get(view.getItemPath());
-        refreshPath(rootProject, itemToOpen.getPath(), new AsyncCallback<Resource>() {
+        final String path = view.getItemPath();
+        refreshPath(rootProject, path, new AsyncCallback<Resource>() {
             @Override
             public void onSuccess(Resource result) {
                 eventBus.fireEvent(new FileEvent((File)result, FileOperation.OPEN));
@@ -151,7 +152,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
 
             @Override
             public void onFailure(Throwable caught) {
-                Log.error(NavigateToFilePresenter.class, "Unable to open a file " + itemToOpen.getName());
+                Log.error(NavigateToFilePresenter.class, "Unable to open a file " + path);
             }
         });
     }

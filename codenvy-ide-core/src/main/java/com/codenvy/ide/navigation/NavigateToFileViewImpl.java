@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.navigation;
 
-import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.util.loging.Log;
@@ -133,16 +132,12 @@ public class NavigateToFileViewImpl extends DialogBox implements NavigateToFileV
 
         @Override
         public void requestSuggestions(final Request request, final Callback callback) {
-            delegate.onRequestSuggestions(request.getQuery(), new AsyncCallback<Array<ItemReference>>() {
+            delegate.onRequestSuggestions(request.getQuery(), new AsyncCallback<Array<String>>() {
                 /** {@inheritDoc} */
                 @Override
-                public void onSuccess(Array<ItemReference> result) {
+                public void onSuccess(Array<String> result) {
                     final List<SuggestOracle.Suggestion> suggestions = new ArrayList<>(result.size());
-                    for (final ItemReference item : result.asIterable()) {
-                        // skip hidden items
-                        if (item.getName().startsWith(".")) {
-                            continue;
-                        }
+                    for (final String item : result.asIterable()) {
                         suggestions.add(new SuggestOracle.Suggestion() {
                             @Override
                             public String getDisplayString() {
@@ -151,7 +146,7 @@ public class NavigateToFileViewImpl extends DialogBox implements NavigateToFileV
 
                             @Override
                             public String getReplacementString() {
-                                return item.getPath();
+                                return item;
                             }
                         });
                     }
@@ -167,10 +162,10 @@ public class NavigateToFileViewImpl extends DialogBox implements NavigateToFileV
             });
         }
 
-        /** Returns the formed display name of the item. */
-        private String getDisplayName(ItemReference item) {
-            final String itemName = item.getName();
-            final String itemPath = item.getPath().replaceFirst("/", "");
+        /** Returns the formed display name of the specified path. */
+        private String getDisplayName(String path) {
+            final String itemName = path.substring(path.lastIndexOf('/') + 1);
+            final String itemPath = path.replaceFirst("/", "");
             String displayString = itemName + "   (" + itemPath.substring(0, itemPath.length() - itemName.length() - 1) + ")";
 
             String[] parts = displayString.split(" ");

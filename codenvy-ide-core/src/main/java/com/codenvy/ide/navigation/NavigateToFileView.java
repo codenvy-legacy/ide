@@ -39,7 +39,7 @@ public interface NavigateToFileView extends View<NavigateToFileView.ActionDelega
          * @param callback
          *         callback
          */
-        void onRequestSuggestions(String query, AsyncCallback<Array<ItemReference>> callback);
+        void onRequestSuggestions(String query, AsyncCallback<Array<String>> callback);
 
         /** Called when file selected. */
         void onFileSelected();
