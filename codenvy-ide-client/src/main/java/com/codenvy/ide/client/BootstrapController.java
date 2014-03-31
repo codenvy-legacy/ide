@@ -145,7 +145,7 @@ public class BootstrapController {
                     public void onFailure(ComponentException caught) {
                         Log.error(BootstrapController.class, "FAILED to start service:" + caught.getComponent(), caught);
 
-                        // Handle any error when receiving profile.
+                        // Handle error when receiving profile.
                         initializationFailed(caught.getMessage());
                     }
                 });
