@@ -73,6 +73,7 @@ public class JavaRuntimeExtension {
 
         debuggerManager.registeredDebugger(Constants.WAR_ID, debuggerPresenter);
         debuggerManager.registeredDebugger(Constants.SPRING_ID, debuggerPresenter);
+        debuggerManager.registeredDebugger(com.codenvy.ide.server.Constants.CODENVY_PLUGIN_ID, debuggerPresenter);
         resolverFactory.addResolver(APPLICATION_JAVA, javaFqnResolver);
     }
 }
