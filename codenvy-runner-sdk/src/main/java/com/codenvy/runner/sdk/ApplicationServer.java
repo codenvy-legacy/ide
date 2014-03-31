@@ -19,6 +19,7 @@ package com.codenvy.runner.sdk;
 
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.ApplicationProcess;
+import com.codenvy.api.runner.internal.DeploymentSources;
 
 import java.util.zip.ZipFile;
 
@@ -33,28 +34,32 @@ public interface ApplicationServer {
     String getName();
 
     /**
-     * Deploy {@code DeploymentSources} to application server.
+     * Deploy WAR to application server.
      *
-     * @param appDir
-     *         root directory where for application server
-     * @param warFile
-     *         web app file to deploy
+     * @param workDir
+     *         root directory for this application server
+     * @param warToDeploy
+     *         WAR file to deploy
+     * @param extensionJar
      * @param runnerConfiguration
-     *         configuration of application server to run application
+     *         runner configuration
      * @param codeServerProcess
-     *         may be <code>null</code> if no need to run code server
+     *         may be <code>null</code> if no need to run GWT Code Server
      * @param stopCallback
-     *         an implementation should invoke stopped() method on provided <code>stopCallback</code> when this
-     *         application
-     *         server stopped
+     *         an implementation should invoke {@link StopCallback#stopped()} method on the provided <code>stopCallback</code>
+     *         when this application server will be stopped
      * @return {@code ApplicationProcess} that represents a deployed app
      * @throws com.codenvy.api.runner.RunnerException
      *         if an error occurs when try to deploy app to application server
      */
-    ApplicationProcess deploy(java.io.File appDir, ZipFile warFile, SDKRunnerConfiguration runnerConfiguration,
-                              CodeServer.CodeServerProcess codeServerProcess, StopCallback stopCallback) throws RunnerException;
+    ApplicationProcess deploy(java.io.File workDir,
+                              ZipFile warToDeploy,
+                              DeploymentSources extensionJar,
+                              SDKRunnerConfiguration runnerConfiguration,
+                              CodeServer.CodeServerProcess codeServerProcess,
+                              StopCallback stopCallback) throws RunnerException;
 
-    /** Will be notified when {@code ApplicationServer} stopped. */
+    /** Will be notified when {@code ApplicationServer} will be stopped. */
     public interface StopCallback {
         void stopped();
     }

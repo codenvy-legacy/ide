@@ -23,6 +23,8 @@ import com.codenvy.api.core.util.SystemInfo;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.ApplicationLogger;
 import com.codenvy.api.runner.internal.ApplicationProcess;
+import com.codenvy.api.runner.internal.DeploymentSources;
+import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.commons.lang.NamedThreadFactory;
 import com.codenvy.commons.lang.ZipUtils;
 import com.google.common.io.CharStreams;
@@ -92,25 +94,31 @@ public class TomcatServer implements ApplicationServer {
     }
 
     @Override
-    public ApplicationProcess deploy(java.io.File appDir,
-                                     ZipFile webApp,
+    public ApplicationProcess deploy(java.io.File workDir,
+                                     ZipFile warToDeploy,
+                                     DeploymentSources extensionJar,
                                      SDKRunnerConfiguration runnerConfiguration,
                                      CodeServer.CodeServerProcess codeServerProcess,
                                      StopCallback stopCallback) throws RunnerException {
         try {
-            final Path tomcatPath = Files.createDirectory(appDir.toPath().resolve("tomcat"));
+            final Path tomcatPath = Files.createDirectory(workDir.toPath().resolve("tomcat"));
             ZipUtils.unzip(Utils.getTomcatBinaryDistribution().openStream(), tomcatPath.toFile());
             final Path webappsPath = tomcatPath.resolve("webapps");
-            ZipUtils.unzip(new java.io.File(webApp.getName()), webappsPath.resolve("ide").toFile());
+            ZipUtils.unzip(new java.io.File(warToDeploy.getName()), webappsPath.resolve("ide").toFile());
             generateServerXml(tomcatPath.toFile(), runnerConfiguration);
-            configureApiServices(webappsPath.toFile(), runnerConfiguration);
+
+            // add JAR with custom's extension to 'webapps/api/WEB-INF/lib'
+            Path apiDirPath = webappsPath.resolve("api");
+            ZipUtils.unzip(new java.io.File(webappsPath.resolve("api.war").toString()), apiDirPath.toFile());
+            IoUtil.copy(extensionJar.getFile(),
+                        apiDirPath.resolve("WEB-INF/lib").resolve(extensionJar.getFile().getName()).toFile(), null);
         } catch (IOException e) {
             throw new RunnerException(e);
         }
         if (SystemInfo.isUnix()) {
-            return startUnix(appDir, runnerConfiguration, codeServerProcess, stopCallback);
+            return startUnix(workDir, runnerConfiguration, codeServerProcess, stopCallback);
         } else {
-            return startWindows(appDir, runnerConfiguration, codeServerProcess, stopCallback);
+            return startWindows(workDir, runnerConfiguration, codeServerProcess, stopCallback);
         }
     }
 
@@ -118,9 +126,6 @@ public class TomcatServer implements ApplicationServer {
         String cfg = SERVER_XML.replace("${PORT}", Integer.toString(runnerConfiguration.getHttpPort()));
         final java.io.File serverXmlFile = new java.io.File(new java.io.File(tomcatDir, "conf"), "server.xml");
         Files.write(serverXmlFile.toPath(), cfg.getBytes());
-    }
-
-    protected void configureApiServices(java.io.File webapps, SDKRunnerConfiguration runnerConfiguration) throws IOException {
     }
 
     public int getMemSize() {

@@ -177,7 +177,7 @@ public class SDKRunner extends Runner {
                                                                             extension);
         final ZipFile warFile = buildCodenvyWebAppWithExtension(extension);
         final ApplicationProcess process =
-                server.deploy(appDir, warFile, sdkRunnerCfg, codeServerProcess,
+                server.deploy(appDir, warFile, toDeploy, sdkRunnerCfg, codeServerProcess,
                               new ApplicationServer.StopCallback() {
                                   @Override
                                   public void stopped() {

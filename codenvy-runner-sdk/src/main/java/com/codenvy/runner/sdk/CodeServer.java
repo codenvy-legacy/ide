@@ -271,7 +271,7 @@ public class CodeServer {
         public void getLogs(Appendable output) throws IOException, RunnerException {
             final String url = bindAddress + ':' + port + "/log/_app";
             final String logContent = sendGet(new URL(url.startsWith("http://") ? url : "http://" + url));
-            output.append(String.format("%n====> GWT-code-server.log <====%n"));
+            output.append(String.format("%n====> GWT-code-server.log <===="));
             output.append(logContent);
             output.append(System.lineSeparator());
         }
