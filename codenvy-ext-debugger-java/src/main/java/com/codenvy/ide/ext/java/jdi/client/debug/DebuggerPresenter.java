@@ -243,7 +243,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     /** {@inheritDoc} */
     @Override
     public ImageResource getTitleImage() {
-        return resources.debugApp();
+        return null;
     }
 
     /** {@inheritDoc} */
@@ -545,6 +545,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         selectedVariable = null;
         updateChangeValueButtonEnableState();
         changeButtonsEnableState(false);
+        view.setEnableRemoveAllBreakpointsButton(true);
+        view.setEnableDisconnectButton(true);
 
         workspaceAgent.openPart(this, PartStackType.INFORMATION);
         PartPresenter activePart = partStack.getActivePart();
@@ -555,8 +557,9 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
 
     private void closeView() {
         variables.clear();
+        view.setEnableRemoveAllBreakpointsButton(false);
+        view.setEnableDisconnectButton(false);
         workspaceAgent.hidePart(this);
-        workspaceAgent.removePart(this);
     }
 
     /** Connect to the debugger. */
