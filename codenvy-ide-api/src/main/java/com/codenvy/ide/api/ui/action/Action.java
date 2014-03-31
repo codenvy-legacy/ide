@@ -21,6 +21,8 @@ package com.codenvy.ide.api.ui.action;
 import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.resources.client.ImageResource;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 /**
  * Represents an entity that has a state, a presentation and can be performed.
  * <p/>
@@ -40,7 +42,7 @@ public abstract class Action {
 
     /** Creates a new action with its text, description and icon set to <code>null</code>. */
     public Action() {
-        this(null, null, null);
+        this(null, null, null, null);
     }
 
     /**
@@ -50,7 +52,7 @@ public abstract class Action {
      *         Default icon to appear in toolbars and menus (Note some platform don't have icons in menu).
      */
     public Action(ImageResource icon) {
-        this(null, null, icon);
+        this(null, null, icon, null);
     }
 
     /**
@@ -62,9 +64,9 @@ public abstract class Action {
      *         menu item when the presentation is a menu item.
      */
     public Action(String text) {
-        this(text, null, null);
+        this(text, null, null, null);
     }
-
+    
     /**
      * Constructs a new action with the specified text, description and icon.
      *
@@ -78,14 +80,32 @@ public abstract class Action {
      *         Action's icon
      */
     public Action(String text, String description, ImageResource icon) {
+        this(text, description, icon, null);
+    }
+    
+    /**
+     * Constructs a new action with the specified text, description and icon.
+     *
+     * @param text
+     *         Serves as a tooltip when the presentation is a button and the name of the
+     *         menu item when the presentation is a menu item
+     * @param description
+     *         Describes current action, this description will appear on
+     *         the status bar when presentation has focus
+     * @param icon
+     *         Action's icon
+     * @param svgIcon
+     *         Action's SVG icon        
+     */
+    public Action(String text, String description, ImageResource icon, SVGResource svgIcon) {
         myEnabledInModalContext = false;
         Presentation presentation = getTemplatePresentation();
         presentation.setText(text);
         presentation.setDescription(description);
         presentation.setIcon(icon);
+        presentation.setSVGIcon(svgIcon);
     }
-
-
+    
     /**
      * Copies template presentation and shortcuts set from <code>sourceAction</code>.
      *
@@ -96,6 +116,7 @@ public abstract class Action {
         Presentation sourcePresentation = sourceAction.getTemplatePresentation();
         Presentation presentation = getTemplatePresentation();
         presentation.setIcon(sourcePresentation.getIcon());
+        presentation.setSVGIcon(sourcePresentation.getSVGIcon());
         presentation.setText(sourcePresentation.getTextWithMnemonic());
         presentation.setDescription(sourcePresentation.getDescription());
     }

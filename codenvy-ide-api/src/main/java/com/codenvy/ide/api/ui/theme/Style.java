@@ -314,4 +314,12 @@ public class Style {
     public static String getButtonHoverTextColor() {
         return theme.getButtonHoverTextColor();
     }
+    
+    public static String getToolbarBackgroundColor() {
+        return theme.getToolbarBackgroundColor();
+    }
+    
+    public static String getToolbarIconColor() {
+        return theme.getToolbarIconColor();
+    }
 }

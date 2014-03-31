@@ -459,4 +459,18 @@ public interface Theme {
     String getBoxTextShadow();
 
     String getBoxBackgroundColorDisabled();
+    
+    /**
+     * The color of the toolbar background.
+     * 
+     * @return {@link String} color
+     */
+    String getToolbarBackgroundColor();
+    
+    /**
+     * The color of the toolbar icons.
+     * 
+     * @return {@link String} color
+     */
+    String getToolbarIconColor();
 }

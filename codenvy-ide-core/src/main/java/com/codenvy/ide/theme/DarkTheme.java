@@ -392,4 +392,14 @@ public class DarkTheme implements Theme {
     public String getButtonHoverTextColor() {
         return "#ffffff";
     }
+    
+    @Override
+    public String getToolbarBackgroundColor() {
+        return "#484848";
+    }
+    
+    @Override
+    public String getToolbarIconColor() {
+        return "#dbdbdb";
+    }
 }

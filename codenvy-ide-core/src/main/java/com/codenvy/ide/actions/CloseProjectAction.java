@@ -32,7 +32,7 @@ public class CloseProjectAction extends Action {
 
     @Inject
     public CloseProjectAction(ResourceProvider resourceProvider, Resources resources) {
-        super("Close", "Close project", resources.projectClosed());
+        super("Close", "Close project", null, resources.closeProject());
         this.resourceProvider = resourceProvider;
     }
 

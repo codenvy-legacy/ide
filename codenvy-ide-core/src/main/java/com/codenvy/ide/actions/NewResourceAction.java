@@ -44,7 +44,7 @@ public class NewResourceAction extends Action {
                              ResourceProvider resourceProvider,
                              WizardDialogFactory wizardDialogFactory,
                              @NewResource DefaultWizard wizard) {
-        super("Other", "Create new resource", resources.file());
+        super("Other", "Create new resource", null, resources.newResource());
         this.wizardDialogFactory = wizardDialogFactory;
         this.wizard = wizard;
         this.resourceProvider = resourceProvider;

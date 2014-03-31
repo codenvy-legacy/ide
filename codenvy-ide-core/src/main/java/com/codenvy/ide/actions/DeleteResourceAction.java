@@ -26,7 +26,6 @@ import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -50,7 +49,7 @@ public class DeleteResourceAction extends Action {
                                 ResourceProvider resourceProvider,
                                 Resources resources,
                                 NotificationManager notificationManager, CoreLocalizationConstant localization) {
-        super("Delete", "Delete resource", resources.delete());
+        super("Delete", "Delete resource", null, resources.delete());
 
         this.selectionAgent = selectionAgent;
         this.resourceProvider = resourceProvider;

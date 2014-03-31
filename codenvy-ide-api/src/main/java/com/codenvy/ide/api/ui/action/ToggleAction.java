@@ -19,6 +19,8 @@ package com.codenvy.ide.api.ui.action;
 
 import com.google.gwt.resources.client.ImageResource;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import javax.annotation.Nullable;
 
 /**
@@ -33,8 +35,8 @@ public abstract class ToggleAction extends Action implements Toggleable {
         super(text);
     }
 
-    public ToggleAction(@Nullable final String text, @Nullable final String description, @Nullable final ImageResource icon) {
-        super(text, description, icon);
+    public ToggleAction(@Nullable final String text, @Nullable final String description, @Nullable final ImageResource icon, @Nullable final SVGResource svgIcon) {
+        super(text, description, icon, svgIcon);
     }
 
     @Override
