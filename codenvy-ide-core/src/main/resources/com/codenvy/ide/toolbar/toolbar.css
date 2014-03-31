@@ -130,8 +130,15 @@ svg.iconButtonIcon {
 .popupButtonIcon {
     width: toolbarIconSize;
     height: toolbarIconSize;
-    margin-top: 4px;
-    margin-left: 4px;
+    margin-top: 3px;
+    margin-left: 3px;
+}
+
+svg.popupButtonIcon {
+    width: toolbarIconSize;
+    height: toolbarIconSize;
+    fill: toolbarIconColor;
+    margin-right: 2px;
 }
 
 .caret {
