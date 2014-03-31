@@ -26,6 +26,8 @@
     <inherits name="com.codenvy.ide.Commons"/>
     <inherits name="com.google.gwt.json.JSON"/>
     <inherits name="com.google.gwt.inject.Inject"/>
+    <inherits name="org.vectomatic.libgwtsvg"/>
+    <inherits name="com.codenvy.api.Project"/>
     <inherits name="com.codenvy.api.Project"/>
 
     <source path=""/>

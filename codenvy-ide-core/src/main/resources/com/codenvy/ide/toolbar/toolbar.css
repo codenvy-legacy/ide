@@ -19,15 +19,15 @@
 .toolbarPanel {
     width: 100%;
     /*background: url(images/component/toolbar/toolbar_Background.png) repeat-x;*/
-    height: 28px;
+    height: 26px;
     cursor: default;
-    background-color: tabsPanelBackground;
+    background-color: toolbarBackgroundColor;
     border-top: 1px solid tabBorder;
     border-bottom: 1px solid tabBorder;
 }
 
 .toolbarPanel div {
-    margin-top: 1px;
+	margin-top: 1px;
     margin-left: 2px;
     float: left;
 }
@@ -45,8 +45,8 @@
 .iconButtonPanelSelected,
 .iconButtonPanelSelectedOver,
 .iconButtonPanelSelectedDown {
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
     overflow: hidden;
     /*background: url(IDE/button-background.png);*/
 }
@@ -88,9 +88,15 @@
 }
 
 .iconButtonIcon {
-    width: 16px;
-    height: 16px;
-    margin: 4px;
+    width: toolbarIconSize;
+    height: toolbarIconSize;
+    margin: 3px;
+}
+
+svg.iconButtonIcon {
+    width: toolbarIconSize;
+    height: toolbarIconSize;
+    fill: toolbarIconColor; 
 }
 
 .disabled {
@@ -100,7 +106,7 @@
 .popupButtonPanel,
 .popupButtonPanelOver,
 .popupButtonPanelDown {
-    height: 24px;
+    height: 22px;
     width: 30px;
     overflow: hidden;
     border: 1px solid transparent;
@@ -122,10 +128,17 @@
 }
 
 .popupButtonIcon {
-    width: 16px;
-    height: 16px;
-    margin-top: 4px;
-    margin-left: 4px;
+    width: toolbarIconSize;
+    height: toolbarIconSize;
+    margin-top: 3px;
+    margin-left: 2px;
+}
+
+svg.popupButtonIcon {
+    width: toolbarIconSize;
+    height: toolbarIconSize;
+    fill: toolbarIconColor;
+    margin-right: 2px;
 }
 
 .caret {

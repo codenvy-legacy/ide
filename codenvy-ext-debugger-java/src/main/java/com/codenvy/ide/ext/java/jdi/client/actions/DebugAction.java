@@ -46,7 +46,7 @@ public class DebugAction extends Action {
     @Inject
     public DebugAction(RunnerController runnerController, DebuggerPresenter debuggerPresenter, JavaRuntimeResources resources,
                        ResourceProvider resourceProvider, JavaRuntimeLocalizationConstant localizationConstants) {
-        super(localizationConstants.debugAppActionText(), localizationConstants.debugAppActionDescription(), resources.debugApp());
+        super(localizationConstants.debugAppActionText(), localizationConstants.debugAppActionDescription(), null, resources.debug());
         this.runnerController = runnerController;
         this.debuggerPresenter = debuggerPresenter;
         this.resourceProvider = resourceProvider;

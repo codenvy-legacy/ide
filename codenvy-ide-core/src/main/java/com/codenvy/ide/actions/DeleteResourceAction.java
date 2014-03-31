@@ -49,7 +49,7 @@ public class DeleteResourceAction extends Action {
                                 ResourceProvider resourceProvider,
                                 Resources resources,
                                 NotificationManager notificationManager, CoreLocalizationConstant localization) {
-        super("Delete", "Delete resource", resources.delete());
+        super("Delete", "Delete resource", null, resources.delete());
 
         this.selectionAgent = selectionAgent;
         this.resourceProvider = resourceProvider;

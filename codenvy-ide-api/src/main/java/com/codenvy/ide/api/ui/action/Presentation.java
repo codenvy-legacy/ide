@@ -23,6 +23,8 @@ import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.UIUtil;
 import com.google.gwt.resources.client.ImageResource;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
@@ -53,6 +55,7 @@ public final class Presentation {
     private String                                  myText;
     private String                                  myDescription;
     private ImageResource                           myIcon;
+    private SVGResource                             mySVGIcon;
     private int                                     myMnemonic;
     private int myDisplayedMnemonicIndex = -1;
     private boolean myVisible;
@@ -166,11 +169,21 @@ public final class Presentation {
     public ImageResource getIcon() {
         return myIcon;
     }
+    
+    public SVGResource getSVGIcon() {
+        return mySVGIcon;
+    }
 
     public void setIcon(ImageResource icon) {
         ImageResource oldIcon = myIcon;
         myIcon = icon;
         firePropertyChange(PROP_ICON, oldIcon, myIcon);
+    }
+    
+    public void setSVGIcon(SVGResource icon) {
+        SVGResource oldIcon = mySVGIcon;
+        mySVGIcon = icon;
+        firePropertyChange(PROP_ICON, oldIcon, mySVGIcon);
     }
 
     public boolean isVisible() {
@@ -227,6 +240,7 @@ public final class Presentation {
         presentation.myDisplayedMnemonicIndex = myDisplayedMnemonicIndex;
         presentation.myEnabled = myEnabled;
         presentation.myIcon = myIcon;
+        presentation.mySVGIcon = mySVGIcon;
         presentation.myVisible = myVisible;
         presentation.myWeight = myWeight;
         return presentation;
@@ -236,6 +250,7 @@ public final class Presentation {
         setText(presentation.getTextWithMnemonic());
         setDescription(presentation.getDescription());
         setIcon(presentation.getIcon());
+        setSVGIcon(presentation.getSVGIcon());
         setVisible(presentation.isVisible());
         setEnabled(presentation.isEnabled());
     }

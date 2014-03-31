@@ -20,6 +20,8 @@ package com.codenvy.ide.extension.runner.client;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 /**
  * Client resources.
  *
@@ -28,8 +30,8 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public interface RunnerResources extends ClientBundle {
 
-    @Source("runApp.png")
-    ImageResource launchApp();
+    @Source("run.svg")
+    SVGResource launchApp();
 
     @Source("getAppLogs.png")
     ImageResource getAppLogs();
