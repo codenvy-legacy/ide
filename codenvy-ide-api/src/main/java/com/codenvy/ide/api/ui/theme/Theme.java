@@ -447,7 +447,7 @@ public interface Theme {
 
     /**
      * Return the exterior shadow property for boxes.
-     * 
+     *
      * @return the exterior shadow
      */
     String getBoxOuterShadow();
@@ -473,4 +473,9 @@ public interface Theme {
      * @return {@link String} color
      */
     String getToolbarIconColor();
+
+    /**
+     * @return the percentage of color inversion
+     */
+    String getCompletedInvertColor();
 }

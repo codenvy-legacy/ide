@@ -91,8 +91,9 @@ public class MavenBuilder extends Builder {
                                                            "    </fileSet>\n" +
                                                            "  </fileSets>\n" +
                                                            "</assembly>";
-    private static final String DEPENDENCIES_JSON_FILE   = "dependencies.json";
-    private static final String ASSEMBLY_DESCRIPTOR_FILE = "dependencies-zip-assembly-descriptor.xml";
+    private static final String DEPENDENCIES_JSON_FILE      = "dependencies.json";
+    private static final String ASSEMBLY_DESCRIPTOR_FILE    = "dependencies-zip-assembly-descriptor.xml";
+    private static final String CODENVY_IDE_API_ARTIFACT_ID = "codenvy-ide-api";
 
     @Inject
     public MavenBuilder(@Named(REPOSITORY) java.io.File rootDirectory,
@@ -136,7 +137,7 @@ public class MavenBuilder extends Builder {
                             if (workDir.equals(event.getWorkDir())) {
                                 try {
                                     final String packaging = MavenUtils.getModel(workDir).getPackaging();
-                                    if (packaging == null || "jar".equals(packaging)) {
+                                    if ((packaging == null || "jar".equals(packaging)) && !isCodenvyExtensionProject(workDir)) {
                                         Files.write(new java.io.File(workDir, ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES_FILE).toPath(),
                                                     ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES.getBytes());
                                         commandLine.add("assembly:single");
@@ -287,6 +288,16 @@ public class MavenBuilder extends Builder {
             return origin.substring(matcher.start(2));
         }
         return origin;
+    }
+
+    private boolean isCodenvyExtensionProject(java.io.File workDir) throws IOException {
+        List<org.apache.maven.model.Dependency> dependencies = MavenUtils.getModel(workDir).getDependencies();
+        for (org.apache.maven.model.Dependency dependency : dependencies) {
+            if (CODENVY_IDE_API_ARTIFACT_ID.equals(dependency.getArtifactId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static class DependencyBuildLogger extends DelegateBuildLogger {

@@ -92,7 +92,7 @@
 }
 
 .ide-PartStack-focused .ide-Base-Part-Toolbar {
-    background-color: partToolbarActive;
+    /*background-color: partToolbarActive;*/
 }
 
 .ide-PartStack-Tab-Left {

@@ -20,7 +20,7 @@ package com.codenvy.ide.extension.runner.client;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 
 /**
- * //
+ * Callback that will be notified when app will be launched.
  *
  * @author Artem Zatsarynnyy
  */

@@ -110,10 +110,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
-                if (event.getProject() != null)
-                    setContent(event.getProject().getParent());
-                else
-                    setContent(null);
+                setContent(event.getProject().getParent());
 
                 // TODO: avoid asking project type while show list of all projects
 //                checkProjectType(event.getProject(), new AsyncCallback<Project>() {

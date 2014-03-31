@@ -351,6 +351,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 protected void onSuccess(Void result) {
                     // remove from the list of child
                     parent.removeChild(item);
+                    showListProjects();
                     eventBus.fireEvent(ResourceChangedEvent.createResourceDeletedEvent(item));
                     callback.onSuccess(item.getName());
                 }
@@ -414,17 +415,14 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         }
         activeProject = null;
 
-        final Folder rootFolder = vfsInfo.getRoot();
-        rootFolder.getChildren().clear();
-
-
         projectServiceClient.getProjects(
                 new AsyncRequestCallback<Array<ProjectReference>>(dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectReference.class)) {
                     @Override
                     protected void onSuccess(Array<ProjectReference> result) {
-                        if (result.isEmpty())
-                            eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(null));//TODO
-                        
+                        final Folder rootFolder = vfsInfo.getRoot();
+                        rootFolder.getChildren().clear();
+                        eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(null));
+
                         for (ProjectReference item : result.asIterable()) {
                             Project project = new Project(eventBus, asyncRequestFactory, projectServiceClient, dtoUnmarshallerFactory);
                             project.setName(item.getName());

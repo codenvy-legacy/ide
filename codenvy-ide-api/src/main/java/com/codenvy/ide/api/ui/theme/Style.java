@@ -322,4 +322,8 @@ public class Style {
     public static String getToolbarIconColor() {
         return theme.getToolbarIconColor();
     }
+    
+    public static String getCompletedInvertColor() {
+        return theme.getCompletedInvertColor();
+    }
 }

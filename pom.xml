@@ -45,6 +45,7 @@
         <module>codenvy-runner-sdk</module>
         <module>codenvy-runner-webapps</module>
         <module>codenvy-ext-builder</module>
+        <module>codenvy-ext-maven</module>
         <module>codenvy-ext-runner</module>
         <module>codenvy-ext-web</module>
         <module>codenvy-ext-java</module>
@@ -82,8 +83,8 @@
         <buildnumber.plugin.version>1.1</buildnumber.plugin.version>
         <ch.qos.logback.version>1.0.13</ch.qos.logback.version>
         <codenvy.platform-api-gwt-client.version>0.3.0-SNAPSHOT</codenvy.platform-api-gwt-client.version>
-        <com.codenvy.commons.version>0.18.0-SNAPSHOT</com.codenvy.commons.version>
-        <com.codenvy.platform-api.version>0.14.0-SNAPSHOT</com.codenvy.platform-api.version>
+        <com.codenvy.commons.version>0.19.0-SNAPSHOT</com.codenvy.commons.version>
+        <com.codenvy.platform-api.version>0.15.0-SNAPSHOT</com.codenvy.platform-api.version>
         <commons-codec.version>1.6</commons-codec.version>
         <commons-fileupload.version>1.2.1</commons-fileupload.version>
         <commons-io.version>2.4</commons-io.version>

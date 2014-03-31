@@ -129,7 +129,7 @@ public class SDKRunner extends Runner {
                                                        .withRel(LINK_REL_CODE_SERVER)
                                                        .withHref(String.format("%s:%d", codeServerBindAddress, codeServerPort)));
                 final DebugMode debugMode = request.getDebugMode();
-                if (debugMode != null) {
+                if (debugMode != null && debugMode.getMode() != null) {
                     configuration.setDebugHost(hostName);
                     configuration.setDebugPort(portService.acquire());
                     configuration.setDebugTransport(DEBUG_TRANSPORT_PROTOCOL);

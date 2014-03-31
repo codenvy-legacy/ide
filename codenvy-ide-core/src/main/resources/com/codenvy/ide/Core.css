@@ -16,31 +16,31 @@
  * from Codenvy S.A..
  */
 @external .gwt-SplitLayoutPanel-HDragger, .gwt-SplitLayoutPanel-VDragger, .hsplitter, .hsplitter, .gwt-DialogBox, gwt-Button,
-          gwt-PushButton-up,gwt-PushButton-up-hovering,gwt-PushButton-up-disabled,
-          gwt-PushButton-down,.gwt-PushButton-down-hovering,.gwt-PushButton-down-disabled, gwt-ToggleButton-up, gwt-ToggleButton-up-hovering, gwt-ToggleButton-up-disabled,
-          gwt-ToggleButton-down, .gwt-ToggleButton-down-hovering, .gwt-ToggleButton-down-disabled, gwt-TextBox, gwt-ListBox, gwt-PopupPanel;
+gwt-PushButton-up,gwt-PushButton-up-hovering,gwt-PushButton-up-disabled,
+gwt-PushButton-down,.gwt-PushButton-down-hovering,.gwt-PushButton-down-disabled, gwt-ToggleButton-up, gwt-ToggleButton-up-hovering, gwt-ToggleButton-up-disabled,
+gwt-ToggleButton-down, .gwt-ToggleButton-down-hovering, .gwt-ToggleButton-down-disabled, gwt-TextBox, gwt-ListBox, gwt-PopupPanel;
 
-    /* Global styles and external GWT styles. */
+/* Global styles and external GWT styles. */
 
-    body, td {
-        font-size: 13px;
-        font-family: mainFontFamily;
-        color: mainFontColor;
+body, td {
+    font-size: 13px;
+    font-family: mainFontFamily;
+    color: mainFontColor;
 
-        /* We turn off document level scrolling all together for the outer page. */
-        overflow: hidden;
-        /*background-color: partBackground;*/
-    }
+    /* We turn off document level scrolling all together for the outer page. */
+    overflow: hidden;
+    /*background-color: partBackground;*/
+}
 
-        /* We must override the user agent stylesheet which sets textarea font to monospace. */
-    textarea {
-        font-family: mainFontFamily;
-        color: mainFontColor;
-        background-color: inputBackground;
-        border: 1px solid tabBorder;
-        border-radius: 2px;
-        font-size: fontSize;
-    }
+/* We must override the user agent stylesheet which sets textarea font to monospace. */
+textarea {
+    font-family: mainFontFamily;
+    color: mainFontColor;
+    background-color: inputBackground;
+    border: 1px solid tabBorder;
+    border-radius: 2px;
+    font-size: fontSize;
+}
 
 .gwt-ListBox {
     background-color: boxBackgroundColor;
@@ -207,57 +207,57 @@
 
 
 #talk_roster {
-        display: none;
-    }
+    display: none;
+}
 
-    a {
-        outline: none;
-    }
+a {
+    outline: none;
+}
 
-    .simpleListContainer {
-        border: 1px solid rgba(0, 0, 0, 0.2);
-    }
+.simpleListContainer {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
 
-    .mainText {
-        font-family: mainFontFamily;
-    }
+.mainText {
+    font-family: mainFontFamily;
+}
 
-    .mainFont {
-        cursor: default;
-        font-family: mainFontFamily;
-        font-size: fontSize;
-        font-style: normal;
-        font-weight: normal;
-    }
+.mainFont {
+    cursor: default;
+    font-family: mainFontFamily;
+    font-size: fontSize;
+    font-style: normal;
+    font-weight: normal;
+}
 
-    .mainBoldFont {
-        cursor: default;
-        font-family: mainFontFamily;
-        font-size: fontSize;
-        font-style: normal;
-        font-weight: bold;
-    }
+.mainBoldFont {
+    cursor: default;
+    font-family: mainFontFamily;
+    font-size: fontSize;
+    font-style: normal;
+    font-weight: bold;
+}
 
-    .errorFont {
-        cursor: default;
-        font-family: mainFontFamily;
-        font-size: fontSize;
-        font-style: normal;
-        font-weight: normal;
-        color: #d21a1a;
-    }
+.errorFont {
+    cursor: default;
+    font-family: mainFontFamily;
+    font-size: fontSize;
+    font-style: normal;
+    font-weight: normal;
+    color: #d21a1a;
+}
 
-    .greyFontColor {
-        color: #545454;
-    }
+.greyFontColor {
+    color: #545454;
+}
 
-    .cursorPointer {
-        cursor: pointer;
-    }
+.cursorPointer {
+    cursor: pointer;
+}
 
-    .line {
+.line {
 
-    }
+}
 
 /* We tweaked so that the default styles will be
 the inline scroller style. There's a separate "documentScrollable"
@@ -340,4 +340,56 @@ class for the document-level scrollbars. */
     border: 1px solid tabBorder;
     border-radius: 3px;
     background-color: partBackground;
+    z-index: 7;
+}
+
+/* Style for SuggestBox */
+.gwt-SuggestBoxPopup .suggestPopupTopLeft {
+    background: dialogTopLeft url("");
+}
+.gwt-SuggestBoxPopup .suggestPopupTopLeftInner {
+    width: 2px;
+    height: 2px;
+}
+.gwt-SuggestBoxPopup .suggestPopupTopCenter {
+    background: dialogTopCenter url("");
+}
+.gwt-SuggestBoxPopup .suggestPopupTopRight {
+    background: dialogTopRight url("");
+}
+.gwt-SuggestBoxPopup .suggestPopupTopRightInner {
+    width: 2px;
+    height: 2px;
+}
+.gwt-SuggestBoxPopup .suggestPopupMiddleLeft {
+    background: dialogMiddleLeft url("");
+}
+.gwt-SuggestBoxPopup .suggestPopupContent {
+    background-color: partBackground;
+}
+.gwt-SuggestBoxPopup .suggestPopupMiddleRight {
+    background: dialogMiddleRight url("");
+}
+.gwt-SuggestBoxPopup .suggestPopupBottomLeft {
+    background: dialogBottomLeft url("");
+}
+.gwt-SuggestBoxPopup .suggestPopupBottomLeftInner {
+    width: 2px;
+    height: 2px;
+}
+.gwt-SuggestBoxPopup .suggestPopupBottomCenter {
+    background: dialogBottomCenter url("");
+}
+.gwt-SuggestBoxPopup .suggestPopupBottomRight {
+    background: dialogBottomRight url("");
+}
+.gwt-SuggestBoxPopup .suggestPopupBottomRightInner {
+    width: 2px;
+    height: 2px;
+}
+.gwt-SuggestBoxPopup .item {
+    color: boxTextColor;
+}
+.gwt-SuggestBoxPopup .item-selected {
+    background-color: keyboardSelectionBackgroundColor;
 }
