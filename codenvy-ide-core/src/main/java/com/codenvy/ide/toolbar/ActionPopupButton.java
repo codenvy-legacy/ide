@@ -29,6 +29,9 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 
+import org.vectomatic.dom.svg.ui.SVGImage;
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
@@ -64,9 +67,13 @@ public class ActionPopupButton extends Composite implements CloseMenuHandler, Ac
         panel = new ButtonPanel();
         initWidget(panel);
         panel.setStyleName(css.popupButtonPanel());
-        ImageResource icon = presentationFactory.getPresentation(action).getIcon();
+        SVGResource icon = presentationFactory.getPresentation(action).getSVGIcon();
         if (icon != null) {
-            Image image = new Image(icon);
+            SVGImage image = new SVGImage(icon);
+            image.getElement().setAttribute("class", css.popupButtonIcon());
+            panel.add(image);
+        } else if (presentationFactory.getPresentation(action).getIcon() != null) {
+            Image image = new Image(presentationFactory.getPresentation(action).getIcon());
             image.setStyleName(css.popupButtonIcon());
             panel.add(image);
         }

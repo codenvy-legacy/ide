@@ -230,7 +230,7 @@ public class StandardComponentInitializer {
         actionManager.registerAction(IdeActions.GROUP_MAIN_TOOLBAR, toolbarGroup);
 
         DefaultActionGroup newGroup = new DefaultActionGroup("New", true, actionManager);
-        newGroup.getTemplatePresentation().setIcon(resources.file());
+        newGroup.getTemplatePresentation().setSVGIcon(resources.newResource());
         newGroup.addAction(newProjectAction, Constraints.FIRST);
         toolbarGroup.add(newGroup);
         toolbarGroup.addSeparator();
@@ -252,7 +252,7 @@ public class StandardComponentInitializer {
         saveGroup.add(saveAllAction);
         saveGroup.add(formatterAction);
         toolbarGroup.addSeparator();
-        toolbarGroup.add(saveGroup);
+        toolbarGroup.add(saveAllAction);
         toolbarGroup.addSeparator();
         fileGroup.add(saveGroup);
 
