@@ -23,6 +23,7 @@ import com.codenvy.ide.actions.CloseProjectAction;
 import com.codenvy.ide.actions.DeleteResourceAction;
 import com.codenvy.ide.actions.FormatterAction;
 import com.codenvy.ide.actions.NewProjectAction;
+import com.codenvy.ide.actions.NewProjectWizardAction;
 import com.codenvy.ide.actions.NewResourceAction;
 import com.codenvy.ide.actions.OpenProjectAction;
 import com.codenvy.ide.actions.RenameResourceAction;
@@ -179,6 +180,9 @@ public class StandardComponentInitializer {
     @Inject
     private FormatterAction formatterAction;
 
+    @Inject
+    private NewProjectWizardAction newProjectWizardAction;
+
     /** Instantiates {@link StandardComponentInitializer} an creates standard content. */
     @Inject
     public StandardComponentInitializer() {
@@ -216,6 +220,7 @@ public class StandardComponentInitializer {
 
         actionManager.registerAction("newProject", newProjectAction);
         actionManager.registerAction("openProject", openProjectAction);
+        actionManager.registerAction("newProject2", newProjectWizardAction);
 
 //        actionManager.registerAction("navigateToFile", navigateToFileAction);
 //        keyBinding.getGlobal().addKey(new KeyBuilder().action().alt().charCode('n').build(), "navigateToFile");
@@ -227,6 +232,7 @@ public class StandardComponentInitializer {
         DefaultActionGroup newGroup = new DefaultActionGroup("New", true, actionManager);
         newGroup.getTemplatePresentation().setIcon(resources.file());
         newGroup.addAction(newProjectAction, Constraints.FIRST);
+        newGroup.addAction(newProjectWizardAction);
         toolbarGroup.add(newGroup);
         toolbarGroup.addSeparator();
         fileGroup.add(newGroup);

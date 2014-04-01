@@ -154,6 +154,8 @@ import com.codenvy.ide.wizard.WizardDialogView;
 import com.codenvy.ide.wizard.WizardDialogViewImpl;
 import com.codenvy.ide.wizard.newproject.PaaSAgentImpl;
 import com.codenvy.ide.wizard.newproject.ProjectTypeDescriptorRegistryImpl;
+import com.codenvy.ide.wizard.newproject.ProjectWizardView;
+import com.codenvy.ide.wizard.newproject.ProjectWizardViewImpl;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageView;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageViewImpl;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePageView;
@@ -301,6 +303,8 @@ public class CoreGinModule extends AbstractGinModule {
 
         bind(ExtensionManagerView.class).to(ExtensionManagerViewImpl.class).in(Singleton.class);
         bind(AppearanceView.class).to(AppearanceViewImpl.class).in(Singleton.class);
+
+        bind(ProjectWizardView.class).to(ProjectWizardViewImpl.class);
     }
 
     @Provides
