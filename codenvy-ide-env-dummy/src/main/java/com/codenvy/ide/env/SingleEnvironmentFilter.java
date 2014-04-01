@@ -25,8 +25,8 @@ import java.util.List;
  * @author andrew00x
  */
 public class SingleEnvironmentFilter implements Filter {
-//    private String wsName;
-//    private String wsId;
+    private String wsName;
+    private String wsId;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -34,8 +34,8 @@ public class SingleEnvironmentFilter implements Filter {
 //        wsName = Constants.WORKSPACE.getName();
 //        wsId = Constants.WORKSPACE.getId();
 
-//        wsName = filterConfig.getInitParameter("ws-name");
-//        wsId = filterConfig.getInitParameter("ws-id");
+        wsName = filterConfig.getInitParameter("ws-name");
+        wsId = filterConfig.getInitParameter("ws-id");
     }
 
     @Override
@@ -82,8 +82,8 @@ public class SingleEnvironmentFilter implements Filter {
         roles.addAll(Arrays.asList("system/admin", "system/manager", "user"));
         roles.addAll(Constants.MEMBER.getRoles());
 
-        return new UserImpl(Constants.USER.getEmail(), Constants.USER.getId(), Constants.TOKEN.getValue(), roles);
+        //return new UserImpl(Constants.USER.getEmail(), Constants.USER.getId(), Constants.TOKEN.getValue(), roles);
 
-        //return new UserImpl("ide", "dummy_token", Arrays.asList("workspace/developer", "workspace/developer", "system/admin", "system/manager", "user"));
+        return new UserImpl("ide", "dummy_token", Arrays.asList("workspace/developer", "workspace/developer", "system/admin", "system/manager", "user"));
     }
 }
