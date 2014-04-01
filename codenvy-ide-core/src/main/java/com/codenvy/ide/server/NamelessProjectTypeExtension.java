@@ -17,37 +17,39 @@
  */
 package com.codenvy.ide.server;
 
-import com.codenvy.api.project.server.ProjectTypeDescriptionExtension;
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
-import com.codenvy.api.project.shared.AttributeDescription;
+import com.codenvy.api.project.server.ProjectTypeExtension;
+import com.codenvy.api.project.shared.Attribute;
+import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
 import com.codenvy.ide.Constants;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /** @author Artem Zatsarynnyy */
 @Singleton
-public class ProjectTypeDescriptionsExtension implements ProjectTypeDescriptionExtension {
+public class NamelessProjectTypeExtension implements ProjectTypeExtension {
 
     @Inject
-    public ProjectTypeDescriptionsExtension(ProjectTypeDescriptionRegistry registry) {
-        registry.registerDescription(this);
+    public NamelessProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
+        registry.registerProjectType(this);
     }
 
     @Override
-    public List<ProjectType> getProjectTypes() {
-        final List<ProjectType> list = new ArrayList<>(1);
-        list.add(new ProjectType(Constants.NAMELESS_ID, Constants.NAMELESS_NAME, Constants.UNKNOWN_CATEGORY));
-        list.add(new ProjectType(Constants.UNKNOWN_ID, Constants.UNKNOWN_PROJECT_TYPE, Constants.UNKNOWN_CATEGORY));
-        return list;
+    public ProjectType getProjectType() {
+        return new ProjectType(Constants.NAMELESS_ID, Constants.NAMELESS_NAME, Constants.UNKNOWN_CATEGORY);
     }
 
     @Override
-    public List<AttributeDescription> getAttributeDescriptions() {
+    public List<Attribute> getPredefinedAttributes() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<ProjectTemplateDescription> getTemplates() {
         return Collections.emptyList();
     }
 }

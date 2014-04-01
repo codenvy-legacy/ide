@@ -34,7 +34,7 @@ import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.server.Constants;
+import com.codenvy.ide.Constants;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -294,7 +294,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     private void checkProjectType(final Project project, final AsyncCallback<Project> callback) {
         project.setVFSInfo(resourceProvider.getVfsInfo());
 
-        if (Constants.UNKNOWN_ID.equals(project.getDescription().getProjectTypeId())) {
+        if (Constants.NAMELESS_ID.equals(project.getDescription().getProjectTypeId())) {
             selectProjectTypePresenter.showDialog(project, callback);
         } else {
             callback.onSuccess(project);
