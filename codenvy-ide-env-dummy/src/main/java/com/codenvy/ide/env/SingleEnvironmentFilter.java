@@ -1,6 +1,5 @@
 package com.codenvy.ide.env;
 
-import com.codenvy.api.local.Constants;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.commons.user.User;
 import com.codenvy.commons.user.UserImpl;
@@ -41,8 +40,8 @@ public class SingleEnvironmentFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         final EnvironmentContext env = EnvironmentContext.getCurrent();
-        env.setWorkspaceName(Constants.WORKSPACE.getName());
-        env.setWorkspaceId(Constants.WORKSPACE.getId());
+        env.setWorkspaceName("default");
+        env.setWorkspaceId("1q2w3e");
         final User user = getUser((HttpServletRequest)request);
         env.setUser(user);
         try {
@@ -80,10 +79,9 @@ public class SingleEnvironmentFilter implements Filter {
 
         List roles = new ArrayList();
         roles.addAll(Arrays.asList("system/admin", "system/manager", "user"));
-        roles.addAll(Constants.MEMBER.getRoles());
 
-        return new UserImpl(Constants.USER.getEmail(), Constants.USER.getId(), Constants.TOKEN.getValue(), roles);
+        //return new UserImpl(Constants.USER.getEmail(), Constants.USER.getId(), Constants.TOKEN.getValue(), roles);
 
-        //return new UserImpl("ide", "dummy_token", Arrays.asList("workspace/developer", "workspace/developer", "system/admin", "system/manager", "user"));
+        return new UserImpl("ide", "dummy_token", Arrays.asList("workspace/developer", "workspace/developer", "system/admin", "system/manager", "user"));
     }
 }
