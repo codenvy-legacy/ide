@@ -155,9 +155,17 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
         else if (item instanceof Folder)
             icon = iconRegistry.getIcon(projectTypeId + ".folder.small.icon");
         else if (item instanceof File) {
-            String[] split = item.getName().split("\\.");
-            String ext = split[split.length - 1];
-            icon = iconRegistry.getIcon(projectTypeId + "/" + ext + ".file.small.icon");
+            String filename = item.getName();
+
+            // search exact match first
+            icon = iconRegistry.getIcon(projectTypeId + "/" + filename + ".file.small.icon");
+
+            // not found, try with extension
+            if (icon == null) {
+                String[] split = item.getName().split("\\.");
+                String ext = split[split.length - 1];
+                icon = iconRegistry.getIcon(projectTypeId + "/" + ext + ".file.small.icon");
+            }
         }
         if (icon == null) {
             icon = iconRegistry.getDefaultIcon();
