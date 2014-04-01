@@ -97,7 +97,11 @@ public class BootstrapController {
         this.iconRegistry = iconRegistry;
         this.themeAgent = themeAgent;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
-
+        
+        //Is necessary for loading IDE styles before standard GWT one:
+        setTheme();
+        styleInjector.inject();
+        
         ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW)
                       .setCallback(new Callback<Void, Exception>() {
                           @Override
