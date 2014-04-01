@@ -41,6 +41,8 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
     protected DockLayoutPanel toolBar;
     protected DockLayoutPanel container;
     protected T               delegate;
+    protected ToolButton      minimizeButton;
+    protected Label           titleLabel;
 
     public BaseView(PartStackUIResources resources) {
         container = new DockLayoutPanel(Style.Unit.PX);
@@ -52,17 +54,29 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
 
         //this hack used for adding box shadow effect to toolbar
         toolBar.getElement().getParentElement().getStyle().setOverflow(Style.Overflow.VISIBLE);
-
+        
+        
+        DockLayoutPanel panel = new DockLayoutPanel(Style.Unit.PX);
+        titleLabel = new Label();
+        titleLabel.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
+        titleLabel.getElement().getStyle().setLineHeight(20, Style.Unit.PX);
+        titleLabel.getElement().getStyle().setMarginLeft(10, Style.Unit.PX);
+        titleLabel.getElement().getStyle().setVerticalAlign(Style.VerticalAlign.MIDDLE);
+        panel.addWest(titleLabel, 100);
+        
         Image minimize = new Image(resources.minimize());
         minimize.getElement().setAttribute("name", "workBenchIconMinimize");
-        ToolButton toolButton = new ToolButton(minimize);
-        toolButton.addClickHandler(new ClickHandler() {
+        minimizeButton = new ToolButton(minimize);
+        minimizeButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 minimize();
             }
         });
-        toolBar.addEast(toolButton, 20);
+        panel.addEast(minimizeButton, 20);
+        
+        
+        toolBar.addNorth(panel, 20);
     }
 
     /** Call minimize on delegate. */
@@ -77,12 +91,7 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
      * @param title
      */
     public void setTitle(@NotNull String title) {
-        Label l = new Label(title, false);
-        l.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
-        l.getElement().getStyle().setLineHeight(20, Style.Unit.PX);
-        l.getElement().getStyle().setMarginLeft(4, Style.Unit.PX);
-        l.getElement().getStyle().setVerticalAlign(Style.VerticalAlign.MIDDLE);
-        toolBar.addWest(l, 100);
+        titleLabel.setText(title);
     }
 
     /** {@inheritDoc} */

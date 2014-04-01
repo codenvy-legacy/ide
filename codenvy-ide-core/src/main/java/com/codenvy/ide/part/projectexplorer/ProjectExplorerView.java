@@ -19,6 +19,7 @@ package com.codenvy.ide.part.projectexplorer;
 
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.parts.base.BaseActionDelegate;
+import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 
 import javax.validation.constraints.NotNull;
@@ -51,6 +52,13 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
      *         title of part
      */
     void setTitle(@NotNull String title);
+    
+    /**
+     * Sets project's name.
+     *
+     * @param project
+     */
+    void setProjectHeader(@NotNull Project project);
 
     /** Needs for delegate some function into ProjectTree view. */
     public interface ActionDelegate extends BaseActionDelegate {

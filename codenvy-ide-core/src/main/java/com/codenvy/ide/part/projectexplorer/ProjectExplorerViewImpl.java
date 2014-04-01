@@ -23,12 +23,17 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.tree.FileTreeNodeRenderer;
 import com.codenvy.ide.tree.ResourceTreeNodeDataAdapter;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 import com.codenvy.ide.util.input.SignalEvent;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -41,8 +46,12 @@ import com.google.inject.Singleton;
 @Singleton
 public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.ActionDelegate> implements ProjectExplorerView {
     protected Tree<Resource> tree;
-    private IconRegistry iconRegistry;
-
+    private IconRegistry     iconRegistry;
+    private Resources        resources;
+    private Image            projectVisibilityImage;
+    private InlineLabel      projectTitle;
+    
+    
     /**
      * Create view.
      *
@@ -52,6 +61,27 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
     public ProjectExplorerViewImpl(Resources resources, IconRegistry iconRegistry) {
         super(resources);
         this.iconRegistry = iconRegistry;
+        this.resources = resources;
+        
+        FlowPanel panel = new FlowPanel();
+        panel.setStyleName(resources.partStackCss().idePartStackToolbarBottom());
+        
+        FlowPanel delimeter = new FlowPanel();
+        delimeter.setStyleName(resources.partStackCss().idePartStackToolbarBottomDelimeter());
+        panel.add(delimeter);
+        
+        projectVisibilityImage = new Image();
+        projectVisibilityImage.getElement().getStyle().setMarginRight(8, Unit.PX);
+        projectVisibilityImage.getElement().getStyle().setMarginLeft(10, Unit.PX);
+        projectVisibilityImage.setVisible(false);
+        panel.add(projectVisibilityImage);
+        projectTitle = new InlineLabel();
+        panel.add(projectTitle);
+        
+        
+        container.setWidgetSize(toolBar, 48);
+        toolBar.addSouth(panel, 28);
+
         tree = Tree.create(resources, new ResourceTreeNodeDataAdapter(), FileTreeNodeRenderer.create(resources, iconRegistry));
         container.add(tree.asWidget());
     }
@@ -125,5 +155,17 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
             tree.expandNode(nodeElement);
         }
         tree.expandPaths(paths, false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setProjectHeader(Project project) {
+        projectVisibilityImage.setVisible(project != null);
+        if (project != null ) {
+            projectVisibilityImage.setResource(resources.close());
+            projectTitle.setText(project.getName());
+        } else {
+            projectTitle.setText("");
+        }
     }
 }

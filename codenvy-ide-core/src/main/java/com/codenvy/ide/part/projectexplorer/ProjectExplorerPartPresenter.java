@@ -111,7 +111,8 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
                 setContent(event.getProject().getParent());
-
+                view.setProjectHeader(event.getProject());
+                
                 // TODO: avoid asking project type while show list of all projects
 //                checkProjectType(event.getProject(), new AsyncCallback<Project>() {
 //                    @Override
@@ -142,6 +143,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
                 setContent(null);
+                view.setProjectHeader(null);
             }
         });
 
