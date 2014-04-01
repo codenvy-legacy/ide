@@ -41,8 +41,8 @@ public class SingleEnvironmentFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         final EnvironmentContext env = EnvironmentContext.getCurrent();
-        env.setWorkspaceName(Constants.WORKSPACE.getName());
-        env.setWorkspaceId(Constants.WORKSPACE.getId());
+        env.setWorkspaceName(wsName);
+        env.setWorkspaceId(wsId);
         final User user = getUser((HttpServletRequest)request);
         env.setUser(user);
         try {
