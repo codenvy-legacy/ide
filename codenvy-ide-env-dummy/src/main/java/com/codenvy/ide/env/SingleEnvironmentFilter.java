@@ -1,5 +1,6 @@
 package com.codenvy.ide.env;
 
+import com.codenvy.api.local.Constants;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.commons.user.User;
 import com.codenvy.commons.user.UserImpl;
@@ -14,7 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Set up environment variable. Only for local packaging with single workspace. Don't use it in production packaging.
@@ -27,6 +30,10 @@ public class SingleEnvironmentFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+
+//        wsName = Constants.WORKSPACE.getName();
+//        wsId = Constants.WORKSPACE.getId();
+
         wsName = filterConfig.getInitParameter("ws-name");
         wsId = filterConfig.getInitParameter("ws-id");
     }
@@ -70,6 +77,13 @@ public class SingleEnvironmentFilter implements Filter {
     }
 
     protected User getUser(HttpServletRequest httpRequest) {
+
+        List roles = new ArrayList();
+        roles.addAll(Arrays.asList("system/admin", "system/manager", "user"));
+        roles.addAll(Constants.MEMBER.getRoles());
+
+        //return new UserImpl(Constants.USER.getEmail(), Constants.USER.getId(), Constants.TOKEN.getValue(), roles);
+
         return new UserImpl("ide", "dummy_token", Arrays.asList("workspace/developer", "workspace/developer", "system/admin", "system/manager", "user"));
     }
 }
