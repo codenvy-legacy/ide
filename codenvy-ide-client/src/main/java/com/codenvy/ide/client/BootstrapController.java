@@ -144,6 +144,9 @@ public class BootstrapController {
                     @Override
                     public void onFailure(ComponentException caught) {
                         Log.error(BootstrapController.class, "FAILED to start service:" + caught.getComponent(), caught);
+
+                        // Handle error when receiving profile.
+                        initializationFailed(caught.getMessage());
                     }
                 });
 
@@ -156,6 +159,18 @@ public class BootstrapController {
             }
         });
     }
+
+    /**
+     * Call this method to handle any of initialization errors.
+     * If a function window["on-initialization-failed"] is set, it will be called using 'message' string as a parameter.
+     *
+     * @param message error message
+     */
+    private native void initializationFailed(String message) /*-{
+        if ($wnd["on-initialization-failed"]) {
+            $wnd["on-initialization-failed"](message);
+        }
+    }-*/;
 
     private void setTheme() {
         final String storedThemeId = preferencesManager.getValue("Theme");
@@ -179,8 +194,6 @@ public class BootstrapController {
                     }
                 });
     }
-
-
 
     private void registerDefaultIcon() {
         Map<String, String> icons = new HashMap<String, String>();
