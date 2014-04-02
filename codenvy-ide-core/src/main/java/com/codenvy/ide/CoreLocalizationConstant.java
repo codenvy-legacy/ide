@@ -140,4 +140,10 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("openFileFieldTitle")
     String openFileFieldTitle();
+
+    @Key("projectExplorer.button.title")
+    String projectExplorerButtonTitle();
+
+    @Key("projectExplorer.titleBar.text")
+    String projectExplorerTitleBarText();
 }

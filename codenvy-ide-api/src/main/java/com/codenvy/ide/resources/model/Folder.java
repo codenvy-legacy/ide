@@ -31,7 +31,7 @@ import com.google.gwt.json.client.JSONObject;
 public class Folder extends Resource {
     public static final String          FOLDER_MIME_TYPE = "text/directory";
     public static final String          TYPE             = "folder";
-    private             Array<Resource> children         = Collections.<Resource>createArray();
+    private             Array<Resource> children         = Collections.createArray();
 
     /**
      * Empty instance of Folder.
@@ -72,9 +72,6 @@ public class Folder extends Resource {
         links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
     }
 
-    public String createPath(String childName) {
-        return getPath() + "/" + childName;
-    }
 
     /** @return the children */
     public Array<Resource> getChildren() {

@@ -21,7 +21,7 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.ext.git.client.GitClientService;
+import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.remote.add.AddRemoteRepositoryPresenter;
 import com.codenvy.ide.ext.git.shared.Remote;
@@ -45,7 +45,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 public class RemotePresenter implements RemoteView.ActionDelegate {
     private final DtoUnmarshallerFactory       dtoUnmarshallerFactory;
     private       RemoteView                   view;
-    private       GitClientService             service;
+    private       GitServiceClient             service;
     private       ResourceProvider             resourceProvider;
     private       GitLocalizationConstant      constant;
     private       AddRemoteRepositoryPresenter addRemoteRepositoryPresenter;
@@ -64,7 +64,7 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
      * @param notificationManager
      */
     @Inject
-    public RemotePresenter(RemoteView view, GitClientService service, ResourceProvider resourceProvider, GitLocalizationConstant constant,
+    public RemotePresenter(RemoteView view, GitServiceClient service, ResourceProvider resourceProvider, GitLocalizationConstant constant,
                            AddRemoteRepositoryPresenter addRemoteRepositoryPresenter, NotificationManager notificationManager,
                            DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
@@ -88,7 +88,7 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
      * then get the list of branches (remote and local).
      */
     private void getRemotes() {
-        service.remoteList(resourceProvider.getVfsInfo().getId(), projectId, null, true,
+        service.remoteList(projectId, null, true,
                            new AsyncRequestCallback<Array<Remote>>(dtoUnmarshallerFactory.newArrayUnmarshaller(Remote.class)) {
                                @Override
                                protected void onSuccess(Array<Remote> result) {
@@ -143,7 +143,7 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
         String name = selectedRemote.getName();
         boolean needToDelete = Window.confirm(constant.deleteRemoteRepositoryQuestion(name));
         if (needToDelete) {
-            service.remoteDelete(resourceProvider.getVfsInfo().getId(), projectId, name, new AsyncRequestCallback<String>() {
+            service.remoteDelete(projectId, name, new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     getRemotes();

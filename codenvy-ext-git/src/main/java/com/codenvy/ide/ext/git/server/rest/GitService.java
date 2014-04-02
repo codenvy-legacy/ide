@@ -115,7 +115,8 @@ public class GitService {
     private VirtualFileSystemRegistry vfsRegistry;
     @Inject
     private GitConnectionFactory      gitConnectionFactory;
-    @QueryParam("vfsid")
+
+    @PathParam("ws-id")
     private String                    vfsId;
     @QueryParam("projectid")
     private String                    projectId;

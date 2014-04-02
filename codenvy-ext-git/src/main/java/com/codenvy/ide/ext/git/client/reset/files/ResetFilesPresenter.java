@@ -23,7 +23,7 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.ext.git.client.GitClientService;
+import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.IndexFile;
 import com.codenvy.ide.ext.git.shared.ResetRequest.ResetType;
@@ -57,7 +57,7 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
     private final DtoFactory              dtoFactory;
     private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
     private       ResetFilesView          view;
-    private       GitClientService        service;
+    private       GitServiceClient        service;
     private       ResourceProvider        resourceProvider;
     private       GitLocalizationConstant constant;
     private       NotificationManager     notificationManager;
@@ -74,7 +74,7 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
      * @param notificationManager
      */
     @Inject
-    public ResetFilesPresenter(ResetFilesView view, GitClientService service, ResourceProvider resourceProvider,
+    public ResetFilesPresenter(ResetFilesView view, GitServiceClient service, ResourceProvider resourceProvider,
                                GitLocalizationConstant constant, NotificationManager notificationManager,
                                DtoFactory dtoFactory, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
@@ -91,7 +91,7 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
     public void showDialog() {
         project = resourceProvider.getActiveProject();
 
-        service.status(resourceProvider.getVfsInfo().getId(), project.getId(),
+        service.status(project.getId(),
                        new AsyncRequestCallback<Status>(dtoUnmarshallerFactory.newUnmarshaller(Status.class)) {
                            @Override
                            protected void onSuccess(Status result) {
@@ -147,7 +147,7 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
 
         String projectId = project.getId();
 
-        service.reset(resourceProvider.getVfsInfo().getId(), projectId, "HEAD", ResetType.MIXED, new AsyncRequestCallback<Void>() {
+        service.reset(projectId, "HEAD", ResetType.MIXED, new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
                 resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {

@@ -20,7 +20,7 @@ package com.codenvy.ide.ext.git.client.reset.commit;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.ext.git.client.GitClientService;
+import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.LogResponse;
 import com.codenvy.ide.ext.git.shared.ResetRequest;
@@ -47,7 +47,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 public class ResetToCommitPresenter implements ResetToCommitView.ActionDelegate {
     private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
     private       ResetToCommitView       view;
-    private       GitClientService        service;
+    private       GitServiceClient        service;
     private       Revision                selectedRevision;
     private       ResourceProvider        resourceProvider;
     private       GitLocalizationConstant constant;
@@ -64,7 +64,7 @@ public class ResetToCommitPresenter implements ResetToCommitView.ActionDelegate 
      * @param notificationManager
      */
     @Inject
-    public ResetToCommitPresenter(ResetToCommitView view, GitClientService service, ResourceProvider resourceProvider,
+    public ResetToCommitPresenter(ResetToCommitView view, GitServiceClient service, ResourceProvider resourceProvider,
                                   GitLocalizationConstant constant, NotificationManager notificationManager,
                                   DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
@@ -80,7 +80,7 @@ public class ResetToCommitPresenter implements ResetToCommitView.ActionDelegate 
     public void showDialog() {
         projectId = resourceProvider.getActiveProject().getId();
 
-        service.log(resourceProvider.getVfsInfo().getId(), projectId, false,
+        service.log(projectId, false,
                     new AsyncRequestCallback<LogResponse>(dtoUnmarshallerFactory.newUnmarshaller(LogResponse.class)) {
                         @Override
                         protected void onSuccess(LogResponse result) {
@@ -109,7 +109,7 @@ public class ResetToCommitPresenter implements ResetToCommitView.ActionDelegate 
         type = (type == null && view.isKeepMode()) ? ResetRequest.ResetType.KEEP : type;
         type = (type == null && view.isMergeMode()) ? ResetRequest.ResetType.MERGE : type;
 
-        service.reset(resourceProvider.getVfsInfo().getId(), projectId, selectedRevision.getId(), type,
+        service.reset(projectId, selectedRevision.getId(), type,
                       new AsyncRequestCallback<Void>() {
                           @Override
                           protected void onSuccess(Void result) {

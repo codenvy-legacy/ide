@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.part.projectexplorer;
 
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
@@ -28,7 +29,6 @@ import com.codenvy.ide.api.resources.FileEvent.FileOperation;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.contexmenu.ContextMenuPresenter;
-import com.codenvy.ide.project.properties.ProjectPropertiesLocalizationConstant;
 import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
@@ -52,12 +52,12 @@ import javax.validation.constraints.NotNull;
  */
 @Singleton
 public class ProjectExplorerPartPresenter extends BasePresenter implements ProjectExplorerView.ActionDelegate, ProjectExplorerPart {
-    protected ProjectExplorerView                   view;
-    protected EventBus                              eventBus;
-    private   ResourceProvider                      resourceProvider;
-    private   ContextMenuPresenter                  contextMenuPresenter;
-    private   SelectProjectTypePresenter            selectProjectTypePresenter;
-    private   ProjectPropertiesLocalizationConstant projectPropertiesLocalizationConstant;
+    protected ProjectExplorerView        view;
+    protected EventBus                   eventBus;
+    private   ResourceProvider           resourceProvider;
+    private   ContextMenuPresenter       contextMenuPresenter;
+    private   SelectProjectTypePresenter selectProjectTypePresenter;
+    private   CoreLocalizationConstant   coreLocalizationConstant;
 
     /**
      * Instantiates the ProjectExplorer Presenter.
@@ -67,7 +67,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
      * @param resourceProvider
      * @param contextMenuPresenter
      * @param selectProjectTypePresenter
-     * @param projectPropertiesLocalizationConstant
+     * @param coreLocalizationConstant
      */
     @Inject
     public ProjectExplorerPartPresenter(ProjectExplorerView view,
@@ -75,14 +75,14 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                                         ResourceProvider resourceProvider,
                                         ContextMenuPresenter contextMenuPresenter,
                                         SelectProjectTypePresenter selectProjectTypePresenter,
-                                        ProjectPropertiesLocalizationConstant projectPropertiesLocalizationConstant) {
+                                        CoreLocalizationConstant coreLocalizationConstant) {
         this.view = view;
+        this.coreLocalizationConstant = coreLocalizationConstant;
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
-        this.view.setTitle(projectPropertiesLocalizationConstant.projectExplorerTitleBarText());
         this.contextMenuPresenter = contextMenuPresenter;
         this.selectProjectTypePresenter = selectProjectTypePresenter;
-        this.projectPropertiesLocalizationConstant = projectPropertiesLocalizationConstant;
+        this.view.setTitle(coreLocalizationConstant.projectExplorerTitleBarText());
 
         bind();
     }
@@ -209,7 +209,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     /** {@inheritDoc} */
     @Override
     public String getTitle() {
-        return projectPropertiesLocalizationConstant.projectExplorerButtonTitle();
+        return coreLocalizationConstant.projectExplorerButtonTitle();
     }
 
     /** {@inheritDoc} */
@@ -292,8 +292,6 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
      *         callback
      */
     private void checkProjectType(final Project project, final AsyncCallback<Project> callback) {
-        project.setVFSInfo(resourceProvider.getVfsInfo());
-
         if (Constants.NAMELESS_ID.equals(project.getDescription().getProjectTypeId())) {
             selectProjectTypePresenter.showDialog(project, callback);
         } else {

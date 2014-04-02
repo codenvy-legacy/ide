@@ -22,7 +22,7 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.ext.git.client.GitClientService;
+import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
@@ -51,7 +51,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 @Singleton
 public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
     private AddToIndexView          view;
-    private GitClientService        service;
+    private GitServiceClient        service;
     private GitLocalizationConstant constant;
     private ResourceProvider        resourceProvider;
     private Project                 project;
@@ -69,8 +69,12 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
      * @param notificationManager
      */
     @Inject
-    public AddToIndexPresenter(AddToIndexView view, GitClientService service, GitLocalizationConstant constant,
-                               ResourceProvider resourceProvider, SelectionAgent selectionAgent, NotificationManager notificationManager) {
+    public AddToIndexPresenter(AddToIndexView view,
+                               GitServiceClient service,
+                               GitLocalizationConstant constant,
+                               ResourceProvider resourceProvider,
+                               SelectionAgent selectionAgent,
+                               NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
@@ -126,7 +130,7 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
         boolean update = view.isUpdated();
 
         try {
-            service.addWS(resourceProvider.getVfsInfo().getId(), project, update, getFilePatterns(), new RequestCallback<Void>() {
+            service.addWS(project, update, getFilePatterns(), new RequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {

@@ -59,17 +59,17 @@ public class ShowProjectGitReadOnlyUrlPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[1];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, REMOTE_URI);
                 return callback;
             }
-        }).when(service).getGitReadOnlyUrl(anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).getGitReadOnlyUrl(anyString(), (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog();
 
         verify(resourceProvider).getActiveProject();
-        verify(service).getGitReadOnlyUrl(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<String>)anyObject());
+        verify(service).getGitReadOnlyUrl(eq(PROJECT_ID), (AsyncRequestCallback<String>)anyObject());
         verify(view).setUrl(eq(REMOTE_URI));
     }
 
@@ -79,17 +79,17 @@ public class ShowProjectGitReadOnlyUrlPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[1];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).getGitReadOnlyUrl(anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).getGitReadOnlyUrl(anyString(), (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog();
 
         verify(resourceProvider).getActiveProject();
-        verify(service).getGitReadOnlyUrl(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<String>)anyObject());
+        verify(service).getGitReadOnlyUrl(eq(PROJECT_ID), (AsyncRequestCallback<String>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).initFailed();
     }
