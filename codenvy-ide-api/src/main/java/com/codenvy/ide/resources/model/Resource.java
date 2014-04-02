@@ -17,9 +17,6 @@
  */
 package com.codenvy.ide.resources.model;
 
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringMap;
-
 /**
  * Resource's superclass.
  * Not intended to be extended by client code. Use File, Folder and Project as superclass.
@@ -40,9 +37,6 @@ public abstract class Resource {
     protected String mimeType;
 
     protected Object tags;
-
-    /** Links. */
-    protected StringMap<Link> links;
 
     /** Parent Project */
     protected Project project;
@@ -124,26 +118,6 @@ public abstract class Resource {
         this.mimeType = mimeType;
     }
 
-    /**
-     * Links for retrieved or(and) manage item.
-     *
-     * @return links map. Never <code>null</code> but empty map instead
-     */
-    public StringMap<Link> getLinks() {
-        if (links == null) {
-            links = Collections.createStringMap();
-        }
-        return links;
-    }
-
-    /**
-     * @param rel
-     *         relation string
-     * @return corresponding hyperlink or null if no such relation found
-     */
-    public Link getLinkByRelation(String rel) {
-        return getLinks().get(rel);
-    }
 
     /** @see java.lang.Object#toString() */
     @Override

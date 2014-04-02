@@ -20,7 +20,6 @@ package com.codenvy.ide.resources.model;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.resources.marshal.JSONDeserializer;
 import com.google.gwt.json.client.JSONObject;
 
 /**
@@ -69,7 +68,6 @@ public class Folder extends Resource {
         if (itemObject.get("mimeType").isString() != null) {
             mimeType = itemObject.get("mimeType").isString().stringValue();
         }
-        links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
     }
 
 

@@ -19,17 +19,12 @@ package com.codenvy.ide.resources.model;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
-import com.codenvy.ide.MimeType;
-import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.resources.marshal.JSONDeserializer;
-import com.codenvy.ide.resources.marshal.JSONSerializer;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.loader.EmptyLoader;
@@ -54,7 +49,6 @@ public class Project extends Folder {
     protected final EventBus                  eventBus;
     protected final AsyncRequestFactory       asyncRequestFactory;
     private final   DtoUnmarshallerFactory    dtoUnmarshallerFactory;
-    protected       Array<Property>           properties;
     protected       Map<String, List<String>> attributes;
     protected       Loader                    loader;
     private         ProjectDescription        description;
@@ -74,7 +68,6 @@ public class Project extends Folder {
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.description = new ProjectDescription(this);
-        this.properties = Collections.<Property>createArray();
         this.attributes = new HashMap<>();
         this.eventBus = eventBus;
         this.asyncRequestFactory = asyncRequestFactory;
@@ -92,8 +85,6 @@ public class Project extends Folder {
         id = itemObject.get("id").isString().stringValue();
         name = itemObject.get("name").isString().stringValue();
         mimeType = itemObject.get("mimeType").isString().stringValue();
-        properties = JSONDeserializer.PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
-        links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
     }
 
     public ProjectDescription getDescription() {
@@ -150,37 +141,6 @@ public class Project extends Folder {
     public List<String> getAttributeValues(String attributeName) {
         return attributes.get(attributeName);
     }
-
-    /**
-     * Other properties.
-     *
-     * @return properties. If there is no properties then empty list returned, never <code>null</code>
-     */
-    public Array<Property> getProperties() {
-        if (properties == null) {
-            properties = Collections.<Property>createArray();
-        }
-        return properties;
-    }
-
-    /**
-     * Get single property with specified name.
-     *
-     * @param name
-     *         name of property
-     * @return property or <code>null</code> if there is not property with specified name
-     */
-    public Property getProperty(String name) {
-        Array<Property> props = getProperties();
-        for (int i = 0; i < props.size(); i++) {
-            Property p = props.get(i);
-            if (p.getName().equals(name)) {
-                return p;
-            }
-        }
-        return null;
-    }
-
 
     // management methods
 
@@ -510,33 +470,6 @@ public class Project extends Folder {
                     callback.onFailure(exception);
                 }
             });
-        } catch (Exception e) {
-            callback.onFailure(e);
-        }
-    }
-
-    /** @param callback */
-    public void flushProjectProperties(final AsyncCallback<Project> callback) {
-        try {
-            AsyncRequestCallback<Void> internalCallback = new AsyncRequestCallback<Void>() {
-                @Override
-                protected void onSuccess(Void result) {
-                    eventBus.fireEvent(ProjectActionEvent.createProjectDescriptionChangedEvent(Project.this));
-                    callback.onSuccess(Project.this);
-                }
-
-                @Override
-                protected void onFailure(Throwable exception) {
-                    callback.onFailure(exception);
-                }
-            };
-
-            String url = this.getLinkByRelation(Link.REL_SELF).getHref();
-            loader.setMessage("Updating item...");
-            asyncRequestFactory.createPostRequest(url, null)
-                               .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(getProperties()).toString())
-                               .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
-                               .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).loader(loader).send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);
         }

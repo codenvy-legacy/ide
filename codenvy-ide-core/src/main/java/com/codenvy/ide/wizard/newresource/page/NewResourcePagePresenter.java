@@ -18,6 +18,7 @@
 package com.codenvy.ide.wizard.newresource.page;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.project.shared.dto.TreeElement;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
@@ -28,7 +29,6 @@ import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.resources.marshal.FolderTreeUnmarshaller;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
@@ -46,6 +46,8 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.validation.constraints.NotNull;
+
+import java.util.List;
 
 import static com.codenvy.ide.api.ui.wizard.newresource.NewResourceWizardKeys.NEW_RESOURCE_PROVIDER;
 import static com.codenvy.ide.api.ui.wizard.newresource.NewResourceWizardKeys.PARENT;
@@ -185,10 +187,10 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
                                      new AsyncRequestCallback<TreeElement>(dtoUnmarshallerFactory.newUnmarshaller(TreeElement.class)) {
                                          @Override
                                          protected void onSuccess(TreeElement result) {
-                                             FolderTreeUnmarshaller unmarshaller = new FolderTreeUnmarshaller(treeStructure, treeStructure);
-                                             unmarshaller.unmarshal(result);
+                                             FolderTreeBuilder unmarshaller = new FolderTreeBuilder(treeStructure, treeStructure);
+                                             unmarshaller.build(result);
                                              Array<String> paths = Collections.createArray();
-                                             view.setPackages(getPackages(paths, unmarshaller.getPayload().getChildren()));
+                                             view.setPackages(getPackages(paths, unmarshaller.getResult().getChildren()));
                                              view.selectPackage(paths.indexOf(getDisplayPath(parent.getPath())));
                                          }
 
@@ -299,5 +301,59 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
             }
         }
         checkEnteredData();
+    }
+
+
+    private class FolderTreeBuilder {
+
+        private final Folder  parentFolder;
+        private final Project parentProject;
+
+        public FolderTreeBuilder(Folder parentFolder, Project parentProject) {
+            this.parentFolder = parentFolder;
+            this.parentFolder.setChildren(Collections.<Resource>createArray());
+            this.parentProject = parentProject;
+        }
+
+        public void build(TreeElement treeElement) {
+            getChildren(treeElement.getChildren(), parentFolder, parentProject);
+        }
+
+        private void getChildren(List<TreeElement> children, Folder parentFolder, Project parentProject) {
+            for (TreeElement treeElement : children) {
+                ItemReference child = treeElement.getNode();
+                // Get item
+                final String type = child.getType();
+
+                if (Project.TYPE.equalsIgnoreCase(type)) {
+                    Log.error(this.getClass(), "Unsupported operation. Unmarshalling a child projects is not supported");
+                } else if (Folder.TYPE.equalsIgnoreCase(type)) {
+                    Folder folder;
+                    // find if Folder already exists. This is a refresh usecase.
+                    Resource existingFolder = parentFolder.findChildByName(child.getName());
+                    // Make sure found resource is Folder
+                    if (existingFolder != null && Folder.TYPE.equalsIgnoreCase(existingFolder.getResourceType())) {
+                        // use existing folder instance as is
+                        folder = (Folder)existingFolder;
+                    } else {
+                        folder = new Folder(child);
+                        parentFolder.addChild(folder);
+                        folder.setProject(parentProject);
+                    }
+                    // recursively get project
+                    getChildren(treeElement.getChildren(), folder, parentProject);
+                } else if (File.TYPE.equalsIgnoreCase(type)) {
+                    File file = new File(child);
+                    parentFolder.addChild(file);
+                    file.setProject(parentProject);
+                } else {
+                    Log.error(this.getClass(), "Unsupported resource type: " + type);
+                }
+            }
+        }
+
+        public Folder getResult() {
+            return parentFolder;
+        }
     }
 }

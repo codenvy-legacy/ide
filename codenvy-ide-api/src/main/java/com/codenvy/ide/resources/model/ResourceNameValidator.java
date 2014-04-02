@@ -24,7 +24,7 @@ import com.google.gwt.regexp.shared.RegExp;
  * <b>Note, methods in this class check names only of limitation provided by Resource API</b>
  *
  * @author Evgen Vidolob
- *          //TODO check how to use GWT Validation API https://developers.google.com/web-toolkit/doc/latest/DevGuideValidation
+ * //TODO check how to use GWT Validation API https://developers.google.com/web-toolkit/doc/latest/DevGuideValidation
  */
 public class ResourceNameValidator {
 
