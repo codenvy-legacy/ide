@@ -21,7 +21,7 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.ext.git.client.GitClientService;
+import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.resources.model.Project;
@@ -47,7 +47,7 @@ import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_ALL;
 public class BranchPresenter implements BranchView.ActionDelegate {
     private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
     private       BranchView              view;
-    private       GitClientService        service;
+    private       GitServiceClient        service;
     private       ResourceProvider        resourceProvider;
     private       GitLocalizationConstant constant;
     private       NotificationManager     notificationManager;
@@ -64,7 +64,7 @@ public class BranchPresenter implements BranchView.ActionDelegate {
      * @param notificationManager
      */
     @Inject
-    public BranchPresenter(BranchView view, GitClientService service, ResourceProvider resourceProvider, GitLocalizationConstant constant,
+    public BranchPresenter(BranchView view, GitServiceClient service, ResourceProvider resourceProvider, GitLocalizationConstant constant,
                            NotificationManager notificationManager, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
@@ -98,7 +98,7 @@ public class BranchPresenter implements BranchView.ActionDelegate {
         String name = Window.prompt(constant.branchTypeNew(), currentBranchName);
         if (!name.isEmpty()) {
             final String projectId = project.getId();
-            service.branchRename(resourceProvider.getVfsInfo().getId(), projectId, currentBranchName, name,
+            service.branchRename(projectId, currentBranchName, name,
                                  new AsyncRequestCallback<String>() {
                                      @Override
                                      protected void onSuccess(String result) {
@@ -124,7 +124,7 @@ public class BranchPresenter implements BranchView.ActionDelegate {
         boolean needToDelete = Window.confirm(constant.branchDeleteAsk(name));
         if (needToDelete) {
             final String projectId = project.getId();
-            service.branchDelete(resourceProvider.getVfsInfo().getId(), projectId, name, true, new AsyncRequestCallback<String>() {
+            service.branchDelete(projectId, name, true, new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     getBranches(projectId);
@@ -154,7 +154,7 @@ public class BranchPresenter implements BranchView.ActionDelegate {
             return;
         }
 
-        service.branchCheckout(resourceProvider.getVfsInfo().getId(), projectId, name, startingPoint, remote,
+        service.branchCheckout(projectId, name, startingPoint, remote,
                                new AsyncRequestCallback<String>() {
                                    @Override
                                    protected void onSuccess(String result) {
@@ -188,7 +188,7 @@ public class BranchPresenter implements BranchView.ActionDelegate {
      *         project id
      */
     private void getBranches(@NotNull String projectId) {
-        service.branchList(resourceProvider.getVfsInfo().getId(), projectId, LIST_ALL,
+        service.branchList(projectId, LIST_ALL,
                            new AsyncRequestCallback<Array<Branch>>(dtoUnmarshallerFactory.newArrayUnmarshaller(Branch.class)) {
                                @Override
                                protected void onSuccess(Array<Branch> result) {
@@ -212,7 +212,7 @@ public class BranchPresenter implements BranchView.ActionDelegate {
         if (!name.isEmpty()) {
             final String projectId = project.getId();
 
-            service.branchCreate(resourceProvider.getVfsInfo().getId(), projectId, name, null,
+            service.branchCreate(projectId, name, null,
                                  new AsyncRequestCallback<Branch>(dtoUnmarshallerFactory.newUnmarshaller(Branch.class)) {
                                      @Override
                                      protected void onSuccess(Branch result) {

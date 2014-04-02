@@ -27,7 +27,7 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.ext.git.client.GitClientService;
+import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.RepoInfo;
 import com.codenvy.ide.ext.github.client.GitHubClientService;
@@ -68,7 +68,7 @@ public class ImportPresenter implements ImportView.ActionDelegate {
     private final SelectProjectTypePresenter         selectProjectTypePresenter;
     private       ImportView                         view;
     private       GitHubClientService                service;
-    private       GitClientService                   gitService;
+    private       GitServiceClient                   gitService;
     private       EventBus                           eventBus;
     private       StringMap<Array<GitHubRepository>> repositories;
     private       ProjectData                        selectedRepository;
@@ -99,7 +99,7 @@ public class ImportPresenter implements ImportView.ActionDelegate {
     @Inject
     public ImportPresenter(ImportView view,
                            GitHubClientService service,
-                           GitClientService gitService,
+                           GitServiceClient gitService,
                            EventBus eventBus,
                            GitLocalizationConstant gitConstant,
                            ResourceProvider resourceProvider,
@@ -251,7 +251,7 @@ public class ImportPresenter implements ImportView.ActionDelegate {
      */
     private void cloneRepository(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
         try {
-            gitService.cloneRepositoryWS(resourceProvider.getVfsInfo().getId(), project, remoteUri, remoteName,
+            gitService.cloneRepositoryWS(project, remoteUri, remoteName,
                                          new RequestCallback<RepoInfo>(dtoUnmarshallerFactory.newWSUnmarshaller(RepoInfo.class)) {
                                              @Override
                                              protected void onSuccess(RepoInfo result) {

@@ -148,7 +148,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      * @return <code>true</code> if any application is launched, and <code>false</code> otherwise
      */
     public boolean isAnyAppLaunched() {
-        return applicationProcessDescriptor != null && !isLaunchingInProgress;
+        return isLaunchingInProgress;
     }
 
     /**
@@ -314,10 +314,10 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 ApplicationProcessDescriptor newAppDescriptor = dtoFactory.createDtoFromJson(result, ApplicationProcessDescriptor.class);
                 ApplicationStatus status = newAppDescriptor.getStatus();
                 if (status == ApplicationStatus.RUNNING) {
-                    isLaunchingInProgress = false;
                     afterApplicationLaunched(newAppDescriptor);
-                } else if (status == ApplicationStatus.STOPPED || status == ApplicationStatus.NEW) {
+                } else if (status == ApplicationStatus.STOPPED) {
                     isLaunchingInProgress = false;
+                    applicationProcessDescriptor = null;
                     console.print(constant.applicationStopped(currentProject.getName()));
                     getLogs();
                     try {

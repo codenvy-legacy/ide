@@ -21,6 +21,7 @@ import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.Profile;
+import com.codenvy.ide.Constants;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.theme.Style;
@@ -189,7 +190,12 @@ public class BootstrapController {
                         dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectTypeDescriptor.class)) {
                     @Override
                     protected void onSuccess(Array<ProjectTypeDescriptor> result) {
-                        projectTypeDescriptorRegistry.registerDescriptors(result);
+                        for (int i = 0; i < result.size(); i++) {
+                            if (!result.get(i).getProjectTypeId().equalsIgnoreCase(Constants.NAMELESS_ID))//skip unknown project type user
+                                                                                                        //can select this project type need
+                                                                                                        //use BaseProjectType instead
+                                projectTypeDescriptorRegistry.registerDescriptor(result.get(i));
+                        }
                     }
 
                     @Override
@@ -198,6 +204,8 @@ public class BootstrapController {
                     }
                 });
     }
+
+
 
     private void registerDefaultIcon() {
         Map<String, String> icons = new HashMap<String, String>();

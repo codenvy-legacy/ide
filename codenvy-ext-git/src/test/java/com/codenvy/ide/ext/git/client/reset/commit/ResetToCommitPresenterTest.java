@@ -75,18 +75,18 @@ public class ResetToCommitPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, mock(LogResponse.class));
                 return callback;
 
             }
-        }).when(service).log(anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<LogResponse>)anyObject());
+        }).when(service).log(anyString(), anyBoolean(), (AsyncRequestCallback<LogResponse>)anyObject());
 
         presenter.showDialog();
 
         verify(resourceProvider).getActiveProject();
-        verify(service).log(eq(VFS_ID), eq(PROJECT_ID), eq(!IS_TEXT_FORMATTED), (AsyncRequestCallback<LogResponse>)anyObject());
+        verify(service).log(eq(PROJECT_ID), eq(!IS_TEXT_FORMATTED), (AsyncRequestCallback<LogResponse>)anyObject());
         verify(view).setRevisions((ArrayList<Revision>)anyObject());
         verify(view).setMixMode(eq(IS_MIXED));
         verify(view).setEnableResetButton(eq(DISABLE_BUTTON));
@@ -99,18 +99,18 @@ public class ResetToCommitPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
 
             }
-        }).when(service).log(anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<LogResponse>)anyObject());
+        }).when(service).log(anyString(), anyBoolean(), (AsyncRequestCallback<LogResponse>)anyObject());
 
         presenter.showDialog();
 
         verify(resourceProvider).getActiveProject();
-        verify(service).log(eq(VFS_ID), eq(PROJECT_ID), eq(!IS_TEXT_FORMATTED), (AsyncRequestCallback<LogResponse>)anyObject());
+        verify(service).log(eq(PROJECT_ID), eq(!IS_TEXT_FORMATTED), (AsyncRequestCallback<LogResponse>)anyObject());
         verify(constant).logFailed();
         verify(notificationManager).showNotification((Notification)anyObject());
     }
@@ -123,12 +123,12 @@ public class ResetToCommitPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[4];
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[3];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service).reset(anyString(), anyString(), anyString(), (ResetRequest.ResetType)anyObject(),
+        }).when(service).reset(anyString(), anyString(), (ResetRequest.ResetType)anyObject(),
                                (AsyncRequestCallback<Void>)anyObject());
         doAnswer(new Answer() {
             @Override
@@ -138,12 +138,12 @@ public class ResetToCommitPresenterTest extends BaseTest {
                 callback.onSuccess(project);
                 return callback;
             }
-        }).when(project).refreshProperties((AsyncCallback<Project>)anyObject());
+        }).when(resourceProvider).getProject(anyString(),(AsyncCallback<Project>)anyObject());
 
         presenter.onRevisionSelected(selectedRevision);
         presenter.onResetClicked();
 
-        verify(service).reset(eq(VFS_ID), anyString(), eq(PROJECT_ID), eq(MIXED), (AsyncRequestCallback<Void>)anyObject());
+        verify(service).reset(anyString(), eq(PROJECT_ID), eq(MIXED), (AsyncRequestCallback<Void>)anyObject());
         verify(notificationManager, never()).showNotification((Notification)anyObject());
     }
 
@@ -155,18 +155,18 @@ public class ResetToCommitPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[4];
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[3];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).reset(anyString(), anyString(), anyString(), (ResetRequest.ResetType)anyObject(),
+        }).when(service).reset(anyString(), anyString(), (ResetRequest.ResetType)anyObject(),
                                (AsyncRequestCallback<Void>)anyObject());
 
         presenter.onRevisionSelected(selectedRevision);
         presenter.onResetClicked();
 
-        verify(service).reset(eq(VFS_ID), anyString(), eq(PROJECT_ID), eq(MIXED), (AsyncRequestCallback<Void>)anyObject());
+        verify(service).reset(anyString(), eq(PROJECT_ID), eq(MIXED), (AsyncRequestCallback<Void>)anyObject());
         verify(constant).resetFail();
         verify(notificationManager).showNotification((Notification)anyObject());
     }

@@ -71,7 +71,7 @@ public class DebugAction extends Action {
             final String projectTypeId = activeProject.getDescription().getProjectTypeId();
             e.getPresentation().setVisible(projectTypeId.equals(Constants.SPRING_ID) ||
                                            projectTypeId.equals(Constants.WAR_ID) ||
-                                           projectTypeId.equals(com.codenvy.ide.server.Constants.CODENVY_PLUGIN_ID));
+                                           projectTypeId.equals(com.codenvy.ide.Constants.CODENVY_PLUGIN_ID));
             e.getPresentation().setEnabled(!runnerController.isAnyAppLaunched());
         } else {
             e.getPresentation().setEnabledAndVisible(false);

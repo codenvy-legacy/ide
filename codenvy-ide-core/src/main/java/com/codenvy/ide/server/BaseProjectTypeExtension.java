@@ -22,24 +22,32 @@ import com.codenvy.api.project.server.ProjectTypeExtension;
 import com.codenvy.api.project.shared.Attribute;
 import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
+import com.codenvy.ide.Constants;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.List;
 
-/** @author Artem Zatsarynnyy */
+/** @author Vitalii Parfonov */
+
+/**
+ * Add this project type for replace UnknownProjectType by user decision
+ * (e.g after cloning project) for avoid cyclic asking if keep
+ * only UnknownProjectType.
+ * This is temporary solution maybe removed in future.
+ */
 @Singleton
-public class UnknownProjectTypeExtension implements ProjectTypeExtension {
+public class BaseProjectTypeExtension implements ProjectTypeExtension {
 
     @Inject
-    public UnknownProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
+    public BaseProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
         registry.registerProjectType(this);
     }
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType(Constants.UNKNOWN_ID, Constants.UNKNOWN_NAME, Constants.UNKNOWN_CATEGORY);
+        return new ProjectType(Constants.UNKNOWN_ID, Constants.UNKNOWN_PROJECT_TYPE, Constants.UNKNOWN_CATEGORY);
     }
 
     @Override

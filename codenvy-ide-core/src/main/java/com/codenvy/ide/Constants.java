@@ -15,18 +15,20 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.server;
+package com.codenvy.ide;
 
 /** @author Artem Zatsarynnyy */
 public interface Constants {
     // project type ids
+    final String NAMELESS_ID                  = "nameless";
+    final String UNKNOWN_CATEGORY             = "unknown";
     final String UNKNOWN_ID                   = "unknown";
-    final String UNKNOWN_CATEGORY             = UNKNOWN_ID;
     final String CODENVY_PLUGIN_ID            = "codenvy_extension";
     // project type names
-    final String UNKNOWN_NAME                 = "Unknown project type";
-    final String CODENVY_PLUGIN_NAME          = "Codenvy extension";
-    final String CODENVY_CATEGORY             = "Condevy";
+    final String NAMELESS_NAME                = "nameless";
+    final String UNKNOWN_PROJECT_TYPE         = "Unknown Project Type";
+    final String CODENVY_PLUGIN_NAME          = "Codenvy Extension";
+    final String CODENVY_CATEGORY             = "Codenvy";
     // project attribute names
     final String LANGUAGE                     = "language";
     final String LANGUAGE_VERSION             = "language.version";

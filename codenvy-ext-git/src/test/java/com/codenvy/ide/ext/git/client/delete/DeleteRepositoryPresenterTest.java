@@ -60,28 +60,28 @@ public class DeleteRepositoryPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[2];
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service).deleteRepository(anyString(), anyString(), (AsyncRequestCallback<Void>)anyObject());
+        }).when(service).deleteRepository(anyString(), (AsyncRequestCallback<Void>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[0];
+                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[1];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, project);
                 return callback;
             }
-        }).when(project).refreshProperties((AsyncCallback<Project>)anyObject());
+        }).when(resourceProvider).getProject(anyString(),(AsyncCallback<Project>)anyObject());
 
         presenter.deleteRepository();
 
         verify(resourceProvider).getActiveProject();
         verify(project).getPath();
-        verify(service).deleteRepository(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<Void>)anyObject());
+        verify(service).deleteRepository(eq(PROJECT_ID), (AsyncRequestCallback<Void>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).deleteGitRepositorySuccess();
         verify(eventBus).fireEvent((RefreshBrowserEvent)anyObject());
@@ -93,18 +93,18 @@ public class DeleteRepositoryPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[2];
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).deleteRepository(anyString(), anyString(), (AsyncRequestCallback<Void>)anyObject());
+        }).when(service).deleteRepository(anyString(), (AsyncRequestCallback<Void>)anyObject());
 
         presenter.deleteRepository();
 
         verify(resourceProvider).getActiveProject();
         verify(project).getPath();
-        verify(service).deleteRepository(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<Void>)anyObject());
+        verify(service).deleteRepository(eq(PROJECT_ID), (AsyncRequestCallback<Void>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(eventBus).fireEvent((ExceptionThrownEvent)anyObject());
     }

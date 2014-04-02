@@ -21,6 +21,7 @@ import com.codenvy.api.project.server.ProjectTypeDescriptionExtension;
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
 import com.codenvy.api.project.shared.AttributeDescription;
 import com.codenvy.api.project.shared.ProjectType;
+import com.codenvy.ide.Constants;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

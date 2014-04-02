@@ -22,7 +22,7 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.ext.git.client.GitClientService;
+import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
@@ -48,7 +48,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
  */
 public class RemoveFromIndexPresenter implements RemoveFromIndexView.ActionDelegate {
     private RemoveFromIndexView     view;
-    private GitClientService        service;
+    private GitServiceClient        service;
     private GitLocalizationConstant constant;
     private ResourceProvider        resourceProvider;
     private Project                 project;
@@ -65,7 +65,7 @@ public class RemoveFromIndexPresenter implements RemoveFromIndexView.ActionDeleg
      * @param notificationManager
      */
     @Inject
-    public RemoveFromIndexPresenter(RemoveFromIndexView view, GitClientService service, GitLocalizationConstant constant,
+    public RemoveFromIndexPresenter(RemoveFromIndexView view, GitServiceClient service, GitLocalizationConstant constant,
                                     ResourceProvider resourceProvider, SelectionAgent selectionAgent,
                                     NotificationManager notificationManager) {
         this.view = view;
@@ -120,7 +120,7 @@ public class RemoveFromIndexPresenter implements RemoveFromIndexView.ActionDeleg
     /** {@inheritDoc} */
     @Override
     public void onRemoveClicked() {
-        service.remove(resourceProvider.getVfsInfo().getId(), project.getId(), getFilePatterns(), view.isRemoved(),
+        service.remove(project.getId(), getFilePatterns(), view.isRemoved(),
                        new AsyncRequestCallback<String>() {
                            @Override
                            protected void onSuccess(String result) {

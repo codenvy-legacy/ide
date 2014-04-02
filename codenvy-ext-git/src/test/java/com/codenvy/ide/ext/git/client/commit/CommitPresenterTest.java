@@ -88,12 +88,12 @@ public class CommitPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                RequestCallback<Revision> callback = (RequestCallback<Revision>)arguments[5];
+                RequestCallback<Revision> callback = (RequestCallback<Revision>)arguments[4];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, revision);
                 return callback;
             }
-        }).when(service).commitWS(anyString(), (Project)anyObject(), anyString(), anyBoolean(), anyBoolean(),
+        }).when(service).commitWS((Project)anyObject(), anyString(), anyBoolean(), anyBoolean(),
                                   (RequestCallback<Revision>)anyObject());
         doAnswer(new Answer() {
             @Override
@@ -114,7 +114,7 @@ public class CommitPresenterTest extends BaseTest {
         verify(view).isAmend();
         verify(view).close();
 
-        verify(service).commitWS(eq(VFS_ID), eq(project), eq(COMMIT_TEXT), eq(ALL_FILE_INCLUDES), eq(IS_OVERWRITTEN),
+        verify(service).commitWS(eq(project), eq(COMMIT_TEXT), eq(ALL_FILE_INCLUDES), eq(IS_OVERWRITTEN),
                                  (RequestCallback<Revision>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
     }
@@ -128,12 +128,12 @@ public class CommitPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                RequestCallback<Revision> callback = (RequestCallback<Revision>)arguments[5];
+                RequestCallback<Revision> callback = (RequestCallback<Revision>)arguments[4];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).commitWS(anyString(), (Project)anyObject(), anyString(), anyBoolean(), anyBoolean(),
+        }).when(service).commitWS((Project)anyObject(), anyString(), anyBoolean(), anyBoolean(),
                                   (RequestCallback<Revision>)anyObject());
 
         presenter.showDialog();
@@ -144,7 +144,7 @@ public class CommitPresenterTest extends BaseTest {
         verify(view).isAmend();
         verify(view).close();
 
-        verify(service).commitWS(eq(VFS_ID), eq(project), eq(COMMIT_TEXT), eq(ALL_FILE_INCLUDES), eq(IS_OVERWRITTEN),
+        verify(service).commitWS(eq(project), eq(COMMIT_TEXT), eq(ALL_FILE_INCLUDES), eq(IS_OVERWRITTEN),
                                  (RequestCallback<Revision>)anyObject());
         verify(constant).commitFailed();
         verify(notificationManager).showNotification((Notification)anyObject());
@@ -155,7 +155,7 @@ public class CommitPresenterTest extends BaseTest {
         when(view.getMessage()).thenReturn(COMMIT_TEXT);
         when(view.isAllFilesInclued()).thenReturn(ALL_FILE_INCLUDES);
         when(view.isAmend()).thenReturn(IS_OVERWRITTEN);
-        doThrow(WebSocketException.class).when(service).commitWS(anyString(), (Project)anyObject(), anyString(), anyBoolean(), anyBoolean(),
+        doThrow(WebSocketException.class).when(service).commitWS((Project)anyObject(), anyString(), anyBoolean(), anyBoolean(),
                                                                  (RequestCallback<Revision>)anyObject());
 
         presenter.showDialog();
@@ -166,7 +166,7 @@ public class CommitPresenterTest extends BaseTest {
         verify(view).isAmend();
         verify(view).close();
 
-        verify(service).commitWS(eq(VFS_ID), eq(project), eq(COMMIT_TEXT), eq(ALL_FILE_INCLUDES), eq(IS_OVERWRITTEN),
+        verify(service).commitWS(eq(project), eq(COMMIT_TEXT), eq(ALL_FILE_INCLUDES), eq(IS_OVERWRITTEN),
                                  (RequestCallback<Revision>)anyObject());
         verify(constant).commitFailed();
         verify(notificationManager).showNotification((Notification)anyObject());

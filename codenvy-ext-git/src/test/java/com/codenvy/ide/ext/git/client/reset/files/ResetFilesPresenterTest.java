@@ -76,17 +76,17 @@ public class ResetFilesPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<Status> callback = (AsyncRequestCallback<Status>)arguments[2];
+                AsyncRequestCallback<Status> callback = (AsyncRequestCallback<Status>)arguments[1];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, status);
                 return callback;
             }
-        }).when(service).status(anyString(), anyString(), (AsyncRequestCallback<Status>)anyObject());
+        }).when(service).status(anyString(), (AsyncRequestCallback<Status>)anyObject());
 
         presenter.showDialog();
 
         verify(resourceProvider).getActiveProject();
-        verify(service).status(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<Status>)anyObject());
+        verify(service).status(eq(PROJECT_ID), (AsyncRequestCallback<Status>)anyObject());
         verify(view).setIndexedFiles((Array<IndexFile>)anyObject());
         verify(view).showDialog();
     }
@@ -97,17 +97,17 @@ public class ResetFilesPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<Status> callback = (AsyncRequestCallback<Status>)arguments[2];
+                AsyncRequestCallback<Status> callback = (AsyncRequestCallback<Status>)arguments[1];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).status(anyString(), anyString(), (AsyncRequestCallback<Status>)anyObject());
+        }).when(service).status(anyString(), (AsyncRequestCallback<Status>)anyObject());
 
         presenter.showDialog();
 
         verify(resourceProvider).getActiveProject();
-        verify(service).status(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<Status>)anyObject());
+        verify(service).status(eq(PROJECT_ID), (AsyncRequestCallback<Status>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).statusFailed();
     }
@@ -124,18 +124,18 @@ public class ResetFilesPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<Status> callback = (AsyncRequestCallback<Status>)arguments[2];
+                AsyncRequestCallback<Status> callback = (AsyncRequestCallback<Status>)arguments[1];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, status);
                 return callback;
             }
-        }).when(service).status(anyString(), anyString(), (AsyncRequestCallback<Status>)anyObject());
+        }).when(service).status(anyString(), (AsyncRequestCallback<Status>)anyObject());
 
         presenter.showDialog();
         presenter.onResetClicked();
 
         verify(view).close();
-        verify(service, never()).reset(eq(VFS_ID), eq(PROJECT_ID), anyString(), (ResetRequest.ResetType)anyObject(),
+        verify(service, never()).reset(eq(PROJECT_ID), anyString(), (ResetRequest.ResetType)anyObject(),
                                        (AsyncRequestCallback<Void>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).nothingToReset();
@@ -154,22 +154,22 @@ public class ResetFilesPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<Status> callback = (AsyncRequestCallback<Status>)arguments[2];
+                AsyncRequestCallback<Status> callback = (AsyncRequestCallback<Status>)arguments[1];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, status);
                 return callback;
             }
-        }).when(service).status(anyString(), anyString(), (AsyncRequestCallback<Status>)anyObject());
+        }).when(service).status(anyString(), (AsyncRequestCallback<Status>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[4];
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[3];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service).reset(anyString(), anyString(), anyString(), (ResetRequest.ResetType)anyObject(),
+        }).when(service).reset(anyString(), anyString(), (ResetRequest.ResetType)anyObject(),
                                (AsyncRequestCallback<Void>)anyObject());
         doAnswer(new Answer() {
             @Override
@@ -185,7 +185,7 @@ public class ResetFilesPresenterTest extends BaseTest {
         presenter.showDialog();
         presenter.onResetClicked();
 
-        verify(service).reset(eq(VFS_ID), eq(PROJECT_ID), anyString(), (ResetRequest.ResetType)anyObject(),
+        verify(service).reset(eq(PROJECT_ID), anyString(), (ResetRequest.ResetType)anyObject(),
                               (AsyncRequestCallback<Void>)anyObject());
         verify(view).close();
         verify(notificationManager).showNotification((Notification)anyObject());
@@ -205,28 +205,28 @@ public class ResetFilesPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<Status> callback = (AsyncRequestCallback<Status>)arguments[2];
+                AsyncRequestCallback<Status> callback = (AsyncRequestCallback<Status>)arguments[1];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, status);
                 return callback;
             }
-        }).when(service).status(anyString(), anyString(), (AsyncRequestCallback<Status>)anyObject());
+        }).when(service).status(anyString(), (AsyncRequestCallback<Status>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[4];
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[3];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).reset(anyString(), anyString(), anyString(), (ResetRequest.ResetType)anyObject(),
+        }).when(service).reset(anyString(), anyString(), (ResetRequest.ResetType)anyObject(),
                                (AsyncRequestCallback<Void>)anyObject());
 
         presenter.showDialog();
         presenter.onResetClicked();
 
-        verify(service).reset(eq(VFS_ID), eq(PROJECT_ID), anyString(), (ResetRequest.ResetType)anyObject(),
+        verify(service).reset(eq(PROJECT_ID), anyString(), (ResetRequest.ResetType)anyObject(),
                               (AsyncRequestCallback<Void>)anyObject());
         verify(constant).resetFilesFailed();
         verify(notificationManager).showNotification((Notification)anyObject());

@@ -73,7 +73,7 @@ import com.codenvy.ide.ext.git.shared.TagCreateRequest;
 import com.codenvy.ide.ext.git.shared.TagDeleteRequest;
 import com.codenvy.ide.ext.git.shared.TagListRequest;
 import com.codenvy.ide.maven.tools.MavenUtils;
-import com.codenvy.ide.server.Constants;
+import com.codenvy.ide.Constants;
 import com.codenvy.vfs.impl.fs.GitUrlResolver;
 import com.codenvy.vfs.impl.fs.LocalPathResolver;
 
@@ -115,7 +115,8 @@ public class GitService {
     private VirtualFileSystemRegistry vfsRegistry;
     @Inject
     private GitConnectionFactory      gitConnectionFactory;
-    @QueryParam("vfsid")
+
+    @PathParam("ws-id")
     private String                    vfsId;
     @QueryParam("projectid")
     private String                    projectId;
@@ -263,7 +264,7 @@ public class GitService {
                     propertyFileContent =
                             "{\"type\":\"maven_multi_module\",\"properties\":[{\"name\":\"builder.name\",\"value\":[\"maven\"]}]}";
                 } else {
-                    propertyFileContent = "{\"type\":\"" + Constants.UNKNOWN_ID + "\"}";
+                    propertyFileContent = "{\"type\":\"" + Constants.NAMELESS_ID + "\"}";
                 }
 
                 Folder codenvyFolder = vfs.createFolder(projectId, ".codenvy");
@@ -317,7 +318,7 @@ public class GitService {
                     vfs.updateItem(folder.getId(), propertiesList, null);
                     found = true;
 
-                    final String propertyFileContent = "{\"type\":\"" + Constants.UNKNOWN_ID + "\"}";
+                    final String propertyFileContent = "{\"type\":\"" + Constants.NAMELESS_ID + "\"}";
                     Folder codenvyFolder = vfs.createFolder(folder.getId(), ".codenvy");
                     vfs.createFile(codenvyFolder.getId(), "project", MediaType.APPLICATION_JSON_TYPE,
                                    new ByteArrayInputStream(propertyFileContent.getBytes()));

@@ -26,7 +26,6 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.marshal.JSONDeserializer;
 import com.codenvy.ide.resources.marshal.JSONSerializer;
-import com.codenvy.ide.resources.marshal.PropertyUnmarshaller;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -36,7 +35,6 @@ import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.loader.EmptyLoader;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
@@ -59,7 +57,6 @@ public class Project extends Folder {
     protected       Array<Property>           properties;
     protected       Map<String, List<String>> attributes;
     protected       Loader                    loader;
-    protected       VirtualFileSystemInfo     vfsInfo;
     private         ProjectDescription        description;
     private         ProjectServiceClient      projectServiceClient;
     private         String                    projectTypeId;
@@ -69,7 +66,9 @@ public class Project extends Folder {
      * <p/>
      * Not intended to be used by client.
      */
-    public Project(EventBus eventBus, AsyncRequestFactory asyncRequestFactory, ProjectServiceClient projectServiceClient,
+    public Project(EventBus eventBus,
+                   AsyncRequestFactory asyncRequestFactory,
+                   ProjectServiceClient projectServiceClient,
                    DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(TYPE, PROJECT_MIME_TYPE);
         this.projectServiceClient = projectServiceClient;
@@ -95,10 +94,6 @@ public class Project extends Folder {
         mimeType = itemObject.get("mimeType").isString().stringValue();
         properties = JSONDeserializer.PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
         links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
-    }
-
-    public void setVFSInfo(VirtualFileSystemInfo vfsInfo) {
-        this.vfsInfo = vfsInfo;
     }
 
     public ProjectDescription getDescription() {
@@ -186,30 +181,6 @@ public class Project extends Folder {
         return null;
     }
 
-    /**
-     * Get value of property <code>name</code>. It is shortcut for:
-     * <pre>
-     *    String name = ...
-     *    Item item = ...
-     *    Property property = item.getProperty(name);
-     *    Object value;
-     *    if (property != null)
-     *       value = property.getValue().get(0);
-     *    else
-     *       value = null;
-     * </pre>
-     *
-     * @param name
-     *         property name
-     * @return value of property with specified name or <code>null</code>
-     */
-    public Object getPropertyValue(String name) {
-        Property p = getProperty(name);
-        if (p != null) {
-            return p.getValue().get(0);
-        }
-        return null;
-    }
 
     // management methods
 
@@ -509,9 +480,9 @@ public class Project extends Folder {
                 @Override
                 protected void onSuccess(Void result) {
                     final Folder folderToRefresh =
-                            (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId()))
+                            (resource instanceof Project && resource.getParent().getId().equals("_root_"))
                             ? (Project)resource : resource.getParent();
-                    if (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId())) {
+                    if (resource instanceof Project && resource.getParent().getId().equals("_root_")) {
                         resource.setName(newName);
 //                        resource.setId(resource.getId());
                     }
@@ -520,7 +491,7 @@ public class Project extends Folder {
                         @Override
                         public void onSuccess(Folder result) {
                             Resource renamed =
-                                    (resource instanceof Project && resource.getParent().getId().equals(vfsInfo.getRoot().getId()))
+                                    (resource instanceof Project && resource.getParent().getId().equals("_root_"))
                                     ? resource : result.findChildByName(newName);
                             renamed.getParent().setTag(folderToRefresh.getTag());
                             eventBus.fireEvent(ResourceChangedEvent.createResourceRenamedEvent(renamed));
@@ -571,39 +542,6 @@ public class Project extends Folder {
         }
     }
 
-    /**
-     * Reads or Refreshes all project properties.
-     *
-     * @param callback
-     *         callback
-     */
-    public void refreshProperties(final AsyncCallback<Project> callback) {
-        final Array<Property> currentProperties = properties;
-
-        AsyncRequestCallback<Array<Property>> internalCallback =
-                new AsyncRequestCallback<Array<Property>>(new PropertyUnmarshaller()) {
-                    @Override
-                    protected void onSuccess(Array<Property> properties) {
-                        // Update properties on client-side Object
-                        currentProperties.clear();
-                        currentProperties.addAll(properties);
-
-                        eventBus.fireEvent(ProjectActionEvent.createProjectDescriptionChangedEvent(project));
-
-                        callback.onSuccess(Project.this);
-                    }
-
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        callback.onFailure(exception);
-                    }
-                };
-
-        // get JSON for this Project
-        String url = vfsInfo.getUrlTemplates().get(Link.REL_ITEM).getHref();
-        url = URL.decode(url).replace("[id]", id);
-        asyncRequestFactory.createGetRequest(URL.encode(url)).loader(loader).send(internalCallback);
-    }
 
     /**
      * @param callback
