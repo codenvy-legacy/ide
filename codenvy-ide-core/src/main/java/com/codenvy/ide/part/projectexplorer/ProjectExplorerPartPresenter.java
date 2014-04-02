@@ -143,7 +143,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
                 setContent(null);
-                view.setProjectHeader(null);
+                view.hideProjectHeader();
             }
         });
 

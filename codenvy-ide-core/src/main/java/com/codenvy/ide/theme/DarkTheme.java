@@ -108,7 +108,17 @@ public class DarkTheme implements Theme {
     public String getPartToolbarShadow() {
         return "rgba(50,50,50, 0.75)";
     }
-
+    
+    @Override
+    public String getPartToolbarSeparatorTopColor() {
+        return "#DBDBDB";
+    }
+    
+    @Override
+    public String getPartToolbarSeparatorBottomColor() {
+        return "#232323";
+    }
+    
     @Override
     public String getMainFontColor() {
         return "#dbdbdb";

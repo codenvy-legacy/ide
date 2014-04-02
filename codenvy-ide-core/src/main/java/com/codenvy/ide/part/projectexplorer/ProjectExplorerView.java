@@ -54,11 +54,16 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
     void setTitle(@NotNull String title);
     
     /**
-     * Sets project's name.
+     * Sets project's name and visibility icon.
      *
      * @param project
      */
     void setProjectHeader(@NotNull Project project);
+    
+    /**
+     * Hide the project's header panel.
+     */
+    void hideProjectHeader();
 
     /** Needs for delegate some function into ProjectTree view. */
     public interface ActionDelegate extends BaseActionDelegate {

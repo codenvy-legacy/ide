@@ -37,6 +37,10 @@ import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.vectomatic.dom.svg.ui.SVGImage;
+
+import javax.validation.constraints.NotNull;
+
 
 /**
  * Tree-based Project Explorer view.
@@ -48,8 +52,9 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
     protected Tree<Resource> tree;
     private IconRegistry     iconRegistry;
     private Resources        resources;
-    private Image            projectVisibilityImage;
+    private SVGImage         projectVisibilityImage;
     private InlineLabel      projectTitle;
+    private FlowPanel        projectHeader;
     
     
     /**
@@ -63,24 +68,25 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         this.iconRegistry = iconRegistry;
         this.resources = resources;
         
-        FlowPanel panel = new FlowPanel();
-        panel.setStyleName(resources.partStackCss().idePartStackToolbarBottom());
+        projectHeader = new FlowPanel();
+        projectHeader.setStyleName(resources.partStackCss().idePartStackToolbarBottom());
         
         FlowPanel delimeter = new FlowPanel();
-        delimeter.setStyleName(resources.partStackCss().idePartStackToolbarBottomDelimeter());
-        panel.add(delimeter);
+        delimeter.setStyleName(resources.partStackCss().idePartStackToolbarSeparator());
+        projectHeader.add(delimeter);
         
-        projectVisibilityImage = new Image();
+        projectVisibilityImage = new SVGImage();
         projectVisibilityImage.getElement().getStyle().setMarginRight(8, Unit.PX);
         projectVisibilityImage.getElement().getStyle().setMarginLeft(10, Unit.PX);
-        projectVisibilityImage.setVisible(false);
-        panel.add(projectVisibilityImage);
+        projectVisibilityImage.setHeight("16px");
+        projectVisibilityImage.setWidth("16px");
+        projectHeader.add(projectVisibilityImage);
+        
         projectTitle = new InlineLabel();
-        panel.add(projectTitle);
+        projectHeader.add(projectTitle);
+        projectHeader.setVisible(false);
         
-        
-        container.setWidgetSize(toolBar, 48);
-        toolBar.addSouth(panel, 28);
+        toolBar.addSouth(projectHeader, 28);
 
         tree = Tree.create(resources, new ResourceTreeNodeDataAdapter(), FileTreeNodeRenderer.create(resources, iconRegistry));
         container.add(tree.asWidget());
@@ -159,13 +165,19 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
     /** {@inheritDoc} */
     @Override
-    public void setProjectHeader(Project project) {
-        projectVisibilityImage.setVisible(project != null);
-        if (project != null ) {
-            projectVisibilityImage.setResource(resources.close());
-            projectTitle.setText(project.getName());
-        } else {
-            projectTitle.setText("");
+    public void setProjectHeader(@NotNull Project project) {
+        if (!projectHeader.isVisible()) {
+            projectHeader.setVisible(true);
+            container.setWidgetSize(toolBar, 48);
         }
+        projectVisibilityImage.setResource(resources.privateProject());
+        projectTitle.setText(project.getName());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void hideProjectHeader() {
+        projectHeader.setVisible(false);
+        container.setWidgetSize(toolBar, 20);
     }
 }

@@ -279,9 +279,9 @@
     vertical-align: middle;
 }
 
-.ide-Base-Part-Toolbar-Bottom-Delimeter {
-	border-top: 1px solid tabBorder;
-    background-color: mainFontColor;
+.ide-Base-Part-Toolbar-Separator {
+	border-top: 1px solid partToolbarSeparatorTopColor;
+    background-color: partToolbarSeparatorBottomColor;
     height: 1px;
     width: 100%;
 }
