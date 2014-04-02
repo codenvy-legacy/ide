@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.resources.model;
+package com.codenvy.ide.api.resources.model;
 
 /**
  * Resource's superclass.

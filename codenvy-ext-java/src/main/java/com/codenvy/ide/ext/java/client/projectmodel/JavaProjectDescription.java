@@ -20,7 +20,7 @@ package com.codenvy.ide.ext.java.client.projectmodel;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringSet;
 import com.codenvy.ide.ext.java.shared.Constants;
-import com.codenvy.ide.resources.model.ProjectDescription;
+import com.codenvy.ide.api.resources.model.ProjectDescription;
 
 /** @author Nikolay Zamosenchuk */
 public class JavaProjectDescription extends ProjectDescription {

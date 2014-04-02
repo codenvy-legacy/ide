@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.debug;
 
-import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.api.resources.model.File;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**

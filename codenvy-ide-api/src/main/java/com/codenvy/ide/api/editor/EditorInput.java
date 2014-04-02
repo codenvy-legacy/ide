@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.api.editor;
 
-import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.api.resources.model.File;
 import com.google.gwt.resources.client.ImageResource;
 
 import javax.validation.constraints.NotNull;

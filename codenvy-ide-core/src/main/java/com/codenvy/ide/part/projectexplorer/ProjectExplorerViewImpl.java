@@ -23,7 +23,7 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.tree.FileTreeNodeRenderer;
 import com.codenvy.ide.tree.ResourceTreeNodeDataAdapter;
 import com.codenvy.ide.ui.tree.Tree;

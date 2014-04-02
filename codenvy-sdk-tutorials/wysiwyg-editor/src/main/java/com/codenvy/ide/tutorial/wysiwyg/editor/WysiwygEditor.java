@@ -18,7 +18,7 @@
 package com.codenvy.ide.tutorial.wysiwyg.editor;
 
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
-import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.resources.client.ImageResource;
