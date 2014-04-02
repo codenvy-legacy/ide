@@ -43,6 +43,7 @@ import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Callback;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -298,81 +299,11 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
 
     @Override
     public Folder getRoot() {
-        String r = "{\n" +
-                   "  \"mimeType\": \"text/directory\",\n" +
-                   "  \"creationDate\": -1,\n" +
-                   "  \"links\": {\n" +
-                   "    \"download-zip\": {\n" +
-                   "      \"href\": \"http://ide3.codenvy-dev.com/api/vfs/1q2w3e/v2/downloadzip/MXEydzNlOnJvb3Q\",\n" +
-                   "      \"rel\": \"download-zip\",\n" +
-                   "      \"type\": \"application/zip\"\n" +
-                   "    },\n" +
-                   "    \"export\": {\n" +
-                   "      \"href\": \"http://ide3.codenvy-dev.com/api/vfs/1q2w3e/v2/export/MXEydzNlOnJvb3Q\",\n" +
-                   "      \"rel\": \"export\",\n" +
-                   "      \"type\": \"application/zip\"\n" +
-                   "    },\n" +
-                   "    \"acl\": {\n" +
-                   "      \"href\": \"http://ide3.codenvy-dev.com/api/vfs/1q2w3e/v2/acl/MXEydzNlOnJvb3Q\",\n" +
-                   "      \"rel\": \"acl\",\n" +
-                   "      \"type\": \"application/json\"\n" +
-                   "    },\n" +
-                   "    \"create-file\": {\n" +
-                   "      \"href\": \"http://ide3.codenvy-dev.com/api/vfs/1q2w3e/v2/file/MXEydzNlOnJvb3Q?name=%5Bname%5D\",\n" +
-                   "      \"rel\": \"create-file\",\n" +
-                   "      \"type\": \"application/json\"\n" +
-                   "    },\n" +
-                   "    \"children\": {\n" +
-                   "      \"href\": \"http://ide3.codenvy-dev.com/api/vfs/1q2w3e/v2/children/MXEydzNlOnJvb3Q\",\n" +
-                   "      \"rel\": \"children\",\n" +
-                   "      \"type\": \"application/json\"\n" +
-                   "    },\n" +
-                   "    \"self\": {\n" +
-                   "      \"href\": \"http://ide3.codenvy-dev.com/api/vfs/1q2w3e/v2/item/MXEydzNlOnJvb3Q\",\n" +
-                   "      \"rel\": \"self\",\n" +
-                   "      \"type\": \"application/json\"\n" +
-                   "    },\n" +
-                   "    \"upload-zip\": {\n" +
-                   "      \"href\": \"http://ide3.codenvy-dev.com/api/vfs/1q2w3e/v2/uploadzip/MXEydzNlOnJvb3Q\",\n" +
-                   "      \"rel\": \"upload-zip\",\n" +
-                   "      \"type\": \"text/html\"\n" +
-                   "    },\n" +
-                   "    \"create-folder\": {\n" +
-                   "      \"href\": \"http://ide3.codenvy-dev.com/api/vfs/1q2w3e/v2/folder/MXEydzNlOnJvb3Q?name=%5Bname%5D\",\n" +
-                   "      \"rel\": \"create-folder\",\n" +
-                   "      \"type\": \"application/json\"\n" +
-                   "    },\n" +
-                   "    \"tree\": {\n" +
-                   "      \"href\": \"http://ide3.codenvy-dev.com/api/vfs/1q2w3e/v2/tree/MXEydzNlOnJvb3Q\",\n" +
-                   "      \"rel\": \"tree\",\n" +
-                   "      \"type\": \"application/json\"\n" +
-                   "    },\n" +
-                   "    \"upload-file\": {\n" +
-                   "      \"href\": \"http://ide3.codenvy-dev.com/api/vfs/1q2w3e/v2/uploadfile/MXEydzNlOnJvb3Q\",\n" +
-                   "      \"rel\": \"upload-file\",\n" +
-                   "      \"type\": \"text/html\"\n" +
-                   "    },\n" +
-                   "    \"import\": {\n" +
-                   "      \"href\": \"http://ide3.codenvy-dev.com/api/vfs/1q2w3e/v2/import/MXEydzNlOnJvb3Q\",\n" +
-                   "      \"rel\": \"import\",\n" +
-                   "      \"type\": \"application/zip\"\n" +
-                   "    }\n" +
-                   "  },\n" +
-                   "  \"parentId\": null,\n" +
-                   "  \"vfsId\": \"1q2w3e\",\n" +
-                   "  \"itemType\": \"FOLDER\",\n" +
-                   "  \"name\": \"\",\n" +
-                   "  \"properties\": [\n" +
-                   "    \n" +
-                   "  ],\n" +
-                   "  \"permissions\": [\n" +
-                   "    \"read\",\n" +
-                   "    \"all\"\n" +
-                   "  ],\n" +
-                   "  \"id\": \"_root_\",\n" +
-                   "  \"path\": \"/\"\n" +
-                   "}";
-        return new Folder(JSONParser.parseLenient(r).isObject());
+        Folder folder = new Folder(new JSONObject());
+        folder.setId("_root_");
+        folder.setName("/");
+        folder.setMimeType("text/directory");
+        return folder;
     }
 
     @Override
