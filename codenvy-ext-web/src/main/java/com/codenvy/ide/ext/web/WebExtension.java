@@ -24,6 +24,7 @@ import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.ext.web.css.CssFileProvider;
+import com.codenvy.ide.ext.web.css.LessFileProvider;
 import com.codenvy.ide.ext.web.css.editor.CssEditorProvider;
 import com.codenvy.ide.ext.web.html.HtmlFileProvider;
 import com.codenvy.ide.ext.web.html.editor.HtmlEditorProvider;
@@ -61,6 +62,7 @@ public class WebExtension {
                         EditorRegistry editorRegistry,
                         NewResourceAgent newResourceAgent,
                         CssFileProvider cssFileProvider,
+                        LessFileProvider lessFileProvider,
                         JsFileProvider jsFileProvider,
                         HtmlFileProvider htmlFileProvider,
                         ParserResource res) {
@@ -69,6 +71,11 @@ public class WebExtension {
         FileType cssFile = new FileType(null, MimeType.TEXT_CSS, "css");
         resourceProvider.registerFileType(cssFile);
         newResourceAgent.register(cssFileProvider);
+
+        // Also register .less files
+        FileType lessFile = new FileType(null, MimeType.TEXT_CSS, "less");
+        resourceProvider.registerFileType(lessFile);
+        newResourceAgent.register(lessFileProvider);
 
         //JS
         FileType jsFile = new FileType(null, MimeType.TEXT_JAVASCRIPT, "js");
@@ -82,6 +89,7 @@ public class WebExtension {
 
         // register Editor Provider
         editorRegistry.register(cssFile, cssEditorProvider);
+        editorRegistry.register(lessFile, cssEditorProvider);
         editorRegistry.register(jsFile, jsEditorProvider);
         editorRegistry.register(htmlFile, htmlEditorProvider);
         Elements.injectJs(res.webParser().getText());
