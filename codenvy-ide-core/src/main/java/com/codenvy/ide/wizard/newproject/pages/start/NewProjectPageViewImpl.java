@@ -55,8 +55,6 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
     interface NewProjectViewImplUiBinder extends UiBinder<Widget, NewProjectPageViewImpl> {
     }
 
-    private static NewProjectViewImplUiBinder uiBinder = GWT.create(NewProjectViewImplUiBinder.class);
-
     @UiField
     TextBox     projectName;
     @UiField
@@ -76,7 +74,10 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
      * @param locale
      */
     @Inject
-    protected NewProjectPageViewImpl(Resources resource, CoreLocalizationConstant locale, IconRegistry iconRegistry) {
+    protected NewProjectPageViewImpl(NewProjectViewImplUiBinder uiBinder,
+                                     Resources resource,
+                                     CoreLocalizationConstant locale,
+                                     IconRegistry iconRegistry) {
         this.res = resource;
         this.locale = locale;
         this.iconRegistry = iconRegistry;
@@ -124,6 +125,7 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
                     delegate.onProjectTypeSelected(id);
                 }
             });
+            btn.ensureDebugId("newProjectPage-toggleBtn-numBtn-" + i);
             grid.setWidget(0, i, btn);
             formatter.setHorizontalAlignment(0, i, HasHorizontalAlignment.ALIGN_CENTER);
 
