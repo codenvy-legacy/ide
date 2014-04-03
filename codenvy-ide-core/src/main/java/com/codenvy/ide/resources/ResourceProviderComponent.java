@@ -26,6 +26,10 @@ import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.IntegerMap;
@@ -33,10 +37,6 @@ import com.codenvy.ide.collections.IntegerMap.IterationCallback;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.core.Component;
 import com.codenvy.ide.core.ComponentException;
-import com.codenvy.ide.api.resources.model.File;
-import com.codenvy.ide.api.resources.model.Folder;
-import com.codenvy.ide.api.resources.model.Project;
-import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -44,6 +44,7 @@ import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -299,16 +300,17 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     }
 
     @Override
-    public Folder getRoot() {
-        Folder folder = new Folder(new JSONObject());
-        folder.setId("_root_");
-        folder.setName("/");
-        folder.setMimeType("text/directory");
+    public Folder getRoot() { //TODO: need rework logic and remove this method
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", new JSONString("_root_"));
+        jsonObject.put("name", new JSONString("/"));
+        jsonObject.put("mimeType", new JSONString("text/directory"));
+        Folder folder = new Folder(jsonObject);
         return folder;
     }
 
     @Override
-    public String getRootId() {
+    public String getRootId() { //TODO: need rework logic and remove this method
         return "_root_";
     }
 
