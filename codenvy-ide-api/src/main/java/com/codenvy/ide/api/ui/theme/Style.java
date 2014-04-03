@@ -85,7 +85,15 @@ public class Style {
     public static String getPartToolbarShadow() {
         return theme.getPartToolbarShadow();
     }
-
+    
+    public static String getPartToolbarSeparatorTopColor() {
+        return theme.getPartToolbarSeparatorTopColor();
+    }
+    
+    public static String getPartToolbarSeparatorBottomColor() {
+        return theme.getPartToolbarSeparatorBottomColor();
+    }
+    
     public static String getMainFontColor() {
         return theme.getMainFontColor();
     }

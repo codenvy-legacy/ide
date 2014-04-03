@@ -132,7 +132,21 @@ public interface Theme {
      * @return the color
      */
     String getPartToolbarShadow();
+    
+    /**
+     * First top line's color of the part toolbar separator. 
+     * 
+     * @return the color
+     */
+    String getPartToolbarSeparatorTopColor();
 
+    /**
+     * Second bottom line's color of the part toolbar separator. 
+     * 
+     * @return the color
+     */
+    String getPartToolbarSeparatorBottomColor();
+    
     /**
      * Color of the main font
      * 

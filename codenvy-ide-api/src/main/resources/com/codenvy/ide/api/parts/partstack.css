@@ -263,8 +263,37 @@
     background-color: partToolbar;
     border-bottom: 1px solid tabBorder;
     box-shadow: 0px 2px 5px 0px partToolbarShadow;
-    padding-left: 3px;
-    padding-right: 5px;
+    text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
+    font-size: secondaryTextFontSize;
+    color: mainFontColor;
+}
+
+.ide-Base-Part-Toolbar-Bottom {
+    background-color: partToolbar;
+    text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
+    font-size: boxFontSize;
+    color: mainFontColor;
+    font-weight: bold;
+    width: 100%;
+    line-height: 26px;
+    vertical-align: middle;
+}
+
+.ide-Base-Part-Toolbar-Separator {
+	border-top: 1px solid partToolbarSeparatorTopColor;
+    background-color: partToolbarSeparatorBottomColor;
+    height: 1px;
+    width: 100%;
+}
+
+.ide-Base-Part-Toolbar-Bottom-Icon {
+	fill: toolbarIconColor;
+	height: 16px;
+    width: 16px;
+    margin-right: 8px;
+    margin-left: 10px;
+    margin-top: 4px;
+    float: left;
 }
 
 .ide-button-micro {

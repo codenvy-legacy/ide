@@ -54,6 +54,7 @@ public class Project extends Folder {
     private         ProjectDescription        description;
     private         ProjectServiceClient      projectServiceClient;
     private         String                    projectTypeId;
+    private         String                    visibility;
 
     /**
      * Constructor for empty project. Used for serialization only.
@@ -142,6 +143,20 @@ public class Project extends Folder {
         return attributes.get(attributeName);
     }
 
+    /**
+     * @return the visibility
+     */
+    public String getVisibility() {
+        return visibility;
+    }
+
+    /**
+     * @param visibility the visibility to set
+     */
+    public void setVisibility(String visibility) {
+        this.visibility = visibility;
+    }
+    
     // management methods
 
     /**

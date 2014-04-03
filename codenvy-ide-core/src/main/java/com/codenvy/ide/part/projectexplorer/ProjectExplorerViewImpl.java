@@ -23,14 +23,22 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.tree.FileTreeNodeRenderer;
 import com.codenvy.ide.tree.ResourceTreeNodeDataAdapter;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 import com.codenvy.ide.util.input.SignalEvent;
+import com.google.gwt.dom.client.Style.Float;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import org.vectomatic.dom.svg.ui.SVGImage;
+
+import javax.validation.constraints.NotNull;
 
 
 /**
@@ -41,8 +49,13 @@ import com.google.inject.Singleton;
 @Singleton
 public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.ActionDelegate> implements ProjectExplorerView {
     protected Tree<Resource> tree;
-    private IconRegistry iconRegistry;
-
+    private IconRegistry     iconRegistry;
+    private Resources        resources;
+    private SVGImage         projectVisibilityImage;
+    private InlineLabel      projectTitle;
+    private FlowPanel        projectHeader;
+    
+    
     /**
      * Create view.
      *
@@ -52,6 +65,11 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
     public ProjectExplorerViewImpl(Resources resources, IconRegistry iconRegistry) {
         super(resources);
         this.iconRegistry = iconRegistry;
+        this.resources = resources;
+        
+        projectHeader = new FlowPanel();
+        projectHeader.setStyleName(resources.partStackCss().idePartStackToolbarBottom());
+        
         tree = Tree.create(resources, new ResourceTreeNodeDataAdapter(), FileTreeNodeRenderer.create(resources, iconRegistry));
         container.add(tree.asWidget());
     }
@@ -125,5 +143,36 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
             tree.expandNode(nodeElement);
         }
         tree.expandPaths(paths, false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setProjectHeader(@NotNull Project project) {
+        if (toolBar.getWidgetIndex(projectHeader) < 0) {
+            toolBar.addSouth(projectHeader, 28);
+            container.setWidgetSize(toolBar, 50);
+        }
+        projectHeader.clear();
+
+        FlowPanel delimeter = new FlowPanel();
+        delimeter.setStyleName(resources.partStackCss().idePartStackToolbarSeparator());
+        projectHeader.add(delimeter);
+
+        projectVisibilityImage =
+                                 new SVGImage("private".equals(project.getVisibility()) ? resources.privateProject()
+                                     : resources.publicProject());
+        projectVisibilityImage.getElement().setAttribute("class", resources.partStackCss().idePartStackToolbarBottomIcon());
+        projectHeader.add(projectVisibilityImage);
+
+        projectTitle = new InlineLabel(project.getName());
+        projectTitle.getElement().getStyle().setFloat(Float.LEFT);
+        projectHeader.add(projectTitle);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void hideProjectHeader() {
+        toolBar.remove(projectHeader);
+        container.setWidgetSize(toolBar, 22);
     }
 }

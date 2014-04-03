@@ -35,6 +35,8 @@
 @eval partToolbar com.codenvy.ide.api.ui.theme.Style.getPartToolbar();
 @eval partToolbarActive com.codenvy.ide.api.ui.theme.Style.getPartToolbarActive();
 @eval partToolbarShadow com.codenvy.ide.api.ui.theme.Style.getPartToolbarShadow();
+@eval partToolbarSeparatorTopColor com.codenvy.ide.api.ui.theme.Style.getPartToolbarSeparatorTopColor();
+@eval partToolbarSeparatorBottomColor com.codenvy.ide.api.ui.theme.Style.getPartToolbarSeparatorBottomColor();
 
 @eval consolePanelColor com.codenvy.ide.api.ui.theme.Style.getConsolePanelColor();
 
