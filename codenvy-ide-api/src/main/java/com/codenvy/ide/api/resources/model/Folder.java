@@ -63,9 +63,9 @@ public class Folder extends Resource {
     }
 
     public void init(JSONObject itemObject) {
-        id = itemObject.get("id").isString().stringValue();
-        name = itemObject.get("name").isString().stringValue();
-        if (itemObject.get("mimeType").isString() != null) {
+        id = itemObject.containsKey("id") ? itemObject.get("id").isString().stringValue() : null;
+        name = itemObject.containsKey("name") ? itemObject.get("name").isString().stringValue() : null;
+        if (itemObject.containsKey("mimeType") && itemObject.get("mimeType").isString() != null) {
             mimeType = itemObject.get("mimeType").isString().stringValue();
         }
     }
