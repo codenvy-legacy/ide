@@ -114,7 +114,7 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
         SpanElement root = Elements.createSpanElement(css.root());
         Image image = detectIcon(item);
 
-        if ((renderIcon) & (image != null)) {
+        if (renderIcon && image != null) {
             ImageElement icon = Elements.createImageElement();
             icon.setSrc(image.getUrl());
             icon.addClassName(css.icon());
