@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.resources.model;
+package com.codenvy.ide.api.resources.model;
 
 import com.google.gwt.regexp.shared.RegExp;
 
@@ -24,7 +24,7 @@ import com.google.gwt.regexp.shared.RegExp;
  * <b>Note, methods in this class check names only of limitation provided by Resource API</b>
  *
  * @author Evgen Vidolob
- *          //TODO check how to use GWT Validation API https://developers.google.com/web-toolkit/doc/latest/DevGuideValidation
+ * //TODO check how to use GWT Validation API https://developers.google.com/web-toolkit/doc/latest/DevGuideValidation
  */
 public class ResourceNameValidator {
 

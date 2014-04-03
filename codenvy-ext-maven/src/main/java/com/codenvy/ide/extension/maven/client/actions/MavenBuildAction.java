@@ -23,7 +23,7 @@ import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.extension.maven.client.MavenLocalizationConstant;
 import com.codenvy.ide.extension.maven.client.MavenResources;
 import com.codenvy.ide.extension.maven.client.build.MavenBuilderPresenter;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 

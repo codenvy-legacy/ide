@@ -18,7 +18,7 @@
 package com.codenvy.ide.api.editor;
 
 import com.codenvy.ide.collections.StringMap;
-import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.api.resources.model.File;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;

@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.java.client.projectmodel;
 
 import com.codenvy.api.project.shared.dto.ItemReference;
-import com.codenvy.ide.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.Folder;
 
 /** @author Nikolay Zamosenchuk */
 public class SourceFolder extends Folder {

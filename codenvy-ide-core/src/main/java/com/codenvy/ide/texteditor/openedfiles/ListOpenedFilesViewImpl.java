@@ -19,7 +19,7 @@ package com.codenvy.ide.texteditor.openedfiles;
 
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.api.resources.model.File;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
