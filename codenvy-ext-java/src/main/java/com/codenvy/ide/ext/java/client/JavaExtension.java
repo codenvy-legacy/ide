@@ -164,7 +164,6 @@ public class JavaExtension {
         iconRegistry.registerIcon("java.package", "java-extension/package-icon.png");
 
 
-
         FileType javaFile = new FileType(JavaResources.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
         editorRegistry.register(javaFile, javaEditorProvider);
         resourceProvider.registerFileType(javaFile);
@@ -243,7 +242,7 @@ public class JavaExtension {
                             Reconciler reconciler = editor.getConfiguration().getReconciler(editor.getView());
                             if (reconciler != null) {
                                 ReconcilingStrategy strategy = reconciler.getReconcilingStrategy(Document.DEFAULT_CONTENT_TYPE);
-                                if(strategy != null && strategy instanceof JavaReconcilerStrategy) {
+                                if (strategy != null && strategy instanceof JavaReconcilerStrategy) {
                                     ((JavaReconcilerStrategy)strategy).parse();
                                 }
                             }

@@ -54,8 +54,8 @@ public interface PartStackView extends View<PartStackView.ActionDelegate> {
 
     /** Update Tab */
     public void updateTabItem(int index, ImageResource icon, String title, String toolTip);
-    
-    /** Clear content panel.*/
+
+    /** Clear content panel. */
     public void clearContentPanel();
 
     /** Handles Focus Request Event. It is generated, when user clicks a stack anywhere */

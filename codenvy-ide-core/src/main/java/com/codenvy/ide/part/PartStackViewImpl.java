@@ -41,6 +41,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.sun.istack.internal.NotNull;
 import com.google.gwt.user.client.Window;
+
 import org.vectomatic.dom.svg.ui.SVGImage;
 
 import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.BELOW;
@@ -87,7 +88,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
             activeTab.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    Window.alert("PartStackViewImpl");
+                    loadDashboardIfExist();
                 }
             });
             tabsPanel.add(activeTab);
@@ -98,6 +99,16 @@ public class PartStackViewImpl extends Composite implements PartStackView {
         addFocusRequestHandler();
         //DEFAULT
     }
+
+    /**
+     * Call this method to load dashboard page maybe called from IDE in hosted version.
+     * If a function window["onLoadDashoboardPage"] is set, it will be called .
+     */
+    private native void loadDashboardIfExist() /*-{
+        if ($wnd["onLoadDashoboardPage"]) {
+            $wnd["onLoadDashoboardPage"]();
+        }
+    }-*/;
 
     /** {@inheritDoc} */
     @Override

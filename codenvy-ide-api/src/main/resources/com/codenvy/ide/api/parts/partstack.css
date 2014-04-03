@@ -100,6 +100,7 @@
     -moz-transform: rotate(270deg);
     transform: rotate(270deg);
     fill: toolbarIconColor;
+    box-shadow: -1px -1px 0px 0px tabBorderShadow;
     height: 18px;
     width: 18px;
     margin-left: -5px;

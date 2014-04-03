@@ -114,7 +114,7 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
         SpanElement root = Elements.createSpanElement(css.root());
         Image image = detectIcon(item);
 
-        if ((renderIcon)&(image!=null)) {
+        if ((renderIcon) & (image != null)) {
             ImageElement icon = Elements.createImageElement();
             icon.setSrc(image.getUrl());
             icon.addClassName(css.icon());
@@ -148,26 +148,21 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
     private static Image detectIcon(Resource item) {
         Project project = item.getProject();
         Image icon = null;
-        String iconPath;
-        if (project == null) {
-            return null;
-        }
+
+        if (project == null) return null;
         final String projectTypeId = project.getDescription().getProjectTypeId();
-        if (item instanceof Project){
-            iconPath=projectTypeId + ".projecttype.small.icon";
-            if(!iconRegistry.getAllRegisterIcons().containsKey(iconPath))return null;
-            icon = iconRegistry.getIcon(iconPath);
-        }else if (item instanceof Folder){
-            iconPath=projectTypeId + ".folder.small.icon";
-            icon = iconRegistry.getIcon(iconPath);
-        }else if (item instanceof File) {
+        if (item instanceof Project) {
+            icon = iconRegistry.getIconIfExist(projectTypeId + ".projecttype.small.icon");
+        } else if (item instanceof Folder) {
+            icon = iconRegistry.getIcon(projectTypeId + ".folder.small.icon");
+        } else if (item instanceof File) {
             String filename = item.getName();
-            iconPath=projectTypeId + "/" + filename + ".file.small.icon";
 
             // search exact match first
-            if(iconRegistry.getAllRegisterIcons().containsKey(iconPath)){
-                icon = iconRegistry.getIcon(iconPath);
-            } else{
+            icon = iconRegistry.getIconIfExist(projectTypeId + "/" + filename + ".file.small.icon");
+
+            // not found, try with extension
+            if (icon == null) {
                 String[] split = item.getName().split("\\.");
                 String ext = split[split.length - 1];
                 icon = iconRegistry.getIcon(projectTypeId + "/" + ext + ".file.small.icon");
