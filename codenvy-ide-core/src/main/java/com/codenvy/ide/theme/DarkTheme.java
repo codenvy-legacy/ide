@@ -111,12 +111,12 @@ public class DarkTheme implements Theme {
     
     @Override
     public String getPartToolbarSeparatorTopColor() {
-        return "#DBDBDB";
+        return "#232323";
     }
     
     @Override
     public String getPartToolbarSeparatorBottomColor() {
-        return "#232323";
+        return "#878787";
     }
     
     @Override

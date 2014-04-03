@@ -122,6 +122,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 project.setName(result.getName());
                 project.setParent(rootFolder);
                 project.setProject(project);
+                project.setVisibility(result.getVisibility());
 
                 rootFolder.getChildren().clear();
                 rootFolder.addChild(project);
@@ -186,6 +187,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 project.setName(name);
                 project.setParent(rootFolder);
                 project.setProject(project);
+                project.setVisibility(result.getVisibility());
 
                 rootFolder.getChildren().clear();
                 rootFolder.addChild(project);

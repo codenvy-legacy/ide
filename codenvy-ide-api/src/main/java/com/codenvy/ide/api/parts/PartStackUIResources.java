@@ -75,7 +75,10 @@ public interface PartStackUIResources extends ClientBundle {
         
         @ClassName("ide-Base-Part-Toolbar-Separator")
         String idePartStackToolbarSeparator();
-
+        
+        @ClassName("ide-Base-Part-Toolbar-Bottom-Icon")
+        String idePartStackToolbarBottomIcon();
+        
         @ClassName("ide-PartStack-Tool-Tab-selected")
         String idePartStackToolTabSelected();
 

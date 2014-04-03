@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.part.projectexplorer;
 
+import com.codenvy.ide.Constants;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
@@ -34,7 +35,6 @@ import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.Constants;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -111,7 +111,13 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
                 setContent(event.getProject().getParent());
-                view.setProjectHeader(event.getProject());
+                
+                //List of projects is displaying (need find better sign, that the list of projects is shown):
+                if (event.getProject().getProject() == null) {
+                    view.hideProjectHeader();
+                } else {
+                    view.setProjectHeader(event.getProject());
+                }
                 
                 // TODO: avoid asking project type while show list of all projects
 //                checkProjectType(event.getProject(), new AsyncCallback<Project>() {

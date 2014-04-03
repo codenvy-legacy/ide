@@ -50,7 +50,7 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
         container.setSize("100%", "100%");
         toolBar = new DockLayoutPanel(Style.Unit.PX);
         toolBar.addStyleName(resources.partStackCss().ideBasePartToolbar());
-        container.addNorth(toolBar, 20);
+        container.addNorth(toolBar, 22);
 
         //this hack used for adding box shadow effect to toolbar
         toolBar.getElement().getParentElement().getStyle().setOverflow(Style.Overflow.VISIBLE);

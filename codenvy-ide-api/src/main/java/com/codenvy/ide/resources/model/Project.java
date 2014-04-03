@@ -49,17 +49,18 @@ import java.util.Map;
  * @author Nikolay Zamosenchuk
  */
 public class Project extends Folder {
-    public static final String PROJECT_MIME_TYPE = "text/vnd.ideproject+directory";
-    public static final String TYPE              = "project";
-    protected final EventBus                  eventBus;
-    protected final AsyncRequestFactory       asyncRequestFactory;
-    private final   DtoUnmarshallerFactory    dtoUnmarshallerFactory;
-    protected       Array<Property>           properties;
-    protected       Map<String, List<String>> attributes;
-    protected       Loader                    loader;
-    private         ProjectDescription        description;
-    private         ProjectServiceClient      projectServiceClient;
-    private         String                    projectTypeId;
+    public static final String           PROJECT_MIME_TYPE = "text/vnd.ideproject+directory";
+    public static final String           TYPE              = "project";
+    protected final EventBus             eventBus;
+    protected final AsyncRequestFactory  asyncRequestFactory;
+    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    protected Array<Property>            properties;
+    protected Map<String, List<String>>  attributes;
+    protected Loader                     loader;
+    private ProjectDescription           description;
+    private ProjectServiceClient         projectServiceClient;
+    private String                       projectTypeId;
+    private String                       visibility;
 
     /**
      * Constructor for empty project. Used for serialization only.
@@ -180,8 +181,21 @@ public class Project extends Folder {
         }
         return null;
     }
+    
+    /**
+     * @return the visibility
+     */
+    public String getVisibility() {
+        return visibility;
+    }
 
-
+    /**
+     * @param visibility the visibility to set
+     */
+    public void setVisibility(String visibility) {
+        this.visibility = visibility;
+    }
+    
     // management methods
 
     /**

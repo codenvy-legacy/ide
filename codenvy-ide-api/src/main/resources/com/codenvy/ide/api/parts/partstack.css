@@ -286,6 +286,16 @@
     width: 100%;
 }
 
+.ide-Base-Part-Toolbar-Bottom-Icon {
+	fill: toolbarIconColor;
+	height: 16px;
+    width: 16px;
+    margin-right: 8px;
+    margin-left: 10px;
+    margin-top: 4px;
+    float: left;
+}
+
 .ide-button-micro {
     padding: 1px 5px;
     font-size: 9px;

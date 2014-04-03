@@ -1,44 +1,13 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- The icon can be used freely in both personal and commercial projects with no attribution required, but always appreciated. 
+You may NOT sub-license, resell, rent, redistribute or otherwise transfer the icon without express written permission from iconmonstr.com -->
+
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="32px" height="46px" viewBox="0 0 32 46" style="enable-background:new 0 0 32 46;" xml:space="preserve">
-<g id="_x32_37._Locked">
-	<g>
-		<path d="M28,17.999V12c0-6.628-5.373-12-12-12C9.372,0,4,5.372,4,12v5.999c-2.209,0-4,1.791-4,4V42c0,2.209,1.791,4,4,4h24
-			c2.209,0,4-1.791,4-4V21.999C32,19.79,30.209,17.999,28,17.999z M8,12c0-4.419,3.582-8,8-8s8,3.581,8,8v5.999H8V12z M28,42H4V22
-			h24V42z M14,33.445V36c0,1.104,0.896,2,2,2s2-0.896,2-2v-2.555c1.19-0.693,2-1.969,2-3.445c0-2.21-1.791-4.001-4-4.001
-			S12,27.79,12,30C12,31.477,12.81,32.752,14,33.445z"/>
-	</g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="512px" height="512px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
+<path id="lock-3-icon" d="M195.334,223.333h-50v-62.666C145.334,99.645,194.979,50,256,50c61.022,0,110.667,49.645,110.667,110.667
+	v62.666h-50v-62.666C316.667,127.215,289.452,100,256,100c-33.451,0-60.666,27.215-60.666,60.667V223.333z M404,253.333V462H108
+	V253.333H404z M283,341c0-14.912-12.088-27-27-27s-27,12.088-27,27c0,7.811,3.317,14.844,8.619,19.773
+	c4.385,4.075,6.881,9.8,6.881,15.785V399.5h23v-22.941c0-5.989,2.494-11.708,6.881-15.785C279.683,355.844,283,348.811,283,341z"/>
 </svg>

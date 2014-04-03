@@ -109,11 +109,11 @@ public class LightTheme implements Theme {
     
     @Override
     public String getPartToolbarSeparatorTopColor() {
-        return "#AAAAAA";
+        return "#FFFFFF";
     }
     @Override
     public String getPartToolbarSeparatorBottomColor() {
-        return "#FFFFFF";
+        return "#AAAAAA";
     }
 
     @Override

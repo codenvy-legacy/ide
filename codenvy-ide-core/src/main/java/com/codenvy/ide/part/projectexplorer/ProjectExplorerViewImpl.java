@@ -30,9 +30,8 @@ import com.codenvy.ide.tree.ResourceTreeNodeDataAdapter;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 import com.codenvy.ide.util.input.SignalEvent;
-import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -71,23 +70,6 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         projectHeader = new FlowPanel();
         projectHeader.setStyleName(resources.partStackCss().idePartStackToolbarBottom());
         
-        FlowPanel delimeter = new FlowPanel();
-        delimeter.setStyleName(resources.partStackCss().idePartStackToolbarSeparator());
-        projectHeader.add(delimeter);
-        
-        projectVisibilityImage = new SVGImage();
-        projectVisibilityImage.getElement().getStyle().setMarginRight(8, Unit.PX);
-        projectVisibilityImage.getElement().getStyle().setMarginLeft(10, Unit.PX);
-        projectVisibilityImage.setHeight("16px");
-        projectVisibilityImage.setWidth("16px");
-        projectHeader.add(projectVisibilityImage);
-        
-        projectTitle = new InlineLabel();
-        projectHeader.add(projectTitle);
-        projectHeader.setVisible(false);
-        
-        toolBar.addSouth(projectHeader, 28);
-
         tree = Tree.create(resources, new ResourceTreeNodeDataAdapter(), FileTreeNodeRenderer.create(resources, iconRegistry));
         container.add(tree.asWidget());
     }
@@ -166,18 +148,31 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
     /** {@inheritDoc} */
     @Override
     public void setProjectHeader(@NotNull Project project) {
-        if (!projectHeader.isVisible()) {
-            projectHeader.setVisible(true);
-            container.setWidgetSize(toolBar, 48);
+        if (toolBar.getWidgetIndex(projectHeader) < 0) {
+            toolBar.addSouth(projectHeader, 28);
+            container.setWidgetSize(toolBar, 50);
         }
-        projectVisibilityImage.setResource(resources.privateProject());
-        projectTitle.setText(project.getName());
+        projectHeader.clear();
+
+        FlowPanel delimeter = new FlowPanel();
+        delimeter.setStyleName(resources.partStackCss().idePartStackToolbarSeparator());
+        projectHeader.add(delimeter);
+
+        projectVisibilityImage =
+                                 new SVGImage("private".equals(project.getVisibility()) ? resources.privateProject()
+                                     : resources.publicProject());
+        projectVisibilityImage.getElement().setAttribute("class", resources.partStackCss().idePartStackToolbarBottomIcon());
+        projectHeader.add(projectVisibilityImage);
+
+        projectTitle = new InlineLabel(project.getName());
+        projectTitle.getElement().getStyle().setFloat(Float.LEFT);
+        projectHeader.add(projectTitle);
     }
 
     /** {@inheritDoc} */
     @Override
     public void hideProjectHeader() {
-        projectHeader.setVisible(false);
-        container.setWidgetSize(toolBar, 20);
+        toolBar.remove(projectHeader);
+        container.setWidgetSize(toolBar, 22);
     }
 }
