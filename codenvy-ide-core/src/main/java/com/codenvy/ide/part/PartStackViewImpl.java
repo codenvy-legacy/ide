@@ -39,6 +39,10 @@ import com.google.gwt.user.client.ui.InsertPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.sun.istack.internal.NotNull;
+import com.google.gwt.user.client.Window;
+
+import org.vectomatic.dom.svg.ui.SVGImage;
 
 import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.BELOW;
 import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.LEFT;
@@ -78,12 +82,33 @@ public class PartStackViewImpl extends Composite implements PartStackView {
 //        parent = new DockLayoutPanel(Style.Unit.PX);
         this.tabsPanel = tabsPanel;
         contentPanel = new SimplePanel();
+        if (tabPosition == LEFT) {
+            SVGImage svgIcon = new SVGImage(resources.arrow());
+            TabButton activeTab = new TabButton(svgIcon, "call dashboard");
+            activeTab.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    loadDashboardIfExist();
+                }
+            });
+            tabsPanel.add(activeTab);
+        }
         contentPanel.setStyleName(resources.partStackCss().idePartStackContent());
         initWidget(contentPanel);
 
         addFocusRequestHandler();
         //DEFAULT
     }
+
+    /**
+     * Call this method to load dashboard page maybe called from IDE in hosted version.
+     * If a function window["onLoadDashoboardPage"] is set, it will be called .
+     */
+    private native void loadDashboardIfExist() /*-{
+        if ($wnd["onLoadDashoboardPage"]) {
+            $wnd["onLoadDashoboardPage"]();
+        }
+    }-*/;
 
     /** {@inheritDoc} */
     @Override
@@ -205,6 +230,23 @@ public class PartStackViewImpl extends Composite implements PartStackView {
                 tabItem.ensureDebugId("777");
                 addHandlers();
             }
+        }
+
+        /**
+         * Create button.
+         *
+         * @param svgIcon
+         * @param title
+         */
+        public TabButton(@NotNull SVGImage svgIcon, @NotNull String title) {
+            tabItem = new FlowPanel();
+            if (title != null) {
+                tabItem.setTitle(title);
+            }
+            initWidget(tabItem);
+            this.setStyleName(resources.partStackCss().idePartStackToolTab());
+            svgIcon.getElement().setAttribute("class", resources.partStackCss().idePartStackBotonLeft());
+            tabItem.add(svgIcon);
         }
 
         @Override
