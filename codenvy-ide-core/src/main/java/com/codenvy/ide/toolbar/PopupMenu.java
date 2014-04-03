@@ -49,6 +49,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.UIObject;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
 
@@ -290,6 +291,15 @@ public class PopupMenu extends Composite {
 
                 DOM.setElementAttribute(table.getRowFormatter().getElement(i), "item-index", "" + i);
                 DOM.setElementAttribute(table.getRowFormatter().getElement(i), "item-enabled", "" + presentation.isEnabled());
+
+                String actionId = actionManager.getId(menuItem);
+                String debugId;
+                if (actionId == null) {
+                    debugId = idPrefix + menuItem.getTemplatePresentation().getText();
+                } else {
+                    debugId = idPrefix + actionId;
+                }
+                UIObject.ensureDebugId(table.getRowFormatter().getElement(i), debugId);
             }
 
 //            Element row = table.getRowFormatter().getElement(i);

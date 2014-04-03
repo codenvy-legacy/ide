@@ -106,6 +106,15 @@ public class LightTheme implements Theme {
     public String getPartToolbarShadow() {
         return getTabBorderColor();
     }
+    
+    @Override
+    public String getPartToolbarSeparatorTopColor() {
+        return "#FFFFFF";
+    }
+    @Override
+    public String getPartToolbarSeparatorBottomColor() {
+        return "#AAAAAA";
+    }
 
     @Override
     public String getMainFontColor() {

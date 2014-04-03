@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.wizard.newresource;
 
-import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.resources.model.Folder;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.junit.Before;

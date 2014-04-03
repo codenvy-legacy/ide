@@ -38,6 +38,7 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -97,6 +98,12 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
             public String getValue(KeyItem object) {
                 return object.getHost();
             }
+
+            @Override
+            public void render(Context context, KeyItem object, SafeHtmlBuilder sb) {
+                sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "sshKeyManagerView-cellTable-host-" + context.getIndex() + "\">");
+                super.render(context, object, sb);
+            }
         };
         hostColumn.setSortable(true);
 
@@ -114,6 +121,7 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
             @Override
             public void render(Context context, KeyItem object, SafeHtmlBuilder sb) {
                 if (object != null && object.getPublicKeyUrl() != null) {
+                    sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "sshKeyManagerView-cellTable-key-" + context.getIndex() + "\">");
                     super.render(context, object, sb);
                 }
             }
@@ -130,6 +138,15 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
             @Override
             public String getValue(KeyItem object) {
                 return "Delete";
+            }
+
+            @Override
+            public void render(Context context, KeyItem object, SafeHtmlBuilder sb) {
+                if (object != null && object.getPublicKeyUrl() != null) {
+                    sb.appendHtmlConstant(
+                            "<div id=\"" + UIObject.DEBUG_ID_PREFIX + "sshKeyManagerView-cellTable-delete-" + context.getIndex() + "\">");
+                    super.render(context, object, sb);
+                }
             }
         };
         // Creates handler on button clicked

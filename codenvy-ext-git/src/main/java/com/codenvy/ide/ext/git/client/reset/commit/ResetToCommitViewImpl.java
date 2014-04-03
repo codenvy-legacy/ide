@@ -20,10 +20,12 @@ package com.codenvy.ide.ext.git.client.reset.commit;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.shared.Revision;
+import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -34,6 +36,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
@@ -133,6 +136,11 @@ public class ResetToCommitViewImpl extends DialogBox implements ResetToCommitVie
             public String getValue(Revision revision) {
                 return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_MEDIUM).format(
                         new Date((long)revision.getCommitTime()));
+            }
+            @Override
+            public void render(Cell.Context context, Revision revision, SafeHtmlBuilder sb) {
+                sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "resetToCommitView-cellTable-" + context.getIndex() + "\">");
+                super.render(context, revision, sb);
             }
         };
         Column<Revision, String> commiterColumn = new Column<Revision, String>(new TextCell()) {

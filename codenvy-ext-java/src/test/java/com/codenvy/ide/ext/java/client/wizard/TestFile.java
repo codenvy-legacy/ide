@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.java.client.wizard;
 
-import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.api.resources.model.File;
 
 /**
  * The implementation of {@link File} for testing.

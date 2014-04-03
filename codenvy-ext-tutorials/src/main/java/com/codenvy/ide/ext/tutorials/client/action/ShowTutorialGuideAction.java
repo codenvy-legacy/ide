@@ -24,7 +24,7 @@ import com.codenvy.ide.ext.tutorials.client.GuidePageController;
 import com.codenvy.ide.ext.tutorials.client.TutorialsLocalizationConstant;
 import com.codenvy.ide.ext.tutorials.client.TutorialsResources;
 import com.codenvy.ide.ext.tutorials.shared.Constants;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 

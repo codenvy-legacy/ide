@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.java.client.wizard;
 
 import com.codenvy.ide.ext.java.client.projectmodel.CompilationUnit;
-import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.api.resources.model.File;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.mockito.invocation.InvocationOnMock;

@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.api.event;
 
-import com.codenvy.ide.resources.model.Folder;
-import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.Resource;
 import com.google.gwt.event.shared.GwtEvent;
 
 import java.util.ArrayList;

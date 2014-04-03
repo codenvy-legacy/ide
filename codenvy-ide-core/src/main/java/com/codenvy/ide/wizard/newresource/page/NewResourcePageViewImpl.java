@@ -30,7 +30,6 @@ import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -40,6 +39,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -94,6 +94,7 @@ public class NewResourcePageViewImpl extends Composite implements NewResourcePag
                     label.setInnerHTML(sb.toSafeHtml().asString());
 
                     itemElement.appendChild(label);
+                    UIObject.ensureDebugId((com.google.gwt.dom.client.Element)itemElement, "resourceType-" + itemData.getId());
                 }
 
                 @Override

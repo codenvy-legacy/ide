@@ -23,10 +23,10 @@ import elemental.html.ImageElement;
 import elemental.html.SpanElement;
 
 import com.codenvy.ide.api.ui.IconRegistry;
-import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.resources.model.Folder;
-import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.ui.tree.NodeRenderer;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
@@ -35,6 +35,7 @@ import com.codenvy.ide.util.CssUtils;
 import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.UIObject;
 
 
 /** Renderer for nodes in the file tree. */
@@ -139,6 +140,7 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
             label.addClassName(css.defaultFont());
         }
         label.setTextContent(name);
+        UIObject.ensureDebugId((com.google.gwt.dom.client.Element)label, "fileTreeNodeRenderer-resource-" + name + label.hashCode());
 
         root.appendChild(label);
 

@@ -41,19 +41,20 @@
     <g:DockLayoutPanel unit="PX" width="550px" height="200px" addStyleNames="{style.emptyBorder}">
         <g:south size="36.0">
             <g:FlowPanel addStyleNames="{style.spacing}">
-                <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonClose}" width="70px" ui:field="btnClose"/>
+                <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonClose}" width="70px" ui:field="btnClose"
+                          debugId="branchView-btn-close"/>
                 <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonRename}" width="75px"
-                          ui:field="btnRename"/>
+                          ui:field="btnRename" debugId="branchView-btn-rename"/>
                 <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonDelete}" width="75px"
-                          ui:field="btnDelete"/>
+                          ui:field="btnDelete" debugId="branchView-btn-delete"/>
                 <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonCreate}" width="75px"
-                          ui:field="btnCreate"/>
+                          ui:field="btnCreate" debugId="branchView-btn-create"/>
                 <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonCheckout}" width="75px"
-                          ui:field="btnCheckout"/>
+                          ui:field="btnCheckout" debugId="branchView-btn-checkout"/>
             </g:FlowPanel>
         </g:south>
         <g:center>
-            <g:ScrollPanel ui:field="branchesPanel" addStyleNames="{res.gitCSS.simpleListContainer}"/>
+            <g:ScrollPanel ui:field="branchesPanel" addStyleNames="{res.gitCSS.simpleListContainer}" debugId="branchView-scrollPanel-branchesPanel"/>
         </g:center>
     </g:DockLayoutPanel>
 </ui:UiBinder>
