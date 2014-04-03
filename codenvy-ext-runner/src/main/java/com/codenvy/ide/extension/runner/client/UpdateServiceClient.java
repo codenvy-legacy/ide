@@ -17,13 +17,16 @@
  */
 package com.codenvy.ide.extension.runner.client;
 
-import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
+import com.codenvy.ide.websocket.WebSocketException;
+import com.codenvy.ide.websocket.rest.RequestCallback;
+
+import javax.validation.constraints.NotNull;
 
 /**
- * Notified when app launched.
+ * //
  *
  * @author Artem Zatsarynnyy
  */
-public interface ProjectRunCallback {
-    void onRun(ApplicationProcessDescriptor appDescriptor);
+public interface UpdateServiceClient {
+    public void update(Long id, @NotNull RequestCallback<Void> callback) throws WebSocketException;
 }

@@ -20,8 +20,6 @@ package com.codenvy.runner.sdk;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.CustomPortService;
-import com.codenvy.api.core.util.LineConsumer;
-import com.codenvy.api.core.util.ProcessUtil;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.api.runner.internal.DeploymentSources;
@@ -177,7 +175,7 @@ public class SDKRunner extends Runner {
                                                                             extension);
         final ZipFile warFile = buildCodenvyWebAppWithExtension(extension);
         final ApplicationProcess process =
-                server.deploy(appDir, warFile, toDeploy, sdkRunnerCfg, codeServerProcess,
+                server.deploy(appDir, warFile, toDeploy.getFile(), sdkRunnerCfg, codeServerProcess,
                               new ApplicationServer.StopCallback() {
                                   @Override
                                   public void stopped() {
@@ -227,45 +225,11 @@ public class SDKRunner extends Runner {
             GwtXmlUtils.inheritGwtModule(IoUtil.findFile(SDKRunner.IDE_GWT_XML_FILE_NAME, workDirPath.toFile()).toPath(),
                                          extension.gwtModuleName);
 
-            warPath = buildWebAppAndGetWar(workDirPath);
+            warPath = Utils.buildProjectFromSources(workDirPath, "*.war");
         } catch (IOException e) {
             throw new RunnerException(e);
         }
         return warPath;
     }
 
-    private ZipFile buildWebAppAndGetWar(Path appDirPath) throws RunnerException {
-        final String[] command = new String[]{MavenUtils.getMavenExecCommand(), "package"};
-        try {
-            ProcessBuilder processBuilder = new ProcessBuilder(command).directory(appDirPath.toFile());
-            Process process = processBuilder.start();
-            ProcessLineConsumer consumer = new ProcessLineConsumer();
-            ProcessUtil.process(process, consumer, consumer);
-            process.waitFor();
-            if (process.exitValue() != 0) {
-                throw new RunnerException(consumer.getOutput().toString());
-            }
-            return new ZipFile(IoUtil.findFile("*.war", appDirPath.resolve("target").toFile()));
-        } catch (IOException | InterruptedException e) {
-            throw new RunnerException(e);
-        }
-    }
-
-    private static class ProcessLineConsumer implements LineConsumer {
-        final StringBuilder output = new StringBuilder();
-
-        @Override
-        public void writeLine(String line) throws IOException {
-            output.append('\n').append(line);
-        }
-
-        @Override
-        public void close() throws IOException {
-            //nothing to close
-        }
-
-        StringBuilder getOutput() {
-            return output;
-        }
-    }
 }

@@ -40,6 +40,7 @@ import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
+import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.codenvy.ide.websocket.rest.StringUnmarshallerWS;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
 import com.google.gwt.user.client.Window;
@@ -60,24 +61,25 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 @Singleton
 public class RunnerController implements Notification.OpenNotificationHandler {
-    private final DtoUnmarshallerFactory       dtoUnmarshallerFactory;
-    private final DtoFactory                   dtoFactory;
-    private       MessageBus                   messageBus;
-    private       WorkspaceAgent               workspaceAgent;
-    private       ResourceProvider             resourceProvider;
-    private       ConsolePart                  console;
-    private       RunnerServiceClient          service;
-    private       RunnerLocalizationConstant   constant;
-    private       NotificationManager          notificationManager;
-    private       Notification                 notification;
-    private       Project                      currentProject;
+    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    private final DtoFactory             dtoFactory;
+    private       MessageBus             messageBus;
+    private       WorkspaceAgent         workspaceAgent;
+    private       ResourceProvider       resourceProvider;
+    private       ConsolePart            console;
+    private       RunnerServiceClient    service;
+    private       UpdateServiceClient    updateService;
+    private RunnerLocalizationConstant constant;
+    private NotificationManager          notificationManager;
+    private Notification                 notification;
+    private Project                      currentProject;
     /** Launched app. */
-    private       ApplicationProcessDescriptor applicationProcessDescriptor;
+    private ApplicationProcessDescriptor applicationProcessDescriptor;
     /** Handler for processing Maven build status which is received over WebSocket connection. */
-    private       SubscriptionHandler<String>  runStatusHandler;
+    private SubscriptionHandler<String>  runStatusHandler;
     /** Is launching of any application in progress? */
-    private       boolean                      isLaunchingInProgress;
-    private       ProjectRunCallback           runCallback;
+    private boolean                      isLaunchingInProgress;
+    private ProjectRunCallback           runCallback;
 
     /**
      * Create controller.
@@ -92,6 +94,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      *         {@link com.codenvy.ide.api.parts.ConsolePart}
      * @param service
      *         {@link com.codenvy.api.runner.gwt.client.RunnerServiceClient}
+     * @param updateService
+     *         {@link com.codenvy.ide.extension.runner.client.UpdateServiceClient}
      * @param constant
      *         {@link com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant}
      * @param notificationManager
@@ -103,6 +107,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                             WorkspaceAgent workspaceAgent,
                             final ConsolePart console,
                             RunnerServiceClient service,
+                            UpdateServiceClient updateService,
                             RunnerLocalizationConstant constant,
                             NotificationManager notificationManager,
                             DtoUnmarshallerFactory dtoUnmarshallerFactory,
@@ -112,6 +117,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         this.workspaceAgent = workspaceAgent;
         this.console = console;
         this.service = service;
+        this.updateService = updateService;
         this.constant = constant;
         this.notificationManager = notificationManager;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
@@ -382,5 +388,24 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     @Override
     public void onOpenClicked() {
         workspaceAgent.setActivePart(console);
+    }
+
+    /** Updates launched Codenvy Extension. */
+    public void updateExtension() {
+        try {
+            updateService.update(applicationProcessDescriptor.getProcessId(), new RequestCallback<Void>() {
+                @Override
+                protected void onSuccess(Void result) {
+                    console.print("successfully updated");
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    console.print("failed to updated");
+                }
+            });
+        } catch (WebSocketException e) {
+            console.print("failed to updated");
+        }
     }
 }

@@ -55,6 +55,15 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("control.stopApp.description")
     String stopAppActionDescription();
 
+    @Key("control.updateExtension.id")
+    String updateExtensionActionId();
+
+    @Key("control.updateExtension.text")
+    String updateExtensionText();
+
+    @Key("control.updateExtension.description")
+    String updateExtensionDescription();
+
     /* Messages */
     @Key("appStarting")
     String applicationStarting(String name);

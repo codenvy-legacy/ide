@@ -15,15 +15,29 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.extension.maven.client.build;
+package com.codenvy.runner.sdk;
 
-import com.codenvy.api.builder.BuildStatus;
+import com.codenvy.api.runner.RunnerException;
+import com.google.inject.Inject;
+
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
 /**
  * //
  *
  * @author Artem Zatsarynnyy
  */
-public interface ProjectBuiltCallback {
-    void onBuilt(BuildStatus status);
+@Path("sdk/{ws-id}")
+public class UpdateService {
+    @Inject
+    private ApplicationUpdaterRegistry applicationUpdaterRegistry;
+
+    @Path("update/{id}")
+    @POST
+    public void updateApplication(@PathParam("id") long id) throws RunnerException {
+        ApplicationUpdater updater = applicationUpdaterRegistry.getUpdater(id);
+        updater.update();
+    }
 }

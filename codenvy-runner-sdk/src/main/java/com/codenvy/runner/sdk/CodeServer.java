@@ -109,13 +109,11 @@ public class CodeServer {
             throw new RunnerException(e);
         }
 
-        final CodeServerProcess codeServerProcess;
         if (SystemInfo.isUnix()) {
-            codeServerProcess = startUnix(workDirPath.toFile(), runnerConfiguration);
+            return startUnix(workDirPath.toFile(), runnerConfiguration);
         } else {
-            codeServerProcess = startWindows(workDirPath.toFile(), runnerConfiguration);
+            return startWindows(workDirPath.toFile(), runnerConfiguration);
         }
-        return codeServerProcess;
     }
 
     // *nix
