@@ -70,7 +70,7 @@ public class BootstrapController {
      * @param styleInjector
      * @param extensionInitializer
      * @param preferencesManager
-     * @param userService
+     * @param userProfileService
      * @param projectTypeDescriptionServiceClient
      *
      * @param projectTypeDescriptorRegistry
@@ -208,11 +208,9 @@ public class BootstrapController {
 
 
     private void registerDefaultIcon() {
-        Map<String, String> icons = new HashMap<String, String>();
-        icons.put("default.projecttype.small.icon", "default/project.png");
-        icons.put("default.folder.small.icon", "default/folder.png");
-        icons.put("default.file.small.icon", "default/file.png");
-        iconRegistry.registerIcons(icons);
+        iconRegistry.registerIcon("default.projecttype.small.icon", "default/project.png");
+        iconRegistry.registerIcon("default.folder.small.icon", "default/folder.png");
+        iconRegistry.registerIcon("default.file.small.icon", "default/file.png");
     }
 
 }

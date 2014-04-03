@@ -50,6 +50,11 @@ public class IconRegistryImpl implements IconRegistry {
     }
 
     @Override
+    public Map getAllRegisterIcons() {
+        return icons;
+    }
+
+    @Override
     public Image getDefaultIcon() {
         return new Image(GWT.getModuleBaseForStaticFiles() + "default/default.jpg");
     }

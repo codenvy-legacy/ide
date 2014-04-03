@@ -40,6 +40,11 @@ public interface IconRegistry {
     Image getDefaultIcon();
 
     /**
+     * @return Map icon
+     */
+    Map getAllRegisterIcons();
+
+    /**
      * @param iconRegistry
      */
     void registerIcons(Map<String, String> iconRegistry);
