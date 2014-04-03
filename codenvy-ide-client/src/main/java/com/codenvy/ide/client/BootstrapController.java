@@ -60,7 +60,7 @@ public class BootstrapController {
     private       ProjectTypeDescriptionServiceClient projectTypeDescriptionServiceClient;
     private       ProjectTypeDescriptorRegistry       projectTypeDescriptorRegistry;
     private       IconRegistry                        iconRegistry;
-    private       ThemeAgent                          themeAgent;
+    private ThemeAgent themeAgent;
 
     /**
      * Create controller.
@@ -97,11 +97,11 @@ public class BootstrapController {
         this.iconRegistry = iconRegistry;
         this.themeAgent = themeAgent;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
-
+        
         //Is necessary for loading IDE styles before standard GWT one:
         setTheme();
         styleInjector.inject();
-
+        
         ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW)
                       .setCallback(new Callback<Void, Exception>() {
                           @Override
@@ -117,60 +117,58 @@ public class BootstrapController {
 
         dtoRegistrar.registerDtoProviders();
         registerDefaultIcon();
-        userProfileService
-                .getCurrentProfile(null, new AsyncRequestCallback<Profile>(dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
+        userProfileService.getCurrentProfile(null, new AsyncRequestCallback<Profile>(dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
+            @Override
+            protected void onSuccess(final Profile profile) {
+                Map<String, String> attributes = profile.getPreferences();
+                preferencesManager.load(attributes);
+
+                setTheme();
+                styleInjector.inject();
+
+                // initialize components
+                componentRegistry.get().start(new Callback<Void, ComponentException>() {
                     @Override
-                    protected void onSuccess(final Profile profile) {
-                        Map<String, String> attributes = profile.getPreferences();
-                        preferencesManager.load(attributes);
+                    public void onSuccess(Void result) {
+                        // instantiate extensions
+                        extensionInitializer.startExtensions();
+                        // Start UI
+                        SimpleLayoutPanel mainPanel = new SimpleLayoutPanel();
+                        RootLayoutPanel.get().add(mainPanel);
+                        WorkspacePresenter workspacePresenter = workspaceProvider.get();
 
-                        setTheme();
-                        styleInjector.inject();
+                        workspacePresenter.setUpdateButtonVisibility(Utils.isAppLaunchedInSDKRunner());
 
-                        // initialize components
-                        componentRegistry.get().start(new Callback<Void, ComponentException>() {
-                            @Override
-                            public void onSuccess(Void result) {
-                                // instantiate extensions
-                                extensionInitializer.startExtensions();
-                                // Start UI
-                                SimpleLayoutPanel mainPanel = new SimpleLayoutPanel();
-                                RootLayoutPanel.get().add(mainPanel);
-                                WorkspacePresenter workspacePresenter = workspaceProvider.get();
-
-                                workspacePresenter.setUpdateButtonVisibility(Utils.isAppLaunchedInSDKRunner());
-
-                                // Display IDE
-                                workspacePresenter.go(mainPanel);
-                                // Display list of projects in project explorer
-                                resourceProvider.showListProjects();
-                            }
-
-                            @Override
-                            public void onFailure(ComponentException caught) {
-                                Log.error(BootstrapController.class, "FAILED to start service:" + caught.getComponent(), caught);
-
-                                // Handle error when receiving profile.
-                                initializationFailed(caught.getMessage());
-                            }
-                        });
-
-                        initializeProjectTypeDescriptorRegistry();
+                        // Display IDE
+                        workspacePresenter.go(mainPanel);
+                        // Display list of projects in project explorer
+                        resourceProvider.showListProjects();
                     }
 
                     @Override
-                    protected void onFailure(Throwable exception) {
-                        Log.error(BootstrapController.class, exception);
+                    public void onFailure(ComponentException caught) {
+                        Log.error(BootstrapController.class, "FAILED to start service:" + caught.getComponent(), caught);
+
+                        // Handle error when receiving profile.
+                        initializationFailed(caught.getMessage());
                     }
                 });
+
+                initializeProjectTypeDescriptorRegistry();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                Log.error(BootstrapController.class, exception);
+            }
+        });
     }
 
     /**
      * Call this method to handle any of initialization errors.
      * If a function window["on-initialization-failed"] is set, it will be called using 'message' string as a parameter.
      *
-     * @param message
-     *         error message
+     * @param message error message
      */
     private native void initializationFailed(String message) /*-{
         if ($wnd["on-initialization-failed"]) {
@@ -193,8 +191,8 @@ public class BootstrapController {
                     protected void onSuccess(Array<ProjectTypeDescriptor> result) {
                         for (int i = 0; i < result.size(); i++) {
                             if (!result.get(i).getProjectTypeId().equalsIgnoreCase(Constants.NAMELESS_ID))//skip unknown project type user
-                                //can select this project type need
-                                //use BaseProjectType instead
+                                                                                                        //can select this project type need
+                                                                                                        //use BaseProjectType instead
                                 projectTypeDescriptorRegistry.registerDescriptor(result.get(i));
                         }
                     }
@@ -205,6 +203,7 @@ public class BootstrapController {
                     }
                 });
     }
+
 
 
     private void registerDefaultIcon() {
