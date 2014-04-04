@@ -17,7 +17,6 @@
  */
 package com.codenvy.runner.sdk;
 
-import com.codenvy.api.runner.RunnerException;
 import com.google.inject.Inject;
 
 import javax.ws.rs.POST;
@@ -36,8 +35,10 @@ public class UpdateService {
 
     @Path("update/{id}")
     @POST
-    public void updateApplication(@PathParam("id") long id) throws RunnerException {
+    public void updateApplication(@PathParam("id") long id) throws UpdateException {
         ApplicationUpdater updater = applicationUpdaterRegistry.getUpdaterByApplicationProcessId(id);
-        updater.update();
+        if (updater != null) {
+            updater.update();
+        }
     }
 }

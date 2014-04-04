@@ -22,7 +22,8 @@ package com.codenvy.runner.sdk;
  *
  * @author Artem Zatsarynnyy
  */
-public interface ApplicationUpdater {
-    /** Updates an application. */
-    void update() throws UpdateException;
+public class UpdateException extends Exception {
+    public UpdateException(Throwable cause) {
+        super(cause);
+    }
 }

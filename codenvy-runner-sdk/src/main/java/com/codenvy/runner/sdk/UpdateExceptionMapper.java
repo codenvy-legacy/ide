@@ -17,12 +17,18 @@
  */
 package com.codenvy.runner.sdk;
 
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+
 /**
  * //
  *
  * @author Artem Zatsarynnyy
  */
-public interface ApplicationUpdater {
-    /** Updates an application. */
-    void update() throws UpdateException;
+public class UpdateExceptionMapper implements ExceptionMapper<UpdateException> {
+    @Override
+    public Response toResponse(UpdateException exception) {
+        return Response.serverError().entity(exception.getMessage()).type(MediaType.TEXT_PLAIN).build();
+    }
 }

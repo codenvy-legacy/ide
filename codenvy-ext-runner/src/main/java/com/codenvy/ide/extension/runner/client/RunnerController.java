@@ -352,14 +352,11 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
                 if (exception instanceof ServerException &&
                     ((ServerException)exception).getHTTPStatus() == 500) {
-                    ServiceError e = dtoFactory.createDtoFromJson(exception.getMessage(),
-                                                                  ServiceError.class);
-                    onFail(constant.startApplicationFailed(currentProject.getName()) + ": " +
-                           e.getMessage(), null);
+                    ServiceError e = dtoFactory.createDtoFromJson(exception.getMessage(), ServiceError.class);
+                    onFail(constant.startApplicationFailed(currentProject.getName()) + ": " + e.getMessage(), null);
                 } else {
                     onFail(constant.startApplicationFailed(currentProject.getName()), exception);
                 }
-
 
                 try {
                     messageBus.unsubscribe("runner:status:" + buildTaskDescriptor.getProcessId(), this);
@@ -409,6 +406,10 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     notification.setStatus(FINISHED);
                     notification.setType(ERROR);
                     notification.setMessage(constant.updateApplicationFailed(currentProject.getName()));
+
+                    if (exception != null && exception.getMessage() != null) {
+                        console.printf(exception.getMessage());
+                    }
                 }
             });
         } catch (WebSocketException e) {

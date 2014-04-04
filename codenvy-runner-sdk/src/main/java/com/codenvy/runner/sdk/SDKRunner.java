@@ -160,6 +160,7 @@ public class SDKRunner extends Runner {
             throw new RunnerException(e);
         }
 
+        // TODO: rework this, using ProjectEventService
         final String workspace = sdkRunnerCfg.getRequest().getWorkspace();
         final String project = sdkRunnerCfg.getRequest().getProject().substring(2);
         final Path projectSourcesPath;
@@ -226,7 +227,7 @@ public class SDKRunner extends Runner {
                                          extension.gwtModuleName);
 
             warPath = Utils.buildProjectFromSources(workDirPath, "*.war");
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RunnerException(e);
         }
         return warPath;

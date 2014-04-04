@@ -135,7 +135,7 @@ public class TomcatServer implements ApplicationServer {
 
         registerUpdater(process, new ApplicationUpdater() {
             @Override
-            public void update() throws RunnerException {
+            public void update() throws UpdateException {
                 List<Link> projectLinks = runnerConfiguration.getRequest().getProjectDescriptor().getLinks();
                 final Link exportZipLink = getLink(Constants.LINK_REL_EXPORT_ZIP, projectLinks);
                 try {
@@ -146,9 +146,9 @@ public class TomcatServer implements ApplicationServer {
                     IoUtil.copy(new File(artifact.getName()),
                                 apiAppContextPath.resolve("WEB-INF/lib").resolve(extensionJar.getName()).toFile(), null);
                     LOG.debug("Extension {} updated", workDir);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     LOG.error("Unable to update extension: {}", workDir);
-                    throw new RunnerException(e);
+                    throw new UpdateException(e);
                 }
             }
         });

@@ -98,6 +98,7 @@ public class CodeServer {
 
             // Create symbolic links to the project's sources in order
             // to provide actual sources to code server at any time.
+            // TODO: rework this, using ProjectEventService
             final Path extDirPath = Files.createDirectory(workDirPath.resolve("ext"));
             if (!projectSourcesPath.isAbsolute()) {
                 projectSourcesPath = projectSourcesPath.toAbsolutePath();
