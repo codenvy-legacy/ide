@@ -75,7 +75,6 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
         });
         panel.addEast(minimizeButton, 20);
         
-        
         toolBar.addNorth(panel, 20);
     }
 

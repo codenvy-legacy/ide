@@ -20,6 +20,8 @@ package com.codenvy.ide.extension.runner.client.inject;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClientImpl;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
+import com.codenvy.ide.extension.runner.client.UpdateServiceClient;
+import com.codenvy.ide.extension.runner.client.UpdateServiceClientImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
@@ -30,5 +32,6 @@ public class RunnerGinModule extends AbstractGinModule {
     @Override
     protected void configure() {
         bind(RunnerServiceClient.class).to(RunnerServiceClientImpl.class).in(Singleton.class);
+        bind(UpdateServiceClient.class).to(UpdateServiceClientImpl.class).in(Singleton.class);
     }
 }

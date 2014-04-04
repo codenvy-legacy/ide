@@ -72,7 +72,7 @@ public class ExtensionManagerViewImpl implements ExtensionManagerView {
         actionManager.registerAction("extensionManagerSortByStatus", sortByStatusAction);
         actionGroup.add(sortByStatusAction);
         toolbarPresenter.bindMainGroup(actionGroup);
-        UIObject.ensureDebugId(descriptionArea, "extensionManagerView-textAreaElement-descriptionArea");
+        UIObject.ensureDebugId(descriptionArea, "window-preferences-extensions-descriptionArea");
 
         CheckboxCell checkboxCell = new CheckboxCell(false, false);
         Column<ExtensionDescription, Boolean> enabledColumn = new Column<ExtensionDescription, Boolean>(checkboxCell) {
@@ -83,7 +83,7 @@ public class ExtensionManagerViewImpl implements ExtensionManagerView {
 
             @Override
             public void render(Cell.Context context, ExtensionDescription object, SafeHtmlBuilder sb) {
-                sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "extensionManagerView-dataGrid-" + context.getIndex() + "\">");
+                sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "window-preferences-extensions-row-" + context.getIndex() + "\">");
                 super.render(context, object, sb);
             }
         };

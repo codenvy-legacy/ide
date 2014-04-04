@@ -21,6 +21,7 @@ import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.api.runner.internal.DeploymentSources;
 
+import java.io.File;
 import java.util.zip.ZipFile;
 
 /**
@@ -41,6 +42,7 @@ public interface ApplicationServer {
      * @param warToDeploy
      *         WAR file to deploy
      * @param extensionJar
+     *         JAR with extension
      * @param runnerConfiguration
      *         runner configuration
      * @param codeServerProcess
@@ -54,13 +56,13 @@ public interface ApplicationServer {
      */
     ApplicationProcess deploy(java.io.File workDir,
                               ZipFile warToDeploy,
-                              DeploymentSources extensionJar,
+                              File extensionJar,
                               SDKRunnerConfiguration runnerConfiguration,
                               CodeServer.CodeServerProcess codeServerProcess,
                               StopCallback stopCallback) throws RunnerException;
 
-    /** Will be notified when {@code ApplicationServer} will be stopped. */
-    public interface StopCallback {
+    /** Notified when {@code ApplicationServer} stopped. */
+    interface StopCallback {
         void stopped();
     }
 }

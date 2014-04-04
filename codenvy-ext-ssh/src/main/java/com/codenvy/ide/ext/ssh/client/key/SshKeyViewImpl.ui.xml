@@ -37,14 +37,14 @@
         <g:south size="26.0">
             <g:FlowPanel>
                 <g:Button addStyleNames="{style.alignBtn}" text="{locale.closeButton}" width="60px" ui:field="btnClose"
-                          debugId="sshKeyView-btn-close"/>
+                          debugId="window-preferences-sshKeys-close"/>
             </g:FlowPanel>
         </g:south>
         <g:center>
             <g:FlowPanel addStyleNames="{style.emptyBorder}">
                 <g:SimplePanel width="100%" height="100%">
                     <g:TextArea ui:field="key" width="100%" height="100%" readOnly="true" addStyleNames="{style.withoutPadding}"
-                                debugId="sshKeyView-textArea-key"/>
+                                debugId="window-preferences-sshKeys-key"/>
                 </g:SimplePanel>
             </g:FlowPanel>
         </g:center>

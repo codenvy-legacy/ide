@@ -45,14 +45,14 @@
         <g:south size="42">
             <g:FlowPanel addStyleNames="{style.spacing}">
                 <g:Button addStyleNames="{style.alignBtn}" width="50px" text="Cancel" ui:field="btnCancel"
-                          debugId="openProjectView-btn-cancel"/>
+                          debugId="file-openProject-cancel"/>
                 <g:Button addStyleNames="{style.alignBtn} {style.space}" width="50px" text="Open" ui:field="btnOpen"
-                          debugId="openProjectView-btn-open"/>
+                          debugId="file-openProject-open"/>
             </g:FlowPanel>
         </g:south>
         <g:center>
             <g:ScrollPanel ui:field="listPanel" addStyleNames="{res.coreCss.simpleListContainer} {style.emptyBorder}"
-                           debugId="openProjectView-scrollPanel-listPanel"/>
+                           debugId="file-openProject-listPanel"/>
         </g:center>
     </g:DockLayoutPanel>
 </ui:UiBinder> 

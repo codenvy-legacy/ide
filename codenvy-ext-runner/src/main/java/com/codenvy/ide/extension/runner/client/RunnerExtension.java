@@ -23,6 +23,7 @@ import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.extension.runner.client.actions.GetLogsAction;
 import com.codenvy.ide.extension.runner.client.actions.RunAction;
 import com.codenvy.ide.extension.runner.client.actions.StopAction;
+import com.codenvy.ide.extension.runner.client.actions.UpdateAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -43,17 +44,19 @@ public class RunnerExtension {
 
     @Inject
     public RunnerExtension(RunnerLocalizationConstant localizationConstants, ActionManager actionManager, RunAction runAction,
-                           GetLogsAction getLogsAction, StopAction stopAction) {
+                           GetLogsAction getLogsAction, StopAction stopAction, UpdateAction updateAction) {
         // register actions
         actionManager.registerAction(localizationConstants.runAppActionId(), runAction);
         actionManager.registerAction(localizationConstants.getAppLogsActionId(), getLogsAction);
         actionManager.registerAction(localizationConstants.stopAppActionId(), stopAction);
+        actionManager.registerAction(localizationConstants.updateExtensionActionId(), updateAction);
 
         // add actions in main menu
         DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
         runMenuActionGroup.add(runAction);
         runMenuActionGroup.add(getLogsAction);
         runMenuActionGroup.add(stopAction);
+        runMenuActionGroup.add(updateAction);
 
         // add actions on main toolbar
         DefaultActionGroup mainToolbarGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_TOOLBAR);

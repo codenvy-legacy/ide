@@ -65,6 +65,7 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
         count.setVisible(false);
 
         container.add(ourUiBinder.createAndBindUi(this));
+        minimizeButton.ensureDebugId("notification-minimizeBut");
     }
 
     /** {@inheritDoc} */

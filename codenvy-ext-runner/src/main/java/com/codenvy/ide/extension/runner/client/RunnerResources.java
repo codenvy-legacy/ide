@@ -25,8 +25,7 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 /**
  * Client resources.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: RunnerResources.java Jul 3, 2013 12:37:19 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 public interface RunnerResources extends ClientBundle {
 
@@ -38,4 +37,7 @@ public interface RunnerResources extends ClientBundle {
 
     @Source("stopApp.png")
     ImageResource stopApp();
+
+    @Source("update.png")
+    ImageResource updateApp();
 }
