@@ -18,10 +18,8 @@
 package com.codenvy.ide.notification;
 
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.parts.base.BaseActionDelegate;
-
-import javax.validation.constraints.NotNull;
+import com.google.gwt.user.client.ui.IsWidget;
 
 /**
  * The view of {@link NotificationManagerImpl}.
@@ -31,8 +29,6 @@ import javax.validation.constraints.NotNull;
 public interface NotificationManagerView extends View<NotificationManagerView.ActionDelegate> {
     /** Required for delegating some functions in view. */
     public interface ActionDelegate extends BaseActionDelegate {
-
-        void onClicked();//TODO need improve it
     }
 
     /**
@@ -42,14 +38,6 @@ public interface NotificationManagerView extends View<NotificationManagerView.Ac
     public enum Status {
         IN_PROGRESS, EMPTY, HAS_UNREAD
     }
-
-    /**
-     * Show status of notification manager on view
-     *
-     * @param status
-     *         notification manager status
-     */
-    void setStatus(@NotNull Status status);
 
     /**
      * Show count of unread notifications on view
@@ -67,5 +55,11 @@ public interface NotificationManagerView extends View<NotificationManagerView.Ac
      * @param title title that need to be set
      */
     void setTitle(String title);
-
+    
+    /**
+     * Returns the label which displays the count of unread messages.
+     * 
+     * @return {@link IsWidget} label
+     */
+    IsWidget getCountLabel();
 }

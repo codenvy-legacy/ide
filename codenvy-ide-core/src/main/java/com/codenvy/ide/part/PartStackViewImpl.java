@@ -36,11 +36,11 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.InsertPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.BELOW;
 import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.LEFT;
 import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.RIGHT;
 
@@ -87,8 +87,8 @@ public class PartStackViewImpl extends Composite implements PartStackView {
 
     /** {@inheritDoc} */
     @Override
-    public TabItem addTabButton(Image icon, String title, String toolTip, boolean closable) {
-        TabButton tabItem = new TabButton(icon, title, toolTip, closable);
+    public TabItem addTabButton(Image icon, String title, String toolTip, IsWidget widget, boolean closable) {
+        TabButton tabItem = new TabButton(icon, title, toolTip, widget, closable);
         tabItem.ensureDebugId("partStackView-tabBut-" + title);
         tabsPanel.add(tabItem);
         tabs.add(tabItem);
@@ -164,10 +164,11 @@ public class PartStackViewImpl extends Composite implements PartStackView {
 
     /** {@inheritDoc} */
     @Override
-    public void updateTabItem(int index, ImageResource icon, String title, String toolTip) {
+    public void updateTabItem(int index, ImageResource icon, String title, String toolTip, IsWidget widget) {
         TabButton tabButton = tabs.get(index);
-        tabButton.tabItemTittle.setText(title);
+        tabButton.tabItemTitle.setText(title);
         tabButton.setTitle(toolTip);
+        tabButton.updateWidget(widget);
     }
 
     /** Special button for tab title. */
@@ -175,8 +176,9 @@ public class PartStackViewImpl extends Composite implements PartStackView {
 
         private Image       image;
         private FlowPanel   tabItem;
-        private InlineLabel tabItemTittle;
+        private InlineLabel tabItemTitle;
         private Image       icon;
+        private IsWidget    widget;
 
         /**
          * Create button.
@@ -186,8 +188,9 @@ public class PartStackViewImpl extends Composite implements PartStackView {
          * @param toolTip
          * @param closable
          */
-        public TabButton(Image icon, String title, String toolTip, boolean closable) {
+        public TabButton(Image icon, String title, String toolTip, IsWidget widget, boolean closable) {
             this.icon = icon;
+            this.widget = widget;
             tabItem = new FlowPanel();
             tabItem.setTitle(toolTip);
             initWidget(tabItem);
@@ -195,15 +198,29 @@ public class PartStackViewImpl extends Composite implements PartStackView {
             if (icon != null) {
                 tabItem.add(icon);
             }
-            tabItemTittle = new InlineLabel(title);
-            tabItemTittle.addStyleName(resources.partStackCss().idePartStackTabLabel());
-            tabItem.add(tabItemTittle);
+            tabItemTitle = new InlineLabel(title);
+            tabItemTitle.addStyleName(resources.partStackCss().idePartStackTabLabel());
+            tabItem.add(tabItemTitle);
+            if (widget != null) {
+                tabItem.add(widget);
+            }
+            
             if (closable) {
                 image = new Image(resources.close());
                 image.setStyleName(resources.partStackCss().idePartStackTabCloseButton());
                 tabItem.add(image);
                 tabItem.ensureDebugId("777");
                 addHandlers();
+            }
+        }
+        
+        protected void updateWidget(IsWidget widget) {
+            if (this.widget != null) {
+                tabItem.remove(this.widget);
+            }
+            this.widget = widget;
+            if (this.widget != null) {
+                tabItem.add(this.widget);
             }
         }
 

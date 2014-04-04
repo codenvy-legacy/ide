@@ -17,18 +17,15 @@
  */
 package com.codenvy.ide.notification;
 
-import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.base.BasePresenter;
-import com.codenvy.ide.api.ui.workspace.PartPresenter;
-import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.workspace.WorkspacePresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -36,9 +33,6 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.api.notification.Notification.State.READ;
-import static com.codenvy.ide.notification.NotificationManagerView.Status.EMPTY;
-import static com.codenvy.ide.notification.NotificationManagerView.Status.HAS_UNREAD;
-import static com.codenvy.ide.notification.NotificationManagerView.Status.IN_PROGRESS;
 
 /**
  * The implementation of {@link NotificationManager}.
@@ -52,7 +46,6 @@ public class NotificationManagerImpl extends BasePresenter   implements Notifica
                                                                         NotificationManagerView.ActionDelegate,
                                                                         NotificationMessageStack.ActionDelegate {
     private static final String TITEL = "Events";
-    private WorkspacePresenter workspacePresenter;
     private NotificationManagerView view;
     private NotificationContainer    notificationContainer;
     private NotificationMessageStack notificationMessageStack;
@@ -97,14 +90,7 @@ public class NotificationManagerImpl extends BasePresenter   implements Notifica
         }
 
         view.setNotificationCount(countUnread);
-        if (countUnread == 0 && !inProgress) {
-            view.setStatus(EMPTY);
-        } else if (inProgress) {
-            view.setStatus(IN_PROGRESS);
-        } else {
-            view.setStatus(HAS_UNREAD);
-        }
-//        minimize();
+        firePropertyChange(TITLE_PROPERTY);
     }
 
     /** {@inheritDoc} */
@@ -188,13 +174,6 @@ public class NotificationManagerImpl extends BasePresenter   implements Notifica
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onClicked() {
-       partStack.setActivePart(this);
-    }
-
-
     @Override
     public String getTitle() {
         return TITEL;
@@ -204,6 +183,12 @@ public class NotificationManagerImpl extends BasePresenter   implements Notifica
     @Override
     public ImageResource getTitleImage() {
         return null;
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public IsWidget getTitleWidget() {
+        return view.getCountLabel();
     }
 
     @Nullable

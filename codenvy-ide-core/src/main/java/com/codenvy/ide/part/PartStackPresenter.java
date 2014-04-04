@@ -101,7 +101,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             throw new IllegalArgumentException("This part stack not contains: " + part.getTitle());
         }
         int index = parts.indexOf(part);
-        view.updateTabItem(index, part.getTitleImage(), part.getTitle(), part.getTitleToolTip());
+        view.updateTabItem(index, part.getTitleImage(), part.getTitle(), part.getTitleToolTip(), part.getTitleWidget());
     }
 
     /** {@inheritDoc} */
@@ -142,7 +142,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         // include close button
         ImageResource titleImage = part.getTitleImage();
         TabItem tabItem =
-                view.addTabButton(titleImage == null ? null : new Image(titleImage), part.getTitle(), part.getTitleToolTip(),
+                view.addTabButton(titleImage == null ? null : new Image(titleImage), part.getTitle(), part.getTitleToolTip(), part.getTitleWidget(),
                                   partsClosable);
         bindEvents(tabItem, part);
 //        setActivePart(part);
