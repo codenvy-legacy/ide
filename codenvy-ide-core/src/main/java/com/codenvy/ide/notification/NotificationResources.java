@@ -25,12 +25,12 @@ import com.google.gwt.resources.client.ImageResource;
 public interface NotificationResources extends ClientBundle {
     public interface NotificationCss extends CssResource {
         String notificationPanel();
-
+        
         String notificationItem();
 
         String floatLeft();
 
-        String top1px();
+        String top4px();
 
         String error();
 
@@ -38,11 +38,13 @@ public interface NotificationResources extends ClientBundle {
 
         String warning();
 
-        String statusPanel();
-
         String right25px();
 
         String invertColor();
+        
+        String countLabel();
+        
+        String close();
     }
 
     @Source({"notification.css", "com/codenvy/ide/api/ui/style.css"})

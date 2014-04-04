@@ -114,11 +114,9 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
         SpanElement root = Elements.createSpanElement(css.root());
         Image image = detectIcon(item);
 
-        if (renderIcon) {
+        if (renderIcon && image != null) {
             ImageElement icon = Elements.createImageElement();
             icon.setSrc(image.getUrl());
-            icon.setHeight(16);
-            icon.setWidth(16);
             icon.addClassName(css.icon());
             root.appendChild(icon);
         }
@@ -147,20 +145,21 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
         return root;
     }
 
-    private static Image detectIcon(Resource item) {//===
+    private static Image detectIcon(Resource item) {
         Project project = item.getProject();
         Image icon = null;
-        if (project == null) return iconRegistry.getDefaultIcon();
+
+        if (project == null) return null;
         final String projectTypeId = project.getDescription().getProjectTypeId();
-        if (item instanceof Project)
-            icon = iconRegistry.getIcon(projectTypeId + ".projecttype.small.icon");
-        else if (item instanceof Folder)
+        if (item instanceof Project) {
+            icon = iconRegistry.getIconIfExist(projectTypeId + ".projecttype.small.icon");
+        } else if (item instanceof Folder) {
             icon = iconRegistry.getIcon(projectTypeId + ".folder.small.icon");
-        else if (item instanceof File) {
+        } else if (item instanceof File) {
             String filename = item.getName();
 
             // search exact match first
-            icon = iconRegistry.getIcon(projectTypeId + "/" + filename + ".file.small.icon");
+            icon = iconRegistry.getIconIfExist(projectTypeId + "/" + filename + ".file.small.icon");
 
             // not found, try with extension
             if (icon == null) {
@@ -168,9 +167,6 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
                 String ext = split[split.length - 1];
                 icon = iconRegistry.getIcon(projectTypeId + "/" + ext + ".file.small.icon");
             }
-        }
-        if (icon == null) {
-            icon = iconRegistry.getDefaultIcon();
         }
         return icon;
     }

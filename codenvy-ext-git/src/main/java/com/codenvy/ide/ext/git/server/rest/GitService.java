@@ -255,6 +255,7 @@ public class GitService {
     private void determineProjectType() throws VirtualFileSystemException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
         ItemList files = vfs.getChildren(projectId, -1, 0, "file", false, PropertyFilter.NONE_FILTER);
+        boolean foundMavenProject = false;
         for (Item file : files.getItems()) {
             if ("pom.xml".equals(file.getName())) {
                 boolean isMultiModule = isMultiModule(vfs.getContent(file.getId()));
@@ -266,13 +267,22 @@ public class GitService {
                 } else {
                     propertyFileContent = "{\"type\":\"" + Constants.NAMELESS_ID + "\"}";
                 }
-
+                foundMavenProject = true;
                 Folder codenvyFolder = vfs.createFolder(projectId, ".codenvy");
                 vfs.createFile(codenvyFolder.getId(), "project", MediaType.APPLICATION_JSON_TYPE,
                                new ByteArrayInputStream(propertyFileContent.getBytes()));
                 break;
             }
         }
+        // We didn't found a maven project, turn it as nameless project
+        if (!foundMavenProject) {
+           String propertyFileContent = "{\"type\":\"" + Constants.NAMELESS_ID + "\"}";
+            Folder codenvyFolder = vfs.createFolder(projectId, ".codenvy");
+            vfs.createFile(codenvyFolder.getId(), "project", MediaType.APPLICATION_JSON_TYPE,
+                           new ByteArrayInputStream(propertyFileContent.getBytes()));
+
+        }
+
     }
 
     /**

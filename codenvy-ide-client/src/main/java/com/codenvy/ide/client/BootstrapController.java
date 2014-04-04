@@ -70,9 +70,8 @@ public class BootstrapController {
      * @param styleInjector
      * @param extensionInitializer
      * @param preferencesManager
-     * @param userService
+     * @param userProfileService
      * @param projectTypeDescriptionServiceClient
-     *
      * @param projectTypeDescriptorRegistry
      * @param resourceProvider
      * @param dtoRegistrar
@@ -100,8 +99,8 @@ public class BootstrapController {
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         
         //Is necessary for loading IDE styles before standard GWT one:
-        /*setTheme();
-        styleInjector.inject();*/
+        setTheme();
+        styleInjector.inject();
         
         ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW)
                       .setCallback(new Callback<Void, Exception>() {
@@ -208,11 +207,9 @@ public class BootstrapController {
 
 
     private void registerDefaultIcon() {
-        Map<String, String> icons = new HashMap<String, String>();
-        icons.put("default.projecttype.small.icon", "default/project.png");
-        icons.put("default.folder.small.icon", "default/folder.png");
-        icons.put("default.file.small.icon", "default/file.png");
-        iconRegistry.registerIcons(icons);
+        iconRegistry.registerIcon("default.projecttype.small.icon", "default/project.png");
+        iconRegistry.registerIcon("default.folder.small.icon", "default/folder.png");
+        iconRegistry.registerIcon("default.file.small.icon", "default/file.png");
     }
 
 }
