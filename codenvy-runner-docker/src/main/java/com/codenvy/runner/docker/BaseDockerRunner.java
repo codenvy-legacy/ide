@@ -194,7 +194,7 @@ public abstract class BaseDockerRunner extends Runner {
                             // TODO: need something more flexible to avoid showing port in URL.
                             final String webUrl = String.format("http://%s:%d", hostName, publicPort);
                             dockerRunnerCfg.getLinks().add(DtoFactory.getInstance().createDto(Link.class)
-                                                                     .withRel("web url")
+                                                                     .withRel(com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL)
                                                                      .withHref(webUrl));
                         } else if (DEBUG_PORT_PATTERN.matcher(name).matches()) {
                             final int privatePort = Integer.parseInt(entry.getValue());
