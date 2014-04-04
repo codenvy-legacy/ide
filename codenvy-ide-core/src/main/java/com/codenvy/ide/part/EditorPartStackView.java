@@ -40,6 +40,7 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -137,7 +138,7 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
 
     /** {@inheritDoc} */
     @Override
-    public TabItem addTabButton(Image icon, String title, String toolTip, boolean closable) {
+    public TabItem addTabButton(Image icon, String title, String toolTip, IsWidget widget, boolean closable) {
         TabButton tabItem = new TabButton(icon, title, toolTip, closable);
         tabsPanel.add(tabItem);
         tabs.add(tabItem);
@@ -214,7 +215,7 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
 
     /** {@inheritDoc} */
     @Override
-    public void updateTabItem(int index, ImageResource icon, String title, String toolTip) {
+    public void updateTabItem(int index, ImageResource icon, String title, String toolTip, IsWidget widget) {
         TabButton tabButton = tabs.get(index);
         tabButton.tabItemTittle.setText(title);
         tabButton.setTitle(toolTip);
