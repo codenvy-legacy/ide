@@ -26,20 +26,14 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.SingleInstanceLockFactory;
 
 import java.io.IOException;
-import java.util.Set;
 
 /**
  * Implementation of LuceneSearcher which stores index in the filesystem.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author andrew00x
  */
 public class FSIndexSearcher extends LuceneSearcher {
     protected final java.io.File indexDir;
-
-    public FSIndexSearcher(java.io.File indexDir, Set<String> indexedMediaTypes) {
-        super(indexedMediaTypes);
-        this.indexDir = indexDir;
-    }
 
     public FSIndexSearcher(java.io.File indexDir, VirtualFileFilter filter) {
         super(filter);
