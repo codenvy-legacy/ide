@@ -42,9 +42,9 @@
         <g:south size="26.0">
             <g:FlowPanel>
                 <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" ui:field="btnCancel"
-                          debugId="removeFromIndexView-btn-cancel"/>
+                          debugId="git-removeFromIndex-cancel"/>
                 <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonRemove}" width="60px" ui:field="btnRemove"
-                          debugId="removeFromIndexView-btn-remove"/>
+                          debugId="git-removeFromIndex-remove"/>
             </g:FlowPanel>
         </g:south>
         <g:center>
@@ -54,7 +54,7 @@
                 </g:north>
                 <g:center>
                     <g:CheckBox ui:field="remove" text="{locale.removeFromIndexOnly}" addStyleNames="{res.gitCSS.textFont}"
-                                debugId="removeFromIndexView-checkBox-removeFromIndexOnly"/>
+                                debugId="git-removeFromIndex-removeFromIndexOnly"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:center>

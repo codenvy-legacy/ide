@@ -125,7 +125,6 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
                     delegate.onProjectTypeSelected(id);
                 }
             });
-            btn.ensureDebugId("newProjectPage-toggleBtn-numBtn-" + i);
             grid.setWidget(0, i, btn);
             formatter.setHorizontalAlignment(0, i, HasHorizontalAlignment.ALIGN_CENTER);
 
@@ -133,6 +132,7 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
             grid.setWidget(1, i, title);
             formatter.setHorizontalAlignment(1, i, HasHorizontalAlignment.ALIGN_CENTER);
 
+            btn.ensureDebugId("file-newProject-" + title.getText());
             projectTypeButtons.add(btn);
         }
     }

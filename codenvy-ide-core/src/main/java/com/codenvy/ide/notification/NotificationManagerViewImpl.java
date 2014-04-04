@@ -93,6 +93,7 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
 
         this.res = resources;
         container.add(ourUiBinder.createAndBindUi(this));
+        minimizeButton.ensureDebugId("notification-minimizeBut");
     }
 
 

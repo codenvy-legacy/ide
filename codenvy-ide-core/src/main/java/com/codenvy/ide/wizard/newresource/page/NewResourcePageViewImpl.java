@@ -94,7 +94,7 @@ public class NewResourcePageViewImpl extends Composite implements NewResourcePag
                     label.setInnerHTML(sb.toSafeHtml().asString());
 
                     itemElement.appendChild(label);
-                    UIObject.ensureDebugId((com.google.gwt.dom.client.Element)itemElement, "resourceType-" + itemData.getId());
+                    UIObject.ensureDebugId((com.google.gwt.dom.client.Element)itemElement, "file-newOther-" + itemData.getId());
                 }
 
                 @Override

@@ -8,6 +8,6 @@
     </ui:style>
     <g:FlowPanel styleName="{style.main}">
         <g:Label>Theme: </g:Label>
-        <g:ListBox ui:field="themeBox" visibleItemCount="1" debugId="appearanceView-listBox-themeBox"></g:ListBox>
+        <g:ListBox ui:field="themeBox" visibleItemCount="1" debugId="window-preferences-appearance-themeBox"></g:ListBox>
     </g:FlowPanel>
 </ui:UiBinder>

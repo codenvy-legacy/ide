@@ -214,6 +214,7 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
         Widget widget = variables.asWidget();
         widget.setHeight("100%");
         this.variablesPanel.add(widget);
+        minimizeButton.ensureDebugId("debugger-minimizeBut");
     }
 
     /** {@inheritDoc} */

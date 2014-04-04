@@ -64,6 +64,8 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
                 delegate.onClearClicked();
             }
         });
+        clearButton.ensureDebugId("console-clear");
+        minimizeButton.ensureDebugId("console-minimizeBut");
         toolBar.addEast(clearButton, 20);
     }
 

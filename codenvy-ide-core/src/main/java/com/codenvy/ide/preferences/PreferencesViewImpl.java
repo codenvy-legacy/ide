@@ -90,7 +90,7 @@ public class PreferencesViewImpl extends DialogBox implements PreferencesView {
                     // Add title
                     sb.appendHtmlConstant("<td>");
                     sb.appendHtmlConstant(
-                            "<div id=\"" + UIObject.DEBUG_ID_PREFIX + "preferencesView-tableCellElement-" + itemData.getTitle() + "\">");
+                            "<div id=\"" + UIObject.DEBUG_ID_PREFIX + "window-preferences-" + itemData.getTitle() + "\">");
                     sb.appendEscaped(itemData.getTitle());
                     sb.appendHtmlConstant("</td></tr></table>");
 

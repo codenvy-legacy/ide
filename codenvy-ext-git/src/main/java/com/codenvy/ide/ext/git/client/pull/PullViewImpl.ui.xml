@@ -48,16 +48,16 @@
         <g:south size="26.0">
             <g:FlowPanel>
                 <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" ui:field="btnCancel"
-                          debugId="pullView-btn-cancel"/>
+                          debugId="git-remotes-pull-cancel"/>
                 <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonPull}" width="60px" ui:field="btnPull"
-                          debugId="pullView-btn-pull"/>
+                          debugId="git-remotes-pull-pull"/>
             </g:FlowPanel>
         </g:south>
         <g:north size="26.0">
             <g:FlowPanel>
                 <g:Label text="{locale.fetchRemoteFieldTitle}" addStyleNames="{res.gitCSS.textFont} {style.alignLeft}"/>
                 <g:ListBox width="290px" ui:field="repository" addStyleNames="{res.gitCSS.textFont} {style.alignLeft}"
-                           debugId="pullView-listBox-repository"/>
+                           debugId="git-remotes-pull-repository"/>
             </g:FlowPanel>
         </g:north>
         <g:center>
@@ -65,13 +65,13 @@
                 <g:east size="48">
                     <g:FlowPanel addStyleNames="{style.emptyBorder}">
                         <g:Label text="{locale.pullLocalBranches}" width="100%"/>
-                        <g:ListBox ui:field="localBranch" width="100%" debugId="pullView-listBox-localBranch"/>
+                        <g:ListBox ui:field="localBranch" width="100%" debugId="git-remotes-pull-localBranch"/>
                     </g:FlowPanel>
                 </g:east>
                 <g:west size="48">
                     <g:FlowPanel addStyleNames="{style.emptyBorder}">
                         <g:Label text="{locale.pullRemoteBranches}" width="100%"/>
-                        <g:ListBox ui:field="remoteBranch" width="100%" debugId="pullView-listBox-remoteBranch"/>
+                        <g:ListBox ui:field="remoteBranch" width="100%" debugId="git-remotes-pull-remoteBranch"/>
                     </g:FlowPanel>
                 </g:west>
                 <g:center>
