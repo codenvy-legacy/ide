@@ -24,6 +24,7 @@ import com.google.gwt.event.logical.shared.HasCloseHandlers;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.IsWidget;
 
 
 /** PartStack View interface */
@@ -38,7 +39,7 @@ public interface PartStackView extends View<PartStackView.ActionDelegate> {
     }
 
     /** Add Tab */
-    public PartStackView.TabItem addTabButton(Image icon, String title, String toolTip, boolean closable);
+    public PartStackView.TabItem addTabButton(Image icon, String title, String toolTip, IsWidget widget, boolean closable);
 
     /** Remove Tab */
     public void removeTabButton(int index);
@@ -53,8 +54,8 @@ public interface PartStackView extends View<PartStackView.ActionDelegate> {
     public void setFocus(boolean focused);
 
     /** Update Tab */
-    public void updateTabItem(int index, ImageResource icon, String title, String toolTip);
-
+    public void updateTabItem(int index, ImageResource icon, String title, String toolTip, IsWidget widget);
+    
     /** Clear content panel. */
     public void clearContentPanel();
 

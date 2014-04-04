@@ -142,7 +142,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
         // include close button
         ImageResource titleImage = part.getTitleImage();
         PartStackView.TabItem tabItem =
-                view.addTabButton(titleImage == null ? null : new Image(titleImage), part.getTitle(), part.getTitleToolTip(),
+                view.addTabButton(titleImage == null ? null : new Image(titleImage), part.getTitle(), part.getTitleToolTip(), null,
                                   partsClosable);
         bindEvents(tabItem, part);
         setActivePart(part);
