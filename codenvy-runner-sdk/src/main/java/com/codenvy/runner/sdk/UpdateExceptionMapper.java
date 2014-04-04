@@ -15,15 +15,20 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.extension.maven.client.build;
+package com.codenvy.runner.sdk;
 
-import com.codenvy.api.builder.BuildStatus;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
 
 /**
  * //
  *
  * @author Artem Zatsarynnyy
  */
-public interface ProjectBuiltCallback {
-    void onBuilt(BuildStatus status);
+public class UpdateExceptionMapper implements ExceptionMapper<UpdateException> {
+    @Override
+    public Response toResponse(UpdateException exception) {
+        return Response.serverError().entity(exception.getMessage()).type(MediaType.TEXT_PLAIN).build();
+    }
 }

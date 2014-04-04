@@ -23,8 +23,7 @@ import com.google.gwt.i18n.client.Messages;
  * Localization constants. Interface to represent the constants contained in resource bundle:
  * 'RunnerLocalizationConstant.properties'.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: RunnerLocalizationConstant.java Jul 3, 2013 12:40:17 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 public interface RunnerLocalizationConstant extends Messages {
     /* Actions */
@@ -55,6 +54,15 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("control.stopApp.description")
     String stopAppActionDescription();
 
+    @Key("control.updateExtension.id")
+    String updateExtensionActionId();
+
+    @Key("control.updateExtension.text")
+    String updateExtensionText();
+
+    @Key("control.updateExtension.description")
+    String updateExtensionDescription();
+
     /* Messages */
     @Key("appStarting")
     String applicationStarting(String name);
@@ -73,4 +81,13 @@ public interface RunnerLocalizationConstant extends Messages {
 
     @Key("stopAppFailed")
     String stopApplicationFailed(String name);
+
+    @Key("appUpdating")
+    String applicationUpdating(String name);
+
+    @Key("appUpdated")
+    String applicationUpdated(String name);
+
+    @Key("updateAppFailed")
+    String updateApplicationFailed(String name);
 }

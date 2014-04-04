@@ -98,6 +98,7 @@ public class CodeServer {
 
             // Create symbolic links to the project's sources in order
             // to provide actual sources to code server at any time.
+            // TODO: rework this, using ProjectEventService
             final Path extDirPath = Files.createDirectory(workDirPath.resolve("ext"));
             if (!projectSourcesPath.isAbsolute()) {
                 projectSourcesPath = projectSourcesPath.toAbsolutePath();
@@ -109,13 +110,11 @@ public class CodeServer {
             throw new RunnerException(e);
         }
 
-        final CodeServerProcess codeServerProcess;
         if (SystemInfo.isUnix()) {
-            codeServerProcess = startUnix(workDirPath.toFile(), runnerConfiguration);
+            return startUnix(workDirPath.toFile(), runnerConfiguration);
         } else {
-            codeServerProcess = startWindows(workDirPath.toFile(), runnerConfiguration);
+            return startWindows(workDirPath.toFile(), runnerConfiguration);
         }
-        return codeServerProcess;
     }
 
     // *nix
