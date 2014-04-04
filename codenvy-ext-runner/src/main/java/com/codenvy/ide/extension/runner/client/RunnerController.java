@@ -30,10 +30,10 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
@@ -61,25 +61,25 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 @Singleton
 public class RunnerController implements Notification.OpenNotificationHandler {
-    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
-    private final DtoFactory             dtoFactory;
-    private       MessageBus             messageBus;
-    private       WorkspaceAgent         workspaceAgent;
-    private       ResourceProvider       resourceProvider;
-    private       ConsolePart            console;
-    private       RunnerServiceClient    service;
-    private       UpdateServiceClient    updateService;
-    private RunnerLocalizationConstant constant;
-    private NotificationManager          notificationManager;
-    private Notification                 notification;
-    private Project                      currentProject;
+    private final DtoUnmarshallerFactory       dtoUnmarshallerFactory;
+    private final DtoFactory                   dtoFactory;
+    private       MessageBus                   messageBus;
+    private       WorkspaceAgent               workspaceAgent;
+    private       ResourceProvider             resourceProvider;
+    private       ConsolePart                  console;
+    private       RunnerServiceClient          service;
+    private       UpdateServiceClient          updateService;
+    private       RunnerLocalizationConstant   constant;
+    private       NotificationManager          notificationManager;
+    private       Notification                 notification;
+    private       Project                      currentProject;
     /** Launched app. */
-    private ApplicationProcessDescriptor applicationProcessDescriptor;
+    private       ApplicationProcessDescriptor applicationProcessDescriptor;
     /** Handler for processing Maven build status which is received over WebSocket connection. */
-    private SubscriptionHandler<String>  runStatusHandler;
+    private       SubscriptionHandler<String>  runStatusHandler;
     /** Is launching of any application in progress? */
-    private boolean                      isLaunchingInProgress;
-    private ProjectRunCallback           runCallback;
+    private       boolean                      isLaunchingInProgress;
+    private       ProjectRunCallback           runCallback;
 
     /**
      * Create controller.
@@ -214,7 +214,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                             applicationProcessDescriptor = null;
                             onFail(constant.startApplicationFailed(currentProject.getName()), exception);
                         }
-                    });
+                    }
+                   );
     }
 
     /** Get logs of the currently launched application. */
@@ -369,7 +370,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         };
 
         try {
-            messageBus.subscribe("runner:status:" + buildTaskDescriptor.getProcessId() , runStatusHandler);
+            messageBus.subscribe("runner:status:" + buildTaskDescriptor.getProcessId(), runStatusHandler);
         } catch (WebSocketException e) {
             Log.error(RunnerController.class, e);
         }
@@ -392,20 +393,28 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     /** Updates launched Codenvy Extension. */
     public void updateExtension() {
+        final Notification notification =
+                new Notification(constant.applicationUpdating(currentProject.getName()), PROGRESS, RunnerController.this);
+        notificationManager.showNotification(notification);
         try {
-            updateService.update(applicationProcessDescriptor.getProcessId(), new RequestCallback<Void>() {
+            updateService.update(applicationProcessDescriptor, new RequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
-                    console.print("successfully updated");
+                    notification.setStatus(FINISHED);
+                    notification.setMessage(constant.applicationUpdated(currentProject.getName()));
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    console.print("failed to updated");
+                    notification.setStatus(FINISHED);
+                    notification.setType(ERROR);
+                    notification.setMessage(constant.updateApplicationFailed(currentProject.getName()));
                 }
             });
         } catch (WebSocketException e) {
-            console.print("failed to updated");
+            notification.setStatus(FINISHED);
+            notification.setType(ERROR);
+            notification.setMessage(constant.updateApplicationFailed(currentProject.getName()));
         }
     }
 }

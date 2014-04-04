@@ -133,19 +133,21 @@ public class TomcatServer implements ApplicationServer {
             process = startWindows(workDir, runnerConfiguration, codeServerProcess, stopCallback);
         }
 
-        registerApplicationUpdater(process, new ApplicationUpdater() {
+        registerUpdater(process, new ApplicationUpdater() {
             @Override
             public void update() throws RunnerException {
                 List<Link> projectLinks = runnerConfiguration.getRequest().getProjectDescriptor().getLinks();
                 final Link exportZipLink = getLink(Constants.LINK_REL_EXPORT_ZIP, projectLinks);
-                final File projectSourcesDir = new File(workDir, "project_sources");
                 try {
+                    final File projectSourcesDir = Files.createTempDirectory(workDir.toPath(), "build-sources-").toFile();
                     ZipUtils.unzip(downloadFile(exportZipLink.getHref(), workDir), projectSourcesDir);
                     ZipFile artifact = Utils.buildProjectFromSources(projectSourcesDir.toPath(), extensionJar.getName());
                     // add JAR with extension to 'api' application's 'lib' directory
                     IoUtil.copy(new File(artifact.getName()),
                                 apiAppContextPath.resolve("WEB-INF/lib").resolve(extensionJar.getName()).toFile(), null);
+                    LOG.debug("Extension {} updated", workDir);
                 } catch (IOException e) {
+                    LOG.error("Unable to update extension: {}", workDir);
                     throw new RunnerException(e);
                 }
             }
@@ -154,7 +156,7 @@ public class TomcatServer implements ApplicationServer {
         return process;
     }
 
-    private void registerApplicationUpdater(ApplicationProcess process, ApplicationUpdater updater) {
+    private void registerUpdater(ApplicationProcess process, ApplicationUpdater updater) {
         applicationUpdaterRegistry.registerUpdater(process, updater);
     }
 
@@ -171,7 +173,7 @@ public class TomcatServer implements ApplicationServer {
         final ValueHolder<IOException> errorHolder = new ValueHolder<>();
         final ValueHolder<java.io.File> resultHolder = new ValueHolder<>();
         final java.io.File downloadDir;
-        downloadDir = Files.createTempDirectory(destinationFolder.toPath(), "updated").toFile();
+        downloadDir = Files.createTempDirectory(destinationFolder.toPath(), "sources-").toFile();
         downloadPlugin.download(url, downloadDir, new DownloadPlugin.Callback() {
             @Override
             public void done(java.io.File downloaded) {

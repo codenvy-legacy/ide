@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.extension.runner.client;
 
+import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.MessageBuilder;
 import com.codenvy.ide.websocket.MessageBus;
@@ -24,34 +25,29 @@ import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 
 import javax.validation.constraints.NotNull;
 
 import static com.google.gwt.http.client.RequestBuilder.POST;
 
-/**
- * //
- *
- * @author Artem Zatsarynnyy
- */
+/** @author Artem Zatsarynnyy */
 @Singleton
 public class UpdateServiceClientImpl implements UpdateServiceClient {
     private final String     updateServicePath;
     private final MessageBus wsMessageBus;
 
     @Inject
-    public UpdateServiceClientImpl(@Named("workspaceId") String workspaceId, MessageBus wsMessageBus) {
-        this.updateServicePath = "/sdk/" + workspaceId;
+    public UpdateServiceClientImpl(MessageBus wsMessageBus) {
+        this.updateServicePath = "/runner-sdk";
         this.wsMessageBus = wsMessageBus;
     }
 
     @Override
-    public void update(Long id, @NotNull RequestCallback<Void> callback) throws WebSocketException {
-        final String url = updateServicePath + "/update" + "?id=" + id;
+    public void update(ApplicationProcessDescriptor applicationProcessDescriptor, @NotNull RequestCallback<Void> callback)
+            throws WebSocketException {
+        final String url = updateServicePath + "/update/" + applicationProcessDescriptor.getProcessId();
         MessageBuilder messageBuilder = new MessageBuilder(POST, url);
         Message message = messageBuilder.build();
-
         wsMessageBus.send(message, callback);
     }
 }

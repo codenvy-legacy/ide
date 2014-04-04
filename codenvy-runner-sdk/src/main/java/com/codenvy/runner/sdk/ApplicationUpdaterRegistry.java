@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * //
+ * Registry for {@link ApplicationUpdater}s.
  *
  * @author Artem Zatsarynnyy
  */
@@ -36,15 +36,36 @@ public class ApplicationUpdaterRegistry {
         applicationUpdaters = new ConcurrentHashMap<>();
     }
 
+    /**
+     * Register {@link ApplicationUpdater}.
+     *
+     * @param process
+     * @param updater
+     *         {@link ApplicationUpdater} to register
+     */
     public void registerUpdater(ApplicationProcess process, ApplicationUpdater updater) {
         applicationUpdaters.put(process.getId(), updater);
     }
 
+    /**
+     * Unregister {@link ApplicationUpdater} for {@link ApplicationProcess} with the specified id.
+     *
+     * @param id
+     *         id of the {@link ApplicationProcess}
+     * @return removed {@link ApplicationUpdater}
+     */
     public ApplicationUpdater unregisterUpdater(long id) {
         return applicationUpdaters.remove(id);
     }
 
-    public ApplicationUpdater getUpdater(long id) {
+    /**
+     * Get {@link ApplicationUpdater} by the specified {@link ApplicationProcess}'s id.
+     *
+     * @param id
+     *         id of the {@link ApplicationProcess}
+     * @return {@link ApplicationUpdater}
+     */
+    public ApplicationUpdater getUpdaterByApplicationProcessId(long id) {
         return applicationUpdaters.get(id);
     }
 }

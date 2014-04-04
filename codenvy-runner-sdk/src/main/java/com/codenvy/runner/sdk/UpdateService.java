@@ -25,11 +25,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
 /**
- * //
+ * Service to update server-side code of launched Codenvy Extension.
  *
  * @author Artem Zatsarynnyy
  */
-@Path("sdk/{ws-id}")
+@Path("runner-sdk")
 public class UpdateService {
     @Inject
     private ApplicationUpdaterRegistry applicationUpdaterRegistry;
@@ -37,7 +37,7 @@ public class UpdateService {
     @Path("update/{id}")
     @POST
     public void updateApplication(@PathParam("id") long id) throws RunnerException {
-        ApplicationUpdater updater = applicationUpdaterRegistry.getUpdater(id);
+        ApplicationUpdater updater = applicationUpdaterRegistry.getUpdaterByApplicationProcessId(id);
         updater.update();
     }
 }
