@@ -39,8 +39,6 @@ import com.google.gwt.user.client.ui.InsertPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.sun.istack.internal.NotNull;
-import com.google.gwt.user.client.Window;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
 
@@ -238,7 +236,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
          * @param svgIcon
          * @param title
          */
-        public TabButton(@NotNull SVGImage svgIcon, @NotNull String title) {
+        public TabButton(SVGImage svgIcon,String title) {
             tabItem = new FlowPanel();
             if (title != null) {
                 tabItem.setTitle(title);
