@@ -56,9 +56,7 @@ public class GitProjectImporter implements ProjectImporter {
             FolderEntry projectMetaFolder = baseFolder.createFolder(".codenvy");
             projectMetaFolder.createFile("project", propertyFileContent.getBytes(), MediaType.APPLICATION_JSON_TYPE.getType());
         } catch (VirtualFileSystemException | GitException | URISyntaxException e) {
-            final String error = "Selected project cannot be imported.";
-            LOG.error(error);
-            throw new IOException(error, e);
+            throw new IOException("Selected project cannot be imported.", e);
         }
     }
 }

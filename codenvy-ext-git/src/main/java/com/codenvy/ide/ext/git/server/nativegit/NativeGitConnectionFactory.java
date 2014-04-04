@@ -76,11 +76,13 @@ public class NativeGitConnectionFactory extends GitConnectionFactory {
 
         String firstName = null, lastName = null;
 
-        for (Attribute attribute : profileAttributes) {
-            if ("firstName".equals(attribute.getName())) {
-                firstName = attribute.getValue();
-            } else if ("lastName".equals(attribute.getName())) {
-                lastName = attribute.getValue();
+        if (profileAttributes != null) {
+            for (Attribute attribute : profileAttributes) {
+                if ("firstName".equals(attribute.getName())) {
+                    firstName = attribute.getValue();
+                } else if ("lastName".equals(attribute.getName())) {
+                    lastName = attribute.getValue();
+                }
             }
         }
 
