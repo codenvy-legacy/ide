@@ -20,6 +20,7 @@ package com.codenvy.ide.ext.git.server.nativegit;
 import com.codenvy.api.user.server.dao.UserProfileDao;
 import com.codenvy.api.user.server.exception.UserProfileException;
 import com.codenvy.api.user.shared.dto.Attribute;
+import com.codenvy.api.user.shared.dto.Profile;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.commons.lang.Strings;
 import com.codenvy.dto.server.DtoFactory;
@@ -66,9 +67,12 @@ public class NativeGitConnectionFactory extends GitConnectionFactory {
     /** {@inheritDoc} */
     @Override
     public GitConnection getConnection(File workDir) throws GitException {
-        final List<Attribute> profileAttributes;
+        List<Attribute> profileAttributes = null;
         try {
-            profileAttributes = userProfileDao.getById(EnvironmentContext.getCurrent().getUser().getId()).getAttributes();
+            Profile userProfile = userProfileDao.getById(EnvironmentContext.getCurrent().getUser().getId());
+            if (userProfile != null) {
+                profileAttributes = userProfile.getAttributes();
+            }
         } catch (UserProfileException e) {
             LOG.warn("Failed to obtain user information.", e);
             throw new GitException("Failed to obtain user information.");
