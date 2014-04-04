@@ -47,10 +47,12 @@
 }
 
 .icon {
+    width: 16px;
+    height: 16px;
     margin: 0px 0px -1px 1px;
     display: inline-block;
     background-position: center center;
-    padding: 0px 3px 0px 3px;
+    padding: 0px 1px 0px 1px;
 }
 
 .folderFont {
@@ -72,7 +74,7 @@
 .label {
     font-size: secondaryTextFontSize;
     text-shadow: 0px 1px 0px treeTextShadow;
-    padding: 0px 3px 0px 3px;
+    padding: 0px 1px 0px 1px;
     cursor: default;
     display: inline-block;
     text-decoration: none;

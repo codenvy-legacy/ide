@@ -20,24 +20,15 @@ package com.codenvy.ide.notification;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
-import com.codenvy.ide.workspace.WorkspaceView;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import javax.validation.constraints.NotNull;
-
-import static com.codenvy.ide.notification.NotificationManagerView.Status.EMPTY;
-import static com.codenvy.ide.notification.NotificationManagerView.Status.IN_PROGRESS;
 
 /**
  * The implementation of {@link NotificationManagerView}.
@@ -55,11 +46,6 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
     FlowPanel mainPanel;
     //    @UiField
     Label     count       = new Label();
-    FlowPanel statusPanel = new FlowPanel();
-
-    SimplePanel iconPanel;
-    Resources   resources;
-
 
     @UiField(provided = true)
     final Resources res;
@@ -71,59 +57,15 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
      * @param resources
      */
     @Inject
-    public NotificationManagerViewImpl(WorkspaceView workspaceView,
-                                       PartStackUIResources partStackUIResources,
+    public NotificationManagerViewImpl(PartStackUIResources partStackUIResources,
                                        Resources resources) {
         super(partStackUIResources);
-        //TODO:need improve this
-        this.resources = resources;
-        iconPanel = new SimplePanel();
-        iconPanel.addStyleName(resources.notificationCss().statusPanel());
-        count.addStyleName(resources.notificationCss().statusPanel());
-        statusPanel.add(iconPanel);
-        statusPanel.add(count);
-        statusPanel.addStyleName(resources.notificationCss().right25px());
-        workspaceView.getStatusPanel().setWidget(statusPanel);
-        iconPanel.addDomHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                delegate.onClicked();
-            }
-        }, ClickEvent.getType());
-
         this.res = resources;
+        count.setStyleName(resources.notificationCss().countLabel());
+        count.setVisible(false);
+
         container.add(ourUiBinder.createAndBindUi(this));
         minimizeButton.ensureDebugId("notification-minimizeBut");
-    }
-
-
-    /** {@inheritDoc} */
-    @Override
-    public void setStatus(@NotNull Status status) {
-        Image icon = createImage(status);
-        iconPanel.setWidget(icon);
-    }
-
-
-    /**
-     * Return image for status
-     *
-     * @param status
-     * @return image for status
-     */
-    private Image createImage(@NotNull Status status) {
-        Image icon;
-        if (status.equals(IN_PROGRESS)) {
-            icon = new Image(res.progress());
-            icon.setSize("16", "16");
-            icon.addStyleName(resources.notificationCss().invertColor());
-        } else if (status.equals(EMPTY)) {
-            icon = new Image(res.message());
-        } else {
-            icon = new Image(res.message());
-        }
-
-        return icon;
     }
 
     /** {@inheritDoc} */
@@ -131,11 +73,18 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
     public void setNotificationCount(int count) {
         String text = count > 0 ? String.valueOf(count) : "";
         this.count.setText(text);
+        this.count.setVisible(count > 0);
     }
 
     @Override
     public void setContainer(NotificationContainer container) {
         mainPanel.add(container);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public IsWidget getCountLabel() {
+        return count;
     }
 
 

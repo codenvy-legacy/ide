@@ -92,7 +92,18 @@
 }
 
 .ide-PartStack-focused .ide-Base-Part-Toolbar {
-    /*background-color: partToolbarActive;*/
+    /*Toolbar that is currently selected(active)*/
+}
+
+.ide-PartStack-Boton-Left {
+    -webkit-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    transform: rotate(270deg);
+    fill: toolbarIconColor;
+    height: 18px;
+    width: 18px;
+    margin-left: -5px;
+    margin-right: -5px;
 }
 
 .ide-PartStack-Tab-Left {
@@ -225,17 +236,17 @@
     font-family: mainFontFamily;
     font-size: 11pt;
     color: #d4d4d4;
-	font-family: mainFontFamily;
-	font-size: 11px;
-	color : #d4d4d4;
+    font-family: mainFontFamily;
+    font-size: 11px;
+    color: #d4d4d4;
     text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5);
     height: 18px;
     line-height: 18px;
     margin-bottom: 2px;
     padding: 0 sideBarHorizontalPadding;
-	height: 18px;
-	line-height: 18px;
-	padding: 0 sideBarHorizontalPadding;
+    height: 18px;
+    line-height: 18px;
+    padding: 0 sideBarHorizontalPadding;
 }
 
 .ide-PartStack-Multiple-Tabs-Item:hover {
@@ -280,15 +291,15 @@
 }
 
 .ide-Base-Part-Toolbar-Separator {
-	border-top: 1px solid partToolbarSeparatorTopColor;
+    border-top: 1px solid partToolbarSeparatorTopColor;
     background-color: partToolbarSeparatorBottomColor;
     height: 1px;
     width: 100%;
 }
 
 .ide-Base-Part-Toolbar-Bottom-Icon {
-	fill: toolbarIconColor;
-	height: 16px;
+    fill: toolbarIconColor;
+    height: 16px;
     width: 16px;
     margin-right: 8px;
     margin-left: 10px;
