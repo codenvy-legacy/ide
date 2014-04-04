@@ -35,18 +35,21 @@ public interface IconRegistry {
     Image getIcon(String iconId);
 
     /**
+     * @param iconId
+     * @return Image GWT widget if exist, otherwise - null
+     */
+    Image getIconIfExist(String iconId);
+
+    /**
      * @return default icon, can be useful if don't find icon by id
      */
     Image getDefaultIcon();
 
     /**
-     * @param iconRegistry
-     */
-    void registerIcons(Map<String, String> iconRegistry);
-
-    /**
-     * @param iconId some id
-     * @param iconPath path to the image
+     * @param iconId
+     *         some id
+     * @param iconPath
+     *         path to the image
      */
     void registerIcon(String iconId, String iconPath);
 }
