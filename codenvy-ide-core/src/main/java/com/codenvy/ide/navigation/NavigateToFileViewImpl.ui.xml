@@ -26,20 +26,20 @@
             margin: 6px;
         }
 
-		.spacingTop {
+        .spacingTop {
             margin-top: 20px;
         }
 
-		.labelMargin {
-			margin-bottom : 5px;	
-		}
+        .labelMargin {
+            margin-bottom: 5px;
+        }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="400px" height="100px" addStyleNames="{style.emptyBorder}">
         <g:center>
-             <g:FlowPanel addStyleNames="{style.emptyBorder} {style.spacingTop}">
+            <g:FlowPanel addStyleNames="{style.emptyBorder} {style.spacingTop}">
                 <g:Label width="100%" addStyleNames="{style.labelMargin}" text="{locale.navigateToFileViewFileFieldTitle}"/>
-                <g:SuggestBox ui:field="files" width="100%"/>
-           	 </g:FlowPanel>
+                <g:SuggestBox ui:field="files" width="100%" debugId="navigateToFileView-suggestBox-files"/>
+            </g:FlowPanel>
         </g:center>
     </g:DockLayoutPanel>
 </ui:UiBinder>

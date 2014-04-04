@@ -41,23 +41,26 @@
     <g:DockLayoutPanel unit="PX" width="350px" height="140px" addStyleNames="{style.emptyBorder}">
         <g:south size="26.0">
             <g:FlowPanel>
-                <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" ui:field="btnCancel"/>
-                <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.startBuild}" width="80px" ui:field="btnStartBuild"/>
+                <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" ui:field="btnCancel"
+                          debugId="mavenBuildView-btn-cancel"/>
+                <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.startBuild}" width="80px" ui:field="btnStartBuild"
+                          debugId="mavenBuildView-btn-startBuild"/>
             </g:FlowPanel>
         </g:south>
         <g:center>
             <g:DockLayoutPanel unit="PX" width="100%" height="100%" styleName="{style.spacing}">
                 <g:north size="30.0">
-                    <g:TextBox ui:field="buildCommand" width="350px" height="25px"/>
+                    <g:TextBox ui:field="buildCommand" width="350px" height="25px" debugId="mavenBuildView-txtBox-buildCommand"/>
                 </g:north>
                 <g:north size="30.0">
-                    <g:CheckBox ui:field="skipTest" HTML="{locale.skipTest}"/>
+                    <g:CheckBox ui:field="skipTest" HTML="{locale.skipTest}" debugId="mavenBuildView-checkBox-skipTest"/>
                 </g:north>
                 <g:north size="30.0">
-                    <g:CheckBox ui:field="updateSnapshot" HTML="{locale.updateSnapshot}" title="{locale.updateSnapshotDesc}"/>
+                    <g:CheckBox ui:field="updateSnapshot" HTML="{locale.updateSnapshot}" title="{locale.updateSnapshotDesc}"
+                                debugId="mavenBuildView-checkBox-updateSnapshot"/>
                 </g:north>
                 <g:north size="30.0">
-                    <g:CheckBox ui:field="offline" HTML="{locale.offlineMode}" />
+                    <g:CheckBox ui:field="offline" HTML="{locale.offlineMode}" debugId="mavenBuildView-checkBox-offline"/>
                 </g:north>
             </g:DockLayoutPanel>
         </g:center>

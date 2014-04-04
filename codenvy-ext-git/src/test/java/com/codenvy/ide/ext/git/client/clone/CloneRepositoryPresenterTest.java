@@ -25,8 +25,8 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.ext.git.shared.RepoInfo;
 import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
-import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -96,7 +96,7 @@ public class CloneRepositoryPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[0];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
@@ -106,7 +106,7 @@ public class CloneRepositoryPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[1];
+                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[0];
                 callback.onSuccess(project);
                 return callback;
             }
@@ -115,13 +115,13 @@ public class CloneRepositoryPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                RequestCallback<RepoInfo> callback = (RequestCallback<RepoInfo>)arguments[4];
+                RequestCallback<RepoInfo> callback = (RequestCallback<RepoInfo>)arguments[3];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, gitRepositoryInfo);
                 return callback;
             }
         }).when(service)
-                .cloneRepositoryWS(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME), (RequestCallback<RepoInfo>)anyObject());
+                .cloneRepositoryWS(eq(project), eq(REMOTE_URI), eq(REMOTE_NAME), (RequestCallback<RepoInfo>)anyObject());
 
         presenter.onCloneClicked();
 
@@ -129,7 +129,7 @@ public class CloneRepositoryPresenterTest extends BaseTest {
         verify(view).getRemoteName();
         verify(view).getRemoteUri();
         verify(projectServiceClient).createFolder(eq(PROJECT_NAME), (AsyncRequestCallback<Void>)anyObject());
-        verify(service).cloneRepositoryWS(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME), (RequestCallback<RepoInfo>)anyObject());
+        verify(service).cloneRepositoryWS(eq(project), eq(REMOTE_URI), eq(REMOTE_NAME), (RequestCallback<RepoInfo>)anyObject());
         verify(constant).cloneSuccess(eq(REMOTE_URI));
         verify(notificationManager).showNotification((Notification)anyObject());
     }
@@ -140,7 +140,7 @@ public class CloneRepositoryPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[2];
+                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[1];
                 callback.onSuccess(project);
                 return callback;
             }
@@ -149,13 +149,13 @@ public class CloneRepositoryPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                RequestCallback<RepoInfo> callback = (RequestCallback<RepoInfo>)arguments[4];
+                RequestCallback<RepoInfo> callback = (RequestCallback<RepoInfo>)arguments[3];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
         }).when(service)
-                .cloneRepositoryWS(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME), (RequestCallback<RepoInfo>)anyObject());
+                .cloneRepositoryWS(eq(project), eq(REMOTE_URI), eq(REMOTE_NAME), (RequestCallback<RepoInfo>)anyObject());
 
         presenter.onCloneClicked();
 
@@ -163,7 +163,7 @@ public class CloneRepositoryPresenterTest extends BaseTest {
         verify(view).getRemoteName();
         verify(view).getRemoteUri();
         verify(resourceProvider).createProject(eq(PROJECT_NAME), (ProjectDescriptor)anyObject(), (AsyncCallback<Project>)anyObject());
-        verify(service).cloneRepositoryWS(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME), (RequestCallback<RepoInfo>)anyObject());
+        verify(service).cloneRepositoryWS(eq(project), eq(REMOTE_URI), eq(REMOTE_NAME), (RequestCallback<RepoInfo>)anyObject());
         verify(constant).cloneFailed(eq(REMOTE_URI));
     }
 
@@ -173,7 +173,7 @@ public class CloneRepositoryPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[2];
+                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[1];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;

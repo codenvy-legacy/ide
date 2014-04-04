@@ -25,14 +25,12 @@ import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.ext.java.jdt.core.JavaConventions;
 import com.codenvy.ide.ext.java.jdt.core.JavaCore;
-import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.resources.model.Folder;
-import com.codenvy.ide.resources.model.Link;
-import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -377,13 +375,11 @@ public class JavaProject extends Project {
                     String id = parent.getId();
                     String name = parent.getPath().replaceFirst(sourceFolder.getPath(), "");
                     name = (name.startsWith("/")) ? name.replaceFirst("/", "").replaceAll("/", ".") : name.replaceAll("/", ".");
-                    StringMap<Link> links = parent.getLinks();
                     parent = new Package();
                     parent.setId(id);
                     parent.setName(name);
                     parent.setParent(sourceFolder);
                     parent.setProject(this);
-                    parent.getLinks().putAll(links);
                     return parent;
                 }
             }

@@ -73,7 +73,7 @@ import com.codenvy.ide.ext.git.shared.TagCreateRequest;
 import com.codenvy.ide.ext.git.shared.TagDeleteRequest;
 import com.codenvy.ide.ext.git.shared.TagListRequest;
 import com.codenvy.ide.maven.tools.MavenUtils;
-import com.codenvy.ide.server.Constants;
+import com.codenvy.ide.Constants;
 import com.codenvy.vfs.impl.fs.GitUrlResolver;
 import com.codenvy.vfs.impl.fs.LocalPathResolver;
 
@@ -115,7 +115,8 @@ public class GitService {
     private VirtualFileSystemRegistry vfsRegistry;
     @Inject
     private GitConnectionFactory      gitConnectionFactory;
-    @QueryParam("vfsid")
+
+    @PathParam("ws-id")
     private String                    vfsId;
     @QueryParam("projectid")
     private String                    projectId;
@@ -254,6 +255,7 @@ public class GitService {
     private void determineProjectType() throws VirtualFileSystemException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
         ItemList files = vfs.getChildren(projectId, -1, 0, "file", false, PropertyFilter.NONE_FILTER);
+        boolean foundMavenProject = false;
         for (Item file : files.getItems()) {
             if ("pom.xml".equals(file.getName())) {
                 boolean isMultiModule = isMultiModule(vfs.getContent(file.getId()));
@@ -263,15 +265,24 @@ public class GitService {
                     propertyFileContent =
                             "{\"type\":\"maven_multi_module\",\"properties\":[{\"name\":\"builder.name\",\"value\":[\"maven\"]}]}";
                 } else {
-                    propertyFileContent = "{\"type\":\"" + Constants.UNKNOWN_ID + "\"}";
+                    propertyFileContent = "{\"type\":\"" + Constants.NAMELESS_ID + "\"}";
                 }
-
+                foundMavenProject = true;
                 Folder codenvyFolder = vfs.createFolder(projectId, ".codenvy");
                 vfs.createFile(codenvyFolder.getId(), "project", MediaType.APPLICATION_JSON_TYPE,
                                new ByteArrayInputStream(propertyFileContent.getBytes()));
                 break;
             }
         }
+        // We didn't found a maven project, turn it as nameless project
+        if (!foundMavenProject) {
+           String propertyFileContent = "{\"type\":\"" + Constants.NAMELESS_ID + "\"}";
+            Folder codenvyFolder = vfs.createFolder(projectId, ".codenvy");
+            vfs.createFile(codenvyFolder.getId(), "project", MediaType.APPLICATION_JSON_TYPE,
+                           new ByteArrayInputStream(propertyFileContent.getBytes()));
+
+        }
+
     }
 
     /**
@@ -317,7 +328,7 @@ public class GitService {
                     vfs.updateItem(folder.getId(), propertiesList, null);
                     found = true;
 
-                    final String propertyFileContent = "{\"type\":\"" + Constants.UNKNOWN_ID + "\"}";
+                    final String propertyFileContent = "{\"type\":\"" + Constants.NAMELESS_ID + "\"}";
                     Folder codenvyFolder = vfs.createFolder(folder.getId(), ".codenvy");
                     vfs.createFile(codenvyFolder.getId(), "project", MediaType.APPLICATION_JSON_TYPE,
                                    new ByteArrayInputStream(propertyFileContent.getBytes()));

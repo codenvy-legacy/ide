@@ -47,13 +47,15 @@
         <g:south size="36.0">
             <g:FlowPanel addStyleNames="{style.spacing}">
                 <g:Button addStyleNames="{style.alignRightBtn}" text="{locale.buttonClose}" width="70px"
-                          ui:field="btnClose"/>
-                <g:Button addStyleNames="{style.alignLeftBtn} {style.space}" text="{locale.buttonAdd}" width="70px" ui:field="btnAdd"/>
-                <g:Button addStyleNames="{style.alignLeftBtn} {style.space}" text="{locale.buttonRemove}" width="70px" ui:field="btnDelete"/>
+                          ui:field="btnClose" debugId="remoteView-btn-close"/>
+                <g:Button addStyleNames="{style.alignLeftBtn} {style.space}" text="{locale.buttonAdd}" width="70px" ui:field="btnAdd"
+                          debugId="remoteView-btn-add"/>
+                <g:Button addStyleNames="{style.alignLeftBtn} {style.space}" text="{locale.buttonRemove}" width="70px" ui:field="btnDelete"
+                          debugId="remoteView-btn-remove"/>
             </g:FlowPanel>
         </g:south>
         <g:center>
-            <p1:CellTable width="100%" ui:field="repositories" focus="false"/>
+            <p1:CellTable width="100%" ui:field="repositories" focus="false" debugId="remoteView-cellTable-repositories"/>
         </g:center>
     </g:DockLayoutPanel>
 </ui:UiBinder>

@@ -18,7 +18,7 @@
 
 package com.codenvy.ide.api.resources;
 
-import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.api.resources.model.File;
 import com.google.gwt.event.shared.GwtEvent;
 
 

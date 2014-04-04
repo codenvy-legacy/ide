@@ -20,7 +20,7 @@ package com.codenvy.ide.ext.git.client.init;
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.ext.git.client.BaseTest;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -78,33 +78,33 @@ public class InitRepositoryPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                RequestCallback<Void> callback = (RequestCallback<Void>)arguments[4];
+                RequestCallback<Void> callback = (RequestCallback<Void>)arguments[3];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service).initWS(anyString(), anyString(), anyString(), anyBoolean(), (RequestCallback<Void>)anyObject());
+        }).when(service).initWS(anyString(), anyString(), anyBoolean(), (RequestCallback<Void>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[0];
+                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[1];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, project);
                 return callback;
             }
-        }).when(project).refreshProperties((AsyncCallback<Project>)anyObject());
+        }).when(resourceProvider).getProject(anyString(),(AsyncCallback<Project>)anyObject());
 
         presenter.showDialog();
         presenter.onOkClicked();
 
         verify(view).isBare();
         verify(view).close();
-        verify(service).initWS(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<Void>)anyObject());
+        verify(service).initWS(eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<Void>)anyObject());
         verify(constant).initSuccess();
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(eventBus).fireEvent((RefreshBrowserEvent)anyObject());
-        verify(project).refreshProperties((AsyncCallback<Project>)anyObject());
+        verify(resourceProvider).getProject(anyString(),(AsyncCallback<Project>)anyObject());
     }
 
     @Test
@@ -113,19 +113,19 @@ public class InitRepositoryPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                RequestCallback<String> callback = (RequestCallback<String>)arguments[4];
+                RequestCallback<String> callback = (RequestCallback<String>)arguments[3];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).initWS(anyString(), anyString(), anyString(), anyBoolean(), (RequestCallback<Void>)anyObject());
+        }).when(service).initWS(anyString(), anyString(), anyBoolean(), (RequestCallback<Void>)anyObject());
 
         presenter.showDialog();
         presenter.onOkClicked();
 
         verify(view).isBare();
         verify(view).close();
-        verify(service).initWS(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<Void>)anyObject());
+        verify(service).initWS(eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<Void>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).initFailed();
     }

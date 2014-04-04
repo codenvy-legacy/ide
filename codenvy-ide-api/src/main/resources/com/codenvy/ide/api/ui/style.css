@@ -35,6 +35,8 @@
 @eval partToolbar com.codenvy.ide.api.ui.theme.Style.getPartToolbar();
 @eval partToolbarActive com.codenvy.ide.api.ui.theme.Style.getPartToolbarActive();
 @eval partToolbarShadow com.codenvy.ide.api.ui.theme.Style.getPartToolbarShadow();
+@eval partToolbarSeparatorTopColor com.codenvy.ide.api.ui.theme.Style.getPartToolbarSeparatorTopColor();
+@eval partToolbarSeparatorBottomColor com.codenvy.ide.api.ui.theme.Style.getPartToolbarSeparatorBottomColor();
 
 @eval consolePanelColor com.codenvy.ide.api.ui.theme.Style.getConsolePanelColor();
 
@@ -104,6 +106,7 @@
 @def landingTitleFontSize 20px;
 @def titleFontSize 16px;
 @def secondaryTextFontSize 11px;
+@def smallFontSize 10px;
 @def largeLabel 14px;
 @def largeDropdownLabel 12px;
 @def boxFontSize 12px;

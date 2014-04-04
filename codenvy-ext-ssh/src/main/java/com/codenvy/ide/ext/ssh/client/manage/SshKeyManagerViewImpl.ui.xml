@@ -43,11 +43,13 @@
         <g:south size="36.0">
             <g:FlowPanel width="100%">
                 <g:FlowPanel addStyleNames="{style.emptyBorder}">
-                    <g:Button addStyleNames="{style.alignLeft}" height="22px"  ui:field="btnGenerate"><ui:text from="{locale.managerGenerateButton}"/></g:Button>
-                    <g:Button addStyleNames="{style.alignLeft} {style.space}" height="22px" ui:field="btnUpload"><ui:text from="{locale.managerUploadButton}"/></g:Button>
+                    <g:Button addStyleNames="{style.alignLeft}" height="22px"  ui:field="btnGenerate" debugId="sshKeyManagerView-btn-generate">
+                        <ui:text from="{locale.managerGenerateButton}"/></g:Button>
+                    <g:Button addStyleNames="{style.alignLeft} {style.space}" height="22px" ui:field="btnUpload" debugId="sshKeyManagerView-btn-upload">
+                        <ui:text from="{locale.managerUploadButton}"/></g:Button>
                     <g:PushButton addStyleNames="{style.alignRight} {style.space}" width="16px" height="17px"
                               ui:field="btnGenerateGithubKey"
-                              title="Generate key and upload it to GitHub" >
+                              title="Generate key and upload it to GitHub" debugId="sshKeyManagerView-btn-generateGithubKey">
                         <g:downFace image="{res.sshKeyGithubGenerate}" />
                         <g:upFace image="{res.sshKeyGithubGenerate}"/>
                               </g:PushButton>
@@ -57,7 +59,7 @@
         <g:center>
             <g:FlowPanel addStyleNames="{style.emptyBorder}">
                 <g:SimplePanel>
-                    <p1:CellTable width="100%" ui:field="keys" focus="false"/>
+                    <p1:CellTable width="100%" ui:field="keys" focus="false" debugId="sshKeyManagerView-cellTable-keys"/>
                 </g:SimplePanel>
             </g:FlowPanel>
         </g:center>

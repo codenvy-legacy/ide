@@ -38,6 +38,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.inject.Inject;
 
 import java.util.HashMap;
@@ -175,6 +176,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
     private MenuBarItem add(String place, ActionGroup group, MenuItemPresentationFactory presentationFactory) {
         table.setText(0, menuBarItems.size(), presentationFactory.getPresentation(group).getText());
         Element element = table.getCellFormatter().getElement(0, menuBarItems.size());
+        UIObject.ensureDebugId(element, place + "/" + actionManager.getId(group));
         MenuBarItem item =
                 new MenuBarItem(group, actionManager, presentationFactory, place, element, this, keyBindingAgent, resources.menuCss());
 

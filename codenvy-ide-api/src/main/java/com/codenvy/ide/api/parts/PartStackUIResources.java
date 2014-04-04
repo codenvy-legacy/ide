@@ -21,6 +21,8 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 /** @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> */
 public interface PartStackUIResources extends ClientBundle {
     public interface PartStackCss extends CssResource {
@@ -70,26 +72,38 @@ public interface PartStackUIResources extends ClientBundle {
         @ClassName("ide-PartStack-Tool-Tab")
         String idePartStackToolTab();
 
+        @ClassName("ide-Base-Part-Toolbar-Bottom")
+        String idePartStackToolbarBottom();
+
+        @ClassName("ide-Base-Part-Toolbar-Separator")
+        String idePartStackToolbarSeparator();
+
+        @ClassName("ide-Base-Part-Toolbar-Bottom-Icon")
+        String idePartStackToolbarBottomIcon();
+
         @ClassName("ide-PartStack-Tool-Tab-selected")
         String idePartStackToolTabSelected();
 
         @ClassName("ide-PartStack-Tab-Right-Button")
         String idePartStackTabRightButton();
-        
+
         @ClassName("ide-PartStack-Tab-Button")
         String idePartStackTabButton();
-        
+
         @ClassName("ide-PartStack-Tab-Button-selected")
         String idePartStackTabButtonSelected();
-        
+
         @ClassName("ide-PartStack-Multiple-Tabs-Container")
         String idePartStackMultipleTabsContainer();
-        
+
         @ClassName("ide-PartStack-Multiple-Tabs-Item")
         String idePartStackMultipleTabsItem();
-        
+
         @ClassName("ide-button-micro")
         String ideButtonMicro();
+
+        @ClassName("ide-PartStack-Boton-Left")
+        String idePartStackBotonLeft();
     }
 
     @Source({"partstack.css", "com/codenvy/ide/api/ui/style.css"})
@@ -99,4 +113,7 @@ public interface PartStackUIResources extends ClientBundle {
 
     @Source("thin_min_view.png")
     ImageResource minimize();
+
+    @Source("arrow.svg")
+    SVGResource arrow();
 }

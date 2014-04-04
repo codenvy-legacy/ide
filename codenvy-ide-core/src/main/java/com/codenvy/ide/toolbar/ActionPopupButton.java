@@ -81,6 +81,7 @@ public class ActionPopupButton extends Composite implements CloseMenuHandler, Ac
         InlineLabel caret = new InlineLabel("");
         caret.setStyleName(css.caret());
         panel.add(caret);
+        this.ensureDebugId(place + "/" + action.getTemplatePresentation().getText());
     }
 
     /** Closes Popup Menu ( if opened ) and sets style of this Popup Menu Button to default. */

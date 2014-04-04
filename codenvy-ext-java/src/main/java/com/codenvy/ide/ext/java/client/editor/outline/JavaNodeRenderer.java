@@ -29,6 +29,7 @@ import com.codenvy.ide.texteditor.api.outline.CodeBlock;
 import com.codenvy.ide.ui.tree.NodeRenderer;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 import com.codenvy.ide.util.dom.Elements;
+import com.google.gwt.user.client.ui.UIObject;
 
 
 /**
@@ -83,6 +84,7 @@ public class JavaNodeRenderer implements NodeRenderer<CodeBlock> {
                 icon.addClassName(getMethodClass(block.getModifiers()));
             }
             label.setTextContent(block.getName());
+            UIObject.ensureDebugId((com.google.gwt.dom.client.Element)label, "javaNodeRenderer-codeblock-" + block.getName() + label.hashCode());
 
             root.appendChild(icon);
             root.appendChild(label);

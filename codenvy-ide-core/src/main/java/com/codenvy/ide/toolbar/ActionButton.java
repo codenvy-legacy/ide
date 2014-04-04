@@ -77,6 +77,7 @@ public class ActionButton extends Composite implements MouseOverHandler, MouseOu
         setVisible(presentation.isVisible());
         if (presentation.getDescription() != null)
             panel.getElement().setAttribute("title", presentation.getDescription());
+        this.ensureDebugId(place + "/" + actionManager.getId(action));
     }
 
     /** {@inheritDoc} */

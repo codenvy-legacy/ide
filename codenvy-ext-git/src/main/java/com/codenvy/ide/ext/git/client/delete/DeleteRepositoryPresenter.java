@@ -22,9 +22,9 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.ext.git.client.GitClientService;
+import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.Window;
@@ -46,8 +46,8 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
  */
 @Singleton
 public class DeleteRepositoryPresenter {
-    private GitClientService        service;
-    private EventBus                eventBus;
+    private GitServiceClient     service;
+    private EventBus eventBus;
     private GitLocalizationConstant constant;
     private ResourceProvider        resourceProvider;
     private Project                 project;
@@ -63,8 +63,11 @@ public class DeleteRepositoryPresenter {
      * @param notificationManager
      */
     @Inject
-    public DeleteRepositoryPresenter(GitClientService service, EventBus eventBus, GitLocalizationConstant constant,
-                                     ResourceProvider resourceProvider, NotificationManager notificationManager) {
+    public DeleteRepositoryPresenter(GitServiceClient service,
+                                     EventBus eventBus,
+                                     GitLocalizationConstant constant,
+                                     ResourceProvider resourceProvider,
+                                     NotificationManager notificationManager) {
         this.service = service;
         this.eventBus = eventBus;
         this.constant = constant;
@@ -94,12 +97,13 @@ public class DeleteRepositoryPresenter {
 
     /** Perform deleting Git repository. */
     private void doDeleteRepository() {
-        service.deleteRepository(resourceProvider.getVfsInfo().getId(), project.getId(), new AsyncRequestCallback<Void>() {
+        service.deleteRepository(project.getId(), new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
-                project.refreshProperties(new AsyncCallback<Project>() {
+                resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
                     @Override
                     public void onSuccess(Project result) {
+                        project.setAttributes(result.getAttributes());
                         Notification notification = new Notification(constant.deleteGitRepositorySuccess(), INFO);
                         notificationManager.showNotification(notification);
                         eventBus.fireEvent(new RefreshBrowserEvent(project));

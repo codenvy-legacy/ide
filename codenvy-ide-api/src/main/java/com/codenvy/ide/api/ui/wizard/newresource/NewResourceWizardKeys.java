@@ -18,8 +18,8 @@
 package com.codenvy.ide.api.ui.wizard.newresource;
 
 import com.codenvy.ide.api.ui.wizard.WizardContext;
-import com.codenvy.ide.resources.model.Folder;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.Project;
 
 /**
  * The container for new resource wizard context.
