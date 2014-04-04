@@ -40,6 +40,19 @@ public abstract class GitConnectionFactory {
     }
 
     /**
+     * Get connection to Git repository located in <code>workDir</code>
+     *
+     * @param workDir
+     *         repository directory
+     * @return connection to Git repository
+     * @throws GitException
+     *         if can't initialize connection
+     */
+    public GitConnection getConnection(String workDir) throws GitException {
+        return getConnection(new File(workDir));
+    }
+
+    /**
      * Get connection to Git repository located in <code>workDir</code>.
      *
      * @param workDir
@@ -51,4 +64,15 @@ public abstract class GitConnectionFactory {
      *         if can't initialize connection
      */
     public abstract GitConnection getConnection(File workDir, GitUser user) throws GitException;
+
+    /**
+     * Get connection to Git repository locate in <code>workDir</code>
+     *
+     * @param workDir
+     *         repository directory
+     * @return connection to Git repository
+     * @throws GitException
+     *         if can't initialize connection
+     */
+    public abstract GitConnection getConnection(File workDir) throws GitException;
 }
