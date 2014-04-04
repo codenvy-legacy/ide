@@ -68,6 +68,8 @@
 		background-color: mainFontColor;
 		line-height: 11px;
 		vertical-align: middle;
+		font-weight: bold;
+		font-size: smallFontSize;
 	}
 	
     .invertColor{
