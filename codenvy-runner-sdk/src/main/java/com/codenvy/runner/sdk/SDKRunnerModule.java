@@ -27,9 +27,9 @@ import com.google.inject.multibindings.Multibinder;
 public class SDKRunnerModule extends AbstractModule {
     @Override
     protected void configure() {
-        Multibinder<Runner> multiBinderRunners = Multibinder.newSetBinder(binder(), Runner.class);
-        multiBinderRunners.addBinding().to(SDKRunner.class);
-        Multibinder<ApplicationServer> multiBinderServers = Multibinder.newSetBinder(binder(), ApplicationServer.class);
-        multiBinderServers.addBinding().to(TomcatServer.class);
+        Multibinder.newSetBinder(binder(), Runner.class).addBinding().to(SDKRunner.class);
+        Multibinder.newSetBinder(binder(), ApplicationServer.class).addBinding().to(TomcatServer.class);
+        bind(UpdateService.class);
+        bind(UpdateExceptionMapper.class).toInstance(new UpdateExceptionMapper());
     }
 }

@@ -43,7 +43,6 @@ import com.google.inject.assistedinject.Assisted;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
 
-import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.BELOW;
 import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.LEFT;
 import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.RIGHT;
 
@@ -113,7 +112,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
     @Override
     public TabItem addTabButton(Image icon, String title, String toolTip, IsWidget widget, boolean closable) {
         TabButton tabItem = new TabButton(icon, title, toolTip, widget, closable);
-        tabItem.ensureDebugId("partStackView-tabBut-" + title);
+        tabItem.ensureDebugId("tabButton-" + title);
         tabsPanel.add(tabItem);
         tabs.add(tabItem);
         return tabItem;

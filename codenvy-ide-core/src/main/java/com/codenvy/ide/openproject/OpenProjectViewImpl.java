@@ -63,7 +63,7 @@ public class OpenProjectViewImpl extends Window implements OpenProjectView {
             TableCellElement label = Elements.createTDElement();
             label.setInnerHTML(itemData);
             itemElement.appendChild(label);
-            UIObject.ensureDebugId((com.google.gwt.dom.client.Element)itemElement, "openProject-" + itemData);
+            UIObject.ensureDebugId((com.google.gwt.dom.client.Element)itemElement, "file-openProject-" + itemData);
         }
 
         @Override

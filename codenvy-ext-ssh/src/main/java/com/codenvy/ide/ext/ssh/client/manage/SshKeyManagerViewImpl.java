@@ -101,7 +101,7 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
 
             @Override
             public void render(Context context, KeyItem object, SafeHtmlBuilder sb) {
-                sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "sshKeyManagerView-cellTable-host-" + context.getIndex() + "\">");
+                sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "window-preferences-sshKeys-cellTable-host-" + context.getIndex() + "\">");
                 super.render(context, object, sb);
             }
         };
@@ -121,7 +121,7 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
             @Override
             public void render(Context context, KeyItem object, SafeHtmlBuilder sb) {
                 if (object != null && object.getPublicKeyUrl() != null) {
-                    sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "sshKeyManagerView-cellTable-key-" + context.getIndex() + "\">");
+                    sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "window-preferences-sshKeys-cellTable-key-" + context.getIndex() + "\">");
                     super.render(context, object, sb);
                 }
             }
@@ -144,7 +144,7 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
             public void render(Context context, KeyItem object, SafeHtmlBuilder sb) {
                 if (object != null && object.getPublicKeyUrl() != null) {
                     sb.appendHtmlConstant(
-                            "<div id=\"" + UIObject.DEBUG_ID_PREFIX + "sshKeyManagerView-cellTable-delete-" + context.getIndex() + "\">");
+                            "<div id=\"" + UIObject.DEBUG_ID_PREFIX + "window-preferences-sshKeys-cellTable-delete-" + context.getIndex() + "\">");
                     super.render(context, object, sb);
                 }
             }

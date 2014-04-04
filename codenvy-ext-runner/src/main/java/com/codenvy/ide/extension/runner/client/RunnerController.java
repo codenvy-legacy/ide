@@ -30,16 +30,17 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
+import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.codenvy.ide.websocket.rest.StringUnmarshallerWS;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
 import com.google.gwt.user.client.Window;
@@ -67,6 +68,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private       ResourceProvider             resourceProvider;
     private       ConsolePart                  console;
     private       RunnerServiceClient          service;
+    private       UpdateServiceClient          updateService;
     private       RunnerLocalizationConstant   constant;
     private       NotificationManager          notificationManager;
     private       Notification                 notification;
@@ -92,6 +94,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      *         {@link com.codenvy.ide.api.parts.ConsolePart}
      * @param service
      *         {@link com.codenvy.api.runner.gwt.client.RunnerServiceClient}
+     * @param updateService
+     *         {@link com.codenvy.ide.extension.runner.client.UpdateServiceClient}
      * @param constant
      *         {@link com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant}
      * @param notificationManager
@@ -103,6 +107,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                             WorkspaceAgent workspaceAgent,
                             final ConsolePart console,
                             RunnerServiceClient service,
+                            UpdateServiceClient updateService,
                             RunnerLocalizationConstant constant,
                             NotificationManager notificationManager,
                             DtoUnmarshallerFactory dtoUnmarshallerFactory,
@@ -112,6 +117,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         this.workspaceAgent = workspaceAgent;
         this.console = console;
         this.service = service;
+        this.updateService = updateService;
         this.constant = constant;
         this.notificationManager = notificationManager;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
@@ -208,7 +214,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                             applicationProcessDescriptor = null;
                             onFail(constant.startApplicationFailed(currentProject.getName()), exception);
                         }
-                    });
+                    }
+                   );
     }
 
     /** Get logs of the currently launched application. */
@@ -345,14 +352,11 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
                 if (exception instanceof ServerException &&
                     ((ServerException)exception).getHTTPStatus() == 500) {
-                    ServiceError e = dtoFactory.createDtoFromJson(exception.getMessage(),
-                                                                  ServiceError.class);
-                    onFail(constant.startApplicationFailed(currentProject.getName()) + ": " +
-                           e.getMessage(), null);
+                    ServiceError e = dtoFactory.createDtoFromJson(exception.getMessage(), ServiceError.class);
+                    onFail(constant.startApplicationFailed(currentProject.getName()) + ": " + e.getMessage(), null);
                 } else {
                     onFail(constant.startApplicationFailed(currentProject.getName()), exception);
                 }
-
 
                 try {
                     messageBus.unsubscribe("runner:status:" + buildTaskDescriptor.getProcessId(), this);
@@ -363,7 +367,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         };
 
         try {
-            messageBus.subscribe("runner:status:" + buildTaskDescriptor.getProcessId() , runStatusHandler);
+            messageBus.subscribe("runner:status:" + buildTaskDescriptor.getProcessId(), runStatusHandler);
         } catch (WebSocketException e) {
             Log.error(RunnerController.class, e);
         }
@@ -382,5 +386,36 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     @Override
     public void onOpenClicked() {
         workspaceAgent.setActivePart(console);
+    }
+
+    /** Updates launched Codenvy Extension. */
+    public void updateExtension() {
+        final Notification notification =
+                new Notification(constant.applicationUpdating(currentProject.getName()), PROGRESS, RunnerController.this);
+        notificationManager.showNotification(notification);
+        try {
+            updateService.update(applicationProcessDescriptor, new RequestCallback<Void>() {
+                @Override
+                protected void onSuccess(Void result) {
+                    notification.setStatus(FINISHED);
+                    notification.setMessage(constant.applicationUpdated(currentProject.getName()));
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    notification.setStatus(FINISHED);
+                    notification.setType(ERROR);
+                    notification.setMessage(constant.updateApplicationFailed(currentProject.getName()));
+
+                    if (exception != null && exception.getMessage() != null) {
+                        console.printf(exception.getMessage());
+                    }
+                }
+            });
+        } catch (WebSocketException e) {
+            notification.setStatus(FINISHED);
+            notification.setType(ERROR);
+            notification.setMessage(constant.updateApplicationFailed(currentProject.getName()));
+        }
     }
 }

@@ -50,7 +50,7 @@
         <g:south size="36.0">
             <g:FlowPanel height="100%" width="100%" addStyleNames="{style.spacing}">
                 <g:Button addStyleNames="{style.btnAlign}" width="50px"  height="22px"  ui:field="btnOk"
-                          debugId="aboutView-btn-ok">OK</g:Button>
+                          debugId="help-about-ok">OK</g:Button>
             </g:FlowPanel>
         </g:south>
         <g:north size="40">

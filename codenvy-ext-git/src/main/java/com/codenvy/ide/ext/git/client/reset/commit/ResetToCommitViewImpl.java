@@ -139,7 +139,7 @@ public class ResetToCommitViewImpl extends DialogBox implements ResetToCommitVie
             }
             @Override
             public void render(Cell.Context context, Revision revision, SafeHtmlBuilder sb) {
-                sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "resetToCommitView-cellTable-" + context.getIndex() + "\">");
+                sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "git-reset-cellTable-" + context.getIndex() + "\">");
                 super.render(context, revision, sb);
             }
         };

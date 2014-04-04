@@ -42,9 +42,9 @@
         <g:south size="26.0">
             <g:FlowPanel>
                 <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" ui:field="btnCancel"
-                          debugId="cloneRepositoryView-btn-cancel"/>
+                          debugId="git-cloneRepository-cancel"/>
                 <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonClone}" width="60px" ui:field="btnClone"
-                          debugId="cloneRepositoryView-btn-clone"/>
+                          debugId="git-cloneRepository-clone"/>
             </g:FlowPanel>
         </g:south>
         <g:north size="50.0">
@@ -54,7 +54,7 @@
                 </g:north>
                 <g:center>
                     <g:TextBox width="368px" ui:field="remoteUri" addStyleNames="{res.gitCSS.textFont}"
-                               debugId="cloneRepositoryView-txtBox-remoteUri"/>
+                               debugId="git-cloneRepository-remoteUri"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>
@@ -65,7 +65,7 @@
                 </g:north>
                 <g:center>
                     <g:TextBox width="368px" ui:field="projectName" addStyleNames="{res.gitCSS.textFont}"
-                               debugId="cloneRepositoryView-txtBox-projectName"/>
+                               debugId="git-cloneRepository-projectName"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>
@@ -76,7 +76,7 @@
                 </g:north>
                 <g:center>
                     <g:TextBox width="368px" ui:field="remoteName" addStyleNames="{res.gitCSS.textFont}"
-                               debugId="cloneRepositoryView-txtBox-remoteName"/>
+                               debugId="git-cloneRepository-remoteName"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>

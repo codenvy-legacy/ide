@@ -35,7 +35,7 @@ public class SearchPartViewImpl extends BaseView<SearchPartView.ActionDelegate> 
     public SearchPartViewImpl(PartStackUIResources resources) {
         super(resources);
         container.add(ourUiBinder.createAndBindUi(this));
-
+        minimizeButton.ensureDebugId("search-minimizeBut");
     }
 
     interface SearchPartViewImplUiBinder

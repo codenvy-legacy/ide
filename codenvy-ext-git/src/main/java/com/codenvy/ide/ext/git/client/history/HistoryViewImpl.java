@@ -116,6 +116,7 @@ public class HistoryViewImpl extends BaseView<HistoryView.ActionDelegate> implem
         createCommitsTable(res);
 
         container.add(ourUiBinder.createAndBindUi(this));
+        minimizeButton.ensureDebugId("git-showHistory-minimizeBut");
     }
 
     /** Creates table what contains list of available commits.
@@ -131,7 +132,7 @@ public class HistoryViewImpl extends BaseView<HistoryView.ActionDelegate> implem
             }
             @Override
             public void render(Cell.Context context, Revision revision, SafeHtmlBuilder sb) {
-                sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "historyView-cellTable-" + context.getIndex() + "\">");
+                sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "git-showHistory-table-" + context.getIndex() + "\">");
                 super.render(context, revision, sb);
             }
         };

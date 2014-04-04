@@ -95,7 +95,6 @@ public class ToolButton extends Composite implements HasClickHandlers {
     public ToolButton(String id, Image image) {
         initWidget(uiBinder.createAndBindUi(this));
         iconPanel.appendChild(image.getElement());
-        this.ensureDebugId("toolButton-" + this.hashCode());
 
         if (id != null) {
             getElement().setId(id);

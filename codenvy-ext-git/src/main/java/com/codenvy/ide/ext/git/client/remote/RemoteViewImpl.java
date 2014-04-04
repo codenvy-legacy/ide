@@ -103,7 +103,7 @@ public class RemoteViewImpl extends DialogBox implements RemoteView {
             }
             @Override
             public void render(Cell.Context context, Remote remote, SafeHtmlBuilder sb) {
-                sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "remoteView-cellTable-" + context.getIndex() + "\">");
+                sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "git-remotes-remotes-cellTable-" + context.getIndex() + "\">");
                 super.render(context, remote, sb);
             }
         };

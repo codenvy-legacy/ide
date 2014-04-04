@@ -43,6 +43,7 @@ public class OutlinePartViewImpl extends BaseView<OutlinePartView.ActionDelegate
         noOutline = new Label("An outline is not available.");
         container = new SimplePanel();
         super.container.add(container);
+        minimizeButton.ensureDebugId("outline-minimizeBut");
     }
 
     /** {@inheritDoc} */

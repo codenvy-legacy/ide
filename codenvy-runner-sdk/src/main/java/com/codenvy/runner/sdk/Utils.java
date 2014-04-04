@@ -17,6 +17,10 @@
  */
 package com.codenvy.runner.sdk;
 
+import com.codenvy.api.core.util.LineConsumer;
+import com.codenvy.api.core.util.ProcessUtil;
+import com.codenvy.api.runner.RunnerException;
+import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.ide.commons.GwtXmlUtils;
 import com.codenvy.ide.maven.tools.MavenUtils;
 
@@ -24,6 +28,7 @@ import org.apache.maven.model.Model;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -54,6 +59,29 @@ class Utils {
             throw new IOException("Unable to get Codenvy Platform binary distribution.");
         }
         return codenvyPlatformDistributionUrl;
+    }
+
+    /**
+     * Builds project with Maven from the specified sources.
+     *
+     * @param sourcesPath
+     *         path to the folder that contains project sources to build
+     * @param artifactNamePattern
+     *         name pattern of the artifact to return
+     * @return {@link java.util.zip.ZipFile} that represents a built artifact
+     * @throws RunnerException
+     */
+    static ZipFile buildProjectFromSources(Path sourcesPath, String artifactNamePattern) throws Exception {
+        final String[] command = new String[]{MavenUtils.getMavenExecCommand(), "clean", "package"};
+        ProcessBuilder processBuilder = new ProcessBuilder(command).directory(sourcesPath.toFile());
+        Process process = processBuilder.start();
+        ProcessLineConsumer consumer = new ProcessLineConsumer();
+        ProcessUtil.process(process, consumer, consumer);
+        process.waitFor();
+        if (process.exitValue() != 0) {
+            throw new Exception(consumer.getOutput().toString());
+        }
+        return new ZipFile(IoUtil.findFile(artifactNamePattern, sourcesPath.resolve("target").toFile()));
     }
 
     static ExtensionDescriptor getExtensionFromJarFile(ZipFile zipFile) throws IOException {
@@ -87,6 +115,24 @@ class Utils {
             return new ExtensionDescriptor(gwtModuleName, MavenUtils.getGroupId(pom), pom.getArtifactId(), MavenUtils.getVersion(pom));
         } finally {
             zipFile.close();
+        }
+    }
+
+    private static class ProcessLineConsumer implements LineConsumer {
+        final StringBuilder output = new StringBuilder();
+
+        @Override
+        public void writeLine(String line) throws IOException {
+            output.append('\n').append(line);
+        }
+
+        @Override
+        public void close() throws IOException {
+            //nothing to close
+        }
+
+        StringBuilder getOutput() {
+            return output;
         }
     }
 

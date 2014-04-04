@@ -15,15 +15,30 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.extension.runner.client;
+package com.codenvy.runner.sdk;
 
-import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
+import com.google.inject.Inject;
+
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
 /**
- * Notified when app launched.
+ * Service to update server-side code of launched Codenvy Extension.
  *
  * @author Artem Zatsarynnyy
  */
-public interface ProjectRunCallback {
-    void onRun(ApplicationProcessDescriptor appDescriptor);
+@Path("runner-sdk")
+public class UpdateService {
+    @Inject
+    private ApplicationUpdaterRegistry applicationUpdaterRegistry;
+
+    @Path("update/{id}")
+    @POST
+    public void updateApplication(@PathParam("id") long id) throws UpdateException {
+        ApplicationUpdater updater = applicationUpdaterRegistry.getUpdaterByApplicationProcessId(id);
+        if (updater != null) {
+            updater.update();
+        }
+    }
 }
