@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.git.server;
 
+import com.codenvy.api.project.server.ProjectImporter;
 import com.codenvy.ide.ext.git.server.nativegit.CredentialsProvider;
 import com.codenvy.ide.ext.git.server.nativegit.OAuthCredentialsProvider;
 import com.codenvy.ide.ext.git.server.provider.GitVendorService;
@@ -44,5 +45,6 @@ public class GitModule extends AbstractModule {
 
         bind(ProviderService.class);
         bind(ProviderExceptionMapper.class).toInstance(new ProviderExceptionMapper());
+        Multibinder.newSetBinder(binder(), ProjectImporter.class).addBinding().to(GitProjectImporter.class);
     }
 }

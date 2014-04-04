@@ -705,7 +705,7 @@ public class GitService {
         return localPathResolver.resolve(virtualFile);
     }
 
-    protected String resolveLocalPath(String projId) throws VirtualFileSystemException {
+    protected String resolveLocalPath(String projectId) throws VirtualFileSystemException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
         if (vfs == null) {
             throw new VirtualFileSystemException(
@@ -718,8 +718,6 @@ public class GitService {
     }
 
     protected GitConnection getGitConnection() throws GitException, VirtualFileSystemException, UserException, UserProfileException {
-        final String name = EnvironmentContext.getCurrent().getUser().getName();
-        GitUser gituser = DtoFactory.getInstance().createDto(GitUser.class).withName(name);
-        return gitConnectionFactory.getConnection(resolveLocalPath(projectId), gituser);
+        return gitConnectionFactory.getConnection(resolveLocalPath(projectId));
     }
 }
