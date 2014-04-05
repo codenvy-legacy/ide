@@ -18,11 +18,73 @@
 
 package com.codenvy.ide.importproject;
 
+import com.google.gwt.user.client.ui.IsWidget;
+
+import javax.validation.constraints.NotNull;
+import java.util.List;
+
+
 /**
  * The view of {@link com.codenvy.ide.importproject.ImportProjectPresenter}.
  *
  * @author Roman Nikitenko
  */
-public interface ImportProjectView {
+public interface ImportProjectView extends IsWidget {
+
+    public interface ActionDelegate {
+        /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
+        void onCancelClicked();
+
+        /** Performs any actions appropriate in response to the user having pressed the Import button. */
+        void onImportClicked();
+
+        /** Performs any actions appropriate in response to the user having changed something. */
+        void onValueChanged();
+    }
+
+    /** Show dialog. */
+    void showDialog();
+
+    /** Close dialog */
+    void close();
+
+    /** Sets the delegate to receive events from this view. */
+    void setDelegate(ActionDelegate delegate);
+
+    /**
+     * Set uri into field on the view.
+     *
+     * @param uri
+     *         text what will be shown on view
+     */
+    void setUri(@NotNull String uri);
+
+    /** @return uri */
+    @NotNull
+    String getUri();
+
+    /**
+     * Returns selected importer.
+     *
+     * @return importer.
+     */
+    @NotNull
+    String getImporter();
+
+    /**
+     * Sets available importers.
+     *
+     * @param importers
+     *         available importers
+     */
+    void setImporters(@NotNull List<String> importers);
+
+    /**
+     * Change the enable state of the upload button.
+     *
+     * @param enabled
+     *         <code>true</code> to enable the button, <code>false</code> to disable it
+     */
+    void setEnabledImportButton(boolean enabled);
 
 }

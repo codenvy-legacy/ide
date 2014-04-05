@@ -17,11 +17,74 @@
  */
 package com.codenvy.ide.importproject;
 
+import com.codenvy.api.project.server.ProjectService;
+import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Provides importing project.
  *
  * @author Roman Nikitenko
  */
-public class ImportProjectPresenter {
+public class ImportProjectPresenter implements ImportProjectView.ActionDelegate{
+
+    private ImportProjectView      view;
+    private ProjectService         projectService;
+    private String                 workspaceId;
+    private ImportSourceDescriptor importSourceDescriptor;
+    private List<String>           importersList;
+
+    @Inject
+    public ImportProjectPresenter(ImportProjectView view,
+                                  ProjectService projectService,
+                                  @Named("workspaceId") String workspaceId) {
+        this.view = view;
+        this.projectService = projectService;
+        this.workspaceId = workspaceId;
+        this.view.setDelegate(this);
+        getSupportedImporters();
+    }
+
+    /** Show dialog. */
+    public void showDialog() {
+        view.setEnabledImportButton(false);
+        view.setImporters(importersList);
+        view.setUri("");
+        view.showDialog();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onCancelClicked() {
+        view.close();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onImportClicked() {
+        try {
+//            projectService.importProject();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onValueChanged() {
+        String uri = view.getUri();
+        boolean enable = !uri.isEmpty();
+        view.setEnabledImportButton(enable);
+    }
+
+    /** Gets supported importers. */
+    private void getSupportedImporters(){
+        importersList = new ArrayList<>();
+        importersList.add("Git");
+    }
 
 }

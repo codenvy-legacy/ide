@@ -44,6 +44,6 @@ public class ImportProjectAction extends Action {
 
     @Override
     public void actionPerformed(ActionEvent event) {
-
+        presenter.showDialog();
     }
 }
