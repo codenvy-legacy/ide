@@ -10,8 +10,21 @@ You may NOT sub-license, resell, rent, redistribute or otherwise transfer the ic
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 
 	 width="512px" height="512px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
-
-<polygon id="arrow-25-icon" points="142.332,104.886 197.48,50 402.5,256 197.48,462 142.332,407.113 292.727,256 "/>
+<defs>
+    <filter id="shadowDarkTheme">
+      <feOffset result="offOut" in="SourceAlpha"  dx="-26" dy="0" />
+      <feGaussianBlur result="blurOut" in="offOut" stdDeviation="0" />
+      <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+    </filter>
+    <filter id="shadowLightTheme">
+      <feOffset result="offOut" in="SourceGraphic"  dx="-26" dy="0" />
+      <feColorMatrix result="matrixOut" in="offOut" type="matrix"
+      values="0.4 0 0 0 0 0 0.4 0 0 0 0 0 0.1 0 0 0 0 0 2 0" />
+      <feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="0" />
+      <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+    </filter>
+</defs>
+<polygon id="arrow-25-icon" points="142.332,104.886 197.48,50 402.5,256 197.48,462 142.332,407.113 292.727,256 " />
 
 </svg>
 

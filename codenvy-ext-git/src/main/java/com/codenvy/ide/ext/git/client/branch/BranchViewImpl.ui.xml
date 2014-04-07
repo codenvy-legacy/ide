@@ -42,19 +42,19 @@
         <g:south size="36.0">
             <g:FlowPanel addStyleNames="{style.spacing}">
                 <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonClose}" width="70px" ui:field="btnClose"
-                          debugId="branchView-btn-close"/>
+                          debugId="git-branches-close"/>
                 <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonRename}" width="75px"
-                          ui:field="btnRename" debugId="branchView-btn-rename"/>
+                          ui:field="btnRename" debugId="git-branches-rename"/>
                 <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonDelete}" width="75px"
-                          ui:field="btnDelete" debugId="branchView-btn-delete"/>
+                          ui:field="btnDelete" debugId="git-branches-delete"/>
                 <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonCreate}" width="75px"
-                          ui:field="btnCreate" debugId="branchView-btn-create"/>
+                          ui:field="btnCreate" debugId="git-branches-create"/>
                 <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonCheckout}" width="75px"
-                          ui:field="btnCheckout" debugId="branchView-btn-checkout"/>
+                          ui:field="btnCheckout" debugId="git-branches-checkout"/>
             </g:FlowPanel>
         </g:south>
         <g:center>
-            <g:ScrollPanel ui:field="branchesPanel" addStyleNames="{res.gitCSS.simpleListContainer}" debugId="branchView-scrollPanel-branchesPanel"/>
+            <g:ScrollPanel ui:field="branchesPanel" addStyleNames="{res.gitCSS.simpleListContainer}" debugId="git-branches-branchesPanel"/>
         </g:center>
     </g:DockLayoutPanel>
 </ui:UiBinder>

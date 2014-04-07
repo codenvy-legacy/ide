@@ -39,11 +39,11 @@
             <g:FlowPanel width="100%" height="100%" addStyleNames="{style.space}">
                 <g:Label text="Resource name:" width="100px" addStyleNames="{style.alignLeft} {style.label}"/>
                 <g:TextBox width="85%" height="20px" alignment="LEFT" ui:field="resourceName" textAlignment="ALIGN_LEFT"
-                           addStyleNames="{style.alignLeft}" debugId="newResourcePageView-txtBox-resourceName"/>
+                           addStyleNames="{style.alignLeft}" debugId="file-newOther-resourceName"/>
                 <g:FlowPanel width="100%" height="5px" addStyleNames="{style.alignLeft}"></g:FlowPanel>
                 <g:Label width="100px" text="Parent folder:" addStyleNames="{style.alignLeft} {style.label}"/>
                 <g:ListBox width="85%" height="22px" ui:field="parent" addStyleNames="{style.alignLeft}"
-                           debugId="newResourcePageView-listBox-parent"/>
+                           debugId="file-newOther-parentFolder"/>
             </g:FlowPanel>
         </g:north>
         <g:north size="20.0">
@@ -51,7 +51,7 @@
         </g:north>
         <g:center>
             <g:ScrollPanel height="95%" ui:field="resources" addStyleNames="{res.coreCss.simpleListContainer}"
-                           debugId="newResourcePageView-scrollPanel-resources"/>
+                           debugId="file-newOther-resources"/>
         </g:center>
     </g:DockLayoutPanel>
 </ui:UiBinder>

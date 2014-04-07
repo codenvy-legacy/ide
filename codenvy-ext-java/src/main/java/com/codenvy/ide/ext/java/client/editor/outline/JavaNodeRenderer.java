@@ -84,7 +84,7 @@ public class JavaNodeRenderer implements NodeRenderer<CodeBlock> {
                 icon.addClassName(getMethodClass(block.getModifiers()));
             }
             label.setTextContent(block.getName());
-            UIObject.ensureDebugId((com.google.gwt.dom.client.Element)label, "javaNodeRenderer-codeblock-" + block.getName() + label.hashCode());
+            UIObject.ensureDebugId((com.google.gwt.dom.client.Element)label, "outline-codeblock-" + block.getName());
 
             root.appendChild(icon);
             root.appendChild(label);

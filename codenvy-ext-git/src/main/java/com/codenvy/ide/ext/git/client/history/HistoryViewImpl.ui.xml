@@ -52,17 +52,17 @@
             <g:FlowPanel width="100%">
                 <g:FlowPanel addStyleNames="{style.emptyBorder}">
                     <g:Button ui:field="btnRefresh" addStyleNames="{style.alignRight} {style.withoutPadding}"
-                              width="18px" height="16px" debugId="historyView-btn-refresh"/>
+                              width="18px" height="16px" debugId="git-showHistory-refresh"/>
                     <g:Button ui:field="btnProjectChanges" addStyleNames="{style.alignRight} {style.space} {style.withoutPadding}"
-                              width="18px" height="16px" debugId="historyView-btn-projectChanges"/>
+                              width="18px" height="16px" debugId="git-showHistory-projectChanges"/>
                     <g:Button ui:field="btnResourceChanges" addStyleNames="{style.alignRight} {style.space} {style.withoutPadding}"
-                              width="18px" height="16px" debugId="historyView-btn-resourceChanges"/>
+                              width="18px" height="16px" debugId="git-showHistory-resourceChanges"/>
                     <g:Button ui:field="btnDiffWithIndex" addStyleNames="{style.alignRight} {style.space} {style.withoutPadding}"
-                              width="18px" height="16px" debugId="historyView-btn-diffWithIndex"/>
+                              width="18px" height="16px" debugId="git-showHistory-diffWithIndex"/>
                     <g:Button ui:field="btnDiffWithWorkTree" addStyleNames="{style.alignRight} {style.space} {style.withoutPadding}"
-                              width="18px" height="16px" debugId="historyView-btn-diffWithWorkTree"/>
+                              width="18px" height="16px" debugId="git-showHistory-diffWithWorkTree"/>
                     <g:Button ui:field="btnDiffWithPrevCommit" addStyleNames="{style.alignRight} {style.space} {style.withoutPadding}"
-                              width="18px" height="16px" debugId="historyView-btn-diffWithPrevCommit"/>
+                              width="18px" height="16px" debugId="git-showHistory-diffWithPrevCommit"/>
                 </g:FlowPanel>
             </g:FlowPanel>
         </g:north>
@@ -72,7 +72,7 @@
                     <g:FlowPanel addStyleNames="{style.emptyBorder}">
                         <g:SimplePanel>
                             <p1:CellTable width="100%" ui:field="commits" focus="false" addStyleNames="{style.emptyBorder}"
-                                          debugId="historyView-cellTable-commits"/>
+                                          debugId="git-showHistory-tableCommits"/>
                         </g:SimplePanel>
                     </g:FlowPanel>
                 </g:north>
@@ -88,7 +88,7 @@
                                         <g:SimplePanel>
                                             <g:TextBox width="100%" ui:field="commitARevision" readOnly="true"
                                                        addStyleNames="{res.gitCSS.textFont} {style.withoutPadding}"
-                                                       debugId="historyView-txtBox-commitARevision"/>
+                                                       debugId="git-showHistory-commitARevision"/>
                                         </g:SimplePanel>
                                     </g:FlowPanel>
                                 </g:center>
@@ -104,7 +104,7 @@
                                         <g:SimplePanel>
                                             <g:TextBox width="100%" ui:field="commitADate" readOnly="true"
                                                        addStyleNames="{res.gitCSS.textFont} {style.withoutPadding}"
-                                                       debugId="historyView-txtBox-commitADate"/>
+                                                       debugId="git-showHistory-commitADate"/>
                                         </g:SimplePanel>
                                     </g:FlowPanel>
                                 </g:center>
@@ -120,7 +120,7 @@
                                         <g:SimplePanel>
                                             <g:TextBox width="100%" ui:field="commitBRevision" readOnly="true"
                                                        addStyleNames="{res.gitCSS.textFont} {style.withoutPadding}"
-                                                       debugId="historyView-txtBox-commitBRevision"/>
+                                                       debugId="git-showHistory-commitBRevision"/>
                                         </g:SimplePanel>
                                     </g:FlowPanel>
                                 </g:center>
@@ -136,21 +136,21 @@
                                         <g:SimplePanel>
                                             <g:TextBox width="100%" ui:field="commitBDate" readOnly="true"
                                                        addStyleNames="{res.gitCSS.textFont} {style.withoutPadding}"
-                                                       debugId="historyView-txtBox-commitBDate"/>
+                                                       debugId="git-showHistory-commitBDate"/>
                                         </g:SimplePanel>
                                     </g:FlowPanel>
                                 </g:center>
                             </g:DockLayoutPanel>
                         </g:north>
                         <g:north size="26">
-                            <g:HTML ui:field="compareType" addStyleNames="{res.gitCSS.textFont}" debugId="historyView-html-compareType"/>
+                            <g:HTML ui:field="compareType" addStyleNames="{res.gitCSS.textFont}" debugId="git-showHistory-compareType"/>
                         </g:north>
                         <g:center>
                             <g:FlowPanel addStyleNames="{style.emptyBorder}">
                                 <g:SimplePanel width="100%" height="100%">
                                     <g:TextArea ui:field="editor" width="100%" height="100%" readOnly="true"
                                                 addStyleNames="{res.gitCSS.textFont} {style.withoutPadding}"
-                                                debugId="historyView-txtArea-editor"/>
+                                                debugId="git-showHistory-editor"/>
                                 </g:SimplePanel>
                             </g:FlowPanel>
                         </g:center>

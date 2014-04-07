@@ -111,7 +111,7 @@ public class BranchViewImpl extends DialogBox implements BranchView {
                 SafeHtmlBuilder sb = new SafeHtmlBuilder();
 
                 sb.appendHtmlConstant("<table><tr><td>");
-                sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "branchView-tableCellElement-" + itemData.getDisplayName() + "\">");
+                sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "git-branches-" + itemData.getDisplayName() + "\">");
                 sb.appendEscaped(itemData.getDisplayName());
                 sb.appendHtmlConstant("</td>");
 

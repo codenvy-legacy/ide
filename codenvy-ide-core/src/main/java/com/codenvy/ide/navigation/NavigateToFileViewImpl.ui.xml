@@ -38,7 +38,7 @@
         <g:center>
             <g:FlowPanel addStyleNames="{style.emptyBorder} {style.spacingTop}">
                 <g:Label width="100%" addStyleNames="{style.labelMargin}" text="{locale.navigateToFileViewFileFieldTitle}"/>
-                <g:SuggestBox ui:field="files" width="100%" debugId="navigateToFileView-suggestBox-files"/>
+                <g:SuggestBox ui:field="files" width="100%" debugId="file-navigateToFile-fileName"/>
             </g:FlowPanel>
         </g:center>
     </g:DockLayoutPanel>

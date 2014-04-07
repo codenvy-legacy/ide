@@ -106,11 +106,12 @@ public class LightTheme implements Theme {
     public String getPartToolbarShadow() {
         return getTabBorderColor();
     }
-    
+
     @Override
     public String getPartToolbarSeparatorTopColor() {
         return "#FFFFFF";
     }
+
     @Override
     public String getPartToolbarSeparatorBottomColor() {
         return "#AAAAAA";
@@ -400,19 +401,24 @@ public class LightTheme implements Theme {
     public String getButtonHoverTextColor() {
         return "#000000";
     }
-    
+
     @Override
     public String getToolbarBackgroundColor() {
         return " #EAEAEA";
     }
-    
+
     @Override
     public String getToolbarIconColor() {
         return "#606060";
     }
-        
+
     @Override
     public String getCompletedInvertColor() {
         return "100%";
+    }
+
+    @Override
+    public String getSvgUrlShadow() {
+        return "url(#shadowLightTheme)";
     }
 }

@@ -33,7 +33,7 @@
         <g:center>
             <g:SplitLayoutPanel width="100%" height="100%">
                 <g:center>
-                    <cellview:DataGrid ui:field="dataGrid" debugId="extensionManagerView-dataGrid"/>
+                    <cellview:DataGrid ui:field="dataGrid" debugId="window-preferences-extensions-dataGrid"/>
                 </g:center>
                 <g:east size="100" unit="PX">
                     <g:HTMLPanel>

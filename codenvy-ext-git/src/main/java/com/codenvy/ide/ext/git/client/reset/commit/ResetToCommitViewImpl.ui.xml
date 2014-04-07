@@ -39,32 +39,32 @@
         <g:south size="26.0">
             <g:FlowPanel>
                 <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" ui:field="btnCancel"
-                          debugId="resetToCommitView-btn-cancel"/>
+                          debugId="git-reset-cancel"/>
                 <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonReset}" width="60px" ui:field="btnReset"
-                          debugId="resetToCommitView-btn-reset"/>
+                          debugId="git-reset-reset"/>
             </g:FlowPanel>
         </g:south>
         <g:south size="100.0">
             <g:DockLayoutPanel unit="PX" width="100%" height="100%">
                 <g:north size="20">
                     <g:RadioButton ui:field="soft" name="type" text="{locale.resetSoftTypeTitle}" addStyleNames="{res.gitCSS.textFont}"
-                                   debugId="resetToCommitView-radioBtn-soft"/>
+                                   debugId="git-reset-soft"/>
                 </g:north>
                 <g:north size="20">
                     <g:RadioButton ui:field="mixed" name="type" addStyleNames="{res.gitCSS.textFont}" text="{locale.resetMixedTypeTitle}"
-                                   debugId="resetToCommitView-radioBtn-mixed"/>
+                                   debugId="git-reset-mixed"/>
                 </g:north>
                 <g:north size="20">
                     <g:RadioButton ui:field="hard" name="type" addStyleNames="{res.gitCSS.textFont}" text="{locale.resetHardTypeTitle}"
-                                   debugId="resetToCommitView-radioBtn-hard"/>
+                                   debugId="git-reset-hard"/>
                 </g:north>
                 <g:north size="20">
                     <g:RadioButton ui:field="keep" name="type" visible="false" addStyleNames="{res.gitCSS.textFont}"
-                                   text="{locale.resetKeepTypeTitle}" debugId="resetToCommitView-radioBtn-keep"/>
+                                   text="{locale.resetKeepTypeTitle}" debugId="git-reset-keep"/>
                 </g:north>
                 <g:north size="20">
                     <g:RadioButton ui:field="merge" name="type" visible="false" addStyleNames="{res.gitCSS.textFont}"
-                                   text="{locale.resetMergeTypeTitle}" debugId="resetToCommitView-radioBtn-merge"/>
+                                   text="{locale.resetMergeTypeTitle}" debugId="git-reset-merge"/>
                 </g:north>
             </g:DockLayoutPanel>
         </g:south>

@@ -41,9 +41,9 @@
         <g:south size="26.0">
             <g:FlowPanel>
                 <g:Button addStyleNames="{style.alignBtn}" text="{locale.cancelButton}" width="60px"
-                          ui:field="btnCancel" debugId="uploadFileView-btn-cancel"/>
+                          ui:field="btnCancel" debugId="file-uploadFile-cancel"/>
                 <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.uploadButton}" width="60px"
-                          ui:field="btnUpload" debugId="uploadFileView-btn-upload"/>
+                          ui:field="btnUpload" debugId="file-uploadFile-upload"/>
             </g:FlowPanel>
         </g:south>
         <g:north size="50.0">
@@ -52,7 +52,7 @@
                     <g:Label text="{locale.openFileFieldTitle}"/>
                 </g:north>
                 <g:center>
-                    <g:FormPanel ui:field="uploadForm" debugId="uploadFileView-formPanel-uploadForm"/>
+                    <g:FormPanel ui:field="uploadForm" debugId="file-uploadFile-uploadForm"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>

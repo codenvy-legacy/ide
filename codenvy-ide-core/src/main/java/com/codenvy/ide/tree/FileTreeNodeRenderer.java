@@ -32,6 +32,7 @@ import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 import com.codenvy.ide.ui.tree.TreeNodeMutator;
 import com.codenvy.ide.util.CssUtils;
+import com.codenvy.ide.util.TextUtils;
 import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
@@ -138,7 +139,7 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
             label.addClassName(css.defaultFont());
         }
         label.setTextContent(name);
-        UIObject.ensureDebugId((com.google.gwt.dom.client.Element)label, "fileTreeNodeRenderer-resource-" + name + label.hashCode());
+        UIObject.ensureDebugId((com.google.gwt.dom.client.Element)label, "projectTree-" + TextUtils.md5(item.getPath()));
 
         root.appendChild(label);
 
