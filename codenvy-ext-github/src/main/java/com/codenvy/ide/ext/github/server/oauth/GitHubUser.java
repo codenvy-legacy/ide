@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.security.oauth.server;
+package com.codenvy.ide.ext.github.server.oauth;
 
 
 import com.codenvy.ide.security.oauth.shared.User;
