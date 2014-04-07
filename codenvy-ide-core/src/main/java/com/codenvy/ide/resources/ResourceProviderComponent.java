@@ -303,7 +303,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     public Folder getRoot() { //TODO: need rework logic and remove this method
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id", new JSONString("_root_"));
-        jsonObject.put("name", new JSONString("/"));
+        jsonObject.put("name", new JSONString(""));
         jsonObject.put("mimeType", new JSONString("text/directory"));
         Folder folder = new Folder(jsonObject);
         return folder;
