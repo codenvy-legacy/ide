@@ -128,9 +128,9 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
             }
         }
 
-        if (event.length() > MAX_EVENT_NAME_LENGTH) {
+        if (event.length() > MAX_PARAM_VALUE_LENGTH) {
             throw new IllegalArgumentException("The length of event name exceeded the length in "
-                                               + MAX_EVENT_NAME_LENGTH + " characters");
+                                               + MAX_PARAM_VALUE_LENGTH + " characters");
 
         }
     }
