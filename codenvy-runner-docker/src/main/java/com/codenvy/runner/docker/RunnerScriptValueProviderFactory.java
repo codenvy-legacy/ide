@@ -31,10 +31,14 @@ import java.util.List;
  * @author andrew00x
  */
 @Singleton
-public class RunnerNameValueProviderFactory implements ValueProviderFactory {
+public class RunnerScriptValueProviderFactory implements ValueProviderFactory {
+    // List of "known" dockerfiles that we expect to find in root folder of project.
+    // Decide to use DockerRunner if find any of this file in root directory of project.
+    static final String[] DOCKER_FILES = new String[]{"run.dc5y", "debug.dc5y"};
+
     @Override
     public String getName() {
-        return com.codenvy.api.runner.internal.Constants.RUNNER_CUSTOM_LAUNCHER;
+        return com.codenvy.api.runner.internal.Constants.RUNNER_SCRIPT_FILE;
     }
 
     @Override
@@ -43,9 +47,9 @@ public class RunnerNameValueProviderFactory implements ValueProviderFactory {
             @Override
             public List<String> getValues() {
                 final FolderEntry projectFolder = project.getBaseFolder();
-                for (String fName : RunnerScriptValueProviderFactory.DOCKER_FILES) {
+                for (String fName : DOCKER_FILES) {
                     if (projectFolder.getChild(fName) != null) {
-                        return Arrays.asList("docker");
+                        return Arrays.asList(fName);
                     }
                 }
                 return Collections.emptyList();

@@ -58,16 +58,15 @@ public class DockerRunner extends BaseDockerRunner {
 
     @Override
     protected DockerfileTemplate getDockerfileTemplate(RunRequest request) throws IOException {
-        String projectUrl = request.getProjectDescriptor().getBaseUrl();
-        String projectPath = request.getProjectDescriptor().getPath();
-        // TODO: make possible use other names that may be configured somehow, e.g. in properties of project
-        String dockerFileName = request.getDebugMode() == null ? "run.dc5y" : "debug.dc5y";
-        String dockerFileUrl = projectUrl.replace(projectPath, String.format("/file%s/%s", projectPath, dockerFileName));
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        final String scriptUrl = request.getRunnerScriptUrl();
+        if (scriptUrl == null) {
+            return null;
+        }
         // TODO: use HTTP client, when it become available
-        try (InputStream in = new URL(dockerFileUrl).openStream()) {
+        final ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try (InputStream in = new URL(scriptUrl).openStream()) {
             ByteStreams.copy(in, output);
         }
-        return DockerfileTemplate.from(dockerFileName, output.toString());
+        return DockerfileTemplate.from("DockerfileTemplate", output.toString());
     }
 }

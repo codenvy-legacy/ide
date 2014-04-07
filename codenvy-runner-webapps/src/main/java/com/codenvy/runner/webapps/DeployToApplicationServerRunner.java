@@ -99,7 +99,8 @@ public class DeployToApplicationServerRunner extends Runner {
                 final int httpPort = portService.acquire();
                 final ApplicationServerRunnerConfiguration configuration =
                         new ApplicationServerRunnerConfiguration(DEFAULT_SERVER_NAME, request.getMemorySize(), httpPort, request);
-                configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class).withRel("web url")
+                configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class)
+                                                       .withRel(com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL)
                                                        .withHref(String.format("http://%s:%d", hostName, httpPort)));
                 final DebugMode debugMode = request.getDebugMode();
                 if (debugMode != null && debugMode.getMode() != null) {
