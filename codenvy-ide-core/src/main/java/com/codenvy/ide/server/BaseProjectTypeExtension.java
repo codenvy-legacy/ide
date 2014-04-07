@@ -52,7 +52,7 @@ public class BaseProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public List<Attribute> getPredefinedAttributes() {
-        return Collections.emptyList();
+        return Collections.singletonList(new Attribute(Constants.LANGUAGE, "unknown"));
     }
 
     @Override
