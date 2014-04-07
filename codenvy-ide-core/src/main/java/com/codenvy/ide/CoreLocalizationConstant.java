@@ -162,6 +162,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("importProject.uriFieldTitle")
     String importProjectUriFieldTitle();
 
+    @Key("importProject.projectNameFieldTitle")
+    String importProjectProjectNameFieldTitle();
+
     @Key("importProject.viewTitle")
     String importProjectViewTitle();
 

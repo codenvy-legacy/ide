@@ -20,7 +20,7 @@ package com.codenvy.ide.importproject;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 import java.util.List;
 
 
@@ -51,16 +51,28 @@ public interface ImportProjectView extends IsWidget {
     /** Sets the delegate to receive events from this view. */
     void setDelegate(ActionDelegate delegate);
 
+    /** @return project name */
+    @Nonnull
+    String getProjectName();
+
+    /**
+     * Set project name into field on the view.
+     *
+     * @param projectName
+     *         text what will be shown on view
+     */
+    void setProjectName(@Nonnull String projectName);
+
     /**
      * Set uri into field on the view.
      *
      * @param uri
      *         text what will be shown on view
      */
-    void setUri(@NotNull String uri);
+    void setUri(@Nonnull String uri);
 
     /** @return uri */
-    @NotNull
+    @Nonnull
     String getUri();
 
     /**
@@ -68,7 +80,7 @@ public interface ImportProjectView extends IsWidget {
      *
      * @return importer.
      */
-    @NotNull
+    @Nonnull
     String getImporter();
 
     /**
@@ -77,7 +89,7 @@ public interface ImportProjectView extends IsWidget {
      * @param importers
      *         available importers
      */
-    void setImporters(@NotNull List<String> importers);
+    void setImporters(@Nonnull List<String> importers);
 
     /**
      * Change the enable state of the upload button.

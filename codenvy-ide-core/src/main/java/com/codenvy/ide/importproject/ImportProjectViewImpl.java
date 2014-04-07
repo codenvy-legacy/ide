@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 import java.util.List;
 
 
@@ -32,6 +32,9 @@ public class ImportProjectViewImpl extends DialogBox implements ImportProjectVie
 
     @UiField
     Button btnImport;
+
+    @UiField
+    TextBox projectName;
 
     @UiField
     TextBox uri;
@@ -76,6 +79,11 @@ public class ImportProjectViewImpl extends DialogBox implements ImportProjectVie
         delegate.onValueChanged();
     }
 
+    @UiHandler("projectName")
+    public void onProjectNameChanged(KeyUpEvent event) {
+        delegate.onValueChanged();
+    }
+
     /** {@inheritDoc} */
     @Override
     public void setDelegate(ImportProjectView.ActionDelegate delegate) {
@@ -83,18 +91,33 @@ public class ImportProjectViewImpl extends DialogBox implements ImportProjectVie
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
-    public void setUri(@NotNull String uri) {
+    public String getProjectName() {
+        return projectName.getText();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setProjectName(@Nonnull String projectName) {
+        this.projectName.setText(projectName);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setUri(@Nonnull String uri) {
         this.uri.setText(uri);
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getUri() {
         return uri.getText();
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getImporter() {
         int index = importersList.getSelectedIndex();
@@ -103,7 +126,7 @@ public class ImportProjectViewImpl extends DialogBox implements ImportProjectVie
 
     /** {@inheritDoc} */
     @Override
-    public void setImporters(@NotNull List<String> importers) {
+    public void setImporters(@Nonnull List<String> importers) {
         importersList.clear();
         for (String importer : importers) {
             importersList.addItem(importer);

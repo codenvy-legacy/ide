@@ -17,43 +17,46 @@
  */
 package com.codenvy.ide.importproject;
 
-import com.codenvy.api.project.server.ProjectService;
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.codenvy.api.project.client.dto.DtoClientImpls.ImportSourceDescriptorImpl;
 
 /**
  * Provides importing project.
  *
  * @author Roman Nikitenko
  */
-public class ImportProjectPresenter implements ImportProjectView.ActionDelegate{
+public class ImportProjectPresenter implements ImportProjectView.ActionDelegate {
 
-    private ImportProjectView      view;
-    private ProjectService         projectService;
-    private String                 workspaceId;
-    private ImportSourceDescriptor importSourceDescriptor;
-    private List<String>           importersList;
+    private final ProjectServiceClient   projectServiceClient;
+    private       ImportSourceDescriptor importSourceDescriptor;
+    private       List<String>           importersList;
+    private       ImportProjectView      view;
 
     @Inject
-    public ImportProjectPresenter(ImportProjectView view,
-                                  ProjectService projectService,
-                                  @Named("workspaceId") String workspaceId) {
+    public ImportProjectPresenter(ProjectServiceClient projectServiceClient,
+                                  ImportProjectView view) {
+        this.projectServiceClient = projectServiceClient;
         this.view = view;
-        this.projectService = projectService;
-        this.workspaceId = workspaceId;
         this.view.setDelegate(this);
         getSupportedImporters();
     }
 
     /** Show dialog. */
     public void showDialog() {
-        view.setEnabledImportButton(false);
-        view.setImporters(importersList);
         view.setUri("");
+        view.setProjectName("");
+        view.setImporters(importersList);
+        view.setEnabledImportButton(false);
+
         view.showDialog();
     }
 
@@ -66,25 +69,37 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate{
     /** {@inheritDoc} */
     @Override
     public void onImportClicked() {
-        try {
-//            projectService.importProject();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String url = view.getUri();
+        String importer = view.getImporter();
+        String projectName = view.getProjectName();
+        importSourceDescriptor = ImportSourceDescriptorImpl.make().withType(importer).withLocation(url);
+        projectServiceClient.importProject(projectName, importSourceDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
+            @Override
+            protected void onSuccess(ProjectDescriptor result) {
+                view.close();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                view.close();
+                Log.error(ImportProjectPresenter.class, "can not import project: " + exception);
+            }
+        });
     }
 
     /** {@inheritDoc} */
     @Override
     public void onValueChanged() {
         String uri = view.getUri();
-        boolean enable = !uri.isEmpty();
+        String projectName = view.getProjectName();
+        boolean enable = !projectName.isEmpty() && !uri.isEmpty();
+
         view.setEnabledImportButton(enable);
     }
 
     /** Gets supported importers. */
-    private void getSupportedImporters(){
+    void getSupportedImporters() {
         importersList = new ArrayList<>();
-        importersList.add("Git");
+        importersList.add("git");
     }
-
 }

@@ -42,6 +42,7 @@ public class ImportProjectAction extends Action {
         this.presenter = presenter;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent event) {
         presenter.showDialog();
