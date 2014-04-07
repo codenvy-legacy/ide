@@ -327,8 +327,8 @@
                                 </goals>
                                 <configuration>
                                     <sources>
-                                        <source>../ext/src/main/java</source>
-                                        <source>../ext/src/main/resources</source>
+                                        <source>extension-sources/src/main/java</source>
+                                        <source>extension-sources/src/main/resources</source>
                                     </sources>
                                 </configuration>
                             </execution>

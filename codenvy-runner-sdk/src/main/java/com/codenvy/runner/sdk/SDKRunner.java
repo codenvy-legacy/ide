@@ -30,13 +30,11 @@ import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
 import com.codenvy.api.runner.internal.dto.DebugMode;
 import com.codenvy.api.runner.internal.dto.RunRequest;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.commons.GwtXmlUtils;
 import com.codenvy.ide.maven.tools.MavenUtils;
-import com.codenvy.vfs.impl.fs.LocalFSMountStrategy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,24 +71,24 @@ public class SDKRunner extends Runner {
     private final Map<String, ApplicationServer> applicationServers;
     private final String                         codeServerBindAddress;
     private final String                         hostName;
-    private final LocalFSMountStrategy           mountStrategy;
     private final CustomPortService              portService;
+    private final CodeServer                     codeServer;
 
     @Inject
     public SDKRunner(@Named(DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
                      @Named(CLEANUP_DELAY_TIME) int cleanupDelay,
                      @Named(CODE_SERVER_BIND_ADDRESS) String codeServerBindAddress,
                      @Named("runner.sdk.host_name") String hostName,
-                     LocalFSMountStrategy mountStrategy,
                      CustomPortService portService,
                      Set<ApplicationServer> appServers,
+                     CodeServer codeServer,
                      ResourceAllocators allocators,
                      EventService eventService) {
         super(deployDirectoryRoot, cleanupDelay, allocators, eventService);
         this.codeServerBindAddress = codeServerBindAddress;
         this.hostName = hostName;
-        this.mountStrategy = mountStrategy;
         this.portService = portService;
+        this.codeServer = codeServer;
         applicationServers = new HashMap<>();
         //available application servers should be already injected
         for (ApplicationServer appServer : appServers) {
@@ -156,24 +154,11 @@ public class SDKRunner extends Runner {
             appDir = Files.createTempDirectory(getDeployDirectory().toPath(), (server.getName() + '_' + getName() + '_')).toFile();
             codeServerWorkDirPath = Files.createTempDirectory(getDeployDirectory().toPath(), ("codeServer_" + getName() + '_'));
             extension = Utils.getExtensionFromJarFile(new ZipFile(toDeploy.getFile()));
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException e) {
             throw new RunnerException(e);
         }
 
-        // TODO: rework this, using ProjectEventService
-        final String workspace = sdkRunnerCfg.getRequest().getWorkspace();
-        final String project = sdkRunnerCfg.getRequest().getProject().substring(2);
-        final Path projectSourcesPath;
-        try {
-            projectSourcesPath = mountStrategy.getMountPath(workspace).toPath().resolve(project);
-        } catch (VirtualFileSystemException e) {
-            throw new RunnerException(e);
-        }
-        CodeServer codeServer = new CodeServer();
-        CodeServer.CodeServerProcess codeServerProcess = codeServer.prepare(codeServerWorkDirPath,
-                                                                            projectSourcesPath,
-                                                                            sdkRunnerCfg,
-                                                                            extension);
+        CodeServer.CodeServerProcess codeServerProcess = codeServer.prepare(codeServerWorkDirPath, sdkRunnerCfg, extension, getExecutor());
         final ZipFile warFile = buildCodenvyWebAppWithExtension(extension);
         final ApplicationProcess process =
                 server.deploy(appDir, warFile, toDeploy.getFile(), sdkRunnerCfg, codeServerProcess,

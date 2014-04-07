@@ -17,14 +17,10 @@
  */
 package com.codenvy.runner.sdk;
 
-import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.CommandLine;
-import com.codenvy.api.core.util.DownloadPlugin;
-import com.codenvy.api.core.util.HttpDownloadPlugin;
 import com.codenvy.api.core.util.ProcessUtil;
 import com.codenvy.api.core.util.SystemInfo;
-import com.codenvy.api.core.util.ValueHolder;
-import com.codenvy.api.project.server.Constants;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.ApplicationLogger;
 import com.codenvy.api.runner.internal.ApplicationProcess;
@@ -40,7 +36,6 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -87,7 +82,6 @@ public class TomcatServer implements ApplicationServer {
     private final ExecutorService            pidTaskExecutor;
     private final int                        memSize;
     private final ApplicationUpdaterRegistry applicationUpdaterRegistry;
-    private final DownloadPlugin downloadPlugin = new HttpDownloadPlugin();
 
     @Inject
     public TomcatServer(@Named(MEM_SIZE_PARAMETER) int memSize, ApplicationUpdaterRegistry applicationUpdaterRegistry) {
@@ -133,17 +127,19 @@ public class TomcatServer implements ApplicationServer {
             process = startWindows(workDir, runnerConfiguration, codeServerProcess, stopCallback);
         }
 
+        // TODO: unregister updater
         registerUpdater(process, new ApplicationUpdater() {
             @Override
             public void update() throws UpdateException {
-                List<Link> projectLinks = runnerConfiguration.getRequest().getProjectDescriptor().getLinks();
-                final Link exportZipLink = getLink(Constants.LINK_REL_EXPORT_ZIP, projectLinks);
                 try {
-                    final File projectSourcesDir = Files.createTempDirectory(workDir.toPath(), "build-sources-").toFile();
-                    ZipUtils.unzip(downloadFile(exportZipLink.getHref(), workDir), projectSourcesDir);
-                    ZipFile artifact = Utils.buildProjectFromSources(projectSourcesDir.toPath(), extensionJar.getName());
+                    final ProjectDescriptor projectDescriptor = runnerConfiguration.getRequest().getProjectDescriptor();
+                    final java.io.File destinationDir = Files.createTempDirectory(workDir.toPath(), "sources-").toFile();
+                    final java.io.File exportProject = Utils.exportProject(projectDescriptor, destinationDir);
+                    final java.io.File sourcesDir = Files.createTempDirectory(workDir.toPath(), "sources-build-").toFile();
+                    ZipUtils.unzip(exportProject, sourcesDir);
+                    ZipFile artifact = Utils.buildProjectFromSources(sourcesDir.toPath(), extensionJar.getName());
                     // add JAR with extension to 'api' application's 'lib' directory
-                    IoUtil.copy(new File(artifact.getName()),
+                    IoUtil.copy(new java.io.File(artifact.getName()),
                                 apiAppContextPath.resolve("WEB-INF/lib").resolve(extensionJar.getName()).toFile(), null);
                     LOG.debug("Extension {} updated", workDir);
                 } catch (Exception e) {
@@ -158,39 +154,6 @@ public class TomcatServer implements ApplicationServer {
 
     private void registerUpdater(ApplicationProcess process, ApplicationUpdater updater) {
         applicationUpdaterRegistry.registerUpdater(process, updater);
-    }
-
-    private static Link getLink(String rel, List<Link> links) {
-        for (Link link : links) {
-            if (rel.equals(link.getRel())) {
-                return link;
-            }
-        }
-        return null;
-    }
-
-    private java.io.File downloadFile(String url, java.io.File destinationFolder) throws IOException {
-        final ValueHolder<IOException> errorHolder = new ValueHolder<>();
-        final ValueHolder<java.io.File> resultHolder = new ValueHolder<>();
-        final java.io.File downloadDir;
-        downloadDir = Files.createTempDirectory(destinationFolder.toPath(), "sources-").toFile();
-        downloadPlugin.download(url, downloadDir, new DownloadPlugin.Callback() {
-            @Override
-            public void done(java.io.File downloaded) {
-                resultHolder.set(downloaded);
-            }
-
-            @Override
-            public void error(IOException e) {
-                LOG.error(e.getMessage(), e);
-                errorHolder.set(e);
-            }
-        });
-        final IOException ioError = errorHolder.get();
-        if (ioError != null) {
-            throw ioError;
-        }
-        return resultHolder.get();
     }
 
     protected void generateServerXml(java.io.File tomcatDir, SDKRunnerConfiguration runnerConfiguration) throws IOException {
