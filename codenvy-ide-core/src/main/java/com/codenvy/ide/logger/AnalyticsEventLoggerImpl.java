@@ -58,8 +58,8 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
     private static final String USER_PARAM         = "USER";
     private static final String SOURCE_PARAM       = "SOURCE";
     private static final String ACTION_PARAM       = "ACTION";
-    private static final String PROJECT_NAME_PARAM = "PROJECT_NAME";
-    private static final String PROJECT_TYPE_PARAM = "PROJECT_TYPE";
+    private static final String PROJECT_NAME_PARAM = "PROJECT";
+    private static final String PROJECT_TYPE_PARAM = "TYPE";
 
     private static final String EMPTY_PARAM_VALUE = "";
 
@@ -161,7 +161,8 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
     }
 
     private void send(final Map<String, String> additionalParams) {
-        userProfile.getCurrentProfile(null, new AsyncRequestCallback<Profile>(dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
+        userProfile.getCurrentProfile(null, new AsyncRequestCallback<Profile>(
+                dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
             @Override
             protected void onSuccess(Profile result) {
                 if (result != null) {
