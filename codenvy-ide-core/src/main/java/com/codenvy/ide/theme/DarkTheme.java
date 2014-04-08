@@ -423,4 +423,24 @@ public class DarkTheme implements Theme {
     public String getSvgUrlShadow() {
         return "url(#shadowDarkTheme)";
     }
+    
+    @Override
+    public String getSuccessEventColor() {
+        return "#7dc878";
+    }
+    
+    @Override
+    public String getErrorEventColor() {
+        return "#e25252";
+    }
+    
+    @Override
+    public String getEventDelimeterColor() {
+        return "#2f2f2f";
+    }
+    
+    @Override
+    public String getLinkColor() {
+        return "#acacac";
+    }
 }

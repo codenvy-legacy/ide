@@ -28,11 +28,11 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 import javax.validation.constraints.NotNull;
 
@@ -60,7 +60,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
     public static final int WIDTH        = 300;
     public static final int HEIGHT       = 30;
     private DockLayoutPanel mainPanel;
-    private InlineLabel     title;
+    private HTML            title;
     private SimplePanel     iconPanel;
     private Notification    notification;
     private Notification    prevState;
@@ -110,7 +110,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
             changeImage(resources.error());
             mainPanel.addStyleName(resources.notificationCss().error());
         } else {
-            changeImage(resources.info());
+            changeImage(resources.success()).getElement().setAttribute("class", resources.notificationCss().success());
         }
 
         SVGImage closeIcon = new SVGImage(resources.closePopup());
@@ -123,8 +123,10 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
         });
         mainPanel.addEast(closeIcon, 18);
         
-        title = new InlineLabel(notification.getMessage());
-        title.getElement().getStyle().setLineHeight(HEIGHT, PX);
+        
+        title = new HTML("<p>" + notification.getMessage() + "</p>");
+        title.setStyleName(resources.notificationCss().center());
+        title.setHeight(HEIGHT + "px");
         mainPanel.add(title);
 
         setWidget(mainPanel);
@@ -145,13 +147,22 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
         }
         iconPanel.setWidget(messageIcon);
     }
+    
+    private SVGImage changeImage(@NotNull SVGResource icon) {
+        SVGImage messageIcon = new SVGImage(icon);
+        messageIcon.setWidth("20px");
+        messageIcon.setHeight("20px");
+        messageIcon.getElement().getStyle().setMarginTop(5, PX);
+        iconPanel.setWidget(messageIcon);
+        return messageIcon;
+    }
 
     /** {@inheritDoc} */
     @Override
     public void onValueChanged() {
         if (!prevState.equals(notification)) {
             if (!prevState.getMessage().equals(notification.getMessage())) {
-                title.setText(notification.getMessage());
+                title.setHTML("<p>" + notification.getMessage() + "</p>");
             }
 
             if (!notification.isFinished()) {
@@ -181,7 +192,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
             changeImage(resources.error());
             mainPanel.addStyleName(resources.notificationCss().error());
         } else {
-            changeImage(resources.info());
+            changeImage(resources.success()).getElement().setAttribute("class", resources.notificationCss().success());
         }
     }
 

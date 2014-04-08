@@ -34,19 +34,23 @@ public interface NotificationResources extends ClientBundle {
 
         String floatLeft();
 
-        String top4px();
+        String margin2px();
 
         String error();
 
         String unread();
 
         String warning();
+        
+        String success();
 
         String right25px();
 
         String invertColor();
         
         String countLabel();
+        
+        String center();
         
         String close();
         
@@ -62,14 +66,14 @@ public interface NotificationResources extends ClientBundle {
     @Source("progress.gif")
     ImageResource progress();
 
-    @Source("info.png")
-    ImageResource info();
+    @Source("success.svg")
+    SVGResource success();
 
-    @Source("error.png")
-    ImageResource error();
+    @Source("error.svg")
+    SVGResource error();
 
-    @Source("warning.png")
-    ImageResource warning();
+    @Source("warning.svg")
+    SVGResource warning();
     
     @Source("close-popup.svg")
     SVGResource closePopup();
