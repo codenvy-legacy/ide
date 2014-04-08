@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.ext.github.server;
 
+import com.codenvy.api.auth.oauth.OAuthTokenProvider;
+import com.codenvy.api.auth.shared.dto.OAuthToken;
 import com.codenvy.api.user.server.dao.UserDao;
 import com.codenvy.api.user.server.exception.UserException;
 import com.codenvy.commons.json.JsonHelper;
@@ -36,8 +38,6 @@ import com.codenvy.ide.ext.ssh.server.SshKeyStore;
 import com.codenvy.ide.ext.ssh.server.SshKeyStoreException;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.HTTPMethod;
-import com.codenvy.ide.security.oauth.server.OAuthTokenProvider;
-import com.codenvy.ide.security.oauth.shared.Token;
 
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.slf4j.Logger;
@@ -45,7 +45,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -358,7 +357,7 @@ public class GitHub extends GitVendorService {
     }
 
     public String getToken(String user) throws GitHubException, IOException {
-        Token token = oauthTokenProvider.getToken("github", user);
+        OAuthToken token = oauthTokenProvider.getToken("github", user);
         String oauthToken = token != null ? token.getToken() : null;
         if (oauthToken == null || oauthToken.isEmpty()) {
             return "";
@@ -622,7 +621,7 @@ public class GitHub extends GitVendorService {
      * *************************************************************************************
      */
     public String getTokenString() {
-        Token token = null;
+        OAuthToken token = null;
         try {
             token = oauthTokenProvider.getToken(getVendorName(), getUserId());
         } catch (IOException e) {
@@ -637,7 +636,7 @@ public class GitHub extends GitVendorService {
 
         return oauthToken.toString();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     protected String getUserId() {

@@ -17,11 +17,16 @@
  */
 package com.codenvy.ide.security.oauth.server;
 
+import com.codenvy.api.auth.shared.dto.OAuthToken;
 import com.codenvy.commons.json.JsonHelper;
 import com.codenvy.commons.json.JsonParseException;
-import com.codenvy.ide.security.oauth.shared.Token;
+import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.security.oauth.shared.User;
-import com.google.api.client.auth.oauth2.*;
+import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
+import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
+import com.google.api.client.auth.oauth2.AuthorizationCodeResponseUrl;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.http.HttpParser;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -139,7 +144,8 @@ public abstract class OAuthAuthenticator {
             }).setRedirectUri(findRedirectUrl(requestUrl)).setScopes(scopes).execute();
             String userId = getUserFromUrl(authorizationCodeResponseUrl);
             if (userId == null) {
-                userId = getUser(new BeanToken(tokenResponse.getAccessToken())).getId();
+                OAuthToken oAuthToken = DtoFactory.getInstance().createDto(OAuthToken.class).withToken(tokenResponse.getAccessToken());
+                userId = getUser(oAuthToken).getId();
             }
             flow.createAndStoreCredential(tokenResponse, userId);
             return userId;
@@ -157,7 +163,7 @@ public abstract class OAuthAuthenticator {
      * @throws OAuthAuthenticationException
      *         if fail to get user info
      */
-    public abstract User getUser(Token accessToken) throws OAuthAuthenticationException;
+    public abstract User getUser(OAuthToken accessToken) throws OAuthAuthenticationException;
 
     /**
      * Get the name of OAuth provider supported by current implementation.
@@ -226,35 +232,19 @@ public abstract class OAuthAuthenticator {
      * @param userId
      * @return
      * @throws IOException
-     * @see OAuthTokenProvider#getToken(String, String)
+     * @see com.codenvy.api.auth.oauth.OAuthTokenProvider#getToken(String, String)
      */
-    public Token getToken(String userId) throws IOException {
+    public OAuthToken getToken(String userId) throws IOException {
         Credential credential = flow.loadCredential(userId);
         if (credential != null) {
             Long expirationTime = credential.getExpiresInSeconds();
             if (expirationTime != null && expirationTime < 0) {
                 credential.refreshToken();
             }
-            return new BeanToken(credential.getAccessToken());
+            return DtoFactory.getInstance().createDto(OAuthToken.class).withToken(credential.getAccessToken());
         }
         return null;
     }
-
-//    /**
-//     * Return authorization token by userId and request url.
-//     *
-//     * @param userId
-//     *        - user identifier
-//     * @param urlInfo
-//     *        - information needed to sign request with authorization header
-//     * @return
-//     *        - authorisation token, or {@code null}
-//     * @throws IOException
-//     * @see OAuthTokenProvider#getToken(String, String)
-//     */
-//    public Token getToken(String userId, OAuth1UrlInfo urlInfo) throws IOException {
-//        return null;
-//    }
 
     /**
      * Invalidate OAuth token for specified user.
@@ -262,7 +252,7 @@ public abstract class OAuthAuthenticator {
      * @param userId
      *         user
      * @return <code>true</code> if OAuth token invalidated and <code>false</code> otherwise, e.g. if user does not have
-     *         token yet
+     * token yet
      */
     public boolean invalidateToken(String userId) {
         Credential credential = flow.loadCredential(userId);

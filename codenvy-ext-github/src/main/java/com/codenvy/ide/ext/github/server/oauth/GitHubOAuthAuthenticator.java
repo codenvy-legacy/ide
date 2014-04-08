@@ -15,11 +15,13 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.security.oauth.server;
+package com.codenvy.ide.ext.github.server.oauth;
 
+import com.codenvy.api.auth.shared.dto.OAuthToken;
 import com.codenvy.commons.json.JsonHelper;
 import com.codenvy.commons.json.JsonParseException;
-import com.codenvy.ide.security.oauth.shared.Token;
+import com.codenvy.ide.security.oauth.server.OAuthAuthenticationException;
+import com.codenvy.ide.security.oauth.server.OAuthAuthenticator;
 import com.codenvy.ide.security.oauth.shared.User;
 import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
 import com.google.api.client.auth.oauth2.BearerToken;
@@ -59,12 +61,11 @@ public class GitHubOAuthAuthenticator extends OAuthAuthenticator {
     }
 
     @Override
-    public User getUser(Token accessToken) throws OAuthAuthenticationException {
+    public User getUser(OAuthToken accessToken) throws OAuthAuthenticationException {
         GitHubUser user = getJson("https://api.github.com/user?access_token=" + accessToken.getToken(), GitHubUser.class);
 
 
-        GithubEmail[] result =
-                getJson2("https://api.github.com/user/emails?access_token=" + accessToken.getToken(), GithubEmail[].class, null);
+        GithubEmail[] result = getJson2("https://api.github.com/user/emails?access_token=" + accessToken.getToken(), GithubEmail[].class, null);
 
         GithubEmail verifiedEmail = null;
         for (GithubEmail email : result) {
@@ -122,8 +123,8 @@ public class GitHubOAuthAuthenticator extends OAuthAuthenticator {
     }
 
     @Override
-    public Token getToken(String userId) throws IOException {
-        final Token token = super.getToken(userId);
+    public OAuthToken getToken(String userId) throws IOException {
+        final OAuthToken token = super.getToken(userId);
         if (!(token == null || token.getToken() == null || token.getToken().isEmpty())) {
             // Need to check if token which stored is valid for requests, then if valid - we returns it to caller
             String tokenVerifyUrl = "https://api.github.com/?access_token=" + token.getToken();

@@ -58,11 +58,6 @@ import com.codenvy.ide.ext.github.server.rest.GitHubService;
 import com.codenvy.ide.ext.ssh.server.KeyService;
 import com.codenvy.ide.ext.ssh.server.SshKeyStore;
 import com.codenvy.ide.ext.ssh.server.UserProfileSshKeyStore;
-import com.codenvy.ide.security.oauth.server.LabOAuthAuthenticatorProvider;
-import com.codenvy.ide.security.oauth.server.OAuthAuthenticationService;
-import com.codenvy.ide.security.oauth.server.OAuthAuthenticatorProvider;
-import com.codenvy.ide.security.oauth.server.OAuthAuthenticatorTokenProvider;
-import com.codenvy.ide.security.oauth.server.OAuthTokenProvider;
 import com.codenvy.inject.DynaModule;
 import com.codenvy.runner.webapps.DeployToApplicationServerRunner;
 import com.codenvy.vfs.impl.fs.CleanableSearcherProvider;
@@ -122,9 +117,6 @@ public class ApiModule extends AbstractModule {
         bind(GitConnectionFactory.class).to(NativeGitConnectionFactory.class);
         bind(KeyService.class);
         bind(SshKeyStore.class).to(UserProfileSshKeyStore.class);
-        bind(OAuthAuthenticationService.class);
-        bind(OAuthTokenProvider.class).to(OAuthAuthenticatorTokenProvider.class);
-        bind(OAuthAuthenticatorProvider.class).to(LabOAuthAuthenticatorProvider.class);
         bind(TokenValidator.class).to(TokenValidatorImpl.class);
     }
 }
