@@ -17,8 +17,6 @@
  */
 package com.codenvy.ide.wizard.project;
 
-import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
-import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.ui.wizard.Wizard;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.WizardDialog;
@@ -38,10 +36,6 @@ import javax.validation.constraints.NotNull;
  */
 @Singleton
 public class NewProjectWizardPresenter  implements WizardDialog, Wizard.UpdateDelegate, ProjectWizardView.ActionDelegate {
-    public static final WizardContext.Key<ProjectTypeDescriptor>     PROJECT_TYPE     =
-            new WizardContext.Key<ProjectTypeDescriptor>("Project type");
-    public static final WizardContext.Key<ProjectTemplateDescriptor> PROJECT_TEMPLATE =
-            new WizardContext.Key<ProjectTemplateDescriptor>("Project template");
     private WizardPage        currentPage;
     private ProjectWizardView view;
     private MainPagePresenter mainPage;
@@ -66,13 +60,17 @@ public class NewProjectWizardPresenter  implements WizardDialog, Wizard.UpdateDe
         currentPage.storeOptions();
         final int previousStepPageIndex = stepsPages.indexOf(currentPage);
         WizardPage wizardPage = stepsPages.get(previousStepPageIndex + 1);
-//        if(wizardPage == namePage){
-//
-//        } else {
-        view.setStepArrowPosition(stepsPages.indexOf(currentPage) - previousStepPageIndex);
-//        }
         setPage(wizardPage);
+        if (wizardPage == namePage) {
+            view.setStepTitles(namePage.getStepsCaptions());
+            Array<WizardPage> nextPages = namePage.getNextPages();
+            if(nextPages != null){
+                stepsPages.addAll(nextPages);
+            }
+        } //else {
+        view.setStepArrowPosition(stepsPages.indexOf(currentPage) - previousStepPageIndex);
         currentPage.focusComponent();
+//        }
     }
 
     /** {@inheritDoc} */
@@ -82,6 +80,9 @@ public class NewProjectWizardPresenter  implements WizardDialog, Wizard.UpdateDe
         final int previousStepPageIndex = stepsPages.indexOf(currentPage);
         if (previousStepPageIndex == 0) return;
         WizardPage wizardPage = stepsPages.get(previousStepPageIndex - 1);
+        if (wizardPage == mainPage) {
+            view.setStepTitles(Collections.createArray(mainPage.getCaption(), "..."));
+        }
         setPage(wizardPage);
         view.setStepArrowPosition(stepsPages.indexOf(currentPage) - previousStepPageIndex);
     }
@@ -116,8 +117,7 @@ public class NewProjectWizardPresenter  implements WizardDialog, Wizard.UpdateDe
         view.setBackButtonVisible(stepsPages.indexOf(currentPage) != 0);
         view.setNextButtonVisible(stepsPages.indexOf(currentPage) != stepsPages.size() -1);
         view.setNextButtonEnabled(currentPage.isCompleted());
-        //todo
-//        view.setFinishButtonEnabled(wizard.canFinish() && currentPage.isCompleted());
+        view.setFinishButtonEnabled(currentPage.isCompleted() && currentPage != mainPage);
         view.setCaption(currentPage.getCaption());
         view.setNotice(currentPage.getNotice());
         view.setImage(currentPage.getImage());
@@ -127,12 +127,12 @@ public class NewProjectWizardPresenter  implements WizardDialog, Wizard.UpdateDe
     @Override
     public void show() {
         stepsPages.clear();
+        wizardContext.clear();
         stepsPages.add(mainPage);
         stepsPages.add(namePage);
         view.setTitle("New Project");
-
         setPage(mainPage);
-        view.setStepTitles(Collections.createArray("Choose Project", "..."));
+        view.setStepTitles(Collections.createArray(mainPage.getCaption(), "..."));
         view.showDialog();
         view.setEnabledAnimation(true);
     }
@@ -146,6 +146,7 @@ public class NewProjectWizardPresenter  implements WizardDialog, Wizard.UpdateDe
     private void setPage(@NotNull WizardPage wizardPage) {
         currentPage = wizardPage;
         currentPage.setContext(wizardContext);
+        currentPage.setUpdateDelegate(this);
         updateControls();
         currentPage.go(view.getContentPanel());
     }

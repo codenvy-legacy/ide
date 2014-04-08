@@ -20,12 +20,18 @@ package com.codenvy.ide.wizard.project.name;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
+import com.codenvy.ide.api.ui.wizard.ProjectWizard;
+import com.codenvy.ide.api.ui.wizard.WizardContext;
+import com.codenvy.ide.api.ui.wizard.WizardPage;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -41,19 +47,23 @@ import javax.validation.constraints.NotNull;
 @Singleton
 public class NamePagePresenter extends AbstractWizardPage implements NamePageView.ActionDelegate {
 
-    private NamePageView           view;
-    private ProjectServiceClient   projectService;
-    private DtoUnmarshallerFactory dtoUnmarshallerFactory;
-    private ResourceProvider       resourceProvider;
+    private NamePageView              view;
+    private ProjectServiceClient      projectService;
+    private DtoUnmarshallerFactory    dtoUnmarshallerFactory;
+    private ResourceProvider          resourceProvider;
+    private ProjectTypeWizardRegistry wizardRegistry;
+    private ProjectWizard             wizard;
+    private WizardPage subPage;
 
     @Inject
     public NamePagePresenter(NamePageView view, ProjectServiceClient projectService, DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                             ResourceProvider resourceProvider) {
+                             ResourceProvider resourceProvider, ProjectTypeWizardRegistry wizardRegistry) {
         super("Name", null);
         this.view = view;
         this.projectService = projectService;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.resourceProvider = resourceProvider;
+        this.wizardRegistry = wizardRegistry;
         view.setDelegate(this);
     }
 
@@ -65,12 +75,21 @@ public class NamePagePresenter extends AbstractWizardPage implements NamePageVie
 
     @Override
     public boolean isCompleted() {
-        return false;
+        if (wizard != null) {
+            return !view.getProjectName().equals("") && subPage.isCompleted();
+        } else {
+            return !view.getProjectName().equals("");
+        }
     }
 
     @Override
     public void focusComponent() {
+        view.focusOnNameField();
+    }
 
+    @Override
+    public void setContext(@NotNull WizardContext wizardContext) {
+        super.setContext(wizardContext);
     }
 
     @Override
@@ -80,8 +99,9 @@ public class NamePagePresenter extends AbstractWizardPage implements NamePageVie
 
     @Override
     public void commit(@NotNull final CommitCallback callback) {
-        final ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(NewProjectWizardPresenter.PROJECT_TEMPLATE);
-        if (templateDescriptor == null) {
+        final ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
+        if (templateDescriptor == null && wizard != null) {
+            wizard.onFinish();
             return;
         }
         final String projectName = view.getProjectName();
@@ -115,5 +135,46 @@ public class NamePagePresenter extends AbstractWizardPage implements NamePageVie
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
+        wizard = null;
+        subPage = null;
+        ProjectTypeDescriptor descriptor = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
+        if(descriptor != null){
+            wizard = wizardRegistry.getWizard(descriptor.getProjectTypeId());
+
+            if(wizard != null){
+                subPage = wizard.flipToFirst();
+                subPage.setContext(wizardContext);
+                subPage.setUpdateDelegate(delegate);
+                view.addSubPage(subPage);
+            }
+        } else{
+            view.clearSubPage();
+        }
+    }
+
+    public Array<String> getStepsCaptions() {
+        Array<String> stringArray = Collections.createArray("Choose Project", getCaption());
+        if(wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE) != null) {
+            return stringArray;
+        }
+        if(wizard != null){
+            stringArray.addAll(wizard.getStepsCaptions());
+            return stringArray;
+        }
+        return Collections.createArray("");
+    }
+
+    public Array<WizardPage> getNextPages(){
+        if(wizard != null){
+            return wizard.getPagesExceptFirst();
+        }
+
+        return null;
+    }
+
+    @Override
+    public void projectNameChanged(String name) {
+        wizardContext.putData(ProjectWizard.PROJECT_NAME, name);
+        delegate.updateControls();
     }
 }

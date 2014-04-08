@@ -83,6 +83,9 @@
                 </g:west>
             </g:DockLayoutPanel>
         </g:north>
+        <g:center>
+            <g:SimplePanel ui:field="subView" />
+        </g:center>
         <!--<g:north size="19">-->
             <!--<g:Label text="{locale.chooseTechnology}"-->
                      <!--addStyleNames="{style.technology}"/>-->

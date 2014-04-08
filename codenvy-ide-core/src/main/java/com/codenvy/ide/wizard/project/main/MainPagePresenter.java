@@ -19,10 +19,11 @@ package com.codenvy.ide.wizard.project.main;
 
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
+import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
+import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
+import com.codenvy.ide.api.ui.wizard.ProjectWizard;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
-import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
@@ -39,15 +40,17 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
 
     private MainPageView                  view;
     private ProjectTypeDescriptorRegistry registry;
+    private ProjectTypeWizardRegistry     wizardRegistry;
     private ProjectTypeDescriptor         typeDescriptor;
-    private ProjectTemplateDescriptor template;
+    private ProjectTemplateDescriptor     template;
 
 
     @Inject
-    public MainPagePresenter(MainPageView view, ProjectTypeDescriptorRegistry registry) {
+    public MainPagePresenter(MainPageView view, ProjectTypeDescriptorRegistry registry, ProjectTypeWizardRegistry wizardRegistry) {
         super("Choose Project", null);
         this.view = view;
         this.registry = registry;
+        this.wizardRegistry = wizardRegistry;
         view.setDelegate(this);
     }
 
@@ -78,10 +81,12 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         Array<ProjectTypeDescriptor> descriptors = registry.getDescriptors();
         Map<String, Set<ProjectTypeDescriptor>> samples = new HashMap<>();
         for (ProjectTypeDescriptor descriptor : descriptors.asIterable()) {
-            if (!descriptorsByCategory.containsKey(descriptor.getProjectTypeCategory())) {
-                descriptorsByCategory.put(descriptor.getProjectTypeCategory(), new HashSet<ProjectTypeDescriptor>());
+            if (wizardRegistry.getWizard(descriptor.getProjectTypeId()) != null) {
+                if (!descriptorsByCategory.containsKey(descriptor.getProjectTypeCategory())) {
+                    descriptorsByCategory.put(descriptor.getProjectTypeCategory(), new HashSet<ProjectTypeDescriptor>());
+                }
+                descriptorsByCategory.get(descriptor.getProjectTypeCategory()).add(descriptor);
             }
-            descriptorsByCategory.get(descriptor.getProjectTypeCategory()).add(descriptor);
             if (descriptor.getTemplates() != null && !descriptor.getTemplates().isEmpty()) {
                 if (!samples.containsKey(descriptor.getProjectTypeCategory())) {
                     samples.put(descriptor.getProjectTypeCategory(), new HashSet<ProjectTypeDescriptor>());
@@ -98,16 +103,16 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
     @Override
     public void projectTypeSelected(ProjectTypeDescriptor typeDescriptor) {
         this.typeDescriptor = typeDescriptor;
-        wizardContext.putData(NewProjectWizardPresenter.PROJECT_TYPE, typeDescriptor);
-        wizardContext.removeData(NewProjectWizardPresenter.PROJECT_TEMPLATE);
+        wizardContext.putData(ProjectWizard.PROJECT_TYPE, typeDescriptor);
+        wizardContext.removeData(ProjectWizard.PROJECT_TEMPLATE);
         delegate.updateControls();
     }
 
     @Override
     public void projectTemplateSelected(ProjectTemplateDescriptor template) {
         this.template = template;
-        wizardContext.putData(NewProjectWizardPresenter.PROJECT_TEMPLATE, template);
-        wizardContext.removeData(NewProjectWizardPresenter.PROJECT_TYPE);
+        wizardContext.putData(ProjectWizard.PROJECT_TEMPLATE, template);
+        wizardContext.removeData(ProjectWizard.PROJECT_TYPE);
         delegate.updateControls();
     }
 }

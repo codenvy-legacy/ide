@@ -15,35 +15,37 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.wizard.project.name;
+package com.codenvy.ide.ext.java.client.wizard.maven;
 
-import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Evgen Vidolob
  */
-public class NamePageViewImpl implements NamePageView {
-    private static NameViewImplUiBinder ourUiBinder = GWT.create(NameViewImplUiBinder.class);
+public class MavenPageViewImpl implements MavenPageView {
+
+    private static MavenPageViewImplUiBinder ourUiBinder = GWT.create(MavenPageViewImplUiBinder.class);
     private final DockLayoutPanel rootElement;
     private       ActionDelegate  delegate;
     @UiField
-    TextBox     projectName;
+    TextBox packageField;
     @UiField
-    TextArea    projectDescription;
+    TextBox versionField;
     @UiField
-    SimplePanel subView;
+    TextBox groupId;
+    @UiField
+    TextBox artifactId;
 
-    public NamePageViewImpl() {
+    public MavenPageViewImpl() {
         rootElement = ourUiBinder.createAndBindUi(this);
 
     }
@@ -59,31 +61,40 @@ public class NamePageViewImpl implements NamePageView {
     }
 
     @Override
-    public String getProjectName() {
-        return projectName.getText();
+    public String getArtifactId() {
+        return artifactId.getText();
     }
 
     @Override
-    public void addSubPage(WizardPage wizardPage) {
-        wizardPage.go(subView);
+    public String getVersion() {
+        return versionField.getText();
     }
 
     @Override
-    public void clearSubPage() {
-        subView.clear();
+    public String getPackage() {
+        return packageField.getText();
     }
 
     @Override
-    public void focusOnNameField() {
-        projectName.setFocus(true);
+    public String getGroupId() {
+        return groupId.getText();
     }
 
-    @UiHandler("projectName")
-    void onProjectNameChanged(ChangeEvent event){
-        delegate.projectNameChanged(projectName.getText());
+    @UiHandler({"versionField", "groupId", "artifactId"})
+    void onTextChanges(ChangeEvent event){
+        delegate.onTextsChange();
+    }
+    @UiHandler({"versionField", "groupId", "artifactId"})
+    void onKeyPress(KeyPressEvent event){
+        delegate.onTextsChange();
     }
 
-    interface NameViewImplUiBinder
-            extends UiBinder<DockLayoutPanel, NamePageViewImpl> {
+    @UiHandler({"versionField", "groupId", "artifactId"})
+    void onKeyDown(KeyDownEvent event){
+        delegate.onTextsChange();
+    }
+
+    interface MavenPageViewImplUiBinder
+            extends UiBinder<DockLayoutPanel, MavenPageViewImpl> {
     }
 }

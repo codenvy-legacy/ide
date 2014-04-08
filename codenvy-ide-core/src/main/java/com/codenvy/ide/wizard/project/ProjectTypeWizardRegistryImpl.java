@@ -15,32 +15,26 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.actions;
+package com.codenvy.ide.wizard.project;
 
-import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.ui.action.Action;
-import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
+import com.codenvy.ide.api.ui.wizard.ProjectWizard;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 
 /**
  * @author Evgen Vidolob
  */
-@Singleton
-public class NewProjectWizardAction extends Action {
+public class ProjectTypeWizardRegistryImpl implements ProjectTypeWizardRegistry {
+    private StringMap<ProjectWizard> map = Collections.createStringMap();
 
-
-    private NewProjectWizardPresenter wizard;
-
-    @Inject
-    public NewProjectWizardAction(Resources resources, NewProjectWizardPresenter wizard) {
-        super("Project Advance", "Create new project", resources.project());
-        this.wizard = wizard;
+    @Override
+    public void addWizard(String projectTypeId, ProjectWizard wizard) {
+        map.put(projectTypeId, wizard);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        wizard.show();
+    public ProjectWizard getWizard(String projectTypeId) {
+        return map.get(projectTypeId);
     }
 }

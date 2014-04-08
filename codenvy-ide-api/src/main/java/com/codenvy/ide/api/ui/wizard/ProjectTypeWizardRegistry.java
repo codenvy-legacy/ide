@@ -15,26 +15,31 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.wizard.project.name;
+package com.codenvy.ide.api.ui.wizard;
 
-import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.api.ui.wizard.WizardPage;
-import com.google.inject.ImplementedBy;
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 /**
+ * Registry that store wizards for creating new projects
  * @author Evgen Vidolob
  */
-@ImplementedBy(NamePageViewImpl.class)
-public interface NamePageView extends View<NamePageView.ActionDelegate> {
-    String getProjectName();
+public interface ProjectTypeWizardRegistry {
 
-    void addSubPage(WizardPage wizardPage);
+    /**
+     * Add wizard for project type.
+     *
+     * @param projectTypeId the project type id
+     * @param wizard the wizard
+     */
+    void addWizard(@NotNull String projectTypeId,@NotNull ProjectWizard wizard);
 
-    void clearSubPage();
-
-    void focusOnNameField();
-
-    public interface ActionDelegate{
-        void projectNameChanged(String name);
-    }
+    /**
+     * Gets wizard wizard for project type.
+     *
+     * @param projectTypeId the project type id
+     * @return the wizard
+     */
+    @Nullable
+    ProjectWizard getWizard(@NotNull String projectTypeId);
 }

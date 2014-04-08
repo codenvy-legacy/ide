@@ -15,26 +15,26 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.wizard.project.name;
+package com.codenvy.ide.ext.java.client.wizard.maven;
 
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.google.inject.ImplementedBy;
 
 /**
  * @author Evgen Vidolob
  */
-@ImplementedBy(NamePageViewImpl.class)
-public interface NamePageView extends View<NamePageView.ActionDelegate> {
-    String getProjectName();
-
-    void addSubPage(WizardPage wizardPage);
-
-    void clearSubPage();
-
-    void focusOnNameField();
-
+@ImplementedBy(MavenPageViewImpl.class)
+public interface MavenPageView extends View<MavenPageView.ActionDelegate> {
     public interface ActionDelegate{
-        void projectNameChanged(String name);
+
+        void onTextsChange();
     }
+
+    String getGroupId();
+
+    String getArtifactId();
+
+    String getVersion();
+
+    String getPackage();
 }
