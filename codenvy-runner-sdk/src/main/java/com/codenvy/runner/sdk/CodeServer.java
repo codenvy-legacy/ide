@@ -114,7 +114,9 @@ public class CodeServer {
         try {
             ZipUtils.unzip(Utils.getCodenvyPlatformBinaryDistribution().openStream(), workDirPath.toFile());
             MavenUtils.addDependency(workDirPath.resolve("pom.xml").toFile(),
-                                     extensionDescriptor.groupId, extensionDescriptor.artifactId, extensionDescriptor.version, null);
+                                     extensionDescriptor.groupId,
+                                     extensionDescriptor.artifactId,
+                                     extensionDescriptor.version, null);
             GwtXmlUtils.inheritGwtModule(IoUtil.findFile(SDKRunner.IDE_GWT_XML_FILE_NAME, workDirPath.toFile()).toPath(),
                                          extensionDescriptor.gwtModuleName);
             setCodeServerConfiguration(workDirPath.resolve("pom.xml"), workDirPath, runnerConfiguration);
@@ -132,15 +134,9 @@ public class CodeServer {
                                             new ProjectEventListener() {
                                                 @Override
                                                 public void onEvent(ProjectEvent event) {
-                                                    try {
-                                                        update(event, extensionSourcesPath, projectDescriptor.getBaseUrl(), executor);
-                                                    } catch (IOException e) {
-                                                        LOG.error("Unable to update mirror of project {} for GWT code server.",
-                                                                  projectDescriptor.getPath());
-                                                    }
+                                                    update(event, extensionSourcesPath, projectDescriptor.getBaseUrl(), executor);
                                                 }
-                                            }
-                                           );
+                                            });
         } catch (IOException e) {
             throw new RunnerException(e);
         }
@@ -152,43 +148,44 @@ public class CodeServer {
         }
     }
 
-    private void update(final ProjectEvent event, final Path projectMirrorPath, final String baseURL, ExecutorService executor)
-            throws IOException {
+    private void update(final ProjectEvent event, final Path projectMirrorPath, final String baseURL, ExecutorService executor) {
         if (event.getType() == ProjectEvent.EventType.DELETED) {
             IoUtil.deleteRecursive(projectMirrorPath.resolve(event.getPath()).toFile());
         } else if (event.getType() == ProjectEvent.EventType.UPDATED || event.getType() == ProjectEvent.EventType.CREATED) {
-            executor.submit(new Callable<Object>() {
+            executor.execute(new Runnable() {
                 @Override
-                public Object call() throws Exception {
+                public void run() {
                     // connect to the project API URL
                     int index = baseURL.indexOf(event.getProject());
-                    HttpURLConnection conn = (HttpURLConnection)new URL(baseURL.substring(0, index)
-                                                                               .concat("/file")
-                                                                               .concat(event.getProject())
-                                                                               .concat("/")
-                                                                               .concat(event.getPath())).openConnection();
-                    conn.setConnectTimeout(30 * 1000);
-                    conn.setRequestMethod("GET");
-                    conn.addRequestProperty(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
-                    conn.setDoInput(true);
-                    conn.setDoOutput(true);
-                    conn.connect();
+                    try {
+                        HttpURLConnection conn = (HttpURLConnection)new URL(baseURL.substring(0, index)
+                                                                                   .concat("/file")
+                                                                                   .concat(event.getProject())
+                                                                                   .concat("/")
+                                                                                   .concat(event.getPath())).openConnection();
+                        conn.setConnectTimeout(30 * 1000);
+                        conn.setRequestMethod("GET");
+                        conn.addRequestProperty(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+                        conn.setDoInput(true);
+                        conn.setDoOutput(true);
+                        conn.connect();
 
-                    // if file has been found, dump the content
-                    final int responseCode = conn.getResponseCode();
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        java.io.File updatedFile = new java.io.File(projectMirrorPath.toString(), event.getPath());
-                        byte[] buffer = new byte[8192];
-                        try (InputStream input = conn.getInputStream()) {
-                            try (OutputStream output = new FileOutputStream(updatedFile)) {
+                        // if file has been found, dump the content
+                        final int responseCode = conn.getResponseCode();
+                        if (responseCode == HttpURLConnection.HTTP_OK) {
+                            java.io.File updatedFile = new java.io.File(projectMirrorPath.toString(), event.getPath());
+                            byte[] buffer = new byte[8192];
+                            try (InputStream input = conn.getInputStream();
+                                 OutputStream output = new FileOutputStream(updatedFile)) {
                                 int bytesRead;
                                 while ((bytesRead = input.read(buffer)) != -1) {
                                     output.write(buffer, 0, bytesRead);
                                 }
                             }
                         }
+                    } catch (IOException e) {
+                        LOG.error("Unable to update mirror of project {} for GWT code server.", event.getProject());
                     }
-                    return null;
                 }
             });
         }

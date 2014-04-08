@@ -26,7 +26,7 @@ public interface AnalyticsEventLogger {
 
     int MAX_PARAMS_NUMBER      = 3;
     int MAX_PARAM_NAME_LENGTH  = 10;
-    int MAX_PARAM_VALUE_LENGTH = 30;
+    int MAX_PARAM_VALUE_LENGTH = 50;
 
     /**
      * Logs a client-side analytics event.
