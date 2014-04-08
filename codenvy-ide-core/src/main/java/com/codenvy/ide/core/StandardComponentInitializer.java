@@ -22,6 +22,7 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.actions.CloseProjectAction;
 import com.codenvy.ide.actions.DeleteResourceAction;
 import com.codenvy.ide.actions.FormatterAction;
+import com.codenvy.ide.actions.ImportProjectAction;
 import com.codenvy.ide.actions.NavigateToFileAction;
 import com.codenvy.ide.actions.NewProjectAction;
 import com.codenvy.ide.actions.NewProjectWizardAction;
@@ -185,6 +186,9 @@ public class StandardComponentInitializer {
     private UploadFileAction uploadFileAction;
 
     @Inject
+    private ImportProjectAction importProjectAction;
+
+    @Inject
     private NewProjectWizardAction newProjectWizardAction;
 
     /** Instantiates {@link StandardComponentInitializer} an creates standard content. */
@@ -224,6 +228,7 @@ public class StandardComponentInitializer {
 
         actionManager.registerAction("newProject", newProjectAction);
         actionManager.registerAction("openProject", openProjectAction);
+        actionManager.registerAction("importProject", importProjectAction);
         actionManager.registerAction("newProject2", newProjectWizardAction);
         actionManager.registerAction("uploadFile", uploadFileAction);
 
@@ -242,6 +247,7 @@ public class StandardComponentInitializer {
         toolbarGroup.addSeparator();
         fileGroup.add(newGroup);
         fileGroup.add(openProjectAction);
+        fileGroup.add(importProjectAction);
         fileGroup.add(uploadFileAction);
         fileGroup.add(navigateToFileAction);
         fileGroup.add(renameResourceAction);
