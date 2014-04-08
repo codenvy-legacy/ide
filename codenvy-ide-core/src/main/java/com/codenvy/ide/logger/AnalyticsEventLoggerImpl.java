@@ -27,6 +27,7 @@ import com.codenvy.ide.dto.EventParameters;
 import com.codenvy.ide.extension.ExtensionDescription;
 import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.Message;
@@ -67,18 +68,21 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
     private final ResourceProvider         resourceProvider;
     private final MessageBus               messageBus;
     private final ExtensionRegistry        extensionRegistry;
+    private final DtoUnmarshallerFactory   dtoUnmarshallerFactory;
 
     @Inject
     public AnalyticsEventLoggerImpl(DtoFactory dtoFactory,
                                     ExtensionRegistry extensionRegistry,
                                     UserProfileServiceClient userProfile,
                                     ResourceProvider resourceProvider,
-                                    MessageBus messageBus) {
+                                    MessageBus messageBus,
+                                    DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.dtoFactory = dtoFactory;
         this.userProfile = userProfile;
         this.resourceProvider = resourceProvider;
         this.messageBus = messageBus;
         this.extensionRegistry = extensionRegistry;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
     }
 
     @Override
@@ -157,7 +161,7 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
     }
 
     private void send(final Map<String, String> additionalParams) {
-        userProfile.getCurrentProfile(null, new AsyncRequestCallback<Profile>() {
+        userProfile.getCurrentProfile(null, new AsyncRequestCallback<Profile>(dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
             @Override
             protected void onSuccess(Profile result) {
                 if (result != null) {
