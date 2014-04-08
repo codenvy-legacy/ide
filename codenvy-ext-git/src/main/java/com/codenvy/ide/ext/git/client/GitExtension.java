@@ -18,12 +18,10 @@
 package com.codenvy.ide.ext.git.client;
 
 import com.codenvy.ide.api.extension.Extension;
-import com.codenvy.ide.api.parts.WelcomePart;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.ext.git.client.action.AddToIndexAction;
-import com.codenvy.ide.ext.git.client.action.CloneRepositoryAction;
 import com.codenvy.ide.ext.git.client.action.CommitAction;
 import com.codenvy.ide.ext.git.client.action.DeleteRepositoryAction;
 import com.codenvy.ide.ext.git.client.action.FetchAction;
@@ -39,7 +37,6 @@ import com.codenvy.ide.ext.git.client.action.ShowGitUrlAction;
 import com.codenvy.ide.ext.git.client.action.ShowMergeAction;
 import com.codenvy.ide.ext.git.client.action.ShowRemoteAction;
 import com.codenvy.ide.ext.git.client.action.ShowStatusAction;
-import com.codenvy.ide.ext.git.client.welcome.CloneProjectAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -62,13 +59,13 @@ public class GitExtension {
     public static final String HISTORY_GROUP_MAIN_MENU    = "GitHistoryGroup";
 
     @Inject
-    public GitExtension(GitResources resources, ActionManager actionManager, CloneRepositoryAction cloneAction,
+    public GitExtension(GitResources resources, ActionManager actionManager,
                         InitRepositoryAction initAction, DeleteRepositoryAction deleteAction, AddToIndexAction addToIndexAction,
                         ResetToCommitAction resetToCommitAction, RemoveFromIndexAction removeFromIndexAction, CommitAction commitAction,
                         ShowBranchesAction showBranchesAction, ShowMergeAction showMergeAction, ResetFilesAction resetFilesAction,
                         ShowStatusAction showStatusAction, ShowGitUrlAction showGitUrlAction, ShowRemoteAction showRemoteAction,
                         PushAction pushAction, FetchAction fetchAction, PullAction pullAction, GitLocalizationConstant constant,
-                        HistoryAction historyAction, CloneProjectAction cloneProjectAction) {
+                        HistoryAction historyAction) {
         resources.gitCSS().ensureInjected();
 
         DefaultActionGroup mainMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_MENU);
@@ -92,8 +89,6 @@ public class GitExtension {
         actionManager.registerAction(REPOSITORY_GROUP_MAIN_MENU, repositoryGroup);
         git.add(repositoryGroup);
 
-        actionManager.registerAction("GitCloneRepository", cloneAction);
-        repositoryGroup.add(cloneAction);
         actionManager.registerAction("GitInitRepository", initAction);
         repositoryGroup.add(initAction);
         actionManager.registerAction("GitDeleteRepository", deleteAction);
