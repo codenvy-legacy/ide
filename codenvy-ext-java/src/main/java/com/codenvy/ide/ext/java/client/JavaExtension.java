@@ -32,9 +32,12 @@ import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEventHandler;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
+import com.codenvy.ide.api.ui.wizard.ProjectWizard;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.ext.java.client.editor.JavaEditorProvider;
@@ -47,7 +50,8 @@ import com.codenvy.ide.ext.java.client.wizard.NewClassProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewEnumProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewInterfaceProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewPackageProvider;
-import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.ext.java.client.wizard.maven.MavenPagePresenter;
+import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -58,11 +62,9 @@ import com.codenvy.ide.texteditor.api.reconciler.ReconcilingStrategy;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
@@ -99,7 +101,7 @@ public class JavaExtension {
                          ProjectServiceClient projectServiceClient,
                          IconRegistry iconRegistry,
                          DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                         FormatController formatController, EditorAgent editorAgent) {
+                         FormatController formatController, EditorAgent editorAgent, ProjectTypeWizardRegistry wizardRegistry, Provider<MavenPagePresenter> mavenPagePresenter) {
         this.resourceProvider = resourceProvider;
         this.notificationManager = notificationManager;
         this.restContext = restContext;
@@ -188,6 +190,8 @@ public class JavaExtension {
         newResourceAgent.register(newEnumHandler);
         newResourceAgent.register(newAnnotationHandler);
         newResourceAgent.register(newPackage);
+        ProjectWizard wizard = new ProjectWizard(notificationManager, mavenPagePresenter);
+        wizardRegistry.addWizard(Constants.MAVEN_ID, wizard);
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override

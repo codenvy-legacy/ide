@@ -83,6 +83,7 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
         this.iconRegistry = iconRegistry;
 
         initWidget(uiBinder.createAndBindUi(this));
+        this.ensureDebugId("file-newProject-newProjectPage");
     }
 
     /** {@inheritDoc} */

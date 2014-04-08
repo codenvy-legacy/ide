@@ -27,6 +27,7 @@ import com.codenvy.ide.dto.EventParameters;
 import com.codenvy.ide.extension.ExtensionDescription;
 import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.Message;
@@ -57,8 +58,8 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
     private static final String USER_PARAM         = "USER";
     private static final String SOURCE_PARAM       = "SOURCE";
     private static final String ACTION_PARAM       = "ACTION";
-    private static final String PROJECT_NAME_PARAM = "PROJECT_NAME";
-    private static final String PROJECT_TYPE_PARAM = "PROJECT_TYPE";
+    private static final String PROJECT_NAME_PARAM = "PROJECT";
+    private static final String PROJECT_TYPE_PARAM = "TYPE";
 
     private static final String EMPTY_PARAM_VALUE = "";
 
@@ -67,23 +68,31 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
     private final ResourceProvider         resourceProvider;
     private final MessageBus               messageBus;
     private final ExtensionRegistry        extensionRegistry;
+    private final DtoUnmarshallerFactory   dtoUnmarshallerFactory;
 
     @Inject
     public AnalyticsEventLoggerImpl(DtoFactory dtoFactory,
                                     ExtensionRegistry extensionRegistry,
                                     UserProfileServiceClient userProfile,
                                     ResourceProvider resourceProvider,
-                                    MessageBus messageBus) {
+                                    MessageBus messageBus,
+                                    DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.dtoFactory = dtoFactory;
         this.userProfile = userProfile;
         this.resourceProvider = resourceProvider;
         this.messageBus = messageBus;
         this.extensionRegistry = extensionRegistry;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
     }
 
     @Override
     public void log(Class<?> extensionClass, String event, Map<String, String> additionalParams) {
         doLog(event, getSource(extensionClass), additionalParams);
+    }
+
+    @Override
+    public void log(Class<?> extensionClass, String event) {
+        doLog(event, getSource(extensionClass), Collections.<String, String>emptyMap());
     }
 
     @Override
@@ -152,7 +161,8 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
     }
 
     private void send(final Map<String, String> additionalParams) {
-        userProfile.getCurrentProfile(null, new AsyncRequestCallback<Profile>() {
+        userProfile.getCurrentProfile(null, new AsyncRequestCallback<Profile>(
+                dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
             @Override
             protected void onSuccess(Profile result) {
                 if (result != null) {
@@ -186,11 +196,13 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
 
                         @Override
                         protected void onFailure(Throwable exception) {
-                            Log.error(getClass(), json, exception.getMessage());
+                            Log.error(getClass(), exception.getMessage());
+                            Log.info(getClass(), json);
                         }
                     });
                 } catch (Exception e) {
-                    Log.error(getClass(), json, e.getMessage());
+                    Log.error(getClass(), e.getMessage());
+                    Log.info(getClass(), json);
                 }
             }
         });
