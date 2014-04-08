@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.java.server.projecttypes;
 
+import com.codenvy.api.project.server.ProjectGenerator;
 import com.codenvy.api.project.server.ValueProviderFactory;
 import com.codenvy.inject.DynaModule;
 import com.google.inject.AbstractModule;
@@ -34,9 +35,14 @@ public class JavaModule extends AbstractModule {
         bind(WarProjectTypeExtension.class);
         bind(SpringProjectTypeExtension.class);
         bind(MultiModuleProjectTypeExtension.class);
+        bind(MavenProjectTypeExtension.class);
+        bind(MavenProjectTypeDescriptionsExtension.class);
 
         Multibinder<ValueProviderFactory> multiBinder = Multibinder.newSetBinder(binder(), ValueProviderFactory.class);
         multiBinder.addBinding().to(MavenSourceFoldersValueProviderFactory.class);
         multiBinder.addBinding().to(AntSourceFoldersValueProviderFactory.class);
+
+        Multibinder<ProjectGenerator> generatorMultibinder = Multibinder.newSetBinder(binder(), ProjectGenerator.class);
+        generatorMultibinder.addBinding().to(MavenSimpleProjectGenerator.class);
     }
 }

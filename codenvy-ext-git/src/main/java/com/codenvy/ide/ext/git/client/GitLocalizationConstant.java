@@ -46,9 +46,6 @@ public interface GitLocalizationConstant extends Messages {
     @Key("button.close")
     String buttonClose();
 
-    @Key("button.clone")
-    String buttonClone();
-
     @Key("button.commit")
     String buttonCommit();
 
@@ -329,25 +326,6 @@ public interface GitLocalizationConstant extends Messages {
     @Key("view.branch.title")
     String branchTitle();
 
-    // Clone
-    @Key("view.clone.title")
-    String cloneTitle();
-
-    @Key("view.clone.project_name_field_title")
-    String projectNameFieldTitle();
-
-    @Key("view.clone.remote_uri_field_title")
-    String cloneRemoteUriFieldTitle();
-
-    @Key("view.clone.remote_uri_field_example")
-    String cloneRemoteUriFieldExample();
-
-    @Key("view.clone.remote_name_field_title")
-    String cloneRemoteNameFieldTitle();
-
-    @Key("view.clone.select_project_type_title")
-    String cloneProjectType();
-
     // Commit
 
     @Key("view.commit.commit_message")
@@ -576,12 +554,6 @@ public interface GitLocalizationConstant extends Messages {
     @Key("control.clone.id")
     String cloneControlId();
 
-    @Key("control.clone.title")
-    String cloneControlTitle();
-
-    @Key("control.clone.prompt")
-    String cloneControlPrompt();
-
     @Key("control.commit.id")
     String commitControlId();
 
@@ -728,15 +700,6 @@ public interface GitLocalizationConstant extends Messages {
 
     @Key("projectNameStartWith_Message")
     String projectNameStartWith_Message();
-
-    // Welcome page
-
-    @Key("welcome.clone.title")
-    String welcomeCloneTitle();
-
-    @Key("welcome.clone.text")
-    String welcomeCloneText();
-
 
     /*
      * Project

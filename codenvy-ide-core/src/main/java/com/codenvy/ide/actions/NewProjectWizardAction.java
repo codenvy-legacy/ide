@@ -2,7 +2,7 @@
  * CODENVY CONFIDENTIAL
  * __________________
  *
- * [2012] - [2013] Codenvy, S.A.
+ * [2012] - [2014] Codenvy, S.A.
  * All Rights Reserved.
  *
  * NOTICE:  All information contained herein is, and remains
@@ -15,30 +15,32 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.git.client.action;
+package com.codenvy.ide.actions;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
-import com.codenvy.ide.ext.git.client.GitResources;
-import com.codenvy.ide.ext.git.client.clone.CloneRepositoryPresenter;
+import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * @author Evgen Vidolob
+ */
 @Singleton
-public class CloneRepositoryAction extends Action {
-    private CloneRepositoryPresenter presenter;
+public class NewProjectWizardAction extends Action {
+
+
+    private NewProjectWizardPresenter wizard;
 
     @Inject
-    public CloneRepositoryAction(CloneRepositoryPresenter presenter, GitResources resources, GitLocalizationConstant constant) {
-        super(constant.cloneControlTitle(), constant.cloneControlPrompt(), resources.cloneRepo());
-        this.presenter = presenter;
+    public NewProjectWizardAction(Resources resources, NewProjectWizardPresenter wizard) {
+        super("Project Advance", "Create new project", resources.project());
+        this.wizard = wizard;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        presenter.showDialog();
+        wizard.show();
     }
 }
