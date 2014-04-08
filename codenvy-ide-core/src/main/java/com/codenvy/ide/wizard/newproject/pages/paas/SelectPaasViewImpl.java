@@ -107,6 +107,7 @@ public class SelectPaasViewImpl implements SelectPaasPageView {
             grid.setWidget(1, i, title);
             formatter.setHorizontalAlignment(1, i, HasHorizontalAlignment.ALIGN_CENTER);
 
+            btn.ensureDebugId("file-newProject-paas-" + title.getText());
             paasButtons.add(btn);
         }
     }

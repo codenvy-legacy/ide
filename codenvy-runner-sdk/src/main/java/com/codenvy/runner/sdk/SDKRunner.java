@@ -150,17 +150,20 @@ public class SDKRunner extends Runner {
 
         final java.io.File appDir;
         final Path codeServerWorkDirPath;
-        final Utils.ExtensionDescriptor extension;
+        final Utils.ExtensionDescriptor extensionDescriptor;
         try {
             appDir = Files.createTempDirectory(getDeployDirectory().toPath(), (server.getName() + '_' + getName() + '_')).toFile();
             codeServerWorkDirPath = Files.createTempDirectory(getDeployDirectory().toPath(), ("codeServer_" + getName() + '_'));
-            extension = Utils.getExtensionFromJarFile(new ZipFile(toDeploy.getFile()));
+            extensionDescriptor = Utils.getExtensionFromJarFile(new ZipFile(toDeploy.getFile()));
         } catch (IOException | IllegalArgumentException e) {
             throw new RunnerException(e);
         }
 
-        CodeServer.CodeServerProcess codeServerProcess = codeServer.prepare(codeServerWorkDirPath, sdkRunnerCfg, extension, getExecutor());
-        final ZipFile warFile = buildCodenvyWebAppWithExtension(extension);
+        CodeServer.CodeServerProcess codeServerProcess = codeServer.prepare(codeServerWorkDirPath,
+                                                                            sdkRunnerCfg,
+                                                                            extensionDescriptor,
+                                                                            getExecutor());
+        final ZipFile warFile = buildCodenvyWebAppWithExtension(extensionDescriptor);
         final ApplicationProcess process =
                 server.deploy(appDir, warFile, toDeploy.getFile(), sdkRunnerCfg, codeServerProcess,
                               new ApplicationServer.StopCallback() {

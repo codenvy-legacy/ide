@@ -21,11 +21,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 
-/**
- * //
- *
- * @author Artem Zatsarynnyy
- */
+/** @author Artem Zatsarynnyy */
 public class UpdateExceptionMapper implements ExceptionMapper<UpdateException> {
     @Override
     public Response toResponse(UpdateException exception) {

@@ -25,7 +25,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
- * Class responsible for register DTO tokenProvider. It uses {@link DtoFactoryVisitorRegistry} to acquire
+ * Class responsible for register DTO providers. It uses {@link DtoFactoryVisitorRegistry} to acquire
  * {@link DtoFactoryVisitor}s.
  *
  * @author Artem Zatsarynnyy
