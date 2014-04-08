@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.importproject;
 
-import com.codenvy.api.project.client.dto.DtoClientImpls;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
@@ -75,7 +74,7 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
         String importer = view.getImporter();
         String projectName = view.getProjectName();
         ImportSourceDescriptor importSourceDescriptor =
-                dtoFactory.createDto(DtoClientImpls.ImportSourceDescriptorImpl.class).withType(importer).withLocation(url);
+                dtoFactory.createDto(ImportSourceDescriptor.class).withType(importer).withLocation(url);
         projectServiceClient.importProject(projectName, importSourceDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
             @Override
             protected void onSuccess(ProjectDescriptor result) {

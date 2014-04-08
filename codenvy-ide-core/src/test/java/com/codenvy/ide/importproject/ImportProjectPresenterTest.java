@@ -18,8 +18,6 @@
 
 package com.codenvy.ide.importproject;
 
-
-import com.codenvy.api.project.client.dto.DtoClientImpls;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
@@ -88,10 +86,8 @@ public class ImportProjectPresenterTest {
         when(view.getUri()).thenReturn("https://github.com/codenvy/hello.git");
         when(view.getImporter()).thenReturn("git");
         when(view.getProjectName()).thenReturn("ide");
-        ImportSourceDescriptor importSourceDescriptor =
-                mock(DtoClientImpls.ImportSourceDescriptorImpl.class);
-        when(dtoFactory.createDto(DtoClientImpls.ImportSourceDescriptorImpl.class)).thenReturn(
-                (DtoClientImpls.ImportSourceDescriptorImpl)importSourceDescriptor);
+        ImportSourceDescriptor importSourceDescriptor = mock(ImportSourceDescriptor.class);
+        when(dtoFactory.createDto(ImportSourceDescriptor.class)).thenReturn(importSourceDescriptor);
         when(importSourceDescriptor.withType("git")).thenReturn(importSourceDescriptor);
         when(importSourceDescriptor.withLocation("https://github.com/codenvy/hello.git")).thenReturn(importSourceDescriptor);
 
@@ -100,11 +96,11 @@ public class ImportProjectPresenterTest {
         verify(view).getUri();
         verify(view).getImporter();
         verify(view).getProjectName();
-        verify(dtoFactory).createDto(DtoClientImpls.ImportSourceDescriptorImpl.class);
+        verify(dtoFactory).createDto(ImportSourceDescriptor.class);
         verify(importSourceDescriptor).withType(anyString());
         verify(importSourceDescriptor).withLocation(anyString());
-        verify(projectServiceClient).importProject(anyString(), (com.codenvy.api.project.shared.dto.ImportSourceDescriptor)anyObject(),
-                                                   (AsyncRequestCallback<ProjectDescriptor>)anyObject());
+        verify(projectServiceClient)
+                .importProject(anyString(), (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
     }
 
     @Test
@@ -118,5 +114,4 @@ public class ImportProjectPresenterTest {
         verify(view).getProjectName();
         verify(view).setEnabledImportButton(eq(true));
     }
-
 }

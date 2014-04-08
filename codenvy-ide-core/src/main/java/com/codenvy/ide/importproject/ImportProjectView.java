@@ -92,7 +92,7 @@ public interface ImportProjectView extends IsWidget {
     void setImporters(@Nonnull List<String> importers);
 
     /**
-     * Change the enable state of the upload button.
+     * Change the enable state of the import button.
      *
      * @param enabled
      *         <code>true</code> to enable the button, <code>false</code> to disable it
