@@ -20,9 +20,11 @@ package com.codenvy.runner.sdk;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.api.core.util.ProcessUtil;
 import com.codenvy.api.core.util.SystemInfo;
+import com.codenvy.api.project.server.ProjectEvent;
+import com.codenvy.api.project.server.ProjectEventListener;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.commons.lang.IoUtil;
-import com.codenvy.commons.lang.NamedThreadFactory;
 import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.ide.commons.GwtXmlUtils;
 import com.codenvy.ide.maven.tools.MavenUtils;
@@ -39,14 +41,20 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import javax.inject.Singleton;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
@@ -60,7 +68,6 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -69,69 +76,76 @@ import java.util.concurrent.TimeoutException;
  *
  * @author Artem Zatsarynnyy
  */
+@Singleton
 public class CodeServer {
     private static final Logger LOG                    = LoggerFactory.getLogger(CodeServer.class);
     /** Id of Maven POM profile used to add (re)sources of custom extension to code server recompilation process. */
     private static final String ADD_SOURCES_PROFILE_ID = "customExtensionSources";
-    private final ExecutorService pidTaskExecutor;
 
-    public CodeServer() {
-        pidTaskExecutor = Executors.newCachedThreadPool(new NamedThreadFactory("CodeServer-", true));
-    }
-
+    /**
+     * Prepare GWT code server for launching.
+     *
+     * @param workDirPath
+     *         root directory for code server
+     * @param runnerConfiguration
+     *         runner configuration
+     * @param extensionDescriptor
+     *         descriptor of extension for which code server should be prepared
+     * @param executor
+     *         executor service
+     * @return {@link CodeServerProcess} that may be launched
+     * @throws RunnerException
+     */
     public CodeServerProcess prepare(Path workDirPath,
-                                     Path projectSourcesPath,
-                                     SDKRunnerConfiguration runnerConfiguration,
-                                     Utils.ExtensionDescriptor extensionDescriptor) throws RunnerException {
+                                     final SDKRunnerConfiguration runnerConfiguration,
+                                     Utils.ExtensionDescriptor extensionDescriptor,
+                                     final ExecutorService executor) throws RunnerException {
         try {
-            final Path warDirPath = workDirPath.resolve("war");
-            ZipUtils.unzip(Utils.getCodenvyPlatformBinaryDistribution().openStream(), warDirPath.toFile());
-
-            MavenUtils.addDependency(warDirPath.resolve("pom.xml").toFile(), extensionDescriptor.groupId,
+            ZipUtils.unzip(Utils.getCodenvyPlatformBinaryDistribution().openStream(), workDirPath.toFile());
+            MavenUtils.addDependency(workDirPath.resolve("pom.xml").toFile(),
+                                     extensionDescriptor.groupId,
                                      extensionDescriptor.artifactId,
-                                     extensionDescriptor.version,
-                                     null);
-            GwtXmlUtils.inheritGwtModule(IoUtil.findFile(SDKRunner.IDE_GWT_XML_FILE_NAME, warDirPath.toFile()).toPath(),
+                                     extensionDescriptor.version, null);
+            GwtXmlUtils.inheritGwtModule(IoUtil.findFile(SDKRunner.IDE_GWT_XML_FILE_NAME, workDirPath.toFile()).toPath(),
                                          extensionDescriptor.gwtModuleName);
+            setCodeServerConfiguration(workDirPath.resolve("pom.xml"), workDirPath, runnerConfiguration);
 
-            setCodeServerConfiguration(warDirPath.resolve("pom.xml"), workDirPath, runnerConfiguration);
+            // get initial copy of project sources
+            final ProjectDescriptor projectDescriptor = runnerConfiguration.getRequest().getProjectDescriptor();
+            final Path extensionSourcesPath = Files.createDirectory(workDirPath.resolve("extension-sources"));
+            final java.io.File file = Utils.exportProject(projectDescriptor, extensionSourcesPath.toFile());
+            ZipUtils.unzip(file, extensionSourcesPath.toFile());
 
-            // Create symbolic links to the project's sources in order
-            // to provide actual sources to code server at any time.
-            // TODO: rework this, using ProjectEventService
-            final Path extDirPath = Files.createDirectory(workDirPath.resolve("ext"));
-            if (!projectSourcesPath.isAbsolute()) {
-                projectSourcesPath = projectSourcesPath.toAbsolutePath();
+            if (SystemInfo.isUnix()) {
+                return startUnix(workDirPath.toFile(), runnerConfiguration, extensionSourcesPath, projectDescriptor.getBaseUrl(), executor);
+            } else {
+                return startWindows(workDirPath.toFile(), runnerConfiguration, extensionSourcesPath, projectDescriptor.getBaseUrl(),
+                                    executor);
             }
-            projectSourcesPath = projectSourcesPath.normalize();
-            Files.createSymbolicLink(extDirPath.resolve("src"), projectSourcesPath.resolve("src"));
-            Files.createSymbolicLink(extDirPath.resolve("pom.xml"), projectSourcesPath.resolve("pom.xml"));
         } catch (IOException e) {
             throw new RunnerException(e);
-        }
-
-        if (SystemInfo.isUnix()) {
-            return startUnix(workDirPath.toFile(), runnerConfiguration);
-        } else {
-            return startWindows(workDirPath.toFile(), runnerConfiguration);
         }
     }
 
     // *nix
 
-    private CodeServerProcess startUnix(java.io.File codeServerWorkDir, SDKRunnerConfiguration runnerConfiguration)
-            throws RunnerException {
+    private CodeServerProcess startUnix(File codeServerWorkDir, SDKRunnerConfiguration runnerConfiguration, Path extensionSourcesPath,
+                                        String projectApiBaseUrl, ExecutorService executor) throws RunnerException {
         java.io.File startUpScriptFile = genStartUpScriptUnix(codeServerWorkDir);
         return new CodeServerProcess(runnerConfiguration.getCodeServerBindAddress(),
-                                     runnerConfiguration.getCodeServerPort(), startUpScriptFile, codeServerWorkDir,
-                                     pidTaskExecutor);
+                                     runnerConfiguration.getCodeServerPort(),
+                                     startUpScriptFile,
+                                     codeServerWorkDir,
+                                     extensionSourcesPath,
+                                     projectApiBaseUrl,
+                                     executor);
     }
 
     /** Set the GWT code server configuration in the specified pom.xml file. */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private void setCodeServerConfiguration(Path pomPath, Path workDir, SDKRunnerConfiguration runnerConfiguration)
+    private void setCodeServerConfiguration(Path pomPath, Path codeServerWorkDir, SDKRunnerConfiguration runnerConfiguration)
             throws RunnerException {
-        final String confWorkDir = workDir == null ? "" : "<codeServerWorkDir>" + workDir + "</codeServerWorkDir>";
+        final String confWorkDir = codeServerWorkDir == null ? "" : "<codeServerWorkDir>" + codeServerWorkDir + "</codeServerWorkDir>";
 
         final String bindAddress = runnerConfiguration.getCodeServerBindAddress();
         final String confBindAddress = bindAddress == null ? "" : "<bindAddress>" + bindAddress + "</bindAddress>";
@@ -174,7 +188,7 @@ public class CodeServer {
                                      "cd war\n" +
                                      codeServerUnix() +
                                      "PID=$!\n" +
-                                     "echo \"$PID\" >> ../run.pid\n" +
+                                     "echo \"$PID\" >> run.pid\n" +
                                      "wait $PID";
         final java.io.File startUpScriptFile = new java.io.File(workDir, "startup.sh");
         try {
@@ -196,25 +210,29 @@ public class CodeServer {
 
     // Windows
 
-    private CodeServerProcess startWindows(java.io.File codeServerWorkDir, SDKRunnerConfiguration runnerConfiguration)
-            throws RunnerException {
+    private CodeServerProcess startWindows(File codeServerWorkDir, SDKRunnerConfiguration runnerConfiguration, Path extensionSourcesPath,
+                                           String projectApiBaseUrl, ExecutorService executor) throws RunnerException {
         throw new UnsupportedOperationException();
     }
 
-    public static class CodeServerProcess {
+    public static class CodeServerProcess implements ProjectEventListener {
         private final String          bindAddress;
         private final int             port;
-        private final ExecutorService pidTaskExecutor;
         private final java.io.File    startUpScriptFile;
         private final java.io.File    workDir;
+        private final Path            extensionSourcesPath;
+        private final String          projectApiBaseUrl;
+        private final ExecutorService pidTaskExecutor;
         private int pid = -1;
 
-        protected CodeServerProcess(String bindAddress, int port, java.io.File startUpScriptFile, java.io.File workDir,
-                                    ExecutorService pidTaskExecutor) {
+        protected CodeServerProcess(String bindAddress, int port, File startUpScriptFile, File workDir, Path extensionSourcesPath,
+                                    String projectApiBaseUrl, ExecutorService pidTaskExecutor) {
             this.bindAddress = bindAddress;
             this.port = port;
             this.startUpScriptFile = startUpScriptFile;
             this.workDir = workDir;
+            this.extensionSourcesPath = extensionSourcesPath;
+            this.projectApiBaseUrl = projectApiBaseUrl;
             this.pidTaskExecutor = pidTaskExecutor;
         }
 
@@ -343,6 +361,55 @@ public class CodeServer {
                 body = bout.toString();
             }
             return body;
+        }
+
+        @Override
+        public void onEvent(ProjectEvent event) {
+            update(event, extensionSourcesPath, projectApiBaseUrl, pidTaskExecutor);
+        }
+
+        private static void update(final ProjectEvent event, final Path projectMirrorPath, final String projectApiBaseUrl,
+                                   ExecutorService executor) {
+            if (event.getType() == ProjectEvent.EventType.DELETED) {
+                IoUtil.deleteRecursive(projectMirrorPath.resolve(event.getPath()).toFile());
+            } else if (event.getType() == ProjectEvent.EventType.UPDATED || event.getType() == ProjectEvent.EventType.CREATED) {
+                executor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        // connect to the project API URL
+                        int index = projectApiBaseUrl.indexOf(event.getProject());
+                        try {
+                            HttpURLConnection conn = (HttpURLConnection)new URL(projectApiBaseUrl.substring(0, index)
+                                                                                                 .concat("/file")
+                                                                                                 .concat(event.getProject())
+                                                                                                 .concat("/")
+                                                                                                 .concat(event.getPath())).openConnection();
+                            conn.setConnectTimeout(30 * 1000);
+                            conn.setRequestMethod("GET");
+                            conn.addRequestProperty(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+                            conn.setDoInput(true);
+                            conn.setDoOutput(true);
+                            conn.connect();
+
+                            // if file has been found, dump the content
+                            final int responseCode = conn.getResponseCode();
+                            if (responseCode == HttpURLConnection.HTTP_OK) {
+                                java.io.File updatedFile = new java.io.File(projectMirrorPath.toString(), event.getPath());
+                                byte[] buffer = new byte[8192];
+                                try (InputStream input = conn.getInputStream();
+                                     OutputStream output = new FileOutputStream(updatedFile)) {
+                                    int bytesRead;
+                                    while ((bytesRead = input.read(buffer)) != -1) {
+                                        output.write(buffer, 0, bytesRead);
+                                    }
+                                }
+                            }
+                        } catch (IOException e) {
+                            LOG.error("Unable to update mirror of project {} for GWT code server.", event.getProject());
+                        }
+                    }
+                });
+            }
         }
     }
 }

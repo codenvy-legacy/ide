@@ -34,7 +34,7 @@ import javax.validation.constraints.NotNull;
 public interface SshKeyService {
 
     /**
-     * Get the list of SSH keys providers.
+     * Get the list of SSH keys tokenProvider.
      *
      * @return {@link com.codenvy.ide.collections.StringMap}
      */

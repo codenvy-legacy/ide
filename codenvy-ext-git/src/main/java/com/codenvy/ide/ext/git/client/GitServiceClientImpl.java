@@ -147,6 +147,8 @@ public class GitServiceClientImpl implements GitServiceClient {
         InitRequest initRequest = dtoFactory.createDto(InitRequest.class);
         initRequest.setBare(bare);
         initRequest.setWorkingDir(projectid);
+        initRequest.setInitCommit(true);
+
         String url = baseHttpUrl + INIT + "?projectid=" + projectid;
 
         asyncRequestFactory.createPostRequest(url, initRequest, true).delay(2000)
@@ -161,6 +163,7 @@ public class GitServiceClientImpl implements GitServiceClient {
         InitRequest initRequest = dtoFactory.createDto(InitRequest.class);
         initRequest.setBare(bare);
         initRequest.setWorkingDir(projectid);
+        initRequest.setInitCommit(true);
 
         callback.setStatusHandler(new InitRequestStatusHandler(projectName, eventBus, constant));
         String url = gitServicePath + INIT + "?projectid=" + projectid;

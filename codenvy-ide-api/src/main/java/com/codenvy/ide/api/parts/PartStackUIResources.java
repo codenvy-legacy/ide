@@ -99,8 +99,8 @@ public interface PartStackUIResources extends ClientBundle {
         @ClassName("ide-PartStack-Multiple-Tabs-Item")
         String idePartStackMultipleTabsItem();
 
-        @ClassName("ide-button-micro")
-        String ideButtonMicro();
+        @ClassName("ide-Base-Part-Title-Label")
+        String ideBasePartTitleLabel ();
 
         @ClassName("ide-PartStack-Boton-Left")
         String idePartStackBotonLeft();

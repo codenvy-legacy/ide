@@ -85,6 +85,7 @@ public class WizardDialogViewImpl extends DialogBox implements WizardDialogView 
 
         Widget widget = uiBinder.createAndBindUi(this);
         this.setWidget(widget);
+        this.ensureDebugId("file-newOther-wizardDialog");
     }
 
     /** {@inheritDoc} */

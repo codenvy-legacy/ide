@@ -16,5 +16,6 @@
   ~ is strictly forbidden unless prior written permission is obtained
   ~ from Codenvy S.A..
   -->
+<!-- Set reloadable in order to allow updating server-side code of launched Codenvy Extension. -->
 <Context reloadable="true">
 </Context>

@@ -24,9 +24,7 @@ import com.codenvy.api.core.rest.HttpJsonHelper;
 import com.codenvy.api.core.rest.RemoteException;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.Pair;
-import com.codenvy.api.project.server.AbstractVirtualFileEntry;
 import com.codenvy.api.project.server.ProjectManager;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.ide.ext.java.server.internal.core.JavaProject;
 import com.codenvy.ide.ext.java.server.internal.core.search.matching.JavaSearchNameEnvironment;
@@ -50,7 +48,6 @@ import org.eclipse.jdt.internal.compiler.env.NameEnvironmentAnswer;
 import org.eclipse.jdt.internal.compiler.lookup.SourceTypeBinding;
 import org.eclipse.jdt.internal.compiler.lookup.TypeBinding;
 import org.eclipse.jdt.internal.core.INameEnvironmentWithProgress;
-import org.everrest.core.impl.provider.json.JsonException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,8 +101,7 @@ public class RestNameEnvironment {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @javax.ws.rs.Path("findTypeCompound")
-    public String findTypeCompound(@QueryParam("compoundTypeName") String compoundTypeName, @QueryParam("projectpath") String projectPath)
-            throws VirtualFileSystemException {
+    public String findTypeCompound(@QueryParam("compoundTypeName") String compoundTypeName, @QueryParam("projectpath") String projectPath) {
         JavaProject javaProject = getJavaProject(projectPath);
         JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
 
@@ -155,8 +151,7 @@ public class RestNameEnvironment {
     @Produces(MediaType.APPLICATION_JSON)
     @javax.ws.rs.Path("findType")
     public String findType(@QueryParam("typename") String typeName, @QueryParam("packagename") String packageName,
-                           @QueryParam("projectpath") String projectPath)
-            throws VirtualFileSystemException {
+                           @QueryParam("projectpath") String projectPath) {
         JavaProject javaProject = getJavaProject(projectPath);
         JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
 
@@ -175,8 +170,7 @@ public class RestNameEnvironment {
     @javax.ws.rs.Path("package")
     @Produces("text/plain")
     public String isPackage(@QueryParam("packagename") String packageName, @QueryParam("parent") String parentPackageName,
-                            @QueryParam("projectpath") String projectPath)
-            throws VirtualFileSystemException {
+                            @QueryParam("projectpath") String projectPath) {
         JavaProject javaProject = getJavaProject(projectPath);
         JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
         return String.valueOf(environment.isPackage(getCharArrayFrom(parentPackageName), packageName.toCharArray()));
@@ -185,7 +179,9 @@ public class RestNameEnvironment {
     @GET
     @javax.ws.rs.Path("findConstructor")
     @Produces(MediaType.APPLICATION_JSON)
-    public String findConstructorDeclarations(@QueryParam("prefix") String prefix, @QueryParam("camelcase") boolean camelCaseMatch, @QueryParam("projectpath") String projectPath){
+    public String findConstructorDeclarations(@QueryParam("prefix") String prefix,
+                                              @QueryParam("camelcase") boolean camelCaseMatch,
+                                              @QueryParam("projectpath") String projectPath){
         JavaProject javaProject = getJavaProject(projectPath);
         JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
         JsonSearchRequester searchRequester = new JsonSearchRequester();
@@ -224,12 +220,8 @@ public class RestNameEnvironment {
     @GET
     @javax.ws.rs.Path("/update-dependencies")
     @Produces(MediaType.APPLICATION_JSON)
-    public void updateDependency(@QueryParam("projectpath") String projectPath,
-                                 @Context UriInfo uriInfo)
-            throws CodeAssistantException, VirtualFileSystemException, IOException, JsonException, BuilderException {
-
+    public void updateDependency(@QueryParam("projectpath") String projectPath, @Context UriInfo uriInfo) throws Exception {
         com.codenvy.api.project.server.Project project = projectManager.getProject(wsId, projectPath);
-
 
         if (project == null) {
             LOG.warn("Project doesn't exist in workspace: " + wsId + ", path: " + projectPath);
@@ -248,33 +240,28 @@ public class RestNameEnvironment {
             url += ":" + port;
         }
         url += "/api/builder/" + wsId + "/dependencies";
-        try {
+        BuildTaskDescriptor buildStatus = getDependencies(url, projectPath, "copy");
 
-            BuildTaskDescriptor buildStatus = getDependencies(url, projectPath, "copy");
+        if (buildStatus.getStatus() == BuildStatus.FAILED) {
+            buildFailed(buildStatus);
+        }
+        File projectDepDir = new File(temp, project.getBaseFolder().getVirtualFile().getId());
+        if (projectDepDir.exists()) {
+            JavaProjectService.removeRecursive(projectDepDir.toPath());
+        }
 
-            if (buildStatus.getStatus() == BuildStatus.FAILED) {
-                buildFailed(buildStatus);
-            }
-            File projectDepDir = new File(temp, project.getBaseFolder().getVirtualFile().getId());
-            if (projectDepDir.exists()) {
-                JavaProjectService.removeRecursive(projectDepDir.toPath());
-            }
-
-            projectDepDir.mkdirs();
-            projectDepDir.deleteOnExit();
-            Link downloadLink = findLink("download result", buildStatus.getLinks());
-            if (downloadLink != null) {
-                InputStream stream = doDownload(downloadLink.getHref());
-                ZipUtils.unzip(stream, projectDepDir);
-                javaProjectService.removeProject(wsId, projectPath);
-            }
-        } catch (IOException e) {
-            LOG.error("Error", e);
+        projectDepDir.mkdirs();
+        projectDepDir.deleteOnExit();
+        Link downloadLink = findLink("download result", buildStatus.getLinks());
+        if (downloadLink != null) {
+            InputStream stream = doDownload(downloadLink.getHref());
+            ZipUtils.unzip(stream, projectDepDir);
+            javaProjectService.removeProject(wsId, projectPath);
         }
     }
 
 
-    private InputStream doDownload(String downloadURL) throws MalformedURLException, IOException {
+    private InputStream doDownload(String downloadURL) throws IOException {
         HttpURLConnection http = null;
         try {
             URL url = new URL(downloadURL);
@@ -282,7 +269,7 @@ public class RestNameEnvironment {
             http.setRequestMethod("GET");
             int responseCode = http.getResponseCode();
             if (responseCode != 200) {
-                throw new IOException("Can't download zipped dependencys");
+                throw new IOException("Can't download zipped dependencies");
             }
             // Connection closed automatically when input stream closed.
             // If IOException or BuilderException occurs then connection closed immediately.
@@ -298,15 +285,8 @@ public class RestNameEnvironment {
 
     }
 
-    private boolean hasPom(com.codenvy.api.project.server.Project project) throws VirtualFileSystemException {
-
-        List<AbstractVirtualFileEntry> items = project.getBaseFolder().getChildren();
-        for (int i = 0; i < items.size(); i++) {
-            AbstractVirtualFileEntry f = items.get(i);
-            if ("pom.xml".equals(f.getName()))
-                return true;
-        }
-        return false;
+    private boolean hasPom(com.codenvy.api.project.server.Project project) {
+        return project.getBaseFolder().getChild("pom.xml") != null;
     }
 
     private void buildFailed(@Nullable BuildTaskDescriptor buildStatus) throws BuilderException {
@@ -352,16 +332,12 @@ public class RestNameEnvironment {
 
 
     @NotNull
-    private BuildTaskDescriptor getDependencies(@NotNull String url, @NotNull String projectName, @NotNull String analyzeType) {
-        BuildTaskDescriptor buildStatus = null;
-        try {
-            Pair<String, String> projectParam = Pair.of("project", projectName);
-            Pair<String, String> typeParam = Pair.of("type", analyzeType);
-            buildStatus = HttpJsonHelper.request(BuildTaskDescriptor.class, url, "POST", null, projectParam, typeParam);
-            buildStatus = waitTaskFinish(buildStatus);
-        } catch (RemoteException | IOException e) {
-            LOG.error("Error", e);
-        }
+    private BuildTaskDescriptor getDependencies(@NotNull String url, @NotNull String projectName, @NotNull String analyzeType)
+            throws IOException, RemoteException {
+        Pair<String, String> projectParam = Pair.of("project", projectName);
+        Pair<String, String> typeParam = Pair.of("type", analyzeType);
+        BuildTaskDescriptor buildStatus = HttpJsonHelper.request(BuildTaskDescriptor.class, url, "POST", null, projectParam, typeParam);
+        buildStatus = waitTaskFinish(buildStatus);
         return buildStatus;
     }
 

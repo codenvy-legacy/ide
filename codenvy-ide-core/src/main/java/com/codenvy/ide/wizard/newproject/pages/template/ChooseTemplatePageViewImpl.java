@@ -34,6 +34,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -64,6 +65,8 @@ public class ChooseTemplatePageViewImpl extends Composite implements ChooseTempl
                     SafeHtmlBuilder sb = new SafeHtmlBuilder();
                     sb.appendHtmlConstant("<table><tr>");
                     sb.appendHtmlConstant("<td style=\"font-weight: bold;\">");
+                    sb.appendHtmlConstant(
+                            "<div id=\"" + UIObject.DEBUG_ID_PREFIX + "file-newProject-template-" + itemData.getDisplayName() + "\">");
                     sb.appendEscaped(itemData.getDisplayName());
                     sb.appendHtmlConstant("</td></tr>");
                     sb.appendHtmlConstant("<tr><td style=\"padding: 10px\">");
@@ -78,7 +81,7 @@ public class ChooseTemplatePageViewImpl extends Composite implements ChooseTempl
                     return Elements.createTRElement();
                 }
             };
-    private SimpleList.ListEventDelegate<ProjectTemplateDescriptor> listDelegate =
+    private SimpleList.ListEventDelegate<ProjectTemplateDescriptor> listDelegate     =
             new SimpleList.ListEventDelegate<ProjectTemplateDescriptor>() {
                 public void onListItemClicked(Element itemElement, ProjectTemplateDescriptor itemData) {
                     delegate.onTemplateSelected(itemData);
@@ -103,6 +106,7 @@ public class ChooseTemplatePageViewImpl extends Composite implements ChooseTempl
         tableElement.setAttribute("style", "width: 100%");
         list = SimpleList.create((View)tableElement, RESOURCES.templateListCss(), listItemRenderer, listDelegate);
         this.templates.add(list);
+        this.ensureDebugId("file-newProject-templatePage");
     }
 
     /** {@inheritDoc} */

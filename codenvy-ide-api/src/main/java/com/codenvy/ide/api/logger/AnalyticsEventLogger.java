@@ -24,21 +24,38 @@ import java.util.Map;
  */
 public interface AnalyticsEventLogger {
 
+    int MAX_PARAMS_NUMBER      = 3;
+    int MAX_PARAM_NAME_LENGTH  = 20;
+    int MAX_PARAM_VALUE_LENGTH = 50;
+
     /**
-     * Logs a client-side analytics event.
+     * Logs a client-side analytics event. Also will be logged the current user, workspace and project information.
      *
-     * @param action
      * @param extensionClass
+     *         it used to tie event with the extension,{@link com.codenvy.ide.api.extension.Extension#title()} will
+     *         be logged as a extension marker
+     * @param event
+     *         the event, is limited to {@link #MAX_PARAM_VALUE_LENGTH} characters
      * @param additionalParams
-     *         (params limitation) // TODO
+     *         any additional parameters to log, not more than {@link #MAX_PARAMS_NUMBER}, every parameter name and its
+     *         value are limited to {@link #MAX_PARAM_NAME_LENGTH} and {@link #MAX_PARAM_VALUE_LENGTH} characters
+     *         correspondingly
      */
-    void log(String action, Class<?> extensionClass, Map<String, String> additionalParams);
+    void log(Class<?> extensionClass, String event, Map<String, String> additionalParams);
+
+
+    /**
+     * Logs a client-side event.
+     *
+     * @see #log(Class, String, java.util.Map)
+     */
+    void log(Class<?> extensionClass, String event);
 
 
     /**
      * Logs a client-side event without reference to an extension.
      *
-     * @see #log(String, Class, java.util.Map)
+     * @see #log(Class, String, java.util.Map)
      */
-    void log(String action);
+    void log(String event);
 }

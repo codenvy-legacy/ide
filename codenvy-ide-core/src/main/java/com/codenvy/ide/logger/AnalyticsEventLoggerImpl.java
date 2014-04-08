@@ -27,12 +27,12 @@ import com.codenvy.ide.dto.EventParameters;
 import com.codenvy.ide.extension.ExtensionDescription;
 import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.MessageBuilder;
 import com.codenvy.ide.websocket.MessageBus;
-import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -52,69 +52,71 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
  */
 @Singleton
 public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
-    private static final String EVENT_NAME         = "ide-usage";
-    private static final String API_ANALYTICS_PATH = "/api/analytics/log/" + EVENT_NAME;
+    private static final String API_ANALYTICS_PATH = "/api/analytics/log/ide-usage";
 
     private static final String WS_PARAM           = "WS";
     private static final String USER_PARAM         = "USER";
     private static final String SOURCE_PARAM       = "SOURCE";
     private static final String ACTION_PARAM       = "ACTION";
-    private static final String PROJECT_NAME_PARAM = "PROJECT_NAME";
-    private static final String PROJECT_TYPE_PARAM = "PROJECT_TYPE";
+    private static final String PROJECT_NAME_PARAM = "PROJECT";
+    private static final String PROJECT_TYPE_PARAM = "TYPE";
 
     private static final String EMPTY_PARAM_VALUE = "";
-
-    private static final int MAX_PARAMS_NUMBER      = 3;
-    private static final int MAX_PARAM_NAME_LENGTH  = 10;
-    private static final int MAX_PARAM_VALUE_LENGTH = 20;
-    private static final int MAX_ACTION_NAME_LENGTH = 50;
 
     private final DtoFactory               dtoFactory;
     private final UserProfileServiceClient userProfile;
     private final ResourceProvider         resourceProvider;
     private final MessageBus               messageBus;
     private final ExtensionRegistry        extensionRegistry;
+    private final DtoUnmarshallerFactory   dtoUnmarshallerFactory;
 
     @Inject
     public AnalyticsEventLoggerImpl(DtoFactory dtoFactory,
                                     ExtensionRegistry extensionRegistry,
                                     UserProfileServiceClient userProfile,
                                     ResourceProvider resourceProvider,
-                                    MessageBus messageBus) {
+                                    MessageBus messageBus,
+                                    DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.dtoFactory = dtoFactory;
         this.userProfile = userProfile;
         this.resourceProvider = resourceProvider;
         this.messageBus = messageBus;
         this.extensionRegistry = extensionRegistry;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
     }
 
     @Override
-    public void log(String action, Class<?> extensionClass, Map<String, String> additionalParams) {
-        doLog(action, getSource(extensionClass), additionalParams);
+    public void log(Class<?> extensionClass, String event, Map<String, String> additionalParams) {
+        doLog(event, getSource(extensionClass), additionalParams);
     }
 
     @Override
-    public void log(String action) {
-        doLog(action, EMPTY_PARAM_VALUE, Collections.<String, String>emptyMap());
+    public void log(Class<?> extensionClass, String event) {
+        doLog(event, getSource(extensionClass), Collections.<String, String>emptyMap());
     }
 
-    private void doLog(String action, String source, Map<String, String> additionalParams) {
-        validate(action, additionalParams);
+    @Override
+    public void log(String event) {
+        doLog(event, EMPTY_PARAM_VALUE, Collections.<String, String>emptyMap());
+    }
+
+    private void doLog(String event, String source, Map<String, String> additionalParams) {
+        validate(event, additionalParams);
 
         additionalParams = new HashMap<>(additionalParams);
-        putReservedParameters(action, source, additionalParams);
+        putReservedParameters(event, source, additionalParams);
 
         send(additionalParams);
     }
 
-    private void putReservedParameters(String action, String source, Map<String, String> additionalParams) {
+    private void putReservedParameters(String event, String source, Map<String, String> additionalParams) {
         addProjectParams(additionalParams);
         additionalParams.put(WS_PARAM, Utils.getWorkspaceName());
-        additionalParams.put(ACTION_PARAM, action);
+        additionalParams.put(ACTION_PARAM, event);
         additionalParams.put(SOURCE_PARAM, source);
     }
 
-    private void validate(String action, Map<String, String> additionalParams) throws IllegalArgumentException {
+    private void validate(String event, Map<String, String> additionalParams) throws IllegalArgumentException {
         if (additionalParams.size() > MAX_PARAMS_NUMBER) {
             throw new IllegalArgumentException("The number of parameters exceeded the limit in " + MAX_PARAMS_NUMBER);
         }
@@ -135,9 +137,9 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
             }
         }
 
-        if (action.length() > MAX_ACTION_NAME_LENGTH) {
-            throw new IllegalArgumentException("The length of action name exceeded the length in "
-                                               + MAX_ACTION_NAME_LENGTH + " characters");
+        if (event.length() > MAX_PARAM_VALUE_LENGTH) {
+            throw new IllegalArgumentException("The length of event name exceeded the length in "
+                                               + MAX_PARAM_VALUE_LENGTH + " characters");
 
         }
     }
@@ -159,7 +161,8 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
     }
 
     private void send(final Map<String, String> additionalParams) {
-        userProfile.getCurrentProfile(null, new AsyncRequestCallback<Profile>() {
+        userProfile.getCurrentProfile(null, new AsyncRequestCallback<Profile>(
+                dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
             @Override
             protected void onSuccess(Profile result) {
                 if (result != null) {
@@ -167,43 +170,40 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
                 } else {
                     additionalParams.put(USER_PARAM, EMPTY_PARAM_VALUE);
                 }
-
-                try {
-                    doSend(additionalParams);
-                } catch (WebSocketException e) {
-                    Log.error(getClass(), e);
-                }
+                doSend(additionalParams);
             }
 
             @Override
             protected void onFailure(Throwable exception) {
                 additionalParams.put(USER_PARAM, EMPTY_PARAM_VALUE);
-
-                try {
-                    doSend(additionalParams);
-                } catch (WebSocketException e) {
-                    Log.error(getClass(), e);
-                }
+                doSend(additionalParams);
             }
 
-            private void doSend(Map<String, String> parameters) throws WebSocketException {
+            private void doSend(Map<String, String> parameters) {
                 EventParameters additionalParams = dtoFactory.createDto(EventParameters.class).withParams(parameters);
+                final String json = dtoFactory.toJson(additionalParams);
 
                 MessageBuilder builder = new MessageBuilder(POST, API_ANALYTICS_PATH);
-                builder.data(dtoFactory.toJson(additionalParams));
+                builder.data(json);
                 builder.header(CONTENTTYPE, APPLICATION_JSON);
                 Message message = builder.build();
 
-                messageBus.send(message, new RequestCallback() {
-                    @Override
-                    protected void onSuccess(Object result) {
-                    }
+                try {
+                    messageBus.send(message, new RequestCallback() {
+                        @Override
+                        protected void onSuccess(Object result) {
+                        }
 
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        Log.error(getClass(), exception);
-                    }
-                });
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            Log.error(getClass(), exception.getMessage());
+                            Log.info(getClass(), json);
+                        }
+                    });
+                } catch (Exception e) {
+                    Log.error(getClass(), e.getMessage());
+                    Log.info(getClass(), json);
+                }
             }
         });
     }
