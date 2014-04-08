@@ -87,6 +87,11 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
     }
 
     @Override
+    public void log(Class<?> extensionClass, String event) {
+        doLog(event, getSource(extensionClass), Collections.<String, String>emptyMap());
+    }
+
+    @Override
     public void log(String event) {
         doLog(event, EMPTY_PARAM_VALUE, Collections.<String, String>emptyMap());
     }
@@ -186,11 +191,13 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
 
                         @Override
                         protected void onFailure(Throwable exception) {
-                            Log.error(getClass(), json, exception.getMessage());
+                            Log.error(getClass(), exception.getMessage());
+                            Log.info(getClass(), json);
                         }
                     });
                 } catch (Exception e) {
-                    Log.error(getClass(), json, e.getMessage());
+                    Log.error(getClass(), e.getMessage());
+                    Log.info(getClass(), json);
                 }
             }
         });
