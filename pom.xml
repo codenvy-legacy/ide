@@ -57,6 +57,7 @@
         <module>codenvy-ide-client</module>
         <module>codenvy-ext-tutorials</module>
         <module>codenvy-sdk-tutorials/action-api</module>
+        <module>codenvy-sdk-tutorials/analytics-event-logger-ext</module>
         <module>codenvy-sdk-tutorials/wizard-api</module>
         <module>codenvy-sdk-tutorials/theme-api</module>
         <module>codenvy-sdk-tutorials/parts-api</module>
