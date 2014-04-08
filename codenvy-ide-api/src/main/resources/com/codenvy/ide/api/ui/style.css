@@ -61,6 +61,7 @@
 @eval buttonTopColor com.codenvy.ide.api.ui.theme.Style.getButtonTopColor();
 @eval buttonColor com.codenvy.ide.api.ui.theme.Style.getButtonColor();
 @eval buttonHoverTextColor com.codenvy.ide.api.ui.theme.Style.getButtonHoverTextColor();
+@eval svgUrlShadow com.codenvy.ide.api.ui.theme.Style.getSvgUrlShadow();
 
 /* notable button */
 @eval notableButtonTopColor com.codenvy.ide.api.ui.theme.Style.getNotableButtonTopColor();
@@ -116,7 +117,7 @@
 @def fileTreeFontFamily "Helvetica Neue", "Myriad Pro","Lucida Grande", Verdana, Arial;
 @def fileTreeFontFamilyFile "Helvetica Neue Regular", "Myriad Pro","Lucida Grande", Verdana, Arial;
 @def mainFontFamily "Helvetica Neue", "Myriad Pro", arial, Verdana, Verdana, sans-serif;
-@def editorLineHeight 15px;
+@def editorLineHeight 13px;
 @def editorFontFamily 'Andale Mono', monospace;
 
 /*Main Menu*/

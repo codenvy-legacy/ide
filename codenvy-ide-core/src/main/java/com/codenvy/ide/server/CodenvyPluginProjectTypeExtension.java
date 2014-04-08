@@ -71,6 +71,10 @@ public class CodenvyPluginProjectTypeExtension implements ProjectTypeExtension {
                                                 "HELLO WORLD EXTENSION",
                                                 "This is a simple Codenvy Extension that prints Hello World in Output console and adds Hello World item to a content menu.",
                                                 baseUrl + "/helloworld-extension.zip"));
+        list.add(new ProjectTemplateDescription("zip",
+                                                "ANALYTICS EVENT LOGGER EXTENSION",
+                                                "This is a simple Codenvy Extension that logs an event for the Analytics.",
+                                                baseUrl + "/analytics-event-logger-extension.zip"));
         return list;
     }
 }

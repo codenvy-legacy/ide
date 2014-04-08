@@ -418,4 +418,9 @@ public class DarkTheme implements Theme {
     public String getCompletedInvertColor() {
         return "0%";
     }
+
+    @Override
+    public String getSvgUrlShadow() {
+        return "url(#shadowDarkTheme)";
+    }
 }

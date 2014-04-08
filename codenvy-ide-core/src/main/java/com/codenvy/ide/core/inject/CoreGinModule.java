@@ -35,6 +35,7 @@ import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
+import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.parts.ConsolePart;
@@ -56,6 +57,7 @@ import com.codenvy.ide.api.ui.theme.Theme;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
 import com.codenvy.ide.api.ui.wizard.DefaultWizard;
 import com.codenvy.ide.api.ui.wizard.DefaultWizardFactory;
+import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.ui.wizard.WizardDialog;
 import com.codenvy.ide.api.ui.wizard.WizardDialogFactory;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResource;
@@ -80,6 +82,7 @@ import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.importproject.ImportProjectView;
 import com.codenvy.ide.importproject.ImportProjectViewImpl;
 import com.codenvy.ide.keybinding.KeyBindingManager;
+import com.codenvy.ide.logger.AnalyticsEventLoggerImpl;
 import com.codenvy.ide.menu.MainMenuView;
 import com.codenvy.ide.menu.MainMenuViewImpl;
 import com.codenvy.ide.navigation.NavigateToFileView;
@@ -152,6 +155,8 @@ import com.codenvy.ide.wizard.WizardDialogView;
 import com.codenvy.ide.wizard.WizardDialogViewImpl;
 import com.codenvy.ide.wizard.newproject.PaaSAgentImpl;
 import com.codenvy.ide.wizard.newproject.ProjectTypeDescriptorRegistryImpl;
+import com.codenvy.ide.wizard.newproject.ProjectWizardView;
+import com.codenvy.ide.wizard.newproject.ProjectWizardViewImpl;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageView;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageViewImpl;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePageView;
@@ -159,6 +164,7 @@ import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePageViewIm
 import com.codenvy.ide.wizard.newresource.NewResourceWizardProvider;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePageView;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePageViewImpl;
+import com.codenvy.ide.wizard.project.ProjectTypeWizardRegistryImpl;
 import com.codenvy.ide.workspace.PartStackPresenterFactory;
 import com.codenvy.ide.workspace.PartStackViewFactory;
 import com.codenvy.ide.workspace.WorkspacePresenter;
@@ -197,12 +203,13 @@ public class CoreGinModule extends AbstractGinModule {
         bind(DtoUnmarshallerFactory.class).in(Singleton.class);
         bind(AsyncRequestFactory.class).in(Singleton.class);
         bind(MessageBus.class).to(MessageBusImpl.class).in(Singleton.class);
+        bind(AnalyticsEventLogger.class).to(AnalyticsEventLoggerImpl.class).in(Singleton.class);
         // client services
         bind(UserServiceClient.class).to(UserServiceClientImpl.class).in(Singleton.class);
         bind(UserProfileServiceClient.class).to(UserProfileServiceClientImpl.class).in(Singleton.class);
         bind(ProjectServiceClient.class).to(ProjectServiceClientImpl.class).in(Singleton.class);
         bind(ProjectTypeDescriptionServiceClient.class).to(ProjectTypeDescriptionServiceClientImpl.class).in(Singleton.class);
-
+        bind(ProjectTypeWizardRegistry.class).to(ProjectTypeWizardRegistryImpl.class).in(Singleton.class);
         apiBindingConfigure();
         resourcesAPIconfigure();
         coreUiConfigure();
@@ -298,6 +305,8 @@ public class CoreGinModule extends AbstractGinModule {
 
         bind(ExtensionManagerView.class).to(ExtensionManagerViewImpl.class).in(Singleton.class);
         bind(AppearanceView.class).to(AppearanceViewImpl.class).in(Singleton.class);
+
+        bind(ProjectWizardView.class).to(ProjectWizardViewImpl.class);
     }
 
     @Provides

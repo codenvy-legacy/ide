@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Queue;
-import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -47,13 +46,6 @@ public class CleanableSearcher extends FSIndexSearcher {
     private final    Queue<IndexUpdateTask>    postponeUpdates;
     private volatile boolean                   initDone;
     private volatile Throwable                 initError;
-
-    CleanableSearcher(CleanableSearcherProvider searcherService, java.io.File indexDir, Set<String> indexedMediaTypes) {
-        super(indexDir, indexedMediaTypes);
-        this.searcherService = searcherService;
-        postponeUpdates = new ConcurrentLinkedQueue<>();
-        postponeUpdateLatch = new CountDownLatch(1);
-    }
 
     CleanableSearcher(CleanableSearcherProvider searcherService, java.io.File indexDir, VirtualFileFilter filter)
             throws IOException, VirtualFileSystemException {

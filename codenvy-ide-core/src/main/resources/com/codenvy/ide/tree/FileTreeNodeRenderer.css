@@ -47,12 +47,10 @@
 }
 
 .icon {
-    width: 16px;
-    height: 16px;
-    margin: 0px 0px -1px 1px;
+    margin: 0px 0px -5px 1px;
     display: inline-block;
     background-position: center center;
-    padding: 0px 1px 0px 1px;
+    padding: 1px 1px;
 }
 
 .folderFont {

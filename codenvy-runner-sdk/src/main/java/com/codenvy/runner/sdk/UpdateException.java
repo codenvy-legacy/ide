@@ -17,11 +17,7 @@
  */
 package com.codenvy.runner.sdk;
 
-/**
- * //
- *
- * @author Artem Zatsarynnyy
- */
+/** @author Artem Zatsarynnyy */
 public class UpdateException extends Exception {
     public UpdateException(Throwable cause) {
         super(cause);

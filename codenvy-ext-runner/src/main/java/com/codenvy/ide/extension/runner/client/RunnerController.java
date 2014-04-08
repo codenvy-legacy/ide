@@ -265,7 +265,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             runCallback.onRun(appDescriptor);
         }
 
-        final Link appLink = getAppLink(appDescriptor, "web url");
+        final Link appLink = getAppLink(appDescriptor, com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
         if (appLink != null) {
             String url = appLink.getHref();
 

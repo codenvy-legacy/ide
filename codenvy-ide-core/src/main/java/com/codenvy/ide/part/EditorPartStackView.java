@@ -131,7 +131,7 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
 
         tabsPanel.add(listTabsButton);
         listTabsButton.setVisible(false);
-
+        setVisible(false);
 
         addFocusRequestHandler();
     }
@@ -139,6 +139,7 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
     /** {@inheritDoc} */
     @Override
     public TabItem addTabButton(Image icon, String title, String toolTip, IsWidget widget, boolean closable) {
+        setVisible(true);
         TabButton tabItem = new TabButton(icon, title, toolTip, closable);
         tabsPanel.add(tabItem);
         tabs.add(tabItem);
@@ -158,6 +159,7 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
             TabButton removed = tabs.remove(index);
             tabsPanel.remove(removed);
         }
+        setVisible(tabs.size() > 0);
     }
 
     /** {@inheritDoc} */

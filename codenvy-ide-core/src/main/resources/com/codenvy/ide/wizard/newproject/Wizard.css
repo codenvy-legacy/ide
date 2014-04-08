@@ -2,6 +2,10 @@
 .alignBtn {
     float: right;
     margin-right: 17px;
+    border-radius: 1px !important;
+    font-size: 12px;
+    font-family: mainFontFamily;
+    font-weight: bold;
 }
 
 .space {
@@ -11,22 +15,24 @@
 .buttons {
     margin-top: 8px;
 }
+
 .centralPage {
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-.buttonPanel{
+.buttonPanel {
     background-color: windowHeaderBackground;
     border-top: 1px solid tabBorder;
 }
 
-.stepsPanel{
+.stepsPanel {
     background-color: stepsPanelColor;
     border-right: 1px solid stepsPanelBorerColor;
     /*width: 100%;*/
     height: 100%;
 }
+
 .arrow_box {
     position: absolute;
     background: windowContentBackground;
@@ -37,6 +43,7 @@
     -webkit-transition: all 300ms;
     transition: all 300ms;
 }
+
 .arrow_box:after, .arrow_box:before {
     right: 100%;
     top: 50%;
@@ -54,6 +61,7 @@
     border-width: 9px;
     margin-top: -9px;
 }
+
 .arrow_box:before {
     border-color: rgba(0, 0, 0, 0);
     border-right-color: stepsPanelBorerColor;

@@ -23,9 +23,9 @@ public interface OAuthAuthenticatorProvider {
     /**
      * Get authentication service by name.
      *
-     * @param oauthProviderName
-     *         name of OAuth provider
      * @return OAuthAuthenticator instance or <code>null</code> if specified OAuth provider is not supported
      */
-    OAuthAuthenticator getAuthenticator(String oauthProviderName);
+    OAuthAuthenticator getAuthenticator();
+
+    String getId();
 }
