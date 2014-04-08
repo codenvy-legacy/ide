@@ -216,7 +216,7 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getEditorVariable2() {
-        return "#05a";
+        return "#0ab";
     }
 
     @Override
@@ -236,7 +236,7 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getEditorString() {
-        return "#6A8759";
+        return "#6AAF32";
     }
 
     @Override
