@@ -18,7 +18,8 @@
 package com.codenvy.ide.security.oauth.server;
 
 
-import com.codenvy.ide.security.oauth.shared.Token;
+import com.codenvy.api.auth.oauth.OAuthTokenProvider;
+import com.codenvy.api.auth.shared.dto.OAuthToken;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,15 +27,31 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.security.Principal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /** RESTful wrapper for OAuthAuthenticator. */
 @Path("oauth")
@@ -42,9 +59,27 @@ public class OAuthAuthenticationService {
     private static final Logger LOG = LoggerFactory.getLogger(OAuthAuthenticationService.class);
     @Inject
     @Named("auth.oauth.access_denied_error_page")
-    protected String                     errorPage;
+    protected String             errorPage;
+
+
+    private final Map<String, OAuthAuthenticator> authenticators;
+
+
     @Inject
-    protected OAuthAuthenticatorProvider providers;
+    protected OAuthTokenProvider tokenProvider;
+
+
+
+    /**
+     * @param authenticatorProviders
+     */
+    @Inject
+    public OAuthAuthenticationService(Set<OAuthAuthenticatorProvider> authenticatorProviders) {
+        this.authenticators = new ConcurrentHashMap<>();
+        for (OAuthAuthenticatorProvider authenticator : authenticatorProviders) {
+            this.authenticators.put(authenticator.getId(), authenticator.getAuthenticator());
+        }
+    }
 
     /**
      * Redirect request to OAuth provider site for authentication|authorization. Client request must contains set of
@@ -84,6 +119,21 @@ public class OAuthAuthenticationService {
         return Response.temporaryRedirect(URI.create(authUrl)).build();
     }
 
+//    @GET
+//    @Path("callback")
+//    public Response callback(@Context UriInfo uriInfo) throws OAuthAuthenticationException {
+//        URL requestUrl = getRequestUrl(uriInfo);
+//        Map<String, List<String>> params = getRequestParameters(getState(requestUrl));
+//        List<String> errorValues = uriInfo.getQueryParameters().get("error");
+//        if (errorValues != null && errorValues.contains("access_denied")) {
+//            return Response.temporaryRedirect(
+//                    uriInfo.getRequestUriBuilder().replacePath(errorPage).replaceQuery(null).build()).build();
+//        }
+//        final String redirectAfterLogin = getParameter(params, "redirect_after_login");
+//        return Response.temporaryRedirect(URI.create(redirectAfterLogin)).build();
+//    }
+
+
     @GET
     @Path("callback")
     public Response callback(@Context UriInfo uriInfo) throws OAuthAuthenticationException {
@@ -101,6 +151,7 @@ public class OAuthAuthenticationService {
         final String redirectAfterLogin = getParameter(params, "redirect_after_login");
         return Response.temporaryRedirect(URI.create(redirectAfterLogin)).build();
     }
+
 
     protected URL getRequestUrl(UriInfo uriInfo) {
         try {
@@ -198,24 +249,15 @@ public class OAuthAuthenticationService {
     @Produces({MediaType.APPLICATION_JSON})
     @RolesAllowed("user")
     @Path("token")
-    public Token token(@QueryParam("oauth_provider") String oauth_provider, @Context SecurityContext security)
-//                       OAuth1UrlInfo urlInfo)
+    public OAuthToken token(@QueryParam("oauth_provider") String oauth_provider, @Context SecurityContext security)
             throws Exception {
         final Principal principal = security.getUserPrincipal();
         LOG.debug("Get token for oauth_provider='{}'  userId='{}' ", oauth_provider, principal.getName());
-        OAuthAuthenticator provider = providers.getAuthenticator(oauth_provider);
-        if (provider != null) {
-//            if (urlInfo == null) {
-                return provider.getToken(principal.getName());
-//            } else {
-//                return provider.getToken(principal.getName(), urlInfo);
-//            }
-        }
-        return null;
+        return tokenProvider.getToken(oauth_provider, principal.getName());
     }
 
     protected OAuthAuthenticator getAuthenticator(String oauthProviderName) {
-        OAuthAuthenticator oauth = providers.getAuthenticator(oauthProviderName);
+        OAuthAuthenticator oauth = authenticators.get(oauthProviderName);
         if (oauth == null) {
             LOG.error("Unsupported OAuth provider {} ", oauthProviderName);
             throw new WebApplicationException(Response.status(400).entity("Unsupported OAuth provider " +
