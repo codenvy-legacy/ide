@@ -19,7 +19,6 @@ package com.codenvy.runner.sdk;
 
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.ApplicationProcess;
-import com.codenvy.api.runner.internal.DeploymentSources;
 
 import java.io.File;
 import java.util.zip.ZipFile;
