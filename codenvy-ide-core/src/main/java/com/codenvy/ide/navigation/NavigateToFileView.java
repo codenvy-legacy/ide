@@ -17,45 +17,45 @@
  */
 package com.codenvy.ide.navigation;
 
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.collections.Array;
-
-import javax.validation.constraints.NotNull;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * View for file navigation (find file by name and open it).
- * 
+ *
  * @author Ann Shumilova
+ * @author Artem Zatsarynnyy
  */
 public interface NavigateToFileView extends View<NavigateToFileView.ActionDelegate> {
     /** Needs for delegate some function into NavigateToFile view. */
     public interface ActionDelegate {
-        /** Returns selected project. */
+        /**
+         * Called when suggestions are requested.
+         *
+         * @param query
+         *         query string
+         * @param callback
+         *         callback
+         */
+        void onRequestSuggestions(String query, AsyncCallback<Array<String>> callback);
+
+        /** Called when file selected. */
         void onFileSelected();
     }
 
     /**
-     * Sets the values of the project's files.
-     * 
-     * @param f
+     * Returns chosen item's path.
+     *
+     * @return chosen item's path
      */
-    void setFiles(@NotNull Array<String> files);
+    String getItemPath();
 
-    /**
-     * Returns chosen project's file.
-     * 
-     * @return {@link String} project's file
-     */
-    String getFile();
-
-    /**
-     * Put cursor in input field.
-     */
+    /** Put cursor in input field. */
     void focusInput();
 
-    /**
-     * Clear input.
-     */
+    /** Clear input. */
     void clearInput();
 
     /** Close dialog. */

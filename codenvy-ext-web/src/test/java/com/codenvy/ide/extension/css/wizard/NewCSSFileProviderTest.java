@@ -20,10 +20,10 @@ package com.codenvy.ide.extension.css.wizard;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.ext.web.WebExtensionResource;
 import com.codenvy.ide.ext.web.css.CssFileProvider;
-import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.resources.model.Folder;
-import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Resource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.junit.Before;

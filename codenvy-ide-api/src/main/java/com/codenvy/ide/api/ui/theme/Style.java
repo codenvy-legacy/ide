@@ -19,7 +19,7 @@ package com.codenvy.ide.api.ui.theme;
 
 /**
  * This class contains constants for style. Fields initialized from user preferences. Static methods used for bridging with CssResources
- * 
+ *
  * @author Evgen Vidolob
  */
 public class Style {
@@ -53,7 +53,7 @@ public class Style {
     public static String getActiveTabBackground() {
         return theme.getActiveTabBackground();
     }
-    
+
     public static String getTabFontColor() {
         return theme.getTabFontColor();
     }
@@ -86,10 +86,18 @@ public class Style {
         return theme.getPartToolbarShadow();
     }
 
+    public static String getPartToolbarSeparatorTopColor() {
+        return theme.getPartToolbarSeparatorTopColor();
+    }
+
+    public static String getPartToolbarSeparatorBottomColor() {
+        return theme.getPartToolbarSeparatorBottomColor();
+    }
+
     public static String getMainFontColor() {
         return theme.getMainFontColor();
     }
-    
+
     public static String getRadioButtonBackgroundColor() {
         return theme.getRadioButtonBackgroundColor();
     }
@@ -313,5 +321,21 @@ public class Style {
 
     public static String getButtonHoverTextColor() {
         return theme.getButtonHoverTextColor();
+    }
+
+    public static String getToolbarBackgroundColor() {
+        return theme.getToolbarBackgroundColor();
+    }
+
+    public static String getToolbarIconColor() {
+        return theme.getToolbarIconColor();
+    }
+
+    public static String getCompletedInvertColor() {
+        return theme.getCompletedInvertColor();
+    }
+
+    public static String getSvgUrlShadow() {
+        return theme.getSvgUrlShadow();
     }
 }

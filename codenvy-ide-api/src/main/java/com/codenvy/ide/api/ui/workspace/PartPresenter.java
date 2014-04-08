@@ -20,6 +20,7 @@ package com.codenvy.ide.api.ui.workspace;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.selection.Selection;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.IsWidget;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -49,6 +50,17 @@ public interface PartPresenter extends Presenter {
      */
     @Nullable
     ImageResource getTitleImage();
+    
+    /**
+     * Returns the widget to be displayed in the title of this part. If this value changes the part must fire a property listener event with
+     * <code>PROP_TITLE</code>.
+     * <p/>
+     * The title widget is usually used to populate the title bar of this part's visual container.
+     * 
+     * @return the title widget
+     */
+    @Nullable
+    IsWidget getTitleWidget();
 
     /**
      * Returns the title tool tip text of this part.

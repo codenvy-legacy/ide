@@ -21,9 +21,9 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.ext.git.client.GitClientService;
+import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.google.inject.Inject;
@@ -38,7 +38,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 @Singleton
 public class StatusCommandPresenter {
-    private GitClientService        service;
+    private GitServiceClient        service;
     private ResourceProvider        resourceProvider;
     private GitLocalizationConstant constant;
     private ConsolePart             console;
@@ -54,7 +54,7 @@ public class StatusCommandPresenter {
      * @param notificationManager
      */
     @Inject
-    public StatusCommandPresenter(GitClientService service, ResourceProvider resourceProvider, ConsolePart console,
+    public StatusCommandPresenter(GitServiceClient service, ResourceProvider resourceProvider, ConsolePart console,
                                   GitLocalizationConstant constant, NotificationManager notificationManager) {
         this.service = service;
         this.resourceProvider = resourceProvider;
@@ -70,7 +70,7 @@ public class StatusCommandPresenter {
             return;
         }
 
-        service.statusText(resourceProvider.getVfsInfo().getId(), project.getId(), false,
+        service.statusText(project.getId(), false,
                            new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                @Override
                                protected void onSuccess(String result) {

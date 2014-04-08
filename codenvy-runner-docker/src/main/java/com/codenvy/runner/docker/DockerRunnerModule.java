@@ -29,7 +29,9 @@ public class DockerRunnerModule extends AbstractModule {
     @Override
     protected void configure() {
         Multibinder.newSetBinder(binder(), Runner.class).addBinding().to(DockerRunner.class);
-        Multibinder.newSetBinder(binder(), ValueProviderFactory.class).addBinding().to(RunnerNameValueProviderFactory.class);
+        final Multibinder<ValueProviderFactory> vfMultibinder = Multibinder.newSetBinder(binder(), ValueProviderFactory.class);
+        vfMultibinder.addBinding().to(RunnerScriptValueProviderFactory.class);
+        vfMultibinder.addBinding().to(RunnerNameValueProviderFactory.class);
         bind(EmbeddedDockerRunnerRegistryPlugin.class).asEagerSingleton();
     }
 }

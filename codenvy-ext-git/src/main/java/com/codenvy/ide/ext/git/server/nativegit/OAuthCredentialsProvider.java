@@ -17,10 +17,10 @@
  */
 package com.codenvy.ide.ext.git.server.nativegit;
 
+import com.codenvy.api.auth.oauth.OAuthTokenProvider;
+import com.codenvy.api.auth.shared.dto.OAuthToken;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.ide.ext.git.server.GitException;
-import com.codenvy.ide.security.oauth.server.OAuthTokenProvider;
-import com.codenvy.ide.security.oauth.shared.Token;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +56,7 @@ public class OAuthCredentialsProvider implements CredentialsProvider {
         if (!WSO_2_URL_PATTERN.matcher(url).matches()) {
             return false;
         }
-        Token token;
+        OAuthToken token;
         try {
             token = tokenProvider.getToken("wso2", EnvironmentContext.getCurrent().getUser().getName());
         } catch (IOException e) {

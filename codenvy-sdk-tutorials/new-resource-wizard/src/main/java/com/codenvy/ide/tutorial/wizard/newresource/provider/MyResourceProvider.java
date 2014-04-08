@@ -20,17 +20,17 @@ package com.codenvy.ide.tutorial.wizard.newresource.provider;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
-import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.resources.model.Folder;
-import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Resource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
 import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.MimeType.TEXT_XML;
-import static com.codenvy.ide.resources.model.Folder.TYPE;
+import static com.codenvy.ide.api.resources.model.Folder.TYPE;
 
 /**
  * Provides creating of a my new resource.

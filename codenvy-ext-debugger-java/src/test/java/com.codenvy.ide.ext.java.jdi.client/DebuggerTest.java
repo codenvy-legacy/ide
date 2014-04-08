@@ -33,7 +33,7 @@ import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
 import com.codenvy.ide.ext.java.jdi.shared.Location;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
 import com.codenvy.ide.extension.runner.client.RunnerController;
-import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -122,10 +122,10 @@ public class DebuggerTest extends BaseTest {
 
         verify(service).connect(eq(DEBUG_HOST), eq(DEBUG_PORT), (AsyncRequestCallback<DebuggerInfo>)anyObject());
         verify(console).print(constants.debuggerConnected(anyString()));
-
         verifySetEnableButtons(DISABLE_BUTTON);
         verify(view).setEnableChangeValueButtonEnable(eq(DISABLE_BUTTON));
-
+        verify(view).setEnableRemoveAllBreakpointsButton(!DISABLE_BUTTON);
+        verify(view).setEnableDisconnectButton(!DISABLE_BUTTON);
         verify(workspaceAgent).openPart(presenter, PartStackType.INFORMATION);
     }
 
@@ -171,8 +171,9 @@ public class DebuggerTest extends BaseTest {
         verify(gutterManager).unmarkCurrentBreakPoint();
         verify(gutterManager).removeAllBreakPoints();
         verify(console).print(constants.debuggerDisconnected(anyString()));
+        verify(view).setEnableRemoveAllBreakpointsButton(DISABLE_BUTTON);
+        verify(view).setEnableDisconnectButton(DISABLE_BUTTON);
         verify(workspaceAgent).hidePart(presenter);
-        verify(workspaceAgent).removePart(presenter);
     }
 
     @Test

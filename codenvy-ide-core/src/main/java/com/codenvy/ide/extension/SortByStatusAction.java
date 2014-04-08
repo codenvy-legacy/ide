@@ -31,7 +31,7 @@ public class SortByStatusAction extends ToggleAction {
     private ExtensionManagerViewImpl view;
 
     public SortByStatusAction(ExtensionManagerViewImpl view, Resources resources) {
-        super("Sort by Status", "Sort by Status", resources.extension());
+        super("Sort by Status", "Sort by Status", resources.extension(), null);
         this.view = view;
     }
 

@@ -106,7 +106,7 @@ public class CredentialsLoader {
                break;
            }
         }
-        //if not available providers exist
+        //if not available tokenProvider exist
         if (!isCredentialsPresent) {
             username.setValue("");
             password.setValue("");

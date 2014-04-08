@@ -19,6 +19,7 @@ package com.codenvy.ide.ext.java.jdi.client;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 /** @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a> */
 public interface JavaRuntimeResources extends ClientBundle {
@@ -42,9 +43,12 @@ public interface JavaRuntimeResources extends ClientBundle {
 
     @Source("stepreturn.png")
     ImageResource stepReturnButton();
-
+    
     @Source("debugApp.png")
     ImageResource debugApp();
+    
+    @Source("debug.svg")
+    SVGResource debug();
 
     @Source("changeVariableValue.png")
     ImageResource changeVariableValue();

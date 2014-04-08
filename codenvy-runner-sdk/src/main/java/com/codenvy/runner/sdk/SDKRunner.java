@@ -20,8 +20,6 @@ package com.codenvy.runner.sdk;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.CustomPortService;
-import com.codenvy.api.core.util.LineConsumer;
-import com.codenvy.api.core.util.ProcessUtil;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.api.runner.internal.DeploymentSources;
@@ -32,13 +30,11 @@ import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
 import com.codenvy.api.runner.internal.dto.DebugMode;
 import com.codenvy.api.runner.internal.dto.RunRequest;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.commons.GwtXmlUtils;
 import com.codenvy.ide.maven.tools.MavenUtils;
-import com.codenvy.vfs.impl.fs.LocalFSMountStrategy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,24 +71,24 @@ public class SDKRunner extends Runner {
     private final Map<String, ApplicationServer> applicationServers;
     private final String                         codeServerBindAddress;
     private final String                         hostName;
-    private final LocalFSMountStrategy           mountStrategy;
     private final CustomPortService              portService;
+    private final CodeServer                     codeServer;
 
     @Inject
     public SDKRunner(@Named(DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
                      @Named(CLEANUP_DELAY_TIME) int cleanupDelay,
                      @Named(CODE_SERVER_BIND_ADDRESS) String codeServerBindAddress,
                      @Named("runner.sdk.host_name") String hostName,
-                     LocalFSMountStrategy mountStrategy,
                      CustomPortService portService,
                      Set<ApplicationServer> appServers,
+                     CodeServer codeServer,
                      ResourceAllocators allocators,
                      EventService eventService) {
         super(deployDirectoryRoot, cleanupDelay, allocators, eventService);
         this.codeServerBindAddress = codeServerBindAddress;
         this.hostName = hostName;
-        this.mountStrategy = mountStrategy;
         this.portService = portService;
+        this.codeServer = codeServer;
         applicationServers = new HashMap<>();
         //available application servers should be already injected
         for (ApplicationServer appServer : appServers) {
@@ -123,13 +119,14 @@ public class SDKRunner extends Runner {
                                                                                         codeServerBindAddress,
                                                                                         codeServerPort,
                                                                                         request);
-                configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class).withRel("web url")
+                configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class)
+                                                       .withRel(com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL)
                                                        .withHref(String.format("http://%s:%d/%s", hostName, httpPort, "ide/default")));
                 configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class)
                                                        .withRel(LINK_REL_CODE_SERVER)
                                                        .withHref(String.format("%s:%d", codeServerBindAddress, codeServerPort)));
                 final DebugMode debugMode = request.getDebugMode();
-                if (debugMode != null) {
+                if (debugMode != null && debugMode.getMode() != null) {
                     configuration.setDebugHost(hostName);
                     configuration.setDebugPort(portService.acquire());
                     configuration.setDebugTransport(DEBUG_TRANSPORT_PROTOCOL);
@@ -158,26 +155,14 @@ public class SDKRunner extends Runner {
             appDir = Files.createTempDirectory(getDeployDirectory().toPath(), (server.getName() + '_' + getName() + '_')).toFile();
             codeServerWorkDirPath = Files.createTempDirectory(getDeployDirectory().toPath(), ("codeServer_" + getName() + '_'));
             extension = Utils.getExtensionFromJarFile(new ZipFile(toDeploy.getFile()));
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException e) {
             throw new RunnerException(e);
         }
 
-        final String workspace = sdkRunnerCfg.getRequest().getWorkspace();
-        final String project = sdkRunnerCfg.getRequest().getProject().substring(1);
-        final Path projectSourcesPath;
-        try {
-            projectSourcesPath = mountStrategy.getMountPath(workspace).toPath().resolve(project);
-        } catch (VirtualFileSystemException e) {
-            throw new RunnerException(e);
-        }
-        CodeServer codeServer = new CodeServer();
-        CodeServer.CodeServerProcess codeServerProcess = codeServer.prepare(codeServerWorkDirPath,
-                                                                            projectSourcesPath,
-                                                                            sdkRunnerCfg,
-                                                                            extension);
+        CodeServer.CodeServerProcess codeServerProcess = codeServer.prepare(codeServerWorkDirPath, sdkRunnerCfg, extension, getExecutor());
         final ZipFile warFile = buildCodenvyWebAppWithExtension(extension);
         final ApplicationProcess process =
-                server.deploy(appDir, warFile, sdkRunnerCfg, codeServerProcess,
+                server.deploy(appDir, warFile, toDeploy.getFile(), sdkRunnerCfg, codeServerProcess,
                               new ApplicationServer.StopCallback() {
                                   @Override
                                   public void stopped() {
@@ -227,45 +212,11 @@ public class SDKRunner extends Runner {
             GwtXmlUtils.inheritGwtModule(IoUtil.findFile(SDKRunner.IDE_GWT_XML_FILE_NAME, workDirPath.toFile()).toPath(),
                                          extension.gwtModuleName);
 
-            warPath = buildWebAppAndGetWar(workDirPath);
-        } catch (IOException e) {
+            warPath = Utils.buildProjectFromSources(workDirPath, "*.war");
+        } catch (Exception e) {
             throw new RunnerException(e);
         }
         return warPath;
     }
 
-    private ZipFile buildWebAppAndGetWar(Path appDirPath) throws RunnerException {
-        final String[] command = new String[]{MavenUtils.getMavenExecCommand(), "package"};
-        try {
-            ProcessBuilder processBuilder = new ProcessBuilder(command).directory(appDirPath.toFile());
-            Process process = processBuilder.start();
-            ProcessLineConsumer consumer = new ProcessLineConsumer();
-            ProcessUtil.process(process, consumer, consumer);
-            process.waitFor();
-            if (process.exitValue() != 0) {
-                throw new RunnerException(consumer.getOutput().toString());
-            }
-            return new ZipFile(IoUtil.findFile("*.war", appDirPath.resolve("target").toFile()));
-        } catch (IOException | InterruptedException e) {
-            throw new RunnerException(e);
-        }
-    }
-
-    private static class ProcessLineConsumer implements LineConsumer {
-        final StringBuilder output = new StringBuilder();
-
-        @Override
-        public void writeLine(String line) throws IOException {
-            output.append('\n').append(line);
-        }
-
-        @Override
-        public void close() throws IOException {
-            //nothing to close
-        }
-
-        StringBuilder getOutput() {
-            return output;
-        }
-    }
 }

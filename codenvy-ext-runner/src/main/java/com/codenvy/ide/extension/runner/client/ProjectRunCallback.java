@@ -20,7 +20,7 @@ package com.codenvy.ide.extension.runner.client;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 
 /**
- * //
+ * Notified when app launched.
  *
  * @author Artem Zatsarynnyy
  */

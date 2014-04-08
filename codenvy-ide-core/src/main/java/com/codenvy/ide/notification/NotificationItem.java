@@ -107,8 +107,8 @@ public class NotificationItem extends Composite implements Notification.Notifica
             changeImage(resources.info());
         }
 
-        Label closeIcon = new Label("X");
-        closeIcon.addStyleName(resources.notificationCss().top1px());
+        Image closeIcon = new Image(resources.close());
+        closeIcon.addStyleName(resources.notificationCss().close());
         closeIcon.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -118,11 +118,11 @@ public class NotificationItem extends Composite implements Notification.Notifica
         mainPanel.addEast(closeIcon, 25);
 
         time = new Label(DATA_FORMAT.format(notification.getTime()));
-        time.addStyleName(resources.notificationCss().top1px());
+        time.addStyleName(resources.notificationCss().top4px());
         mainPanel.addWest(time, 55);
 
         title = new HTML(notification.getMessage());
-        title.addStyleName(resources.notificationCss().top1px());
+        title.addStyleName(resources.notificationCss().top4px());
         mainPanel.add(title);
 
         initWidget(mainPanel);
@@ -136,6 +136,10 @@ public class NotificationItem extends Composite implements Notification.Notifica
      */
     private void changeImage(@NotNull ImageResource icon) {
         Image messageIcon = new Image(icon);
+        if (resources.progress().equals(icon)) {
+            messageIcon.setSize("16", "16");
+            messageIcon.setStyleName(resources.notificationCss().invertColor());
+        }
         iconPanel.setWidget(messageIcon);
     }
 

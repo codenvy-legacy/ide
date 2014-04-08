@@ -27,8 +27,8 @@ import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackView;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesPresenter;
 import com.codenvy.ide.util.loging.Log;
@@ -142,7 +142,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
         // include close button
         ImageResource titleImage = part.getTitleImage();
         PartStackView.TabItem tabItem =
-                view.addTabButton(titleImage == null ? null : new Image(titleImage), part.getTitle(), part.getTitleToolTip(),
+                view.addTabButton(titleImage == null ? null : new Image(titleImage), part.getTitle(), part.getTitleToolTip(), null,
                                   partsClosable);
         bindEvents(tabItem, part);
         setActivePart(part);

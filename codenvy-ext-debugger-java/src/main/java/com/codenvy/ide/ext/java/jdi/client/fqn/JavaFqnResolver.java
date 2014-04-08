@@ -19,7 +19,7 @@ package com.codenvy.ide.ext.java.jdi.client.fqn;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
-import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.api.resources.model.File;
 import com.google.inject.Singleton;
 
 import javax.validation.constraints.NotNull;

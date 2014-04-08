@@ -20,20 +20,24 @@ package com.codenvy.ide.extension.runner.client;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 /**
  * Client resources.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: RunnerResources.java Jul 3, 2013 12:37:19 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 public interface RunnerResources extends ClientBundle {
 
-    @Source("runApp.png")
-    ImageResource launchApp();
+    @Source("run.svg")
+    SVGResource launchApp();
 
     @Source("getAppLogs.png")
     ImageResource getAppLogs();
 
     @Source("stopApp.png")
     ImageResource stopApp();
+
+    @Source("update.png")
+    ImageResource updateApp();
 }

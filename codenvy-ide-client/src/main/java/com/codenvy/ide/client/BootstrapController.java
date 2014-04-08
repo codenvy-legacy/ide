@@ -21,6 +21,7 @@ import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.Profile;
+import com.codenvy.ide.Constants;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.theme.Style;
@@ -30,7 +31,7 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
-import com.codenvy.ide.resources.ProjectTypeDescriptorRegistry;
+import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.Utils;
@@ -69,9 +70,8 @@ public class BootstrapController {
      * @param styleInjector
      * @param extensionInitializer
      * @param preferencesManager
-     * @param userService
+     * @param userProfileService
      * @param projectTypeDescriptionServiceClient
-     *
      * @param projectTypeDescriptorRegistry
      * @param resourceProvider
      * @param dtoRegistrar
@@ -97,7 +97,11 @@ public class BootstrapController {
         this.iconRegistry = iconRegistry;
         this.themeAgent = themeAgent;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
-
+        
+        //Is necessary for loading IDE styles before standard GWT one:
+        setTheme();
+        styleInjector.inject();
+        
         ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW)
                       .setCallback(new Callback<Void, Exception>() {
                           @Override
@@ -144,6 +148,9 @@ public class BootstrapController {
                     @Override
                     public void onFailure(ComponentException caught) {
                         Log.error(BootstrapController.class, "FAILED to start service:" + caught.getComponent(), caught);
+
+                        // Handle error when receiving profile.
+                        initializationFailed(caught.getMessage());
                     }
                 });
 
@@ -156,6 +163,18 @@ public class BootstrapController {
             }
         });
     }
+
+    /**
+     * Call this method to handle any of initialization errors.
+     * If a function window["on-initialization-failed"] is set, it will be called using 'message' string as a parameter.
+     *
+     * @param message error message
+     */
+    private native void initializationFailed(String message) /*-{
+        if ($wnd["on-initialization-failed"]) {
+            $wnd["on-initialization-failed"](message);
+        }
+    }-*/;
 
     private void setTheme() {
         final String storedThemeId = preferencesManager.getValue("Theme");
@@ -170,7 +189,12 @@ public class BootstrapController {
                         dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectTypeDescriptor.class)) {
                     @Override
                     protected void onSuccess(Array<ProjectTypeDescriptor> result) {
-                        projectTypeDescriptorRegistry.registerDescriptors(result);
+                        for (int i = 0; i < result.size(); i++) {
+                            if (!result.get(i).getProjectTypeId().equalsIgnoreCase(Constants.NAMELESS_ID))//skip unknown project type user
+                                                                                                        //can select this project type need
+                                                                                                        //use BaseProjectType instead
+                                projectTypeDescriptorRegistry.registerDescriptor(result.get(i));
+                        }
                     }
 
                     @Override
@@ -183,11 +207,9 @@ public class BootstrapController {
 
 
     private void registerDefaultIcon() {
-        Map<String, String> icons = new HashMap<String, String>();
-        icons.put("default.projecttype.small.icon", "default/project.png");
-        icons.put("default.folder.small.icon", "default/folder.png");
-        icons.put("default.file.small.icon", "default/file.png");
-        iconRegistry.registerIcons(icons);
+        iconRegistry.registerIcon("default.projecttype.small.icon", "default/project.png");
+        iconRegistry.registerIcon("default.folder.small.icon", "default/folder.png");
+        iconRegistry.registerIcon("default.file.small.icon", "default/file.png");
     }
 
 }

@@ -22,6 +22,7 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.actions.CloseProjectAction;
 import com.codenvy.ide.actions.DeleteResourceAction;
 import com.codenvy.ide.actions.FormatterAction;
+import com.codenvy.ide.actions.NavigateToFileAction;
 import com.codenvy.ide.actions.NewProjectAction;
 import com.codenvy.ide.actions.NewProjectWizardAction;
 import com.codenvy.ide.actions.NewResourceAction;
@@ -31,6 +32,7 @@ import com.codenvy.ide.actions.SaveAction;
 import com.codenvy.ide.actions.SaveAllAction;
 import com.codenvy.ide.actions.ShowAboutAction;
 import com.codenvy.ide.actions.ShowPreferencesAction;
+import com.codenvy.ide.actions.UploadFileAction;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -136,9 +138,8 @@ public class StandardComponentInitializer {
 //    @Inject
 //    private ShowProjectPropertiesAction showProjectPropertiesAction;
 
-    // Temporary disable 'Navigate To File' feature
-//    @Inject
-//    private NavigateToFileAction navigateToFileAction;
+    @Inject
+    private NavigateToFileAction navigateToFileAction;
 
     @Inject
     @MainToolbar
@@ -181,6 +182,9 @@ public class StandardComponentInitializer {
     private FormatterAction formatterAction;
 
     @Inject
+    private UploadFileAction uploadFileAction;
+
+    @Inject
     private NewProjectWizardAction newProjectWizardAction;
 
     /** Instantiates {@link StandardComponentInitializer} an creates standard content. */
@@ -221,23 +225,25 @@ public class StandardComponentInitializer {
         actionManager.registerAction("newProject", newProjectAction);
         actionManager.registerAction("openProject", openProjectAction);
         actionManager.registerAction("newProject2", newProjectWizardAction);
+        actionManager.registerAction("uploadFile", uploadFileAction);
 
-//        actionManager.registerAction("navigateToFile", navigateToFileAction);
-//        keyBinding.getGlobal().addKey(new KeyBuilder().action().alt().charCode('n').build(), "navigateToFile");
+        actionManager.registerAction("navigateToFile", navigateToFileAction);
+        keyBinding.getGlobal().addKey(new KeyBuilder().action().alt().charCode('n').build(), "navigateToFile");
 
         DefaultActionGroup toolbarGroup = new DefaultActionGroup(actionManager);
         toolbarGroup.addSeparator();
         actionManager.registerAction(IdeActions.GROUP_MAIN_TOOLBAR, toolbarGroup);
 
         DefaultActionGroup newGroup = new DefaultActionGroup("New", true, actionManager);
-        newGroup.getTemplatePresentation().setIcon(resources.file());
+        newGroup.getTemplatePresentation().setSVGIcon(resources.newResource());
         newGroup.addAction(newProjectAction, Constraints.FIRST);
         newGroup.addAction(newProjectWizardAction);
         toolbarGroup.add(newGroup);
         toolbarGroup.addSeparator();
         fileGroup.add(newGroup);
         fileGroup.add(openProjectAction);
-//        fileGroup.add(navigateToFileAction);
+        fileGroup.add(uploadFileAction);
+        fileGroup.add(navigateToFileAction);
         fileGroup.add(renameResourceAction);
         actionManager.registerAction("newResource", newFileAction);
         newGroup.add(newFileAction);
@@ -252,7 +258,7 @@ public class StandardComponentInitializer {
         saveGroup.add(saveAllAction);
         saveGroup.add(formatterAction);
         toolbarGroup.addSeparator();
-        toolbarGroup.add(saveGroup);
+        toolbarGroup.add(saveAllAction);
         toolbarGroup.addSeparator();
         fileGroup.add(saveGroup);
 

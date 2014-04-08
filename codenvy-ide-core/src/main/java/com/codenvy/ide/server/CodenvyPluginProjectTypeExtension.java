@@ -22,6 +22,7 @@ import com.codenvy.api.project.server.ProjectTypeExtension;
 import com.codenvy.api.project.shared.Attribute;
 import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
+import com.codenvy.ide.Constants;
 
 import javax.inject.Inject;
 import javax.inject.Named;

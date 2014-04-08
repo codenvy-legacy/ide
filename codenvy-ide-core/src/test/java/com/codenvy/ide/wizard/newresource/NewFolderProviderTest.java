@@ -18,7 +18,7 @@
 package com.codenvy.ide.wizard.newresource;
 
 import com.codenvy.ide.api.selection.Selection;
-import com.codenvy.ide.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.Folder;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.junit.Before;
@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import static com.codenvy.ide.resources.model.Folder.TYPE;
+import static com.codenvy.ide.api.resources.model.Folder.TYPE;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;

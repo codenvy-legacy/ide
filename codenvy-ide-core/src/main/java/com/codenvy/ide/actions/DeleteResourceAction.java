@@ -26,8 +26,7 @@ import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.api.resources.model.Resource;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -50,7 +49,7 @@ public class DeleteResourceAction extends Action {
                                 ResourceProvider resourceProvider,
                                 Resources resources,
                                 NotificationManager notificationManager, CoreLocalizationConstant localization) {
-        super("Delete", "Delete resource", resources.delete());
+        super("Delete", "Delete resource", null, resources.delete());
 
         this.selectionAgent = selectionAgent;
         this.resourceProvider = resourceProvider;
@@ -63,12 +62,11 @@ public class DeleteResourceAction extends Action {
     public void update(ActionEvent e) {
         Selection<?> s = selectionAgent.getSelection();
         if (s != null && s.getFirstElement() instanceof Resource) {
-            e.getPresentation().setVisible(true);
             Selection<Resource> selection = (Selection<Resource>)s;
             Resource resource = selection.getFirstElement();
             e.getPresentation().setEnabled(resource != null);
         } else
-            e.getPresentation().setVisible(false);
+            e.getPresentation().setEnabled(false);
     }
 
     /** {@inheritDoc} */
@@ -95,7 +93,6 @@ public class DeleteResourceAction extends Action {
                 @Override
                 public void onSuccess(String result) {
                     // do nothing
-                    resourceProvider.showListProjects();
                 }
 
                 @Override

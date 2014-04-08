@@ -19,8 +19,8 @@ package com.codenvy.ide.ext.java.client.projectmodel;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.resources.model.Folder;
-import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.Resource;
 
 import org.junit.Before;
 import org.junit.Test;

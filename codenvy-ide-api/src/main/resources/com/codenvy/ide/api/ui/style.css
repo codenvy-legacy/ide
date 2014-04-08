@@ -35,6 +35,8 @@
 @eval partToolbar com.codenvy.ide.api.ui.theme.Style.getPartToolbar();
 @eval partToolbarActive com.codenvy.ide.api.ui.theme.Style.getPartToolbarActive();
 @eval partToolbarShadow com.codenvy.ide.api.ui.theme.Style.getPartToolbarShadow();
+@eval partToolbarSeparatorTopColor com.codenvy.ide.api.ui.theme.Style.getPartToolbarSeparatorTopColor();
+@eval partToolbarSeparatorBottomColor com.codenvy.ide.api.ui.theme.Style.getPartToolbarSeparatorBottomColor();
 
 @eval consolePanelColor com.codenvy.ide.api.ui.theme.Style.getConsolePanelColor();
 
@@ -43,6 +45,7 @@
 
 /* Indicates a completed action. Preferred text color is lightTextColor. */
 @eval completedBackgroundColor com.codenvy.ide.api.ui.theme.Style.getCompletedBackgroundColor();
+@eval completedInvertColor com.codenvy.ide.api.ui.theme.Style.getCompletedInvertColor();
 /* Background color for an item selected with the keyboard */
 @eval keyboardSelectionBackgroundColor com.codenvy.ide.api.ui.theme.Style.getKeyboardSelectionBackgroundColor();
 @eval anchorColor com.codenvy.ide.api.ui.theme.Style.getAnchorColor();
@@ -58,6 +61,7 @@
 @eval buttonTopColor com.codenvy.ide.api.ui.theme.Style.getButtonTopColor();
 @eval buttonColor com.codenvy.ide.api.ui.theme.Style.getButtonColor();
 @eval buttonHoverTextColor com.codenvy.ide.api.ui.theme.Style.getButtonHoverTextColor();
+@eval svgUrlShadow com.codenvy.ide.api.ui.theme.Style.getSvgUrlShadow();
 
 /* notable button */
 @eval notableButtonTopColor com.codenvy.ide.api.ui.theme.Style.getNotableButtonTopColor();
@@ -94,6 +98,7 @@
 @def sideBarHorizontalPadding 12px;
 @def splitterWidth 8px;
 @def splitterOverlap 4px;
+@def toolbarIconSize 16px;
 
 /* Font Sizes */
 @def fontSize 13px;
@@ -102,6 +107,7 @@
 @def landingTitleFontSize 20px;
 @def titleFontSize 16px;
 @def secondaryTextFontSize 11px;
+@def smallFontSize 10px;
 @def largeLabel 14px;
 @def largeDropdownLabel 12px;
 @def boxFontSize 12px;
@@ -126,6 +132,10 @@
 @eval lightestTextColor com.codenvy.ide.api.ui.theme.Style.getLightestTextColor();
 @eval radioButtonBackgroundColor com.codenvy.ide.api.ui.theme.Style.getRadioButtonBackgroundColor();
 @eval disabledMenuItemColor com.codenvy.ide.api.ui.theme.Style.getDeisabledMenuColor();
+
+/*Toolbar*/
+@eval toolbarBackgroundColor com.codenvy.ide.api.ui.theme.Style.getToolbarBackgroundColor();
+@eval toolbarIconColor com.codenvy.ide.api.ui.theme.Style.getToolbarIconColor();
 
 /* DialogBox*/
 @eval dialogTopLeft com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();

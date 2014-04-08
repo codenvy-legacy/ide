@@ -20,7 +20,8 @@ package com.codenvy.ide.ext.java.client;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.ext.java.shared.Constants;
+import com.codenvy.ide.api.resources.model.Project;
 
 /** @author Evgen Vidolob */
 public class UpdateDependencyAction extends Action {
@@ -44,15 +45,11 @@ public class UpdateDependencyAction extends Action {
     public void update(ActionEvent e) {
         Project activeProject = resourceProvider.getActiveProject();
         if (activeProject != null) {
-            // TODO: read attribute value
-            // it doesn't work now cause builder.name is calculated attribute
-            final String builder = (String)activeProject.getAttributeValue("builder.name");
+            final String builder = activeProject.getAttributeValue(Constants.BUILDER_NAME);
             if ("maven".equals(builder)) {
-                e.getPresentation().setVisible(true);
-                e.getPresentation().setEnabled(true);
+                e.getPresentation().setEnabledAndVisible(true);
             } else {
-                e.getPresentation().setVisible(false);
-                e.getPresentation().setEnabled(false);
+                e.getPresentation().setEnabledAndVisible(false);
             }
         } else {
             e.getPresentation().setEnabledAndVisible(false);

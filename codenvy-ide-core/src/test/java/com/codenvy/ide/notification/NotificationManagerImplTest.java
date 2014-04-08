@@ -17,10 +17,8 @@
  */
 package com.codenvy.ide.notification;
 
-import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.notification.Notification;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
 
@@ -32,15 +30,9 @@ import static com.codenvy.ide.api.notification.Notification.State.READ;
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
-import static com.codenvy.ide.notification.NotificationContainer.HEIGHT;
-import static com.codenvy.ide.notification.NotificationContainer.WIDTH;
-import static com.codenvy.ide.notification.NotificationManagerView.Status.EMPTY;
-import static com.codenvy.ide.notification.NotificationManagerView.Status.HAS_UNREAD;
-import static com.codenvy.ide.notification.NotificationManagerView.Status.IN_PROGRESS;
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.anyInt;
-import static org.mockito.Mockito.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
@@ -76,18 +68,14 @@ public class NotificationManagerImplTest extends GwtTestWithMockito {
         manager.onValueChanged();
 
         verify(view).setNotificationCount(eq(1));
-        verify(view).setStatus(eq(IN_PROGRESS));
 
         reset(view);
         notification.setStatus(FINISHED);
-
-        verify(view).setStatus(eq(HAS_UNREAD));
 
         reset(view);
         notification.setState(READ);
 
         verify(view).setNotificationCount(eq(0));
-        verify(view).setStatus(eq(EMPTY));
     }
 
     @Test
@@ -98,7 +86,6 @@ public class NotificationManagerImplTest extends GwtTestWithMockito {
         verify(notificationContainer).addNotification(eq(notification));
         verify(notificationMessageStack).addNotification(eq(notification));
         verify(view).setNotificationCount(anyInt());
-        verify(view).setStatus((NotificationManagerView.Status)anyObject());
     }
 
     @Test
@@ -109,7 +96,6 @@ public class NotificationManagerImplTest extends GwtTestWithMockito {
         verify(notificationContainer).removeNotification(eq(notification));
         verify(notificationMessageStack).removeNotification(eq(notification));
         verify(view).setNotificationCount(anyInt());
-        verify(view).setStatus((NotificationManagerView.Status)anyObject());
     }
 
     @Test
@@ -149,7 +135,6 @@ public class NotificationManagerImplTest extends GwtTestWithMockito {
 
         verify(closeNotificationHandler).onCloseClicked();
         verify(view).setNotificationCount(eq(0));
-        verify(view).setStatus(eq(EMPTY));
     }
 
     @Test
@@ -165,7 +150,6 @@ public class NotificationManagerImplTest extends GwtTestWithMockito {
         verify(notificationContainer).removeNotification(eq(notification));
         verify(notificationMessageStack).removeNotification(eq(notification));
         verify(view).setNotificationCount(eq(0));
-        verify(view).setStatus(eq(EMPTY));
     }
 
 //    @Test

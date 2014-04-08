@@ -32,6 +32,7 @@ import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
 import com.codenvy.api.runner.internal.dto.DebugMode;
 import com.codenvy.api.runner.internal.dto.RunRequest;
+import com.codenvy.commons.lang.NamedThreadFactory;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.runner.docker.dockerfile.DockerImage;
 import com.codenvy.runner.docker.dockerfile.DockerfileParser;
@@ -46,6 +47,7 @@ import com.google.common.io.CharStreams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -55,6 +57,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -77,9 +81,12 @@ public abstract class BaseDockerRunner extends Runner {
     private static final Pattern DEBUG_PORT_PATTERN =
             Pattern.compile("APPLICATION_PORT_([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-6][0-5][0-5][0-3][0-5])_DEBUG");
 
-    private final Map<String, ImageUsage> dockerImageUsage;
+    private final Map<String, ImageStats> dockerImages;
     private final String                  hostName;
     private final CustomPortService       portService;
+    private final long                    maxImageIdleTime;
+
+    private ScheduledExecutorService imageCleaner;
 
     protected BaseDockerRunner(java.io.File deployDirectoryRoot,
                                int cleanupDelay,
@@ -90,7 +97,62 @@ public abstract class BaseDockerRunner extends Runner {
         super(deployDirectoryRoot, cleanupDelay, allocators, eventService);
         this.hostName = hostName;
         this.portService = portService;
-        this.dockerImageUsage = new HashMap<>();
+        this.dockerImages = new HashMap<>();
+        // TODO: configurable
+        this.maxImageIdleTime = TimeUnit.MINUTES.toMillis(15);
+    }
+
+    @PostConstruct
+    @Override
+    public final synchronized void start() {
+        super.start();
+        imageCleaner = Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory(getName() + "-ImageCleaner-", true));
+        imageCleaner.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (BaseDockerRunner.this) {
+                    final DockerConnector connector = DockerConnector.getInstance();
+                    final List<String> remove = new LinkedList<>();
+                    for (Map.Entry<String, ImageStats> e : dockerImages.entrySet()) {
+                        final ImageStats stats = e.getValue();
+                        if (stats.idle() > maxImageIdleTime) {
+                            try {
+                                connector.removeImage(stats.image);
+                                LOG.debug("Remove docker image: {}", stats.image);
+                                remove.add(e.getKey());
+                            } catch (IOException err) {
+                                LOG.error(String.format("Failed remove docker image %s", stats.image), err);
+                            }
+                        }
+                    }
+                    dockerImages.keySet().removeAll(remove);
+                }
+            }
+        }, 1, 1, TimeUnit.MINUTES);
+        doStart();
+    }
+
+    protected void doStart() {
+    }
+
+    @Override
+    public final synchronized void stop() {
+        super.stop();
+        imageCleaner.shutdownNow();
+        final DockerConnector connector = DockerConnector.getInstance();
+        for (ImageStats stats : dockerImages.values()) {
+            try {
+                connector.removeImage(stats.image);
+                LOG.debug("Remove docker image: {}", stats.image);
+            } catch (IOException e) {
+                LOG.error(String.format("Failed remove docker image %s", stats.image), e);
+            }
+        }
+        dockerImages.clear();
+        doStop();
+    }
+
+    protected void doStop() {
     }
 
     @Override
@@ -132,7 +194,7 @@ public abstract class BaseDockerRunner extends Runner {
                             // TODO: need something more flexible to avoid showing port in URL.
                             final String webUrl = String.format("http://%s:%d", hostName, publicPort);
                             dockerRunnerCfg.getLinks().add(DtoFactory.getInstance().createDto(Link.class)
-                                                                     .withRel("web url")
+                                                                     .withRel(com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL)
                                                                      .withHref(webUrl));
                         } else if (DEBUG_PORT_PATTERN.matcher(name).matches()) {
                             final int privatePort = Integer.parseInt(entry.getValue());
@@ -156,9 +218,9 @@ public abstract class BaseDockerRunner extends Runner {
             final String dockerRepoName = workspace + (project.startsWith("/") ? project : ('/' + runnerCfg.getRequest().getProject()));
             final String fileHash = com.google.common.io.Files.hash(applicationFile, Hashing.sha1()).toString();
             final DockerConnector connector = DockerConnector.getInstance();
-            final ImageUsage imageUsage = createImageIfNeed(connector, dockerRepoName, fileHash, dockerfile, applicationFile);
+            final ImageStats imageStats = createImageIfNeed(connector, dockerRepoName, fileHash, dockerfile, applicationFile);
             final ContainerConfig containerConfig =
-                    new ContainerConfig().withImage(imageUsage.image).withMemory(runnerCfg.getMemory() * 1024 * 1024).withCpuShares(1);
+                    new ContainerConfig().withImage(imageStats.image).withMemory(runnerCfg.getMemory() * 1024 * 1024).withCpuShares(1);
             HostConfig hostConfig = null;
             if (!portMapping.isEmpty()) {
                 hostConfig = new HostConfig();
@@ -181,7 +243,7 @@ public abstract class BaseDockerRunner extends Runner {
                     }
                 }
             });
-            imageUsage.inc();
+            imageStats.inc();
             registerDisposer(docker, new Disposer() {
                 @Override
                 public void dispose() {
@@ -191,11 +253,7 @@ public abstract class BaseDockerRunner extends Runner {
                         }
                         connector.removeContainer(docker.container, true);
                         LOG.debug("Remove docker container: {}", docker.container);
-                    } catch (Exception e) {
-                        LOG.error(e.getMessage(), e);
-                    }
-                    try {
-                        maybeDeleteImage(connector, imageUsage);
+                        imageStats.dec();
                     } catch (Exception e) {
                         LOG.error(e.getMessage(), e);
                     }
@@ -211,21 +269,30 @@ public abstract class BaseDockerRunner extends Runner {
 
     private static final Pattern BUILD_LOG_PATTERN = Pattern.compile("\\{[^\\}^\\{]+\\}");
 
-    private synchronized ImageUsage createImageIfNeed(DockerConnector connector,
+    private synchronized ImageStats createImageIfNeed(DockerConnector connector,
                                                       String dockerRepoName,
                                                       String tag,
                                                       java.io.File dockerFile,
                                                       java.io.File applicationFile) throws IOException, RunnerException {
-        String dockerImageId = null;
-        final Image[] images = connector.listImages();
-        for (int i = 0, l = images.length; i < l && dockerImageId == null; i++) {
-            Image image = images[i];
-            if (dockerRepoName.equals(image.getRepository()) && tag.equals(image.getTag())) {
-                dockerImageId = image.getId();
+        final String dockerImageName = dockerRepoName + ':' + tag;
+        ImageStats imageStats = dockerImages.get(dockerImageName);
+        if (imageStats != null) {
+            Image image = null;
+            final Image[] images = connector.listImages();
+            for (int i = 0, l = images.length; i < l && image == null; i++) {
+                // While create new image we get short form of image id.
+                // Unfortunately while get list of existed images we get long form of id.
+                // That's why use 'startsWith' instead of 'equals'.
+                if (images[i].getId().startsWith(imageStats.image)) {
+                    image = images[i];
+                }
+            }
+            if (image == null) {
+                dockerImages.remove(dockerImageName);
+                imageStats = null;
             }
         }
-        final String dockerImageName = dockerRepoName + ':' + tag;
-        if (dockerImageId == null) {
+        if (imageStats == null) {
             final StringBuilder output = new StringBuilder();
             connector.createImage(dockerFile, applicationFile, dockerRepoName, tag, output);
             final String buildLog = output.toString();
@@ -235,6 +302,7 @@ public abstract class BaseDockerRunner extends Runner {
                     throw new RunnerException(String.format("Error building Docker container, response from Docker API:\n%s\n", buildLog));
                 }
             }
+            String imageId = null;
             final Matcher matcher = BUILD_LOG_PATTERN.matcher(buildLog);
             if (matcher.find()) {
                 do {
@@ -244,29 +312,19 @@ public abstract class BaseDockerRunner extends Runner {
                         while (endSize < msg.length() && Character.digit(msg.charAt(endSize), 16) != -1) {
                             endSize++;
                         }
-                        dockerImageId = msg.substring(29, endSize);
+                        imageId = msg.substring(29, endSize);
                     }
                 } while (matcher.find());
             }
-            if (dockerImageId == null) {
+            if (imageId == null) {
                 throw new RunnerException("Invalid response from Docker API, can't get ID of newly created image");
             }
-            LOG.debug("Create new image {}, id {}", dockerImageName, dockerImageId);
+            LOG.debug("Create new image {}, id {}", dockerImageName, imageId);
+            dockerImages.put(dockerImageName, imageStats = new ImageStats(imageId));
         } else {
-            LOG.debug("Image {} exists, id {}", dockerImageName, dockerImageId);
+            LOG.debug("Image {} exists, id {}", dockerImageName, imageStats.image);
         }
-        ImageUsage imageUsage = dockerImageUsage.get(dockerImageName);
-        if (imageUsage == null) {
-            dockerImageUsage.put(dockerImageName, imageUsage = new ImageUsage(dockerImageId));
-        }
-        return imageUsage;
-    }
-
-    private void maybeDeleteImage(DockerConnector connector, ImageUsage imageUsage) throws IOException {
-        if (imageUsage.dec() == 0) {
-            connector.removeImage(imageUsage.image);
-            LOG.debug("Remove docker image: {}", imageUsage.image);
-        }
+        return imageStats;
     }
 
     public static class DockerRunnerConfiguration extends RunnerConfiguration {
@@ -275,32 +333,29 @@ public abstract class BaseDockerRunner extends Runner {
         }
     }
 
-    private static class ImageUsage {
+    private static class ImageStats {
         final String image;
-        int count;
+        int  count;
+        long unusedSince;
 
-        ImageUsage(String image) {
+        ImageStats(String image) {
             this.image = image;
         }
 
         synchronized int inc() {
+            unusedSince = 0;
             return ++count;
         }
 
         synchronized int dec() {
-            return --count;
-        }
-
-        synchronized int count() {
+            if (--count == 0) {
+                unusedSince = System.currentTimeMillis();
+            }
             return count;
         }
 
-        @Override
-        public String toString() {
-            return "ImageUsage{" +
-                   "image='" + image + '\'' +
-                   ", count=" + count +
-                   '}';
+        synchronized long idle() {
+            return unusedSince == 0 ? 0 : System.currentTimeMillis() - unusedSince;
         }
     }
 

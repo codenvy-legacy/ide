@@ -21,9 +21,9 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.ext.git.client.BaseTest;
-import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.resources.model.Folder;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -127,12 +127,12 @@ public class AddToIndexPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                RequestCallback<Void> callback = (RequestCallback<Void>)arguments[4];
+                RequestCallback<Void> callback = (RequestCallback<Void>)arguments[3];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service).addWS(anyString(), (Project)anyObject(), anyBoolean(), (List<String>)anyObject(),
+        }).when(service).addWS((Project)anyObject(), anyBoolean(), (List<String>)anyObject(),
                                (RequestCallback<Void>)anyObject());
         doAnswer(new Answer() {
             @Override
@@ -153,7 +153,7 @@ public class AddToIndexPresenterTest extends BaseTest {
 
         verify(view).isUpdated();
         verify(view).close();
-        verify(service).addWS(eq(VFS_ID), eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
+        verify(service).addWS(eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
                               (RequestCallback<Void>)anyObject());
         verify(resourceProvider).getProject(eq(PROJECT_NAME), (AsyncCallback<Project>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
@@ -166,12 +166,12 @@ public class AddToIndexPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                RequestCallback<Void> callback = (RequestCallback<Void>)arguments[4];
+                RequestCallback<Void> callback = (RequestCallback<Void>)arguments[3];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).addWS(anyString(), (Project)anyObject(), anyBoolean(), (List<String>)anyObject(),
+        }).when(service).addWS((Project)anyObject(), anyBoolean(), (List<String>)anyObject(),
                                (RequestCallback<Void>)anyObject());
         when(view.isUpdated()).thenReturn(NEED_UPDATING);
 
@@ -180,7 +180,7 @@ public class AddToIndexPresenterTest extends BaseTest {
 
         verify(view).isUpdated();
         verify(view).close();
-        verify(service).addWS(eq(VFS_ID), eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
+        verify(service).addWS(eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
                               (RequestCallback<Void>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).addFailed();
@@ -189,7 +189,7 @@ public class AddToIndexPresenterTest extends BaseTest {
     @Test
     public void testOnAddClickedWhenAddRequestIsFailed() throws Exception {
         doThrow(WebSocketException.class).when(service)
-                .addWS(anyString(), (Project)anyObject(), anyBoolean(), (List<String>)anyObject(),
+                .addWS((Project)anyObject(), anyBoolean(), (List<String>)anyObject(),
                        (RequestCallback<Void>)anyObject());
         when(view.isUpdated()).thenReturn(NEED_UPDATING);
 
@@ -198,7 +198,7 @@ public class AddToIndexPresenterTest extends BaseTest {
 
         verify(view).isUpdated();
         verify(service)
-                .addWS(eq(VFS_ID), eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
+                .addWS(eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
                        (RequestCallback<Void>)anyObject());
         verify(view).close();
         verify(notificationManager).showNotification((Notification)anyObject());

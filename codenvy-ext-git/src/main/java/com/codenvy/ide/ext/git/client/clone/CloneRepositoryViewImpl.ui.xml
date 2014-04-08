@@ -41,8 +41,10 @@
     <g:DockLayoutPanel unit="PX" width="380px" height="180px" addStyleNames="{style.emptyBorder}">
         <g:south size="26.0">
             <g:FlowPanel>
-                <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" ui:field="btnCancel"/>
-                <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonClone}" width="60px" ui:field="btnClone" />
+                <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" ui:field="btnCancel"
+                          debugId="git-cloneRepository-cancel"/>
+                <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonClone}" width="60px" ui:field="btnClone"
+                          debugId="git-cloneRepository-clone"/>
             </g:FlowPanel>
         </g:south>
         <g:north size="50.0">
@@ -51,7 +53,8 @@
                     <g:Label text="{locale.cloneRemoteUriFieldTitle}" addStyleNames="{res.gitCSS.textFont}"/>
                 </g:north>
                 <g:center>
-                    <g:TextBox width="368px" ui:field="remoteUri" addStyleNames="{res.gitCSS.textFont}"/>
+                    <g:TextBox width="368px" ui:field="remoteUri" addStyleNames="{res.gitCSS.textFont}"
+                               debugId="git-cloneRepository-remoteUri"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>
@@ -61,7 +64,8 @@
                     <g:Label text="{locale.projectNameFieldTitle}" addStyleNames="{res.gitCSS.textFont}"/>
                 </g:north>
                 <g:center>
-                    <g:TextBox width="368px" ui:field="projectName" addStyleNames="{res.gitCSS.textFont}"/>
+                    <g:TextBox width="368px" ui:field="projectName" addStyleNames="{res.gitCSS.textFont}"
+                               debugId="git-cloneRepository-projectName"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>
@@ -71,7 +75,8 @@
                     <g:Label text="{locale.cloneRemoteNameFieldTitle}" addStyleNames="{res.gitCSS.textFont}"/>
                 </g:north>
                 <g:center>
-                    <g:TextBox width="368px" ui:field="remoteName" addStyleNames="{res.gitCSS.textFont}"/>
+                    <g:TextBox width="368px" ui:field="remoteName" addStyleNames="{res.gitCSS.textFont}"
+                               debugId="git-cloneRepository-remoteName"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>

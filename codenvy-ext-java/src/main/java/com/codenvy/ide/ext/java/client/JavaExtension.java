@@ -47,7 +47,7 @@ import com.codenvy.ide.ext.java.client.wizard.NewClassProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewEnumProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewInterfaceProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewPackageProvider;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -107,28 +107,61 @@ public class JavaExtension {
         this.asyncRequestFactory = asyncRequestFactory;
         this.editorAgent = editorAgent;
 
-        Map<String, String> icons = new HashMap<>();
-        icons.put("jar.projecttype.big.icon", "java-extension/jar_64.png");
-        icons.put("jar.projecttype.small.icon", "java-extension/jar.png");
-        icons.put("jar.folder.small.icon", "java-extension/package.gif");
-        icons.put("jar/java.file.small.icon", "java-extension/java-class.png");
-        icons.put("java.class", "java-extension/java-class.png");
-        icons.put("java.package", "java-extension/package.gif");
-        icons.put("spring.projecttype.big.icon", "java-extension/Spring-Logo.png");
-        icons.put("spring.projecttype.small.icon", "java-extension/Spring-Logo.png");
-        icons.put("spring.folder.small.icon", "java-extension/package.gif");
-        icons.put("spring/java.file.small.icon", "java-extension/java-class.png");
-        icons.put("java.class", "java-extension/java-class.png");
-        icons.put("java.package", "java-extension/package.gif");
-        icons.put("war.projecttype.big.icon", "java-extension/web_app_big.png");
-        icons.put("war.projecttype.small.icon", "java-extension/web_app_big.png");
-        icons.put("war.folder.small.icon", "java-extension/package.gif");
-        icons.put("war/java.file.small.icon", "java-extension/java-class.png");
-        icons.put("java.class", "java-extension/java-class.png");
-        icons.put("java.package", "java-extension/package.gif");
 
+        iconRegistry.registerIcon("jar.projecttype.big.icon", "java-extension/jar_64.png");
+//        iconRegistry.registerIcon("jar.projecttype.small.icon", "java-extension/jar.png");
+        iconRegistry.registerIcon("jar.folder.small.icon", "java-extension/package-icon.png");
+        iconRegistry.registerIcon("jar/java.file.small.icon", "java-extension/java-icon.png");
+        iconRegistry.registerIcon("jar/xml.file.small.icon", "java-extension/xml-icon.png");
+        iconRegistry.registerIcon("jar/css.file.small.icon", "java-extension/css-icon.png");
+        iconRegistry.registerIcon("jar/js.file.small.icon", "java-extension/js-icon.png");
+        iconRegistry.registerIcon("jar/json.file.small.icon", "java-extension/json-icon.png");
+        iconRegistry.registerIcon("jar/html.file.small.icon", "java-extension/html-icon.png");
+        iconRegistry.registerIcon("jar/html.file.small.icon", "java-extension/html-icon.png");
+        iconRegistry.registerIcon("jar/jsp.file.small.icon", "java-extension/jsp-icon.png");
+        iconRegistry.registerIcon("jar/gif.file.small.icon", "java-extension/image-icon.png");
+        iconRegistry.registerIcon("jar/jpg.file.small.icon", "java-extension/image-icon.png");
+        iconRegistry.registerIcon("jar/png.file.small.icon", "java-extension/image-icon.png");
+        iconRegistry.registerIcon("jar/pom.xml.file.small.icon", "java-extension/maven-icon.png");
 
-        iconRegistry.registerIcons(icons);
+        iconRegistry.registerIcon("java.class", "java-extension/java-icon.png");
+        iconRegistry.registerIcon("java.package", "java-extension/package-icon.png");
+
+        iconRegistry.registerIcon("spring.projecttype.big.icon", "java-extension/Spring-Logo.png");
+//        iconRegistry.registerIcon("spring.projecttype.small.icon", "java-extension/Spring-Logo.png");
+        iconRegistry.registerIcon("spring.folder.small.icon", "java-extension/package-icon.png");
+        iconRegistry.registerIcon("spring/java.file.small.icon", "java-extension/java-icon.png");
+        iconRegistry.registerIcon("spring/xml.file.small.icon", "java-extension/xml-icon.png");
+        iconRegistry.registerIcon("spring/html.file.small.icon", "java-extension/html-icon.png");
+        iconRegistry.registerIcon("spring/jsp.file.small.icon", "java-extension/jsp-icon.png");
+        iconRegistry.registerIcon("spring/css.file.small.icon", "java-extension/css-icon.png");
+        iconRegistry.registerIcon("spring/js.file.small.icon", "java-extension/js-icon.png");
+        iconRegistry.registerIcon("spring/json.file.small.icon", "java-extension/json-icon.png");
+        iconRegistry.registerIcon("spring/gif.file.small.icon", "java-extension/image-icon.png");
+        iconRegistry.registerIcon("spring/jpg.file.small.icon", "java-extension/image-icon.png");
+        iconRegistry.registerIcon("spring/png.file.small.icon", "java-extension/image-icon.png");//pom.xml
+        iconRegistry.registerIcon("spring/pom.xml.file.small.icon", "java-extension/maven-icon.png");
+
+        iconRegistry.registerIcon("java.class", "java-extension/java-icon.png");
+        iconRegistry.registerIcon("java.package", "java-extension/package-icon.png");
+
+        iconRegistry.registerIcon("war.projecttype.big.icon", "java-extension/web_app_big.png");
+//        iconRegistry.registerIcon("war.projecttype.small.icon", "java-extension/web_app_big.png");
+        iconRegistry.registerIcon("war.folder.small.icon", "java-extension/package-icon.png");
+        iconRegistry.registerIcon("war/java.file.small.icon", "java-extension/java-icon.png");
+        iconRegistry.registerIcon("war/xml.file.small.icon", "java-extension/xml-icon.png");
+        iconRegistry.registerIcon("war/html.file.small.icon", "java-extension/html-icon.png");
+        iconRegistry.registerIcon("war/jsp.file.small.icon", "java-extension/jsp-icon.png");
+        iconRegistry.registerIcon("war/css.file.small.icon", "java-extension/css-icon.png");
+        iconRegistry.registerIcon("war/js.file.small.icon", "java-extension/js-icon.png");
+        iconRegistry.registerIcon("war/json.file.small.icon", "java-extension/json-icon.png");
+        iconRegistry.registerIcon("war/gif.file.small.icon", "java-extension/image-icon.png");
+        iconRegistry.registerIcon("war/jpg.file.small.icon", "java-extension/image-icon.png");
+        iconRegistry.registerIcon("war/png.file.small.icon", "java-extension/image-icon.png");
+        iconRegistry.registerIcon("war/pom.xml.file.small.icon", "java-extension/maven-icon.png");
+
+        iconRegistry.registerIcon("java.class", "java-extension/java-icon.png");
+        iconRegistry.registerIcon("java.package", "java-extension/package-icon.png");
 
 
         FileType javaFile = new FileType(JavaResources.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
@@ -209,7 +242,7 @@ public class JavaExtension {
                             Reconciler reconciler = editor.getConfiguration().getReconciler(editor.getView());
                             if (reconciler != null) {
                                 ReconcilingStrategy strategy = reconciler.getReconcilingStrategy(Document.DEFAULT_CONTENT_TYPE);
-                                if(strategy != null && strategy instanceof JavaReconcilerStrategy) {
+                                if (strategy != null && strategy instanceof JavaReconcilerStrategy) {
                                     ((JavaReconcilerStrategy)strategy).parse();
                                 }
                             }

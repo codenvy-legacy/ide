@@ -33,6 +33,8 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.ImageResource.ImageOptions;
 import com.google.gwt.resources.client.ImageResource.RepeatStyle;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 
 /**
  * Interface for resources, e.g., css, images, text files, etc.
@@ -77,9 +79,6 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
     @Source("tree/project_explorer.png")
     ImageResource projectExplorer();
 
-    @Source("tree/delete.png")
-    ImageResource delete();
-
     @Source("tree/project-closed.png")
     ImageResource projectClosed();
 
@@ -110,9 +109,6 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
     @Source("extension/extention.png")
     ImageResource extension();
 
-    @Source("texteditor/save.png")
-    ImageResource save();
-
     @Source("texteditor/save-all.png")
     ImageResource saveAll();
     
@@ -131,4 +127,25 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
     
     @Source("console/clear.png")
     ImageResource clear();
+    
+    @Source("actions/close-project.svg")
+    SVGResource closeProject();
+    
+    @Source("actions/delete.svg")
+    SVGResource delete();
+    
+    @Source("actions/new-resource.svg")
+    SVGResource newResource();
+    
+    @Source("actions/save.svg")
+    SVGResource save();
+    
+    @Source("project/private-project.svg")
+    SVGResource privateProject();
+    
+    @Source("project/public-project.svg")
+    SVGResource publicProject();
+    
+    @Source("workspace/codenvy-placeholder.png")
+    ImageResource codenvyPlaceholder();
 }

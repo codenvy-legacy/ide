@@ -35,28 +35,34 @@ public class IconRegistryImpl implements IconRegistry {
 
     @Override
     public Image getIcon(String iconId) {
+        Image iconImage = getIconIfExist(iconId);
+        if (iconImage == null) {
+            String pref = iconId.split("\\.")[0];
+            String defIconId = iconId.replaceFirst(pref, "default");
+            if (icons.containsKey(defIconId)) {
+                String url = GWT.getModuleBaseForStaticFiles() + icons.get(defIconId);
+                return new Image(url);
+            } else {
+                return getDefaultIcon();
+            }
+        } else {
+            return iconImage;
+        }
+    }
+
+    @Override
+    public Image getIconIfExist(String iconId) {
         if (icons.containsKey(iconId)) {
             String url = GWT.getModuleBaseForStaticFiles() + icons.get(iconId);
             return new Image(url);
         } else {
-            String pref = iconId.split("\\.")[0];
-            String defIconId = iconId.replaceFirst(pref, "default");
-            if (icons.containsKey(defIconId)){
-                String url = GWT.getModuleBaseForStaticFiles() + icons.get(defIconId);
-                return new Image(url);
-            } else
-                return getDefaultIcon();
+            return null;
         }
     }
 
     @Override
     public Image getDefaultIcon() {
         return new Image(GWT.getModuleBaseForStaticFiles() + "default/default.jpg");
-    }
-
-    @Override
-    public void registerIcons(Map<String, String> iconRegistry) {
-        icons.putAll(iconRegistry);
     }
 
     @Override

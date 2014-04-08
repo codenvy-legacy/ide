@@ -23,7 +23,7 @@ import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.extension.runner.client.RunnerController;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -39,9 +39,11 @@ public class RunAction extends Action {
     private       RunnerController runnerController;
 
     @Inject
-    public RunAction(RunnerController runnerController, RunnerResources resources, ResourceProvider resourceProvider,
+    public RunAction(RunnerController runnerController,
+                     RunnerResources resources,
+                     ResourceProvider resourceProvider,
                      RunnerLocalizationConstant localizationConstants) {
-        super(localizationConstants.runAppActionText(), localizationConstants.runAppActionDescription(), resources.launchApp());
+        super(localizationConstants.runAppActionText(), localizationConstants.runAppActionDescription(), null, resources.launchApp());
         this.runnerController = runnerController;
         this.resourceProvider = resourceProvider;
     }

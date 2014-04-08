@@ -18,8 +18,8 @@
 package com.codenvy.ide.ext.java.client.projectmodel;
 
 import com.codenvy.api.project.shared.dto.ItemReference;
-import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.resources.model.Folder;
 
 /**
  * Java Compilation unit is a java file that contains top level class and can be compiled.

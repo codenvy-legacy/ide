@@ -47,14 +47,17 @@
     <g:DockLayoutPanel unit="PX" width="450px" height="110px" addStyleNames="{style.emptyBorder}">
         <g:south size="26.0">
             <g:FlowPanel>
-                <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" ui:field="btnCancel"/>
-                <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonPush}" width="60px" ui:field="btnPush"/>
+                <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" ui:field="btnCancel"
+                          debugId="git-remotes-push-cancel"/>
+                <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonPush}" width="60px" ui:field="btnPush"
+                          debugId="git-remotes-push-push"/>
             </g:FlowPanel>
         </g:south>
         <g:north size="26.0">
             <g:FlowPanel>
                 <g:Label text="{locale.pushViewRemoteFieldTitle}" addStyleNames="{res.gitCSS.textFont} {style.alignLeft}"/>
-                <g:ListBox width="290px" ui:field="repository" addStyleNames="{res.gitCSS.textFont} {style.alignLeft}"/>
+                <g:ListBox width="290px" ui:field="repository" addStyleNames="{res.gitCSS.textFont} {style.alignLeft}"
+                           debugId="git-remotes-push-repository"/>
             </g:FlowPanel>
         </g:north>
         <g:center>
@@ -62,13 +65,13 @@
                 <g:east size="48">
                     <g:FlowPanel addStyleNames="{style.emptyBorder}">
                         <g:Label text="{locale.pushViewRemoteBranchFieldTitle}" width="100%"/>
-                        <g:ListBox ui:field="remoteBranch" width="100%"/>
+                        <g:ListBox ui:field="remoteBranch" width="100%" debugId="git-remotes-push-remoteBranch"/>
                     </g:FlowPanel>
                 </g:east>
                 <g:west size="48">
                     <g:FlowPanel addStyleNames="{style.emptyBorder}">
                         <g:Label text="{locale.pushViewLocalBranchFieldTitle}" width="100%"/>
-                        <g:ListBox ui:field="localBranch" width="100%"/>
+                        <g:ListBox ui:field="localBranch" width="100%" debugId="git-remotes-push-localBranch"/>
                     </g:FlowPanel>
                 </g:west>
                 <g:center>

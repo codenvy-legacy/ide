@@ -49,6 +49,9 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.UIObject;
+
+import org.vectomatic.dom.svg.ui.SVGImage;
 
 /**
  * PopupMenu is visual component represents all known Popup Menu.
@@ -210,7 +213,12 @@ public class PopupMenu extends Composite {
                 table.getCellFormatter().setStyleName(i, 0, POPUP_RESOURCES.popup().popupMenuDelimiter());
             } else {
                 Presentation presentation = presentationFactory.getPresentation(menuItem);
-                table.setWidget(i, 0, new Image(presentation.getIcon() == null ? POPUP_RESOURCES.blank() : presentation.getIcon()));
+                
+                if (presentation.getSVGIcon() != null){
+                    table.setWidget(i, 0, new SVGImage(presentation.getSVGIcon()));
+                } else {
+                    table.setWidget(i, 0, new Image(presentation.getIcon() == null ? POPUP_RESOURCES.blank() : presentation.getIcon())); 
+                }
                 table.getCellFormatter().setStyleName(i, 0,
                                                       presentation.isEnabled() ? POPUP_RESOURCES.popup().popupMenuIconField()
                                                                                : POPUP_RESOURCES.popup().popupMenuIconFieldDisabled());
@@ -283,6 +291,15 @@ public class PopupMenu extends Composite {
 
                 DOM.setElementAttribute(table.getRowFormatter().getElement(i), "item-index", "" + i);
                 DOM.setElementAttribute(table.getRowFormatter().getElement(i), "item-enabled", "" + presentation.isEnabled());
+
+                String actionId = actionManager.getId(menuItem);
+                String debugId;
+                if (actionId == null) {
+                    debugId = idPrefix + menuItem.getTemplatePresentation().getText();
+                } else {
+                    debugId = idPrefix + actionId;
+                }
+                UIObject.ensureDebugId(table.getRowFormatter().getElement(i), debugId);
             }
 
 //            Element row = table.getRowFormatter().getElement(i);

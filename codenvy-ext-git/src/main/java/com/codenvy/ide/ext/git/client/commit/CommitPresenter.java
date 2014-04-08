@@ -20,10 +20,10 @@ package com.codenvy.ide.ext.git.client.commit;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.ext.git.client.GitClientService;
+import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Revision;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
@@ -48,7 +48,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 public class CommitPresenter implements CommitView.ActionDelegate {
     private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
     private       CommitView              view;
-    private       GitClientService        service;
+    private       GitServiceClient        service;
     private       ResourceProvider        resourceProvider;
     private       GitLocalizationConstant constant;
     private       Project                 project;
@@ -64,7 +64,7 @@ public class CommitPresenter implements CommitView.ActionDelegate {
      * @param notificationManager
      */
     @Inject
-    public CommitPresenter(CommitView view, GitClientService service, ResourceProvider resourceProvider, GitLocalizationConstant constant,
+    public CommitPresenter(CommitView view, GitServiceClient service, ResourceProvider resourceProvider, GitLocalizationConstant constant,
                            NotificationManager notificationManager, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
@@ -94,7 +94,7 @@ public class CommitPresenter implements CommitView.ActionDelegate {
         boolean amend = view.isAmend();
 
         try {
-            service.commitWS(resourceProvider.getVfsInfo().getId(), project, message, all, amend,
+            service.commitWS(project, message, all, amend,
                              new RequestCallback<Revision>(dtoUnmarshallerFactory.newWSUnmarshaller(Revision.class)) {
                                  @Override
                                  protected void onSuccess(Revision result) {

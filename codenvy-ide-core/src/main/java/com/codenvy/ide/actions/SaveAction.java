@@ -38,7 +38,7 @@ public class SaveAction extends Action {
 
     @Inject
     public SaveAction(Resources resources, EditorAgent editorAgent) {
-        super("Save", "Save changes for current file", resources.save());
+        super("Save", "Save changes for current file", null, resources.save());
         this.editorAgent = editorAgent;
     }
 

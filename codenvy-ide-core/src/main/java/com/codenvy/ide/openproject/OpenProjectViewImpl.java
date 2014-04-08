@@ -32,36 +32,38 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 
 /**
-* The implementation of {@link OpenProjectView}.
-* Provides selecting project what want to open.
-*
-* @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
-*/
+ * The implementation of {@link OpenProjectView}.
+ * Provides selecting project what want to open.
+ *
+ * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ */
 @Singleton
 public class OpenProjectViewImpl extends Window implements OpenProjectView {
     private static OpenProjectViewImplUiBinder uiBinder = GWT.create(OpenProjectViewImplUiBinder.class);
     @UiField
-    Button btnCancel;
+    Button                    btnCancel;
     @UiField
-    Button btnOpen;
+    Button                    btnOpen;
     @UiField
-    ScrollPanel listPanel;
+    ScrollPanel               listPanel;
     @UiField(provided = true)
     com.codenvy.ide.Resources res;
-    private ActionDelegate delegate;
+    private ActionDelegate     delegate;
     private SimpleList<String> list;
-    private SimpleList.ListItemRenderer<String> listItemRenderer = new SimpleList.ListItemRenderer<String>() {
+    private SimpleList.ListItemRenderer<String>  listItemRenderer = new SimpleList.ListItemRenderer<String>() {
         @Override
         public void render(Element itemElement, String itemData) {
             TableCellElement label = Elements.createTDElement();
             label.setInnerHTML(itemData);
             itemElement.appendChild(label);
+            UIObject.ensureDebugId((com.google.gwt.dom.client.Element)itemElement, "file-openProject-" + itemData);
         }
 
         @Override
@@ -69,7 +71,7 @@ public class OpenProjectViewImpl extends Window implements OpenProjectView {
             return Elements.createTRElement();
         }
     };
-    private SimpleList.ListEventDelegate<String> listDelegate = new SimpleList.ListEventDelegate<String>() {
+    private SimpleList.ListEventDelegate<String> listDelegate     = new SimpleList.ListEventDelegate<String>() {
         public void onListItemClicked(Element itemElement, String itemData) {
             list.getSelectionModel().setSelectedItem(itemData);
             delegate.selectedProject(itemData);
@@ -80,10 +82,10 @@ public class OpenProjectViewImpl extends Window implements OpenProjectView {
     };
 
     /**
-* Create view.
-*
-* @param resources
-*/
+     * Create view.
+     *
+     * @param resources
+     */
     @Inject
     protected OpenProjectViewImpl(com.codenvy.ide.Resources resources) {
         this.res = resources;

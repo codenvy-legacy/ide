@@ -18,8 +18,7 @@
 
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui"
-             xmlns:c="urn:import:com.codenvy.ide.ui">
+             xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:with field='res' type='com.codenvy.ide.Resources'/>
     <ui:with field='locale' type='com.codenvy.ide.CoreLocalizationConstant'/>
     <ui:style>
@@ -27,20 +26,20 @@
             margin: 6px;
         }
 
-		.spacingTop {
+        .spacingTop {
             margin-top: 20px;
         }
 
-		.labelMargin {
-			margin-bottom : 5px;	
-		}
+        .labelMargin {
+            margin-bottom: 5px;
+        }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="400px" height="100px" addStyleNames="{style.emptyBorder}">
         <g:center>
-             <g:FlowPanel addStyleNames="{style.emptyBorder} {style.spacingTop}">
+            <g:FlowPanel addStyleNames="{style.emptyBorder} {style.spacingTop}">
                 <g:Label width="100%" addStyleNames="{style.labelMargin}" text="{locale.navigateToFileViewFileFieldTitle}"/>
-                <g:SuggestBox ui:field="files" width="100%"/>
-           	 </g:FlowPanel>
+                <g:SuggestBox ui:field="files" width="100%" debugId="file-navigateToFile-fileName"/>
+            </g:FlowPanel>
         </g:center>
     </g:DockLayoutPanel>
 </ui:UiBinder>

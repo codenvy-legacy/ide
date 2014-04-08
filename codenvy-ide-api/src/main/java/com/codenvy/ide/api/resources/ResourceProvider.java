@@ -19,10 +19,10 @@ package com.codenvy.ide.api.resources;
 
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.extension.SDK;
-import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.resources.model.VirtualFileSystemInfo;
+import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Resource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -109,12 +109,13 @@ public interface ResourceProvider {
      */
     public FileType getFileType(File file);
 
+
     /**
-     * Return virtual file system information.
+     * Returns root folder's id.
      *
      * @return
      */
-    public VirtualFileSystemInfo getVfsInfo();
+    public Folder getRoot();
 
     /**
      * Returns root folder's id.

@@ -23,11 +23,11 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.ext.git.client.GitClientService;
+import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.MergeResult;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
@@ -58,7 +58,7 @@ public class MergePresenter implements MergeView.ActionDelegate {
     public static final String REMOTE_BRANCHES_TITLE = "Remote Branches";
     private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
     private       MergeView               view;
-    private       GitClientService        service;
+    private       GitServiceClient        service;
     private       ResourceProvider        resourceProvider;
     private       EventBus                eventBus;
     private       GitLocalizationConstant constant;
@@ -78,7 +78,7 @@ public class MergePresenter implements MergeView.ActionDelegate {
      * @param notificationManager
      */
     @Inject
-    public MergePresenter(MergeView view, GitClientService service, ResourceProvider resourceProvider, EventBus eventBus,
+    public MergePresenter(MergeView view, GitServiceClient service, ResourceProvider resourceProvider, EventBus eventBus,
                           GitLocalizationConstant constant, NotificationManager notificationManager,
                           DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
@@ -99,7 +99,7 @@ public class MergePresenter implements MergeView.ActionDelegate {
         selectedReference = null;
         view.setEnableMergeButton(false);
 
-        service.branchList(resourceProvider.getVfsInfo().getId(), projectId, LIST_LOCAL,
+        service.branchList(projectId, LIST_LOCAL,
                            new AsyncRequestCallback<Array<Branch>>(dtoUnmarshallerFactory.newArrayUnmarshaller(Branch.class)) {
                                @Override
                                protected void onSuccess(Array<Branch> result) {
@@ -126,7 +126,7 @@ public class MergePresenter implements MergeView.ActionDelegate {
                                }
                            });
 
-        service.branchList(resourceProvider.getVfsInfo().getId(), projectId, LIST_REMOTE,
+        service.branchList(projectId, LIST_REMOTE,
                            new AsyncRequestCallback<Array<Branch>>(dtoUnmarshallerFactory.newArrayUnmarshaller(Branch.class)) {
                                @Override
                                protected void onSuccess(Array<Branch> result) {
@@ -166,7 +166,7 @@ public class MergePresenter implements MergeView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onMergeClicked() {
-        service.merge(resourceProvider.getVfsInfo().getId(), projectId, selectedReference.getDisplayName(),
+        service.merge(projectId, selectedReference.getDisplayName(),
                       new AsyncRequestCallback<MergeResult>(dtoUnmarshallerFactory.newUnmarshaller(MergeResult.class)) {
                           @Override
                           protected void onSuccess(final MergeResult result) {

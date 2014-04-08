@@ -35,10 +35,11 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
+
+import org.vectomatic.dom.svg.ui.SVGImage;
 
 /**
  * Toolbar image button.
@@ -76,6 +77,7 @@ public class ActionButton extends Composite implements MouseOverHandler, MouseOu
         setVisible(presentation.isVisible());
         if (presentation.getDescription() != null)
             panel.getElement().setAttribute("title", presentation.getDescription());
+        this.ensureDebugId(place + "/" + actionManager.getId(action));
     }
 
     /** {@inheritDoc} */
@@ -109,9 +111,12 @@ public class ActionButton extends Composite implements MouseOverHandler, MouseOu
     /** Redraw icon. */
     private void renderImage() {
         panel.clear();
-        ImageResource image = presentation.getIcon();
-        if (image != null) {
-            Image img = new Image(image);
+        if (presentation.getSVGIcon() != null) {
+            SVGImage image = new SVGImage(presentation.getSVGIcon());
+            image.getElement().setAttribute("class", css.iconButtonIcon());
+            panel.add(image);
+        } else if (presentation.getIcon() != null) {
+            Image img = new Image(presentation.getIcon());
             img.setStyleName(css.iconButtonIcon());
             panel.add(img);
         }

@@ -38,6 +38,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -88,6 +89,8 @@ public class PreferencesViewImpl extends DialogBox implements PreferencesView {
 
                     // Add title
                     sb.appendHtmlConstant("<td>");
+                    sb.appendHtmlConstant(
+                            "<div id=\"" + UIObject.DEBUG_ID_PREFIX + "window-preferences-" + itemData.getTitle() + "\">");
                     sb.appendEscaped(itemData.getTitle());
                     sb.appendHtmlConstant("</td></tr></table>");
 

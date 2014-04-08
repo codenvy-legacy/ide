@@ -37,7 +37,7 @@ import com.google.inject.Singleton;
 
 /**
  * Implements {@link ConsolePartView}.
- * 
+ *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
@@ -64,6 +64,8 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
                 delegate.onClearClicked();
             }
         });
+        clearButton.ensureDebugId("console-clear");
+        minimizeButton.ensureDebugId("console-minimizeBut");
         toolBar.addEast(clearButton, 20);
     }
 
@@ -76,7 +78,9 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
     /** {@inheritDoc} */
     @Override
     public void print(String message) {
-        consoleArea.add(new HTML(message));
+        HTML html = new HTML(message);
+        html.getElement().setAttribute("style", "padding-left: 2px;");
+        consoleArea.add(html);
     }
 
     /** {@inheritDoc} */

@@ -21,11 +21,11 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.ext.git.client.GitClientService;
+import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.RepoInfo;
 import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
@@ -53,7 +53,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
     private final ProjectServiceClient       projectServiceClient;
     private final SelectProjectTypePresenter selectProjectTypePresenter;
     private       CloneRepositoryView        view;
-    private       GitClientService           service;
+    private       GitServiceClient           service;
     private       ResourceProvider           resourceProvider;
     private       GitLocalizationConstant    constant;
     private       NotificationManager        notificationManager;
@@ -61,7 +61,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
 
     @Inject
     public CloneRepositoryPresenter(CloneRepositoryView view,
-                                    GitClientService service,
+                                    GitServiceClient service,
                                     ResourceProvider resourceProvider,
                                     GitLocalizationConstant constant,
                                     NotificationManager notificationManager,
@@ -119,7 +119,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      */
     private void cloneRepository(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
         try {
-            service.cloneRepositoryWS(resourceProvider.getVfsInfo().getId(), project, remoteUri, remoteName,
+            service.cloneRepositoryWS(project, remoteUri, remoteName,
                                       new RequestCallback<RepoInfo>(dtoUnmarshallerFactory.newWSUnmarshaller(RepoInfo.class)) {
                                           @Override
                                           protected void onSuccess(RepoInfo result) {

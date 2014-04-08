@@ -26,6 +26,10 @@ import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.IntegerMap;
@@ -33,18 +37,14 @@ import com.codenvy.ide.collections.IntegerMap.IterationCallback;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.core.Component;
 import com.codenvy.ide.core.ComponentException;
-import com.codenvy.ide.resources.marshal.VFSInfoUnmarshaller;
-import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.resources.model.Folder;
-import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.resources.model.VirtualFileSystemInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Callback;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -52,7 +52,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
-import static com.codenvy.ide.resources.model.ProjectDescription.LANGUAGE_ATTRIBUTE;
+import static com.codenvy.ide.api.resources.model.ProjectDescription.LANGUAGE_ATTRIBUTE;
 
 /**
  * Implementation of Resource Provider
@@ -71,7 +71,6 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     private final   DtoUnmarshallerFactory   dtoUnmarshallerFactory;
     private final   AsyncRequestFactory      asyncRequestFactory;
     private final   ProjectServiceClient     projectServiceClient;
-    protected       VirtualFileSystemInfo    vfsInfo;
     @SuppressWarnings("unused")
     private boolean initialized = false;
     private Project activeProject;
@@ -103,27 +102,9 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
 
     @Override
     public void start(final Callback<Component, ComponentException> callback) {
-        AsyncRequestCallback<VirtualFileSystemInfo> internalCallback =
-                new AsyncRequestCallback<VirtualFileSystemInfo>(new VFSInfoUnmarshaller()) {
-                    @Override
-                    protected void onSuccess(VirtualFileSystemInfo result) {
-                        vfsInfo = result;
-                        initialized = true;
-                        // notify Component started
-                        callback.onSuccess(ResourceProviderComponent.this);
-                    }
-
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        // notify Component failed
-                        callback.onFailure(new ComponentException("Failed to start Resource Provider. Cause:" + exception.getMessage(),
-                                                                  ResourceProviderComponent.this));
-                        Log.error(ResourceProviderComponent.class, exception);
-                    }
-                };
-
-        this.vfsInfo = internalCallback.getPayload();
-        asyncRequestFactory.createGetRequest(workspaceURL).send(internalCallback);
+        initialized = true;
+        // notify Component started
+        callback.onSuccess(ResourceProviderComponent.this);
     }
 
     /** {@inheritDoc} */
@@ -133,8 +114,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         projectServiceClient.getProject(name, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
-                Folder rootFolder = vfsInfo.getRoot();
-
+                Folder rootFolder = getRoot();
                 final String language = result.getAttributes().get(LANGUAGE_ATTRIBUTE).get(0);
                 final Project project = getModelProvider(language).createProjectInstance();
                 project.setId(result.getId());
@@ -143,7 +123,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 project.setName(result.getName());
                 project.setParent(rootFolder);
                 project.setProject(project);
-                project.setVFSInfo(vfsInfo);
+                project.setVisibility(result.getVisibility());
 
                 rootFolder.getChildren().clear();
                 rootFolder.addChild(project);
@@ -199,8 +179,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         projectServiceClient.createProject(name, projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
-                Folder rootFolder = vfsInfo.getRoot();
-
+                Folder rootFolder = getRoot();
                 final String language = result.getAttributes().get(LANGUAGE_ATTRIBUTE).get(0);
                 final Project project = getModelProvider(language).createProjectInstance();
                 project.setId(result.getId());
@@ -209,7 +188,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 project.setName(name);
                 project.setParent(rootFolder);
                 project.setProject(project);
-                project.setVFSInfo(vfsInfo);
+                project.setVisibility(result.getVisibility());
 
                 rootFolder.getChildren().clear();
                 rootFolder.addChild(project);
@@ -320,6 +299,22 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
 
     }
 
+    @Override
+    public Folder getRoot() { //TODO: need rework logic and remove this method
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", new JSONString("_root_"));
+        jsonObject.put("name", new JSONString(""));
+        jsonObject.put("mimeType", new JSONString("text/directory"));
+        Folder folder = new Folder(jsonObject);
+        return folder;
+    }
+
+    @Override
+    public String getRootId() { //TODO: need rework logic and remove this method
+        return "_root_";
+    }
+
+
     private String getFileExtension(String name) {
         int lastDotPos = name.lastIndexOf('.');
         //file has no extension
@@ -329,17 +324,6 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         return name.substring(lastDotPos + 1);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public VirtualFileSystemInfo getVfsInfo() {
-        return vfsInfo;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getRootId() {
-        return vfsInfo.getRoot().getId();
-    }
 
     /** {@inheritDoc} */
     @Override
@@ -351,6 +335,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 protected void onSuccess(Void result) {
                     // remove from the list of child
                     parent.removeChild(item);
+                    showListProjects();
                     eventBus.fireEvent(ResourceChangedEvent.createResourceDeletedEvent(item));
                     callback.onSuccess(item.getName());
                 }
@@ -414,22 +399,17 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         }
         activeProject = null;
 
-        final Folder rootFolder = vfsInfo.getRoot();
-        rootFolder.getChildren().clear();
-
-
         projectServiceClient.getProjects(
                 new AsyncRequestCallback<Array<ProjectReference>>(dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectReference.class)) {
                     @Override
                     protected void onSuccess(Array<ProjectReference> result) {
-                        if (result.isEmpty())
-                            eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(null));//TODO
-                        
+                        final Folder rootFolder = getRoot();
+                        eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(null));
+
                         for (ProjectReference item : result.asIterable()) {
                             Project project = new Project(eventBus, asyncRequestFactory, projectServiceClient, dtoUnmarshallerFactory);
                             project.setName(item.getName());
                             project.setProjectType(item.getProjectTypeId());
-
                             rootFolder.addChild(project);
                             eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
                         }

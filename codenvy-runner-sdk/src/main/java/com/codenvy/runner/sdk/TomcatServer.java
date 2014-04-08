@@ -20,9 +20,11 @@ package com.codenvy.runner.sdk;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.api.core.util.ProcessUtil;
 import com.codenvy.api.core.util.SystemInfo;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.ApplicationLogger;
 import com.codenvy.api.runner.internal.ApplicationProcess;
+import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.commons.lang.NamedThreadFactory;
 import com.codenvy.commons.lang.ZipUtils;
 import com.google.common.io.CharStreams;
@@ -77,12 +79,14 @@ public class TomcatServer implements ApplicationServer {
             "  </Service>\n" +
             "</Server>\n";
 
-    private final ExecutorService pidTaskExecutor;
-    private final int             memSize;
+    private final ExecutorService            pidTaskExecutor;
+    private final int                        memSize;
+    private final ApplicationUpdaterRegistry applicationUpdaterRegistry;
 
     @Inject
-    public TomcatServer(@Named(MEM_SIZE_PARAMETER) int memSize) {
+    public TomcatServer(@Named(MEM_SIZE_PARAMETER) int memSize, ApplicationUpdaterRegistry applicationUpdaterRegistry) {
         this.memSize = memSize;
+        this.applicationUpdaterRegistry = applicationUpdaterRegistry;
         pidTaskExecutor = Executors.newCachedThreadPool(new NamedThreadFactory("TomcatServer-", true));
     }
 
@@ -92,35 +96,70 @@ public class TomcatServer implements ApplicationServer {
     }
 
     @Override
-    public ApplicationProcess deploy(java.io.File appDir,
-                                     ZipFile webApp,
-                                     SDKRunnerConfiguration runnerConfiguration,
+    public ApplicationProcess deploy(final java.io.File workDir,
+                                     ZipFile warToDeploy,
+                                     final java.io.File extensionJar,
+                                     final SDKRunnerConfiguration runnerConfiguration,
                                      CodeServer.CodeServerProcess codeServerProcess,
                                      StopCallback stopCallback) throws RunnerException {
+        final Path tomcatPath;
+        final Path webappsPath;
+        final Path apiAppContextPath;
         try {
-            final Path tomcatPath = Files.createDirectory(appDir.toPath().resolve("tomcat"));
+            tomcatPath = Files.createDirectory(workDir.toPath().resolve("tomcat"));
             ZipUtils.unzip(Utils.getTomcatBinaryDistribution().openStream(), tomcatPath.toFile());
-            final Path webappsPath = tomcatPath.resolve("webapps");
-            ZipUtils.unzip(new java.io.File(webApp.getName()), webappsPath.resolve("ide").toFile());
+            webappsPath = tomcatPath.resolve("webapps");
+            ZipUtils.unzip(new java.io.File(warToDeploy.getName()), webappsPath.resolve("ide").toFile());
             generateServerXml(tomcatPath.toFile(), runnerConfiguration);
-            configureApiServices(webappsPath.toFile(), runnerConfiguration);
+
+            // add JAR with extension to 'api' application's 'lib' directory
+            apiAppContextPath = webappsPath.resolve("api");
+            ZipUtils.unzip(new java.io.File(webappsPath.resolve("api.war").toString()), apiAppContextPath.toFile());
+            IoUtil.copy(extensionJar, apiAppContextPath.resolve("WEB-INF/lib").resolve(extensionJar.getName()).toFile(), null);
         } catch (IOException e) {
             throw new RunnerException(e);
         }
+
+        ApplicationProcess process;
         if (SystemInfo.isUnix()) {
-            return startUnix(appDir, runnerConfiguration, codeServerProcess, stopCallback);
+            process = startUnix(workDir, runnerConfiguration, codeServerProcess, stopCallback);
         } else {
-            return startWindows(appDir, runnerConfiguration, codeServerProcess, stopCallback);
+            process = startWindows(workDir, runnerConfiguration, codeServerProcess, stopCallback);
         }
+
+        // TODO: unregister updater
+        registerUpdater(process, new ApplicationUpdater() {
+            @Override
+            public void update() throws UpdateException {
+                try {
+                    final ProjectDescriptor projectDescriptor = runnerConfiguration.getRequest().getProjectDescriptor();
+                    final java.io.File destinationDir = Files.createTempDirectory(workDir.toPath(), "sources-").toFile();
+                    final java.io.File exportProject = Utils.exportProject(projectDescriptor, destinationDir);
+                    final java.io.File sourcesDir = Files.createTempDirectory(workDir.toPath(), "sources-build-").toFile();
+                    ZipUtils.unzip(exportProject, sourcesDir);
+                    ZipFile artifact = Utils.buildProjectFromSources(sourcesDir.toPath(), extensionJar.getName());
+                    // add JAR with extension to 'api' application's 'lib' directory
+                    IoUtil.copy(new java.io.File(artifact.getName()),
+                                apiAppContextPath.resolve("WEB-INF/lib").resolve(extensionJar.getName()).toFile(), null);
+                    LOG.debug("Extension {} updated", workDir);
+                } catch (Exception e) {
+                    LOG.error("Unable to update extension: {}", workDir);
+                    throw new UpdateException(e);
+                }
+            }
+        });
+
+        return process;
+    }
+
+    private void registerUpdater(ApplicationProcess process, ApplicationUpdater updater) {
+        applicationUpdaterRegistry.registerUpdater(process, updater);
     }
 
     protected void generateServerXml(java.io.File tomcatDir, SDKRunnerConfiguration runnerConfiguration) throws IOException {
-        String cfg = SERVER_XML.replace("${PORT}", Integer.toString(runnerConfiguration.getHttpPort()));
+        final String cfg = SERVER_XML.replace("${PORT}", Integer.toString(runnerConfiguration.getHttpPort()));
         final java.io.File serverXmlFile = new java.io.File(new java.io.File(tomcatDir, "conf"), "server.xml");
         Files.write(serverXmlFile.toPath(), cfg.getBytes());
-    }
-
-    protected void configureApiServices(java.io.File webapps, SDKRunnerConfiguration runnerConfiguration) throws IOException {
     }
 
     public int getMemSize() {

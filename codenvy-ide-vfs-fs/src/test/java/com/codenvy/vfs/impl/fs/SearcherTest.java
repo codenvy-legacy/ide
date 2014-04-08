@@ -18,6 +18,7 @@
 package com.codenvy.vfs.impl.fs;
 
 import com.codenvy.api.core.notification.EventService;
+import com.codenvy.api.vfs.server.VirtualFileFilter;
 import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.api.vfs.shared.dto.ItemList;
 
@@ -86,7 +87,7 @@ public class SearcherTest extends LocalFileSystemTest {
         queryToResult[8] = new Pair<>(new String[]{file2, file3}, "name=SearcherTest*&mediaType=text/plain");
         queryToResult[9] = new Pair<>(new String[]{file1}, "name=SearcherTest*&mediaType=text/xml");
 
-        CleanableSearcherProvider searcherProvider = new CleanableSearcherProvider(root.getParentFile());
+        CleanableSearcherProvider searcherProvider = new CleanableSearcherProvider(root.getParentFile(), Collections.<VirtualFileFilter>emptySet());
         // Re-register virtual file system with searching enabled.
         // remove old one first
         provider.close();

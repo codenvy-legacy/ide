@@ -73,7 +73,7 @@ public class DarkTheme implements Theme {
     public String getActiveTabBorderColor() {
         return "#232323";
     }
-    
+
     @Override
     public String getTabFontColor() {
         return "#989898";
@@ -108,7 +108,17 @@ public class DarkTheme implements Theme {
     public String getPartToolbarShadow() {
         return "rgba(50,50,50, 0.75)";
     }
-
+    
+    @Override
+    public String getPartToolbarSeparatorTopColor() {
+        return "#232323";
+    }
+    
+    @Override
+    public String getPartToolbarSeparatorBottomColor() {
+        return "#878787";
+    }
+    
     @Override
     public String getMainFontColor() {
         return "#dbdbdb";
@@ -389,7 +399,28 @@ public class DarkTheme implements Theme {
         return "0px 1px 0px rgba(46, 46, 46, 0.5)";
     }
 
+    @Override
     public String getButtonHoverTextColor() {
         return "#ffffff";
+    }
+    
+    @Override
+    public String getToolbarBackgroundColor() {
+        return "#484848";
+    }
+    
+    @Override
+    public String getToolbarIconColor() {
+        return "#dbdbdb";
+    }
+        
+    @Override
+    public String getCompletedInvertColor() {
+        return "0%";
+    }
+
+    @Override
+    public String getSvgUrlShadow() {
+        return "url(#shadowDarkTheme)";
     }
 }

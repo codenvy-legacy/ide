@@ -908,9 +908,8 @@ public class FSMountPoint implements MountPoint {
         if (virtualFile.isRoot()) {
             throw new InvalidArgumentException("Unable delete root folder. ");
         }
-        final String myPath = virtualFile.getPath();
-        final boolean isFolder = virtualFile.isFolder();
         final PathLockFactory.PathLock lock = pathLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
+        final String myPath = virtualFile.getPath();
         try {
             if (!hasPermission(virtualFile, BasicPermissions.WRITE, true)) {
                 throw new PermissionDeniedException(
