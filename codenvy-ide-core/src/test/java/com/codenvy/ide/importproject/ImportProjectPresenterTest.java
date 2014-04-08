@@ -19,8 +19,11 @@
 package com.codenvy.ide.importproject;
 
 
+import com.codenvy.api.project.client.dto.DtoClientImpls;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 
 import org.junit.Test;
@@ -34,6 +37,7 @@ import static org.mockito.Matchers.eq;
 
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -51,12 +55,14 @@ public class ImportProjectPresenterTest {
     @Mock
     private ProjectServiceClient projectServiceClient;
 
+    @Mock
+    private DtoFactory dtoFactory;
+
     @InjectMocks
     private ImportProjectPresenter presenter;
 
     @Test
     public void showDialogShouldBeExecuted() {
-        presenter.getSupportedImporters();
 
         presenter.showDialog();
 
@@ -79,12 +85,24 @@ public class ImportProjectPresenterTest {
     @Test
     public void onImportClickedShouldBeExecuted() {
         view.showDialog();
+        when(view.getUri()).thenReturn("https://github.com/codenvy/hello.git");
+        when(view.getImporter()).thenReturn("git");
+        when(view.getProjectName()).thenReturn("ide");
+        ImportSourceDescriptor importSourceDescriptor =
+                mock(DtoClientImpls.ImportSourceDescriptorImpl.class);
+        when(dtoFactory.createDto(DtoClientImpls.ImportSourceDescriptorImpl.class)).thenReturn(
+                (DtoClientImpls.ImportSourceDescriptorImpl)importSourceDescriptor);
+        when(importSourceDescriptor.withType("git")).thenReturn(importSourceDescriptor);
+        when(importSourceDescriptor.withLocation("https://github.com/codenvy/hello.git")).thenReturn(importSourceDescriptor);
 
         presenter.onImportClicked();
 
         verify(view).getUri();
         verify(view).getImporter();
         verify(view).getProjectName();
+        verify(dtoFactory).createDto(DtoClientImpls.ImportSourceDescriptorImpl.class);
+        verify(importSourceDescriptor).withType(anyString());
+        verify(importSourceDescriptor).withLocation(anyString());
         verify(projectServiceClient).importProject(anyString(), (com.codenvy.api.project.shared.dto.ImportSourceDescriptor)anyObject(),
                                                    (AsyncRequestCallback<ProjectDescriptor>)anyObject());
     }

@@ -17,17 +17,17 @@
  */
 package com.codenvy.ide.importproject;
 
+import com.codenvy.api.project.client.dto.DtoClientImpls;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.codenvy.api.project.client.dto.DtoClientImpls.ImportSourceDescriptorImpl;
 
 /**
  * Provides importing project.
@@ -36,24 +36,26 @@ import static com.codenvy.api.project.client.dto.DtoClientImpls.ImportSourceDesc
  */
 public class ImportProjectPresenter implements ImportProjectView.ActionDelegate {
 
-    private final ProjectServiceClient   projectServiceClient;
-    private       ImportSourceDescriptor importSourceDescriptor;
-    private       List<String>           importersList;
-    private       ImportProjectView      view;
+    private final ProjectServiceClient projectServiceClient;
+    private       DtoFactory           dtoFactory;
+    private       ImportProjectView    view;
 
     @Inject
     public ImportProjectPresenter(ProjectServiceClient projectServiceClient,
+                                  DtoFactory dtoFactory,
                                   ImportProjectView view) {
         this.projectServiceClient = projectServiceClient;
+        this.dtoFactory = dtoFactory;
         this.view = view;
         this.view.setDelegate(this);
-        getSupportedImporters();
     }
 
     /** Show dialog. */
     public void showDialog() {
         view.setUri("");
         view.setProjectName("");
+        List<String> importersList = new ArrayList<>();
+        importersList.add("git");
         view.setImporters(importersList);
         view.setEnabledImportButton(false);
 
@@ -72,7 +74,8 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
         String url = view.getUri();
         String importer = view.getImporter();
         String projectName = view.getProjectName();
-        importSourceDescriptor = ImportSourceDescriptorImpl.make().withType(importer).withLocation(url);
+        ImportSourceDescriptor importSourceDescriptor =
+                dtoFactory.createDto(DtoClientImpls.ImportSourceDescriptorImpl.class).withType(importer).withLocation(url);
         projectServiceClient.importProject(projectName, importSourceDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
@@ -95,11 +98,5 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
         boolean enable = !projectName.isEmpty() && !uri.isEmpty();
 
         view.setEnabledImportButton(enable);
-    }
-
-    /** Gets supported importers. */
-    void getSupportedImporters() {
-        importersList = new ArrayList<>();
-        importersList.add("git");
     }
 }
