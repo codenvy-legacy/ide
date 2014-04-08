@@ -22,7 +22,6 @@ import com.codenvy.ide.api.ui.theme.ThemeAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
-import com.google.gwt.user.client.Cookies;
 import com.google.inject.Inject;
 
 import javax.validation.constraints.NotNull;
@@ -34,8 +33,6 @@ import java.util.Set;
  * @author Evgen Vidolob
  */
 public class ThemeAgentImpl  implements ThemeAgent{
-    
-    private static final String THEME_COOOKIE = "codenvy-theme";
     
     private StringMap<Theme> themes = Collections.createStringMap();
 
@@ -58,7 +55,6 @@ public class ThemeAgentImpl  implements ThemeAgent{
 
     @Override
     public Theme getTheme(@NotNull String themeId) {
-        System.out.println("ThemeAgentImpl.getTheme()>>" + themes.containsKey(themeId));
         if (themes.containsKey(themeId))
             return themes.get(themeId);
         
@@ -77,7 +73,7 @@ public class ThemeAgentImpl  implements ThemeAgent{
 
     @Override
     public String getCurrentThemeId() {
-        return (currentThemeId == null) ? Cookies.getCookie(THEME_COOOKIE) : currentThemeId;
+        return currentThemeId;
     }
 
     /**
@@ -88,7 +84,6 @@ public class ThemeAgentImpl  implements ThemeAgent{
     @Override
     public native void setCurrentThemeId(String id) /*-{
         this.@com.codenvy.ide.theme.ThemeAgentImpl::currentThemeId = id;
-        $doc.cookie= @com.codenvy.ide.theme.ThemeAgentImpl::THEME_COOOKIE + "=" + id;
         if ($wnd["IDE3"]) {
             $wnd["IDE3"].theme = id;
         }
