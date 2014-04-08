@@ -21,10 +21,14 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 public interface NotificationResources extends ClientBundle {
     public interface NotificationCss extends CssResource {
         String notificationPanel();
+        
+        String notificationPopup();
         
         String notificationItem();
 
@@ -45,6 +49,8 @@ public interface NotificationResources extends ClientBundle {
         String countLabel();
         
         String close();
+        
+        String closePopupIcon();
     }
 
     @Source({"notification.css", "com/codenvy/ide/api/ui/style.css"})
@@ -64,4 +70,7 @@ public interface NotificationResources extends ClientBundle {
 
     @Source("warning.png")
     ImageResource warning();
+    
+    @Source("close-popup.svg")
+    SVGResource closePopup();
 }
