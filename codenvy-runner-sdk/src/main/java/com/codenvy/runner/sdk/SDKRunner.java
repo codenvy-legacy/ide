@@ -20,6 +20,7 @@ package com.codenvy.runner.sdk;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.CustomPortService;
+import com.codenvy.api.project.server.ProjectEventService;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.api.runner.internal.DeploymentSources;
@@ -30,13 +31,11 @@ import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
 import com.codenvy.api.runner.internal.dto.DebugMode;
 import com.codenvy.api.runner.internal.dto.RunRequest;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.commons.GwtXmlUtils;
 import com.codenvy.ide.maven.tools.MavenUtils;
-import com.codenvy.vfs.impl.fs.LocalFSMountStrategy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,24 +72,30 @@ public class SDKRunner extends Runner {
     private final Map<String, ApplicationServer> applicationServers;
     private final String                         codeServerBindAddress;
     private final String                         hostName;
-    private final LocalFSMountStrategy           mountStrategy;
     private final CustomPortService              portService;
+    private final CodeServer                     codeServer;
+    private final ProjectEventService            projectEventService;
+    private final ApplicationUpdaterRegistry     applicationUpdaterRegistry;
 
     @Inject
     public SDKRunner(@Named(DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
                      @Named(CLEANUP_DELAY_TIME) int cleanupDelay,
                      @Named(CODE_SERVER_BIND_ADDRESS) String codeServerBindAddress,
                      @Named("runner.sdk.host_name") String hostName,
-                     LocalFSMountStrategy mountStrategy,
                      CustomPortService portService,
                      Set<ApplicationServer> appServers,
+                     CodeServer codeServer,
                      ResourceAllocators allocators,
-                     EventService eventService) {
+                     EventService eventService,
+                     ProjectEventService projectEventService,
+                     ApplicationUpdaterRegistry applicationUpdaterRegistry) {
         super(deployDirectoryRoot, cleanupDelay, allocators, eventService);
         this.codeServerBindAddress = codeServerBindAddress;
         this.hostName = hostName;
-        this.mountStrategy = mountStrategy;
         this.portService = portService;
+        this.codeServer = codeServer;
+        this.projectEventService = projectEventService;
+        this.applicationUpdaterRegistry = applicationUpdaterRegistry;
         applicationServers = new HashMap<>();
         //available application servers should be already injected
         for (ApplicationServer appServer : appServers) {
@@ -152,35 +157,35 @@ public class SDKRunner extends Runner {
 
         final java.io.File appDir;
         final Path codeServerWorkDirPath;
-        final Utils.ExtensionDescriptor extension;
+        final Utils.ExtensionDescriptor extensionDescriptor;
         try {
             appDir = Files.createTempDirectory(getDeployDirectory().toPath(), (server.getName() + '_' + getName() + '_')).toFile();
             codeServerWorkDirPath = Files.createTempDirectory(getDeployDirectory().toPath(), ("codeServer_" + getName() + '_'));
-            extension = Utils.getExtensionFromJarFile(new ZipFile(toDeploy.getFile()));
-        } catch (IOException e) {
+            extensionDescriptor = Utils.getExtensionFromJarFile(new ZipFile(toDeploy.getFile()));
+        } catch (IOException | IllegalArgumentException e) {
             throw new RunnerException(e);
         }
 
-        // TODO: rework this, using ProjectEventService
+        final CodeServer.CodeServerProcess codeServerProcess = codeServer.prepare(codeServerWorkDirPath,
+                                                                                  sdkRunnerCfg,
+                                                                                  extensionDescriptor,
+                                                                                  getExecutor());
         final String workspace = sdkRunnerCfg.getRequest().getWorkspace();
-        final String project = sdkRunnerCfg.getRequest().getProject().substring(2);
-        final Path projectSourcesPath;
-        try {
-            projectSourcesPath = mountStrategy.getMountPath(workspace).toPath().resolve(project);
-        } catch (VirtualFileSystemException e) {
-            throw new RunnerException(e);
-        }
-        CodeServer codeServer = new CodeServer();
-        CodeServer.CodeServerProcess codeServerProcess = codeServer.prepare(codeServerWorkDirPath,
-                                                                            projectSourcesPath,
-                                                                            sdkRunnerCfg,
-                                                                            extension);
-        final ZipFile warFile = buildCodenvyWebAppWithExtension(extension);
+        final String project = sdkRunnerCfg.getRequest().getProject();
+        // Register an appropriate ProjectEventListener in order
+        // to provide mirror of a remote project for GWT code server.
+        projectEventService.addListener(workspace, project, codeServerProcess);
+
+        final ZipFile warFile = buildCodenvyWebAppWithExtension(extensionDescriptor);
+
         final ApplicationProcess process =
                 server.deploy(appDir, warFile, toDeploy.getFile(), sdkRunnerCfg, codeServerProcess,
                               new ApplicationServer.StopCallback() {
                                   @Override
                                   public void stopped() {
+                                      // stop tracking changes in remote project since code server is stopped
+                                      projectEventService.removeListener(workspace, project, codeServerProcess);
+
                                       portService.release(sdkRunnerCfg.getHttpPort());
 
                                       final int debugPort = sdkRunnerCfg.getDebugPort();
@@ -193,7 +198,8 @@ public class SDKRunner extends Runner {
                                           portService.release(codeServerPort);
                                       }
                                   }
-                              });
+                              }
+                             );
 
         registerDisposer(process, new Disposer() {
             @Override

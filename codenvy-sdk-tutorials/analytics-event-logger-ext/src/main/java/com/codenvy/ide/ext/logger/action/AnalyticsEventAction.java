@@ -1,0 +1,54 @@
+package com.codenvy.ide.ext.logger.action;
+
+/**
+ * As usual, importing resources, related to Action API.
+ * The 3rd import is required to call a default alert box.
+ */
+
+import com.codenvy.ide.api.logger.AnalyticsEventLogger;
+import com.codenvy.ide.api.ui.action.Action;
+import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.ext.logger.AnalyticsEventLoggerExtension;
+import com.google.gwt.user.client.Window;
+import com.google.inject.Inject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class AnalyticsEventAction extends Action {
+
+    private final AnalyticsEventLogger eventLogger;
+
+    /**
+     * Define a constructor and pass over text to be displayed in the dialogue box.
+     */
+    @Inject
+    public AnalyticsEventAction(AnalyticsEventLogger eventLogger) {
+        super("Analytics Event");
+        this.eventLogger = eventLogger;
+    }
+
+    /**
+     * Define the action required when calling this method. In our case it'll log an event for the Analytics system.
+     */
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+        Window.alert("Analytics event will be logged");
+        logAnalyticsEvent();
+    }
+
+    private void logAnalyticsEvent() {
+        /**
+         * Preparing additional parameters, must meet the requirements described in javadoc for
+         * {@link com.codenvy.ide.api.logger.AnalyticsEventLogger#log(Class, String, java.util.Map)}
+         */
+        Map<String, String> additionalParameters = new HashMap<>();
+        additionalParameters.put("Plugin author", "Codenvy");
+
+        /**
+         * Logging the "Analytics Event Action performed" event. If plugin integrated into Codenvy IDE then event will
+         * be immediately transferred to Analytics system, otherwise it will be printed on a browser console.
+         */
+        eventLogger.log(AnalyticsEventLoggerExtension.class, "Analytics Event Action performed", additionalParameters);
+    }
+}

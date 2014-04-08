@@ -18,8 +18,8 @@
 package com.codenvy.runner.sdk;
 
 import com.codenvy.api.runner.internal.ApplicationProcess;
-import com.google.inject.Singleton;
 
+import javax.inject.Singleton;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
