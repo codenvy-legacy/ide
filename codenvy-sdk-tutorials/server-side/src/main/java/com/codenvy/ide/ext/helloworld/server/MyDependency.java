@@ -3,7 +3,7 @@ package com.codenvy.ide.ext.helloworld.server;
 import javax.inject.Singleton;
 
 /**
- * Add some logic to a server side component, forcing add to return 'Hello'
+ * Add some logic to a server side component, making it return some text:
  */
 
 
