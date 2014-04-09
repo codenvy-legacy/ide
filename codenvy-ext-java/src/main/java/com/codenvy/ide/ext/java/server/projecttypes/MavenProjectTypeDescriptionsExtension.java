@@ -42,7 +42,7 @@ public class MavenProjectTypeDescriptionsExtension implements ProjectTypeDescrip
     @Override
     public List<ProjectType> getProjectTypes() {
         final List<ProjectType> list = new ArrayList<>(1);
-        list.add(new ProjectType(Constants.MAVEN_ID, Constants.MAVEN_NAME, Constants.JAVA_CATEGORY));
+        list.add(new ProjectType(Constants.MAVEN_JAR_ID, Constants.MAVEN_NAME, Constants.JAVA_CATEGORY));
         return list;
     }
 
