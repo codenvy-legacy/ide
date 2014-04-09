@@ -108,7 +108,7 @@ public class CodenvyTutorialProjectTypeExtension implements ProjectTypeExtension
                                                 "with Codenvy API.",
                                                 baseUrl + "/theme-api-tutorial.zip"));
         list.add(new ProjectTemplateDescription("zip",
-                                                "Icon Registry API TUTORIAL",
+                                                "ICON REGISTRY API TUTORIAL",
                                                 "The following tutorial will take you through simple example to learn how to use " +
                                                 "IconRegistry.",
                                                 baseUrl + "/icons-registry-api-tutorial.zip"));
