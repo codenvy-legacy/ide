@@ -77,6 +77,8 @@ public class GitProjectImporter implements ProjectImporter {
                 FolderEntry projectMetaFolder = baseFolder.createFolder(".codenvy");
                 projectMetaFolder.createFile("project", propertyFileContent.getBytes(), MediaType.APPLICATION_JSON_TYPE.getType());
             }
+        } catch (NotAuthorizedException e) {
+            throw new IOException("User is not authorize to call this action", e);
         } catch (VirtualFileSystemException | GitException | URISyntaxException e) {
             throw new IOException("Selected project cannot be imported.", e);
         }
