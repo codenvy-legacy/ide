@@ -136,32 +136,46 @@ public class Debugger implements EventsHandler {
     }
 
     /**
-     * Attach to a JVM that is already running at specified host. Calling this method has no effect is Debugger already
-     * connected.
+     * Attach to a JVM that is already running at specified host.
      *
      * @throws VMConnectException
      *         when connection to Java VM is not established
      */
     private void connect() throws VMConnectException {
-        AttachingConnector connector = connector();
+        final String connectorName = "com.sun.jdi.SocketAttach";
+        AttachingConnector connector = connector(connectorName);
         if (connector == null) {
-            throw new VMConnectException("Unable connect to target Java VM. Requested connector not found. ");
+            throw new VMConnectException(
+                    String.format("Unable connect to target Java VM. Requested connector '%s' not found. ", connectorName));
         }
         Map<String, Connector.Argument> arguments = connector.defaultArguments();
         arguments.get("hostname").setValue(host);
         ((Connector.IntegerArgument)arguments.get("port")).setValue(port);
-        try {
-            vm = connector.attach(arguments);
-            eventsCollector = new EventsCollector(vm.eventQueue(), this);
-        } catch (IOException | IllegalConnectorArgumentsException e) {
-            throw new VMConnectException(e.getMessage(), e);
+        int attempt = 0;
+        for (; ; ) {
+            try {
+                vm = connector.attach(arguments);
+                break;
+            } catch (IOException e) {
+                LOG.error(e.getMessage(), e);
+                if (++attempt > 10) {
+                    throw new VMConnectException(e.getMessage(), e);
+                }
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ignored) {
+                }
+            } catch (IllegalConnectorArgumentsException e) {
+                throw new VMConnectException(e.getMessage(), e);
+            }
         }
+        eventsCollector = new EventsCollector(vm.eventQueue(), this);
         LOG.debug("Connect {}:{}", host, port);
     }
 
-    private AttachingConnector connector() {
+    private AttachingConnector connector(String connectorName) {
         for (AttachingConnector c : Bootstrap.virtualMachineManager().attachingConnectors()) {
-            if ("com.sun.jdi.SocketAttach".equals(c.name())) {
+            if (connectorName.equals(c.name())) {
                 return c;
             }
         }
@@ -285,10 +299,10 @@ public class Debugger implements EventsHandler {
             com.sun.jdi.Location location = breakpointRequest.location();
             // Breakpoint always enabled at the moment. Managing states of breakpoint is not supported for now.
             breakPoints.add(DtoFactory.getInstance().createDto(BreakPoint.class)
-                                    .withEnabled(true)
-                                    .withLocation(DtoFactory.getInstance().createDto(Location.class)
-                                                            .withClassName(location.declaringType().name())
-                                                            .withLineNumber(location.lineNumber())));
+                                      .withEnabled(true)
+                                      .withLocation(DtoFactory.getInstance().createDto(Location.class)
+                                                              .withClassName(location.declaringType().name())
+                                                              .withLineNumber(location.lineNumber())));
         }
         Collections.sort(breakPoints, BREAKPOINT_COMPARATOR);
         return breakPoints;
@@ -383,7 +397,8 @@ public class Debugger implements EventsHandler {
                                                   .withType(f.getTypeName())
                                                   .withVariablePath(
                                                           DtoFactory.getInstance().createDto(VariablePath.class)
-                                                                    .withPath(Arrays.asList(f.isStatic() ? "static" : "this", f.getName())))
+                                                                    .withPath(Arrays.asList(f.isStatic() ? "static" : "this", f.getName()))
+                                                                   )
                                                   .withPrimitive(f.isPrimitive()));
         }
         for (JdiLocalVariable var : getCurrentFrame().getLocalVariables()) {
@@ -393,7 +408,8 @@ public class Debugger implements EventsHandler {
                                                    .withType(var.getTypeName())
                                                    .withVariablePath(
                                                            DtoFactory.getInstance().createDto(VariablePath.class)
-                                                                     .withPath(Collections.singletonList(var.getName())))
+                                                                     .withPath(Collections.singletonList(var.getName()))
+                                                                    )
                                                    .withPrimitive(var.isPrimitive()));
         }
         return dump;
@@ -603,7 +619,9 @@ public class Debugger implements EventsHandler {
                                                                                        DtoFactory.getInstance().createDto(Location.class)
                                                                                                  .withClassName(
                                                                                                          location.declaringType().name())
-                                                                                                 .withLineNumber(location.lineNumber())))
+                                                                                                 .withLineNumber(location.lineNumber())
+                                                                                            )
+                                                                            )
                                                              .withType(DebuggerEvent.BREAKPOINT);
                 events.add(breakPointEvent);
             }
