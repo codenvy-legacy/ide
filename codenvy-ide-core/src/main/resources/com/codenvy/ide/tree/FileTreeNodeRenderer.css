@@ -51,6 +51,8 @@
     display: inline-block;
     background-position: center center;
     padding: 1px 1px;
+    max-height: 16px;
+    max-width: 16px;
 }
 
 .folderFont {

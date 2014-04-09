@@ -96,6 +96,16 @@
 }
 
 .ide-PartStack-Boton-Left {
+    border-right: 1px solid tabBorder;
+    cursor: pointer;
+    cursor: hand;
+    height: 18px;
+    display: block;
+    padding-left: 19px !important;
+    padding-right: 19px !important;
+}
+
+.ide-PartStack-Boton-Left > svg {
     -webkit-transform: rotate(270deg);
     -moz-transform: rotate(270deg);
     transform: rotate(270deg);
@@ -103,8 +113,8 @@
     filter: svgUrlShadow;
     height: 18px;
     width: 18px;
-    margin-left: -5px;
-    margin-right: -5px;
+    position: relative;
+    left: -9;
 }
 
 .ide-PartStack-Tab-Left {
