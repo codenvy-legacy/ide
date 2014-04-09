@@ -33,16 +33,16 @@ import java.util.List;
  * @author Evgen Vidolob
  */
 @Singleton
-public class MavenProjectTypeExtension implements ProjectTypeExtension {
+public class MavenJarProjectTypeExtension implements ProjectTypeExtension {
 
     @Inject
-    public MavenProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
+    public MavenJarProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
         registry.registerProjectType(this);
     }
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType(Constants.MAVEN_ID, Constants.MAVEN_NAME, Constants.JAVA_CATEGORY);
+        return new ProjectType(Constants.MAVEN_JAR_ID, Constants.MAVEN_NAME, Constants.JAVA_CATEGORY);
     }
 
     @Override

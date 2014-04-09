@@ -66,7 +66,7 @@ public class MavenSimpleProjectGenerator implements ProjectGenerator {
             testJava.createFolder(name);
         }
         FolderEntry folder = (FolderEntry)baseFolder.getChild(".codenvy");
-        String properties =  "{\"type\":\"" +Constants.MAVEN_ID +"\",\"properties\":[{\"name\":\"builder.name\",\"value\":[\"maven\"]},{\"name\":\"language\",\"value\":[\"java\"]}]}";
+        String properties =  "{\"type\":\"" +Constants.MAVEN_JAR_ID +"\",\"properties\":[{\"name\":\"builder.name\",\"value\":[\"maven\"]},{\"name\":\"language\",\"value\":[\"java\"]}]}";
         AbstractVirtualFileEntry child = folder.getChild("project");
         ((FileEntry)child).updateContent(properties.getBytes());
     }

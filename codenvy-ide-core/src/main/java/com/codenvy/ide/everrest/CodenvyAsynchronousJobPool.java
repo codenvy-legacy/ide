@@ -62,8 +62,11 @@ public class CodenvyAsynchronousJobPool extends AsynchronousJobPool implements C
 
     @Override
     protected UriBuilder getAsynchronousJobUriBuilder(AsynchronousJob job) {
-        return UriBuilder.fromPath(asynchronousServicePath).path(
-                EnvironmentContext.getCurrent().getWorkspaceId()).path(Long.toString(job.getJobId()));
+        final String wsId = EnvironmentContext.getCurrent().getWorkspaceId();
+        if (wsId == null) {
+            return super.getAsynchronousJobUriBuilder(job);
+        }
+        return UriBuilder.fromPath(asynchronousServicePath).path(wsId).path(Long.toString(job.getJobId()));
     }
 
     @Override

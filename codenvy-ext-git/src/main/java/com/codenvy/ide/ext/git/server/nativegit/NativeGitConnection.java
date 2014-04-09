@@ -298,7 +298,7 @@ public class NativeGitConnection implements GitConnection {
         initCommand.execute();
         nativeGit.createConfig().setUser(user).saveUser();
         //make initial commit.
-        if (!request.isBare()) {
+        if (!request.isBare() && request.isInitCommit()) {
             try {
                 nativeGit.createAddCommand()
                          .setFilePattern(new ArrayList<String>(Arrays.asList(".")))

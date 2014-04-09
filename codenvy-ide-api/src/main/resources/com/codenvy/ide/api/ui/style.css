@@ -179,3 +179,10 @@
 @eval cellEvenRow com.codenvy.ide.api.ui.theme.Style.getCellEvenRow();
 @eval cellKeyboardSelectedRow com.codenvy.ide.api.ui.theme.Style.getCellKeyboardSelectedRow();
 @eval cellHoveredRow com.codenvy.ide.api.ui.theme.Style.getCellHoveredRow();
+
+/*Events*/
+@eval successEventColor com.codenvy.ide.api.ui.theme.Style.getSuccessEventColor();
+@eval errorEventColor com.codenvy.ide.api.ui.theme.Style.getErrorEventColor();
+@eval linkColor com.codenvy.ide.api.ui.theme.Style.getLinkColor();
+@eval eventDelimeterColor com.codenvy.ide.api.ui.theme.Style.getEventDelimeterColor();
+

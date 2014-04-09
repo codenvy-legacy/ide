@@ -83,6 +83,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
         if (tabPosition == LEFT) {
             SVGImage svgIcon = new SVGImage(resources.arrow());
             TabButton activeTab = new TabButton(svgIcon, "call dashboard");
+            activeTab.setStyleName(resources.partStackCss().idePartStackBotonLeft());
             activeTab.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -227,7 +228,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
             if (widget != null) {
                 tabItem.add(widget);
             }
-            
+
             if (closable) {
                 image = new Image(resources.close());
                 image.setStyleName(resources.partStackCss().idePartStackTabCloseButton());
@@ -236,7 +237,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
                 addHandlers();
             }
         }
-        
+
         protected void updateWidget(IsWidget widget) {
             if (this.widget != null) {
                 tabItem.remove(this.widget);
@@ -253,14 +254,12 @@ public class PartStackViewImpl extends Composite implements PartStackView {
          * @param svgIcon
          * @param title
          */
-        public TabButton(SVGImage svgIcon,String title) {
+        public TabButton(SVGImage svgIcon, String title) {
             tabItem = new FlowPanel();
             if (title != null) {
                 tabItem.setTitle(title);
             }
             initWidget(tabItem);
-            this.setStyleName(resources.partStackCss().idePartStackToolTab());
-            svgIcon.getElement().setAttribute("class", resources.partStackCss().idePartStackBotonLeft());
             tabItem.add(svgIcon);
         }
 

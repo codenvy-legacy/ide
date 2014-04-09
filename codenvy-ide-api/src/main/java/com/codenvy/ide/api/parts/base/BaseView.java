@@ -58,10 +58,7 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
         
         DockLayoutPanel panel = new DockLayoutPanel(Style.Unit.PX);
         titleLabel = new Label();
-        titleLabel.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
-        titleLabel.getElement().getStyle().setLineHeight(20, Style.Unit.PX);
-        titleLabel.getElement().getStyle().setMarginLeft(10, Style.Unit.PX);
-        titleLabel.getElement().getStyle().setVerticalAlign(Style.VerticalAlign.MIDDLE);
+        titleLabel.setStyleName(resources.partStackCss().ideBasePartTitleLabel());
         panel.addWest(titleLabel, 100);
         
         Image minimize = new Image(resources.minimize());

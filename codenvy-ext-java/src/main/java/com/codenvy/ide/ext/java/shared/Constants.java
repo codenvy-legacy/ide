@@ -24,7 +24,7 @@ public interface Constants {
     final String WAR_ID          = "war";
     final String SPRING_ID       = "spring";
     final String MULTI_MODULE_ID = "maven_multi_module";
-    final String MAVEN_ID        = "maven";
+    final String MAVEN_JAR_ID    = "maven";
 
     // project type names
     final String JAR_NAME                     = "Java Library (JAR)";
