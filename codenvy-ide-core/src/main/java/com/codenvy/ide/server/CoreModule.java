@@ -26,9 +26,7 @@ public class CoreModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(ProjectTypeDescriptionsExtension.class);
-        bind(CodenvyPluginProjectTypeDescriptionExtension.class);
         bind(NamelessProjectTypeExtension.class);
         bind(BaseProjectTypeExtension.class);
-        bind(CodenvyPluginProjectTypeExtension.class);
     }
 }
