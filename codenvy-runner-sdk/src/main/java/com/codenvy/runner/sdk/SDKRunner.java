@@ -20,6 +20,7 @@ package com.codenvy.runner.sdk;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.CustomPortService;
+import com.codenvy.api.project.server.ProjectEventService;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.api.runner.internal.DeploymentSources;
@@ -73,6 +74,8 @@ public class SDKRunner extends Runner {
     private final String                         hostName;
     private final CustomPortService              portService;
     private final CodeServer                     codeServer;
+    private final ProjectEventService            projectEventService;
+    private final ApplicationUpdaterRegistry     applicationUpdaterRegistry;
 
     @Inject
     public SDKRunner(@Named(DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
@@ -83,12 +86,16 @@ public class SDKRunner extends Runner {
                      Set<ApplicationServer> appServers,
                      CodeServer codeServer,
                      ResourceAllocators allocators,
-                     EventService eventService) {
+                     EventService eventService,
+                     ProjectEventService projectEventService,
+                     ApplicationUpdaterRegistry applicationUpdaterRegistry) {
         super(deployDirectoryRoot, cleanupDelay, allocators, eventService);
         this.codeServerBindAddress = codeServerBindAddress;
         this.hostName = hostName;
         this.portService = portService;
         this.codeServer = codeServer;
+        this.projectEventService = projectEventService;
+        this.applicationUpdaterRegistry = applicationUpdaterRegistry;
         applicationServers = new HashMap<>();
         //available application servers should be already injected
         for (ApplicationServer appServer : appServers) {
@@ -159,16 +166,26 @@ public class SDKRunner extends Runner {
             throw new RunnerException(e);
         }
 
-        CodeServer.CodeServerProcess codeServerProcess = codeServer.prepare(codeServerWorkDirPath,
-                                                                            sdkRunnerCfg,
-                                                                            extensionDescriptor,
-                                                                            getExecutor());
+        final CodeServer.CodeServerProcess codeServerProcess = codeServer.prepare(codeServerWorkDirPath,
+                                                                                  sdkRunnerCfg,
+                                                                                  extensionDescriptor,
+                                                                                  getExecutor());
+        final String workspace = sdkRunnerCfg.getRequest().getWorkspace();
+        final String project = sdkRunnerCfg.getRequest().getProject();
+        // Register an appropriate ProjectEventListener in order
+        // to provide mirror of a remote project for GWT code server.
+        projectEventService.addListener(workspace, project, codeServerProcess);
+
         final ZipFile warFile = buildCodenvyWebAppWithExtension(extensionDescriptor);
+
         final ApplicationProcess process =
                 server.deploy(appDir, warFile, toDeploy.getFile(), sdkRunnerCfg, codeServerProcess,
                               new ApplicationServer.StopCallback() {
                                   @Override
                                   public void stopped() {
+                                      // stop tracking changes in remote project since code server is stopped
+                                      projectEventService.removeListener(workspace, project, codeServerProcess);
+
                                       portService.release(sdkRunnerCfg.getHttpPort());
 
                                       final int debugPort = sdkRunnerCfg.getDebugPort();
@@ -181,7 +198,8 @@ public class SDKRunner extends Runner {
                                           portService.release(codeServerPort);
                                       }
                                   }
-                              });
+                              }
+                             );
 
         registerDisposer(process, new Disposer() {
             @Override

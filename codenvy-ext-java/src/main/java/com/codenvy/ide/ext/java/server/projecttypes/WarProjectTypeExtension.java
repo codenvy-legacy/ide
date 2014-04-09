@@ -52,9 +52,8 @@ public class WarProjectTypeExtension implements ProjectTypeExtension {
     public List<Attribute> getPredefinedAttributes() {
         final List<Attribute> list = new ArrayList<>(4);
         list.add(new Attribute(Constants.LANGUAGE, "java"));
-        list.add(new Attribute(Constants.FRAMEWORK, "web_application"));
-        list.add(new Attribute(Constants.RUNNER_NAME, "java_webapp"));
-        list.add(new Attribute(Constants.BUILDER_NAME, "maven"));
+        list.add(new Attribute(Constants.FRAMEWORK, "javaWebApplication"));
+        list.add(new Attribute(Constants.RUNNER_NAME, "JavaWeb"));
         return list;
     }
 

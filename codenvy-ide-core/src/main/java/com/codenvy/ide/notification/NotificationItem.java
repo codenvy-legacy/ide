@@ -24,13 +24,15 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
+
+import org.vectomatic.dom.svg.ui.SVGImage;
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 import javax.validation.constraints.NotNull;
 
@@ -76,8 +78,6 @@ public class NotificationItem extends Composite implements Notification.Notifica
         notification.addObserver(this);
 
         mainPanel = new DockLayoutPanel(PX);
-        mainPanel.setHeight("16px");
-//        mainPanel.setWidth("100%");
         mainPanel.addStyleName(resources.notificationCss().notificationItem());
 
         if (!notification.isRead()) {
@@ -96,7 +96,11 @@ public class NotificationItem extends Composite implements Notification.Notifica
         mainPanel.addWest(iconPanel, 25);
 
         if (!notification.isFinished()) {
-            changeImage(resources.progress());
+            Image messageIcon = new Image(resources.progress());
+            messageIcon.setSize("12", "12");
+            messageIcon.setStyleName(resources.notificationCss().invertColor());
+            messageIcon.addStyleName(resources.notificationCss().margin4px());
+            iconPanel.setWidget(messageIcon);
         } else if (notification.isWarning()) {
             changeImage(resources.warning());
             mainPanel.addStyleName(resources.notificationCss().warning());
@@ -104,7 +108,7 @@ public class NotificationItem extends Composite implements Notification.Notifica
             changeImage(resources.error());
             mainPanel.addStyleName(resources.notificationCss().error());
         } else {
-            changeImage(resources.info());
+            changeImage(resources.success()).getElement().setAttribute("class", resources.notificationCss().success());
         }
 
         Image closeIcon = new Image(resources.close());
@@ -118,11 +122,12 @@ public class NotificationItem extends Composite implements Notification.Notifica
         mainPanel.addEast(closeIcon, 25);
 
         time = new Label(DATA_FORMAT.format(notification.getTime()));
-        time.addStyleName(resources.notificationCss().top4px());
+        time.getElement().getStyle().setLineHeight(20, PX);
         mainPanel.addWest(time, 55);
 
-        title = new HTML(notification.getMessage());
-        title.addStyleName(resources.notificationCss().top4px());
+        title = new HTML("<p>" + notification.getMessage() + "</p>");
+        title.addStyleName(resources.notificationCss().center());
+        title.setHeight("20px");
         mainPanel.add(title);
 
         initWidget(mainPanel);
@@ -134,13 +139,10 @@ public class NotificationItem extends Composite implements Notification.Notifica
      * @param icon
      *         icon that need to set
      */
-    private void changeImage(@NotNull ImageResource icon) {
-        Image messageIcon = new Image(icon);
-        if (resources.progress().equals(icon)) {
-            messageIcon.setSize("16", "16");
-            messageIcon.setStyleName(resources.notificationCss().invertColor());
-        }
+    private SVGImage changeImage(@NotNull SVGResource icon) {
+        SVGImage messageIcon = new SVGImage(icon);
         iconPanel.setWidget(messageIcon);
+        return messageIcon;
     }
 
     /** {@inheritDoc} */
@@ -148,11 +150,15 @@ public class NotificationItem extends Composite implements Notification.Notifica
     public void onValueChanged() {
         if (!prevState.equals(notification)) {
             if (!prevState.getMessage().equals(notification.getMessage())) {
-                title.setHTML(notification.getMessage());
+                title.setHTML("<p>" + notification.getMessage() + "</p>");
             }
 
             if (!notification.isFinished()) {
-                changeImage(resources.progress());
+                Image messageIcon = new Image(resources.progress());
+                messageIcon.setSize("12", "12");
+                messageIcon.setStyleName(resources.notificationCss().invertColor());
+                messageIcon.addStyleName(resources.notificationCss().margin4px());
+                iconPanel.setWidget(messageIcon);
             } else if (!prevState.getType().equals(notification.getType())) {
                 changeType();
             } else {
@@ -190,7 +196,7 @@ public class NotificationItem extends Composite implements Notification.Notifica
             changeImage(resources.error());
             mainPanel.addStyleName(resources.notificationCss().error());
         } else {
-            changeImage(resources.info());
+            changeImage(resources.success()).getElement().setAttribute("class", resources.notificationCss().success());
         }
     }
 }
