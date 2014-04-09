@@ -80,6 +80,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Native implementation of GitConnection
@@ -93,6 +94,12 @@ public class NativeGitConnection implements GitConnection {
     private final CredentialsLoader credentialsLoader;
     private       GitUser           user;
     private       SshKeysManager    keysManager;
+
+    private static final Pattern authErrorPattern =
+            Pattern.compile(
+                    ".*fatal: Authentication failed for '.*'.*|.*fatal: Could not read from remote repository\\.\\n\\nPlease make sure " +
+                    "you have the correct access rights\\nand the repository exists\\.\\n.*",
+                    Pattern.MULTILINE);
 
     /**
      * @param repository
@@ -534,8 +541,7 @@ public class NativeGitConnection implements GitConnection {
             }
             command.execute();
         } catch (GitException e) {
-            //if not authorized
-            if (e.getMessage().toLowerCase().startsWith("fatal: authentication failed")) {
+            if (isOperationNeedAuth(e.getMessage())) {
                 //try to search available credentials and execute command with it
                 command.setAskPassScriptPath(credentialsLoader.findCredentialsAndCreateGitAskPassScript(url).toString());
                 try {
@@ -546,8 +552,8 @@ public class NativeGitConnection implements GitConnection {
                     command.execute();
                 } catch (GitException inner) {
                     //if not authorized again make runtime exception
-                    if (inner.getMessage().toLowerCase().startsWith("fatal: authentication failed")) {
-                        throw new NotAuthorizedException("not authorized");
+                    if (isOperationNeedAuth(inner.getMessage())) {
+                        throw new NotAuthorizedException();
                     } else {
                         throw inner;
                     }
@@ -556,6 +562,11 @@ public class NativeGitConnection implements GitConnection {
                 throw e;
             }
         }
+    }
+
+    /** Check if error message from git output corresponding authenticate issue. */
+    private boolean isOperationNeedAuth(String errorMessage) {
+        return authErrorPattern.matcher(errorMessage).find();
     }
 
     /**

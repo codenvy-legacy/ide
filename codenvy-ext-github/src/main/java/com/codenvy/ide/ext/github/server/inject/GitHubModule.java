@@ -17,8 +17,10 @@
  */
 package com.codenvy.ide.ext.github.server.inject;
 
+import com.codenvy.ide.ext.git.server.nativegit.CredentialsProvider;
 import com.codenvy.ide.ext.git.server.provider.GitVendorService;
 import com.codenvy.ide.ext.github.server.GitHub;
+import com.codenvy.ide.ext.github.server.oauth.GitHubOAuthCredentialProvider;
 import com.codenvy.inject.DynaModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
@@ -36,5 +38,8 @@ public class GitHubModule extends AbstractModule {
     protected void configure() {
         Multibinder<GitVendorService> gitVendorServices = Multibinder.newSetBinder(binder(), GitVendorService.class);
         gitVendorServices.addBinding().to(GitHub.class);
+
+        Multibinder<CredentialsProvider> multiBindings = Multibinder.newSetBinder(binder(), CredentialsProvider.class);
+        multiBindings.addBinding().to(GitHubOAuthCredentialProvider.class);
     }
 }
