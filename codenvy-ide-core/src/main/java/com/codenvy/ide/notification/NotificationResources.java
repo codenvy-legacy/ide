@@ -34,7 +34,7 @@ public interface NotificationResources extends ClientBundle {
 
         String floatLeft();
 
-        String margin2px();
+        String margin4px();
 
         String error();
 

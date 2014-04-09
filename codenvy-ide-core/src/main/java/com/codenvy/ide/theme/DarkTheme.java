@@ -171,7 +171,7 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getEditorSelectionColor() {
-        return "#214283";
+        return "#256c9f";
     }
 
     @Override
