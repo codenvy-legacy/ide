@@ -100,9 +100,7 @@
     cursor: pointer;
     cursor: hand;
     height: 18px;
-    display: block;
-    padding-left: 19px !important;
-    padding-right: 19px !important;
+    display: inline-block;
 }
 
 .ide-PartStack-Boton-Left > svg {
@@ -113,8 +111,7 @@
     filter: svgUrlShadow;
     height: 18px;
     width: 18px;
-    position: relative;
-    left: -9;
+    margin-left: -2px;
 }
 
 .ide-PartStack-Tab-Left {

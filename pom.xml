@@ -72,6 +72,7 @@
         <module>codenvy-sdk-tutorials/wysiwyg-editor</module>
         <module>codenvy-sdk-tutorials/server-side</module>
         <module>codenvy-sdk-tools</module>
+        <module>codenvy-ide-factory</module>
     </modules>
     <scm>
         <connection>scm:git:git@github.com:codenvy/ide.git</connection>
