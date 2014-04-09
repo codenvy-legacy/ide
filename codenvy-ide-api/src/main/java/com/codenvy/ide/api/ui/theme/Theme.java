@@ -552,4 +552,9 @@ public interface Theme {
      */
     String getEventDelimeterColor();
     
+    /**
+     * @return the color of part minimize button color.
+     */
+    String getMinimizeIconColor();
+    
 }

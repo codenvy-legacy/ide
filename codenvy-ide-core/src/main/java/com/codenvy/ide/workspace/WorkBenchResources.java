@@ -36,8 +36,8 @@ public interface WorkBenchResources extends ClientBundle {
         @ClassName("ide-work-bench-tool-panel-right")
         String ideWorkBenchToolPanelRight();
 
-        @ClassName("ide-work-bench-split-panel-right")
-        String ideWorkBenchSplitPanelRight();
+        @ClassName("ide-work-bench-split-panel-left")
+        String ideWorkBenchSplitPanelLeft();
 
         @ClassName("ide-work-bench-split-panel-bottom")
         String ideWorkBenchSplitPanelBottom();

@@ -354,4 +354,8 @@ public class Style {
     public static String getEventDelimeterColor() {
         return theme.getEventDelimeterColor();
     }
+    
+    public static String getMinimizeIconColor() {
+        return theme.getMinimizeIconColor();
+    }
 }
