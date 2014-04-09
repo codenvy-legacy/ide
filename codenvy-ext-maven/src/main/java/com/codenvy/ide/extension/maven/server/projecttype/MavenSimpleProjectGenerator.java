@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.server.projecttypes;
+package com.codenvy.ide.extension.maven.server.projecttype;
 
 import com.codenvy.api.project.server.AbstractVirtualFileEntry;
 import com.codenvy.api.project.server.FileEntry;

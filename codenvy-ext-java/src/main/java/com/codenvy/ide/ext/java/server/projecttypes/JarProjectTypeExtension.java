@@ -35,8 +35,6 @@ import java.util.Map;
 @Singleton
 public class JarProjectTypeExtension implements ProjectTypeExtension {
 
-    private Map<String, String> icons = new HashMap<>();
-
     @Inject
     public JarProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
         registry.registerProjectType(this);

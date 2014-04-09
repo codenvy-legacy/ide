@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.server.projecttypes;
+package com.codenvy.ide.extension.maven.server.projecttype;
 
 import com.codenvy.api.project.server.ProjectTypeDescriptionExtension;
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
@@ -42,7 +42,7 @@ public class MavenProjectTypeDescriptionsExtension implements ProjectTypeDescrip
     @Override
     public List<ProjectType> getProjectTypes() {
         final List<ProjectType> list = new ArrayList<>(1);
-        list.add(new ProjectType(Constants.MAVEN_JAR_ID, Constants.MAVEN_NAME, Constants.JAVA_CATEGORY));
+        list.add(new ProjectType(Constants.MAVEN_JAR_ID, Constants.MAVEN_JAR_NAME, Constants.JAVA_CATEGORY));
         return list;
     }
 

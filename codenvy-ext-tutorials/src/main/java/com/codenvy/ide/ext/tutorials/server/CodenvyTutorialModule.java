@@ -27,5 +27,7 @@ public class CodenvyTutorialModule extends AbstractModule {
     protected void configure() {
         bind(ProjectTypeDescriptionsExtension.class);
         bind(CodenvyTutorialProjectTypeExtension.class);
+        bind(CodenvyPluginProjectTypeDescriptionExtension.class);
+        bind(CodenvyPluginProjectTypeExtension.class);
     }
 }
