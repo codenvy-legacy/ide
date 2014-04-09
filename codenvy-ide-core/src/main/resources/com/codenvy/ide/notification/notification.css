@@ -19,11 +19,55 @@
     .notificationItem {
         font-size: secondaryTextFontSize;
         font-family: mainFontFamily; 
+        border-bottom: 1px solid eventDelimeterColor;
+        height: 20px;
+        vertical-align: middle;
+        text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5); 
+    }
+    
+    .center {
+    	display: table;
+		position: absolute;
+    }
+    
+    .center p {
+    	display: table-cell;
+	    vertical-align: middle;
+    }
+    
+    .notificationItem svg {
+    	width: 15px;
+    	height: 15px;
+    	margin: 2 4;
+    }
+    
+    .notificationItem a, .notificationPopup a {
+    	color: linkColor;
     }
     
 	.notificationPanel {
         cursor: pointer;
         padding-left: 2px;
+    }
+    
+    .notificationPopup {
+        border-radius: 1px !important;
+        box-shadow: 0px 1px 1.5px 1.5px rgba(255, 255, 255, 0) !important;
+        font-size: secondaryTextFontSize;
+        color: buttonHoverTextColor;
+        vertical-align: middle;
+    }
+    
+    .closePopupIcon {
+    	fill: toolbarIconColor;
+    	margin: auto;
+    	width: 18px;
+    	height: 18px;
+    	opacity: 0.5;
+    }
+    
+    .closePopupIcon:hover {
+    	opacity: 1;
     }
 	
     .floatLeft {
@@ -31,7 +75,7 @@
     }
 
     .close {
-        top: 40% !important;
+        margin-top: 7px;
         opacity: 0.5;
     }
     
@@ -39,8 +83,8 @@
         opacity: 1;
     }
     
-    .top4px {
-        top: 4px !important;
+    .margin2px {
+        margin: 2px;
     }
 
     .right25px {
@@ -48,11 +92,17 @@
     }
 
     .error {
-        color: #bf3a37 !important;
+        color: errorEventColor !important;
+        fill: errorEventColor !important;
+    }
+    
+    .success {
+        fill: successEventColor;
     }
 
     .warning {
         color: #cb772f !important;
+        fill: #cb772f;
     }
 
     .unread {

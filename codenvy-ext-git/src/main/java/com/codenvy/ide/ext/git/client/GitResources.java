@@ -62,9 +62,6 @@ public interface GitResources extends ClientBundle {
     @Source("controls/reset.png")
     ImageResource reset();
 
-    @Source("controls/cloneRepo.png")
-    ImageResource cloneRepo();
-
     @Source("controls/initRepo.png")
     ImageResource initRepo();
 
@@ -166,9 +163,6 @@ public interface GitResources extends ClientBundle {
 
     @Source("controls/repository.png")
     ImageResource projectReadOnlyGitUrl();
-
-    @Source("welcome/clone-git-repository.png")
-    ImageResource welcomeClone();
 
     @Source("welcome/project_open.png")
     ImageResource project();

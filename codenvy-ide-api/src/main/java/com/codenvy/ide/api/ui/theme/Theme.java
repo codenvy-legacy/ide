@@ -531,4 +531,25 @@ public interface Theme {
      * @return the shadow property for *.svg
      */
     String getSvgUrlShadow();
+    
+    /**
+     * @return the color of the success event
+     */
+    String getSuccessEventColor();
+    
+    /**
+     * @return the color of the error event
+     */
+    String getErrorEventColor();
+    
+    /**
+     * @return the color of the links
+     */
+    String getLinkColor();
+    
+    /**
+     * @return the color of the event items delimeter
+     */
+    String getEventDelimeterColor();
+    
 }

@@ -112,7 +112,11 @@ public class CodenvyTutorialProjectTypeExtension implements ProjectTypeExtension
                                                 "The following tutorial will take you through simple example to learn how to use " +
                                                 "IconRegistry.",
                                                 baseUrl + "/icons-registry-api-tutorial.zip"));
-
+         list.add(new ProjectTemplateDescription("zip",
+                                                "SERVER SIDE API TUTORIAL",
+                                                "The following tutorial will take you through a simple example demonstrating registration" + 
+                                                "of a server side component and server-client side communication.",
+                                                baseUrl + "/server-side-tutorial.zip"));
 
         return list;
     }

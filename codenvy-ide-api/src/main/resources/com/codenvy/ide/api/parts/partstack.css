@@ -173,6 +173,13 @@
     height: 100%;
 }
 
+.ide-Base-Part-Title-Label {
+    display: inline-block;
+    line-height: 22px;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
 .ide-PartStack-Tool-Tab {
     /* tab button */
     border-right: 1px solid tabBorder;
@@ -234,9 +241,6 @@
 }
 
 .ide-PartStack-Multiple-Tabs-Item {
-    font-family: mainFontFamily;
-    font-size: 11pt;
-    color: #d4d4d4;
     font-family: mainFontFamily;
     font-size: 11px;
     color: #d4d4d4;
@@ -308,9 +312,4 @@
     float: left;
 }
 
-.ide-button-micro {
-    padding: 1px 5px;
-    font-size: 9px;
-    line-height: 16px;
-}
 

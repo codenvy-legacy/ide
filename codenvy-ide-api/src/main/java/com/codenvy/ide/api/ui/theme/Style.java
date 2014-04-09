@@ -338,4 +338,20 @@ public class Style {
     public static String getSvgUrlShadow() {
         return theme.getSvgUrlShadow();
     }
+    
+    public static String getSuccessEventColor() {
+        return theme.getSuccessEventColor();
+    }
+    
+    public static String getErrorEventColor() {
+        return theme.getErrorEventColor();
+    }
+    
+    public static String getLinkColor() {
+        return theme.getLinkColor();
+    }
+    
+    public static String getEventDelimeterColor() {
+        return theme.getEventDelimeterColor();
+    }
 }

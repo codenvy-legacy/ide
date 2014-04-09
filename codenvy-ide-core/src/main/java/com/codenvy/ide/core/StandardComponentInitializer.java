@@ -22,8 +22,10 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.actions.CloseProjectAction;
 import com.codenvy.ide.actions.DeleteResourceAction;
 import com.codenvy.ide.actions.FormatterAction;
+import com.codenvy.ide.actions.ImportProjectAction;
 import com.codenvy.ide.actions.NavigateToFileAction;
 import com.codenvy.ide.actions.NewProjectAction;
+import com.codenvy.ide.actions.NewProjectWizardAction;
 import com.codenvy.ide.actions.NewResourceAction;
 import com.codenvy.ide.actions.OpenProjectAction;
 import com.codenvy.ide.actions.RenameResourceAction;
@@ -183,6 +185,12 @@ public class StandardComponentInitializer {
     @Inject
     private UploadFileAction uploadFileAction;
 
+    @Inject
+    private ImportProjectAction importProjectAction;
+
+    @Inject
+    private NewProjectWizardAction newProjectWizardAction;
+
     /** Instantiates {@link StandardComponentInitializer} an creates standard content. */
     @Inject
     public StandardComponentInitializer() {
@@ -220,6 +228,8 @@ public class StandardComponentInitializer {
 
         actionManager.registerAction("newProject", newProjectAction);
         actionManager.registerAction("openProject", openProjectAction);
+        actionManager.registerAction("importProject", importProjectAction);
+        actionManager.registerAction("newProject2", newProjectWizardAction);
         actionManager.registerAction("uploadFile", uploadFileAction);
 
         actionManager.registerAction("navigateToFile", navigateToFileAction);
@@ -232,10 +242,12 @@ public class StandardComponentInitializer {
         DefaultActionGroup newGroup = new DefaultActionGroup("New", true, actionManager);
         newGroup.getTemplatePresentation().setSVGIcon(resources.newResource());
         newGroup.addAction(newProjectAction, Constraints.FIRST);
+        newGroup.addAction(newProjectWizardAction);
         toolbarGroup.add(newGroup);
         toolbarGroup.addSeparator();
         fileGroup.add(newGroup);
         fileGroup.add(openProjectAction);
+        fileGroup.add(importProjectAction);
         fileGroup.add(uploadFileAction);
         fileGroup.add(navigateToFileAction);
         fileGroup.add(renameResourceAction);

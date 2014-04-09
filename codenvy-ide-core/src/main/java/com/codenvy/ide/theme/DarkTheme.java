@@ -216,7 +216,7 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getEditorVariable2() {
-        return "#05a";
+        return "#0ab";
     }
 
     @Override
@@ -236,7 +236,7 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getEditorString() {
-        return "#6A8759";
+        return "#6AAF32";
     }
 
     @Override
@@ -422,5 +422,25 @@ public class DarkTheme implements Theme {
     @Override
     public String getSvgUrlShadow() {
         return "url(#shadowDarkTheme)";
+    }
+    
+    @Override
+    public String getSuccessEventColor() {
+        return "#7dc878";
+    }
+    
+    @Override
+    public String getErrorEventColor() {
+        return "#e25252";
+    }
+    
+    @Override
+    public String getEventDelimeterColor() {
+        return "#2f2f2f";
+    }
+    
+    @Override
+    public String getLinkColor() {
+        return "#acacac";
     }
 }

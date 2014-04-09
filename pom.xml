@@ -57,6 +57,7 @@
         <module>codenvy-ide-client</module>
         <module>codenvy-ext-tutorials</module>
         <module>codenvy-sdk-tutorials/action-api</module>
+        <module>codenvy-sdk-tutorials/analytics-event-logger-ext</module>
         <module>codenvy-sdk-tutorials/wizard-api</module>
         <module>codenvy-sdk-tutorials/theme-api</module>
         <module>codenvy-sdk-tutorials/parts-api</module>
@@ -69,6 +70,7 @@
         <module>codenvy-sdk-tutorials/helloworld-ext</module>
         <module>codenvy-sdk-tutorials/icons-regitry-api</module>
         <module>codenvy-sdk-tutorials/wysiwyg-editor</module>
+        <module>codenvy-sdk-tutorials/server-side</module>
         <module>codenvy-sdk-tools</module>
     </modules>
     <scm>
@@ -97,10 +99,10 @@
         <gson.version>2.1</gson.version>
         <guava.version>12.0.1</guava.version>
         <gwt-test-utils.version>0.47</gwt-test-utils.version>
-	    <gwt.svg.version>0.5.9</gwt.svg.version>
+        <gwt.svg.version>0.5.9</gwt.svg.version>
         <gwt.test.skip>true</gwt.test.skip>
         <gwt.version>2.6.0</gwt.version>
-	    <javax.annotation.version>1.0</javax.annotation.version>
+        <javax.annotation.version>1.0</javax.annotation.version>
         <javax.validation.version>1.0.0.GA</javax.validation.version>
         <javax.ws.rs.version>1.0</javax.ws.rs.version>
         <javax.ws.version>1.0</javax.ws.version>
@@ -157,7 +159,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore />
+                                        <ignore/>
                                     </action>
                                 </pluginExecution>
                                 <pluginExecution>
@@ -170,7 +172,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore />
+                                        <ignore/>
                                     </action>
                                 </pluginExecution>
                                 <pluginExecution>
@@ -183,7 +185,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore />
+                                        <ignore/>
                                     </action>
                                 </pluginExecution>
                                 <pluginExecution>
@@ -196,7 +198,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore />
+                                        <ignore/>
                                     </action>
                                 </pluginExecution>
                             </pluginExecutions>
