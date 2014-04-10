@@ -56,6 +56,7 @@
     <inherits name='com.codenvy.api.VFS'/>
 
     <inherits name="com.codenvy.ide.ui.CodenvyUI"/>
+    <inherits name='com.codenvy.api.factory.FactoryDto'/>
 
     <stylesheet src="IDE.css"/>
 

@@ -93,6 +93,7 @@
 
 .ide-PartStack-focused .ide-Base-Part-Toolbar {
     /*Toolbar that is currently selected(active)*/
+    background-color: partToolbarActive;
 }
 
 .ide-PartStack-Boton-Left {
@@ -108,8 +109,8 @@
     transform: rotate(270deg);
     fill: toolbarIconColor;
     /*filter: svgUrlShadow;*/
-    height: 17px;
-    width: 17px;
+    height: 15px;
+    width: 15px;
     margin: 1px -1px;
 }
 
