@@ -111,8 +111,8 @@ public interface PartStackUIResources extends ClientBundle {
 
     ImageResource close();
 
-    @Source("thin_min_view.png")
-    ImageResource minimize();
+    @Source("minimize.svg")
+    SVGResource minimize();
 
     @Source("arrow.svg")
     SVGResource arrow();

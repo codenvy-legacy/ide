@@ -15,32 +15,28 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.server.projecttypes;
+package com.codenvy.ide.extension.maven.server.inject;
 
 import com.codenvy.api.project.server.ProjectGenerator;
 import com.codenvy.api.project.server.ValueProviderFactory;
+import com.codenvy.ide.extension.maven.server.projecttype.MavenJarProjectTypeExtension;
+import com.codenvy.ide.extension.maven.server.projecttype.MavenProjectTypeDescriptionsExtension;
+import com.codenvy.ide.extension.maven.server.projecttype.MavenSimpleProjectGenerator;
+import com.codenvy.ide.extension.maven.server.projecttype.MavenSourceFoldersValueProviderFactory;
 import com.codenvy.inject.DynaModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
 
 /** @author Artem Zatsarynnyy */
 @DynaModule
-public class JavaModule extends AbstractModule {
+public class MavenModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(ProjectTypeDescriptionsExtension.class);
-        bind(MultiModuleProjectTypeDescriptionExtension.class);
-
-        bind(JarProjectTypeExtension.class);
-        bind(WarProjectTypeExtension.class);
-        bind(SpringProjectTypeExtension.class);
-        bind(MultiModuleProjectTypeExtension.class);
         bind(MavenJarProjectTypeExtension.class);
         bind(MavenProjectTypeDescriptionsExtension.class);
 
         Multibinder<ValueProviderFactory> multiBinder = Multibinder.newSetBinder(binder(), ValueProviderFactory.class);
         multiBinder.addBinding().to(MavenSourceFoldersValueProviderFactory.class);
-        multiBinder.addBinding().to(AntSourceFoldersValueProviderFactory.class);
 
         Multibinder<ProjectGenerator> generatorMultibinder = Multibinder.newSetBinder(binder(), ProjectGenerator.class);
         generatorMultibinder.addBinding().to(MavenSimpleProjectGenerator.class);

@@ -45,10 +45,10 @@
                     <g:SimplePanel ui:field="infoPanel" width="100%" height="100%" addStyleNames="{res.workBenchCss.ideWorkBenchSplitPanelBottom}"/>
                 </g:south>
                 <g:west size="0">
-                    <g:SimplePanel ui:field="navPanel" width="100%" height="100%"/>
+                    <g:SimplePanel ui:field="navPanel" width="100%" height="100%" addStyleNames="{res.workBenchCss.ideWorkBenchSplitPanelLeft}"/>
                 </g:west>
                 <g:east size="0">
-                    <g:SimplePanel ui:field="toolPanel" width="100%" height="100%" addStyleNames="{res.workBenchCss.ideWorkBenchSplitPanelRight}"/>
+                    <g:SimplePanel ui:field="toolPanel" width="100%" height="100%"/>
                 </g:east>
                 <g:center>
                     <g:ScrollPanel ui:field="editorPanel" width="100%" height="100%" addStyleNames="{style.bg}"/>

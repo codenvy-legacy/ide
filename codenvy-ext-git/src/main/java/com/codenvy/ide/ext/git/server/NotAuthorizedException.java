@@ -19,9 +19,13 @@ package com.codenvy.ide.ext.git.server;
 
 
 /**
- * @author <a href="mailto:evoevodin@codenvy.com">Eugene Voevodin</a>
+ * @author Eugene Voevodin
  */
 public class NotAuthorizedException extends GitException {
+
+    public NotAuthorizedException() {
+    }
+
     /**
      * @param message error message
      */

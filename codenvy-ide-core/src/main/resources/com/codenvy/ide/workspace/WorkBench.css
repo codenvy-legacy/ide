@@ -57,19 +57,23 @@
     overflow: visible !important;
 }
 
-img[name="workBenchIconMinimize"] {
-    margin: 22% 20%;
+svg[name="workBenchIconMinimize"] {
+    margin: 2px auto;
+    width: 14px;
+    height: 11px;
+    fill: minimizeIconColor; 
 }
 
 
-.ide-work-bench-split-panel-right img[name="workBenchIconMinimize"] {
+.ide-work-bench-split-panel-left svg[name="workBenchIconMinimize"] {
     -webkit-transform: rotate(180deg);
     -moz-transform: rotate(180deg);
     transform: rotate(180deg);
 }
 
-.ide-work-bench-split-panel-bottom img[name="workBenchIconMinimize"] {
-    -webkit-transform: rotate(270deg);
-    -moz-transform: rotate(270deg);
-    transform: rotate(270deg);
+.ide-work-bench-split-panel-bottom svg[name="workBenchIconMinimize"] {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    transform: rotate(90deg);
+    margin: 2px 1px;
 }

@@ -147,6 +147,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("projectExplorer.titleBar.text")
     String projectExplorerTitleBarText();
 
+    @Key("importProject.messageSuccess")
+    String importProjectMessageSuccess();
+
     @Key("importProject.name")
     String importProjectName();
 
