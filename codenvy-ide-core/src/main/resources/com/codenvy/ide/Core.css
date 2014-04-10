@@ -313,6 +313,10 @@ class for the document-level scrollbars. */
     inset 0px -1px 0px  rgba(178,178,178,0.07);
 }
 
+::-webkit-scrollbar-corner {
+    background-color: transparent;
+}
+
 ::-webkit-scrollbar-thumb:hover {
     background-color: rgba(178,178,178,0.4);
     -webkit-box-shadow: inset 1px 1px 1px rgba(178,178,178,0.25);
