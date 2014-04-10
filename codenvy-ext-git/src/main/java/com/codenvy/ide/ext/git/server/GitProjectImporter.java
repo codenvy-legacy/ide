@@ -123,8 +123,6 @@ public class GitProjectImporter implements ProjectImporter {
                 } else {
                     propertyFileContent = "{\"type\":\"" + Constants.NAMELESS_ID + "\"}";
                 }
-                foundMavenProject = true;
-
                 if (folderEntry.getChild(".codenvy") != null) {
                     folderEntry.getChild(".codenvy").remove();
                 }
@@ -134,14 +132,6 @@ public class GitProjectImporter implements ProjectImporter {
                 break;
             }
         }
-        // We didn't found a maven project, turn it as nameless project
-        if (!foundMavenProject) {
-            String propertyFileContent = "{\"type\":\"" + Constants.NAMELESS_ID + "\"}";
-            FolderEntry projectMetaFolder = folderEntry.createFolder(".codenvy");
-            projectMetaFolder.createFile("project", propertyFileContent.getBytes(), MediaType.APPLICATION_JSON_TYPE.getType());
-
-        }
-
     }
 
     /**
