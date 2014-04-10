@@ -40,12 +40,12 @@ public class NamelessProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType(Constants.NAMELESS_ID, Constants.NAMELESS_NAME, Constants.UNKNOWN_CATEGORY);
+        return new ProjectType(Constants.NAMELESS_ID, Constants.NAMELESS_NAME, Constants.NAMELESS_CATEGORY);
     }
 
     @Override
     public List<Attribute> getPredefinedAttributes() {
-        return Collections.emptyList();
+        return Collections.singletonList(new Attribute(Constants.LANGUAGE, "nameless"));
     }
 
     @Override

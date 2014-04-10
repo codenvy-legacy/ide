@@ -21,6 +21,7 @@ package com.codenvy.ide;
 public interface Constants {
     // project type ids
     final String NAMELESS_ID                  = "nameless";
+    final String NAMELESS_CATEGORY            = "nameless";
     final String UNKNOWN_CATEGORY             = "unknown";
     final String UNKNOWN_ID                   = "unknown";
     final String CODENVY_PLUGIN_ID            = "codenvy_extension";
