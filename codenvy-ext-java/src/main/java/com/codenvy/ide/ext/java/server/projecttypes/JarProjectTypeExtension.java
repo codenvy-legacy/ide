@@ -50,7 +50,7 @@ public class JarProjectTypeExtension implements ProjectTypeExtension {
         final List<Attribute> list = new ArrayList<>(3);
         list.add(new Attribute(Constants.LANGUAGE, "java"));
         list.add(new Attribute(Constants.FRAMEWORK, "javaStandaloneApp"));
-        list.add(new Attribute(Constants.RUNNER_NAME, "JavaStandalone"));
+        list.add(new Attribute(Constants.BUILDER_NAME, "maven"));
         return list;
     }
 
