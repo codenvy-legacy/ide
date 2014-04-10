@@ -91,12 +91,12 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
         String url = view.getUri();
         String importer = view.getImporter();
         final String projectName = view.getProjectName();
+        view.close();
         ImportSourceDescriptor importSourceDescriptor =
                 dtoFactory.createDto(ImportSourceDescriptor.class).withType(importer).withLocation(url);
         projectServiceClient.importProject(projectName, importSourceDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
-                view.close();
                 resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
                     @Override
                     public void onSuccess(Project result) {
@@ -115,7 +115,6 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
 
             @Override
             protected void onFailure(Throwable exception) {
-                view.close();
                 Log.error(ImportProjectPresenter.class, "can not import project: " + exception);
                 Notification notification = new Notification(exception.getMessage(), ERROR);
                 notificationManager.showNotification(notification);
@@ -126,10 +125,27 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
     /** {@inheritDoc} */
     @Override
     public void onValueChanged() {
-        String uri = view.getUri();
         String projectName = view.getProjectName();
-        boolean enable = !projectName.isEmpty() && !uri.isEmpty();
+        String uri = view.getUri();
+        if(projectName.isEmpty() && !uri.isEmpty()){
+            projectName = parseUri(uri);
+            view.setProjectName(projectName);
+        }
+        boolean enable = !uri.isEmpty() && !projectName.isEmpty();
 
         view.setEnabledImportButton(enable);
+    }
+
+    /** Gets project name from uri.*/
+    private String parseUri(String uri){
+        String result;
+        int indexStartProjectName = uri.lastIndexOf("/") + 1;
+        int indexFinishProjectName = uri.indexOf(".", indexStartProjectName);
+        if (indexStartProjectName != 0 && indexFinishProjectName != (-1)){
+            result = uri.substring(indexStartProjectName, indexFinishProjectName);
+        } else if (indexStartProjectName != 0){
+            result = uri.substring(indexStartProjectName);
+        } else {result = "";}
+        return result;
     }
 }
