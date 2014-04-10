@@ -93,7 +93,6 @@
 
 .ide-PartStack-focused .ide-Base-Part-Toolbar {
     /*Toolbar that is currently selected(active)*/
-    background-color: partToolbarActive;
 }
 
 .ide-PartStack-Boton-Left {
