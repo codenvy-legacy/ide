@@ -24,10 +24,13 @@ import com.codenvy.api.core.rest.HttpJsonHelper;
 import com.codenvy.api.core.rest.RemoteException;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.Pair;
+import com.codenvy.api.project.server.Project;
 import com.codenvy.api.project.server.ProjectManager;
 import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.ide.ext.java.server.internal.core.JavaProject;
 import com.codenvy.ide.ext.java.server.internal.core.search.matching.JavaSearchNameEnvironment;
+import com.codenvy.ide.maven.tools.MavenUtils;
+import com.codenvy.vfs.impl.fs.VirtualFileImpl;
 import com.google.inject.name.Named;
 
 import org.eclipse.jdt.core.IJavaProject;
@@ -233,6 +236,7 @@ public class RestNameEnvironment {
             throw new CodeAssistantException(500, "Doesn't have pom.xml file");
         }
 
+
         URI uri = uriInfo.getBaseUri();
         String url = uri.getScheme() + "://" + uri.getHost();
         int port = uri.getPort();
@@ -259,7 +263,6 @@ public class RestNameEnvironment {
             javaProjectService.removeProject(wsId, projectPath);
         }
     }
-
 
     private InputStream doDownload(String downloadURL) throws IOException {
         HttpURLConnection http = null;

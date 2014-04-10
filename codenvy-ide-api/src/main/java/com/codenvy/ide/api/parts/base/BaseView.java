@@ -24,8 +24,9 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+
+import org.vectomatic.dom.svg.ui.SVGImage;
 
 import javax.validation.constraints.NotNull;
 
@@ -61,7 +62,7 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
         titleLabel.setStyleName(resources.partStackCss().ideBasePartTitleLabel());
         panel.addWest(titleLabel, 100);
         
-        Image minimize = new Image(resources.minimize());
+        SVGImage minimize = new SVGImage(resources.minimize());
         minimize.getElement().setAttribute("name", "workBenchIconMinimize");
         minimizeButton = new ToolButton(minimize);
         minimizeButton.addClickHandler(new ClickHandler() {

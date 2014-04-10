@@ -44,6 +44,7 @@ import com.codenvy.ide.util.input.SignalEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 
 
@@ -183,6 +184,7 @@ public class AutocompleteUiController implements AutocompleteBox {
                 autoHideController.removePartnerClickTargets(infoPopup.getView().getElement());
             }
         });
+        UIObject.ensureDebugId((com.google.gwt.dom.client.Element)container, "autocompleteContainer");
     }
 
     /** @param widget */

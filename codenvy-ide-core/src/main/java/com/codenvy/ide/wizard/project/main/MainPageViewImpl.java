@@ -37,6 +37,7 @@ import com.codenvy.ide.util.input.SignalEvent;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.TextAreaElement;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
@@ -81,9 +82,12 @@ public class MainPageViewImpl implements MainPageView {
                                                                    Object itemData) {
                                                     SpanElement spanElement = Elements.createSpanElement();
                                                     if (itemData instanceof ProjectTypeDescriptor) {
-                                                        spanElement.setInnerText(((ProjectTypeDescriptor)itemData).getProjectTypeName());
+                                                        spanElement.setInnerHTML(
+                                                                SafeHtmlUtils.htmlEscape(
+                                                                        ((ProjectTypeDescriptor)itemData).getProjectTypeName()));
                                                     } else if (itemData instanceof ProjectTemplateDescriptor) {
-                                                        spanElement.setInnerText(((ProjectTemplateDescriptor)itemData).getDisplayName());
+                                                        spanElement.setInnerHTML(SafeHtmlUtils.htmlEscape(
+                                                                ((ProjectTemplateDescriptor)itemData).getDisplayName()));
                                                     }
                                                     listItemBase.appendChild(spanElement);
                                                 }
@@ -137,11 +141,11 @@ public class MainPageViewImpl implements MainPageView {
             @Override
             public void onNodeSelected(TreeNodeElement<String> node, SignalEvent event) {
                 String key = node.getData();
-                if(key.equals(SAMPLES)){
+                if (key.equals(SAMPLES)) {
                     projectTypeList.render(Collections.createArray());
                     return;
                 }
-                if(key.startsWith(SAMPLES)) {
+                if (key.startsWith(SAMPLES)) {
                     Set<ProjectTypeDescriptor> typeDescriptors = samples.get(key.substring(SAMPLES.length()));
                     Array<Object> array = Collections.createArray();
                     for (ProjectTypeDescriptor typeDescriptor : typeDescriptors) {
@@ -151,8 +155,7 @@ public class MainPageViewImpl implements MainPageView {
                     }
                     projectTypeList.render(array);
 
-                }
-                else {
+                } else {
                     Set<ProjectTypeDescriptor> projectTypeDescriptors = categories.get(key);
                     Array<Object> descriptors = Collections.createArray();
                     for (ProjectTypeDescriptor descriptor : projectTypeDescriptors) {
@@ -161,7 +164,7 @@ public class MainPageViewImpl implements MainPageView {
                     projectTypeList.render(descriptors);
                 }
                 descriptionArea.setInnerText("");
-                if(projectTypeList.size() > 0){
+                if (projectTypeList.size() > 0) {
                     selectNextWizardType(projectTypeList.get(0));
                 }
             }
@@ -181,13 +184,13 @@ public class MainPageViewImpl implements MainPageView {
 
     private void selectNextWizardType(Object itemData) {
         projectTypeList.getSelectionModel().setSelectedItem(itemData);
-        if(itemData instanceof ProjectTemplateDescriptor) {
+        if (itemData instanceof ProjectTemplateDescriptor) {
             delegate.projectTemplateSelected((ProjectTemplateDescriptor)itemData);
             descriptionArea.setInnerText(((ProjectTemplateDescriptor)itemData).getDescription());
-        } else if(itemData instanceof ProjectTypeDescriptor) {
+        } else if (itemData instanceof ProjectTypeDescriptor) {
             delegate.projectTypeSelected((ProjectTypeDescriptor)itemData);
             descriptionArea.setInnerText(((ProjectTypeDescriptor)itemData).getProjectTypeName());
-        } else{
+        } else {
             descriptionArea.setInnerText("");
         }
     }
@@ -233,13 +236,13 @@ public class MainPageViewImpl implements MainPageView {
                     for (String s : categories.keySet()) {
                         array.add(s);
                     }
-                    if(!samples.isEmpty()){
+                    if (!samples.isEmpty()) {
                         array.add(SAMPLES);
                     }
                     return array;
 
                 }
-                if(SAMPLES.equals(data)){
+                if (SAMPLES.equals(data)) {
                     Array<String> array = Collections.createArray();
                     for (String s : samples.keySet()) {
                         array.add(SAMPLES + s);
@@ -306,10 +309,10 @@ public class MainPageViewImpl implements MainPageView {
         @Override
         public SpanElement renderNodeContents(String data) {
             SpanElement spanElement = Elements.createSpanElement();
-            if(!SAMPLES.equals(data) && data.startsWith(SAMPLES)) {
+            if (!SAMPLES.equals(data) && data.startsWith(SAMPLES)) {
                 data = data.substring(SAMPLES.length());
             }
-            spanElement.setInnerText(data);
+            spanElement.setInnerHTML(data);
             return spanElement;
         }
 

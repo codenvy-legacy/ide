@@ -34,6 +34,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.vectomatic.dom.svg.ui.SVGImage;
+
 
 /**
  * Implements {@link ConsolePartView}.
@@ -57,7 +59,7 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
         super(resources);
         container.add(uiBinder.createAndBindUi(this));
 
-        ToolButton clearButton = new ToolButton(new Image(coreResources.clear()));
+        ToolButton clearButton = new ToolButton(new SVGImage(coreResources.clear()));
         clearButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {

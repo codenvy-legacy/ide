@@ -44,6 +44,7 @@ import com.codenvy.ide.util.input.SignalEventUtils;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.user.client.ui.UIObject;
 
 
 /**
@@ -205,6 +206,7 @@ public class InputController {
         inputElement.getStyle().setTop("0");
         inputElement.getStyle().setHeight("1px");
         inputElement.getStyle().setWidth("1px");
+        UIObject.ensureDebugId((com.google.gwt.dom.client.Element)inputElement, "codenvyEditotid");
       /*
        * Firefox doesn't seem to respect just the NOWRAP value, so we need to set
        * the legacy wrap attribute.
