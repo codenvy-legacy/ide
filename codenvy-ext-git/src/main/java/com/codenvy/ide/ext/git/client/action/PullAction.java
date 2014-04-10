@@ -36,7 +36,7 @@ public class PullAction extends Action {
     @Inject
     public PullAction(PullPresenter presenter, ResourceProvider resourceProvider, GitResources resources,
                       GitLocalizationConstant constant) {
-        super(constant.pullControlTitle(), constant.pullControlPrompt(), resources.pull());
+        super(constant.pullControlTitle(), constant.pullControlPrompt(), null, resources.pull());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }

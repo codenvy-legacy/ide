@@ -36,7 +36,7 @@ public class ShowPreferencesAction extends Action {
     @Inject
     public ShowPreferencesAction(Resources resources, PreferencesPresenter presenter) {
         //TODO change icon
-        super("Preferences", "Preferences", resources.file());
+        super("Preferences", "Preferences", null, resources.preferences());
         this.presenter = presenter;
     }
 

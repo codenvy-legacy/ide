@@ -36,7 +36,7 @@ public class ShowGitUrlAction extends Action {
     @Inject
     public ShowGitUrlAction(ShowProjectGitReadOnlyUrlPresenter presenter, ResourceProvider resourceProvider, GitResources resources,
                             GitLocalizationConstant constant) {
-        super(constant.projectReadOnlyGitUrlPrompt(), constant.projectReadOnlyGitUrlPrompt(), resources.projectReadOnlyGitUrl());
+        super(constant.projectReadOnlyGitUrlPrompt(), constant.projectReadOnlyGitUrlPrompt(), null, resources.projectReadOnlyGitUrl());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }

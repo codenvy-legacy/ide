@@ -36,7 +36,7 @@ public class ResetFilesAction extends Action {
     @Inject
     public ResetFilesAction(ResetFilesPresenter presenter, ResourceProvider resourceProvider, GitResources resources,
                             GitLocalizationConstant constant) {
-        super(constant.resetFilesControlTitle(), constant.resetFilesControlPrompt(), resources.reset());
+        super(constant.resetFilesControlTitle(), constant.resetFilesControlPrompt(), null, resources.reset());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }

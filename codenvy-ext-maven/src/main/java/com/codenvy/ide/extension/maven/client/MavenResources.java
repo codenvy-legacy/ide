@@ -20,6 +20,8 @@ package com.codenvy.ide.extension.maven.client;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 /**
  * Client resources.
  *
@@ -27,8 +29,8 @@ import com.google.gwt.resources.client.ImageResource;
  * @version $Id: Apr 3, 2012 3:03:35 PM anya $
  */
 public interface MavenResources extends ClientBundle {
-    @Source("build.png")
-    ImageResource build();
+    @Source("build.svg")
+    SVGResource build();
 
     @Source("clearOutput.png")
     ImageResource clearOutput();

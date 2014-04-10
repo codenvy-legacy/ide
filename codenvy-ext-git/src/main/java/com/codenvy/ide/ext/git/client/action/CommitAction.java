@@ -36,7 +36,7 @@ public class CommitAction extends Action {
     @Inject
     public CommitAction(CommitPresenter presenter, ResourceProvider resourceProvider, GitResources resources,
                         GitLocalizationConstant constant) {
-        super(constant.commitControlTitle(), constant.commitControlPrompt(), resources.commit());
+        super(constant.commitControlTitle(), constant.commitControlPrompt(), null, resources.commit());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }

@@ -41,7 +41,7 @@ public class BuildAction extends Action {
     public BuildAction(BuildProjectPresenter presenter, BuilderResources resources,
                        BuilderLocalizationConstant localizationConstant, ResourceProvider resourceProvider) {
         super(localizationConstant.buildProjectControlTitle(),
-              localizationConstant.buildProjectControlDescription(), resources.build());
+              localizationConstant.buildProjectControlDescription(), null, resources.build());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }
