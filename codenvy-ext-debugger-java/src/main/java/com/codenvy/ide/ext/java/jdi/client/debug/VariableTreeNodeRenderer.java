@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.java.jdi.client.debug;
 
 import elemental.html.DivElement;
-import elemental.html.Element;
+import elemental.dom.Element;
 import elemental.html.SpanElement;
 
 import com.codenvy.ide.ext.java.jdi.shared.Variable;

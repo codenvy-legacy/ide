@@ -17,10 +17,10 @@
  */
 package com.codenvy.ide.wizard.project.main;
 
-import elemental.html.DragEvent;
-import elemental.html.Element;
+import elemental.dom.Element;
+import elemental.events.MouseEvent;
 import elemental.html.SpanElement;
-import elemental.js.html.JsElement;
+import elemental.js.dom.JsElement;
 
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
@@ -120,12 +120,12 @@ public class MainPageViewImpl implements MainPageView {
             }
 
             @Override
-            public void onNodeDragStart(TreeNodeElement<String> node, DragEvent event) {
+            public void onNodeDragStart(TreeNodeElement<String> node, MouseEvent event) {
 
             }
 
             @Override
-            public void onNodeDragDrop(TreeNodeElement<String> node, DragEvent event) {
+            public void onNodeDragDrop(TreeNodeElement<String> node, MouseEvent event) {
 
             }
 
@@ -172,7 +172,7 @@ public class MainPageViewImpl implements MainPageView {
             }
 
             @Override
-            public void onRootDragDrop(DragEvent event) {
+            public void onRootDragDrop(MouseEvent event) {
 
             }
         });

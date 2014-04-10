@@ -17,7 +17,7 @@ package com.codenvy.ide.texteditor;
 import elemental.css.CSSStyleDeclaration;
 import elemental.events.Event;
 import elemental.events.EventListener;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineInfo;
@@ -129,7 +129,7 @@ public class Spacer {
 
         // Create div area for clients to draw inside
         element = Elements.createDivElement();
-        element.addClassName(cssClass);
+        Elements.addClassName(cssClass, element);
         element.getStyle().setLeft("0px");
         element.getStyle().setRight("0px");
         element.getStyle().setHeight(height, CSSStyleDeclaration.Unit.PX);
@@ -143,9 +143,9 @@ public class Spacer {
             }
         };
 
-        element.setOnMouseDown(bubblePreventionListener);
-        element.setOnMouseMove(bubblePreventionListener);
-        element.setOnMouseUp(bubblePreventionListener);
+        element.setOnmousedown(bubblePreventionListener);
+        element.setOnmousemove(bubblePreventionListener);
+        element.setOnmouseup(bubblePreventionListener);
 
         buffer.addAnchoredElement(anchor, element);
 

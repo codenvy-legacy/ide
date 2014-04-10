@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.outline;
 
-import elemental.html.DragEvent;
+import elemental.events.MouseEvent;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
@@ -122,11 +122,11 @@ public class OutlineImpl implements OutlinePresenter {
             }
 
             @Override
-            public void onNodeDragStart(TreeNodeElement<CodeBlock> node, DragEvent event) {
+            public void onNodeDragStart(TreeNodeElement<CodeBlock> node, MouseEvent event) {
             }
 
             @Override
-            public void onNodeDragDrop(TreeNodeElement<CodeBlock> node, DragEvent event) {
+            public void onNodeDragDrop(TreeNodeElement<CodeBlock> node, MouseEvent event) {
             }
 
             @Override
@@ -145,7 +145,7 @@ public class OutlineImpl implements OutlinePresenter {
             }
 
             @Override
-            public void onRootDragDrop(DragEvent event) {
+            public void onRootDragDrop(MouseEvent event) {
             }
         });
 
