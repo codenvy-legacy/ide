@@ -36,7 +36,7 @@ public class ShowRemoteAction extends Action {
     @Inject
     public ShowRemoteAction(RemotePresenter presenter, ResourceProvider resourceProvider, GitResources resources,
                             GitLocalizationConstant constant) {
-        super(constant.remotesControlTitle(), constant.remotesControlPrompt(), resources.remotes());
+        super(constant.remotesControlTitle(), constant.remotesControlPrompt(), null, resources.remotes());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }
