@@ -127,7 +127,7 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
     public void onValueChanged() {
         String projectName = view.getProjectName();
         String uri = view.getUri();
-        if(projectName.isEmpty() && !uri.isEmpty()){
+        if (projectName.isEmpty() && !uri.isEmpty()) {
             projectName = parseUri(uri);
             view.setProjectName(projectName);
         }
@@ -136,16 +136,18 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
         view.setEnabledImportButton(enable);
     }
 
-    /** Gets project name from uri.*/
-    private String parseUri(String uri){
+    /** Gets project name from uri. */
+    private String parseUri(String uri) {
         String result;
         int indexStartProjectName = uri.lastIndexOf("/") + 1;
         int indexFinishProjectName = uri.indexOf(".", indexStartProjectName);
-        if (indexStartProjectName != 0 && indexFinishProjectName != (-1)){
+        if (indexStartProjectName != 0 && indexFinishProjectName != (-1)) {
             result = uri.substring(indexStartProjectName, indexFinishProjectName);
-        } else if (indexStartProjectName != 0){
+        } else if (indexStartProjectName != 0) {
             result = uri.substring(indexStartProjectName);
-        } else {result = "";}
+        } else {
+            result = "";
+        }
         return result;
     }
 }
