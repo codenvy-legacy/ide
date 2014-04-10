@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- * 
- * [2012] - [2013] Codenvy, S.A. 
+ *
+ * [2012] - [2013] Codenvy, S.A.
  * All Rights Reserved.
- * 
+ *
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -30,6 +30,9 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+
+import org.vectomatic.dom.svg.ui.SVGImage;
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 import javax.validation.constraints.NotNull;
 
@@ -79,10 +82,13 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
         this.delegate = delegate;
         this.resources = resources;
         notification.addObserver(this);
+        
+        this.getElement().addClassName(resources.notificationCss().notificationPopup());
 
         mainPanel = new DockLayoutPanel(PX);
         mainPanel.setWidth(String.valueOf(WIDTH) + "px");
         mainPanel.setHeight(String.valueOf(HEIGHT) + "px");
+        
 
         DoubleClickHandler handler = new DoubleClickHandler() {
             @Override
@@ -104,20 +110,23 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
             changeImage(resources.error());
             mainPanel.addStyleName(resources.notificationCss().error());
         } else {
-            changeImage(resources.info());
+            changeImage(resources.success()).getElement().setAttribute("class", resources.notificationCss().success());
         }
 
-        Image closeIcon = new Image(resources.close());
-        closeIcon.addStyleName(resources.notificationCss().floatLeft());
+        SVGImage closeIcon = new SVGImage(resources.closePopup());
+        closeIcon.getElement().setAttribute("class", resources.notificationCss().closePopupIcon());
         closeIcon.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 NotificationMessage.this.delegate.onCloseMessageClicked(NotificationMessage.this.notification);
             }
         });
-        mainPanel.addEast(closeIcon, 16);
-
-        title = new HTML(notification.getMessage());
+        mainPanel.addEast(closeIcon, 18);
+        
+        
+        title = new HTML("<p>" + notification.getMessage() + "</p>");
+        title.setStyleName(resources.notificationCss().center());
+        title.setHeight(HEIGHT + "px");
         mainPanel.add(title);
 
         setWidget(mainPanel);
@@ -131,7 +140,21 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
      */
     private void changeImage(@NotNull ImageResource icon) {
         Image messageIcon = new Image(icon);
+        messageIcon.getElement().getStyle().setMarginTop(5, PX);
+        if(resources.progress().equals(icon)){
+            messageIcon.setSize("16", "16");
+            messageIcon.addStyleName(resources.notificationCss().invertColor());
+        }
         iconPanel.setWidget(messageIcon);
+    }
+    
+    private SVGImage changeImage(@NotNull SVGResource icon) {
+        SVGImage messageIcon = new SVGImage(icon);
+        messageIcon.setWidth("20px");
+        messageIcon.setHeight("20px");
+        messageIcon.getElement().getStyle().setMarginTop(5, PX);
+        iconPanel.setWidget(messageIcon);
+        return messageIcon;
     }
 
     /** {@inheritDoc} */
@@ -139,7 +162,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
     public void onValueChanged() {
         if (!prevState.equals(notification)) {
             if (!prevState.getMessage().equals(notification.getMessage())) {
-                title.setHTML(notification.getMessage());
+                title.setHTML("<p>" + notification.getMessage() + "</p>");
             }
 
             if (!notification.isFinished()) {
@@ -169,7 +192,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
             changeImage(resources.error());
             mainPanel.addStyleName(resources.notificationCss().error());
         } else {
-            changeImage(resources.info());
+            changeImage(resources.success()).getElement().setAttribute("class", resources.notificationCss().success());
         }
     }
 

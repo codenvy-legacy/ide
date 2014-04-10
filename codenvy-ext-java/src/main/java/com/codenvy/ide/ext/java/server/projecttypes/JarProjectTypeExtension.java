@@ -35,8 +35,6 @@ import java.util.Map;
 @Singleton
 public class JarProjectTypeExtension implements ProjectTypeExtension {
 
-    private Map<String, String> icons = new HashMap<>();
-
     @Inject
     public JarProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
         registry.registerProjectType(this);
@@ -44,14 +42,14 @@ public class JarProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType(Constants.JAR_ID, Constants.JAR_NAME);
+        return new ProjectType(Constants.JAR_ID, Constants.JAR_NAME, Constants.JAVA_CATEGORY);
     }
 
     @Override
     public List<Attribute> getPredefinedAttributes() {
         final List<Attribute> list = new ArrayList<>(3);
         list.add(new Attribute(Constants.LANGUAGE, "java"));
-        list.add(new Attribute(Constants.FRAMEWORK, "standalone"));
+        list.add(new Attribute(Constants.FRAMEWORK, "javaStandaloneApp"));
         list.add(new Attribute(Constants.BUILDER_NAME, "maven"));
         return list;
     }

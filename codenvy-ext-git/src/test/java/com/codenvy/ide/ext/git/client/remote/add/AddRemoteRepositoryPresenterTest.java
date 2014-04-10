@@ -76,17 +76,17 @@ public class AddRemoteRepositoryPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, EMPTY_TEXT);
                 return callback;
             }
-        }).when(service).remoteAdd(anyString(), anyString(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).remoteAdd(anyString(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog(callback);
         presenter.onOkClicked();
 
-        verify(service).remoteAdd(eq(VFS_ID), anyString(), eq(REMOTE_NAME), eq(REMOTE_URI), (AsyncRequestCallback<String>)anyObject());
+        verify(service).remoteAdd(anyString(), eq(REMOTE_NAME), eq(REMOTE_URI), (AsyncRequestCallback<String>)anyObject());
         verify(callback).onSuccess(eq((Void)null));
         verify(callback, never()).onFailure((Throwable)anyObject());
         verify(view).close();
@@ -98,18 +98,18 @@ public class AddRemoteRepositoryPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).remoteAdd(anyString(), anyString(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).remoteAdd(anyString(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
 
 
         presenter.showDialog(callback);
         presenter.onOkClicked();
 
-        verify(service).remoteAdd(eq(VFS_ID), anyString(), eq(REMOTE_NAME), eq(REMOTE_URI), (AsyncRequestCallback<String>)anyObject());
+        verify(service).remoteAdd(anyString(), eq(REMOTE_NAME), eq(REMOTE_URI), (AsyncRequestCallback<String>)anyObject());
         verify(callback).onFailure((Throwable)anyObject());
     }
 

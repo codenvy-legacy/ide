@@ -25,6 +25,7 @@ import com.codenvy.ide.collections.StringMap;
 import com.google.inject.Inject;
 
 import javax.validation.constraints.NotNull;
+
 import java.util.Set;
 
 /**
@@ -32,7 +33,7 @@ import java.util.Set;
  * @author Evgen Vidolob
  */
 public class ThemeAgentImpl  implements ThemeAgent{
-
+    
     private StringMap<Theme> themes = Collections.createStringMap();
 
     private final Theme defaultTheme;
@@ -56,6 +57,7 @@ public class ThemeAgentImpl  implements ThemeAgent{
     public Theme getTheme(@NotNull String themeId) {
         if (themes.containsKey(themeId))
             return themes.get(themeId);
+        
         return defaultTheme;
     }
 
@@ -82,7 +84,6 @@ public class ThemeAgentImpl  implements ThemeAgent{
     @Override
     public native void setCurrentThemeId(String id) /*-{
         this.@com.codenvy.ide.theme.ThemeAgentImpl::currentThemeId = id;
-
         if ($wnd["IDE3"]) {
             $wnd["IDE3"].theme = id;
         }

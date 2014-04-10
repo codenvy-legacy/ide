@@ -30,9 +30,9 @@ import java.util.List;
  */
 public class DockerfileParser {
 
-    public static Dockerfile[] parse(Reader reader) throws IOException {
-        final List<Dockerfile> parsed = new LinkedList<>();
-        Dockerfile current = null;
+    public static DockerImage[] parse(Reader reader) throws IOException {
+        final List<DockerImage> parsed = new LinkedList<>();
+        DockerImage current = null;
         for (String line : CharStreams.readLines(reader)) {
             line = line.trim();
             Instruction instruction;
@@ -44,7 +44,7 @@ public class DockerfileParser {
                 if (current != null) {
                     parsed.add(current);
                 }
-                current = new Dockerfile();
+                current = new DockerImage();
                 instruction.setInstructionArgumentsToModel(current, line);
             } else {
                 if (current == null) {
@@ -59,7 +59,7 @@ public class DockerfileParser {
         if (current != null) {
             parsed.add(current);
         }
-        return parsed.toArray(new Dockerfile[parsed.size()]);
+        return parsed.toArray(new DockerImage[parsed.size()]);
     }
 
     private static Instruction getInstruction(String line) {
@@ -97,31 +97,31 @@ public class DockerfileParser {
     private enum Instruction {
         FROM {
             @Override
-            void setInstructionArgumentsToModel(Dockerfile model, String line) {
+            void setInstructionArgumentsToModel(DockerImage model, String line) {
                 model.setFrom(line.substring(name().length()).trim());
             }
         },
         MAINTAINER {
             @Override
-            void setInstructionArgumentsToModel(Dockerfile model, String line) {
+            void setInstructionArgumentsToModel(DockerImage model, String line) {
                 model.getMaintainer().add(line.substring(name().length()).trim());
             }
         },
         RUN {
             @Override
-            void setInstructionArgumentsToModel(Dockerfile model, String line) {
+            void setInstructionArgumentsToModel(DockerImage model, String line) {
                 model.getRun().add(line.substring(name().length()).trim());
             }
         },
         CMD {
             @Override
-            void setInstructionArgumentsToModel(Dockerfile model, String line) {
+            void setInstructionArgumentsToModel(DockerImage model, String line) {
                 model.setCmd(line.substring(name().length()).trim());
             }
         },
         EXPOSE {
             @Override
-            void setInstructionArgumentsToModel(Dockerfile model, String line) {
+            void setInstructionArgumentsToModel(DockerImage model, String line) {
                 final String args = line.substring(name().length()).trim();
                 final int l = args.length();
                 int i = 0, j = 0;
@@ -140,7 +140,7 @@ public class DockerfileParser {
         },
         ENV {
             @Override
-            void setInstructionArgumentsToModel(Dockerfile model, String line) {
+            void setInstructionArgumentsToModel(DockerImage model, String line) {
                 final String args = line.substring(name().length()).trim();
                 final int l = args.length();
                 int i = 0;
@@ -164,7 +164,7 @@ public class DockerfileParser {
         },
         ADD {
             @Override
-            void setInstructionArgumentsToModel(Dockerfile model, String line) {
+            void setInstructionArgumentsToModel(DockerImage model, String line) {
                 final String args = line.substring(name().length()).trim();
                 final int l = args.length();
                 int i = 0;
@@ -190,13 +190,13 @@ public class DockerfileParser {
         },
         ENTRYPOINT {
             @Override
-            void setInstructionArgumentsToModel(Dockerfile model, String line) {
+            void setInstructionArgumentsToModel(DockerImage model, String line) {
                 model.setEntrypoint(line.substring(name().length()).trim());
             }
         },
         VOLUME {
             @Override
-            void setInstructionArgumentsToModel(Dockerfile model, String line) {
+            void setInstructionArgumentsToModel(DockerImage model, String line) {
                 String args = line.substring(name().length()).trim();
                 if (!args.isEmpty()) {
                     final int l = args.length();
@@ -229,24 +229,24 @@ public class DockerfileParser {
         },
         USER {
             @Override
-            void setInstructionArgumentsToModel(Dockerfile model, String line) {
+            void setInstructionArgumentsToModel(DockerImage model, String line) {
                 model.setUser(line.substring(name().length()).trim());
             }
         },
         WORKDIR {
             @Override
-            void setInstructionArgumentsToModel(Dockerfile model, String line) {
+            void setInstructionArgumentsToModel(DockerImage model, String line) {
                 model.setWorkdir(line.substring(name().length()).trim());
             }
         },
         COMMENT {
             @Override
-            void setInstructionArgumentsToModel(Dockerfile model, String line) {
+            void setInstructionArgumentsToModel(DockerImage model, String line) {
                 // ignore comments
             }
         };
 
-        abstract void setInstructionArgumentsToModel(Dockerfile model, String line);
+        abstract void setInstructionArgumentsToModel(DockerImage model, String line);
     }
 
     private DockerfileParser() {

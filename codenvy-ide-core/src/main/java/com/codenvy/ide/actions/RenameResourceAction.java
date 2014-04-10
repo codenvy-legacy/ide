@@ -18,47 +18,41 @@
 package com.codenvy.ide.actions;
 
 import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.rename.RenameResourcePresenter;
-import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Resource;
 import com.google.inject.Inject;
 
 /**
  * Action for changing resource's name.
- * 
+ *
  * @author Ann Shumilova
  */
 public class RenameResourceAction extends Action {
 
     private SelectionAgent          selectionAgent;
     private ResourceProvider        resourceProvider;
-    private NotificationManager     notificationManager;
     private RenameResourcePresenter presenter;
 
     @Inject
     public RenameResourceAction(RenameResourcePresenter presenter, SelectionAgent selectionAgent,
                                 ResourceProvider resourceProvider,
-                                Resources resources,
-                                NotificationManager notificationManager, CoreLocalizationConstant localization) {
+                                CoreLocalizationConstant localization) {
         super(localization.renameButton(), "Rename resource", null);
 
         this.selectionAgent = selectionAgent;
         this.resourceProvider = resourceProvider;
-        this.notificationManager = notificationManager;
         this.presenter = presenter;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        Project activeProject = resourceProvider.getActiveProject();
         Selection<Resource> selection = (Selection<Resource>)selectionAgent.getSelection();
         final Resource resource = selection.getFirstElement();
         presenter.renameResource(resource);

@@ -53,12 +53,12 @@ public class DarkTheme implements Theme {
     public String getSelectionBackground() {
         return "#256c9f";
     }
-    
+
     @Override
     public String getInactiveTabBackground() {
         return "#484848";
     }
-    
+
     @Override
     public String getInactiveTabBorderColor() {
         return "#353535";
@@ -68,10 +68,15 @@ public class DarkTheme implements Theme {
     public String getActiveTabBackground() {
         return "#5a5c5c";
     }
-    
+
     @Override
     public String getActiveTabBorderColor() {
         return "#232323";
+    }
+
+    @Override
+    public String getTabFontColor() {
+        return "#989898";
     }
 
     @Override
@@ -103,7 +108,17 @@ public class DarkTheme implements Theme {
     public String getPartToolbarShadow() {
         return "rgba(50,50,50, 0.75)";
     }
-
+    
+    @Override
+    public String getPartToolbarSeparatorTopColor() {
+        return "#232323";
+    }
+    
+    @Override
+    public String getPartToolbarSeparatorBottomColor() {
+        return "#878787";
+    }
+    
     @Override
     public String getMainFontColor() {
         return "#dbdbdb";
@@ -141,7 +156,7 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getEditorBackgroundColor() {
-        return "#383838";
+        return "#373737";
     }
 
     @Override
@@ -156,7 +171,7 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getEditorSelectionColor() {
-        return "#214283";
+        return "#256c9f";
     }
 
     @Override
@@ -201,7 +216,7 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getEditorVariable2() {
-        return "#05a";
+        return "#0ab";
     }
 
     @Override
@@ -221,7 +236,7 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getEditorString() {
-        return "#6A8759";
+        return "#6AAF32";
     }
 
     @Override
@@ -333,4 +348,105 @@ public class DarkTheme implements Theme {
     public String getButtonTextShadow() {
         return "rgba(0, 0, 0, 1)";
     }
+
+    @Override
+    public String getTreeTextFileColor() {
+        return "#dbdbdb";
+    }
+
+    @Override
+    public String getTreeTextFolderColor() {
+        return "#888888";
+    }
+
+    @Override
+    public String getTreeTextShadow() {
+        return "rgba(0, 0, 0, 0.5)";
+    }
+
+    @Override
+    public String getBoxBorderColor() {
+        return "#191c1e";
+    }
+
+    @Override
+    public String getBoxTextColor() {
+        return "dbdbdb"; // same as main editor color ATM for dark
+    }
+
+    @Override
+    public String getBoxInnerShadow() {
+        return "0px 1px 2px 0px rgba(0, 0, 0, 0.19) inset";
+    }
+
+    @Override
+    public String getBoxOuterShadow() {
+        return "0px 1px 0px 0px rgba(223, 223, 223, 0.4)";
+    }
+
+    @Override
+    public String getBoxBackgroundColor() {
+        return getPartBackground();
+    }
+
+    @Override
+    public String getBoxBackgroundColorDisabled() {
+        return getTabsPanelBackground();
+    }
+
+    @Override
+    public String getBoxTextShadow() {
+        return "0px 1px 0px rgba(46, 46, 46, 0.5)";
+    }
+
+    @Override
+    public String getButtonHoverTextColor() {
+        return "#ffffff";
+    }
+    
+    @Override
+    public String getToolbarBackgroundColor() {
+        return "#484848";
+    }
+    
+    @Override
+    public String getToolbarIconColor() {
+        return "#dbdbdb";
+    }
+        
+    @Override
+    public String getCompletedInvertColor() {
+        return "0%";
+    }
+
+    @Override
+    public String getSvgUrlShadow() {
+        return "url(#shadowDarkTheme)";
+    }
+    
+    @Override
+    public String getSuccessEventColor() {
+        return "#7dc878";
+    }
+    
+    @Override
+    public String getErrorEventColor() {
+        return "#e25252";
+    }
+    
+    @Override
+    public String getEventDelimeterColor() {
+        return "#2f2f2f";
+    }
+    
+    @Override
+    public String getLinkColor() {
+        return "#acacac";
+    }
+    
+    @Override
+    public String getMinimizeIconColor() {
+        return "#1f1f1f";
+    }
+    
 }

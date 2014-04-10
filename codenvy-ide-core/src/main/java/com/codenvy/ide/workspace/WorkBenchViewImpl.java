@@ -43,7 +43,7 @@ public class WorkBenchViewImpl extends LayoutPanel implements WorkBenchView<Work
     }
 
     @UiField(provided = true)
-    SplitLayoutPanel splitPanel = new SplitLayoutPanel(6);
+    SplitLayoutPanel splitPanel = new SplitLayoutPanel(1);
 
     @UiField
     ScrollPanel editorPanel;

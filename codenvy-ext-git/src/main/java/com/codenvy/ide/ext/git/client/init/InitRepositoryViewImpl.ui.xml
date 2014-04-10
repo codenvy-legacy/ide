@@ -41,8 +41,10 @@
     <g:DockLayoutPanel unit="PX" width="380px" height="130px" addStyleNames="{style.emptyBorder}">
         <g:south size="26.0">
             <g:FlowPanel>
-                <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" ui:field="btnCancel"/>
-                <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonOk}" width="60px" ui:field="btnOk"/>
+                <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" ui:field="btnCancel"
+                          debugId="git-initializeRepository-cancel"/>
+                <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonOk}" width="60px" ui:field="btnOk"
+                          debugId="git-initializeRepository-ok"/>
             </g:FlowPanel>
         </g:south>
         <g:north size="50.0">
@@ -51,12 +53,12 @@
                     <g:Label text="{locale.createWorkdirFieldTitle}" addStyleNames="{res.gitCSS.textFont}"/>
                 </g:north>
                 <g:center>
-                    <g:TextBox width="368px" ui:field="workdir" addStyleNames="{res.gitCSS.textFont}"/>
+                    <g:TextBox width="368px" ui:field="workdir" addStyleNames="{res.gitCSS.textFont}" debugId="git-initializeRepository-workdir"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>
         <g:north size="50.0">
-            <g:CheckBox ui:field="bare" HTML="{locale.createBareFieldTitle}"/>
+            <g:CheckBox ui:field="bare" HTML="{locale.createBareFieldTitle}" debugId="git-initializeRepository-bare"/>
         </g:north>
     </g:DockLayoutPanel>
 </ui:UiBinder>

@@ -22,8 +22,7 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.VirtualFileSystemInfo;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.gwt.test.GwtModule;
@@ -61,11 +60,9 @@ public abstract class BaseTest extends GwtTestWithMockito {
     @Mock
     protected Project                 project;
     @Mock
-    protected VirtualFileSystemInfo   vfsInfo;
-    @Mock
     protected ResourceProvider        resourceProvider;
     @Mock
-    protected GitClientService        service;
+    protected GitServiceClient        service;
     @Mock
     protected GitLocalizationConstant constant;
     @Mock
@@ -85,10 +82,9 @@ public abstract class BaseTest extends GwtTestWithMockito {
 
     @Before
     public void disarm() {
-        when(resourceProvider.getVfsInfo()).thenReturn(vfsInfo);
-        when(resourceProvider.getVfsInfo().getId()).thenReturn(VFS_ID);
         when(resourceProvider.getActiveProject()).thenReturn(project);
         when(project.getId()).thenReturn(PROJECT_ID);
         when(project.getPath()).thenReturn(PROJECT_PATH);
+        when(project.getName()).thenReturn(PROJECT_NAME);
     }
 }

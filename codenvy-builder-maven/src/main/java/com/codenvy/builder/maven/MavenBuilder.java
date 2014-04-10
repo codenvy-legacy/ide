@@ -25,6 +25,10 @@ import com.codenvy.api.builder.internal.Builder;
 import com.codenvy.api.builder.internal.BuilderConfiguration;
 import com.codenvy.api.builder.internal.DelegateBuildLogger;
 import com.codenvy.api.builder.internal.DependencyCollector;
+import com.codenvy.api.builder.internal.SourceManagerEvent;
+import com.codenvy.api.builder.internal.SourceManagerListener;
+import com.codenvy.api.builder.internal.SourcesManager;
+import com.codenvy.api.builder.internal.dto.BuildRequest;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.builder.maven.dto.MavenDependency;
@@ -62,7 +66,7 @@ public class MavenBuilder extends Builder {
                                                                                      "  <formats>\n" +
                                                                                      "    <format>jar</format>\n" +
                                                                                      "  </formats>\n" +
-                                                                                     "  <includeBaseDirectory>true</includeBaseDirectory>\n" +
+                                                                                     "  <includeBaseDirectory>false</includeBaseDirectory>\n" +
                                                                                      "  <dependencySets>\n" +
                                                                                      "    <dependencySet>\n" +
                                                                                      "      <outputDirectory>/</outputDirectory>\n" +
@@ -87,8 +91,9 @@ public class MavenBuilder extends Builder {
                                                            "    </fileSet>\n" +
                                                            "  </fileSets>\n" +
                                                            "</assembly>";
-    private static final String DEPENDENCIES_JSON_FILE   = "dependencies.json";
-    private static final String ASSEMBLY_DESCRIPTOR_FILE = "dependencies-zip-assembly-descriptor.xml";
+    private static final String DEPENDENCIES_JSON_FILE      = "dependencies.json";
+    private static final String ASSEMBLY_DESCRIPTOR_FILE    = "dependencies-zip-assembly-descriptor.xml";
+    private static final String CODENVY_IDE_API_ARTIFACT_ID = "codenvy-ide-api";
 
     @Inject
     public MavenBuilder(@Named(REPOSITORY) java.io.File rootDirectory,
@@ -113,6 +118,7 @@ public class MavenBuilder extends Builder {
     protected CommandLine createCommandLine(BuilderConfiguration config) throws BuilderException {
         final CommandLine commandLine = new CommandLine(MavenUtils.getMavenExecCommand());
         final List<String> targets = config.getTargets();
+        final java.io.File workDir = config.getWorkDir();
         switch (config.getTaskType()) {
             case DEFAULT:
                 if (!targets.isEmpty()) {
@@ -120,15 +126,32 @@ public class MavenBuilder extends Builder {
                 } else {
                     commandLine.add("clean", "install");
                 }
+                if (((BuildRequest)config.getRequest()).isSkipTest()) {
+                    commandLine.add("-Dmaven.test.skip");
+                }
                 if (config.getRequest().isIncludeDependencies()) {
-                    try {
-                        Files.write(new java.io.File(config.getWorkDir(), ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES_FILE).toPath(),
-                                    ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES.getBytes());
-                    } catch (IOException e) {
-                        throw new BuilderException(e);
-                    }
-                    commandLine.add("assembly:single");
-                    commandLine.addPair("-Ddescriptor", ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES_FILE);
+                    final SourcesManager sourcesManager = getSourcesManager();
+                    final SourceManagerListener sourceListener = new SourceManagerListener() {
+                        @Override
+                        public void afterDownload(SourceManagerEvent event) {
+                            if (workDir.equals(event.getWorkDir())) {
+                                try {
+                                    final String packaging = MavenUtils.getModel(workDir).getPackaging();
+                                    if ((packaging == null || "jar".equals(packaging)) && !isCodenvyExtensionProject(workDir)) {
+                                        Files.write(new java.io.File(workDir, ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES_FILE).toPath(),
+                                                    ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES.getBytes());
+                                        commandLine.add("assembly:single");
+                                        commandLine.addPair("-Ddescriptor", ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES_FILE);
+                                    }
+                                } catch (IOException e) {
+                                    throw new IllegalStateException(e);
+                                } finally {
+                                    sourcesManager.removeListener(this);
+                                }
+                            }
+                        }
+                    };
+                    sourcesManager.addListener(sourceListener);
                 }
                 break;
             case LIST_DEPS:
@@ -143,7 +166,7 @@ public class MavenBuilder extends Builder {
                 }
                 // Prepare file for assembly plugin. Plugin create zip archive of all dependencies.
                 try {
-                    Files.write(new java.io.File(config.getWorkDir(), ASSEMBLY_DESCRIPTOR_FILE).toPath(),
+                    Files.write(new java.io.File(workDir, ASSEMBLY_DESCRIPTOR_FILE).toPath(),
                                 assemblyDescriptor.getBytes());
                 } catch (IOException e) {
                     throw new BuilderException(e);
@@ -265,6 +288,16 @@ public class MavenBuilder extends Builder {
             return origin.substring(matcher.start(2));
         }
         return origin;
+    }
+
+    private boolean isCodenvyExtensionProject(java.io.File workDir) throws IOException {
+        List<org.apache.maven.model.Dependency> dependencies = MavenUtils.getModel(workDir).getDependencies();
+        for (org.apache.maven.model.Dependency dependency : dependencies) {
+            if (CODENVY_IDE_API_ARTIFACT_ID.equals(dependency.getArtifactId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static class DependencyBuildLogger extends DelegateBuildLogger {

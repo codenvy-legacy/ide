@@ -47,26 +47,45 @@
 }
 
 .icon {
-    margin: 0px 0px -1px 1px;
+    margin: 0px 0px -5px 1px;
     display: inline-block;
     background-position: center center;
-    padding: 0px 3px 0px 3px;
+    padding: 1px 1px;
+    max-height: 16px;
+    max-width: 16px;
 }
 
-.label, .nodeNameInput {
+.folderFont {
     font-family: fileTreeFontFamily;
-    font-size: secondaryTextFontSize;
-    display: inline-block;
-    text-decoration: none;
+    font-weight: bold;
+    color: treeTextFolderColor;
+}
+
+.fileFont {
+    font-family: fileTreeFontFamilyFile;
+    color: treeTextFileColor;
+}
+
+.defaultFont {
+    font-family: fileTreeFontFamily;
     color: inherit;
 }
 
 .label {
-    padding: 0px 3px 0px 3px;
+    font-size: secondaryTextFontSize;
+    text-shadow: 0px 1px 0px treeTextShadow;
+    padding: 0px 1px 0px 1px;
     cursor: default;
+    display: inline-block;
+    text-decoration: none;
 }
 
 .nodeNameInput {
+    font-family: fileTreeFontFamily;
+    font-size: secondaryTextFontSize;
     border: 1px solid #D9D9D9;
     border-top: 1px solid #C0C0C0;
+    display: inline-block;
+    text-decoration: none;
+    color: inherit;
 }

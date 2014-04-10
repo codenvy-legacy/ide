@@ -22,18 +22,21 @@ import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.util.loging.Log;
+import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.TextAreaElement;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
@@ -69,12 +72,19 @@ public class ExtensionManagerViewImpl implements ExtensionManagerView {
         actionManager.registerAction("extensionManagerSortByStatus", sortByStatusAction);
         actionGroup.add(sortByStatusAction);
         toolbarPresenter.bindMainGroup(actionGroup);
+        UIObject.ensureDebugId(descriptionArea, "window-preferences-extensions-descriptionArea");
 
         CheckboxCell checkboxCell = new CheckboxCell(false, false);
         Column<ExtensionDescription, Boolean> enabledColumn = new Column<ExtensionDescription, Boolean>(checkboxCell) {
             @Override
             public Boolean getValue(ExtensionDescription object) {
                 return object.isEnabled();
+            }
+
+            @Override
+            public void render(Cell.Context context, ExtensionDescription object, SafeHtmlBuilder sb) {
+                sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "window-preferences-extensions-row-" + context.getIndex() + "\">");
+                super.render(context, object, sb);
             }
         };
 

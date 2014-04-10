@@ -21,9 +21,9 @@ import com.codenvy.ide.api.event.RefreshBrowserEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.ext.git.client.GitClientService;
+import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
@@ -45,8 +45,8 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
  */
 @Singleton
 public class InitRepositoryPresenter implements InitRepositoryView.ActionDelegate {
-    private InitRepositoryView      view;
-    private GitClientService        service;
+    private InitRepositoryView view;
+    private GitServiceClient        service;
     private Project                 project;
     private ResourceProvider        resourceProvider;
     private EventBus                eventBus;
@@ -64,8 +64,12 @@ public class InitRepositoryPresenter implements InitRepositoryView.ActionDelegat
      * @param notificationManager
      */
     @Inject
-    public InitRepositoryPresenter(InitRepositoryView view, GitClientService service, ResourceProvider resourceProvider,
-                                   EventBus eventBus, GitLocalizationConstant constant, NotificationManager notificationManager) {
+    public InitRepositoryPresenter(InitRepositoryView view,
+                                   GitServiceClient service,
+                                   ResourceProvider resourceProvider,
+                                   EventBus eventBus,
+                                   GitLocalizationConstant constant,
+                                   NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
@@ -94,7 +98,7 @@ public class InitRepositoryPresenter implements InitRepositoryView.ActionDelegat
         view.close();
 
         try {
-            service.initWS(resourceProvider.getVfsInfo().getId(), projectId, projectName, bare, new RequestCallback<Void>() {
+            service.initWS(projectId, projectName, bare, new RequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     onInitSuccess();
@@ -112,9 +116,10 @@ public class InitRepositoryPresenter implements InitRepositoryView.ActionDelegat
 
     /** Perform actions when repository was successfully init. */
     private void onInitSuccess() {
-        project.refreshProperties(new AsyncCallback<Project>() {
+        resourceProvider.getProject(project.getName(), new AsyncCallback<Project>(){
             @Override
             public void onSuccess(Project result) {
+                project.setAttributes(result.getAttributes());
                 Notification notification = new Notification(constant.initSuccess(), INFO);
                 notificationManager.showNotification(notification);
                 eventBus.fireEvent(new RefreshBrowserEvent(project));

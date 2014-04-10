@@ -34,10 +34,12 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.vectomatic.dom.svg.ui.SVGImage;
+
 
 /**
  * Implements {@link ConsolePartView}.
- * 
+ *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
@@ -57,13 +59,15 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
         super(resources);
         container.add(uiBinder.createAndBindUi(this));
 
-        ToolButton clearButton = new ToolButton(new Image(coreResources.clear()));
+        ToolButton clearButton = new ToolButton(new SVGImage(coreResources.clear()));
         clearButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onClearClicked();
             }
         });
+        clearButton.ensureDebugId("console-clear");
+        minimizeButton.ensureDebugId("console-minimizeBut");
         toolBar.addEast(clearButton, 20);
     }
 
@@ -76,7 +80,9 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
     /** {@inheritDoc} */
     @Override
     public void print(String message) {
-        consoleArea.add(new HTML(message));
+        HTML html = new HTML(message);
+        html.getElement().setAttribute("style", "padding-left: 2px;");
+        consoleArea.add(html);
     }
 
     /** {@inheritDoc} */

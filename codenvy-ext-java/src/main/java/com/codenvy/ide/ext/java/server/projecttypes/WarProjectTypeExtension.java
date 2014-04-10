@@ -45,15 +45,15 @@ public class WarProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType("war", "Java Web Application (WAR)");
+        return new ProjectType("war", "Java Web Application (WAR)", Constants.JAVA_CATEGORY);
     }
 
     @Override
     public List<Attribute> getPredefinedAttributes() {
         final List<Attribute> list = new ArrayList<>(4);
         list.add(new Attribute(Constants.LANGUAGE, "java"));
-        list.add(new Attribute(Constants.FRAMEWORK, "web_application"));
-        list.add(new Attribute(Constants.RUNNER_NAME, "webapps"));
+        list.add(new Attribute(Constants.FRAMEWORK, "javaWebApplication"));
+        list.add(new Attribute(Constants.RUNNER_NAME, "JavaWeb"));
         list.add(new Attribute(Constants.BUILDER_NAME, "maven"));
         return list;
     }

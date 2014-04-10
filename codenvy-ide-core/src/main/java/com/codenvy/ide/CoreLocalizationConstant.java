@@ -123,6 +123,52 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("format.description")
     String formatDescription();
 
+    @Key("uploadFile.name")
+    String uploadFileName();
 
+    @Key("uploadFile.description")
+    String uploadFileDescription();
+
+    @Key("uploadFile.title")
+    String uploadFileTitle();
+
+    @Key("cancelButton")
+    String cancelButton();
+
+    @Key("uploadButton")
+    String uploadButton();
+
+    @Key("openFileFieldTitle")
+    String openFileFieldTitle();
+
+    @Key("projectExplorer.button.title")
+    String projectExplorerButtonTitle();
+
+    @Key("projectExplorer.titleBar.text")
+    String projectExplorerTitleBarText();
+
+    @Key("importProject.messageSuccess")
+    String importProjectMessageSuccess();
+
+    @Key("importProject.name")
+    String importProjectName();
+
+    @Key("importProject.description")
+    String importProjectDescription();
+
+    @Key("importProject.importButton")
+    String importProjectButton();
+
+    @Key("importProject.importerFieldTitle")
+    String importProjectImporterFieldTitle();
+
+    @Key("importProject.uriFieldTitle")
+    String importProjectUriFieldTitle();
+
+    @Key("importProject.projectNameFieldTitle")
+    String importProjectProjectNameFieldTitle();
+
+    @Key("importProject.viewTitle")
+    String importProjectViewTitle();
 
 }

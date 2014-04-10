@@ -44,7 +44,7 @@ public class SpringProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType(Constants.SPRING_ID, Constants.SPRING_NAME);
+        return new ProjectType(Constants.SPRING_ID, Constants.SPRING_NAME, Constants.JAVA_CATEGORY);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class SpringProjectTypeExtension implements ProjectTypeExtension {
         final List<Attribute> list = new ArrayList<>(4);
         list.add(new Attribute(Constants.LANGUAGE, "java"));
         list.add(new Attribute(Constants.FRAMEWORK, "spring"));
-        list.add(new Attribute(Constants.RUNNER_NAME, "webapps"));
+        list.add(new Attribute(Constants.RUNNER_NAME, "JavaWeb"));
         list.add(new Attribute(Constants.BUILDER_NAME, "maven"));
         return list;
     }

@@ -45,7 +45,7 @@ public class Style {
     public static String getInactiveTabBackground() {
         return theme.getInactiveTabBackground();
     }
-    
+
     public static String getInactiveTabBorderColor() {
         return theme.getInactiveTabBorderColor();
     }
@@ -53,7 +53,11 @@ public class Style {
     public static String getActiveTabBackground() {
         return theme.getActiveTabBackground();
     }
-    
+
+    public static String getTabFontColor() {
+        return theme.getTabFontColor();
+    }
+
     public static String getActiveTabBorderColor() {
         return theme.getActiveTabBorderColor();
     }
@@ -80,6 +84,14 @@ public class Style {
 
     public static String getPartToolbarShadow() {
         return theme.getPartToolbarShadow();
+    }
+
+    public static String getPartToolbarSeparatorTopColor() {
+        return theme.getPartToolbarSeparatorTopColor();
+    }
+
+    public static String getPartToolbarSeparatorBottomColor() {
+        return theme.getPartToolbarSeparatorBottomColor();
     }
 
     public static String getMainFontColor() {
@@ -265,5 +277,85 @@ public class Style {
 
     public static String getButtonTextShadow() {
         return theme.getButtonTextShadow();
+    }
+
+    public static String getTreeTextFileColor() {
+        return theme.getTreeTextFileColor();
+    }
+
+    public static String getTreeTextFolderColor() {
+        return theme.getTreeTextFolderColor();
+    }
+
+    public static String getTreeTextShadow() {
+        return theme.getTreeTextShadow();
+    }
+
+    public static String getBoxBorderColor() {
+        return theme.getBoxBorderColor();
+    }
+
+    public static String getBoxTextColor() {
+        return theme.getBoxTextColor();
+    }
+
+    public static String getBoxInnerShadow() {
+        return theme.getBoxInnerShadow();
+    }
+
+    public static String getBoxOuterShadow() {
+        return theme.getBoxOuterShadow();
+    }
+
+    public static String getBoxBackgroundColor() {
+        return theme.getBoxBackgroundColor();
+    }
+
+    public static String getBoxBackgroundColorDisabled() {
+        return theme.getBoxBackgroundColorDisabled();
+    }
+
+    public static String getBoxTextShadow() {
+        return theme.getBoxTextShadow();
+    }
+
+    public static String getButtonHoverTextColor() {
+        return theme.getButtonHoverTextColor();
+    }
+
+    public static String getToolbarBackgroundColor() {
+        return theme.getToolbarBackgroundColor();
+    }
+
+    public static String getToolbarIconColor() {
+        return theme.getToolbarIconColor();
+    }
+
+    public static String getCompletedInvertColor() {
+        return theme.getCompletedInvertColor();
+    }
+
+    public static String getSvgUrlShadow() {
+        return theme.getSvgUrlShadow();
+    }
+    
+    public static String getSuccessEventColor() {
+        return theme.getSuccessEventColor();
+    }
+    
+    public static String getErrorEventColor() {
+        return theme.getErrorEventColor();
+    }
+    
+    public static String getLinkColor() {
+        return theme.getLinkColor();
+    }
+    
+    public static String getEventDelimeterColor() {
+        return theme.getEventDelimeterColor();
+    }
+    
+    public static String getMinimizeIconColor() {
+        return theme.getMinimizeIconColor();
     }
 }

@@ -27,7 +27,7 @@ import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
 import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
 import com.codenvy.ide.extension.runner.client.RunnerController;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -46,7 +46,7 @@ public class DebugAction extends Action {
     @Inject
     public DebugAction(RunnerController runnerController, DebuggerPresenter debuggerPresenter, JavaRuntimeResources resources,
                        ResourceProvider resourceProvider, JavaRuntimeLocalizationConstant localizationConstants) {
-        super(localizationConstants.debugAppActionText(), localizationConstants.debugAppActionDescription(), resources.debugApp());
+        super(localizationConstants.debugAppActionText(), localizationConstants.debugAppActionDescription(), null, resources.debug());
         this.runnerController = runnerController;
         this.debuggerPresenter = debuggerPresenter;
         this.resourceProvider = resourceProvider;
@@ -69,7 +69,9 @@ public class DebugAction extends Action {
         Project activeProject = resourceProvider.getActiveProject();
         if (activeProject != null) {
             final String projectTypeId = activeProject.getDescription().getProjectTypeId();
-            e.getPresentation().setVisible(projectTypeId.equals(Constants.SPRING_ID) || projectTypeId.equals(Constants.WAR_ID));
+            e.getPresentation().setVisible(projectTypeId.equals(Constants.SPRING_ID) ||
+                                           projectTypeId.equals(Constants.WAR_ID) ||
+                                           projectTypeId.equals(com.codenvy.ide.Constants.CODENVY_PLUGIN_ID));
             e.getPresentation().setEnabled(!runnerController.isAnyAppLaunched());
         } else {
             e.getPresentation().setEnabledAndVisible(false);

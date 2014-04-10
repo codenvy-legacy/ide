@@ -20,6 +20,7 @@ package com.codenvy.ide.api.ui.workspace;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
+import com.google.gwt.user.client.ui.IsWidget;
 
 import javax.validation.constraints.NotNull;
 
@@ -97,5 +98,11 @@ public abstract class AbstractPartPresenter implements PartPresenter {
     @Override
     public int getSize() {
         return 0;
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public IsWidget getTitleWidget() {
+        return null;
     }
 }

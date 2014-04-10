@@ -66,6 +66,7 @@
             padding-top: 2px;
         }
     </ui:style>
+
     <g:DockLayoutPanel unit="PX" width="100%" height="100%">
         <g:north size="50">
             <g:DockLayoutPanel unit="PX" width="100%" height="100%">
@@ -78,7 +79,7 @@
                 <g:center>
                     <g:SimplePanel addStyleNames="{style.spaceRight}">
                         <g:SimplePanel>
-                            <g:TextBox width="390px" height="29px" ui:field="projectName"/>
+                            <g:TextBox width="390px" height="29px" ui:field="projectName" debugId="file-newProject-projectName"/>
                         </g:SimplePanel>
                     </g:SimplePanel>
                 </g:center>
@@ -95,7 +96,7 @@
                 <g:center>
                     <g:SimplePanel addStyleNames="{style.spaceRight}">
                         <g:SimplePanel>
-                            <g:TextArea width="686px" height="66px" ui:field="projectDescription"/>
+                            <g:TextArea width="686px" height="66px" ui:field="projectDescription" debugId="file-newProject-projectDescription"/>
                         </g:SimplePanel>
                     </g:SimplePanel>
                 </g:center>
@@ -111,13 +112,13 @@
                 </g:west>
                 <g:west size="340">
                     <g:FlowPanel>
-                        <g:RadioButton name="privacy" text="{locale.createProjectFromTemplatePublic}" height="13px" checked="true"/>
+                        <g:RadioButton name="privacy" text="{locale.createProjectFromTemplatePublic}" height="13px" checked="true" debugId="file-newProject-public"/>
                         <g:Label addStyleNames="{style.privacyDescription}" text="{locale.createProjectFromTemplatePublicDescription}"/>
                     </g:FlowPanel>
                 </g:west>
                 <g:west size="340">
                     <g:FlowPanel>
-                        <g:RadioButton name="privacy" text="{locale.createProjectFromTemplatePrivate}" height="13px"/>
+                        <g:RadioButton name="privacy" text="{locale.createProjectFromTemplatePrivate}" height="13px" debugId="file-newProject-private"/>
                         <g:Label addStyleNames="{style.privacyDescription}" text="{locale.createProjectFromTemplatePrivateDescription}"/>
                     </g:FlowPanel>
                 </g:west>

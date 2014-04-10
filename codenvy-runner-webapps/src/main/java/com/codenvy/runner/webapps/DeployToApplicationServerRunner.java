@@ -23,6 +23,7 @@ import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.api.runner.internal.DeploymentSources;
+import com.codenvy.api.runner.internal.DeploymentSourcesValidator;
 import com.codenvy.api.runner.internal.Disposer;
 import com.codenvy.api.runner.internal.ResourceAllocators;
 import com.codenvy.api.runner.internal.Runner;
@@ -60,6 +61,7 @@ public class DeployToApplicationServerRunner extends Runner {
     private final Map<String, ApplicationServer> servers;
     private final String                         hostName;
     private final CustomPortService              portService;
+    private final DeploymentSourcesValidator     applicationValidator;
 
     @Inject
     public DeployToApplicationServerRunner(@Named(DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
@@ -76,16 +78,17 @@ public class DeployToApplicationServerRunner extends Runner {
         for (ApplicationServer server : serverSet) {
             this.servers.put(server.getName(), server);
         }
+        this.applicationValidator = new JavaWebApplicationValidator();
     }
 
     @Override
     public String getName() {
-        return "webapps";
+        return "JavaWeb";
     }
 
     @Override
     public String getDescription() {
-        return "Deploy to application server runner";
+        return "Java Web application runner";
     }
 
     @Override
@@ -96,10 +99,11 @@ public class DeployToApplicationServerRunner extends Runner {
                 final int httpPort = portService.acquire();
                 final ApplicationServerRunnerConfiguration configuration =
                         new ApplicationServerRunnerConfiguration(DEFAULT_SERVER_NAME, request.getMemorySize(), httpPort, request);
-                configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class).withRel("web url")
+                configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class)
+                                                       .withRel(com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL)
                                                        .withHref(String.format("http://%s:%d", hostName, httpPort)));
                 final DebugMode debugMode = request.getDebugMode();
-                if (debugMode != null) {
+                if (debugMode != null && debugMode.getMode() != null) {
                     configuration.setDebugHost(hostName);
                     configuration.setDebugPort(portService.acquire());
                     configuration.setDebugTransport(DEBUG_TRANSPORT_PROTOCOL);
@@ -108,6 +112,11 @@ public class DeployToApplicationServerRunner extends Runner {
                 return configuration;
             }
         };
+    }
+
+    @Override
+    protected DeploymentSourcesValidator getDeploymentSourcesValidator() {
+        return applicationValidator;
     }
 
     @Override

@@ -36,11 +36,13 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.InsertPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.BELOW;
+import org.vectomatic.dom.svg.ui.SVGImage;
+
 import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.LEFT;
 import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.RIGHT;
 
@@ -79,7 +81,16 @@ public class PartStackViewImpl extends Composite implements PartStackView {
         this.tabsPanel = tabsPanel;
         contentPanel = new SimplePanel();
         if (tabPosition == LEFT) {
-            top = 26;
+            SVGImage svgIcon = new SVGImage(resources.arrow());
+            TabButton activeTab = new TabButton(svgIcon, "call dashboard");
+            activeTab.setStyleName(resources.partStackCss().idePartStackBotonLeft());
+            activeTab.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    loadDashboardIfExist();
+                }
+            });
+            tabsPanel.add(activeTab);
         }
         contentPanel.setStyleName(resources.partStackCss().idePartStackContent());
         initWidget(contentPanel);
@@ -88,10 +99,21 @@ public class PartStackViewImpl extends Composite implements PartStackView {
         //DEFAULT
     }
 
+    /**
+     * Call this method to load dashboard page maybe called from IDE in hosted version.
+     * If a function window["onLoadDashoboardPage"] is set, it will be called .
+     */
+    private native void loadDashboardIfExist() /*-{
+        if ($wnd["onLoadDashoboardPage"]) {
+            $wnd["onLoadDashoboardPage"]();
+        }
+    }-*/;
+
     /** {@inheritDoc} */
     @Override
-    public TabItem addTabButton(Image icon, String title, String toolTip, boolean closable) {
-        TabButton tabItem = new TabButton(icon, title, toolTip, closable);
+    public TabItem addTabButton(Image icon, String title, String toolTip, IsWidget widget, boolean closable) {
+        TabButton tabItem = new TabButton(icon, title, toolTip, widget, closable);
+        tabItem.ensureDebugId("tabButton-" + title);
         tabsPanel.add(tabItem);
         tabs.add(tabItem);
         return tabItem;
@@ -166,10 +188,11 @@ public class PartStackViewImpl extends Composite implements PartStackView {
 
     /** {@inheritDoc} */
     @Override
-    public void updateTabItem(int index, ImageResource icon, String title, String toolTip) {
+    public void updateTabItem(int index, ImageResource icon, String title, String toolTip, IsWidget widget) {
         TabButton tabButton = tabs.get(index);
-        tabButton.tabItemTittle.setText(title);
+        tabButton.tabItemTitle.setText(title);
         tabButton.setTitle(toolTip);
+        tabButton.updateWidget(widget);
     }
 
     /** Special button for tab title. */
@@ -177,8 +200,9 @@ public class PartStackViewImpl extends Composite implements PartStackView {
 
         private Image       image;
         private FlowPanel   tabItem;
-        private InlineLabel tabItemTittle;
+        private InlineLabel tabItemTitle;
         private Image       icon;
+        private IsWidget    widget;
 
         /**
          * Create button.
@@ -188,8 +212,9 @@ public class PartStackViewImpl extends Composite implements PartStackView {
          * @param toolTip
          * @param closable
          */
-        public TabButton(Image icon, String title, String toolTip, boolean closable) {
+        public TabButton(Image icon, String title, String toolTip, IsWidget widget, boolean closable) {
             this.icon = icon;
+            this.widget = widget;
             tabItem = new FlowPanel();
             tabItem.setTitle(toolTip);
             initWidget(tabItem);
@@ -197,15 +222,45 @@ public class PartStackViewImpl extends Composite implements PartStackView {
             if (icon != null) {
                 tabItem.add(icon);
             }
-            tabItemTittle = new InlineLabel(title);
-            tabItemTittle.addStyleName(resources.partStackCss().idePartStackTabLabel());
-            tabItem.add(tabItemTittle);
+            tabItemTitle = new InlineLabel(title);
+            tabItemTitle.addStyleName(resources.partStackCss().idePartStackTabLabel());
+            tabItem.add(tabItemTitle);
+            if (widget != null) {
+                tabItem.add(widget);
+            }
+
             if (closable) {
                 image = new Image(resources.close());
                 image.setStyleName(resources.partStackCss().idePartStackTabCloseButton());
                 tabItem.add(image);
+                tabItem.ensureDebugId("777");
                 addHandlers();
             }
+        }
+
+        protected void updateWidget(IsWidget widget) {
+            if (this.widget != null) {
+                tabItem.remove(this.widget);
+            }
+            this.widget = widget;
+            if (this.widget != null) {
+                tabItem.add(this.widget);
+            }
+        }
+
+        /**
+         * Create button.
+         *
+         * @param svgIcon
+         * @param title
+         */
+        public TabButton(SVGImage svgIcon, String title) {
+            tabItem = new FlowPanel();
+            if (title != null) {
+                tabItem.setTitle(title);
+            }
+            initWidget(tabItem);
+            tabItem.add(svgIcon);
         }
 
         @Override
@@ -229,49 +284,43 @@ public class PartStackViewImpl extends Composite implements PartStackView {
 
         @Override
         protected void onLoad() {
+            final int padding = 15;//div(button) padding
+            final int margin = 8;//text margin
+            final int marginPicture = 4;//picture margin
+            int offsetWidth;
             super.onLoad();
-
-
-            int offsetWidth = getElement().getOffsetWidth();
             if (tabPosition == RIGHT) {
-                int padding;
-                if (icon != null) {
-                    getElement().getStyle().setWidth(offsetWidth + 16, Style.Unit.PX);
-                    padding = 0;
-                } else {
-                    padding = 16;
-                    getElement().getStyle().setWidth(offsetWidth, Style.Unit.PX);
-                }
-
-                getElement().getStyle().setTop(top, Style.Unit.PX);
-
-                top += offsetWidth - padding;
                 tabItem.addStyleName(resources.partStackCss().idePartStackTabRight());
-            } else if (tabPosition == LEFT) {
-                int topPadding;
+                offsetWidth = getElement().getOffsetWidth();
                 if (icon != null) {
-                    getElement().getStyle().setWidth(offsetWidth + 15, Style.Unit.PX);
-                    topPadding = 6;
+                    getElement().getStyle().setWidth(offsetWidth - padding * 2 - marginPicture, Style.Unit.PX);
+                    offsetWidth -= marginPicture;
                 } else {
-                    topPadding = 16;
+                    getElement().getStyle().setWidth(offsetWidth - padding * 2, Style.Unit.PX);
                 }
                 if (first) {
-                    if (icon != null) {
-                        top += offsetWidth + 2;
-                    } else {
-                        top += offsetWidth - 15;
-                    }
                     first = false;
-                } else {
-                    top += offsetWidth - topPadding;
                 }
-
+                getElement().getStyle().setTop(top, Style.Unit.PX);
+                if (!first) {
+                    top += (offsetWidth - margin * 2);
+                }
+            } else if (tabPosition == LEFT) {
                 tabItem.addStyleName(resources.partStackCss().idePartStackTabLeft());
-//                tabItem.getElement().getStyle().setWidth(offsetWidth, Style.Unit.PX);
+                offsetWidth = getElement().getOffsetWidth();
+                if (icon != null) {
+                    getElement().getStyle().setWidth((offsetWidth - padding * 2), Style.Unit.PX);
+                    offsetWidth -= marginPicture;
+                } else {
+                    getElement().getStyle().setWidth((offsetWidth - padding * 2), Style.Unit.PX);
+                }
+                if (first) {
+                    first = false;
+                }
+                top += offsetWidth - margin * 2;
                 tabItem.getElement().getStyle().setTop(top, Style.Unit.PX);
             } else {
                 tabItem.addStyleName(resources.partStackCss().idePartStackTabBelow());
-
             }
         }
 

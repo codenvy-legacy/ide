@@ -43,13 +43,13 @@
             <g:FlowPanel addStyleNames="{style.emptyBorder}">
                 <g:FlowPanel height="100%" width="100%">
                     <g:Button text="Cancel"  width="60px" height="100%"  addStyleNames="{style.alignBtn}"
-                              ui:field="btnCancel"/>
+                              ui:field="btnCancel" debugId="file-newOther-cancel"/>
                     <g:Button text="Finish"  width="60px" height="100%" addStyleNames="{style.alignBtn} {style.space}"
-                              ui:field="btnFinish"/>
+                              ui:field="btnFinish" debugId="file-newOther-finish"/>
                     <g:Button text="Next"  width="60px" height="100%" addStyleNames="{style.alignBtn} {style.space}"
-                              ui:field="btnNext"/>
+                              ui:field="btnNext" debugId="file-newOther-next"/>
                     <g:Button text="Back"  width="60px" height="100%" addStyleNames="{style.alignBtn} {style.space}"
-                              ui:field="btnBack"/>
+                              ui:field="btnBack" debugId="file-newOther-back"/>
                 </g:FlowPanel>
             </g:FlowPanel>
         </g:south>

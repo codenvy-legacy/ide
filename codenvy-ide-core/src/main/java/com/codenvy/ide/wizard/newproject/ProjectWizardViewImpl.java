@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
-import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.window.Window;
 import com.codenvy.ide.wizard.newproject.step.Step;

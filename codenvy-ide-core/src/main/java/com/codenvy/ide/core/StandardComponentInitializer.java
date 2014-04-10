@@ -19,7 +19,21 @@ package com.codenvy.ide.core;
 
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.actions.*;
+import com.codenvy.ide.actions.CloseProjectAction;
+import com.codenvy.ide.actions.DeleteResourceAction;
+import com.codenvy.ide.actions.FormatterAction;
+import com.codenvy.ide.actions.ImportProjectAction;
+import com.codenvy.ide.actions.NavigateToFileAction;
+import com.codenvy.ide.actions.NewProjectAction;
+import com.codenvy.ide.actions.NewProjectWizardAction;
+import com.codenvy.ide.actions.NewResourceAction;
+import com.codenvy.ide.actions.OpenProjectAction;
+import com.codenvy.ide.actions.RenameResourceAction;
+import com.codenvy.ide.actions.SaveAction;
+import com.codenvy.ide.actions.SaveAllAction;
+import com.codenvy.ide.actions.ShowAboutAction;
+import com.codenvy.ide.actions.ShowPreferencesAction;
+import com.codenvy.ide.actions.UploadFileAction;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -121,12 +135,12 @@ public class StandardComponentInitializer {
     @Inject
     private ShowAboutAction showAboutAction;
 
-    @Inject
-    private ShowProjectPropertiesAction showProjectPropertiesAction;
-
-    // Temporary disable 'Navigate To File' feature
+    // Temporary disable 'Project Properties' feature
 //    @Inject
-//    private NavigateToFileAction navigateToFileAction;
+//    private ShowProjectPropertiesAction showProjectPropertiesAction;
+
+    @Inject
+    private NavigateToFileAction navigateToFileAction;
 
     @Inject
     @MainToolbar
@@ -147,9 +161,8 @@ public class StandardComponentInitializer {
     @Inject
     private DeleteResourceAction deleteResourceAction;
 
-    // Temporary disable 'Rename' feature
-//    @Inject
-//    private RenameResourceAction renameResourceAction;
+    @Inject
+    private RenameResourceAction renameResourceAction;
 
     @Inject
     private CloseProjectAction closeProjectAction;
@@ -168,6 +181,15 @@ public class StandardComponentInitializer {
 
     @Inject
     private FormatterAction formatterAction;
+
+    @Inject
+    private UploadFileAction uploadFileAction;
+
+    @Inject
+    private ImportProjectAction importProjectAction;
+
+    @Inject
+    private NewProjectWizardAction newProjectWizardAction;
 
     /** Instantiates {@link StandardComponentInitializer} an creates standard content. */
     @Inject
@@ -195,8 +217,8 @@ public class StandardComponentInitializer {
         help.add(showAboutAction);
 
         DefaultActionGroup project = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_PROJECT);
-        actionManager.registerAction("showProjectProperties", showProjectPropertiesAction);
-        project.add(showProjectPropertiesAction);
+//        actionManager.registerAction("showProjectProperties", showProjectPropertiesAction);
+//        project.add(showProjectPropertiesAction);
 
         DefaultActionGroup fileGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_FILE);
 
@@ -206,23 +228,29 @@ public class StandardComponentInitializer {
 
         actionManager.registerAction("newProject", newProjectAction);
         actionManager.registerAction("openProject", openProjectAction);
+        actionManager.registerAction("importProject", importProjectAction);
+        actionManager.registerAction("newProject2", newProjectWizardAction);
+        actionManager.registerAction("uploadFile", uploadFileAction);
 
-//        actionManager.registerAction("navigateToFile", navigateToFileAction);
-//        keyBinding.getGlobal().addKey(new KeyBuilder().action().alt().charCode('n').build(), "navigateToFile");
+        actionManager.registerAction("navigateToFile", navigateToFileAction);
+        keyBinding.getGlobal().addKey(new KeyBuilder().action().alt().charCode('n').build(), "navigateToFile");
 
         DefaultActionGroup toolbarGroup = new DefaultActionGroup(actionManager);
         toolbarGroup.addSeparator();
         actionManager.registerAction(IdeActions.GROUP_MAIN_TOOLBAR, toolbarGroup);
 
         DefaultActionGroup newGroup = new DefaultActionGroup("New", true, actionManager);
-        newGroup.getTemplatePresentation().setIcon(resources.file());
+        newGroup.getTemplatePresentation().setSVGIcon(resources.newResource());
         newGroup.addAction(newProjectAction, Constraints.FIRST);
+        newGroup.addAction(newProjectWizardAction);
         toolbarGroup.add(newGroup);
         toolbarGroup.addSeparator();
         fileGroup.add(newGroup);
         fileGroup.add(openProjectAction);
-//        fileGroup.add(navigateToFileAction);
-//        fileGroup.add(renameResourceAction);
+        fileGroup.add(importProjectAction);
+        fileGroup.add(uploadFileAction);
+        fileGroup.add(navigateToFileAction);
+        fileGroup.add(renameResourceAction);
         actionManager.registerAction("newResource", newFileAction);
         newGroup.add(newFileAction);
 
@@ -236,7 +264,7 @@ public class StandardComponentInitializer {
         saveGroup.add(saveAllAction);
         saveGroup.add(formatterAction);
         toolbarGroup.addSeparator();
-        toolbarGroup.add(saveGroup);
+        toolbarGroup.add(saveAllAction);
         toolbarGroup.addSeparator();
         fileGroup.add(saveGroup);
 
@@ -244,7 +272,7 @@ public class StandardComponentInitializer {
         actionManager.registerAction("changeResourceGroup", changeResourceGroup);
         actionManager.registerAction("closeProject", closeProjectAction);
         actionManager.registerAction("deleteItem", deleteResourceAction);
-//        actionManager.registerAction("renameResource", renameResourceAction);
+        actionManager.registerAction("renameResource", renameResourceAction);
         changeResourceGroup.add(closeProjectAction);
         changeResourceGroup.add(deleteResourceAction);
         changeResourceGroup.addSeparator();
@@ -260,7 +288,7 @@ public class StandardComponentInitializer {
         resourceOperation.addSeparator();
         actionManager.registerAction("resourceOperation", resourceOperation);
         resourceOperation.add(deleteResourceAction);
-//        resourceOperation.add(renameResourceAction);
+        resourceOperation.add(renameResourceAction);
         contextMenuGroup.add(resourceOperation);
 
         DefaultActionGroup closeProjectGroup = new DefaultActionGroup(actionManager);

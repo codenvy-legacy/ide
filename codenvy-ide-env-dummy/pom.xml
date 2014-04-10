@@ -23,7 +23,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M13-SNAPSHOT</version>
+        <version>3.0.0-M14-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ide-env-dummy</artifactId>
     <packaging>jar</packaging>
@@ -36,6 +36,11 @@
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-user</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-infrastructure-local</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
         <dependency>

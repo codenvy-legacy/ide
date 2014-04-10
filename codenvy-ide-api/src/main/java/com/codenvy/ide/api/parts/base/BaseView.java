@@ -24,8 +24,9 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+
+import org.vectomatic.dom.svg.ui.SVGImage;
 
 import javax.validation.constraints.NotNull;
 
@@ -41,6 +42,8 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
     protected DockLayoutPanel toolBar;
     protected DockLayoutPanel container;
     protected T               delegate;
+    protected ToolButton      minimizeButton;
+    protected Label           titleLabel;
 
     public BaseView(PartStackUIResources resources) {
         container = new DockLayoutPanel(Style.Unit.PX);
@@ -48,21 +51,29 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
         container.setSize("100%", "100%");
         toolBar = new DockLayoutPanel(Style.Unit.PX);
         toolBar.addStyleName(resources.partStackCss().ideBasePartToolbar());
-        container.addNorth(toolBar, 20);
+        container.addNorth(toolBar, 22);
 
         //this hack used for adding box shadow effect to toolbar
         toolBar.getElement().getParentElement().getStyle().setOverflow(Style.Overflow.VISIBLE);
-
-        Image minimize=new Image(resources.minimize());
-        minimize.addStyleName(resources.partStackCss().ideImageIconMinimize());
-        ToolButton toolButton = new ToolButton(minimize);
-        toolButton.addClickHandler(new ClickHandler() {
+        
+        
+        DockLayoutPanel panel = new DockLayoutPanel(Style.Unit.PX);
+        titleLabel = new Label();
+        titleLabel.setStyleName(resources.partStackCss().ideBasePartTitleLabel());
+        panel.addWest(titleLabel, 100);
+        
+        SVGImage minimize = new SVGImage(resources.minimize());
+        minimize.getElement().setAttribute("name", "workBenchIconMinimize");
+        minimizeButton = new ToolButton(minimize);
+        minimizeButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 minimize();
             }
         });
-        toolBar.addEast(toolButton, 20);
+        panel.addEast(minimizeButton, 20);
+        
+        toolBar.addNorth(panel, 20);
     }
 
     /** Call minimize on delegate. */
@@ -77,11 +88,7 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
      * @param title
      */
     public void setTitle(@NotNull String title) {
-        Label l = new Label(title, false);
-        l.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
-        l.getElement().getStyle().setLineHeight(20, Style.Unit.PX);
-        l.getElement().getStyle().setVerticalAlign(Style.VerticalAlign.MIDDLE);
-        toolBar.addWest(l, 100);
+        titleLabel.setText(title);
     }
 
     /** {@inheritDoc} */

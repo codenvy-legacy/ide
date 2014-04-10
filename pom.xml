@@ -27,7 +27,7 @@
     </parent>
     <groupId>com.codenvy.ide</groupId>
     <artifactId>codenvy-ide-parent</artifactId>
-    <version>3.0.0-M13-SNAPSHOT</version>
+    <version>3.0.0-M14-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Codenvy :: Parent</name>
     <modules>
@@ -45,6 +45,7 @@
         <module>codenvy-runner-sdk</module>
         <module>codenvy-runner-webapps</module>
         <module>codenvy-ext-builder</module>
+        <module>codenvy-ext-maven</module>
         <module>codenvy-ext-runner</module>
         <module>codenvy-ext-web</module>
         <module>codenvy-ext-java</module>
@@ -56,6 +57,7 @@
         <module>codenvy-ide-client</module>
         <module>codenvy-ext-tutorials</module>
         <module>codenvy-sdk-tutorials/action-api</module>
+        <module>codenvy-sdk-tutorials/analytics-event-logger-ext</module>
         <module>codenvy-sdk-tutorials/wizard-api</module>
         <module>codenvy-sdk-tutorials/theme-api</module>
         <module>codenvy-sdk-tutorials/parts-api</module>
@@ -68,7 +70,9 @@
         <module>codenvy-sdk-tutorials/helloworld-ext</module>
         <module>codenvy-sdk-tutorials/icons-regitry-api</module>
         <module>codenvy-sdk-tutorials/wysiwyg-editor</module>
+        <module>codenvy-sdk-tutorials/server-side</module>
         <module>codenvy-sdk-tools</module>
+        <module>codenvy-ide-factory</module>
     </modules>
     <scm>
         <connection>scm:git:git@github.com:codenvy/ide.git</connection>
@@ -81,21 +85,22 @@
         <buildNumber>${maven.build.timestamp}</buildNumber>
         <buildnumber.plugin.version>1.1</buildnumber.plugin.version>
         <ch.qos.logback.version>1.0.13</ch.qos.logback.version>
-        <codenvy.platform-api-gwt-client.version>0.3.0</codenvy.platform-api-gwt-client.version>
-        <com.codenvy.commons.version>0.17.0</com.codenvy.commons.version>
-        <com.codenvy.platform-api.version>0.12.0</com.codenvy.platform-api.version>
+        <codenvy.platform-api-gwt-client.version>0.3.0-SNAPSHOT</codenvy.platform-api-gwt-client.version>
+        <com.codenvy.commons.version>0.19.0-SNAPSHOT</com.codenvy.commons.version>
+        <com.codenvy.platform-api.version>0.15.0-SNAPSHOT</com.codenvy.platform-api.version>
         <commons-codec.version>1.6</commons-codec.version>
         <commons-fileupload.version>1.2.1</commons-fileupload.version>
         <commons-io.version>2.4</commons-io.version>
         <commons.compress.version>1.6</commons.compress.version>
         <enforcer.plugin.version>1.0.1</enforcer.plugin.version>
-        <everrest.version>1.1.9</everrest.version>
+        <everrest.version>1.1.10</everrest.version>
         <failsafe.plugin.version>2.6</failsafe.plugin.version>
         <gin.version>2.1.2</gin.version>
         <google.api.client.version>1.9.0-beta</google.api.client.version>
         <gson.version>2.1</gson.version>
         <guava.version>12.0.1</guava.version>
         <gwt-test-utils.version>0.47</gwt-test-utils.version>
+        <gwt.svg.version>0.5.9</gwt.svg.version>
         <gwt.test.skip>true</gwt.test.skip>
         <gwt.version>2.6.0</gwt.version>
         <javax.annotation.version>1.0</javax.annotation.version>
@@ -155,7 +160,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore />
+                                        <ignore/>
                                     </action>
                                 </pluginExecution>
                                 <pluginExecution>
@@ -168,7 +173,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore />
+                                        <ignore/>
                                     </action>
                                 </pluginExecution>
                                 <pluginExecution>
@@ -181,7 +186,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore />
+                                        <ignore/>
                                     </action>
                                 </pluginExecution>
                                 <pluginExecution>
@@ -194,7 +199,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore />
+                                        <ignore/>
                                     </action>
                                 </pluginExecution>
                             </pluginExecutions>

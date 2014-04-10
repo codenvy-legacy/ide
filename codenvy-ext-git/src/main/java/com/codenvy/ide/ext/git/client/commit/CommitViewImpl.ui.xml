@@ -41,24 +41,28 @@
     <g:DockLayoutPanel unit="PX" width="350px" height="250px" addStyleNames="{style.emptyBorder}">
         <g:south size="26.0">
             <g:FlowPanel>
-                <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" ui:field="btnCancel"/>
-                <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonCommit}" width="60px" ui:field="btnCommit"/>
+                <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" ui:field="btnCancel"
+                          debugId="git-commit-cancel"/>
+                <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonCommit}" width="60px" ui:field="btnCommit"
+                          debugId="git-commit-commit"/>
             </g:FlowPanel>
         </g:south>
         <g:center>
             <g:DockLayoutPanel unit="PX" width="100%" height="100%" styleName="{style.spacing}">
                 <g:north size="22.0">
-                    <g:CheckBox ui:field="all" HTML="{locale.commitAllFieldTitle}" addStyleNames="{res.gitCSS.textFont}"/>
+                    <g:CheckBox ui:field="all" HTML="{locale.commitAllFieldTitle}" addStyleNames="{res.gitCSS.textFont}"
+                                debugId="git-commit-addAll"/>
                 </g:north>
                 <g:north size="22.0">
                     <g:CheckBox ui:field="amend" visible="false" HTML="{locale.commitAmendFieldTitle}"
-                                addStyleNames="{res.gitCSS.textFont}"/>
+                                addStyleNames="{res.gitCSS.textFont}" debugId="git-commit-amend"/>
                 </g:north>
                 <g:north size="20.0">
                     <g:Label text="{locale.commitMessageFieldTitle}" addStyleNames="{res.gitCSS.textFont}"/>
                 </g:north>
                 <g:center>
-                    <g:TextArea ui:field="message" width="338px" height="140px" addStyleNames="{res.gitCSS.textFont}"/>
+                    <g:TextArea ui:field="message" width="338px" height="140px" addStyleNames="{res.gitCSS.textFont}"
+                                debugId="git-commit-message"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:center>

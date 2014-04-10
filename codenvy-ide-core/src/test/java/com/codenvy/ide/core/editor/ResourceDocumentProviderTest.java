@@ -19,8 +19,8 @@ package com.codenvy.ide.core.editor;
 
 import com.codenvy.ide.api.editor.DocumentProvider.DocumentCallback;
 import com.codenvy.ide.api.editor.EditorInput;
-import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentFactoryImpl;
 import com.google.gwt.user.client.rpc.AsyncCallback;

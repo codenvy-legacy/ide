@@ -22,11 +22,11 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.ext.git.client.GitClientService;
+import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.Remote;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.websocket.WebSocketException;
@@ -54,7 +54,7 @@ import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_REMOTE;
 public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
     private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
     private       PushToRemoteView        view;
-    private       GitClientService        service;
+    private       GitServiceClient        service;
     private       ResourceProvider        resourceProvider;
     private       GitLocalizationConstant constant;
     private       NotificationManager     notificationManager;
@@ -70,7 +70,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
      * @param notificationManager
      */
     @Inject
-    public PushToRemotePresenter(PushToRemoteView view, GitClientService service, ResourceProvider resourceProvider,
+    public PushToRemotePresenter(PushToRemoteView view, GitServiceClient service, ResourceProvider resourceProvider,
                                  GitLocalizationConstant constant, NotificationManager notificationManager,
                                  DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
@@ -95,7 +95,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
     private void getRemotes() {
         final String projectId = project.getId();
 
-        service.remoteList(resourceProvider.getVfsInfo().getId(), projectId, null, true,
+        service.remoteList(projectId, null, true,
                            new AsyncRequestCallback<Array<Remote>>(dtoUnmarshallerFactory.newArrayUnmarshaller(Remote.class)) {
                                @Override
                                protected void onSuccess(Array<Remote> result) {
@@ -124,7 +124,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
      *         is a remote mode
      */
     private void getBranches(@NotNull final String projectId, @NotNull final String remoteMode) {
-        service.branchList(resourceProvider.getVfsInfo().getId(), projectId, remoteMode,
+        service.branchList(projectId, remoteMode,
                            new AsyncRequestCallback<Array<Branch>>(dtoUnmarshallerFactory.newArrayUnmarshaller(Branch.class)) {
                                @Override
                                protected void onSuccess(Array<Branch> result) {
@@ -213,7 +213,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
         final String repository = view.getRepository();
 
         try {
-            service.pushWS(resourceProvider.getVfsInfo().getId(), project, getRefs(), repository, false, new RequestCallback<String>() {
+            service.pushWS(project, getRefs(), repository, false, new RequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     Notification notification = new Notification(constant.pushSuccess(repository), INFO);

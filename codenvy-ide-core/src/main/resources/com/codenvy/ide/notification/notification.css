@@ -17,26 +17,74 @@
      */
 
     .notificationItem {
-        /*border: 1px solid rgba(0, 0, 0, 0.2);*/
-        /*margin: 2px;*/
+        font-size: secondaryTextFontSize;
+        font-family: mainFontFamily; 
+        border-bottom: 1px solid eventDelimeterColor;
+        height: 20px;
+        vertical-align: middle;
+        text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5); 
     }
-
-    .notificationPanel {
+    
+    .center {
+    	display: table;
+		position: absolute;
+    }
+    
+    .center p {
+    	display: table-cell;
+	    vertical-align: middle;
+    }
+    
+    .notificationItem svg {
+    	width: 15px;
+    	height: 15px;
+    	margin: 2 4;
+    }
+    
+    .notificationItem a, .notificationPopup a {
+    	color: linkColor;
+    }
+    
+	.notificationPanel {
         cursor: pointer;
+        padding-left: 2px;
     }
-
-    .statusPanel {
-        padding: 2px;
-        float: right;
-        cursor: pointer;
+    
+    .notificationPopup {
+        border-radius: 1px !important;
+        box-shadow: 0 2px 5px 0 rgba(50, 50, 50, 0.75);
+        font-size: secondaryTextFontSize;
+        color: buttonHoverTextColor;
+        vertical-align: middle;
     }
-
+    
+    .closePopupIcon {
+    	fill: toolbarIconColor;
+    	margin: auto;
+    	width: 18px;
+    	height: 18px;
+    	opacity: 0.5;
+    }
+    
+    .closePopupIcon:hover {
+    	opacity: 1;
+    }
+	
     .floatLeft {
         float: left;
     }
 
-    .top1px {
-        top: 1px !important;
+    .close {
+        margin-top: 7px;
+        opacity: 0.5;
+    }
+    
+    .close:hover {
+        opacity: 1;
+    }
+    
+    .margin4px {
+        margin: 4px;
     }
 
     .right25px {
@@ -44,13 +92,37 @@
     }
 
     .error {
-        color: #bf3a37 !important;
+        color: errorEventColor !important;
+        fill: errorEventColor !important;
+    }
+    
+    .success {
+        fill: successEventColor;
     }
 
     .warning {
         color: #cb772f !important;
+        fill: #cb772f;
     }
 
     .unread {
         /*opacity: 0.7;*/
+    }
+	
+	.countLabel {
+		float: right;
+		margin-top: 3px;
+		margin-left: 3px;
+		padding: 0px 3px;
+		color: tabBorder;
+		background-color: mainFontColor;
+		line-height: 11px;
+		vertical-align: middle;
+		font-weight: bold;
+		font-size: smallFontSize;
+	}
+	
+    .invertColor{
+        -webkit-filter: invert(completedInvertColor);
+        filter: invert(completedInvertColor);
     }

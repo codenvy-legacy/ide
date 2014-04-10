@@ -19,7 +19,7 @@ package com.codenvy.ide.texteditor.openedfiles;
 
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.api.resources.model.File;
 
 import javax.validation.constraints.NotNull;
 

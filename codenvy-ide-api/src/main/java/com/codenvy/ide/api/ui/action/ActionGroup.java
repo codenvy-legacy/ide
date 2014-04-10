@@ -21,6 +21,8 @@ package com.codenvy.ide.api.ui.action;
 import com.codenvy.ide.util.ListenerManager;
 import com.google.gwt.resources.client.ImageResource;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -68,8 +70,8 @@ public abstract class ActionGroup extends Action {
         setPopup(popup);
     }
 
-    public ActionGroup(String text, String description, ImageResource icon) {
-        super(text, description, icon);
+    public ActionGroup(String text, String description, ImageResource icon, SVGResource svgIcon) {
+        super(text, description, icon, svgIcon);
     }
 
     /** This method can be called in popup menus if {@link #canBePerformed()} is true */

@@ -33,8 +33,9 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.vectomatic.dom.svg.ui.SVGImage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,11 +89,11 @@ public class ToolButton extends Composite implements HasClickHandlers {
 
     private List<ClickHandler> clickHandlers = new ArrayList<ClickHandler>();
 
-    public ToolButton(Image image) {
+    public ToolButton(SVGImage image) {
         this(null, image);
     }
 
-    public ToolButton(String id, Image image) {
+    public ToolButton(String id, SVGImage image) {
         initWidget(uiBinder.createAndBindUi(this));
         iconPanel.appendChild(image.getElement());
 

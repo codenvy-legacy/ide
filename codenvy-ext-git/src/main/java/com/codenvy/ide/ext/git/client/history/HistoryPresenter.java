@@ -28,13 +28,13 @@ import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.ext.git.client.GitClientService;
+import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.shared.LogResponse;
 import com.codenvy.ide.ext.git.shared.Revision;
-import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
@@ -63,7 +63,7 @@ import static com.codenvy.ide.ext.git.shared.DiffRequest.DiffType.RAW;
 public class HistoryPresenter extends BasePresenter implements HistoryView.ActionDelegate {
     private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
     private       HistoryView             view;
-    private       GitClientService        service;
+    private       GitServiceClient        service;
     private       GitLocalizationConstant constant;
     private       GitResources            resources;
     private       ResourceProvider        resourceProvider;
@@ -89,7 +89,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
      * @param notificationManager
      */
     @Inject
-    public HistoryPresenter(HistoryView view, GitClientService service, GitLocalizationConstant constant, GitResources resources,
+    public HistoryPresenter(HistoryView view, GitServiceClient service, GitLocalizationConstant constant, GitResources resources,
                             ResourceProvider resourceProvider, WorkspaceAgent workspaceAgent, SelectionAgent selectionAgent,
                             NotificationManager notificationManager, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
@@ -134,7 +134,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
 
     /** Get the log of the commits. If successfully received, then display in revision grid, otherwise - show error in output panel. */
     private void getCommitsLog(@NotNull String projectId) {
-        service.log(resourceProvider.getVfsInfo().getId(), projectId, false,
+        service.log(projectId, false,
                     new AsyncRequestCallback<LogResponse>(dtoUnmarshallerFactory.newUnmarshaller(LogResponse.class)) {
                         @Override
                         protected void onSuccess(LogResponse result) {
@@ -332,7 +332,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
         }
 
         String projectId = resourceProvider.getActiveProject().getId();
-        service.diff(resourceProvider.getVfsInfo().getId(), projectId, filePatterns, RAW, false, 0, revision.getId(), isCached,
+        service.diff(projectId, filePatterns, RAW, false, 0, revision.getId(), isCached,
                      new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                          @Override
                          protected void onSuccess(String result) {
@@ -369,7 +369,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
         if (index + 1 < revisions.size()) {
             final Revision revisionA = revisions.get(index + 1);
             String projectId = resourceProvider.getActiveProject().getId();
-            service.diff(resourceProvider.getVfsInfo().getId(), projectId, filePatterns, RAW, false, 0, revisionA.getId(),
+            service.diff(projectId, filePatterns, RAW, false, 0, revisionA.getId(),
                          revisionB.getId(),
                          new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                              @Override

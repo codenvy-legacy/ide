@@ -124,7 +124,6 @@ public abstract class LocalFileSystemTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        System.setProperty("org.exoplatform.mimetypes", "conf/mimetypes.properties");
         // root directory for ALL virtual file systems
         root = createRootDirectory();
 
@@ -155,7 +154,7 @@ public abstract class LocalFileSystemTest extends TestCase {
         deployer.publish(new VirtualFileSystemApplication());
 
         // RUNTIME VARIABLES
-        EnvironmentContext.getCurrent().setUser(new UserImpl("admin", null, Arrays.asList("developer")));
+        EnvironmentContext.getCurrent().setUser(new UserImpl("admin", null, Arrays.asList("workspace/admin", "workspace/developer")));
     }
 
     // Directory "fs-root" in "target" folder of builder project.

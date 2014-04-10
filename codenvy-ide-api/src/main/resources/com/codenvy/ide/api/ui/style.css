@@ -35,14 +35,18 @@
 @eval partToolbar com.codenvy.ide.api.ui.theme.Style.getPartToolbar();
 @eval partToolbarActive com.codenvy.ide.api.ui.theme.Style.getPartToolbarActive();
 @eval partToolbarShadow com.codenvy.ide.api.ui.theme.Style.getPartToolbarShadow();
+@eval partToolbarSeparatorTopColor com.codenvy.ide.api.ui.theme.Style.getPartToolbarSeparatorTopColor();
+@eval partToolbarSeparatorBottomColor com.codenvy.ide.api.ui.theme.Style.getPartToolbarSeparatorBottomColor();
 
 @eval consolePanelColor com.codenvy.ide.api.ui.theme.Style.getConsolePanelColor();
 
 @eval tabBorderShadow com.codenvy.ide.api.ui.theme.Style.getTabBorderShadow();
 @eval buttonTextShadow com.codenvy.ide.api.ui.theme.Style.getButtonTextShadow();
+@eval minimizeIconColor com.codenvy.ide.api.ui.theme.Style.getMinimizeIconColor();
 
 /* Indicates a completed action. Preferred text color is lightTextColor. */
 @eval completedBackgroundColor com.codenvy.ide.api.ui.theme.Style.getCompletedBackgroundColor();
+@eval completedInvertColor com.codenvy.ide.api.ui.theme.Style.getCompletedInvertColor();
 /* Background color for an item selected with the keyboard */
 @eval keyboardSelectionBackgroundColor com.codenvy.ide.api.ui.theme.Style.getKeyboardSelectionBackgroundColor();
 @eval anchorColor com.codenvy.ide.api.ui.theme.Style.getAnchorColor();
@@ -50,10 +54,15 @@
 /* Tree */
 @eval hoverBackground com.codenvy.ide.api.ui.theme.Style.getHoverBackground();
 @eval selectionBackground com.codenvy.ide.api.ui.theme.Style.getSelectionBackground();
+@eval treeTextFileColor com.codenvy.ide.api.ui.theme.Style.getTreeTextFileColor();
+@eval treeTextFolderColor com.codenvy.ide.api.ui.theme.Style.getTreeTextFolderColor();
+@eval treeTextShadow com.codenvy.ide.api.ui.theme.Style.getTreeTextShadow();
 
 /* Button */
 @eval buttonTopColor com.codenvy.ide.api.ui.theme.Style.getButtonTopColor();
 @eval buttonColor com.codenvy.ide.api.ui.theme.Style.getButtonColor();
+@eval buttonHoverTextColor com.codenvy.ide.api.ui.theme.Style.getButtonHoverTextColor();
+@eval svgUrlShadow com.codenvy.ide.api.ui.theme.Style.getSvgUrlShadow();
 
 /* notable button */
 @eval notableButtonTopColor com.codenvy.ide.api.ui.theme.Style.getNotableButtonTopColor();
@@ -70,6 +79,15 @@
 @eval editorInactiveSelectionColor com.codenvy.ide.api.ui.theme.Style.getEditorInactiveSelectionColor();
 @eval editoGutterColor com.codenvy.ide.api.ui.theme.Style.getEditorGutterColor();
 
+/* Listbox, TextBox... */
+@eval boxBorderColor com.codenvy.ide.api.ui.theme.Style.getBoxBorderColor();
+@eval boxBackgroundColor com.codenvy.ide.api.ui.theme.Style.getBoxBackgroundColor();
+@eval boxBackgroundColorDisabled com.codenvy.ide.api.ui.theme.Style.getBoxBackgroundColorDisabled();
+@eval boxTextColor com.codenvy.ide.api.ui.theme.Style.getBoxTextColor();
+@eval boxTextShadow com.codenvy.ide.api.ui.theme.Style.getBoxTextShadow();
+@eval boxInnerShadow com.codenvy.ide.api.ui.theme.Style.getBoxInnerShadow();
+@eval boxOuterShadow com.codenvy.ide.api.ui.theme.Style.getBoxOuterShadow();
+
 /* Sizes */
 @def dividerThickness 1px;
 @def popupPadding 24px;
@@ -81,6 +99,7 @@
 @def sideBarHorizontalPadding 12px;
 @def splitterWidth 8px;
 @def splitterOverlap 4px;
+@def toolbarIconSize 16px;
 
 /* Font Sizes */
 @def fontSize 13px;
@@ -89,12 +108,15 @@
 @def landingTitleFontSize 20px;
 @def titleFontSize 16px;
 @def secondaryTextFontSize 11px;
+@def smallFontSize 10px;
 @def largeLabel 14px;
 @def largeDropdownLabel 12px;
+@def boxFontSize 12px;
 
 /* Fonts */
 @def alternativeFontFamily "Helvetica Neue", "Myriad Pro","open sans", arial, sans-serif;
 @def fileTreeFontFamily "Helvetica Neue", "Myriad Pro","Lucida Grande", Verdana, Arial;
+@def fileTreeFontFamilyFile "Helvetica Neue Regular", "Myriad Pro","Lucida Grande", Verdana, Arial;
 @def mainFontFamily "Helvetica Neue", "Myriad Pro", arial, Verdana, Verdana, sans-serif;
 @def editorLineHeight 15px;
 @def editorFontFamily 'Andale Mono', monospace;
@@ -105,11 +127,16 @@
 @def fontMenuSize 12px;
 
 @eval mainFontColor com.codenvy.ide.api.ui.theme.Style.getMainFontColor();
+@eval tabFontColor com.codenvy.ide.api.ui.theme.Style.getTabFontColor();
 @eval welcomeFontColor com.codenvy.ide.api.ui.theme.Style.getWelcomeFontColor();
 @eval lightTextColor com.codenvy.ide.api.ui.theme.Style.getLightTextColor();
 @eval lightestTextColor com.codenvy.ide.api.ui.theme.Style.getLightestTextColor();
 @eval radioButtonBackgroundColor com.codenvy.ide.api.ui.theme.Style.getRadioButtonBackgroundColor();
 @eval disabledMenuItemColor com.codenvy.ide.api.ui.theme.Style.getDeisabledMenuColor();
+
+/*Toolbar*/
+@eval toolbarBackgroundColor com.codenvy.ide.api.ui.theme.Style.getToolbarBackgroundColor();
+@eval toolbarIconColor com.codenvy.ide.api.ui.theme.Style.getToolbarIconColor();
 
 /* DialogBox*/
 @eval dialogTopLeft com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
@@ -153,3 +180,10 @@
 @eval cellEvenRow com.codenvy.ide.api.ui.theme.Style.getCellEvenRow();
 @eval cellKeyboardSelectedRow com.codenvy.ide.api.ui.theme.Style.getCellKeyboardSelectedRow();
 @eval cellHoveredRow com.codenvy.ide.api.ui.theme.Style.getCellHoveredRow();
+
+/*Events*/
+@eval successEventColor com.codenvy.ide.api.ui.theme.Style.getSuccessEventColor();
+@eval errorEventColor com.codenvy.ide.api.ui.theme.Style.getErrorEventColor();
+@eval linkColor com.codenvy.ide.api.ui.theme.Style.getLinkColor();
+@eval eventDelimeterColor com.codenvy.ide.api.ui.theme.Style.getEventDelimeterColor();
+

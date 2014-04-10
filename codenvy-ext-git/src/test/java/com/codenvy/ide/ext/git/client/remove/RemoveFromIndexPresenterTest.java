@@ -20,9 +20,9 @@ package com.codenvy.ide.ext.git.client.remove;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.ext.git.client.BaseTest;
-import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.resources.model.Folder;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -38,11 +38,7 @@ import java.util.List;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.anyBoolean;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Testing {@link RemoveFromIndexPresenter} functionality.
@@ -123,12 +119,12 @@ public class RemoveFromIndexPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, EMPTY_TEXT);
                 return callback;
             }
-        }).when(service).remove(anyString(), anyString(), (List<String>)anyObject(), anyBoolean(),
+        }).when(service).remove(anyString(), (List<String>)anyObject(), anyBoolean(),
                                 (AsyncRequestCallback<String>)anyObject());
         doAnswer(new Answer() {
             @Override
@@ -144,7 +140,7 @@ public class RemoveFromIndexPresenterTest extends BaseTest {
         presenter.onRemoveClicked();
 
         verify(service)
-                .remove(eq(VFS_ID), eq(PROJECT_ID), (List<String>)anyObject(), eq(REMOVED),
+                .remove(eq(PROJECT_ID), (List<String>)anyObject(), eq(REMOVED),
                         (AsyncRequestCallback<String>)anyObject());
         verify(resourceProvider).getProject(eq(PROJECT_NAME), (AsyncCallback<Project>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
@@ -160,19 +156,19 @@ public class RemoveFromIndexPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).remove(anyString(), anyString(), (List<String>)anyObject(), anyBoolean(),
+        }).when(service).remove(anyString(), (List<String>)anyObject(), anyBoolean(),
                                 (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog();
         presenter.onRemoveClicked();
 
         verify(service)
-                .remove(eq(VFS_ID), eq(PROJECT_ID), (List<String>)anyObject(), eq(REMOVED),
+                .remove(eq(PROJECT_ID), (List<String>)anyObject(), eq(REMOVED),
                         (AsyncRequestCallback<String>)anyObject());
         verify(constant).removeFilesFailed();
         verify(notificationManager).showNotification((Notification)anyObject());

@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.git.client.remote.add;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.ext.git.client.GitClientService;
+import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -35,7 +35,7 @@ import javax.validation.constraints.NotNull;
 @Singleton
 public class AddRemoteRepositoryPresenter implements AddRemoteRepositoryView.ActionDelegate {
     private AddRemoteRepositoryView view;
-    private GitClientService        service;
+    private GitServiceClient        service;
     private ResourceProvider        resourceProvider;
     private AsyncCallback<Void>     callback;
 
@@ -47,7 +47,7 @@ public class AddRemoteRepositoryPresenter implements AddRemoteRepositoryView.Act
      * @param resourceProvider
      */
     @Inject
-    public AddRemoteRepositoryPresenter(AddRemoteRepositoryView view, GitClientService service, ResourceProvider resourceProvider) {
+    public AddRemoteRepositoryPresenter(AddRemoteRepositoryView view, GitServiceClient service, ResourceProvider resourceProvider) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
@@ -70,7 +70,7 @@ public class AddRemoteRepositoryPresenter implements AddRemoteRepositoryView.Act
         String url = view.getUrl();
         final String projectId = resourceProvider.getActiveProject().getId();
 
-        service.remoteAdd(resourceProvider.getVfsInfo().getId(), projectId, name, url, new AsyncRequestCallback<String>() {
+        service.remoteAdd(projectId, name, url, new AsyncRequestCallback<String>() {
             @Override
             protected void onSuccess(String result) {
                 callback.onSuccess(null);

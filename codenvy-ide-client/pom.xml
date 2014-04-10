@@ -23,7 +23,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M13-SNAPSHOT</version>
+        <version>3.0.0-M14-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ide-client</artifactId>
     <packaging>jar</packaging>
@@ -68,6 +68,11 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-maven</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-runner</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -89,6 +94,11 @@
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-factory</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

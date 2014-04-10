@@ -27,6 +27,10 @@ public class SingleEnvironmentFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+
+//        wsName = Constants.WORKSPACE.getName();
+//        wsId = Constants.WORKSPACE.getId();
+
         wsName = filterConfig.getInitParameter("ws-name");
         wsId = filterConfig.getInitParameter("ws-id");
     }
@@ -70,6 +74,14 @@ public class SingleEnvironmentFilter implements Filter {
     }
 
     protected User getUser(HttpServletRequest httpRequest) {
-        return new UserImpl("ide", "dummy_token", Arrays.asList("developer", "admin", "system/admin", "system/manager", "user"));
+
+//        List roles = new ArrayList();
+//        roles.addAll(Arrays.asList("system/admin", "system/manager", "user"));
+//        roles.addAll(Constants.MEMBER.getRoles());
+
+        //return new UserImpl(Constants.USER.getEmail(), Constants.USER.getId(), Constants.TOKEN.getValue(), roles);
+
+        return new UserImpl("codenvy", "dummy_token",
+                            Arrays.asList("workspace/developer", "workspace/developer", "system/admin", "system/manager", "user"));
     }
 }

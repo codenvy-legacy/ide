@@ -38,6 +38,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -110,6 +111,7 @@ public class BranchViewImpl extends DialogBox implements BranchView {
                 SafeHtmlBuilder sb = new SafeHtmlBuilder();
 
                 sb.appendHtmlConstant("<table><tr><td>");
+                sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "git-branches-" + itemData.getDisplayName() + "\">");
                 sb.appendEscaped(itemData.getDisplayName());
                 sb.appendHtmlConstant("</td>");
 

@@ -21,7 +21,7 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -32,7 +32,7 @@ public class CloseProjectAction extends Action {
 
     @Inject
     public CloseProjectAction(ResourceProvider resourceProvider, Resources resources) {
-        super("Close", "Close project", resources.projectClosed());
+        super("Close", "Close project", null, resources.closeProject());
         this.resourceProvider = resourceProvider;
     }
 

@@ -17,13 +17,12 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.fqn;
 
-import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.api.resources.model.File;
 
 import javax.validation.constraints.NotNull;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  4:58:00 PM Mar 28, 2012 evgen $
+ * @author Evgen Vidolob
  */
 public interface FqnResolver {
     @NotNull

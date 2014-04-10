@@ -52,12 +52,12 @@ public class LightTheme implements Theme {
     public String getSelectionBackground() {
         return "#C3DEFF";
     }
-    
+
     @Override
     public String getInactiveTabBackground() {
         return "#d6d6d6";
     }
-    
+
     @Override
     public String getInactiveTabBorderColor() {
         return "#353535";
@@ -67,10 +67,14 @@ public class LightTheme implements Theme {
     public String getActiveTabBackground() {
         return "#ffffff";
     }
-    
+
     @Override
     public String getActiveTabBorderColor() {
         return "#232323";
+    }
+
+    public String getTabFontColor() {
+        return "#989898";
     }
 
     @Override
@@ -101,6 +105,16 @@ public class LightTheme implements Theme {
     @Override
     public String getPartToolbarShadow() {
         return getTabBorderColor();
+    }
+
+    @Override
+    public String getPartToolbarSeparatorTopColor() {
+        return "#FFFFFF";
+    }
+
+    @Override
+    public String getPartToolbarSeparatorBottomColor() {
+        return "#AAAAAA";
     }
 
     @Override
@@ -331,5 +345,105 @@ public class LightTheme implements Theme {
     @Override
     public String getButtonTextShadow() {
         return "rgba(188, 195, 199, 0.5)";
+    }
+
+    @Override
+    public String getTreeTextFileColor() {
+        return "#7b7b7b";
+    }
+
+    @Override
+    public String getTreeTextFolderColor() {
+        return "#606060";
+    }
+
+    @Override
+    public String getTreeTextShadow() {
+        return "rgba(255, 255, 255, 0.5)";
+    }
+
+    @Override
+    public String getBoxBorderColor() {
+        return "#aaaaaa";
+    }
+
+    @Override
+    public String getBoxTextColor() {
+        return "#606060";
+    }
+
+
+    @Override
+    public String getBoxInnerShadow() {
+        return "0px 1px 2px 0px #777777 inset";
+    }
+
+    @Override
+    public String getBoxOuterShadow() {
+        return "0px 1px 0px 0px #7a7a7a";
+    }
+
+    @Override
+    public String getBoxBackgroundColor() {
+        return "#e2e2e2";
+    }
+
+    @Override
+    public String getBoxBackgroundColorDisabled() {
+        return getTabsPanelBackground();
+    }
+
+    @Override
+    public String getBoxTextShadow() {
+        return "0px 1px 0px #ffffff";
+    }
+
+    public String getButtonHoverTextColor() {
+        return "#000000";
+    }
+
+    @Override
+    public String getToolbarBackgroundColor() {
+        return " #EAEAEA";
+    }
+
+    @Override
+    public String getToolbarIconColor() {
+        return "#606060";
+    }
+
+    @Override
+    public String getCompletedInvertColor() {
+        return "100%";
+    }
+
+    @Override
+    public String getSvgUrlShadow() {
+        return "url(#shadowLightTheme)";
+    }
+    
+    @Override
+    public String getSuccessEventColor() {
+        return "#7dc878";
+    }
+    
+    @Override
+    public String getErrorEventColor() {
+        return "#e25252";
+    }
+    
+    @Override
+    public String getEventDelimeterColor() {
+        return "#2f2f2f";
+    }
+    
+    @Override
+    public String getLinkColor() {
+        return "#acacac";
+    }
+    
+    @Override
+    public String getMinimizeIconColor() {
+        return "#1f1f1f";
     }
 }

@@ -18,14 +18,12 @@
 package com.codenvy.ide.ext.git.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.ext.git.client.GitClientService;
-import com.codenvy.ide.ext.git.client.GitClientServiceImpl;
+import com.codenvy.ide.ext.git.client.GitServiceClient;
+import com.codenvy.ide.ext.git.client.GitServiceClientImpl;
 import com.codenvy.ide.ext.git.client.add.AddToIndexView;
 import com.codenvy.ide.ext.git.client.add.AddToIndexViewImpl;
 import com.codenvy.ide.ext.git.client.branch.BranchView;
 import com.codenvy.ide.ext.git.client.branch.BranchViewImpl;
-import com.codenvy.ide.ext.git.client.clone.CloneRepositoryView;
-import com.codenvy.ide.ext.git.client.clone.CloneRepositoryViewImpl;
 import com.codenvy.ide.ext.git.client.commit.CommitView;
 import com.codenvy.ide.ext.git.client.commit.CommitViewImpl;
 import com.codenvy.ide.ext.git.client.fetch.FetchView;
@@ -61,9 +59,8 @@ public class GitGinModule extends AbstractGinModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
-        bind(GitClientService.class).to(GitClientServiceImpl.class).in(Singleton.class);
+        bind(GitServiceClient.class).to(GitServiceClientImpl.class).in(Singleton.class);
 
-        bind(CloneRepositoryView.class).to(CloneRepositoryViewImpl.class).in(Singleton.class);
         bind(InitRepositoryView.class).to(InitRepositoryViewImpl.class).in(Singleton.class);
         bind(AddToIndexView.class).to(AddToIndexViewImpl.class).in(Singleton.class);
         bind(ResetToCommitView.class).to(ResetToCommitViewImpl.class).in(Singleton.class);
