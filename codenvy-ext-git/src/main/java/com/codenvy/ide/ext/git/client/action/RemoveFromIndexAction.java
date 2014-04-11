@@ -36,7 +36,7 @@ public class RemoveFromIndexAction extends Action {
     @Inject
     public RemoveFromIndexAction(RemoveFromIndexPresenter presenter, ResourceProvider resourceProvider, GitResources resources,
                                  GitLocalizationConstant constant) {
-        super(constant.removeFromIndexTitle(), constant.removeFromIndexTitle(), resources.removeFiles());
+        super(constant.removeFromIndexTitle(), constant.removeFromIndexTitle(), null, resources.removeFiles());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }

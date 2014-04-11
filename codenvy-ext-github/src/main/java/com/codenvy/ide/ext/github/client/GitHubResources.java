@@ -19,6 +19,7 @@ package com.codenvy.ide.ext.github.client;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -38,8 +39,8 @@ public interface GitHubResources extends ClientBundle {
     @Source("buttons/next.png")
     ImageResource next();
 
-    @Source("welcome/import-from-github.png")
-    ImageResource importFromGithub();
+    @Source("welcome/import-from-github.svg")
+    SVGResource importFromGithub();
 
     @Source("welcome/clone-git-repository.png")
     ImageResource welcomeClone();

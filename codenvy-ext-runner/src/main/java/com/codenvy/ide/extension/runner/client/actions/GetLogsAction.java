@@ -43,7 +43,7 @@ public class GetLogsAction extends Action {
                          RunnerResources resources,
                          ResourceProvider resourceProvider, RunnerLocalizationConstant localizationConstants) {
         super(localizationConstants.getAppLogsActionText(),
-              localizationConstants.getAppLogsActionDescription(), resources.getAppLogs());
+              localizationConstants.getAppLogsActionDescription(), null, resources.getAppLogs());
         this.controller = controller;
         this.resourceProvider = resourceProvider;
     }
