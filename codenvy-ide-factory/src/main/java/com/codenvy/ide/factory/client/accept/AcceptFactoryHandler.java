@@ -6,6 +6,7 @@ import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.user.gwt.client.UserServiceClient;
 import com.codenvy.api.user.shared.dto.User;
+import com.codenvy.ide.Constants;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
@@ -192,7 +193,19 @@ public class AcceptFactoryHandler implements OAuthCallback {
 
             @Override
             public void onSuccess(Project openedProject) {
-                openFile(acceptedFactory);
+                if (openedProject.getDescription().getProjectTypeId().equals(Constants.NAMELESS_ID)) {
+                    selectProjectTypePresenter.showDialog(openedProject, new AsyncCallback<Project>() {
+                        @Override
+                        public void onFailure(Throwable caught) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(Project result) {
+                           openFile(acceptedFactory);
+                        }
+                    });
+                }
             }
         });
     }
@@ -349,7 +362,7 @@ public class AcceptFactoryHandler implements OAuthCallback {
         final String projectType = acceptedFactory.getProjectattributes().getPtype();
         final ProjectTypeDescriptor projectTypeDescriptor = projectTypeDescriptorRegistry.getDescriptor(projectType);
 
-        if (projectType == null || "unknown".equals(projectType) || projectTypeDescriptor == null) {
+        if (projectType == null || Constants.NAMELESS_ID.equals(projectType) || projectTypeDescriptor == null) {
             askAndSetCorrectProjectType(acceptedFactory);
             return;
         }

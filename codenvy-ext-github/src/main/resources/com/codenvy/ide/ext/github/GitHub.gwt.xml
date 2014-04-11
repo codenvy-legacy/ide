@@ -27,6 +27,7 @@
     <inherits name='com.codenvy.ide.Api'/>
     <inherits name="com.google.gwt.inject.Inject"/>
     <inherits name="com.codenvy.api.User"/>
+    <inherits name="com.codenvy.ide.Core"/>
 
     <source path="client"/>
     <source path="shared"/>
