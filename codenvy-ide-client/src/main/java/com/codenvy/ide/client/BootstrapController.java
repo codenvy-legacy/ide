@@ -40,6 +40,7 @@ import com.codenvy.ide.workspace.WorkspacePresenter;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.ScriptInjector;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.inject.Inject;
@@ -97,11 +98,11 @@ public class BootstrapController {
         this.iconRegistry = iconRegistry;
         this.themeAgent = themeAgent;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
-        
+
         //Is necessary for loading IDE styles before standard GWT one:
-        setTheme();
-        styleInjector.inject();
-        
+//        setTheme();
+//        styleInjector.inject();
+
         ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW)
                       .setCallback(new Callback<Void, Exception>() {
                           @Override
@@ -127,32 +128,42 @@ public class BootstrapController {
                 styleInjector.inject();
 
                 // initialize components
-                componentRegistry.get().start(new Callback<Void, ComponentException>() {
-                    @Override
-                    public void onSuccess(Void result) {
-                        // instantiate extensions
-                        extensionInitializer.startExtensions();
-                        // Start UI
-                        SimpleLayoutPanel mainPanel = new SimpleLayoutPanel();
-                        RootLayoutPanel.get().add(mainPanel);
-                        WorkspacePresenter workspacePresenter = workspaceProvider.get();
-
-                        workspacePresenter.setUpdateButtonVisibility(Utils.isAppLaunchedInSDKRunner());
-
-                        // Display IDE
-                        workspacePresenter.go(mainPanel);
-                        // Display list of projects in project explorer
-                        resourceProvider.showListProjects();
-                    }
+                //FIXME add timer fox fixing problem with switching themes need fix it
+                Timer timer = new Timer() {
 
                     @Override
-                    public void onFailure(ComponentException caught) {
-                        Log.error(BootstrapController.class, "FAILED to start service:" + caught.getComponent(), caught);
+                    public void run() {
 
-                        // Handle error when receiving profile.
-                        initializationFailed(caught.getMessage());
+                        componentRegistry.get().start(new Callback<Void, ComponentException>() {
+                            @Override
+                            public void onSuccess(Void result) {
+                                // instantiate extensions
+                                extensionInitializer.startExtensions();
+                                // Start UI
+                                SimpleLayoutPanel mainPanel = new SimpleLayoutPanel();
+                                RootLayoutPanel.get().add(mainPanel);
+                                WorkspacePresenter workspacePresenter = workspaceProvider.get();
+
+                                workspacePresenter.setUpdateButtonVisibility(Utils.isAppLaunchedInSDKRunner());
+
+                                // Display IDE
+                                workspacePresenter.go(mainPanel);
+                                // Display list of projects in project explorer
+                                resourceProvider.showListProjects();
+                            }
+
+                            @Override
+                            public void onFailure(ComponentException caught) {
+                                Log.error(BootstrapController.class, "FAILED to start service:" + caught.getComponent(), caught);
+
+                                // Handle error when receiving profile.
+                                initializationFailed(caught.getMessage());
+                            }
+                        });
                     }
-                });
+                };
+
+                timer.schedule(500);
 
                 initializeProjectTypeDescriptorRegistry();
             }
@@ -191,8 +202,8 @@ public class BootstrapController {
                     protected void onSuccess(Array<ProjectTypeDescriptor> result) {
                         for (int i = 0; i < result.size(); i++) {
                             if (!result.get(i).getProjectTypeId().equalsIgnoreCase(Constants.NAMELESS_ID))//skip unknown project type user
-                                                                                                        //can select this project type need
-                                                                                                        //use BaseProjectType instead
+                                //can select this project type need
+                                //use BaseProjectType instead
                                 projectTypeDescriptorRegistry.registerDescriptor(result.get(i));
                         }
                     }

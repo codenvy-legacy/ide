@@ -3,10 +3,12 @@ package com.codenvy.ide.ext.git.server;
 import com.codenvy.api.project.server.AbstractVirtualFileEntry;
 import com.codenvy.api.project.server.FileEntry;
 import com.codenvy.api.project.server.FolderEntry;
+import com.codenvy.api.project.server.Project;
 import com.codenvy.api.project.server.ProjectImporter;
 import com.codenvy.api.project.server.ProjectManager;
 import com.codenvy.api.vfs.server.ContentStream;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.Constants;
 import com.codenvy.ide.ext.git.server.nativegit.NativeGitConnectionFactory;
@@ -110,8 +112,10 @@ public class GitProjectImporter implements ProjectImporter {
      *
      * @throws VirtualFileSystemException
      */
-    private void determineProjectType(FolderEntry folderEntry) throws VirtualFileSystemException {
-        boolean foundMavenProject = false;
+    private void determineProjectType(FolderEntry folderEntry) throws VirtualFileSystemException, IOException {
+        Project project = projectManager.getProject(EnvironmentContext.getCurrent().getWorkspaceId(), folderEntry.getPath());
+        if (project.getDescription().getProjectType().getId() != Constants.NAMELESS_ID)
+            return;
         for (AbstractVirtualFileEntry file : folderEntry.getChildren()) {
             if ("pom.xml".equals(file.getName())) {
                 boolean isMultiModule = isMultiModule(file.getVirtualFile().getContent());

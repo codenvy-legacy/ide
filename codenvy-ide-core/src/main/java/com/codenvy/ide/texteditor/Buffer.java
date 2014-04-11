@@ -52,6 +52,7 @@ import com.codenvy.ide.util.dom.MouseGestureListener;
 import com.codenvy.ide.util.executor.Executor;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.user.client.ui.RequiresResize;
+import com.google.gwt.user.client.ui.UIObject;
 
 
 /*
@@ -228,6 +229,7 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
 
             columnMarkerElement = Elements.createDivElement(css.columnMarkerLine());
             textLayerElement = Elements.createDivElement(css.textLayer());
+            UIObject.ensureDebugId((com.google.gwt.dom.client.Element)textLayerElement, "textBlock");
             
             
 

@@ -63,8 +63,12 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
     final private String                 SEARCH_URL;
 
     @Inject
-    public NavigateToFilePresenter(NavigateToFileView view, ResourceProvider resourceProvider, EventBus eventBus, MessageBus wsMessageBus,
-                                   @Named("workspaceId") String workspaceId, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+    public NavigateToFilePresenter(NavigateToFileView view,
+                                   ResourceProvider resourceProvider,
+                                   EventBus eventBus,
+                                   MessageBus wsMessageBus,
+                                   @Named("workspaceId") String workspaceId,
+                                   DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.resourceProvider = resourceProvider;
         this.view = view;
         this.eventBus = eventBus;
