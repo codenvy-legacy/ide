@@ -140,6 +140,9 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
     @Source("actions/save.svg")
     SVGResource save();
     
+    @Source("actions/preferences.svg")
+    SVGResource preferences();
+    
     @Source("project/private-project.svg")
     SVGResource privateProject();
     

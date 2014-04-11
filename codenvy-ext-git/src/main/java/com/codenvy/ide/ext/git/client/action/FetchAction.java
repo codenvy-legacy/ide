@@ -36,7 +36,7 @@ public class FetchAction extends Action {
     @Inject
     public FetchAction(FetchPresenter presenter, ResourceProvider resourceProvider, GitResources resources,
                        GitLocalizationConstant constant) {
-        super(constant.fetchControlTitle(), constant.fetchControlPrompt(), resources.fetch());
+        super(constant.fetchControlTitle(), constant.fetchControlPrompt(), null, resources.fetch());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }

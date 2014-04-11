@@ -44,7 +44,7 @@ public class MavenBuildAction extends Action {
                             MavenLocalizationConstant localizationConstant,
                             ResourceProvider resourceProvider) {
         super(localizationConstant.buildProjectControlTitle(),
-              localizationConstant.buildProjectControlDescription(), resources.build());
+              localizationConstant.buildProjectControlDescription(), null, resources.build());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }

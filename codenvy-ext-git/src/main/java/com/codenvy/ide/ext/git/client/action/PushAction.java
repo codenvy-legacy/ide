@@ -36,7 +36,7 @@ public class PushAction extends Action {
     @Inject
     public PushAction(PushToRemotePresenter presenter, ResourceProvider resourceProvider, GitResources resources,
                       GitLocalizationConstant constant) {
-        super(constant.pushControlTitle(), constant.pushControlPrompt(), resources.push());
+        super(constant.pushControlTitle(), constant.pushControlPrompt(), null, resources.push());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }
