@@ -65,7 +65,7 @@ import java.util.regex.Pattern;
 
 /** @author andrew00x */
 public abstract class BaseDockerRunner extends Runner {
-    private static final Logger LOG = LoggerFactory.getLogger(BaseDockerRunner.class);
+    static final Logger LOG = LoggerFactory.getLogger(BaseDockerRunner.class);
 
     // Pattern for ports in range [0;65535]
     // Public HTTP ports of application should be defined as environment variables in dockerfile in following format:

@@ -25,6 +25,7 @@ import com.codenvy.api.project.shared.ValueProvider;
 import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -38,7 +39,7 @@ public class RunnerScriptValueProviderFactory implements ValueProviderFactory {
 
     @Override
     public String getName() {
-        return com.codenvy.api.runner.internal.Constants.RUNNER_SCRIPT_FILE;
+        return com.codenvy.api.runner.internal.Constants.RUNNER_SCRIPT_FILES;
     }
 
     @Override
@@ -47,12 +48,13 @@ public class RunnerScriptValueProviderFactory implements ValueProviderFactory {
             @Override
             public List<String> getValues() {
                 final FolderEntry projectFolder = project.getBaseFolder();
+                final List<String> files = new LinkedList<>();
                 for (String fName : DOCKER_FILES) {
                     if (projectFolder.getChild(fName) != null) {
-                        return Arrays.asList(fName);
+                        files.add(fName);
                     }
                 }
-                return Collections.emptyList();
+                return files;
             }
 
             @Override
