@@ -23,7 +23,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M14-SNAPSHOT</version>
+        <version>3.0.0-M14</version>
     </parent>
     <artifactId>codenvy-builder-maven</artifactId>
     <packaging>jar</packaging>
