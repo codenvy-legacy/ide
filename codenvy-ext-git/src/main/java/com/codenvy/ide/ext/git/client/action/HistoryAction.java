@@ -36,7 +36,7 @@ public class HistoryAction extends Action {
     @Inject
     public HistoryAction(HistoryPresenter presenter, ResourceProvider resourceProvider, GitResources resources,
                          GitLocalizationConstant constant) {
-        super(constant.historyControlTitle(), constant.historyControlPrompt(), resources.history());
+        super(constant.historyControlTitle(), constant.historyControlPrompt(), null, resources.showHistory());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }

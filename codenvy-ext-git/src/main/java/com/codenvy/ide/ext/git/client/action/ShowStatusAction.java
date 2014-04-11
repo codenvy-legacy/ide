@@ -36,7 +36,7 @@ public class ShowStatusAction extends Action {
     @Inject
     public ShowStatusAction(StatusCommandPresenter presenter, ResourceProvider resourceProvider, GitResources resources,
                             GitLocalizationConstant constant) {
-        super(constant.statusControlTitle(), constant.statusControlPrompt(), resources.status());
+        super(constant.statusControlTitle(), constant.statusControlPrompt(), null, resources.status());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }

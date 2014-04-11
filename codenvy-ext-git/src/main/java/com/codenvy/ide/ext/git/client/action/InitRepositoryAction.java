@@ -36,7 +36,7 @@ public class InitRepositoryAction extends Action {
     @Inject
     public InitRepositoryAction(InitRepositoryPresenter presenter, GitResources resources, GitLocalizationConstant constant,
                                 ResourceProvider resourceProvider) {
-        super(constant.initControlTitle(), constant.initControlPrompt(), resources.initRepo());
+        super(constant.initControlTitle(), constant.initControlPrompt(), null, resources.initRepo());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }

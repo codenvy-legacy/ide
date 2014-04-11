@@ -36,7 +36,7 @@ public class ShowBranchesAction extends Action {
     @Inject
     public ShowBranchesAction(BranchPresenter presenter, ResourceProvider resourceProvider, GitResources resources,
                               GitLocalizationConstant constant) {
-        super(constant.branchesControlTitle(), constant.branchesControlPrompt(), resources.branches());
+        super(constant.branchesControlTitle(), constant.branchesControlPrompt(), null, resources.branches());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }

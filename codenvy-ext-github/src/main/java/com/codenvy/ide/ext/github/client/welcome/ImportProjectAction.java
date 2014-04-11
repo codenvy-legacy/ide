@@ -55,7 +55,7 @@ public class ImportProjectAction extends Action {
                                ImportPresenter importPresenter,
                                UserServiceClient service,
                                DtoUnmarshallerFactory dtoUnmarshallerFactory) {
-        super(constant.importFromGithubTitle(), constant.welcomeImportText(), resources.importFromGithub());
+        super(constant.importFromGithubTitle(), constant.welcomeImportText(), null, resources.importFromGithub());
         this.constant = constant;
         this.resources = resources;
         this.importPresenter = importPresenter;

@@ -21,6 +21,8 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 22, 2011 2:39:07 PM anya $
@@ -56,44 +58,47 @@ public interface GitResources extends ClientBundle {
     @Source("buttons/next.png")
     ImageResource next();
 
-    @Source("controls/remove.png")
-    ImageResource removeFiles();
+    @Source("controls/remove.svg")
+    SVGResource removeFiles();
 
-    @Source("controls/reset.png")
-    ImageResource reset();
+    @Source("controls/reset.svg")
+    SVGResource reset();
 
-    @Source("controls/initRepo.png")
-    ImageResource initRepo();
+    @Source("controls/init.svg")
+    SVGResource initRepo();
 
-    @Source("controls/deleteRepo.png")
-    ImageResource deleteRepo();
+    @Source("controls/delete-repo.svg")
+    SVGResource deleteRepo();
 
-    @Source("controls/merge.png")
-    ImageResource merge();
+    @Source("controls/merge.svg")
+    SVGResource merge();
 
-    @Source("controls/add.png")
-    ImageResource addToIndex();
+    @Source("controls/add.svg")
+    SVGResource addToIndex();
 
-    @Source("controls/branches.png")
-    ImageResource branches();
+    @Source("controls/branches.svg")
+    SVGResource branches();
 
-    @Source("controls/remotes.png")
-    ImageResource remotes();
+    @Source("controls/remotes.svg")
+    SVGResource remotes();
 
-    @Source("controls/commit.png")
-    ImageResource commit();
+    @Source("controls/commit.svg")
+    SVGResource commit();
 
-    @Source("controls/push.png")
-    ImageResource push();
+    @Source("controls/push.svg")
+    SVGResource push();
 
-    @Source("controls/pull.png")
-    ImageResource pull();
+    @Source("controls/pull.svg")
+    SVGResource pull();
 
     @Source("history/arrows.png")
     ImageResource arrows();
 
     @Source("history/history.png")
     ImageResource history();
+    
+    @Source("history/show-history.svg")
+    SVGResource showHistory();
 
     @Source("history/project_level.png")
     ImageResource projectLevel();
@@ -113,11 +118,11 @@ public interface GitResources extends ClientBundle {
     @Source("history/refresh.png")
     ImageResource refresh();
 
-    @Source("controls/fetch.png")
-    ImageResource fetch();
+    @Source("controls/fetch.svg")
+    SVGResource fetch();
 
-    @Source("controls/status.png")
-    ImageResource status();
+    @Source("controls/status.svg")
+    SVGResource status();
 
     @Source("controls/checkout.png")
     ImageResource checkout();
@@ -155,14 +160,14 @@ public interface GitResources extends ClientBundle {
     @Source("branch/current.png")
     ImageResource currentBranch();
 
-    @Source("controls/remote.png")
-    ImageResource remote();
+    @Source("controls/remote.svg")
+    SVGResource remote();
 
-    @Source("controls/revert.png")
-    ImageResource revert();
+    @Source("controls/revert.svg")
+    SVGResource revert();
 
-    @Source("controls/repository.png")
-    ImageResource projectReadOnlyGitUrl();
+    @Source("controls/git-url.svg")
+    SVGResource projectReadOnlyGitUrl();
 
     @Source("welcome/project_open.png")
     ImageResource project();
