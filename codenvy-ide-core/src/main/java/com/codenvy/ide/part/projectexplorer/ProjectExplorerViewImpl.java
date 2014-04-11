@@ -72,6 +72,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         
         tree = Tree.create(resources, new ResourceTreeNodeDataAdapter(), FileTreeNodeRenderer.create(resources, iconRegistry));
         container.add(tree.asWidget());
+        tree.asWidget().ensureDebugId("projectExplorerTree-panel");
         minimizeButton.ensureDebugId("projectExplorer-minimizeBut");
     }
 
