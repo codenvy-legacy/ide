@@ -53,6 +53,7 @@ public class SpringProjectTypeExtension implements ProjectTypeExtension {
         list.add(new Attribute(Constants.LANGUAGE, "java"));
         list.add(new Attribute(Constants.FRAMEWORK, "spring"));
         list.add(new Attribute(Constants.RUNNER_NAME, "JavaWeb"));
+        list.add(new Attribute(Constants.BUILDER_NAME, "maven"));
         return list;
     }
 

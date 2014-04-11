@@ -23,6 +23,7 @@ import com.codenvy.api.builder.internal.BuildLogger;
 import com.codenvy.api.builder.internal.BuildResult;
 import com.codenvy.api.builder.internal.Builder;
 import com.codenvy.api.builder.internal.BuilderConfiguration;
+import com.codenvy.api.builder.internal.BuilderTaskType;
 import com.codenvy.api.builder.internal.DelegateBuildLogger;
 import com.codenvy.api.builder.internal.DependencyCollector;
 import com.codenvy.api.builder.internal.SourceManagerEvent;
@@ -78,19 +79,19 @@ public class MavenBuilder extends Builder {
     private static final String ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES_FILE = "jar-with-dependencies-assembly-descriptor.xml";
 
     /** Rules for builder assembly plugin. Use it for create zip of all project dependencies. */
-    private static final String assemblyDescriptor       = "<assembly>\n" +
-                                                           "  <id>dependencies</id>\n" +
-                                                           "  <formats>\n" +
-                                                           "    <format>zip</format>\n" +
-                                                           "  </formats>\n" +
-                                                           "  <includeBaseDirectory>false</includeBaseDirectory>\n" +
-                                                           "  <fileSets>\n" +
-                                                           "    <fileSet>\n" +
-                                                           "      <directory>target/dependency</directory>\n" +
-                                                           "      <outputDirectory>/</outputDirectory>\n" +
-                                                           "    </fileSet>\n" +
-                                                           "  </fileSets>\n" +
-                                                           "</assembly>";
+    private static final String assemblyDescriptor          = "<assembly>\n" +
+                                                              "  <id>dependencies</id>\n" +
+                                                              "  <formats>\n" +
+                                                              "    <format>zip</format>\n" +
+                                                              "  </formats>\n" +
+                                                              "  <includeBaseDirectory>false</includeBaseDirectory>\n" +
+                                                              "  <fileSets>\n" +
+                                                              "    <fileSet>\n" +
+                                                              "      <directory>target/dependency</directory>\n" +
+                                                              "      <outputDirectory>/</outputDirectory>\n" +
+                                                              "    </fileSet>\n" +
+                                                              "  </fileSets>\n" +
+                                                              "</assembly>";
     private static final String DEPENDENCIES_JSON_FILE      = "dependencies.json";
     private static final String ASSEMBLY_DESCRIPTOR_FILE    = "dependencies-zip-assembly-descriptor.xml";
     private static final String CODENVY_IDE_API_ARTIFACT_ID = "codenvy-ide-api";
@@ -182,7 +183,10 @@ public class MavenBuilder extends Builder {
 
     @Override
     protected BuildResult getTaskResult(FutureBuildTask task, boolean successful) throws BuilderException {
-        if (!successful) {
+        final BuilderConfiguration config = task.getConfiguration();
+        if (!(successful || config.getTaskType() == BuilderTaskType.COPY_DEPS)) {
+            // It's ok to have unsuccessful status for copy-dependencies task (create zipball of all dependencies of project).
+            // Error might be caused by assembly plugin if project hasn't any dependencies.
             return new BuildResult(false, getBuildReport(task));
         }
 
@@ -192,7 +196,11 @@ public class MavenBuilder extends Builder {
             logReader = new BufferedReader(task.getBuildLogger().getReader());
             String line;
             while ((line = logReader.readLine()) != null) {
-                if ("BUILD SUCCESS".equals(removeLoggerPrefix(line))) {
+                line = removeLoggerPrefix(line);
+                if ("BUILD SUCCESS".equals(line)
+                    // Maven assembly plugin fails, consider it as project hasn't any dependencies, e.g. java web application that has only jsp ans static content.
+                    || line.contains(
+                        "Failed to create assembly: Error creating assembly archive dependencies: You must set at least one file")) {
                     mavenSuccess = true;
                     break;
                 }
@@ -212,7 +220,6 @@ public class MavenBuilder extends Builder {
             return new BuildResult(false, getBuildReport(task));
         }
 
-        final BuilderConfiguration config = task.getConfiguration();
         final java.io.File workDir = config.getWorkDir();
         final BuildResult result = new BuildResult(true, getBuildReport(task));
         java.io.File[] files = null;

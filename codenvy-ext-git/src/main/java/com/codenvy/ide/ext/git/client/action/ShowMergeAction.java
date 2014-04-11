@@ -36,7 +36,7 @@ public class ShowMergeAction extends Action {
     @Inject
     public ShowMergeAction(MergePresenter presenter, ResourceProvider resourceProvider, GitResources resources,
                            GitLocalizationConstant constant) {
-        super(constant.mergeControlTitle(), constant.mergeControlPrompt(), resources.merge());
+        super(constant.mergeControlTitle(), constant.mergeControlPrompt(), null, resources.merge());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }

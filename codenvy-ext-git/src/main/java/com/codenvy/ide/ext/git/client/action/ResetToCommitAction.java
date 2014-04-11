@@ -36,7 +36,7 @@ public class ResetToCommitAction extends Action {
     @Inject
     public ResetToCommitAction(ResetToCommitPresenter presenter, ResourceProvider resourceProvider, GitResources resources,
                                GitLocalizationConstant constant) {
-        super(constant.resetToCommitControlTitle(), constant.resetToCommitControlPrompt(), resources.revert());
+        super(constant.resetToCommitControlTitle(), constant.resetToCommitControlPrompt(), null, resources.revert());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }

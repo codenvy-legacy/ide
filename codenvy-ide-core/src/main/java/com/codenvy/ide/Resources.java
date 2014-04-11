@@ -125,8 +125,8 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
     @ImageOptions(repeatStyle = RepeatStyle.Horizontal)
     ImageResource logoBg();
     
-    @Source("console/clear.png")
-    ImageResource clear();
+    @Source("console/clear.svg")
+    SVGResource clear();
     
     @Source("actions/close-project.svg")
     SVGResource closeProject();
@@ -139,6 +139,9 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
     
     @Source("actions/save.svg")
     SVGResource save();
+    
+    @Source("actions/preferences.svg")
+    SVGResource preferences();
     
     @Source("project/private-project.svg")
     SVGResource privateProject();

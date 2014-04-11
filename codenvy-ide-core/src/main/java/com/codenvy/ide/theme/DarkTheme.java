@@ -443,4 +443,10 @@ public class DarkTheme implements Theme {
     public String getLinkColor() {
         return "#acacac";
     }
+    
+    @Override
+    public String getMinimizeIconColor() {
+        return "#1f1f1f";
+    }
+    
 }

@@ -36,7 +36,7 @@ public class DeleteRepositoryAction extends Action {
     @Inject
     public DeleteRepositoryAction(DeleteRepositoryPresenter presenter, ResourceProvider resourceProvider, GitResources resources,
                                   GitLocalizationConstant constant) {
-        super(constant.deleteControlTitle(), constant.deleteControlPrompt(), resources.deleteRepo());
+        super(constant.deleteControlTitle(), constant.deleteControlPrompt(), null, resources.deleteRepo());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }

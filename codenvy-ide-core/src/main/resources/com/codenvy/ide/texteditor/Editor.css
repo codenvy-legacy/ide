@@ -36,7 +36,7 @@
 
     .editorFont, .root {
         font-family: editorFontFamily;
-        font-size: 11px;
+        font-size: 13px;
     }
 
         /* Same selection colors as the editor's manually drawn selection */

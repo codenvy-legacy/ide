@@ -42,6 +42,7 @@
 
 @eval tabBorderShadow com.codenvy.ide.api.ui.theme.Style.getTabBorderShadow();
 @eval buttonTextShadow com.codenvy.ide.api.ui.theme.Style.getButtonTextShadow();
+@eval minimizeIconColor com.codenvy.ide.api.ui.theme.Style.getMinimizeIconColor();
 
 /* Indicates a completed action. Preferred text color is lightTextColor. */
 @eval completedBackgroundColor com.codenvy.ide.api.ui.theme.Style.getCompletedBackgroundColor();
@@ -117,7 +118,7 @@
 @def fileTreeFontFamily "Helvetica Neue", "Myriad Pro","Lucida Grande", Verdana, Arial;
 @def fileTreeFontFamilyFile "Helvetica Neue Regular", "Myriad Pro","Lucida Grande", Verdana, Arial;
 @def mainFontFamily "Helvetica Neue", "Myriad Pro", arial, Verdana, Verdana, sans-serif;
-@def editorLineHeight 13px;
+@def editorLineHeight 15px;
 @def editorFontFamily 'Andale Mono', monospace;
 
 /*Main Menu*/

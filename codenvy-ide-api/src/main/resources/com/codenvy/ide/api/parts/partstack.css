@@ -97,12 +97,9 @@
 
 .ide-PartStack-Boton-Left {
     border-right: 1px solid tabBorder;
-    cursor: pointer;
     cursor: hand;
     height: 18px;
-    display: block;
-    padding-left: 19px !important;
-    padding-right: 19px !important;
+    display: inline-block;
 }
 
 .ide-PartStack-Boton-Left > svg {
@@ -110,11 +107,10 @@
     -moz-transform: rotate(270deg);
     transform: rotate(270deg);
     fill: toolbarIconColor;
-    filter: svgUrlShadow;
-    height: 18px;
-    width: 18px;
-    position: relative;
-    left: -9;
+    /*filter: svgUrlShadow;*/
+    height: 15px;
+    width: 15px;
+    margin: 1px -1px;
 }
 
 .ide-PartStack-Tab-Left {
