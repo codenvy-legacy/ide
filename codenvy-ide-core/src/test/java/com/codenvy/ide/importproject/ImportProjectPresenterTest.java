@@ -102,16 +102,4 @@ public class ImportProjectPresenterTest {
         verify(projectServiceClient)
                 .importProject(anyString(), (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
     }
-
-    @Test
-    public void onValueChangedShouldBeExecuted() {
-        when(view.getUri()).thenReturn("https://github.com/codenvy/hello.git");
-        when(view.getProjectName()).thenReturn("ide");
-
-        presenter.onValueChanged();
-
-        verify(view).getUri();
-        verify(view).getProjectName();
-        verify(view).setEnabledImportButton(eq(true));
-    }
 }

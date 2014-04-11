@@ -36,7 +36,7 @@ public class AddToIndexAction extends Action {
     @Inject
     public AddToIndexAction(AddToIndexPresenter presenter, ResourceProvider resourceProvider, GitResources resources,
                             GitLocalizationConstant constant) {
-        super(constant.addToIndexTitle(), constant.addToIndexTitle(), resources.addToIndex());
+        super(constant.addToIndexTitle(), constant.addToIndexTitle(), null, resources.addToIndex());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }

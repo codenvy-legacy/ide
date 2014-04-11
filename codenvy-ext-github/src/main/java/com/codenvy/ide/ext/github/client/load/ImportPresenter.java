@@ -19,6 +19,7 @@ package com.codenvy.ide.ext.github.client.load;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.user.shared.dto.User;
+import com.codenvy.ide.Constants;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -283,6 +284,19 @@ public class ImportPresenter implements ImportView.ActionDelegate {
             public void onSuccess(Project result) {
                 notification.setStatus(FINISHED);
                 notification.setMessage(gitConstant.cloneSuccess(gitRepositoryInfo.getRemoteUri()));
+                if (result.getDescription().getProjectTypeId().equals(Constants.NAMELESS_ID)) {
+                    selectProjectTypePresenter.showDialog(result, new AsyncCallback<Project>() {
+                        @Override
+                        public void onFailure(Throwable caught) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(Project result) {
+
+                        }
+                    });
+                }
             }
 
             @Override

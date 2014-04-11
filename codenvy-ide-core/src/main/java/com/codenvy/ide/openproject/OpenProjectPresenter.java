@@ -19,10 +19,12 @@ package com.codenvy.ide.openproject;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectReference;
+import com.codenvy.ide.Constants;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
@@ -39,8 +41,9 @@ import com.google.inject.Singleton;
 public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
     private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
     private final ProjectServiceClient   projectServiceClient;
-    private       OpenProjectView        view;
-    private       ResourceProvider       resourceProvider;
+    private SelectProjectTypePresenter projectTypePresenter;
+    private OpenProjectView  view;
+    private ResourceProvider resourceProvider;
     private String selectedProject = null;
 
     /**
@@ -52,11 +55,15 @@ public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
      * @param projectServiceClient
      */
     @Inject
-    protected OpenProjectPresenter(OpenProjectView view, ResourceProvider resourceProvider, DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                                   ProjectServiceClient projectServiceClient) {
+    protected OpenProjectPresenter(OpenProjectView view,
+                                   ResourceProvider resourceProvider,
+                                   DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                                   ProjectServiceClient projectServiceClient,
+                                   SelectProjectTypePresenter projectTypePresenter) {
         this.view = view;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.projectServiceClient = projectServiceClient;
+        this.projectTypePresenter = projectTypePresenter;
         this.view.setDelegate(this);
         this.resourceProvider = resourceProvider;
 
@@ -75,6 +82,19 @@ public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
             @Override
             public void onSuccess(Project result) {
                 view.close();
+                if (result.getDescription().getProjectTypeId().equals(Constants.NAMELESS_ID)) {
+                    projectTypePresenter.showDialog(result, new AsyncCallback<Project>() {
+                        @Override
+                        public void onFailure(Throwable caught) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(Project result) {
+
+                        }
+                    });
+                }
             }
 
             @Override

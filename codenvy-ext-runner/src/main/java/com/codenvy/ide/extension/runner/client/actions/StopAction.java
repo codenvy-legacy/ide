@@ -41,7 +41,7 @@ public class StopAction extends Action {
     @Inject
     public StopAction(RunnerController controller, RunnerResources resources,
                       ResourceProvider resourceProvider, RunnerLocalizationConstant localizationConstants) {
-        super(localizationConstants.stopAppActionText(), localizationConstants.stopAppActionDescription(),
+        super(localizationConstants.stopAppActionText(), localizationConstants.stopAppActionDescription(), null,
               resources.stopApp());
         this.controller = controller;
         this.resourceProvider = resourceProvider;
