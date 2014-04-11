@@ -19,6 +19,7 @@ package com.codenvy.ide.navigation;
 
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.ui.window.Window;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -45,7 +46,12 @@ import java.util.List;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class NavigateToFileViewImpl extends DialogBox implements NavigateToFileView {
+public class NavigateToFileViewImpl extends Window implements NavigateToFileView {
+
+    @Override
+    protected void onClose() {
+        //Do nothing
+    }
 
     interface NavigateToFileViewImplUiBinder extends UiBinder<Widget, NavigateToFileViewImpl> {
     }
@@ -60,7 +66,7 @@ public class NavigateToFileViewImpl extends DialogBox implements NavigateToFileV
     @Inject
     public NavigateToFileViewImpl(CoreLocalizationConstant locale, NavigateToFileViewImplUiBinder uiBinder) {
         this.locale = locale;
-        this.setText(locale.navigateToFileViewTitle());
+        this.setTitle(locale.navigateToFileViewTitle());
         files = new SuggestBox(new MySuggestOracle());
 
         files.getValueBox().addKeyUpHandler(new KeyUpHandler() {
@@ -100,7 +106,6 @@ public class NavigateToFileViewImpl extends DialogBox implements NavigateToFileV
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        this.center();
         this.files.setEnabled(true);
         this.show();
     }
