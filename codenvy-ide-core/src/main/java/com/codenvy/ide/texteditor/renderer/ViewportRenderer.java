@@ -35,6 +35,7 @@ import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
 import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.UIObject;
 
 import java.util.EnumSet;
 
@@ -400,6 +401,7 @@ public class ViewportRenderer {
 
         if (!buffer.hasLineElement(element)) {
             element.getStyle().setTop(top + createOffset, CSSStyleDeclaration.Unit.PX);
+            UIObject.ensureDebugId((com.google.gwt.dom.client.Element)element, "line" + (lineNumber+1));
             buffer.addLineElement(element);
             if (createOffset != 0) {
             /*
