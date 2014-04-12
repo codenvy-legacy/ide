@@ -30,22 +30,44 @@ import javax.validation.constraints.NotNull;
  */
 @SDK(title = "ide.api.ui.console")
 public interface ConsolePart extends PartPresenter {
-    /**
-     * Print message on console.
-     *
-     * @param message
-     *         message that need to be shown
-     */
-    void print(@NotNull String message);
 
     /**
-     * Print message on console in @pre tag. Useful for format plain text.
-     * Don't use it for HTML content.
+     * Print text on console.
      *
-     * @param message message that need to be shown
+     * @param text
+     *         text that need to be shown
      */
-    void printf(@NotNull String message);
+    void print(@NotNull String text);
+
+    /**
+     * Display an exception.
+     *
+     * @param e
+     */
+    void displayException(Exception e);
+
+    /**
+     * [INFO] text
+     *
+     * @param text
+     */
+    void displayMsgInfo(String text);
+
+    /**
+     * [ERROR] text
+     *
+     * @param text
+     */
+    void displayMsgError(String text);
+
+    /**
+     * [WARNING] text
+     *
+     * @param text
+     */
+    void displayMsgWarn(String text);
 
     /** Clear console. Remove all messages. */
     void clear();
+
 }

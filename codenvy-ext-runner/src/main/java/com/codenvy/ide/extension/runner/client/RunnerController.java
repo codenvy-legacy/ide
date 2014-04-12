@@ -228,7 +228,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         service.getLogs(viewLogsLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
             @Override
             protected void onSuccess(String result) {
-                console.printf(result);
+                console.print(result);
             }
 
             @Override
@@ -303,7 +303,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         if (exception != null && exception.getMessage() != null) {
             message += ": " + exception.getMessage();
         }
-        console.printf(message);
+        console.print(message);
     }
 
 
@@ -408,7 +408,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     notification.setMessage(constant.updateApplicationFailed(currentProject.getName()));
 
                     if (exception != null && exception.getMessage() != null) {
-                        console.printf(exception.getMessage());
+                        console.print(exception.getMessage());
                     }
                 }
             });
