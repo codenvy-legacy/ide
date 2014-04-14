@@ -37,8 +37,23 @@
 			margin-left: 10px;
         }
 
-        .spacing {
+        .label {
+            margin-top: 6px;
+			margin-right: 5px;
+			font-size : 11px;
+			font-weight: bold;
+			float: left;
+			clear: left;
+        }
+	
+		.spacing {
             margin-top: 10px;
+        }
+
+		.value {
+			font-size : 11px;
+			float: left;
+          	margin-top: 6px;
         }
 
 		@sprite .bg {
@@ -46,7 +61,7 @@
 			background-repeat: repeat-x;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="280px" height="180px" addStyleNames="{style.emptyBorder}">
+    <g:DockLayoutPanel unit="PX" width="280px" height="165px" addStyleNames="{style.emptyBorder}">
         <g:south size="36.0">
             <g:FlowPanel height="100%" width="100%" addStyleNames="{style.spacing}">
                 <g:Button addStyleNames="{style.btnAlign}" width="50px"  height="22px"  ui:field="btnOk"
@@ -59,10 +74,13 @@
             </g:FlowPanel>
         </g:north>
         <g:center>
-            <g:FlowPanel addStyleNames="{style.spacing}">
-                <g:Label width="100%" ui:field="version" addStyleNames="{style.spacing} {res.coreCss.mainText}"/>
-                <g:Label width="100%" ui:field="revision" addStyleNames="{style.spacing} {res.coreCss.mainText}"/>
-                <g:Label width="100%" ui:field="buildTime" addStyleNames="{style.spacing} {res.coreCss.mainText}"/>
+            <g:FlowPanel addStyleNames="{style.spacing} {res.coreCss.mainText}">
+                <g:Label addStyleNames="{style.label}" text="{locale.aboutVersion}"/>
+                <g:Label ui:field="version" addStyleNames="{style.value}"/>
+                <g:Label addStyleNames="{style.label}" text="{locale.aboutRevision}"/>
+                <g:Label ui:field="revision" addStyleNames="{style.value}"/>
+                <g:Label addStyleNames="{style.label}" text="{locale.aboutBuildTime}"/>
+            	<g:Label ui:field="buildTime" addStyleNames="{style.value}"/>
             </g:FlowPanel>    
         </g:center>
     </g:DockLayoutPanel>
