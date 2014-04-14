@@ -60,6 +60,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 //TODO: need rework for using websocket wait for server side
 @Singleton
 public class BuildProjectPresenter implements Notification.OpenNotificationHandler {
+
     protected final EventBus         eventBus;
     protected final ResourceProvider resourceProvider;
     protected final ConsolePart      console;
@@ -270,7 +271,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         service.log(statusLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
             @Override
             protected void onSuccess(String result) {
-                console.printf(result);
+                console.print(result);
             }
 
             @Override
