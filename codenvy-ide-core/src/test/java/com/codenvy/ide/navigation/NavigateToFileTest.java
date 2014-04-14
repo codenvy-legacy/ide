@@ -104,7 +104,8 @@ public class NavigateToFileTest {
         when(resourceProvider.getActiveProject()).thenReturn(project);
         when(resourceProvider.getRootId()).thenReturn(VFS_ID);
 
-        presenter = new NavigateToFilePresenter(view, resourceProvider, eventBus, messageBus, anyString(), dtoUnmarshallerFactory);
+        presenter = new NavigateToFilePresenter(view, resourceProvider, eventBus, messageBus, anyString(), dtoUnmarshallerFactory,
+                                                notificationManager);
     }
 
     @Test
