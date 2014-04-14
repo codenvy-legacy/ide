@@ -37,7 +37,7 @@ public class SearcherVirtualFileFilterModule extends AbstractModule {
         multibinder.addBinding().toInstance(new VirtualFileFilter() {
             @Override
             public boolean accept(VirtualFile virtualFile) throws VirtualFileSystemException {
-                return virtualFile.getPath().endsWith("/.codenvy/misc.xml");
+                return !virtualFile.getPath().endsWith("/.codenvy/misc.xml");
             }
         });
     }
