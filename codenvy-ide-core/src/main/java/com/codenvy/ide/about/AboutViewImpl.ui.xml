@@ -22,7 +22,7 @@
     <ui:with field='res' type='com.codenvy.ide.Resources'/>
     <ui:with field='locale' type='com.codenvy.ide.about.AboutLocalizationConstant'/>
     
-    <ui:image field="logoBg" src="logoBg.png"/>
+    <ui:image field="logo" src="logo.png"/>
     <ui:style>
         .btnAlign {
             float: right;
@@ -38,7 +38,7 @@
         }
 
         .label {
-            margin-top: 6px;
+            margin: 6px 5px 0 15px;
 			margin-right: 5px;
 			font-size : 11px;
 			font-weight: bold;
@@ -57,20 +57,20 @@
         }
 
 		@sprite .bg {
-            gwt-image: "logoBg";
-			background-repeat: repeat-x;
+            gwt-image: "logo";
+			background-position: center;
+			background-size: 175px;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="280px" height="165px" addStyleNames="{style.emptyBorder}">
+    <g:DockLayoutPanel unit="PX" width="290px" height="185px" addStyleNames="{style.emptyBorder}">
         <g:south size="36.0">
             <g:FlowPanel height="100%" width="100%" addStyleNames="{style.spacing}">
                 <g:Button addStyleNames="{style.btnAlign}" width="50px"  height="22px"  ui:field="btnOk"
                           debugId="help-about-ok">OK</g:Button>
             </g:FlowPanel>
         </g:south>
-        <g:north size="40">
+        <g:north size="70">
             <g:FlowPanel height="100%" width="100%" addStyleNames="{style.bg}">
-               <g:Image resource="{res.logo}" addStyleNames="{style.image}"/> 
             </g:FlowPanel>
         </g:north>
         <g:center>

@@ -121,10 +121,6 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
     @Source("about/logo.png")
     ImageResource logo();
     
-    @Source("about/logoBg.png")
-    @ImageOptions(repeatStyle = RepeatStyle.Horizontal)
-    ImageResource logoBg();
-    
     @Source("console/clear.svg")
     SVGResource clear();
     
