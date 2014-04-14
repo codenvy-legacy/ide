@@ -133,15 +133,15 @@
         border-width: 1px;
         border-style: solid;
         cursor: pointer;
-        left: 2px;
+        left: 1px;
         right: 2px;
         height: 3px;
         position: absolute;
     }
 
     .overview-mark-error {
-        background-color: #e4a5c5;
-        border-color: #f82c92;
+        background-color: #DB4C29;
+        border: 0;
     }
 
     .overview-mark-task {
@@ -159,9 +159,8 @@
     }
 
     .overview-mark-warning {
-        background-color: #fcf1ca;
-        border-color: #f6d357;
-
+        background-color: #EFD746;
+        border: 0;
     }
 
     .overview-bottom-mark-warning {
