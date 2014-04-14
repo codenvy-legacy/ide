@@ -22,6 +22,7 @@ import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.Profile;
 import com.codenvy.ide.Constants;
+import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.theme.Style;
@@ -31,7 +32,6 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
-import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.Utils;
@@ -39,14 +39,14 @@ import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.workspace.WorkspacePresenter;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.client.ScriptInjector;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -128,37 +128,41 @@ public class BootstrapController {
                                                      setTheme();
                                                      styleInjector.inject();
 
+                                                     Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                                                        
+                                                        @Override
+                                                        public void execute() {
+                                                            componentRegistry.get().start(new Callback<Void, ComponentException>() {
+                                                                @Override
+                                                                public void onSuccess(Void result) {
+                                                                    // instantiate extensions
+                                                                    extensionInitializer.startExtensions();
+                                                                    // Start UI
+                                                                    SimpleLayoutPanel mainPanel = new SimpleLayoutPanel();
+                                                                    RootLayoutPanel.get().add(mainPanel);
+                                                                    WorkspacePresenter workspacePresenter = workspaceProvider.get();
 
-                                                     componentRegistry.get().start(new Callback<Void, ComponentException>() {
-                                                         @Override
-                                                         public void onSuccess(Void result) {
-                                                             // instantiate extensions
-                                                             extensionInitializer.startExtensions();
-                                                             // Start UI
-                                                             SimpleLayoutPanel mainPanel = new SimpleLayoutPanel();
-                                                             RootLayoutPanel.get().add(mainPanel);
-                                                             WorkspacePresenter workspacePresenter = workspaceProvider.get();
+                                                                    workspacePresenter.setUpdateButtonVisibility(Utils.isAppLaunchedInSDKRunner());
 
-                                                             workspacePresenter.setUpdateButtonVisibility(Utils.isAppLaunchedInSDKRunner());
+                                                                    // Display IDE
+                                                                    workspacePresenter.go(mainPanel);
+                                                                    // Display list of projects in project explorer
+                                                                    resourceProvider.showListProjects();
+                                                                }
 
-                                                             // Display IDE
-                                                             workspacePresenter.go(mainPanel);
-                                                             // Display list of projects in project explorer
-                                                             resourceProvider.showListProjects();
-                                                         }
+                                                                @Override
+                                                                public void onFailure(ComponentException caught) {
+                                                                    Log.error(BootstrapController.class,
+                                                                              "FAILED to start service:" + caught.getComponent(), caught);
 
-                                                         @Override
-                                                         public void onFailure(ComponentException caught) {
-                                                             Log.error(BootstrapController.class,
-                                                                       "FAILED to start service:" + caught.getComponent(), caught);
+                                                                    // Handle error when receiving profile.
+                                                                    initializationFailed(caught.getMessage());
+                                                                }
+                                                            });
 
-                                                             // Handle error when receiving profile.
-                                                             initializationFailed(caught.getMessage());
-                                                         }
-                                                     });
-
-
-                                                     initializeProjectTypeDescriptorRegistry();
+                                                            initializeProjectTypeDescriptorRegistry();
+                                                        }
+                                                    });
                                                  }
 
                                                  @Override
