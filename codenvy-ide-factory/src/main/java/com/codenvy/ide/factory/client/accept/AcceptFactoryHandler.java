@@ -197,19 +197,13 @@ public class AcceptFactoryHandler implements OAuthCallback {
 
             @Override
             public void onSuccess(Project openedProject) {
-                if (openedProject.getDescription().getProjectTypeId().equals(Constants.NAMELESS_ID)) {
-                    selectProjectTypePresenter.showDialog(openedProject, new AsyncCallback<Project>() {
-                        @Override
-                        public void onFailure(Throwable caught) {
-
-                        }
-
-                        @Override
-                        public void onSuccess(Project result) {
-                           openFile(acceptedFactory);
-                        }
-                    });
+                if (openedProject.getDescription() != null &&
+                    Constants.NAMELESS_ID.equals(openedProject.getDescription().getProjectTypeId())) {
+                    updateProjectWithPreSettedProjectType(acceptedFactory);
+                    return;
                 }
+
+                openFile(acceptedFactory);
             }
         });
     }
@@ -366,7 +360,7 @@ public class AcceptFactoryHandler implements OAuthCallback {
         final String projectType = acceptedFactory.getProjectattributes().getPtype();
         final ProjectTypeDescriptor projectTypeDescriptor = projectTypeDescriptorRegistry.getDescriptor(projectType);
 
-        if (projectType == null || Constants.NAMELESS_ID.equals(projectType) || projectTypeDescriptor == null) {
+        if (projectType == null || projectTypeDescriptor == null) {
             askAndSetCorrectProjectType(acceptedFactory);
             return;
         }

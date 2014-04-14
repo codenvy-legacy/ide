@@ -348,6 +348,9 @@ class for the document-level scrollbars. */
 }
 
 /* Style for SuggestBox */
+.gwt-SuggestBoxPopup {
+    z-index: 90000;
+}
 .gwt-SuggestBoxPopup .suggestPopupTopLeft {
     background: dialogTopLeft url("");
 }
