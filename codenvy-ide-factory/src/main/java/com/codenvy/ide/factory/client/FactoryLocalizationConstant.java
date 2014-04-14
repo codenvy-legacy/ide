@@ -31,7 +31,4 @@ public interface FactoryLocalizationConstant extends Messages {
 
     @Key("accept.need.to.authorize")
     public String needToAuthorize();
-
-    @Key("accept.failed.to.accept.factory")
-    public String failedToAcceptFactory();
 }

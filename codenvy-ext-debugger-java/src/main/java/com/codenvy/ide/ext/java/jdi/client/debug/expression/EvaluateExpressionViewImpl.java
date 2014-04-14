@@ -21,7 +21,9 @@ import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -76,6 +78,15 @@ public class EvaluateExpressionViewImpl extends DialogBox implements EvaluateExp
 
         this.setText(this.locale.evaluateExpressionViewTitle());
         this.setWidget(widget);
+
+        expression.addKeyUpHandler(new KeyUpHandler() {
+            @Override
+            public void onKeyUp(KeyUpEvent event) {
+                if (KeyCodes.KEY_ENTER == event.getNativeKeyCode()) {
+                    delegate.onEvaluateClicked();
+                }
+            }
+        });
     }
 
     /** {@inheritDoc} */

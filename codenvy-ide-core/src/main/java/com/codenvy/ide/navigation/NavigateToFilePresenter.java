@@ -18,6 +18,8 @@
 package com.codenvy.ide.navigation;
 
 import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEvent.FileOperation;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -59,6 +61,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
     private       EventBus               eventBus;
     private final MessageBus             wsMessageBus;
     private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    private final NotificationManager    notificationManager;
     private       Project                rootProject;
     final private String                 SEARCH_URL;
 
@@ -68,12 +71,14 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
                                    EventBus eventBus,
                                    MessageBus wsMessageBus,
                                    @Named("workspaceId") String workspaceId,
-                                   DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+                                   DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                                   NotificationManager notificationManager) {
         this.resourceProvider = resourceProvider;
         this.view = view;
         this.eventBus = eventBus;
         this.wsMessageBus = wsMessageBus;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.notificationManager = notificationManager;
         SEARCH_URL = "/project/" + workspaceId + "/search";
         view.setDelegate(this);
     }
@@ -159,6 +164,33 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
                 Log.error(NavigateToFilePresenter.class, "Unable to open a file " + path);
             }
         });
+    }
+
+    /**
+     * Open file from current opened project.
+     * @param path relative path to file. If user need to open file located in
+     *             <code>/project/path/to/some/file.ext</code> path parameter should be <code>path/to/some/file.ext</code>.
+     */
+    public void openFile(final String path) {
+        rootProject = getRootProject(resourceProvider.getActiveProject());
+        if (rootProject != null) {
+            refreshPath(rootProject, rootProject.getPath() + (!path.startsWith("/") ? "/".concat(path) : path), new AsyncCallback<Resource>() {
+                @Override
+                public void onSuccess(Resource resource) {
+                    if (resource.isFile()) {
+                        eventBus.fireEvent(new FileEvent((File)resource, FileOperation.OPEN));
+                    } else {
+                        notificationManager
+                                .showNotification(new Notification("Unable to open " + path + ". It's not a file.", Notification.Type.WARNING));
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    notificationManager.showNotification(new Notification("Unable to open " + path, Notification.Type.WARNING));
+                }
+            });
+        }
     }
 
     private void refreshPath(Folder rootFolder, final String pathToRefresh, final AsyncCallback<Resource> callback) {

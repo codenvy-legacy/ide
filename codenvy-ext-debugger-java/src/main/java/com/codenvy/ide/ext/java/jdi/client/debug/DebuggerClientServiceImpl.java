@@ -172,7 +172,8 @@ public class DebuggerClientServiceImpl implements DebuggerClientService {
     @Override
     public void evaluateExpression(@NotNull String id, @NotNull String expression, @NotNull AsyncRequestCallback<String> callback) {
         final String requestUrl = baseUrl + "/expression/" + id;
-        asyncRequestFactory.createPostRequest(requestUrl, expression)
+        asyncRequestFactory.createPostRequest(requestUrl, null)
+                           .data(expression)
                            .header(ACCEPT, TEXT_PLAIN)
                            .header(CONTENTTYPE, TEXT_PLAIN)
                            .loader(new EmptyLoader())
