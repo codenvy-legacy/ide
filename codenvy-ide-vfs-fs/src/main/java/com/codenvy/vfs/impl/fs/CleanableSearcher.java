@@ -21,6 +21,7 @@ import com.codenvy.api.vfs.server.MountPoint;
 import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.api.vfs.server.VirtualFileFilter;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
+import com.codenvy.api.vfs.server.search.QueryExpression;
 
 import org.apache.lucene.index.Term;
 import org.slf4j.Logger;
@@ -37,7 +38,7 @@ import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
 /**
  * Filesystem based LuceneSearcher which cleans index directory after call method {@link #close()}.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author andrew00x
  */
 public class CleanableSearcher extends FSIndexSearcher {
     private static final Logger LOG = LoggerFactory.getLogger(CleanableSearcher.class);

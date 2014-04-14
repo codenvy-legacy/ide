@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.about;
 
+import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -34,7 +35,7 @@ import com.google.inject.Singleton;
  * @author Ann Shumilova
  */
 @Singleton
-public class AboutViewImpl extends DialogBox implements AboutView {
+public class AboutViewImpl extends Window implements AboutView {
     interface AboutViewImplUiBinder extends UiBinder<Widget, AboutViewImpl> {
     }
 
@@ -55,7 +56,7 @@ public class AboutViewImpl extends DialogBox implements AboutView {
     @Inject
     public AboutViewImpl(AboutViewImplUiBinder uiBinder, AboutLocalizationConstant locale) {
         this.locale = locale;
-        this.setText(locale.aboutViewTitle());
+        this.setTitle(locale.aboutViewTitle());
         this.setWidget(uiBinder.createAndBindUi(this));
     }
 
@@ -74,7 +75,6 @@ public class AboutViewImpl extends DialogBox implements AboutView {
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        this.center();
         this.show();
         btnOk.setFocus(true);
     }
@@ -100,5 +100,10 @@ public class AboutViewImpl extends DialogBox implements AboutView {
     @UiHandler("btnOk")
     void onBtnOkClick(ClickEvent event) {
         delegate.onOkClicked();
+    }
+
+    @Override
+    protected void onClose() {
+        //do nothing 
     }
 }

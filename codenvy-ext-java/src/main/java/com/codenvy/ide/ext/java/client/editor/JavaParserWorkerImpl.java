@@ -52,6 +52,7 @@ import com.codenvy.ide.text.edits.ReplaceEdit;
 import com.codenvy.ide.text.edits.TextEdit;
 import com.codenvy.ide.util.UUID;
 import com.codenvy.ide.util.loging.Log;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.webworker.client.ErrorEvent;
 import com.google.gwt.webworker.client.ErrorHandler;
 import com.google.gwt.webworker.client.MessageEvent;
@@ -325,7 +326,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         }
         //TODO check project type, create worker only if project is Java
 //        worker = Worker.create("./javaParserWorker/javaParserWorker.nocache.js");
-        worker = Worker.create("/ide/_app/javaParserWorker/javaParserWorker.nocache.js");
+        worker = Worker.create(GWT.getModuleBaseForStaticFiles() + "javaParserWorker/javaParserWorker.nocache.js");
         worker.setOnMessage(new MessageHandler() {
             @Override
             public void onMessage(MessageEvent event) {
