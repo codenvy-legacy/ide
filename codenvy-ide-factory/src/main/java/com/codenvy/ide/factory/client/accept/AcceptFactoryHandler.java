@@ -102,8 +102,6 @@ public class AcceptFactoryHandler implements OAuthCallback {
     };
 
     private void getStartUpParams() {
-        notificationManager.showNotification(new Notification(localization.getInformationAboutFactory(), Notification.Type.INFO));
-
         StringMap<Array<String>> parameterMap = buildParameterMap(getRawStartUpParams());
         if (parameterMap.get("id") != null && parameterMap.get("id").get(0) != null) {
             getFactory(parameterMap.get("id").get(0), true);
@@ -113,6 +111,8 @@ public class AcceptFactoryHandler implements OAuthCallback {
     }
 
     private void getFactory(String queryStringOrId, boolean encoded) {
+        notificationManager.showNotification(new Notification(localization.getInformationAboutFactory(), Notification.Type.INFO));
+
         try {
             factoryService.getFactory(queryStringOrId, encoded,
                                       new RequestCallback<Factory>(dtoUnmarshallerFactory.newWSUnmarshaller(Factory.class)) {
