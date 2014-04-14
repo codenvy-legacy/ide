@@ -18,6 +18,7 @@
 package com.codenvy.ide.navigation;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
@@ -76,6 +77,8 @@ public class NavigateToFileTest {
     private ProjectServiceClient    projectServiceClient;
     @Mock
     private DtoUnmarshallerFactory  dtoUnmarshallerFactory;
+    @Mock
+    private NotificationManager     notificationManager;
 
     @Before
     public void setUp() {
