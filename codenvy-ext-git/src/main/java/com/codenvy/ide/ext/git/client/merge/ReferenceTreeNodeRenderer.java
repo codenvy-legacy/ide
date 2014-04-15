@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.git.client.merge;
 
 import elemental.html.DivElement;
-import elemental.html.Element;
+import elemental.dom.Element;
 import elemental.html.SpanElement;
 
 import com.codenvy.ide.ui.tree.NodeRenderer;

@@ -16,7 +16,7 @@ package com.codenvy.ide.texteditor;
 
 import elemental.events.Event;
 import elemental.events.EventListener;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 import com.codenvy.ide.texteditor.api.FocusManager;
 import com.codenvy.ide.util.ListenerManager;

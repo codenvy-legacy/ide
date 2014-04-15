@@ -15,8 +15,8 @@
 package com.codenvy.ide.texteditor.linedimensions;
 
 
-import elemental.canvas.CanvasRenderingContext2D;
-import elemental.canvas.TextMetrics;
+import elemental.html.CanvasRenderingContext2D;
+import elemental.html.TextMetrics;
 import elemental.html.CanvasElement;
 
 import com.codenvy.ide.util.dom.Elements;

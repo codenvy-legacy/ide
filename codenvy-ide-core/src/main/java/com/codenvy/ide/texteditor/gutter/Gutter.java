@@ -14,7 +14,7 @@
 
 package com.codenvy.ide.texteditor.gutter;
 
-import elemental.html.Element;
+import elemental.dom.Element;
 
 import com.codenvy.ide.mvp.UiComponent;
 import com.codenvy.ide.text.store.anchor.Anchor;

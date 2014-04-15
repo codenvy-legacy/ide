@@ -19,7 +19,7 @@ package com.codenvy.ide.texteditor;
 
 import elemental.events.Event;
 import elemental.events.EventListener;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;

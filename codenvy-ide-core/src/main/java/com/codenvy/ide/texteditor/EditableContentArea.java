@@ -15,10 +15,11 @@
 package com.codenvy.ide.texteditor;
 
 import elemental.html.DivElement;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.mvp.UiComponent;
+import com.codenvy.ide.util.dom.DomUtils;
 import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
@@ -151,7 +152,7 @@ public class EditableContentArea extends UiComponent<EditableContentArea.View> {
         }
 
         if (currentContent != null) {
-            currentContent.getContentElement().removeFromParent();
+            DomUtils.removeFromParent(currentContent.getContentElement());
         }
 
         getView().getContentElement().setInnerHTML("");
