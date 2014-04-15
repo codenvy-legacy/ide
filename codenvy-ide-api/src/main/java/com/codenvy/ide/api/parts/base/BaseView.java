@@ -60,7 +60,7 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
         DockLayoutPanel panel = new DockLayoutPanel(Style.Unit.PX);
         titleLabel = new Label();
         titleLabel.setStyleName(resources.partStackCss().ideBasePartTitleLabel());
-        panel.addWest(titleLabel, 100);
+        panel.add(titleLabel);
         
         SVGImage minimize = new SVGImage(resources.minimize());
         minimize.getElement().setAttribute("name", "workBenchIconMinimize");
