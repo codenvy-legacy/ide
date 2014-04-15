@@ -18,9 +18,7 @@
 package com.codenvy.ide.ext.java.client.wizard.maven;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -81,16 +79,7 @@ public class MavenPageViewImpl implements MavenPageView {
     }
 
     @UiHandler({"versionField", "groupId", "artifactId"})
-    void onTextChanges(ChangeEvent event){
-        delegate.onTextsChange();
-    }
-    @UiHandler({"versionField", "groupId", "artifactId"})
-    void onKeyPress(KeyPressEvent event){
-        delegate.onTextsChange();
-    }
-
-    @UiHandler({"versionField", "groupId", "artifactId"})
-    void onKeyDown(KeyDownEvent event){
+    void onKeyUp(KeyUpEvent event){
         delegate.onTextsChange();
     }
 

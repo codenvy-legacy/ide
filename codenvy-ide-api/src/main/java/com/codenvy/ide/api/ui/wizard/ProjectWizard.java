@@ -23,11 +23,9 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 /**
  * Wizard that used in creating projects from scratch.
- * Page thad added in constructor used as 'partial' page (show on same page with project name fields)
  * @author Evgen Vidolob
  */
 public class ProjectWizard extends DefaultWizard {
@@ -45,30 +43,25 @@ public class ProjectWizard extends DefaultWizard {
      *         manager of notification
      */
     @Inject
-    public ProjectWizard(NotificationManager notificationManager, Provider<? extends WizardPage> firsSubPage) {
+    public ProjectWizard(NotificationManager notificationManager) {
         super(notificationManager, "New project");
-        addPage(firsSubPage);
     }
 
 
     public Array<String> getStepsCaptions() {
         Array<String> captions = Collections.createArray();
-        for (int i = 1; i < wizardPages.size(); i++) {
+        for (int i = 0; i < wizardPages.size(); i++) {
             captions.add(wizardPages.get(i).getCaption());
         }
         return captions;
     }
 
     /**
-     * Get pages except first.
+     * Get pages.
      *
      * @return the array
      */
-    public Array<WizardPage> getPagesExceptFirst() {
-        Array<WizardPage> pages = Collections.createArray();
-        for (int i = 1; i < wizardPages.size(); i++) {
-            pages.add(wizardPages.get(i));
-        }
-        return pages;
+    public Array<WizardPage> getPages() {
+        return wizardPages;
     }
 }

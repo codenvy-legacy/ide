@@ -190,7 +190,8 @@ public class JavaExtension {
         newResourceAgent.register(newEnumHandler);
         newResourceAgent.register(newAnnotationHandler);
         newResourceAgent.register(newPackage);
-        ProjectWizard wizard = new ProjectWizard(notificationManager, mavenPagePresenter);
+        ProjectWizard wizard = new ProjectWizard(notificationManager);
+        wizard.addPage(mavenPagePresenter);
         wizardRegistry.addWizard(Constants.MAVEN_JAR_ID, wizard);
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
