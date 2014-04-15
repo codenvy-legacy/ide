@@ -18,7 +18,7 @@
 package com.codenvy.ide.texteditor.renderer;
 
 
-import elemental.html.Element;
+import elemental.dom.Element;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.collections.Array;
@@ -55,13 +55,12 @@ public class CurrentLineHighlighter {
 
     /**
      * @param buffer
-     * @param editor
      */
     public CurrentLineHighlighter(Buffer buffer, SelectionModel selection, Resources res) {
         this.buffer = buffer;
         listenerRemovers.add(selection.getCursorListenerRegistrar().add(cursorListener));
         lineHighlighter = Elements.createDivElement(res.workspaceEditorBufferCss().line());
-        lineHighlighter.addClassName(res.workspaceEditorBufferCss().currentLine());
+        Elements.addClassName(res.workspaceEditorBufferCss().currentLine(), lineHighlighter);
         lineHighlighter.getStyle().setTop(0, "PX");
         buffer.addUnmanagedElement(lineHighlighter);
     }

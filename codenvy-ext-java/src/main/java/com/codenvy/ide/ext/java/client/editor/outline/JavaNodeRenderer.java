@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.java.client.editor.outline;
 
 import elemental.html.DivElement;
-import elemental.html.Element;
+import elemental.dom.Element;
 import elemental.html.SpanElement;
 
 import com.codenvy.ide.ext.java.client.JavaCss;
@@ -64,24 +64,24 @@ public class JavaNodeRenderer implements NodeRenderer<CodeBlock> {
             JavaCodeBlock block = (JavaCodeBlock)data;
             SpanElement label = Elements.createSpanElement(css.outlineLabel());
             if (BlockTypes.PACKAGE.getType().equals(block.getType())) {
-                icon.addClassName(css.packageItem());
+                Elements.addClassName(css.packageItem(), icon);
             }
             if (BlockTypes.IMPORTS.getType().equals(block.getType())) {
-                icon.addClassName(css.imports());
+                Elements.addClassName(css.imports(), icon);
             } else if (BlockTypes.IMPORT.getType().equals(block.getType())) {
-                icon.addClassName(css.importItem());
+                Elements.addClassName(css.importItem(), icon);
             } else if (BlockTypes.CLASS.getType().equals(block.getType())) {
-                icon.addClassName(css.classItem());
+                Elements.addClassName(css.classItem(), icon);
             } else if (BlockTypes.INTERFACE.getType().equals(block.getType())) {
-                icon.addClassName(css.interfaceItem());
+                Elements.addClassName(css.interfaceItem(), icon);
             } else if (BlockTypes.ENUM.getType().equals(block.getType())) {
-                icon.addClassName(css.enumItem());
+                Elements.addClassName(css.enumItem(), icon);
             } else if (BlockTypes.ANNOTATION.getType().equals(block.getType())) {
-                icon.addClassName(css.annotationItem());
+                Elements.addClassName(css.annotationItem(), icon);
             } else if (BlockTypes.FIELD.getType().equals(block.getType())) {
-                icon.addClassName(getFieldClass(block.getModifiers()));
+                Elements.addClassName(getFieldClass(block.getModifiers()), icon);
             } else if (BlockTypes.METHOD.getType().equals(block.getType())) {
-                icon.addClassName(getMethodClass(block.getModifiers()));
+                Elements.addClassName(getMethodClass(block.getModifiers()), icon);
             }
             label.setTextContent(block.getName());
             UIObject.ensureDebugId((com.google.gwt.dom.client.Element)label, "outline-codeblock-" + block.getName());

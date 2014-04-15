@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.part.projectexplorer;
 
-import elemental.html.DragEvent;
+import elemental.events.MouseEvent;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.base.BaseView;
@@ -106,11 +106,11 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
             }
 
             @Override
-            public void onNodeDragStart(TreeNodeElement<Resource> node, DragEvent event) {
+            public void onNodeDragStart(TreeNodeElement<Resource> node, MouseEvent event) {
             }
 
             @Override
-            public void onNodeDragDrop(TreeNodeElement<Resource> node, DragEvent event) {
+            public void onNodeDragDrop(TreeNodeElement<Resource> node, MouseEvent event) {
             }
 
             @Override
@@ -129,7 +129,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
             }
 
             @Override
-            public void onRootDragDrop(DragEvent event) {
+            public void onRootDragDrop(MouseEvent event) {
             }
         });
     }
