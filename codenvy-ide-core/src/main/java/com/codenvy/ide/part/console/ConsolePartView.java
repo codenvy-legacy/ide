@@ -34,12 +34,12 @@ public interface ConsolePartView extends View<ConsolePartView.ActionDelegate> {
     }
 
     /**
-     * Print message in console area.
+     * Print text in console area.
      *
-     * @param message
-     *         message that need to be shown
+     * @param text
+     *         text that need to be shown
      */
-    void print(String message);
+    void print(String text);
 
     /**
      * Set title of console part.

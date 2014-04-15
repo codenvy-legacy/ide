@@ -22,6 +22,7 @@ import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.api.parts.base.ToolButton;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.PreElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -51,6 +52,7 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
 
     @UiField
     FlowPanel                                  consoleArea;
+
     @UiField
     ScrollPanel                                scrollPanel;
 
@@ -79,8 +81,25 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
 
     /** {@inheritDoc} */
     @Override
-    public void print(String message) {
-        HTML html = new HTML(message);
+    public void print(String text) {
+        String preStyle = " style='margin:0px; font-weight:700; font-size: 12;' ";
+
+        HTML html = new HTML();
+
+        String TEXT = text.toUpperCase();
+        if (TEXT.startsWith("[INFO]")) {
+            html.setHTML("<pre" + preStyle + ">[<span style='color:lightgreen;'><b>INFO</b></span>] " + text.substring(6) + "</pre>");
+
+        } else if (TEXT.startsWith("[ERROR]")) {
+            html.setHTML("<pre" + preStyle + ">[<span style='color:#F62217;'><b>ERROR</b></span>] " + text.substring(7) + "</pre>");
+
+        } else if (TEXT.startsWith("[WARNING]")) {
+            html.setHTML("<pre" + preStyle + ">[<span style='color:cyan;'><b>WARNING</b></span>] " + text.substring(9) + "</pre>");
+
+        } else {
+            html.setHTML("<pre" + preStyle + ">" + text + "</pre>");
+        }
+
         html.getElement().setAttribute("style", "padding-left: 2px;");
         consoleArea.add(html);
     }
@@ -96,4 +115,5 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
     public void scrollBottom() {
         scrollPanel.getElement().setScrollTop(scrollPanel.getElement().getScrollHeight());
     }
+
 }

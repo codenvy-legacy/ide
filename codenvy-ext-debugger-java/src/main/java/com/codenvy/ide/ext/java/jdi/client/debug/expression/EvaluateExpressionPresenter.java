@@ -52,12 +52,11 @@ public class EvaluateExpressionPresenter implements EvaluateExpressionView.Actio
     /** Show dialog. */
     public void showDialog(@NotNull DebuggerInfo debuggerInfo) {
         this.debuggerInfo = debuggerInfo;
-
         view.setExpression("");
-        view.focusInExpressionField();
+        view.setResult("");
         view.setEnableEvaluateButton(false);
-
         view.showDialog();
+        view.focusInExpressionField();
     }
 
     /** Close dialog. */

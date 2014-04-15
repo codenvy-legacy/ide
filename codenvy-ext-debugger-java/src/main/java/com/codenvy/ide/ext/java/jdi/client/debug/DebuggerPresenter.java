@@ -151,7 +151,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         this.gutterManager = gutterManager;
         this.resolverFactory = resolverFactory;
         this.filesToBreakpoints = Collections.createStringMap();
-        this.variables = new ArrayList<Variable>();
+        this.variables = new ArrayList<>();
         this.editorAgent = editorAgent;
         this.evaluateExpressionPresenter = evaluateExpressionPresenter;
         this.changeValuePresenter = changeValuePresenter;
@@ -345,7 +345,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                                   new AsyncRequestCallback<StackFrameDump>(dtoUnmarshallerFactory.newUnmarshaller(StackFrameDump.class)) {
                                       @Override
                                       protected void onSuccess(StackFrameDump result) {
-                                          List<Variable> variables = new ArrayList<Variable>();
+                                          List<Variable> variables = new ArrayList<>();
                                           variables.addAll(result.getFields());
                                           variables.addAll(result.getLocalVariables());
 
@@ -481,7 +481,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         changeValuePresenter.showDialog(debuggerInfo, selectedVariable, new AsyncCallback<String>() {
             @Override
             public void onSuccess(String s) {
-                view.setVariables(variables);
+                getStackFrameDump();
             }
 
             @Override

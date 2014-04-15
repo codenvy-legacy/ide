@@ -30,6 +30,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 
 /**
  * @author andrew00x
@@ -58,13 +59,31 @@ public class DockerRunner extends BaseDockerRunner {
 
     @Override
     protected DockerfileTemplate getDockerfileTemplate(RunRequest request) throws IOException {
-        final String scriptUrl = request.getRunnerScriptUrl();
-        if (scriptUrl == null) {
+        final List<String> scriptUrls = request.getRunnerScriptUrls();
+        if (scriptUrls.isEmpty()) {
             return null;
         }
-        // TODO: use HTTP client, when it become available
+        final boolean debug = request.getDebugMode() != null;
+        String myScript = null;
+        for (int i = 0, size = scriptUrls.size(); i < size && myScript == null; i++) {
+            final String scriptUrl = scriptUrls.get(i);
+            final int queryStart = scriptUrl.indexOf('?');
+            final String _scriptUrl = queryStart > 0 ? scriptUrl.substring(0, queryStart) : scriptUrl;
+            if (debug) {
+                if (_scriptUrl.endsWith("/debug.dc5y")) {
+                    LOG.debug("Use dockerfile {}", _scriptUrl);
+                    myScript = scriptUrl;
+                }
+            } else if (_scriptUrl.endsWith("/run.dc5y")) {
+                LOG.debug("Use dockerfile {}", _scriptUrl);
+                myScript = scriptUrl;
+            }
+        }
+        if (myScript == null) {
+            return null;
+        }
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
-        try (InputStream in = new URL(scriptUrl).openStream()) {
+        try (InputStream in = new URL(myScript).openStream()) {
             ByteStreams.copy(in, output);
         }
         return DockerfileTemplate.from("DockerfileTemplate", output.toString());

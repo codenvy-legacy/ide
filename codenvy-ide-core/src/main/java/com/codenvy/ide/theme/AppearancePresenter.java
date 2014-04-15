@@ -65,6 +65,7 @@ public class AppearancePresenter extends AbstractPreferencesPagePresenter implem
                 @Override
                 public void onSuccess(Profile result) {
                     if (Window.confirm("Restart Codenvy to activate changes in Appearances?")) {
+                        themeAgent.setCurrentThemeId(themeId);
                         Window.Location.reload();
                     }
                 }

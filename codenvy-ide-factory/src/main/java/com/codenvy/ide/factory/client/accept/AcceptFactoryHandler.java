@@ -1,5 +1,6 @@
 package com.codenvy.ide.factory.client.accept;
 
+import com.codenvy.api.core.rest.shared.dto.ServiceError;
 import com.codenvy.api.factory.dto.Factory;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
@@ -18,6 +19,7 @@ import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.factory.client.FactoryClientService;
 import com.codenvy.ide.factory.client.FactoryLocalizationConstant;
+import com.codenvy.ide.navigation.NavigateToFilePresenter;
 import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -56,6 +58,7 @@ public class AcceptFactoryHandler implements OAuthCallback {
     private final ProjectServiceClient          projectServiceClient;
     private final DtoFactory                    dtoFactory;
     private final UserServiceClient             userServiceClient;
+    private final NavigateToFilePresenter       navigateToFilePresenter;
 
     private static final String ACCEPT_EVENTS_CHANNEL = "acceptFactoryEvents";
 
@@ -65,7 +68,8 @@ public class AcceptFactoryHandler implements OAuthCallback {
                                 FactoryLocalizationConstant localization, ResourceProvider resourceProvider,
                                 SelectProjectTypePresenter selectProjectTypePresenter, NotificationManager notificationManager,
                                 ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry, ProjectServiceClient projectServiceClient,
-                                DtoFactory dtoFactory, UserServiceClient userServiceClient) {
+                                DtoFactory dtoFactory, UserServiceClient userServiceClient,
+                                NavigateToFilePresenter navigateToFilePresenter) {
         this.restContext = restContext;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.factoryService = factoryService;
@@ -78,6 +82,7 @@ public class AcceptFactoryHandler implements OAuthCallback {
         this.projectServiceClient = projectServiceClient;
         this.dtoFactory = dtoFactory;
         this.userServiceClient = userServiceClient;
+        this.navigateToFilePresenter = navigateToFilePresenter;
     }
 
     public void processFactory() {
@@ -97,8 +102,6 @@ public class AcceptFactoryHandler implements OAuthCallback {
     };
 
     private void getStartUpParams() {
-        notificationManager.showNotification(new Notification(localization.getInformationAboutFactory(), Notification.Type.INFO));
-
         StringMap<Array<String>> parameterMap = buildParameterMap(getRawStartUpParams());
         if (parameterMap.get("id") != null && parameterMap.get("id").get(0) != null) {
             getFactory(parameterMap.get("id").get(0), true);
@@ -108,6 +111,8 @@ public class AcceptFactoryHandler implements OAuthCallback {
     }
 
     private void getFactory(String queryStringOrId, boolean encoded) {
+        notificationManager.showNotification(new Notification(localization.getInformationAboutFactory(), Notification.Type.INFO));
+
         try {
             factoryService.getFactory(queryStringOrId, encoded,
                                       new RequestCallback<Factory>(dtoUnmarshallerFactory.newWSUnmarshaller(Factory.class)) {
@@ -162,9 +167,8 @@ public class AcceptFactoryHandler implements OAuthCallback {
                         acceptNotification.setMessage(localization.needToAuthorize());
                         getOAuthInformation(factory);
                     } else {
-                        acceptNotification.setMessage(e.getMessage() != null && !e.getMessage().isEmpty() ? e.getMessage()
-                                                                                                          : localization
-                                                              .failedToAcceptFactory());
+                        ServiceError serviceError = dtoFactory.createDtoFromJson(e.getMessage(), ServiceError.class);
+                        acceptNotification.setMessage(serviceError.getMessage());
                     }
 
                 }
@@ -193,19 +197,13 @@ public class AcceptFactoryHandler implements OAuthCallback {
 
             @Override
             public void onSuccess(Project openedProject) {
-                if (openedProject.getDescription().getProjectTypeId().equals(Constants.NAMELESS_ID)) {
-                    selectProjectTypePresenter.showDialog(openedProject, new AsyncCallback<Project>() {
-                        @Override
-                        public void onFailure(Throwable caught) {
-
-                        }
-
-                        @Override
-                        public void onSuccess(Project result) {
-                           openFile(acceptedFactory);
-                        }
-                    });
+                if (openedProject.getDescription() != null &&
+                    Constants.NAMELESS_ID.equals(openedProject.getDescription().getProjectTypeId())) {
+                    updateProjectWithPreSettedProjectType(acceptedFactory);
+                    return;
                 }
+
+                openFile(acceptedFactory);
             }
         });
     }
@@ -228,7 +226,7 @@ public class AcceptFactoryHandler implements OAuthCallback {
 
     private void openFile(Factory acceptedFactory) {
         if (acceptedFactory.getOpenfile() != null && !acceptedFactory.getOpenfile().isEmpty()) {
-            //perform actions to open file
+            navigateToFilePresenter.openFile(acceptedFactory.getOpenfile());
         }
     }
 
@@ -362,7 +360,7 @@ public class AcceptFactoryHandler implements OAuthCallback {
         final String projectType = acceptedFactory.getProjectattributes().getPtype();
         final ProjectTypeDescriptor projectTypeDescriptor = projectTypeDescriptorRegistry.getDescriptor(projectType);
 
-        if (projectType == null || Constants.NAMELESS_ID.equals(projectType) || projectTypeDescriptor == null) {
+        if (projectType == null || projectTypeDescriptor == null) {
             askAndSetCorrectProjectType(acceptedFactory);
             return;
         }

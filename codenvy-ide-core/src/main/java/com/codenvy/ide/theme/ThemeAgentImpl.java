@@ -22,6 +22,8 @@ import com.codenvy.ide.api.ui.theme.ThemeAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
+import com.google.gwt.storage.client.Storage;
+import com.google.gwt.user.client.Cookies;
 import com.google.inject.Inject;
 
 import javax.validation.constraints.NotNull;
@@ -33,6 +35,8 @@ import java.util.Set;
  * @author Evgen Vidolob
  */
 public class ThemeAgentImpl  implements ThemeAgent{
+    
+    public static final String THEME_STORAGE = "codenvy-theme";
     
     private StringMap<Theme> themes = Collections.createStringMap();
 
@@ -73,6 +77,10 @@ public class ThemeAgentImpl  implements ThemeAgent{
 
     @Override
     public String getCurrentThemeId() {
+        if (currentThemeId == null && Storage.isLocalStorageSupported()
+            && Storage.getLocalStorageIfSupported().getItem(THEME_STORAGE) != null) {
+            setCurrentThemeId(Storage.getLocalStorageIfSupported().getItem(THEME_STORAGE));
+        }
         return currentThemeId;
     }
 
@@ -84,6 +92,11 @@ public class ThemeAgentImpl  implements ThemeAgent{
     @Override
     public native void setCurrentThemeId(String id) /*-{
         this.@com.codenvy.ide.theme.ThemeAgentImpl::currentThemeId = id;
+        
+        if(typeof(Storage)!=="undefined") {
+            localStorage.setItem(@com.codenvy.ide.theme.ThemeAgentImpl::THEME_STORAGE, id);
+        }
+         
         if ($wnd["IDE3"]) {
             $wnd["IDE3"].theme = id;
         }

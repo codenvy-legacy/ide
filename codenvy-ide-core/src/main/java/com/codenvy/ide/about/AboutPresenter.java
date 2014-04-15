@@ -46,11 +46,11 @@ public class AboutPresenter implements AboutView.ActionDelegate {
      */
     public void showAbout() {
         view.showDialog();
-        view.setRevision(locale.aboutRevision(buildInfo.revision()));
-        view.setVersion(locale.aboutVersion(buildInfo.version()));
-        view.setTime(locale.aboutBuildTime(buildInfo.buildTime()));
+        view.setRevision(buildInfo.revision());
+        view.setVersion(buildInfo.version());
+        view.setTime(buildInfo.buildTime());
     }
-
+    
     /** {@inheritDoc} */
     @Override
     public void onOkClicked() {

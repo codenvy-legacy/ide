@@ -70,7 +70,7 @@ public interface MavenLocalizationConstant extends Messages {
     String mavenBuilder();
 
     @Key("maven.builder.offline-mode")
-    @DefaultMessage("Work offline (-o,--offline)")
+    @DefaultMessage("Work Offline (-o,--offline)")
     String offlineMode();
 
 }

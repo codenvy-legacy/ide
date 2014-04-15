@@ -42,6 +42,6 @@ public class HelloWorldExtension
         /**
          * Displaying text in the Console
          */
-        console.printf("Hello World");
+        console.print("Hello World");
     }
 }

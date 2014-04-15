@@ -228,7 +228,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         service.getLogs(viewLogsLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
             @Override
             protected void onSuccess(String result) {
-                console.printf(result);
+                console.print(result);
             }
 
             @Override
@@ -245,15 +245,17 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             onFail(constant.stopApplicationFailed(currentProject.getName()), null);
         }
 
-        applicationProcessDescriptor = null;
         service.stop(stopLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
             @Override
             protected void onSuccess(String result) {
                 console.print(constant.applicationStopped(currentProject.getName()));
+                getLogs();
+                applicationProcessDescriptor = null;
             }
 
             @Override
             protected void onFailure(Throwable exception) {
+                applicationProcessDescriptor = null;
                 onFail(constant.stopApplicationFailed(currentProject.getName()), exception);
             }
         });
@@ -303,7 +305,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         if (exception != null && exception.getMessage() != null) {
             message += ": " + exception.getMessage();
         }
-        console.printf(message);
+        console.print(message);
     }
 
 
@@ -324,9 +326,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     afterApplicationLaunched(newAppDescriptor);
                 } else if (status == ApplicationStatus.STOPPED) {
                     isLaunchingInProgress = false;
-                    applicationProcessDescriptor = null;
-                    console.print(constant.applicationStopped(currentProject.getName()));
                     getLogs();
+                    console.print(constant.applicationStopped(currentProject.getName()));
                     try {
                         messageBus.unsubscribe("runner:status:" + newAppDescriptor.getProcessId(), this);
                     } catch (WebSocketException e) {
@@ -334,14 +335,14 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     }
                     applicationProcessDescriptor = null;
                 } else if (status == ApplicationStatus.CANCELLED) {
-                    isLaunchingInProgress = false;
-                    applicationProcessDescriptor = null;
                     onFail(constant.startApplicationFailed(currentProject.getName()), null);
                     try {
                         messageBus.unsubscribe("runner:status:" + newAppDescriptor.getProcessId(), this);
                     } catch (WebSocketException e) {
                         Log.error(RunnerController.class, e);
                     }
+                    isLaunchingInProgress = false;
+                    applicationProcessDescriptor = null;
                 }
             }
 
@@ -408,7 +409,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     notification.setMessage(constant.updateApplicationFailed(currentProject.getName()));
 
                     if (exception != null && exception.getMessage() != null) {
-                        console.printf(exception.getMessage());
+                        console.print(exception.getMessage());
                     }
                 }
             });
