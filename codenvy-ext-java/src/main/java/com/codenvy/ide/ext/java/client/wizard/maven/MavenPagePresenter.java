@@ -47,7 +47,7 @@ public class MavenPagePresenter extends AbstractWizardPage implements MavenPageV
 
     @Inject
     public MavenPagePresenter(MavenPageView view, ProjectServiceClient projectServiceClient, ResourceProvider resourceProvider) {
-        super("", null);
+        super("Maven project settings", null);
         this.view = view;
         this.projectServiceClient = projectServiceClient;
         this.resourceProvider = resourceProvider;

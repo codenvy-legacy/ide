@@ -30,6 +30,5 @@ public class SDKRunnerModule extends AbstractModule {
         Multibinder.newSetBinder(binder(), Runner.class).addBinding().to(SDKRunner.class);
         Multibinder.newSetBinder(binder(), ApplicationServer.class).addBinding().to(TomcatServer.class);
         bind(UpdateService.class);
-        bind(UpdateExceptionMapper.class).toInstance(new UpdateExceptionMapper());
     }
 }

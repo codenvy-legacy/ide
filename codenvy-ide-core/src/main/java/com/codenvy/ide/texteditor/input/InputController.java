@@ -18,7 +18,7 @@ import elemental.css.CSSStyleDeclaration;
 import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.TextEvent;
-import elemental.html.Element;
+import elemental.dom.Element;
 import elemental.html.TextAreaElement;
 
 import com.codenvy.ide.text.store.DocumentModel;

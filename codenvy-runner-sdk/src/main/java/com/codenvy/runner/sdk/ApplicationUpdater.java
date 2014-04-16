@@ -17,12 +17,12 @@
  */
 package com.codenvy.runner.sdk;
 
+import com.codenvy.api.runner.RunnerException;
+
 /**
- * //
- *
  * @author Artem Zatsarynnyy
  */
 public interface ApplicationUpdater {
     /** Updates an application. */
-    void update() throws UpdateException;
+    void update() throws RunnerException;
 }

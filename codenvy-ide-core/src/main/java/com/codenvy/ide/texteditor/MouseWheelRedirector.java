@@ -16,8 +16,8 @@ package com.codenvy.ide.texteditor;
 
 import elemental.events.Event;
 import elemental.events.EventListener;
-import elemental.events.MouseWheelEvent;
-import elemental.html.Element;
+import elemental.events.MouseEvent;
+import elemental.dom.Element;
 
 import com.codenvy.ide.collections.Jso;
 import com.codenvy.ide.texteditor.Buffer.ScrollListener;
@@ -94,7 +94,7 @@ class MouseWheelRedirector {
         scrollableElement.addEventListener(Event.MOUSEWHEEL, new EventListener() {
             @Override
             public void handleEvent(Event evt) {
-                MouseWheelEvent mouseWheelEvent = (MouseWheelEvent)evt;
+                MouseEvent mouseWheelEvent = (MouseEvent)evt;
 
             /*
              * The negative is so the deltaX,Y are positive when the scroll delta

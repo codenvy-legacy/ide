@@ -14,7 +14,7 @@
 
 package com.codenvy.ide.texteditor;
 
-import elemental.html.Element;
+import elemental.dom.Element;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -296,7 +296,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
 
         gutters.add(gutter);
 
-        gutter.getGutterElement().addClassName(getView().css.gutter());
+        Elements.addClassName(getView().css.gutter(), gutter.getGutterElement());
         getView().addGutter(gutter.getGutterElement());
         return gutter;
     }

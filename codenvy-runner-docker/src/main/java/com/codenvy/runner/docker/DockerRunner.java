@@ -19,8 +19,8 @@ package com.codenvy.runner.docker;
 
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.util.CustomPortService;
+import com.codenvy.api.runner.dto.RunRequest;
 import com.codenvy.api.runner.internal.ResourceAllocators;
-import com.codenvy.api.runner.internal.dto.RunRequest;
 import com.google.common.io.ByteStreams;
 
 import javax.inject.Inject;

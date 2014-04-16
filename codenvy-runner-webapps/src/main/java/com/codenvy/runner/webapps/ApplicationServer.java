@@ -24,12 +24,14 @@ import com.codenvy.api.runner.internal.DeploymentSources;
 /**
  * Application server to deploy an app.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @author Artem Zatsarynnyy
  */
 public interface ApplicationServer {
 
     /** Application server name. */
     String getName();
+
+    String getDescription();
 
     /**
      * Deploy {@code DeploymentSources} to application server.
@@ -47,9 +49,8 @@ public interface ApplicationServer {
      * @throws RunnerException
      *         if an error occurs when try to deploy {@code DeploymentSources} to application server
      */
-    ApplicationProcess deploy(java.io.File appDir, DeploymentSources toDeploy,
-                              ApplicationServerRunnerConfiguration runnerConfiguration, StopCallback stopCallback)
-            throws RunnerException;
+    ApplicationProcess deploy(java.io.File appDir, DeploymentSources toDeploy, ApplicationServerRunnerConfiguration runnerConfiguration,
+                              StopCallback stopCallback) throws RunnerException;
 
     /** Will be notified when {@code ApplicationServer} stopped. */
     public interface StopCallback {
