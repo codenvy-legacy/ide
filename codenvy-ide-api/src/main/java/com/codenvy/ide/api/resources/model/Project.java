@@ -151,12 +151,13 @@ public class Project extends Folder {
     }
 
     /**
-     * @param visibility the visibility to set
+     * @param visibility
+     *         the visibility to set
      */
     public void setVisibility(String visibility) {
         this.visibility = visibility;
     }
-    
+
     // management methods
 
     /**
@@ -311,6 +312,56 @@ public class Project extends Folder {
                 callback.onFailure(throwable);
             }
         });
+    }
+
+    /**
+     * Recursively looks for the {@link Resource}.
+     *
+     * @param path
+     *         resource's path to find (e.g. /project/folder/file)
+     * @param callback
+     *         callback
+     */
+    public void findResourceByPath(String path, AsyncCallback<Resource> callback) {
+        findResourceByPath(this, path, callback);
+    }
+
+    /**
+     * Recursively looks for the {@link Resource}.
+     *
+     * @param rootFolder
+     *         root folder
+     * @param path
+     *         resource's path to find (e.g. /project/folder/file)
+     * @param callback
+     *         callback
+     */
+    public void findResourceByPath(Folder rootFolder, final String path, final AsyncCallback<Resource> callback) {
+        // Avoid redundant requests. Use cached project structure.
+        if (!rootFolder.getChildren().isEmpty()) {
+            for (Resource child : rootFolder.getChildren().asIterable()) {
+                if (path.equals(child.getPath())) {
+                    callback.onSuccess(child);
+                    return;
+                } else if (path.startsWith(child.getPath())) {
+                    findResourceByPath((Folder)child, path, callback);
+                    return;
+                }
+            }
+            callback.onFailure(new Exception("Resource not found"));
+        } else {
+            refreshChildren(rootFolder, new AsyncCallback<Folder>() {
+                @Override
+                public void onSuccess(Folder result) {
+                    findResourceByPath(result, path, callback);
+                }
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    callback.onFailure(caught);
+                }
+            });
+        }
     }
 
     /**

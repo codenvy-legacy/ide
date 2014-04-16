@@ -21,7 +21,7 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
-/** @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a> */
+/** @author Vitaly Parfonov */
 public interface JavaRuntimeResources extends ClientBundle {
     @Source("resume.png")
     ImageResource resumeButton();

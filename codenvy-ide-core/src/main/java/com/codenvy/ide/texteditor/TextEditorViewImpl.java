@@ -439,13 +439,11 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         new CurrentLineHighlighter(buffer, selection, resources);
         breakpointGutterManager.setDebugLineRenderer(new DebugLineRenderer(buffer, resources));
         textInputListenerManager.dispatch(new Dispatcher<TextInputListener>() {
-
             @Override
             public void dispatch(TextInputListener listener) {
                 listener.inputDocumentChanged(null, document);
             }
         });
-
     }
 
     public void undo() {

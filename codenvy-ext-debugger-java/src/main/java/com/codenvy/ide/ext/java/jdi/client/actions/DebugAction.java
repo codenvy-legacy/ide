@@ -19,6 +19,7 @@ package com.codenvy.ide.ext.java.jdi.client.actions;
 
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
@@ -27,7 +28,6 @@ import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
 import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
 import com.codenvy.ide.extension.runner.client.RunnerController;
-import com.codenvy.ide.api.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -57,8 +57,8 @@ public class DebugAction extends Action {
     public void actionPerformed(ActionEvent e) {
         runnerController.runActiveProject(true, new ProjectRunCallback() {
             @Override
-            public void onRun(ApplicationProcessDescriptor appDescriptor) {
-                debuggerPresenter.attachDebugger(appDescriptor);
+            public void onRun(ApplicationProcessDescriptor appDescriptor, Project project) {
+                debuggerPresenter.attachDebugger(appDescriptor, project);
             }
         });
     }

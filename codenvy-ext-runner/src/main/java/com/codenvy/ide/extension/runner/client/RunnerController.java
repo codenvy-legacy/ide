@@ -72,7 +72,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private       RunnerLocalizationConstant   constant;
     private       NotificationManager          notificationManager;
     private       Notification                 notification;
-    private       Project                      currentProject;
+    private       Project                      project;
     /** Launched app. */
     private       ApplicationProcessDescriptor applicationProcessDescriptor;
     /** Handler for processing Maven build status which is received over WebSocket connection. */
@@ -138,7 +138,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     stopActiveProject();
                     console.clear();
                 }
-                currentProject = null;
+                project = null;
                 applicationProcessDescriptor = null;
             }
 
@@ -158,7 +158,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     /**
-     * Run current project.
+     * Run project which is currently active.
      *
      * @param debug
      *         if <code>true</code> - run in debug mode
@@ -168,16 +168,16 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     /**
-     * Run current project.
+     * Run project which is currently active.
      *
      * @param debug
      *         if <code>true</code> - run in debug mode
      * @param callback
-     *         callback that will be notified when project run
+     *         callback that will be notified when project will be run
      */
     public void runActiveProject(boolean debug, final ProjectRunCallback callback) {
-        currentProject = resourceProvider.getActiveProject();
-        if (currentProject == null) {
+        project = resourceProvider.getActiveProject();
+        if (project == null) {
             Window.alert("Project is not opened.");
             return;
         }
@@ -188,7 +188,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
         runCallback = callback;
         isLaunchingInProgress = true;
-        notification = new Notification(constant.applicationStarting(currentProject.getName()), PROGRESS, RunnerController.this);
+        notification = new Notification(constant.applicationStarting(project.getName()), PROGRESS, RunnerController.this);
         notificationManager.showNotification(notification);
 
         RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
@@ -199,7 +199,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     private void runActiveProject(RunOptions runOptions) {
-        service.run(currentProject.getPath(), runOptions,
+        service.run(project.getPath(), runOptions,
                     new AsyncRequestCallback<ApplicationProcessDescriptor>(
                             dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
                         @Override
@@ -212,7 +212,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                         protected void onFailure(Throwable exception) {
                             isLaunchingInProgress = false;
                             applicationProcessDescriptor = null;
-                            onFail(constant.startApplicationFailed(currentProject.getName()), exception);
+                            onFail(constant.startApplicationFailed(project.getName()), exception);
                         }
                     }
                    );
@@ -242,13 +242,13 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     public void stopActiveProject() {
         final Link stopLink = getAppLink(applicationProcessDescriptor, "stop");
         if (stopLink == null) {
-            onFail(constant.stopApplicationFailed(currentProject.getName()), null);
+            onFail(constant.stopApplicationFailed(project.getName()), null);
         }
 
         service.stop(stopLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
             @Override
             protected void onSuccess(String result) {
-                console.print(constant.applicationStopped(currentProject.getName()));
+                console.print(constant.applicationStopped(project.getName()));
                 getLogs();
                 applicationProcessDescriptor = null;
             }
@@ -256,7 +256,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             @Override
             protected void onFailure(Throwable exception) {
                 applicationProcessDescriptor = null;
-                onFail(constant.stopApplicationFailed(currentProject.getName()), exception);
+                onFail(constant.stopApplicationFailed(project.getName()), exception);
             }
         });
     }
@@ -264,7 +264,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private void afterApplicationLaunched(ApplicationProcessDescriptor appDescriptor) {
         this.applicationProcessDescriptor = appDescriptor;
         if (runCallback != null) {
-            runCallback.onRun(appDescriptor);
+            runCallback.onRun(appDescriptor, project);
         }
 
         final Link appLink = getAppLink(appDescriptor, com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
@@ -289,7 +289,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 url = urlBuilder.toString();
             }
 
-            console.print(constant.applicationStartedOnUrl(currentProject.getName(),
+            console.print(constant.applicationStartedOnUrl(project.getName(),
                                                            "<a href=\"" + url + "\" target=\"_blank\">" + url + "</a>"));
         }
         notification.setStatus(FINISHED);
@@ -327,7 +327,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 } else if (status == ApplicationStatus.STOPPED) {
                     isLaunchingInProgress = false;
                     getLogs();
-                    console.print(constant.applicationStopped(currentProject.getName()));
+                    console.print(constant.applicationStopped(project.getName()));
                     try {
                         messageBus.unsubscribe("runner:status:" + newAppDescriptor.getProcessId(), this);
                     } catch (WebSocketException e) {
@@ -335,7 +335,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     }
                     applicationProcessDescriptor = null;
                 } else if (status == ApplicationStatus.CANCELLED) {
-                    onFail(constant.startApplicationFailed(currentProject.getName()), null);
+                    onFail(constant.startApplicationFailed(project.getName()), null);
                     try {
                         messageBus.unsubscribe("runner:status:" + newAppDescriptor.getProcessId(), this);
                     } catch (WebSocketException e) {
@@ -354,9 +354,9 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 if (exception instanceof ServerException &&
                     ((ServerException)exception).getHTTPStatus() == 500) {
                     ServiceError e = dtoFactory.createDtoFromJson(exception.getMessage(), ServiceError.class);
-                    onFail(constant.startApplicationFailed(currentProject.getName()) + ": " + e.getMessage(), null);
+                    onFail(constant.startApplicationFailed(project.getName()) + ": " + e.getMessage(), null);
                 } else {
-                    onFail(constant.startApplicationFailed(currentProject.getName()), exception);
+                    onFail(constant.startApplicationFailed(project.getName()), exception);
                 }
 
                 try {
@@ -392,21 +392,21 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     /** Updates launched Codenvy Extension. */
     public void updateExtension() {
         final Notification notification =
-                new Notification(constant.applicationUpdating(currentProject.getName()), PROGRESS, RunnerController.this);
+                new Notification(constant.applicationUpdating(project.getName()), PROGRESS, RunnerController.this);
         notificationManager.showNotification(notification);
         try {
             updateService.update(applicationProcessDescriptor, new RequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     notification.setStatus(FINISHED);
-                    notification.setMessage(constant.applicationUpdated(currentProject.getName()));
+                    notification.setMessage(constant.applicationUpdated(project.getName()));
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
                     notification.setStatus(FINISHED);
                     notification.setType(ERROR);
-                    notification.setMessage(constant.updateApplicationFailed(currentProject.getName()));
+                    notification.setMessage(constant.updateApplicationFailed(project.getName()));
 
                     if (exception != null && exception.getMessage() != null) {
                         console.print(exception.getMessage());
@@ -416,7 +416,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         } catch (WebSocketException e) {
             notification.setStatus(FINISHED);
             notification.setType(ERROR);
-            notification.setMessage(constant.updateApplicationFailed(currentProject.getName()));
+            notification.setMessage(constant.updateApplicationFailed(project.getName()));
         }
     }
 }

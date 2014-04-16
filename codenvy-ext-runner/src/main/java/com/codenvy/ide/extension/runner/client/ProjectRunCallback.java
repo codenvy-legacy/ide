@@ -18,12 +18,21 @@
 package com.codenvy.ide.extension.runner.client;
 
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
+import com.codenvy.ide.api.resources.model.Project;
 
 /**
- * Notified when app launched.
+ * Notified when app will be launched.
  *
  * @author Artem Zatsarynnyy
  */
 public interface ProjectRunCallback {
-    void onRun(ApplicationProcessDescriptor appDescriptor);
+    /**
+     * Notified when app will be launched.
+     *
+     * @param appDescriptor
+     *         descriptor of application that was run
+     * @param project
+     *         project that was run
+     */
+    void onRun(ApplicationProcessDescriptor appDescriptor, Project project);
 }
