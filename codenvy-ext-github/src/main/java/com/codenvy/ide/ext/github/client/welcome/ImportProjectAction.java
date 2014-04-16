@@ -19,6 +19,7 @@ package com.codenvy.ide.ext.github.client.welcome;
 
 import com.codenvy.api.user.gwt.client.UserServiceClient;
 import com.codenvy.api.user.shared.dto.User;
+import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.github.client.GitHubLocalizationConstant;
@@ -37,34 +38,28 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ImportProjectAction extends Action {
-    private final DtoUnmarshallerFactory     dtoUnmarshallerFactory;
-    private       GitHubLocalizationConstant constant;
-    private       GitHubResources            resources;
-    private       ImportPresenter            importPresenter;
-    private       UserServiceClient          service;
+    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    private final ImportPresenter        importPresenter;
+    private final UserServiceClient      service;
+    private final AnalyticsEventLogger   eventLogger;
 
-    /**
-     * Create action.
-     *
-     * @param constant
-     * @param resources
-     */
     @Inject
     public ImportProjectAction(GitHubLocalizationConstant constant,
                                GitHubResources resources,
                                ImportPresenter importPresenter,
                                UserServiceClient service,
-                               DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+                               DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                               AnalyticsEventLogger eventLogger) {
         super(constant.importFromGithubTitle(), constant.welcomeImportText(), null, resources.importFromGithub());
-        this.constant = constant;
-        this.resources = resources;
         this.importPresenter = importPresenter;
         this.service = service;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.eventLogger = eventLogger;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log("IDE: Import project from GitHub");
         service.getCurrentUser(new AsyncRequestCallback<User>(dtoUnmarshallerFactory.newUnmarshaller(User.class)) {
             @Override
             protected void onSuccess(User result) {

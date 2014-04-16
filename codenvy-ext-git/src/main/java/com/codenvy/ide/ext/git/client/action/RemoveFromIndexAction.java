@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.git.client.action;
 
+import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
@@ -30,20 +31,24 @@ import com.google.inject.Singleton;
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 @Singleton
 public class RemoveFromIndexAction extends Action {
-    private RemoveFromIndexPresenter presenter;
-    private ResourceProvider         resourceProvider;
+    private final RemoveFromIndexPresenter presenter;
+    private final ResourceProvider         resourceProvider;
+    private final AnalyticsEventLogger eventLogger;
 
     @Inject
-    public RemoveFromIndexAction(RemoveFromIndexPresenter presenter, ResourceProvider resourceProvider, GitResources resources,
-                                 GitLocalizationConstant constant) {
+    public RemoveFromIndexAction(RemoveFromIndexPresenter presenter, ResourceProvider resourceProvider,
+                                 GitResources resources,
+                                 GitLocalizationConstant constant, AnalyticsEventLogger eventLogger) {
         super(constant.removeFromIndexTitle(), constant.removeFromIndexTitle(), null, resources.removeFiles());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log("IDE: Git remove");
         presenter.showDialog();
     }
 

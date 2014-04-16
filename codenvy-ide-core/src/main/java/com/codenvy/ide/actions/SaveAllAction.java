@@ -20,6 +20,7 @@ package com.codenvy.ide.actions;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
+import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.collections.StringMap;
@@ -33,19 +34,20 @@ import com.google.inject.Singleton;
 @Singleton
 public class SaveAllAction extends Action {
 
-    private final EditorAgent editorAgent;
-    private final Resources   resources;
+    private final EditorAgent          editorAgent;
+    private final AnalyticsEventLogger eventLogger;
 
     @Inject
-    public SaveAllAction(EditorAgent editorAgent, Resources resources) {
+    public SaveAllAction(EditorAgent editorAgent, Resources resources, AnalyticsEventLogger eventLogger) {
         super("Save All", "Save all changes for project", null, resources.save());
         this.editorAgent = editorAgent;
-        this.resources = resources;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log("IDE: Save all");
         StringMap<EditorPartPresenter> editors = editorAgent.getOpenedEditors();
         editors.iterate(new StringMap.IterationCallback<EditorPartPresenter>() {
             @Override
