@@ -86,6 +86,7 @@ public class NavigateToFileViewImpl extends Window implements NavigateToFileView
 
         Widget widget = uiBinder.createAndBindUi(this);
         this.setWidget(widget);
+        getFooter().setVisible(false);
     }
 
     /** {@inheritDoc} */

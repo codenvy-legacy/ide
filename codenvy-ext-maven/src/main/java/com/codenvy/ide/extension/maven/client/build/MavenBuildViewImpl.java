@@ -22,11 +22,11 @@ import com.codenvy.ide.extension.maven.client.MavenResources;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.TextBox;
@@ -61,9 +61,7 @@ public class MavenBuildViewImpl extends Window implements MavenBuildView {
     CheckBox offline;
     @UiField
     TextBox  buildCommand;
-    @UiField
     Button   btnStartBuild;
-    @UiField
     Button   btnCancel;
     @UiField(provided = true)
     final   MavenResources            res;
@@ -104,6 +102,27 @@ public class MavenBuildViewImpl extends Window implements MavenBuildView {
                 delegate.onOfflineValueChange(event);
             }
         });
+        createButtons();
+    }
+    
+    private void createButtons(){
+        btnCancel = createButton(locale.buttonCancel(), "project-buildWithOptions-cancel", new ClickHandler() {
+            
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCancelClicked();
+            }
+        });
+        getFooter().add(btnCancel);
+        
+        btnStartBuild = createButton(locale.startBuild(), "project-buildWithOptions-startBuild", new ClickHandler() {
+            
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onStartBuildClicked();
+            }
+        });
+        getFooter().add(btnStartBuild);
     }
 
     /** {@inheritDoc} */
@@ -141,15 +160,4 @@ public class MavenBuildViewImpl extends Window implements MavenBuildView {
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
-
-    @UiHandler("btnStartBuild")
-    public void onStartBuildClicked(ClickEvent event) {
-        delegate.onStartBuildClicked();
-    }
-
-    @UiHandler("btnCancel")
-    public void onCancelClicked(ClickEvent event) {
-        delegate.onCancelClicked();
-    }
-
 }

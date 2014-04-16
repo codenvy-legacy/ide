@@ -20,21 +20,21 @@ package com.codenvy.ide.ext.git.client.reset.commit;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.shared.Revision;
+import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
@@ -44,6 +44,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import javax.validation.constraints.NotNull;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -54,7 +55,7 @@ import java.util.List;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class ResetToCommitViewImpl extends DialogBox implements ResetToCommitView {
+public class ResetToCommitViewImpl extends Window implements ResetToCommitView {
     interface ResetToCommitViewImplUiBinder extends UiBinder<Widget, ResetToCommitViewImpl> {
     }
 
@@ -70,9 +71,7 @@ public class ResetToCommitViewImpl extends DialogBox implements ResetToCommitVie
     RadioButton         keep;
     @UiField
     RadioButton         merge;
-    @UiField
     Button              btnReset;
-    @UiField
     Button              btnCancel;
     @UiField(provided = true)
     CellTable<Revision> commits;
@@ -97,10 +96,28 @@ public class ResetToCommitViewImpl extends DialogBox implements ResetToCommitVie
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 
-        this.setText(locale.resetCommitViewTitle());
+        this.setTitle(locale.resetCommitViewTitle());
         this.setWidget(widget);
 
         prepareRadioButtons();
+        
+        btnCancel = createButton(locale.buttonCancel(), "git-reset-cancel", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCancelClicked();
+            }
+        });
+        getFooter().add(btnCancel);
+
+        btnReset = createButton(locale.buttonReset(), "git-reset-reset", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onResetClicked();
+            }
+        });
+        getFooter().add(btnReset);
     }
 
     /** Add description to buttons. */
@@ -265,7 +282,6 @@ public class ResetToCommitViewImpl extends DialogBox implements ResetToCommitVie
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        this.center();
         this.show();
     }
 
@@ -275,13 +291,8 @@ public class ResetToCommitViewImpl extends DialogBox implements ResetToCommitVie
         this.delegate = delegate;
     }
 
-    @UiHandler("btnReset")
-    public void onResetClicked(ClickEvent event) {
-        delegate.onResetClicked();
-    }
-
-    @UiHandler("btnCancel")
-    public void onCancelClicked(ClickEvent event) {
-        delegate.onCancelClicked();
+    /** {@inheritDoc} */
+    @Override
+    protected void onClose() {
     }
 }

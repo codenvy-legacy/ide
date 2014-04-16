@@ -22,20 +22,6 @@
     <ui:with field='res' type='com.codenvy.ide.Resources'/>
     <ui:with field="style" type="com.codenvy.ide.wizard.newproject.ProjectWizardViewImpl.Css" />
     <g:DockLayoutPanel unit="PX" width="1090px" height="574px">
-        <g:south size="43">
-            <g:FlowPanel addStyleNames="{style.buttonPanel}">
-                <g:FlowPanel height="100%" width="100%" addStyleNames="{style.buttons}">
-                    <g:Button text="Cancel"  width="60px" addStyleNames="{style.alignBtn}"
-                              ui:field="btnCancel" debugId="file-newProject-cancel"/>
-                    <g:Button text="Finish"  width="60px" addStyleNames="{style.alignBtn} {style.space}"
-                              ui:field="btnFinish" debugId="file-newProject-finish"/>
-                    <g:Button text="Next"  width="60px" addStyleNames="{style.alignBtn} {style.space}"
-                              ui:field="btnNext" debugId="file-newProject-next"/>
-                    <g:Button text="Back"  width="60px" addStyleNames="{style.alignBtn} {style.space}"
-                              ui:field="btnBack" debugId="file-newProject-back"/>
-                </g:FlowPanel>
-            </g:FlowPanel>
-        </g:south>
         <g:west size="209">
             <g:HTMLPanel width="100%" height="100%">
               <g:FlowPanel ui:field="stepsPanel" addStyleNames="{style.stepsPanel}"></g:FlowPanel>

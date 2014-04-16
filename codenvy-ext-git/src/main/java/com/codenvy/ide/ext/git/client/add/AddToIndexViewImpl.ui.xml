@@ -22,10 +22,6 @@
     <ui:with field='locale' type='com.codenvy.ide.ext.git.client.GitLocalizationConstant'/>
     <ui:with field='res' type='com.codenvy.ide.ext.git.client.GitResources'/>
     <ui:style>
-        .alignBtn {
-            float: right;
-        }
-
         .spacing {
             margin-bottom: 10px;
         }
@@ -38,15 +34,7 @@
             margin-right: 5px;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="400px" height="100px" addStyleNames="{style.emptyBorder}">
-        <g:south size="26.0">
-            <g:FlowPanel>
-                <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" ui:field="btnCancel"
-                          debugId="git-addToIndex-cancel"/>
-                <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonOk}" width="60px" ui:field="btnAdd"
-                          debugId="git-addToIndex-ok"/>
-            </g:FlowPanel>
-        </g:south>
+    <g:DockLayoutPanel unit="PX" width="400px" height="80px" addStyleNames="{style.emptyBorder}">
         <g:center>
             <g:DockLayoutPanel unit="PX" width="100%" height="100%" styleName="{style.spacing}">
                 <g:north size="20.0">

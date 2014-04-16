@@ -21,10 +21,6 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:with field='res' type='com.codenvy.ide.Resources'/>
     <ui:style>
-        .btnAlign {
-            float: right;
-        }
-
         .emptyBorder {
             margin: 6px;
         }
@@ -38,16 +34,6 @@
         }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="600px" height="400px" addStyleNames="{style.emptyBorder}">
-        <g:south size="36.0">
-            <g:FlowPanel height="100%" width="100%" addStyleNames="{style.spacing}">
-                <g:Button addStyleNames="{style.btnAlign}" width="50px"  height="22px" ui:field="btnClose"
-                          debugId="window-preferences-close">Close</g:Button>
-                <g:Button addStyleNames="{style.btnAlign} {style.space}" width="50px"  height="22px"  ui:field="btnOk"
-                          debugId="window-preferences-ok">OK</g:Button>
-                <g:Button addStyleNames="{style.btnAlign} {style.space}" width="50px"  height="22px"  ui:field="btnApply"
-                          debugId="window-preferences-apply">Apply</g:Button>
-            </g:FlowPanel>
-        </g:south>
         <g:west size="180.0">
             <g:ScrollPanel ui:field="preferences" addStyleNames="{res.coreCss.simpleListContainer}"
                            debugId="window-preferences-scrollPanel-preferences"/>

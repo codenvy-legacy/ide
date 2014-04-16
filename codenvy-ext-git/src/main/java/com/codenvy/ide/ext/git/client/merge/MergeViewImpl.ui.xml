@@ -22,10 +22,6 @@
     <ui:with field='locale' type='com.codenvy.ide.ext.git.client.GitLocalizationConstant'/>
     <ui:with field='res' type='com.codenvy.ide.ext.git.client.GitResources'/>
     <ui:style>
-        .alignBtn {
-            float: right;
-        }
-
         .emptyBorder {
             margin: 6px;
         }
@@ -38,15 +34,7 @@
             margin-top: 10px;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="350px" height="300px" addStyleNames="{style.emptyBorder}">
-        <g:south size="36.0">
-            <g:FlowPanel addStyleNames="{style.spacing}">
-                <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" ui:field="btnCancel"
-                          debugId="git-merge-cancel"/>
-                <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonMerge}" width="60px" ui:field="btnMerge"
-                          debugId="git-merge-merge"/>
-            </g:FlowPanel>
-        </g:south>
+    <g:DockLayoutPanel unit="PX" width="350px" height="270px" addStyleNames="{style.emptyBorder}">
         <g:center>
             <g:ScrollPanel ui:field="referencesPanel" addStyleNames="{res.gitCSS.simpleListContainer}"
                            debugId="git-merge-referencesPanel"/>
