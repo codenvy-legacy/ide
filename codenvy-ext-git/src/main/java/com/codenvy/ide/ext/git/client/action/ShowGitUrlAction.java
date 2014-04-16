@@ -49,7 +49,7 @@ public class ShowGitUrlAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        eventLogger.log("IDE: Show git url");
+        eventLogger.log("IDE: Git show git url");
         presenter.showDialog();
     }
 
