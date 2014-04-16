@@ -17,14 +17,12 @@
  */
 package com.codenvy.ide.wizard.project.name;
 
-import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -40,8 +38,6 @@ public class NamePageViewImpl implements NamePageView {
     TextBox     projectName;
     @UiField
     TextArea    projectDescription;
-    @UiField
-    SimplePanel subView;
 
     public NamePageViewImpl() {
         rootElement = ourUiBinder.createAndBindUi(this);
@@ -64,22 +60,12 @@ public class NamePageViewImpl implements NamePageView {
     }
 
     @Override
-    public void addSubPage(WizardPage wizardPage) {
-        wizardPage.go(subView);
-    }
-
-    @Override
-    public void clearSubPage() {
-        subView.clear();
-    }
-
-    @Override
     public void focusOnNameField() {
         projectName.setFocus(true);
     }
 
     @UiHandler("projectName")
-    void onProjectNameChanged(ChangeEvent event){
+    void onProjectNameChanged(KeyUpEvent event){
         delegate.projectNameChanged(projectName.getText());
     }
 

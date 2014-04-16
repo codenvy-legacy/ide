@@ -18,7 +18,6 @@
 package com.codenvy.ide.wizard.project.name;
 
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.google.inject.ImplementedBy;
 
 /**
@@ -27,10 +26,6 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(NamePageViewImpl.class)
 public interface NamePageView extends View<NamePageView.ActionDelegate> {
     String getProjectName();
-
-    void addSubPage(WizardPage wizardPage);
-
-    void clearSubPage();
 
     void focusOnNameField();
 

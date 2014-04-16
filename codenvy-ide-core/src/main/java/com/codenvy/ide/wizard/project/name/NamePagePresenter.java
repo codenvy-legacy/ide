@@ -53,7 +53,6 @@ public class NamePagePresenter extends AbstractWizardPage implements NamePageVie
     private ResourceProvider          resourceProvider;
     private ProjectTypeWizardRegistry wizardRegistry;
     private ProjectWizard             wizard;
-    private WizardPage subPage;
 
     @Inject
     public NamePagePresenter(NamePageView view, ProjectServiceClient projectService, DtoUnmarshallerFactory dtoUnmarshallerFactory,
@@ -75,11 +74,7 @@ public class NamePagePresenter extends AbstractWizardPage implements NamePageVie
 
     @Override
     public boolean isCompleted() {
-        if (wizard != null) {
-            return !view.getProjectName().equals("") && subPage.isCompleted();
-        } else {
             return !view.getProjectName().equals("");
-        }
     }
 
     @Override
@@ -136,19 +131,12 @@ public class NamePagePresenter extends AbstractWizardPage implements NamePageVie
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
         wizard = null;
-        subPage = null;
         ProjectTypeDescriptor descriptor = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
         if(descriptor != null){
             wizard = wizardRegistry.getWizard(descriptor.getProjectTypeId());
-
-            if(wizard != null){
-                subPage = wizard.flipToFirst();
-                subPage.setContext(wizardContext);
-                subPage.setUpdateDelegate(delegate);
-                view.addSubPage(subPage);
+            if (wizard != null) {
+                wizard.flipToFirst();
             }
-        } else{
-            view.clearSubPage();
         }
     }
 
@@ -166,9 +154,8 @@ public class NamePagePresenter extends AbstractWizardPage implements NamePageVie
 
     public Array<WizardPage> getNextPages(){
         if(wizard != null){
-            return wizard.getPagesExceptFirst();
+            return wizard.getPages();
         }
-
         return null;
     }
 
