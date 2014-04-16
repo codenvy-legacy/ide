@@ -33,6 +33,8 @@ public interface ApplicationServer {
     /** Application server name. */
     String getName();
 
+    String getDescription();
+
     /**
      * Deploy WAR to application server.
      *
