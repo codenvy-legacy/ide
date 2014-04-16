@@ -134,6 +134,9 @@ public class CleanableSearcher extends FSIndexSearcher {
                 CleanableSearcher.super.init(mountPoint);
                 initDone = true;
                 for (IndexUpdateTask update : postponeUpdates) {
+                    if (Thread.currentThread().isInterrupted()) {
+                        break;
+                    }
                     update.run();
                 }
                 postponeUpdates.clear();
