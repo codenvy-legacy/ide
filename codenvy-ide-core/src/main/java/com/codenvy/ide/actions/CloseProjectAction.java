@@ -42,7 +42,6 @@ public class CloseProjectAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        eventLogger.log("IDE: Close project");
         Project activeProject = resourceProvider.getActiveProject();
         e.getPresentation().setEnabled(activeProject != null);
     }
@@ -50,6 +49,7 @@ public class CloseProjectAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log("IDE: Close project");
         resourceProvider.showListProjects();
     }
 }
