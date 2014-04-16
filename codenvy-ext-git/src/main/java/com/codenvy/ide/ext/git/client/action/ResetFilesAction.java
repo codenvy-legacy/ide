@@ -17,33 +17,37 @@
  */
 package com.codenvy.ide.ext.git.client.action;
 
+import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.reset.files.ResetFilesPresenter;
-import com.codenvy.ide.api.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 @Singleton
 public class ResetFilesAction extends Action {
-    private ResetFilesPresenter presenter;
-    private ResourceProvider    resourceProvider;
+    private final ResetFilesPresenter  presenter;
+    private final ResourceProvider     resourceProvider;
+    private final AnalyticsEventLogger eventLogger;
 
     @Inject
     public ResetFilesAction(ResetFilesPresenter presenter, ResourceProvider resourceProvider, GitResources resources,
-                            GitLocalizationConstant constant) {
+                            GitLocalizationConstant constant, AnalyticsEventLogger eventLogger) {
         super(constant.resetFilesControlTitle(), constant.resetFilesControlPrompt(), null, resources.reset());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log("IDE: Git reset");
         presenter.showDialog();
     }
 

@@ -17,33 +17,39 @@
  */
 package com.codenvy.ide.ext.git.client.action;
 
+import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.url.ShowProjectGitReadOnlyUrlPresenter;
-import com.codenvy.ide.api.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 @Singleton
 public class ShowGitUrlAction extends Action {
-    private ShowProjectGitReadOnlyUrlPresenter presenter;
-    private ResourceProvider                   resourceProvider;
+    private final ShowProjectGitReadOnlyUrlPresenter presenter;
+    private final ResourceProvider                   resourceProvider;
+    private final AnalyticsEventLogger               eventLogger;
 
     @Inject
-    public ShowGitUrlAction(ShowProjectGitReadOnlyUrlPresenter presenter, ResourceProvider resourceProvider, GitResources resources,
-                            GitLocalizationConstant constant) {
-        super(constant.projectReadOnlyGitUrlPrompt(), constant.projectReadOnlyGitUrlPrompt(), null, resources.projectReadOnlyGitUrl());
+    public ShowGitUrlAction(ShowProjectGitReadOnlyUrlPresenter presenter, ResourceProvider resourceProvider,
+                            GitResources resources,
+                            GitLocalizationConstant constant, AnalyticsEventLogger eventLogger) {
+        super(constant.projectReadOnlyGitUrlPrompt(), constant.projectReadOnlyGitUrlPrompt(), null,
+              resources.projectReadOnlyGitUrl());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log("IDE: Git show git url");
         presenter.showDialog();
     }
 
