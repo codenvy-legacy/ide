@@ -22,7 +22,7 @@ import elemental.events.EventRemover;
 import elemental.events.MouseEvent;
 import elemental.html.ClientRect;
 import elemental.html.DivElement;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.common.Constants;
@@ -378,14 +378,14 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
         private void addLine(Element lineElement) {
             String className = lineElement.getClassName();
             if (className == null || className.isEmpty()) {
-                lineElement.addClassName(css.line());
+                Elements.addClassName(css.line(), lineElement);
             }
 
             textLayerElement.appendChild(lineElement);
         }
 
         private Element getFirstLine() {
-            return textLayerElement.getFirstChildElement();
+            return textLayerElement.getFirstElementChild();
         }
 
         private int getHeight() {
@@ -429,7 +429,7 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
           * at the bottom of the vertical scrollbar that won't scroll the
           * scrollable element, but that's OK.)
           */
-            scrollbarElement.getFirstChildElement().getStyle()
+            scrollbarElement.getFirstElementChild().getStyle()
                             .setHeight(height + Constants.SCROLLBAR_SIZE, CSSStyleDeclaration.Unit.PX);
         }
 

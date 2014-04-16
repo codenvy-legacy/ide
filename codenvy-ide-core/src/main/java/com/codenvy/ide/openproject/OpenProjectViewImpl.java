@@ -17,7 +17,7 @@
 */
 package com.codenvy.ide.openproject;
 
-import elemental.html.Element;
+import elemental.dom.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 

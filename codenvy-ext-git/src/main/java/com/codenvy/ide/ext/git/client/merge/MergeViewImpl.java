@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.git.client.merge;
 
-import elemental.html.DragEvent;
+import elemental.events.MouseEvent;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -105,12 +105,12 @@ public class MergeViewImpl extends Window implements MergeView {
             }
 
             @Override
-            public void onNodeDragStart(TreeNodeElement<Reference> node, DragEvent event) {
+            public void onNodeDragStart(TreeNodeElement<Reference> node, MouseEvent event) {
                 //do nothing
             }
 
             @Override
-            public void onNodeDragDrop(TreeNodeElement<Reference> node, DragEvent event) {
+            public void onNodeDragDrop(TreeNodeElement<Reference> node, MouseEvent event) {
                 //do nothing
             }
 
@@ -130,7 +130,7 @@ public class MergeViewImpl extends Window implements MergeView {
             }
 
             @Override
-            public void onRootDragDrop(DragEvent event) {
+            public void onRootDragDrop(MouseEvent event) {
                 //do nothing
             }
         });

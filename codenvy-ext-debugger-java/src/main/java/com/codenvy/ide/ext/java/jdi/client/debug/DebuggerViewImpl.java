@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.debug;
 
-import elemental.html.DragEvent;
-import elemental.html.Element;
+import elemental.dom.Element;
+import elemental.events.MouseEvent;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
@@ -179,12 +179,12 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
             }
 
             @Override
-            public void onNodeDragStart(TreeNodeElement<Variable> node, DragEvent event) {
+            public void onNodeDragStart(TreeNodeElement<Variable> node, MouseEvent event) {
                 //do nothing
             }
 
             @Override
-            public void onNodeDragDrop(TreeNodeElement<Variable> node, DragEvent event) {
+            public void onNodeDragDrop(TreeNodeElement<Variable> node, MouseEvent event) {
                 //do nothing
             }
 
@@ -207,7 +207,7 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
             }
 
             @Override
-            public void onRootDragDrop(DragEvent event) {
+            public void onRootDragDrop(MouseEvent event) {
                 //do nothing
             }
         });

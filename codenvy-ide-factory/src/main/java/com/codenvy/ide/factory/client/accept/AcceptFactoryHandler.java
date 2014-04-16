@@ -2,6 +2,7 @@ package com.codenvy.ide.factory.client.accept;
 
 import com.codenvy.api.core.rest.shared.dto.ServiceError;
 import com.codenvy.api.factory.dto.Factory;
+import com.codenvy.api.factory.gwt.client.FactoryServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
@@ -17,7 +18,6 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.factory.client.FactoryClientService;
 import com.codenvy.ide.factory.client.FactoryLocalizationConstant;
 import com.codenvy.ide.navigation.NavigateToFilePresenter;
 import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
@@ -48,7 +48,7 @@ import com.google.inject.name.Named;
 public class AcceptFactoryHandler implements OAuthCallback {
     private final String                        restContext;
     private final DtoUnmarshallerFactory        dtoUnmarshallerFactory;
-    private final FactoryClientService          factoryService;
+    private final FactoryServiceClient          factoryService;
     private final MessageBus                    messageBus;
     private final FactoryLocalizationConstant   localization;
     private final ResourceProvider              resourceProvider;
@@ -64,7 +64,7 @@ public class AcceptFactoryHandler implements OAuthCallback {
 
     @Inject
     public AcceptFactoryHandler(@Named("restContext") String restContext, DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                                FactoryClientService factoryService, MessageBus messageBus,
+                                FactoryServiceClient factoryService, MessageBus messageBus,
                                 FactoryLocalizationConstant localization, ResourceProvider resourceProvider,
                                 SelectProjectTypePresenter selectProjectTypePresenter, NotificationManager notificationManager,
                                 ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry, ProjectServiceClient projectServiceClient,
@@ -86,7 +86,7 @@ public class AcceptFactoryHandler implements OAuthCallback {
     }
 
     public void processFactory() {
-        if (getRawStartUpParams() != null) {
+        if (Utils.getRawStartUpParams() != null) {
             checkWebSocketOpenState.scheduleRepeating(500);
         }
     }
@@ -102,11 +102,11 @@ public class AcceptFactoryHandler implements OAuthCallback {
     };
 
     private void getStartUpParams() {
-        StringMap<Array<String>> parameterMap = buildParameterMap(getRawStartUpParams());
+        StringMap<Array<String>> parameterMap = buildParameterMap(Utils.getRawStartUpParams());
         if (parameterMap.get("id") != null && parameterMap.get("id").get(0) != null) {
             getFactory(parameterMap.get("id").get(0), true);
         } else if (parameterMap.get("v") != null && parameterMap.get("v").get(0) != null) {
-            getFactory(getRawStartUpParams(), false);
+            getFactory(Utils.getRawStartUpParams(), false);
         }
     }
 
@@ -319,19 +319,6 @@ public class AcceptFactoryHandler implements OAuthCallback {
      * Commons
      * *****************************************************
      */
-
-    // @formatter:off
-    private native String getRawStartUpParams() /*-{
-        try {
-            if (!$wnd["startUpParams"]) {
-            } else {
-                return $wnd["startUpParams"];
-            }
-        } catch (e) {
-            console.log("ERROR > " + e.message);
-        }
-    }-*/;
-    // @formatter:on
 
     private StringMap<Array<String>> buildParameterMap(String rawQueryString) {
         StringMap<Array<String>> parameterMap = Collections.createStringMap();

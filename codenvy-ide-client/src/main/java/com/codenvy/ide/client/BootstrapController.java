@@ -24,6 +24,7 @@ import com.codenvy.api.user.shared.dto.Profile;
 import com.codenvy.ide.Constants;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.theme.Style;
 import com.codenvy.ide.api.ui.theme.Theme;
@@ -42,6 +43,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.client.ScriptInjector;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.inject.Inject;
@@ -99,9 +102,9 @@ public class BootstrapController {
         this.themeAgent = themeAgent;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
 
-        // Is necessary for loading IDE styles before standard GWT one:
-        setTheme();
-        styleInjector.inject();
+        //Is necessary for loading IDE styles before standard GWT one:
+//        setTheme();
+//        styleInjector.inject();
 
         ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW)
                       .setCallback(new Callback<Void, Exception>() {
@@ -146,8 +149,22 @@ public class BootstrapController {
 
                                                                     // Display IDE
                                                                     workspacePresenter.go(mainPanel);
-                                                                    // Display list of projects in project explorer
-                                                                    resourceProvider.showListProjects();
+                                                                    if(Utils.getProjectToOpen() != null){
+                                                                        resourceProvider.getProject(Utils.getProjectToOpen(), new AsyncCallback<Project>() {
+                                                                            @Override
+                                                                            public void onFailure(Throwable throwable) {
+
+                                                                            }
+
+                                                                            @Override
+                                                                            public void onSuccess(Project project) {
+
+                                                                            }
+                                                                        });
+                                                                    }else{
+                                                                        // Display list of projects in project explorer
+                                                                        resourceProvider.showListProjects();
+                                                                    }
                                                                 }
 
                                                                 @Override
@@ -179,10 +196,10 @@ public class BootstrapController {
      * @param message error message
      */
     private native void initializationFailed(String message) /*-{
-                                                             if ($wnd["on-initialization-failed"]) {
-                                                             $wnd["on-initialization-failed"](message);
-                                                             }
-                                                             }-*/;
+        if ($wnd["on-initialization-failed"]) {
+            $wnd["on-initialization-failed"](message);
+        }
+    }-*/;
 
     private void setTheme() {
         String storedThemeId = preferencesManager.getValue("Theme");
@@ -216,6 +233,7 @@ public class BootstrapController {
                                                }
                                            });
     }
+
 
 
     private void registerDefaultIcon() {

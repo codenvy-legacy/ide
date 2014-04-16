@@ -26,6 +26,7 @@ import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.extension.Extension;
+import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
@@ -81,6 +82,7 @@ public class JavaExtension {
     private String              workspaceId;
     private AsyncRequestFactory asyncRequestFactory;
     private EditorAgent         editorAgent;
+    private AnalyticsEventLogger eventLogger;
 
     @Inject
     public JavaExtension(ResourceProvider resourceProvider,
@@ -101,13 +103,18 @@ public class JavaExtension {
                          ProjectServiceClient projectServiceClient,
                          IconRegistry iconRegistry,
                          DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                         FormatController formatController, EditorAgent editorAgent, ProjectTypeWizardRegistry wizardRegistry, Provider<MavenPagePresenter> mavenPagePresenter) {
+                         FormatController formatController,
+                         EditorAgent editorAgent,
+                         ProjectTypeWizardRegistry wizardRegistry,
+                         Provider<MavenPagePresenter> mavenPagePresenter,
+                         AnalyticsEventLogger eventLogger) {
         this.resourceProvider = resourceProvider;
         this.notificationManager = notificationManager;
         this.restContext = restContext;
         this.workspaceId = workspaceId;
         this.asyncRequestFactory = asyncRequestFactory;
         this.editorAgent = editorAgent;
+        this.eventLogger = eventLogger;
 
 
         iconRegistry.registerIcon("jar.projecttype.big.icon", "java-extension/jar_64.png");
@@ -178,7 +185,7 @@ public class JavaExtension {
         // add actions in context menu
         DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
         contextMenuGroup.addSeparator();
-        UpdateDependencyAction dependencyAction = new UpdateDependencyAction(this, resourceProvider);
+        UpdateDependencyAction dependencyAction = new UpdateDependencyAction(this, resourceProvider, eventLogger);
         actionManager.registerAction("updateDependency", dependencyAction);
         contextMenuGroup.addAction(dependencyAction);
 
@@ -190,7 +197,8 @@ public class JavaExtension {
         newResourceAgent.register(newEnumHandler);
         newResourceAgent.register(newAnnotationHandler);
         newResourceAgent.register(newPackage);
-        ProjectWizard wizard = new ProjectWizard(notificationManager, mavenPagePresenter);
+        ProjectWizard wizard = new ProjectWizard(notificationManager);
+        wizard.addPage(mavenPagePresenter);
         wizardRegistry.addWizard(Constants.MAVEN_JAR_ID, wizard);
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {

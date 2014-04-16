@@ -18,7 +18,7 @@ import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.MouseEvent;
 import elemental.html.AnchorElement;
-import elemental.html.Element;
+import elemental.dom.Element;
 import elemental.html.ImageElement;
 import elemental.html.SpanElement;
 
@@ -118,7 +118,7 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
         if (renderIcon && image != null) {
             ImageElement icon = Elements.createImageElement();
             icon.setSrc(image.getUrl());
-            icon.addClassName(css.icon());
+            Elements.addClassName(css.icon(), icon);
             root.appendChild(icon);
         }
 
@@ -132,11 +132,11 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
         }
 
         if (item.isFolder()) {
-            label.addClassName(css.folderFont());
+            Elements.addClassName(css.folderFont(), label);
         } else if (item.isFile()) {
-            label.addClassName(css.fileFont());
+            Elements.addClassName(css.fileFont(), label);
         } else {
-            label.addClassName(css.defaultFont());
+            Elements.addClassName(css.defaultFont(), label);
         }
         label.setTextContent(name);
         UIObject.ensureDebugId((com.google.gwt.dom.client.Element)label, "projectTree-" + TextUtils.md5(item.getPath()));

@@ -17,33 +17,37 @@
  */
 package com.codenvy.ide.ext.git.client.action;
 
+import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.merge.MergePresenter;
-import com.codenvy.ide.api.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 @Singleton
 public class ShowMergeAction extends Action {
-    private MergePresenter   presenter;
-    private ResourceProvider resourceProvider;
+    private final MergePresenter       presenter;
+    private final ResourceProvider     resourceProvider;
+    private final AnalyticsEventLogger eventLogger;
 
     @Inject
     public ShowMergeAction(MergePresenter presenter, ResourceProvider resourceProvider, GitResources resources,
-                           GitLocalizationConstant constant) {
+                           GitLocalizationConstant constant, AnalyticsEventLogger eventLogger) {
         super(constant.mergeControlTitle(), constant.mergeControlPrompt(), null, resources.merge());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log("IDE: Git merge");
         presenter.showDialog();
     }
 

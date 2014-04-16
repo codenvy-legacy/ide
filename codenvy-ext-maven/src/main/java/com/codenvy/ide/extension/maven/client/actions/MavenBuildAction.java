@@ -17,13 +17,14 @@
  */
 package com.codenvy.ide.extension.maven.client.actions;
 
+import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.extension.maven.client.MavenLocalizationConstant;
 import com.codenvy.ide.extension.maven.client.MavenResources;
 import com.codenvy.ide.extension.maven.client.build.MavenBuilderPresenter;
-import com.codenvy.ide.api.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -36,22 +37,25 @@ import com.google.inject.Singleton;
 public class MavenBuildAction extends Action {
 
     private final ResourceProvider      resourceProvider;
-    private       MavenBuilderPresenter presenter;
+    private final MavenBuilderPresenter presenter;
+    private final AnalyticsEventLogger  eventLogger;
 
     @Inject
     public MavenBuildAction(MavenBuilderPresenter presenter,
                             MavenResources resources,
                             MavenLocalizationConstant localizationConstant,
-                            ResourceProvider resourceProvider) {
+                            ResourceProvider resourceProvider, AnalyticsEventLogger eventLogger) {
         super(localizationConstant.buildProjectControlTitle(),
               localizationConstant.buildProjectControlDescription(), null, resources.build());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log("IDE: Build project with Maven parameter");
         presenter.showDialog();
     }
 

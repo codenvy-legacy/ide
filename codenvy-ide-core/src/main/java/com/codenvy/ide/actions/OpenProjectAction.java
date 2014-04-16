@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.actions;
 
+import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.openproject.OpenProjectPresenter;
@@ -30,16 +31,19 @@ import com.google.inject.Singleton;
 @Singleton
 public class OpenProjectAction extends Action {
 
-    private OpenProjectPresenter presenter;
+    private final OpenProjectPresenter presenter;
+    private final AnalyticsEventLogger eventLogger;
 
     @Inject
-    public OpenProjectAction(OpenProjectPresenter presenter) {
+    public OpenProjectAction(OpenProjectPresenter presenter, AnalyticsEventLogger eventLogger) {
         super("Open Project", "Open project", null);
         this.presenter = presenter;
+        this.eventLogger = eventLogger;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log("IDE: Open project");
         presenter.showDialog();
     }
 

@@ -15,7 +15,7 @@
 package com.codenvy.ide.texteditor.renderer;
 
 import elemental.css.CSSStyleDeclaration;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -99,14 +99,14 @@ public class LineNumberRenderer {
         if (renderedActiveLineNumber != NONE) {
             Element renderedActiveLine = lineNumberToElementCache.get(renderedActiveLineNumber);
             if (renderedActiveLine != null) {
-                renderedActiveLine.removeClassName(css.activeLineNumber());
+                Elements.addClassName(css.activeLineNumber(), renderedActiveLine);
                 renderedActiveLineNumber = NONE;
             }
         }
         Element newActiveLine = lineNumberToElementCache.get(lineNumber);
         // Add class if it's in the viewport.
         if (newActiveLine != null) {
-            newActiveLine.addClassName(css.activeLineNumber());
+            Elements.addClassName(css.activeLineNumber(), newActiveLine);
             renderedActiveLineNumber = lineNumber;
         }
     }
@@ -257,7 +257,7 @@ public class LineNumberRenderer {
                 element.setTextContent(String.valueOf(lineNumber + 1));
                 element.getStyle().setTop(buffer.calculateLineTop(lineNumber), CSSStyleDeclaration.Unit.PX);
                 if (lineNumber == activeLineNumber) {
-                    element.addClassName(css.activeLineNumber());
+                    Elements.addClassName(css.activeLineNumber(), element);
                     renderedActiveLineNumber = activeLineNumber;
                 }
             } else {

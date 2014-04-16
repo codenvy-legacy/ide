@@ -21,7 +21,7 @@ import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.KeyboardEvent;
 import elemental.js.events.JsKeyboardEvent;
-import elemental.js.html.JsElement;
+import elemental.js.dom.JsElement;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -365,7 +365,7 @@ public abstract class Window implements IsWidget {
         }
 
         private void handleEvents() {
-            ((elemental.html.Element)getElement()).addEventListener(Event.KEYDOWN, new EventListener() {
+            ((elemental.dom.Element)getElement()).addEventListener(Event.KEYDOWN, new EventListener() {
                 @Override
                 public void handleEvent(Event evt) {
                     JsKeyboardEvent keyEvt = (JsKeyboardEvent)evt;

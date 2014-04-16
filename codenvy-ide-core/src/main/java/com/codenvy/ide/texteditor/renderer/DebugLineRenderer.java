@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.texteditor.renderer;
 
-import elemental.html.Element;
+import elemental.dom.Element;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.texteditor.Buffer;
@@ -41,7 +41,7 @@ public class DebugLineRenderer {
     public DebugLineRenderer(Buffer buffer, Resources res) {
         this.buffer = buffer;
         lineHighlighter = Elements.createDivElement(res.workspaceEditorBufferCss().line());
-        lineHighlighter.addClassName(res.workspaceEditorBufferCss().debugLine());
+        Elements.addClassName(res.workspaceEditorBufferCss().debugLine(), lineHighlighter);
         lineHighlighter.getStyle().setTop(buffer.calculateLineTop(-1), "px");
     }
 

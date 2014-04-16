@@ -26,6 +26,7 @@ import com.codenvy.api.vfs.server.util.MediaTypeFilter;
 import com.codenvy.api.vfs.server.util.VirtualFileFilters;
 import com.codenvy.commons.lang.NamedThreadFactory;
 
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -101,6 +102,14 @@ public class CleanableSearcherProvider extends LuceneSearcherProvider {
     void close(CleanableSearcher searcher) {
         instances.values().remove(searcher);
         searcher.doClose();
+    }
+
+    @PreDestroy
+    private void stop() {
+        executor.shutdownNow();
+        for (CleanableSearcher searcher : instances.values()) {
+            searcher.close();
+        }
     }
 }
 

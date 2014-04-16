@@ -52,7 +52,7 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
  */
 @Singleton
 public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
-    private static final String API_ANALYTICS_PATH = "/api/analytics/log/ide-usage";
+    private static final String API_ANALYTICS_PATH = "/analytics/log/ide-usage";
 
     private static final String WS_PARAM           = "WS";
     private static final String USER_PARAM         = "USER";
@@ -87,17 +87,17 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
 
     @Override
     public void log(Class<?> extensionClass, String event, Map<String, String> additionalParams) {
-        doLog(event, getSource(extensionClass), additionalParams);
+//        doLog(event, getSource(extensionClass), additionalParams);
     }
 
     @Override
     public void log(Class<?> extensionClass, String event) {
-        doLog(event, getSource(extensionClass), Collections.<String, String>emptyMap());
+//        doLog(event, getSource(extensionClass), Collections.<String, String>emptyMap());
     }
 
     @Override
     public void log(String event) {
-        doLog(event, EMPTY_PARAM_VALUE, Collections.<String, String>emptyMap());
+//        doLog(event, EMPTY_PARAM_VALUE, Collections.<String, String>emptyMap());
     }
 
     private void doLog(String event, String source, Map<String, String> additionalParams) {
@@ -199,6 +199,8 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
                             Log.error(getClass(), exception.getMessage());
                             Log.info(getClass(), json);
                         }
+
+
                     });
                 } catch (Exception e) {
                     Log.error(getClass(), e.getMessage());

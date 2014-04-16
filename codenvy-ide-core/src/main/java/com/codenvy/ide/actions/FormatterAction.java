@@ -4,10 +4,10 @@ import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
+import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.texteditor.api.TextEditorOperations;
-
 import com.google.inject.Inject;
 
 /**
@@ -18,18 +18,23 @@ import com.google.inject.Inject;
 
 public class FormatterAction extends Action {
 
-    private EditorAgent         editorAgent;
+    private final EditorAgent          editorAgent;
+    private final AnalyticsEventLogger eventLogger;
+
     private EditorPartPresenter editor;
 
 
     @Inject
-    public FormatterAction(EditorAgent editorAgent, CoreLocalizationConstant localization) {
+    public FormatterAction(EditorAgent editorAgent, CoreLocalizationConstant localization,
+                           AnalyticsEventLogger eventLogger) {
         super(localization.formatName(), localization.formatDescription(), null);
         this.editorAgent = editorAgent;
+        this.eventLogger = eventLogger;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log("IDE: Format file");
         editor = editorAgent.getActiveEditor();
         if (editor instanceof CodenvyTextEditor) {
             ((CodenvyTextEditor)editor).getView().doOperation(TextEditorOperations.FORMAT);

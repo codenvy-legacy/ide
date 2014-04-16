@@ -37,14 +37,15 @@ import com.google.inject.Singleton;
 public class UpdateAction extends Action {
 
     private final ResourceProvider resourceProvider;
-    private       RunnerController runnerController;
+    private final RunnerController runnerController;
 
     @Inject
     public UpdateAction(RunnerController runnerController,
                         RunnerResources resources,
                         ResourceProvider resourceProvider,
                         RunnerLocalizationConstant localizationConstants) {
-        super(localizationConstants.updateExtensionText(), localizationConstants.updateExtensionDescription(), resources.updateApp());
+        super(localizationConstants.updateExtensionText(), localizationConstants.updateExtensionDescription(),
+              resources.updateApp());
         this.runnerController = runnerController;
         this.resourceProvider = resourceProvider;
     }
@@ -61,7 +62,8 @@ public class UpdateAction extends Action {
         Project activeProject = resourceProvider.getActiveProject();
         if (activeProject != null) {
             // this action is specific for the Codenvy Extension project only
-            e.getPresentation().setVisible(Constants.CODENVY_PLUGIN_ID.equals(activeProject.getDescription().getProjectTypeId()));
+            e.getPresentation()
+             .setVisible(Constants.CODENVY_PLUGIN_ID.equals(activeProject.getDescription().getProjectTypeId()));
             e.getPresentation().setEnabled(runnerController.isAnyAppLaunched());
         } else {
             e.getPresentation().setEnabledAndVisible(false);

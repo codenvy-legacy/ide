@@ -92,7 +92,13 @@ public class TomcatServer implements ApplicationServer {
 
     @Override
     public final String getName() {
-        return "Tomcat";
+        return "Tomcat7";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Apache Tomcat 7.0 is an implementation of the Java Servlet and JavaServer Pages technologies.\n" +
+               "Home page: http://tomcat.apache.org/";
     }
 
     @Override
@@ -130,7 +136,7 @@ public class TomcatServer implements ApplicationServer {
         // TODO: unregister updater
         registerUpdater(process, new ApplicationUpdater() {
             @Override
-            public void update() throws UpdateException {
+            public void update() throws RunnerException {
                 try {
                     final ProjectDescriptor projectDescriptor = runnerConfiguration.getRequest().getProjectDescriptor();
                     final java.io.File destinationDir = Files.createTempDirectory(workDir.toPath(), "sources-").toFile();
@@ -144,7 +150,7 @@ public class TomcatServer implements ApplicationServer {
                     LOG.debug("Extension {} updated", workDir);
                 } catch (Exception e) {
                     LOG.error("Unable to update extension: {}", workDir);
-                    throw new UpdateException(e);
+                    throw new RunnerException(e);
                 }
             }
         });

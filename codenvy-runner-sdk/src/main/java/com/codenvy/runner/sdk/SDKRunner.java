@@ -22,6 +22,9 @@ import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.api.project.server.ProjectEventService;
 import com.codenvy.api.runner.RunnerException;
+import com.codenvy.api.runner.dto.DebugMode;
+import com.codenvy.api.runner.dto.RunRequest;
+import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.api.runner.internal.DeploymentSources;
 import com.codenvy.api.runner.internal.Disposer;
@@ -29,8 +32,6 @@ import com.codenvy.api.runner.internal.ResourceAllocators;
 import com.codenvy.api.runner.internal.Runner;
 import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
-import com.codenvy.api.runner.internal.dto.DebugMode;
-import com.codenvy.api.runner.internal.dto.RunRequest;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.dto.server.DtoFactory;
@@ -62,44 +63,51 @@ public class SDKRunner extends Runner {
     private static final Logger LOG = LoggerFactory.getLogger(SDKRunner.class);
 
     public static final String IDE_GWT_XML_FILE_NAME    = "IDEPlatform.gwt.xml";
-    public static final String DEFAULT_SERVER_NAME      = "Tomcat";
+    public static final String DEFAULT_SERVER_NAME      = "Tomcat7";
     public static final String DEBUG_TRANSPORT_PROTOCOL = "dt_socket";
     /** Rel for code server link. */
     public static final String LINK_REL_CODE_SERVER     = "code server";
     /** Name of configuration parameter that specifies the domain name or IP address of the code server. */
     public static final String CODE_SERVER_BIND_ADDRESS = "runner.sdk.code_server_bind_address";
 
-    private final Map<String, ApplicationServer> applicationServers;
-    private final String                         codeServerBindAddress;
+    private final Map<String, ApplicationServer> servers;
+    private final Map<String, RunnerEnvironment> environments;
+    private final String                         codeServerAddress;
     private final String                         hostName;
     private final CustomPortService              portService;
     private final CodeServer                     codeServer;
     private final ProjectEventService            projectEventService;
-    private final ApplicationUpdaterRegistry     applicationUpdaterRegistry;
 
     @Inject
     public SDKRunner(@Named(DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
                      @Named(CLEANUP_DELAY_TIME) int cleanupDelay,
-                     @Named(CODE_SERVER_BIND_ADDRESS) String codeServerBindAddress,
+                     @Named(CODE_SERVER_BIND_ADDRESS) String codeServerAddress,
                      @Named("runner.sdk.host_name") String hostName,
                      CustomPortService portService,
                      Set<ApplicationServer> appServers,
                      CodeServer codeServer,
                      ResourceAllocators allocators,
                      EventService eventService,
-                     ProjectEventService projectEventService,
-                     ApplicationUpdaterRegistry applicationUpdaterRegistry) {
+                     ProjectEventService projectEventService) {
         super(deployDirectoryRoot, cleanupDelay, allocators, eventService);
-        this.codeServerBindAddress = codeServerBindAddress;
+        this.codeServerAddress = codeServerAddress;
         this.hostName = hostName;
         this.portService = portService;
         this.codeServer = codeServer;
         this.projectEventService = projectEventService;
-        this.applicationUpdaterRegistry = applicationUpdaterRegistry;
-        applicationServers = new HashMap<>();
+        this.servers = new HashMap<>();
         //available application servers should be already injected
         for (ApplicationServer appServer : appServers) {
-            applicationServers.put(appServer.getName(), appServer);
+            servers.put(appServer.getName(), appServer);
+        }
+        this.environments = new HashMap<>(servers.size());
+        final DtoFactory dtoFactory = DtoFactory.getInstance();
+        for (ApplicationServer server : appServers) {
+            final RunnerEnvironment runnerEnvironment = dtoFactory.createDto(RunnerEnvironment.class)
+                                                                  .withId(server.getName())
+                                                                  .withDescription(server.getDescription())
+                                                                  .withIsDefault(DEFAULT_SERVER_NAME.equals(server.getName()));
+            this.environments.put(runnerEnvironment.getId(), runnerEnvironment);
         }
     }
 
@@ -114,24 +122,34 @@ public class SDKRunner extends Runner {
     }
 
     @Override
+    public Map<String, RunnerEnvironment> getEnvironments() {
+        final Map<String, RunnerEnvironment> copy = new HashMap<>(environments.size());
+        final DtoFactory dtoFactory = DtoFactory.getInstance();
+        for (Map.Entry<String, RunnerEnvironment> entry : environments.entrySet()) {
+            copy.put(entry.getKey(), dtoFactory.clone(entry.getValue()));
+        }
+        return copy;
+    }
+
+    @Override
     public RunnerConfigurationFactory getRunnerConfigurationFactory() {
         return new RunnerConfigurationFactory() {
             @Override
             public RunnerConfiguration createRunnerConfiguration(RunRequest request) throws RunnerException {
                 final int httpPort = portService.acquire();
                 final int codeServerPort = portService.acquire();
-                final SDKRunnerConfiguration configuration = new SDKRunnerConfiguration(DEFAULT_SERVER_NAME,
-                                                                                        request.getMemorySize(),
-                                                                                        httpPort,
-                                                                                        codeServerBindAddress,
-                                                                                        codeServerPort,
-                                                                                        request);
+                String server = request.getEnvironmentId();
+                if (server == null) {
+                    server = DEFAULT_SERVER_NAME;
+                }
+                final SDKRunnerConfiguration configuration =
+                        new SDKRunnerConfiguration(server, request.getMemorySize(), httpPort, codeServerAddress, codeServerPort, request);
                 configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class)
                                                        .withRel(com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL)
                                                        .withHref(String.format("http://%s:%d/%s", hostName, httpPort, "ide/default")));
                 configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class)
                                                        .withRel(LINK_REL_CODE_SERVER)
-                                                       .withHref(String.format("%s:%d", codeServerBindAddress, codeServerPort)));
+                                                       .withHref(String.format("%s:%d", codeServerAddress, codeServerPort)));
                 final DebugMode debugMode = request.getDebugMode();
                 if (debugMode != null && debugMode.getMode() != null) {
                     configuration.setDebugHost(hostName);
@@ -150,7 +168,7 @@ public class SDKRunner extends Runner {
         // It always should be SDKRunnerConfiguration.
         final SDKRunnerConfiguration sdkRunnerCfg = (SDKRunnerConfiguration)configuration;
 
-        final ApplicationServer server = applicationServers.get(sdkRunnerCfg.getServer());
+        final ApplicationServer server = servers.get(sdkRunnerCfg.getServer());
         if (server == null) {
             throw new RunnerException(String.format("Server %s not found", sdkRunnerCfg.getServer()));
         }
@@ -185,14 +203,11 @@ public class SDKRunner extends Runner {
                                   public void stopped() {
                                       // stop tracking changes in remote project since code server is stopped
                                       projectEventService.removeListener(workspace, project, codeServerProcess);
-
                                       portService.release(sdkRunnerCfg.getHttpPort());
-
                                       final int debugPort = sdkRunnerCfg.getDebugPort();
                                       if (debugPort > 0) {
                                           portService.release(debugPort);
                                       }
-
                                       final int codeServerPort = sdkRunnerCfg.getCodeServerPort();
                                       if (codeServerPort > 0) {
                                           portService.release(codeServerPort);

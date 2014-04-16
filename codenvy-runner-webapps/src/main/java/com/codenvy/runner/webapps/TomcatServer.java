@@ -92,7 +92,13 @@ public class TomcatServer implements ApplicationServer {
 
     @Override
     public final String getName() {
-        return "Tomcat";
+        return "Tomcat7";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Apache Tomcat 7.0 is an implementation of the Java Servlet and JavaServer Pages technologies.\n" +
+               "Home page: http://tomcat.apache.org/";
     }
 
     @Override

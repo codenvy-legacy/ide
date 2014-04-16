@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.extension.builder.client.actions;
 
+import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
@@ -35,20 +36,24 @@ import com.google.inject.Singleton;
 public class BuildAction extends Action {
 
     private final ResourceProvider      resourceProvider;
-    private       BuildProjectPresenter presenter;
+    private final BuildProjectPresenter presenter;
+    private final AnalyticsEventLogger  eventLogger;
 
     @Inject
     public BuildAction(BuildProjectPresenter presenter, BuilderResources resources,
-                       BuilderLocalizationConstant localizationConstant, ResourceProvider resourceProvider) {
+                       BuilderLocalizationConstant localizationConstant, ResourceProvider resourceProvider,
+                       AnalyticsEventLogger eventLogger) {
         super(localizationConstant.buildProjectControlTitle(),
               localizationConstant.buildProjectControlDescription(), null, resources.build());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log("IDE: Build project");
         presenter.buildActiveProject();
     }
 
