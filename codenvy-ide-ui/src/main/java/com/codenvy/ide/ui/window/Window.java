@@ -381,7 +381,6 @@ public abstract class Window implements IsWidget {
             
             
             contentContainer.addDomHandler(handler, KeyDownEvent.getType());
-            contentContainer.addHandler(handler, KeyDownEvent.getType());
             
             crossButton.addDomHandler(new ClickHandler() {
                 @Override
