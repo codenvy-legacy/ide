@@ -249,7 +249,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-        view.setBreakpoints(gutterManager.getBreakPoints());
+        view.setBreakpoints(gutterManager.getBreakpoints());
         view.setVariables(variables);
         container.setWidget(view);
     }
@@ -286,7 +286,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                     @Override
                     public void onSuccess(File result) {
                         if (result != null && filePath != null && filePath.equalsIgnoreCase(result.getPath())) {
-                            gutterManager.markCurrentBreakPoint(finalLocation.getLineNumber() - 1);
+                            gutterManager.markCurrentBreakpoint(finalLocation.getLineNumber() - 1);
                         }
                     }
 
@@ -298,7 +298,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                     }
                 });
             } else {
-                gutterManager.markCurrentBreakPoint(location.getLineNumber() - 1);
+                gutterManager.markCurrentBreakpoint(location.getLineNumber() - 1);
             }
             getStackFrameDump();
             changeButtonsEnableState(true);
@@ -530,7 +530,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         view.setVariables(variables);
         selectedVariable = null;
         updateChangeValueButtonEnableState();
-        gutterManager.unmarkCurrentBreakPoint();
+        gutterManager.unmarkCurrentBreakpoint();
     }
 
     private void showDialog(@NotNull DebuggerInfo debuggerInfo) {
@@ -607,7 +607,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
             });
         } else {
             changeButtonsEnableState(false);
-            gutterManager.unmarkCurrentBreakPoint();
+            gutterManager.unmarkCurrentBreakpoint();
         }
     }
 
@@ -644,14 +644,14 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     /** Perform some action after disconnecting a debugger. */
     private void onDebuggerDisconnected() {
         debuggerInfo = null;
-        gutterManager.unmarkCurrentBreakPoint();
+        gutterManager.unmarkCurrentBreakpoint();
         gutterManager.removeAllBreakPoints();
         console.print(constant.debuggerDisconnected(appDescriptor.getDebugHost() + ':' + appDescriptor.getDebugPort()));
         appDescriptor = null;
     }
 
     private void updateBreakPoints() {
-        view.setBreakpoints(gutterManager.getBreakPoints());
+        view.setBreakpoints(gutterManager.getBreakpoints());
     }
 
     /** {@inheritDoc} */
@@ -675,7 +675,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 protected void onSuccess(Void result) {
                     if (resolver != null) {
                         final String fqn = resolver.resolveFqn(file);
-                        Breakpoint breakpoint = new Breakpoint(Breakpoint.Type.BREAKPOINT, lineNumber, fqn);
+                        Breakpoint breakpoint = new Breakpoint(Breakpoint.Type.BREAKPOINT, lineNumber, fqn, file);
                         callback.onSuccess(breakpoint);
                     }
                     updateBreakPoints();

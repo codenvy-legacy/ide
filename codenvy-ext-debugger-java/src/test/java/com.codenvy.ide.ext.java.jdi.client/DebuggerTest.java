@@ -171,7 +171,7 @@ public class DebuggerTest extends BaseTest {
         verifySetEnableButtons(DISABLE_BUTTON);
 
         verify(runnerController).stopActiveProject();
-        verify(gutterManager).unmarkCurrentBreakPoint();
+        verify(gutterManager).unmarkCurrentBreakpoint();
         verify(gutterManager).removeAllBreakPoints();
         verify(console).print(constants.debuggerDisconnected(anyString()));
         verify(view).setEnableRemoveAllBreakpointsButton(DISABLE_BUTTON);
@@ -217,7 +217,7 @@ public class DebuggerTest extends BaseTest {
         verify(service).resume(anyString(), (AsyncRequestCallback<Void>)anyObject());
         verify(view).setVariables(anyListOf(Variable.class));
         verify(view).setEnableChangeValueButtonEnable(eq(DISABLE_BUTTON));
-        verify(gutterManager).unmarkCurrentBreakPoint();
+        verify(gutterManager).unmarkCurrentBreakpoint();
     }
 
     @Test
@@ -258,7 +258,7 @@ public class DebuggerTest extends BaseTest {
         verify(service).stepInto(anyString(), (AsyncRequestCallback<Void>)anyObject());
         verify(view).setVariables(anyListOf(Variable.class));
         verify(view).setEnableChangeValueButtonEnable(eq(DISABLE_BUTTON));
-        verify(gutterManager).unmarkCurrentBreakPoint();
+        verify(gutterManager).unmarkCurrentBreakpoint();
     }
 
     @Test
@@ -299,7 +299,7 @@ public class DebuggerTest extends BaseTest {
         verify(service).stepOver(anyString(), (AsyncRequestCallback<Void>)anyObject());
         verify(view).setVariables(anyListOf(Variable.class));
         verify(view).setEnableChangeValueButtonEnable(eq(DISABLE_BUTTON));
-        verify(gutterManager).unmarkCurrentBreakPoint();
+        verify(gutterManager).unmarkCurrentBreakpoint();
     }
 
     @Test
@@ -340,7 +340,7 @@ public class DebuggerTest extends BaseTest {
         verify(service).stepReturn(anyString(), (AsyncRequestCallback<Void>)anyObject());
         verify(view).setVariables(anyListOf(Variable.class));
         verify(view).setEnableChangeValueButtonEnable(eq(DISABLE_BUTTON));
-        verify(gutterManager).unmarkCurrentBreakPoint();
+        verify(gutterManager).unmarkCurrentBreakpoint();
     }
 
     @Test

@@ -26,7 +26,7 @@ import com.codenvy.ide.util.dom.Elements;
 /**
  * The renderer for the debug line in the editor.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
 public class DebugLineRenderer {
     private final Element lineHighlighter;
