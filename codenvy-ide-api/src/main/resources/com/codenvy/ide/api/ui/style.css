@@ -153,6 +153,7 @@
 /*Window*/
 @eval windowContentBackground com.codenvy.ide.api.ui.theme.Style.getWindowContentBackground();
 @eval windowHeaderBackground com.codenvy.ide.api.ui.theme.Style.getWindowHeaderBackground();
+@eval windowSeparatorColor com.codenvy.ide.api.ui.theme.Style.getWindowSeparatorColor();
 
 /*syntax highlight*/
 @eval keyword com.codenvy.ide.api.ui.theme.Style.getEditorKeyWord();

@@ -17,10 +17,7 @@
  */
 package com.codenvy.ide.ui.window;
 
-import elemental.events.Event;
-import elemental.events.EventListener;
 import elemental.events.KeyboardEvent;
-import elemental.js.events.JsKeyboardEvent;
 import elemental.js.dom.JsElement;
 
 import com.google.gwt.core.client.GWT;
@@ -32,6 +29,8 @@ import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
@@ -276,6 +275,8 @@ public abstract class Window implements IsWidget {
 
         String footer();
         
+        String separator();
+        
         String alignBtn();
 
         String crossButton();
@@ -365,18 +366,23 @@ public abstract class Window implements IsWidget {
         }
 
         private void handleEvents() {
-            ((elemental.dom.Element)getElement()).addEventListener(Event.KEYDOWN, new EventListener() {
+            KeyDownHandler handler = new KeyDownHandler() {
+
                 @Override
-                public void handleEvent(Event evt) {
-                    JsKeyboardEvent keyEvt = (JsKeyboardEvent)evt;
-                    int keyCode = keyEvt.getKeyCode();
-                    if (KeyboardEvent.KeyCode.ESC == keyCode) {
+                public void onKeyDown(KeyDownEvent event) {
+                    com.google.gwt.user.client.Window.alert(delegate + ""  + event.getNativeEvent().getKeyCode());
+                    if (KeyboardEvent.KeyCode.ESC == event.getNativeEvent().getKeyCode()) {
                         if (delegate != null) {
                             delegate.onEscapeKey();
                         }
                     }
                 }
-            }, true);
+            };
+            
+            
+            contentContainer.addDomHandler(handler, KeyDownEvent.getType());
+            contentContainer.addHandler(handler, KeyDownEvent.getType());
+            
             crossButton.addDomHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
