@@ -38,15 +38,7 @@
             margin-right: 5px;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="380px" height="130px" addStyleNames="{style.emptyBorder}">
-        <g:south size="26.0">
-            <g:FlowPanel>
-                <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" ui:field="btnCancel"
-                          debugId="git-initializeRepository-cancel"/>
-                <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonOk}" width="60px" ui:field="btnOk"
-                          debugId="git-initializeRepository-ok"/>
-            </g:FlowPanel>
-        </g:south>
+    <g:DockLayoutPanel unit="PX" width="380px" height="100px" addStyleNames="{style.emptyBorder}">
         <g:north size="50.0">
             <g:DockLayoutPanel unit="PX" width="100%" height="100%" styleName="{style.spacing}">
                 <g:north size="20.0">

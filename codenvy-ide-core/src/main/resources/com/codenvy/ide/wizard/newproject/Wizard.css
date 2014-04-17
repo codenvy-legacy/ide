@@ -2,10 +2,6 @@
 .alignBtn {
     float: right;
     margin-right: 17px;
-    border-radius: 1px !important;
-    font-size: 12px;
-    font-family: mainFontFamily;
-    font-weight: bold;
 }
 
 .space {

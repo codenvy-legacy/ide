@@ -18,14 +18,14 @@
 package com.codenvy.ide.upload;
 
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -38,15 +38,12 @@ import javax.validation.constraints.NotNull;
  *
  * @author Roman Nikitenko.
  */
-public class UploadFileViewImpl extends DialogBox implements UploadFileView {
+public class UploadFileViewImpl extends Window implements UploadFileView {
 
     public interface UploadFileViewBinder extends UiBinder<Widget, UploadFileViewImpl> {
     }
 
-    @UiField
     Button btnCancel;
-
-    @UiField
     Button btnUpload;
 
     @UiField
@@ -59,9 +56,27 @@ public class UploadFileViewImpl extends DialogBox implements UploadFileView {
     @Inject
     public UploadFileViewImpl(UploadFileViewBinder uploadFileViewBinder, CoreLocalizationConstant locale) {
 
-        this.setText(locale.uploadFileTitle());
+        this.setTitle(locale.uploadFileTitle());
         setWidget(uploadFileViewBinder.createAndBindUi(this));
         bind();
+        
+        btnCancel = createButton(locale.cancel(), "file-uploadFile-cancel", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCancelClicked();
+            }
+        });
+        getFooter().add(btnCancel);
+
+        btnUpload = createButton(locale.uploadButton(), "file-uploadFile-upload", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onUploadClicked();
+            }
+        });
+        getFooter().add(btnUpload);
     }
 
     /** Bind handlers. */
@@ -90,7 +105,6 @@ public class UploadFileViewImpl extends DialogBox implements UploadFileView {
         });
         uploadForm.add(file);
 
-        this.center();
         this.show();
     }
 
@@ -100,16 +114,6 @@ public class UploadFileViewImpl extends DialogBox implements UploadFileView {
         this.hide();
         uploadForm.remove(file);
         file = null;
-    }
-
-    @UiHandler("btnCancel")
-    public void onCancelClicked(ClickEvent event) {
-        delegate.onCancelClicked();
-    }
-
-    @UiHandler("btnUpload")
-    public void onUploadClicked(ClickEvent event) {
-        delegate.onUploadClicked();
     }
 
     /** {@inheritDoc} */
@@ -147,6 +151,11 @@ public class UploadFileViewImpl extends DialogBox implements UploadFileView {
     @Override
     public String getFileName() {
         return file.getName();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onClose() {
     }
 
 }

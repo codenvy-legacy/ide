@@ -19,14 +19,15 @@ package com.codenvy.ide.ext.git.client.remote.add;
 
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
+import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -40,7 +41,7 @@ import javax.validation.constraints.NotNull;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class AddRemoteRepositoryViewImpl extends DialogBox implements AddRemoteRepositoryView {
+public class AddRemoteRepositoryViewImpl extends Window implements AddRemoteRepositoryView {
     interface AddRemoteRepositoryViewImplUiBinder extends UiBinder<Widget, AddRemoteRepositoryViewImpl> {
     }
 
@@ -50,9 +51,7 @@ public class AddRemoteRepositoryViewImpl extends DialogBox implements AddRemoteR
     TextBox name;
     @UiField
     TextBox url;
-    @UiField
     Button  btnOk;
-    @UiField
     Button  btnCancel;
     @UiField(provided = true)
     final   GitResources            res;
@@ -73,8 +72,26 @@ public class AddRemoteRepositoryViewImpl extends DialogBox implements AddRemoteR
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 
-        this.setText("Add remote repository");
+        this.setTitle("Add remote repository");
         this.setWidget(widget);
+        
+        btnCancel = createButton(locale.buttonCancel(), "", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCancelClicked();
+            }
+        });
+        getFooter().add(btnCancel);
+
+        btnOk = createButton(locale.buttonOk(), "", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onOkClicked();
+            }
+        });
+        getFooter().add(btnOk);
     }
 
     /** {@inheritDoc} */
@@ -118,7 +135,6 @@ public class AddRemoteRepositoryViewImpl extends DialogBox implements AddRemoteR
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        this.center();
         this.show();
     }
 
@@ -128,18 +144,13 @@ public class AddRemoteRepositoryViewImpl extends DialogBox implements AddRemoteR
         this.delegate = delegate;
     }
 
-    @UiHandler("btnOk")
-    public void onOkClicked(ClickEvent event) {
-        delegate.onOkClicked();
-    }
-
-    @UiHandler("btnCancel")
-    public void onCancelClicked(ClickEvent event) {
-        delegate.onCancelClicked();
-    }
-
     @UiHandler({"name", "url"})
     public void onValueChanged(KeyUpEvent event) {
         delegate.onValueChanged();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onClose() {
     }
 }

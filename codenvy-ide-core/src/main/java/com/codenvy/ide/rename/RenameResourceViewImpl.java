@@ -18,13 +18,14 @@
 package com.codenvy.ide.rename;
 
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -34,16 +35,14 @@ import com.google.inject.Inject;
  * 
  * @author Ann Shumilova
  */
-public class RenameResourceViewImpl extends DialogBox implements RenameResourceView {
+public class RenameResourceViewImpl extends Window implements RenameResourceView {
 
     interface RenameResourceViewImplUiBinder extends UiBinder<Widget, RenameResourceViewImpl> {
     }
 
     @UiField
     TextBox                  newName;
-    @UiField
     Button                   btnRename;
-    @UiField
     Button                   btnCancel;
     @UiField(provided = true)
     CoreLocalizationConstant locale;
@@ -52,9 +51,27 @@ public class RenameResourceViewImpl extends DialogBox implements RenameResourceV
     @Inject
     public RenameResourceViewImpl(CoreLocalizationConstant locale, RenameResourceViewImplUiBinder uiBinder) {
         this.locale = locale;
-        this.setText(locale.renameResourceViewTitle());
+        this.setTitle(locale.renameResourceViewTitle());
 
         this.setWidget(uiBinder.createAndBindUi(this));
+        
+        btnCancel = createButton(locale.cancel(), "file-rename-cancel", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCancelClicked();
+            }
+        });
+        getFooter().add(btnCancel);
+
+        btnRename = createButton(locale.renameButton(), "file-rename-rename", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onRenameClicked();
+            }
+        });
+        getFooter().add(btnRename);
     }
 
     /** {@inheritDoc} */
@@ -96,24 +113,18 @@ public class RenameResourceViewImpl extends DialogBox implements RenameResourceV
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        this.center();
         this.show();
         this.newName.setFocus(true);
-    }
-
-    @UiHandler("btnRename")
-    public void onRenameClicked(ClickEvent event) {
-        delegate.onRenameClicked();
-    }
-
-    @UiHandler("btnCancel")
-    public void onCancelClicked(ClickEvent event) {
-        delegate.onCancelClicked();
     }
 
     @UiHandler("newName")
     public void onMessageChanged(KeyUpEvent event) {
         delegate.onValueChanged();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onClose() {
     }
 
 }

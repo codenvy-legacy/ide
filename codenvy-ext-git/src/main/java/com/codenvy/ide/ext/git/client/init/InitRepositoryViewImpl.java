@@ -19,15 +19,16 @@ package com.codenvy.ide.ext.git.client.init;
 
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
+import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -41,7 +42,7 @@ import javax.validation.constraints.NotNull;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class InitRepositoryViewImpl extends DialogBox implements InitRepositoryView {
+public class InitRepositoryViewImpl extends Window implements InitRepositoryView {
     interface InitRepositoryViewImplUiBinder extends UiBinder<Widget, InitRepositoryViewImpl> {
     }
 
@@ -51,9 +52,7 @@ public class InitRepositoryViewImpl extends DialogBox implements InitRepositoryV
     CheckBox bare;
     @UiField
     TextBox  workdir;
-    @UiField
     Button   btnOk;
-    @UiField
     Button   btnCancel;
     @UiField(provided = true)
     final   GitResources            res;
@@ -74,8 +73,27 @@ public class InitRepositoryViewImpl extends DialogBox implements InitRepositoryV
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 
-        this.setText(locale.createTitle());
+        this.setTitle(locale.createTitle());
         this.setWidget(widget);
+        
+        
+        btnCancel = createButton(locale.buttonCancel(), "git-initializeRepository-cancel", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCancelClicked();
+            }
+        });
+        getFooter().add(btnCancel);
+
+        btnOk = createButton(locale.buttonOk(), "git-initializeRepository-ok", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onOkClicked();
+            }
+        });
+        getFooter().add(btnOk);
     }
 
     /** {@inheritDoc} */
@@ -124,22 +142,16 @@ public class InitRepositoryViewImpl extends DialogBox implements InitRepositoryV
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        this.center();
         this.show();
-    }
-
-    @UiHandler("btnOk")
-    public void onOkClicked(ClickEvent event) {
-        delegate.onOkClicked();
-    }
-
-    @UiHandler("btnCancel")
-    public void onCancelClicked(ClickEvent event) {
-        delegate.onCancelClicked();
     }
 
     @UiHandler("workdir")
     public void onValueChanged(KeyUpEvent event) {
         delegate.onValueChanged();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onClose() {
     }
 }

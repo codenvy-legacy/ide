@@ -17,18 +17,19 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.window.Window;
 import com.codenvy.ide.wizard.newproject.step.Step;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DeckLayoutPanel;
@@ -61,13 +62,9 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
         WIZARD_RESOURCE.css().ensureInjected();
     }
 
-    @UiField
     Button          btnCancel;
-    @UiField
     Button          btnFinish;
-    @UiField
     Button          btnBack;
-    @UiField
     Button          btnNext;
     //    @UiField
 //    SimplePanel     imagePanel;
@@ -87,6 +84,7 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     @UiField(provided = true)
     Css style;
     private ActionDelegate delegate;
+    private CoreLocalizationConstant locale;
 
     /**
      * Create view.
@@ -94,11 +92,51 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
      * @param resource
      */
     @Inject
-    protected ProjectWizardViewImpl(com.codenvy.ide.Resources resource) {
+    protected ProjectWizardViewImpl(com.codenvy.ide.Resources resource, CoreLocalizationConstant locale) {
         this.res = resource;
+        this.locale = locale;
         this.style = WIZARD_RESOURCE.css();
         Widget widget = uiBinder.createAndBindUi(this);
         this.setWidget(widget);
+        createButtons();
+    }
+    
+    private void createButtons(){
+        btnCancel = createButton(locale.cancel(), "file-newProject-cancel", new ClickHandler() {
+            
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCancelClicked();
+            }
+        });
+        getFooter().add(btnCancel);
+        
+        btnFinish = createButton(locale.finish(), "file-newProject-finish", new ClickHandler() {
+            
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onFinishClicked();
+            }
+        });
+        getFooter().add(btnFinish);
+        
+        btnNext = createButton(locale.next(), "file-newProject-next", new ClickHandler() {
+            
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onNextClicked();
+            }
+        });
+        getFooter().add(btnNext);
+        
+        btnBack = createButton(locale.back(), "file-newProject-back", new ClickHandler() {
+            
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onBackClicked();
+            }
+        });
+        getFooter().add(btnBack);
     }
 
     @Override
@@ -197,26 +235,6 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     @Override
     public AcceptsOneWidget getContentPanel() {
         return contentPanel;
-    }
-
-    @UiHandler("btnCancel")
-    void onBtnCancelClick(ClickEvent event) {
-        delegate.onCancelClicked();
-    }
-
-    @UiHandler("btnFinish")
-    void onBtnFinishClick(ClickEvent event) {
-        delegate.onFinishClicked();
-    }
-
-    @UiHandler("btnNext")
-    void onBtnNextClick(ClickEvent event) {
-        delegate.onNextClicked();
-    }
-
-    @UiHandler("btnBack")
-    void onBtnBackClick(ClickEvent event) {
-        delegate.onBackClicked();
     }
 
     public interface Css extends CssResource{

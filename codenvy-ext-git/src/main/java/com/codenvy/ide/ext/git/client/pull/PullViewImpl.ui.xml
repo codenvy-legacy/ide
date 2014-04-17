@@ -22,10 +22,6 @@
     <ui:with field='locale' type='com.codenvy.ide.ext.git.client.GitLocalizationConstant'/>
     <ui:with field='res' type='com.codenvy.ide.ext.git.client.GitResources'/>
     <ui:style>
-        .alignBtn {
-            float: right;
-        }
-
         .alignLeft {
             float: left;
         }
@@ -44,15 +40,7 @@
             float: left;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="450px" height="110px" addStyleNames="{style.emptyBorder}">
-        <g:south size="26.0">
-            <g:FlowPanel>
-                <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" ui:field="btnCancel"
-                          debugId="git-remotes-pull-cancel"/>
-                <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonPull}" width="60px" ui:field="btnPull"
-                          debugId="git-remotes-pull-pull"/>
-            </g:FlowPanel>
-        </g:south>
+    <g:DockLayoutPanel unit="PX" width="450px" height="90px" addStyleNames="{style.emptyBorder}">
         <g:north size="26.0">
             <g:FlowPanel>
                 <g:Label text="{locale.fetchRemoteFieldTitle}" addStyleNames="{res.gitCSS.textFont} {style.alignLeft}"/>
