@@ -372,6 +372,13 @@ public interface Theme {
      * @return the color
      */
     String getWindowHeaderBackground();
+    
+    /**
+     * Color of the line separating elements in Window (for footer).
+     *
+     * @return the color
+     */
+    String getWindowSeparatorColor();
 
     /**
      * New Project wizard steps background color(used in new project wizard, left vertical panel)

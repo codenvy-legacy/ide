@@ -276,6 +276,11 @@ public class LightTheme implements Theme {
     public String getWindowHeaderBackground() {
         return getTabBorderColor();
     }
+    
+    @Override
+    public String getWindowSeparatorColor() {
+        return "#818181";
+    }
 
     @Override
     public String getWizardStepsColor() {

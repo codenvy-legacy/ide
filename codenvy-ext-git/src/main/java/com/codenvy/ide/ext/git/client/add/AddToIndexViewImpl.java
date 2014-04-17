@@ -19,14 +19,14 @@ package com.codenvy.ide.ext.git.client.add;
 
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
+import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -40,7 +40,7 @@ import javax.validation.constraints.NotNull;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class AddToIndexViewImpl extends DialogBox implements AddToIndexView {
+public class AddToIndexViewImpl extends Window implements AddToIndexView {
     interface AddToIndexViewImplUiBinder extends UiBinder<Widget, AddToIndexViewImpl> {
     }
 
@@ -50,9 +50,7 @@ public class AddToIndexViewImpl extends DialogBox implements AddToIndexView {
     Label    message;
     @UiField
     CheckBox update;
-    @UiField
     Button   btnAdd;
-    @UiField
     Button   btnCancel;
     @UiField(provided = true)
     final   GitResources            res;
@@ -73,8 +71,26 @@ public class AddToIndexViewImpl extends DialogBox implements AddToIndexView {
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 
-        this.setText(locale.addToIndexTitle());
+        this.setTitle(locale.addToIndexTitle());
         this.setWidget(widget);
+        
+        btnCancel = createButton(locale.buttonCancel(), "", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCancelClicked();
+            }
+        });
+        getFooter().add(btnCancel);
+
+        btnAdd = createButton(locale.buttonAdd(), "", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onAddClicked();
+            }
+        });
+        getFooter().add(btnAdd);
     }
 
     /** {@inheritDoc} */
@@ -104,7 +120,6 @@ public class AddToIndexViewImpl extends DialogBox implements AddToIndexView {
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        this.center();
         this.show();
     }
 
@@ -114,13 +129,8 @@ public class AddToIndexViewImpl extends DialogBox implements AddToIndexView {
         this.delegate = delegate;
     }
 
-    @UiHandler("btnAdd")
-    public void onAddClicked(ClickEvent event) {
-        delegate.onAddClicked();
-    }
-
-    @UiHandler("btnCancel")
-    public void onCancelClicked(ClickEvent event) {
-        delegate.onCancelClicked();
+    /** {@inheritDoc} */
+    @Override
+    protected void onClose() {
     }
 }

@@ -170,5 +170,28 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("importProject.viewTitle")
     String importProjectViewTitle();
-
+    
+    @Key("ok")
+    String ok();
+    
+    @Key("cancel")
+    String cancel();
+    
+    @Key("open")
+    String open();
+    
+    @Key("next")
+    String next();
+    
+    @Key("back")
+    String back();
+    
+    @Key("finish")
+    String finish();
+    
+    @Key("close")
+    String close();
+    
+    @Key("apply")
+    String apply();
 }

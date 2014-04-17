@@ -21,14 +21,15 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.shared.Remote;
+import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -42,7 +43,7 @@ import javax.validation.constraints.NotNull;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class PullViewImpl extends DialogBox implements PullView {
+public class PullViewImpl extends Window implements PullView {
     interface PullViewImplUiBinder extends UiBinder<Widget, PullViewImpl> {
     }
 
@@ -54,9 +55,7 @@ public class PullViewImpl extends DialogBox implements PullView {
     ListBox localBranch;
     @UiField
     ListBox remoteBranch;
-    @UiField
     Button  btnPull;
-    @UiField
     Button  btnCancel;
     @UiField(provided = true)
     final   GitResources            res;
@@ -77,8 +76,26 @@ public class PullViewImpl extends DialogBox implements PullView {
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 
-        this.setText(locale.pullTitle());
+        this.setTitle(locale.pullTitle());
         this.setWidget(widget);
+
+        btnCancel = createButton(locale.buttonCancel(), "git-remotes-pull-cancel", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCancelClicked();
+            }
+        });
+        getFooter().add(btnCancel);
+
+        btnPull = createButton(locale.buttonPull(), "git-remotes-pull-pull", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onPullClicked();
+            }
+        });
+        getFooter().add(btnPull);
     }
 
     /** {@inheritDoc} */
@@ -158,7 +175,6 @@ public class PullViewImpl extends DialogBox implements PullView {
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        this.center();
         this.show();
     }
 
@@ -168,19 +184,9 @@ public class PullViewImpl extends DialogBox implements PullView {
         this.delegate = delegate;
     }
 
-    @UiHandler("btnPull")
-    public void onPullClicked(ClickEvent event) {
-        delegate.onPullClicked();
-    }
-    
     @UiHandler("remoteBranch")
     public void onValueChanged(ChangeEvent event) {
         delegate.onRemoteBranchChanged();;
-    }
-
-    @UiHandler("btnCancel")
-    public void onCancelClicked(ClickEvent event) {
-        delegate.onCancelClicked();
     }
 
     /** {@inheritDoc} */
@@ -204,5 +210,10 @@ public class PullViewImpl extends DialogBox implements PullView {
                 break;
             }
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onClose() {
     }
 }

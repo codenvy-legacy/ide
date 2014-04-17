@@ -18,6 +18,8 @@
 package com.codenvy.ide.ext.java.client.editor;
 
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
+import com.codenvy.ide.api.logger.AnalyticsEventLogger;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.jdt.Images;
@@ -38,24 +40,32 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor {
     private TextEditorPartPresenter editor;
     private JavaParserWorker        worker;
     private JavaResources           javaResources;
+    private AnalyticsEventLogger eventLogger;
 
-    public JavaCodeAssistProcessor(TextEditorPartPresenter editor, JavaParserWorker worker, JavaResources javaResources) {
+    public JavaCodeAssistProcessor(TextEditorPartPresenter editor,
+                                   JavaParserWorker worker,
+                                   JavaResources javaResources,
+                                   AnalyticsEventLogger eventLogger) {
         this.editor = editor;
         this.worker = worker;
         this.javaResources = javaResources;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
     @Override
     public void computeCompletionProposals(TextEditorPartView view, int offset, final CodeAssistCallback callback) {
-        worker.computeCAProposals(view.getDocument().get(), offset, editor.getEditorInput().getFile().getName(), editor.getEditorInput().getFile().getProject().getPath(),
+        eventLogger.log("Autocompleting");
+        worker.computeCAProposals(view.getDocument().get(), offset, editor.getEditorInput().getFile().getName(),
+                                  editor.getEditorInput().getFile().getProject().getPath(),
                                   new JavaParserWorker.WorkerCallback<WorkerProposal>() {
                                       @Override
                                       public void onResult(Array<WorkerProposal> problems) {
                                           CompletionProposal[] proposals = new CompletionProposal[problems.size()];
                                           for (int i = 0; i < problems.size(); i++) {
                                               WorkerProposal proposal = problems.get(i);
-                                              proposals[i] = new CompletionProposalImpl(proposal.id(), insertStyle(javaResources, proposal.displayText()),
+                                              proposals[i] = new CompletionProposalImpl(proposal.id(),
+                                                                                        insertStyle(javaResources, proposal.displayText()),
                                                                                         getImage(javaResources, proposal.image()),
                                                                                         proposal.autoInsertable(), worker);
                                           }

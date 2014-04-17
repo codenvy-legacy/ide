@@ -22,6 +22,7 @@ import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorProvider;
+import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.jdt.JavaPartitions;
@@ -44,8 +45,9 @@ public class JavaEditorProvider implements EditorProvider {
     private final NotificationManager         notificationManager;
     private       Provider<CodenvyTextEditor> editorProvider;
     private       JavaParserWorker            worker;
-    private FileSaveWatcher watcher;
-    private ContentFormatter                  contentFormatter;
+    private       FileSaveWatcher             watcher;
+    private AnalyticsEventLogger eventLogger;
+    private ContentFormatter contentFormatter;
 
     /**
      * @param resources
@@ -60,12 +62,14 @@ public class JavaEditorProvider implements EditorProvider {
                               JavaParserWorker worker,
                               EventBus eventBus,
                               FileSaveWatcher watcher,
-                              ContentFormatter contentFormatter) {
+                              ContentFormatter contentFormatter,
+                              AnalyticsEventLogger eventLogger) {
         super();
         this.activityManager = activityManager;
         this.editorProvider = editorProvider;
         this.worker = worker;
         this.watcher = watcher;
+        this.eventLogger = eventLogger;
         this.documentProvider =
                 new CompilationUnitDocumentProvider(resources.workspaceEditorCss(), JavaResources.INSTANCE.css(), documentFactory,
                                                     eventBus);
@@ -80,7 +84,7 @@ public class JavaEditorProvider implements EditorProvider {
         CodenvyTextEditor textEditor = editorProvider.get();
         JavaEditorConfiguration configuration =
                 new JavaEditorConfiguration(activityManager, JavaResources.INSTANCE, textEditor, JavaPartitions.JAVA_PARTITIONING,
-                                            worker, contentFormatter);
+                                            worker, contentFormatter, eventLogger);
 
         textEditor.initialize(configuration, documentProvider, notificationManager);
         watcher.editorOpened(textEditor);

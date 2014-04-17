@@ -21,16 +21,17 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.shared.Remote;
+import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -44,7 +45,7 @@ import javax.validation.constraints.NotNull;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class FetchViewImpl extends DialogBox implements FetchView {
+public class FetchViewImpl extends Window implements FetchView {
     interface FetchViewImplUiBinder extends UiBinder<Widget, FetchViewImpl> {
     }
 
@@ -60,9 +61,7 @@ public class FetchViewImpl extends DialogBox implements FetchView {
     ListBox                              localBranch;
     @UiField
     ListBox                              remoteBranch;
-    @UiField
     Button                               btnFetch;
-    @UiField
     Button                               btnCancel;
     @UiField(provided = true)
     final GitResources                   res;
@@ -83,8 +82,26 @@ public class FetchViewImpl extends DialogBox implements FetchView {
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 
-        this.setText(locale.fetchTitle());
+        this.setTitle(locale.fetchTitle());
         this.setWidget(widget);
+        
+        btnCancel = createButton(locale.buttonCancel(), "git-remotes-fetch-cancel", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCancelClicked();
+            }
+        });
+        getFooter().add(btnCancel);
+
+        btnFetch = createButton(locale.buttonFetch(), "git-remotes-fetch-fetch", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onFetchClicked();
+            }
+        });
+        getFooter().add(btnFetch);
     }
 
     /** {@inheritDoc} */
@@ -176,7 +193,6 @@ public class FetchViewImpl extends DialogBox implements FetchView {
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        this.center();
         this.show();
     }
 
@@ -184,16 +200,6 @@ public class FetchViewImpl extends DialogBox implements FetchView {
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
-    }
-
-    @UiHandler("btnFetch")
-    public void onFetchClicked(ClickEvent event) {
-        delegate.onFetchClicked();
-    }
-
-    @UiHandler("btnCancel")
-    public void onCancelClicked(ClickEvent event) {
-        delegate.onCancelClicked();
     }
 
     @UiHandler("fetchAllBranches")
@@ -251,5 +257,10 @@ public class FetchViewImpl extends DialogBox implements FetchView {
                 break;
             }
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onClose() {
     }
 }
