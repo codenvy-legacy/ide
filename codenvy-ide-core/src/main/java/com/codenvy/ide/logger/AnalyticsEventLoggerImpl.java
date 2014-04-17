@@ -17,13 +17,13 @@
  */
 package com.codenvy.ide.logger;
 
+import com.codenvy.api.analytics.shared.dto.EventParameters;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.Profile;
 import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.dto.EventParameters;
 import com.codenvy.ide.extension.ExtensionDescription;
 import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -37,6 +37,7 @@ import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,17 +91,17 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
 
     @Override
     public void log(Class<?> extensionClass, String event, Map<String, String> additionalParams) {
-//        doLog(event, getSource(extensionClass), additionalParams);
+        doLog(event, getSource(extensionClass), additionalParams);
     }
 
     @Override
     public void log(Class<?> extensionClass, String event) {
-//        doLog(event, getSource(extensionClass), Collections.<String, String>emptyMap());
+        doLog(event, getSource(extensionClass), Collections.<String, String>emptyMap());
     }
 
     @Override
     public void log(String event) {
-//        doLog(event, EMPTY_PARAM_VALUE, Collections.<String, String>emptyMap());
+        doLog(event, EMPTY_PARAM_VALUE, Collections.<String, String>emptyMap());
     }
 
     private void doLog(String event, String source, Map<String, String> additionalParams) {
