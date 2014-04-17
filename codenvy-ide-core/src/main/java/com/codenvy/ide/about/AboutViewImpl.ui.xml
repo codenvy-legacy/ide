@@ -24,10 +24,6 @@
     
     <ui:image field="logo" src="logo.png"/>
     <ui:style>
-        .btnAlign {
-            float: right;
-        }
-
         .emptyBorder {
             margin: 6px;
         }
@@ -62,13 +58,7 @@
 			background-size: 175px;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="290px" height="185px" addStyleNames="{style.emptyBorder}">
-        <g:south size="36.0">
-            <g:FlowPanel height="100%" width="100%" addStyleNames="{style.spacing}">
-                <g:Button addStyleNames="{style.btnAlign}" width="50px"  height="22px"  ui:field="btnOk"
-                          debugId="help-about-ok">OK</g:Button>
-            </g:FlowPanel>
-        </g:south>
+    <g:DockLayoutPanel unit="PX" width="290px" height="165px" addStyleNames="{style.emptyBorder}">
         <g:north size="70">
             <g:FlowPanel height="100%" width="100%" addStyleNames="{style.bg}">
             </g:FlowPanel>

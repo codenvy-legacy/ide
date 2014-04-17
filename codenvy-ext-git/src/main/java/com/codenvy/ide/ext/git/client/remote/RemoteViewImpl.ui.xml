@@ -23,14 +23,6 @@
     <ui:with field='locale' type='com.codenvy.ide.ext.git.client.GitLocalizationConstant'/>
     <ui:with field='res' type='com.codenvy.ide.ext.git.client.GitResources'/>
     <ui:style>
-        .alignRightBtn {
-            float: right;
-        }
-
-        .alignLeftBtn {
-            float: left;
-        }
-
         .emptyBorder {
             margin: 6px;
         }
@@ -43,17 +35,7 @@
             margin-top: 10px;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="550px" height="250px" addStyleNames="{style.emptyBorder}">
-        <g:south size="36.0">
-            <g:FlowPanel addStyleNames="{style.spacing}">
-                <g:Button addStyleNames="{style.alignRightBtn}" text="{locale.buttonClose}" width="70px"
-                          ui:field="btnClose" debugId="git-remotes-remotes-close"/>
-                <g:Button addStyleNames="{style.alignLeftBtn} {style.space}" text="{locale.buttonAdd}" width="70px" ui:field="btnAdd"
-                          debugId="git-remotes-remotes-add"/>
-                <g:Button addStyleNames="{style.alignLeftBtn} {style.space}" text="{locale.buttonRemove}" width="70px" ui:field="btnDelete"
-                          debugId="git-remotes-remotes-remove"/>
-            </g:FlowPanel>
-        </g:south>
+    <g:DockLayoutPanel unit="PX" width="550px" height="220px" addStyleNames="{style.emptyBorder}">
         <g:center>
             <p1:CellTable width="100%" ui:field="repositories" focus="false" debugId="git-remotes-remotes-repositoriesTable"/>
         </g:center>

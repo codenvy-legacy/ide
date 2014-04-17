@@ -21,22 +21,21 @@ import elemental.dom.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
-import com.codenvy.ide.Resources;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ui.list.SimpleList;
+import com.codenvy.ide.ui.window.Window;
 import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
@@ -51,22 +50,17 @@ import javax.validation.constraints.NotNull;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class BranchViewImpl extends DialogBox implements BranchView {
+public class BranchViewImpl extends Window implements BranchView {
     interface BranchViewImplUiBinder extends UiBinder<Widget, BranchViewImpl> {
     }
 
     private static BranchViewImplUiBinder ourUiBinder = GWT.create(BranchViewImplUiBinder.class);
 
-    @UiField
-    Button                    btnClose;
-    @UiField
-    Button btnRename;
-    @UiField
-    Button btnDelete;
-    @UiField
-    Button btnCreate;
-    @UiField
-    Button btnCheckout;
+    Button                                btnClose;
+    Button                                btnRename;
+    Button                                btnDelete;
+    Button                                btnCreate;
+    Button                                btnCheckout;
     @UiField
     ScrollPanel               branchesPanel;
     @UiField(provided = true)
@@ -83,13 +77,13 @@ public class BranchViewImpl extends DialogBox implements BranchView {
      * @param locale
      */
     @Inject
-    protected BranchViewImpl(GitResources resources, GitLocalizationConstant locale, Resources coreRes) {
+    protected BranchViewImpl(GitResources resources, GitLocalizationConstant locale, com.codenvy.ide.Resources coreRes) {
         this.res = resources;
         this.locale = locale;
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 
-        this.setText(locale.branchTitle());
+        this.setTitle(locale.branchTitle());
         this.setWidget(widget);
 
         TableElement breakPointsElement = Elements.createTableElement();
@@ -135,6 +129,55 @@ public class BranchViewImpl extends DialogBox implements BranchView {
         branches = SimpleList
                 .create((SimpleList.View)breakPointsElement, coreRes.defaultSimpleListCss(), listBranchesRenderer, listBranchesDelegate);
         this.branchesPanel.add(branches);
+        
+        createButtons();
+    }
+    
+    private void createButtons() {
+        btnClose = createButton(locale.buttonClose(), "git-branches-close", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCloseClicked();
+            }
+        });
+        getFooter().add(btnClose);
+
+        btnRename = createButton(locale.buttonRename(), "git-branches-rename", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onRenameClicked();
+            }
+        });
+        getFooter().add(btnRename);
+
+        btnDelete = createButton(locale.buttonDelete(), "git-branches-delete", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onDeleteClicked();
+            }
+        });
+        getFooter().add(btnDelete);
+
+        btnCreate = createButton(locale.buttonCreate(), "git-branches-create", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCreateClicked();
+            }
+        });
+        getFooter().add(btnCreate);
+
+        btnCheckout = createButton(locale.buttonCheckout(), "git-branches-checkout", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCheckoutClicked();
+            }
+        });
+        getFooter().add(btnCheckout);
     }
 
     /** {@inheritDoc} */
@@ -176,32 +219,11 @@ public class BranchViewImpl extends DialogBox implements BranchView {
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        this.center();
         this.show();
     }
 
-    @UiHandler("btnClose")
-    public void onCloseClicked(ClickEvent event) {
-        delegate.onCloseClicked();
-    }
-
-    @UiHandler("btnRename")
-    public void onRenameClicked(ClickEvent event) {
-        delegate.onRenameClicked();
-    }
-
-    @UiHandler("btnDelete")
-    public void onDeleteClicked(ClickEvent event) {
-        delegate.onDeleteClicked();
-    }
-
-    @UiHandler("btnCreate")
-    public void onCreateClicked(ClickEvent event) {
-        delegate.onCreateClicked();
-    }
-
-    @UiHandler("btnCheckout")
-    public void onCheckoutClick(ClickEvent event) {
-        delegate.onCheckoutClicked();
+    /** {@inheritDoc} */
+    @Override
+    protected void onClose() {
     }
 }
