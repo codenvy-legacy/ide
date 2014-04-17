@@ -370,7 +370,6 @@ public abstract class Window implements IsWidget {
 
                 @Override
                 public void onKeyDown(KeyDownEvent event) {
-                    com.google.gwt.user.client.Window.alert(delegate + ""  + event.getNativeEvent().getKeyCode());
                     if (KeyboardEvent.KeyCode.ESC == event.getNativeEvent().getKeyCode()) {
                         if (delegate != null) {
                             delegate.onEscapeKey();
