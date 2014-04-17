@@ -153,7 +153,8 @@ public class BootstrapController {
                                                                         resourceProvider.getProject(Utils.getProjectToOpen(), new AsyncCallback<Project>() {
                                                                             @Override
                                                                             public void onFailure(Throwable throwable) {
-
+                                                                                // Display list of projects in project explorer
+                                                                                resourceProvider.showListProjects();
                                                                             }
 
                                                                             @Override
