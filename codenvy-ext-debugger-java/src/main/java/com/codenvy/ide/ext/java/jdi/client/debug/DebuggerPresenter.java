@@ -74,6 +74,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
 import static com.codenvy.ide.ext.java.jdi.shared.DebuggerEvent.BREAKPOINT;
 import static com.codenvy.ide.ext.java.jdi.shared.DebuggerEvent.STEP;
 
@@ -293,7 +294,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                     @Override
                     public void onFailure(Throwable caught) {
                         Notification notification =
-                                new Notification("Source not found for class " + finalLocation.getClassName(), ERROR);
+                                new Notification("Source not found for class " + finalLocation.getClassName(), WARNING);
                         notificationManager.showNotification(notification);
                     }
                 });

@@ -21,10 +21,9 @@ import com.google.gwt.i18n.client.Messages;
 
 /**
  * Localization constants. Interface to represent the constants contained in resource bundle:
- * 'BuilderLocalizationConstant.properties'.
+ * 'MavenLocalizationConstant.properties'.
  *
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: BuilderLocalizationConstant.java Feb 21, 2012 3:06:29 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 public interface MavenLocalizationConstant extends Messages {
     /* Actions */
@@ -55,7 +54,6 @@ public interface MavenLocalizationConstant extends Messages {
     @DefaultMessage("Update Snapshot (-U,--update-snapshots)")
     String updateSnapshot();
 
-
     @Key("maven.build.updateSnapshot.desc")
     @DefaultMessage("Forces a check for updated releases \n" +
                     "and snapshots on remote repositories")
@@ -72,5 +70,4 @@ public interface MavenLocalizationConstant extends Messages {
     @Key("maven.builder.offline-mode")
     @DefaultMessage("Work Offline (-o,--offline)")
     String offlineMode();
-
 }
