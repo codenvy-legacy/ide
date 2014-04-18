@@ -57,6 +57,12 @@ public class GitProjectImporter implements ProjectImporter {
         return "git";
     }
 
+
+    @Override
+    public String getDescription() {
+        return "Add possibility to import project from GIT repository";
+    }
+
     @Override
     public void importSources(FolderEntry baseFolder, String location) throws IOException {
         try {
