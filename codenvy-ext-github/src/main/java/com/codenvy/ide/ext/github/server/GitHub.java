@@ -19,6 +19,8 @@ package com.codenvy.ide.ext.github.server;
 
 import com.codenvy.api.auth.oauth.OAuthTokenProvider;
 import com.codenvy.api.auth.shared.dto.OAuthToken;
+import com.codenvy.api.core.NotFoundException;
+import com.codenvy.api.core.ServerException;
 import com.codenvy.api.user.server.dao.UserDao;
 import com.codenvy.api.user.server.exception.UserException;
 import com.codenvy.commons.json.JsonHelper;
@@ -643,7 +645,9 @@ public class GitHub extends GitVendorService {
         String id = super.getUserId();
         try {
             id = userDao.getByAlias(id).getId();
-        } catch (UserException e) {
+        } catch (NotFoundException e) {
+            return id;
+        } catch (ServerException e) {
             return id;
         }
         return id;

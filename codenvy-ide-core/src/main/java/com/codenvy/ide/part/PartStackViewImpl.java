@@ -81,6 +81,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
         this.tabsPanel = tabsPanel;
         contentPanel = new SimplePanel();
         if (tabPosition == LEFT) {
+            top += 4;
             SVGImage svgIcon = new SVGImage(resources.arrow());
             TabButton activeTab = new TabButton(svgIcon, "call dashboard");
             activeTab.setStyleName(resources.partStackCss().idePartStackBotonLeft());
@@ -317,7 +318,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
                 if (first) {
                     first = false;
                 }
-                top += offsetWidth - margin * 2;
+                top += offsetWidth - margin * 2 - 4;
                 tabItem.getElement().getStyle().setTop(top, Style.Unit.PX);
             } else {
                 tabItem.addStyleName(resources.partStackCss().idePartStackTabBelow());
