@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.env;
 
+import com.codenvy.api.core.ConflictException;
 import com.codenvy.api.user.server.TokenValidator;
-import com.codenvy.api.user.server.exception.UserException;
 
 /**
  * Temporary dummy implementation of {@link TokenValidator}.
@@ -29,7 +29,7 @@ public class TokenValidatorImpl implements TokenValidator {
 
     /** {@inheritDoc} */
     @Override
-    public String validateToken(String token) throws UserException {
+    public String validateToken(String token) throws ConflictException {
         //TODO
         return "codenvy@codenvy.com";
     }
