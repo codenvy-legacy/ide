@@ -26,15 +26,14 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.builder.client.BuilderExtension;
 import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.rest.RequestStatusHandler;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
@@ -57,14 +56,12 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
  *
  * @author Artem Zatsarynnyy
  */
-//TODO: need rework for using websocket wait for server side
 @Singleton
 public class BuildProjectPresenter implements Notification.OpenNotificationHandler {
 
-    protected final EventBus         eventBus;
-    protected final ResourceProvider resourceProvider;
-    protected final ConsolePart      console;
-
+    protected final EventBus                    eventBus;
+    protected final ResourceProvider            resourceProvider;
+    protected final ConsolePart                 console;
     protected final BuilderServiceClient        service;
     protected final BuilderLocalizationConstant constant;
     protected final WorkspaceAgent              workspaceAgent;
@@ -77,9 +74,8 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     /** Build of another project is performed. */
     protected boolean isBuildInProgress = false;
     /** Project for build. */
-    protected Project              projectToBuild;
-    protected RequestStatusHandler statusHandler;
-    protected Notification         notification;
+    protected Project      projectToBuild;
+    protected Notification notification;
 
     /**
      * Create presenter.
@@ -121,13 +117,11 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
             return;
         }
         projectToBuild = resourceProvider.getActiveProject();
-        statusHandler = new BuildRequestStatusHandler(projectToBuild.getName(), eventBus, constant);
         doBuild(buildOptions);
     }
 
     /** Start the build of project. */
     private void doBuild(BuildOptions buildOptions) {
-        statusHandler.requestInProgress(projectToBuild.getName());
         service.build(projectToBuild.getPath(),
                       buildOptions,
                       new AsyncRequestCallback<BuildTaskDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(BuildTaskDescriptor.class)) {
@@ -148,13 +142,13 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
 
                           @Override
                           protected void onFailure(Throwable exception) {
-                              statusHandler.requestError(projectToBuild.getName(), exception);
                               setBuildInProgress(false);
                               notification.setStatus(FINISHED);
                               notification.setType(ERROR);
                               notification.setMessage(exception.getMessage());
                           }
-                      });
+                      }
+                     );
     }
 
     /**
@@ -239,13 +233,11 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         if (descriptor.getStatus() == BuildStatus.SUCCESSFUL) {
             Notification notification = new Notification(constant.buildSuccess(), INFO, this);
             notificationManager.showNotification(notification);
-            statusHandler.requestFinished(projectToBuild.getName());
             console.print(message.toString());
         } else if (descriptor.getStatus() == BuildStatus.FAILED) {
             Notification notification = new Notification(constant.buildFailed(), ERROR, this);
             notificationManager.showNotification(notification);
             String errorMessage = constant.buildFailed();
-            statusHandler.requestError(projectToBuild.getName(), new Exception(errorMessage));
             console.print(errorMessage);
         }
         getBuildLogs(descriptor);

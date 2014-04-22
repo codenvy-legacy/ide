@@ -360,6 +360,20 @@ public interface Theme {
     String getEditorString2();
 
     /**
+     * Background color of completion popup.
+     *
+     * @return the color
+     */
+    String getCompletionPopupBackgroundColor();
+    
+    /**
+     * Border color of completion popup.
+     *
+     * @return the color
+     */
+    String getCompletionPopupBorderColor();
+    
+    /**
      * Background color of the window widget(used in new project wizard)
      *
      * @return the color

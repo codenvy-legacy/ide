@@ -21,7 +21,6 @@ import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.extension.builder.client.actions.BuildAction;
-import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -30,20 +29,17 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
 /**
  * Builder extension entry point.
  *
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: BuilderExtension.java Feb 21, 2012 1:53:48 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 @Extension(title = "Building project", version = "3.0.0")
 public class BuilderExtension {
-    public static final String PROJECT_BUILD_GROUP_MAIN_MENU   = "ProjectBuildGroup";
+    public static final String PROJECT_BUILD_GROUP_MAIN_MENU = "ProjectBuildGroup";
     /** Channel for the messages containing status of the Maven build job. */
-    public static final String BUILD_STATUS_CHANNEL            = "builder:status:";
-
+    public static final String BUILD_STATUS_CHANNEL          = "builder:status:";
 
     /**
      * Create extension.
-     *
      */
     @Inject
     public BuilderExtension(BuilderLocalizationConstant localizationConstants,

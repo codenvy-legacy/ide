@@ -29,20 +29,15 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
 /**
  * Builder extension entry point.
  *
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: BuilderExtension.java Feb 21, 2012 1:53:48 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 @Extension(title = "Building project", version = "3.0.0")
 public class MavenExtension {
-    public static final String PROJECT_BUILD_GROUP_MAIN_MENU   = "ProjectBuildGroup";
-    /** Channel for the messages containing status of the Maven build job. */
-    public static final String BUILD_STATUS_CHANNEL            = "builder:status:";
-
+    public static final String PROJECT_BUILD_GROUP_MAIN_MENU = "ProjectBuildGroup";
 
     /**
      * Create extension.
-     *
      */
     @Inject
     public MavenExtension(MavenLocalizationConstant localizationConstants,
@@ -50,12 +45,10 @@ public class MavenExtension {
                           MavenBuildAction buildAction) {
         // register actions
         actionManager.registerAction(localizationConstants.buildProjectControlId(), buildAction);
-//        actionManager.registerAction(localizationConstants.buildAndPublishProjectControlId(), buildAndPublishAction);
 
         // compose action group
         DefaultActionGroup buildGroup = new DefaultActionGroup(PROJECT_BUILD_GROUP_MAIN_MENU, false, actionManager);
         buildGroup.add(buildAction);
-//        buildGroup.add(buildAndPublishAction);
 
         // add action group to 'Project' menu
         DefaultActionGroup projectMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_PROJECT);

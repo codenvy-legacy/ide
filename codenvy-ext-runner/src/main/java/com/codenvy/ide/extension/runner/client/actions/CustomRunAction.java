@@ -22,6 +22,7 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.extension.runner.client.CustomRunPresenter;
 import com.codenvy.ide.extension.runner.client.RunnerController;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
@@ -34,23 +35,25 @@ import com.google.inject.Singleton;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class RunAction extends Action {
+public class CustomRunAction extends Action {
 
     private final ResourceProvider     resourceProvider;
     private final RunnerController     runnerController;
+    private final CustomRunPresenter   customRunPresenter;
     private final AnalyticsEventLogger eventLogger;
 
     @Inject
-    public RunAction(RunnerController runnerController,
-                     RunnerResources resources,
-                     ResourceProvider resourceProvider,
-                     RunnerLocalizationConstant localizationConstants,
-                     AnalyticsEventLogger eventLogger) {
-        super(localizationConstants.runAppActionText(),
-              localizationConstants.runAppActionDescription(),
-              null,
-              resources.launchApp());
+    public CustomRunAction(RunnerController runnerController,
+                           CustomRunPresenter customRunPresenter,
+                           RunnerResources resources,
+                           ResourceProvider resourceProvider,
+                           RunnerLocalizationConstant localizationConstants,
+                           AnalyticsEventLogger eventLogger) {
+        super(localizationConstants.customRunAppActionText(),
+              localizationConstants.customRunAppActionDescription(),
+              null, resources.launchApp());
         this.runnerController = runnerController;
+        this.customRunPresenter = customRunPresenter;
         this.resourceProvider = resourceProvider;
         this.eventLogger = eventLogger;
     }
@@ -59,7 +62,7 @@ public class RunAction extends Action {
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log("IDE: Run application");
-        runnerController.runActiveProject();
+        customRunPresenter.showDialog();
     }
 
     /** {@inheritDoc} */

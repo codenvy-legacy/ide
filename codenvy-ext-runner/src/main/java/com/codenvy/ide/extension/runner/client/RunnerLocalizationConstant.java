@@ -26,6 +26,13 @@ import com.google.gwt.i18n.client.Messages;
  * @author Artem Zatsarynnyy
  */
 public interface RunnerLocalizationConstant extends Messages {
+    /* Buttons */
+    @Key("button.run")
+    String buttonRun();
+
+    @Key("button.cancel")
+    String buttonCancel();
+
     /* Actions */
     @Key("control.runApp.id")
     String runAppActionId();
@@ -35,6 +42,15 @@ public interface RunnerLocalizationConstant extends Messages {
 
     @Key("control.runApp.description")
     String runAppActionDescription();
+
+    @Key("control.customRunApp.id")
+    String customRunAppActionId();
+
+    @Key("control.customRunApp.text")
+    String customRunAppActionText();
+
+    @Key("control.customRunApp.description")
+    String customRunAppActionDescription();
 
     @Key("control.getAppLogs.id")
     String getAppLogsActionId();
@@ -90,4 +106,11 @@ public interface RunnerLocalizationConstant extends Messages {
 
     @Key("updateAppFailed")
     String updateApplicationFailed(String name);
+
+    @Key("gettingEnvironmentsFailed")
+    String gettingEnvironmentsFailed();
+
+    /* RunConfigurationView */
+    @Key("view.runConfiguration.title")
+    String runConfigurationViewTitle();
 }
