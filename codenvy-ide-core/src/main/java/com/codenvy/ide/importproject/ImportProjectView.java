@@ -40,6 +40,8 @@ public interface ImportProjectView extends IsWidget {
 
         /** Performs any actions appropriate in response to the user having changed something. */
         void onValueChanged();
+
+        void onImporterSelected();
     }
 
     /** Show dialog. */
@@ -90,6 +92,14 @@ public interface ImportProjectView extends IsWidget {
      *         available importers
      */
     void setImporters(@Nonnull List<String> importers);
+
+
+    /**
+     * Sets importer description
+     *
+     * @param description  description
+     */
+    void setDescription(@Nonnull String description);
 
     /**
      * Change the enable state of the import button.
