@@ -268,7 +268,17 @@ public class DarkTheme implements Theme {
     public String getEditorString2() {
         return "#CC7832";
     }
+    
+    @Override
+    public String getCompletionPopupBackgroundColor() {
+        return "#303030";
+    }
 
+    @Override
+    public String getCompletionPopupBorderColor() {
+        return "#484848";
+    }
+    
     @Override
     public String getWindowContentBackground() {
         return "#373737";

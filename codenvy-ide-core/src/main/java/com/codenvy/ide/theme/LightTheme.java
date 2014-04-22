@@ -268,6 +268,16 @@ public class LightTheme implements Theme {
     }
 
     @Override
+    public String getCompletionPopupBackgroundColor() {
+        return "#303030";
+    }
+
+    @Override
+    public String getCompletionPopupBorderColor() {
+        return "#484848";
+    }
+    
+    @Override
     public String getWindowContentBackground() {
         return getDialogContentBackground();
     }

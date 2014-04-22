@@ -78,6 +78,8 @@
 @eval editorSelectionColor com.codenvy.ide.api.ui.theme.Style.getEditorSelectionColor();
 @eval editorInactiveSelectionColor com.codenvy.ide.api.ui.theme.Style.getEditorInactiveSelectionColor();
 @eval editoGutterColor com.codenvy.ide.api.ui.theme.Style.getEditorGutterColor();
+@eval completionPopupBorderColor com.codenvy.ide.api.ui.theme.Style.getCompletionPopupBorderColor();
+@eval completionPopupBackgroundColor com.codenvy.ide.api.ui.theme.Style.getCompletionPopupBackgroundColor();
 
 /* Listbox, TextBox... */
 @eval boxBorderColor com.codenvy.ide.api.ui.theme.Style.getBoxBorderColor();
