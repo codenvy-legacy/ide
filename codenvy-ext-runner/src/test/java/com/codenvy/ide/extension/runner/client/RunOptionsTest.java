@@ -41,6 +41,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -107,7 +108,7 @@ public class RunOptionsTest extends BaseTest {
         presenter.showDialog();
 
         verify(service).getRunners(Matchers.<AsyncRequestCallback<Array<RunnerDescriptor>>>anyObject());
-        verify(view, never()).showDialog();
+        verify(view, times(0)).showDialog();
         verify(notificationManager).showNotification((Notification)anyObject());
     }
 
