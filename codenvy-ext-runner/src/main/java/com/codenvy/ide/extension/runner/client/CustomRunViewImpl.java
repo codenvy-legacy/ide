@@ -21,7 +21,6 @@ import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ui.window.Window;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -38,16 +37,14 @@ import com.google.inject.Singleton;
 import javax.validation.constraints.NotNull;
 
 /**
- * The implementation of {@link RunOptionsView}.
+ * The implementation of {@link CustomRunView}.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class RunOptionsViewImpl extends Window implements RunOptionsView {
-    interface MavenBuildViewImplUiBinder extends UiBinder<Widget, RunOptionsViewImpl> {
+public class CustomRunViewImpl extends Window implements CustomRunView {
+    interface CustomRunViewImplUiBinder extends UiBinder<Widget, CustomRunViewImpl> {
     }
-
-    private static MavenBuildViewImplUiBinder ourUiBinder = GWT.create(MavenBuildViewImplUiBinder.class);
 
     @UiField
     ListBox  environmentField;
@@ -64,12 +61,11 @@ public class RunOptionsViewImpl extends Window implements RunOptionsView {
 
     /** Create view. */
     @Inject
-    protected RunOptionsViewImpl(RunnerResources resources, RunnerLocalizationConstant locale) {
+    protected CustomRunViewImpl(RunnerResources resources, RunnerLocalizationConstant constant, CustomRunViewImplUiBinder uiBinder) {
         this.resources = resources;
-        this.locale = locale;
-        Widget widget = ourUiBinder.createAndBindUi(this);
-        setTitle(locale.runConfigurationViewTitle());
-        setWidget(widget);
+        this.locale = constant;
+        setTitle(constant.runConfigurationViewTitle());
+        setWidget(uiBinder.createAndBindUi(this));
         environmentField.addChangeHandler(new ChangeHandler() {
             @Override
             public void onChange(ChangeEvent event) {

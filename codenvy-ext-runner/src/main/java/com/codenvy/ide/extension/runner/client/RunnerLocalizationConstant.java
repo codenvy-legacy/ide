@@ -107,6 +107,9 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("updateAppFailed")
     String updateApplicationFailed(String name);
 
+    @Key("gettingEnvironmentsFailed")
+    String gettingEnvironmentsFailed();
+
     /* RunConfigurationView */
     @Key("view.runConfiguration.title")
     String runConfigurationViewTitle();

@@ -22,7 +22,7 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.extension.runner.client.RunOptionsPresenter;
+import com.codenvy.ide.extension.runner.client.CustomRunPresenter;
 import com.codenvy.ide.extension.runner.client.RunnerController;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
@@ -39,12 +39,12 @@ public class CustomRunAction extends Action {
 
     private final ResourceProvider     resourceProvider;
     private final RunnerController     runnerController;
-    private final RunOptionsPresenter  runOptionsPresenter;
+    private final CustomRunPresenter   customRunPresenter;
     private final AnalyticsEventLogger eventLogger;
 
     @Inject
     public CustomRunAction(RunnerController runnerController,
-                           RunOptionsPresenter runOptionsPresenter,
+                           CustomRunPresenter customRunPresenter,
                            RunnerResources resources,
                            ResourceProvider resourceProvider,
                            RunnerLocalizationConstant localizationConstants,
@@ -53,7 +53,7 @@ public class CustomRunAction extends Action {
               localizationConstants.customRunAppActionDescription(),
               null, resources.launchApp());
         this.runnerController = runnerController;
-        this.runOptionsPresenter = runOptionsPresenter;
+        this.customRunPresenter = customRunPresenter;
         this.resourceProvider = resourceProvider;
         this.eventLogger = eventLogger;
     }
@@ -62,7 +62,7 @@ public class CustomRunAction extends Action {
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log("IDE: Run application");
-        runOptionsPresenter.showDialog();
+        customRunPresenter.showDialog();
     }
 
     /** {@inheritDoc} */

@@ -40,24 +40,23 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Testing {@link RunOptionsPresenter} functionality
+ * Testing {@link CustomRunPresenter} functionality
  *
  * @author Artem Zatsarynnyy
  */
 public class RunOptionsTest extends BaseTest {
     private static String RUNNER_NAME = "my_runner";
     @Mock
-    private RunOptionsView      view;
+    private CustomRunView      view;
     @Mock
-    private RunnerController    runnerController;
+    private RunnerController   runnerController;
     @InjectMocks
-    private RunOptionsPresenter presenter;
+    private CustomRunPresenter presenter;
     private Array<RunnerDescriptor> runnerDescriptors = Collections.createArray();
 
     @Before

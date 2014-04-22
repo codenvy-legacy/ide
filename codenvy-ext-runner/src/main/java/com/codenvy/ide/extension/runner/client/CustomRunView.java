@@ -24,13 +24,12 @@ import com.codenvy.ide.collections.Array;
 import javax.validation.constraints.NotNull;
 
 /**
- * The view of {@link RunOptionsPresenter}.
+ * The view of {@link CustomRunPresenter}.
  *
  * @author Artem Zatsarynnyy
  */
-public interface RunOptionsView extends View<RunOptionsView.ActionDelegate> {
+public interface CustomRunView extends View<CustomRunView.ActionDelegate> {
 
-    /** Needs for delegate some function into Commit view. */
     public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having pressed the Run button. */
         void onRunClicked();

@@ -41,28 +41,31 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class RunOptionsPresenter implements RunOptionsView.ActionDelegate {
-    private final RunnerController       runnerController;
-    private final RunnerServiceClient    runnerServiceClient;
-    private final RunOptionsView         view;
-    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
-    private final NotificationManager    notificationManager;
-    private final ResourceProvider       resourceProvider;
+public class CustomRunPresenter implements CustomRunView.ActionDelegate {
+    private final RunnerController           runnerController;
+    private final RunnerServiceClient        runnerServiceClient;
+    private final CustomRunView              view;
+    private final DtoUnmarshallerFactory     dtoUnmarshallerFactory;
+    private final NotificationManager        notificationManager;
+    private final ResourceProvider           resourceProvider;
+    private final RunnerLocalizationConstant constant;
 
     /** Create presenter. */
     @Inject
-    protected RunOptionsPresenter(RunnerController runnerController,
-                                  RunnerServiceClient runnerServiceClient,
-                                  RunOptionsView view,
-                                  DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                                  NotificationManager notificationManager,
-                                  ResourceProvider resourceProvider) {
+    protected CustomRunPresenter(RunnerController runnerController,
+                                 RunnerServiceClient runnerServiceClient,
+                                 CustomRunView view,
+                                 DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                                 NotificationManager notificationManager,
+                                 ResourceProvider resourceProvider,
+                                 RunnerLocalizationConstant constant) {
         this.runnerController = runnerController;
         this.runnerServiceClient = runnerServiceClient;
         this.view = view;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.notificationManager = notificationManager;
         this.resourceProvider = resourceProvider;
+        this.constant = constant;
         this.view.setDelegate(this);
     }
 
@@ -79,8 +82,8 @@ public class RunOptionsPresenter implements RunOptionsView.ActionDelegate {
 
                     @Override
                     protected void onFailure(Throwable exception) {
-                        notificationManager.showNotification(new Notification("Can not get info about runner environments", ERROR));
-                        Log.error(RunOptionsPresenter.class, exception);
+                        notificationManager.showNotification(new Notification(constant.gettingEnvironmentsFailed(), ERROR));
+                        Log.error(CustomRunPresenter.class, exception);
                     }
                 }
                                       );

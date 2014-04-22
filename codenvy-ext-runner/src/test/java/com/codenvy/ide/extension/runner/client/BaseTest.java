@@ -19,12 +19,9 @@ package com.codenvy.ide.extension.runner.client;
 
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.websocket.MessageBus;
-import com.google.web.bindery.event.shared.EventBus;
 
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -41,21 +38,17 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public abstract class BaseTest {
     @Mock
+    protected RunnerController           runnerController;
+    @Mock
     protected RunnerServiceClient        service;
     @Mock
-    protected RunnerLocalizationConstant constants;
-    @Mock
     protected NotificationManager        notificationManager;
-    @Mock
-    protected EventBus                   eventBus;
-    @Mock
-    protected MessageBus                 messageBus;
-    @Mock
-    protected ConsolePart                console;
     @Mock
     protected DtoUnmarshallerFactory     dtoUnmarshallerFactory;
     @Mock
     protected ResourceProvider           resourceProvider;
+    @Mock
+    protected RunnerLocalizationConstant constant;
     @Mock
     protected Project                    activeProject;
 
