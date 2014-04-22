@@ -680,33 +680,34 @@ public class JavaAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
                 start = d.getLineInformationOfOffset(region.getOffset()).getOffset();
 
             // insert closing brace on new line after an unclosed opening brace
-            if (getBracketCount(d, start, c.offset, true) > 0 && closeBrace() && !isClosed(d, c.offset, c.length)) {
-                c.caretOffset = c.offset + buf.length();
-                c.shiftsCaret = false;
-
-                // copy old content of line behind insertion point to new line
-                // unless we think we are inserting an anonymous type definition
-
-                if (c.offset == 0 || computeAnonymousPosition(d, c.offset - 1, fPartitioning, lineEnd) == -1) {
-                    if (lineEnd - contentStart > 0) {
-                        c.length = lineEnd - c.offset;
-                        buf.append(d.get(contentStart, lineEnd - contentStart).toCharArray());
-                    }
-                }
-
-                buf.append(TextUtilities.getDefaultLineDelimiter(d));
-                StringBuffer reference = null;
-                int nonWS = findEndOfWhiteSpace(d, start, lineEnd);
-                if (nonWS < c.offset && d.getChar(nonWS) == '{')
-                    reference = new StringBuffer(d.get(start, nonWS - start));
-                else
-                    reference = indenter.getReferenceIndentation(c.offset);
-                if (reference != null)
-                    buf.append(reference);
-                buf.append('}');
-            }
-            // insert extra line upon new line between two braces
-            else if (c.offset > start && contentStart < lineEnd && d.getChar(contentStart) == '}') {
+//            if (getBracketCount(d, start, c.offset, true) > 0 && closeBrace() && !isClosed(d, c.offset, c.length)) {
+//                c.caretOffset = c.offset + buf.length();
+//                c.shiftsCaret = false;
+//
+//                // copy old content of line behind insertion point to new line
+//                // unless we think we are inserting an anonymous type definition
+//
+//                if (c.offset == 0 || computeAnonymousPosition(d, c.offset - 1, fPartitioning, lineEnd) == -1) {
+//                    if (lineEnd - contentStart > 0) {
+//                        c.length = lineEnd - c.offset;
+//                        buf.append(d.get(contentStart, lineEnd - contentStart).toCharArray());
+//                    }
+//                }
+//
+//                buf.append(TextUtilities.getDefaultLineDelimiter(d));
+//                StringBuffer reference = null;
+//                int nonWS = findEndOfWhiteSpace(d, start, lineEnd);
+//                if (nonWS < c.offset && d.getChar(nonWS) == '{')
+//                    reference = new StringBuffer(d.get(start, nonWS - start));
+//                else
+//                    reference = indenter.getReferenceIndentation(c.offset);
+//                if (reference != null)
+//                    buf.append(reference);
+//                buf.append('}');
+//            }
+//           //insert extra line upon new line between two braces
+//            else
+            if (c.offset > start && contentStart < lineEnd && d.getChar(contentStart) == '}') {
                 int firstCharPos = scanner.findNonWhitespaceBackward(c.offset - 1, start);
                 if (firstCharPos != JavaHeuristicScanner.NOT_FOUND && d.getChar(firstCharPos) == '{') {
                     c.caretOffset = c.offset + buf.length();
@@ -732,98 +733,98 @@ public class JavaAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
         }
     }
 
-    private boolean isClosed(Document document, int offset, int length) {
-
-        CompilationUnitInfo info = getCompilationUnitForMethod(document, offset);
-        if (info == null)
-            return false;
-
-        CompilationUnit compilationUnit = null;
-        try {
-            ASTParser parser = ASTParser.newParser(AST.JLS4);
-            parser.setSource(info.buffer);
-            compilationUnit = (CompilationUnit)parser.createAST();
-        } catch (ArrayIndexOutOfBoundsException x) {
-            // work around for parser problem
-            return false;
-        }
-
-        IProblem[] problems = compilationUnit.getProblems();
-        for (int i = 0; i != problems.length; ++i) {
-            if (problems[i].getID() == IProblem.UnmatchedBracket)
-                return true;
-        }
-
-        final int relativeOffset = offset - info.delta;
-
-        ASTNode node = NodeFinder.perform(compilationUnit, relativeOffset, length);
-
-        if (length == 0) {
-            while (node != null &&
-                   (relativeOffset == node.getStartPosition() || relativeOffset == node.getStartPosition() + node.getLength()))
-                node = node.getParent();
-        }
-
-        if (node == null)
-            return false;
-
-        switch (node.getNodeType()) {
-            case ASTNode.BLOCK:
-                return getBlockBalance(document, offset, fPartitioning) <= 0;
-
-            case ASTNode.IF_STATEMENT: {
-                IfStatement ifStatement = (IfStatement)node;
-                Expression expression = ifStatement.getExpression();
-                Region expressionRegion = createRegion(expression, info.delta);
-                Statement thenStatement = ifStatement.getThenStatement();
-                Region thenRegion = createRegion(thenStatement, info.delta);
-
-                // between expression and then statement
-                if (expressionRegion.getOffset() + expressionRegion.getLength() <= offset && offset + length <= thenRegion.getOffset())
-                    return thenStatement != null;
-
-                Statement elseStatement = ifStatement.getElseStatement();
-                Region elseRegion = createRegion(elseStatement, info.delta);
-
-                if (elseStatement != null) {
-                    int sourceOffset = thenRegion.getOffset() + thenRegion.getLength();
-                    int sourceLength = elseRegion.getOffset() - sourceOffset;
-                    Region elseToken = getToken(document, new RegionImpl(sourceOffset, sourceLength), ITerminalSymbols.TokenNameelse);
-                    return elseToken != null && elseToken.getOffset() + elseToken.getLength() <= offset &&
-                           offset + length < elseRegion.getOffset();
-                }
-            }
-            break;
-
-            case ASTNode.WHILE_STATEMENT:
-            case ASTNode.FOR_STATEMENT: {
-                Expression expression = node.getNodeType() == ASTNode.WHILE_STATEMENT ? ((WhileStatement)node).getExpression()
-                                                                                      : ((ForStatement)node).getExpression();
-                Region expressionRegion = createRegion(expression, info.delta);
-                Statement body =
-                        node.getNodeType() == ASTNode.WHILE_STATEMENT ? ((WhileStatement)node).getBody() : ((ForStatement)node).getBody();
-                Region bodyRegion = createRegion(body, info.delta);
-
-                // between expression and body statement
-                if (expressionRegion.getOffset() + expressionRegion.getLength() <= offset && offset + length <= bodyRegion.getOffset())
-                    return body != null;
-            }
-            break;
-
-            case ASTNode.DO_STATEMENT: {
-                DoStatement doStatement = (DoStatement)node;
-                Region doRegion = createRegion(doStatement, info.delta);
-                Statement body = doStatement.getBody();
-                Region bodyRegion = createRegion(body, info.delta);
-
-                if (doRegion.getOffset() + doRegion.getLength() <= offset && offset + length <= bodyRegion.getOffset())
-                    return body != null;
-            }
-            break;
-        }
-
-        return true;
-    }
+//    private boolean isClosed(Document document, int offset, int length) {
+//
+//        CompilationUnitInfo info = getCompilationUnitForMethod(document, offset);
+//        if (info == null)
+//            return false;
+//
+//        CompilationUnit compilationUnit = null;
+//        try {
+//            ASTParser parser = ASTParser.newParser(AST.JLS4);
+//            parser.setSource(info.buffer);
+//            compilationUnit = (CompilationUnit)parser.createAST();
+//        } catch (ArrayIndexOutOfBoundsException x) {
+//            // work around for parser problem
+//            return false;
+//        }
+//
+//        IProblem[] problems = compilationUnit.getProblems();
+//        for (int i = 0; i != problems.length; ++i) {
+//            if (problems[i].getID() == IProblem.UnmatchedBracket)
+//                return true;
+//        }
+//
+//        final int relativeOffset = offset - info.delta;
+//
+//        ASTNode node = NodeFinder.perform(compilationUnit, relativeOffset, length);
+//
+//        if (length == 0) {
+//            while (node != null &&
+//                   (relativeOffset == node.getStartPosition() || relativeOffset == node.getStartPosition() + node.getLength()))
+//                node = node.getParent();
+//        }
+//
+//        if (node == null)
+//            return false;
+//
+//        switch (node.getNodeType()) {
+//            case ASTNode.BLOCK:
+//                return getBlockBalance(document, offset, fPartitioning) <= 0;
+//
+//            case ASTNode.IF_STATEMENT: {
+//                IfStatement ifStatement = (IfStatement)node;
+//                Expression expression = ifStatement.getExpression();
+//                Region expressionRegion = createRegion(expression, info.delta);
+//                Statement thenStatement = ifStatement.getThenStatement();
+//                Region thenRegion = createRegion(thenStatement, info.delta);
+//
+//                // between expression and then statement
+//                if (expressionRegion.getOffset() + expressionRegion.getLength() <= offset && offset + length <= thenRegion.getOffset())
+//                    return thenStatement != null;
+//
+//                Statement elseStatement = ifStatement.getElseStatement();
+//                Region elseRegion = createRegion(elseStatement, info.delta);
+//
+//                if (elseStatement != null) {
+//                    int sourceOffset = thenRegion.getOffset() + thenRegion.getLength();
+//                    int sourceLength = elseRegion.getOffset() - sourceOffset;
+//                    Region elseToken = getToken(document, new RegionImpl(sourceOffset, sourceLength), ITerminalSymbols.TokenNameelse);
+//                    return elseToken != null && elseToken.getOffset() + elseToken.getLength() <= offset &&
+//                           offset + length < elseRegion.getOffset();
+//                }
+//            }
+//            break;
+//
+//            case ASTNode.WHILE_STATEMENT:
+//            case ASTNode.FOR_STATEMENT: {
+//                Expression expression = node.getNodeType() == ASTNode.WHILE_STATEMENT ? ((WhileStatement)node).getExpression()
+//                                                                                      : ((ForStatement)node).getExpression();
+//                Region expressionRegion = createRegion(expression, info.delta);
+//                Statement body =
+//                        node.getNodeType() == ASTNode.WHILE_STATEMENT ? ((WhileStatement)node).getBody() : ((ForStatement)node).getBody();
+//                Region bodyRegion = createRegion(body, info.delta);
+//
+//                // between expression and body statement
+//                if (expressionRegion.getOffset() + expressionRegion.getLength() <= offset && offset + length <= bodyRegion.getOffset())
+//                    return body != null;
+//            }
+//            break;
+//
+//            case ASTNode.DO_STATEMENT: {
+//                DoStatement doStatement = (DoStatement)node;
+//                Region doRegion = createRegion(doStatement, info.delta);
+//                Statement body = doStatement.getBody();
+//                Region bodyRegion = createRegion(body, info.delta);
+//
+//                if (doRegion.getOffset() + doRegion.getLength() <= offset && offset + length <= bodyRegion.getOffset())
+//                    return body != null;
+//            }
+//            break;
+//        }
+//
+//        return true;
+//    }
 
     private void smartPaste(Document document, DocumentCommand command) {
         int newOffset = command.offset;
