@@ -2,6 +2,8 @@ package com.codenvy.ide.importproject;
 
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.ui.window.Window;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -9,6 +11,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -37,6 +40,9 @@ public class ImportProjectViewImpl extends Window implements ImportProjectView{
     TextBox projectName;
 
     @UiField
+    Label description;
+
+    @UiField
     TextBox uri;
 
     @UiField
@@ -49,7 +55,7 @@ public class ImportProjectViewImpl extends Window implements ImportProjectView{
     public ImportProjectViewImpl(ImportProjectViewBinder importProjectViewBinder, CoreLocalizationConstant locale) {
         this.setTitle(locale.importProjectViewTitle());
         setWidget(importProjectViewBinder.createAndBindUi(this));
-        
+
         btnCancel = createButton(locale.cancel(), "file-importProject-cancel", new ClickHandler() {
 
             @Override
@@ -67,6 +73,13 @@ public class ImportProjectViewImpl extends Window implements ImportProjectView{
             }
         });
         getFooter().add(btnImport);
+
+        importersList.addChangeHandler(new ChangeHandler() {
+            @Override
+            public void onChange(ChangeEvent event) {
+               delegate.onImporterSelected();
+            }
+        });
     }
 
     /** {@inheritDoc} */
@@ -121,6 +134,13 @@ public class ImportProjectViewImpl extends Window implements ImportProjectView{
     @Override
     public String getUri() {
         return uri.getText();
+    }
+
+
+    @Override
+    public void setDescription(@Nonnull String description) {
+        this.description.setText(description);
+
     }
 
     /** {@inheritDoc} */

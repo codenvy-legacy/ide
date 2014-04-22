@@ -25,7 +25,6 @@ import com.codenvy.api.core.util.ProcessUtil;
 import com.codenvy.api.core.util.ValueHolder;
 import com.codenvy.api.project.server.Constants;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.api.runner.RunnerException;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.ide.commons.GwtXmlUtils;
 import com.codenvy.ide.maven.tools.MavenUtils;
@@ -112,7 +111,6 @@ class Utils {
      * @param artifactNamePattern
      *         name pattern of the artifact to return
      * @return {@link java.util.zip.ZipFile} that represents a built artifact
-     * @throws RunnerException
      */
     static ZipFile buildProjectFromSources(Path sourcesPath, String artifactNamePattern) throws Exception {
         final String[] command = new String[]{MavenUtils.getMavenExecCommand(), "clean", "package"};
