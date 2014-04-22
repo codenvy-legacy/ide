@@ -93,7 +93,7 @@
 
     .leftGutterNotification {
         width: 14px;
-        background-color: editoGutterColor;
+        background-color: editorGutterColor;
         text-align: right;
     }
 
