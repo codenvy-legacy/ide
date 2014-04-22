@@ -67,6 +67,9 @@ public class BracketInserter implements AutoEditStrategy {
             case '\'':
                 return character;
 
+            case '{':
+                return '}';
+
             default:
                 throw new IllegalArgumentException();
         }
@@ -97,13 +100,17 @@ public class BracketInserter implements AutoEditStrategy {
         if (!command.doit || isMultilineSelection() || command.text.isEmpty())
             return;
 
-        final char character = command.text.charAt(0);
+        char character = command.text.charAt(0);
+        if (character == ' ' && !command.text.endsWith(" ")) {
+            character = command.text.charAt(command.text.length() - 1);
+        }
         switch (character) {
             case '(':
             case '<':
             case '[':
             case '\'':
             case '\"':
+            case '{':
                 break;
             default:
                 return;
@@ -146,7 +153,7 @@ public class BracketInserter implements AutoEditStrategy {
                                && prevToken != Symbols.TokenEOF)
                         return;
                     break;
-
+                case '{':
                 case '[':
                     if (
                             nextToken == Symbols.TokenIDENT
