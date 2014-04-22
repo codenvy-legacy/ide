@@ -27,7 +27,6 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
@@ -46,7 +45,6 @@ public class RunOptionsPresenter implements RunOptionsView.ActionDelegate {
     private final RunnerController       runnerController;
     private final RunnerServiceClient    runnerServiceClient;
     private final RunOptionsView         view;
-    private final DtoFactory             dtoFactory;
     private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
     private final NotificationManager    notificationManager;
     private final ResourceProvider       resourceProvider;
@@ -56,20 +54,19 @@ public class RunOptionsPresenter implements RunOptionsView.ActionDelegate {
     protected RunOptionsPresenter(RunnerController runnerController,
                                   RunnerServiceClient runnerServiceClient,
                                   RunOptionsView view,
-                                  DtoFactory dtoFactory,
                                   DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                   NotificationManager notificationManager,
                                   ResourceProvider resourceProvider) {
         this.runnerController = runnerController;
         this.runnerServiceClient = runnerServiceClient;
         this.view = view;
-        this.dtoFactory = dtoFactory;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.notificationManager = notificationManager;
         this.resourceProvider = resourceProvider;
         this.view.setDelegate(this);
     }
 
+    /** Show dialog. */
     public void showDialog() {
         runnerServiceClient.getRunners(
                 new AsyncRequestCallback<Array<RunnerDescriptor>>(dtoUnmarshallerFactory.newArrayUnmarshaller(RunnerDescriptor.class)) {
