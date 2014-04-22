@@ -39,8 +39,6 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -54,8 +52,6 @@ public class CustomRunTest extends BaseTest {
     private static String RUNNER_NAME = "my_runner";
     @Mock
     private CustomRunView      view;
-    @Mock
-    private RunnerController   runnerController;
     @InjectMocks
     private CustomRunPresenter presenter;
     private Array<RunnerDescriptor> runnerDescriptors = Collections.createArray();
@@ -89,7 +85,7 @@ public class CustomRunTest extends BaseTest {
 
         verify(service).getRunners(Matchers.<AsyncRequestCallback<Array<RunnerDescriptor>>>anyObject());
         verify(view).setEnvironments(Matchers.<Array<RunnerEnvironment>>anyObject());
-        verify(view, timeout(1)).showDialog();
+        verify(view, times(1)).showDialog();
     }
 
     @Test
@@ -117,6 +113,7 @@ public class CustomRunTest extends BaseTest {
         presenter.onRunClicked();
 
         verify(view).close();
+        verify(view).getSelectedEnvironment();
         verify(runnerController).runActiveProject((RunnerEnvironment)anyObject());
     }
 
