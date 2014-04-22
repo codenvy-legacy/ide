@@ -57,6 +57,9 @@
 
     .proposalIcon {
         max-width: 16px;
+    }
+    
+    .proposalIcon img {
         vertical-align: middle;
     }
 
