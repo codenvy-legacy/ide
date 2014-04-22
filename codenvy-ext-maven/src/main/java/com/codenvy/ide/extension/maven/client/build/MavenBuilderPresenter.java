@@ -19,7 +19,6 @@ package com.codenvy.ide.extension.maven.client.build;
 
 import com.codenvy.api.builder.dto.BuildOptions;
 import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
-import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -45,9 +44,8 @@ import java.util.Map;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class MavenBuilderPresenter extends BuildProjectPresenter
-        implements Notification.OpenNotificationHandler, MavenBuildView.ActionDelegate {
-    private       MavenBuildView            view;
+public class MavenBuilderPresenter extends BuildProjectPresenter implements MavenBuildView.ActionDelegate {
+    private MavenBuildView view;
 
     /**
      * Create presenter.
@@ -71,11 +69,9 @@ public class MavenBuilderPresenter extends BuildProjectPresenter
         this.view.setBuildCommand("clean install");
     }
 
-
     public void showDialog() {
         view.showDialog();
     }
-
 
     @Override
     public void onStartBuildClicked() {
@@ -133,10 +129,10 @@ public class MavenBuilderPresenter extends BuildProjectPresenter
             view.setBuildCommand(command.replaceAll("\\s+", " "));
         } else {
             String buildCommand = view.getBuildCommand();
-            view.setBuildCommand(buildCommand.replaceAll("-U", "").replaceAll("--update-snapshots", "").replaceAll("\\s+", " ")); //TODO: need improve it
+            view.setBuildCommand(
+                    buildCommand.replaceAll("-U", "").replaceAll("--update-snapshots", "").replaceAll("\\s+", " ")); //TODO: need improve it
         }
     }
-
 
     @Override
     public void onOfflineValueChange(ValueChangeEvent<Boolean> event) {
@@ -145,7 +141,8 @@ public class MavenBuilderPresenter extends BuildProjectPresenter
             view.setBuildCommand(command.replaceAll("\\s+", " "));
         } else {
             String buildCommand = view.getBuildCommand();
-            view.setBuildCommand(buildCommand.replaceAll("-o", "").replaceAll("--offline", "").replaceAll("\\s+", " ")); //TODO: need improve it
+            view.setBuildCommand(
+                    buildCommand.replaceAll("-o", "").replaceAll("--offline", "").replaceAll("\\s+", " ")); //TODO: need improve it
         }
     }
 }

@@ -23,6 +23,7 @@ import com.codenvy.api.runner.ApplicationStatus;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.api.runner.dto.DebugMode;
 import com.codenvy.api.runner.dto.RunOptions;
+import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
@@ -77,7 +78,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private       ApplicationProcessDescriptor applicationProcessDescriptor;
     /** Handler for processing Maven build status which is received over WebSocket connection. */
     private       SubscriptionHandler<String>  runStatusHandler;
-    /** Is launching of any application in progress? */
+    /** Determines whether any application is launched. */
     private       boolean                      isLaunchingInProgress;
     private       ProjectRunCallback           runCallback;
 
@@ -149,7 +150,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     /**
-     * Check whether any application is launched.
+     * Determines whether any application is launched.
      *
      * @return <code>true</code> if any application is launched, and <code>false</code> otherwise
      */
@@ -157,18 +158,23 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         return isLaunchingInProgress;
     }
 
-    /**
-     * Run project which is currently active.
-     *
-     * @param debug
-     *         if <code>true</code> - run in debug mode
-     */
-    public void runActiveProject(boolean debug) {
-        runActiveProject(debug, null);
+    /** Run active project. */
+    public void runActiveProject() {
+        runActiveProject(null, false, null);
     }
 
     /**
-     * Run project which is currently active.
+     * Run active project, specifying environment.
+     *
+     * @param environment
+     *         environment which will be used to run project
+     */
+    public void runActiveProject(RunnerEnvironment environment) {
+        runActiveProject(environment, false, null);
+    }
+
+    /**
+     * Run active project.
      *
      * @param debug
      *         if <code>true</code> - run in debug mode
@@ -176,6 +182,20 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      *         callback that will be notified when project will be run
      */
     public void runActiveProject(boolean debug, final ProjectRunCallback callback) {
+        runActiveProject(null, debug, callback);
+    }
+
+    /**
+     * Run active project.
+     *
+     * @param environment
+     *         environment which will be used to run project
+     * @param debug
+     *         if <code>true</code> - run in debug mode
+     * @param callback
+     *         callback that will be notified when project will be run
+     */
+    public void runActiveProject(RunnerEnvironment environment, boolean debug, final ProjectRunCallback callback) {
         project = resourceProvider.getActiveProject();
         if (project == null) {
             Window.alert("Project is not opened.");
@@ -186,19 +206,19 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             return;
         }
 
-        runCallback = callback;
         isLaunchingInProgress = true;
         notification = new Notification(constant.applicationStarting(project.getName()), PROGRESS, RunnerController.this);
         notificationManager.showNotification(notification);
+        runCallback = callback;
 
         RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
         if (debug) {
             runOptions.setDebugMode(dtoFactory.createDto(DebugMode.class).withMode("default"));
         }
-        runActiveProject(runOptions);
-    }
+        if (environment != null) {
+            runOptions.setEnvironmentId(environment.getId());
+        }
 
-    private void runActiveProject(RunOptions runOptions) {
         service.run(project.getPath(), runOptions,
                     new AsyncRequestCallback<ApplicationProcessDescriptor>(
                             dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
@@ -307,7 +327,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
         console.print(message);
     }
-
 
     /**
      * Starts checking job status by subscribing on receiving

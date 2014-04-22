@@ -20,6 +20,7 @@ package com.codenvy.ide.extension.runner.client;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.extension.runner.client.actions.CustomRunAction;
 import com.codenvy.ide.extension.runner.client.actions.GetLogsAction;
 import com.codenvy.ide.extension.runner.client.actions.RunAction;
 import com.codenvy.ide.extension.runner.client.actions.StopAction;
@@ -44,9 +45,10 @@ public class RunnerExtension {
 
     @Inject
     public RunnerExtension(RunnerLocalizationConstant localizationConstants, ActionManager actionManager, RunAction runAction,
-                           GetLogsAction getLogsAction, StopAction stopAction, UpdateAction updateAction) {
+                           CustomRunAction customRunAction, GetLogsAction getLogsAction, StopAction stopAction, UpdateAction updateAction) {
         // register actions
         actionManager.registerAction(localizationConstants.runAppActionId(), runAction);
+        actionManager.registerAction(localizationConstants.customRunAppActionId(), customRunAction);
         actionManager.registerAction(localizationConstants.getAppLogsActionId(), getLogsAction);
         actionManager.registerAction(localizationConstants.stopAppActionId(), stopAction);
         actionManager.registerAction(localizationConstants.updateExtensionActionId(), updateAction);
@@ -54,6 +56,7 @@ public class RunnerExtension {
         // add actions in main menu
         DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
         runMenuActionGroup.add(runAction);
+        runMenuActionGroup.add(customRunAction);
         runMenuActionGroup.add(getLogsAction);
         runMenuActionGroup.add(stopAction);
         runMenuActionGroup.add(updateAction);
