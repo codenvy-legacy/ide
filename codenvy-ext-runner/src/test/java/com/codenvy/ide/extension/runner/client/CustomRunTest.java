@@ -50,7 +50,7 @@ import static org.mockito.Mockito.when;
  *
  * @author Artem Zatsarynnyy
  */
-public class RunOptionsTest extends BaseTest {
+public class CustomRunTest extends BaseTest {
     private static String RUNNER_NAME = "my_runner";
     @Mock
     private CustomRunView      view;
