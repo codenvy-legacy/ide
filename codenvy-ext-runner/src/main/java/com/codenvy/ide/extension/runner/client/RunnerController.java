@@ -340,6 +340,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             @Override
             protected void onMessageReceived(String result) {
                 ApplicationProcessDescriptor newAppDescriptor = dtoFactory.createDtoFromJson(result, ApplicationProcessDescriptor.class);
+                applicationProcessDescriptor = newAppDescriptor;
                 ApplicationStatus status = newAppDescriptor.getStatus();
                 if (status == ApplicationStatus.RUNNING) {
                     afterApplicationLaunched(newAppDescriptor);
