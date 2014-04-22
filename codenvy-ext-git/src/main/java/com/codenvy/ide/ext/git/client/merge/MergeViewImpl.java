@@ -25,14 +25,14 @@ import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
+import com.codenvy.ide.ui.window.Window;
 import com.codenvy.ide.util.input.SignalEvent;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -51,15 +51,13 @@ import static com.codenvy.ide.ext.git.client.merge.Reference.RefType.REMOTE_BRAN
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class MergeViewImpl extends DialogBox implements MergeView {
+public class MergeViewImpl extends Window implements MergeView {
     interface MergeViewImplUiBinder extends UiBinder<Widget, MergeViewImpl> {
     }
 
     private static MergeViewImplUiBinder ourUiBinder = GWT.create(MergeViewImplUiBinder.class);
 
-    @UiField
     Button      btnCancel;
-    @UiField
     Button      btnMerge;
     @UiField
     ScrollPanel referencesPanel;
@@ -86,7 +84,7 @@ public class MergeViewImpl extends DialogBox implements MergeView {
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 
-        this.setText(locale.mergeTitle());
+        this.setTitle(locale.mergeTitle());
         this.setWidget(widget);
 
         this.references =
@@ -150,6 +148,24 @@ public class MergeViewImpl extends DialogBox implements MergeView {
 
         Array<Reference> branches = Collections.createArray(localBranch, remoteBranch);
         root.setBranches(branches);
+        
+        btnCancel = createButton(locale.buttonCancel(), "git-merge-cancel", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCancelClicked();
+            }
+        });
+        getFooter().add(btnCancel);
+
+        btnMerge = createButton(locale.buttonMerge(), "git-merge-merge", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onMergeClicked();
+            }
+        });
+        getFooter().add(btnMerge);
     }
 
     /** {@inheritDoc} */
@@ -187,17 +203,11 @@ public class MergeViewImpl extends DialogBox implements MergeView {
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        this.center();
         this.show();
     }
 
-    @UiHandler("btnCancel")
-    public void onCancelClicked(ClickEvent event) {
-        delegate.onCancelClicked();
-    }
-
-    @UiHandler("btnMerge")
-    public void onMergeClicked(ClickEvent event) {
-        delegate.onMergeClicked();
+    /** {@inheritDoc} */
+    @Override
+    protected void onClose() {
     }
 }

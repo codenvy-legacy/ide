@@ -19,6 +19,7 @@ package com.codenvy.ide.ext.git.server.rest;
 
 import com.codenvy.ide.ext.git.shared.Tag;
 
+import javax.inject.Singleton;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
@@ -39,6 +40,7 @@ import java.lang.reflect.Type;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
+@Singleton
 @Provider
 @Produces(MediaType.TEXT_PLAIN)
 public final class TagListWriter implements MessageBodyWriter<Iterable<Tag>> {

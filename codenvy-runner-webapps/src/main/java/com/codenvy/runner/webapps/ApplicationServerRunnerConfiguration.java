@@ -17,8 +17,8 @@
  */
 package com.codenvy.runner.webapps;
 
+import com.codenvy.api.runner.dto.RunRequest;
 import com.codenvy.api.runner.internal.RunnerConfiguration;
-import com.codenvy.api.runner.internal.dto.RunRequest;
 
 /**
  * Configuration of Web applications runner.

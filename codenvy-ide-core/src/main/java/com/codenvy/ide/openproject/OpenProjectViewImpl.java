@@ -21,15 +21,16 @@ import elemental.dom.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.window.Window;
 import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.UIObject;
@@ -47,14 +48,14 @@ import com.google.inject.Singleton;
 @Singleton
 public class OpenProjectViewImpl extends Window implements OpenProjectView {
     private static OpenProjectViewImplUiBinder uiBinder = GWT.create(OpenProjectViewImplUiBinder.class);
-    @UiField
+
     Button                    btnCancel;
-    @UiField
     Button                    btnOpen;
     @UiField
     ScrollPanel               listPanel;
     @UiField(provided = true)
     com.codenvy.ide.Resources res;
+    private CoreLocalizationConstant localization;
     private ActionDelegate     delegate;
     private SimpleList<String> list;
     private SimpleList.ListItemRenderer<String>  listItemRenderer = new SimpleList.ListItemRenderer<String>() {
@@ -87,8 +88,9 @@ public class OpenProjectViewImpl extends Window implements OpenProjectView {
      * @param resources
      */
     @Inject
-    protected OpenProjectViewImpl(com.codenvy.ide.Resources resources) {
+    protected OpenProjectViewImpl(com.codenvy.ide.Resources resources, CoreLocalizationConstant localization) {
         this.res = resources;
+        this.localization = localization;
 
         Widget widget = uiBinder.createAndBindUi(this);
 
@@ -99,8 +101,30 @@ public class OpenProjectViewImpl extends Window implements OpenProjectView {
 
         this.setTitle("Open Project");
         this.setWidget(widget);
+        createButtons();
     }
-
+    
+    private void createButtons() {
+        btnOpen = createButton(localization.open(), "file-openProject-open", new ClickHandler() {
+            
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onOpenClicked();
+            }
+        });
+        
+        btnCancel = createButton(localization.cancel(), "file-openProject-cancel", new ClickHandler() {
+            
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCancelClicked();
+            }
+        });
+        
+        getFooter().add(btnCancel);
+        getFooter().add(btnOpen);
+    }
+    
     @Override
     protected void onClose() {
         delegate.onCancelClicked();
@@ -134,16 +158,6 @@ public class OpenProjectViewImpl extends Window implements OpenProjectView {
     @Override
     public void showDialog() {
         this.show();
-    }
-
-    @UiHandler("btnCancel")
-    void onBtnCancelClick(ClickEvent event) {
-        delegate.onCancelClicked();
-    }
-
-    @UiHandler("btnOpen")
-    void onBtnOpenClick(ClickEvent event) {
-        delegate.onOpenClicked();
     }
 
     interface OpenProjectViewImplUiBinder extends UiBinder<Widget, OpenProjectViewImpl> {

@@ -18,22 +18,25 @@
 package com.codenvy.ide.actions;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.api.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 @Singleton
 public class CloseProjectAction extends Action {
-    private ResourceProvider resourceProvider;
+    private final ResourceProvider resourceProvider;
+    private final AnalyticsEventLogger eventLogger;
 
     @Inject
-    public CloseProjectAction(ResourceProvider resourceProvider, Resources resources) {
+    public CloseProjectAction(ResourceProvider resourceProvider, Resources resources, AnalyticsEventLogger eventLogger) {
         super("Close", "Close project", null, resources.closeProject());
         this.resourceProvider = resourceProvider;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
@@ -46,6 +49,7 @@ public class CloseProjectAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log("IDE: Close project");
         resourceProvider.showListProjects();
     }
 }

@@ -1,19 +1,24 @@
 package com.codenvy.ide.importproject;
 
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.ui.window.Window;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+
 import java.util.List;
 
 
@@ -22,19 +27,20 @@ import java.util.List;
  *
  * @author Roman Nikitenko
  */
-public class ImportProjectViewImpl extends DialogBox implements ImportProjectView{
+public class ImportProjectViewImpl extends Window implements ImportProjectView{
 
     public interface ImportProjectViewBinder extends UiBinder<Widget, ImportProjectViewImpl> {
     }
 
-    @UiField
     Button btnCancel;
 
-    @UiField
     Button btnImport;
 
     @UiField
     TextBox projectName;
+
+    @UiField
+    Label description;
 
     @UiField
     TextBox uri;
@@ -47,14 +53,38 @@ public class ImportProjectViewImpl extends DialogBox implements ImportProjectVie
     /** Create view. */
     @Inject
     public ImportProjectViewImpl(ImportProjectViewBinder importProjectViewBinder, CoreLocalizationConstant locale) {
-        this.setText(locale.importProjectViewTitle());
+        this.setTitle(locale.importProjectViewTitle());
         setWidget(importProjectViewBinder.createAndBindUi(this));
+
+        btnCancel = createButton(locale.cancel(), "file-importProject-cancel", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCancelClicked();
+            }
+        });
+        getFooter().add(btnCancel);
+
+        btnImport = createButton(locale.importProjectButton(), "file-importProject-import", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onImportClicked();
+            }
+        });
+        getFooter().add(btnImport);
+
+        importersList.addChangeHandler(new ChangeHandler() {
+            @Override
+            public void onChange(ChangeEvent event) {
+               delegate.onImporterSelected();
+            }
+        });
     }
 
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        this.center();
         this.show();
     }
 
@@ -62,16 +92,6 @@ public class ImportProjectViewImpl extends DialogBox implements ImportProjectVie
     @Override
     public void close() {
         this.hide();
-    }
-
-    @UiHandler("btnCancel")
-    public void onCancelClicked(ClickEvent event) {
-        delegate.onCancelClicked();
-    }
-
-    @UiHandler("btnImport")
-    public void onImportClicked(ClickEvent event) {
-        delegate.onImportClicked();
     }
 
     @UiHandler("uri")
@@ -116,6 +136,13 @@ public class ImportProjectViewImpl extends DialogBox implements ImportProjectVie
         return uri.getText();
     }
 
+
+    @Override
+    public void setDescription(@Nonnull String description) {
+        this.description.setText(description);
+
+    }
+
     /** {@inheritDoc} */
     @Nonnull
     @Override
@@ -137,5 +164,10 @@ public class ImportProjectViewImpl extends DialogBox implements ImportProjectVie
     @Override
     public void setEnabledImportButton(boolean enabled) {
         btnImport.setEnabled(enabled);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onClose() {
     }
 }

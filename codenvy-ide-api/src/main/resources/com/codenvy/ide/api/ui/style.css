@@ -112,6 +112,7 @@
 @def largeLabel 14px;
 @def largeDropdownLabel 12px;
 @def boxFontSize 12px;
+@def buttonFontSize 12px;
 
 /* Fonts */
 @def alternativeFontFamily "Helvetica Neue", "Myriad Pro","open sans", arial, sans-serif;
@@ -152,6 +153,7 @@
 /*Window*/
 @eval windowContentBackground com.codenvy.ide.api.ui.theme.Style.getWindowContentBackground();
 @eval windowHeaderBackground com.codenvy.ide.api.ui.theme.Style.getWindowHeaderBackground();
+@eval windowSeparatorColor com.codenvy.ide.api.ui.theme.Style.getWindowSeparatorColor();
 
 /*syntax highlight*/
 @eval keyword com.codenvy.ide.api.ui.theme.Style.getEditorKeyWord();

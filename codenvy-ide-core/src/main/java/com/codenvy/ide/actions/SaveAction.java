@@ -20,6 +20,7 @@ package com.codenvy.ide.actions;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
+import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.google.inject.Inject;
@@ -34,16 +35,19 @@ import com.google.inject.Singleton;
 @Singleton
 public class SaveAction extends Action {
 
-    private EditorAgent editorAgent;
+    private final EditorAgent editorAgent;
+    private final AnalyticsEventLogger eventLogger;
 
     @Inject
-    public SaveAction(Resources resources, EditorAgent editorAgent) {
+    public SaveAction(Resources resources, EditorAgent editorAgent, AnalyticsEventLogger eventLogger) {
         super("Save", "Save changes for current file", null, resources.save());
         this.editorAgent = editorAgent;
+        this.eventLogger = eventLogger;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log("IDE: Save file");
         editorAgent.getActiveEditor().doSave();
     }
 

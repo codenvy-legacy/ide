@@ -18,6 +18,7 @@
 package com.codenvy.ide.actions;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.ui.wizard.WizardDialog;
@@ -34,23 +35,26 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class NewProjectAction extends Action {
-    private WizardDialogFactory wizardDialogFactory;
-    private NewProjectWizard    wizard;
-    private ProjectWizardViewImpl projectWizardView;
+    private final WizardDialogFactory wizardDialogFactory;
+    private final NewProjectWizard    wizard;
+    private final ProjectWizardViewImpl projectWizardView;
+    private final AnalyticsEventLogger eventLogger;
 
     @Inject
     public NewProjectAction(Resources resources, WizardDialogFactory wizardDialogFactory, NewProjectWizard wizard,
-                            ProjectWizardViewImpl projectWizardView) {
+                            ProjectWizardViewImpl projectWizardView, AnalyticsEventLogger eventLogger) {
         super("Project", "Create new project", resources.project());
 
         this.wizardDialogFactory = wizardDialogFactory;
         this.wizard = wizard;
         this.projectWizardView = projectWizardView;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log("IDE: New project");
         WizardDialog wizardDialog = new ProjectWizardPresenter(projectWizardView, wizard);//wizardDialogFactory.create(wizard);
         wizardDialog.show();
     }

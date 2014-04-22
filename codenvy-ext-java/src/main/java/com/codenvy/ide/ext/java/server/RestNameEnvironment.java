@@ -21,7 +21,6 @@ import com.codenvy.api.builder.BuildStatus;
 import com.codenvy.api.builder.BuilderException;
 import com.codenvy.api.builder.dto.BuildTaskDescriptor;
 import com.codenvy.api.core.rest.HttpJsonHelper;
-import com.codenvy.api.core.rest.RemoteException;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.Pair;
 import com.codenvy.api.project.server.ProjectManager;
@@ -305,7 +304,8 @@ public class RestNameEnvironment {
             LOG.error("Build failed see more detail here: " + logLink.getHref());
             throw new BuilderException(
                     "Build failed see more detail here: <a href=\"" + logLink.getHref() + "\" target=\"_blank\">" + logLink.getHref() +
-                    "</a>");
+                    "</a>"
+            );
         }
         throw new BuilderException("Build failed");
     }
@@ -321,7 +321,7 @@ public class RestNameEnvironment {
     }
 
     @NotNull
-    private BuildTaskDescriptor waitTaskFinish(@NotNull BuildTaskDescriptor buildDescription) throws IOException, RemoteException {
+    private BuildTaskDescriptor waitTaskFinish(@NotNull BuildTaskDescriptor buildDescription) throws Exception {
         BuildTaskDescriptor request = buildDescription;
         final int sleepTime = 2000;
 
@@ -343,7 +343,7 @@ public class RestNameEnvironment {
 
     @NotNull
     private BuildTaskDescriptor getDependencies(@NotNull String url, @NotNull String projectName, @NotNull String analyzeType)
-            throws IOException, RemoteException {
+            throws Exception {
         Pair<String, String> projectParam = Pair.of("project", projectName);
         Pair<String, String> typeParam = Pair.of("type", analyzeType);
         BuildTaskDescriptor buildStatus = HttpJsonHelper.request(BuildTaskDescriptor.class, url, "POST", null, projectParam, typeParam);

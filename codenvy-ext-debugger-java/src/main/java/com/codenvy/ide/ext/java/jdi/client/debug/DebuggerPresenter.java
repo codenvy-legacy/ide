@@ -26,18 +26,19 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.parts.base.BasePresenter;
+import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.debug.Breakpoint;
 import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.debug.Debugger;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeExtension;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
-import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
 import com.codenvy.ide.ext.java.jdi.client.debug.changevalue.ChangeValuePresenter;
 import com.codenvy.ide.ext.java.jdi.client.debug.expression.EvaluateExpressionPresenter;
 import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolver;
@@ -54,8 +55,6 @@ import com.codenvy.ide.ext.java.jdi.shared.StepEvent;
 import com.codenvy.ide.ext.java.jdi.shared.Value;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
 import com.codenvy.ide.extension.runner.client.RunnerController;
-import com.codenvy.ide.api.resources.model.File;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.HTTPStatus;
@@ -70,7 +69,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +85,7 @@ import static com.codenvy.ide.ext.java.jdi.shared.DebuggerEvent.STEP;
  */
 @Singleton
 public class DebuggerPresenter extends BasePresenter implements DebuggerView.ActionDelegate, Debugger {
-    private static final String TITLE                  = "Debug";
+    private static final String TITLE = "Debug";
     private final DtoFactory                             dtoFactory;
     private final DtoUnmarshallerFactory                 dtoUnmarshallerFactory;
     /** Channel identifier to receive events from debugger over WebSocket. */
@@ -97,7 +95,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private       DebuggerView                           view;
     private       RunnerController                       runnerController;
     private       DebuggerClientService                  service;
-    private       JavaRuntimeResources                   resources;
     private       ConsolePart                            console;
     private       JavaRuntimeLocalizationConstant        constant;
     private       DebuggerInfo                           debuggerInfo;
@@ -110,17 +107,16 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private       EvaluateExpressionPresenter            evaluateExpressionPresenter;
     private       ChangeValuePresenter                   changeValuePresenter;
     private       NotificationManager                    notificationManager;
-    private       StringMap<File>                        filesToBreakpoints;
     /** Handler for processing events which is received from debugger over WebSocket connection. */
     private       SubscriptionHandler<DebuggerEventList> debuggerEventsHandler;
     private       SubscriptionHandler<Void>              debuggerDisconnectedHandler;
     private       List<Variable>                         variables;
     private       ApplicationProcessDescriptor           appDescriptor;
+    private       Project                                project;
 
     /** Create presenter. */
     @Inject
     public DebuggerPresenter(DebuggerView view,
-                             JavaRuntimeResources resources,
                              final DebuggerClientService service,
                              final EventBus eventBus,
                              final ConsolePart console,
@@ -142,7 +138,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.view.setDelegate(this);
         this.view.setTitle(TITLE);
-        this.resources = resources;
         this.service = service;
         this.console = console;
         this.messageBus = messageBus;
@@ -150,7 +145,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         this.workspaceAgent = workspaceAgent;
         this.gutterManager = gutterManager;
         this.resolverFactory = resolverFactory;
-        this.filesToBreakpoints = Collections.createStringMap();
         this.variables = new ArrayList<>();
         this.editorAgent = editorAgent;
         this.evaluateExpressionPresenter = evaluateExpressionPresenter;
@@ -255,56 +249,64 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-        view.setBreakpoints(gutterManager.getBreakPoints());
+        view.setBreakpoints(gutterManager.getBreakpoints());
         view.setVariables(variables);
-
         container.setWidget(view);
     }
 
     private void onEventListReceived(@NotNull DebuggerEventList eventList) {
-        String filePath = null;
+        if (eventList.getEvents().size() == 0) {
+            return;
+        }
 
-        int currentLineNumber = 0;
-        if (eventList.getEvents().size() > 0) {
-            Location location;
-            File activeFile = null;
-
-            EditorPartPresenter activeEditor = editorAgent.getActiveEditor();
-            if (activeEditor != null) {
-                activeFile = activeEditor.getEditorInput().getFile();
+        File activeFile = null;
+        EditorPartPresenter activeEditor = editorAgent.getActiveEditor();
+        if (activeEditor != null) {
+            activeFile = activeEditor.getEditorInput().getFile();
+        }
+        Location location;
+        List<DebuggerEvent> events = eventList.getEvents();
+        for (DebuggerEvent event : events) {
+            switch (event.getType()) {
+                case STEP:
+                    location = ((StepEvent)event).getLocation();
+                    break;
+                case BREAKPOINT:
+                    location = ((BreakPointEvent)event).getBreakPoint().getLocation();
+                    break;
+                default:
+                    Log.error(DebuggerPresenter.class, "Unknown type of debugger event: " + event.getType());
+                    return;
             }
 
-            List<DebuggerEvent> events = eventList.getEvents();
-            for (DebuggerEvent event : events) {
-                if (event.getType() == STEP) {
-                    StepEvent stepEvent = (StepEvent)event;
-                    location = stepEvent.getLocation();
-                    filePath = resolveFilePathByLocation(location);
-                    if (activeFile == null || !filePath.equalsIgnoreCase(activeFile.getPath())) {
-                        openFile(location);
+            final String filePath = resolveFilePathByLocation(location);
+            if (activeFile == null || !filePath.equalsIgnoreCase(activeFile.getPath())) {
+                final Location finalLocation = location;
+                openFile(location, new AsyncCallback<File>() {
+                    @Override
+                    public void onSuccess(File result) {
+                        if (result != null && filePath != null && filePath.equalsIgnoreCase(result.getPath())) {
+                            gutterManager.markCurrentBreakpoint(finalLocation.getLineNumber() - 1);
+                        }
                     }
-                    currentLineNumber = location.getLineNumber();
-                } else if (event.getType() == BREAKPOINT) {
-                    BreakPointEvent breakPointEvent = (BreakPointEvent)event;
-                    location = breakPointEvent.getBreakPoint().getLocation();
-                    filePath = resolveFilePathByLocation(location);
-                    if (activeFile == null || !filePath.equalsIgnoreCase(activeFile.getPath())) {
-                        activeFile = openFile(location);
-                    }
-                    currentLineNumber = location.getLineNumber();
-                }
-                getStackFrameDump();
-                changeButtonsEnableState(true);
-            }
 
-            if (activeFile != null && filePath != null && filePath.equalsIgnoreCase(activeFile.getPath())) {
-                gutterManager.markCurrentBreakPoint(currentLineNumber - 1);
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        Notification notification =
+                                new Notification("Source not found for class " + finalLocation.getClassName(), ERROR);
+                        notificationManager.showNotification(notification);
+                    }
+                });
+            } else {
+                gutterManager.markCurrentBreakpoint(location.getLineNumber() - 1);
             }
+            getStackFrameDump();
+            changeButtonsEnableState(true);
         }
     }
 
     /**
-     * Create file path from location.
+     * Create file path from {@link Location}.
      *
      * @param location
      *         location of class
@@ -312,32 +314,23 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      */
     @NotNull
     private String resolveFilePathByLocation(@NotNull Location location) {
-        File file = getFileWithBreakPoints(location.getClassName());
-        Project project = file.getProject();
-        // TODO: get source folder from project attribute
         final String sourcePath = "src/main/java";
         return project.getPath() + "/" + sourcePath + "/" + location.getClassName().replace(".", "/") + ".java";
     }
 
-    @Nullable
-    private File openFile(@NotNull Location location) {
-        File file = getFileWithBreakPoints(location.getClassName());
-        if (file != null) {
-            editorAgent.openEditor(file);
-        }
-        return file;
-    }
+    private void openFile(@NotNull Location location, final AsyncCallback<File> callback) {
+        project.findResourceByPath(resolveFilePathByLocation(location), new AsyncCallback<Resource>() {
+            @Override
+            public void onSuccess(Resource result) {
+                editorAgent.openEditor((File)result);
+                callback.onSuccess((File)result);
+            }
 
-    /**
-     * Return file with current fqn.
-     *
-     * @param fqn
-     *         file fqn
-     * @return {@link File}
-     */
-    @Nullable
-    private File getFileWithBreakPoints(@NotNull String fqn) {
-        return filesToBreakpoints.get(fqn);
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
+            }
+        });
     }
 
     private void getStackFrameDump() {
@@ -429,7 +422,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 Notification notification = new Notification(exception.getMessage(), ERROR);
                 notificationManager.showNotification(notification);
             }
-
         });
     }
 
@@ -516,7 +508,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                                      Notification notification = new Notification(exception.getMessage(), ERROR);
                                      notificationManager.showNotification(notification);
                                  }
-                             });
+                             }
+                            );
         }
     }
 
@@ -537,7 +530,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         view.setVariables(variables);
         selectedVariable = null;
         updateChangeValueButtonEnableState();
-        gutterManager.unmarkCurrentBreakPoint();
+        gutterManager.unmarkCurrentBreakpoint();
     }
 
     private void showDialog(@NotNull DebuggerInfo debuggerInfo) {
@@ -562,8 +555,17 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         workspaceAgent.hidePart(this);
     }
 
-    /** Connect to the debugger. */
-    public void attachDebugger(@NotNull final ApplicationProcessDescriptor appDescriptor) {
+    /**
+     * Attach debugger to the specified app.
+     *
+     * @param appDescriptor
+     *         descriptor of application to debug
+     * @param project
+     *         project to debug
+     */
+    public void attachDebugger(@NotNull final ApplicationProcessDescriptor appDescriptor, Project project) {
+        this.project = project;
+
         this.appDescriptor = appDescriptor;
         service.connect(appDescriptor.getDebugHost(), appDescriptor.getDebugPort(),
                         new AsyncRequestCallback<DebuggerInfo>(dtoUnmarshallerFactory.newUnmarshaller(DebuggerInfo.class)) {
@@ -605,7 +607,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
             });
         } else {
             changeButtonsEnableState(false);
-            gutterManager.unmarkCurrentBreakPoint();
+            gutterManager.unmarkCurrentBreakpoint();
         }
     }
 
@@ -642,14 +644,14 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     /** Perform some action after disconnecting a debugger. */
     private void onDebuggerDisconnected() {
         debuggerInfo = null;
-        gutterManager.unmarkCurrentBreakPoint();
+        gutterManager.unmarkCurrentBreakpoint();
         gutterManager.removeAllBreakPoints();
         console.print(constant.debuggerDisconnected(appDescriptor.getDebugHost() + ':' + appDescriptor.getDebugPort()));
         appDescriptor = null;
     }
 
     private void updateBreakPoints() {
-        view.setBreakpoints(gutterManager.getBreakPoints());
+        view.setBreakpoints(gutterManager.getBreakpoints());
     }
 
     /** {@inheritDoc} */
@@ -673,8 +675,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 protected void onSuccess(Void result) {
                     if (resolver != null) {
                         final String fqn = resolver.resolveFqn(file);
-                        filesToBreakpoints.put(fqn, file);
-                        Breakpoint breakpoint = new Breakpoint(Breakpoint.Type.BREAKPOINT, lineNumber, fqn);
+                        Breakpoint breakpoint = new Breakpoint(Breakpoint.Type.BREAKPOINT, lineNumber, fqn, file);
                         callback.onSuccess(breakpoint);
                     }
                     updateBreakPoints();

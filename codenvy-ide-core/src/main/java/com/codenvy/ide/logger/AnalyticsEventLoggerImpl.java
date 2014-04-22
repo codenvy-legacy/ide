@@ -17,13 +17,13 @@
  */
 package com.codenvy.ide.logger;
 
+import com.codenvy.api.analytics.shared.dto.EventParameters;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.Profile;
 import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.dto.EventParameters;
 import com.codenvy.ide.extension.ExtensionDescription;
 import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -52,7 +52,7 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
  */
 @Singleton
 public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
-    private static final String API_ANALYTICS_PATH = "/api/analytics/log/ide-usage";
+    private static final String API_ANALYTICS_PATH = "/analytics/log/ide-usage";
 
     private static final String WS_PARAM           = "WS";
     private static final String USER_PARAM         = "USER";
@@ -70,6 +70,8 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
     private final ExtensionRegistry        extensionRegistry;
     private final DtoUnmarshallerFactory   dtoUnmarshallerFactory;
 
+    private String currentUser;
+
     @Inject
     public AnalyticsEventLoggerImpl(DtoFactory dtoFactory,
                                     ExtensionRegistry extensionRegistry,
@@ -83,6 +85,8 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
         this.messageBus = messageBus;
         this.extensionRegistry = extensionRegistry;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+
+        saveCurrentUser();
     }
 
     @Override
@@ -111,6 +115,7 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
 
     private void putReservedParameters(String event, String source, Map<String, String> additionalParams) {
         addProjectParams(additionalParams);
+        additionalParams.put(USER_PARAM, currentUser);
         additionalParams.put(WS_PARAM, Utils.getWorkspaceName());
         additionalParams.put(ACTION_PARAM, event);
         additionalParams.put(SOURCE_PARAM, source);
@@ -160,51 +165,50 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
         }
     }
 
-    private void send(final Map<String, String> additionalParams) {
-        userProfile.getCurrentProfile(null, new AsyncRequestCallback<Profile>(
-                dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
+    private void saveCurrentUser() {
+        userProfile.getCurrentProfile(
+                null, new AsyncRequestCallback<Profile>(dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
+
             @Override
             protected void onSuccess(Profile result) {
                 if (result != null) {
-                    additionalParams.put(USER_PARAM, result.getUserId());
+                    currentUser = result.getUserId();
                 } else {
-                    additionalParams.put(USER_PARAM, EMPTY_PARAM_VALUE);
+                    currentUser = EMPTY_PARAM_VALUE;
                 }
-                doSend(additionalParams);
             }
 
             @Override
             protected void onFailure(Throwable exception) {
-                additionalParams.put(USER_PARAM, EMPTY_PARAM_VALUE);
-                doSend(additionalParams);
-            }
-
-            private void doSend(Map<String, String> parameters) {
-                EventParameters additionalParams = dtoFactory.createDto(EventParameters.class).withParams(parameters);
-                final String json = dtoFactory.toJson(additionalParams);
-
-                MessageBuilder builder = new MessageBuilder(POST, API_ANALYTICS_PATH);
-                builder.data(json);
-                builder.header(CONTENTTYPE, APPLICATION_JSON);
-                Message message = builder.build();
-
-                try {
-                    messageBus.send(message, new RequestCallback() {
-                        @Override
-                        protected void onSuccess(Object result) {
-                        }
-
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            Log.error(getClass(), exception.getMessage());
-                            Log.info(getClass(), json);
-                        }
-                    });
-                } catch (Exception e) {
-                    Log.error(getClass(), e.getMessage());
-                    Log.info(getClass(), json);
-                }
+                currentUser = EMPTY_PARAM_VALUE;
             }
         });
+    }
+
+    private void send(Map<String, String> parameters) {
+        EventParameters additionalParams = dtoFactory.createDto(EventParameters.class).withParams(parameters);
+        final String json = dtoFactory.toJson(additionalParams);
+
+        MessageBuilder builder = new MessageBuilder(POST, API_ANALYTICS_PATH);
+        builder.data(json);
+        builder.header(CONTENTTYPE, APPLICATION_JSON);
+        Message message = builder.build();
+
+        try {
+            messageBus.send(message, new RequestCallback() {
+                @Override
+                protected void onSuccess(Object result) {
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    Log.error(getClass(), exception.getMessage());
+                    Log.info(getClass(), json);
+                }
+            });
+        } catch (Exception e) {
+            Log.error(getClass(), e.getMessage());
+            Log.info(getClass(), json);
+        }
     }
 }

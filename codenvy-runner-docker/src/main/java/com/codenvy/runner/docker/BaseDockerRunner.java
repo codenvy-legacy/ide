@@ -20,8 +20,12 @@ package com.codenvy.runner.docker;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.CustomPortService;
+import com.codenvy.api.core.util.LineConsumer;
 import com.codenvy.api.core.util.Pair;
+import com.codenvy.api.core.util.ValueHolder;
 import com.codenvy.api.runner.RunnerException;
+import com.codenvy.api.runner.dto.DebugMode;
+import com.codenvy.api.runner.dto.RunRequest;
 import com.codenvy.api.runner.internal.ApplicationLogger;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.api.runner.internal.DeploymentSources;
@@ -30,19 +34,19 @@ import com.codenvy.api.runner.internal.ResourceAllocators;
 import com.codenvy.api.runner.internal.Runner;
 import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
-import com.codenvy.api.runner.internal.dto.DebugMode;
-import com.codenvy.api.runner.internal.dto.RunRequest;
+import com.codenvy.commons.json.JsonHelper;
+import com.codenvy.commons.json.JsonParseException;
 import com.codenvy.commons.lang.NamedThreadFactory;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.runner.docker.dockerfile.DockerImage;
 import com.codenvy.runner.docker.dockerfile.DockerfileParser;
+import com.codenvy.runner.docker.json.BuildImageStatus;
 import com.codenvy.runner.docker.json.ContainerConfig;
 import com.codenvy.runner.docker.json.ContainerCreated;
 import com.codenvy.runner.docker.json.HostConfig;
 import com.codenvy.runner.docker.json.Image;
 import com.codenvy.runner.docker.json.PortBinding;
 import com.google.common.hash.Hashing;
-import com.google.common.io.CharStreams;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +54,6 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.Reader;
-import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.HashMap;
@@ -60,7 +63,7 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
 /** @author andrew00x */
@@ -104,7 +107,7 @@ public abstract class BaseDockerRunner extends Runner {
 
     @PostConstruct
     @Override
-    public final synchronized void start() {
+    public final void start() {
         super.start();
         imageCleaner = Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory(getName() + "-ImageCleaner-", true));
         imageCleaner.scheduleAtFixedRate(new Runnable() {
@@ -136,7 +139,7 @@ public abstract class BaseDockerRunner extends Runner {
     }
 
     @Override
-    public final synchronized void stop() {
+    public final void stop() {
         super.stop();
         imageCleaner.shutdownNow();
         final DockerConnector connector = DockerConnector.getInstance();
@@ -267,7 +270,7 @@ public abstract class BaseDockerRunner extends Runner {
 
     protected abstract DockerfileTemplate getDockerfileTemplate(RunRequest request) throws IOException;
 
-    private static final Pattern BUILD_LOG_PATTERN = Pattern.compile("\\{[^\\}^\\{]+\\}");
+//    private static final Pattern BUILD_LOG_PATTERN = Pattern.compile("\\{[^\\}^\\{]+\\}");
 
     private synchronized ImageStats createImageIfNeed(DockerConnector connector,
                                                       String dockerRepoName,
@@ -292,30 +295,44 @@ public abstract class BaseDockerRunner extends Runner {
                 imageStats = null;
             }
         }
+        final ValueHolder<String> imageIdH = new ValueHolder<>();
+        final ValueHolder<String> errorH = new ValueHolder<>();
         if (imageStats == null) {
-            final StringBuilder output = new StringBuilder();
-            connector.createImage(dockerFile, applicationFile, dockerRepoName, tag, output);
-            final String buildLog = output.toString();
-            LOG.debug(buildLog);
-            for (String line : CharStreams.readLines(new StringReader(buildLog))) {
-                if (line.startsWith("Error build:")) {
-                    throw new RunnerException(String.format("Error building Docker container, response from Docker API:\n%s\n", buildLog));
-                }
-            }
-            String imageId = null;
-            final Matcher matcher = BUILD_LOG_PATTERN.matcher(buildLog);
-            if (matcher.find()) {
-                do {
-                    final String msg = buildLog.substring(matcher.start() + 1, matcher.end() - 1);
-                    if (msg.startsWith("\"stream\":\"Successfully built ")) {
-                        int endSize = 29; // length of '"stream":"Successfully built '
-                        while (endSize < msg.length() && Character.digit(msg.charAt(endSize), 16) != -1) {
-                            endSize++;
+            final LineConsumer output = new LineConsumer() {
+                @Override
+                public void writeLine(String line) throws IOException {
+                    if (!(line == null || line.isEmpty())) {
+                        LOG.debug(line);
+                        try {
+                            final BuildImageStatus status = JsonHelper.fromJson(line, BuildImageStatus.class, null);
+                            final String stream = status.getStream();
+                            final String error = status.getError();
+                            if (stream != null && stream.startsWith("Successfully built ")) {
+                                int endSize = 19;
+                                while (endSize < stream.length() && Character.digit(stream.charAt(endSize), 16) != -1) {
+                                    endSize++;
+                                }
+                                imageIdH.set(stream.substring(19, endSize));
+                            } else if (error != null && errorH.get() == null) {
+                                errorH.set(error);
+                            }
+                        } catch (JsonParseException e) {
+                            LOG.error(e.getMessage(), e);
                         }
-                        imageId = msg.substring(29, endSize);
                     }
-                } while (matcher.find());
+                }
+
+                @Override
+                public void close() throws IOException {
+                    // noop
+                }
+            };
+            connector.createImage(dockerFile, applicationFile, dockerRepoName, tag, output);
+            final String error = errorH.get();
+            if (error != null) {
+                throw new RunnerException(error);
             }
+            final String imageId = imageIdH.get();
             if (imageId == null) {
                 throw new RunnerException("Invalid response from Docker API, can't get ID of newly created image");
             }
@@ -364,6 +381,7 @@ public abstract class BaseDockerRunner extends Runner {
         final ContainerConfig containerCfg;
         final HostConfig      hostCfg;
         final Callback        callback;
+        final AtomicBoolean   started;
         String       container;
         DockerLogger logger;
 
@@ -372,86 +390,86 @@ public abstract class BaseDockerRunner extends Runner {
             this.containerCfg = containerCfg;
             this.hostCfg = hostCfg;
             this.callback = callback;
+            started = new AtomicBoolean(false);
         }
 
         @Override
-        public synchronized void start() throws RunnerException {
-            if (container != null) {
+        public void start() throws RunnerException {
+            if (started.compareAndSet(false, true)) {
+                try {
+                    final ContainerCreated response = connector.createContainer(containerCfg);
+                    connector.startContainer(response.getId(), hostCfg);
+                    container = response.getId();
+                    logger = new DockerLogger(connector, container);
+                    if (callback != null) {
+                        callback.started();
+                    }
+                } catch (IOException e) {
+                    throw new RunnerException(e);
+                }
+            } else {
                 throw new IllegalStateException("Process is already started");
             }
-            try {
-                final ContainerCreated response = connector.createContainer(containerCfg);
-                connector.startContainer(response.getId(), hostCfg);
-                container = response.getId();
-                logger = new DockerLogger(connector, container);
-            } catch (IOException e) {
-                throw new RunnerException(e);
-            }
-            if (callback != null) {
-                callback.started();
-            }
         }
 
         @Override
-        public synchronized void stop() throws RunnerException {
-            if (container == null) {
+        public void stop() throws RunnerException {
+            if (started.compareAndSet(true, false)) {
+                try {
+                    connector.stopContainer(container, 3, TimeUnit.SECONDS);
+                    if (callback != null) {
+                        callback.stopped();
+                    }
+                } catch (IOException e) {
+                    throw new RunnerException(e);
+                }
+            } else {
                 throw new IllegalStateException("Process is not started yet");
-            }
-            try {
-                connector.stopContainer(container, 3, TimeUnit.SECONDS);
-            } catch (IOException e) {
-                throw new RunnerException(e);
-            }
-            if (callback != null) {
-                callback.stopped();
             }
         }
 
         @Override
         public int waitFor() throws RunnerException {
-            synchronized (this) {
-                if (container == null) {
-                    throw new IllegalStateException("Process is not started yet");
+            if (started.get()) {
+                try {
+                    return connector.waitContainer(container).getStatusCode();
+                } catch (IOException e) {
+                    throw new RunnerException(e);
                 }
             }
-            try {
-                return connector.waitContainer(container).getStatusCode();
-            } catch (IOException e) {
-                throw new RunnerException(e);
-            }
+            throw new IllegalStateException("Process is not started yet");
         }
 
         @Override
-        public synchronized int exitCode() throws RunnerException {
-            if (container == null) {
-                return -1;
+        public int exitCode() throws RunnerException {
+            if (started.get()) {
+                try {
+                    return connector.inspectContainer(container).getState().getExitCode();
+                } catch (IOException e) {
+                    throw new RunnerException(e);
+                }
             }
-            try {
-                return connector.inspectContainer(container).getState().getExitCode();
-            } catch (IOException e) {
-                throw new RunnerException(e.getMessage(), e);
-            }
+            return -1;
         }
 
         @Override
-        public synchronized boolean isRunning() throws RunnerException {
-            if (container == null) {
-                return false;
+        public boolean isRunning() throws RunnerException {
+            if (started.get()) {
+                try {
+                    return connector.inspectContainer(container).getState().isRunning();
+                } catch (IOException e) {
+                    throw new RunnerException(e);
+                }
             }
-            try {
-                return connector.inspectContainer(container).getState().isRunning();
-            } catch (IOException e) {
-                throw new RunnerException(e.getMessage(), e);
-            }
+            return false;
         }
 
         @Override
-        public synchronized ApplicationLogger getLogger() throws RunnerException {
-            if (logger == null) {
-                // is not started yet
-                return ApplicationLogger.DUMMY;
+        public ApplicationLogger getLogger() throws RunnerException {
+            if (started.get()) {
+                return logger;
             }
-            return logger;
+            return ApplicationLogger.DUMMY;
         }
 
         private static interface Callback {

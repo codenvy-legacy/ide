@@ -175,4 +175,8 @@ public class Renderer {
         viewportRenderer.teardown();
         lineNumberRenderer.teardown();
     }
+
+    public LineNumberRenderer getLineNumberRenderer() {
+        return lineNumberRenderer;
+    }
 }

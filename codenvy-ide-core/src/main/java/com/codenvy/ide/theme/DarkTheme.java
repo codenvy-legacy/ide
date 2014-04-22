@@ -278,6 +278,11 @@ public class DarkTheme implements Theme {
     public String getWindowHeaderBackground() {
         return "#656565";
     }
+    
+    @Override
+    public String getWindowSeparatorColor() {
+        return "#818181";
+    }
 
     @Override
     public String getWizardStepsColor() {
@@ -371,7 +376,7 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getBoxTextColor() {
-        return "dbdbdb"; // same as main editor color ATM for dark
+        return "#dbdbdb"; // same as main editor color ATM for dark
     }
 
     @Override

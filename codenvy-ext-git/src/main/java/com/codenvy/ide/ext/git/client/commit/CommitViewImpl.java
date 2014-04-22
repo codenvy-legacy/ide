@@ -19,15 +19,16 @@ package com.codenvy.ide.ext.git.client.commit;
 
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
+import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -41,7 +42,7 @@ import javax.validation.constraints.NotNull;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class CommitViewImpl extends DialogBox implements CommitView {
+public class CommitViewImpl extends Window implements CommitView {
     interface CommitViewImplUiBinder extends UiBinder<Widget, CommitViewImpl> {
     }
 
@@ -53,9 +54,7 @@ public class CommitViewImpl extends DialogBox implements CommitView {
     CheckBox amend;
     @UiField
     TextArea message;
-    @UiField
     Button   btnCommit;
-    @UiField
     Button   btnCancel;
     @UiField(provided = true)
     final   GitResources            res;
@@ -76,8 +75,26 @@ public class CommitViewImpl extends DialogBox implements CommitView {
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 
-        this.setText(locale.commitTitle());
+        this.setTitle(locale.commitTitle());
         this.setWidget(widget);
+        
+        btnCancel = createButton(locale.buttonCancel(), "git-commit-cancel", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCancelClicked();
+            }
+        });
+        getFooter().add(btnCancel);
+
+        btnCommit = createButton(locale.buttonCommit(), "git-commit-commit", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCommitClicked();
+            }
+        });
+        getFooter().add(btnCommit);
     }
 
     /** {@inheritDoc} */
@@ -138,7 +155,6 @@ public class CommitViewImpl extends DialogBox implements CommitView {
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        this.center();
         this.show();
     }
 
@@ -148,18 +164,13 @@ public class CommitViewImpl extends DialogBox implements CommitView {
         this.delegate = delegate;
     }
 
-    @UiHandler("btnCommit")
-    public void onCommitClicked(ClickEvent event) {
-        delegate.onCommitClicked();
-    }
-
-    @UiHandler("btnCancel")
-    public void onCancelClicked(ClickEvent event) {
-        delegate.onCancelClicked();
-    }
-
     @UiHandler("message")
     public void onMessageChanged(KeyUpEvent event) {
         delegate.onValueChanged();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onClose() {
     }
 }

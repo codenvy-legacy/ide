@@ -18,14 +18,15 @@
 package com.codenvy.ide.actions;
 
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.rename.RenameResourcePresenter;
-import com.codenvy.ide.api.resources.model.Project;
-import com.codenvy.ide.api.resources.model.Resource;
 import com.google.inject.Inject;
 
 /**
@@ -35,24 +36,27 @@ import com.google.inject.Inject;
  */
 public class RenameResourceAction extends Action {
 
-    private SelectionAgent          selectionAgent;
-    private ResourceProvider        resourceProvider;
-    private RenameResourcePresenter presenter;
+    private final SelectionAgent          selectionAgent;
+    private final ResourceProvider        resourceProvider;
+    private final RenameResourcePresenter presenter;
+    private final AnalyticsEventLogger    eventLogger;
 
     @Inject
     public RenameResourceAction(RenameResourcePresenter presenter, SelectionAgent selectionAgent,
                                 ResourceProvider resourceProvider,
-                                CoreLocalizationConstant localization) {
+                                CoreLocalizationConstant localization, AnalyticsEventLogger eventLogger) {
         super(localization.renameButton(), "Rename resource", null);
 
         this.selectionAgent = selectionAgent;
         this.resourceProvider = resourceProvider;
         this.presenter = presenter;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log("IDE: File rename");
         Selection<Resource> selection = (Selection<Resource>)selectionAgent.getSelection();
         final Resource resource = selection.getFirstElement();
         presenter.renameResource(resource);

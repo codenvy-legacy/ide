@@ -17,34 +17,40 @@
  */
 package com.codenvy.ide.debug;
 
+import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
+import com.codenvy.ide.api.event.ActivePartChangedEvent;
+import com.codenvy.ide.api.event.ActivePartChangedHandler;
 import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.commons.exception.ServerException;
-import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.texteditor.TextEditorViewImpl;
+import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.renderer.DebugLineRenderer;
 import com.codenvy.ide.texteditor.renderer.LineNumberRenderer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * The manager provides to manege breakpoints and shows it into gutter.
  *
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @author Evgen Vidolob
  */
 @Singleton
 public class BreakpointGutterManager {
-    private StringMap<Array<Breakpoint>> breakPoints;
+    private StringMap<Array<Breakpoint>> breakpoints;
     private EditorAgent                  editorAgent;
     private DebuggerManager              debuggerManager;
     private ConsolePart                  console;
-    private LineNumberRenderer           renderer;
     private DebugLineRenderer            debugLineRenderer;
-    private Breakpoint                   markedBreakPoint;
+    private Breakpoint                   currentBreakpoint;
 
     /**
      * Create manager.
@@ -54,119 +60,107 @@ public class BreakpointGutterManager {
      * @param console
      */
     @Inject
-    protected BreakpointGutterManager(EditorAgent editorAgent, DebuggerManager debuggerManager, ConsolePart console) {
+    protected BreakpointGutterManager(EditorAgent editorAgent, DebuggerManager debuggerManager, ConsolePart console, EventBus eventBus) {
         this.editorAgent = editorAgent;
-        this.breakPoints = Collections.createStringMap();
+        this.breakpoints = Collections.createStringMap();
         this.debuggerManager = debuggerManager;
         this.console = console;
-    }
 
-    /**
-     * Set render for place where breakpoints are shown.
-     *
-     * @param renderer
-     */
-    public void setBreakPointRenderer(LineNumberRenderer renderer) {
-        this.renderer = renderer;
-    }
-
-    /**
-     * Set render for place where debug step are shown.
-     *
-     * @param debugLineRenderer
-     */
-    public void setDebugLineRenderer(DebugLineRenderer debugLineRenderer) {
-        this.debugLineRenderer = debugLineRenderer;
-    }
-
-    /**
-     * Change state of breakpoint.
-     *
-     * @param lineNumber
-     *         line number where breakpoint is
-     */
-    public void changeBreakPoint(final int lineNumber) {
-        final File activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
-        final Array<Breakpoint> breakPoints = this.breakPoints.get(activeFile.getId());
-        final Debugger debugger = debuggerManager.getDebugger();
-
-        if (debugger != null) {
-            if (breakPoints != null && !breakPoints.isEmpty()) {
-                for (int i = 0; i < breakPoints.size(); i++) {
-                    Breakpoint breakpoint = breakPoints.get(i);
-
-                    if (breakpoint.getLineNumber() == lineNumber) {
-                        final int index = i;
-
-                        debugger.deleteBreakpoint(activeFile, lineNumber, new AsyncCallback<Void>() {
-                            @Override
-                            public void onSuccess(Void result) {
-                                breakPoints.remove(index);
-                                renderer.fillOrUpdateLines(lineNumber, lineNumber);
-                            }
-
-                            @Override
-                            public void onFailure(Throwable exception) {
-                                if (exception instanceof ServerException) {
-                                    ServerException e = (ServerException)exception;
-                                    if (e.isErrorMessageProvided()) {
-                                        console.print(e.getMessage());
-                                        return;
-                                    }
-                                }
-                                console.print("Can't delete breakpoint at " + (lineNumber + 1));
-                            }
-                        });
-                        return;
+        eventBus.addHandler(ActivePartChangedEvent.TYPE, new ActivePartChangedHandler() {
+            @Override
+            public void onActivePartChanged(ActivePartChangedEvent event) {
+                PartPresenter activePart = event.getActivePart();
+                if (activePart instanceof CodenvyTextEditor) {
+                    TextEditorPartView view = ((CodenvyTextEditor)activePart).getView();
+                    if (view instanceof TextEditorViewImpl) {
+                        BreakpointGutterManager.this.debugLineRenderer = ((TextEditorViewImpl)view).getDebugLineRenderer();
                     }
                 }
             }
+        });
+    }
 
-            debugger.addBreakpoint(activeFile, lineNumber, new AsyncCallback<Breakpoint>() {
-                @Override
-                public void onSuccess(Breakpoint result) {
-                    if (breakPoints != null) {
-                        breakPoints.add(result);
-                    } else {
-                        BreakpointGutterManager.this.breakPoints.put(activeFile.getId(), Collections.<Breakpoint>createArray(result));
-                    }
-                    renderer.fillOrUpdateLines(lineNumber, lineNumber);
-                }
-
-                @Override
-                public void onFailure(Throwable exception) {
-                    if (exception instanceof ServerException) {
-                        ServerException e = (ServerException)exception;
-                        if (e.isErrorMessageProvided()) {
-                            console.print(e.getMessage());
-                            return;
-                        }
-                    }
-                    console.print("Can't add breakpoint at " + (lineNumber + 1));
-                }
-            });
+    /**
+     * Change state of the breakpoint in active editor at the specified line.
+     *
+     * @param lineNumber
+     *         active editor's line number where breakpoint is
+     */
+    public void changeBreakPointState(final int lineNumber) {
+        final Debugger debugger = debuggerManager.getDebugger();
+        if (debugger == null) {
+            return;
         }
+
+        final File activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
+        final LineNumberRenderer renderer = getRendererForFile(activeFile);
+        final Array<Breakpoint> breakPoints = this.breakpoints.get(activeFile.getId());
+        if (breakPoints != null && !breakPoints.isEmpty()) {
+            for (int i = 0; i < breakPoints.size(); i++) {
+                Breakpoint breakpoint = breakPoints.get(i);
+
+                if (breakpoint.getLineNumber() == lineNumber) {
+                    final int index = i;
+
+                    debugger.deleteBreakpoint(activeFile, lineNumber, new AsyncCallback<Void>() {
+                        @Override
+                        public void onSuccess(Void result) {
+                            breakPoints.remove(index);
+                            renderer.fillOrUpdateLines(lineNumber, lineNumber);
+                        }
+
+                        @Override
+                        public void onFailure(Throwable exception) {
+                            if (exception instanceof ServerException) {
+                                ServerException e = (ServerException)exception;
+                                if (e.isErrorMessageProvided()) {
+                                    console.print(e.getMessage());
+                                    return;
+                                }
+                            }
+                            console.print("Can't delete breakpoint at line " + (lineNumber + 1));
+                        }
+                    });
+                    return;
+                }
+            }
+        }
+
+        debugger.addBreakpoint(activeFile, lineNumber, new AsyncCallback<Breakpoint>() {
+            @Override
+            public void onSuccess(Breakpoint result) {
+                if (breakPoints != null) {
+                    breakPoints.add(result);
+                } else {
+                    BreakpointGutterManager.this.breakpoints.put(activeFile.getId(), Collections.createArray(result));
+                }
+                renderer.fillOrUpdateLines(lineNumber, lineNumber);
+            }
+
+            @Override
+            public void onFailure(Throwable exception) {
+                if (exception instanceof ServerException) {
+                    ServerException e = (ServerException)exception;
+                    if (e.isErrorMessageProvided()) {
+                        console.print(e.getMessage());
+                        return;
+                    }
+                }
+                console.print("Can't add breakpoint at line " + (lineNumber + 1));
+            }
+        });
     }
 
     /** Remove all breakpoints. */
     public void removeAllBreakPoints() {
-        EditorPartPresenter activeEditor = editorAgent.getActiveEditor();
-        File activeFile = null;
-        final String activeFileId;
-        if (activeEditor != null) {
-            activeFile = activeEditor.getEditorInput().getFile();
-        }
-        activeFileId = activeFile != null ? activeFile.getId() : null;
-
-        breakPoints.iterate(new StringMap.IterationCallback<Array<Breakpoint>>() {
+        breakpoints.iterate(new StringMap.IterationCallback<Array<Breakpoint>>() {
             @Override
             public void onIteration(String key, Array<Breakpoint> value) {
-                breakPoints.remove(key);
-                if (key.equals(activeFileId)) {
-                    for (int i = 0; i < value.size(); i++) {
-                        Breakpoint breakpoint = value.get(i);
-                        int lineNumber = breakpoint.getLineNumber();
-                        renderer.fillOrUpdateLines(lineNumber, lineNumber);
+                Array<Breakpoint> removedBreakpoints = breakpoints.remove(key);
+                for (Breakpoint breakpoint : removedBreakpoints.asIterable()) {
+                    LineNumberRenderer renderer = getRendererForFile(breakpoint.getFile());
+                    if (renderer != null) {
+                        renderer.fillOrUpdateLines(breakpoint.getLineNumber(), breakpoint.getLineNumber());
                     }
                 }
             }
@@ -182,7 +176,7 @@ public class BreakpointGutterManager {
      */
     public boolean isBreakPointExist(int lineNumber) {
         File activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
-        Array<Breakpoint> breakPoints = this.breakPoints.get(activeFile.getId());
+        Array<Breakpoint> breakPoints = this.breakpoints.get(activeFile.getId());
         if (breakPoints != null) {
             for (int i = 0; i < breakPoints.size(); i++) {
                 Breakpoint breakpoint = breakPoints.get(i);
@@ -195,17 +189,15 @@ public class BreakpointGutterManager {
     }
 
     /** @return all breakpoints. */
-    public Array<Breakpoint> getBreakPoints() {
-        final Array<Breakpoint> points = Collections.<Breakpoint>createArray();
-
-        breakPoints.iterate(new StringMap.IterationCallback<Array<Breakpoint>>() {
+    public Array<Breakpoint> getBreakpoints() {
+        final Array<Breakpoint> breakpoints = Collections.createArray();
+        this.breakpoints.iterate(new StringMap.IterationCallback<Array<Breakpoint>>() {
             @Override
             public void onIteration(String key, Array<Breakpoint> value) {
-                points.addAll(value);
+                breakpoints.addAll(value);
             }
         });
-
-        return points;
+        return breakpoints;
     }
 
     /**
@@ -214,45 +206,62 @@ public class BreakpointGutterManager {
      * @param lineNumber
      *         line which need to mark
      */
-    public void markCurrentBreakPoint(int lineNumber) {
-        int oldLIneNumber = 0;
-        if (markedBreakPoint != null) {
-            oldLIneNumber = markedBreakPoint.getLineNumber();
+    public void markCurrentBreakpoint(int lineNumber) {
+        int oldLineNumber = 0;
+        if (currentBreakpoint != null) {
+            oldLineNumber = currentBreakpoint.getLineNumber();
         }
 
         File activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
-        markedBreakPoint = new Breakpoint(Breakpoint.Type.BREAKPOINT, lineNumber, activeFile.getPath());
+        LineNumberRenderer renderer = getRendererForFile(activeFile);
+        currentBreakpoint = new Breakpoint(Breakpoint.Type.CURRENT, lineNumber, activeFile.getPath(), activeFile);
 
-        renderer.fillOrUpdateLines(oldLIneNumber, oldLIneNumber);
+        renderer.fillOrUpdateLines(oldLineNumber, oldLineNumber);
         renderer.fillOrUpdateLines(lineNumber, lineNumber);
         debugLineRenderer.showLine(lineNumber);
     }
 
     /** Unmark current line. */
-    public void unmarkCurrentBreakPoint() {
-        if (markedBreakPoint != null) {
-            int oldLIneNumber = markedBreakPoint.getLineNumber();
-            markedBreakPoint = null;
-
-            renderer.fillOrUpdateLines(oldLIneNumber, oldLIneNumber);
+    public void unmarkCurrentBreakpoint() {
+        if (currentBreakpoint != null) {
+            final int oldLineNumber = currentBreakpoint.getLineNumber();
+            LineNumberRenderer r = getRendererForFile(currentBreakpoint.getFile());
+            currentBreakpoint = null;
+            r.fillOrUpdateLines(oldLineNumber, oldLineNumber);
             debugLineRenderer.disableLine();
         }
     }
 
     /**
-     * Check whether current line is marked.
+     * Check whether line is marked.
      *
      * @param lineNumber
      *         line which need to check
      * @return <code>true</code> if the line is marked, and <code>false</code> otherwise
      */
     public boolean isMarkedLine(int lineNumber) {
-        if (markedBreakPoint != null) {
+        if (currentBreakpoint != null) {
             File activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
-            boolean isFileWithMarkBreakPoint = activeFile.getPath().equals(markedBreakPoint.getPath());
-            boolean isCurrentLine = lineNumber == markedBreakPoint.getLineNumber();
+            boolean isFileWithMarkBreakPoint = activeFile.getPath().equals(currentBreakpoint.getPath());
+            boolean isCurrentLine = lineNumber == currentBreakpoint.getLineNumber();
             return isFileWithMarkBreakPoint && isCurrentLine;
         }
         return false;
+    }
+
+    private LineNumberRenderer getRendererForFile(File file) {
+        StringMap<EditorPartPresenter> openedEditors = editorAgent.getOpenedEditors();
+        for (String key : openedEditors.getKeys().asIterable()) {
+            EditorPartPresenter editor = openedEditors.get(key);
+            if (file.getId().equals(editor.getEditorInput().getFile().getId())) {
+                if (editor instanceof CodenvyTextEditor) {
+                    TextEditorPartView view = ((CodenvyTextEditor)editor).getView();
+                    if (view instanceof TextEditorViewImpl) {
+                        return ((TextEditorViewImpl)view).getRenderer().getLineNumberRenderer();
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

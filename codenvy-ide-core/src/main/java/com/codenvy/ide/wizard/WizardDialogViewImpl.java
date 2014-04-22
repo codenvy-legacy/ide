@@ -17,17 +17,17 @@
  */
 package com.codenvy.ide.wizard;
 
-import com.codenvy.ide.Resources;
+import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DeckLayoutPanel;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -45,7 +45,7 @@ import javax.validation.constraints.NotNull;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class WizardDialogViewImpl extends DialogBox implements WizardDialogView {
+public class WizardDialogViewImpl extends Window implements WizardDialogView {
     interface ViewImplUiBinder extends UiBinder<Widget, WizardDialogViewImpl> {
     }
 
@@ -54,13 +54,9 @@ public class WizardDialogViewImpl extends DialogBox implements WizardDialogView 
     private final int ANIMATION_TIME = 400;
     private final int NO_TIME        = 0;
 
-    @UiField
     Button          btnCancel;
-    @UiField
     Button          btnFinish;
-    @UiField
     Button          btnBack;
-    @UiField
     Button          btnNext;
     @UiField
     SimplePanel     imagePanel;
@@ -71,7 +67,8 @@ public class WizardDialogViewImpl extends DialogBox implements WizardDialogView 
     @UiField
     DeckLayoutPanel contentPanel;
     @UiField(provided = true)
-    final   Resources      res;
+    final   com.codenvy.ide.Resources      res;
+    final CoreLocalizationConstant locale;
     private ActionDelegate delegate;
 
     /**
@@ -80,12 +77,51 @@ public class WizardDialogViewImpl extends DialogBox implements WizardDialogView 
      * @param resource
      */
     @Inject
-    protected WizardDialogViewImpl(Resources resource) {
+    protected WizardDialogViewImpl(com.codenvy.ide.Resources resource, CoreLocalizationConstant locale) {
         this.res = resource;
-
+        this.locale = locale;
+        
         Widget widget = uiBinder.createAndBindUi(this);
         this.setWidget(widget);
-        this.ensureDebugId("file-newOther-wizardDialog");
+        createButtons();
+    }
+    
+    private void createButtons(){
+        btnCancel = createButton(locale.cancel(), "file-newOther-cancel", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCancelClicked();
+            }
+        });
+        getFooter().add(btnCancel);
+
+        btnFinish = createButton(locale.finish(), "file-newOther-finish", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onFinishClicked();
+            }
+        });
+        getFooter().add(btnFinish);
+
+        btnNext = createButton(locale.next(), "file-newOther-next", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onNextClicked();
+            }
+        });
+        getFooter().add(btnNext);
+
+        btnBack = createButton(locale.back(), "file-newOther-back", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onBackClicked();
+            }
+        });
+        getFooter().add(btnBack);
     }
 
     /** {@inheritDoc} */
@@ -115,7 +151,7 @@ public class WizardDialogViewImpl extends DialogBox implements WizardDialogView 
     /** {@inheritDoc} */
     @Override
     public void setTitle(String title) {
-        this.setText(title);
+        super.setTitle(title);
     }
 
     /** {@inheritDoc} */
@@ -151,7 +187,6 @@ public class WizardDialogViewImpl extends DialogBox implements WizardDialogView 
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        this.center();
         this.show();
     }
 
@@ -167,23 +202,8 @@ public class WizardDialogViewImpl extends DialogBox implements WizardDialogView 
         return contentPanel;
     }
 
-    @UiHandler("btnCancel")
-    void onBtnCancelClick(ClickEvent event) {
-        delegate.onCancelClicked();
-    }
-
-    @UiHandler("btnFinish")
-    void onBtnFinishClick(ClickEvent event) {
-        delegate.onFinishClicked();
-    }
-
-    @UiHandler("btnNext")
-    void onBtnNextClick(ClickEvent event) {
-        delegate.onNextClicked();
-    }
-
-    @UiHandler("btnBack")
-    void onBtnBackClick(ClickEvent event) {
-        delegate.onBackClicked();
+    /** {@inheritDoc} */
+    @Override
+    protected void onClose() {
     }
 }

@@ -17,24 +17,31 @@
  */
 package com.codenvy.ide.importproject;
 
+import com.codenvy.api.project.gwt.client.ProjectImportersServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
 import com.codenvy.ide.Constants;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.AsyncRequestFactory;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
@@ -46,22 +53,29 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
  */
 public class ImportProjectPresenter implements ImportProjectView.ActionDelegate {
 
-    private final ProjectServiceClient     projectServiceClient;
-    private       ResourceProvider         resourceProvider;
-    private       NotificationManager      notificationManager;
-    private       CoreLocalizationConstant locale;
-    private       DtoFactory               dtoFactory;
-    private       ImportProjectView        view;
-    private SelectProjectTypePresenter projectTypePresenter;
+    private final ProjectServiceClient          projectServiceClient;
+    private       ResourceProvider              resourceProvider;
+    private       NotificationManager           notificationManager;
+    private       CoreLocalizationConstant      locale;
+    private       DtoFactory                    dtoFactory;
+    private       ImportProjectView             view;
+    private       SelectProjectTypePresenter    projectTypePresenter;
+    private       ProjectImportersServiceClient projectImportersService;
+    private DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    private Map<String, ProjectImporterDescriptor> importers;
 
     @Inject
+
     public ImportProjectPresenter(ProjectServiceClient projectServiceClient,
                                   NotificationManager notificationManager,
                                   ResourceProvider resourceProvider,
                                   CoreLocalizationConstant locale,
                                   DtoFactory dtoFactory,
                                   ImportProjectView view,
-                                  SelectProjectTypePresenter projectTypePresenter) {
+                                  SelectProjectTypePresenter projectTypePresenter,
+                                  ProjectImportersServiceClient projectImportersService,
+                                  DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+
         this.projectServiceClient = projectServiceClient;
         this.notificationManager = notificationManager;
         this.resourceProvider = resourceProvider;
@@ -69,19 +83,41 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
         this.dtoFactory = dtoFactory;
         this.view = view;
         this.projectTypePresenter = projectTypePresenter;
+        this.projectImportersService = projectImportersService;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+
         this.view.setDelegate(this);
     }
 
     /** Show dialog. */
     public void showDialog() {
+        importers = new HashMap<>();
         view.setUri("");
         view.setProjectName("");
-        List<String> importersList = new ArrayList<>();
-        importersList.add("git");
-        view.setImporters(importersList);
-        view.setEnabledImportButton(false);
+        final List<String> importersList = new ArrayList<>();
+        //TODO: need add test on this
+        projectImportersService.getProjectImporters(new AsyncRequestCallback<Array<ProjectImporterDescriptor>>(
+                dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectImporterDescriptor.class)) {
+            @Override
+            protected void onSuccess(Array<ProjectImporterDescriptor> result) {
+                for (int i = 0; i < result.size(); i++) {
+                    importers.put(result.get(i).getId(), result.get(i));
+                    importersList.add(result.get(i).getId());
+                }
+                view.setImporters(importersList);
+                view.setEnabledImportButton(false);
+                onImporterSelected();
+                view.showDialog();
+            }
 
-        view.showDialog();
+            @Override
+            protected void onFailure(Throwable exception) {
+                Log.error(ImportProjectPresenter.class, "can not get project importers");
+                Notification notification = new Notification(exception.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
+            }
+        });
+
     }
 
     /** {@inheritDoc} */
@@ -152,6 +188,13 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
         boolean enable = !uri.isEmpty() && !projectName.isEmpty();
 
         view.setEnabledImportButton(enable);
+    }
+
+    @Override
+    public void onImporterSelected() {
+        String importer = view.getImporter();
+        view.setDescription(importers.get(importer).getDescription());
+
     }
 
     /** Gets project name from uri. */

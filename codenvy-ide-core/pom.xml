@@ -62,6 +62,11 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-analytics</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-project</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
@@ -74,6 +79,11 @@
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-vfs</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api-gwt-client</groupId>
+            <artifactId>codenvy-api-core-gwt-client</artifactId>
+            <version>${codenvy.platform-api-gwt-client.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api-gwt-client</groupId>

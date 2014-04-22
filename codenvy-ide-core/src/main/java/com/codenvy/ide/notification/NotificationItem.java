@@ -97,7 +97,7 @@ public class NotificationItem extends Composite implements Notification.Notifica
 
         if (!notification.isFinished()) {
             Image messageIcon = new Image(resources.progress());
-            messageIcon.setSize("12", "12");
+            messageIcon.setSize("12px", "12px");
             messageIcon.setStyleName(resources.notificationCss().invertColor());
             messageIcon.addStyleName(resources.notificationCss().margin4px());
             iconPanel.setWidget(messageIcon);
@@ -155,7 +155,7 @@ public class NotificationItem extends Composite implements Notification.Notifica
 
             if (!notification.isFinished()) {
                 Image messageIcon = new Image(resources.progress());
-                messageIcon.setSize("12", "12");
+                messageIcon.setSize("12px", "12px");
                 messageIcon.setStyleName(resources.notificationCss().invertColor());
                 messageIcon.addStyleName(resources.notificationCss().margin4px());
                 iconPanel.setWidget(messageIcon);

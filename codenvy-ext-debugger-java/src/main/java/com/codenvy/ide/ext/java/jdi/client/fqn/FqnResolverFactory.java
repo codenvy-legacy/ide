@@ -25,10 +25,7 @@ import com.google.inject.Singleton;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
-/**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: 5:00:18 PM Mar 28, 2012 evgen $
- */
+/** @author Evgen Vidolob */
 @Singleton
 public class FqnResolverFactory {
     private StringMap<FqnResolver> resolvers;
