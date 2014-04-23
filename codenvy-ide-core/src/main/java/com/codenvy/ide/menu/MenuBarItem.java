@@ -27,6 +27,7 @@ import com.codenvy.ide.toolbar.ActionSelectedHandler;
 import com.codenvy.ide.toolbar.MenuLockLayer;
 import com.codenvy.ide.toolbar.PopupMenu;
 import com.codenvy.ide.toolbar.PresentationFactory;
+import com.codenvy.ide.toolbar.Utils;
 import com.google.gwt.user.client.Element;
 
 /**
@@ -56,9 +57,6 @@ public class MenuBarItem implements ActionSelectedHandler {
     /** Enabled or disabled state */
     private boolean enabled         = true;
     private boolean hasVisibleItems = true;
-    /**
-     *
-     */
     private ActionSelectedHandler actionSelectedHandler;
     private KeyBindingAgent       keyBindingAgent;
     private MenuResources.Css     css;
@@ -71,10 +69,8 @@ public class MenuBarItem implements ActionSelectedHandler {
     /** Title of Menu Bar Item */
     private String title;
 
-
     public MenuBarItem(ActionGroup group, ActionManager actionManager, PresentationFactory presentationFactory, String place,
-                       Element element, ActionSelectedHandler handler, KeyBindingAgent keyBindingAgent,
-                       MenuResources.Css css) {
+                       Element element, ActionSelectedHandler handler, KeyBindingAgent keyBindingAgent, MenuResources.Css css) {
         this.group = group;
         this.actionManager = actionManager;
         this.presentationFactory = presentationFactory;
@@ -86,9 +82,7 @@ public class MenuBarItem implements ActionSelectedHandler {
         Presentation presentation = presentationFactory.getPresentation(group);
         title = presentation.getText();
         element.setInnerText(presentation.getText());
-//        setEnabled(Utils.hasVisibleChildren(group, presentationFactory, actionManager, place));
-
-
+        setEnabled(Utils.hasVisibleChildren(group, presentationFactory, actionManager, place));
     }
 
     /** Close opened Popup Menu. */
@@ -171,7 +165,6 @@ public class MenuBarItem implements ActionSelectedHandler {
         } else {
             element.setClassName(css.menuBarItemDisabled());
         }
-
     }
 
     /** {@inheritDoc} */

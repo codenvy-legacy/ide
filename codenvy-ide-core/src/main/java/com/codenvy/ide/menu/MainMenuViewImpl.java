@@ -69,8 +69,8 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
     /** Lock layer for displaying popup menus. */
     private       MenuLockLayer               lockLayer;
     /** List Menu Bar items. */
-    private Map<Element, MenuBarItem> menuBarItems   = new LinkedHashMap<Element, MenuBarItem>();
-    private Map<Action, MenuBarItem>  action2barItem = new HashMap<Action, MenuBarItem>();
+    private Map<Element, MenuBarItem> menuBarItems   = new LinkedHashMap<>();
+    private Map<Action, MenuBarItem>  action2barItem = new HashMap<>();
     /** Store selected Menu Bar item. */
     private MenuBarItem  selectedMenuBarItem;
     /** Working table, cells of which are contains element of Menu. */
@@ -80,7 +80,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
         @Override
         public void run() {
             updateMenuActions();
-            schedule(2000);
+            schedule(1000);
         }
     };
 
@@ -150,8 +150,8 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
     }
 
     private void expandActionGroup(final Array<Action> newVisibleActions, ActionManager actionManager) {
-        final ActionGroup mainActionGroup = (ActionGroup)actionManager
-                .getAction(IdeActions.GROUP_MAIN_MENU); //CustomActionsSchema.getInstance().getCorrectedAction(IdeActions.GROUP_MAIN_MENU);
+        final ActionGroup mainActionGroup = (ActionGroup)actionManager.getAction(IdeActions.GROUP_MAIN_MENU);
+        //CustomActionsSchema.getInstance().getCorrectedAction(IdeActions.GROUP_MAIN_MENU);
         if (mainActionGroup == null) return;
         final Action[] children = mainActionGroup.getChildren(null);
         for (final Action action : children) {

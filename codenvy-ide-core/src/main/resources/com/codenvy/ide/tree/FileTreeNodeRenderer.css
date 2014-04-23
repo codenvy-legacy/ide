@@ -44,15 +44,29 @@
     display: inline-block;
     white-space: nowrap;
     vertical-align: middle;
+
+    line-height: 18px;
+    vertical-align: middle;
 }
 
 .icon {
+    /*
     margin: 0px 0px -5px 1px;
     display: inline-block;
     background-position: center center;
     padding: 1px 1px;
     max-height: 16px;
     max-width: 16px;
+    */
+
+    width:16px;
+    height:16px;
+    overflow: hidden;
+
+    display: inline-block;
+    vertical-align: middle;
+
+    margin-top: -2px;
 }
 
 .folderFont {
@@ -73,8 +87,10 @@
 
 .label {
     font-size: secondaryTextFontSize;
+    /*
     text-shadow: 0px 1px 0px treeTextShadow;
     padding: 0px 1px 0px 1px;
+    */
     cursor: default;
     display: inline-block;
     text-decoration: none;
