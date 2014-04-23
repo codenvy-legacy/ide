@@ -124,7 +124,7 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
             SVGImage image = detectIcon(item);
             if (image != null) {
                 image.getElement().setAttribute("class", css.icon());
-                root.appendChild((Element)image);
+                root.appendChild((Element)image.getElement());
             }
         }
 
