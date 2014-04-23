@@ -52,6 +52,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.ConnectException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -496,12 +497,12 @@ public class DockerConnector {
         checkCLibrary();
         int fd = C_LIBRARY.socket(AF_UNIX, SOCK_STREAM, 0);
         if (fd == -1) {
-            throw new IOException(String.format("Unable connect to unix socket: '%s'", path));
+            throw new ConnectException(String.format("Unable connect to unix socket: '%s'", path));
         }
         SockAddrUn sockAddr = new SockAddrUn(path);
         int c = C_LIBRARY.connect(fd, sockAddr, sockAddr.size());
         if (c == -1) {
-            throw new IOException(String.format("Unable connect to unix socket: '%s'", path));
+            throw new ConnectException(String.format("Unable connect to unix socket: '%s'", path));
         }
         return fd;
     }
