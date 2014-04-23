@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.java.client;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
@@ -26,7 +27,6 @@ import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.extension.Extension;
-import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
@@ -45,11 +45,7 @@ import com.codenvy.ide.ext.java.client.editor.JavaEditorProvider;
 import com.codenvy.ide.ext.java.client.editor.JavaReconcilerStrategy;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProjectModelProvider;
-import com.codenvy.ide.ext.java.client.wizard.NewAnnotationProvider;
-import com.codenvy.ide.ext.java.client.wizard.NewClassProvider;
-import com.codenvy.ide.ext.java.client.wizard.NewEnumProvider;
-import com.codenvy.ide.ext.java.client.wizard.NewInterfaceProvider;
-import com.codenvy.ide.ext.java.client.wizard.NewPackageProvider;
+import com.codenvy.ide.ext.java.client.wizard.*;
 import com.codenvy.ide.ext.java.client.wizard.maven.MavenPagePresenter;
 import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.ide.rest.AsyncRequestCallback;

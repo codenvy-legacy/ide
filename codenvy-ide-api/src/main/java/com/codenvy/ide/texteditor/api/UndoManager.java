@@ -122,8 +122,9 @@ public class UndoManager {
         return textViewer != null && fDocumentUndoManager != null;
     }
 
-    /*
-     * @see IUndoManager#beginCompoundChange
+    /**
+     * Signals the undo manager that all subsequent changes until
+     * <code>endCompoundChange</code> is called are to be undone in one piece.
      */
     public void beginCompoundChange() {
         if (isConnected()) {
@@ -131,8 +132,10 @@ public class UndoManager {
         }
     }
 
-    /*
-     * @see IUndoManager#endCompoundChange
+    /**
+     * Signals the undo manager that the sequence of changes which started with
+     * <code>beginCompoundChange</code> has been finished. All subsequent changes
+     * are considered to be individually undo-able.
      */
     public void endCompoundChange() {
         if (isConnected()) {
@@ -163,8 +166,11 @@ public class UndoManager {
         Log.error(UndoManager.class, title, ex);
     }
 
-    /*
-     * @see org.eclipse.jface.text.IUndoManager#setMaximalUndoLevel(int)
+    /**
+     * The given parameter determines the maximal length of the history
+     * remembered by the undo manager.
+     *
+     * @param undoLevel the length of this undo manager's history
      */
     public void setMaximalUndoLevel(int undoLevel) {
         fUndoLevel = Math.max(0, undoLevel);
@@ -173,8 +179,10 @@ public class UndoManager {
         }
     }
 
-    /*
-     * @see org.eclipse.jface.text.IUndoManager#connect(org.eclipse.jface.text.ITextViewer)
+    /**
+     * Connects this undo manager to the given text viewer.
+     *
+     * @param textViewer the viewer the undo manager is connected to
      */
     public void connect(TextEditorPartView textViewer) {
         if (this.textViewer == null && textViewer != null) {
@@ -185,8 +193,10 @@ public class UndoManager {
         connectDocumentUndoManager(doc);
     }
 
-    /*
-     * @see org.eclipse.jface.text.IUndoManager#disconnect()
+    /**
+     * Disconnects this undo manager from its text viewer.
+     * If this undo manager hasn't been connected before this
+     * operation has no effect.
      */
     public void disconnect() {
         if (textViewer != null) {
@@ -196,8 +206,9 @@ public class UndoManager {
         disconnectDocumentUndoManager();
     }
 
-    /*
-     * @see org.eclipse.jface.text.IUndoManager#reset()
+    /**
+     * Resets the history of the undo manager. After that call,
+     * there aren't any undo-able or redo-able text changes.
      */
     public void reset() {
         if (isConnected())
@@ -205,8 +216,11 @@ public class UndoManager {
 
     }
 
-    /*
-     * @see org.eclipse.jface.text.IUndoManager#redoable()
+    /**
+     * Returns whether at least one text change can be repeated. A text change
+     * can be repeated only if it was executed and rolled back.
+     *
+     * @return <code>true</code> if at least on text change can be repeated
      */
     public boolean redoable() {
         if (isConnected())
@@ -214,8 +228,10 @@ public class UndoManager {
         return false;
     }
 
-    /*
-     * @see org.eclipse.jface.text.IUndoManager#undoable()
+    /**
+     * Returns whether at least one text change can be rolled back.
+     *
+     * @return <code>true</code> if at least one text change can be rolled back
      */
     public boolean undoable() {
         if (isConnected())
@@ -223,8 +239,10 @@ public class UndoManager {
         return false;
     }
 
-    /*
-     * @see org.eclipse.jface.text.IUndoManager#redo()
+    /**
+     * Returns whether at least one text change can be rolled back.
+     *
+     * @return <code>true</code> if at least one text change can be rolled back
      */
     public void redo() {
         if (isConnected()) {
@@ -236,8 +254,8 @@ public class UndoManager {
         }
     }
 
-    /*
-     * @see org.eclipse.jface.text.IUndoManager#undo()
+    /**
+     * Rolls back the most recently executed text change.
      */
     public void undo() {
         if (isConnected()) {
@@ -261,8 +279,10 @@ public class UndoManager {
         textViewer.getSelection().selectAndReveal(offset, length);
     }
 
-    /*
-     * @see org.eclipse.jface.text.IUndoManagerExtension#getUndoContext()
+    /**
+	 * Returns this undo manager's undo context.
+	 *
+	 * @return the undo context or <code>null</code> if the undo manager is not connected
      */
     public IUndoContext getUndoContext() {
         if (isConnected()) {
