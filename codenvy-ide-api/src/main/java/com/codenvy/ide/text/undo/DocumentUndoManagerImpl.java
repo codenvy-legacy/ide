@@ -131,11 +131,11 @@ public class DocumentUndoManagerImpl implements DocumentUndoManager {
         /** Undo the change described by this change. */
         protected void undoTextChange() {
             try {
-                if (fDocumentUndoManager.fDocument instanceof Document)
-                    ((Document)fDocumentUndoManager.fDocument).replace(fStart, fText.length(), fPreservedText,
-                                                                       fUndoModificationStamp);
-                else
-                    fDocumentUndoManager.fDocument.replace(fStart, fText.length(), fPreservedText);
+                if (fDocumentUndoManager.fDocument != null)
+                    (fDocumentUndoManager.fDocument).replace(fStart, fText.length(), fPreservedText,
+                                                             fUndoModificationStamp);
+//                else
+//                    fDocumentUndoManager.fDocument.replace(fStart, fText.length(), fPreservedText);
             } catch (BadLocationException x) {
             }
         }
@@ -145,8 +145,8 @@ public class DocumentUndoManagerImpl implements DocumentUndoManager {
          */
         public boolean canUndo() {
             if (isValid()) {
-                if (fDocumentUndoManager.fDocument instanceof Document) {
-                    long docStamp = ((Document)fDocumentUndoManager.fDocument).getModificationStamp();
+                if (fDocumentUndoManager.fDocument != null) {
+                    long docStamp = (fDocumentUndoManager.fDocument).getModificationStamp();
 
                     // Normal case: an undo is valid if its redo will restore
                     // document to its current modification stamp
@@ -256,11 +256,11 @@ public class DocumentUndoManagerImpl implements DocumentUndoManager {
         /** Re-applies the change described by this change. */
         protected void redoTextChange() {
             try {
-                if (fDocumentUndoManager.fDocument instanceof Document)
-                    ((Document)fDocumentUndoManager.fDocument)
+                if (fDocumentUndoManager.fDocument != null)
+                    fDocumentUndoManager.fDocument
                             .replace(fStart, fEnd - fStart, fText, fRedoModificationStamp);
-                else
-                    fDocumentUndoManager.fDocument.replace(fStart, fEnd - fStart, fText);
+//                else
+//                    fDocumentUndoManager.fDocument.replace(fStart, fEnd - fStart, fText);
             } catch (BadLocationException x) {
             }
         }
