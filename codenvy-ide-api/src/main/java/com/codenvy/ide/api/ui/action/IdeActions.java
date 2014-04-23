@@ -17,10 +17,7 @@
  */
 package com.codenvy.ide.api.ui.action;
 
-/**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
- */
+/** @author Evgen Vidolob */
 public interface IdeActions {
     String GROUP_MAIN_MENU         = "MainMenu";
     String GROUP_MAIN_TOOLBAR      = "MainToolBar";
@@ -36,10 +33,6 @@ public interface IdeActions {
     String GROUP_PROJECT = "ProjectGroup";
     
     String GROUP_HELP = "HelpGroup";
-
-    String GROUP_PROJECT_PAAS = "ProjectPaaSGroup";
-
-    String GROUP_PAAS = "PaaSGroup";
 
     String GROUP_RUN_MAIN_MENU = "RunGroupMainMenu";
 
