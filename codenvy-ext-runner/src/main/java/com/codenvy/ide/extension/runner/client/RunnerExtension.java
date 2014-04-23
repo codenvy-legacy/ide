@@ -83,7 +83,6 @@ public class RunnerExtension {
         // add actions in context menu
         DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
         DefaultActionGroup runContextGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_CONTEXT_MENU);
-        actionManager.registerAction(GROUP_RUN_CONTEXT_MENU, runContextGroup);
         runContextGroup.addSeparator();
         runContextGroup.add(runAction);
         contextMenuGroup.add(runContextGroup);
