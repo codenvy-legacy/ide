@@ -19,6 +19,9 @@ package com.codenvy.ide.api.ui;
 
 import com.google.gwt.user.client.ui.Image;
 
+import org.vectomatic.dom.svg.ui.SVGImage;
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import java.util.Map;
 
 /**
@@ -33,6 +36,12 @@ public interface IconRegistry {
      * @return Image GWT widget
      */
     Image getIcon(String iconId);
+    
+    /**
+     * @param iconId id of the icon
+     * @return SVG GWT image
+     */
+    SVGImage getSVGIcon(String iconId);
 
     /**
      * @param iconId
@@ -44,6 +53,11 @@ public interface IconRegistry {
      * @return default icon, can be useful if don't find icon by id
      */
     Image getDefaultIcon();
+    
+    /**
+     * @return default SVG icon, can be useful if don't find icon by id
+     */
+    SVGImage getDefaultSVGIcon();
 
     /**
      * @param iconId
@@ -52,4 +66,12 @@ public interface IconRegistry {
      *         path to the image
      */
     void registerIcon(String iconId, String iconPath);
+    
+    /**
+     * @param iconId
+     *         some id
+     * @param resource
+     *         SVG resource
+     */
+    void registerSVGIcon(String iconId, SVGResource resource);
 }

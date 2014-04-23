@@ -14,19 +14,18 @@
 
 package com.codenvy.ide.tree;
 
+import elemental.dom.Element;
 import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.MouseEvent;
 import elemental.html.AnchorElement;
-import elemental.dom.Element;
-import elemental.html.ImageElement;
 import elemental.html.SpanElement;
 
-import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.resources.model.Folder;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.ui.tree.NodeRenderer;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
@@ -35,8 +34,9 @@ import com.codenvy.ide.util.CssUtils;
 import com.codenvy.ide.util.TextUtils;
 import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.UIObject;
+
+import org.vectomatic.dom.svg.ui.SVGImage;
 
 
 /** Renderer for nodes in the file tree. */
@@ -113,13 +113,11 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
                                                  boolean renderIcon) {
 
         SpanElement root = Elements.createSpanElement(css.root());
-        Image image = detectIcon(item);
+        SVGImage image = detectIcon(item);
 
         if (renderIcon && image != null) {
-            ImageElement icon = Elements.createImageElement();
-            icon.setSrc(image.getUrl());
-            Elements.addClassName(css.icon(), icon);
-            root.appendChild(icon);
+            image.getElement().setAttribute("class", css.icon());
+            root.appendChild((Element)image.getElement());
         }
 
         final Element label;
@@ -146,7 +144,7 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
         return root;
     }
 
-    private static Image detectIcon(Resource item) {
+    /*private static Image detectIcon(Resource item) {
         Project project = item.getProject();
         Image icon = null;
 
@@ -170,8 +168,36 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
             }
         }
         return icon;
+    }*/
+
+    private static SVGImage detectIcon(Resource item) {
+        Project project = item.getProject();
+        SVGImage icon = null;
+
+        if (project == null) return null;
+        final String projectTypeId = project.getDescription().getProjectTypeId();
+        if (item instanceof Project) {
+            icon = iconRegistry.getSVGIcon(projectTypeId + ".projecttype.small.icon");
+        } else if (item instanceof Folder) {
+            icon = iconRegistry.getSVGIcon(projectTypeId + ".folder.small.icon");
+        } else if (item instanceof File) {
+            String filename = item.getName();
+
+            // search exact match first
+            icon = iconRegistry.getSVGIcon(projectTypeId + "/" + filename + ".file.small.icon");
+
+            // not found, try with extension
+            if (icon == null) {
+                String[] split = item.getName().split("\\.");
+                String ext = split[split.length - 1];
+                icon = iconRegistry.getSVGIcon(projectTypeId + "/" + ext + ".file.small.icon");
+            }
+        }
+        return icon;
     }
 
+    
+    
     private final EventListener mouseDownListener = new EventListener() {
         @Override
         public void handleEvent(Event evt) {
