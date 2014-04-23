@@ -19,7 +19,6 @@ package com.codenvy.ide.extension.builder.client.console;
 
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -36,22 +35,19 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDelegate> implements BuilderConsoleView {
-    interface ConsolePartViewImplUiBinder extends UiBinder<Widget, BuilderConsoleViewImpl> {
+    interface BuilderConsoleViewImplUiBinder extends UiBinder<Widget, BuilderConsoleViewImpl> {
     }
 
-    private static ConsolePartViewImplUiBinder uiBinder = GWT.create(ConsolePartViewImplUiBinder.class);
-
     @UiField
-    FlowPanel consoleArea;
-
+    FlowPanel   consoleArea;
     @UiField
     ScrollPanel scrollPanel;
 
     @Inject
-    public BuilderConsoleViewImpl(PartStackUIResources resources) {
+    public BuilderConsoleViewImpl(PartStackUIResources resources, BuilderConsoleViewImplUiBinder uiBinder) {
         super(resources);
         container.add(uiBinder.createAndBindUi(this));
-        minimizeButton.ensureDebugId("runner-console-minimizeBut");
+        minimizeButton.ensureDebugId("builder-console-minimizeBut");
     }
 
     /** {@inheritDoc} */
@@ -70,13 +66,10 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
         final String TEXT = text.toUpperCase();
         if (TEXT.startsWith("[INFO]")) {
             html.setHTML("<pre" + preStyle + ">[<span style='color:lightgreen;'><b>INFO</b></span>] " + text.substring(6) + "</pre>");
-
         } else if (TEXT.startsWith("[ERROR]")) {
             html.setHTML("<pre" + preStyle + ">[<span style='color:#F62217;'><b>ERROR</b></span>] " + text.substring(7) + "</pre>");
-
         } else if (TEXT.startsWith("[WARNING]")) {
             html.setHTML("<pre" + preStyle + ">[<span style='color:cyan;'><b>WARNING</b></span>] " + text.substring(9) + "</pre>");
-
         } else {
             html.setHTML("<pre" + preStyle + ">" + text + "</pre>");
         }
