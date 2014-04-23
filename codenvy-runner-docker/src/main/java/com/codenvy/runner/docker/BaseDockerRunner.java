@@ -54,6 +54,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.Reader;
+import java.net.ConnectException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.HashMap;
@@ -414,7 +415,7 @@ public abstract class BaseDockerRunner extends Runner {
 
         @Override
         public void stop() throws RunnerException {
-            if (started.compareAndSet(true, false)) {
+            if (started.get()) {
                 try {
                     connector.stopContainer(container, 3, TimeUnit.SECONDS);
                     if (callback != null) {
@@ -457,6 +458,9 @@ public abstract class BaseDockerRunner extends Runner {
             if (started.get()) {
                 try {
                     return connector.inspectContainer(container).getState().isRunning();
+                } catch (ConnectException e) {
+                    // If connection to docker daemon is lost.
+                    LOG.error(e.getMessage(),e);
                 } catch (IOException e) {
                     throw new RunnerException(e);
                 }
