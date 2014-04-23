@@ -69,7 +69,6 @@ public class BuilderExtension {
         // add actions in context menu
         DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
         DefaultActionGroup buildContextGroup = (DefaultActionGroup)actionManager.getAction(GROUP_BUILD_CONTEXT_MENU);
-        actionManager.registerAction(GROUP_RUN_CONTEXT_MENU, buildContextGroup);
         buildContextGroup.add(buildAction);
         contextMenuGroup.add(buildContextGroup);
 
