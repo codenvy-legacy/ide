@@ -19,12 +19,15 @@ package com.codenvy.ide.extension.maven.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.action.ActionManager;
+import com.codenvy.ide.api.ui.action.Anchor;
+import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.extension.maven.client.actions.MavenBuildAction;
+import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
+import com.codenvy.ide.extension.maven.client.actions.CustomBuildAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_BUILD;
 
 /**
  * Builder extension entry point.
@@ -32,28 +35,17 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-@Extension(title = "Building project", version = "3.0.0")
+@Extension(title = "Building Maven project", version = "3.0.0")
 public class MavenExtension {
-    public static final String PROJECT_BUILD_GROUP_MAIN_MENU = "ProjectBuildGroup";
-
-    /**
-     * Create extension.
-     */
+    /** Create extension. */
     @Inject
     public MavenExtension(MavenLocalizationConstant localizationConstants,
+                          BuilderLocalizationConstant builderLocalizationConstant,
                           ActionManager actionManager,
-                          MavenBuildAction buildAction) {
-        // register actions
-        actionManager.registerAction(localizationConstants.buildProjectControlId(), buildAction);
+                          CustomBuildAction customBuildAction) {
+        actionManager.registerAction(localizationConstants.buildProjectControlId(), customBuildAction);
 
-        // compose action group
-        DefaultActionGroup buildGroup = new DefaultActionGroup(PROJECT_BUILD_GROUP_MAIN_MENU, false, actionManager);
-        buildGroup.add(buildAction);
-
-        // add action group to 'Project' menu
-        DefaultActionGroup projectMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_PROJECT);
-        projectMenuActionGroup.addSeparator();
-        projectMenuActionGroup.add(buildGroup);
-
+        DefaultActionGroup buildMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_BUILD);
+        buildMenuActionGroup.add(customBuildAction, new Constraints(Anchor.AFTER, builderLocalizationConstant.buildProjectControlId()));
     }
 }

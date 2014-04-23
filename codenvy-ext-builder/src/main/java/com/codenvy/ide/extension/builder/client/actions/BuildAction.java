@@ -60,6 +60,6 @@ public class BuildAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        e.getPresentation().setEnabled(resourceProvider.getActiveProject() != null);
+        e.getPresentation().setEnabledAndVisible(resourceProvider.getActiveProject() != null);
     }
 }

@@ -34,17 +34,17 @@ import com.google.inject.Singleton;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class MavenBuildAction extends Action {
+public class CustomBuildAction extends Action {
 
     private final ResourceProvider      resourceProvider;
     private final MavenBuilderPresenter presenter;
     private final AnalyticsEventLogger  eventLogger;
 
     @Inject
-    public MavenBuildAction(MavenBuilderPresenter presenter,
-                            MavenResources resources,
-                            MavenLocalizationConstant localizationConstant,
-                            ResourceProvider resourceProvider, AnalyticsEventLogger eventLogger) {
+    public CustomBuildAction(MavenBuilderPresenter presenter,
+                             MavenResources resources,
+                             MavenLocalizationConstant localizationConstant,
+                             ResourceProvider resourceProvider, AnalyticsEventLogger eventLogger) {
         super(localizationConstant.buildProjectControlTitle(),
               localizationConstant.buildProjectControlDescription(), null, resources.build());
         this.presenter = presenter;

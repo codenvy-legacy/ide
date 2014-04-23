@@ -34,7 +34,7 @@ import com.google.inject.Singleton;
 import static com.codenvy.ide.MimeType.APPLICATION_JAVA;
 import static com.codenvy.ide.api.ui.action.Anchor.AFTER;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_CONTEXT_MENU;
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_MAIN_MENU;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_TOOLBAR;
 
 /**
@@ -60,12 +60,13 @@ public class JavaRuntimeExtension {
         actionManager.registerAction(localizationConstant.debugAppActionId(), debugAction);
 
         // add actions in main menu
-        DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
-        runMenuActionGroup.add(debugAction, new Constraints(AFTER, runnerLocalizationConstants.runAppActionId()));
+        DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN);
+        runMenuActionGroup.add(debugAction, new Constraints(AFTER, runnerLocalizationConstants.customRunAppActionId()));
 
         // add actions on main toolbar
         DefaultActionGroup runToolbarGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_TOOLBAR);
         runToolbarGroup.add(debugAction);
+        runToolbarGroup.addSeparator();
 
         // add actions in context menu
         DefaultActionGroup runContextGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_CONTEXT_MENU);

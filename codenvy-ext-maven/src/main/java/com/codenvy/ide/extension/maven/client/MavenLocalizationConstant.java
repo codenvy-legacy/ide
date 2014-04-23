@@ -27,13 +27,13 @@ import com.google.gwt.i18n.client.Messages;
  */
 public interface MavenLocalizationConstant extends Messages {
     /* Actions */
-    @Key("control.buildProject.id")
+    @Key("control.customBuildProject.id")
     String buildProjectControlId();
 
-    @Key("control.buildProject.text")
+    @Key("control.customBuildProject.text")
     String buildProjectControlTitle();
 
-    @Key("control.buildProject.description")
+    @Key("control.customBuildProject.description")
     String buildProjectControlDescription();
 
     @Key("messages.buildSuccess")

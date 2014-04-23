@@ -21,8 +21,7 @@ package com.codenvy.ide.api.ui.action;
  * Represents constraints for some action. Constraints are used to specify
  * action's position in the default group, see {@link DefaultActionGroup}.
  *
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Evgen Vidolob
  */
 public class Constraints {
     public final static Constraints FIRST = new Constraints(Anchor.FIRST, null);
