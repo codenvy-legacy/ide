@@ -25,17 +25,17 @@ import com.codenvy.ide.api.editor.SelectionProvider;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEventHandler;
+import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.outline.OutlineImpl;
-import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.text.Document;
+import com.codenvy.ide.text.DocumentEvent;
+import com.codenvy.ide.text.DocumentListener;
 import com.codenvy.ide.text.annotation.AnnotationModel;
-import com.codenvy.ide.text.store.TextChange;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.api.TextListener;
 import com.codenvy.ide.texteditor.api.outline.OutlineModel;
 import com.codenvy.ide.texteditor.api.outline.OutlinePresenter;
 import com.codenvy.ide.util.executor.UserActivityManager;
@@ -51,15 +51,15 @@ import javax.validation.constraints.NotNull;
 /** @author Evgen Vidolob */
 public class TextEditorPresenter extends AbstractTextEditorPresenter implements FileEventHandler {
 
-    private final TextListener textListener = new TextListener() {
-
-        @Override
-        public void onTextChange(TextChange textChange) {
-            if (!isDirty()) {
-                updateDirtyState(true);
-            }
-        }
-    };
+//    private final TextListener textListener = new TextListener() {
+//
+//        @Override
+//        public void onTextChange(TextChange textChange) {
+//            if (!isDirty()) {
+//                updateDirtyState(true);
+//            }
+//        }
+//    };
     protected TextEditorViewImpl      editor;
     private   Resources               resources;
     private   UserActivityManager     userActivityManager;
@@ -101,8 +101,28 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
                         AnnotationModel annotationModel = documentProvider.getAnnotationModel(input);
                         editor.setDocument(document, annotationModel);
                         firePropertyChange(PROP_INPUT);
+                        document.addDocumentListener(new DocumentListener() {
+                            @Override
+                            public void documentAboutToBeChanged(DocumentEvent event) {
+
+                            }
+
+                            @Override
+                            public void documentChanged(DocumentEvent event) {
+                                handleDocumentChanged();
+                            }
+                        });
                     }
                 });
+            }
+        });
+    }
+
+    private void handleDocumentChanged() {
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+              updateDirtyState(editor.getUndoManager().undoable());
             }
         });
     }
@@ -175,7 +195,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
                            @NotNull NotificationManager notificationManager) {
         super.initialize(configuration, documentProvider, notificationManager);
         editor = new TextEditorViewImpl(resources, userActivityManager, breakpointGutterManager, dtoFactory);
-        editor.getTextListenerRegistrar().add(textListener);
+//        editor.getTextListenerRegistrar().add(textListener);
     }
 
     @Override
