@@ -103,10 +103,6 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
 
     }
 
-    private static final native void log(String msg) /*-{
-        console.log(msg);
-    }-*/;
-
     /**
      * Renders the given information as a node.
      *
@@ -129,7 +125,6 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
                 icon.setAttribute("src", image.getUrl());
             }
         }
-
 
         Elements.addClassName(css.label(), root);
 
