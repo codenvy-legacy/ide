@@ -24,7 +24,12 @@ import com.codenvy.ide.extension.builder.client.actions.BuildAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_BUILD;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_BUILD_CONTEXT_MENU;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_BUILD_TOOLBAR;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_CONTEXT_MENU;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_TOOLBAR;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_CONTEXT_MENU;
 
 /**
  * Builder extension entry point.
@@ -34,28 +39,33 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
 @Singleton
 @Extension(title = "Building project", version = "3.0.0")
 public class BuilderExtension {
-    public static final String PROJECT_BUILD_GROUP_MAIN_MENU = "ProjectBuildGroup";
     /** Channel for the messages containing status of the Maven build job. */
-    public static final String BUILD_STATUS_CHANNEL          = "builder:status:";
+    public static final String BUILD_STATUS_CHANNEL = "builder:status:";
 
-    /**
-     * Create extension.
-     */
+    /** Create extension. */
     @Inject
     public BuilderExtension(BuilderLocalizationConstant localizationConstants,
                             ActionManager actionManager,
                             BuildAction buildAction) {
-        // register actions
         actionManager.registerAction(localizationConstants.buildProjectControlId(), buildAction);
 
-        // compose action group
-        DefaultActionGroup buildGroup = new DefaultActionGroup(PROJECT_BUILD_GROUP_MAIN_MENU, false, actionManager);
-        buildGroup.add(buildAction);
+        // add actions in main menu
+        DefaultActionGroup buildMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_BUILD);
+        buildMenuActionGroup.add(buildAction);
 
-        // add action group to 'Project' menu
-        DefaultActionGroup projectMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_PROJECT);
-        projectMenuActionGroup.addSeparator();
-        projectMenuActionGroup.add(buildGroup);
+        // add actions on main toolbar
+        DefaultActionGroup mainToolbarGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_TOOLBAR);
+        DefaultActionGroup buildToolbarGroup = new DefaultActionGroup(GROUP_BUILD_TOOLBAR, false, actionManager);
+        actionManager.registerAction(GROUP_BUILD_TOOLBAR, buildToolbarGroup);
+        buildToolbarGroup.add(buildAction);
+        buildToolbarGroup.addSeparator();
+        mainToolbarGroup.add(buildToolbarGroup);
 
+        // add actions in context menu
+        DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
+        DefaultActionGroup buildContextGroup = (DefaultActionGroup)actionManager.getAction(GROUP_BUILD_CONTEXT_MENU);
+        actionManager.registerAction(GROUP_RUN_CONTEXT_MENU, buildContextGroup);
+        buildContextGroup.add(buildAction);
+        contextMenuGroup.add(buildContextGroup);
     }
 }

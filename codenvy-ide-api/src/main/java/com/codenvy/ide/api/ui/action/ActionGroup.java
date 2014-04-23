@@ -26,10 +26,7 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
- */
+/** @author Evgen Vidolob */
 public abstract class ActionGroup extends Action {
     private boolean myPopup;
     private final       ListenerManager<PropertyChangeListener> myChangeSupport = ListenerManager.create();
@@ -142,7 +139,7 @@ public abstract class ActionGroup extends Action {
             }
         } else {
             if (mySecondaryActions == null) {
-                mySecondaryActions = new HashSet<Action>();
+                mySecondaryActions = new HashSet<>();
             }
 
             mySecondaryActions.add(action);
@@ -161,7 +158,6 @@ public abstract class ActionGroup extends Action {
             }
         }
     }
-
 
     public boolean hideIfNoVisibleChildren() {
         return false;

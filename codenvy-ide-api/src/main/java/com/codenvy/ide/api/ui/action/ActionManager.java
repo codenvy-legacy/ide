@@ -23,8 +23,7 @@ import com.codenvy.ide.api.extension.SDK;
  * A manager for actions. Used to register and unregister actions, also
  * contains utility methods to easily fetch action by id and id by action.
  *
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Evgen Vidolob
  * @see Action
  */
 @SDK(title = "ide.api.ui.action")
@@ -36,7 +35,7 @@ public interface ActionManager {
      * @param actionId
      *         Id of the registered action
      * @return Action associated with the specified actionId, <code>null</code> if
-     *         there is no actions associated with the speicified actionId
+     *         there is no actions associated with the specified actionId
      * @throws java.lang.IllegalArgumentException
      *         if <code>actionId</code> is <code>null</code>
      */

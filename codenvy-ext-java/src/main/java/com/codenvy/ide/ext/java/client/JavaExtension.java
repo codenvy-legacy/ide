@@ -43,7 +43,6 @@ import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.ext.java.client.editor.JavaEditorProvider;
 import com.codenvy.ide.ext.java.client.editor.JavaReconcilerStrategy;
-import com.codenvy.ide.ext.java.client.format.FormatController;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProjectModelProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewAnnotationProvider;
@@ -70,19 +69,17 @@ import com.google.web.bindery.event.shared.EventBus;
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_CONTEXT_MENU;
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_BUILD;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_BUILD_CONTEXT_MENU;
 
 /** @author Evgen Vidolob */
 @Extension(title = "Java syntax highlighting and code autocompletion.", version = "3.0.0")
 public class JavaExtension {
-    private ResourceProvider    resourceProvider;
     private NotificationManager notificationManager;
     private String              restContext;
     private String              workspaceId;
     private AsyncRequestFactory asyncRequestFactory;
     private EditorAgent         editorAgent;
-    private AnalyticsEventLogger eventLogger;
 
     @Inject
     public JavaExtension(ResourceProvider resourceProvider,
@@ -103,19 +100,15 @@ public class JavaExtension {
                          ProjectServiceClient projectServiceClient,
                          IconRegistry iconRegistry,
                          DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                         FormatController formatController,
                          EditorAgent editorAgent,
                          ProjectTypeWizardRegistry wizardRegistry,
                          Provider<MavenPagePresenter> mavenPagePresenter,
                          AnalyticsEventLogger eventLogger) {
-        this.resourceProvider = resourceProvider;
         this.notificationManager = notificationManager;
         this.restContext = restContext;
         this.workspaceId = workspaceId;
         this.asyncRequestFactory = asyncRequestFactory;
         this.editorAgent = editorAgent;
-        this.eventLogger = eventLogger;
-
 
         iconRegistry.registerIcon("jar.projecttype.big.icon", "java-extension/jar_64.png");
 //        iconRegistry.registerIcon("jar.projecttype.small.icon", "java-extension/jar.png");
@@ -172,7 +165,6 @@ public class JavaExtension {
         iconRegistry.registerIcon("java.class", "java-extension/java-icon.png");
         iconRegistry.registerIcon("java.package", "java-extension/package-icon.png");
 
-
         FileType javaFile = new FileType(JavaResources.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
         editorRegistry.register(javaFile, javaEditorProvider);
         resourceProvider.registerFileType(javaFile);
@@ -183,14 +175,14 @@ public class JavaExtension {
         JavaResources.INSTANCE.css().ensureInjected();
 
         // add actions in context menu
-        DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
-        contextMenuGroup.addSeparator();
+        DefaultActionGroup buildContextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_BUILD_CONTEXT_MENU);
+        buildContextMenuGroup.addSeparator();
         UpdateDependencyAction dependencyAction = new UpdateDependencyAction(this, resourceProvider, eventLogger);
         actionManager.registerAction("updateDependency", dependencyAction);
-        contextMenuGroup.addAction(dependencyAction);
+        buildContextMenuGroup.addAction(dependencyAction);
 
-        DefaultActionGroup projectMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_PROJECT);
-        projectMenuActionGroup.add(dependencyAction);
+        DefaultActionGroup buildMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_BUILD);
+        buildMenuActionGroup.add(dependencyAction);
 
         newResourceAgent.register(newClassHandler);
         newResourceAgent.register(newInterfaceHandler);
@@ -261,7 +253,6 @@ public class JavaExtension {
                         }
                     }
                 });
-
             }
 
             @Override

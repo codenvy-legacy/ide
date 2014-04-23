@@ -44,8 +44,7 @@ import org.vectomatic.dom.svg.ui.SVGImage;
 /**
  * Toolbar image button.
  *
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Evgen Vidolob
  */
 public class ActionButton extends Composite implements MouseOverHandler, MouseOutHandler, MouseDownHandler, MouseUpHandler,
                                                        ClickHandler {

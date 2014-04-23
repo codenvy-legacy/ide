@@ -19,6 +19,8 @@ package com.codenvy.ide.extension.runner.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.action.ActionManager;
+import com.codenvy.ide.api.ui.action.Anchor;
+import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.extension.runner.client.actions.CustomRunAction;
 import com.codenvy.ide.extension.runner.client.actions.GetLogsAction;
@@ -30,8 +32,8 @@ import com.google.inject.Singleton;
 
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_CONTEXT_MENU;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_TOOLBAR;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_CONTEXT_MENU;
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_MAIN_MENU;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_TOOLBAR;
 
 /**
@@ -44,8 +46,13 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_TOOLBAR;
 public class RunnerExtension {
 
     @Inject
-    public RunnerExtension(RunnerLocalizationConstant localizationConstants, ActionManager actionManager, RunAction runAction,
-                           CustomRunAction customRunAction, GetLogsAction getLogsAction, StopAction stopAction, UpdateAction updateAction) {
+    public RunnerExtension(RunnerLocalizationConstant localizationConstants,
+                           ActionManager actionManager,
+                           RunAction runAction,
+                           CustomRunAction customRunAction,
+                           GetLogsAction getLogsAction,
+                           StopAction stopAction,
+                           UpdateAction updateAction) {
         // register actions
         actionManager.registerAction(localizationConstants.runAppActionId(), runAction);
         actionManager.registerAction(localizationConstants.customRunAppActionId(), customRunAction);
@@ -54,9 +61,9 @@ public class RunnerExtension {
         actionManager.registerAction(localizationConstants.updateExtensionActionId(), updateAction);
 
         // add actions in main menu
-        DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
+        DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN);
         runMenuActionGroup.add(runAction);
-        runMenuActionGroup.add(customRunAction);
+        runMenuActionGroup.add(customRunAction, new Constraints(Anchor.AFTER, localizationConstants.runAppActionId()));
         runMenuActionGroup.add(getLogsAction);
         runMenuActionGroup.add(stopAction);
         runMenuActionGroup.add(updateAction);
@@ -70,7 +77,7 @@ public class RunnerExtension {
 
         // add actions in context menu
         DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
-        DefaultActionGroup runContextGroup = new DefaultActionGroup(GROUP_RUN_CONTEXT_MENU, false, actionManager);
+        DefaultActionGroup runContextGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_CONTEXT_MENU);
         actionManager.registerAction(GROUP_RUN_CONTEXT_MENU, runContextGroup);
         runContextGroup.addSeparator();
         runContextGroup.add(runAction);

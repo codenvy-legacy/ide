@@ -17,10 +17,7 @@
  */
 package com.codenvy.ide.api.ui.action;
 
-/**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
- */
+/** @author Evgen Vidolob */
 public class ActionPlaces {
     public static final String UNKNOWN = "unknown";
 

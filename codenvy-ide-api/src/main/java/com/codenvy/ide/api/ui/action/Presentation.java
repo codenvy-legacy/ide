@@ -31,8 +31,7 @@ import javax.validation.constraints.NotNull;
 /**
  * The presentation of an action in a specific place in the user interface.
  *
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Evgen Vidolob
  */
 public final class Presentation {
     private StringMap<Object> userMap;
@@ -169,7 +168,7 @@ public final class Presentation {
     public ImageResource getIcon() {
         return myIcon;
     }
-    
+
     public SVGResource getSVGIcon() {
         return mySVGIcon;
     }
@@ -179,7 +178,7 @@ public final class Presentation {
         myIcon = icon;
         firePropertyChange(PROP_ICON, oldIcon, myIcon);
     }
-    
+
     public void setSVGIcon(SVGResource icon) {
         SVGResource oldIcon = mySVGIcon;
         mySVGIcon = icon;

@@ -33,8 +33,7 @@ import org.vectomatic.dom.svg.ui.SVGResource;
  * <p/>
  * The same action can have various presentations.
  *
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Evgen Vidolob
  */
 public abstract class Action {
     private Presentation myTemplatePresentation;
