@@ -20,18 +20,17 @@ package com.codenvy.ide.extension.maven.client.build;
 import com.codenvy.api.builder.dto.BuildOptions;
 import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
 import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
+import com.codenvy.ide.extension.builder.client.console.BuilderConsolePresenter;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.websocket.MessageBus;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Presenter for build project with builder.
+ * Presenter for customizing building Maven project.
  *
  * @author Artem Zatsarynnyy
  */
@@ -47,14 +46,11 @@ import java.util.Map;
 public class MavenBuilderPresenter extends BuildProjectPresenter implements MavenBuildView.ActionDelegate {
     private MavenBuildView view;
 
-    /**
-     * Create presenter.
-     */
+    /** Create presenter. */
     @Inject
     protected MavenBuilderPresenter(MavenBuildView view,
-                                    EventBus eventBus,
                                     ResourceProvider resourceProvider,
-                                    ConsolePart console,
+                                    BuilderConsolePresenter console,
                                     BuilderServiceClient service,
                                     BuilderLocalizationConstant constant,
                                     WorkspaceAgent workspaceAgent,
@@ -62,8 +58,8 @@ public class MavenBuilderPresenter extends BuildProjectPresenter implements Mave
                                     NotificationManager notificationManager,
                                     DtoFactory dtoFactory,
                                     DtoUnmarshallerFactory dtoUnmarshallerFactory) {
-        super(eventBus, resourceProvider, console, service, constant, workspaceAgent, messageBus, notificationManager,
-              dtoFactory, dtoUnmarshallerFactory);
+        super(resourceProvider, console, service, constant, workspaceAgent, messageBus, notificationManager, dtoFactory,
+              dtoUnmarshallerFactory);
         this.view = view;
         this.view.setDelegate(this);
         this.view.setBuildCommand("clean install");

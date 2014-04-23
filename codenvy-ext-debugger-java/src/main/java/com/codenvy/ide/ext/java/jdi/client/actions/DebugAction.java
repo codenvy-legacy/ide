@@ -28,7 +28,7 @@ import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
 import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
-import com.codenvy.ide.extension.runner.client.RunnerController;
+import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 

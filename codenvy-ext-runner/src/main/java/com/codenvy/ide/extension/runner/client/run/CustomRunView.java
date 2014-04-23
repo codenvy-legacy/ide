@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.extension.runner.client;
+package com.codenvy.ide.extension.runner.client.run;
 
 import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.ide.api.mvp.View;

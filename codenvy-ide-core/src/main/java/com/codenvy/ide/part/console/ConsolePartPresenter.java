@@ -30,7 +30,7 @@ import com.google.inject.Singleton;
 
 
 /**
- * Template for the Console View Part. Used for demo and currently does nothing.
+ * Template for the Console View Part.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
@@ -71,9 +71,6 @@ public class ConsolePartPresenter extends BasePresenter implements ConsolePartVi
         container.setWidget(view);
     }
 
-    /**
-     *
-     */
     private void performPostOutputActions() {
         PartPresenter activePart = partStack.getActivePart();
         if (activePart == null || !activePart.equals(this)) {
@@ -121,7 +118,6 @@ public class ConsolePartPresenter extends BasePresenter implements ConsolePartVi
             }
         }, WorkBenchPartControllerImpl.DURATION);
     }
-
 
     @Override
     public void displayException(Exception e) {

@@ -32,10 +32,9 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Base view for part that must contains toolbar, this class provide one default button: "minimize" or hide part view and
- * label for view title
+ * label for view title.
  *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
  */
 public abstract class BaseView<T extends BaseActionDelegate> extends Composite implements View<T> {
 
