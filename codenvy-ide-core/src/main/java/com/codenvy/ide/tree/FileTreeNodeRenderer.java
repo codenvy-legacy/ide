@@ -34,6 +34,7 @@ import com.codenvy.ide.ui.tree.TreeNodeMutator;
 import com.codenvy.ide.util.CssUtils;
 import com.codenvy.ide.util.TextUtils;
 import com.codenvy.ide.util.dom.Elements;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.UIObject;
@@ -102,6 +103,10 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
 
     }
 
+    private static final native void log(String msg) /*-{
+        console.log(msg);
+    }-*/;
+
     /**
      * Renders the given information as a node.
      *
@@ -111,37 +116,38 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
      */
     public static SpanElement renderNodeContents(Css css, String name, Resource item, EventListener mouseDownListener,
                                                  boolean renderIcon) {
-
         SpanElement root = Elements.createSpanElement(css.root());
-        Image image = detectIcon(item);
+        int depth = item.getPath().split("/").length - 2;
+        root.setAttribute("__depth", "" + depth);
 
-        if (renderIcon && image != null) {
-            ImageElement icon = Elements.createImageElement();
-            icon.setSrc(image.getUrl());
-            Elements.addClassName(css.icon(), icon);
-            root.appendChild(icon);
+        if (renderIcon) {
+            Image image = detectIcon(item);
+            if (image != null) {
+                ImageElement icon = Elements.createImageElement("img");
+                icon.setClassName(css.icon());
+                root.appendChild(icon);
+                icon.setAttribute("src", image.getUrl());
+            }
         }
 
-        final Element label;
-        if (mouseDownListener != null) {
-            label = Elements.createAnchorElement(css.label());
-            ((AnchorElement)label).setHref("javascript:;");
-            label.addEventListener(Event.MOUSEDOWN, mouseDownListener, false);
-        } else {
-            label = Elements.createSpanElement(css.label());
-        }
+
+        Elements.addClassName(css.label(), root);
 
         if (item.isFolder()) {
-            Elements.addClassName(css.folderFont(), label);
+            Elements.addClassName(css.folderFont(), root);
         } else if (item.isFile()) {
-            Elements.addClassName(css.fileFont(), label);
+            Elements.addClassName(css.fileFont(), root);
         } else {
-            Elements.addClassName(css.defaultFont(), label);
+            Elements.addClassName(css.defaultFont(), root);
         }
-        label.setTextContent(name);
-        UIObject.ensureDebugId((com.google.gwt.dom.client.Element)label, "projectTree-" + TextUtils.md5(item.getPath()));
 
-        root.appendChild(label);
+        root.setInnerHTML(root.getInnerHTML() + "&nbsp;" + name);
+
+        if (mouseDownListener != null) {
+            root.addEventListener(Event.MOUSEDOWN, mouseDownListener, false);
+        }
+
+        UIObject.ensureDebugId((com.google.gwt.dom.client.Element)root, "projectTree-" + TextUtils.md5(item.getPath()));
 
         return root;
     }
@@ -169,6 +175,7 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
                 icon = iconRegistry.getIcon(projectTypeId + "/" + ext + ".file.small.icon");
             }
         }
+
         return icon;
     }
 

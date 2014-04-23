@@ -21,6 +21,7 @@ import com.codenvy.ide.api.ui.workspace.WorkBenchView;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.LayoutPanel;
@@ -43,7 +44,7 @@ public class WorkBenchViewImpl extends LayoutPanel implements WorkBenchView<Work
     }
 
     @UiField(provided = true)
-    SplitLayoutPanel splitPanel = new SplitLayoutPanel(1);
+    SplitLayoutPanel splitPanel = new SplitLayoutPanel(3);
 
     @UiField
     ScrollPanel editorPanel;
