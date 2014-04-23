@@ -17,12 +17,12 @@
  */
 package com.codenvy.ide.ext.java.client.editor;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorProvider;
-import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.jdt.JavaPartitions;
@@ -46,8 +46,8 @@ public class JavaEditorProvider implements EditorProvider {
     private       Provider<CodenvyTextEditor> editorProvider;
     private       JavaParserWorker            worker;
     private       FileSaveWatcher             watcher;
-    private AnalyticsEventLogger eventLogger;
-    private ContentFormatter contentFormatter;
+    private       AnalyticsEventLogger        eventLogger;
+    private       ContentFormatter            contentFormatter;
 
     /**
      * @param resources
