@@ -162,7 +162,11 @@ public class DeployToApplicationServerRunner extends Runner {
         }
 
         final ApplicationProcess process =
-                server.deploy(appDir, toDeploy, webAppsRunnerCfg, new ApplicationServer.StopCallback() {
+                server.deploy(appDir, toDeploy, webAppsRunnerCfg, new ApplicationProcess.Callback() {
+                    @Override
+                    public void started() {
+                    }
+
                     @Override
                     public void stopped() {
                         portService.release(webAppsRunnerCfg.getHttpPort());

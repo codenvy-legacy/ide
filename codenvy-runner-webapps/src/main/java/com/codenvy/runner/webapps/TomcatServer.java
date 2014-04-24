@@ -105,7 +105,7 @@ public class TomcatServer implements ApplicationServer {
     public ApplicationProcess deploy(java.io.File appDir,
                                      DeploymentSources toDeploy,
                                      ApplicationServerRunnerConfiguration runnerConfiguration,
-                                     StopCallback stopCallback) throws RunnerException {
+                                     ApplicationProcess.Callback callback) throws RunnerException {
         final java.io.File myTomcatHome = getTomcatHome();
         try {
             final Path tomcatPath = Files.createDirectory(appDir.toPath().resolve("tomcat"));
@@ -127,9 +127,9 @@ public class TomcatServer implements ApplicationServer {
         }
 
         if (SystemInfo.isUnix()) {
-            return startUnix(appDir, runnerConfiguration, stopCallback);
+            return startUnix(appDir, runnerConfiguration, callback);
         } else {
-            return startWindows(appDir, runnerConfiguration, stopCallback);
+            return startWindows(appDir, runnerConfiguration, callback);
         }
     }
 
@@ -156,7 +156,7 @@ public class TomcatServer implements ApplicationServer {
 
     protected ApplicationProcess startUnix(final java.io.File appDir,
                                            final ApplicationServerRunnerConfiguration runnerConfiguration,
-                                           StopCallback stopCallback) throws RunnerException {
+                                           ApplicationProcess.Callback callback) throws RunnerException {
         final java.io.File logsDir = new java.io.File(appDir, "logs");
         final java.io.File startUpScriptFile;
         try {
@@ -170,7 +170,7 @@ public class TomcatServer implements ApplicationServer {
         logFiles.add(new java.io.File(logsDir, "stderr.log"));
 
         return new TomcatProcess(runnerConfiguration.getHttpPort(), logFiles, runnerConfiguration.getDebugPort(),
-                                 startUpScriptFile, appDir, stopCallback, pidTaskExecutor);
+                                 startUpScriptFile, appDir, callback, pidTaskExecutor);
     }
 
     private java.io.File genStartUpScriptUnix(java.io.File appDir, ApplicationServerRunnerConfiguration runnerConfiguration)
@@ -225,7 +225,7 @@ public class TomcatServer implements ApplicationServer {
 
     protected ApplicationProcess startWindows(java.io.File appDir,
                                               ApplicationServerRunnerConfiguration runnerConfiguration,
-                                              StopCallback stopCallback) {
+                                              ApplicationProcess.Callback callback) {
         throw new UnsupportedOperationException();
     }
 
@@ -236,20 +236,20 @@ public class TomcatServer implements ApplicationServer {
         final ExecutorService    pidTaskExecutor;
         final java.io.File       startUpScriptFile;
         final java.io.File       workDir;
-        final StopCallback       stopCallback;
+        final Callback           callback;
 
         int pid = -1;
         TomcatLogger logger;
         Process      process;
 
         TomcatProcess(int httpPort, List<java.io.File> logFiles, int debugPort, java.io.File startUpScriptFile, java.io.File workDir,
-                      StopCallback stopCallback, ExecutorService pidTaskExecutor) {
+                      Callback callback, ExecutorService pidTaskExecutor) {
             this.httpPort = httpPort;
             this.logFiles = logFiles;
             this.debugPort = debugPort;
             this.startUpScriptFile = startUpScriptFile;
             this.workDir = workDir;
-            this.stopCallback = stopCallback;
+            this.callback = callback;
             this.pidTaskExecutor = pidTaskExecutor;
         }
 
@@ -260,9 +260,7 @@ public class TomcatServer implements ApplicationServer {
             }
 
             try {
-                process = Runtime.getRuntime()
-                                 .exec(new CommandLine(startUpScriptFile.getAbsolutePath()).toShellCommand(), null,
-                                       workDir);
+                process = Runtime.getRuntime().exec(new CommandLine(startUpScriptFile.getAbsolutePath()).toShellCommand(), null, workDir);
                 pid = pidTaskExecutor.submit(new Callable<Integer>() {
                     @Override
                     public Integer call() throws Exception {
@@ -302,7 +300,7 @@ public class TomcatServer implements ApplicationServer {
             // Use ProcessUtil.kill(pid) because java.lang.Process.destroy() method doesn't
             // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
             ProcessUtil.kill(pid);
-            stopCallback.stopped();
+            callback.stopped();
             LOG.debug("Stop Tomcat at port {}, application {}", httpPort, workDir);
         }
 
