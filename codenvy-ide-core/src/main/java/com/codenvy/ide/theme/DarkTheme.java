@@ -371,7 +371,7 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getTreeTextFolderColor() {
-        return "#888888";
+        return "#b4b4b4";
     }
 
     @Override
