@@ -42,18 +42,12 @@ public interface ApplicationServer {
      *         {@code DeploymentSources} to deploy
      * @param runnerConfiguration
      *         configuration of application server to run application
-     * @param stopCallback
-     *         an implementation should invoke stopped() method on provided <code>stopCallback</code> when this application
-     *         server stopped
+     * @param callback
+     *         Callback
      * @return {@code ApplicationProcess} that represents a deployed app
      * @throws RunnerException
      *         if an error occurs when try to deploy {@code DeploymentSources} to application server
      */
     ApplicationProcess deploy(java.io.File appDir, DeploymentSources toDeploy, ApplicationServerRunnerConfiguration runnerConfiguration,
-                              StopCallback stopCallback) throws RunnerException;
-
-    /** Will be notified when {@code ApplicationServer} stopped. */
-    public interface StopCallback {
-        void stopped();
-    }
+                              ApplicationProcess.Callback callback) throws RunnerException;
 }

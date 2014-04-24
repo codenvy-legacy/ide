@@ -57,6 +57,7 @@
 @eval treeTextFileColor com.codenvy.ide.api.ui.theme.Style.getTreeTextFileColor();
 @eval treeTextFolderColor com.codenvy.ide.api.ui.theme.Style.getTreeTextFolderColor();
 @eval treeTextShadow com.codenvy.ide.api.ui.theme.Style.getTreeTextShadow();
+@eval treeIconFileColor com.codenvy.ide.api.ui.theme.Style.getTreeIconFileColor();
 
 /* Button */
 @eval buttonTopColor com.codenvy.ide.api.ui.theme.Style.getButtonTopColor();
