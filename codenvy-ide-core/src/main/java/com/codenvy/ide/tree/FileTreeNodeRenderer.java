@@ -183,14 +183,14 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
         if (project == null) return null;
         final String projectTypeId = project.getDescription().getProjectTypeId();
         if (item instanceof Project) {
-            icon = iconRegistry.getSVGIcon(projectTypeId + ".projecttype.small.icon");
+            icon = iconRegistry.getSVGIconIfExist(projectTypeId + ".projecttype.small.icon");
         } else if (item instanceof Folder) {
             icon = iconRegistry.getSVGIcon(projectTypeId + ".folder.small.icon");
         } else if (item instanceof File) {
             String filename = item.getName();
 
             // search exact match first
-            icon = iconRegistry.getSVGIcon(projectTypeId + "/" + filename + ".file.small.icon");
+            icon = iconRegistry.getSVGIconIfExist(projectTypeId + "/" + filename + ".file.small.icon");
 
             // not found, try with extension
             if (icon == null) {

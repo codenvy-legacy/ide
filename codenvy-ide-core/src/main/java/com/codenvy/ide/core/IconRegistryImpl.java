@@ -64,6 +64,15 @@ public class IconRegistryImpl implements IconRegistry {
             return null;
         }
     }
+    
+    @Override
+    public SVGImage getSVGIconIfExist(String iconId) {
+        if (svgIcons.containsKey(iconId)) {
+            return new SVGImage(svgIcons.get(iconId));
+        } else {
+            return null;
+        }
+    }
 
     @Override
     public Image getDefaultIcon() {

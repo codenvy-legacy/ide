@@ -22,8 +22,6 @@ import com.google.gwt.user.client.ui.Image;
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
-import java.util.Map;
-
 /**
  * Provide  possibility to define images for UI in IDE extensions.
  *
@@ -49,6 +47,13 @@ public interface IconRegistry {
      */
     Image getIconIfExist(String iconId);
 
+    /**
+     * @param iconId
+     * @return SVG Image GWT widget if exist, otherwise - null
+     */
+    SVGImage getSVGIconIfExist(String iconId);
+
+    
     /**
      * @return default icon, can be useful if don't find icon by id
      */
