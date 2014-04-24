@@ -30,6 +30,7 @@ import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.dto.DtoFactory;
+import com.codenvy.ide.extension.builder.client.BuilderExtension;
 import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
 import com.codenvy.ide.extension.builder.client.console.BuilderConsolePresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -61,8 +62,6 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 @Singleton
 public class BuildProjectPresenter implements Notification.OpenNotificationHandler {
 
-    private static final String BUILDER_STATUS_CHANNEL = "builder:status:";
-    private static final String BUILDER_OUTPUT_CHANNEL = "builder:output:";
     protected final ResourceProvider                         resourceProvider;
     protected final BuilderConsolePresenter                  console;
     protected final BuilderServiceClient                     service;
@@ -166,7 +165,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                     protected void onErrorReceived(Throwable exception) {
                         setBuildInProgress(false);
                         try {
-                            messageBus.unsubscribe(BUILDER_STATUS_CHANNEL + buildTaskDescriptor.getTaskId(), this);
+                            messageBus.unsubscribe(BuilderExtension.BUILD_STATUS_CHANNEL + buildTaskDescriptor.getTaskId(), this);
                             Log.error(BuildProjectPresenter.class, exception);
                         } catch (WebSocketException e) {
                             Log.error(BuildProjectPresenter.class, e);
@@ -178,7 +177,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                 };
 
         try {
-            messageBus.subscribe(BUILDER_STATUS_CHANNEL + buildTaskDescriptor.getTaskId(), buildStatusHandler);
+            messageBus.subscribe(BuilderExtension.BUILD_STATUS_CHANNEL + buildTaskDescriptor.getTaskId(), buildStatusHandler);
         } catch (WebSocketException e) {
             Log.error(BuildProjectPresenter.class, e);
         }
@@ -204,7 +203,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
             @Override
             protected void onErrorReceived(Throwable throwable) {
                 try {
-                    messageBus.unsubscribe(BUILDER_OUTPUT_CHANNEL + buildTaskDescriptor.getTaskId(), this);
+                    messageBus.unsubscribe(BuilderExtension.BUILD_OUTPUT_CHANNEL + buildTaskDescriptor.getTaskId(), this);
                     Log.error(BuildProjectPresenter.class, throwable);
                 } catch (WebSocketException e) {
                     Log.error(BuildProjectPresenter.class, e);
@@ -213,7 +212,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         };
 
         try {
-            messageBus.subscribe(BUILDER_OUTPUT_CHANNEL + buildTaskDescriptor.getTaskId(), buildOutputHandler);
+            messageBus.subscribe(BuilderExtension.BUILD_OUTPUT_CHANNEL + buildTaskDescriptor.getTaskId(), buildOutputHandler);
         } catch (WebSocketException e) {
             Log.error(BuildProjectPresenter.class, e);
         }
@@ -226,7 +225,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     /** Perform actions after build is finished. */
     private void afterBuildFinished(BuildTaskDescriptor descriptor) {
         try {
-            messageBus.unsubscribe(BUILDER_STATUS_CHANNEL + descriptor.getTaskId(), buildStatusHandler);
+            messageBus.unsubscribe(BuilderExtension.BUILD_STATUS_CHANNEL + descriptor.getTaskId(), buildStatusHandler);
         } catch (Exception e) {
             Log.error(BuildProjectPresenter.class, e);
         }

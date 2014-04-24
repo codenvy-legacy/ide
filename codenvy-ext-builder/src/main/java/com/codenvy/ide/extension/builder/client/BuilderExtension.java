@@ -41,6 +41,8 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_TOOLBAR;
 @Singleton
 @Extension(title = "Builder", version = "3.0.0")
 public class BuilderExtension {
+    public static final String BUILD_STATUS_CHANNEL = "builder:status:";
+    public static final String BUILD_OUTPUT_CHANNEL = "builder:output:";
 
     /** Create extension. */
     @Inject
