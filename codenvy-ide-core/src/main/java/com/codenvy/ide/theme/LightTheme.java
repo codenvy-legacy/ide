@@ -376,7 +376,12 @@ public class LightTheme implements Theme {
     public String getTreeTextShadow() {
         return "rgba(255, 255, 255, 0.5)";
     }
-
+    
+    @Override
+    public String getTreeIconFileColor() {
+        return "#606060";
+    }
+    
     @Override
     public String getBoxBorderColor() {
         return "#aaaaaa";

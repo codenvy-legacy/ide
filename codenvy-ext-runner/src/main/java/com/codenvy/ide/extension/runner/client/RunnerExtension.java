@@ -22,11 +22,14 @@ import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.Anchor;
 import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.api.ui.workspace.PartStackType;
+import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.extension.runner.client.actions.CustomRunAction;
 import com.codenvy.ide.extension.runner.client.actions.GetLogsAction;
 import com.codenvy.ide.extension.runner.client.actions.RunAction;
 import com.codenvy.ide.extension.runner.client.actions.StopAction;
 import com.codenvy.ide.extension.runner.client.actions.UpdateAction;
+import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -42,7 +45,7 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_TOOLBAR;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-@Extension(title = "Runner extension.", version = "3.0.0")
+@Extension(title = "Runner", version = "3.0.0")
 public class RunnerExtension {
 
     @Inject
@@ -52,7 +55,9 @@ public class RunnerExtension {
                            CustomRunAction customRunAction,
                            GetLogsAction getLogsAction,
                            StopAction stopAction,
-                           UpdateAction updateAction) {
+                           UpdateAction updateAction,
+                           WorkspaceAgent workspaceAgent,
+                           RunnerConsolePresenter runnerConsolePresenter) {
         // register actions
         actionManager.registerAction(localizationConstants.runAppActionId(), runAction);
         actionManager.registerAction(localizationConstants.customRunAppActionId(), customRunAction);
@@ -78,9 +83,11 @@ public class RunnerExtension {
         // add actions in context menu
         DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
         DefaultActionGroup runContextGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_CONTEXT_MENU);
-        actionManager.registerAction(GROUP_RUN_CONTEXT_MENU, runContextGroup);
         runContextGroup.addSeparator();
         runContextGroup.add(runAction);
         contextMenuGroup.add(runContextGroup);
+
+        // add Runner console
+        workspaceAgent.openPart(runnerConsolePresenter, PartStackType.INFORMATION);
     }
 }

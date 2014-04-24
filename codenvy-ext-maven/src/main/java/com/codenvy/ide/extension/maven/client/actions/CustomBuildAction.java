@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.extension.maven.client.actions;
 
-import com.codenvy.ide.api.logger.AnalyticsEventLogger;
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;

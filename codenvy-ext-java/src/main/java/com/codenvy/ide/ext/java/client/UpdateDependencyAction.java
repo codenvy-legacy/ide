@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.java.client;
 
-import com.codenvy.ide.api.logger.AnalyticsEventLogger;
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;

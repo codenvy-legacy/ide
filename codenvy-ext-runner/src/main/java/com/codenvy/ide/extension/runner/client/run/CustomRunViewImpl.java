@@ -15,11 +15,13 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.extension.runner.client;
+package com.codenvy.ide.extension.runner.client.run;
 
 import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
+import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;

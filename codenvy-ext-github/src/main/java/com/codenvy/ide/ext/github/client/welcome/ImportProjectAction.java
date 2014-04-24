@@ -17,9 +17,9 @@
  */
 package com.codenvy.ide.ext.github.client.welcome;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.user.gwt.client.UserServiceClient;
 import com.codenvy.api.user.shared.dto.User;
-import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.github.client.GitHubLocalizationConstant;

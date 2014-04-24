@@ -22,6 +22,8 @@ import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.extension.runner.client.run.CustomRunPresenter;
+import com.codenvy.ide.extension.runner.client.run.CustomRunView;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
@@ -44,7 +46,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Testing {@link CustomRunPresenter} functionality
+ * Testing {@link com.codenvy.ide.extension.runner.client.run.CustomRunPresenter} functionality
  *
  * @author Artem Zatsarynnyy
  */

@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.extension.runner.client;
+package com.codenvy.ide.extension.runner.client.run;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.rest.shared.dto.ServiceError;
@@ -29,12 +29,15 @@ import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.dto.DtoFactory;
+import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
+import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
+import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
+import com.codenvy.ide.extension.runner.client.update.UpdateServiceClient;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
@@ -67,7 +70,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private       MessageBus                   messageBus;
     private       WorkspaceAgent               workspaceAgent;
     private       ResourceProvider             resourceProvider;
-    private       ConsolePart                  console;
+    private       RunnerConsolePresenter       console;
     private       RunnerServiceClient          service;
     private       UpdateServiceClient          updateService;
     private       RunnerLocalizationConstant   constant;
@@ -92,11 +95,11 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      * @param workspaceAgent
      *         {@link com.codenvy.ide.api.ui.workspace.WorkspaceAgent}
      * @param console
-     *         {@link com.codenvy.ide.api.parts.ConsolePart}
+     *         {@link com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter}
      * @param service
      *         {@link com.codenvy.api.runner.gwt.client.RunnerServiceClient}
      * @param updateService
-     *         {@link com.codenvy.ide.extension.runner.client.UpdateServiceClient}
+     *         {@link com.codenvy.ide.extension.runner.client.update.UpdateServiceClient}
      * @param constant
      *         {@link com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant}
      * @param notificationManager
@@ -106,7 +109,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     public RunnerController(ResourceProvider resourceProvider,
                             EventBus eventBus,
                             WorkspaceAgent workspaceAgent,
-                            final ConsolePart console,
+                            final RunnerConsolePresenter console,
                             RunnerServiceClient service,
                             UpdateServiceClient updateService,
                             RunnerLocalizationConstant constant,

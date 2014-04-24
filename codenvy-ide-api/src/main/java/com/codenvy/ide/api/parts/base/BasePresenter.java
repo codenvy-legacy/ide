@@ -25,7 +25,7 @@ import javax.validation.constraints.NotNull;
 /**
  * Base presenter for parts that support minimizing by part toolbar button.
  *
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
+ * @author Evgen Vidolob
  */
 public abstract class BasePresenter extends AbstractPartPresenter implements BaseActionDelegate {
     protected PartStack partStack;
@@ -36,8 +36,9 @@ public abstract class BasePresenter extends AbstractPartPresenter implements Bas
     /** {@inheritDoc} */
     @Override
     public void minimize() {
-        if (partStack != null)
+        if (partStack != null) {
             partStack.hidePart(this);
+        }
     }
 
     /**

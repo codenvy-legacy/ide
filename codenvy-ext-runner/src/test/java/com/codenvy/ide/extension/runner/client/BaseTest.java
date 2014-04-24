@@ -21,6 +21,7 @@ import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 
 import org.junit.Before;

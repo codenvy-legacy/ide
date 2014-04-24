@@ -19,7 +19,8 @@ package com.codenvy.ide.api.ui;
 
 import com.google.gwt.user.client.ui.Image;
 
-import java.util.Map;
+import org.vectomatic.dom.svg.ui.SVGImage;
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 /**
  * Provide  possibility to define images for UI in IDE extensions.
@@ -33,6 +34,12 @@ public interface IconRegistry {
      * @return Image GWT widget
      */
     Image getIcon(String iconId);
+    
+    /**
+     * @param iconId id of the icon
+     * @return SVG GWT image
+     */
+    SVGImage getSVGIcon(String iconId);
 
     /**
      * @param iconId
@@ -41,9 +48,21 @@ public interface IconRegistry {
     Image getIconIfExist(String iconId);
 
     /**
+     * @param iconId
+     * @return SVG Image GWT widget if exist, otherwise - null
+     */
+    SVGImage getSVGIconIfExist(String iconId);
+
+    
+    /**
      * @return default icon, can be useful if don't find icon by id
      */
     Image getDefaultIcon();
+    
+    /**
+     * @return default SVG icon, can be useful if don't find icon by id
+     */
+    SVGImage getDefaultSVGIcon();
 
     /**
      * @param iconId
@@ -52,4 +71,12 @@ public interface IconRegistry {
      *         path to the image
      */
     void registerIcon(String iconId, String iconPath);
+    
+    /**
+     * @param iconId
+     *         some id
+     * @param resource
+     *         SVG resource
+     */
+    void registerSVGIcon(String iconId, SVGResource resource);
 }

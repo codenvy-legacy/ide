@@ -20,10 +20,12 @@ package com.codenvy.ide.extension.runner.client.inject;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClientImpl;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.extension.runner.client.CustomRunView;
-import com.codenvy.ide.extension.runner.client.CustomRunViewImpl;
-import com.codenvy.ide.extension.runner.client.UpdateServiceClient;
-import com.codenvy.ide.extension.runner.client.UpdateServiceClientImpl;
+import com.codenvy.ide.extension.runner.client.console.RunnerConsoleView;
+import com.codenvy.ide.extension.runner.client.console.RunnerConsoleViewImpl;
+import com.codenvy.ide.extension.runner.client.run.CustomRunView;
+import com.codenvy.ide.extension.runner.client.run.CustomRunViewImpl;
+import com.codenvy.ide.extension.runner.client.update.UpdateServiceClient;
+import com.codenvy.ide.extension.runner.client.update.UpdateServiceClientImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
@@ -36,5 +38,6 @@ public class RunnerGinModule extends AbstractGinModule {
         bind(RunnerServiceClient.class).to(RunnerServiceClientImpl.class).in(Singleton.class);
         bind(UpdateServiceClient.class).to(UpdateServiceClientImpl.class).in(Singleton.class);
         bind(CustomRunView.class).to(CustomRunViewImpl.class).in(Singleton.class);
+        bind(RunnerConsoleView.class).to(RunnerConsoleViewImpl.class).in(Singleton.class);
     }
 }

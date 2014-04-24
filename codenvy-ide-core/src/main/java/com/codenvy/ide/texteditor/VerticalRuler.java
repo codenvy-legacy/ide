@@ -39,6 +39,7 @@ import com.codenvy.ide.ui.menu.PositionController;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.user.client.ui.UIObject;
 
 import java.util.Iterator;
 
@@ -81,6 +82,7 @@ public class VerticalRuler {
                 }
             }
         });
+        UIObject.ensureDebugId((com.google.gwt.dom.client.Element)view.getGutterElement(), "leftNotificationGutter");
     }
 
     private void showToolTip(Mark mark) {
@@ -122,6 +124,7 @@ public class VerticalRuler {
             int lineNumber = getLineNumberForPosition(position);
             m.lineNumber = lineNumber;
             m.setTopPosition(editor.getBuffer().calculateLineTop(lineNumber), "px");
+            UIObject.ensureDebugId((com.google.gwt.dom.client.Element)m.getElement(), "mark" + (lineNumber+1) + "-" + annotation.getType());
             view.addUnmanagedElement(m.getElement());
             elements.add(m);
         }

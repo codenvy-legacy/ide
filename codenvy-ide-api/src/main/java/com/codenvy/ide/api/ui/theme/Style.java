@@ -302,6 +302,10 @@ public class Style {
     public static String getTreeTextShadow() {
         return theme.getTreeTextShadow();
     }
+    
+    public static String getTreeIconFileColor() {
+        return theme.getTreeIconFileColor();
+    }
 
     public static String getBoxBorderColor() {
         return theme.getBoxBorderColor();

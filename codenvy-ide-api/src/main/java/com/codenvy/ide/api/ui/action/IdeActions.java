@@ -31,9 +31,9 @@ public interface IdeActions {
     String GROUP_BUILD_TOOLBAR = "BuildGroupToolbar";
     String GROUP_RUN_TOOLBAR   = "RunGroupToolbar";
 
-    String GROUP_MAIN_CONTEXT_MENU = "MainContextMenu";
-    String GROUP_BUILD_CONTEXT_MENU  = "BuildGroupContextMenu";
-    String GROUP_RUN_CONTEXT_MENU  = "RunGroupContextMenu";
+    String GROUP_MAIN_CONTEXT_MENU  = "MainContextMenu";
+    String GROUP_BUILD_CONTEXT_MENU = "BuildGroupContextMenu";
+    String GROUP_RUN_CONTEXT_MENU   = "RunGroupContextMenu";
 
     String GROUP_EDITOR_POPUP = "EditorPopupMenu";
     String GROUP_EDITOR       = "EditorActions";

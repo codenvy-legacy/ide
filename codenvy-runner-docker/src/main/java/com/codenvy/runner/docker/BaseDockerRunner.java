@@ -235,7 +235,7 @@ public abstract class BaseDockerRunner extends Runner {
                 }
                 hostConfig.setPortBindings(portBinding);
             }
-            final DockerProcess docker = new DockerProcess(connector, containerConfig, hostConfig, new DockerProcess.Callback() {
+            final DockerProcess docker = new DockerProcess(connector, containerConfig, hostConfig, new ApplicationProcess.Callback() {
                 @Override
                 public void started() {
                 }
@@ -270,8 +270,6 @@ public abstract class BaseDockerRunner extends Runner {
     }
 
     protected abstract DockerfileTemplate getDockerfileTemplate(RunRequest request) throws IOException;
-
-//    private static final Pattern BUILD_LOG_PATTERN = Pattern.compile("\\{[^\\}^\\{]+\\}");
 
     private synchronized ImageStats createImageIfNeed(DockerConnector connector,
                                                       String dockerRepoName,
@@ -460,7 +458,7 @@ public abstract class BaseDockerRunner extends Runner {
                     return connector.inspectContainer(container).getState().isRunning();
                 } catch (ConnectException e) {
                     // If connection to docker daemon is lost.
-                    LOG.error(e.getMessage(),e);
+                    LOG.error(e.getMessage(), e);
                 } catch (IOException e) {
                     throw new RunnerException(e);
                 }
@@ -474,12 +472,6 @@ public abstract class BaseDockerRunner extends Runner {
                 return logger;
             }
             return ApplicationLogger.DUMMY;
-        }
-
-        private static interface Callback {
-            void started();
-
-            void stopped();
         }
 
         private static class DockerLogger implements ApplicationLogger {
