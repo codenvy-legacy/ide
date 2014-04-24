@@ -18,8 +18,8 @@
 package com.codenvy.ide.logger;
 
 import com.codenvy.api.analytics.shared.dto.EventParameters;
-import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
-import com.codenvy.api.user.shared.dto.Profile;
+import com.codenvy.api.user.gwt.client.UserServiceClient;
+import com.codenvy.api.user.shared.dto.User;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.dto.DtoFactory;
@@ -64,24 +64,24 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
 
     private static final String EMPTY_PARAM_VALUE = "";
 
-    private final DtoFactory               dtoFactory;
-    private final UserProfileServiceClient userProfile;
-    private final ResourceProvider         resourceProvider;
-    private final MessageBus               messageBus;
-    private final ExtensionRegistry        extensionRegistry;
-    private final DtoUnmarshallerFactory   dtoUnmarshallerFactory;
+    private final DtoFactory             dtoFactory;
+    private final UserServiceClient      user;
+    private final ResourceProvider       resourceProvider;
+    private final MessageBus             messageBus;
+    private final ExtensionRegistry      extensionRegistry;
+    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
 
     private String currentUser;
 
     @Inject
     public AnalyticsEventLoggerImpl(DtoFactory dtoFactory,
                                     ExtensionRegistry extensionRegistry,
-                                    UserProfileServiceClient userProfile,
+                                    UserServiceClient user,
                                     ResourceProvider resourceProvider,
                                     MessageBus messageBus,
                                     DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.dtoFactory = dtoFactory;
-        this.userProfile = userProfile;
+        this.user = user;
         this.resourceProvider = resourceProvider;
         this.messageBus = messageBus;
         this.extensionRegistry = extensionRegistry;
@@ -181,13 +181,11 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
 
 
     private void saveCurrentUser() {
-        userProfile.getCurrentProfile(
-                null, new AsyncRequestCallback<Profile>(dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
-
+        user.getCurrentUser(new AsyncRequestCallback<User>(dtoUnmarshallerFactory.newUnmarshaller(User.class)) {
             @Override
-            protected void onSuccess(Profile result) {
+            protected void onSuccess(User result) {
                 if (result != null) {
-                    currentUser = result.getUserId();
+                    currentUser = result.getEmail();
                 } else {
                     currentUser = EMPTY_PARAM_VALUE;
                 }
