@@ -23,7 +23,6 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectServiceClientImpl;
 import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClientImpl;
-import com.codenvy.api.project.server.ProjectImportersService;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClientImpl;
 import com.codenvy.api.user.gwt.client.UserServiceClient;
@@ -32,6 +31,8 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.about.AboutView;
 import com.codenvy.ide.about.AboutViewImpl;
 import com.codenvy.ide.actions.ActionManagerImpl;
+import com.codenvy.ide.actions.find.FindActionView;
+import com.codenvy.ide.actions.find.FindActionViewImpl;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorAgent;
@@ -49,7 +50,9 @@ import com.codenvy.ide.api.parts.SearchPart;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ModelProvider;
+import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.GenericModelProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.action.ActionManager;
@@ -118,9 +121,7 @@ import com.codenvy.ide.projecttype.SelectProjectTypeView;
 import com.codenvy.ide.projecttype.SelectProjectTypeViewImpl;
 import com.codenvy.ide.rename.RenameResourceView;
 import com.codenvy.ide.rename.RenameResourceViewImpl;
-import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.ResourceProviderComponent;
-import com.codenvy.ide.api.resources.model.GenericModelProvider;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.search.SearchPartPresenter;
@@ -311,6 +312,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(AppearanceView.class).to(AppearanceViewImpl.class).in(Singleton.class);
 
         bind(ProjectWizardView.class).to(ProjectWizardViewImpl.class);
+        bind(FindActionView.class).to(FindActionViewImpl.class).in(Singleton.class);
     }
 
     @Provides

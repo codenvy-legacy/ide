@@ -18,14 +18,34 @@
 package com.codenvy.ide.actions.find;
 
 import com.codenvy.ide.api.mvp.Presenter;
+import com.codenvy.ide.api.ui.action.ActionManager;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * @author Evgen Vidolob
  */
-public class FindActionPresenter implements Presenter {
+@Singleton
+public class FindActionPresenter implements Presenter, FindActionView.ActionDelegate {
+
+    private FindActionView view;
+    private ActionManager actionManager;
+
+    @Inject
+    public FindActionPresenter(FindActionView view, ActionManager actionManager) {
+        this.view = view;
+        this.actionManager = actionManager;
+        view.setDelegate(this);
+    }
+
     @Override
     public void go(AcceptsOneWidget container) {
+
+    }
+
+    public void show() {
+        view.show();
 
     }
 }

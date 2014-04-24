@@ -30,7 +30,7 @@ public class FindActionViewImpl extends Window implements FindActionView {
 
     public FindActionViewImpl() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
-
+        setWidget(rootElement);
     }
 
     @Override

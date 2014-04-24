@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.actions;
 
+import com.codenvy.ide.actions.find.FindActionPresenter;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.google.inject.Inject;
@@ -29,13 +30,16 @@ import com.google.inject.Singleton;
 @Singleton
 public class FindActionAction extends Action {
 
+    private FindActionPresenter presenter;
+
     @Inject
-    public FindActionAction() {
+    public FindActionAction(FindActionPresenter presenter) {
         super("Find Action","Find Action by name", null);
+        this.presenter = presenter;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        presenter.show();
     }
 }
