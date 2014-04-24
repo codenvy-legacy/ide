@@ -267,6 +267,7 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
                 tabItem.add(image);
                 addHandlers();
             }
+            this.ensureDebugId("tabButton-" + title);
         }
 
         @Override
