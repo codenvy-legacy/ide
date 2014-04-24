@@ -32,7 +32,6 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_BUILD_CONTEXT_MENU;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_BUILD_TOOLBAR;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_CONTEXT_MENU;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_TOOLBAR;
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_CONTEXT_MENU;
 
 /**
  * Builder extension entry point.
@@ -42,8 +41,6 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_CONTEXT_MENU;
 @Singleton
 @Extension(title = "Builder", version = "3.0.0")
 public class BuilderExtension {
-    /** Channel for the messages containing status of the Maven build job. */
-    public static final String BUILD_STATUS_CHANNEL = "builder:status:";
 
     /** Create extension. */
     @Inject
