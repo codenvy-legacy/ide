@@ -37,8 +37,6 @@ import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
-import com.codenvy.ide.api.ui.wizard.ProjectWizard;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.ext.java.client.editor.JavaEditorProvider;
@@ -50,8 +48,6 @@ import com.codenvy.ide.ext.java.client.wizard.NewClassProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewEnumProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewInterfaceProvider;
 import com.codenvy.ide.ext.java.client.wizard.NewPackageProvider;
-import com.codenvy.ide.ext.java.client.wizard.maven.MavenPagePresenter;
-import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -62,7 +58,6 @@ import com.codenvy.ide.texteditor.api.reconciler.ReconcilingStrategy;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -101,8 +96,6 @@ public class JavaExtension {
                          IconRegistry iconRegistry,
                          DtoUnmarshallerFactory dtoUnmarshallerFactory,
                          EditorAgent editorAgent,
-                         ProjectTypeWizardRegistry wizardRegistry,
-                         Provider<MavenPagePresenter> mavenPagePresenter,
                          AnalyticsEventLogger eventLogger) {
         this.notificationManager = notificationManager;
         this.restContext = restContext;
@@ -189,9 +182,6 @@ public class JavaExtension {
         newResourceAgent.register(newEnumHandler);
         newResourceAgent.register(newAnnotationHandler);
         newResourceAgent.register(newPackage);
-        ProjectWizard wizard = new ProjectWizard(notificationManager);
-        wizard.addPage(mavenPagePresenter);
-        wizardRegistry.addWizard(Constants.MAVEN_JAR_ID, wizard);
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
