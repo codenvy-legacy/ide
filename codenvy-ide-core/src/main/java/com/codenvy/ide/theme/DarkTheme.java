@@ -378,6 +378,11 @@ public class DarkTheme implements Theme {
     public String getTreeTextShadow() {
         return "rgba(0, 0, 0, 0.5)";
     }
+    
+    @Override
+    public String getTreeIconFileColor() {
+        return "#b4b4b4";
+    }
 
     @Override
     public String getBoxBorderColor() {

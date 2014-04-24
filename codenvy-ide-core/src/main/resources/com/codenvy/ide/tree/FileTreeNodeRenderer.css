@@ -90,3 +90,8 @@
     text-decoration: none;
     color: inherit;
 }
+
+@external .treeFileIcon;
+.treeFileIcon {
+	fill: treeIconFileColor;
+}
