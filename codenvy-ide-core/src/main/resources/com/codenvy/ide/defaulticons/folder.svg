@@ -5,6 +5,6 @@
     <desc>Created with Sketch.</desc>
     <defs></defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" >
-        <path d="M175.087,47.265 C162.325,47.265 150.083,42.21 141.039,33.206 L108.35,0.66 L0,0.66 L0,329.34 L412,329.34 L412,47.265 L175.087,47.265 L175.087,47.265 Z" id="folder-icon" fill="#C9C9C9"></path>
+        <path d="M175.087,47.265 C162.325,47.265 150.083,42.21 141.039,33.206 L108.35,0.66 L0,0.66 L0,329.34 L412,329.34 L412,47.265 L175.087,47.265 L175.087,47.265 Z" id="folder-icon" class="treeFileIcon"></path>
     </g>
 </svg>

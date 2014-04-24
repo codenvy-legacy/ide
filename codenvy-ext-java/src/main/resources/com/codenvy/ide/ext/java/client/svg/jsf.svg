@@ -5,9 +5,9 @@
     <desc>Created with Sketch.</desc>
     <defs></defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <path d="M209.818,40 L209.818,125.75 L295.682,125.75 L295.682,372 L40.317,372 L40.317,40 L209.818,40 L209.818,40 Z M234.818,0 L0.317,0 L0.317,412 L335.682,412 L335.682,100.75 L234.818,0 L234.818,0 Z" id="icon" fill="#CACACA"></path>
+        <path d="M209.818,40 L209.818,125.75 L295.682,125.75 L295.682,372 L40.317,372 L40.317,40 L209.818,40 L209.818,40 Z M234.818,0 L0.317,0 L0.317,412 L335.682,412 L335.682,100.75 L234.818,0 L234.818,0 Z" id="icon" class="treeFileIcon"></path>
         <rect id="banner" fill="#F6A623" x="21" y="193" width="440" height="162"></rect>
-        <text id="JSF" font-family="Helvetica" font-size="144" font-weight="bold"  text-anchor="middle" fill="#5F3B00">
+        <text id="JSF" font-family="Helvetica" font-size="144" font-weight="bold" fill="#5F3B00">
             <tspan x="108.953125" y="325">JSF</tspan>
         </text>
     </g>

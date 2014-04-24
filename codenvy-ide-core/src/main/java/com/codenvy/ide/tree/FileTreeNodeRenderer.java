@@ -77,6 +77,8 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
 
         @Override
         String nodeNameInput();
+        
+        String treeFileIcon();
     }
 
     public interface Resources extends Tree.Resources {
