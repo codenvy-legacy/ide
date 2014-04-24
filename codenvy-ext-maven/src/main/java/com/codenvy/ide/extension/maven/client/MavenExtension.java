@@ -18,13 +18,19 @@
 package com.codenvy.ide.extension.maven.client;
 
 import com.codenvy.ide.api.extension.Extension;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.Anchor;
 import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
+import com.codenvy.ide.api.ui.wizard.ProjectWizard;
+import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
 import com.codenvy.ide.extension.maven.client.actions.CustomBuildAction;
+import com.codenvy.ide.extension.maven.client.wizard.MavenPagePresenter;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_BUILD;
@@ -42,10 +48,15 @@ public class MavenExtension {
     public MavenExtension(MavenLocalizationConstant localizationConstants,
                           BuilderLocalizationConstant builderLocalizationConstant,
                           ActionManager actionManager,
-                          CustomBuildAction customBuildAction) {
+                          CustomBuildAction customBuildAction, Provider<MavenPagePresenter> mavenPagePresenter,
+                          ProjectTypeWizardRegistry wizardRegistry, NotificationManager notificationManager) {
         actionManager.registerAction(localizationConstants.buildProjectControlId(), customBuildAction);
 
         DefaultActionGroup buildMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_BUILD);
         buildMenuActionGroup.add(customBuildAction, new Constraints(Anchor.AFTER, builderLocalizationConstant.buildProjectControlId()));
+
+        ProjectWizard wizard = new ProjectWizard(notificationManager);
+        wizard.addPage(mavenPagePresenter);
+        wizardRegistry.addWizard(Constants.MAVEN_JAR_ID, wizard);
     }
 }

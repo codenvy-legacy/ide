@@ -145,4 +145,16 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
     
     @Source("workspace/codenvy-placeholder.png")
     ImageResource codenvyPlaceholder();
+    
+    @Source("defaulticons/file.svg")
+    SVGResource defaultFile();
+    
+    @Source("defaulticons/default.svg")
+    SVGResource defaultIcon();
+    
+    @Source("defaulticons/folder.svg")
+    SVGResource defaultFolder();
+    
+    @Source("defaulticons/project.svg")
+    SVGResource defaultProject();
 }
