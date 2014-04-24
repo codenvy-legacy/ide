@@ -103,10 +103,6 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
 
     }
 
-    private static final native void log(String msg) /*-{
-        console.log(msg);
-    }-*/;
-
     /**
      * Renders the given information as a node.
      *

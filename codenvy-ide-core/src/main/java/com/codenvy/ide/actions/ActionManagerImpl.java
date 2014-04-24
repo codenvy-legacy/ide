@@ -62,10 +62,15 @@ public class ActionManagerImpl implements ActionManager {
         Constraints afterFile = new Constraints(Anchor.AFTER, IdeActions.GROUP_FILE);
         mainMenu.add(projectGroup, afterFile);
 
-        DefaultActionGroup runGroup = new DefaultActionGroup("Run", true, this);
-        registerAction(IdeActions.GROUP_RUN_MAIN_MENU, runGroup);
+        DefaultActionGroup buildGroup = new DefaultActionGroup("Build", true, this);
+        registerAction(IdeActions.GROUP_BUILD, buildGroup);
         Constraints afterProject = new Constraints(Anchor.AFTER, IdeActions.GROUP_PROJECT);
-        mainMenu.add(runGroup, afterProject);
+        mainMenu.add(buildGroup, afterProject);
+
+        DefaultActionGroup runGroup = new DefaultActionGroup("Run", true, this);
+        registerAction(IdeActions.GROUP_RUN, runGroup);
+        Constraints afterBuild = new Constraints(Anchor.AFTER, IdeActions.GROUP_BUILD);
+        mainMenu.add(runGroup, afterBuild);
 
         DefaultActionGroup windowGroup = new DefaultActionGroup("Window", true, this);
         registerAction(IdeActions.GROUP_WINDOW, windowGroup);
@@ -76,8 +81,15 @@ public class ActionManagerImpl implements ActionManager {
         Constraints afterWindow = new Constraints(Anchor.AFTER, IdeActions.GROUP_WINDOW);
         mainMenu.add(helpGroup, afterWindow);
 
+
         DefaultActionGroup contextMenuGroup = new DefaultActionGroup(IdeActions.GROUP_MAIN_CONTEXT_MENU, false, this);
         registerAction(IdeActions.GROUP_MAIN_CONTEXT_MENU, contextMenuGroup);
+
+        DefaultActionGroup buildContextMenuGroup = new DefaultActionGroup(IdeActions.GROUP_BUILD_CONTEXT_MENU, false, this);
+        registerAction(IdeActions.GROUP_BUILD_CONTEXT_MENU, buildContextMenuGroup);
+
+        DefaultActionGroup runContextMenuGroup = new DefaultActionGroup(IdeActions.GROUP_RUN_CONTEXT_MENU, false, this);
+        registerAction(IdeActions.GROUP_RUN_CONTEXT_MENU, runContextMenuGroup);
     }
 
     private static void reportActionError(final String pluginId, final String message) {

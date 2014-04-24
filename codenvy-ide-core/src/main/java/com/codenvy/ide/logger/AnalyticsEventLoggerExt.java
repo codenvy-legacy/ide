@@ -15,47 +15,27 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.api.logger;
+package com.codenvy.ide.logger;
+
+
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 
 import java.util.Map;
 
 /**
  * @author Anatoliy Bazko
  */
-public interface AnalyticsEventLogger {
-
-    int MAX_PARAMS_NUMBER      = 3;
-    int MAX_PARAM_NAME_LENGTH  = 20;
-    int MAX_PARAM_VALUE_LENGTH = 50;
+public interface AnalyticsEventLoggerExt extends AnalyticsEventLogger {
 
     /**
-     * Logs a client-side analytics event. Also will be logged the current user, workspace and project information.
+     * Logs arbitrary event.
      *
-     * @param extensionClass
-     *         it used to tie event with the extension,{@link com.codenvy.ide.api.extension.Extension#title()} will
-     *         be logged as a extension marker
      * @param event
-     *         the event, is limited to {@link #MAX_PARAM_VALUE_LENGTH} characters
+     *         the event name
      * @param additionalParams
      *         any additional parameters to log, not more than {@link #MAX_PARAMS_NUMBER}, every parameter name and its
      *         value are limited to {@link #MAX_PARAM_NAME_LENGTH} and {@link #MAX_PARAM_VALUE_LENGTH} characters
      *         correspondingly
      */
-    void log(Class<?> extensionClass, String event, Map<String, String> additionalParams);
-
-
-    /**
-     * Logs a client-side event.
-     *
-     * @see #log(Class, String, java.util.Map)
-     */
-    void log(Class<?> extensionClass, String event);
-
-
-    /**
-     * Logs a client-side event without reference to an extension.
-     *
-     * @see #log(Class, String, java.util.Map)
-     */
-    void log(String event);
+    public void logEvent(String event, Map<String, String> additionalParams);
 }

@@ -135,10 +135,6 @@ public class StandardComponentInitializer {
     @Inject
     private ShowAboutAction showAboutAction;
 
-    // Temporary disable 'Project Properties' feature
-//    @Inject
-//    private ShowProjectPropertiesAction showProjectPropertiesAction;
-
     @Inject
     private NavigateToFileAction navigateToFileAction;
 
@@ -202,7 +198,6 @@ public class StandardComponentInitializer {
         newResourceAgent.register(folderProvider);
         newResourceAgent.register(textFileProvider);
 
-
         FileType xmlFile = new FileType(null, MimeType.TEXT_XML, "xml");
         resourceProvider.registerFileType(xmlFile);
         newResourceAgent.register(xmlFileProvider);
@@ -215,10 +210,6 @@ public class StandardComponentInitializer {
         DefaultActionGroup help = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_HELP);
         actionManager.registerAction("showAbout", showAboutAction);
         help.add(showAboutAction);
-
-        DefaultActionGroup project = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_PROJECT);
-//        actionManager.registerAction("showProjectProperties", showProjectPropertiesAction);
-//        project.add(showProjectPropertiesAction);
 
         DefaultActionGroup fileGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_FILE);
 

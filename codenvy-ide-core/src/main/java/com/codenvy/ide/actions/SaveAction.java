@@ -17,10 +17,10 @@
  */
 package com.codenvy.ide.actions;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
-import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.google.inject.Inject;
@@ -35,7 +35,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class SaveAction extends Action {
 
-    private final EditorAgent editorAgent;
+    private final EditorAgent          editorAgent;
     private final AnalyticsEventLogger eventLogger;
 
     @Inject

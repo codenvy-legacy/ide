@@ -54,7 +54,7 @@ import com.codenvy.ide.ext.java.jdi.shared.StackFrameDump;
 import com.codenvy.ide.ext.java.jdi.shared.StepEvent;
 import com.codenvy.ide.ext.java.jdi.shared.Value;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
-import com.codenvy.ide.extension.runner.client.RunnerController;
+import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.HTTPStatus;

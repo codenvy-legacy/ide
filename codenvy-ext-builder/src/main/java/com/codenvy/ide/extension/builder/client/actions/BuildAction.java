@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.extension.builder.client.actions;
 
-import com.codenvy.ide.api.logger.AnalyticsEventLogger;
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
@@ -60,6 +60,6 @@ public class BuildAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        e.getPresentation().setEnabled(resourceProvider.getActiveProject() != null);
+        e.getPresentation().setEnabledAndVisible(resourceProvider.getActiveProject() != null);
     }
 }

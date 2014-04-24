@@ -24,7 +24,6 @@ import com.google.gwt.user.client.ui.SplitLayoutPanel;
  * Implementation of WorkBenchPartController, used with SplitLayoutPanel as container
  * 
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
  */
 public class WorkBenchPartControllerImpl implements WorkBenchPartController {
 

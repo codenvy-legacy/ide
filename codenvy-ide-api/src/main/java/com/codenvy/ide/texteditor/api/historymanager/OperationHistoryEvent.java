@@ -18,12 +18,6 @@ import com.codenvy.ide.runtime.IStatus;
  * DefaultOperationHistory, including the addition or removal of operations, and
  * the execution, undo, and redo of operations.
  * </p>
- * <p>
- * Operation history listeners must be prepared to receive notifications from a
- * background thread. Any UI access occurring inside the implementation must be
- * properly synchronized using the techniques specified by the client's widget
- * library.
- * </p>
  */
 public final class OperationHistoryEvent {
 

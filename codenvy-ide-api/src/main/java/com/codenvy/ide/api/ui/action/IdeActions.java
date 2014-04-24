@@ -19,24 +19,23 @@ package com.codenvy.ide.api.ui.action;
 
 /** @author Evgen Vidolob */
 public interface IdeActions {
-    String GROUP_MAIN_MENU         = "MainMenu";
-    String GROUP_MAIN_TOOLBAR      = "MainToolBar";
-    String GROUP_MAIN_CONTEXT_MENU = "MainContextMenu";
-    String GROUP_EDITOR_POPUP      = "EditorPopupMenu";
-    String GROUP_OTHER_MENU        = "OtherMenu";
-    String GROUP_EDITOR            = "EditorActions";
+    String GROUP_MAIN_MENU = "MainMenu";
+    String GROUP_FILE      = "FileGroup";
+    String GROUP_PROJECT   = "BuildProject";
+    String GROUP_BUILD     = "BuildGroup";
+    String GROUP_RUN       = "RunGroupMainMenu";
+    String GROUP_WINDOW    = "WindowGroup";
+    String GROUP_HELP      = "HelpGroup";
 
-    String GROUP_FILE = "FileGroup";
+    String GROUP_MAIN_TOOLBAR  = "MainToolBar";
+    String GROUP_BUILD_TOOLBAR = "BuildGroupToolbar";
+    String GROUP_RUN_TOOLBAR   = "RunGroupToolbar";
 
-    String GROUP_WINDOW = "WindowGroup";
+    String GROUP_MAIN_CONTEXT_MENU  = "MainContextMenu";
+    String GROUP_BUILD_CONTEXT_MENU = "BuildGroupContextMenu";
+    String GROUP_RUN_CONTEXT_MENU   = "RunGroupContextMenu";
 
-    String GROUP_PROJECT = "ProjectGroup";
-    
-    String GROUP_HELP = "HelpGroup";
-
-    String GROUP_RUN_MAIN_MENU = "RunGroupMainMenu";
-
-    String GROUP_RUN_TOOLBAR = "RunGroupToolbar";
-
-    String GROUP_RUN_CONTEXT_MENU = "RunGroupContextMenu";
+    String GROUP_EDITOR_POPUP = "EditorPopupMenu";
+    String GROUP_EDITOR       = "EditorActions";
+    String GROUP_OTHER_MENU   = "OtherMenu";
 }

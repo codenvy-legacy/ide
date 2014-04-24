@@ -34,7 +34,7 @@ import com.codenvy.ide.ext.java.jdi.shared.BreakPoint;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
 import com.codenvy.ide.ext.java.jdi.shared.Location;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
-import com.codenvy.ide.extension.runner.client.RunnerController;
+import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;

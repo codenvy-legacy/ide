@@ -24,14 +24,13 @@ import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
-import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.builder.client.BuilderExtension;
 import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
+import com.codenvy.ide.extension.builder.client.console.BuilderConsolePresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
@@ -42,7 +41,6 @@ import com.codenvy.ide.websocket.rest.StringUnmarshallerWS;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.List;
 
@@ -59,9 +57,8 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 @Singleton
 public class BuildProjectPresenter implements Notification.OpenNotificationHandler {
 
-    protected final EventBus                    eventBus;
     protected final ResourceProvider            resourceProvider;
-    protected final ConsolePart                 console;
+    protected final BuilderConsolePresenter     console;
     protected final BuilderServiceClient        service;
     protected final BuilderLocalizationConstant constant;
     protected final WorkspaceAgent              workspaceAgent;
@@ -77,13 +74,10 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     protected Project      projectToBuild;
     protected Notification notification;
 
-    /**
-     * Create presenter.
-     */
+    /** Create presenter. */
     @Inject
-    protected BuildProjectPresenter(EventBus eventBus,
-                                    ResourceProvider resourceProvider,
-                                    ConsolePart console,
+    protected BuildProjectPresenter(ResourceProvider resourceProvider,
+                                    BuilderConsolePresenter console,
                                     BuilderServiceClient service,
                                     BuilderLocalizationConstant constant,
                                     WorkspaceAgent workspaceAgent,
@@ -91,7 +85,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                                     NotificationManager notificationManager,
                                     DtoFactory dtoFactory,
                                     DtoUnmarshallerFactory dtoUnmarshallerFactory) {
-        this.eventBus = eventBus;
         this.workspaceAgent = workspaceAgent;
         this.resourceProvider = resourceProvider;
         this.console = console;
@@ -103,13 +96,18 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
     }
 
-    /** Performs building of current project. */
+    /** Build active project. */
     public void buildActiveProject() {
         buildActiveProject(null);
     }
 
+    /**
+     * Build active project, specifying options to configure build process.
+     *
+     * @param buildOptions
+     *         options to configure build process
+     */
     public void buildActiveProject(BuildOptions buildOptions) {
-
         if (isBuildInProgress) {
             String message = constant.buildInProgress(projectToBuild.getPath().substring(1));
             Notification notification = new Notification(message, ERROR);
@@ -176,7 +174,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                 notification.setType(ERROR);
                 notification.setStatus(FINISHED);
                 notification.setMessage(exception.getMessage());
-                eventBus.fireEvent(new ExceptionThrownEvent(exception));
             }
         };
 

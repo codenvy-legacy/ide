@@ -17,9 +17,8 @@
  */
 package com.codenvy.ide.ext.java.client.editor;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
-import com.codenvy.ide.api.logger.AnalyticsEventLogger;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.jdt.Images;
@@ -40,7 +39,7 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor {
     private TextEditorPartPresenter editor;
     private JavaParserWorker        worker;
     private JavaResources           javaResources;
-    private AnalyticsEventLogger eventLogger;
+    private AnalyticsEventLogger    eventLogger;
 
     public JavaCodeAssistProcessor(TextEditorPartPresenter editor,
                                    JavaParserWorker worker,
