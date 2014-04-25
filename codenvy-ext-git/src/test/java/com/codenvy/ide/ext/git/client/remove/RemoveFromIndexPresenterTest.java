@@ -126,15 +126,6 @@ public class RemoveFromIndexPresenterTest extends BaseTest {
             }
         }).when(service).remove(anyString(), (List<String>)anyObject(), anyBoolean(),
                                 (AsyncRequestCallback<String>)anyObject());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[1];
-                callback.onSuccess(project);
-                return callback;
-            }
-        }).when(resourceProvider).getProject(anyString(), (AsyncCallback<Project>)anyObject());
 
         presenter.showDialog();
         presenter.onRemoveClicked();
@@ -142,7 +133,6 @@ public class RemoveFromIndexPresenterTest extends BaseTest {
         verify(service)
                 .remove(eq(PROJECT_ID), (List<String>)anyObject(), eq(REMOVED),
                         (AsyncRequestCallback<String>)anyObject());
-        verify(resourceProvider).getProject(eq(PROJECT_NAME), (AsyncCallback<Project>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).removeFilesSuccessfull();
         verify(view).close();

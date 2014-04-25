@@ -41,11 +41,12 @@ public class StopAction extends Action {
     private final AnalyticsEventLogger eventLogger;
 
     @Inject
-    public StopAction(RunnerController controller, RunnerResources resources,
-                      ResourceProvider resourceProvider, RunnerLocalizationConstant localizationConstants,
+    public StopAction(RunnerController controller,
+                      RunnerResources resources,
+                      ResourceProvider resourceProvider,
+                      RunnerLocalizationConstant localizationConstants,
                       AnalyticsEventLogger eventLogger) {
-        super(localizationConstants.stopAppActionText(), localizationConstants.stopAppActionDescription(), null,
-              resources.stopApp());
+        super(localizationConstants.stopAppActionText(), localizationConstants.stopAppActionDescription(), null, resources.stopApp());
         this.controller = controller;
         this.resourceProvider = resourceProvider;
         this.eventLogger = eventLogger;

@@ -47,7 +47,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     public RunnerConsoleViewImpl(PartStackUIResources resources, RunnerConsoleViewImplUiBinder uiBinder) {
         super(resources);
         container.add(uiBinder.createAndBindUi(this));
-        minimizeButton.ensureDebugId("runner-console-minimizeBut");
+        minimizeButton.ensureDebugId("runner-console-minimizeButton");
     }
 
     /** {@inheritDoc} */
@@ -58,22 +58,8 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
 
     /** {@inheritDoc} */
     @Override
-    public void print(String text) {
-        final String preStyle = " style='margin:0px; font-weight:700; font-size: 12;' ";
-
-        HTML html = new HTML();
-
-        final String TEXT = text.toUpperCase();
-        if (TEXT.startsWith("[INFO]")) {
-            html.setHTML("<pre" + preStyle + ">[<span style='color:lightgreen;'><b>INFO</b></span>] " + text.substring(6) + "</pre>");
-        } else if (TEXT.startsWith("[ERROR]")) {
-            html.setHTML("<pre" + preStyle + ">[<span style='color:#F62217;'><b>ERROR</b></span>] " + text.substring(7) + "</pre>");
-        } else if (TEXT.startsWith("[WARNING]")) {
-            html.setHTML("<pre" + preStyle + ">[<span style='color:cyan;'><b>WARNING</b></span>] " + text.substring(9) + "</pre>");
-        } else {
-            html.setHTML("<pre" + preStyle + ">" + text + "</pre>");
-        }
-
+    public void print(String message) {
+        HTML html = new HTML(message);
         html.getElement().setAttribute("style", "padding-left: 2px;");
         consoleArea.add(html);
     }

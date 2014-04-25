@@ -17,17 +17,14 @@
  */
 package com.codenvy.ide.ext.git.client.init;
 
-import com.codenvy.ide.api.event.RefreshBrowserEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.api.resources.model.Project;
-import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -101,7 +98,8 @@ public class InitRepositoryPresenter implements InitRepositoryView.ActionDelegat
             service.initWS(projectId, projectName, bare, new RequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
-                    onInitSuccess();
+                    Notification notification = new Notification(constant.initSuccess(), INFO);
+                    notificationManager.showNotification(notification);
                 }
 
                 @Override
@@ -112,24 +110,6 @@ public class InitRepositoryPresenter implements InitRepositoryView.ActionDelegat
         } catch (WebSocketException e) {
             handleError(e);
         }
-    }
-
-    /** Perform actions when repository was successfully init. */
-    private void onInitSuccess() {
-        resourceProvider.getProject(project.getName(), new AsyncCallback<Project>(){
-            @Override
-            public void onSuccess(Project result) {
-                project.setAttributes(result.getAttributes());
-                Notification notification = new Notification(constant.initSuccess(), INFO);
-                notificationManager.showNotification(notification);
-                eventBus.fireEvent(new RefreshBrowserEvent(project));
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                Log.error(InitRepositoryPresenter.class, caught);
-            }
-        });
     }
 
     /**

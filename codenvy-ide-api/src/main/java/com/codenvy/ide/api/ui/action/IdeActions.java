@@ -21,7 +21,6 @@ package com.codenvy.ide.api.ui.action;
 public interface IdeActions {
     String GROUP_MAIN_MENU = "MainMenu";
     String GROUP_FILE      = "FileGroup";
-    String GROUP_PROJECT   = "BuildProject";
     String GROUP_BUILD     = "BuildGroup";
     String GROUP_RUN       = "RunGroupMainMenu";
     String GROUP_WINDOW    = "WindowGroup";

@@ -33,7 +33,6 @@ import com.codenvy.api.vfs.shared.dto.Folder;
 import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.api.vfs.shared.dto.Property;
-import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.ext.git.server.GitConnection;
 import com.codenvy.ide.ext.git.server.GitConnectionFactory;
@@ -51,7 +50,6 @@ import com.codenvy.ide.ext.git.shared.CommitRequest;
 import com.codenvy.ide.ext.git.shared.Commiters;
 import com.codenvy.ide.ext.git.shared.DiffRequest;
 import com.codenvy.ide.ext.git.shared.FetchRequest;
-import com.codenvy.ide.ext.git.shared.GitUser;
 import com.codenvy.ide.ext.git.shared.InitRequest;
 import com.codenvy.ide.ext.git.shared.LogRequest;
 import com.codenvy.ide.ext.git.shared.MergeRequest;
@@ -254,6 +252,19 @@ public class GitService {
      */
     private void determineProjectType() throws VirtualFileSystemException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+
+        //Сheck whether ".codenvy" folder and "project" file are already exists
+        ItemList folders = vfs.getChildren(projectId, -1, 0, "folder", false, PropertyFilter.ALL_FILTER);
+        for(Item folder : folders.getItems()) {
+            if(".codenvy".equals(folder.getName())) {
+                ItemList files = vfs.getChildren(folder.getId(), -1, 0, "file", false, PropertyFilter.NONE_FILTER);
+                for (Item file : files.getItems()) {
+                    if ("project".equals(file.getName())) {
+                        return;
+                    }
+                }
+            }
+        }
         ItemList files = vfs.getChildren(projectId, -1, 0, "file", false, PropertyFilter.NONE_FILTER);
         boolean foundMavenProject = false;
         for (Item file : files.getItems()) {
