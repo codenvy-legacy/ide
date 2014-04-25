@@ -22,7 +22,6 @@ import com.codenvy.ide.api.parts.base.BaseActionDelegate;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.debug.Breakpoint;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
-import com.google.gwt.user.client.ui.ToggleButton;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -127,9 +126,6 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
      */
     void setEnableStepIntoButton(boolean isEnable);
 
-    /** Reset keydown state for StepIntoButton. */
-    void resetStepIntoButton();
-
     /**
      * Sets whether Step over button is enabled.
      *
@@ -138,9 +134,6 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
      */
     void setEnableStepOverButton(boolean isEnable);
 
-    /** Reset keydown state for StepOverButton. */
-    void resetStepOverButton();
-
     /**
      * Sets whether Step return button is enabled.
      *
@@ -148,9 +141,6 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
      *         <code>true</code> to enable the button, <code>false</code> to disable it
      */
     void setEnableStepReturnButton(boolean isEnable);
-
-    /** Reset keydown state for StepReturnButton. */
-    void resetStepReturnButton();
 
     /**
      * Sets whether Change value button is enabled.
