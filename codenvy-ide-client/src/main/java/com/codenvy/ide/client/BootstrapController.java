@@ -22,6 +22,7 @@ import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.Profile;
 import com.codenvy.ide.Constants;
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
@@ -94,7 +95,7 @@ public class BootstrapController {
                                final ResourceProvider resourceProvider,
                                DtoRegistrar dtoRegistrar,
                                final ThemeAgent themeAgent,
-                               DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+                               DtoUnmarshallerFactory dtoUnmarshallerFactory, Resources resources) {
         this.preferencesManager = preferencesManager;
         this.projectTypeDescriptionServiceClient = projectTypeDescriptionServiceClient;
         this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
@@ -120,7 +121,7 @@ public class BootstrapController {
                       }).inject();
 
         dtoRegistrar.registerDtoProviders();
-        registerDefaultIcon();
+        registerDefaultIcon(resources);
         userProfileService.getCurrentProfile(null,
                                              new AsyncRequestCallback<Profile>(dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
                                                  @Override
@@ -236,11 +237,12 @@ public class BootstrapController {
     }
 
 
-
-    private void registerDefaultIcon() {
-        iconRegistry.registerIcon("default.projecttype.small.icon", "default/project.png");
-        iconRegistry.registerIcon("default.folder.small.icon", "default/folder.png");
-        iconRegistry.registerIcon("default.file.small.icon", "default/file.png");
+    
+    private void registerDefaultIcon(Resources resources) {
+        iconRegistry.registerSVGIcon("default.projecttype.small.icon", resources.defaultProject());
+        iconRegistry.registerSVGIcon("default.folder.small.icon", resources.defaultFolder());
+        iconRegistry.registerSVGIcon("default.file.small.icon", resources.defaultFile());
+        iconRegistry.registerSVGIcon("default", resources.defaultIcon());
     }
 
 }

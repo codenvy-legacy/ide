@@ -22,8 +22,6 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.parts.OutlinePart;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
-import com.codenvy.ide.api.parts.SearchPart;
-import com.codenvy.ide.api.parts.WelcomePart;
 import com.codenvy.ide.api.ui.workspace.EditorPartStack;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStack;
@@ -57,6 +55,11 @@ public class WorkBenchPresenter implements Presenter {
      * @param view
      * @param editorPartStackPresenter
      * @param stackPresenterFactory
+     * @param partViewFactory
+     * @param outlinePart
+     * @param consolePart
+     * @param projectExplorerPart
+     * @param notificationManager
      */
     @Inject
     public WorkBenchPresenter(WorkBenchViewImpl view,
@@ -66,7 +69,6 @@ public class WorkBenchPresenter implements Presenter {
                               OutlinePart outlinePart,
                               ConsolePart consolePart,
                               ProjectExplorerPart projectExplorerPart,
-                              SearchPart searchPart,
                               NotificationManager notificationManager) {
         this.view = view;
 
@@ -93,7 +95,6 @@ public class WorkBenchPresenter implements Presenter {
         openPart(outlinePart, PartStackType.TOOLING);
         openPart(projectExplorerPart, PartStackType.NAVIGATION);
         openPart(consolePart, PartStackType.INFORMATION);
-        openPart(searchPart, PartStackType.INFORMATION);
         openPart(notificationManager, PartStackType.INFORMATION);
         setActivePart(projectExplorerPart);
     }

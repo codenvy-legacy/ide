@@ -17,14 +17,14 @@
  */
 package com.codenvy.ide.ext.git.client.action;
 
-import com.codenvy.ide.api.logger.AnalyticsEventLogger;
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.remove.RemoveFromIndexPresenter;
-import com.codenvy.ide.api.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -33,7 +33,7 @@ import com.google.inject.Singleton;
 public class RemoveFromIndexAction extends Action {
     private final RemoveFromIndexPresenter presenter;
     private final ResourceProvider         resourceProvider;
-    private final AnalyticsEventLogger eventLogger;
+    private final AnalyticsEventLogger     eventLogger;
 
     @Inject
     public RemoveFromIndexAction(RemoveFromIndexPresenter presenter, ResourceProvider resourceProvider,

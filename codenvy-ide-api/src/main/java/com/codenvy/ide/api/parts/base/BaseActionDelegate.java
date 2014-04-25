@@ -18,13 +18,11 @@
 package com.codenvy.ide.api.parts.base;
 
 /**
- * Base interface for action delegates, provide method for minimizing part
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * Base interface for action delegates, provide method for minimizing part.
+ *
+ * @author Evgen Vidolob
  */
 public interface BaseActionDelegate {
-    /**
-     * Hide Part from UI
-     */
+    /** Hide Part from UI */
     void minimize();
 }

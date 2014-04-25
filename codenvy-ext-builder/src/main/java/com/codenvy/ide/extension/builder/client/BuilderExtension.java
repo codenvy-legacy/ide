@@ -19,8 +19,13 @@ package com.codenvy.ide.extension.builder.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.action.ActionManager;
+import com.codenvy.ide.api.ui.action.Anchor;
+import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.api.ui.workspace.PartStackType;
+import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.extension.builder.client.actions.BuildAction;
+import com.codenvy.ide.extension.builder.client.console.BuilderConsolePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -30,6 +35,7 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_BUILD_TOOLBAR;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_CONTEXT_MENU;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_TOOLBAR;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_CONTEXT_MENU;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_TOOLBAR;
 
 /**
  * Builder extension entry point.
@@ -37,16 +43,18 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_CONTEXT_MENU;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-@Extension(title = "Building project", version = "3.0.0")
+@Extension(title = "Builder", version = "3.0.0")
 public class BuilderExtension {
-    /** Channel for the messages containing status of the Maven build job. */
     public static final String BUILD_STATUS_CHANNEL = "builder:status:";
+    public static final String BUILD_OUTPUT_CHANNEL = "builder:output:";
 
     /** Create extension. */
     @Inject
     public BuilderExtension(BuilderLocalizationConstant localizationConstants,
                             ActionManager actionManager,
-                            BuildAction buildAction) {
+                            BuildAction buildAction,
+                            WorkspaceAgent workspaceAgent,
+                            BuilderConsolePresenter builderConsolePresenter) {
         actionManager.registerAction(localizationConstants.buildProjectControlId(), buildAction);
 
         // add actions in main menu
@@ -59,13 +67,15 @@ public class BuilderExtension {
         actionManager.registerAction(GROUP_BUILD_TOOLBAR, buildToolbarGroup);
         buildToolbarGroup.add(buildAction);
         buildToolbarGroup.addSeparator();
-        mainToolbarGroup.add(buildToolbarGroup);
+        mainToolbarGroup.add(buildToolbarGroup, new Constraints(Anchor.BEFORE, GROUP_RUN_TOOLBAR));
 
         // add actions in context menu
         DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
         DefaultActionGroup buildContextGroup = (DefaultActionGroup)actionManager.getAction(GROUP_BUILD_CONTEXT_MENU);
-        actionManager.registerAction(GROUP_RUN_CONTEXT_MENU, buildContextGroup);
         buildContextGroup.add(buildAction);
-        contextMenuGroup.add(buildContextGroup);
+        contextMenuGroup.add(buildContextGroup, new Constraints(Anchor.BEFORE, GROUP_RUN_CONTEXT_MENU));
+
+        // add Builder console
+        workspaceAgent.openPart(builderConsolePresenter, PartStackType.INFORMATION);
     }
 }

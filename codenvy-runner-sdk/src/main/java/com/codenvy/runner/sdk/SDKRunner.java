@@ -198,7 +198,11 @@ public class SDKRunner extends Runner {
 
         final ApplicationProcess process =
                 server.deploy(appDir, warFile, toDeploy.getFile(), sdkRunnerCfg, codeServerProcess,
-                              new ApplicationServer.StopCallback() {
+                              new ApplicationProcess.Callback() {
+                                  @Override
+                                  public void started() {
+                                  }
+
                                   @Override
                                   public void stopped() {
                                       // stop tracking changes in remote project since code server is stopped

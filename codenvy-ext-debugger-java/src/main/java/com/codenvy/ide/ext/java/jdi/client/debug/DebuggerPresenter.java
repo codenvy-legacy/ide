@@ -54,7 +54,7 @@ import com.codenvy.ide.ext.java.jdi.shared.StackFrameDump;
 import com.codenvy.ide.ext.java.jdi.shared.StepEvent;
 import com.codenvy.ide.ext.java.jdi.shared.Value;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
-import com.codenvy.ide.extension.runner.client.RunnerController;
+import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.HTTPStatus;
@@ -411,17 +411,18 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     /** {@inheritDoc} */
     @Override
     public void onStepIntoButtonClicked() {
-        changeButtonsEnableState(false);
         service.stepInto(debuggerInfo.getId(), new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
                 resetStates();
+                view.resetStepIntoButton();
             }
 
             @Override
             protected void onFailure(Throwable exception) {
                 Notification notification = new Notification(exception.getMessage(), ERROR);
                 notificationManager.showNotification(notification);
+                view.resetStepIntoButton();
             }
         });
     }
@@ -429,17 +430,18 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     /** {@inheritDoc} */
     @Override
     public void onStepOverButtonClicked() {
-        changeButtonsEnableState(false);
         service.stepOver(debuggerInfo.getId(), new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
                 resetStates();
+                view.resetStepOverButton();
             }
 
             @Override
             protected void onFailure(Throwable exception) {
                 Notification notification = new Notification(exception.getMessage(), ERROR);
                 notificationManager.showNotification(notification);
+                view.resetStepOverButton();
             }
 
         });
@@ -448,17 +450,18 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     /** {@inheritDoc} */
     @Override
     public void onStepReturnButtonClicked() {
-        changeButtonsEnableState(false);
         service.stepReturn(debuggerInfo.getId(), new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
                 resetStates();
+                view.resetStepReturnButton();
             }
 
             @Override
             protected void onFailure(Throwable exception) {
                 Notification notification = new Notification(exception.getMessage(), ERROR);
                 notificationManager.showNotification(notification);
+                view.resetStepReturnButton();
             }
 
         });

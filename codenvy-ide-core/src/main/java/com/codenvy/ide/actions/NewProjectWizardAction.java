@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.actions;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
@@ -32,7 +32,7 @@ import com.google.inject.Singleton;
 public class NewProjectWizardAction extends Action {
 
     private final NewProjectWizardPresenter wizard;
-    private final AnalyticsEventLogger eventLogger;
+    private final AnalyticsEventLogger      eventLogger;
 
     @Inject
     public NewProjectWizardAction(Resources resources, NewProjectWizardPresenter wizard,

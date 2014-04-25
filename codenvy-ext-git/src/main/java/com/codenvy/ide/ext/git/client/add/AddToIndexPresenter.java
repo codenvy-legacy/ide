@@ -27,10 +27,8 @@ import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.api.resources.model.Folder;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
-import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -133,18 +131,8 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
             service.addWS(project, update, getFilePatterns(), new RequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
-                    resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
-                        @Override
-                        public void onSuccess(Project result) {
-                            Notification notification = new Notification(constant.addSuccess(), INFO);
-                            notificationManager.showNotification(notification);
-                        }
-
-                        @Override
-                        public void onFailure(Throwable caught) {
-                            Log.error(AddToIndexPresenter.class, "can not get project " + project.getName());
-                        }
-                    });
+                    Notification notification = new Notification(constant.addSuccess(), INFO);
+                    notificationManager.showNotification(notification);
                 }
 
                 @Override

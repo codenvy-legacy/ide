@@ -22,6 +22,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Singleton;
 
+import org.vectomatic.dom.svg.ui.SVGImage;
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +35,8 @@ import java.util.Map;
 public class IconRegistryImpl implements IconRegistry {
 
     private Map<String, String> icons = new HashMap<>();
+    
+    private Map<String, SVGResource> svgIcons = new HashMap<>();
 
     @Override
     public Image getIcon(String iconId) {
@@ -59,6 +64,15 @@ public class IconRegistryImpl implements IconRegistry {
             return null;
         }
     }
+    
+    @Override
+    public SVGImage getSVGIconIfExist(String iconId) {
+        if (svgIcons.containsKey(iconId)) {
+            return new SVGImage(svgIcons.get(iconId));
+        } else {
+            return null;
+        }
+    }
 
     @Override
     public Image getDefaultIcon() {
@@ -68,5 +82,33 @@ public class IconRegistryImpl implements IconRegistry {
     @Override
     public void registerIcon(String iconId, String iconPath) {
         icons.put(iconId, iconPath);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SVGImage getSVGIcon(String iconId) {
+        if (svgIcons.containsKey(iconId)) {
+            return new SVGImage(svgIcons.get(iconId));
+        } else {
+            String pref = iconId.split("\\.")[0];
+            String defIconId = iconId.replaceFirst(pref, "default");
+            if (svgIcons.containsKey(defIconId)) {
+                return new SVGImage(svgIcons.get(defIconId));
+            } else {
+                return getDefaultSVGIcon();
+            }
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SVGImage getDefaultSVGIcon() {
+        return new SVGImage(svgIcons.get("default"));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void registerSVGIcon(String iconId, SVGResource resource) {
+        svgIcons.put(iconId, resource);
     }
 }

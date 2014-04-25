@@ -17,12 +17,12 @@
  */
 package com.codenvy.ide.extension.runner.client.actions;
 
-import com.codenvy.ide.api.logger.AnalyticsEventLogger;
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.extension.runner.client.RunnerController;
+import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.google.inject.Inject;
@@ -41,11 +41,12 @@ public class StopAction extends Action {
     private final AnalyticsEventLogger eventLogger;
 
     @Inject
-    public StopAction(RunnerController controller, RunnerResources resources,
-                      ResourceProvider resourceProvider, RunnerLocalizationConstant localizationConstants,
+    public StopAction(RunnerController controller,
+                      RunnerResources resources,
+                      ResourceProvider resourceProvider,
+                      RunnerLocalizationConstant localizationConstants,
                       AnalyticsEventLogger eventLogger) {
-        super(localizationConstants.stopAppActionText(), localizationConstants.stopAppActionDescription(), null,
-              resources.stopApp());
+        super(localizationConstants.stopAppActionText(), localizationConstants.stopAppActionDescription(), null, resources.stopApp());
         this.controller = controller;
         this.resourceProvider = resourceProvider;
         this.eventLogger = eventLogger;

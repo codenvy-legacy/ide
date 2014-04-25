@@ -44,7 +44,7 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_TOOLBAR;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-@Extension(title = "Java Debugger.", version = "3.0.0")
+@Extension(title = "Java debugger", version = "3.0.0")
 public class JavaRuntimeExtension {
     /** Channel for the messages containing debugger events. */
     public static final String EVENTS_CHANNEL     = "debugger:events:";

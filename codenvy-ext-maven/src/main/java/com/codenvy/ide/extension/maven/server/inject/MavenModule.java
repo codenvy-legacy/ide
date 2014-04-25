@@ -17,12 +17,13 @@
  */
 package com.codenvy.ide.extension.maven.server.inject;
 
-import com.codenvy.api.project.server.ProjectGenerator;
 import com.codenvy.api.project.server.ValueProviderFactory;
+import com.codenvy.ide.extension.maven.server.projecttype.MavenArtifactIdValueProviderFactory;
+import com.codenvy.ide.extension.maven.server.projecttype.MavenGroupIdValueProviderFactory;
 import com.codenvy.ide.extension.maven.server.projecttype.MavenJarProjectTypeExtension;
 import com.codenvy.ide.extension.maven.server.projecttype.MavenProjectTypeDescriptionsExtension;
-import com.codenvy.ide.extension.maven.server.projecttype.MavenSimpleProjectGenerator;
 import com.codenvy.ide.extension.maven.server.projecttype.MavenSourceFoldersValueProviderFactory;
+import com.codenvy.ide.extension.maven.server.projecttype.MavenVersionValueProviderFactory;
 import com.codenvy.inject.DynaModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
@@ -37,8 +38,8 @@ public class MavenModule extends AbstractModule {
 
         Multibinder<ValueProviderFactory> multiBinder = Multibinder.newSetBinder(binder(), ValueProviderFactory.class);
         multiBinder.addBinding().to(MavenSourceFoldersValueProviderFactory.class);
-
-        Multibinder<ProjectGenerator> generatorMultibinder = Multibinder.newSetBinder(binder(), ProjectGenerator.class);
-        generatorMultibinder.addBinding().to(MavenSimpleProjectGenerator.class);
+        multiBinder.addBinding().to(MavenArtifactIdValueProviderFactory.class);
+        multiBinder.addBinding().to(MavenGroupIdValueProviderFactory.class);
+        multiBinder.addBinding().to(MavenVersionValueProviderFactory.class);
     }
 }
