@@ -166,6 +166,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                         setBuildInProgress(false);
                         try {
                             messageBus.unsubscribe(BuilderExtension.BUILD_STATUS_CHANNEL + buildTaskDescriptor.getTaskId(), this);
+                            messageBus.unsubscribe(BuilderExtension.BUILD_OUTPUT_CHANNEL + buildTaskDescriptor.getTaskId(), this);
                             Log.error(BuildProjectPresenter.class, exception);
                         } catch (WebSocketException e) {
                             Log.error(BuildProjectPresenter.class, e);
@@ -224,44 +225,30 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
 
     /** Perform actions after build is finished. */
     private void afterBuildFinished(BuildTaskDescriptor descriptor) {
+        setBuildInProgress(false);
         try {
             messageBus.unsubscribe(BuilderExtension.BUILD_STATUS_CHANNEL + descriptor.getTaskId(), buildStatusHandler);
+            messageBus.unsubscribe(BuilderExtension.BUILD_OUTPUT_CHANNEL + descriptor.getTaskId(), buildStatusHandler);
         } catch (Exception e) {
             Log.error(BuildProjectPresenter.class, e);
         }
 
-        setBuildInProgress(false);
-        final String message = constant.buildFinished(projectToBuild.getName());
         notification.setStatus(FINISHED);
-        notification.setMessage(message);
 
         if (descriptor.getStatus() == BuildStatus.SUCCESSFUL) {
-            notificationManager.showNotification(new Notification(constant.buildSuccess(), INFO, this));
-            console.print(message);
+            notification.setType(INFO);
+            notification.setMessage(constant.buildFinished(projectToBuild.getName()));
+
+            Link downloadResultLink = getAppLink(descriptor, Constants.LINK_REL_DOWNLOAD_RESULT);
+            console.print(constant.downloadArtifact(downloadResultLink.getHref()));
         } else if (descriptor.getStatus() == BuildStatus.FAILED) {
-            notificationManager.showNotification(new Notification(constant.buildFailed(), ERROR, this));
-            console.print(constant.buildFailed());
-        }
-
-        if (descriptor.getStatus() == BuildStatus.SUCCESSFUL) {
-            List<Link> links = descriptor.getLinks();
-            for (Link link : links) {
-                if (link.getRel().equalsIgnoreCase(Constants.LINK_REL_DOWNLOAD_RESULT)) {
-                    console.print(constant.downloadArtifact(link.getHref()));
-                }
-            }
+            notification.setType(ERROR);
+            notification.setMessage(constant.buildFailed());
         }
     }
 
     private void getBuildLogs(BuildTaskDescriptor descriptor) {
-        Link statusLink = null;
-        List<Link> links = descriptor.getLinks();
-        for (int i = 0; i < links.size(); i++) {
-            Link link = links.get(i);
-            if (link.getRel().equalsIgnoreCase("view build log"))
-                statusLink = link;
-        }
-
+        Link statusLink = getAppLink(descriptor, Constants.LINK_REL_VIEW_LOG);
         service.log(statusLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
             @Override
             protected void onSuccess(String result) {
@@ -272,8 +259,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
             protected void onFailure(Throwable exception) {
                 String msg = constant.failGetBuildResult();
                 console.print(msg);
-                Notification notification = new Notification(msg, ERROR);
-                notificationManager.showNotification(notification);
+                notificationManager.showNotification(new Notification(msg, ERROR));
             }
         });
     }
@@ -282,6 +268,15 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     @Override
     public void onOpenClicked() {
         workspaceAgent.setActivePart(console);
+    }
+
+    private Link getAppLink(BuildTaskDescriptor descriptor, String rel) {
+        List<Link> links = descriptor.getLinks();
+        for (Link link : links) {
+            if (link.getRel().equalsIgnoreCase(rel))
+                return link;
+        }
+        return null;
     }
 
     private class LineUnmarshaller implements Unmarshallable<String> {
