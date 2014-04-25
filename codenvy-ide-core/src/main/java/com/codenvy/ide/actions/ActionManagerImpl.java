@@ -57,15 +57,10 @@ public class ActionManagerImpl implements ActionManager {
         registerAction(IdeActions.GROUP_FILE, fileGroup);
         mainMenu.add(fileGroup);
 
-        DefaultActionGroup projectGroup = new DefaultActionGroup("Project", true, this);
-        registerAction(IdeActions.GROUP_PROJECT, projectGroup);
-        Constraints afterFile = new Constraints(Anchor.AFTER, IdeActions.GROUP_FILE);
-        mainMenu.add(projectGroup, afterFile);
-
         DefaultActionGroup buildGroup = new DefaultActionGroup("Build", true, this);
         registerAction(IdeActions.GROUP_BUILD, buildGroup);
-        Constraints afterProject = new Constraints(Anchor.AFTER, IdeActions.GROUP_PROJECT);
-        mainMenu.add(buildGroup, afterProject);
+        Constraints afterFile = new Constraints(Anchor.AFTER, IdeActions.GROUP_FILE);
+        mainMenu.add(buildGroup, afterFile);
 
         DefaultActionGroup runGroup = new DefaultActionGroup("Run", true, this);
         registerAction(IdeActions.GROUP_RUN, runGroup);
