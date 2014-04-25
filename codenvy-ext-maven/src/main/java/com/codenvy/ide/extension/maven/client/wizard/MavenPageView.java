@@ -35,6 +35,4 @@ public interface MavenPageView extends View<MavenPageView.ActionDelegate> {
     String getArtifactId();
 
     String getVersion();
-
-    String getPackage();
 }

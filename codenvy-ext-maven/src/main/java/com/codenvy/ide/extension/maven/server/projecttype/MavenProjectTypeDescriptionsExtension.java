@@ -48,9 +48,12 @@ public class MavenProjectTypeDescriptionsExtension implements ProjectTypeDescrip
 
     @Override
     public List<AttributeDescription> getAttributeDescriptions() {
-        final List<AttributeDescription> list = new ArrayList<>(2);
+        final List<AttributeDescription> list = new ArrayList<>();
         list.add(new AttributeDescription(Constants.LANGUAGE));
         list.add(new AttributeDescription(Constants.BUILDER_NAME));
+        list.add(new AttributeDescription("maven.groupId"));
+        list.add(new AttributeDescription("maven.artifactId"));
+        list.add(new AttributeDescription("maven.version"));
         return list;
     }
 }
