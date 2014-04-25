@@ -47,7 +47,7 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
     public BuilderConsoleViewImpl(PartStackUIResources resources, BuilderConsoleViewImplUiBinder uiBinder) {
         super(resources);
         container.add(uiBinder.createAndBindUi(this));
-        minimizeButton.ensureDebugId("builder-console-minimizeBut");
+        minimizeButton.ensureDebugId("builder-console-minimizeButton");
     }
 
     /** {@inheritDoc} */

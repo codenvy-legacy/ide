@@ -45,7 +45,6 @@ import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
-import com.codenvy.ide.websocket.rest.StringUnmarshallerWS;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -59,7 +58,7 @@ import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
- * This class controls launching application.
+ * Controls launching application.
  *
  * @author Artem Zatsarynnyy
  */
@@ -79,32 +78,11 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private       Project                      project;
     /** Launched app. */
     private       ApplicationProcessDescriptor applicationProcessDescriptor;
-    /** Handler for processing Maven build status which is received over WebSocket connection. */
-    private       SubscriptionHandler<String>  runStatusHandler;
     /** Determines whether any application is launched. */
     private       boolean                      isLaunchingInProgress;
     private       ProjectRunCallback           runCallback;
 
-    /**
-     * Create controller.
-     *
-     * @param resourceProvider
-     *         {@link com.codenvy.ide.api.resources.ResourceProvider}
-     * @param eventBus
-     *         {@link com.google.web.bindery.event.shared.EventBus}
-     * @param workspaceAgent
-     *         {@link com.codenvy.ide.api.ui.workspace.WorkspaceAgent}
-     * @param console
-     *         {@link com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter}
-     * @param service
-     *         {@link com.codenvy.api.runner.gwt.client.RunnerServiceClient}
-     * @param updateService
-     *         {@link com.codenvy.ide.extension.runner.client.update.UpdateServiceClient}
-     * @param constant
-     *         {@link com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant}
-     * @param notificationManager
-     *         {@link com.codenvy.ide.api.notification.NotificationManager}
-     */
+    /** Create controller. */
     @Inject
     public RunnerController(ResourceProvider resourceProvider,
                             EventBus eventBus,
@@ -271,8 +249,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         service.stop(stopLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
             @Override
             protected void onSuccess(String result) {
-                console.print(constant.applicationStopped(project.getName()));
-                getLogs();
                 applicationProcessDescriptor = null;
             }
 
@@ -312,8 +288,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 url = urlBuilder.toString();
             }
 
-            console.print(constant.applicationStartedOnUrl(project.getName(),
-                                                           "<a href=\"" + url + "\" target=\"_blank\">" + url + "</a>"));
+            console.print(constant.applicationStartedOnUrl(project.getName(), "<a href=\"" + url + "\" target=\"_blank\">" + url + "</a>"));
         }
         notification.setStatus(FINISHED);
     }
@@ -332,38 +307,42 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     /**
-     * Starts checking job status by subscribing on receiving
-     * messages over WebSocket or scheduling task to check status.
+     * Start checking status of launched application by subscribing
+     * on receiving messages over WebSocket.
      *
      * @param buildTaskDescriptor
      *         the build job to check status
      */
     private void startCheckingStatus(final ApplicationProcessDescriptor buildTaskDescriptor) {
-        runStatusHandler = new SubscriptionHandler<String>(new StringUnmarshallerWS()) {
+        SubscriptionHandler<ApplicationProcessDescriptor> runStatusHandler = new SubscriptionHandler<ApplicationProcessDescriptor>(
+                dtoUnmarshallerFactory.newWSUnmarshaller(ApplicationProcessDescriptor.class)) {
             @Override
-            protected void onMessageReceived(String result) {
-                ApplicationProcessDescriptor newAppDescriptor = dtoFactory.createDtoFromJson(result, ApplicationProcessDescriptor.class);
-                applicationProcessDescriptor = newAppDescriptor;
-                ApplicationStatus status = newAppDescriptor.getStatus();
+            protected void onMessageReceived(ApplicationProcessDescriptor result) {
+                applicationProcessDescriptor = result;
+                ApplicationStatus status = applicationProcessDescriptor.getStatus();
+
                 if (status == ApplicationStatus.RUNNING) {
-                    afterApplicationLaunched(newAppDescriptor);
+                    afterApplicationLaunched(applicationProcessDescriptor);
                 } else if (status == ApplicationStatus.STOPPED) {
                     isLaunchingInProgress = false;
                     getLogs();
                     console.print(constant.applicationStopped(project.getName()));
+
                     try {
-                        messageBus.unsubscribe("runner:status:" + newAppDescriptor.getProcessId(), this);
+                        messageBus.unsubscribe("runner:status:" + applicationProcessDescriptor.getProcessId(), this);
                     } catch (WebSocketException e) {
                         Log.error(RunnerController.class, e);
                     }
                     applicationProcessDescriptor = null;
                 } else if (status == ApplicationStatus.CANCELLED) {
                     onFail(constant.startApplicationFailed(project.getName()), null);
+
                     try {
-                        messageBus.unsubscribe("runner:status:" + newAppDescriptor.getProcessId(), this);
+                        messageBus.unsubscribe("runner:status:" + applicationProcessDescriptor.getProcessId(), this);
                     } catch (WebSocketException e) {
                         Log.error(RunnerController.class, e);
                     }
+
                     isLaunchingInProgress = false;
                     applicationProcessDescriptor = null;
                 }
@@ -396,7 +375,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             Log.error(RunnerController.class, e);
         }
     }
-
 
     private Link getAppLink(ApplicationProcessDescriptor appDescriptor, String rel) {
         List<Link> links = appDescriptor.getLinks();

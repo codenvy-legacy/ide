@@ -67,24 +67,17 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
     }
 
     /**
-     * Print text on console.
+     * Print message on console.
      *
-     * @param text
-     *         text that need to be print
+     * @param message
+     *         message that need to be print
      */
-    public void print(String text) {
-        String[] lines = text.split("\n");
-        for (String line : lines) {
-            view.print(line);
-        }
-        performPostOutputActions();
-    }
-
-    private void performPostOutputActions() {
+    public void print(String message) {
         PartPresenter activePart = partStack.getActivePart();
         if (activePart == null || !activePart.equals(this)) {
             partStack.setActivePart(this);
         }
+        view.print("<pre>" + message + "</pre>");
         view.scrollBottom();
     }
 
