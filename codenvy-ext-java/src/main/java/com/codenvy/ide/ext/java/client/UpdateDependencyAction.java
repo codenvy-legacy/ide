@@ -32,8 +32,8 @@ public class UpdateDependencyAction extends Action {
     private final AnalyticsEventLogger eventLogger;
 
     public UpdateDependencyAction(JavaExtension javaExtension, ResourceProvider resourceProvider,
-                                  AnalyticsEventLogger eventLogger) {
-        super("Update dependencies", "Update dependencies", null);
+                                  AnalyticsEventLogger eventLogger, JavaResources resources) {
+        super("Update dependencies", "Update dependencies", null, resources.updateDependencies());
         this.javaExtension = javaExtension;
         this.resourceProvider = resourceProvider;
         this.eventLogger = eventLogger;
