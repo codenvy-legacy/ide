@@ -35,8 +35,6 @@ public class MavenPageViewImpl implements MavenPageView {
     private final DockLayoutPanel rootElement;
     private       ActionDelegate  delegate;
     @UiField
-    TextBox packageField;
-    @UiField
     TextBox versionField;
     @UiField
     TextBox groupId;
@@ -66,11 +64,6 @@ public class MavenPageViewImpl implements MavenPageView {
     @Override
     public String getVersion() {
         return versionField.getText();
-    }
-
-    @Override
-    public String getPackage() {
-        return packageField.getText();
     }
 
     @Override

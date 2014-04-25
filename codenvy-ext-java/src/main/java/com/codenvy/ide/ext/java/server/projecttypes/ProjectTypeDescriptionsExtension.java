@@ -48,7 +48,6 @@ public class ProjectTypeDescriptionsExtension implements ProjectTypeDescriptionE
         list.add(new ProjectType(Constants.JAR_ID, Constants.JAR_NAME, Constants.JAVA_CATEGORY));
         list.add(new ProjectType(Constants.WAR_ID, Constants.WAR_NAME, Constants.JAVA_CATEGORY));
         list.add(new ProjectType(Constants.SPRING_ID, Constants.SPRING_NAME, Constants.JAVA_CATEGORY));
-        list.add(new ProjectType(Constants.MAVEN_JAR_ID, Constants.MAVEN_JAR_NAME, Constants.JAVA_CATEGORY));
         return list;
     }
 

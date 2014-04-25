@@ -466,7 +466,7 @@ public class DarkTheme implements Theme {
     
     @Override
     public String getMinimizeIconColor() {
-        return "#1f1f1f";
+        return "#dbdbdb";
     }
     
 }

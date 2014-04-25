@@ -28,8 +28,6 @@ import com.codenvy.ide.api.resources.model.Folder;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
 import javax.validation.constraints.NotNull;
@@ -124,18 +122,8 @@ public class RemoveFromIndexPresenter implements RemoveFromIndexView.ActionDeleg
                        new AsyncRequestCallback<String>() {
                            @Override
                            protected void onSuccess(String result) {
-                               resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
-                                   @Override
-                                   public void onSuccess(Project result) {
-                                       Notification notification = new Notification(constant.removeFilesSuccessfull(), INFO);
-                                       notificationManager.showNotification(notification);
-                                   }
-
-                                   @Override
-                                   public void onFailure(Throwable caught) {
-                                       Log.error(RemoveFromIndexPresenter.class, "can not get project " + project.getName());
-                                   }
-                               });
+                               Notification notification = new Notification(constant.removeFilesSuccessfull(), INFO);
+                               notificationManager.showNotification(notification);
                            }
 
                            @Override
