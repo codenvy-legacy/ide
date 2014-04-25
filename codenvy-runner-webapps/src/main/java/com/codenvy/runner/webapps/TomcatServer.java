@@ -175,7 +175,7 @@ public class TomcatServer implements ApplicationServer {
                                      "chmod +x bin/*.sh\n" +
                                      catalinaUnix(runnerConfiguration) +
                                      "PID=$!\n" +
-                                     "echo \"$PID\" >> ../run.pid\n" +
+                                     "echo \"$PID\" > ../run.pid\n" +
                                      "wait $PID";
         final java.io.File startUpScriptFile = new java.io.File(appDir, "startup.sh");
         Files.write(startUpScriptFile.toPath(), startupScript.getBytes());
@@ -253,7 +253,7 @@ public class TomcatServer implements ApplicationServer {
 
         @Override
         public synchronized void start() throws RunnerException {
-            if (process != null) {
+            if (process != null && ProcessUtil.isAlive(process)) {
                 throw new IllegalStateException("Process is already started");
             }
             try {
@@ -275,6 +275,9 @@ public class TomcatServer implements ApplicationServer {
             // Use ProcessUtil.kill(process) because java.lang.Process.destroy() method doesn't
             // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
             ProcessUtil.kill(process);
+            if (output != null) {
+                output.stop();
+            }
             callback.stopped();
             LOG.debug("Stop Tomcat at port {}, application {}", httpPort, workDir);
         }
@@ -292,7 +295,9 @@ public class TomcatServer implements ApplicationServer {
                 Thread.interrupted();
                 ProcessUtil.kill(process);
             } finally {
-                output.stop();
+                if (output != null) {
+                    output.stop();
+                }
             }
             return process.exitValue();
         }
