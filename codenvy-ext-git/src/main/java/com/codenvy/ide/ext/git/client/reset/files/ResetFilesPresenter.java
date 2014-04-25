@@ -31,9 +31,7 @@ import com.codenvy.ide.ext.git.shared.Status;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -144,25 +142,14 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
             notificationManager.showNotification(notification);
             return;
         }
-
+        view.close();
         String projectId = project.getId();
 
         service.reset(projectId, "HEAD", ResetType.MIXED, new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
-                resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
-                    @Override
-                    public void onSuccess(Project result) {
-                        view.close();
-                        Notification notification = new Notification(constant.resetFilesSuccessfully(), INFO);
-                        notificationManager.showNotification(notification);
-                    }
-
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        Log.error(ResetFilesPresenter.class, "can not get project " + project.getName());
-                    }
-                });
+                Notification notification = new Notification(constant.resetFilesSuccessfully(), INFO);
+                notificationManager.showNotification(notification);
             }
 
             @Override

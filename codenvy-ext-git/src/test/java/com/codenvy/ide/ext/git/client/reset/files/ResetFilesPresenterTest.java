@@ -23,9 +23,7 @@ import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.ext.git.shared.IndexFile;
 import com.codenvy.ide.ext.git.shared.ResetRequest;
 import com.codenvy.ide.ext.git.shared.Status;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Test;
@@ -171,23 +169,13 @@ public class ResetFilesPresenterTest extends BaseTest {
             }
         }).when(service).reset(anyString(), anyString(), (ResetRequest.ResetType)anyObject(),
                                (AsyncRequestCallback<Void>)anyObject());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[1];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, project);
-                return callback;
-            }
-        }).when(resourceProvider).getProject(anyString(), (AsyncCallback<Project>)anyObject());
 
         presenter.showDialog();
         presenter.onResetClicked();
 
+        verify(view).close();
         verify(service).reset(eq(PROJECT_ID), anyString(), (ResetRequest.ResetType)anyObject(),
                               (AsyncRequestCallback<Void>)anyObject());
-        verify(view).close();
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).resetFilesSuccessfully();
     }
