@@ -67,10 +67,4 @@
     <source path='client'/>
     <source path='shared'/>
 
-    <!-- Enable Super Dev Mode support. -->
-    <add-linker name='xsiframe'/>
-    <set-configuration-property name='devModeRedirectEnabled' value='true'/>
-    <!-- Enable SourceMaps support. -->
-    <set-property name='compiler.useSourceMaps' value='true'/>
-
 </module>
