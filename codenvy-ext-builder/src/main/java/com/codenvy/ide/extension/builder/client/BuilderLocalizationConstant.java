@@ -40,28 +40,16 @@ public interface BuilderLocalizationConstant extends Messages {
     @Key("messages.buildInProgress")
     String buildInProgress(String project);
 
-    @Key("messages.buildSuccess")
-    String buildSuccess();
-
     @Key("messages.buildFailed")
     String buildFailed();
-
-    @Key("messages.selectedItemsFail")
-    String selectedItemsFail();
 
     @Key("messages.downloadArtifact")
     String downloadArtifact(String url);
 
-    @Key("messages.dependencyForYourPom")
-    String dependencyForYourPom(String dependency);
-
     @Key("messages.failGetBuildResult")
     String failGetBuildResult();
 
-    @Key("buildProject.outputClear")
-    String outputClear();
-
-    /* InitRequestHandler */
+    /* BuildProjectPresenter */
     @Key("build.started")
     String buildStarted(String project);
 

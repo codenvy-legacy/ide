@@ -50,6 +50,7 @@ public class MavenJarProjectTypeExtension implements ProjectTypeExtension {
         final List<Attribute> list = new ArrayList<>(2);
         list.add(new Attribute(Constants.LANGUAGE, "java"));
         list.add(new Attribute(Constants.BUILDER_NAME, "maven"));
+//        list.add(new Attribute("maven.groupId", (String[])null));
         return list;
     }
 

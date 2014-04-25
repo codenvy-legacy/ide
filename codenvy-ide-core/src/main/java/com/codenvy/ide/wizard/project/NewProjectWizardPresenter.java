@@ -117,7 +117,7 @@ public class NewProjectWizardPresenter  implements WizardDialog, Wizard.UpdateDe
         view.setBackButtonVisible(stepsPages.indexOf(currentPage) != 0);
         view.setNextButtonVisible(stepsPages.indexOf(currentPage) != stepsPages.size() -1);
         view.setNextButtonEnabled(currentPage.isCompleted());
-        view.setFinishButtonEnabled(currentPage.isCompleted() && currentPage != mainPage);
+        view.setFinishButtonEnabled(currentPage.isCompleted() && currentPage != mainPage && currentPage != namePage);
         view.setCaption(currentPage.getCaption());
         view.setNotice(currentPage.getNotice());
         view.setImage(currentPage.getImage());

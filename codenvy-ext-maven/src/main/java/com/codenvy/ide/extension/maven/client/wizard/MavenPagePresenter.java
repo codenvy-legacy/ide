@@ -23,9 +23,7 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.api.ui.wizard.ProjectWizard;
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringMap;
-import com.codenvy.ide.ext.java.shared.Constants;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -34,6 +32,10 @@ import com.google.inject.Singleton;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Evgen Vidolob
@@ -44,13 +46,16 @@ public class MavenPagePresenter extends AbstractWizardPage implements MavenPageV
     private MavenPageView        view;
     private ProjectServiceClient projectServiceClient;
     private ResourceProvider     resourceProvider;
+    private DtoFactory factory;
 
     @Inject
-    public MavenPagePresenter(MavenPageView view, ProjectServiceClient projectServiceClient, ResourceProvider resourceProvider) {
+    public MavenPagePresenter(MavenPageView view, ProjectServiceClient projectServiceClient, ResourceProvider resourceProvider,
+                              DtoFactory factory) {
         super("Maven project settings", null);
         this.view = view;
         this.projectServiceClient = projectServiceClient;
         this.resourceProvider = resourceProvider;
+        this.factory = factory;
         view.setDelegate(this);
     }
 
@@ -82,38 +87,41 @@ public class MavenPagePresenter extends AbstractWizardPage implements MavenPageV
 
     @Override
     public void commit(@NotNull final CommitCallback callback) {
-        StringMap<String> options = Collections.createStringMap();
-        options.put("artifactId", view.getArtifactId());
-        options.put("groupId", view.getGroupId());
-        options.put("version", view.getVersion());
-        options.put("package", view.getPackage());
+        Map<String, List<String>> options = new HashMap<>();
+        options.put("maven.artifactId", Arrays.asList(view.getArtifactId()));
+        options.put("maven.groupId", Arrays.asList(view.getGroupId()));
+        options.put("maven.version", Arrays.asList(view.getVersion()));
+//        options.put("package", view.getPackage());
+        ProjectDescriptor projectDescriptor = factory.createDto(ProjectDescriptor.class);
+        projectDescriptor.withProjectTypeId(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId());
+        projectDescriptor.setAttributes(options);
         final String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
         projectServiceClient
-                .generateProject(projectName, Constants.MAVEN_SIMPLE_PROJECT_GENERATOR, options,
-                                 new AsyncRequestCallback<ProjectDescriptor>() {
+                .createProject(projectName, projectDescriptor,
+                               new AsyncRequestCallback<ProjectDescriptor>() {
 
 
-                                     @Override
-                                     protected void onSuccess(ProjectDescriptor result) {
-                                         resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
-                                             @Override
-                                             public void onSuccess(Project project) {
-                                                 callback.onSuccess();
-                                             }
+                                   @Override
+                                   protected void onSuccess(ProjectDescriptor result) {
+                                       resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
+                                           @Override
+                                           public void onSuccess(Project project) {
+                                               callback.onSuccess();
+                                           }
 
-                                             @Override
-                                             public void onFailure(Throwable caught) {
-                                                 callback.onFailure(caught);
-                                             }
-                                         });
-                                     }
+                                           @Override
+                                           public void onFailure(Throwable caught) {
+                                               callback.onFailure(caught);
+                                           }
+                                       });
+                                   }
 
-                                     @Override
-                                     protected void onFailure(Throwable exception) {
-                                         callback.onFailure(exception);
-                                     }
-                                 }
-                                );
+                                   @Override
+                                   protected void onFailure(Throwable exception) {
+                                       callback.onFailure(exception);
+                                   }
+                               }
+                              );
     }
 
     @Override

@@ -19,6 +19,8 @@ package com.codenvy.ide.extension.builder.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.action.ActionManager;
+import com.codenvy.ide.api.ui.action.Anchor;
+import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
@@ -32,6 +34,8 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_BUILD_CONTEXT_MENU;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_BUILD_TOOLBAR;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_CONTEXT_MENU;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_TOOLBAR;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_CONTEXT_MENU;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_TOOLBAR;
 
 /**
  * Builder extension entry point.
@@ -63,13 +67,13 @@ public class BuilderExtension {
         actionManager.registerAction(GROUP_BUILD_TOOLBAR, buildToolbarGroup);
         buildToolbarGroup.add(buildAction);
         buildToolbarGroup.addSeparator();
-        mainToolbarGroup.add(buildToolbarGroup);
+        mainToolbarGroup.add(buildToolbarGroup, new Constraints(Anchor.BEFORE, GROUP_RUN_TOOLBAR));
 
         // add actions in context menu
         DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
         DefaultActionGroup buildContextGroup = (DefaultActionGroup)actionManager.getAction(GROUP_BUILD_CONTEXT_MENU);
         buildContextGroup.add(buildAction);
-        contextMenuGroup.add(buildContextGroup);
+        contextMenuGroup.add(buildContextGroup, new Constraints(Anchor.BEFORE, GROUP_RUN_CONTEXT_MENU));
 
         // add Builder console
         workspaceAgent.openPart(builderConsolePresenter, PartStackType.INFORMATION);
