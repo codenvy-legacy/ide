@@ -46,6 +46,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -64,11 +65,11 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
     @UiField
     PushButton                      btnResume;
     @UiField
-    PushButton                      btnStepInto;
+    ToggleButton                    btnStepInto;
     @UiField
-    PushButton                      btnStepOver;
+    ToggleButton                    btnStepOver;
     @UiField
-    PushButton                      btnStepReturn;
+    ToggleButton                    btnStepReturn;
     @UiField
     PushButton                      btnDisconnect;
     @UiField
@@ -267,14 +268,45 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
 
     /** {@inheritDoc} */
     @Override
+    public boolean resetStepIntoButton(boolean state) {
+        return setButtonState(btnStepInto, state);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void setEnableStepOverButton(boolean isEnable) {
         btnStepOver.setEnabled(isEnable);
     }
 
     /** {@inheritDoc} */
     @Override
+    public boolean resetStepOverButton(boolean state) {
+        return setButtonState(btnStepOver, state);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void setEnableStepReturnButton(boolean isEnable) {
         btnStepReturn.setEnabled(isEnable);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean resetStepReturnButton(boolean state) {
+        return setButtonState(btnStepReturn, state);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean setButtonState(ToggleButton button, boolean state){
+        if (state) {
+            if (!button.isDown()) return true;
+            button.setDown(false);
+        } else {
+            if (button.isDown()) return true;
+            button.setDown(true);
+        }
+        return false;
     }
 
     /** {@inheritDoc} */
