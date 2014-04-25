@@ -439,7 +439,7 @@ public class FSMountPoint implements MountPoint {
             final VirtualFileImpl child =
                     new VirtualFileImpl(new java.io.File(parent.getIoFile(), name), childPath, pathToId(childPath), this);
             if (child.exists()) {
-                if (hasPermission(child, BasicPermissions.READ, false)) {
+                if (hasPermission(child, BasicPermissions.READ, true)) {
                     return child;
                 }
                 throw new PermissionDeniedException(String.format("Unable get item '%s'. Operation not permitted. ", child.getPath()));
