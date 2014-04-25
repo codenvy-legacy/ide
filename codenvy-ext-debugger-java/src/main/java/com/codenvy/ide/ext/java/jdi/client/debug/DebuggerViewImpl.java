@@ -46,7 +46,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -65,11 +64,11 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
     @UiField
     PushButton                      btnResume;
     @UiField
-    ToggleButton                    btnStepInto;
+    PushButton                      btnStepInto;
     @UiField
-    ToggleButton                    btnStepOver;
+    PushButton                      btnStepOver;
     @UiField
-    ToggleButton                    btnStepReturn;
+    PushButton                      btnStepReturn;
     @UiField
     PushButton                      btnDisconnect;
     @UiField
@@ -268,32 +267,14 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
 
     /** {@inheritDoc} */
     @Override
-    public void resetStepIntoButton() {
-        if (btnStepInto.isDown()) btnStepInto.setDown(false);
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void setEnableStepOverButton(boolean isEnable) {
         btnStepOver.setEnabled(isEnable);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void resetStepOverButton() {
-        if (btnStepOver.isDown()) btnStepOver.setDown(false);
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void setEnableStepReturnButton(boolean isEnable) {
         btnStepReturn.setEnabled(isEnable);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void resetStepReturnButton() {
-        if (btnStepReturn.isDown()) btnStepReturn.setDown(false);
     }
 
     /** {@inheritDoc} */
@@ -329,29 +310,17 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
 
     @UiHandler("btnStepInto")
     public void onStepIntoButtonClicked(ClickEvent event) {
-        if (btnStepInto.isDown()) {
-            delegate.onStepIntoButtonClicked();
-        } else {
-            btnStepInto.setDown(true);
-        }
+        delegate.onStepIntoButtonClicked();
     }
 
     @UiHandler("btnStepOver")
     public void onStepOverButtonClicked(ClickEvent event) {
-        if (btnStepOver.isDown()) {
-            delegate.onStepOverButtonClicked();
-        } else {
-            btnStepOver.setDown(true);
-        }
+        delegate.onStepOverButtonClicked();
     }
 
     @UiHandler("btnStepReturn")
     public void onStepReturnButtonClicked(ClickEvent event) {
-        if (btnStepReturn.isDown()) {
-            delegate.onStepReturnButtonClicked();
-        } else {
-            btnStepReturn.setDown(true);
-        }
+        delegate.onStepReturnButtonClicked();
     }
 
     @UiHandler("btnDisconnect")
