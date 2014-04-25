@@ -492,6 +492,11 @@ public interface Theme {
      * @return the color of tree text-shadow
      */
     String getTreeTextShadow();
+    
+    /**
+     * @return the color of tree icon file
+     */
+    String getTreeIconFileColor();
 
     /**
      * @return the color of button text if hover

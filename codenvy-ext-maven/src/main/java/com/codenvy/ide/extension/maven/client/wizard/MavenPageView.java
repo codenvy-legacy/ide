@@ -2,7 +2,7 @@
  * CODENVY CONFIDENTIAL
  * __________________
  *
- * [2012] - [2013] Codenvy, S.A.
+ * [2012] - [2014] Codenvy, S.A.
  * All Rights Reserved.
  *
  * NOTICE:  All information contained herein is, and remains
@@ -15,15 +15,26 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.api.parts;
+package com.codenvy.ide.extension.maven.client.wizard;
 
-import com.codenvy.ide.api.extension.SDK;
-import com.codenvy.ide.api.ui.workspace.PartPresenter;
+import com.codenvy.ide.api.mvp.View;
+import com.google.inject.ImplementedBy;
 
 /**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Evgen Vidolob
  */
-@SDK(title = "ide.api.ui.search")
-public interface SearchPart extends PartPresenter {
+@ImplementedBy(MavenPageViewImpl.class)
+public interface MavenPageView extends View<MavenPageView.ActionDelegate> {
+    public interface ActionDelegate{
+
+        void onTextsChange();
+    }
+
+    String getGroupId();
+
+    String getArtifactId();
+
+    String getVersion();
+
+    String getPackage();
 }

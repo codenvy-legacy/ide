@@ -57,7 +57,7 @@ public class BuilderConsolePresenter extends BasePresenter implements BuilderCon
     /** {@inheritDoc} */
     @Override
     public String getTitleToolTip() {
-        return "Displays Runner output";
+        return "Displays Builder output";
     }
 
     /** {@inheritDoc} */
