@@ -33,6 +33,8 @@ public interface ApplicationServer {
     /** Application server name. */
     String getName();
 
+    String getDescription();
+
     /**
      * Deploy WAR to application server.
      *
@@ -46,9 +48,8 @@ public interface ApplicationServer {
      *         runner configuration
      * @param codeServerProcess
      *         may be <code>null</code> if no need to run GWT Code Server
-     * @param stopCallback
-     *         an implementation should invoke {@link StopCallback#stopped()} method on the provided <code>stopCallback</code>
-     *         when this application server will be stopped
+     * @param callback
+     *         Callback
      * @return {@code ApplicationProcess} that represents a deployed app
      * @throws com.codenvy.api.runner.RunnerException
      *         if an error occurs when try to deploy app to application server
@@ -58,10 +59,5 @@ public interface ApplicationServer {
                               File extensionJar,
                               SDKRunnerConfiguration runnerConfiguration,
                               CodeServer.CodeServerProcess codeServerProcess,
-                              StopCallback stopCallback) throws RunnerException;
-
-    /** Notified when {@code ApplicationServer} stopped. */
-    interface StopCallback {
-        void stopped();
-    }
+                              ApplicationProcess.Callback callback) throws RunnerException;
 }

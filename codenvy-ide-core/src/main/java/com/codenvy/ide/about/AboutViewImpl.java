@@ -17,12 +17,13 @@
  */
 package com.codenvy.ide.about;
 
+import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -34,11 +35,10 @@ import com.google.inject.Singleton;
  * @author Ann Shumilova
  */
 @Singleton
-public class AboutViewImpl extends DialogBox implements AboutView {
+public class AboutViewImpl extends Window implements AboutView {
     interface AboutViewImplUiBinder extends UiBinder<Widget, AboutViewImpl> {
     }
 
-    @UiField
     Button                 btnOk;
     @UiField
     Label                  version;
@@ -53,10 +53,19 @@ public class AboutViewImpl extends DialogBox implements AboutView {
     
 
     @Inject
-    public AboutViewImpl(AboutViewImplUiBinder uiBinder, AboutLocalizationConstant locale) {
+    public AboutViewImpl(com.codenvy.ide.Resources resources, AboutViewImplUiBinder uiBinder, AboutLocalizationConstant locale, CoreLocalizationConstant coreLocale) {
         this.locale = locale;
-        this.setText(locale.aboutViewTitle());
+        this.setTitle(locale.aboutViewTitle());
         this.setWidget(uiBinder.createAndBindUi(this));
+       
+        btnOk = createButton(coreLocale.ok(), "help-about-ok", new ClickHandler() {
+            
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onOkClicked();
+            }
+        });
+        getFooter().add(btnOk);
     }
 
     /** {@inheritDoc} */
@@ -74,7 +83,6 @@ public class AboutViewImpl extends DialogBox implements AboutView {
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        this.center();
         this.show();
         btnOk.setFocus(true);
     }
@@ -97,8 +105,8 @@ public class AboutViewImpl extends DialogBox implements AboutView {
         this.buildTime.setText(time);
     }
 
-    @UiHandler("btnOk")
-    void onBtnOkClick(ClickEvent event) {
-        delegate.onOkClicked();
+    @Override
+    protected void onClose() {
+        //do nothing 
     }
 }

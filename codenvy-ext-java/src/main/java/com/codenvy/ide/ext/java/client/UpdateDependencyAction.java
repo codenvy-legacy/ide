@@ -17,26 +17,31 @@
  */
 package com.codenvy.ide.ext.java.client;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.java.shared.Constants;
-import com.codenvy.ide.api.resources.model.Project;
 
 /** @author Evgen Vidolob */
 public class UpdateDependencyAction extends Action {
 
-    private JavaExtension    javaExtension;
-    private ResourceProvider resourceProvider;
+    private final JavaExtension        javaExtension;
+    private final ResourceProvider     resourceProvider;
+    private final AnalyticsEventLogger eventLogger;
 
-    public UpdateDependencyAction(JavaExtension javaExtension, ResourceProvider resourceProvider) {
-        super("Update dependencies", "Update dependencies", null);
+    public UpdateDependencyAction(JavaExtension javaExtension, ResourceProvider resourceProvider,
+                                  AnalyticsEventLogger eventLogger, JavaResources resources) {
+        super("Update dependencies", "Update dependencies", null, resources.updateDependencies());
         this.javaExtension = javaExtension;
         this.resourceProvider = resourceProvider;
+        this.eventLogger = eventLogger;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log("IDE: Update project dependencies");
         javaExtension.updateDependencies(resourceProvider.getActiveProject());
     }
 

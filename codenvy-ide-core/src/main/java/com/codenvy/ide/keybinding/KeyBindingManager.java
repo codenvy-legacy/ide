@@ -19,7 +19,7 @@ package com.codenvy.ide.keybinding;
 
 import elemental.events.Event;
 import elemental.events.EventListener;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;

@@ -14,7 +14,7 @@
 
 package com.codenvy.ide.texteditor;
 
-import elemental.html.Element;
+import elemental.dom.Element;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -93,7 +93,6 @@ import com.google.gwt.user.client.ui.RequiresResize;
 
 import java.util.Iterator;
 
-
 /**
  * The Display for the text editor presenter.
  * This is default implementation for {@link TextEditorPartView}
@@ -128,28 +127,29 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
     private final ListenerManager<ReadOnlyListener>  readOnlyListenerManager  = ListenerManager.create();
     private final ListenerManager<TextInputListener> textInputListenerManager = ListenerManager.create();
     private       ContentFormatter                   contentFormatter;
-    private final EditorActivityManager     editorActivityManager;
-    private final RenderTimeExecutor        renderTimeExecutor;
-    private final com.codenvy.ide.Resources resources;
-    private final UserActivityManager       userActivityManager;
-    private final OverviewRuler             overviewRuller;
-    private       DocumentModel             textStore;
-    private       UndoManager               editorUndoManager;
-    private       LocalCursorController     localCursorController;
-    private       Renderer                  renderer;
-    private       SelectionManager          selectionManager;
-    private       ViewportModel             viewport;
-    private       boolean                   isReadOnly;
-    private       Document                  document;
-    private       SyntaxHighlighter         syntaxHighlighter;
-    private       Parser                    parser;
-    private       CodeAssistantImpl         codeAssistant;
-    private       VerticalRuler             verticalRuler;
-    private       QuickAssistAssistant      quickAssistAssistant;
-    private       BreakpointGutterManager   breakpointGutterManager;
-    private final DtoFactory dtoFactory;
-    private StringMap<Array<AutoEditStrategy>> autoEditStrategies;
-    private String                             documentPartitioning;
+    private final EditorActivityManager              editorActivityManager;
+    private final RenderTimeExecutor                 renderTimeExecutor;
+    private final com.codenvy.ide.Resources          resources;
+    private final UserActivityManager                userActivityManager;
+    private final OverviewRuler                      overviewRuller;
+    private       DocumentModel                      textStore;
+    private       UndoManager                        editorUndoManager;
+    private       LocalCursorController              localCursorController;
+    private       Renderer                           renderer;
+    private       DebugLineRenderer                  debugLineRenderer;
+    private       SelectionManager                   selectionManager;
+    private       ViewportModel                      viewport;
+    private       boolean                            isReadOnly;
+    private       Document                           document;
+    private       SyntaxHighlighter                  syntaxHighlighter;
+    private       Parser                             parser;
+    private       CodeAssistantImpl                  codeAssistant;
+    private       VerticalRuler                      verticalRuler;
+    private       QuickAssistAssistant               quickAssistAssistant;
+    private       BreakpointGutterManager            breakpointGutterManager;
+    private final DtoFactory                         dtoFactory;
+    private       StringMap<Array<AutoEditStrategy>> autoEditStrategies;
+    private       String                             documentPartitioning;
 
     public TextEditorViewImpl(com.codenvy.ide.Resources resources, UserActivityManager userActivityManager,
                               BreakpointGutterManager breakpointGutterManager, DtoFactory dtoFactory) {
@@ -161,8 +161,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         renderTimeExecutor = new RenderTimeExecutor();
         LineDimensionsCalculator lineDimensions = LineDimensionsCalculator.create(editorFontDimensionsCalculator);
 
-        buffer = Buffer.create(resources, editorFontDimensionsCalculator.getFontDimensions(), lineDimensions,
-                               renderTimeExecutor);
+        buffer = Buffer.create(resources, editorFontDimensionsCalculator.getFontDimensions(), lineDimensions, renderTimeExecutor);
         input = new InputController();
         View view = new View(resources, buffer.getView().getElement(), input.getInputElement());
         setView(view);
@@ -215,7 +214,6 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         } catch (BadLocationException e) {
             Log.debug(TextEditorViewImpl.class, e);
         }
-
 
         if (strategies == null)
             return;
@@ -296,7 +294,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
 
         gutters.add(gutter);
 
-        gutter.getGutterElement().addClassName(getView().css.gutter());
+        Elements.addClassName(getView().css.gutter(), gutter.getGutterElement());
         getView().addGutter(gutter.getGutterElement());
         return gutter;
     }
@@ -358,6 +356,10 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
 
     public Renderer getRenderer() {
         return renderer;
+    }
+
+    public DebugLineRenderer getDebugLineRenderer() {
+        return debugLineRenderer;
     }
 
     /** @see com.codenvy.ide.texteditor.api.TextEditorPartView#getSelection() */
@@ -437,15 +439,13 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
                                      getRenderer(), getSelection());
         createSyntaxHighlighter(parser);
         new CurrentLineHighlighter(buffer, selection, resources);
-        breakpointGutterManager.setDebugLineRenderer(new DebugLineRenderer(buffer, resources));
+        debugLineRenderer = new DebugLineRenderer(buffer, resources);
         textInputListenerManager.dispatch(new Dispatcher<TextInputListener>() {
-
             @Override
             public void dispatch(TextInputListener listener) {
                 listener.inputDocumentChanged(null, document);
             }
         });
-
     }
 
     public void undo() {
@@ -667,8 +667,6 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         }
 
         return false;
-
-
     }
 
     /** @see com.codenvy.ide.texteditor.api.TextEditorPartView#doOperation(int) */
@@ -686,16 +684,17 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
                 }
                 break;
             case TextEditorOperations.FORMAT:
-                if (contentFormatter != null){
+                if (contentFormatter != null) {
                     Position selectedRange = selectionManager.getSelectionModel().getSelectedRange();
                     int lengthSelectedRange = selectedRange.getLength();
-                    int offset =              selectedRange.getOffset();
+                    int offset = selectedRange.getOffset();
                     Region region;
-                    if (lengthSelectedRange > 0 && offset >= 0){
+                    if (lengthSelectedRange > 0 && offset >= 0) {
                         region = new RegionImpl(offset, lengthSelectedRange);
+                    } else {
+                        region = new RegionImpl(0, getDocument().getLength());
                     }
-                    else {region = new RegionImpl(0, getDocument().getLength());}
-                    contentFormatter.format(getDocument(),region);
+                    contentFormatter.format(getDocument(), region);
                 }
                 break;
             default:

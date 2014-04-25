@@ -17,7 +17,7 @@ package com.codenvy.ide.texteditor.codeassistant;
 import elemental.css.CSSStyleDeclaration;
 import elemental.dom.Node;
 import elemental.html.ClientRect;
-import elemental.html.Element;
+import elemental.dom.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
@@ -169,6 +169,7 @@ public class AutocompleteUiController implements AutocompleteBox {
                 new PositionerBuilder().setPosition(Position.NO_OVERLAP).setVerticalAlign(VerticalAlign.TOP_TOP)
                                        .setHorizontalAlign(HorizontalAlign.RIGHT).buildAnchorPositioner(box);
         infoPopup = Popup.create(resources);
+        infoPopup.getView().getElement().getClassList().add(css.infoPopup());
         infoPopup.addPartner(box);
         infoPopup.addPartnerClickTargets(box);
         infoPopup.setDelay(-1);
@@ -423,7 +424,7 @@ public class AutocompleteUiController implements AutocompleteBox {
     }
 
     public interface Resources extends SimpleList.Resources, Popup.Resources {
-        @Source("AutocompleteComponent.css")
+        @Source({"AutocompleteComponent.css", "com/codenvy/ide/api/ui/style.css"})
         Css autocompleteComponentCss();
     }
 
@@ -435,6 +436,8 @@ public class AutocompleteUiController implements AutocompleteBox {
         String proposalLabel();
 
         String proposalGroup();
+        
+        String infoPopup();
 
         String container();
 

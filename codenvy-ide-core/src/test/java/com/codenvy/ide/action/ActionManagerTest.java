@@ -33,10 +33,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-/**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
- */
+/** @author Evgen Vidolob */
 @RunWith(MockitoJUnitRunner.class)
 public class ActionManagerTest {
 

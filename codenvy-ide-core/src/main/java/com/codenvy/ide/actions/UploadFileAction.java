@@ -18,12 +18,14 @@
 
 package com.codenvy.ide.actions;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.upload.UploadFilePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -36,21 +38,24 @@ import com.google.inject.Singleton;
 @Singleton
 public class UploadFileAction extends Action {
 
-    private UploadFilePresenter presenter;
-    private SelectionAgent      selectionAgent;
+    private final UploadFilePresenter  presenter;
+    private final SelectionAgent       selectionAgent;
+    private final AnalyticsEventLogger eventLogger;
 
     @Inject
     public UploadFileAction(UploadFilePresenter presenter,
                             CoreLocalizationConstant locale,
-                            SelectionAgent selectionAgent) {
-        super(locale.uploadFileName(), locale.uploadFileDescription(), null);
+                            SelectionAgent selectionAgent, AnalyticsEventLogger eventLogger, Resources resources) {
+        super(locale.uploadFileName(), locale.uploadFileDescription(), null, resources.uploadFile());
         this.presenter = presenter;
         this.selectionAgent = selectionAgent;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log("IDE: Upload file");
         presenter.showDialog();
     }
 

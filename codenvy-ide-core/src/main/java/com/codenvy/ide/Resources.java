@@ -30,8 +30,6 @@ import com.codenvy.ide.welcome.WelcomePageResources;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.resources.client.ImageResource.ImageOptions;
-import com.google.gwt.resources.client.ImageResource.RepeatStyle;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
@@ -121,12 +119,11 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
     @Source("about/logo.png")
     ImageResource logo();
     
-    @Source("about/logoBg.png")
-    @ImageOptions(repeatStyle = RepeatStyle.Horizontal)
-    ImageResource logoBg();
-    
     @Source("console/clear.svg")
     SVGResource clear();
+    
+    @Source("actions/about.svg")
+    SVGResource about();
     
     @Source("actions/close-project.svg")
     SVGResource closeProject();
@@ -137,11 +134,29 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
     @Source("actions/new-resource.svg")
     SVGResource newResource();
     
+    @Source("actions/navigate-to-file.svg")
+    SVGResource navigateToFile();
+    
+    @Source("actions/open-project.svg")
+    SVGResource openProject();
+    
     @Source("actions/save.svg")
     SVGResource save();
     
     @Source("actions/preferences.svg")
     SVGResource preferences();
+    
+    @Source("actions/rename.svg")
+    SVGResource rename();
+    
+    @Source("actions/format.svg")
+    SVGResource format();
+    
+    @Source("actions/import.svg")
+    SVGResource importProject();
+    
+    @Source("actions/upload-file.svg")
+    SVGResource uploadFile();
     
     @Source("project/private-project.svg")
     SVGResource privateProject();
@@ -151,4 +166,16 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
     
     @Source("workspace/codenvy-placeholder.png")
     ImageResource codenvyPlaceholder();
+    
+    @Source("defaulticons/file.svg")
+    SVGResource defaultFile();
+    
+    @Source("defaulticons/default.svg")
+    SVGResource defaultIcon();
+    
+    @Source("defaulticons/folder.svg")
+    SVGResource defaultFolder();
+    
+    @Source("defaulticons/project.svg")
+    SVGResource defaultProject();
 }

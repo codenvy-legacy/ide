@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.java.client.editor;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
@@ -24,11 +25,7 @@ import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.client.editor.outline.JavaNodeRenderer;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.jdt.JavaPartitions;
-import com.codenvy.ide.ext.java.jdt.internal.ui.text.BracketInserter;
-import com.codenvy.ide.ext.java.jdt.internal.ui.text.JavaAutoEditStrategy;
-import com.codenvy.ide.ext.java.jdt.internal.ui.text.JavaDocAutoIndentStrategy;
-import com.codenvy.ide.ext.java.jdt.internal.ui.text.JavaStringAutoIndentStrategy;
-import com.codenvy.ide.ext.java.jdt.internal.ui.text.SmartSemicolonAutoEditStrategy;
+import com.codenvy.ide.ext.java.jdt.internal.ui.text.*;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.api.AutoEditStrategy;
@@ -64,18 +61,24 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
     private String                  documentPartitioning;
     private JavaParserWorker        worker;
     private JavaResources           javaResources;
+    private AnalyticsEventLogger    eventLogger;
     private JavaProject             project;
     private ContentFormatter        contentFormatter;
 
 
-    public JavaEditorConfiguration(UserActivityManager manager, JavaResources resources, TextEditorPartPresenter javaEditor,
-                                   String documentPartitioning, JavaParserWorker worker, ContentFormatter contentFormatter) {
-        super();
+    public JavaEditorConfiguration(UserActivityManager manager,
+                                   JavaResources resources,
+                                   TextEditorPartPresenter javaEditor,
+                                   String documentPartitioning,
+                                   JavaParserWorker worker,
+                                   ContentFormatter contentFormatter,
+                                   AnalyticsEventLogger eventLogger) {
         this.manager = manager;
         this.javaEditor = javaEditor;
         this.documentPartitioning = documentPartitioning;
         this.worker = worker;
         this.javaResources = resources;
+        this.eventLogger = eventLogger;
         outlineModel = new OutlineModel(new JavaNodeRenderer(resources));
         reconcilerStrategy = new JavaReconcilerStrategy(javaEditor, worker, outlineModel);
         this.contentFormatter = contentFormatter;
@@ -101,7 +104,7 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
 
     private JavaCodeAssistProcessor getOrCreateCodeAssistProcessor() {
         if (codeAssistProcessor == null) {
-            codeAssistProcessor = new JavaCodeAssistProcessor(javaEditor, worker, javaResources);
+            codeAssistProcessor = new JavaCodeAssistProcessor(javaEditor, worker, javaResources, eventLogger);
         }
         return codeAssistProcessor;
     }

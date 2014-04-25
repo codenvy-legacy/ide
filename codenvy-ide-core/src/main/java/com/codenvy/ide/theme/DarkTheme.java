@@ -268,7 +268,17 @@ public class DarkTheme implements Theme {
     public String getEditorString2() {
         return "#CC7832";
     }
+    
+    @Override
+    public String getCompletionPopupBackgroundColor() {
+        return "#303030";
+    }
 
+    @Override
+    public String getCompletionPopupBorderColor() {
+        return "#484848";
+    }
+    
     @Override
     public String getWindowContentBackground() {
         return "#373737";
@@ -277,6 +287,11 @@ public class DarkTheme implements Theme {
     @Override
     public String getWindowHeaderBackground() {
         return "#656565";
+    }
+    
+    @Override
+    public String getWindowSeparatorColor() {
+        return "#818181";
     }
 
     @Override
@@ -356,12 +371,17 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getTreeTextFolderColor() {
-        return "#888888";
+        return "#b4b4b4";
     }
 
     @Override
     public String getTreeTextShadow() {
         return "rgba(0, 0, 0, 0.5)";
+    }
+    
+    @Override
+    public String getTreeIconFileColor() {
+        return "#b4b4b4";
     }
 
     @Override
@@ -371,7 +391,7 @@ public class DarkTheme implements Theme {
 
     @Override
     public String getBoxTextColor() {
-        return "dbdbdb"; // same as main editor color ATM for dark
+        return "#dbdbdb"; // same as main editor color ATM for dark
     }
 
     @Override
@@ -446,7 +466,7 @@ public class DarkTheme implements Theme {
     
     @Override
     public String getMinimizeIconColor() {
-        return "#1f1f1f";
+        return "#dbdbdb";
     }
     
 }

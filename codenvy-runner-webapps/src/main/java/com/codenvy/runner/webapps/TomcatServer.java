@@ -17,15 +17,17 @@
  */
 package com.codenvy.runner.webapps;
 
+import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.api.core.util.ProcessUtil;
+import com.codenvy.api.core.util.StreamPump;
 import com.codenvy.api.core.util.SystemInfo;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.ApplicationLogger;
+import com.codenvy.api.runner.internal.ApplicationLogsPublisher;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.api.runner.internal.DeploymentSources;
 import com.codenvy.commons.lang.IoUtil;
-import com.codenvy.commons.lang.NamedThreadFactory;
 import com.codenvy.commons.lang.ZipUtils;
 import com.google.common.io.CharStreams;
 import com.google.inject.Singleton;
@@ -35,19 +37,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * {@code ApplicationServer} implementation to deploy application to Apache Tomcat servlet container.
@@ -77,29 +72,36 @@ public class TomcatServer implements ApplicationServer {
             "    </Engine>\n" +
             "  </Service>\n" +
             "</Server>\n";
-    /** Validator to validate deployment sources. */
-    private final ExecutorService pidTaskExecutor;
-    private final int             memSize;
-    private final java.io.File    tomcatHome;
+
+    private final int          memSize;
+    private final java.io.File tomcatHome;
+    private final EventService eventService;
 
     @Inject
     public TomcatServer(@Named(MEM_SIZE_PARAMETER) int memSize,
-                        @Named(TOMCAT_HOME_PARAMETER) java.io.File tomcatHome) {
+                        @Named(TOMCAT_HOME_PARAMETER) java.io.File tomcatHome,
+                        EventService eventService) {
         this.memSize = memSize;
         this.tomcatHome = tomcatHome;
-        this.pidTaskExecutor = Executors.newCachedThreadPool(new NamedThreadFactory("TomcatServer-", true));
+        this.eventService = eventService;
     }
 
     @Override
     public final String getName() {
-        return "Tomcat";
+        return "Tomcat7";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Apache Tomcat 7.0 is an implementation of the Java Servlet and JavaServer Pages technologies.\n" +
+               "Home page: http://tomcat.apache.org/";
     }
 
     @Override
     public ApplicationProcess deploy(java.io.File appDir,
                                      DeploymentSources toDeploy,
                                      ApplicationServerRunnerConfiguration runnerConfiguration,
-                                     StopCallback stopCallback) throws RunnerException {
+                                     ApplicationProcess.Callback callback) throws RunnerException {
         final java.io.File myTomcatHome = getTomcatHome();
         try {
             final Path tomcatPath = Files.createDirectory(appDir.toPath().resolve("tomcat"));
@@ -121,9 +123,9 @@ public class TomcatServer implements ApplicationServer {
         }
 
         if (SystemInfo.isUnix()) {
-            return startUnix(appDir, runnerConfiguration, stopCallback);
+            return startUnix(appDir, runnerConfiguration, callback);
         } else {
-            return startWindows(appDir, runnerConfiguration, stopCallback);
+            return startWindows(appDir, runnerConfiguration, callback);
         }
     }
 
@@ -150,7 +152,7 @@ public class TomcatServer implements ApplicationServer {
 
     protected ApplicationProcess startUnix(final java.io.File appDir,
                                            final ApplicationServerRunnerConfiguration runnerConfiguration,
-                                           StopCallback stopCallback) throws RunnerException {
+                                           ApplicationProcess.Callback callback) throws RunnerException {
         final java.io.File logsDir = new java.io.File(appDir, "logs");
         final java.io.File startUpScriptFile;
         try {
@@ -159,12 +161,10 @@ public class TomcatServer implements ApplicationServer {
         } catch (IOException e) {
             throw new RunnerException(e);
         }
-        final List<java.io.File> logFiles = new ArrayList<>(2);
-        logFiles.add(new java.io.File(logsDir, "stdout.log"));
-        logFiles.add(new java.io.File(logsDir, "stderr.log"));
+        final List<java.io.File> logFiles = new ArrayList<>(1);
+        logFiles.add(new java.io.File(logsDir, "output.log"));
 
-        return new TomcatProcess(runnerConfiguration.getHttpPort(), logFiles, runnerConfiguration.getDebugPort(),
-                                 startUpScriptFile, appDir, stopCallback, pidTaskExecutor);
+        return new TomcatProcess(appDir, startUpScriptFile, logFiles, runnerConfiguration, callback, eventService);
     }
 
     private java.io.File genStartUpScriptUnix(java.io.File appDir, ApplicationServerRunnerConfiguration runnerConfiguration)
@@ -195,31 +195,29 @@ public class TomcatServer implements ApplicationServer {
         if (debugPort <= 0) {
             return catalinaOpts;
         }
-        final StringBuilder export = new StringBuilder();
-        export.append(catalinaOpts);
         /*
         From catalina.sh:
         -agentlib:jdwp=transport=$JPDA_TRANSPORT,address=$JPDA_ADDRESS,server=y,suspend=$JPDA_SUSPEND
          */
-        export.append(String.format("export JPDA_ADDRESS=%d%n", debugPort));
-        export.append(String.format("export JPDA_TRANSPORT=%s%n", runnerConfiguration.getDebugTransport()));
-        export.append(String.format("export JPDA_SUSPEND=%s%n", runnerConfiguration.isDebugSuspend() ? "y" : "n"));
-        return export.toString();
+        return catalinaOpts +
+               String.format("export JPDA_ADDRESS=%d%n", debugPort) +
+               String.format("export JPDA_TRANSPORT=%s%n", runnerConfiguration.getDebugTransport()) +
+               String.format("export JPDA_SUSPEND=%s%n", runnerConfiguration.isDebugSuspend() ? "y" : "n");
     }
 
     private String catalinaUnix(ApplicationServerRunnerConfiguration runnerConfiguration) {
         final boolean debug = runnerConfiguration.getDebugPort() > 0;
         if (debug) {
-            return "./bin/catalina.sh jpda run > ../logs/stdout.log 2> ../logs/stderr.log &\n";
+            return "./bin/catalina.sh jpda run 2>&1 | tee ../logs/output.log &\n";
         }
-        return "./bin/catalina.sh run > ../logs/stdout.log 2> ../logs/stderr.log &\n";
+        return "./bin/catalina.sh run 2>&1 | tee ../logs/output.log &\n";
     }
 
     // Windows
 
     protected ApplicationProcess startWindows(java.io.File appDir,
                                               ApplicationServerRunnerConfiguration runnerConfiguration,
-                                              StopCallback stopCallback) {
+                                              ApplicationProcess.Callback callback) {
         throw new UnsupportedOperationException();
     }
 
@@ -227,108 +225,93 @@ public class TomcatServer implements ApplicationServer {
         final int                httpPort;
         final List<java.io.File> logFiles;
         final int                debugPort;
-        final ExecutorService    pidTaskExecutor;
         final java.io.File       startUpScriptFile;
         final java.io.File       workDir;
-        final StopCallback       stopCallback;
+        final Callback           callback;
+        final EventService       eventService;
+        final String             workspace;
+        final String             project;
+        final long               id;
 
-        int pid = -1;
-        TomcatLogger logger;
-        Process      process;
+        ApplicationLogger logger;
+        Process           process;
+        StreamPump        output;
 
-        TomcatProcess(int httpPort, List<java.io.File> logFiles, int debugPort, java.io.File startUpScriptFile, java.io.File workDir,
-                      StopCallback stopCallback, ExecutorService pidTaskExecutor) {
-            this.httpPort = httpPort;
+        TomcatProcess(java.io.File appDir, java.io.File startUpScriptFile, List<java.io.File> logFiles,
+                      ApplicationServerRunnerConfiguration runnerConfiguration, Callback callback, EventService eventService) {
+            this.httpPort = runnerConfiguration.getHttpPort();
             this.logFiles = logFiles;
-            this.debugPort = debugPort;
+            this.debugPort = runnerConfiguration.getDebugPort();
             this.startUpScriptFile = startUpScriptFile;
-            this.workDir = workDir;
-            this.stopCallback = stopCallback;
-            this.pidTaskExecutor = pidTaskExecutor;
+            this.workDir = appDir;
+            this.callback = callback;
+            this.eventService = eventService;
+            this.workspace = runnerConfiguration.getRequest().getWorkspace();
+            this.project = runnerConfiguration.getRequest().getProject();
+            this.id = runnerConfiguration.getRequest().getId();
         }
 
         @Override
-        public void start() throws RunnerException {
-            if (pid != -1) {
+        public synchronized void start() throws RunnerException {
+            if (process != null) {
                 throw new IllegalStateException("Process is already started");
             }
-
             try {
-                process = Runtime.getRuntime()
-                                 .exec(new CommandLine(startUpScriptFile.getAbsolutePath()).toShellCommand(), null,
-                                       workDir);
-                pid = pidTaskExecutor.submit(new Callable<Integer>() {
-                    @Override
-                    public Integer call() throws Exception {
-                        final java.io.File pidFile = new java.io.File(workDir, "run.pid");
-                        final Path pidPath = pidFile.toPath();
-                        synchronized (this) {
-                            while (!Files.isReadable(pidPath)) {
-                                wait(100);
-                            }
-                        }
-                        final BufferedReader pidReader = new BufferedReader(new FileReader(pidFile));
-                        try {
-                            return Integer.valueOf(pidReader.readLine());
-                        } finally {
-                            try {
-                                pidReader.close();
-                            } catch (IOException ignored) {
-                            }
-                        }
-                    }
-                }).get(5, TimeUnit.SECONDS);
-
-                logger = new TomcatLogger(logFiles);
+                process = Runtime.getRuntime().exec(new CommandLine(startUpScriptFile.getAbsolutePath()).toShellCommand(), null, workDir);
+                logger = new ApplicationLogsPublisher(new TomcatLogger(logFiles), eventService, id, workspace, project);
+                output = new StreamPump();
+                output.start(process, logger);
                 LOG.debug("Start Tomcat at port {}, application {}", httpPort, workDir);
-            } catch (IOException | InterruptedException | TimeoutException e) {
+            } catch (IOException e) {
                 throw new RunnerException(e);
-            } catch (ExecutionException e) {
-                throw new RunnerException(e.getCause());
             }
         }
 
         @Override
-        public void stop() throws RunnerException {
-            if (pid == -1) {
+        public synchronized void stop() throws RunnerException {
+            if (process == null) {
                 throw new IllegalStateException("Process is not started yet");
             }
-            // Use ProcessUtil.kill(pid) because java.lang.Process.destroy() method doesn't
+            // Use ProcessUtil.kill(process) because java.lang.Process.destroy() method doesn't
             // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
-            ProcessUtil.kill(pid);
-            stopCallback.stopped();
+            ProcessUtil.kill(process);
+            callback.stopped();
             LOG.debug("Stop Tomcat at port {}, application {}", httpPort, workDir);
         }
 
         @Override
         public int waitFor() throws RunnerException {
             synchronized (this) {
-                if (pid == -1) {
+                if (process == null) {
                     throw new IllegalStateException("Process is not started yet");
                 }
             }
             try {
                 process.waitFor();
-            } catch (InterruptedException ignored) {
+            } catch (InterruptedException e) {
+                Thread.interrupted();
+                ProcessUtil.kill(process);
+            } finally {
+                output.stop();
             }
             return process.exitValue();
         }
 
         @Override
-        public int exitCode() throws RunnerException {
-            if (pid == -1 || ProcessUtil.isAlive(pid)) {
+        public synchronized int exitCode() throws RunnerException {
+            if (process == null || ProcessUtil.isAlive(process)) {
                 return -1;
             }
             return process.exitValue();
         }
 
         @Override
-        public boolean isRunning() throws RunnerException {
-            return ProcessUtil.isAlive(pid);
+        public synchronized boolean isRunning() throws RunnerException {
+            return process != null && ProcessUtil.isAlive(process);
         }
 
         @Override
-        public ApplicationLogger getLogger() throws RunnerException {
+        public synchronized ApplicationLogger getLogger() throws RunnerException {
             if (logger == null) {
                 // is not started yet
                 return ApplicationLogger.DUMMY;
@@ -362,7 +345,7 @@ public class TomcatServer implements ApplicationServer {
 
             @Override
             public void writeLine(String line) throws IOException {
-                throw new UnsupportedOperationException();
+                // noop since logs already redirected to the file
             }
 
             @Override

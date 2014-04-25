@@ -32,10 +32,9 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Base view for part that must contains toolbar, this class provide one default button: "minimize" or hide part view and
- * label for view title
+ * label for view title.
  *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
  */
 public abstract class BaseView<T extends BaseActionDelegate> extends Composite implements View<T> {
 
@@ -60,8 +59,7 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
         DockLayoutPanel panel = new DockLayoutPanel(Style.Unit.PX);
         titleLabel = new Label();
         titleLabel.setStyleName(resources.partStackCss().ideBasePartTitleLabel());
-        panel.addWest(titleLabel, 100);
-        
+
         SVGImage minimize = new SVGImage(resources.minimize());
         minimize.getElement().setAttribute("name", "workBenchIconMinimize");
         minimizeButton = new ToolButton(minimize);
@@ -72,7 +70,7 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
             }
         });
         panel.addEast(minimizeButton, 20);
-        
+        panel.add(titleLabel);
         toolBar.addNorth(panel, 20);
     }
 

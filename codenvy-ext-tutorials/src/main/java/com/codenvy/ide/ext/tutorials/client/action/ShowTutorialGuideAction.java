@@ -17,14 +17,15 @@
  */
 package com.codenvy.ide.ext.tutorials.client.action;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.tutorials.client.GuidePageController;
 import com.codenvy.ide.ext.tutorials.client.TutorialsLocalizationConstant;
 import com.codenvy.ide.ext.tutorials.client.TutorialsResources;
 import com.codenvy.ide.ext.tutorials.shared.Constants;
-import com.codenvy.ide.api.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -37,22 +38,26 @@ import com.google.inject.Singleton;
 @Singleton
 public class ShowTutorialGuideAction extends Action {
 
-    private final ResourceProvider    resourceProvider;
-    private       GuidePageController guidePageController;
+    private final ResourceProvider     resourceProvider;
+    private final GuidePageController  guidePageController;
+    private final AnalyticsEventLogger eventLogger;
 
     @Inject
     public ShowTutorialGuideAction(GuidePageController guidePageController, TutorialsResources resources,
                                    ResourceProvider resourceProvider,
-                                   TutorialsLocalizationConstant localizationConstants) {
+                                   TutorialsLocalizationConstant localizationConstants,
+                                   AnalyticsEventLogger eventLogger) {
         super(localizationConstants.showTutorialGuideActionText(),
               localizationConstants.showTutorialGuideActionDescription(), resources.guide());
         this.guidePageController = guidePageController;
         this.resourceProvider = resourceProvider;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log("IDE: Show tutorial");
         guidePageController.openTutorialPage();
     }
 
@@ -61,7 +66,8 @@ public class ShowTutorialGuideAction extends Action {
     public void update(ActionEvent e) {
         Project activeProject = resourceProvider.getActiveProject();
         if (activeProject != null) {
-            e.getPresentation().setEnabledAndVisible(activeProject.getDescription().getProjectTypeId().equals(Constants.TUTORIAL_ID));
+            e.getPresentation()
+             .setEnabledAndVisible(activeProject.getDescription().getProjectTypeId().equals(Constants.TUTORIAL_ID));
         } else {
             e.getPresentation().setEnabledAndVisible(false);
         }

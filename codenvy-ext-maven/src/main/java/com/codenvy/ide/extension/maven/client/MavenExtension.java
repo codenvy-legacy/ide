@@ -18,49 +18,45 @@
 package com.codenvy.ide.extension.maven.client;
 
 import com.codenvy.ide.api.extension.Extension;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.ui.action.ActionManager;
+import com.codenvy.ide.api.ui.action.Anchor;
+import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.extension.maven.client.actions.MavenBuildAction;
+import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
+import com.codenvy.ide.api.ui.wizard.ProjectWizard;
+import com.codenvy.ide.ext.java.shared.Constants;
+import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
+import com.codenvy.ide.extension.maven.client.actions.CustomBuildAction;
+import com.codenvy.ide.extension.maven.client.wizard.MavenPagePresenter;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_BUILD;
 
 /**
  * Builder extension entry point.
  *
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: BuilderExtension.java Feb 21, 2012 1:53:48 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 @Singleton
-@Extension(title = "Building project", version = "3.0.0")
+@Extension(title = "Building Maven project", version = "3.0.0")
 public class MavenExtension {
-    public static final String PROJECT_BUILD_GROUP_MAIN_MENU   = "ProjectBuildGroup";
-    /** Channel for the messages containing status of the Maven build job. */
-    public static final String BUILD_STATUS_CHANNEL            = "builder:status:";
-
-
-    /**
-     * Create extension.
-     *
-     */
+    /** Create extension. */
     @Inject
     public MavenExtension(MavenLocalizationConstant localizationConstants,
+                          BuilderLocalizationConstant builderLocalizationConstant,
                           ActionManager actionManager,
-                          MavenBuildAction buildAction) {
-        // register actions
-        actionManager.registerAction(localizationConstants.buildProjectControlId(), buildAction);
-//        actionManager.registerAction(localizationConstants.buildAndPublishProjectControlId(), buildAndPublishAction);
+                          CustomBuildAction customBuildAction, Provider<MavenPagePresenter> mavenPagePresenter,
+                          ProjectTypeWizardRegistry wizardRegistry, NotificationManager notificationManager) {
+        actionManager.registerAction(localizationConstants.buildProjectControlId(), customBuildAction);
 
-        // compose action group
-        DefaultActionGroup buildGroup = new DefaultActionGroup(PROJECT_BUILD_GROUP_MAIN_MENU, false, actionManager);
-        buildGroup.add(buildAction);
-//        buildGroup.add(buildAndPublishAction);
+        DefaultActionGroup buildMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_BUILD);
+        buildMenuActionGroup.add(customBuildAction, new Constraints(Anchor.AFTER, builderLocalizationConstant.buildProjectControlId()));
 
-        // add action group to 'Project' menu
-        DefaultActionGroup projectMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_PROJECT);
-        projectMenuActionGroup.addSeparator();
-        projectMenuActionGroup.add(buildGroup);
-
+        ProjectWizard wizard = new ProjectWizard(notificationManager);
+        wizard.addPage(mavenPagePresenter);
+        wizardRegistry.addWizard(Constants.MAVEN_JAR_ID, wizard);
     }
 }

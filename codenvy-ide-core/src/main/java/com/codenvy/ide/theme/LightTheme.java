@@ -268,6 +268,16 @@ public class LightTheme implements Theme {
     }
 
     @Override
+    public String getCompletionPopupBackgroundColor() {
+        return "#303030";
+    }
+
+    @Override
+    public String getCompletionPopupBorderColor() {
+        return "#484848";
+    }
+    
+    @Override
     public String getWindowContentBackground() {
         return getDialogContentBackground();
     }
@@ -275,6 +285,11 @@ public class LightTheme implements Theme {
     @Override
     public String getWindowHeaderBackground() {
         return getTabBorderColor();
+    }
+    
+    @Override
+    public String getWindowSeparatorColor() {
+        return "#818181";
     }
 
     @Override
@@ -361,7 +376,12 @@ public class LightTheme implements Theme {
     public String getTreeTextShadow() {
         return "rgba(255, 255, 255, 0.5)";
     }
-
+    
+    @Override
+    public String getTreeIconFileColor() {
+        return "#606060";
+    }
+    
     @Override
     public String getBoxBorderColor() {
         return "#aaaaaa";
@@ -444,6 +464,6 @@ public class LightTheme implements Theme {
     
     @Override
     public String getMinimizeIconColor() {
-        return "#1f1f1f";
+        return "#7b7b7b";
     }
 }

@@ -21,10 +21,6 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field='locale' type='com.codenvy.ide.CoreLocalizationConstant'/>
     <ui:style>
-        .alignBtn {
-            float: right;
-        }
-
         .spacing {
             margin-bottom: 10px;
         }
@@ -41,20 +37,12 @@
             float: left;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="320px" height="160px" addStyleNames="{style.emptyBorder}">
-        <g:south size="26.0">
-            <g:FlowPanel>
-                <g:Button addStyleNames="{style.alignBtn}" text="{locale.cancelButton}" width="60px" ui:field="btnCancel"
-                          debugId="file-importProject-cancel"/>
-                <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.importProjectButton}" width="60px"
-                          ui:field="btnImport"
-                          debugId="file-importProject-import"/>
-            </g:FlowPanel>
-        </g:south>
-        <g:north size="30.0">
+    <g:DockLayoutPanel unit="PX" width="320px" height="180px" addStyleNames="{style.emptyBorder}">
+        <g:north size="60.0">
             <g:FlowPanel>
                 <g:Label width="220px" height="22px" text="{locale.importProjectImporterFieldTitle}" addStyleNames="{style.alignLeft}"/>
                 <g:ListBox width="100px" ui:field="importersList" addStyleNames="{style.alignLeft}" debugId="file-importProject-importer"/>
+                <g:Label width="220px" ui:field="description" debugId="file-importProject-description" height="22px"  addStyleNames="{style.alignLeft}"/>
             </g:FlowPanel>
         </g:north>
         <g:north size="50.0">

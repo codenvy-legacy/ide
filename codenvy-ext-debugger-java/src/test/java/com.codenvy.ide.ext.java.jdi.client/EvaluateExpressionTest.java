@@ -59,9 +59,10 @@ public class EvaluateExpressionTest extends BaseTest {
         presenter.showDialog(debuggerInfo);
 
         verify(view).setExpression(eq(EMPTY_EXPRESSION));
-        verify(view).focusInExpressionField();
+        verify(view).setResult(eq(EMPTY_EXPRESSION));
         verify(view).setEnableEvaluateButton(eq(DISABLE_BUTTON));
         verify(view).showDialog();
+        verify(view).focusInExpressionField();
     }
 
     @Test

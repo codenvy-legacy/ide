@@ -150,8 +150,6 @@ public interface IOperationHistory {
      *         not be <code>null</code>. If an attempt is made to register
      *         an instance which is already registered with this instance,
      *         this method has no effect.
-     * @see com.codenvy.ide.texteditor.api.historymanager.core.commands.operations.IOperationHistoryListener
-     * @see com.codenvy.ide.texteditor.api.historymanager.core.commands.operations.OperationHistoryEvent
      */
     void addOperationHistoryListener(IOperationHistoryListener listener);
 

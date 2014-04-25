@@ -18,23 +18,15 @@
 package com.codenvy.ide.extension.builder.client;
 
 import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ImageResource;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
 /**
  * Client resources.
  *
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Apr 3, 2012 3:03:35 PM anya $
+ * @author Ann Shumilova
  */
 public interface BuilderResources extends ClientBundle {
     @Source("build.svg")
     SVGResource build();
-
-    @Source("buildAndPublish.png")
-    ImageResource buildAndPublish();
-
-    @Source("clearOutput.png")
-    ImageResource clearOutput();
 }

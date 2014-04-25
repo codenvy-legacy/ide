@@ -110,14 +110,16 @@ textarea {
 }
 
 .gwt-Button, button{
-    padding: 0px;
+    padding: 0px 10px;
     color: mainFontColor;
-    border-radius: 2px;
     border: 1px solid tabBorder;
     font-weight: 500;
-    font-size: fontSize;
-    height: 26px;
+    font-size: buttonFontSize;
+    height: 22px;
     background: linear-gradient(to bottom, buttonTopColor 0%, buttonTopColor 3%,buttonColor 4%, buttonColor 100%);
+	border-radius: 1px;
+    font-family: mainFontFamily;
+    font-weight: bold;
 }
 .gwt-Button:hover, .gwt-Button[disabled]:hover, button:hover, button[disabled]:hover{
     /*border-top: 1px solid #646464;*/
@@ -126,7 +128,7 @@ textarea {
 
 .gwt-Button:active, button:active{
     box-shadow:  0 0 4px 2px selectionBackground;
-    border-radius: 3px;
+    border-radius: 1px;
     outline: none;
 }
 
@@ -136,14 +138,14 @@ textarea {
 
 .gwt-Button[disabled]:active, button[disabled]:active{
     box-shadow:  0 0 0px 0px selectionBackground;
-    border-radius: 2px;
+    border-radius: 1px;
     outline: none;
 }
 
 
 .gwt-PushButton-up,.gwt-ToggleButton-up{
     color: mainFontColor;
-    border-radius: 2px;
+    border-radius: 1px;
     border: 1px solid tabBorder;
     font-weight: 500;
     background: linear-gradient(to bottom, buttonTopColor 0%, buttonTopColor 3%,buttonColor 4%, buttonColor 100%);
@@ -157,7 +159,7 @@ textarea {
 }
 .gwt-PushButton-down, .gwt-ToggleButton-down{
     color: mainFontColor;
-    border-radius: 2px;
+    border-radius: 1px;
     border: 1px solid tabBorder;
     font-weight: 500;
     background: linear-gradient(to bottom, buttonTopColor 0%, buttonTopColor 3%,buttonColor 4%, buttonColor 100%);
@@ -167,7 +169,7 @@ textarea {
 }
 .gwt-PushButton-down-hovering, .gwt-ToggleButton-down-hovering{
     color: mainFontColor;
-    border-radius: 2px;
+    border-radius: 1px;
     border: 1px solid tabBorder;
     font-weight: 500;
     background: linear-gradient(to bottom, buttonTopColor 0%, buttonTopColor 3%,buttonColor 4%, buttonColor 100%);
@@ -177,7 +179,7 @@ textarea {
 }
 .gwt-PushButton-down-disabled, .gwt-ToggleButton-down-disabled{
     box-shadow:  0 0 0px 0px selectionBackground;
-    border-radius: 2px;
+    border-radius: 1px;
     outline: none;
     color: #888888;
 }
@@ -348,6 +350,9 @@ class for the document-level scrollbars. */
 }
 
 /* Style for SuggestBox */
+.gwt-SuggestBoxPopup {
+    z-index: 90000;
+}
 .gwt-SuggestBoxPopup .suggestPopupTopLeft {
     background: dialogTopLeft url("");
 }

@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.actions;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
@@ -32,17 +33,21 @@ import com.google.inject.Singleton;
 public class ShowPreferencesAction extends Action {
 
     private final PreferencesPresenter presenter;
+    private final AnalyticsEventLogger eventLogger;
 
     @Inject
-    public ShowPreferencesAction(Resources resources, PreferencesPresenter presenter) {
+    public ShowPreferencesAction(Resources resources, PreferencesPresenter presenter,
+                                 AnalyticsEventLogger eventLogger) {
         //TODO change icon
         super("Preferences", "Preferences", null, resources.preferences());
         this.presenter = presenter;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log("IDE: Show preferences");
         presenter.showPreferences();
     }
 }

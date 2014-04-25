@@ -22,10 +22,6 @@
     <ui:with field='locale' type='com.codenvy.ide.extension.maven.client.MavenLocalizationConstant'/>
     <ui:with field='res' type='com.codenvy.ide.extension.maven.client.MavenResources'/>
     <ui:style>
-        .alignBtn {
-            float: right;
-        }
-
         .spacing {
             margin-bottom: 10px;
         }
@@ -33,24 +29,12 @@
         .emptyBorder {
             margin: 6px;
         }
-
-        .space {
-            margin-right: 5px;
-        }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="350px" height="140px" addStyleNames="{style.emptyBorder}">
-        <g:south size="26.0">
-            <g:FlowPanel>
-                <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" ui:field="btnCancel"
-                          debugId="project-buildWithOptions-cancel"/>
-                <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.startBuild}" width="80px" ui:field="btnStartBuild"
-                          debugId="project-buildWithOptions-startBuild"/>
-            </g:FlowPanel>
-        </g:south>
         <g:center>
             <g:DockLayoutPanel unit="PX" width="100%" height="100%" styleName="{style.spacing}">
                 <g:north size="30.0">
-                    <g:TextBox ui:field="buildCommand" width="350px" height="25px" debugId="project-buildWithOptions-buildCommand"/>
+                    <g:TextBox ui:field="buildCommand" width="340px" height="22px" debugId="project-buildWithOptions-buildCommand"/>
                 </g:north>
                 <g:north size="30.0">
                     <g:CheckBox ui:field="skipTest" HTML="{locale.skipTest}" debugId="project-buildWithOptions-skipTest"/>

@@ -34,6 +34,11 @@
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.codenvy.platform-api-gwt-client</groupId>
+            <artifactId>codenvy-api-factory-gwt-client</artifactId>
+            <version>${codenvy.platform-api-gwt-client.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
             <version>${gwt.version}</version>
@@ -59,14 +64,6 @@
                 <directory>${project.build.directory}/generated-sources/dto/</directory>
             </resource>
         </resources>
-        <testResources>
-            <testResource>
-                <directory>src/test/java</directory>
-            </testResource>
-            <testResource>
-                <directory>src/test/resources</directory>
-            </testResource>
-        </testResources>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -119,21 +116,6 @@
                 <artifactId>codenvy-dto-maven-plugin</artifactId>
                 <version>${com.codenvy.platform-api.version}</version>
                 <executions>
-                    <execution>
-                        <id>generate-client-dto</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <dtoPackages>
-                                <package>com.codenvy.api.factory.dto</package>
-                            </dtoPackages>
-                            <outputDirectory>${dto-generator-out-directory}</outputDirectory>
-                            <genClassName>com.codenvy.ide.factory.client.dto.DtoClientImpls</genClassName>
-                            <impl>client</impl>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>generate-server-dto</id>
                         <phase>process-sources</phase>

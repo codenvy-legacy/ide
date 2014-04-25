@@ -17,25 +17,24 @@
  */
 package com.codenvy.ide.preferences;
 
-import elemental.html.Element;
+import elemental.dom.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
-import com.codenvy.ide.Resources;
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.list.SimpleList;
-import com.codenvy.ide.ui.list.SimpleList.View;
+import com.codenvy.ide.ui.window.Window;
 import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.UIObject;
@@ -53,22 +52,20 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class PreferencesViewImpl extends DialogBox implements PreferencesView {
+public class PreferencesViewImpl extends Window implements PreferencesView {
     interface PreferenceViewImplUiBinder extends UiBinder<Widget, PreferencesViewImpl> {
     }
 
-    @UiField
     Button      btnClose;
-    @UiField
     Button      btnOk;
-    @UiField
     Button      btnApply;
     @UiField
     ScrollPanel preferences;
     @UiField
     SimplePanel contentPanel;
     @UiField(provided = true)
-    Resources   res;
+    com.codenvy.ide.Resources   res;
+    private CoreLocalizationConstant locale;
     private ActionDelegate                       delegate;
     private PreferencesPagePresenter             firstPage;
     private SimpleList<PreferencesPagePresenter> list;
@@ -121,19 +118,50 @@ public class PreferencesViewImpl extends DialogBox implements PreferencesView {
      * @param resources
      */
     @Inject
-    protected PreferencesViewImpl(Resources resources, PreferenceViewImplUiBinder uiBinder) {
+    protected PreferencesViewImpl(com.codenvy.ide.Resources resources, PreferenceViewImplUiBinder uiBinder, CoreLocalizationConstant locale) {
         this.res = resources;
+        this.locale = locale;
 
         Widget widget = uiBinder.createAndBindUi(this);
 
-        this.setText("Preferences");
+        this.setTitle("Preferences");
         this.setWidget(widget);
 
         //create list of preferences
         TableElement tableElement = Elements.createTableElement();
         tableElement.setAttribute("style", "width: 100%");
-        list = SimpleList.create((View)tableElement, res.defaultSimpleListCss(), listItemRenderer, listDelegate);
+        list = SimpleList.create((SimpleList.View)tableElement, res.defaultSimpleListCss(), listItemRenderer, listDelegate);
         this.preferences.add(list);
+        createButtons();
+    }
+    
+    private void createButtons(){
+        btnClose = createButton(locale.close(), "window-preferences-close", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCloseClicked();
+            }
+        });
+        getFooter().add(btnClose);
+
+        btnOk = createButton(locale.ok(), "window-preferences-ok", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onOkClicked();
+            }
+        });
+        getFooter().add(btnOk);
+
+        btnApply = createButton(locale.apply(), "window-preferences-apply", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onApplyClicked();
+            }
+        });
+        getFooter().add(btnApply);
     }
 
     /** {@inheritDoc} */
@@ -149,21 +177,6 @@ public class PreferencesViewImpl extends DialogBox implements PreferencesView {
         }
     }
 
-    @UiHandler("btnApply")
-    void onBtnApplyClick(ClickEvent event) {
-        delegate.onApplyClicked();
-    }
-
-    @UiHandler("btnOk")
-    void onBtnOkClick(ClickEvent event) {
-        delegate.onOkClicked();
-    }
-
-    @UiHandler("btnClose")
-    void onBtnCloseClick(ClickEvent event) {
-        delegate.onCloseClicked();
-    }
-
     /** {@inheritDoc} */
     @Override
     public void close() {
@@ -173,7 +186,6 @@ public class PreferencesViewImpl extends DialogBox implements PreferencesView {
     /** {@inheritDoc} */
     @Override
     public void showPreferences() {
-        this.center();
         this.show();
     }
 
@@ -197,5 +209,10 @@ public class PreferencesViewImpl extends DialogBox implements PreferencesView {
         if (preferences.size() > 0) {
             firstPage = preferences.get(0);
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onClose() {
     }
 }

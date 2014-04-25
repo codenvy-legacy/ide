@@ -19,13 +19,13 @@ package com.codenvy.ide.ext.git.client.url;
 
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
+import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -39,7 +39,7 @@ import javax.validation.constraints.NotNull;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class ShowProjectGitReadOnlyUrlViewImpl extends DialogBox implements ShowProjectGitReadOnlyUrlView {
+public class ShowProjectGitReadOnlyUrlViewImpl extends Window implements ShowProjectGitReadOnlyUrlView {
     interface ShowProjectGitReadOnlyUrlViewImplUiBinder extends UiBinder<Widget, ShowProjectGitReadOnlyUrlViewImpl> {
     }
 
@@ -47,7 +47,6 @@ public class ShowProjectGitReadOnlyUrlViewImpl extends DialogBox implements Show
 
     @UiField
     TextBox url;
-    @UiField
     Button  btnClose;
     @UiField(provided = true)
     final   GitResources            res;
@@ -68,8 +67,17 @@ public class ShowProjectGitReadOnlyUrlViewImpl extends DialogBox implements Show
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 
-        this.setText(locale.projectReadOnlyGitUrlTitle());
+        this.setTitle(locale.projectReadOnlyGitUrlTitle());
         this.setWidget(widget);
+        
+        btnClose = createButton(locale.buttonClose(), "", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCloseClicked();
+            }
+        });
+        getFooter().add(btnClose);
     }
 
     /** {@inheritDoc} */
@@ -87,7 +95,6 @@ public class ShowProjectGitReadOnlyUrlViewImpl extends DialogBox implements Show
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        this.center();
         this.show();
     }
 
@@ -97,8 +104,8 @@ public class ShowProjectGitReadOnlyUrlViewImpl extends DialogBox implements Show
         this.delegate = delegate;
     }
 
-    @UiHandler("btnClose")
-    public void onCloseClicked(ClickEvent event) {
-        delegate.onCloseClicked();
+    /** {@inheritDoc} */
+    @Override
+    protected void onClose() {
     }
 }

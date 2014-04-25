@@ -17,13 +17,14 @@
  */
 package com.codenvy.ide.extension.runner.client.actions;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.extension.runner.client.RunnerController;
+import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
-import com.codenvy.ide.api.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -35,23 +36,30 @@ import com.google.inject.Singleton;
 @Singleton
 public class RunAction extends Action {
 
-    private final ResourceProvider resourceProvider;
-    private       RunnerController runnerController;
+    private final ResourceProvider     resourceProvider;
+    private final RunnerController     runnerController;
+    private final AnalyticsEventLogger eventLogger;
 
     @Inject
     public RunAction(RunnerController runnerController,
                      RunnerResources resources,
                      ResourceProvider resourceProvider,
-                     RunnerLocalizationConstant localizationConstants) {
-        super(localizationConstants.runAppActionText(), localizationConstants.runAppActionDescription(), null, resources.launchApp());
+                     RunnerLocalizationConstant localizationConstants,
+                     AnalyticsEventLogger eventLogger) {
+        super(localizationConstants.runAppActionText(),
+              localizationConstants.runAppActionDescription(),
+              null,
+              resources.launchApp());
         this.runnerController = runnerController;
         this.resourceProvider = resourceProvider;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        runnerController.runActiveProject(false);
+        eventLogger.log("IDE: Run application");
+        runnerController.runActiveProject();
     }
 
     /** {@inheritDoc} */

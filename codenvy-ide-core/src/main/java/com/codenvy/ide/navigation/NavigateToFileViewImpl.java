@@ -29,7 +29,6 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.user.client.ui.Widget;
@@ -83,11 +82,11 @@ public class NavigateToFileViewImpl extends Window implements NavigateToFileView
             public void onSelection(SelectionEvent<SuggestOracle.Suggestion> event) {
                 delegate.onFileSelected();
             }
-
         });
 
         Widget widget = uiBinder.createAndBindUi(this);
         this.setWidget(widget);
+        getFooter().setVisible(false);
     }
 
     /** {@inheritDoc} */

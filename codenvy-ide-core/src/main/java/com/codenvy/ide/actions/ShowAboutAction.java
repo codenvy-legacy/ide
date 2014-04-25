@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.actions;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.about.AboutLocalizationConstant;
 import com.codenvy.ide.about.AboutPresenter;
 import com.codenvy.ide.api.ui.action.Action;
@@ -25,22 +27,25 @@ import com.google.inject.Inject;
 
 /**
  * Action for showing About application information.
- * 
+ *
  * @author Ann Shumilova
  */
 public class ShowAboutAction extends Action {
-    
-    private AboutPresenter presenter;
-    
+
+    private final AboutPresenter       presenter;
+    private final AnalyticsEventLogger eventLogger;
+
     @Inject
-    public ShowAboutAction(AboutPresenter presenter, AboutLocalizationConstant locale) {
-        super(locale.aboutControlTitle(), "Show about application", null);
+    public ShowAboutAction(AboutPresenter presenter, AboutLocalizationConstant locale, AnalyticsEventLogger eventLogger, Resources resources) {
+        super(locale.aboutControlTitle(), "Show about application", null, resources.about());
         this.presenter = presenter;
+        this.eventLogger = eventLogger;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log("IDE: Show about application");
         presenter.showAbout();
     }
 

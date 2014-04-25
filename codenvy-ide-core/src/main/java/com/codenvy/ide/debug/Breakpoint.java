@@ -17,7 +17,9 @@
  */
 package com.codenvy.ide.debug;
 
-/** @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a> */
+import com.codenvy.ide.api.resources.model.File;
+
+/** @author Evgen Vidolob */
 public class Breakpoint {
     public enum Type {
         BREAKPOINT, DISABLED, CONDITIONAL, CURRENT
@@ -27,26 +29,32 @@ public class Breakpoint {
     private   Type   type;
     private   String message;
     private   String path;
+    protected File   file;
 
     /**
      * @param type
      * @param lineNumber
+     * @param path
+     * @param file
      */
-    public Breakpoint(Type type, int lineNumber, String path) {
-        this(type, lineNumber, path, null);
+    public Breakpoint(Type type, int lineNumber, String path, File file) {
+        this(type, lineNumber, path, file, null);
     }
 
     /**
      * @param type
      * @param lineNumber
+     * @param path
+     * @param file
      * @param message
      */
-    public Breakpoint(Type type, int lineNumber, String path, String message) {
+    public Breakpoint(Type type, int lineNumber, String path, File file, String message) {
         super();
         this.type = type;
         this.lineNumber = lineNumber;
         this.path = path;
         this.message = message;
+        this.file = file;
     }
 
     /** @return the type */
@@ -67,5 +75,14 @@ public class Breakpoint {
     /** @return file path */
     public String getPath() {
         return path;
+    }
+
+    /**
+     * Returns the file with which this breakpoint is associated.
+     *
+     * @return file with which this breakpoint is associated
+     */
+    public File getFile() {
+        return file;
     }
 }

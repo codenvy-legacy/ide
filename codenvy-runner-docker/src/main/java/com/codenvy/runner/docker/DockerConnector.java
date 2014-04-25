@@ -17,6 +17,7 @@
  */
 package com.codenvy.runner.docker;
 
+import com.codenvy.api.core.util.LineConsumer;
 import com.codenvy.api.core.util.Pair;
 import com.codenvy.api.core.util.SystemInfo;
 import com.codenvy.commons.json.JsonHelper;
@@ -42,6 +43,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -49,8 +51,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
 import java.io.Writer;
+import java.net.ConnectException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -165,7 +167,7 @@ public class DockerConnector {
     }
 
 
-    public void createImage(java.io.File dockerFile, String repository, String tag, Appendable output) throws IOException {
+    public void createImage(java.io.File dockerFile, String repository, String tag, LineConsumer output) throws IOException {
         final java.io.File tar = Files.createTempFile(repository.replace('/', '_'), ".tar").toFile();
         createTarArchive(tar, dockerFile);
         String name = repository;
@@ -180,7 +182,7 @@ public class DockerConnector {
                             java.io.File application,
                             String repository,
                             String tag,
-                            Appendable output) throws IOException {
+                            LineConsumer output) throws IOException {
         final java.io.File tar = Files.createTempFile(repository.replace('/', '_'), ".tar").toFile();
         createTarArchive(tar, dockerFile, application);
         String name = repository;
@@ -191,7 +193,7 @@ public class DockerConnector {
     }
 
 
-    private void buildImage(java.io.File tar, String name, Appendable output) throws IOException {
+    private void buildImage(java.io.File tar, String name, LineConsumer output) throws IOException {
         final int fd = connect();
         try (InputStream tarInput = new FileInputStream(tar)) {
             final List<Pair<String, ?>> headers = new ArrayList<>(2);
@@ -203,7 +205,24 @@ public class DockerConnector {
                 final String msg = CharStreams.toString(new InputStreamReader(response.getInputStream()));
                 throw new IOException(String.format("Error response from docker API, status: %d, message: %s", status, msg));
             }
-            CharStreams.copy(new InputStreamReader(response.getInputStream()), output);
+            // Docker daemon sends chunked data in response.
+            // One chunk is one JSON object so need to read full chunk at once to be able restore JSON object.
+            final InputStream stream = response.getInputStream();
+            final int bufSize = 64;
+            byte[] buf = new byte[bufSize];
+            final ByteArrayOutputStream bOut = new ByteArrayOutputStream(bufSize);
+            for (; ; ) {
+                int r = stream.read(buf);
+                if (r < 0) {
+                    break;
+                }
+                bOut.write(buf, 0, r);
+                // See ChunkedInputStream.available()
+                if (stream.available() == 0) {
+                    output.writeLine(bOut.toString());
+                    bOut.reset();
+                }
+            }
         } finally {
             close(fd);
             if (!tar.delete()) {
@@ -478,12 +497,12 @@ public class DockerConnector {
         checkCLibrary();
         int fd = C_LIBRARY.socket(AF_UNIX, SOCK_STREAM, 0);
         if (fd == -1) {
-            throw new IOException(String.format("Unable connect to unix socket: '%s'", path));
+            throw new ConnectException(String.format("Unable connect to unix socket: '%s'", path));
         }
         SockAddrUn sockAddr = new SockAddrUn(path);
         int c = C_LIBRARY.connect(fd, sockAddr, sockAddr.size());
         if (c == -1) {
-            throw new IOException(String.format("Unable connect to unix socket: '%s'", path));
+            throw new ConnectException(String.format("Unable connect to unix socket: '%s'", path));
         }
         return fd;
     }
@@ -805,6 +824,11 @@ public class DockerConnector {
             }
 
             return doRead(b, 0, len);
+        }
+
+        @Override
+        public synchronized int available() {
+            return (chunkSize - chunkPos);
         }
 
         private int doRead(byte[] b, int off, int len) throws IOException {

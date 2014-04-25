@@ -21,14 +21,15 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.shared.Remote;
+import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -42,7 +43,7 @@ import javax.validation.constraints.NotNull;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class PushToRemoteViewImpl extends DialogBox implements PushToRemoteView {
+public class PushToRemoteViewImpl extends Window implements PushToRemoteView {
     interface PushToRemoteViewImplUiBinder extends UiBinder<Widget, PushToRemoteViewImpl> {
     }
 
@@ -54,9 +55,7 @@ public class PushToRemoteViewImpl extends DialogBox implements PushToRemoteView 
     ListBox localBranch;
     @UiField
     ListBox remoteBranch;
-    @UiField
     Button  btnPush;
-    @UiField
     Button  btnCancel;
     @UiField(provided = true)
     final   GitResources            res;
@@ -77,8 +76,26 @@ public class PushToRemoteViewImpl extends DialogBox implements PushToRemoteView 
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 
-        this.setText(locale.pushViewTitle());
+        this.setTitle(locale.pushViewTitle());
         this.setWidget(widget);
+        
+        btnCancel = createButton(locale.buttonCancel(), "git-remotes-push-cancel", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCancelClicked();
+            }
+        });
+        getFooter().add(btnCancel);
+
+        btnPush = createButton(locale.buttonPush(), "git-remotes-push-push", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onPushClicked();
+            }
+        });
+        getFooter().add(btnPush);
     }
 
     /** {@inheritDoc} */
@@ -150,7 +167,6 @@ public class PushToRemoteViewImpl extends DialogBox implements PushToRemoteView 
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        this.center();
         this.show();
     }
 
@@ -160,16 +176,6 @@ public class PushToRemoteViewImpl extends DialogBox implements PushToRemoteView 
         this.delegate = delegate;
     }
 
-    @UiHandler("btnPush")
-    public void onPushClicked(ClickEvent event) {
-        delegate.onPushClicked();
-    }
-
-    @UiHandler("btnCancel")
-    public void onCancelClicked(ClickEvent event) {
-        delegate.onCancelClicked();
-    }
-    
     @UiHandler("localBranch")
     public void onValueChanged(ChangeEvent event) {
         delegate.onLocalBranchChanged();
@@ -196,5 +202,10 @@ public class PushToRemoteViewImpl extends DialogBox implements PushToRemoteView 
                 break;
             }
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onClose() {
     }
 }

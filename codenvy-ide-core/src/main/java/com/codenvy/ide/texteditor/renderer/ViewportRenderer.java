@@ -15,7 +15,7 @@
 package com.codenvy.ide.texteditor.renderer;
 
 import elemental.css.CSSStyleDeclaration;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.text.store.DocumentModel;
@@ -33,8 +33,10 @@ import com.codenvy.ide.texteditor.ViewportModel.Edge;
 import com.codenvy.ide.texteditor.renderer.Renderer.LineLifecycleListener;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
+import com.codenvy.ide.util.dom.DomUtils;
 import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.UIObject;
 
 import java.util.EnumSet;
 
@@ -355,7 +357,7 @@ public class ViewportRenderer {
 
         Element element = line.getTag(LINE_TAG_LINE_ELEMENT);
         if (element != null && buffer.hasLineElement(element)) {
-            element.removeFromParent();
+            DomUtils.removeFromParent(element);
             line.putTag(LINE_TAG_LINE_ELEMENT, null);
         }
 
@@ -400,6 +402,7 @@ public class ViewportRenderer {
 
         if (!buffer.hasLineElement(element)) {
             element.getStyle().setTop(top + createOffset, CSSStyleDeclaration.Unit.PX);
+            UIObject.ensureDebugId((com.google.gwt.dom.client.Element)element, "line" + (lineNumber+1));
             buffer.addLineElement(element);
             if (createOffset != 0) {
             /*

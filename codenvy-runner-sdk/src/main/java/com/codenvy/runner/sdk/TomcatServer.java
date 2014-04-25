@@ -92,7 +92,13 @@ public class TomcatServer implements ApplicationServer {
 
     @Override
     public final String getName() {
-        return "Tomcat";
+        return "Tomcat7";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Apache Tomcat 7.0 is an implementation of the Java Servlet and JavaServer Pages technologies.\n" +
+               "Home page: http://tomcat.apache.org/";
     }
 
     @Override
@@ -101,7 +107,7 @@ public class TomcatServer implements ApplicationServer {
                                      final java.io.File extensionJar,
                                      final SDKRunnerConfiguration runnerConfiguration,
                                      CodeServer.CodeServerProcess codeServerProcess,
-                                     StopCallback stopCallback) throws RunnerException {
+                                     ApplicationProcess.Callback callback) throws RunnerException {
         final Path tomcatPath;
         final Path webappsPath;
         final Path apiAppContextPath;
@@ -122,15 +128,15 @@ public class TomcatServer implements ApplicationServer {
 
         ApplicationProcess process;
         if (SystemInfo.isUnix()) {
-            process = startUnix(workDir, runnerConfiguration, codeServerProcess, stopCallback);
+            process = startUnix(workDir, runnerConfiguration, codeServerProcess, callback);
         } else {
-            process = startWindows(workDir, runnerConfiguration, codeServerProcess, stopCallback);
+            process = startWindows(workDir, runnerConfiguration, codeServerProcess, callback);
         }
 
         // TODO: unregister updater
         registerUpdater(process, new ApplicationUpdater() {
             @Override
-            public void update() throws UpdateException {
+            public void update() throws RunnerException {
                 try {
                     final ProjectDescriptor projectDescriptor = runnerConfiguration.getRequest().getProjectDescriptor();
                     final java.io.File destinationDir = Files.createTempDirectory(workDir.toPath(), "sources-").toFile();
@@ -144,7 +150,7 @@ public class TomcatServer implements ApplicationServer {
                     LOG.debug("Extension {} updated", workDir);
                 } catch (Exception e) {
                     LOG.error("Unable to update extension: {}", workDir);
-                    throw new UpdateException(e);
+                    throw new RunnerException(e);
                 }
             }
         });
@@ -174,7 +180,7 @@ public class TomcatServer implements ApplicationServer {
     // *nix
 
     protected ApplicationProcess startUnix(java.io.File appDir, SDKRunnerConfiguration runnerCfg,
-                                           CodeServer.CodeServerProcess codeServerProcess, StopCallback stopCallback)
+                                           CodeServer.CodeServerProcess codeServerProcess, ApplicationProcess.Callback callback)
             throws RunnerException {
         final java.io.File startUpScriptFile;
         final java.io.File logsDir = new java.io.File(appDir, "logs");
@@ -189,7 +195,7 @@ public class TomcatServer implements ApplicationServer {
         logFiles.add(new java.io.File(logsDir, "stdout.log"));
         logFiles.add(new java.io.File(logsDir, "stderr.log"));
         return new TomcatProcess(runnerCfg.getHttpPort(), logFiles, runnerCfg.getDebugPort(),
-                                 startUpScriptFile, appDir, codeServerProcess, stopCallback, pidTaskExecutor);
+                                 startUpScriptFile, appDir, codeServerProcess, callback, pidTaskExecutor);
     }
 
     private java.io.File genStartUpScriptUnix(java.io.File appDir, SDKRunnerConfiguration runnerConfiguration) throws IOException {
@@ -248,7 +254,7 @@ public class TomcatServer implements ApplicationServer {
     // Windows
 
     protected ApplicationProcess startWindows(java.io.File appDir, SDKRunnerConfiguration runnerConfiguration,
-                                              CodeServer.CodeServerProcess codeServerProcess, StopCallback stopCallback) {
+                                              CodeServer.CodeServerProcess codeServerProcess, ApplicationProcess.Callback callback) {
         throw new UnsupportedOperationException();
     }
 
@@ -260,20 +266,20 @@ public class TomcatServer implements ApplicationServer {
         final java.io.File                 startUpScriptFile;
         final java.io.File                 workDir;
         final CodeServer.CodeServerProcess codeServerProcess;
-        final StopCallback                 stopCallback;
+        final Callback                     callback;
         int pid = -1;
         TomcatLogger logger;
         Process      process;
 
         TomcatProcess(int httpPort, List<java.io.File> logFiles, int debugPort, java.io.File startUpScriptFile, java.io.File workDir,
-                      CodeServer.CodeServerProcess codeServerProcess, StopCallback stopCallback, ExecutorService pidTaskExecutor) {
+                      CodeServer.CodeServerProcess codeServerProcess, Callback callback, ExecutorService pidTaskExecutor) {
             this.httpPort = httpPort;
             this.logFiles = logFiles;
             this.debugPort = debugPort;
             this.startUpScriptFile = startUpScriptFile;
             this.workDir = workDir;
             this.codeServerProcess = codeServerProcess;
-            this.stopCallback = stopCallback;
+            this.callback = callback;
             this.pidTaskExecutor = pidTaskExecutor;
         }
 
@@ -335,7 +341,7 @@ public class TomcatServer implements ApplicationServer {
             } catch (Exception ignore) {
             }
 
-            stopCallback.stopped();
+            callback.stopped();
             LOG.debug("Stop Tomcat at port {}, application {}", httpPort, workDir);
         }
 

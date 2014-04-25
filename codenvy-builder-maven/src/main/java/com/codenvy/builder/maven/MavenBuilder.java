@@ -18,6 +18,7 @@
 package com.codenvy.builder.maven;
 
 import com.codenvy.api.builder.BuilderException;
+import com.codenvy.api.builder.dto.BuildRequest;
 import com.codenvy.api.builder.dto.Dependency;
 import com.codenvy.api.builder.internal.BuildLogger;
 import com.codenvy.api.builder.internal.BuildResult;
@@ -29,7 +30,6 @@ import com.codenvy.api.builder.internal.DependencyCollector;
 import com.codenvy.api.builder.internal.SourceManagerEvent;
 import com.codenvy.api.builder.internal.SourceManagerListener;
 import com.codenvy.api.builder.internal.SourcesManager;
-import com.codenvy.api.builder.internal.dto.BuildRequest;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.builder.maven.dto.MavenDependency;

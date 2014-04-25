@@ -30,7 +30,7 @@ import com.google.inject.Singleton;
 
 
 /**
- * Template for the Console View Part. Used for demo and currently does nothing.
+ * Template for the Console View Part.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
@@ -71,10 +71,7 @@ public class ConsolePartPresenter extends BasePresenter implements ConsolePartVi
         container.setWidget(view);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void print(String message) {
-        view.print(message);
+    private void performPostOutputActions() {
         PartPresenter activePart = partStack.getActivePart();
         if (activePart == null || !activePart.equals(this)) {
             partStack.setActivePart(this);
@@ -82,16 +79,18 @@ public class ConsolePartPresenter extends BasePresenter implements ConsolePartVi
         view.scrollBottom();
     }
 
-
-    /** {@inheritDoc} */
-    @Override
-    public void printf(String message) {
-        view.print("<pre>" + message + "</pre>");
-        PartPresenter activePart = partStack.getActivePart();
-        if (activePart == null || !activePart.equals(this)) {
-            partStack.setActivePart(this);
+    /**
+     * Print text on console.
+     *
+     * @param text
+     *         text that need to be shown
+     */
+    public void print(String text) {
+        String []lines = text.split("\n");
+        for (String line : lines) {
+            view.print(line);
         }
-        view.scrollBottom();
+        performPostOutputActions();
     }
 
     /** {@inheritDoc} */
@@ -119,4 +118,21 @@ public class ConsolePartPresenter extends BasePresenter implements ConsolePartVi
             }
         }, WorkBenchPartControllerImpl.DURATION);
     }
+
+    @Override
+    public void displayException(Exception e) {
+    }
+
+    @Override
+    public void displayMsgInfo(String text) {
+    }
+
+    @Override
+    public void displayMsgError(String text) {
+    }
+
+    @Override
+    public void displayMsgWarn(String text) {
+    }
+
 }

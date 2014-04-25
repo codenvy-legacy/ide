@@ -17,13 +17,12 @@
  */
 package com.codenvy.ide.logger;
 
-import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
-import com.codenvy.api.user.shared.dto.Profile;
-import com.codenvy.ide.api.logger.AnalyticsEventLogger;
+import com.codenvy.api.analytics.shared.dto.EventParameters;
+import com.codenvy.api.user.gwt.client.UserServiceClient;
+import com.codenvy.api.user.shared.dto.User;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.dto.EventParameters;
 import com.codenvy.ide.extension.ExtensionDescription;
 import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -37,6 +36,7 @@ import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,13 +46,14 @@ import static com.codenvy.ide.rest.HTTPHeader.CONTENTTYPE;
 import static com.google.gwt.http.client.RequestBuilder.POST;
 
 /**
- * API to track ide usage.
+ * API to track Analytics events.
  *
  * @author Anatoliy Bazko
  */
 @Singleton
-public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
-    private static final String API_ANALYTICS_PATH = "/api/analytics/log/ide-usage";
+public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
+    private static final String IDE_EVENT          = "ide-usage";
+    private static final String API_ANALYTICS_PATH = "/analytics/log/";
 
     private static final String WS_PARAM           = "WS";
     private static final String USER_PARAM         = "USER";
@@ -63,60 +64,89 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
 
     private static final String EMPTY_PARAM_VALUE = "";
 
-    private final DtoFactory               dtoFactory;
-    private final UserProfileServiceClient userProfile;
-    private final ResourceProvider         resourceProvider;
-    private final MessageBus               messageBus;
-    private final ExtensionRegistry        extensionRegistry;
-    private final DtoUnmarshallerFactory   dtoUnmarshallerFactory;
+    private final DtoFactory             dtoFactory;
+    private final UserServiceClient      user;
+    private final ResourceProvider       resourceProvider;
+    private final MessageBus             messageBus;
+    private final ExtensionRegistry      extensionRegistry;
+    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
+
+    private String currentUser;
 
     @Inject
     public AnalyticsEventLoggerImpl(DtoFactory dtoFactory,
                                     ExtensionRegistry extensionRegistry,
-                                    UserProfileServiceClient userProfile,
+                                    UserServiceClient user,
                                     ResourceProvider resourceProvider,
                                     MessageBus messageBus,
                                     DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.dtoFactory = dtoFactory;
-        this.userProfile = userProfile;
+        this.user = user;
         this.resourceProvider = resourceProvider;
         this.messageBus = messageBus;
         this.extensionRegistry = extensionRegistry;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+
+        saveCurrentUser();
     }
 
     @Override
-    public void log(Class<?> extensionClass, String event, Map<String, String> additionalParams) {
-        doLog(event, getSource(extensionClass), additionalParams);
+    public void log(Class<?> extensionClass, String action, Map<String, String> additionalParams) {
+        doLog(IDE_EVENT, action, getSource(extensionClass), additionalParams);
     }
 
     @Override
-    public void log(Class<?> extensionClass, String event) {
-        doLog(event, getSource(extensionClass), Collections.<String, String>emptyMap());
+    public void log(Class<?> extensionClass, String action) {
+        doLog(IDE_EVENT, action, getSource(extensionClass), Collections.<String, String>emptyMap());
     }
 
     @Override
-    public void log(String event) {
-        doLog(event, EMPTY_PARAM_VALUE, Collections.<String, String>emptyMap());
+    public void log(String action) {
+        doLog(IDE_EVENT, action, null, Collections.<String, String>emptyMap());
     }
 
-    private void doLog(String event, String source, Map<String, String> additionalParams) {
-        validate(event, additionalParams);
+    @Override
+    public void logEvent(String event, Map<String, String> additionalParams) {
+        doLog(event, null, null, additionalParams);
+    }
+
+    private void doLog(String event,
+                       @Nullable String action,
+                       @Nullable String source,
+                       Map<String, String> additionalParams) {
+
+        validate(action, additionalParams);
 
         additionalParams = new HashMap<>(additionalParams);
-        putReservedParameters(event, source, additionalParams);
+        putReservedParameters(action, source, additionalParams);
 
-        send(additionalParams);
+        send(event, additionalParams);
     }
 
-    private void putReservedParameters(String event, String source, Map<String, String> additionalParams) {
-        addProjectParams(additionalParams);
-        additionalParams.put(WS_PARAM, Utils.getWorkspaceName());
-        additionalParams.put(ACTION_PARAM, event);
-        additionalParams.put(SOURCE_PARAM, source);
+    private void putReservedParameters(@Nullable String action,
+                                       @Nullable String source,
+                                       Map<String, String> additionalParams) {
+        Project project = resourceProvider.getActiveProject();
+        if (project != null) {
+            putIfNotNull(PROJECT_NAME_PARAM, project.getName(), additionalParams);
+            putIfNotNull(PROJECT_TYPE_PARAM, project.getDescription().getProjectTypeId(), additionalParams);
+        }
+
+        putIfNotNull(USER_PARAM, currentUser, additionalParams);
+        putIfNotNull(WS_PARAM, Utils.getWorkspaceName(), additionalParams);
+        putIfNotNull(ACTION_PARAM, action, additionalParams);
+        putIfNotNull(SOURCE_PARAM, source, additionalParams);
     }
 
-    private void validate(String event, Map<String, String> additionalParams) throws IllegalArgumentException {
+    private void putIfNotNull(String key,
+                              @Nullable String value,
+                              Map<String, String> additionalParams) {
+        if (value != null) {
+            additionalParams.put(key, value);
+        }
+    }
+
+    private void validate(@Nullable String action, Map<String, String> additionalParams) throws IllegalArgumentException {
         if (additionalParams.size() > MAX_PARAMS_NUMBER) {
             throw new IllegalArgumentException("The number of parameters exceeded the limit in " + MAX_PARAMS_NUMBER);
         }
@@ -137,8 +167,8 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
             }
         }
 
-        if (event.length() > MAX_PARAM_VALUE_LENGTH) {
-            throw new IllegalArgumentException("The length of event name exceeded the length in "
+        if (action != null && action.length() > MAX_PARAM_VALUE_LENGTH) {
+            throw new IllegalArgumentException("The length of action name exceeded the length in "
                                                + MAX_PARAM_VALUE_LENGTH + " characters");
 
         }
@@ -149,62 +179,49 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLogger {
         return description != null ? description.getTitle() : EMPTY_PARAM_VALUE;
     }
 
-    private void addProjectParams(final Map<String, String> additionalParams) {
-        Project project = resourceProvider.getActiveProject();
-        if (project != null) {
-            additionalParams.put(PROJECT_NAME_PARAM, project.getName());
-            additionalParams.put(PROJECT_TYPE_PARAM, project.getDescription().getProjectTypeId());
-        } else {
-            additionalParams.put(PROJECT_NAME_PARAM, EMPTY_PARAM_VALUE);
-            additionalParams.put(PROJECT_TYPE_PARAM, EMPTY_PARAM_VALUE);
-        }
-    }
 
-    private void send(final Map<String, String> additionalParams) {
-        userProfile.getCurrentProfile(null, new AsyncRequestCallback<Profile>(
-                dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
+    private void saveCurrentUser() {
+        user.getCurrentUser(new AsyncRequestCallback<User>(dtoUnmarshallerFactory.newUnmarshaller(User.class)) {
             @Override
-            protected void onSuccess(Profile result) {
+            protected void onSuccess(User result) {
                 if (result != null) {
-                    additionalParams.put(USER_PARAM, result.getUserId());
+                    currentUser = result.getEmail();
                 } else {
-                    additionalParams.put(USER_PARAM, EMPTY_PARAM_VALUE);
+                    currentUser = EMPTY_PARAM_VALUE;
                 }
-                doSend(additionalParams);
             }
 
             @Override
             protected void onFailure(Throwable exception) {
-                additionalParams.put(USER_PARAM, EMPTY_PARAM_VALUE);
-                doSend(additionalParams);
-            }
-
-            private void doSend(Map<String, String> parameters) {
-                EventParameters additionalParams = dtoFactory.createDto(EventParameters.class).withParams(parameters);
-                final String json = dtoFactory.toJson(additionalParams);
-
-                MessageBuilder builder = new MessageBuilder(POST, API_ANALYTICS_PATH);
-                builder.data(json);
-                builder.header(CONTENTTYPE, APPLICATION_JSON);
-                Message message = builder.build();
-
-                try {
-                    messageBus.send(message, new RequestCallback() {
-                        @Override
-                        protected void onSuccess(Object result) {
-                        }
-
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            Log.error(getClass(), exception.getMessage());
-                            Log.info(getClass(), json);
-                        }
-                    });
-                } catch (Exception e) {
-                    Log.error(getClass(), e.getMessage());
-                    Log.info(getClass(), json);
-                }
+                currentUser = EMPTY_PARAM_VALUE;
             }
         });
+    }
+
+    private void send(String event, Map<String, String> parameters) {
+        EventParameters additionalParams = dtoFactory.createDto(EventParameters.class).withParams(parameters);
+        final String json = dtoFactory.toJson(additionalParams);
+
+        MessageBuilder builder = new MessageBuilder(POST, API_ANALYTICS_PATH + event);
+        builder.data(json);
+        builder.header(CONTENTTYPE, APPLICATION_JSON);
+        Message message = builder.build();
+
+        try {
+            messageBus.send(message, new RequestCallback() {
+                @Override
+                protected void onSuccess(Object result) {
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    Log.error(getClass(), exception.getMessage());
+                    Log.info(getClass(), json);
+                }
+            });
+        } catch (Exception e) {
+            Log.error(getClass(), e.getMessage());
+            Log.info(getClass(), json);
+        }
     }
 }

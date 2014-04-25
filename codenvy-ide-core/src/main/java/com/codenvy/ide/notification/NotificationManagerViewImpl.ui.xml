@@ -28,7 +28,7 @@
             float: left;
         }
     </ui:style>
-    <g:FlowPanel ui:field="mainPanel" addStyleNames="{res.notificationCss.notificationPanel} {style.notificationPanel}">
+    <g:FlowPanel ui:field="mainPanel" addStyleNames="{res.notificationCss.notificationPanel} {style.notificationPanel}" debugId="eventsPart">
         <!--<g:SimplePanel ui:field="iconPanel" addStyleNames="{style.floatLeft}"/>-->
         <!--<g:Label ui:field="count"/>-->
     </g:FlowPanel>

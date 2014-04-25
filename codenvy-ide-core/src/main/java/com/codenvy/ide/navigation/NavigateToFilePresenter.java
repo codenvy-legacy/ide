@@ -18,15 +18,17 @@
 package com.codenvy.ide.navigation;
 
 import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEvent.FileOperation;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.resources.model.Folder;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.Message;
@@ -59,6 +61,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
     private       EventBus               eventBus;
     private final MessageBus             wsMessageBus;
     private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    private final NotificationManager    notificationManager;
     private       Project                rootProject;
     final private String                 SEARCH_URL;
 
@@ -68,12 +71,14 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
                                    EventBus eventBus,
                                    MessageBus wsMessageBus,
                                    @Named("workspaceId") String workspaceId,
-                                   DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+                                   DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                                   NotificationManager notificationManager) {
         this.resourceProvider = resourceProvider;
         this.view = view;
         this.eventBus = eventBus;
         this.wsMessageBus = wsMessageBus;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.notificationManager = notificationManager;
         SEARCH_URL = "/project/" + workspaceId + "/search";
         view.setDelegate(this);
     }
@@ -148,7 +153,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
         view.close();
 
         final String path = view.getItemPath();
-        refreshPath(rootProject, path, new AsyncCallback<Resource>() {
+        rootProject.findResourceByPath(path, new AsyncCallback<Resource>() {
             @Override
             public void onSuccess(Resource result) {
                 eventBus.fireEvent(new FileEvent((File)result, FileOperation.OPEN));
@@ -161,30 +166,38 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
         });
     }
 
-    private void refreshPath(Folder rootFolder, final String pathToRefresh, final AsyncCallback<Resource> callback) {
-        // Avoid redundant requests. Use cached project structure.
-        if (!rootFolder.getChildren().isEmpty()) {
-            for (Resource child : rootFolder.getChildren().asIterable()) {
-                if (pathToRefresh.equals(child.getPath())) {
-                    callback.onSuccess(child);
-                    break;
-                } else if (pathToRefresh.startsWith(child.getPath())) {
-                    refreshPath((Folder)child, pathToRefresh, callback);
-                    break;
-                }
-            }
-        } else {
-            rootProject.refreshChildren(rootFolder, new AsyncCallback<Folder>() {
-                @Override
-                public void onSuccess(Folder result) {
-                    refreshPath(result, pathToRefresh, callback);
-                }
+    /**
+     * Open file from current opened project.
+     *
+     * @param path
+     *         relative path to file. If user need to open file located in
+     *         <code>/project/path/to/some/file.ext</code> path parameter should be <code>path/to/some/file.ext</code>.
+     */
+    public void openFile(final String path) {
+        rootProject = getRootProject(resourceProvider.getActiveProject());
+        if (rootProject != null) {
+            rootProject.findResourceByPath(rootProject.getPath() + (!path.startsWith("/") ? "/".concat(path) : path),
+                                           new AsyncCallback<Resource>() {
+                                               @Override
+                                               public void onSuccess(Resource resource) {
+                                                   if (resource.isFile()) {
+                                                       eventBus.fireEvent(new FileEvent((File)resource, FileOperation.OPEN));
+                                                   } else {
+                                                       notificationManager
+                                                               .showNotification(
+                                                                       new Notification("Unable to open " + path + ". It's not a file.",
+                                                                                        Notification.Type.WARNING)
+                                                                                );
+                                                   }
+                                               }
 
-                @Override
-                public void onFailure(Throwable caught) {
-                    callback.onFailure(caught);
-                }
-            });
+                                               @Override
+                                               public void onFailure(Throwable caught) {
+                                                   notificationManager.showNotification(
+                                                           new Notification("Unable to open " + path, Notification.Type.WARNING));
+                                               }
+                                           }
+                                          );
         }
     }
 

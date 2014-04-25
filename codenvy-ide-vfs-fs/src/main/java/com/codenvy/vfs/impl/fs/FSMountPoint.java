@@ -124,7 +124,7 @@ public class FSMountPoint implements MountPoint {
     private static final int MAX_BUFFER_SIZE  = 100 * 1024; // 100k
     private static final int COPY_BUFFER_SIZE = 8 * 1024; // 8k
 
-    private static final long LOCK_FILE_TIMEOUT     = 30000; // 30 seconds
+    private static final long LOCK_FILE_TIMEOUT     = 60000; // 60 seconds
     private static final int  FILE_LOCK_MAX_THREADS = 1024;
 
     static final String SERVICE_DIR = ".vfs";
@@ -439,7 +439,7 @@ public class FSMountPoint implements MountPoint {
             final VirtualFileImpl child =
                     new VirtualFileImpl(new java.io.File(parent.getIoFile(), name), childPath, pathToId(childPath), this);
             if (child.exists()) {
-                if (hasPermission(child, BasicPermissions.READ, false)) {
+                if (hasPermission(child, BasicPermissions.READ, true)) {
                     return child;
                 }
                 throw new PermissionDeniedException(String.format("Unable get item '%s'. Operation not permitted. ", child.getPath()));

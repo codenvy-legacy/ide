@@ -32,14 +32,13 @@ import java.util.List;
  * on rules different than just positional constraints, that's when you need
  * to implement your own <code>ActionGroup</code>.
  *
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Evgen Vidolob
  */
 public class DefaultActionGroup extends ActionGroup {
     /** Contains instances of AnAction */
-    private final List<Action>                    mySortedChildren = new ArrayList<Action>();
+    private final List<Action>                    mySortedChildren = new ArrayList<>();
     /** Contains instances of Pair */
-    private final List<Pair<Action, Constraints>> myPairs          = new ArrayList<Pair<Action, Constraints>>();
+    private final List<Pair<Action, Constraints>> myPairs          = new ArrayList<>();
     private ActionManager actionManager;
 
     public DefaultActionGroup(ActionManager actionManager) {
@@ -153,7 +152,7 @@ public class DefaultActionGroup extends ActionGroup {
             if (addToSortedList(action, constraint, actionManager)) {
                 actionAdded(action, actionManager);
             } else {
-                myPairs.add(new Pair<Action, Constraints>(action, constraint));
+                myPairs.add(new Pair<>(action, constraint));
             }
         }
 
@@ -255,7 +254,7 @@ public class DefaultActionGroup extends ActionGroup {
     }
 
     private Action[] mapNotNull(Action[] arr, Action[] emptyArray) {
-        List<Action> result = new ArrayList<Action>(arr.length);
+        List<Action> result = new ArrayList<>(arr.length);
         for (Action t : arr) {
             if (t != null) {
                 result.add(t);

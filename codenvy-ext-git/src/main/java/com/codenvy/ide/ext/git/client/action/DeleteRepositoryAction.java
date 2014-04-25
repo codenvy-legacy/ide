@@ -17,33 +17,38 @@
  */
 package com.codenvy.ide.ext.git.client.action;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.delete.DeleteRepositoryPresenter;
-import com.codenvy.ide.api.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 @Singleton
 public class DeleteRepositoryAction extends Action {
-    private DeleteRepositoryPresenter presenter;
-    private ResourceProvider          resourceProvider;
+    private final DeleteRepositoryPresenter presenter;
+    private final ResourceProvider          resourceProvider;
+    private final AnalyticsEventLogger      eventLogger;
 
     @Inject
-    public DeleteRepositoryAction(DeleteRepositoryPresenter presenter, ResourceProvider resourceProvider, GitResources resources,
-                                  GitLocalizationConstant constant) {
+    public DeleteRepositoryAction(DeleteRepositoryPresenter presenter, ResourceProvider resourceProvider,
+                                  GitResources resources,
+                                  GitLocalizationConstant constant, AnalyticsEventLogger eventLogger) {
         super(constant.deleteControlTitle(), constant.deleteControlPrompt(), null, resources.deleteRepo());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log("IDE: Git delete repository");
         presenter.deleteRepository();
     }
 

@@ -222,6 +222,14 @@ public class Style {
     public static String getEditorAttribute() {
         return theme.getEditorAttribute();
     }
+    
+    public static String getCompletionPopupBorderColor() {
+        return theme.getCompletionPopupBorderColor();
+    }
+    
+    public static String getCompletionPopupBackgroundColor() {
+        return theme.getCompletionPopupBackgroundColor();
+    }
 
     public static String getWindowContentBackground() {
         return theme.getWindowContentBackground();
@@ -230,7 +238,11 @@ public class Style {
     public static String getWindowHeaderBackground() {
         return theme.getWindowHeaderBackground();
     }
-
+    
+    public static String getWindowSeparatorColor() {
+        return theme.getWindowSeparatorColor();
+    }
+    
     public static String getWizardStepsColor() {
         return theme.getWizardStepsColor();
     }
@@ -289,6 +301,10 @@ public class Style {
 
     public static String getTreeTextShadow() {
         return theme.getTreeTextShadow();
+    }
+    
+    public static String getTreeIconFileColor() {
+        return theme.getTreeIconFileColor();
     }
 
     public static String getBoxBorderColor() {

@@ -15,7 +15,7 @@
 package com.codenvy.ide.texteditor.selection;
 
 import elemental.css.CSSStyleDeclaration;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.mvp.UiComponent;
@@ -83,9 +83,9 @@ public class CursorView extends UiComponent<CursorView.View> {
 
         private void setBlockMode(boolean isBlockMode) {
             if (isBlockMode) {
-                caret.addClassName(css.block());
+                Elements.addClassName(css.block(), caret);
             } else {
-                caret.removeClassName(css.block());
+                Elements.removeClassName(css.block(), caret);
             }
         }
     }

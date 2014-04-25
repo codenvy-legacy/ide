@@ -14,6 +14,9 @@
               <g:HTMLPanel ui:field="crossButton" styleName="{css.crossButton}"></g:HTMLPanel>
           </g:HTMLPanel>
           <g:HTMLPanel ui:field="content"></g:HTMLPanel>
+          <g:HTMLPanel ui:field="footer" styleName="{css.footer}">
+              <g:FlowPanel styleName="{css.separator}"></g:FlowPanel>
+          </g:HTMLPanel>
       </g:HTMLPanel>
     </g:HTMLPanel>
   </g:HTMLPanel>

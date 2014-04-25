@@ -35,7 +35,7 @@ public class UpdateService {
 
     @Path("update/{id}")
     @POST
-    public void updateApplication(@PathParam("id") long id) throws UpdateException {
+    public void updateApplication(@PathParam("id") long id) throws Exception {
         ApplicationUpdater updater = applicationUpdaterRegistry.getUpdaterByApplicationProcessId(id);
         if (updater != null) {
             updater.update();

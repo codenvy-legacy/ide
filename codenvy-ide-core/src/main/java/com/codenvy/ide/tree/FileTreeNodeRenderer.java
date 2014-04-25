@@ -14,19 +14,18 @@
 
 package com.codenvy.ide.tree;
 
+import elemental.dom.Element;
 import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.MouseEvent;
 import elemental.html.AnchorElement;
-import elemental.html.Element;
-import elemental.html.ImageElement;
 import elemental.html.SpanElement;
 
-import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.resources.model.Folder;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.ui.tree.NodeRenderer;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
@@ -34,9 +33,11 @@ import com.codenvy.ide.ui.tree.TreeNodeMutator;
 import com.codenvy.ide.util.CssUtils;
 import com.codenvy.ide.util.TextUtils;
 import com.codenvy.ide.util.dom.Elements;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.UIObject;
+
+import org.vectomatic.dom.svg.ui.SVGImage;
 
 
 /** Renderer for nodes in the file tree. */
@@ -76,6 +77,8 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
 
         @Override
         String nodeNameInput();
+        
+        String treeFileIcon();
     }
 
     public interface Resources extends Tree.Resources {
@@ -111,42 +114,40 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
      */
     public static SpanElement renderNodeContents(Css css, String name, Resource item, EventListener mouseDownListener,
                                                  boolean renderIcon) {
-
         SpanElement root = Elements.createSpanElement(css.root());
-        Image image = detectIcon(item);
+        int depth = item.getPath().split("/").length - 2;
+        root.setAttribute("__depth", "" + depth);
 
-        if (renderIcon && image != null) {
-            ImageElement icon = Elements.createImageElement();
-            icon.setSrc(image.getUrl());
-            icon.addClassName(css.icon());
-            root.appendChild(icon);
+        if (renderIcon) {
+            SVGImage image = detectIcon(item);
+            if (image != null) {
+                image.getElement().setAttribute("class", css.icon());
+                root.appendChild((Element)image.getElement());
+            }
         }
 
-        final Element label;
-        if (mouseDownListener != null) {
-            label = Elements.createAnchorElement(css.label());
-            ((AnchorElement)label).setHref("javascript:;");
-            label.addEventListener(Event.MOUSEDOWN, mouseDownListener, false);
-        } else {
-            label = Elements.createSpanElement(css.label());
-        }
+        Elements.addClassName(css.label(), root);
 
         if (item.isFolder()) {
-            label.addClassName(css.folderFont());
+            Elements.addClassName(css.folderFont(), root);
         } else if (item.isFile()) {
-            label.addClassName(css.fileFont());
+            Elements.addClassName(css.fileFont(), root);
         } else {
-            label.addClassName(css.defaultFont());
+            Elements.addClassName(css.defaultFont(), root);
         }
-        label.setTextContent(name);
-        UIObject.ensureDebugId((com.google.gwt.dom.client.Element)label, "projectTree-" + TextUtils.md5(item.getPath()));
 
-        root.appendChild(label);
+        root.setInnerHTML(root.getInnerHTML() + "&nbsp;" + name);
+
+        if (mouseDownListener != null) {
+            root.addEventListener(Event.MOUSEDOWN, mouseDownListener, false);
+        }
+
+        UIObject.ensureDebugId((com.google.gwt.dom.client.Element)root, "projectTree-" + TextUtils.md5(item.getPath()));
 
         return root;
     }
 
-    private static Image detectIcon(Resource item) {
+    /*private static Image detectIcon(Resource item) {
         Project project = item.getProject();
         Image icon = null;
 
@@ -169,9 +170,38 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
                 icon = iconRegistry.getIcon(projectTypeId + "/" + ext + ".file.small.icon");
             }
         }
+
+        return icon;
+    }*/
+
+    private static SVGImage detectIcon(Resource item) {
+        Project project = item.getProject();
+        SVGImage icon = null;
+
+        if (project == null) return null;
+        final String projectTypeId = project.getDescription().getProjectTypeId();
+        if (item instanceof Project) {
+            icon = iconRegistry.getSVGIconIfExist(projectTypeId + ".projecttype.small.icon");
+        } else if (item instanceof Folder) {
+            icon = iconRegistry.getSVGIcon(projectTypeId + ".folder.small.icon");
+        } else if (item instanceof File) {
+            String filename = item.getName();
+
+            // search exact match first
+            icon = iconRegistry.getSVGIconIfExist(projectTypeId + "/" + filename + ".file.small.icon");
+
+            // not found, try with extension
+            if (icon == null) {
+                String[] split = item.getName().split("\\.");
+                String ext = split[split.length - 1];
+                icon = iconRegistry.getSVGIcon(projectTypeId + "/" + ext + ".file.small.icon");
+            }
+        }
         return icon;
     }
 
+    
+    
     private final EventListener mouseDownListener = new EventListener() {
         @Override
         public void handleEvent(Event evt) {

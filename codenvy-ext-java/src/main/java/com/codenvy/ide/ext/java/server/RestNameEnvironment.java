@@ -21,16 +21,14 @@ import com.codenvy.api.builder.BuildStatus;
 import com.codenvy.api.builder.BuilderException;
 import com.codenvy.api.builder.dto.BuildTaskDescriptor;
 import com.codenvy.api.core.rest.HttpJsonHelper;
-import com.codenvy.api.core.rest.RemoteException;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.Pair;
-import com.codenvy.api.project.server.Project;
 import com.codenvy.api.project.server.ProjectManager;
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.commons.lang.ZipUtils;
+import com.codenvy.commons.user.User;
 import com.codenvy.ide.ext.java.server.internal.core.JavaProject;
 import com.codenvy.ide.ext.java.server.internal.core.search.matching.JavaSearchNameEnvironment;
-import com.codenvy.ide.maven.tools.MavenUtils;
-import com.codenvy.vfs.impl.fs.VirtualFileImpl;
 import com.google.inject.name.Named;
 
 import org.eclipse.jdt.core.IJavaProject;
@@ -64,6 +62,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.io.File;
 import java.io.FilterInputStream;
@@ -72,7 +71,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -184,7 +182,7 @@ public class RestNameEnvironment {
     @Produces(MediaType.APPLICATION_JSON)
     public String findConstructorDeclarations(@QueryParam("prefix") String prefix,
                                               @QueryParam("camelcase") boolean camelCaseMatch,
-                                              @QueryParam("projectpath") String projectPath){
+                                              @QueryParam("projectpath") String projectPath) {
         JavaProject javaProject = getJavaProject(projectPath);
         JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
         JsonSearchRequester searchRequester = new JsonSearchRequester();
@@ -196,9 +194,9 @@ public class RestNameEnvironment {
     @javax.ws.rs.Path("findTypes")
     @Produces(MediaType.APPLICATION_JSON)
     public String findTypes(@QueryParam("qualifiedname") String qualifiedName, @QueryParam("findmembers") boolean findMembers,
-                            @QueryParam("camelcase")  boolean camelCaseMatch,
+                            @QueryParam("camelcase") boolean camelCaseMatch,
                             @QueryParam("searchfor") int searchFor,
-                            @QueryParam("projectpath") String projectPath){
+                            @QueryParam("projectpath") String projectPath) {
         JavaProject javaProject = getJavaProject(projectPath);
         JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
         JsonSearchRequester searchRequester = new JsonSearchRequester();
@@ -210,8 +208,8 @@ public class RestNameEnvironment {
     @javax.ws.rs.Path("findExactTypes")
     @Produces(MediaType.APPLICATION_JSON)
     public String findExactTypes(@QueryParam("missingsimplename") String missingSimpleName, @QueryParam("findmembers") boolean findMembers,
-                            @QueryParam("searchfor") int searchFor,
-                            @QueryParam("projectpath") String projectPath){
+                                 @QueryParam("searchfor") int searchFor,
+                                 @QueryParam("projectpath") String projectPath) {
         JavaProject javaProject = getJavaProject(projectPath);
         JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
         JsonSearchRequester searchRequester = new JsonSearchRequester();
@@ -267,8 +265,8 @@ public class RestNameEnvironment {
     private InputStream doDownload(String downloadURL) throws IOException {
         HttpURLConnection http = null;
         try {
-            URL url = new URL(downloadURL);
-            http = (HttpURLConnection)url.openConnection();
+            URI uri = UriBuilder.fromUri(downloadURL).queryParam("token", getAuthenticationToken()).build();
+            http = (HttpURLConnection)uri.toURL().openConnection();
             http.setRequestMethod("GET");
             int responseCode = http.getResponseCode();
             if (responseCode != 200) {
@@ -288,6 +286,14 @@ public class RestNameEnvironment {
 
     }
 
+    private static String getAuthenticationToken() {
+        User user = EnvironmentContext.getCurrent().getUser();
+        if (user != null) {
+            return user.getToken();
+        }
+        return null;
+    }
+
     private boolean hasPom(com.codenvy.api.project.server.Project project) {
         return project.getBaseFolder().getChild("pom.xml") != null;
     }
@@ -298,7 +304,8 @@ public class RestNameEnvironment {
             LOG.error("Build failed see more detail here: " + logLink.getHref());
             throw new BuilderException(
                     "Build failed see more detail here: <a href=\"" + logLink.getHref() + "\" target=\"_blank\">" + logLink.getHref() +
-                    "</a>");
+                    "</a>"
+            );
         }
         throw new BuilderException("Build failed");
     }
@@ -314,7 +321,7 @@ public class RestNameEnvironment {
     }
 
     @NotNull
-    private BuildTaskDescriptor waitTaskFinish(@NotNull BuildTaskDescriptor buildDescription) throws IOException, RemoteException {
+    private BuildTaskDescriptor waitTaskFinish(@NotNull BuildTaskDescriptor buildDescription) throws Exception {
         BuildTaskDescriptor request = buildDescription;
         final int sleepTime = 2000;
 
@@ -336,7 +343,7 @@ public class RestNameEnvironment {
 
     @NotNull
     private BuildTaskDescriptor getDependencies(@NotNull String url, @NotNull String projectName, @NotNull String analyzeType)
-            throws IOException, RemoteException {
+            throws Exception {
         Pair<String, String> projectParam = Pair.of("project", projectName);
         Pair<String, String> typeParam = Pair.of("type", analyzeType);
         BuildTaskDescriptor buildStatus = HttpJsonHelper.request(BuildTaskDescriptor.class, url, "POST", null, projectParam, typeParam);
@@ -365,7 +372,7 @@ public class RestNameEnvironment {
                     break;
                 }
             }
-            if(binding == null) return null;
+            if (binding == null) return null;
             return TypeBindingConvetror.toJsonBinaryType(binding);
         }
         return null;

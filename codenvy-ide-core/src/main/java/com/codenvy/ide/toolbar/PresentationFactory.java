@@ -23,15 +23,12 @@ import com.codenvy.ide.api.ui.action.Presentation;
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 
-/**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
- */
+/** @author Evgen Vidolob */
 public class PresentationFactory {
     private final HashMap<Action, Presentation> myAction2Presentation;
 
     public PresentationFactory() {
-        myAction2Presentation = new HashMap<Action, Presentation>();
+        myAction2Presentation = new HashMap<>();
     }
 
     public final Presentation getPresentation(@NotNull Action action) {

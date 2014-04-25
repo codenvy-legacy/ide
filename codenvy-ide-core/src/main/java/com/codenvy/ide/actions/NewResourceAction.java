@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.actions;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
@@ -35,24 +36,27 @@ import com.google.inject.Singleton;
 @Singleton
 public class NewResourceAction extends Action {
 
-    private WizardDialogFactory wizardDialogFactory;
-    private DefaultWizard       wizard;
-    private ResourceProvider    resourceProvider;
+    private final WizardDialogFactory  wizardDialogFactory;
+    private final DefaultWizard        wizard;
+    private final ResourceProvider     resourceProvider;
+    private final AnalyticsEventLogger eventLogger;
 
     @Inject
     public NewResourceAction(Resources resources,
                              ResourceProvider resourceProvider,
                              WizardDialogFactory wizardDialogFactory,
-                             @NewResource DefaultWizard wizard) {
+                             @NewResource DefaultWizard wizard, AnalyticsEventLogger eventLogger) {
         super("Other", "Create new resource", null, resources.newResource());
         this.wizardDialogFactory = wizardDialogFactory;
         this.wizard = wizard;
         this.resourceProvider = resourceProvider;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log("IDE: New file");
         WizardDialog wizardDialog = wizardDialogFactory.create(wizard);
         wizardDialog.show();
     }

@@ -17,16 +17,17 @@
  */
 package com.codenvy.ide.actions;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.api.resources.model.Resource;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -39,22 +40,23 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 /** @author Andrey Plotnikov */
 @Singleton
 public class DeleteResourceAction extends Action {
-    private SelectionAgent           selectionAgent;
-    private ResourceProvider         resourceProvider;
-    private NotificationManager      notificationManager;
-    private CoreLocalizationConstant localization;
+    private final SelectionAgent           selectionAgent;
+    private final ResourceProvider         resourceProvider;
+    private final NotificationManager      notificationManager;
+    private final CoreLocalizationConstant localization;
+    private final AnalyticsEventLogger     eventLogger;
 
     @Inject
-    public DeleteResourceAction(SelectionAgent selectionAgent,
-                                ResourceProvider resourceProvider,
-                                Resources resources,
-                                NotificationManager notificationManager, CoreLocalizationConstant localization) {
+    public DeleteResourceAction(SelectionAgent selectionAgent, ResourceProvider resourceProvider, Resources resources,
+                                NotificationManager notificationManager, CoreLocalizationConstant localization,
+                                AnalyticsEventLogger eventLogger) {
         super("Delete", "Delete resource", null, resources.delete());
 
         this.selectionAgent = selectionAgent;
         this.resourceProvider = resourceProvider;
         this.notificationManager = notificationManager;
         this.localization = localization;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
@@ -72,6 +74,7 @@ public class DeleteResourceAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log("IDE: Delete file");
         Selection<?> s = selectionAgent.getSelection();
         if (s != null && s.getFirstElement() instanceof Resource) {
             Selection<Resource> selection = (Selection<Resource>)s;

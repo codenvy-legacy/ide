@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.git.client.delete;
 
-import com.codenvy.ide.api.event.RefreshBrowserEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -26,9 +25,7 @@ import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -100,20 +97,8 @@ public class DeleteRepositoryPresenter {
         service.deleteRepository(project.getId(), new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
-                resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
-                    @Override
-                    public void onSuccess(Project result) {
-                        project.setAttributes(result.getAttributes());
-                        Notification notification = new Notification(constant.deleteGitRepositorySuccess(), INFO);
-                        notificationManager.showNotification(notification);
-                        eventBus.fireEvent(new RefreshBrowserEvent(project));
-                    }
-
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        Log.error(DeleteRepositoryPresenter.class, caught);
-                    }
-                });
+                Notification notification = new Notification(constant.deleteGitRepositorySuccess(), INFO);
+                notificationManager.showNotification(notification);
             }
 
             @Override

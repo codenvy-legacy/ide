@@ -57,6 +57,7 @@
 @eval treeTextFileColor com.codenvy.ide.api.ui.theme.Style.getTreeTextFileColor();
 @eval treeTextFolderColor com.codenvy.ide.api.ui.theme.Style.getTreeTextFolderColor();
 @eval treeTextShadow com.codenvy.ide.api.ui.theme.Style.getTreeTextShadow();
+@eval treeIconFileColor com.codenvy.ide.api.ui.theme.Style.getTreeIconFileColor();
 
 /* Button */
 @eval buttonTopColor com.codenvy.ide.api.ui.theme.Style.getButtonTopColor();
@@ -78,6 +79,8 @@
 @eval editorSelectionColor com.codenvy.ide.api.ui.theme.Style.getEditorSelectionColor();
 @eval editorInactiveSelectionColor com.codenvy.ide.api.ui.theme.Style.getEditorInactiveSelectionColor();
 @eval editoGutterColor com.codenvy.ide.api.ui.theme.Style.getEditorGutterColor();
+@eval completionPopupBorderColor com.codenvy.ide.api.ui.theme.Style.getCompletionPopupBorderColor();
+@eval completionPopupBackgroundColor com.codenvy.ide.api.ui.theme.Style.getCompletionPopupBackgroundColor();
 
 /* Listbox, TextBox... */
 @eval boxBorderColor com.codenvy.ide.api.ui.theme.Style.getBoxBorderColor();
@@ -112,6 +115,7 @@
 @def largeLabel 14px;
 @def largeDropdownLabel 12px;
 @def boxFontSize 12px;
+@def buttonFontSize 12px;
 
 /* Fonts */
 @def alternativeFontFamily "Helvetica Neue", "Myriad Pro","open sans", arial, sans-serif;
@@ -152,6 +156,7 @@
 /*Window*/
 @eval windowContentBackground com.codenvy.ide.api.ui.theme.Style.getWindowContentBackground();
 @eval windowHeaderBackground com.codenvy.ide.api.ui.theme.Style.getWindowHeaderBackground();
+@eval windowSeparatorColor com.codenvy.ide.api.ui.theme.Style.getWindowSeparatorColor();
 
 /*syntax highlight*/
 @eval keyword com.codenvy.ide.api.ui.theme.Style.getEditorKeyWord();

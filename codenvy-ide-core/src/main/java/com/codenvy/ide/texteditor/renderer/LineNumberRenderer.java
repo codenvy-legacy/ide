@@ -15,7 +15,7 @@
 package com.codenvy.ide.texteditor.renderer;
 
 import elemental.css.CSSStyleDeclaration;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -99,14 +99,14 @@ public class LineNumberRenderer {
         if (renderedActiveLineNumber != NONE) {
             Element renderedActiveLine = lineNumberToElementCache.get(renderedActiveLineNumber);
             if (renderedActiveLine != null) {
-                renderedActiveLine.removeClassName(css.activeLineNumber());
+                Elements.addClassName(css.activeLineNumber(), renderedActiveLine);
                 renderedActiveLineNumber = NONE;
             }
         }
         Element newActiveLine = lineNumberToElementCache.get(lineNumber);
         // Add class if it's in the viewport.
         if (newActiveLine != null) {
-            newActiveLine.addClassName(css.activeLineNumber());
+            Elements.addClassName(css.activeLineNumber(), newActiveLine);
             renderedActiveLineNumber = lineNumber;
         }
     }
@@ -146,7 +146,6 @@ public class LineNumberRenderer {
         this.lineNumberToElementCache = JsoIntegerMap.create();
         this.viewport = viewport;
         this.breakpointGutterManager = breakpointGutterManager;
-        this.breakpointGutterManager.setBreakPointRenderer(this);
         this.resources = res;
         this.css = res.lineNumberRendererCss();
         listenerRemovers.add(selection.getCursorListenerRegistrar().add(cursorListener));
@@ -155,7 +154,7 @@ public class LineNumberRenderer {
             @Override
             public void onClick(int y) {
                 final int lineNumber = LineNumberRenderer.this.buffer.convertYToLineNumber(y, true);
-                LineNumberRenderer.this.breakpointGutterManager.changeBreakPoint(lineNumber);
+                LineNumberRenderer.this.breakpointGutterManager.changeBreakPointState(lineNumber);
             }
         });
     }
@@ -244,11 +243,10 @@ public class LineNumberRenderer {
         if (breakpointGutterManager.isMarkedLine(lineNumber)) {
             Image i = new Image(resources.currentBreakpoint());
             element = (Element)i.getElement();
-            element.getStyle().setHeight(buffer.getEditorLineHeight() + CSSStyleDeclaration.Unit.PX);
+            element.getStyle().setHeight(10, CSSStyleDeclaration.Unit.PX);
             element.getStyle().setPosition("absolute");
             element.getStyle().setTop(buffer.convertLineNumberToY(lineNumber) + 2, CSSStyleDeclaration.Unit.PX);
             element.getStyle().setLeft(9, CSSStyleDeclaration.Unit.PX);
-            element.getStyle().setCursor(CSSStyleDeclaration.Cursor.POINTER);
             element.setId("breakpoint-toggle-" + (lineNumber + 1));
         } else {
             if (!breakpointGutterManager.isBreakPointExist(lineNumber)) {
@@ -257,7 +255,7 @@ public class LineNumberRenderer {
                 element.setTextContent(String.valueOf(lineNumber + 1));
                 element.getStyle().setTop(buffer.calculateLineTop(lineNumber), CSSStyleDeclaration.Unit.PX);
                 if (lineNumber == activeLineNumber) {
-                    element.addClassName(css.activeLineNumber());
+                    Elements.addClassName(css.activeLineNumber(), element);
                     renderedActiveLineNumber = activeLineNumber;
                 }
             } else {

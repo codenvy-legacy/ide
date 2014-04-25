@@ -23,8 +23,7 @@ import com.google.gwt.i18n.client.Messages;
  * Localization constants. Interface to represent the constants contained in resource bundle:
  * 'BuilderLocalizationConstant.properties'.
  *
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: BuilderLocalizationConstant.java Feb 21, 2012 3:06:29 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 public interface BuilderLocalizationConstant extends Messages {
     /* Actions */
@@ -37,48 +36,20 @@ public interface BuilderLocalizationConstant extends Messages {
     @Key("control.buildProject.description")
     String buildProjectControlDescription();
 
-    @Key("control.buildAndPublishProject.id")
-    String buildAndPublishProjectControlId();
-
-    @Key("control.buildAndPublishProject.text")
-    String buildAndPublishProjectControlText();
-
-    @Key("control.buildAndPublishProject.description")
-    String buildAndPublishProjectControlDescription();
-
     /* Messages */
     @Key("messages.buildInProgress")
     String buildInProgress(String project);
 
-    @Key("messages.buildSuccess")
-    String buildSuccess();
-
     @Key("messages.buildFailed")
     String buildFailed();
-
-    @Key("messages.selectedItemsFail")
-    String selectedItemsFail();
 
     @Key("messages.downloadArtifact")
     String downloadArtifact(String url);
 
-    @Key("messages.dependencyForYourPom")
-    String dependencyForYourPom(String dependency);
-
     @Key("messages.failGetBuildResult")
     String failGetBuildResult();
 
-    /* BuildProjectView */
-    @Key("buildProject.id")
-    String buildProjectId();
-
-    @Key("buildProject.title")
-    String buildProjectTitle();
-
-    @Key("buildProject.outputClear")
-    String outputClear();
-
-    /* InitRequestHandler */
+    /* BuildProjectPresenter */
     @Key("build.started")
     String buildStarted(String project);
 

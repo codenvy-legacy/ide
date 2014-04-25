@@ -25,11 +25,9 @@ import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -124,24 +122,15 @@ public class CommitPresenter implements CommitView.ActionDelegate {
      *         a {@link Revision}
      */
     private void onCommitSuccess(@NotNull final Revision revision) {
-        resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
-            @Override
-            public void onSuccess(Project result) {
-                DateTimeFormat formatter = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_MEDIUM);
-                String date = formatter.format(new Date((long)revision.getCommitTime()));
-                String message = constant.commitMessage(revision.getId(), date);
-                message += (revision.getCommitter() != null && revision.getCommitter().getName() != null &&
-                            !revision.getCommitter().getName().isEmpty())
-                           ? " " + constant.commitUser(revision.getCommitter().getName()) : "";
-                Notification notification = new Notification(message, INFO);
-                notificationManager.showNotification(notification);
-            }
+        DateTimeFormat formatter = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_MEDIUM);
+        String date = formatter.format(new Date(revision.getCommitTime()));
 
-            @Override
-            public void onFailure(Throwable caught) {
-                Log.error(CommitPresenter.class, "can not get project " + project.getName());
-            }
-        });
+        String message = constant.commitMessage(revision.getId(), date);
+        message += (revision.getCommitter() != null && revision.getCommitter().getName() != null && !revision.getCommitter().getName().isEmpty())
+                   ? " " + constant.commitUser(revision.getCommitter().getName()) : "";
+
+        Notification notification = new Notification(message, INFO);
+        notificationManager.showNotification(notification);
     }
 
     /**

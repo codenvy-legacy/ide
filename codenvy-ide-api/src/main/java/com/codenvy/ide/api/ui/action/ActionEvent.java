@@ -27,7 +27,6 @@ import javax.validation.constraints.NotNull;
  * Container for the information necessary to execute or update an {@link Action}.
  *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
  * @see Action#actionPerformed(ActionEvent)
  * @see Action#update(ActionEvent)
  */

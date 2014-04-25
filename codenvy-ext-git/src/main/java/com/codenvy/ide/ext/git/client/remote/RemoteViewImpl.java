@@ -17,23 +17,22 @@
  */
 package com.codenvy.ide.ext.git.client.remote;
 
-import com.codenvy.ide.Resources;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.shared.Remote;
+import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
@@ -42,6 +41,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import javax.validation.constraints.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,17 +51,14 @@ import java.util.List;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class RemoteViewImpl extends DialogBox implements RemoteView {
+public class RemoteViewImpl extends Window implements RemoteView {
     interface RemoteViewImplUiBinder extends UiBinder<Widget, RemoteViewImpl> {
     }
 
     private static RemoteViewImplUiBinder ourUiBinder = GWT.create(RemoteViewImplUiBinder.class);
 
-    @UiField
     Button            btnClose;
-    @UiField
     Button            btnAdd;
-    @UiField
     Button            btnDelete;
     @UiField(provided = true)
     CellTable<Remote> repositories;
@@ -79,7 +76,7 @@ public class RemoteViewImpl extends DialogBox implements RemoteView {
      * @param locale
      */
     @Inject
-    protected RemoteViewImpl(GitResources resources, GitLocalizationConstant locale, Resources ideResources) {
+    protected RemoteViewImpl(GitResources resources, GitLocalizationConstant locale, com.codenvy.ide.Resources ideResources) {
         this.res = resources;
         this.locale = locale;
 
@@ -87,13 +84,40 @@ public class RemoteViewImpl extends DialogBox implements RemoteView {
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 
-        this.setText(locale.remotesViewTitle());
+        this.setTitle(locale.remotesViewTitle());
         this.setWidget(widget);
+        
+        btnClose = createButton(locale.buttonClose(), "git-remotes-remotes-close", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCloseClicked();
+            }
+        });
+        getFooter().add(btnClose);
+
+        btnAdd = createButton(locale.buttonAdd(), "git-remotes-remotes-add", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onAddClicked();
+            }
+        });
+        getFooter().add(btnAdd);
+        
+        btnDelete = createButton(locale.buttonRemove(), "git-remotes-remotes-remove", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onDeleteClicked();
+            }
+        });
+        getFooter().add(btnDelete);
     }
 
     /** Initialize the columns of the grid.
      * @param ideResources*/
-    private void initRepositoriesTable(Resources ideResources) {
+    private void initRepositoriesTable(com.codenvy.ide.Resources ideResources) {
         repositories = new CellTable<Remote>(15, ideResources);
 
         Column<Remote, String> nameColumn = new Column<Remote, String>(new TextCell()) {
@@ -164,7 +188,6 @@ public class RemoteViewImpl extends DialogBox implements RemoteView {
     @Override
     public void showDialog() {
         this.isShown = true;
-        this.center();
         this.show();
     }
 
@@ -174,18 +197,8 @@ public class RemoteViewImpl extends DialogBox implements RemoteView {
         this.delegate = delegate;
     }
 
-    @UiHandler("btnClose")
-    public void onCloseClicked(ClickEvent event) {
-        delegate.onCloseClicked();
-    }
-
-    @UiHandler("btnAdd")
-    public void onAddClicked(ClickEvent event) {
-        delegate.onAddClicked();
-    }
-
-    @UiHandler("btnDelete")
-    public void onDeleteClicked(ClickEvent event) {
-        delegate.onDeleteClicked();
+    /** {@inheritDoc} */
+    @Override
+    protected void onClose() {
     }
 }

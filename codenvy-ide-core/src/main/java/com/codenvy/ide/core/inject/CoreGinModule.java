@@ -17,6 +17,9 @@
  */
 package com.codenvy.ide.core.inject;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.api.project.gwt.client.ProjectImportersServiceClient;
+import com.codenvy.api.project.gwt.client.ProjectImportersServiceClientImpl;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectServiceClientImpl;
 import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClient;
@@ -35,18 +38,18 @@ import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.api.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.parts.OutlinePart;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
-import com.codenvy.ide.api.parts.SearchPart;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ModelProvider;
+import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.GenericModelProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.action.ActionManager;
@@ -82,6 +85,7 @@ import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.importproject.ImportProjectView;
 import com.codenvy.ide.importproject.ImportProjectViewImpl;
 import com.codenvy.ide.keybinding.KeyBindingManager;
+import com.codenvy.ide.logger.AnalyticsEventLoggerExt;
 import com.codenvy.ide.logger.AnalyticsEventLoggerImpl;
 import com.codenvy.ide.menu.MainMenuView;
 import com.codenvy.ide.menu.MainMenuViewImpl;
@@ -115,14 +119,9 @@ import com.codenvy.ide.projecttype.SelectProjectTypeView;
 import com.codenvy.ide.projecttype.SelectProjectTypeViewImpl;
 import com.codenvy.ide.rename.RenameResourceView;
 import com.codenvy.ide.rename.RenameResourceViewImpl;
-import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.resources.ResourceProviderComponent;
-import com.codenvy.ide.api.resources.model.GenericModelProvider;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.search.SearchPartPresenter;
-import com.codenvy.ide.search.SearchPartView;
-import com.codenvy.ide.search.SearchPartViewImpl;
 import com.codenvy.ide.selection.SelectionAgentImpl;
 import com.codenvy.ide.text.DocumentFactory;
 import com.codenvy.ide.text.DocumentFactoryImpl;
@@ -204,10 +203,12 @@ public class CoreGinModule extends AbstractGinModule {
         bind(AsyncRequestFactory.class).in(Singleton.class);
         bind(MessageBus.class).to(MessageBusImpl.class).in(Singleton.class);
         bind(AnalyticsEventLogger.class).to(AnalyticsEventLoggerImpl.class).in(Singleton.class);
+        bind(AnalyticsEventLoggerExt.class).to(AnalyticsEventLoggerImpl.class).in(Singleton.class);
         // client services
         bind(UserServiceClient.class).to(UserServiceClientImpl.class).in(Singleton.class);
         bind(UserProfileServiceClient.class).to(UserProfileServiceClientImpl.class).in(Singleton.class);
         bind(ProjectServiceClient.class).to(ProjectServiceClientImpl.class).in(Singleton.class);
+        bind(ProjectImportersServiceClient.class).to(ProjectImportersServiceClientImpl.class).in(Singleton.class);
         bind(ProjectTypeDescriptionServiceClient.class).to(ProjectTypeDescriptionServiceClientImpl.class).in(Singleton.class);
         bind(ProjectTypeWizardRegistry.class).to(ProjectTypeWizardRegistryImpl.class).in(Singleton.class);
         apiBindingConfigure();
@@ -235,7 +236,6 @@ public class CoreGinModule extends AbstractGinModule {
         // Parts
         bind(ConsolePart.class).to(ConsolePartPresenter.class).in(Singleton.class);
         bind(OutlinePart.class).to(OutlinePartPresenter.class).in(Singleton.class);
-        bind(SearchPart.class).to(SearchPartPresenter.class).in(Singleton.class);
         bind(ProjectExplorerPart.class).to(ProjectExplorerPartPresenter.class).in(Singleton.class);
         bind(ActionManager.class).to(ActionManagerImpl.class).in(Singleton.class);
     }
@@ -286,7 +286,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(PartStackView.class).annotatedWith(Names.named("editorPartStack")).to(EditorPartStackView.class);
         bind(ProjectExplorerView.class).to(ProjectExplorerViewImpl.class).in(Singleton.class);
         bind(ConsolePartView.class).to(ConsolePartViewImpl.class).in(Singleton.class);
-        bind(SearchPartView.class).to(SearchPartViewImpl.class).in(Singleton.class);
 
         bind(ChooseTemplatePageView.class).to(ChooseTemplatePageViewImpl.class);
         bind(DefaultWizard.class).annotatedWith(NewResource.class).toProvider(NewResourceWizardProvider.class).in(Singleton.class);

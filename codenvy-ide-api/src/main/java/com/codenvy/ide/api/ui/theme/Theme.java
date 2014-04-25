@@ -360,6 +360,20 @@ public interface Theme {
     String getEditorString2();
 
     /**
+     * Background color of completion popup.
+     *
+     * @return the color
+     */
+    String getCompletionPopupBackgroundColor();
+    
+    /**
+     * Border color of completion popup.
+     *
+     * @return the color
+     */
+    String getCompletionPopupBorderColor();
+    
+    /**
      * Background color of the window widget(used in new project wizard)
      *
      * @return the color
@@ -372,6 +386,13 @@ public interface Theme {
      * @return the color
      */
     String getWindowHeaderBackground();
+    
+    /**
+     * Color of the line separating elements in Window (for footer).
+     *
+     * @return the color
+     */
+    String getWindowSeparatorColor();
 
     /**
      * New Project wizard steps background color(used in new project wizard, left vertical panel)
@@ -471,6 +492,11 @@ public interface Theme {
      * @return the color of tree text-shadow
      */
     String getTreeTextShadow();
+    
+    /**
+     * @return the color of tree icon file
+     */
+    String getTreeIconFileColor();
 
     /**
      * @return the color of button text if hover

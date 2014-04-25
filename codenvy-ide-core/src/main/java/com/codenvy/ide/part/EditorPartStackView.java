@@ -23,6 +23,7 @@ import com.codenvy.ide.api.ui.workspace.PartStackView;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -99,6 +100,8 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
         this.resources = resources;
         this.partStackUIResources = partStackResources;
         initWidget(uiBinder.createAndBindUi(this));
+        setWidth("100%");
+        setHeight("100%");
 
         parent.setStyleName(partStackResources.partStackCss().idePartStack());
         tabsPanel.setStyleName(partStackResources.partStackCss().idePartStackTabs());
@@ -134,6 +137,14 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
         setVisible(false);
 
         addFocusRequestHandler();
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        Style style = getElement().getParentElement().getStyle();
+        style.setHeight(100, Style.Unit.PCT);
+        style.setWidth(100, Style.Unit.PCT);
     }
 
     /** {@inheritDoc} */
@@ -256,6 +267,7 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
                 tabItem.add(image);
                 addHandlers();
             }
+            this.ensureDebugId("tabButton-" + title);
         }
 
         @Override

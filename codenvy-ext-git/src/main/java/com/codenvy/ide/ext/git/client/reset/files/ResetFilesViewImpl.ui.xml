@@ -22,10 +22,6 @@
              xmlns:p1='urn:import:com.google.gwt.user.cellview.client'>
     <ui:with field='locale' type='com.codenvy.ide.ext.git.client.GitLocalizationConstant'/>
     <ui:style>
-        .alignBtn {
-            float: right;
-        }
-
         .emptyBorder {
             margin: 6px;
         }
@@ -38,13 +34,7 @@
             margin-top: 10px;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="430px" height="260px" addStyleNames="{style.emptyBorder}">
-        <g:south size="36.0">
-            <g:FlowPanel addStyleNames="{style.spacing}">
-                <g:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" ui:field="btnCancel"/>
-                <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonReset}" width="60px" ui:field="btnReset"/>
-            </g:FlowPanel>
-        </g:south>
+    <g:DockLayoutPanel unit="PX" width="430px" height="230px" addStyleNames="{style.emptyBorder}">
         <g:center>
             <g:SimplePanel>
                 <p1:CellTable width="100%" ui:field="indexFiles" focus="false"/>

@@ -21,6 +21,9 @@ import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.api.runner.RunnerException;
+import com.codenvy.api.runner.dto.DebugMode;
+import com.codenvy.api.runner.dto.RunRequest;
+import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.api.runner.internal.DeploymentSources;
 import com.codenvy.api.runner.internal.DeploymentSourcesValidator;
@@ -29,8 +32,6 @@ import com.codenvy.api.runner.internal.ResourceAllocators;
 import com.codenvy.api.runner.internal.Runner;
 import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
-import com.codenvy.api.runner.internal.dto.DebugMode;
-import com.codenvy.api.runner.internal.dto.RunRequest;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.dto.server.DtoFactory;
 
@@ -55,10 +56,11 @@ import java.util.Set;
 public class DeployToApplicationServerRunner extends Runner {
     private static final Logger LOG = LoggerFactory.getLogger(DeployToApplicationServerRunner.class);
 
-    public static final String DEFAULT_SERVER_NAME      = "Tomcat";
+    public static final String DEFAULT_SERVER_NAME      = "Tomcat7";
     public static final String DEBUG_TRANSPORT_PROTOCOL = "dt_socket";
 
     private final Map<String, ApplicationServer> servers;
+    private final Map<String, RunnerEnvironment> environments;
     private final String                         hostName;
     private final CustomPortService              portService;
     private final DeploymentSourcesValidator     applicationValidator;
@@ -69,14 +71,23 @@ public class DeployToApplicationServerRunner extends Runner {
                                            @Named("runner.java_webapp.host_name") String hostName,
                                            ResourceAllocators allocators,
                                            CustomPortService portService,
-                                           Set<ApplicationServer> serverSet,
+                                           Set<ApplicationServer> appServers,
                                            EventService eventService) {
         super(deployDirectoryRoot, cleanupDelay, allocators, eventService);
         this.hostName = hostName;
         this.portService = portService;
         this.servers = new HashMap<>();
-        for (ApplicationServer server : serverSet) {
+        for (ApplicationServer server : appServers) {
             this.servers.put(server.getName(), server);
+        }
+        this.environments = new HashMap<>(servers.size());
+        final DtoFactory dtoFactory = DtoFactory.getInstance();
+        for (ApplicationServer server : appServers) {
+            final RunnerEnvironment runnerEnvironment = dtoFactory.createDto(RunnerEnvironment.class)
+                                                                  .withId(server.getName())
+                                                                  .withDescription(server.getDescription())
+                                                                  .withIsDefault(DEFAULT_SERVER_NAME.equals(server.getName()));
+            this.environments.put(runnerEnvironment.getId(), runnerEnvironment);
         }
         this.applicationValidator = new JavaWebApplicationValidator();
     }
@@ -92,13 +103,27 @@ public class DeployToApplicationServerRunner extends Runner {
     }
 
     @Override
+    public Map<String, RunnerEnvironment> getEnvironments() {
+        final Map<String, RunnerEnvironment> copy = new HashMap<>(environments.size());
+        final DtoFactory dtoFactory = DtoFactory.getInstance();
+        for (Map.Entry<String, RunnerEnvironment> entry : environments.entrySet()) {
+            copy.put(entry.getKey(), dtoFactory.clone(entry.getValue()));
+        }
+        return copy;
+    }
+
+    @Override
     public RunnerConfigurationFactory getRunnerConfigurationFactory() {
         return new RunnerConfigurationFactory() {
             @Override
             public RunnerConfiguration createRunnerConfiguration(RunRequest request) throws RunnerException {
                 final int httpPort = portService.acquire();
+                String server = request.getEnvironmentId();
+                if (server == null) {
+                    server = DEFAULT_SERVER_NAME;
+                }
                 final ApplicationServerRunnerConfiguration configuration =
-                        new ApplicationServerRunnerConfiguration(DEFAULT_SERVER_NAME, request.getMemorySize(), httpPort, request);
+                        new ApplicationServerRunnerConfiguration(server, request.getMemorySize(), httpPort, request);
                 configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class)
                                                        .withRel(com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL)
                                                        .withHref(String.format("http://%s:%d", hostName, httpPort)));
@@ -137,7 +162,11 @@ public class DeployToApplicationServerRunner extends Runner {
         }
 
         final ApplicationProcess process =
-                server.deploy(appDir, toDeploy, webAppsRunnerCfg, new ApplicationServer.StopCallback() {
+                server.deploy(appDir, toDeploy, webAppsRunnerCfg, new ApplicationProcess.Callback() {
+                    @Override
+                    public void started() {
+                    }
+
                     @Override
                     public void stopped() {
                         portService.release(webAppsRunnerCfg.getHttpPort());

@@ -17,11 +17,8 @@
  */
 package com.codenvy.ide.ui.window;
 
-import elemental.events.Event;
-import elemental.events.EventListener;
 import elemental.events.KeyboardEvent;
-import elemental.js.events.JsKeyboardEvent;
-import elemental.js.html.JsElement;
+import elemental.js.dom.JsElement;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -32,6 +29,8 @@ import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
@@ -46,6 +45,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -134,6 +134,15 @@ public abstract class Window implements IsWidget {
     public void setHideOnEscapeEnabled(boolean isEnabled) {
         this.hideOnEscapeEnabled = isEnabled;
     }
+    
+    protected Button createButton(String title, String debugId, ClickHandler clickHandler){
+        Button button = new Button();
+        button.setText(title);
+        button.ensureDebugId(debugId);
+        button.addStyleName(resources.centerPanelCss().alignBtn());
+        button.addClickHandler(clickHandler);
+        return button;
+    }
 
     /**
      * See {@link #show(com.google.gwt.dom.client.InputElement)}.
@@ -211,6 +220,10 @@ public abstract class Window implements IsWidget {
     public void setTitle(String title) {
         view.headerLabel.setText(title);
     }
+    
+    public HTMLPanel getFooter() {
+        return view.footer;
+    }
 
     /**
      * The resources used by this UI component.
@@ -255,10 +268,16 @@ public abstract class Window implements IsWidget {
         String positioner();
 
         String header();
-
+        
         String headerTitleWrapper();
 
         String headerTitleLabel();
+
+        String footer();
+        
+        String separator();
+        
+        String alignBtn();
 
         String crossButton();
     }
@@ -295,6 +314,8 @@ public abstract class Window implements IsWidget {
         HTMLPanel content;
         @UiField
         Label     headerLabel;
+        @UiField
+        HTMLPanel footer;
         @UiField
         HTMLPanel crossButton;
 
@@ -345,18 +366,21 @@ public abstract class Window implements IsWidget {
         }
 
         private void handleEvents() {
-            ((elemental.html.Element)getElement()).addEventListener(Event.KEYDOWN, new EventListener() {
+            KeyDownHandler handler = new KeyDownHandler() {
+
                 @Override
-                public void handleEvent(Event evt) {
-                    JsKeyboardEvent keyEvt = (JsKeyboardEvent)evt;
-                    int keyCode = keyEvt.getKeyCode();
-                    if (KeyboardEvent.KeyCode.ESC == keyCode) {
+                public void onKeyDown(KeyDownEvent event) {
+                    if (KeyboardEvent.KeyCode.ESC == event.getNativeEvent().getKeyCode()) {
                         if (delegate != null) {
                             delegate.onEscapeKey();
                         }
                     }
                 }
-            }, true);
+            };
+            
+            
+            contentContainer.addDomHandler(handler, KeyDownEvent.getType());
+            
             crossButton.addDomHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -378,7 +402,7 @@ public abstract class Window implements IsWidget {
         public void setContent(Widget content) {
             this.content.add(content);
         }
-
+        
         private void endDragging(MouseUpEvent event) {
             dragging = false;
             DOM.releaseCapture(header.getElement());

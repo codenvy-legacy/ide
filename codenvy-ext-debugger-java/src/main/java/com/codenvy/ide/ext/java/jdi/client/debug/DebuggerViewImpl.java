@@ -17,8 +17,8 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.debug;
 
-import elemental.html.DragEvent;
-import elemental.html.Element;
+import elemental.dom.Element;
+import elemental.events.MouseEvent;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
@@ -46,6 +46,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -64,11 +65,11 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
     @UiField
     PushButton                      btnResume;
     @UiField
-    PushButton                      btnStepInto;
+    ToggleButton                    btnStepInto;
     @UiField
-    PushButton                      btnStepOver;
+    ToggleButton                    btnStepOver;
     @UiField
-    PushButton                      btnStepReturn;
+    ToggleButton                    btnStepReturn;
     @UiField
     PushButton                      btnDisconnect;
     @UiField
@@ -179,12 +180,12 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
             }
 
             @Override
-            public void onNodeDragStart(TreeNodeElement<Variable> node, DragEvent event) {
+            public void onNodeDragStart(TreeNodeElement<Variable> node, MouseEvent event) {
                 //do nothing
             }
 
             @Override
-            public void onNodeDragDrop(TreeNodeElement<Variable> node, DragEvent event) {
+            public void onNodeDragDrop(TreeNodeElement<Variable> node, MouseEvent event) {
                 //do nothing
             }
 
@@ -207,7 +208,7 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
             }
 
             @Override
-            public void onRootDragDrop(DragEvent event) {
+            public void onRootDragDrop(MouseEvent event) {
                 //do nothing
             }
         });
@@ -267,14 +268,32 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
 
     /** {@inheritDoc} */
     @Override
+    public void resetStepIntoButton() {
+        if (btnStepInto.isDown()) btnStepInto.setDown(false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void setEnableStepOverButton(boolean isEnable) {
         btnStepOver.setEnabled(isEnable);
     }
 
     /** {@inheritDoc} */
     @Override
+    public void resetStepOverButton() {
+        if (btnStepOver.isDown()) btnStepOver.setDown(false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void setEnableStepReturnButton(boolean isEnable) {
         btnStepReturn.setEnabled(isEnable);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void resetStepReturnButton() {
+        if (btnStepReturn.isDown()) btnStepReturn.setDown(false);
     }
 
     /** {@inheritDoc} */
@@ -310,17 +329,29 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
 
     @UiHandler("btnStepInto")
     public void onStepIntoButtonClicked(ClickEvent event) {
-        delegate.onStepIntoButtonClicked();
+        if (btnStepInto.isDown()) {
+            delegate.onStepIntoButtonClicked();
+        } else {
+            btnStepInto.setDown(true);
+        }
     }
 
     @UiHandler("btnStepOver")
     public void onStepOverButtonClicked(ClickEvent event) {
-        delegate.onStepOverButtonClicked();
+        if (btnStepOver.isDown()) {
+            delegate.onStepOverButtonClicked();
+        } else {
+            btnStepOver.setDown(true);
+        }
     }
 
     @UiHandler("btnStepReturn")
     public void onStepReturnButtonClicked(ClickEvent event) {
-        delegate.onStepReturnButtonClicked();
+        if (btnStepReturn.isDown()) {
+            delegate.onStepReturnButtonClicked();
+        } else {
+            btnStepReturn.setDown(true);
+        }
     }
 
     @UiHandler("btnDisconnect")

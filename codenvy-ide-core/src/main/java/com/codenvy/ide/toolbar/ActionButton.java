@@ -44,8 +44,7 @@ import org.vectomatic.dom.svg.ui.SVGImage;
 /**
  * Toolbar image button.
  *
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Evgen Vidolob
  */
 public class ActionButton extends Composite implements MouseOverHandler, MouseOutHandler, MouseDownHandler, MouseUpHandler,
                                                        ClickHandler {
@@ -77,7 +76,6 @@ public class ActionButton extends Composite implements MouseOverHandler, MouseOu
         setVisible(presentation.isVisible());
         if (presentation.getDescription() != null)
             panel.getElement().setAttribute("title", presentation.getDescription());
-        this.ensureDebugId(place + "/" + actionManager.getId(action));
     }
 
     /** {@inheritDoc} */
@@ -130,6 +128,7 @@ public class ActionButton extends Composite implements MouseOverHandler, MouseOu
         } else {
             addStyleName(css.disabled());
         }
+        this.ensureDebugId(place + "/" + actionManager.getId(action) + "-" + enabled);
     }
 
     /** {@inheritDoc} */

@@ -15,7 +15,7 @@
 package com.codenvy.ide.texteditor.linedimensions;
 
 import elemental.css.CSSStyleDeclaration;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.dom.Elements;

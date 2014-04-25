@@ -19,6 +19,8 @@ package com.codenvy.ide.ext.java.jdi.client;
 
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.debug.Breakpoint;
 import com.codenvy.ide.debug.BreakpointGutterManager;
@@ -32,8 +34,7 @@ import com.codenvy.ide.ext.java.jdi.shared.BreakPoint;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
 import com.codenvy.ide.ext.java.jdi.shared.Location;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
-import com.codenvy.ide.extension.runner.client.RunnerController;
-import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -89,6 +90,8 @@ public class DebuggerTest extends BaseTest {
     @Mock
     private AsyncCallback<Breakpoint>    asyncCallbackBreakpoint;
     @Mock
+    private Project                      project;
+    @Mock
     private AsyncCallback<Void>          asyncCallbackVoid;
 
     @Before
@@ -118,7 +121,7 @@ public class DebuggerTest extends BaseTest {
             }
         }).when(service).connect(anyString(), anyInt(), (AsyncRequestCallback<DebuggerInfo>)anyObject());
 
-        presenter.attachDebugger(applicationProcessDescriptor);
+        presenter.attachDebugger(applicationProcessDescriptor, project);
 
         verify(service).connect(eq(DEBUG_HOST), eq(DEBUG_PORT), (AsyncRequestCallback<DebuggerInfo>)anyObject());
         verify(console).print(constants.debuggerConnected(anyString()));
@@ -142,7 +145,7 @@ public class DebuggerTest extends BaseTest {
             }
         }).when(service).connect(anyString(), anyInt(), (AsyncRequestCallback<DebuggerInfo>)anyObject());
 
-        presenter.attachDebugger(applicationProcessDescriptor);
+        presenter.attachDebugger(applicationProcessDescriptor, project);
 
         verify(service).connect(eq(DEBUG_HOST), eq(DEBUG_PORT), (AsyncRequestCallback<DebuggerInfo>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
@@ -168,7 +171,7 @@ public class DebuggerTest extends BaseTest {
         verifySetEnableButtons(DISABLE_BUTTON);
 
         verify(runnerController).stopActiveProject();
-        verify(gutterManager).unmarkCurrentBreakPoint();
+        verify(gutterManager).unmarkCurrentBreakpoint();
         verify(gutterManager).removeAllBreakPoints();
         verify(console).print(constants.debuggerDisconnected(anyString()));
         verify(view).setEnableRemoveAllBreakpointsButton(DISABLE_BUTTON);
@@ -214,7 +217,7 @@ public class DebuggerTest extends BaseTest {
         verify(service).resume(anyString(), (AsyncRequestCallback<Void>)anyObject());
         verify(view).setVariables(anyListOf(Variable.class));
         verify(view).setEnableChangeValueButtonEnable(eq(DISABLE_BUTTON));
-        verify(gutterManager).unmarkCurrentBreakPoint();
+        verify(gutterManager).unmarkCurrentBreakpoint();
     }
 
     @Test
@@ -255,7 +258,7 @@ public class DebuggerTest extends BaseTest {
         verify(service).stepInto(anyString(), (AsyncRequestCallback<Void>)anyObject());
         verify(view).setVariables(anyListOf(Variable.class));
         verify(view).setEnableChangeValueButtonEnable(eq(DISABLE_BUTTON));
-        verify(gutterManager).unmarkCurrentBreakPoint();
+        verify(gutterManager).unmarkCurrentBreakpoint();
     }
 
     @Test
@@ -296,7 +299,7 @@ public class DebuggerTest extends BaseTest {
         verify(service).stepOver(anyString(), (AsyncRequestCallback<Void>)anyObject());
         verify(view).setVariables(anyListOf(Variable.class));
         verify(view).setEnableChangeValueButtonEnable(eq(DISABLE_BUTTON));
-        verify(gutterManager).unmarkCurrentBreakPoint();
+        verify(gutterManager).unmarkCurrentBreakpoint();
     }
 
     @Test
@@ -337,7 +340,7 @@ public class DebuggerTest extends BaseTest {
         verify(service).stepReturn(anyString(), (AsyncRequestCallback<Void>)anyObject());
         verify(view).setVariables(anyListOf(Variable.class));
         verify(view).setEnableChangeValueButtonEnable(eq(DISABLE_BUTTON));
-        verify(gutterManager).unmarkCurrentBreakPoint();
+        verify(gutterManager).unmarkCurrentBreakpoint();
     }
 
     @Test
