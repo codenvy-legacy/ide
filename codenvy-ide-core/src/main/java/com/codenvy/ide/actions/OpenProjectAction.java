@@ -18,6 +18,7 @@
 package com.codenvy.ide.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.openproject.OpenProjectPresenter;
@@ -35,8 +36,8 @@ public class OpenProjectAction extends Action {
     private final AnalyticsEventLogger eventLogger;
 
     @Inject
-    public OpenProjectAction(OpenProjectPresenter presenter, AnalyticsEventLogger eventLogger) {
-        super("Open Project", "Open project", null);
+    public OpenProjectAction(OpenProjectPresenter presenter, AnalyticsEventLogger eventLogger, Resources resources) {
+        super("Open Project", "Open project", null, resources.openProject());
         this.presenter = presenter;
         this.eventLogger = eventLogger;
     }

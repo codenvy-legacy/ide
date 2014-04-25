@@ -2,6 +2,7 @@ package com.codenvy.ide.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
@@ -26,8 +27,8 @@ public class FormatterAction extends Action {
 
     @Inject
     public FormatterAction(EditorAgent editorAgent, CoreLocalizationConstant localization,
-                           AnalyticsEventLogger eventLogger) {
-        super(localization.formatName(), localization.formatDescription(), null);
+                           AnalyticsEventLogger eventLogger, Resources resources) {
+        super(localization.formatName(), localization.formatDescription(), null, resources.format());
         this.editorAgent = editorAgent;
         this.eventLogger = eventLogger;
     }
