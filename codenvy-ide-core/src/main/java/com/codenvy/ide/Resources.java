@@ -122,6 +122,9 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
     @Source("console/clear.svg")
     SVGResource clear();
     
+    @Source("actions/about.svg")
+    SVGResource about();
+    
     @Source("actions/close-project.svg")
     SVGResource closeProject();
     
@@ -131,11 +134,29 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
     @Source("actions/new-resource.svg")
     SVGResource newResource();
     
+    @Source("actions/navigate-to-file.svg")
+    SVGResource navigateToFile();
+    
+    @Source("actions/open-project.svg")
+    SVGResource openProject();
+    
     @Source("actions/save.svg")
     SVGResource save();
     
     @Source("actions/preferences.svg")
     SVGResource preferences();
+    
+    @Source("actions/rename.svg")
+    SVGResource rename();
+    
+    @Source("actions/format.svg")
+    SVGResource format();
+    
+    @Source("actions/import.svg")
+    SVGResource importProject();
+    
+    @Source("actions/upload-file.svg")
+    SVGResource uploadFile();
     
     @Source("project/private-project.svg")
     SVGResource privateProject();

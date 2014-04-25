@@ -18,6 +18,7 @@
 package com.codenvy.ide.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.about.AboutLocalizationConstant;
 import com.codenvy.ide.about.AboutPresenter;
 import com.codenvy.ide.api.ui.action.Action;
@@ -35,8 +36,8 @@ public class ShowAboutAction extends Action {
     private final AnalyticsEventLogger eventLogger;
 
     @Inject
-    public ShowAboutAction(AboutPresenter presenter, AboutLocalizationConstant locale, AnalyticsEventLogger eventLogger) {
-        super(locale.aboutControlTitle(), "Show about application", null);
+    public ShowAboutAction(AboutPresenter presenter, AboutLocalizationConstant locale, AnalyticsEventLogger eventLogger, Resources resources) {
+        super(locale.aboutControlTitle(), "Show about application", null, resources.about());
         this.presenter = presenter;
         this.eventLogger = eventLogger;
     }
