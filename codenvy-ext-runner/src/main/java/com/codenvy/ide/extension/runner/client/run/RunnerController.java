@@ -19,12 +19,12 @@ package com.codenvy.ide.extension.runner.client.run;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.rest.shared.dto.ServiceError;
-import com.codenvy.api.runner.ApplicationStatus;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.api.runner.dto.DebugMode;
 import com.codenvy.api.runner.dto.RunOptions;
 import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
+import com.codenvy.api.runner.internal.Constants;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.notification.Notification;
@@ -33,6 +33,7 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.commons.exception.ServerException;
+import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
@@ -42,10 +43,14 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
+import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
+import com.codenvy.ide.websocket.rest.Unmarshallable;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -56,6 +61,7 @@ import java.util.List;
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
 
 /**
  * Controls launching application.
@@ -64,23 +70,28 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 @Singleton
 public class RunnerController implements Notification.OpenNotificationHandler {
-    private final DtoUnmarshallerFactory       dtoUnmarshallerFactory;
-    private final DtoFactory                   dtoFactory;
-    private       MessageBus                   messageBus;
-    private       WorkspaceAgent               workspaceAgent;
-    private       ResourceProvider             resourceProvider;
-    private       RunnerConsolePresenter       console;
-    private       RunnerServiceClient          service;
-    private       UpdateServiceClient          updateService;
-    private       RunnerLocalizationConstant   constant;
-    private       NotificationManager          notificationManager;
-    private       Notification                 notification;
-    private       Project                      project;
+
+    public static final String RUNNER_STATUS_CHANNEL = "runner:status:";
+    public static final String RUNNER_OUTPUT_CHANNEL = "runner:output:";
+    private final DtoUnmarshallerFactory                            dtoUnmarshallerFactory;
+    private final DtoFactory                                        dtoFactory;
+    private       MessageBus                                        messageBus;
+    private       WorkspaceAgent                                    workspaceAgent;
+    private       ResourceProvider                                  resourceProvider;
+    private       RunnerConsolePresenter                            console;
+    private       RunnerServiceClient                               service;
+    private       UpdateServiceClient                               updateService;
+    private       RunnerLocalizationConstant                        constant;
+    private       NotificationManager                               notificationManager;
+    private       Notification                                      notification;
+    private       Project                                           project;
     /** Launched app. */
-    private       ApplicationProcessDescriptor applicationProcessDescriptor;
+    private       ApplicationProcessDescriptor                      currentApplication;
     /** Determines whether any application is launched. */
-    private       boolean                      isLaunchingInProgress;
-    private       ProjectRunCallback           runCallback;
+    private       boolean                                           isLaunchingInProgress;
+    private       ProjectRunCallback                                runCallback;
+    protected     SubscriptionHandler<String>                       runnerOutputHandler;
+    protected     SubscriptionHandler<ApplicationProcessDescriptor> runStatusHandler;
 
     /** Create controller. */
     @Inject
@@ -110,7 +121,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
                 isLaunchingInProgress = false;
-                applicationProcessDescriptor = null;
+                currentApplication = null;
             }
 
             @Override
@@ -118,10 +129,10 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 isLaunchingInProgress = false;
                 if (isAnyAppLaunched()) {
                     stopActiveProject();
-                    console.clear();
                 }
+                console.clear();
                 project = null;
-                applicationProcessDescriptor = null;
+                currentApplication = null;
             }
 
             @Override
@@ -187,6 +198,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             return;
         }
 
+        console.clear();
         isLaunchingInProgress = true;
         notification = new Notification(constant.applicationStarting(project.getName()), PROGRESS, RunnerController.this);
         notificationManager.showNotification(notification);
@@ -205,23 +217,120 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                             dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
                         @Override
                         protected void onSuccess(ApplicationProcessDescriptor result) {
-                            applicationProcessDescriptor = result;
-                            startCheckingStatus(applicationProcessDescriptor);
+                            currentApplication = result;
+                            startCheckingStatus(currentApplication);
+                            startCheckingOutput(currentApplication);
                         }
 
                         @Override
                         protected void onFailure(Throwable exception) {
                             isLaunchingInProgress = false;
-                            applicationProcessDescriptor = null;
+                            currentApplication = null;
                             onFail(constant.startApplicationFailed(project.getName()), exception);
                         }
                     }
                    );
     }
 
+    private void startCheckingStatus(final ApplicationProcessDescriptor buildTaskDescriptor) {
+        runStatusHandler = new SubscriptionHandler<ApplicationProcessDescriptor>(
+                dtoUnmarshallerFactory.newWSUnmarshaller(ApplicationProcessDescriptor.class)) {
+            @Override
+            protected void onMessageReceived(ApplicationProcessDescriptor result) {
+                currentApplication = result;
+
+                switch (currentApplication.getStatus()) {
+                    case RUNNING:
+                        afterApplicationLaunched(currentApplication);
+                        break;
+                    case STOPPED:
+                        isLaunchingInProgress = false;
+                        currentApplication = null;
+                        console.clearAppURL();
+                        notification.setStatus(FINISHED);
+                        notification.setMessage(constant.applicationStopped(project.getName()));
+                        console.print(constant.applicationStopped(project.getName()));
+
+                        try {
+                            messageBus.unsubscribe(RUNNER_STATUS_CHANNEL + currentApplication.getProcessId(), this);
+                            messageBus.unsubscribe(RUNNER_OUTPUT_CHANNEL + currentApplication.getProcessId(), runnerOutputHandler);
+                        } catch (WebSocketException e) {
+                            Log.error(RunnerController.class, e);
+                        }
+                        break;
+                    case CANCELLED:
+                        isLaunchingInProgress = false;
+                        currentApplication = null;
+                        console.clearAppURL();
+                        notification.setStatus(FINISHED);
+                        notification.setMessage(constant.applicationCanceled(project.getName()));
+
+                        try {
+                            messageBus.unsubscribe(RUNNER_STATUS_CHANNEL + currentApplication.getProcessId(), this);
+                            messageBus.unsubscribe(RUNNER_OUTPUT_CHANNEL + currentApplication.getProcessId(), runnerOutputHandler);
+                        } catch (WebSocketException e) {
+                            Log.error(RunnerController.class, e);
+                        }
+                        break;
+                }
+            }
+
+            @Override
+            protected void onErrorReceived(Throwable exception) {
+                isLaunchingInProgress = false;
+                currentApplication = null;
+
+                if (exception instanceof ServerException &&
+                    ((ServerException)exception).getHTTPStatus() == 500) {
+                    ServiceError e = dtoFactory.createDtoFromJson(exception.getMessage(), ServiceError.class);
+                    onFail(constant.startApplicationFailed(project.getName()) + ": " + e.getMessage(), null);
+                } else {
+                    onFail(constant.startApplicationFailed(project.getName()), exception);
+                }
+
+                try {
+                    messageBus.unsubscribe(RUNNER_STATUS_CHANNEL + buildTaskDescriptor.getProcessId(), this);
+                } catch (WebSocketException e) {
+                    Log.error(RunnerController.class, e);
+                }
+            }
+        };
+
+        try {
+            messageBus.subscribe(RUNNER_STATUS_CHANNEL + buildTaskDescriptor.getProcessId(), runStatusHandler);
+        } catch (WebSocketException e) {
+            Log.error(RunnerController.class, e);
+        }
+    }
+
+    private void startCheckingOutput(final ApplicationProcessDescriptor applicationProcessDescriptor) {
+        runnerOutputHandler = new SubscriptionHandler<String>(new LineUnmarshaller()) {
+            @Override
+            protected void onMessageReceived(String result) {
+                console.print(result);
+            }
+
+            @Override
+            protected void onErrorReceived(Throwable throwable) {
+                try {
+                    messageBus.unsubscribe(RUNNER_OUTPUT_CHANNEL + applicationProcessDescriptor.getProcessId(), this);
+                    Log.error(RunnerController.class, throwable);
+                } catch (WebSocketException e) {
+                    Log.error(RunnerController.class, e);
+                }
+            }
+        };
+
+        try {
+            messageBus.subscribe(RUNNER_OUTPUT_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerOutputHandler);
+        } catch (WebSocketException e) {
+            Log.error(RunnerController.class, e);
+        }
+    }
+
     /** Get logs of the currently launched application. */
     public void getLogs() {
-        final Link viewLogsLink = getAppLink(applicationProcessDescriptor, "view logs");
+        final Link viewLogsLink = getAppLink(currentApplication, Constants.LINK_REL_VIEW_LOG);
         if (viewLogsLink == null) {
             onFail(constant.getApplicationLogsFailed(), null);
         }
@@ -239,29 +348,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         });
     }
 
-    /** Stop the currently launched application. */
-    public void stopActiveProject() {
-        final Link stopLink = getAppLink(applicationProcessDescriptor, "stop");
-        if (stopLink == null) {
-            onFail(constant.stopApplicationFailed(project.getName()), null);
-        }
-
-        service.stop(stopLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-            @Override
-            protected void onSuccess(String result) {
-                applicationProcessDescriptor = null;
-            }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                applicationProcessDescriptor = null;
-                onFail(constant.stopApplicationFailed(project.getName()), exception);
-            }
-        });
-    }
-
     private void afterApplicationLaunched(ApplicationProcessDescriptor appDescriptor) {
-        this.applicationProcessDescriptor = appDescriptor;
+        this.currentApplication = appDescriptor;
         if (runCallback != null) {
             runCallback.onRun(appDescriptor, project);
         }
@@ -273,7 +361,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             final Link codeServerLink = getAppLink(appDescriptor, "code server");
             if (codeServerLink != null) {
                 StringBuilder urlBuilder = new StringBuilder();
-                urlBuilder.append(url);
+                urlBuilder.append(appLink.getHref());
                 final String codeServerHref = codeServerLink.getHref();
                 final int colon = codeServerHref.lastIndexOf(':');
                 if (colon > 0) {
@@ -287,10 +375,10 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 }
                 url = urlBuilder.toString();
             }
-
-            console.print(constant.applicationStartedOnUrl(project.getName(), "<a href=\"" + url + "\" target=\"_blank\">" + url + "</a>"));
+            console.setAppURL(url);
         }
         notification.setStatus(FINISHED);
+        notification.setMessage(constant.applicationStarted(project.getName()));
     }
 
     private void onFail(String message, Throwable exception) {
@@ -304,76 +392,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             message += ": " + exception.getMessage();
         }
         console.print(message);
-    }
-
-    /**
-     * Start checking status of launched application by subscribing
-     * on receiving messages over WebSocket.
-     *
-     * @param buildTaskDescriptor
-     *         the build job to check status
-     */
-    private void startCheckingStatus(final ApplicationProcessDescriptor buildTaskDescriptor) {
-        SubscriptionHandler<ApplicationProcessDescriptor> runStatusHandler = new SubscriptionHandler<ApplicationProcessDescriptor>(
-                dtoUnmarshallerFactory.newWSUnmarshaller(ApplicationProcessDescriptor.class)) {
-            @Override
-            protected void onMessageReceived(ApplicationProcessDescriptor result) {
-                applicationProcessDescriptor = result;
-                ApplicationStatus status = applicationProcessDescriptor.getStatus();
-
-                if (status == ApplicationStatus.RUNNING) {
-                    afterApplicationLaunched(applicationProcessDescriptor);
-                } else if (status == ApplicationStatus.STOPPED) {
-                    isLaunchingInProgress = false;
-                    getLogs();
-                    console.print(constant.applicationStopped(project.getName()));
-
-                    try {
-                        messageBus.unsubscribe("runner:status:" + applicationProcessDescriptor.getProcessId(), this);
-                    } catch (WebSocketException e) {
-                        Log.error(RunnerController.class, e);
-                    }
-                    applicationProcessDescriptor = null;
-                } else if (status == ApplicationStatus.CANCELLED) {
-                    onFail(constant.startApplicationFailed(project.getName()), null);
-
-                    try {
-                        messageBus.unsubscribe("runner:status:" + applicationProcessDescriptor.getProcessId(), this);
-                    } catch (WebSocketException e) {
-                        Log.error(RunnerController.class, e);
-                    }
-
-                    isLaunchingInProgress = false;
-                    applicationProcessDescriptor = null;
-                }
-            }
-
-            @Override
-            protected void onErrorReceived(Throwable exception) {
-                isLaunchingInProgress = false;
-                applicationProcessDescriptor = null;
-
-                if (exception instanceof ServerException &&
-                    ((ServerException)exception).getHTTPStatus() == 500) {
-                    ServiceError e = dtoFactory.createDtoFromJson(exception.getMessage(), ServiceError.class);
-                    onFail(constant.startApplicationFailed(project.getName()) + ": " + e.getMessage(), null);
-                } else {
-                    onFail(constant.startApplicationFailed(project.getName()), exception);
-                }
-
-                try {
-                    messageBus.unsubscribe("runner:status:" + buildTaskDescriptor.getProcessId(), this);
-                } catch (WebSocketException e) {
-                    Log.error(RunnerController.class, e);
-                }
-            }
-        };
-
-        try {
-            messageBus.subscribe("runner:status:" + buildTaskDescriptor.getProcessId(), runStatusHandler);
-        } catch (WebSocketException e) {
-            Log.error(RunnerController.class, e);
-        }
     }
 
     private Link getAppLink(ApplicationProcessDescriptor appDescriptor, String rel) {
@@ -390,13 +408,36 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         workspaceAgent.setActivePart(console);
     }
 
+    /** Stop the currently launched application. */
+    public void stopActiveProject() {
+        final Link stopLink = getAppLink(currentApplication, Constants.LINK_REL_STOP);
+        if (stopLink == null) {
+            onFail(constant.stopApplicationFailed(project.getName()), null);
+            return;
+        }
+
+        service.stop(stopLink, new AsyncRequestCallback<ApplicationProcessDescriptor>(
+                dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
+            @Override
+            protected void onSuccess(ApplicationProcessDescriptor result) {
+                // stopping will be processed in startCheckingStatus() method
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                currentApplication = null;
+                onFail(constant.stopApplicationFailed(project.getName()), exception);
+            }
+        });
+    }
+
     /** Updates launched Codenvy Extension. */
     public void updateExtension() {
         final Notification notification =
                 new Notification(constant.applicationUpdating(project.getName()), PROGRESS, RunnerController.this);
         notificationManager.showNotification(notification);
         try {
-            updateService.update(applicationProcessDescriptor, new RequestCallback<Void>() {
+            updateService.update(currentApplication, new RequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     notification.setStatus(FINISHED);
@@ -420,4 +461,25 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             notification.setMessage(constant.updateApplicationFailed(project.getName()));
         }
     }
+
+    private class LineUnmarshaller implements Unmarshallable<String> {
+        private String line;
+
+        @Override
+        public void unmarshal(Message response) throws UnmarshallerException {
+            JSONObject jsonObject = JSONParser.parseStrict(response.getBody()).isObject();
+            if (jsonObject == null) {
+                return;
+            }
+            if (jsonObject.containsKey("line")) {
+                line = jsonObject.get("line").isString().stringValue();
+            }
+        }
+
+        @Override
+        public String getPayload() {
+            return line;
+        }
+    }
+
 }

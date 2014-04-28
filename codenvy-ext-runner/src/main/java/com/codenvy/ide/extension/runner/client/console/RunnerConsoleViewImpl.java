@@ -21,6 +21,7 @@ import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -42,6 +43,8 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     FlowPanel   consoleArea;
     @UiField
     ScrollPanel scrollPanel;
+    @UiField
+    Anchor      appURL;
 
     @Inject
     public RunnerConsoleViewImpl(PartStackUIResources resources, RunnerConsoleViewImplUiBinder uiBinder) {
@@ -60,6 +63,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     @Override
     public void print(String message) {
         HTML html = new HTML(message);
+        html.setHTML("<pre style='margin:0px; font-weight:700;'> " + message + "</pre>");
         html.getElement().setAttribute("style", "padding-left: 2px;");
         consoleArea.add(html);
     }
@@ -76,4 +80,11 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         scrollPanel.getElement().setScrollTop(scrollPanel.getElement().getScrollHeight());
     }
 
+
+    /** {@inheritDoc} */
+    @Override
+    public void setAppURL(String link) {
+        appURL.setText(link);
+        appURL.setHref(link);
+    }
 }

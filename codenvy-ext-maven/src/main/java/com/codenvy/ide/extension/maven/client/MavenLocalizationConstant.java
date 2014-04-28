@@ -36,12 +36,6 @@ public interface MavenLocalizationConstant extends Messages {
     @Key("control.customBuildProject.description")
     String buildProjectControlDescription();
 
-    @Key("messages.buildSuccess")
-    String buildSuccess();
-
-    @Key("messages.buildFailed")
-    String buildFailed();
-
     @Key("button.cancel")
     @DefaultMessage("Cancel")
     String buttonCancel();

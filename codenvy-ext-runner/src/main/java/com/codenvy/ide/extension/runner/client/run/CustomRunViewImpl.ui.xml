@@ -41,7 +41,7 @@
     <g:DockLayoutPanel unit="PX" width="350px" height="140px" addStyleNames="{style.emptyBorder}">
         <g:center>
             <g:FlowPanel addStyleNames="{style.emptyBorder} {style.spacingTop}">
-                <g:Label text="Environment:" width="100%" addStyleNames="{style.labelMargin}"/>
+                <g:Label text="Select the environment your application needs to run in:" width="100%" addStyleNames="{style.labelMargin}"/>
                 <g:ListBox ui:field="environmentField" width="100%" debugId="project-customRun-environment"/>
                 <g:TextArea ui:field="descriptionField" readOnly="true" width="100%" height="80px" addStyleNames="{style.noResize}}"/>
             </g:FlowPanel>
