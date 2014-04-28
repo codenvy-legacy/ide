@@ -43,8 +43,8 @@ public interface BuilderLocalizationConstant extends Messages {
     @Key("messages.buildFailed")
     String buildFailed();
 
-    @Key("messages.downloadArtifact")
-    String downloadArtifact(String url);
+    @Key("messages.buildCanceled")
+    String buildCanceled();
 
     @Key("messages.failGetBuildResult")
     String failGetBuildResult();

@@ -21,6 +21,7 @@ import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -35,6 +36,11 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDelegate> implements BuilderConsoleView {
+    private final String PRE_STYLE   = "style='margin:0px; font-weight:700;'";
+    private final String INFO_COLOR  = "lightgreen'";
+    private final String WARN_COLOR  = "cyan'";
+    private final String ERROR_COLOR = "#F62217'";
+
     interface BuilderConsoleViewImplUiBinder extends UiBinder<Widget, BuilderConsoleViewImpl> {
     }
 
@@ -42,6 +48,8 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
     FlowPanel   consoleArea;
     @UiField
     ScrollPanel scrollPanel;
+    @UiField
+    Anchor      downloadURL;
 
     @Inject
     public BuilderConsoleViewImpl(PartStackUIResources resources, BuilderConsoleViewImplUiBinder uiBinder) {
@@ -58,22 +66,21 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
 
     /** {@inheritDoc} */
     @Override
-    public void print(String text) {
-        final String preStyle = " style='margin:0px; font-weight:700; font-size: 12;' ";
-
+    public void print(String message) {
         HTML html = new HTML();
-
-        final String TEXT = text.toUpperCase();
-        if (TEXT.startsWith("[INFO]")) {
-            html.setHTML("<pre" + preStyle + ">[<span style='color:lightgreen;'><b>INFO</b></span>] " + text.substring(6) + "</pre>");
-        } else if (TEXT.startsWith("[ERROR]")) {
-            html.setHTML("<pre" + preStyle + ">[<span style='color:#F62217;'><b>ERROR</b></span>] " + text.substring(7) + "</pre>");
-        } else if (TEXT.startsWith("[WARNING]")) {
-            html.setHTML("<pre" + preStyle + ">[<span style='color:cyan;'><b>WARNING</b></span>] " + text.substring(9) + "</pre>");
+        final String capMessage = message.toUpperCase();
+        if (capMessage.startsWith("[INFO]")) {
+            html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + INFO_COLOR + ";'><b>INFO</b></span>] " + message.substring(6) +
+                         "</pre>");
+        } else if (capMessage.startsWith("[ERROR]")) {
+            html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + ERROR_COLOR + ";'><b>ERROR</b></span>] " + message.substring(7) +
+                         "</pre>");
+        } else if (capMessage.startsWith("[WARNING]")) {
+            html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + WARN_COLOR + ";'><b>WARNING</b></span>] " + message.substring(9) +
+                         "</pre>");
         } else {
-            html.setHTML("<pre" + preStyle + ">" + text + "</pre>");
+            html.setHTML("<pre " + PRE_STYLE + ">" + message + "</pre>");
         }
-
         html.getElement().setAttribute("style", "padding-left: 2px;");
         consoleArea.add(html);
     }
@@ -90,4 +97,10 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
         scrollPanel.getElement().setScrollTop(scrollPanel.getElement().getScrollHeight());
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void setDownloadLink(String link) {
+        downloadURL.setText(link);
+        downloadURL.setHref(link);
+    }
 }

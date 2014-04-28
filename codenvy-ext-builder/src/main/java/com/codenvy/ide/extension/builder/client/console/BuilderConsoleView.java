@@ -30,12 +30,12 @@ public interface BuilderConsoleView extends View<BuilderConsoleView.ActionDelega
     }
 
     /**
-     * Print text in console area.
+     * Print message in console area.
      *
-     * @param text
-     *         text that need to be shown
+     * @param message
+     *         message that need to be shown
      */
-    void print(String text);
+    void print(String message);
 
     /**
      * Set title of console part.
@@ -48,8 +48,14 @@ public interface BuilderConsoleView extends View<BuilderConsoleView.ActionDelega
     /** Clear console. Remove all messages. */
     void clear();
 
-    /**
-     * Scroll to bottom of the view.
-     */
+    /** Scroll to bottom of the view. */
     void scrollBottom();
+
+    /**
+     * Set URL to download artifact.
+     *
+     * @param link
+     *         link to download artifact
+     */
+    void setDownloadLink(String link);
 }

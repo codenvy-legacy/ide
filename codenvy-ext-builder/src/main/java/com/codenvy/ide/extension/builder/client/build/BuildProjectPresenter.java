@@ -28,6 +28,8 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.IntegerMap;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.builder.client.BuilderExtension;
@@ -73,12 +75,14 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     protected final DtoUnmarshallerFactory                   dtoUnmarshallerFactory;
     /** Handler for processing Maven build status which is received over WebSocket connection. */
     protected       SubscriptionHandler<BuildTaskDescriptor> buildStatusHandler;
-    protected       SubscriptionHandler<String>              buildOutputHandler;
+    protected       SubscriptionHandler<Line>                buildOutputHandler;
     /** Build of another project is performed. */
     protected boolean isBuildInProgress = false;
     /** Project for build. */
     protected Project      projectToBuild;
     protected Notification notification;
+    private IntegerMap<Line> messagesBuffer = Collections.createIntegerMap();
+    private int lastMessageNum;
 
     /** Create presenter. */
     @Inject
@@ -121,7 +125,13 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
             return;
         }
 
+        console.clearDownloadLink();
+        console.clear();
         projectToBuild = resourceProvider.getActiveProject();
+        lastMessageNum = 0;
+
+        notification = new Notification(constant.buildStarted(projectToBuild.getName()), PROGRESS, BuildProjectPresenter.this);
+        notificationManager.showNotification(notification);
 
         service.build(projectToBuild.getPath(),
                       buildOptions,
@@ -129,14 +139,10 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                           @Override
                           protected void onSuccess(BuildTaskDescriptor result) {
                               if (result.getStatus() == BuildStatus.SUCCESSFUL) {
-                                  final String message = constant.buildFinished(projectToBuild.getName());
-                                  notification = new Notification(message, FINISHED, BuildProjectPresenter.this);
-                                  notificationManager.showNotification(notification);
+                                  notification.setStatus(FINISHED);
+                                  notification.setMessage(constant.buildFinished(projectToBuild.getName()));
                               } else {
-                                  setBuildInProgress(true);
-                                  final String message = constant.buildStarted(projectToBuild.getName());
-                                  notification = new Notification(message, PROGRESS, BuildProjectPresenter.this);
-                                  notificationManager.showNotification(notification);
+                                  isBuildInProgress = true;
                                   startCheckingStatus(result);
                                   startCheckingOutput(result);
                               }
@@ -144,10 +150,11 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
 
                           @Override
                           protected void onFailure(Throwable exception) {
-                              setBuildInProgress(false);
+                              isBuildInProgress = false;
                               notification.setStatus(FINISHED);
                               notification.setType(ERROR);
-                              notification.setMessage(exception.getMessage());
+                              notification.setMessage(constant.buildFailed());
+                              console.print(exception.getMessage());
                           }
                       }
                      );
@@ -158,15 +165,21 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                 new SubscriptionHandler<BuildTaskDescriptor>(dtoUnmarshallerFactory.newWSUnmarshaller(BuildTaskDescriptor.class)) {
                     @Override
                     protected void onMessageReceived(BuildTaskDescriptor result) {
-                        updateBuildStatus(result);
+                        switch (result.getStatus()) {
+                            case SUCCESSFUL:
+                            case CANCELLED:
+                            case FAILED:
+                                afterBuildFinished(result);
+                        }
                     }
 
                     @Override
                     protected void onErrorReceived(Throwable exception) {
-                        setBuildInProgress(false);
+                        isBuildInProgress = false;
                         try {
                             messageBus.unsubscribe(BuilderExtension.BUILD_STATUS_CHANNEL + buildTaskDescriptor.getTaskId(), this);
-                            messageBus.unsubscribe(BuilderExtension.BUILD_OUTPUT_CHANNEL + buildTaskDescriptor.getTaskId(), this);
+                            messageBus.unsubscribe(BuilderExtension.BUILD_OUTPUT_CHANNEL + buildTaskDescriptor.getTaskId(),
+                                                   buildOutputHandler);
                             Log.error(BuildProjectPresenter.class, exception);
                         } catch (WebSocketException e) {
                             Log.error(BuildProjectPresenter.class, e);
@@ -184,21 +197,24 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         }
     }
 
-    private void updateBuildStatus(BuildTaskDescriptor descriptor) {
-        switch (descriptor.getStatus()) {
-            case SUCCESSFUL:
-            case CANCELLED:
-            case FAILED:
-                afterBuildFinished(descriptor);
-                break;
-        }
-    }
-
     private void startCheckingOutput(final BuildTaskDescriptor buildTaskDescriptor) {
-        buildOutputHandler = new SubscriptionHandler<String>(new LineUnmarshaller()) {
+        buildOutputHandler = new SubscriptionHandler<Line>(new LineUnmarshaller()) {
             @Override
-            protected void onMessageReceived(String result) {
-                console.print(result);
+            protected void onMessageReceived(Line result) {
+//                if (lastMessageNum == 0 || lastMessageNum == result.num - 1) {
+//                    lastMessageNum = result.num;
+                console.print(result.text);
+//                } else if (lastMessageNum == result.num - 1) {
+//                    messagesBuffer.put(result.num, result);
+//                }
+//
+//                Line nextLine = messagesBuffer.get(result.num + 1);
+//                while (nextLine != null) {
+//                    lastMessageNum = result.num;
+//                    console.print(nextLine.text);
+//                    messagesBuffer.erase(nextLine.num);
+//                    nextLine = messagesBuffer.get(nextLine.num + 1);
+//                }
             }
 
             @Override
@@ -219,32 +235,35 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         }
     }
 
-    private void setBuildInProgress(boolean buildInProgress) {
-        isBuildInProgress = buildInProgress;
-    }
-
-    /** Perform actions after build is finished. */
     private void afterBuildFinished(BuildTaskDescriptor descriptor) {
-        setBuildInProgress(false);
+        isBuildInProgress = false;
         try {
             messageBus.unsubscribe(BuilderExtension.BUILD_STATUS_CHANNEL + descriptor.getTaskId(), buildStatusHandler);
-            messageBus.unsubscribe(BuilderExtension.BUILD_OUTPUT_CHANNEL + descriptor.getTaskId(), buildStatusHandler);
+            messageBus.unsubscribe(BuilderExtension.BUILD_OUTPUT_CHANNEL + descriptor.getTaskId(), buildOutputHandler);
         } catch (Exception e) {
             Log.error(BuildProjectPresenter.class, e);
         }
 
         notification.setStatus(FINISHED);
 
-        if (descriptor.getStatus() == BuildStatus.SUCCESSFUL) {
-            notification.setType(INFO);
-            notification.setMessage(constant.buildFinished(projectToBuild.getName()));
+        switch (descriptor.getStatus()) {
+            case SUCCESSFUL:
+                Link downloadResultLink = getAppLink(descriptor, Constants.LINK_REL_DOWNLOAD_RESULT);
+                console.setDownloadLink(downloadResultLink.getHref());
 
-            Link downloadResultLink = getAppLink(descriptor, Constants.LINK_REL_DOWNLOAD_RESULT);
-            console.print(constant.downloadArtifact(downloadResultLink.getHref()));
-        } else if (descriptor.getStatus() == BuildStatus.FAILED) {
-            notification.setType(ERROR);
-            notification.setMessage(constant.buildFailed());
+                notification.setType(INFO);
+                notification.setMessage(constant.buildFinished(projectToBuild.getName()));
+                break;
+            case FAILED:
+                notification.setType(ERROR);
+                notification.setMessage(constant.buildFailed());
+                break;
+            case CANCELLED:
+                notification.setType(ERROR);
+                notification.setMessage(constant.buildCanceled());
+                break;
         }
+        workspaceAgent.setActivePart(console);
     }
 
     private void getBuildLogs(BuildTaskDescriptor descriptor) {
@@ -279,8 +298,8 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         return null;
     }
 
-    private class LineUnmarshaller implements Unmarshallable<String> {
-        private String line;
+    private class LineUnmarshaller implements Unmarshallable<Line> {
+        private Line line;
 
         @Override
         public void unmarshal(Message response) throws UnmarshallerException {
@@ -289,13 +308,25 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                 return;
             }
             if (jsonObject.containsKey("line")) {
-                line = jsonObject.get("line").isString().stringValue();
+                final int lineNumber = 0/*(int)jsonObject.get("lineNumber").isNumber().doubleValue()*/;
+                final String text = jsonObject.get("line").isString().stringValue();
+                line = new Line(lineNumber, text);
             }
         }
 
         @Override
-        public String getPayload() {
+        public Line getPayload() {
             return line;
+        }
+    }
+
+    private class Line {
+        int    num;
+        String text;
+
+        Line(int lineNumber, String text) {
+            this.num = lineNumber;
+            this.text = text;
         }
     }
 
