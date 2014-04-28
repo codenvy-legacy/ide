@@ -79,6 +79,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -1372,6 +1373,24 @@ public class FSMountPoint implements MountPoint {
             if (!virtualFile.getIoFile().setLastModified(System.currentTimeMillis())) {
                 LOG.warn("Unable to set timestamp to '{}'. ", virtualFile.getIoFile());
             }
+
+            // 6. signal for cache update in ide2.
+            // When ide2 do not will be use own implementation of MountPoint then this step will be redundant
+            java.io.File cacheResetDir =
+                    new java.io.File(ioRoot, FSMountPoint.SERVICE_DIR + java.io.File.separatorChar + "cache");
+            if (!(cacheResetDir.exists() || cacheResetDir.mkdirs())) {
+                LOG.warn("Unable to create folder {} for cache update in ide2", cacheResetDir.getPath());
+            } else {
+                java.nio.file.Path resetFilePath = new java.io.File(cacheResetDir, "reset_ide_old").toPath();
+                if (!Files.exists(resetFilePath)) {
+                    try {
+                        Files.createFile(resetFilePath);
+                    } catch (IOException e) {
+                        LOG.warn("Unable to create file {} for cache update in ide2", resetFilePath.toAbsolutePath());
+                    }
+                }
+            }
+
             eventService.publish(new UpdateACLEvent(workspaceId, virtualFile.getPath()));
         } finally {
             lock.release();
