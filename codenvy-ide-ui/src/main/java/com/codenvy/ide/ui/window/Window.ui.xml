@@ -1,8 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
-  <ui:with field="css"
-    type="com.codenvy.ide.ui.window.Window.Css" />
+  <ui:with field="css" type="com.codenvy.ide.ui.window.Window.Css" />
   <g:HTMLPanel ui:field="popup" styleName="{css.popup}">
     <g:HTMLPanel ui:field="glass" styleName="{css.glass}"></g:HTMLPanel>
     <g:HTMLPanel styleName="{css.positioner}">
