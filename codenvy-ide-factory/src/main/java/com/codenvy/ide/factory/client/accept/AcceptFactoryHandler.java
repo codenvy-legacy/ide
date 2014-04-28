@@ -127,7 +127,8 @@ public class AcceptFactoryHandler implements OAuthCallback {
                                                       .showNotification(new Notification(e.getMessage(), Notification.Type.ERROR));
 
                                           }
-                                      });
+                                      }
+                                     );
         } catch (WebSocketException e) {
             notificationManager.showNotification(
                     new Notification(e.getMessage(), Notification.Type.ERROR));
@@ -150,7 +151,8 @@ public class AcceptFactoryHandler implements OAuthCallback {
 
                     notificationManager.showNotification(
                             new Notification(localization.projectImported(acceptedFactory.getProjectattributes().getPname()),
-                                             Notification.Type.INFO));
+                                             Notification.Type.INFO)
+                                                        );
 
                     openProject(acceptedFactory);
                 }
@@ -308,7 +310,8 @@ public class AcceptFactoryHandler implements OAuthCallback {
         boolean permitToRedirect = Window.confirm(localization.oauthLoginPrompt("github.com"));
         if (permitToRedirect) {
             String authUrl = restContext + "/oauth/authenticate?oauth_provider=" + provider + "&scope=" + scope + "&userId=" + userId +
-                             "&redirect_after_login=/ide/" + Utils.getWorkspaceName();
+                             "&redirect_after_login=" + Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/ide/" +
+                             Utils.getWorkspaceName();
             JsOAuthWindow authWindow = new JsOAuthWindow(authUrl, "error.url", 500, 980, this);
             authWindow.loginWithOAuth();
         }
@@ -367,6 +370,7 @@ public class AcceptFactoryHandler implements OAuthCallback {
                                                protected void onFailure(Throwable exception) {
                                                    askAndSetCorrectProjectType(acceptedFactory);
                                                }
-                                           });
+                                           }
+                                          );
     }
 }
