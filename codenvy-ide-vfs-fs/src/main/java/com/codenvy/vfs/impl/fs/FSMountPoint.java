@@ -1375,7 +1375,7 @@ public class FSMountPoint implements MountPoint {
             }
 
             // 6. signal for cache update in ide2.
-            // When ide2 do not will be use own implementation of MountPoint then this step will be redundant
+            // When ide2 doesn't use own implementation of MountPoint then this step will be redundant
             java.io.File cacheResetDir =
                     new java.io.File(ioRoot, FSMountPoint.SERVICE_DIR + java.io.File.separatorChar + "cache");
             if (!(cacheResetDir.exists() || cacheResetDir.mkdirs())) {
