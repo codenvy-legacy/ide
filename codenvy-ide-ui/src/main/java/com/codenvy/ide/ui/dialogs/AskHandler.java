@@ -18,9 +18,23 @@
 package com.codenvy.ide.ui.dialogs;
 
 /**
+ * Handler for user interaction in Ask dialog window
+ *
  * @author Vitaly Parfonov
  */
-public class BooleanValueHandler {
+public abstract class AskHandler {
 
+    /**
+     * Call if user click Ok button
+     */
+    public abstract void onOk();
 
+    /**
+     * Call if user click cancel button.
+     * By default nothing todo.
+     * If need custom interaction override it.
+     */
+    public void onCancel() {
+        //by default nothing todo
+    }
 }
