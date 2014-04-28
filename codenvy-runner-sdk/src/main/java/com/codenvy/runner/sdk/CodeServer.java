@@ -47,11 +47,9 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -65,11 +63,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * GWT code server.
@@ -188,7 +182,7 @@ public class CodeServer {
                                      "cd war\n" +
                                      codeServerUnix() +
                                      "PID=$!\n" +
-                                     "echo \"$PID\" >> run.pid\n" +
+                                     "echo \"$PID\" > run.pid\n" +
                                      "wait $PID";
         final java.io.File startUpScriptFile = new java.io.File(workDir, "startup.sh");
         try {
@@ -222,66 +216,39 @@ public class CodeServer {
         private final java.io.File    workDir;
         private final Path            extensionSourcesPath;
         private final String          projectApiBaseUrl;
-        private final ExecutorService pidTaskExecutor;
-        private int pid = -1;
+        private final ExecutorService executor;
+
+        private Process process;
 
         protected CodeServerProcess(String bindAddress, int port, File startUpScriptFile, File workDir, Path extensionSourcesPath,
-                                    String projectApiBaseUrl, ExecutorService pidTaskExecutor) {
+                                    String projectApiBaseUrl, ExecutorService executor) {
             this.bindAddress = bindAddress;
             this.port = port;
             this.startUpScriptFile = startUpScriptFile;
             this.workDir = workDir;
             this.extensionSourcesPath = extensionSourcesPath;
             this.projectApiBaseUrl = projectApiBaseUrl;
-            this.pidTaskExecutor = pidTaskExecutor;
+            this.executor = executor;
         }
 
-        public void start() throws RunnerException {
-            if (pid != -1) {
+        public synchronized void start() throws RunnerException {
+            if (process != null && ProcessUtil.isAlive(process)) {
                 throw new IllegalStateException("Code server process is already started");
             }
 
             try {
-                Runtime.getRuntime().exec(new CommandLine(startUpScriptFile.getAbsolutePath()).toShellCommand(), null, workDir);
-                pid = pidTaskExecutor.submit(new Callable<Integer>() {
-                    @Override
-                    public Integer call() throws Exception {
-                        final java.io.File pidFile = new java.io.File(workDir, "run.pid");
-                        final Path pidPath = pidFile.toPath();
-                        synchronized (this) {
-                            while (!Files.isReadable(pidPath)) {
-                                wait(100);
-                            }
-                        }
-                        final BufferedReader pidReader = new BufferedReader(new FileReader(pidFile));
-                        try {
-                            return Integer.valueOf(pidReader.readLine());
-                        } finally {
-                            try {
-                                pidReader.close();
-                            } catch (IOException ignored) {
-                            }
-                        }
-                    }
-                }).get(5, TimeUnit.SECONDS);
-
+                process = Runtime.getRuntime().exec(new CommandLine(startUpScriptFile.getAbsolutePath()).toShellCommand(), null, workDir);
                 LOG.debug("Start GWT code server at port {}, working directory {}", port, workDir);
-            } catch (IOException | InterruptedException | TimeoutException e) {
+            } catch (IOException e) {
                 throw new RunnerException(e);
-            } catch (ExecutionException e) {
-                throw new RunnerException(e.getCause());
             }
         }
 
-        public void stop() {
-            if (pid == -1) {
+        public synchronized void stop() {
+            if (process == null) {
                 throw new IllegalStateException("Code server process is not started yet");
             }
-
-            // Use ProcessUtil.kill(pid) because java.lang.Process.destroy() method doesn't
-            // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
-            ProcessUtil.kill(pid);
-
+            ProcessUtil.kill(process);
             LOG.debug("Stop GWT code server at port {}, working directory {}", port, workDir);
         }
 
@@ -365,7 +332,7 @@ public class CodeServer {
 
         @Override
         public void onEvent(ProjectEvent event) {
-            update(event, extensionSourcesPath, projectApiBaseUrl, pidTaskExecutor);
+            update(event, extensionSourcesPath, projectApiBaseUrl, executor);
         }
 
         private static void update(final ProjectEvent event, final Path projectMirrorPath, final String projectApiBaseUrl,

@@ -20,6 +20,7 @@ package com.codenvy.ide.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
@@ -44,8 +45,8 @@ public class UploadFileAction extends Action {
     @Inject
     public UploadFileAction(UploadFilePresenter presenter,
                             CoreLocalizationConstant locale,
-                            SelectionAgent selectionAgent, AnalyticsEventLogger eventLogger) {
-        super(locale.uploadFileName(), locale.uploadFileDescription(), null);
+                            SelectionAgent selectionAgent, AnalyticsEventLogger eventLogger, Resources resources) {
+        super(locale.uploadFileName(), locale.uploadFileDescription(), null, resources.uploadFile());
         this.presenter = presenter;
         this.selectionAgent = selectionAgent;
         this.eventLogger = eventLogger;

@@ -179,11 +179,9 @@ public class UserProfileSshKeyStore implements SshKeyStore {
         Profile profile;
         try {
             profile = profileDao.getById(user.getId());
-
             profile.getPreferences().remove(sshKeyAttributeName(host, PRIVATE));
             profile.getPreferences().remove(sshKeyAttributeName(host, PUBLIC));
             profileDao.update(profile);
-            throw new SshKeyStoreException(String.format("Failed to remove keys for host '%s'.", host));
         } catch (NotFoundException e) {
             throw new SshKeyStoreException(String.format("Failed to remove keys for host '%s'.", host));
         } catch (ServerException e) {

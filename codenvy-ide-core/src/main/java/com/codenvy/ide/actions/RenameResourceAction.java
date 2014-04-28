@@ -19,6 +19,7 @@ package com.codenvy.ide.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
@@ -44,8 +45,8 @@ public class RenameResourceAction extends Action {
     @Inject
     public RenameResourceAction(RenameResourcePresenter presenter, SelectionAgent selectionAgent,
                                 ResourceProvider resourceProvider,
-                                CoreLocalizationConstant localization, AnalyticsEventLogger eventLogger) {
-        super(localization.renameButton(), "Rename resource", null);
+                                CoreLocalizationConstant localization, AnalyticsEventLogger eventLogger, Resources resources) {
+        super(localization.renameButton(), "Rename resource", null, resources.rename());
 
         this.selectionAgent = selectionAgent;
         this.resourceProvider = resourceProvider;

@@ -20,6 +20,7 @@ package com.codenvy.ide.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.importproject.ImportProjectPresenter;
@@ -39,8 +40,8 @@ public class ImportProjectAction extends Action {
 
     @Inject
     public ImportProjectAction(ImportProjectPresenter presenter,
-                               CoreLocalizationConstant locale, AnalyticsEventLogger eventLogger) {
-        super(locale.importProjectName(), locale.importProjectDescription(), null);
+                               CoreLocalizationConstant locale, AnalyticsEventLogger eventLogger, Resources resources) {
+        super(locale.importProjectName(), locale.importProjectDescription(), null, resources.importProject());
         this.presenter = presenter;
         this.eventLogger = eventLogger;
     }

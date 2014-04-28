@@ -48,8 +48,14 @@ public interface RunnerConsoleView extends View<RunnerConsoleView.ActionDelegate
     /** Clear console. Remove all messages. */
     void clear();
 
-    /**
-     * Scroll to bottom of the view.
-     */
+    /** Scroll to bottom of the view. */
     void scrollBottom();
+
+    /**
+     * Set application's URL.
+     *
+     * @param link
+     *         application URL
+     */
+    void setAppURL(String link);
 }

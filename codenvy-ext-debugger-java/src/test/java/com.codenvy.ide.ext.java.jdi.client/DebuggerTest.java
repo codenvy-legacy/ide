@@ -55,6 +55,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -251,14 +252,23 @@ public class DebuggerTest extends BaseTest {
                 return callback;
             }
         }).when(service).stepInto(anyString(), (AsyncRequestCallback<Void>)anyObject());
+        when(view.resetStepIntoButton(false)).thenReturn(true);
 
         presenter.onStepIntoButtonClicked();
 
-        verifySetEnableButtons(DISABLE_BUTTON);
         verify(service).stepInto(anyString(), (AsyncRequestCallback<Void>)anyObject());
         verify(view).setVariables(anyListOf(Variable.class));
         verify(view).setEnableChangeValueButtonEnable(eq(DISABLE_BUTTON));
         verify(gutterManager).unmarkCurrentBreakpoint();
+    }
+
+    @Test
+    public void testStepIntoRequestIfKeyup() throws Exception {
+        when(view.resetStepIntoButton(false)).thenReturn(false);
+
+        presenter.onStepIntoButtonClicked();
+
+        verify(service, never()).stepInto(anyString(), (AsyncRequestCallback<Void>)anyObject());
     }
 
     @Test
@@ -273,6 +283,7 @@ public class DebuggerTest extends BaseTest {
                 return callback;
             }
         }).when(service).stepInto(anyString(), (AsyncRequestCallback<Void>)anyObject());
+        when(view.resetStepIntoButton(false)).thenReturn(true);
 
         presenter.onStepIntoButtonClicked();
 
@@ -292,10 +303,10 @@ public class DebuggerTest extends BaseTest {
                 return callback;
             }
         }).when(service).stepOver(anyString(), (AsyncRequestCallback<Void>)anyObject());
+        when(view.resetStepOverButton(false)).thenReturn(true);
 
         presenter.onStepOverButtonClicked();
 
-        verifySetEnableButtons(DISABLE_BUTTON);
         verify(service).stepOver(anyString(), (AsyncRequestCallback<Void>)anyObject());
         verify(view).setVariables(anyListOf(Variable.class));
         verify(view).setEnableChangeValueButtonEnable(eq(DISABLE_BUTTON));
@@ -314,11 +325,21 @@ public class DebuggerTest extends BaseTest {
                 return callback;
             }
         }).when(service).stepOver(anyString(), (AsyncRequestCallback<Void>)anyObject());
+        when(view.resetStepOverButton(false)).thenReturn(true);
 
         presenter.onStepOverButtonClicked();
 
         verify(service).stepOver(anyString(), (AsyncRequestCallback<Void>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
+    }
+
+    @Test
+    public void testStepOverRequestIfKeyup() throws Exception {
+        when(view.resetStepOverButton(false)).thenReturn(false);
+
+        presenter.onStepOverButtonClicked();
+
+        verify(service, never()).stepOver(anyString(), (AsyncRequestCallback<Void>)anyObject());
     }
 
     @Test
@@ -333,10 +354,10 @@ public class DebuggerTest extends BaseTest {
                 return callback;
             }
         }).when(service).stepReturn(anyString(), (AsyncRequestCallback<Void>)anyObject());
+        when(view.resetStepReturnButton(false)).thenReturn(true);
 
         presenter.onStepReturnButtonClicked();
 
-        verifySetEnableButtons(DISABLE_BUTTON);
         verify(service).stepReturn(anyString(), (AsyncRequestCallback<Void>)anyObject());
         verify(view).setVariables(anyListOf(Variable.class));
         verify(view).setEnableChangeValueButtonEnable(eq(DISABLE_BUTTON));
@@ -355,11 +376,21 @@ public class DebuggerTest extends BaseTest {
                 return callback;
             }
         }).when(service).stepReturn(anyString(), (AsyncRequestCallback<Void>)anyObject());
+        when(view.resetStepReturnButton(false)).thenReturn(true);
 
         presenter.onStepReturnButtonClicked();
 
         verify(service).stepReturn(anyString(), (AsyncRequestCallback<Void>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
+    }
+
+    @Test
+    public void testStepReturnRequestIfKeyup() throws Exception {
+        when(view.resetStepReturnButton(false)).thenReturn(false);
+
+        presenter.onStepReturnButtonClicked();
+
+        verify(service, never()).stepReturn(anyString(), (AsyncRequestCallback<Void>)anyObject());
     }
 
     @Test

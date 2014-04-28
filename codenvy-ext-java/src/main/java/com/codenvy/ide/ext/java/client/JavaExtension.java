@@ -163,7 +163,7 @@ public class JavaExtension {
         // add actions in context menu
         DefaultActionGroup buildContextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_BUILD_CONTEXT_MENU);
         buildContextMenuGroup.addSeparator();
-        UpdateDependencyAction dependencyAction = new UpdateDependencyAction(this, resourceProvider, eventLogger);
+        UpdateDependencyAction dependencyAction = new UpdateDependencyAction(this, resourceProvider, eventLogger, resources);
         actionManager.registerAction("updateDependency", dependencyAction);
         buildContextMenuGroup.addAction(dependencyAction);
 
