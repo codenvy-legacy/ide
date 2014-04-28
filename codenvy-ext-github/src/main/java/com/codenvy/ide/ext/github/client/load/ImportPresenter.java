@@ -252,19 +252,20 @@ public class ImportPresenter implements ImportView.ActionDelegate {
      */
     private void cloneRepository(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
         try {
-            gitService.cloneRepositoryWS(project, remoteUri, remoteName,
-                                         new RequestCallback<RepoInfo>(dtoUnmarshallerFactory.newWSUnmarshaller(RepoInfo.class)) {
-                                             @Override
-                                             protected void onSuccess(RepoInfo result) {
-                                                 onCloneSuccess(result, project);
-                                             }
+            gitService.cloneRepository(project, remoteUri, remoteName,
+                                       new RequestCallback<RepoInfo>(dtoUnmarshallerFactory.newWSUnmarshaller(RepoInfo.class)) {
+                                           @Override
+                                           protected void onSuccess(RepoInfo result) {
+                                               onCloneSuccess(result, project);
+                                           }
 
-                                             @Override
-                                             protected void onFailure(Throwable exception) {
-                                                 deleteFolder(project);
-                                                 handleError(exception, remoteUri);
-                                             }
-                                         });
+                                           @Override
+                                           protected void onFailure(Throwable exception) {
+                                               deleteFolder(project);
+                                               handleError(exception, remoteUri);
+                                           }
+                                       }
+                                      );
         } catch (WebSocketException e) {
             deleteFolder(project);
             handleError(e, remoteUri);

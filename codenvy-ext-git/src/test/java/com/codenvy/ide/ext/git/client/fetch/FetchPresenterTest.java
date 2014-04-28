@@ -207,14 +207,14 @@ public class FetchPresenterTest extends BaseTest {
                 onSuccess.invoke(callback, EMPTY_TEXT);
                 return callback;
             }
-        }).when(service).fetchWS((Project)anyObject(), anyString(), (List<String>)anyObject(), anyBoolean(),
-                                 (RequestCallback<String>)anyObject());
+        }).when(service).fetch((Project)anyObject(), anyString(), (List<String>)anyObject(), anyBoolean(),
+                               (RequestCallback<String>)anyObject());
 
         presenter.showDialog();
         presenter.onFetchClicked();
 
-        verify(service).fetchWS(eq(project), eq(REPOSITORY_NAME), (List<String>)anyObject(),
-                                eq(NO_REMOVE_DELETE_REFS), (RequestCallback<String>)anyObject());
+        verify(service).fetch(eq(project), eq(REPOSITORY_NAME), (List<String>)anyObject(),
+                              eq(NO_REMOVE_DELETE_REFS), (RequestCallback<String>)anyObject());
         verify(view).close();
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).fetchSuccess(eq(REMOTE_URI));
@@ -236,14 +236,14 @@ public class FetchPresenterTest extends BaseTest {
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).fetchWS((Project)anyObject(), anyString(), (List<String>)anyObject(), anyBoolean(),
-                                 (RequestCallback<String>)anyObject());
+        }).when(service).fetch((Project)anyObject(), anyString(), (List<String>)anyObject(), anyBoolean(),
+                               (RequestCallback<String>)anyObject());
 
         presenter.showDialog();
         presenter.onFetchClicked();
 
-        verify(service).fetchWS(eq(project), eq(REPOSITORY_NAME), (List<String>)anyObject(),
-                                eq(NO_REMOVE_DELETE_REFS), (RequestCallback<String>)anyObject());
+        verify(service).fetch(eq(project), eq(REPOSITORY_NAME), (List<String>)anyObject(),
+                              eq(NO_REMOVE_DELETE_REFS), (RequestCallback<String>)anyObject());
         verify(view).close();
         verify(constant).fetchFail(eq(REMOTE_URI));
         verify(notificationManager).showNotification((Notification)anyObject());

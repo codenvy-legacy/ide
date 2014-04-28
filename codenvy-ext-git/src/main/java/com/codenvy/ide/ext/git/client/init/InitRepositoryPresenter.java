@@ -95,7 +95,7 @@ public class InitRepositoryPresenter implements InitRepositoryView.ActionDelegat
         view.close();
 
         try {
-            service.initWS(projectId, projectName, bare, new RequestCallback<Void>() {
+            service.init(projectId, projectName, bare, new RequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     Notification notification = new Notification(constant.initSuccess(), INFO);

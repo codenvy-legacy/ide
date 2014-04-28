@@ -135,6 +135,9 @@ public interface GitLocalizationConstant extends Messages {
     @Key("messages.getContent.failed")
     String getContentFailed();
 
+    @Key("messages.refreshChildren.failed")
+    String refreshChildrenFailed();
+
     @Key("messages.nothing_to_commit")
     String nothingToCommit();
 

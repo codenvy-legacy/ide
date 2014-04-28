@@ -17,12 +17,9 @@
  */
 package com.codenvy.ide.ext.git.client.init;
 
-import com.codenvy.ide.api.event.RefreshBrowserEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.ext.git.client.BaseTest;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.websocket.rest.RequestCallback;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Test;
@@ -83,14 +80,14 @@ public class InitRepositoryPresenterTest extends BaseTest {
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service).initWS(anyString(), anyString(), anyBoolean(), (RequestCallback<Void>)anyObject());
+        }).when(service).init(anyString(), anyString(), anyBoolean(), (RequestCallback<Void>)anyObject());
 
         presenter.showDialog();
         presenter.onOkClicked();
 
         verify(view).isBare();
         verify(view).close();
-        verify(service).initWS(eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<Void>)anyObject());
+        verify(service).init(eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<Void>)anyObject());
         verify(constant).initSuccess();
         verify(notificationManager).showNotification((Notification)anyObject());
     }
@@ -106,14 +103,14 @@ public class InitRepositoryPresenterTest extends BaseTest {
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).initWS(anyString(), anyString(), anyBoolean(), (RequestCallback<Void>)anyObject());
+        }).when(service).init(anyString(), anyString(), anyBoolean(), (RequestCallback<Void>)anyObject());
 
         presenter.showDialog();
         presenter.onOkClicked();
 
         verify(view).isBare();
         verify(view).close();
-        verify(service).initWS(eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<Void>)anyObject());
+        verify(service).init(eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<Void>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).initFailed();
     }

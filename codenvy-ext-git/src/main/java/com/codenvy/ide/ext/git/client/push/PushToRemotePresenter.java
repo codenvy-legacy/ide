@@ -213,7 +213,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
         final String repository = view.getRepository();
 
         try {
-            service.pushWS(project, getRefs(), repository, false, new RequestCallback<String>() {
+            service.push(project, getRefs(), repository, false, new RequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     Notification notification = new Notification(constant.pushSuccess(repository), INFO);
