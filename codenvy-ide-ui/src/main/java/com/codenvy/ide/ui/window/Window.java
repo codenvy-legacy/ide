@@ -17,8 +17,7 @@
  */
 package com.codenvy.ide.ui.window;
 
-import elemental.events.KeyboardEvent;
-import elemental.js.dom.JsElement;
+import javax.annotation.Nullable;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -51,9 +50,11 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 
-import javax.annotation.Nullable;
+import elemental.events.KeyboardEvent;
+import elemental.js.dom.JsElement;
 
 /**
  * A popup that automatically centers its content, even if the dimensions of the content change. The
@@ -84,6 +85,17 @@ public abstract class Window implements IsWidget {
         view.setContent(widget);
         handleViewEvents();
     }
+
+    /**
+     * ensureDebugId on the current window container. ensureDebugId id + "-headerLabel" on the window control bar title
+     * 
+     * @see UIObject#ensureDebugId(String)
+     */
+    public void ensureDebugId(String id) {
+        view.contentContainer.ensureDebugId(id);
+        view.headerLabel.ensureDebugId(id + "-headerLabel");
+    }
+
 
     /**
      * Hides the {@link Window} popup. The popup will animate out of view.
