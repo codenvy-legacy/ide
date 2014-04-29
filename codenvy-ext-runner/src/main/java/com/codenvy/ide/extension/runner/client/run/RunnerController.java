@@ -61,7 +61,6 @@ import java.util.List;
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
 
 /**
  * Controls launching application.
@@ -90,7 +89,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     /** Determines whether any application is launched. */
     private       boolean                                           isLaunchingInProgress;
     private       ProjectRunCallback                                runCallback;
-    protected     SubscriptionHandler<String>                       runnerOutputHandler;
+    protected     SubscriptionHandler<LogMessage>                   runnerOutputHandler;
     protected     SubscriptionHandler<ApplicationProcessDescriptor> runStatusHandler;
 
     /** Create controller. */
@@ -303,23 +302,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
     }
 
-    private void startCheckingOutput(final ApplicationProcessDescriptor applicationProcessDescriptor) {
-        runnerOutputHandler = new SubscriptionHandler<String>(new LineUnmarshaller()) {
-            @Override
-            protected void onMessageReceived(String result) {
-                console.print(result);
-            }
-
-            @Override
-            protected void onErrorReceived(Throwable throwable) {
-                try {
-                    messageBus.unsubscribe(RUNNER_OUTPUT_CHANNEL + applicationProcessDescriptor.getProcessId(), this);
-                    Log.error(RunnerController.class, throwable);
-                } catch (WebSocketException e) {
-                    Log.error(RunnerController.class, e);
-                }
-            }
-        };
+    private void startCheckingOutput(ApplicationProcessDescriptor applicationProcessDescriptor) {
+        runnerOutputHandler = new LogMessagesHandler(applicationProcessDescriptor, console, messageBus);
 
         try {
             messageBus.subscribe(RUNNER_OUTPUT_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerOutputHandler);

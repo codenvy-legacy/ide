@@ -193,7 +193,8 @@ public class ResetToCommitPresenterTest extends BaseTest {
     }
 
     @Test
-    public void testOnResetClickedWhenResetTypeEqualsHardOrMergeAndFileIsNotExistInCommitToResetAndDiffAndResetRequestsIsSuccessful() throws Exception {
+    public void testOnResetClickedWhenResetTypeEqualsHardOrMergeAndFileIsNotExistInCommitToResetAndDiffAndResetRequestsIsSuccessful()
+                                                                                                                                throws Exception {
         when(view.isMixMode()).thenReturn(false);
         when(view.isHardMode()).thenReturn(true);
         doAnswer(new Answer() {
@@ -245,7 +246,8 @@ public class ResetToCommitPresenterTest extends BaseTest {
     }
 
     @Test
-    public void testOnResetClickedWhenResetTypeEqualsHardOrMergeAndWhenFileIsChangedInCommitToResetAndDiffAndResetRequestsIsSuccessful() throws Exception {
+    public void testOnResetClickedWhenResetTypeEqualsHardOrMergeAndWhenFileIsChangedInCommitToResetAndDiffAndResetRequestsIsSuccessful()
+                                                                                                                                throws Exception {
         when(view.isMixMode()).thenReturn(false);
         when(view.isMergeMode()).thenReturn(true);
 

@@ -26,6 +26,8 @@ import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.security.oauth.JsOAuthWindow;
 import com.codenvy.ide.security.oauth.OAuthCallback;
 import com.codenvy.ide.security.oauth.OAuthStatus;
+import com.codenvy.ide.ui.dialogs.Ask;
+import com.codenvy.ide.ui.dialogs.AskHandler;
 import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
@@ -127,7 +129,8 @@ public class AcceptFactoryHandler implements OAuthCallback {
                                                       .showNotification(new Notification(e.getMessage(), Notification.Type.ERROR));
 
                                           }
-                                      });
+                                      }
+                                     );
         } catch (WebSocketException e) {
             notificationManager.showNotification(
                     new Notification(e.getMessage(), Notification.Type.ERROR));
@@ -150,7 +153,8 @@ public class AcceptFactoryHandler implements OAuthCallback {
 
                     notificationManager.showNotification(
                             new Notification(localization.projectImported(acceptedFactory.getProjectattributes().getPname()),
-                                             Notification.Type.INFO));
+                                             Notification.Type.INFO)
+                                                        );
 
                     openProject(acceptedFactory);
                 }
@@ -304,14 +308,23 @@ public class AcceptFactoryHandler implements OAuthCallback {
         });
     }
 
-    private void askUserToAuthorize(String userId, String provider, String scope) {
-        boolean permitToRedirect = Window.confirm(localization.oauthLoginPrompt("github.com"));
-        if (permitToRedirect) {
-            String authUrl = restContext + "/oauth/authenticate?oauth_provider=" + provider + "&scope=" + scope + "&userId=" + userId +
-                             "&redirect_after_login=/ide/" + Utils.getWorkspaceName();
-            JsOAuthWindow authWindow = new JsOAuthWindow(authUrl, "error.url", 500, 980, this);
-            authWindow.loginWithOAuth();
-        }
+    private void askUserToAuthorize(final String userId, final String provider, final String scope) {
+        Ask ask = new Ask(localization.oAuthLoginTitle(), localization.oAuthLoginPrompt("github.com"), new AskHandler() {
+            @Override
+            public void onOk() {
+                showPopUp(userId, provider, scope);
+            }
+        });
+        ask.show();
+
+    }
+
+    private void showPopUp(String userId, String provider, String scope) {
+        String authUrl = restContext + "/oauth/authenticate?oauth_provider=" + provider + "&scope=" + scope + "&userId=" + userId +
+                         "&redirect_after_login=" + Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/ide/" +
+                         Utils.getWorkspaceName();
+        JsOAuthWindow authWindow = new JsOAuthWindow(authUrl, "error.url", 500, 980, this);
+        authWindow.loginWithOAuth();
     }
 
     /**
@@ -367,6 +380,7 @@ public class AcceptFactoryHandler implements OAuthCallback {
                                                protected void onFailure(Throwable exception) {
                                                    askAndSetCorrectProjectType(acceptedFactory);
                                                }
-                                           });
+                                           }
+                                          );
     }
 }

@@ -50,7 +50,7 @@
             </g:FlowPanel>
         </g:north>
         <g:center>
-            <g:ScrollPanel width="100%" height="100%" ui:field="scrollPanel">
+            <g:ScrollPanel width="100%" height="100%" ui:field="scrollPanel" debugId="runnerConsolePart">
                 <g:FlowPanel width="100%" height="100%" ui:field="consoleArea"/>
             </g:ScrollPanel>
         </g:center>

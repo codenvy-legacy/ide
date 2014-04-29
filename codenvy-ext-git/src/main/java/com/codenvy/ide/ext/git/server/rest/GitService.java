@@ -17,8 +17,6 @@
  */
 package com.codenvy.ide.ext.git.server.rest;
 
-import com.codenvy.api.user.server.exception.UserException;
-import com.codenvy.api.user.server.exception.UserProfileException;
 import com.codenvy.api.vfs.server.ContentStream;
 import com.codenvy.api.vfs.server.MountPoint;
 import com.codenvy.api.vfs.server.VirtualFile;
@@ -115,14 +113,14 @@ public class GitService {
     private GitConnectionFactory      gitConnectionFactory;
 
     @PathParam("ws-id")
-    private String                    vfsId;
+    private String vfsId;
     @QueryParam("projectid")
-    private String                    projectId;
+    private String projectId;
 
     @Path("add")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void add(AddRequest request) throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+    public void add(AddRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.add(request);
@@ -135,7 +133,7 @@ public class GitService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void branchCheckout(BranchCheckoutRequest request)
-            throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+            throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.branchCheckout(request);
@@ -150,7 +148,7 @@ public class GitService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Branch branchCreate(BranchCreateRequest request)
-            throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+            throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             return gitConnection.branchCreate(request);
@@ -163,7 +161,7 @@ public class GitService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void branchDelete(BranchDeleteRequest request)
-            throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+            throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.branchDelete(request);
@@ -176,7 +174,7 @@ public class GitService {
     @POST
     public void branchRename(@QueryParam("oldName") String oldName,
                              @QueryParam("newName") String newName)
-            throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+            throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.branchRename(oldName, newName);
@@ -190,7 +188,7 @@ public class GitService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public GenericEntity<List<Branch>> branchList(BranchListRequest request)
-            throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+            throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             return new GenericEntity<List<Branch>>(gitConnection.branchList(request)) {
@@ -205,7 +203,7 @@ public class GitService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public RepoInfo clone(final CloneRequest request)
-            throws URISyntaxException, GitException, VirtualFileSystemException, UserProfileException, UserException {
+            throws URISyntaxException, GitException, VirtualFileSystemException {
         long start = System.currentTimeMillis();
         // On-the-fly resolving of repository's working directory.
         request.setWorkingDir(resolveLocalPathByPath(request.getWorkingDir()));
@@ -255,8 +253,8 @@ public class GitService {
 
         //Сheck whether ".codenvy" folder and "project" file are already exists
         ItemList folders = vfs.getChildren(projectId, -1, 0, "folder", false, PropertyFilter.ALL_FILTER);
-        for(Item folder : folders.getItems()) {
-            if(".codenvy".equals(folder.getName())) {
+        for (Item folder : folders.getItems()) {
+            if (".codenvy".equals(folder.getName())) {
                 ItemList files = vfs.getChildren(folder.getId(), -1, 0, "file", false, PropertyFilter.NONE_FILTER);
                 for (Item file : files.getItems()) {
                     if ("project".equals(file.getName())) {
@@ -287,7 +285,7 @@ public class GitService {
         }
         // We didn't found a maven project, turn it as nameless project
         if (!foundMavenProject) {
-           String propertyFileContent = "{\"type\":\"" + Constants.NAMELESS_ID + "\"}";
+            String propertyFileContent = "{\"type\":\"" + Constants.NAMELESS_ID + "\"}";
             Folder codenvyFolder = vfs.createFolder(projectId, ".codenvy");
             vfs.createFile(codenvyFolder.getId(), "project", MediaType.APPLICATION_JSON_TYPE,
                            new ByteArrayInputStream(propertyFileContent.getBytes()));
@@ -374,7 +372,7 @@ public class GitService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public Revision commit(CommitRequest request) throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+    public Revision commit(CommitRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         Revision revision = gitConnection.commit(request);
         try {
@@ -399,7 +397,7 @@ public class GitService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public InfoPage diff(DiffRequest request) throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+    public InfoPage diff(DiffRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             return gitConnection.diff(request);
@@ -411,7 +409,7 @@ public class GitService {
     @Path("fetch")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void fetch(FetchRequest request) throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+    public void fetch(FetchRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.fetch(request);
@@ -424,7 +422,7 @@ public class GitService {
     @Path("init")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void init(final InitRequest request) throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+    public void init(final InitRequest request) throws GitException, VirtualFileSystemException {
         request.setWorkingDir(resolveLocalPath(projectId));
         GitConnection gitConnection = getGitConnection();
         try {
@@ -439,7 +437,7 @@ public class GitService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public LogPage log(LogRequest request) throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+    public LogPage log(LogRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             return gitConnection.log(request);
@@ -452,7 +450,7 @@ public class GitService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public MergeResult merge(MergeRequest request) throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+    public MergeResult merge(MergeRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             return gitConnection.merge(request);
@@ -464,7 +462,7 @@ public class GitService {
     @Path("mv")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void mv(MoveRequest request) throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+    public void mv(MoveRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.mv(request);
@@ -476,7 +474,7 @@ public class GitService {
     @Path("pull")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void pull(PullRequest request) throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+    public void pull(PullRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.pull(request);
@@ -489,7 +487,7 @@ public class GitService {
     @Path("push")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void push(PushRequest request) throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+    public void push(PushRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.push(request);
@@ -501,7 +499,7 @@ public class GitService {
     @Path("remote-add")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void remoteAdd(RemoteAddRequest request) throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+    public void remoteAdd(RemoteAddRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.remoteAdd(request);
@@ -513,7 +511,7 @@ public class GitService {
     @Path("remote-delete/{name}")
     @POST
     public void remoteDelete(@PathParam("name") String name)
-            throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+            throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.remoteDelete(name);
@@ -527,7 +525,7 @@ public class GitService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public GenericEntity<List<Remote>> remoteList(RemoteListRequest request)
-            throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+            throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             return new GenericEntity<List<Remote>>(gitConnection.remoteList(request)) {
@@ -541,7 +539,7 @@ public class GitService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void remoteUpdate(RemoteUpdateRequest request)
-            throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+            throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.remoteUpdate(request);
@@ -553,7 +551,7 @@ public class GitService {
     @Path("reset")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void reset(ResetRequest request) throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+    public void reset(ResetRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.reset(request);
@@ -565,7 +563,7 @@ public class GitService {
     @Path("rm")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void rm(RmRequest request) throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+    public void rm(RmRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.rm(request);
@@ -578,7 +576,7 @@ public class GitService {
     @POST
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Status status(@QueryParam("short") boolean shortFormat)
-            throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+            throws GitException, VirtualFileSystemException {
         if (!isGitRepository()) {
             throw new GitException("Not a git repository.");
         }
@@ -594,7 +592,7 @@ public class GitService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Tag tagCreate(TagCreateRequest request) throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+    public Tag tagCreate(TagCreateRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             return gitConnection.tagCreate(request);
@@ -606,7 +604,7 @@ public class GitService {
     @Path("tag-delete")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void tagDelete(TagDeleteRequest request) throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+    public void tagDelete(TagDeleteRequest request) throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.tagDelete(request);
@@ -620,7 +618,7 @@ public class GitService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public GenericEntity<List<Tag>> tagList(TagListRequest request)
-            throws GitException, VirtualFileSystemException, UserProfileException, UserException {
+            throws GitException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             return new GenericEntity<List<Tag>>(gitConnection.tagList(request)) {
@@ -640,7 +638,7 @@ public class GitService {
     @GET
     @Path("commiters")
     public Commiters getCommiters(@Context UriInfo uriInfo)
-            throws VirtualFileSystemException, GitException, UserProfileException, UserException {
+            throws VirtualFileSystemException, GitException {
         GitConnection gitConnection = getGitConnection();
         try {
             return DtoFactory.getInstance().createDto(Commiters.class).withCommiters(gitConnection.getCommiters());
@@ -728,7 +726,7 @@ public class GitService {
         return localPathResolver.resolve(virtualFile);
     }
 
-    protected GitConnection getGitConnection() throws GitException, VirtualFileSystemException, UserException, UserProfileException {
+    protected GitConnection getGitConnection() throws GitException, VirtualFileSystemException {
         return gitConnectionFactory.getConnection(resolveLocalPath(projectId));
     }
 }

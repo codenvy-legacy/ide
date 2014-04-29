@@ -278,7 +278,7 @@ public class ResetToCommitPresenter implements ResetToCommitView.ActionDelegate 
         project.findResourceByPath(file.getPath(), new AsyncCallback<Resource>() {
             @Override
             public void onFailure(Throwable caught) {
-                String errorMessage = (caught.getMessage() != null) ? caught.getMessage() : constant.findResourceFailed();
+                String errorMessage = (caught.getMessage() != null) ? caught.getMessage() : constant.findResourceFailed( );
                 Notification notification = new Notification(errorMessage, ERROR);
                 notificationManager.showNotification(notification);
             }

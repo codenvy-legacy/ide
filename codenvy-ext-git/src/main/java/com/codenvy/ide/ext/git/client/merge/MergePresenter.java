@@ -17,9 +17,15 @@
  */
 package com.codenvy.ide.ext.git.client.merge;
 
+import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.editor.EditorInitException;
+import com.codenvy.ide.api.editor.EditorInput;
+import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
@@ -37,6 +43,7 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
@@ -56,16 +63,16 @@ import static com.codenvy.ide.ext.git.shared.MergeResult.MergeStatus.ALREADY_UP_
 public class MergePresenter implements MergeView.ActionDelegate {
     public static final String LOCAL_BRANCHES_TITLE  = "Local Branches";
     public static final String REMOTE_BRANCHES_TITLE = "Remote Branches";
-    private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
     private       MergeView               view;
     private       GitServiceClient        service;
-    private       ResourceProvider        resourceProvider;
     private       EventBus                eventBus;
     private       GitLocalizationConstant constant;
-    private       NotificationManager     notificationManager;
-    private       Reference               selectedReference;
     private       String                  projectId;
-    private       String                  projectName;
+    private       EditorAgent             editorAgent;
+    private       ResourceProvider        resourceProvider;
+    private       Reference               selectedReference;
+    private       NotificationManager     notificationManager;
+    private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
 
     /**
      * Create presenter.
@@ -78,24 +85,29 @@ public class MergePresenter implements MergeView.ActionDelegate {
      * @param notificationManager
      */
     @Inject
-    public MergePresenter(MergeView view, GitServiceClient service, ResourceProvider resourceProvider, EventBus eventBus,
-                          GitLocalizationConstant constant, NotificationManager notificationManager,
+    public MergePresenter(MergeView view,
+                          EventBus eventBus,
+                          EditorAgent editorAgent,
+                          GitServiceClient service,
+                          GitLocalizationConstant constant,
+                          ResourceProvider resourceProvider,
+                          NotificationManager notificationManager,
                           DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
-        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.view.setDelegate(this);
         this.service = service;
-        this.resourceProvider = resourceProvider;
         this.eventBus = eventBus;
         this.constant = constant;
+        this.editorAgent = editorAgent;
+        this.resourceProvider = resourceProvider;
         this.notificationManager = notificationManager;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
     }
 
     /** Show dialog. */
     public void showDialog() {
         Project project = resourceProvider.getActiveProject();
         projectId = project.getId();
-        projectName = project.getName();
         selectedReference = null;
         view.setEnableMergeButton(false);
 
@@ -166,23 +178,19 @@ public class MergePresenter implements MergeView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onMergeClicked() {
+        view.close();
+
+        final List<EditorPartPresenter> openedEditors = new ArrayList<>();
+        for (EditorPartPresenter partPresenter : editorAgent.getOpenedEditors().getValues().asIterable()) {
+            openedEditors.add(partPresenter);
+        }
         service.merge(projectId, selectedReference.getDisplayName(),
                       new AsyncRequestCallback<MergeResult>(dtoUnmarshallerFactory.newUnmarshaller(MergeResult.class)) {
                           @Override
                           protected void onSuccess(final MergeResult result) {
-                              resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
-                                  @Override
-                                  public void onSuccess(Project project) {
-                                      Notification notification = new Notification(formMergeMessage(result), INFO);
-                                      notificationManager.showNotification(notification);
-                                      view.close();
-                                  }
-
-                                  @Override
-                                  public void onFailure(Throwable caught) {
-                                      Log.error(MergePresenter.class, "can not get project " + projectName);
-                                  }
-                              });
+                              Notification notification = new Notification(formMergeMessage(result), INFO);
+                              notificationManager.showNotification(notification);
+                              refreshProject(openedEditors);
                           }
 
                           @Override
@@ -192,6 +200,88 @@ public class MergePresenter implements MergeView.ActionDelegate {
                               notificationManager.showNotification(notification);
                           }
                       });
+    }
+
+    /**
+     * Refresh project.
+     *
+     * @param openedEditors
+     *         editors that corresponds to open files
+     */
+    private void refreshProject(final List<EditorPartPresenter> openedEditors) {
+        resourceProvider.getActiveProject().refreshChildren(new AsyncCallback<Project>() {
+            @Override
+            public void onSuccess(Project result) {
+                for (EditorPartPresenter partPresenter : openedEditors) {
+                    final File file = partPresenter.getEditorInput().getFile();
+                    refreshFile(file, partPresenter);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                String errorMessage = (caught.getMessage() != null) ? caught.getMessage() : constant.refreshChildrenFailed();
+                Notification notification = new Notification(errorMessage, ERROR);
+                notificationManager.showNotification(notification);
+            }
+        });
+    }
+
+    /**
+     * Refresh file.
+     *
+     * @param file
+     *         file to refresh
+     * @param partPresenter
+     *        editor that corresponds to the <code>file</code>.
+     */
+    private void refreshFile(final File file, final EditorPartPresenter partPresenter) {
+        final Project project = resourceProvider.getActiveProject();
+        project.findResourceByPath(file.getPath(), new AsyncCallback<Resource>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                String errorMessage = (caught.getMessage() != null) ? caught.getMessage() : constant.findResourceFailed();
+                Notification notification = new Notification(errorMessage, ERROR);
+                notificationManager.showNotification(notification);
+            }
+
+            @Override
+            public void onSuccess(final Resource result) {
+                updateOpenedFile((File)result, partPresenter);
+            }
+        });
+    }
+
+    /**
+     * Update content of the file.
+     *
+     * @param file
+     *         file to update
+     * @param partPresenter
+     *        editor that corresponds to the <code>file</code>.
+     */
+    private void updateOpenedFile(final File file, final EditorPartPresenter partPresenter) {
+        resourceProvider.getActiveProject().getContent(file, new AsyncCallback<File>() {
+            @Override
+            public void onSuccess(File result) {
+                try {
+                    EditorInput editorInput = partPresenter.getEditorInput();
+
+                    editorInput.setFile(result);
+                    partPresenter.init(editorInput);
+
+                } catch (EditorInitException event) {
+                    Log.error(MergePresenter.class, "can not initializes the editor with the given input " + event);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                String errorMessage = (caught.getMessage() != null) ? caught.getMessage() : constant.getContentFailed();
+                Notification notification = new Notification(errorMessage, ERROR);
+                notificationManager.showNotification(notification);
+            }
+        });
     }
 
     /**

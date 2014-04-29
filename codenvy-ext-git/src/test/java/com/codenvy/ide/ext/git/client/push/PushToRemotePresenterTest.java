@@ -257,14 +257,14 @@ public class PushToRemotePresenterTest extends BaseTest {
                 onSuccess.invoke(callback, EMPTY_TEXT);
                 return callback;
             }
-        }).when(service).pushWS((Project)anyObject(), (List<String>)anyObject(), anyString(), anyBoolean(),
-                                (RequestCallback<String>)anyObject());
+        }).when(service).push((Project)anyObject(), (List<String>)anyObject(), anyString(), anyBoolean(),
+                              (RequestCallback<String>)anyObject());
 
         presenter.showDialog();
         presenter.onPushClicked();
 
-        verify(service).pushWS(eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
-                               (RequestCallback<String>)anyObject());
+        verify(service).push(eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
+                             (RequestCallback<String>)anyObject());
         verify(view).close();
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).pushSuccess(eq(REPOSITORY_NAME));
@@ -281,14 +281,14 @@ public class PushToRemotePresenterTest extends BaseTest {
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).pushWS((Project)anyObject(), (List<String>)anyObject(), anyString(), anyBoolean(),
-                                (RequestCallback<String>)anyObject());
+        }).when(service).push((Project)anyObject(), (List<String>)anyObject(), anyString(), anyBoolean(),
+                              (RequestCallback<String>)anyObject());
 
         presenter.showDialog();
         presenter.onPushClicked();
 
-        verify(service).pushWS(eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
-                               (RequestCallback<String>)anyObject());
+        verify(service).push(eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
+                             (RequestCallback<String>)anyObject());
         verify(view).close();
         verify(constant).pushFail();
         verify(notificationManager).showNotification((Notification)anyObject());

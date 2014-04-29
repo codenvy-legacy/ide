@@ -143,23 +143,7 @@ public class GitServiceClientImpl implements GitServiceClient {
     /** {@inheritDoc} */
     @Override
     public void init(@NotNull String projectid, @NotNull String projectName, boolean bare,
-                     @NotNull AsyncRequestCallback<Void> callback) {
-        InitRequest initRequest = dtoFactory.createDto(InitRequest.class);
-        initRequest.setBare(bare);
-        initRequest.setWorkingDir(projectid);
-        initRequest.setInitCommit(true);
-
-        String url = baseHttpUrl + INIT + "?projectid=" + projectid;
-
-        asyncRequestFactory.createPostRequest(url, initRequest, true).delay(2000)
-                           .requestStatusHandler(new InitRequestStatusHandler(projectName, eventBus, constant))
-                           .send(callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void initWS(@NotNull String projectid, @NotNull String projectName, boolean bare,
-                       @NotNull RequestCallback<Void> callback) throws WebSocketException {
+                     @NotNull RequestCallback<Void> callback) throws WebSocketException {
         InitRequest initRequest = dtoFactory.createDto(InitRequest.class);
         initRequest.setBare(bare);
         initRequest.setWorkingDir(projectid);
@@ -178,22 +162,7 @@ public class GitServiceClientImpl implements GitServiceClient {
     /** {@inheritDoc} */
     @Override
     public void cloneRepository(@NotNull Project project, @NotNull String remoteUri, @NotNull String remoteName,
-                                @NotNull AsyncRequestCallback<RepoInfo> callback) {
-        CloneRequest cloneRequest = dtoFactory.createDto(CloneRequest.class).withRemoteName(remoteName).withRemoteUri(remoteUri)
-                                              .withWorkingDir(project.getId());
-
-        String url = baseHttpUrl + CLONE + "?projectid=" + project.getId();
-
-        asyncRequestFactory.createPostRequest(url, cloneRequest, true)
-                           .requestStatusHandler(new CloneRequestStatusHandler(project.getName(), remoteUri, eventBus, constant))
-                           .header(ACCEPT, APPLICATION_JSON)
-                           .send(callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void cloneRepositoryWS(@NotNull Project project, @NotNull String remoteUri, @NotNull String remoteName,
-                                  @NotNull RequestCallback<RepoInfo> callback) throws WebSocketException {
+                                @NotNull RequestCallback<RepoInfo> callback) throws WebSocketException {
         CloneRequest cloneRequest = dtoFactory.createDto(CloneRequest.class).withRemoteName(remoteName).withRemoteUri(remoteUri)
                                               .withWorkingDir(project.getPath());
 
@@ -228,24 +197,7 @@ public class GitServiceClientImpl implements GitServiceClient {
     /** {@inheritDoc} */
     @Override
     public void add(@NotNull Project project, boolean update, @Nullable List<String> filePattern,
-                    @NotNull AsyncRequestCallback<Void> callback) {
-        AddRequest addRequest = dtoFactory.createDto(AddRequest.class).withUpdate(update);
-        if (filePattern == null) {
-            addRequest.setFilepattern(AddRequest.DEFAULT_PATTERN);
-        } else {
-            addRequest.setFilepattern(filePattern);
-        }
-        String url = baseHttpUrl + ADD + "?projectid=" + project.getId();
-        asyncRequestFactory.createPostRequest(url, addRequest, true)
-                           .header(CONTENTTYPE, APPLICATION_JSON)
-                           .requestStatusHandler(new AddRequestHandler(project.getName(), eventBus, constant))
-                           .send(callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void addWS(@NotNull Project project, boolean update, @Nullable List<String> filePattern,
-                      @NotNull RequestCallback<Void> callback) throws WebSocketException {
+                    @NotNull RequestCallback<Void> callback) throws WebSocketException {
         AddRequest addRequest = dtoFactory.createDto(AddRequest.class).withUpdate(update);
         if (filePattern == null) {
             addRequest.setFilepattern(AddRequest.DEFAULT_PATTERN);
@@ -266,21 +218,7 @@ public class GitServiceClientImpl implements GitServiceClient {
     /** {@inheritDoc} */
     @Override
     public void commit(@NotNull Project project, @NotNull String message, boolean all, boolean amend,
-                       @NotNull AsyncRequestCallback<Revision> callback) {
-        CommitRequest commitRequest =
-                dtoFactory.createDto(CommitRequest.class).withMessage(message).withAmend(amend).withAll(all);
-
-        String url = baseHttpUrl + COMMIT + "?projectid=" + project.getId();
-
-        asyncRequestFactory.createPostRequest(url, commitRequest, true)
-                           .requestStatusHandler(new CommitRequestHandler(project.getName(), message, eventBus, constant))
-                           .send(callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void commitWS(@NotNull Project project, @NotNull String message, boolean all, boolean amend,
-                         @NotNull RequestCallback<Revision> callback) throws WebSocketException {
+                       @NotNull RequestCallback<Revision> callback) throws WebSocketException {
         CommitRequest commitRequest =
                 dtoFactory.createDto(CommitRequest.class).withMessage(message).withAmend(amend).withAll(all);
         callback.setStatusHandler(new CommitRequestHandler(project.getName(), message, eventBus, constant));
@@ -295,18 +233,7 @@ public class GitServiceClientImpl implements GitServiceClient {
     /** {@inheritDoc} */
     @Override
     public void push(@NotNull Project project, @NotNull List<String> refSpec, @NotNull String remote,
-                     boolean force, @NotNull AsyncRequestCallback<String> callback) {
-        PushRequest pushRequest =
-                dtoFactory.createDto(PushRequest.class).withRemote(remote).withRefSpec(refSpec).withForce(force);
-        String url = baseHttpUrl + PUSH + "?projectid=" + project.getId();
-        PushRequestHandler requestHandler = new PushRequestHandler(project.getName(), refSpec, eventBus, constant);
-        asyncRequestFactory.createPostRequest(url, pushRequest, true).requestStatusHandler(requestHandler).send(callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void pushWS(@NotNull Project project, @NotNull List<String> refSpec, @NotNull String remote,
-                       boolean force, @NotNull RequestCallback<String> callback) throws WebSocketException {
+                     boolean force, @NotNull RequestCallback<String> callback) throws WebSocketException {
         PushRequest pushRequest =
                 dtoFactory.createDto(PushRequest.class).withRemote(remote).withRefSpec(refSpec).withForce(force);
 
@@ -450,19 +377,7 @@ public class GitServiceClientImpl implements GitServiceClient {
     /** {@inheritDoc} */
     @Override
     public void fetch(@NotNull Project project, @NotNull String remote, List<String> refspec,
-                      boolean removeDeletedRefs, @NotNull AsyncRequestCallback<String> callback) {
-        FetchRequest fetchRequest = dtoFactory.createDto(FetchRequest.class).withRefSpec(refspec).withRemote(remote)
-                                              .withRemoveDeletedRefs(removeDeletedRefs);
-        String url = baseHttpUrl + FETCH + "?projectid=" + project.getId();
-        asyncRequestFactory.createPostRequest(url, fetchRequest)
-                           .requestStatusHandler(new FetchRequestHandler(project.getName(), refspec, eventBus, constant))
-                           .send(callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void fetchWS(@NotNull Project project, @NotNull String remote, List<String> refspec,
-                        boolean removeDeletedRefs, @NotNull RequestCallback<String> callback) throws WebSocketException {
+                      boolean removeDeletedRefs, @NotNull RequestCallback<String> callback) throws WebSocketException {
         FetchRequest fetchRequest = dtoFactory.createDto(FetchRequest.class).withRefSpec(refspec).withRemote(remote)
                                               .withRemoveDeletedRefs(removeDeletedRefs);
 
@@ -478,18 +393,7 @@ public class GitServiceClientImpl implements GitServiceClient {
     /** {@inheritDoc} */
     @Override
     public void pull(@NotNull Project project, @NotNull String refSpec, @NotNull String remote,
-                     @NotNull AsyncRequestCallback<String> callback) {
-        PullRequest pullRequest = dtoFactory.createDto(PullRequest.class).withRemote(remote).withRefSpec(refSpec);
-        String url = baseHttpUrl + PULL + "?projectid=" + project.getId();
-        asyncRequestFactory.createPostRequest(url, pullRequest, true)
-                           .requestStatusHandler(new PullRequestHandler(project.getName(), refSpec, eventBus, constant))
-                           .send(callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void pullWS(@NotNull Project project, @NotNull String refSpec, @NotNull String remote,
-                       @NotNull RequestCallback<String> callback) throws WebSocketException {
+                     @NotNull RequestCallback<String> callback) throws WebSocketException {
         PullRequest pullRequest = dtoFactory.createDto(PullRequest.class).withRemote(remote).withRefSpec(refSpec);
         callback.setStatusHandler(new PullRequestHandler(project.getName(), refSpec, eventBus, constant));
         String url = gitServicePath + PULL + "?projectid=" + project.getId();

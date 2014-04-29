@@ -24,7 +24,11 @@ public interface FactoryLocalizationConstant extends Messages {
     public String projectImported(String projectName);
 
     @Key("accept.oauth.login.prompt")
-    public String oauthLoginPrompt(String host);
+    public String oAuthLoginPrompt(String host);
+
+
+    @Key("accept.oauth.login.title")
+    public String oAuthLoginTitle();
 
     @Key("accept.oauth.failed.to.get.current.loggedin.user")
     public String oauthFailedToGetCurrentLoggedInUser();
