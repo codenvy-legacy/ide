@@ -73,6 +73,13 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>com.google.code.sortpom</groupId>
+                <artifactId>maven-sortpom-plugin</artifactId>
+                <configuration>
+                    <verifyFail>Warn</verifyFail>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
