@@ -77,28 +77,6 @@ public class DeleteRepositoryPresenter {
     /** Delete Git repository. */
     public void deleteRepository() {
         project = resourceProvider.getActiveProject();
-        String workDir = project.getPath();
-        askBeforeDelete(workDir);
-    }
-
-    /**
-     * Confirm, that user wants to delete Git repository.
-     *
-     * @param repository
-     *         repository name
-     */
-    private void askBeforeDelete(@NotNull String repository) {
-        Ask ask = new Ask(constant.deleteGitRepositoryTitle(), constant.deleteGitRepositoryQuestion(repository), new AskHandler() {
-            @Override
-            public void onOk() {
-                doDeleteRepository();
-            }
-        });
-        ask.show();
-    }
-
-    /** Perform deleting Git repository. */
-    private void doDeleteRepository() {
         service.deleteRepository(project.getId(), new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
@@ -114,4 +92,5 @@ public class DeleteRepositoryPresenter {
             }
         });
     }
+
 }

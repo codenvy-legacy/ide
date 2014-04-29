@@ -34,8 +34,6 @@ import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.ui.dialogs.Ask;
-import com.codenvy.ide.ui.dialogs.AskHandler;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -142,27 +140,21 @@ public class BranchPresenter implements BranchView.ActionDelegate {
     @Override
     public void onDeleteClicked() {
         final String name = selectedBranch.getName();
-        Ask ask = new Ask(constant.branchDelete(), constant.branchDeleteAsk(name), new AskHandler() {
-            @Override
-            public void onOk() {
-                final String projectId = project.getId();
-                service.branchDelete(projectId, name, true, new AsyncRequestCallback<String>() {
-                    @Override
-                    protected void onSuccess(String result) {
-                        getBranches(projectId);
-                    }
 
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : constant.branchDeleteFailed();
-                        Notification notification = new Notification(errorMessage, ERROR);
-                        notificationManager.showNotification(notification);
-                    }
-                });
+        final String projectId = project.getId();
+        service.branchDelete(projectId, name, true, new AsyncRequestCallback<String>() {
+            @Override
+            protected void onSuccess(String result) {
+                getBranches(projectId);
             }
 
+            @Override
+            protected void onFailure(Throwable exception) {
+                String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : constant.branchDeleteFailed();
+                Notification notification = new Notification(errorMessage, ERROR);
+                notificationManager.showNotification(notification);
+            }
         });
-        ask.show();
     }
 
     /** {@inheritDoc} */
