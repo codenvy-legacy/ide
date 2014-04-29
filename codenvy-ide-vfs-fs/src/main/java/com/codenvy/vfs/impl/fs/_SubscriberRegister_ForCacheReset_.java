@@ -32,15 +32,15 @@ public class _SubscriberRegister_ForCacheReset_ {
 
         @Override
         public void onEvent(UpdateACLEvent event) {
-            String wsId = event.getWorkspaceId();
-            String path = event.getPath();
-            String absolutePath = null;
+            String pathToVFSRoot;
             try {
-                absolutePath = localFSMountStrategy.getMountPath(wsId) + path;
+                pathToVFSRoot = localFSMountStrategy.getMountPath(event.getWorkspaceId()) + event.getPath();
             } catch (VirtualFileSystemException e) {
-                LOG.warn("Can not get path to workspace {}", wsId);
+                LOG.warn("Can not get path to workspace {} for cache update in ide2", event.getWorkspaceId());
+                return;
             }
-            java.io.File cacheResetDir = new java.io.File(absolutePath, FSMountPoint.SERVICE_DIR + java.io.File.separatorChar + "cache");
+
+            java.io.File cacheResetDir = new java.io.File(pathToVFSRoot, FSMountPoint.SERVICE_DIR + java.io.File.separatorChar + "cache");
             if (!(cacheResetDir.exists() || cacheResetDir.mkdirs())) {
                 LOG.warn("Unable to create folder {} for cache update in ide2", cacheResetDir.getPath());
             } else {
