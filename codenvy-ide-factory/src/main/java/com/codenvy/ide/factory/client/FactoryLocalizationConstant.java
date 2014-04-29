@@ -31,4 +31,32 @@ public interface FactoryLocalizationConstant extends Messages {
 
     @Key("accept.need.to.authorize")
     public String needToAuthorize();
+    
+    @Key("factory.url.action")
+    public String factoryUrlAction();
+    
+    @Key("share.view.title")
+    public String shareViewTitle();
+    
+    @Key("factory.view.title")
+    public String factoryViewTitle();
+    
+    @Key("nonencoded.url.title")
+    public String nonEncodedUrlTitle();
+    
+    @Key("encoded.url.title")
+    public String encodedUrlTitle();
+    
+    @Key("html.button")
+    public String htmlButton();
+    
+    @Key("github.button")
+    public String githubButton();
+    
+    @Key("iframe.button")
+    public String iframeButton();
+    
+    @Key("social.button")
+    public String socialButton();
+    
 }
