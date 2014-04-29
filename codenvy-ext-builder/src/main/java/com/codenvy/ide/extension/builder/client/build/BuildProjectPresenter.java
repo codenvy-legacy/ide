@@ -28,9 +28,6 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.IntegerMap;
-import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.builder.client.BuilderExtension;
 import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
@@ -39,13 +36,9 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
-import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
-import com.codenvy.ide.websocket.rest.Unmarshallable;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -75,14 +68,12 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     protected final DtoUnmarshallerFactory                   dtoUnmarshallerFactory;
     /** Handler for processing Maven build status which is received over WebSocket connection. */
     protected       SubscriptionHandler<BuildTaskDescriptor> buildStatusHandler;
-    protected       SubscriptionHandler<Line>                buildOutputHandler;
+    protected       SubscriptionHandler<LogMessage>          buildOutputHandler;
     /** Build of another project is performed. */
     protected boolean isBuildInProgress = false;
     /** Project for build. */
     protected Project      projectToBuild;
     protected Notification notification;
-    private IntegerMap<Line> messagesBuffer = Collections.createIntegerMap();
-    private int lastMessageNum;
 
     /** Create presenter. */
     @Inject
@@ -128,7 +119,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         console.clearDownloadLink();
         console.clear();
         projectToBuild = resourceProvider.getActiveProject();
-        lastMessageNum = 0;
 
         notification = new Notification(constant.buildStarted(projectToBuild.getName()), PROGRESS, BuildProjectPresenter.this);
         notificationManager.showNotification(notification);
@@ -197,37 +187,8 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         }
     }
 
-    private void startCheckingOutput(final BuildTaskDescriptor buildTaskDescriptor) {
-        buildOutputHandler = new SubscriptionHandler<Line>(new LineUnmarshaller()) {
-            @Override
-            protected void onMessageReceived(Line result) {
-//                if (lastMessageNum == 0 || lastMessageNum == result.num - 1) {
-//                    lastMessageNum = result.num;
-                console.print(result.text);
-//                } else if (lastMessageNum == result.num - 1) {
-//                    messagesBuffer.put(result.num, result);
-//                }
-//
-//                Line nextLine = messagesBuffer.get(result.num + 1);
-//                while (nextLine != null) {
-//                    lastMessageNum = result.num;
-//                    console.print(nextLine.text);
-//                    messagesBuffer.erase(nextLine.num);
-//                    nextLine = messagesBuffer.get(nextLine.num + 1);
-//                }
-            }
-
-            @Override
-            protected void onErrorReceived(Throwable throwable) {
-                try {
-                    messageBus.unsubscribe(BuilderExtension.BUILD_OUTPUT_CHANNEL + buildTaskDescriptor.getTaskId(), this);
-                    Log.error(BuildProjectPresenter.class, throwable);
-                } catch (WebSocketException e) {
-                    Log.error(BuildProjectPresenter.class, e);
-                }
-            }
-        };
-
+    private void startCheckingOutput(BuildTaskDescriptor buildTaskDescriptor) {
+        buildOutputHandler = new LogMessagesHandler(buildTaskDescriptor, console, messageBus);
         try {
             messageBus.subscribe(BuilderExtension.BUILD_OUTPUT_CHANNEL + buildTaskDescriptor.getTaskId(), buildOutputHandler);
         } catch (WebSocketException e) {
@@ -296,38 +257,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                 return link;
         }
         return null;
-    }
-
-    private class LineUnmarshaller implements Unmarshallable<Line> {
-        private Line line;
-
-        @Override
-        public void unmarshal(Message response) throws UnmarshallerException {
-            JSONObject jsonObject = JSONParser.parseStrict(response.getBody()).isObject();
-            if (jsonObject == null) {
-                return;
-            }
-            if (jsonObject.containsKey("line")) {
-                final int lineNumber = 0/*(int)jsonObject.get("lineNumber").isNumber().doubleValue()*/;
-                final String text = jsonObject.get("line").isString().stringValue();
-                line = new Line(lineNumber, text);
-            }
-        }
-
-        @Override
-        public Line getPayload() {
-            return line;
-        }
-    }
-
-    private class Line {
-        int    num;
-        String text;
-
-        Line(int lineNumber, String text) {
-            this.num = lineNumber;
-            this.text = text;
-        }
     }
 
 }
