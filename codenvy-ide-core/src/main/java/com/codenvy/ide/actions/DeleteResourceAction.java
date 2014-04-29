@@ -28,7 +28,8 @@ import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.google.gwt.user.client.Window;
+import com.codenvy.ide.ui.dialogs.Ask;
+import com.codenvy.ide.ui.dialogs.AskHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -89,21 +90,24 @@ public class DeleteResourceAction extends Action {
      * @param resource
      *         resource that need to be deleted
      */
-    private void delete(@NotNull Resource resource) {
-        boolean isDelete = Window.confirm(localization.deleteResourceQuestion(resource.getName()));
-        if (isDelete) {
-            resourceProvider.delete(resource, new AsyncCallback<String>() {
-                @Override
-                public void onSuccess(String result) {
-                    // do nothing
-                }
+    private void delete(@NotNull final Resource resource) {
+        Ask ask = new Ask(localization.delete(), localization.deleteResourceQuestion(resource.getName()), new AskHandler() {
+            @Override
+            public void onOk() {
+                resourceProvider.delete(resource, new AsyncCallback<String>() {
+                    @Override
+                    public void onSuccess(String result) {
+                        // do nothing
+                    }
 
-                @Override
-                public void onFailure(Throwable caught) {
-                    showErrorMessage(caught);
-                }
-            });
-        }
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        showErrorMessage(caught);
+                    }
+                });
+            }
+        });
+        ask.show();
     }
 
     /**
