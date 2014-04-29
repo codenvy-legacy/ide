@@ -141,27 +141,21 @@ public class BranchPresenter implements BranchView.ActionDelegate {
     @Override
     public void onDeleteClicked() {
         final String name = selectedBranch.getName();
-        Ask ask = new Ask(constant.branchDelete(), constant.branchDeleteAsk(name), new AskHandler() {
-            @Override
-            public void onOk() {
-                final String projectId = project.getId();
-                service.branchDelete(projectId, name, true, new AsyncRequestCallback<String>() {
-                    @Override
-                    protected void onSuccess(String result) {
-                        getBranches(projectId);
-                    }
 
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : constant.branchDeleteFailed();
-                        Notification notification = new Notification(errorMessage, ERROR);
-                        notificationManager.showNotification(notification);
-                    }
-                });
+        final String projectId = project.getId();
+        service.branchDelete(projectId, name, true, new AsyncRequestCallback<String>() {
+            @Override
+            protected void onSuccess(String result) {
+                getBranches(projectId);
             }
 
+            @Override
+            protected void onFailure(Throwable exception) {
+                String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : constant.branchDeleteFailed();
+                Notification notification = new Notification(errorMessage, ERROR);
+                notificationManager.showNotification(notification);
+            }
         });
-        ask.show();
     }
 
     /** {@inheritDoc} */
