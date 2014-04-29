@@ -446,24 +446,4 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
     }
 
-    private class LineUnmarshaller implements Unmarshallable<String> {
-        private String line;
-
-        @Override
-        public void unmarshal(Message response) throws UnmarshallerException {
-            JSONObject jsonObject = JSONParser.parseStrict(response.getBody()).isObject();
-            if (jsonObject == null) {
-                return;
-            }
-            if (jsonObject.containsKey("line")) {
-                line = jsonObject.get("line").isString().stringValue();
-            }
-        }
-
-        @Override
-        public String getPayload() {
-            return line;
-        }
-    }
-
 }
