@@ -71,6 +71,8 @@ import java.util.regex.Pattern;
 public abstract class BaseDockerRunner extends Runner {
     static final Logger LOG = LoggerFactory.getLogger(BaseDockerRunner.class);
 
+    public static final String HOST_NAME = "runner.docker.host_name";
+
     // Pattern for ports in range [0;65535]
     // Public HTTP ports of application should be defined as environment variables in dockerfile in following format:
     // ENV APPLICATION_PORT_{NUMBER}_HTTP {NUMBER}
