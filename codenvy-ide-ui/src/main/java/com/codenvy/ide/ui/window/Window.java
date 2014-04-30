@@ -134,11 +134,12 @@ public abstract class Window implements IsWidget {
     public void setHideOnEscapeEnabled(boolean isEnabled) {
         this.hideOnEscapeEnabled = isEnabled;
     }
-    
-    protected Button createButton(String title, String debugId, ClickHandler clickHandler){
+
+    protected Button createButton(String title, String debugId, ClickHandler clickHandler) {
         Button button = new Button();
         button.setText(title);
         button.ensureDebugId(debugId);
+        button.getElement().setId(debugId);
         button.addStyleName(resources.centerPanelCss().alignBtn());
         button.addClickHandler(clickHandler);
         return button;
@@ -168,6 +169,7 @@ public abstract class Window implements IsWidget {
         final JsElement popup = view.popup.getElement().cast();
         if (popup.getParentElement() == null) {
             // Hide the popup so it can enter its initial state without flickering.
+
             popup.getStyle().setVisibility("hidden");
             RootLayoutPanel.get().add(view);
         }
@@ -220,7 +222,7 @@ public abstract class Window implements IsWidget {
     public void setTitle(String title) {
         view.headerLabel.setText(title);
     }
-    
+
     public HTMLPanel getFooter() {
         return view.footer;
     }
@@ -268,15 +270,15 @@ public abstract class Window implements IsWidget {
         String positioner();
 
         String header();
-        
+
         String headerTitleWrapper();
 
         String headerTitleLabel();
 
         String footer();
-        
+
         String separator();
-        
+
         String alignBtn();
 
         String crossButton();
@@ -322,10 +324,10 @@ public abstract class Window implements IsWidget {
         // the left style attribute in pixels
         private int leftPosition = -1;
         // The top style attribute in pixels
-        private int topPosition = -1;
-        private int windowWidth;
-        private int clientLeft;
-        private int clientTop;
+        private int topPosition  = -1;
+        private int        windowWidth;
+        private int        clientLeft;
+        private int        clientTop;
         private ViewEvents delegate;
         private boolean    dragging;
         private int        dragStartX;
@@ -377,10 +379,10 @@ public abstract class Window implements IsWidget {
                     }
                 }
             };
-            
-            
+
+
             contentContainer.addDomHandler(handler, KeyDownEvent.getType());
-            
+
             crossButton.addDomHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -402,7 +404,7 @@ public abstract class Window implements IsWidget {
         public void setContent(Widget content) {
             this.content.add(content);
         }
-        
+
         private void endDragging(MouseUpEvent event) {
             dragging = false;
             DOM.releaseCapture(header.getElement());
@@ -434,13 +436,12 @@ public abstract class Window implements IsWidget {
                */
                 dragging = true;
                 DOM.setCapture(header.getElement());
-                if("".equals(contentContainer.getElement().getStyle().getPosition())){
-                  contentContainer.getElement().getStyle().setTop(contentContainer.getAbsoluteTop()+1, Style.Unit.PX);
-                  contentContainer.getElement().getStyle().setLeft(contentContainer.getAbsoluteLeft(), Style.Unit.PX);
-                }
-                else{
-                  contentContainer.getElement().getStyle().setTop(contentContainer.getAbsoluteTop(), Style.Unit.PX);
-                  contentContainer.getElement().getStyle().setLeft(contentContainer.getAbsoluteLeft(), Style.Unit.PX);
+                if ("".equals(contentContainer.getElement().getStyle().getPosition())) {
+                    contentContainer.getElement().getStyle().setTop(contentContainer.getAbsoluteTop() + 1, Style.Unit.PX);
+                    contentContainer.getElement().getStyle().setLeft(contentContainer.getAbsoluteLeft(), Style.Unit.PX);
+                } else {
+                    contentContainer.getElement().getStyle().setTop(contentContainer.getAbsoluteTop(), Style.Unit.PX);
+                    contentContainer.getElement().getStyle().setLeft(contentContainer.getAbsoluteLeft(), Style.Unit.PX);
 
                 }
 
@@ -451,12 +452,15 @@ public abstract class Window implements IsWidget {
             }
 
         }
+
         /**
          * Sets the popup's position relative to the browser's client area. The
          * popup's position may be set before calling {@link #show()}.
          *
-         * @param left the left position, in pixels
-         * @param top the top position, in pixels
+         * @param left
+         *         the left position, in pixels
+         * @param top
+         *         the top position, in pixels
          */
         public void setPopupPosition(int left, int top) {
             // Save the position of the popup
@@ -475,6 +479,7 @@ public abstract class Window implements IsWidget {
             elem.getStyle().setPropertyPx("left", left);
             elem.getStyle().setPropertyPx("top", top);
         }
+
         @UiTemplate("Window.ui.xml")
         interface MyBinder extends UiBinder<HTMLPanel, View> {
         }

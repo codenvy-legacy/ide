@@ -61,7 +61,6 @@ import java.util.List;
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
 
 /**
  * Controls launching application.
@@ -90,7 +89,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     /** Determines whether any application is launched. */
     private       boolean                                           isLaunchingInProgress;
     private       ProjectRunCallback                                runCallback;
-    protected     SubscriptionHandler<String>                       runnerOutputHandler;
+    protected     SubscriptionHandler<LogMessage>                   runnerOutputHandler;
     protected     SubscriptionHandler<ApplicationProcessDescriptor> runStatusHandler;
 
     /** Create controller. */
@@ -253,7 +252,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
                         try {
                             messageBus.unsubscribe(RUNNER_STATUS_CHANNEL + currentApplication.getProcessId(), this);
-                            messageBus.unsubscribe(RUNNER_OUTPUT_CHANNEL + currentApplication.getProcessId(), runnerOutputHandler);
                         } catch (WebSocketException e) {
                             Log.error(RunnerController.class, e);
                         }
@@ -267,7 +265,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
                         try {
                             messageBus.unsubscribe(RUNNER_STATUS_CHANNEL + currentApplication.getProcessId(), this);
-                            messageBus.unsubscribe(RUNNER_OUTPUT_CHANNEL + currentApplication.getProcessId(), runnerOutputHandler);
                         } catch (WebSocketException e) {
                             Log.error(RunnerController.class, e);
                         }
@@ -303,23 +300,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
     }
 
-    private void startCheckingOutput(final ApplicationProcessDescriptor applicationProcessDescriptor) {
-        runnerOutputHandler = new SubscriptionHandler<String>(new LineUnmarshaller()) {
-            @Override
-            protected void onMessageReceived(String result) {
-                console.print(result);
-            }
-
-            @Override
-            protected void onErrorReceived(Throwable throwable) {
-                try {
-                    messageBus.unsubscribe(RUNNER_OUTPUT_CHANNEL + applicationProcessDescriptor.getProcessId(), this);
-                    Log.error(RunnerController.class, throwable);
-                } catch (WebSocketException e) {
-                    Log.error(RunnerController.class, e);
-                }
-            }
-        };
+    private void startCheckingOutput(ApplicationProcessDescriptor applicationProcessDescriptor) {
+        runnerOutputHandler = new LogMessagesHandler(applicationProcessDescriptor, console, messageBus);
 
         try {
             messageBus.subscribe(RUNNER_OUTPUT_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerOutputHandler);
@@ -459,26 +441,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             notification.setStatus(FINISHED);
             notification.setType(ERROR);
             notification.setMessage(constant.updateApplicationFailed(project.getName()));
-        }
-    }
-
-    private class LineUnmarshaller implements Unmarshallable<String> {
-        private String line;
-
-        @Override
-        public void unmarshal(Message response) throws UnmarshallerException {
-            JSONObject jsonObject = JSONParser.parseStrict(response.getBody()).isObject();
-            if (jsonObject == null) {
-                return;
-            }
-            if (jsonObject.containsKey("line")) {
-                line = jsonObject.get("line").isString().stringValue();
-            }
-        }
-
-        @Override
-        public String getPayload() {
-            return line;
         }
     }
 

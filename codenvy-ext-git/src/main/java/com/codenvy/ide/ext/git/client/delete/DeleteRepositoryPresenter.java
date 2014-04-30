@@ -20,11 +20,13 @@ package com.codenvy.ide.ext.git.client.delete;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.ext.git.client.GitServiceClient;
-import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
+import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
+import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.ui.dialogs.Ask;
+import com.codenvy.ide.ui.dialogs.AskHandler;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -43,8 +45,8 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
  */
 @Singleton
 public class DeleteRepositoryPresenter {
-    private GitServiceClient     service;
-    private EventBus eventBus;
+    private GitServiceClient        service;
+    private EventBus                eventBus;
     private GitLocalizationConstant constant;
     private ResourceProvider        resourceProvider;
     private Project                 project;
@@ -75,25 +77,6 @@ public class DeleteRepositoryPresenter {
     /** Delete Git repository. */
     public void deleteRepository() {
         project = resourceProvider.getActiveProject();
-        String workDir = project.getPath();
-        askBeforeDelete(workDir);
-    }
-
-    /**
-     * Confirm, that user wants to delete Git repository.
-     *
-     * @param repository
-     *         repository name
-     */
-    private void askBeforeDelete(@NotNull String repository) {
-        boolean needToDelete = Window.confirm(constant.deleteGitRepositoryQuestion(repository));
-        if (needToDelete) {
-            doDeleteRepository();
-        }
-    }
-
-    /** Perform deleting Git repository. */
-    private void doDeleteRepository() {
         service.deleteRepository(project.getId(), new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
@@ -109,4 +92,5 @@ public class DeleteRepositoryPresenter {
             }
         });
     }
+
 }

@@ -26,6 +26,7 @@ import com.codenvy.api.runner.dto.DebugMode;
 import com.codenvy.api.runner.dto.RunRequest;
 import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.runner.internal.ApplicationProcess;
+import com.codenvy.api.runner.internal.Constants;
 import com.codenvy.api.runner.internal.DeploymentSources;
 import com.codenvy.api.runner.internal.Disposer;
 import com.codenvy.api.runner.internal.ResourceAllocators;
@@ -69,6 +70,7 @@ public class SDKRunner extends Runner {
     public static final String LINK_REL_CODE_SERVER     = "code server";
     /** Name of configuration parameter that specifies the domain name or IP address of the code server. */
     public static final String CODE_SERVER_BIND_ADDRESS = "runner.sdk.code_server_bind_address";
+    public static final String HOST_NAME                = "runner.sdk.host_name";
 
     private final Map<String, ApplicationServer> servers;
     private final Map<String, RunnerEnvironment> environments;
@@ -79,17 +81,17 @@ public class SDKRunner extends Runner {
     private final ProjectEventService            projectEventService;
 
     @Inject
-    public SDKRunner(@Named(DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
-                     @Named(CLEANUP_DELAY_TIME) int cleanupDelay,
+    public SDKRunner(@Named(Constants.DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
+                     @Named(Constants.APP_CLEANUP_TIME) int cleanupTime,
                      @Named(CODE_SERVER_BIND_ADDRESS) String codeServerAddress,
-                     @Named("runner.sdk.host_name") String hostName,
+                     @Named(HOST_NAME) String hostName,
                      CustomPortService portService,
                      Set<ApplicationServer> appServers,
                      CodeServer codeServer,
                      ResourceAllocators allocators,
                      EventService eventService,
                      ProjectEventService projectEventService) {
-        super(deployDirectoryRoot, cleanupDelay, allocators, eventService);
+        super(deployDirectoryRoot, cleanupTime, allocators, eventService);
         this.codeServerAddress = codeServerAddress;
         this.hostName = hostName;
         this.portService = portService;
