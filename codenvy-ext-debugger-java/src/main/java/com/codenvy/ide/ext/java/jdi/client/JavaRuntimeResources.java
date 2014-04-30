@@ -19,15 +19,17 @@ package com.codenvy.ide.ext.java.jdi.client;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
+
 import org.vectomatic.dom.svg.ui.SVGResource;
 
 /** @author Vitaly Parfonov */
 public interface JavaRuntimeResources extends ClientBundle {
-    @Source("resume.png")
-    ImageResource resumeButton();
 
-    @Source("disconnect.png")
-    ImageResource disconnectButton();
+    @Source("resume.svg")
+    SVGResource resumeButton();
+
+    @Source("disconnect.svg")
+    SVGResource disconnectButton();
 
     @Source("cancel.png")
     ImageResource cancelButton();
@@ -35,32 +37,32 @@ public interface JavaRuntimeResources extends ClientBundle {
     @Source("ok.png")
     ImageResource okButton();
 
-    @Source("stepinto.png")
-    ImageResource stepIntoButton();
+    @Source("stepinto.svg")
+    SVGResource stepIntoButton();
 
-    @Source("stepover.png")
-    ImageResource stepOverButton();
+    @Source("stepover.svg")
+    SVGResource stepOverButton();
 
-    @Source("stepreturn.png")
-    ImageResource stepReturnButton();
-    
+    @Source("stepreturn.svg")
+    SVGResource stepReturnButton();
+
     @Source("debugApp.png")
     ImageResource debugApp();
-    
+
     @Source("debug.svg")
     SVGResource debug();
 
-    @Source("changeVariableValue.png")
-    ImageResource changeVariableValue();
+    @Source("edit.svg")
+    SVGResource changeVariableValue();
 
-    @Source("evaluate.png")
-    ImageResource evaluate();
+    @Source("evaluate.svg")
+    SVGResource evaluate();
 
     @Source("breakpoint.png")
     ImageResource breakpoint();
 
-    @Source("remove_all_breakpoints.gif")
-    ImageResource removeAllBreakpointsButton();
+    @Source("remove.svg")
+    SVGResource removeAllBreakpointsButton();
 
     @Source("breakpoints.png")
     ImageResource breakPointsIcon();
