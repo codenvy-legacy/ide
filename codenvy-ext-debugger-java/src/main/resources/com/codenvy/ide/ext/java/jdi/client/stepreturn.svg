@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="326px" height="259px" viewBox="0 0 326 259" version="1.1" xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.0.1 (7597) - http://www.bohemiancoding.com/sketch -->
+    <title>Slice 1</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g>
+            <g>
+                <g>
+                    <g>
+                        <rect fill="#3087ED" x="0" y="211" width="80" height="39"></rect>
+                        <rect fill="#3087ED" x="220" y="211" width="80" height="39"></rect>
+                        <g transform="translate(222.521088, 129.355779) rotate(-90.000000) translate(-222.521088, -129.355779) translate(93.021088, 26.355779)"
+                           fill="#E7D600">
+                            <rect x="0" y="0" width="160" height="60"></rect>
+                            <rect transform="translate(189.000000, 80.000000) rotate(-90.000000) translate(-189.000000, -80.000000) "
+                                  x="109" y="50" width="160" height="60"></rect>
+                            <path d="M189,132 L259,206 L119,206 L189,132 L189,132 Z"
+                                  transform="translate(189.000000, 169.000000) scale(-1, -1) translate(-189.000000, -169.000000) "></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
