@@ -52,6 +52,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.UIObject;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 /**
  * PopupMenu is visual component represents all known Popup Menu.
@@ -213,11 +214,15 @@ public class PopupMenu extends Composite {
                 table.getCellFormatter().setStyleName(i, 0, POPUP_RESOURCES.popup().popupMenuDelimiter());
             } else {
                 Presentation presentation = presentationFactory.getPresentation(menuItem);
-                
-                if (presentation.getSVGIcon() != null){
+
+                if (presentation.getSVGIcon() != null) {
                     table.setWidget(i, 0, new SVGImage(presentation.getSVGIcon()));
                 } else {
-                    table.setWidget(i, 0, new Image(presentation.getIcon() == null ? POPUP_RESOURCES.blank() : presentation.getIcon())); 
+                    Image image = null;
+                    if (presentation.getIcon() != null) {
+                        image = new Image(presentation.getIcon());
+                    }
+                    table.setWidget(i, 0, image);
                 }
                 table.getCellFormatter().setStyleName(i, 0,
                                                       presentation.isEnabled() ? POPUP_RESOURCES.popup().popupMenuIconField()
@@ -230,12 +235,8 @@ public class PopupMenu extends Composite {
                     ToggleAction toggleAction = (ToggleAction)menuItem;
                     ActionEvent e = new ActionEvent(place, presentationFactory.getPresentation(toggleAction), actionManager, 0);
                     if (toggleAction.isSelected(e)) {
-                        checkImage = AbstractImagePrototype.create(POPUP_RESOURCES.check()).getHTML();
-                    } else {
-                        checkImage = AbstractImagePrototype.create(POPUP_RESOURCES.blank()).getHTML();
+                        table.setHTML(i, work, AbstractImagePrototype.create(POPUP_RESOURCES.check()).getHTML());
                     }
-
-                    table.setHTML(i, work, checkImage);
                     table.getCellFormatter().setStyleName(i, work,
                                                           presentation.isEnabled() ? POPUP_RESOURCES.popup().popupMenuCheckField()
                                                                                    : POPUP_RESOURCES.popup()
@@ -270,17 +271,12 @@ public class PopupMenu extends Composite {
                                                          !Utils.hasVisibleChildren((ActionGroup)menuItem, presentationFactory,
                                                                                    actionManager,
                                                                                    place))) {
-                    Image image = new Image(POPUP_RESOURCES.subMenu());
-                    image.setStyleName(POPUP_RESOURCES.popup().popupMenuSubMenuImage());
-                    table.setWidget(i, work, image);
+                    table.setWidget(i, work, new SVGImage(POPUP_RESOURCES.subMenu()));
                     table.getCellFormatter().setStyleName(i, work,
                                                           presentation.isEnabled() ? POPUP_RESOURCES.popup().popupMenuSubMenuField()
                                                                                    : POPUP_RESOURCES.popup()
                                                                                                     .popupMenuSubMenuFieldDisabled());
                 } else {
-                    Image image = new Image(POPUP_RESOURCES.blank());
-                    image.setStyleName(POPUP_RESOURCES.popup().popupMenuSubMenuImage());
-                    table.setWidget(i, work, image);
                     table.getCellFormatter().setStyleName(i, work,
                                                           presentation.isEnabled() ? POPUP_RESOURCES.popup().popupMenuSubMenuField()
                                                                                    : POPUP_RESOURCES.popup()
@@ -436,7 +432,7 @@ public class PopupMenu extends Composite {
         Action menuItem = list.get(itemIndex);
         if (menuItem instanceof ActionGroup && (!((ActionGroup)menuItem).canBePerformed() &&
                                                 Utils.hasVisibleChildren((ActionGroup)menuItem, presentationFactory, actionManager,
-                                                                          place))) {
+                                                                         place))) {
             openSubPopup(tr);
         } else {
             if (actionSelectedHandler != null) {
@@ -512,11 +508,8 @@ public class PopupMenu extends Composite {
         @Source("check.gif")
         ImageResource check();
 
-        @Source("blank.png")
-        ImageResource blank();
-
-        @Source("submenu.gif")
-        ImageResource subMenu();
+        @Source("com/codenvy/ide/menu/submenu.svg")
+        SVGResource subMenu();
     }
 
     interface Css extends CssResource {
@@ -556,8 +549,6 @@ public class PopupMenu extends Composite {
         String popupMenuSubMenuFieldOver();
 
         String popupMenuHotKeyField();
-
-        String popupMenuSubMenuImage();
     }
 
     /** This table uses for handling mouse events. */
