@@ -252,7 +252,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
                         try {
                             messageBus.unsubscribe(RUNNER_STATUS_CHANNEL + currentApplication.getProcessId(), this);
-                            messageBus.unsubscribe(RUNNER_OUTPUT_CHANNEL + currentApplication.getProcessId(), runnerOutputHandler);
                         } catch (WebSocketException e) {
                             Log.error(RunnerController.class, e);
                         }
@@ -266,7 +265,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
                         try {
                             messageBus.unsubscribe(RUNNER_STATUS_CHANNEL + currentApplication.getProcessId(), this);
-                            messageBus.unsubscribe(RUNNER_OUTPUT_CHANNEL + currentApplication.getProcessId(), runnerOutputHandler);
                         } catch (WebSocketException e) {
                             Log.error(RunnerController.class, e);
                         }
