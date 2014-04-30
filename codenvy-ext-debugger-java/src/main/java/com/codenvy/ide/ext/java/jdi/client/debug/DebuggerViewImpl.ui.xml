@@ -31,8 +31,20 @@
             float: left;
         }
 
-        .withoutPadding {
-            padding: 0px;
+        .debuggerButton {
+            width: 18px;
+            height: 16px;
+            float: left;
+            margin-left: 1px;
+            padding: 1px;
+        }
+
+        .debuggerButton > svg {
+            width: 14px;
+            height: 14px;
+            margin: auto;
+            display: block;
+            padding: inherit;
         }
 
         .buttonBorder {
@@ -53,40 +65,31 @@
         <g:north size="26.0">
             <g:FlowPanel width="100%" height="100%">
                 <g:FlowPanel addStyleNames="{style.alignLeft} {style.buttonBorder}">
-                    <g:PushButton ui:field="btnResume" title="{locale.resumeButton}" width="18px" height="16px"
-                                  addStyleNames="{style.alignLeft} {style.withoutPadding}">
-                        <g:upFace image="{res.resumeButton}"/>
+                    <g:PushButton ui:field="btnResume" title="{locale.resumeButton}"
+                                  addStyleNames="{style.debuggerButton}">
                     </g:PushButton>
 
-                    <g:ToggleButton ui:field="btnStepInto" title="{locale.stepInto}" width="18px" height="16px"
-                                    addStyleNames="{style.alignLeft} {style.withoutPadding}">
-                        <g:upFace image="{res.stepIntoButton}"/>
+                    <g:ToggleButton ui:field="btnStepInto" title="{locale.stepInto}"
+                                    addStyleNames="{style.debuggerButton}">
                     </g:ToggleButton>
 
-                    <g:ToggleButton ui:field="btnStepOver" title="{locale.stepOver}" width="18px" height="16px"
-                                    addStyleNames="{style.alignLeft} {style.withoutPadding}">
-                        <g:upFace image="{res.stepOverButton}"/>
+                    <g:ToggleButton ui:field="btnStepOver" title="{locale.stepOver}"
+                                    addStyleNames="{style.debuggerButton}">
                     </g:ToggleButton>
-                    <g:ToggleButton ui:field="btnStepReturn" title="{locale.stepReturn}" width="18px" height="16px"
-                                    addStyleNames="{style.alignLeft} {style.withoutPadding} ">
-                        <g:upFace image="{res.stepReturnButton}"/>
+                    <g:ToggleButton ui:field="btnStepReturn" title="{locale.stepReturn}"
+                                    addStyleNames="{style.debuggerButton} ">
                     </g:ToggleButton>
-                    <g:PushButton ui:field="btnDisconnect" title="{locale.disconnectButton}" width="18px"
-                                  height="16px" addStyleNames="{style.alignLeft} {style.withoutPadding}">
-                        <g:upFace image="{res.disconnectButton}"/>
+                    <g:PushButton ui:field="btnDisconnect" title="{locale.disconnectButton}"
+                                  addStyleNames="{style.debuggerButton}">
                     </g:PushButton>
                     <g:PushButton ui:field="btnRemoveAllBreakpoints" title="{locale.removeBreakpointsButton}"
-                                  width="18px" height="16px"
-                                  addStyleNames="{style.alignLeft} {style.withoutPadding}">
-                        <g:upFace image="{res.removeAllBreakpointsButton}"/>
+                                  addStyleNames="{style.debuggerButton}">
                     </g:PushButton>
-                    <g:PushButton ui:field="btnChangeValue" title="{locale.changeValue}" width="18px" height="16px"
-                                  addStyleNames="{style.alignLeft} {style.withoutPadding}">
-                        <g:upFace image="{res.changeVariableValue}"/>
+                    <g:PushButton ui:field="btnChangeValue" title="{locale.changeValue}"
+                                  addStyleNames="{style.debuggerButton}">
                     </g:PushButton>
-                    <g:PushButton ui:field="btnEvaluateExpression" title="{locale.evaluateExpression}" width="18px"
-                                  height="16px" addStyleNames="{style.alignLeft} {style.withoutPadding}">
-                        <g:upFace image="{res.evaluate}"/>
+                    <g:PushButton ui:field="btnEvaluateExpression" title="{locale.evaluateExpression}"
+                                  addStyleNames="{style.debuggerButton}">
                     </g:PushButton>
                 </g:FlowPanel>
                 <g:Label ui:field="vmName" addStyleNames="{style.alignRight} {style.labelBorder}"/>
