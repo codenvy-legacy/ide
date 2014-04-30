@@ -19,11 +19,14 @@ package com.codenvy.runner.docker;
 
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.util.CustomPortService;
+import com.codenvy.api.core.util.Pair;
 import com.codenvy.api.runner.dto.RunRequest;
 import com.codenvy.api.runner.internal.ResourceAllocators;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Runner based on BaseDockerRunner that uses prepared set of dockerfiles.
@@ -31,8 +34,8 @@ import java.util.List;
  * @author andrew00x
  */
 public class EmbeddedDockerRunner extends BaseDockerRunner {
-    private final String             name;
-    private final List<java.io.File> dockerfiles;
+    private final String                                        name;
+    private final Map<String, List<Pair<String, java.io.File>>> dockerfiles;
 
     public EmbeddedDockerRunner(java.io.File deployDirectoryRoot,
                                 int cleanupTime,
@@ -41,10 +44,10 @@ public class EmbeddedDockerRunner extends BaseDockerRunner {
                                 CustomPortService portService,
                                 EventService eventService,
                                 String name,
-                                List<java.io.File> dockerfiles) {
+                                Map<String, List<Pair<String, java.io.File>>> dockerfiles) {
         super(deployDirectoryRoot, cleanupTime, hostName, allocators, portService, eventService);
         this.name = name;
-        this.dockerfiles = new ArrayList<>(dockerfiles);
+        this.dockerfiles = new HashMap<>(dockerfiles);
     }
 
     @Override
@@ -59,13 +62,17 @@ public class EmbeddedDockerRunner extends BaseDockerRunner {
 
     @Override
     protected DockerfileTemplate getDockerfileTemplate(RunRequest request) {
-        String name = request.getRunner();
-        if (request.getDebugMode() != null) {
-            name += "_Debug";
+        String environmentId = request.getEnvironmentId();
+        if (environmentId == null) {
+            environmentId = "default";
         }
-        for (java.io.File dockerfile : dockerfiles) {
-            if (name.equals(dockerfile.getName())) {
-                return DockerfileTemplate.from(dockerfile);
+        final List<Pair<String, File>> list = dockerfiles.get(environmentId);
+        final String name = request.getDebugMode() != null ? "Dockerfile_Debug" : "Dockerfile";
+        if (list != null) {
+            for (Pair<String, File> pair : list) {
+                if (name.equals(pair.first)) {
+                    return DockerfileTemplate.from(pair.second);
+                }
             }
         }
         return null;

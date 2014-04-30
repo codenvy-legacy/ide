@@ -47,16 +47,14 @@ import com.codenvy.runner.docker.json.HostConfig;
 import com.codenvy.runner.docker.json.Image;
 import com.codenvy.runner.docker.json.PortBinding;
 import com.google.common.hash.Hashing;
+import com.google.common.io.ByteStreams;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.io.Reader;
 import java.net.ConnectException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -186,45 +184,18 @@ public abstract class BaseDockerRunner extends Runner {
             final java.io.File dockerfile = new java.io.File(applicationFile.getParentFile(), "Dockerfile");
             dockerfileTemplate.writeDockerfile(dockerfile);
             // Find port mapping specified in Dockerfile.
-            final List<Pair<Integer, Integer>> portMapping = new LinkedList<>();
-            int debugPort = -1;
-            try (Reader reader = Files.newBufferedReader(dockerfile.toPath(), Charset.forName("UTF-8"))) {
-                for (DockerImage dockerImage : DockerfileParser.parse(reader)) {
-                    for (Map.Entry<String, String> entry : dockerImage.getEnv().entrySet()) {
-                        final String name = entry.getKey();
-                        if (HTTP_PORT_PATTERN.matcher(name).matches()) {
-                            final int privatePort = Integer.parseInt(entry.getValue());
-                            final int publicPort = portService.acquire();
-                            portMapping.add(Pair.of(publicPort, privatePort));
-                            // Web link for application.
-                            // TODO: need something more flexible to avoid showing port in URL.
-                            final String webUrl = String.format("http://%s:%d", hostName, publicPort);
-                            dockerRunnerCfg.getLinks().add(DtoFactory.getInstance().createDto(Link.class)
-                                                                     .withRel(com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL)
-                                                                     .withHref(webUrl));
-                        } else if (DEBUG_PORT_PATTERN.matcher(name).matches()) {
-                            final int privatePort = Integer.parseInt(entry.getValue());
-                            debugPort = portService.acquire();
-                            portMapping.add(Pair.of(debugPort, privatePort));
-                        }
-                    }
-                }
-            } catch (IOException e) {
-                throw new RunnerException(e);
-            }
-            final DebugMode debugMode = dockerRunnerCfg.getRequest().getDebugMode();
-            if (debugMode != null) {
-                dockerRunnerCfg.setDebugHost(hostName);
-                dockerRunnerCfg.setDebugPort(debugPort);
-                dockerRunnerCfg.setDebugSuspend("suspend".equals(debugMode.getMode()));
-            }
+            final List<Pair<Integer, Integer>> portMapping = getPortMapping(dockerfile, dockerRunnerCfg);
 
             final String workspace = runnerCfg.getRequest().getWorkspace();
             final String project = runnerCfg.getRequest().getProject();
             final String dockerRepoName = workspace + (project.startsWith("/") ? project : ('/' + runnerCfg.getRequest().getProject()));
-            final String fileHash = com.google.common.io.Files.hash(applicationFile, Hashing.sha1()).toString();
+            @SuppressWarnings("unchecked")
+            final String hash = ByteStreams.hash(ByteStreams.join(com.google.common.io.Files.newInputStreamSupplier(applicationFile),
+                                                                  com.google.common.io.Files.newInputStreamSupplier(dockerfile)),
+                                                 Hashing.sha1()
+                                                ).toString();
             final DockerConnector connector = DockerConnector.getInstance();
-            final ImageStats imageStats = createImageIfNeed(connector, dockerRepoName, fileHash, dockerfile, applicationFile);
+            final ImageStats imageStats = createImageIfNeed(connector, dockerRepoName, hash, dockerfile, applicationFile);
             final ContainerConfig containerConfig =
                     new ContainerConfig().withImage(imageStats.image).withMemory(runnerCfg.getMemory() * 1024 * 1024).withCpuShares(1);
             HostConfig hostConfig = null;
@@ -269,6 +240,39 @@ public abstract class BaseDockerRunner extends Runner {
         } catch (IOException e) {
             throw new RunnerException(e);
         }
+    }
+
+    private List<Pair<Integer, Integer>> getPortMapping(java.io.File dockerfile, DockerRunnerConfiguration dockerRunnerCfg)
+            throws IOException {
+        final List<Pair<Integer, Integer>> portMapping = new LinkedList<>();
+        int debugPort = -1;
+        for (DockerImage dockerImage : DockerfileParser.parse(dockerfile).getImages()) {
+            for (Map.Entry<String, String> entry : dockerImage.getEnv().entrySet()) {
+                final String name = entry.getKey();
+                if (HTTP_PORT_PATTERN.matcher(name).matches()) {
+                    final int privatePort = Integer.parseInt(entry.getValue());
+                    final int publicPort = portService.acquire();
+                    portMapping.add(Pair.of(publicPort, privatePort));
+                    // Web link for application.
+                    // TODO: need something more flexible to avoid showing port in URL.
+                    final String webUrl = String.format("http://%s:%d", hostName, publicPort);
+                    dockerRunnerCfg.getLinks().add(DtoFactory.getInstance().createDto(Link.class)
+                                                             .withRel(com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL)
+                                                             .withHref(webUrl));
+                } else if (DEBUG_PORT_PATTERN.matcher(name).matches()) {
+                    final int privatePort = Integer.parseInt(entry.getValue());
+                    debugPort = portService.acquire();
+                    portMapping.add(Pair.of(debugPort, privatePort));
+                }
+            }
+        }
+        final DebugMode debugMode = dockerRunnerCfg.getRequest().getDebugMode();
+        if (debugMode != null) {
+            dockerRunnerCfg.setDebugHost(hostName);
+            dockerRunnerCfg.setDebugPort(debugPort);
+            dockerRunnerCfg.setDebugSuspend("suspend".equals(debugMode.getMode()));
+        }
+        return portMapping;
     }
 
     protected abstract DockerfileTemplate getDockerfileTemplate(RunRequest request) throws IOException;

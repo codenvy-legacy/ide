@@ -19,6 +19,7 @@ package com.codenvy.runner.docker;
 
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.util.CustomPortService;
+import com.codenvy.api.core.util.Pair;
 import com.codenvy.api.runner.internal.Constants;
 import com.codenvy.api.runner.internal.ResourceAllocators;
 import com.codenvy.api.runner.internal.RunnerRegistry;
@@ -30,8 +31,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.File;
+import java.io.FileFilter;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -60,7 +63,7 @@ public class EmbeddedDockerRunnerRegistryPlugin {
                                               @Nullable @Named(DOCKERFILES_REPO) String dockerfilesRepository) {
         this.registry = registry;
         this.myRunners = new LinkedList<>();
-        for (Map.Entry<String, List<File>> entry : findDockerfiles(dockerfilesRepository).entrySet()) {
+        for (Map.Entry<String, Map<String, List<Pair<String, File>>>> entry : findDockerfiles(dockerfilesRepository).entrySet()) {
             myRunners.add(new EmbeddedDockerRunner(deployDirectoryRoot,
                                                    cleanupTime,
                                                    hostName,
@@ -89,7 +92,7 @@ public class EmbeddedDockerRunnerRegistryPlugin {
     }
 
     /** Finds Dockerfiles. */
-    private Map<String, List<File>> findDockerfiles(String dockerfilesRepository) {
+    private Map<String, Map<String, List<Pair<String, File>>>> findDockerfiles(String dockerfilesRepository) {
         File dockerFilesDir = null;
         if (!(dockerfilesRepository == null || dockerfilesRepository.isEmpty())) {
             dockerFilesDir = new File(dockerfilesRepository);
@@ -105,19 +108,30 @@ public class EmbeddedDockerRunnerRegistryPlugin {
             }
         }
         if (dockerFilesDir != null && dockerFilesDir.isDirectory()) {
-            final Map<String, List<File>> dockerFiles = new HashMap<>();
-            for (File file : dockerFilesDir.listFiles()) {
-                if (file.isFile()) {
-                    String fName = file.getName();
-                    final int isDebug = fName.indexOf("_Debug");
-                    if (isDebug > 0) {
-                        fName = fName.substring(0, isDebug);
+            final Map<String, Map<String, List<Pair<String, File>>>> dockerFiles = new HashMap<>();
+            final FileFilter dirFilter = new FileFilter() {
+                @Override
+                public boolean accept(File pathname) {
+                    return pathname.isDirectory();
+                }
+            };
+            final FileFilter fileFilter = new FileFilter() {
+                @Override
+                public boolean accept(File pathname) {
+                    String name;
+                    return pathname.isFile() && ((name = pathname.getName()).equals("Dockerfile") || name.equals("Dockerfile_Debug"));
+                }
+            };
+            for (File file : dockerFilesDir.listFiles(dirFilter)) {
+                final String runnerName = file.getName();
+                dockerFiles.put(runnerName, new HashMap<String, List<Pair<String, File>>>());
+                for (File _file : file.listFiles(dirFilter)) {
+                    final String envName = _file.getName();
+                    dockerFiles.get(runnerName).put(envName, new LinkedList<Pair<String, File>>());
+                    for (File __file : _file.listFiles(fileFilter)) {
+                        final String fName = __file.getName();
+                        dockerFiles.get(runnerName).get(envName).add(Pair.of(fName, __file));
                     }
-                    List<File> files = dockerFiles.get(fName);
-                    if (files == null) {
-                        dockerFiles.put(fName, files = new LinkedList<>());
-                    }
-                    files.add(file);
                 }
             }
             return dockerFiles;
