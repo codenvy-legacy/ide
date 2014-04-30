@@ -92,23 +92,24 @@ public class CommitPresenter implements CommitView.ActionDelegate {
         boolean amend = view.isAmend();
 
         try {
-            service.commitWS(project, message, all, amend,
-                             new RequestCallback<Revision>(dtoUnmarshallerFactory.newWSUnmarshaller(Revision.class)) {
-                                 @Override
-                                 protected void onSuccess(Revision result) {
-                                     if (!result.isFake()) {
-                                         onCommitSuccess(result);
-                                     } else {
-                                         Notification notification = new Notification(result.getMessage(), ERROR);
-                                         notificationManager.showNotification(notification);
-                                     }
-                                 }
+            service.commit(project, message, all, amend,
+                           new RequestCallback<Revision>(dtoUnmarshallerFactory.newWSUnmarshaller(Revision.class)) {
+                               @Override
+                               protected void onSuccess(Revision result) {
+                                   if (!result.isFake()) {
+                                       onCommitSuccess(result);
+                                   } else {
+                                       Notification notification = new Notification(result.getMessage(), ERROR);
+                                       notificationManager.showNotification(notification);
+                                   }
+                               }
 
-                                 @Override
-                                 protected void onFailure(Throwable exception) {
-                                     handleError(exception);
-                                 }
-                             });
+                               @Override
+                               protected void onFailure(Throwable exception) {
+                                   handleError(exception);
+                               }
+                           }
+                          );
         } catch (WebSocketException e) {
             handleError(e);
         }

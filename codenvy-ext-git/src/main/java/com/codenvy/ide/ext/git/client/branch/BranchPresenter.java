@@ -26,12 +26,12 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
+import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.ext.git.shared.Branch;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
@@ -42,7 +42,6 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.validation.constraints.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,16 +55,16 @@ import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_ALL;
  */
 @Singleton
 public class BranchPresenter implements BranchView.ActionDelegate {
-    private       BranchView                view;
-    private       EventBus                  eventBus;
-    private       Project                   project;
-    private       GitServiceClient          service;
-    private       GitLocalizationConstant   constant;
-    private       EditorAgent               editorAgent;
-    private       Branch                    selectedBranch;
-    private       ResourceProvider          resourceProvider;
-    private       NotificationManager       notificationManager;
-    private final DtoUnmarshallerFactory    dtoUnmarshallerFactory;
+    private       BranchView              view;
+    private       EventBus                eventBus;
+    private       Project                 project;
+    private       GitServiceClient        service;
+    private       GitLocalizationConstant constant;
+    private       EditorAgent             editorAgent;
+    private       Branch                  selectedBranch;
+    private       ResourceProvider        resourceProvider;
+    private       NotificationManager     notificationManager;
+    private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
 
     /**
      * Create presenter.

@@ -411,17 +411,19 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     /** {@inheritDoc} */
     @Override
     public void onStepIntoButtonClicked() {
-        changeButtonsEnableState(false);
+        if (!view.resetStepIntoButton(false)) return;
         service.stepInto(debuggerInfo.getId(), new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
                 resetStates();
+                view.resetStepIntoButton(true);
             }
 
             @Override
             protected void onFailure(Throwable exception) {
                 Notification notification = new Notification(exception.getMessage(), ERROR);
                 notificationManager.showNotification(notification);
+                view.resetStepIntoButton(true);
             }
         });
     }
@@ -429,17 +431,19 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     /** {@inheritDoc} */
     @Override
     public void onStepOverButtonClicked() {
-        changeButtonsEnableState(false);
+        if (!view.resetStepOverButton(false)) return;
         service.stepOver(debuggerInfo.getId(), new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
                 resetStates();
+                view.resetStepOverButton(true);
             }
 
             @Override
             protected void onFailure(Throwable exception) {
                 Notification notification = new Notification(exception.getMessage(), ERROR);
                 notificationManager.showNotification(notification);
+                view.resetStepOverButton(true);
             }
 
         });
@@ -448,17 +452,19 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     /** {@inheritDoc} */
     @Override
     public void onStepReturnButtonClicked() {
-        changeButtonsEnableState(false);
+        if (!view.resetStepReturnButton(false)) return;
         service.stepReturn(debuggerInfo.getId(), new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
                 resetStates();
+                view.resetStepReturnButton(true);
             }
 
             @Override
             protected void onFailure(Throwable exception) {
                 Notification notification = new Notification(exception.getMessage(), ERROR);
                 notificationManager.showNotification(notification);
+                view.resetStepReturnButton(true);
             }
 
         });

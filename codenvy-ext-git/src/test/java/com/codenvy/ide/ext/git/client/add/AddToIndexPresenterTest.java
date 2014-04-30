@@ -131,8 +131,8 @@ public class AddToIndexPresenterTest extends BaseTest {
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service).addWS((Project)anyObject(), anyBoolean(), (List<String>)anyObject(),
-                               (RequestCallback<Void>)anyObject());
+        }).when(service).add((Project)anyObject(), anyBoolean(), (List<String>)anyObject(),
+                             (RequestCallback<Void>)anyObject());
 
         when(project.getName()).thenReturn(PROJECT_NAME);
         when(view.isUpdated()).thenReturn(NEED_UPDATING);
@@ -143,8 +143,8 @@ public class AddToIndexPresenterTest extends BaseTest {
 
         verify(view).isUpdated();
         verify(view).close();
-        verify(service).addWS(eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
-                              (RequestCallback<Void>)anyObject());
+        verify(service).add(eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
+                            (RequestCallback<Void>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).addSuccess();
     }
@@ -160,8 +160,8 @@ public class AddToIndexPresenterTest extends BaseTest {
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).addWS((Project)anyObject(), anyBoolean(), (List<String>)anyObject(),
-                               (RequestCallback<Void>)anyObject());
+        }).when(service).add((Project)anyObject(), anyBoolean(), (List<String>)anyObject(),
+                             (RequestCallback<Void>)anyObject());
         when(view.isUpdated()).thenReturn(NEED_UPDATING);
 
         presenter.showDialog();
@@ -169,8 +169,8 @@ public class AddToIndexPresenterTest extends BaseTest {
 
         verify(view).isUpdated();
         verify(view).close();
-        verify(service).addWS(eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
-                              (RequestCallback<Void>)anyObject());
+        verify(service).add(eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
+                            (RequestCallback<Void>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).addFailed();
     }
@@ -178,8 +178,8 @@ public class AddToIndexPresenterTest extends BaseTest {
     @Test
     public void testOnAddClickedWhenAddRequestIsFailed() throws Exception {
         doThrow(WebSocketException.class).when(service)
-                .addWS((Project)anyObject(), anyBoolean(), (List<String>)anyObject(),
-                       (RequestCallback<Void>)anyObject());
+                .add((Project)anyObject(), anyBoolean(), (List<String>)anyObject(),
+                     (RequestCallback<Void>)anyObject());
         when(view.isUpdated()).thenReturn(NEED_UPDATING);
 
         presenter.showDialog();
@@ -187,8 +187,8 @@ public class AddToIndexPresenterTest extends BaseTest {
 
         verify(view).isUpdated();
         verify(service)
-                .addWS(eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
-                       (RequestCallback<Void>)anyObject());
+                .add(eq(project), eq(NEED_UPDATING), (List<String>)anyObject(),
+                     (RequestCallback<Void>)anyObject());
         verify(view).close();
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).addFailed();

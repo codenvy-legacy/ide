@@ -128,7 +128,7 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
         boolean update = view.isUpdated();
 
         try {
-            service.addWS(project, update, getFilePatterns(), new RequestCallback<Void>() {
+            service.add(project, update, getFilePatterns(), new RequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     Notification notification = new Notification(constant.addSuccess(), INFO);
