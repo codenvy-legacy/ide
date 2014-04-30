@@ -47,20 +47,6 @@ import java.util.List;
  * @author Ann Zhuleva
  */
 public interface GitServiceClient {
-    /**
-     * Add changes to Git index (temporary storage).
-     *
-     * @param project
-     *         project (root of GIT repository)
-     * @param update
-     *         if <code>true</code> then never stage new files, but stage modified new contents of tracked files and remove files from
-     *         the index if the corresponding files in the working tree have been removed
-     * @param filePattern
-     *         pattern of the files to be added, default is "." (all files are added)
-     * @param callback
-     */
-    void add(@NotNull Project project, boolean update, @Nullable List<String> filePattern,
-             @NotNull AsyncRequestCallback<Void> callback);
 
     /**
      * Add changes to Git index (temporary storage). Sends request over WebSocket.
@@ -76,31 +62,8 @@ public interface GitServiceClient {
      *         callback
      * @throws WebSocketException
      */
-    void addWS(@NotNull Project project, boolean update, @Nullable List<String> filePattern,
-               @NotNull RequestCallback<Void> callback) throws WebSocketException;
-
-    /**
-     * Fetch changes from remote repository to local one.
-     *
-     * @param project
-     *         project root of GIT repository
-     * @param remote
-     *         remote repository's name
-     * @param refspec
-     *         list of refspec to fetch.
-     *         <p/>
-     *         Expected form is:
-     *         <ul>
-     *         <li>refs/heads/featured:refs/remotes/origin/featured - branch 'featured' from remote repository will be fetched to
-     *         'refs/remotes/origin/featured'.</li>
-     *         <li>featured - remote branch name.</li>
-     *         </ul>
-     * @param removeDeletedRefs
-     *         if <code>true</code> then delete removed refs from local repository
-     * @param callback
-     */
-    void fetch(@NotNull Project project, @NotNull String remote, List<String> refspec,
-               boolean removeDeletedRefs, @NotNull AsyncRequestCallback<String> callback);
+    void add(@NotNull Project project, boolean update, @Nullable List<String> filePattern,
+             @NotNull RequestCallback<Void> callback) throws WebSocketException;
 
     /**
      * Fetch changes from remote repository to local one (sends request over WebSocket).
@@ -124,8 +87,8 @@ public interface GitServiceClient {
      *         callback
      * @throws WebSocketException
      */
-    void fetchWS(@NotNull Project project, @NotNull String remote, List<String> refspec,
-                 boolean removeDeletedRefs, @NotNull RequestCallback<String> callback) throws WebSocketException;
+    void fetch(@NotNull Project project, @NotNull String remote, List<String> refspec,
+               boolean removeDeletedRefs, @NotNull RequestCallback<String> callback) throws WebSocketException;
 
     /**
      * Get the list of the branches. For now, all branches cannot be returned at once, so the parameter <code>remote</code> tells to get
@@ -270,19 +233,6 @@ public interface GitServiceClient {
                @NotNull AsyncRequestCallback<Void> callback);
 
     /**
-     * Initializes new Git repository.
-     *
-     * @param projectid
-     *         project's id (root of GIT repository)
-     * @param projectName
-     * @param bare
-     *         to create bare repository or not
-     * @param callback
-     */
-    void init(@NotNull String projectid, @NotNull String projectName, boolean bare,
-              @NotNull AsyncRequestCallback<Void> callback);
-
-    /**
      * Initializes new Git repository (over WebSocket).
      *
      * @param projectid
@@ -294,29 +244,8 @@ public interface GitServiceClient {
      * @param callback
      *         callback
      */
-    void initWS(@NotNull String projectid, @NotNull String projectName, boolean bare,
-                @NotNull RequestCallback<Void> callback) throws WebSocketException;
-
-    /**
-     * Pull (fetch and merge) changes from remote repository to local one.
-     *
-     * @param project
-     *         project's id (root of GIT repository)
-     * @param refSpec
-     *         list of refspec to fetch.
-     *         <p/>
-     *         Expected form is:
-     *         <ul>
-     *         <li>refs/heads/featured:refs/remotes/origin/featured - branch 'featured' from remote repository will be fetched to
-     *         'refs/remotes/origin/featured'.</li>
-     *         <li>featured - remote branch name.</li>
-     *         </ul>
-     * @param remote
-     *         remote remote repository's name
-     * @param callback
-     */
-    void pull(@NotNull Project project, @NotNull String refSpec, @NotNull String remote,
-              @NotNull AsyncRequestCallback<String> callback);
+    void init(@NotNull String projectid, @NotNull String projectName, boolean bare,
+              @NotNull RequestCallback<Void> callback) throws WebSocketException;
 
     /**
      * Pull (fetch and merge) changes from remote repository to local one (sends request over WebSocket).
@@ -338,25 +267,8 @@ public interface GitServiceClient {
      *         callback
      * @throws WebSocketException
      */
-    void pullWS(@NotNull Project project, @NotNull String refSpec, @NotNull String remote,
-                @NotNull RequestCallback<String> callback) throws WebSocketException;
-
-    /**
-     * Push changes from local repository to remote one.
-     *
-     * @param project
-     *         projectid to GIT repository
-     * @param refSpec
-     *         list of refspec to push
-     * @param remote
-     *         remote repository name or url
-     * @param force
-     *         push refuses to update a remote ref that is not an ancestor of the local ref used to overwrite it. If <code>true</code>
-     *         disables the check. This can cause the remote repository to lose commits
-     * @param callback
-     */
-    void push(@NotNull Project project, @NotNull List<String> refSpec, @NotNull String remote, boolean force,
-              @NotNull AsyncRequestCallback<String> callback);
+    void pull(@NotNull Project project, @NotNull String refSpec, @NotNull String remote,
+              @NotNull RequestCallback<String> callback) throws WebSocketException;
 
     /**
      * Push changes from local repository to remote one (sends request over WebSocket).
@@ -374,23 +286,8 @@ public interface GitServiceClient {
      *         callback
      * @throws WebSocketException
      */
-    void pushWS(@NotNull Project project, @NotNull List<String> refSpec, @NotNull String remote, boolean force,
-                @NotNull RequestCallback<String> callback) throws WebSocketException;
-
-    /**
-     * Clones one remote repository to local one.
-     *
-     * @param project
-     *         project (root of GIT repository)
-     * @param remoteUri
-     *         the location of the remote repository
-     * @param remoteName
-     *         remote name instead of "origin"
-     * @param callback
-     *         callback
-     */
-    void cloneRepository(@NotNull Project project, @NotNull String remoteUri, @NotNull String remoteName,
-                         @NotNull AsyncRequestCallback<RepoInfo> callback);
+    void push(@NotNull Project project, @NotNull List<String> refSpec, @NotNull String remote, boolean force,
+              @NotNull RequestCallback<String> callback) throws WebSocketException;
 
     /**
      * Clones one remote repository to local one (over WebSocket).
@@ -405,25 +302,8 @@ public interface GitServiceClient {
      *         callback
      * @throws WebSocketException
      */
-    void cloneRepositoryWS(@NotNull Project project, @NotNull String remoteUri, @NotNull String remoteName,
-                           @NotNull RequestCallback<RepoInfo> callback) throws WebSocketException;
-
-    /**
-     * Performs commit changes from index to repository. The result of the commit is represented by {@link Revision}, which is returned by
-     * callback in <code>onSuccess(Revision result)</code>.
-     *
-     * @param project
-     *         project (root of GIT repository)
-     * @param message
-     *         commit log message
-     * @param all
-     *         automatically stage files that have been modified and deleted
-     * @param amend
-     *         indicates that previous commit must be overwritten
-     * @param callback
-     */
-    void commit(@NotNull Project project, @NotNull String message, boolean all, boolean amend,
-                @NotNull AsyncRequestCallback<Revision> callback);
+    void cloneRepository(@NotNull Project project, @NotNull String remoteUri, @NotNull String remoteName,
+                         @NotNull RequestCallback<RepoInfo> callback) throws WebSocketException;
 
     /**
      * Performs commit changes from index to repository. The result of the commit is represented by {@link Revision}, which is returned by
@@ -441,8 +321,8 @@ public interface GitServiceClient {
      *         callback
      * @throws WebSocketException
      */
-    void commitWS(@NotNull Project project, @NotNull String message, boolean all, boolean amend,
-                  @NotNull RequestCallback<Revision> callback) throws WebSocketException;
+    void commit(@NotNull Project project, @NotNull String message, boolean all, boolean amend,
+                @NotNull RequestCallback<Revision> callback) throws WebSocketException;
 
     /**
      * Compare two commits, get the diff for pointed file(s) or for the whole project in text format.

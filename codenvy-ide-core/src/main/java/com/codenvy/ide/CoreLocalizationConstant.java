@@ -194,4 +194,8 @@ public interface CoreLocalizationConstant extends Messages {
     
     @Key("apply")
     String apply();
+
+    @Key("delete")
+    @DefaultMessage("Delete")
+    String delete();
 }

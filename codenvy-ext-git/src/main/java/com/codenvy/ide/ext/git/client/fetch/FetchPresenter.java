@@ -216,19 +216,20 @@ public class FetchPresenter implements FetchView.ActionDelegate {
         boolean removeDeletedRefs = view.isRemoveDeletedRefs();
 
         try {
-            service.fetchWS(project, remoteName, getRefs(), removeDeletedRefs,
-                            new RequestCallback<String>() {
-                                @Override
-                                protected void onSuccess(String result) {
-                                    Notification notification = new Notification(constant.fetchSuccess(remoteUrl), INFO);
-                                    notificationManager.showNotification(notification);
-                                }
+            service.fetch(project, remoteName, getRefs(), removeDeletedRefs,
+                          new RequestCallback<String>() {
+                              @Override
+                              protected void onSuccess(String result) {
+                                  Notification notification = new Notification(constant.fetchSuccess(remoteUrl), INFO);
+                                  notificationManager.showNotification(notification);
+                              }
 
-                                @Override
-                                protected void onFailure(Throwable exception) {
-                                    handleError(exception, remoteUrl);
-                                }
-                            });
+                              @Override
+                              protected void onFailure(Throwable exception) {
+                                  handleError(exception, remoteUrl);
+                              }
+                          }
+                         );
         } catch (WebSocketException e) {
             handleError(e, remoteUrl);
         }

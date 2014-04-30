@@ -99,7 +99,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
                            new AsyncRequestCallback<Array<Remote>>(dtoUnmarshallerFactory.newArrayUnmarshaller(Remote.class)) {
                                @Override
                                protected void onSuccess(Array<Remote> result) {
-                                   getBranches(projectId, LIST_REMOTE);
+                                   getBranches(projectId, LIST_LOCAL);
                                    view.setEnablePushButton(!result.isEmpty());
                                    view.setRepositories(result);
                                    view.showDialog();
@@ -128,18 +128,27 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
                            new AsyncRequestCallback<Array<Branch>>(dtoUnmarshallerFactory.newArrayUnmarshaller(Branch.class)) {
                                @Override
                                protected void onSuccess(Array<Branch> result) {
-                                   if (LIST_REMOTE.equals(remoteMode)) {
-                                       view.setRemoteBranches(getRemoteBranchesToDisplay(view.getRepository(), result));
-                                       getBranches(projectId, LIST_LOCAL);
-                                   } else {
-                                       view.setLocalBranches(getLocalBranchesToDisplay(result));
+                                   if(!LIST_REMOTE.equals(remoteMode)) {
+                                       Array<String> localBranches = getLocalBranchesToDisplay(result);
+                                       view.setLocalBranches(localBranches);
+
                                        for (Branch branch : result.asIterable()) {
-                                           if (branch.isActive()) {
-                                               view.selectLocalBranch(branch.getDisplayName());
-                                               break;
+                                            if (branch.isActive()) {
+                                                view.selectLocalBranch(branch.getDisplayName());
+                                                break;
+                                            }
+                                        }
+                                       getBranches(projectId, LIST_REMOTE);
+                                    } else {
+                                       Array<String> remoteBranches = getRemoteBranchesToDisplay(view.getRepository(), result);
+                                       // Need to add the current local branch in the list of remote branches
+                                       // to be able to push changes to the remote branch  with same name
+                                       String currentBranch = view.getLocalBranch();
+                                           if (!remoteBranches.contains(currentBranch)) {
+                                               remoteBranches.add(currentBranch);
                                            }
-                                       }
-                                   }
+                                       view.setRemoteBranches(remoteBranches);
+                                    }
                                }
 
                                @Override
@@ -213,7 +222,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
         final String repository = view.getRepository();
 
         try {
-            service.pushWS(project, getRefs(), repository, false, new RequestCallback<String>() {
+            service.push(project, getRefs(), repository, false, new RequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     Notification notification = new Notification(constant.pushSuccess(repository), INFO);

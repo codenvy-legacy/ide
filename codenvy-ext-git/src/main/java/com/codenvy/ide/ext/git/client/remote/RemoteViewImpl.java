@@ -21,6 +21,8 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.shared.Remote;
+import com.codenvy.ide.ui.dialogs.Ask;
+import com.codenvy.ide.ui.dialogs.AskHandler;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.TextCell;
@@ -62,6 +64,8 @@ public class RemoteViewImpl extends Window implements RemoteView {
     Button            btnDelete;
     @UiField(provided = true)
     CellTable<Remote> repositories;
+
+    private Remote selectedObject;
     @UiField(provided = true)
     final   GitResources            res;
     @UiField(provided = true)
@@ -76,7 +80,9 @@ public class RemoteViewImpl extends Window implements RemoteView {
      * @param locale
      */
     @Inject
-    protected RemoteViewImpl(GitResources resources, GitLocalizationConstant locale, com.codenvy.ide.Resources ideResources) {
+    protected RemoteViewImpl(GitResources resources,
+                             final GitLocalizationConstant locale,
+                             com.codenvy.ide.Resources ideResources) {
         this.res = resources;
         this.locale = locale;
 
@@ -104,12 +110,19 @@ public class RemoteViewImpl extends Window implements RemoteView {
             }
         });
         getFooter().add(btnAdd);
-        
+
         btnDelete = createButton(locale.buttonRemove(), "git-remotes-remotes-remove", new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                delegate.onDeleteClicked();
+
+                Ask ask = new Ask(locale.deleteRemoteRepositoryTitle(), locale.deleteRemoteRepositoryQuestion(selectedObject.getName()), new AskHandler() {
+                    @Override
+                    public void onOk() {
+                        delegate.onDeleteClicked();
+                    }
+                });
+                ask.show();
             }
         });
         getFooter().add(btnDelete);
@@ -147,7 +160,7 @@ public class RemoteViewImpl extends Window implements RemoteView {
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             @Override
             public void onSelectionChange(SelectionChangeEvent event) {
-                Remote selectedObject = selectionModel.getSelectedObject();
+                selectedObject = selectionModel.getSelectedObject();
                 delegate.onRemoteSelected(selectedObject);
             }
         });

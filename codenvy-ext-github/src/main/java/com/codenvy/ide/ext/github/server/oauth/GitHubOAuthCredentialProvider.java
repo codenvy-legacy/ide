@@ -32,7 +32,7 @@ public class GitHubOAuthCredentialProvider implements CredentialsProvider {
 
         OAuthToken token;
         try {
-            token = tokenProvider.getToken("github", EnvironmentContext.getCurrent().getUser().getName());
+            token = tokenProvider.getToken("github", EnvironmentContext.getCurrent().getUser().getId());
         } catch (IOException e) {
             return false;
         }
