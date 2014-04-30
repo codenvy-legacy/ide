@@ -83,6 +83,7 @@ public class WizardDialogViewImpl extends Window implements WizardDialogView {
         
         Widget widget = uiBinder.createAndBindUi(this);
         this.setWidget(widget);
+        this.ensureDebugId("wizardDialog");
         createButtons();
     }
     
