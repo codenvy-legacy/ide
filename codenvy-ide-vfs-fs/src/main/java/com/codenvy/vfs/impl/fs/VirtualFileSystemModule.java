@@ -25,9 +25,12 @@ import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
 
-/** @author andrew00x */
+/**
+ * @author andrew00x
+ * @author Sergii Leschenko
+ */
 @DynaModule
-public class SearcherVirtualFileFilterModule extends AbstractModule {
+public class VirtualFileSystemModule extends AbstractModule {
     @Override
     protected void configure() {
         final Multibinder<VirtualFileFilter> multibinder =
