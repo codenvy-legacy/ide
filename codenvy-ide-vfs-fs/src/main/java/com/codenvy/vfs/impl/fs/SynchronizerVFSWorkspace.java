@@ -32,13 +32,13 @@ import java.io.File;
 
 /** @author Sergii Leschenko */
 public abstract class SynchronizerVFSWorkspace {
-    public static class CreatorVFSRoot implements EventSubscriber<CreateWorkspaceEvent> {
-        private static final Logger LOG = LoggerFactory.getLogger(RemoverVFSRoot.class);
+    public static class VFSRootCreator implements EventSubscriber<CreateWorkspaceEvent> {
+        private static final Logger LOG = LoggerFactory.getLogger(VFSRootRemover.class);
 
         private final LocalFSMountStrategy mountStrategy;
 
         @Inject
-        private CreatorVFSRoot(LocalFSMountStrategy mountStrategy) {
+        private VFSRootCreator(LocalFSMountStrategy mountStrategy) {
             this.mountStrategy = mountStrategy;
         }
 
@@ -57,13 +57,13 @@ public abstract class SynchronizerVFSWorkspace {
         }
     }
 
-    public static class RemoverVFSRoot implements EventSubscriber<DeleteWorkspaceEvent> {
-        private static final Logger LOG = LoggerFactory.getLogger(RemoverVFSRoot.class);
+    public static class VFSRootRemover implements EventSubscriber<DeleteWorkspaceEvent> {
+        private static final Logger LOG = LoggerFactory.getLogger(VFSRootRemover.class);
 
         private final VirtualFileSystemRegistry fileSystemRegistry;
 
         @Inject
-        private RemoverVFSRoot(VirtualFileSystemRegistry fileSystemRegistry, LocalFSMountStrategy mountStrategy) {
+        private VFSRootRemover(VirtualFileSystemRegistry fileSystemRegistry, LocalFSMountStrategy mountStrategy) {
             this.fileSystemRegistry = fileSystemRegistry;
         }
 

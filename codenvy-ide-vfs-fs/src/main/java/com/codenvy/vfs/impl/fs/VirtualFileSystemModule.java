@@ -48,8 +48,8 @@ public class VirtualFileSystemModule extends AbstractModule {
         Multibinder<com.codenvy.api.core.notification.EventSubscriber> subscriptionServiceBinder =
                 Multibinder.newSetBinder(binder(), com.codenvy.api.core.notification.EventSubscriber.class);
 
-        subscriptionServiceBinder.addBinding().to(SynchronizerVFSWorkspace.RemoverVFSRoot.class);
-        subscriptionServiceBinder.addBinding().to(SynchronizerVFSWorkspace.CreatorVFSRoot.class);
+        subscriptionServiceBinder.addBinding().to(SynchronizerVFSWorkspace.VFSRootRemover.class);
+        subscriptionServiceBinder.addBinding().to(SynchronizerVFSWorkspace.VFSRootCreator.class);
 
         subscriptionServiceBinder.addBinding().to(_IdeOldCacheUpdater_.class);
     }
