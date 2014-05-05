@@ -19,7 +19,6 @@ package com.codenvy.runner.docker;
 
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.util.CustomPortService;
-import com.codenvy.api.core.util.Pair;
 import com.codenvy.api.runner.internal.Constants;
 import com.codenvy.api.runner.internal.ResourceAllocators;
 import com.codenvy.api.runner.internal.RunnerRegistry;
@@ -30,11 +29,9 @@ import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.io.File;
 import java.io.FileFilter;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -54,7 +51,7 @@ public class EmbeddedDockerRunnerRegistryPlugin {
 
     @Inject
     public EmbeddedDockerRunnerRegistryPlugin(RunnerRegistry registry,
-                                              @Named(Constants.DEPLOY_DIRECTORY) File deployDirectoryRoot,
+                                              @Named(Constants.DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
                                               @Named(Constants.APP_CLEANUP_TIME) int cleanupTime,
                                               @Named(BaseDockerRunner.HOST_NAME) String hostName,
                                               ResourceAllocators allocators,
@@ -63,7 +60,7 @@ public class EmbeddedDockerRunnerRegistryPlugin {
                                               @Nullable @Named(DOCKERFILES_REPO) String dockerfilesRepository) {
         this.registry = registry;
         this.myRunners = new LinkedList<>();
-        for (Map.Entry<String, Map<String, List<Pair<String, File>>>> entry : findDockerfiles(dockerfilesRepository).entrySet()) {
+        for (Map.Entry<String, Map<String, List<java.io.File>>> entry : findDockerfiles(dockerfilesRepository).entrySet()) {
             myRunners.add(new EmbeddedDockerRunner(deployDirectoryRoot,
                                                    cleanupTime,
                                                    hostName,
@@ -92,46 +89,45 @@ public class EmbeddedDockerRunnerRegistryPlugin {
     }
 
     /** Finds Dockerfiles. */
-    private Map<String, Map<String, List<Pair<String, File>>>> findDockerfiles(String dockerfilesRepository) {
-        File dockerFilesDir = null;
+    private Map<String, Map<String, List<java.io.File>>> findDockerfiles(String dockerfilesRepository) {
+        java.io.File dockerFilesDir = null;
         if (!(dockerfilesRepository == null || dockerfilesRepository.isEmpty())) {
-            dockerFilesDir = new File(dockerfilesRepository);
+            dockerFilesDir = new java.io.File(dockerfilesRepository);
         }
         if (dockerFilesDir == null) {
             final URL dockerFilesUrl = Thread.currentThread().getContextClassLoader().getResource("codenvy/runner/docker");
             if (dockerFilesUrl != null) {
                 try {
-                    dockerFilesDir = new File(dockerFilesUrl.toURI());
+                    dockerFilesDir = new java.io.File(dockerFilesUrl.toURI());
                 } catch (URISyntaxException e) {
                     throw new IllegalStateException(e);
                 }
             }
         }
         if (dockerFilesDir != null && dockerFilesDir.isDirectory()) {
-            final Map<String, Map<String, List<Pair<String, File>>>> dockerFiles = new HashMap<>();
+            final Map<String, Map<String, List<java.io.File>>> dockerFiles = new HashMap<>();
             final FileFilter dirFilter = new FileFilter() {
                 @Override
-                public boolean accept(File pathname) {
+                public boolean accept(java.io.File pathname) {
                     return pathname.isDirectory();
                 }
             };
-            final FileFilter fileFilter = new FileFilter() {
+            final FileFilter dockerfileFilter = new FileFilter() {
                 @Override
-                public boolean accept(File pathname) {
+                public boolean accept(java.io.File pathname) {
                     String name;
-                    return pathname.isFile() && ((name = pathname.getName()).equals("Dockerfile") || name.equals("Dockerfile_Debug"));
+                    return pathname.isFile() && ((name = pathname.getName()).equals("run.dc5y") || name.equals("debug.dc5y"));
                 }
             };
-            for (File file : dockerFilesDir.listFiles(dirFilter)) {
-                final String runnerName = file.getName();
-                dockerFiles.put(runnerName, new HashMap<String, List<Pair<String, File>>>());
-                for (File _file : file.listFiles(dirFilter)) {
-                    final String envName = _file.getName();
-                    dockerFiles.get(runnerName).put(envName, new LinkedList<Pair<String, File>>());
-                    for (File __file : _file.listFiles(fileFilter)) {
-                        final String fName = __file.getName();
-                        dockerFiles.get(runnerName).get(envName).add(Pair.of(fName, __file));
-                    }
+            for (java.io.File f1 : dockerFilesDir.listFiles(dirFilter)) {
+                final String runnerName = f1.getName();
+                final Map<String, List<java.io.File>> runnerMap = new HashMap<>();
+                dockerFiles.put(runnerName, runnerMap);
+                for (java.io.File f2 : f1.listFiles(dirFilter)) {
+                    final String envName = f2.getName();
+                    final LinkedList<java.io.File> envList = new LinkedList<>();
+                    Collections.addAll(envList, f2.listFiles(dockerfileFilter));
+                    runnerMap.put(envName, envList);
                 }
             }
             return dockerFiles;

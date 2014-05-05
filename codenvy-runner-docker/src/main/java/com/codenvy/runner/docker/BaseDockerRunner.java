@@ -22,7 +22,6 @@ import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.api.core.util.LineConsumer;
 import com.codenvy.api.core.util.Pair;
-import com.codenvy.api.core.util.ValueHolder;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.dto.DebugMode;
 import com.codenvy.api.runner.dto.RunRequest;
@@ -38,8 +37,6 @@ import com.codenvy.commons.json.JsonHelper;
 import com.codenvy.commons.json.JsonParseException;
 import com.codenvy.commons.lang.NamedThreadFactory;
 import com.codenvy.dto.server.DtoFactory;
-import com.codenvy.runner.docker.dockerfile.DockerImage;
-import com.codenvy.runner.docker.dockerfile.DockerfileParser;
 import com.codenvy.runner.docker.json.BuildImageStatus;
 import com.codenvy.runner.docker.json.ContainerConfig;
 import com.codenvy.runner.docker.json.ContainerCreated;
@@ -56,10 +53,18 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -85,10 +90,11 @@ public abstract class BaseDockerRunner extends Runner {
     private static final Pattern DEBUG_PORT_PATTERN =
             Pattern.compile("APPLICATION_PORT_([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-6][0-5][0-5][0-3][0-5])_DEBUG");
 
-    private final Map<String, ImageStats> dockerImages;
-    private final String                  hostName;
-    private final CustomPortService       portService;
-    private final long                    maxImageIdleTime;
+    private final ConcurrentMap<String, Future<ImageStats>> buildImageTasks;
+    private final Map<String, ImageStats>                   dockerImages;
+    private final String                                    hostName;
+    private final CustomPortService                         portService;
+    private final long                                      maxImageIdleTime;
 
     private ScheduledExecutorService imageCleaner;
 
@@ -101,9 +107,10 @@ public abstract class BaseDockerRunner extends Runner {
         super(deployDirectoryRoot, cleanupDelay, allocators, eventService);
         this.hostName = hostName;
         this.portService = portService;
-        this.dockerImages = new HashMap<>();
+        this.dockerImages = new ConcurrentHashMap<>();
         // TODO: configurable
         this.maxImageIdleTime = TimeUnit.MINUTES.toMillis(15);
+        buildImageTasks = new ConcurrentHashMap<>();
     }
 
     @PostConstruct
@@ -114,22 +121,22 @@ public abstract class BaseDockerRunner extends Runner {
         imageCleaner.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                synchronized (BaseDockerRunner.this) {
-                    final DockerConnector connector = DockerConnector.getInstance();
-                    final List<String> remove = new LinkedList<>();
-                    for (Map.Entry<String, ImageStats> e : dockerImages.entrySet()) {
-                        final ImageStats stats = e.getValue();
-                        if (stats.idle() > maxImageIdleTime) {
-                            try {
-                                connector.removeImage(stats.image);
-                                LOG.debug("Remove docker image: {}", stats.image);
-                                remove.add(e.getKey());
-                            } catch (IOException err) {
-                                LOG.error(String.format("Failed remove docker image %s", stats.image), err);
-                            }
+                final DockerConnector connector = DockerConnector.getInstance();
+                for (Iterator<Map.Entry<String, ImageStats>> itr = dockerImages.entrySet().iterator(); itr.hasNext(); ) {
+                    if (Thread.currentThread().isInterrupted()) {
+                        return;
+                    }
+                    final Map.Entry<String, ImageStats> e = itr.next();
+                    final ImageStats stats = e.getValue();
+                    if (stats.idle() > maxImageIdleTime) {
+                        try {
+                            connector.removeImage(stats.image);
+                            LOG.debug("Remove docker image: {}", stats.image);
+                            itr.remove();
+                        } catch (IOException err) {
+                            LOG.error(String.format("Failed remove docker image %s", stats.image), err);
                         }
                     }
-                    dockerImages.keySet().removeAll(remove);
                 }
             }
         }, 1, 1, TimeUnit.MINUTES);
@@ -142,7 +149,15 @@ public abstract class BaseDockerRunner extends Runner {
     @Override
     public final void stop() {
         super.stop();
+        boolean interrupted = false;
         imageCleaner.shutdownNow();
+        try {
+            if (!imageCleaner.awaitTermination(15, TimeUnit.SECONDS)) {
+                LOG.warn("Unable terminate image cleaner");
+            }
+        } catch (InterruptedException e) {
+            interrupted = true;
+        }
         final DockerConnector connector = DockerConnector.getInstance();
         for (ImageStats stats : dockerImages.values()) {
             try {
@@ -154,6 +169,9 @@ public abstract class BaseDockerRunner extends Runner {
         }
         dockerImages.clear();
         doStop();
+        if (interrupted) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     protected void doStop() {
@@ -277,11 +295,11 @@ public abstract class BaseDockerRunner extends Runner {
 
     protected abstract DockerfileTemplate getDockerfileTemplate(RunRequest request) throws IOException;
 
-    private synchronized ImageStats createImageIfNeed(DockerConnector connector,
-                                                      String dockerRepoName,
-                                                      String tag,
-                                                      java.io.File dockerFile,
-                                                      java.io.File applicationFile) throws IOException, RunnerException {
+    private ImageStats createImageIfNeed(final DockerConnector connector,
+                                         final String dockerRepoName,
+                                         final String tag,
+                                         final java.io.File dockerFile,
+                                         final java.io.File applicationFile) throws IOException, RunnerException {
         final String dockerImageName = dockerRepoName + ':' + tag;
         ImageStats imageStats = dockerImages.get(dockerImageName);
         if (imageStats != null) {
@@ -300,53 +318,104 @@ public abstract class BaseDockerRunner extends Runner {
                 imageStats = null;
             }
         }
-        final ValueHolder<String> imageIdH = new ValueHolder<>();
-        final ValueHolder<String> errorH = new ValueHolder<>();
         if (imageStats == null) {
-            final LineConsumer output = new LineConsumer() {
-                @Override
-                public void writeLine(String line) throws IOException {
-                    if (!(line == null || line.isEmpty())) {
-                        LOG.debug(line);
-                        try {
-                            final BuildImageStatus status = JsonHelper.fromJson(line, BuildImageStatus.class, null);
-                            final String stream = status.getStream();
-                            final String error = status.getError();
-                            if (stream != null && stream.startsWith("Successfully built ")) {
-                                int endSize = 19;
-                                while (endSize < stream.length() && Character.digit(stream.charAt(endSize), 16) != -1) {
-                                    endSize++;
-                                }
-                                imageIdH.set(stream.substring(19, endSize));
-                            } else if (error != null && errorH.get() == null) {
-                                errorH.set(error);
-                            }
-                        } catch (JsonParseException e) {
-                            LOG.error(e.getMessage(), e);
+            Future<ImageStats> future = buildImageTasks.get(dockerImageName);
+            if (future == null) {
+                final Callable<ImageStats> c = new Callable<ImageStats>() {
+                    public ImageStats call() throws IOException, RunnerException {
+                        final long startTime = System.currentTimeMillis();
+                        final CreateImageLogger output = new CreateImageLogger();
+                        connector.createImage(dockerFile, applicationFile, dockerRepoName, tag, output);
+                        final String error = output.getError();
+                        if (error != null) {
+                            throw new RunnerException(error);
                         }
+                        final String imageId = output.getImageId();
+                        if (imageId == null) {
+                            throw new RunnerException("Invalid response from Docker API, can't get ID of newly created image");
+                        }
+                        final long endTime = System.currentTimeMillis();
+                        LOG.debug("Create new image {}, id {} in {} ms", dockerImageName, imageId, (endTime - startTime));
+                        ImageStats _imageStats;
+                        dockerImages.put(dockerImageName, _imageStats = new ImageStats(imageId));
+                        return _imageStats;
                     }
+                };
+                FutureTask<ImageStats> newFuture = new FutureTask<>(c);
+                future = buildImageTasks.putIfAbsent(dockerImageName, newFuture);
+                if (future == null) {
+                    future = newFuture;
+                    newFuture.run();
                 }
-
-                @Override
-                public void close() throws IOException {
-                    // noop
+            }
+            try {
+                return future.get();
+            } catch (InterruptedException e) {
+                Thread.interrupted();
+                throw new RunnerException("Interrupted while waiting for creation of docker image. ");
+            } catch (ExecutionException e) {
+                final Throwable cause = e.getCause();
+                if (cause instanceof Error) {
+                    throw (Error)cause;
+                } else if (cause instanceof RuntimeException) {
+                    throw (RuntimeException)cause;
+                } else if (cause instanceof IOException) {
+                    throw (IOException)cause;
+                } else if (cause instanceof RunnerException) {
+                    throw (RunnerException)cause;
+                } else {
+                    throw new RunnerException(e);
                 }
-            };
-            connector.createImage(dockerFile, applicationFile, dockerRepoName, tag, output);
-            final String error = errorH.get();
-            if (error != null) {
-                throw new RunnerException(error);
+            } catch (CancellationException e) {
+                throw new RunnerException("Cancelled while waiting for creation of docker image. ");
+            } finally {
+                buildImageTasks.remove(dockerImageName, future);
             }
-            final String imageId = imageIdH.get();
-            if (imageId == null) {
-                throw new RunnerException("Invalid response from Docker API, can't get ID of newly created image");
-            }
-            LOG.debug("Create new image {}, id {}", dockerImageName, imageId);
-            dockerImages.put(dockerImageName, imageStats = new ImageStats(imageId));
         } else {
             LOG.debug("Image {} exists, id {}", dockerImageName, imageStats.image);
+            return imageStats;
         }
-        return imageStats;
+    }
+
+    private static class CreateImageLogger implements LineConsumer {
+        String imageId;
+        String error;
+
+        String getImageId() {
+            return imageId;
+        }
+
+        String getError() {
+            return error;
+        }
+
+        @Override
+        public void writeLine(String line) throws IOException {
+            if (!(line == null || line.isEmpty())) {
+                LOG.debug(line);
+                try {
+                    final BuildImageStatus status = JsonHelper.fromJson(line, BuildImageStatus.class, null);
+                    final String stream = status.getStream();
+                    final String error = status.getError();
+                    if (stream != null && stream.startsWith("Successfully built ")) {
+                        int endSize = 19;
+                        while (endSize < stream.length() && Character.digit(stream.charAt(endSize), 16) != -1) {
+                            endSize++;
+                        }
+                        imageId = stream.substring(19, endSize);
+                    } else if (error != null && this.error == null) {
+                        this.error = error;
+                    }
+                } catch (JsonParseException e) {
+                    LOG.error(e.getMessage(), e);
+                }
+            }
+        }
+
+        @Override
+        public void close() throws IOException {
+            // noop
+        }
     }
 
     public static class DockerRunnerConfiguration extends RunnerConfiguration {

@@ -18,14 +18,14 @@
 package com.codenvy.runner.docker.dockerfile;
 
 import com.codenvy.api.core.util.Pair;
+import com.codenvy.runner.docker.DockerImage;
+import com.codenvy.runner.docker.DockerfileParser;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.StringReader;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;

@@ -19,9 +19,10 @@ package com.codenvy.runner.docker;
 
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.util.CustomPortService;
-import com.codenvy.api.core.util.Pair;
 import com.codenvy.api.runner.dto.RunRequest;
+import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.runner.internal.ResourceAllocators;
+import com.codenvy.dto.server.DtoFactory;
 
 import java.io.File;
 import java.util.HashMap;
@@ -34,20 +35,31 @@ import java.util.Map;
  * @author andrew00x
  */
 public class EmbeddedDockerRunner extends BaseDockerRunner {
-    private final String                                        name;
-    private final Map<String, List<Pair<String, java.io.File>>> dockerfiles;
+    private final String                          name;
+    private final Map<String, List<java.io.File>> dockerfiles;
+    private final Map<String, RunnerEnvironment>  environments;
 
-    public EmbeddedDockerRunner(java.io.File deployDirectoryRoot,
-                                int cleanupTime,
-                                String hostName,
-                                ResourceAllocators allocators,
-                                CustomPortService portService,
-                                EventService eventService,
-                                String name,
-                                Map<String, List<Pair<String, java.io.File>>> dockerfiles) {
+    EmbeddedDockerRunner(java.io.File deployDirectoryRoot,
+                         int cleanupTime,
+                         String hostName,
+                         ResourceAllocators allocators,
+                         CustomPortService portService,
+                         EventService eventService,
+                         String name,
+                         Map<String, List<java.io.File>> dockerfiles) {
         super(deployDirectoryRoot, cleanupTime, hostName, allocators, portService, eventService);
         this.name = name;
-        this.dockerfiles = new HashMap<>(dockerfiles);
+        this.dockerfiles = dockerfiles;
+        environments = new HashMap<>(dockerfiles.size());
+        final DtoFactory dtoFactory = DtoFactory.getInstance();
+        for (Map.Entry<String, List<File>> e : dockerfiles.entrySet()) {
+            // TODO : environment description
+            final RunnerEnvironment runnerEnvironment = dtoFactory.createDto(RunnerEnvironment.class)
+                                                                  .withId(e.getKey())
+                                                                  .withDescription(null)
+                                                                  .withIsDefault("default".equals(e.getKey()));
+            this.environments.put(runnerEnvironment.getId(), runnerEnvironment);
+        }
     }
 
     @Override
@@ -61,17 +73,27 @@ public class EmbeddedDockerRunner extends BaseDockerRunner {
     }
 
     @Override
+    public Map<String, RunnerEnvironment> getEnvironments() {
+        final Map<String, RunnerEnvironment> copy = new HashMap<>(environments.size());
+        final DtoFactory dtoFactory = DtoFactory.getInstance();
+        for (Map.Entry<String, RunnerEnvironment> entry : environments.entrySet()) {
+            copy.put(entry.getKey(), dtoFactory.clone(entry.getValue()));
+        }
+        return copy;
+    }
+
+    @Override
     protected DockerfileTemplate getDockerfileTemplate(RunRequest request) {
         String environmentId = request.getEnvironmentId();
         if (environmentId == null) {
             environmentId = "default";
         }
-        final List<Pair<String, File>> list = dockerfiles.get(environmentId);
-        final String name = request.getDebugMode() != null ? "Dockerfile_Debug" : "Dockerfile";
+        final List<java.io.File> list = dockerfiles.get(environmentId);
+        final String name = request.getDebugMode() == null ? "run.dc5y" : "debug.dc5y";
         if (list != null) {
-            for (Pair<String, File> pair : list) {
-                if (name.equals(pair.first)) {
-                    return DockerfileTemplate.from(pair.second);
+            for (java.io.File f : list) {
+                if (name.equals(f.getName())) {
+                    return DockerfileTemplate.from(f);
                 }
             }
         }

@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.runner.docker.dockerfile;
+package com.codenvy.runner.docker;
 
 import java.io.File;
 import java.util.LinkedList;
