@@ -17,6 +17,7 @@
  */
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.notification.EventSubscriber;
 import com.codenvy.api.vfs.server.MountPoint;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
@@ -27,18 +28,34 @@ import com.codenvy.api.workspace.server.observation.DeleteWorkspaceEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
-/** @author Sergii Leschenko */
-public abstract class SynchronizerVFSWorkspace {
-    public static class VFSRootCreator implements EventSubscriber<CreateWorkspaceEvent> {
-        private static final Logger LOG = LoggerFactory.getLogger(VFSRootRemover.class);
+/**
+ * This class provide execution required actions in virtual file system when workspace was created or deleted
+ *
+ * @author Sergii Leschenko
+ */
+@Singleton
+public class ConsistentProvider {
+    private final EventService          eventService;
+    private final List<EventSubscriber> subscribers;
+
+    /** Create a root folder for VFS, when workspace was created */
+    @Singleton
+    private static class VFSRootCreator implements EventSubscriber<CreateWorkspaceEvent> {
+        private static final Logger LOG = LoggerFactory.getLogger(VFSRootCreator.class);
 
         private final LocalFSMountStrategy mountStrategy;
 
         @Inject
-        private VFSRootCreator(LocalFSMountStrategy mountStrategy) {
+        VFSRootCreator(LocalFSMountStrategy mountStrategy) {
             this.mountStrategy = mountStrategy;
         }
 
@@ -57,13 +74,15 @@ public abstract class SynchronizerVFSWorkspace {
         }
     }
 
-    public static class VFSRootRemover implements EventSubscriber<DeleteWorkspaceEvent> {
+    /** Remove root folder for VFS when workspace was deleted */
+    @Singleton
+    private static class VFSRootRemover implements EventSubscriber<DeleteWorkspaceEvent> {
         private static final Logger LOG = LoggerFactory.getLogger(VFSRootRemover.class);
 
         private final VirtualFileSystemRegistry fileSystemRegistry;
 
         @Inject
-        private VFSRootRemover(VirtualFileSystemRegistry fileSystemRegistry, LocalFSMountStrategy mountStrategy) {
+        VFSRootRemover(VirtualFileSystemRegistry fileSystemRegistry) {
             this.fileSystemRegistry = fileSystemRegistry;
         }
 
@@ -73,11 +92,34 @@ public abstract class SynchronizerVFSWorkspace {
                 MountPoint mountPoint = fileSystemRegistry.getProvider(event.getWorkspaceId()).getMountPoint(false);
                 File rootFolder = ((VirtualFileImpl)mountPoint.getRoot()).getIoFile();
                 if (!rootFolder.delete()) {
-                    throw new VirtualFileSystemException("asd");
+                    LOG.warn("Can not delete Virtual File System linked to workspace {}", event.getWorkspaceId());
                 }
             } catch (VirtualFileSystemException e) {
-                LOG.warn("Can not delete Virtual File System linked to workspace {}", event.getWorkspaceId());
+                LOG.warn("Can not get mount point of for workspace {}", event.getWorkspaceId());
             }
+        }
+    }
+
+    @Inject
+    public ConsistentProvider(EventService eventService, VirtualFileSystemRegistry vfsRegistry,
+                              LocalFSMountStrategy mountStrategy) {
+        this.eventService = eventService;
+        subscribers = new LinkedList<EventSubscriber>(Arrays.asList(
+                new VFSRootCreator(mountStrategy),
+                new VFSRootRemover(vfsRegistry)));
+    }
+
+    @PostConstruct
+    private void subscribe() {
+        for (EventSubscriber eventSubscriber : subscribers) {
+            eventService.subscribe(eventSubscriber);
+        }
+    }
+
+    @PreDestroy
+    private void unsubscribe(VFSRootCreator creator, VFSRootRemover remover) {
+        for (EventSubscriber eventSubscriber : subscribers) {
+            eventService.unsubscribe(eventSubscriber);
         }
     }
 }

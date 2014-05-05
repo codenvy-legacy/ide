@@ -25,17 +25,13 @@ import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
 
-/**
- * @author andrew00x
- * @author Sergii Leschenko
- */
+/** @author andrew00x */
 @DynaModule
 public class VirtualFileSystemModule extends AbstractModule {
     @Override
     protected void configure() {
         final Multibinder<VirtualFileFilter> multibinder =
                 Multibinder.newSetBinder(binder(), VirtualFileFilter.class, Names.named("vfs.index_filter"));
-
         multibinder.addBinding().toInstance(new VirtualFileFilter() {
             @Override
             public boolean accept(VirtualFile virtualFile) throws VirtualFileSystemException {
@@ -43,14 +39,6 @@ public class VirtualFileSystemModule extends AbstractModule {
             }
         });
 
-        bind(EventSubscriberRegister.class).asEagerSingleton();
-
-        Multibinder<com.codenvy.api.core.notification.EventSubscriber> subscriptionServiceBinder =
-                Multibinder.newSetBinder(binder(), com.codenvy.api.core.notification.EventSubscriber.class);
-
-        subscriptionServiceBinder.addBinding().to(SynchronizerVFSWorkspace.VFSRootRemover.class);
-        subscriptionServiceBinder.addBinding().to(SynchronizerVFSWorkspace.VFSRootCreator.class);
-
-        subscriptionServiceBinder.addBinding().to(_IdeOldCacheUpdater_.class);
+        bind(ConsistentProvider.class).asEagerSingleton();
     }
 }
