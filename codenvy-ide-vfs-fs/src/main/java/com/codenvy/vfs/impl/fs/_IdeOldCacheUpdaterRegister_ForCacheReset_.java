@@ -34,11 +34,13 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 /** @author Sergii Leschenko */
 @DynaModule
-public class _SubscriberRegisterModule_ForCacheReset_ extends AbstractModule {
+public class _IdeOldCacheUpdaterRegister_ForCacheReset_ extends AbstractModule {
     private static final Logger LOG = LoggerFactory.getLogger(_IdeOldCacheUpdater.class);
 
     @Override
@@ -57,9 +59,9 @@ public class _SubscriberRegisterModule_ForCacheReset_ extends AbstractModule {
         private final Set<EventSubscriber> listeners;
 
         @Inject
-        public _SubscriberRegister_ForCacheReset_(EventService eventService, Set<EventSubscriber> listeners) {
+        public _SubscriberRegister_ForCacheReset_(EventService eventService, _IdeOldCacheUpdater cacheUpdater) {
             this.eventService = eventService;
-            this.listeners = listeners;
+            listeners = new HashSet<EventSubscriber>(Arrays.asList(cacheUpdater));
         }
 
         @PostConstruct
