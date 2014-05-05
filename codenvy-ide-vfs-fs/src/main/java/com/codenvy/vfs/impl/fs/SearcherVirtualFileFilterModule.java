@@ -46,7 +46,7 @@ public class SearcherVirtualFileFilterModule extends AbstractModule {
                 Multibinder.newSetBinder(binder(), com.codenvy.api.core.notification.EventSubscriber.class);
 
         subscriptionServiceBinder.addBinding().to(SynchronizerVFSWorkspace.RemoverVFSRoot.class);
-        subscriptionServiceBinder.addBinding().to(SynchronizerVFSWorkspace.CreaterVFSRoot.class);
+        subscriptionServiceBinder.addBinding().to(SynchronizerVFSWorkspace.CreatorVFSRoot.class);
 
         subscriptionServiceBinder.addBinding().to(_IdeOldCacheUpdater_.class);
     }

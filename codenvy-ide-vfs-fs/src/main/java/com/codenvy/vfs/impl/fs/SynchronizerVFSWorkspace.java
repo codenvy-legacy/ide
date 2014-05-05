@@ -30,14 +30,15 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import java.io.File;
 
+/** @author Sergii Leschenko */
 public abstract class SynchronizerVFSWorkspace {
-    public static class CreaterVFSRoot implements EventSubscriber<CreateWorkspaceEvent> {
+    public static class CreatorVFSRoot implements EventSubscriber<CreateWorkspaceEvent> {
         private static final Logger LOG = LoggerFactory.getLogger(RemoverVFSRoot.class);
 
         private final LocalFSMountStrategy mountStrategy;
 
         @Inject
-        private CreaterVFSRoot(LocalFSMountStrategy mountStrategy) {
+        private CreatorVFSRoot(LocalFSMountStrategy mountStrategy) {
             this.mountStrategy = mountStrategy;
         }
 
