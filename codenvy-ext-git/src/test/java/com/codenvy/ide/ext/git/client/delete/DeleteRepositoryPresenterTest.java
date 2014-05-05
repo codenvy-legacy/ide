@@ -21,9 +21,21 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.ui.dialogs.Ask;
+import com.codenvy.ide.ui.window.Window;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Widget;
+import com.googlecode.gwt.test.finder.GwtFinder;
+import com.googlecode.gwt.test.utils.GwtDomUtils;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
+import com.googlecode.gwt.test.utils.WidgetUtils;
+import com.googlecode.gwt.test.utils.events.Browser;
 
 import org.junit.Test;
+import org.mockito.Answers;
+import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -35,6 +47,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing {@link DeleteRepositoryPresenter} functionality.
@@ -44,11 +57,23 @@ import static org.mockito.Mockito.verify;
 public class DeleteRepositoryPresenterTest extends BaseTest {
     private DeleteRepositoryPresenter presenter;
 
+    @Mock
+    Window.Resources resources;
+
+    @Mock
+    Window.Css css;
+
+
     @Override
     public void disarm() {
         super.disarm();
-
+        when(resources.centerPanelCss()).thenReturn(css);
+        when(css.alignBtn()).thenReturn("sdgsdf");
+        when(css.glassVisible()).thenReturn("sdgsdf");
+        when(css.contentVisible()).thenReturn("sdgsdf");
+        when(css.animationDuration()).thenReturn(1);
         presenter = new DeleteRepositoryPresenter(service, eventBus, constant, resourceProvider, notificationManager);
+//        when(resources.centerPanelCss())
     }
 
     @Test
@@ -65,9 +90,7 @@ public class DeleteRepositoryPresenterTest extends BaseTest {
         }).when(service).deleteRepository(anyString(), (AsyncRequestCallback<Void>)anyObject());
 
         presenter.deleteRepository();
-
         verify(resourceProvider).getActiveProject();
-        verify(project).getPath();
         verify(project).getId();
         verify(service).deleteRepository(eq(PROJECT_ID), (AsyncRequestCallback<Void>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
@@ -90,7 +113,6 @@ public class DeleteRepositoryPresenterTest extends BaseTest {
         presenter.deleteRepository();
 
         verify(resourceProvider).getActiveProject();
-        verify(project).getPath();
         verify(service).deleteRepository(eq(PROJECT_ID), (AsyncRequestCallback<Void>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(eventBus).fireEvent((ExceptionThrownEvent)anyObject());

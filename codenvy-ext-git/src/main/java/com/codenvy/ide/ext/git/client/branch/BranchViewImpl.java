@@ -25,6 +25,8 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.shared.Branch;
+import com.codenvy.ide.ui.dialogs.Ask;
+import com.codenvy.ide.ui.dialogs.AskHandler;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.window.Window;
 import com.codenvy.ide.util.dom.Elements;
@@ -56,13 +58,13 @@ public class BranchViewImpl extends Window implements BranchView {
 
     private static BranchViewImplUiBinder ourUiBinder = GWT.create(BranchViewImplUiBinder.class);
 
-    Button                                btnClose;
-    Button                                btnRename;
-    Button                                btnDelete;
-    Button                                btnCreate;
-    Button                                btnCheckout;
+    Button btnClose;
+    Button btnRename;
+    Button btnDelete;
+    Button btnCreate;
+    Button btnCheckout;
     @UiField
-    ScrollPanel               branchesPanel;
+    ScrollPanel branchesPanel;
     @UiField(provided = true)
     final   GitResources            res;
     @UiField(provided = true)
@@ -77,7 +79,9 @@ public class BranchViewImpl extends Window implements BranchView {
      * @param locale
      */
     @Inject
-    protected BranchViewImpl(GitResources resources, GitLocalizationConstant locale, com.codenvy.ide.Resources coreRes) {
+    protected BranchViewImpl(GitResources resources,
+                             GitLocalizationConstant locale,
+                             com.codenvy.ide.Resources coreRes) {
         this.res = resources;
         this.locale = locale;
 
@@ -129,10 +133,10 @@ public class BranchViewImpl extends Window implements BranchView {
         branches = SimpleList
                 .create((SimpleList.View)breakPointsElement, coreRes.defaultSimpleListCss(), listBranchesRenderer, listBranchesDelegate);
         this.branchesPanel.add(branches);
-        
+
         createButtons();
     }
-    
+
     private void createButtons() {
         btnClose = createButton(locale.buttonClose(), "git-branches-close", new ClickHandler() {
 
@@ -156,7 +160,15 @@ public class BranchViewImpl extends Window implements BranchView {
 
             @Override
             public void onClick(ClickEvent event) {
-                delegate.onDeleteClicked();
+                Ask ask = new Ask(locale.branchDelete(), locale.branchDeleteAsk(branches.getSelectionModel().getSelectedItem().getName()),
+                                  new AskHandler() {
+
+                                      @Override
+                                      public void onOk() {
+                                          delegate.onDeleteClicked();
+                                      }
+                                  });
+                ask.show();
             }
         });
         getFooter().add(btnDelete);

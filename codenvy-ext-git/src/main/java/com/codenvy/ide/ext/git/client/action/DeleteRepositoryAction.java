@@ -25,6 +25,8 @@ import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.delete.DeleteRepositoryPresenter;
+import com.codenvy.ide.ui.dialogs.Ask;
+import com.codenvy.ide.ui.dialogs.AskHandler;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -33,15 +35,19 @@ import com.google.inject.Singleton;
 public class DeleteRepositoryAction extends Action {
     private final DeleteRepositoryPresenter presenter;
     private final ResourceProvider          resourceProvider;
+    private       GitLocalizationConstant   constant;
     private final AnalyticsEventLogger      eventLogger;
 
     @Inject
-    public DeleteRepositoryAction(DeleteRepositoryPresenter presenter, ResourceProvider resourceProvider,
+    public DeleteRepositoryAction(DeleteRepositoryPresenter presenter,
+                                  ResourceProvider resourceProvider,
                                   GitResources resources,
-                                  GitLocalizationConstant constant, AnalyticsEventLogger eventLogger) {
+                                  GitLocalizationConstant constant,
+                                  AnalyticsEventLogger eventLogger) {
         super(constant.deleteControlTitle(), constant.deleteControlPrompt(), null, resources.deleteRepo());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
+        this.constant = constant;
         this.eventLogger = eventLogger;
     }
 
@@ -49,7 +55,14 @@ public class DeleteRepositoryAction extends Action {
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log("IDE: Git delete repository");
-        presenter.deleteRepository();
+        Ask ask = new Ask(constant.deleteGitRepositoryTitle(),
+                          constant.deleteGitRepositoryQuestion(resourceProvider.getActiveProject().getPath()), new AskHandler() {
+            @Override
+            public void onOk() {
+                presenter.deleteRepository();
+            }
+        });
+        ask.show();
     }
 
     /** {@inheritDoc} */
