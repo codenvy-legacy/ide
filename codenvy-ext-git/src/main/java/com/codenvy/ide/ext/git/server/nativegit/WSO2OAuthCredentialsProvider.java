@@ -36,18 +36,18 @@ import java.util.regex.Pattern;
  * @author Eugene Voevodin
  */
 @Singleton
-public class OAuthCredentialsProvider implements CredentialsProvider {
+public class WSO2OAuthCredentialsProvider implements CredentialsProvider {
     public static final String WSO_2_URL_STRING =
             "(http|https)://((([0-9a-fA-F]{32}(:x-oauth-basic)?)|([0-9a-zA-Z-_.]+))@)?git\\.cloudpreview\\.wso2\\.com" +
             "(:[0-9]{1,5})?/.+\\.git";
 
     public static final Pattern WSO_2_URL_PATTERN = Pattern.compile(WSO_2_URL_STRING);
 
-    private static final Logger LOG = LoggerFactory.getLogger(OAuthCredentialsProvider.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WSO2OAuthCredentialsProvider.class);
     private final OAuthTokenProvider tokenProvider;
 
     @Inject
-    public OAuthCredentialsProvider(OAuthTokenProvider tokenProvider) {
+    public WSO2OAuthCredentialsProvider(OAuthTokenProvider tokenProvider) {
         this.tokenProvider = tokenProvider;
     }
 
