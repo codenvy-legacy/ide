@@ -25,10 +25,13 @@ import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.extension.builder.client.actions.BuildAction;
-import com.codenvy.ide.extension.builder.client.console.ClearConsoleAction;
 import com.codenvy.ide.extension.builder.client.console.ArtifactURLAction;
+import com.codenvy.ide.extension.builder.client.console.BuildFinishedAction;
+import com.codenvy.ide.extension.builder.client.console.BuildStartedAction;
+import com.codenvy.ide.extension.builder.client.console.BuildTotalTimeAction;
 import com.codenvy.ide.extension.builder.client.console.BuilderConsolePresenter;
 import com.codenvy.ide.extension.builder.client.console.BuilderConsoleToolbar;
+import com.codenvy.ide.extension.builder.client.console.ClearConsoleAction;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -61,6 +64,9 @@ public class BuilderExtension {
                             BuildAction buildAction,
                             ClearConsoleAction clearConsoleAction,
                             ArtifactURLAction artifactURLAction,
+                            BuildStartedAction buildStartedAction,
+                            BuildFinishedAction buildFinishedAction,
+                            BuildTotalTimeAction buildTotalTimeAction,
                             WorkspaceAgent workspaceAgent,
                             BuilderConsolePresenter builderConsolePresenter,
                             @BuilderConsoleToolbar ToolbarPresenter builderConsoleToolbar) {
@@ -95,6 +101,12 @@ public class BuilderExtension {
         consoleToolbarActionGroup.add(clearConsoleAction);
         consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(artifactURLAction);
+        consoleToolbarActionGroup.addSeparator();
+        consoleToolbarActionGroup.add(buildStartedAction);
+        consoleToolbarActionGroup.addSeparator();
+        consoleToolbarActionGroup.add(buildFinishedAction);
+        consoleToolbarActionGroup.addSeparator();
+        consoleToolbarActionGroup.add(buildTotalTimeAction);
         builderConsoleToolbar.bindMainGroup(consoleToolbarActionGroup);
     }
 }

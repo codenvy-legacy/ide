@@ -25,23 +25,23 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Action used to show artifact download URL.
+ * Action used to show build total time.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class ArtifactURLAction extends InfoAction {
+public class BuildTotalTimeAction extends InfoAction {
     private final BuildProjectPresenter buildProjectPresenter;
 
     @Inject
-    public ArtifactURLAction(BuildProjectPresenter buildProjectPresenter, BuilderResources resources) {
-        super("Artifact URL", true, resources);
+    public BuildTotalTimeAction(BuildProjectPresenter buildProjectPresenter, BuilderResources resources) {
+        super("Build Total Time", false, resources);
         this.buildProjectPresenter = buildProjectPresenter;
     }
 
     @Override
     public void update(ActionEvent e) {
         final Presentation presentation = e.getPresentation();
-        presentation.putClientProperty(Properties.DATA_PROPERTY, buildProjectPresenter.getLastBuildResultURL());
+        presentation.putClientProperty(Properties.DATA_PROPERTY, buildProjectPresenter.getLastBuildTotalTime());
     }
 }

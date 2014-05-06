@@ -25,23 +25,23 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Action used to show artifact download URL.
+ * Action used to show time when build task started.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class ArtifactURLAction extends InfoAction {
+public class BuildStartedAction extends InfoAction {
     private final BuildProjectPresenter buildProjectPresenter;
 
     @Inject
-    public ArtifactURLAction(BuildProjectPresenter buildProjectPresenter, BuilderResources resources) {
-        super("Artifact URL", true, resources);
+    public BuildStartedAction(BuildProjectPresenter buildProjectPresenter, BuilderResources resources) {
+        super("Build Started At", false, resources);
         this.buildProjectPresenter = buildProjectPresenter;
     }
 
     @Override
     public void update(ActionEvent e) {
         final Presentation presentation = e.getPresentation();
-        presentation.putClientProperty(Properties.DATA_PROPERTY, buildProjectPresenter.getLastBuildResultURL());
+        presentation.putClientProperty(Properties.DATA_PROPERTY, buildProjectPresenter.getLastBuildStartTime());
     }
 }

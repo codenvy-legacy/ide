@@ -39,9 +39,11 @@ import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
+import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import java.util.Date;
 import java.util.List;
 
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
@@ -72,9 +74,11 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     /** Build of another project is performed. */
     protected boolean isBuildInProgress = false;
     /** Project for build. */
-    protected Project      projectToBuild;
-    protected Notification notification;
-    private   String       downloadArtifactURL;
+    protected Project             projectToBuild;
+    protected Notification        notification;
+    private   String              downloadArtifactURL;
+    /** Descriptor of the last build task. */
+    private   BuildTaskDescriptor lastBuildTaskDescriptor;
 
     /** Create presenter. */
     @Inject
@@ -117,8 +121,8 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
             return;
         }
 
+        lastBuildTaskDescriptor = null;
         downloadArtifactURL = null;
-        console.clear();
         projectToBuild = resourceProvider.getActiveProject();
 
         notification = new Notification(constant.buildStarted(projectToBuild.getName()), PROGRESS, BuildProjectPresenter.this);
@@ -130,8 +134,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                           @Override
                           protected void onSuccess(BuildTaskDescriptor result) {
                               if (result.getStatus() == BuildStatus.SUCCESSFUL) {
-                                  notification.setStatus(FINISHED);
-                                  notification.setMessage(constant.buildFinished(projectToBuild.getName()));
+                                  afterBuildFinished(result);
                               } else {
                                   isBuildInProgress = true;
                                   startCheckingStatus(result);
@@ -196,6 +199,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     }
 
     private void afterBuildFinished(BuildTaskDescriptor descriptor) {
+        lastBuildTaskDescriptor = descriptor;
         isBuildInProgress = false;
         try {
             messageBus.unsubscribe(BuilderExtension.BUILD_STATUS_CHANNEL + descriptor.getTaskId(), buildStatusHandler);
@@ -257,9 +261,82 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         return null;
     }
 
-    /** Returns link to download artifact. */
-    public String getDownloadArtifactURL() {
+    /** Returns link to download result of last build task. */
+    public String getLastBuildResultURL() {
         return downloadArtifactURL;
     }
 
+    /** Returns time when last build task started in format HH:mm:ss. */
+    public String getLastBuildStartTime() {
+        if (lastBuildTaskDescriptor != null) {
+            final Date startDate = new Date(lastBuildTaskDescriptor.getStartTime());
+            return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND).format(startDate);
+        }
+        return null;
+    }
+
+    /** Returns time when last build task finished in format HH:mm:ss. */
+    public String getLastBuildEndTime() {
+        if (lastBuildTaskDescriptor != null && lastBuildTaskDescriptor.getEndTime() > 0) {
+            final Date endDate = new Date(lastBuildTaskDescriptor.getEndTime());
+            return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND).format(endDate);
+        }
+        return null;
+    }
+
+    /** Returns total build time in format mm:ss.ms. */
+    public String getLastBuildTotalTime() {
+        if (lastBuildTaskDescriptor != null && lastBuildTaskDescriptor.getEndTime() > 0) {
+            final long totalTimeMs = lastBuildTaskDescriptor.getEndTime() - lastBuildTaskDescriptor.getStartTime();
+            int ms = (int)(totalTimeMs % 1000);
+            int ss = (int)(totalTimeMs / 1000);
+            int mm = 0;
+            if (ss > 60) {
+                mm = ss / 60;
+                ss = ss % 60;
+            }
+            return String.valueOf("" + getDoubleDigit(mm) + ':' + getDoubleDigit(ss) + '.' + ms);
+        }
+        return null;
+    }
+
+    /** Get a double digit int from a single, e.g.: 1 = "01", 2 = "02". */
+    private static String getDoubleDigit(int i) {
+        final String doubleDigitI;
+        switch (i) {
+            case 0:
+                doubleDigitI = "00";
+                break;
+            case 1:
+                doubleDigitI = "01";
+                break;
+            case 2:
+                doubleDigitI = "02";
+                break;
+            case 3:
+                doubleDigitI = "03";
+                break;
+            case 4:
+                doubleDigitI = "04";
+                break;
+            case 5:
+                doubleDigitI = "05";
+                break;
+            case 6:
+                doubleDigitI = "06";
+                break;
+            case 7:
+                doubleDigitI = "07";
+                break;
+            case 8:
+                doubleDigitI = "08";
+                break;
+            case 9:
+                doubleDigitI = "09";
+                break;
+            default:
+                doubleDigitI = Integer.toString(i);
+        }
+        return doubleDigitI;
+    }
 }

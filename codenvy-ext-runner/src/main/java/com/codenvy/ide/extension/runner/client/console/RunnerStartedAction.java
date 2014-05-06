@@ -15,33 +15,33 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.extension.builder.client.console;
+package com.codenvy.ide.extension.runner.client.console;
 
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.ui.action.Presentation;
-import com.codenvy.ide.extension.builder.client.BuilderResources;
-import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
+import com.codenvy.ide.extension.runner.client.RunnerResources;
+import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Action used to show artifact download URL.
+ * Action used to show time when runner started.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class ArtifactURLAction extends InfoAction {
-    private final BuildProjectPresenter buildProjectPresenter;
+public class RunnerStartedAction extends InfoAction {
+    private final RunnerController runnerController;
 
     @Inject
-    public ArtifactURLAction(BuildProjectPresenter buildProjectPresenter, BuilderResources resources) {
-        super("Artifact URL", true, resources);
-        this.buildProjectPresenter = buildProjectPresenter;
+    public RunnerStartedAction(RunnerController runnerController, RunnerResources resources) {
+        super("Runner Started At", false, resources);
+        this.runnerController = runnerController;
     }
 
     @Override
     public void update(ActionEvent e) {
         final Presentation presentation = e.getPresentation();
-        presentation.putClientProperty(Properties.DATA_PROPERTY, buildProjectPresenter.getLastBuildResultURL());
+        presentation.putClientProperty(Properties.DATA_PROPERTY, runnerController.getStartTime());
     }
 }

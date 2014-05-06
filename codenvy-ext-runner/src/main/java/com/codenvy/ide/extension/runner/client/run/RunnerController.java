@@ -46,11 +46,13 @@ import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
+import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import java.util.Date;
 import java.util.List;
 
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
@@ -190,7 +192,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             return;
         }
 
-        console.clear();
+        currentApplication = null;
         notification = new Notification(constant.applicationStarting(project.getName()), PROGRESS, RunnerController.this);
         notificationManager.showNotification(notification);
         runCallback = callback;
@@ -441,4 +443,23 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     public String getApplicationURL() {
         return applicationURL;
     }
+
+    /** Returns time when runner started in format HH:mm:ss. */
+    public String getStartTime() {
+        if (currentApplication != null) {
+            final Date startDate = new Date(currentApplication.getStartTime());
+            return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND).format(startDate);
+        }
+        return null;
+    }
+
+    /** Returns time when runner finished in format HH:mm:ss. */
+    public String getStopTime() {
+        if (currentApplication != null && currentApplication.getStopTime() > 0) {
+            final Date stopDate = new Date(currentApplication.getStopTime());
+            return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND).format(stopDate);
+        }
+        return null;
+    }
+
 }

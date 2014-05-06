@@ -33,6 +33,8 @@ import com.codenvy.ide.extension.runner.client.actions.UpdateAction;
 import com.codenvy.ide.extension.runner.client.console.ApplicationURLAction;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsoleToolbar;
+import com.codenvy.ide.extension.runner.client.console.RunnerFinishedAction;
+import com.codenvy.ide.extension.runner.client.console.RunnerStartedAction;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -63,6 +65,8 @@ public class RunnerExtension {
                            UpdateAction updateAction,
                            ClearConsoleAction clearConsoleAction,
                            ApplicationURLAction applicationURLAction,
+                           RunnerStartedAction runnerStartedAction,
+                           RunnerFinishedAction runnerFinishedAction,
                            WorkspaceAgent workspaceAgent,
                            RunnerConsolePresenter runnerConsolePresenter,
                            RunnerResources runnerResources,
@@ -103,9 +107,15 @@ public class RunnerExtension {
 
         // add toolbar with actions to Builder console
         DefaultActionGroup consoleToolbarActionGroup = new DefaultActionGroup(GROUP_RUNNER_CONSOLE_TOOLBAR, false, actionManager);
+        consoleToolbarActionGroup.add(stopAction);
+        consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(clearConsoleAction);
         consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(applicationURLAction);
+        consoleToolbarActionGroup.addSeparator();
+        consoleToolbarActionGroup.add(runnerStartedAction);
+        consoleToolbarActionGroup.addSeparator();
+        consoleToolbarActionGroup.add(runnerFinishedAction);
         runnerConsoleToolbar.bindMainGroup(consoleToolbarActionGroup);
     }
 }
