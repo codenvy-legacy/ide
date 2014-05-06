@@ -24,17 +24,18 @@ import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
-import com.codenvy.ide.extension.runner.client.console.ClearConsoleAction;
 import com.codenvy.ide.extension.runner.client.actions.CustomRunAction;
 import com.codenvy.ide.extension.runner.client.actions.GetLogsAction;
 import com.codenvy.ide.extension.runner.client.actions.RunAction;
 import com.codenvy.ide.extension.runner.client.actions.StopAction;
 import com.codenvy.ide.extension.runner.client.actions.UpdateAction;
 import com.codenvy.ide.extension.runner.client.console.ApplicationURLAction;
+import com.codenvy.ide.extension.runner.client.console.ClearConsoleAction;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsoleToolbar;
 import com.codenvy.ide.extension.runner.client.console.RunnerFinishedAction;
 import com.codenvy.ide.extension.runner.client.console.RunnerStartedAction;
+import com.codenvy.ide.extension.runner.client.console.RunnerTotalTimeAction;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -67,6 +68,7 @@ public class RunnerExtension {
                            ApplicationURLAction applicationURLAction,
                            RunnerStartedAction runnerStartedAction,
                            RunnerFinishedAction runnerFinishedAction,
+                           RunnerTotalTimeAction runnerTotalTimeAction,
                            WorkspaceAgent workspaceAgent,
                            RunnerConsolePresenter runnerConsolePresenter,
                            RunnerResources runnerResources,
@@ -116,6 +118,8 @@ public class RunnerExtension {
         consoleToolbarActionGroup.add(runnerStartedAction);
         consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(runnerFinishedAction);
+        consoleToolbarActionGroup.addSeparator();
+        consoleToolbarActionGroup.add(runnerTotalTimeAction);
         runnerConsoleToolbar.bindMainGroup(consoleToolbarActionGroup);
     }
 }

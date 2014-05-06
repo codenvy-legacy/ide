@@ -67,7 +67,9 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 @Singleton
 public class RunnerController implements Notification.OpenNotificationHandler {
 
+    /** WebSocket channel to get application's status. */
     public static final String RUNNER_STATUS_CHANNEL = "runner:status:";
+    /** WebSocket channel to get runner output. */
     public static final String RUNNER_OUTPUT_CHANNEL = "runner:output:";
     private final DtoUnmarshallerFactory                            dtoUnmarshallerFactory;
     private final DtoFactory                                        dtoFactory;
@@ -85,11 +87,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private       ApplicationProcessDescriptor                      currentApplication;
     private       ProjectRunCallback                                runCallback;
     protected     SubscriptionHandler<LogMessage>                   runnerOutputHandler;
-    protected     SubscriptionHandler<ApplicationProcessDescriptor> runStatusHandler;
-    /** URL of the application which is currently running. */
-    private       String                                            applicationURL;
+    protected     SubscriptionHandler<ApplicationProcessDescriptor> runnerStatusHandler;
 
-    /** Create controller. */
     @Inject
     public RunnerController(ResourceProvider resourceProvider,
                             EventBus eventBus,
@@ -225,7 +224,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     private void startCheckingStatus(final ApplicationProcessDescriptor buildTaskDescriptor) {
-        runStatusHandler = new SubscriptionHandler<ApplicationProcessDescriptor>(
+        runnerStatusHandler = new SubscriptionHandler<ApplicationProcessDescriptor>(
                 dtoUnmarshallerFactory.newWSUnmarshaller(ApplicationProcessDescriptor.class)) {
             @Override
             protected void onMessageReceived(ApplicationProcessDescriptor result) {
@@ -236,8 +235,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                         afterApplicationLaunched(currentApplication);
                         break;
                     case STOPPED:
-                        currentApplication = null;
-                        applicationURL = null;
+//                        currentApplication = null;
                         notification.setStatus(FINISHED);
                         notification.setMessage(constant.applicationStopped(project.getName()));
                         console.print(constant.applicationStopped(project.getName()));
@@ -250,7 +248,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                         break;
                     case CANCELLED:
                         currentApplication = null;
-                        applicationURL = null;
                         notification.setStatus(FINISHED);
                         notification.setMessage(constant.applicationCanceled(project.getName()));
 
@@ -284,7 +281,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         };
 
         try {
-            messageBus.subscribe(RUNNER_STATUS_CHANNEL + buildTaskDescriptor.getProcessId(), runStatusHandler);
+            messageBus.subscribe(RUNNER_STATUS_CHANNEL + buildTaskDescriptor.getProcessId(), runnerStatusHandler);
         } catch (WebSocketException e) {
             Log.error(RunnerController.class, e);
         }
@@ -292,7 +289,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     private void startCheckingOutput(ApplicationProcessDescriptor applicationProcessDescriptor) {
         runnerOutputHandler = new LogMessagesHandler(applicationProcessDescriptor, console, messageBus);
-
         try {
             messageBus.subscribe(RUNNER_OUTPUT_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerOutputHandler);
         } catch (WebSocketException e) {
@@ -300,9 +296,19 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
     }
 
+    private void afterApplicationLaunched(ApplicationProcessDescriptor appDescriptor) {
+        currentApplication = appDescriptor;
+        if (runCallback != null) {
+            runCallback.onRun(appDescriptor, project);
+        }
+
+        notification.setStatus(FINISHED);
+        notification.setMessage(constant.applicationStarted(project.getName()));
+    }
+
     /** Get logs of the currently launched application. */
     public void getLogs() {
-        final Link viewLogsLink = getAppLink(currentApplication, Constants.LINK_REL_VIEW_LOG);
+        final Link viewLogsLink = getLink(currentApplication, Constants.LINK_REL_VIEW_LOG);
         if (viewLogsLink == null) {
             onFail(constant.getApplicationLogsFailed(), null);
         }
@@ -318,53 +324,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 onFail(constant.getApplicationLogsFailed(), exception);
             }
         });
-    }
-
-    private void afterApplicationLaunched(ApplicationProcessDescriptor appDescriptor) {
-        this.currentApplication = appDescriptor;
-        if (runCallback != null) {
-            runCallback.onRun(appDescriptor, project);
-        }
-        applicationURL = getAppLink(appDescriptor);
-
-        notification.setStatus(FINISHED);
-        notification.setMessage(constant.applicationStarted(project.getName()));
-    }
-
-    private String getAppLink(ApplicationProcessDescriptor appDescriptor) {
-        String url = null;
-        final Link appLink = getAppLink(appDescriptor, com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
-        if (appLink != null) {
-            url = appLink.getHref();
-
-            final Link codeServerLink = getAppLink(appDescriptor, "code server");
-            if (codeServerLink != null) {
-                StringBuilder urlBuilder = new StringBuilder();
-                urlBuilder.append(appLink.getHref());
-                final String codeServerHref = codeServerLink.getHref();
-                final int colon = codeServerHref.lastIndexOf(':');
-                if (colon > 0) {
-                    urlBuilder.append("?h=");
-                    urlBuilder.append(codeServerHref.substring(0, colon));
-                    urlBuilder.append("&p=");
-                    urlBuilder.append(codeServerHref.substring(colon + 1));
-                } else {
-                    urlBuilder.append("?h=");
-                    urlBuilder.append(codeServerHref);
-                }
-                url = urlBuilder.toString();
-            }
-        }
-        return url;
-    }
-
-    private Link getAppLink(ApplicationProcessDescriptor appDescriptor, String rel) {
-        List<Link> links = appDescriptor.getLinks();
-        for (Link link : links) {
-            if (link.getRel().equalsIgnoreCase(rel))
-                return link;
-        }
-        return null;
     }
 
     private void onFail(String message, Throwable exception) {
@@ -387,7 +346,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     /** Stop the currently launched application. */
     public void stopActiveProject() {
-        final Link stopLink = getAppLink(currentApplication, Constants.LINK_REL_STOP);
+        final Link stopLink = getLink(currentApplication, Constants.LINK_REL_STOP);
         if (stopLink == null) {
             onFail(constant.stopApplicationFailed(project.getName()), null);
             return;
@@ -440,12 +399,15 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     /** Returns URL of the application which is currently running. */
-    public String getApplicationURL() {
-        return applicationURL;
+    public String getCurrentAppURL() {
+        if (currentApplication != null) {
+            return getAppLink(currentApplication);
+        }
+        return null;
     }
 
-    /** Returns time when runner started in format HH:mm:ss. */
-    public String getStartTime() {
+    /** Returns time when last app started, in format HH:mm:ss. */
+    public String getCurrentAppStartTime() {
         if (currentApplication != null) {
             final Date startDate = new Date(currentApplication.getStartTime());
             return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND).format(startDate);
@@ -453,8 +415,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         return null;
     }
 
-    /** Returns time when runner finished in format HH:mm:ss. */
-    public String getStopTime() {
+    /** Returns time when last app stopped in format HH:mm:ss. */
+    public String getCurrentAppStopTime() {
         if (currentApplication != null && currentApplication.getStopTime() > 0) {
             final Date stopDate = new Date(currentApplication.getStopTime());
             return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND).format(stopDate);
@@ -462,4 +424,95 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         return null;
     }
 
+    /** Returns total time which application was launched, in format mm:ss.ms. */
+    public String getTotalTime() {
+        if (currentApplication != null && currentApplication.getStopTime() > 0) {
+            final long totalTimeMs = currentApplication.getStopTime() - currentApplication.getStartTime();
+            int ms = (int)(totalTimeMs % 1000);
+            int ss = (int)(totalTimeMs / 1000);
+            int mm = 0;
+            if (ss > 60) {
+                mm = ss / 60;
+                ss = ss % 60;
+            }
+            return String.valueOf("" + getDoubleDigit(mm) + ':' + getDoubleDigit(ss) + '.' + ms);
+        }
+        return null;
+    }
+
+    private static String getAppLink(ApplicationProcessDescriptor appDescriptor) {
+        String url = null;
+        final Link appLink = getLink(appDescriptor, com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
+        if (appLink != null) {
+            url = appLink.getHref();
+
+            final Link codeServerLink = getLink(appDescriptor, "code server");
+            if (codeServerLink != null) {
+                StringBuilder urlBuilder = new StringBuilder();
+                urlBuilder.append(appLink.getHref());
+                final String codeServerHref = codeServerLink.getHref();
+                final int colon = codeServerHref.lastIndexOf(':');
+                if (colon > 0) {
+                    urlBuilder.append("?h=");
+                    urlBuilder.append(codeServerHref.substring(0, colon));
+                    urlBuilder.append("&p=");
+                    urlBuilder.append(codeServerHref.substring(colon + 1));
+                } else {
+                    urlBuilder.append("?h=");
+                    urlBuilder.append(codeServerHref);
+                }
+                url = urlBuilder.toString();
+            }
+        }
+        return url;
+    }
+
+    private static Link getLink(ApplicationProcessDescriptor appDescriptor, String rel) {
+        List<Link> links = appDescriptor.getLinks();
+        for (Link link : links) {
+            if (link.getRel().equalsIgnoreCase(rel))
+                return link;
+        }
+        return null;
+    }
+
+    /** Get a double digit int from a single, e.g.: 1 = "01", 2 = "02". */
+    private static String getDoubleDigit(int i) {
+        final String doubleDigitI;
+        switch (i) {
+            case 0:
+                doubleDigitI = "00";
+                break;
+            case 1:
+                doubleDigitI = "01";
+                break;
+            case 2:
+                doubleDigitI = "02";
+                break;
+            case 3:
+                doubleDigitI = "03";
+                break;
+            case 4:
+                doubleDigitI = "04";
+                break;
+            case 5:
+                doubleDigitI = "05";
+                break;
+            case 6:
+                doubleDigitI = "06";
+                break;
+            case 7:
+                doubleDigitI = "07";
+                break;
+            case 8:
+                doubleDigitI = "08";
+                break;
+            case 9:
+                doubleDigitI = "09";
+                break;
+            default:
+                doubleDigitI = Integer.toString(i);
+        }
+        return doubleDigitI;
+    }
 }

@@ -25,23 +25,23 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Action used to show application URL.
+ * Action used to show total time which application was launched.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class ApplicationURLAction extends InfoAction {
+public class RunnerTotalTimeAction extends InfoAction {
     private final RunnerController runnerController;
 
     @Inject
-    public ApplicationURLAction(RunnerController runnerController, RunnerResources resources) {
-        super("Application URL", true, resources);
+    public RunnerTotalTimeAction(RunnerController runnerController, RunnerResources resources) {
+        super("Runner Total Time", false, resources);
         this.runnerController = runnerController;
     }
 
     @Override
     public void update(ActionEvent e) {
         final Presentation presentation = e.getPresentation();
-        presentation.putClientProperty(Properties.DATA_PROPERTY, runnerController.getCurrentAppURL());
+        presentation.putClientProperty(Properties.DATA_PROPERTY, runnerController.getTotalTime());
     }
 }

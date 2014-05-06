@@ -34,7 +34,6 @@ import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
 import com.codenvy.ide.extension.builder.client.console.BuilderConsolePresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
@@ -76,11 +75,9 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     /** Project for build. */
     protected Project             projectToBuild;
     protected Notification        notification;
-    private   String              downloadArtifactURL;
     /** Descriptor of the last build task. */
     private   BuildTaskDescriptor lastBuildTaskDescriptor;
 
-    /** Create presenter. */
     @Inject
     protected BuildProjectPresenter(ResourceProvider resourceProvider,
                                     BuilderConsolePresenter console,
@@ -122,7 +119,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         }
 
         lastBuildTaskDescriptor = null;
-        downloadArtifactURL = null;
         projectToBuild = resourceProvider.getActiveProject();
 
         notification = new Notification(constant.buildStarted(projectToBuild.getName()), PROGRESS, BuildProjectPresenter.this);
@@ -203,7 +199,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         isBuildInProgress = false;
         try {
             messageBus.unsubscribe(BuilderExtension.BUILD_STATUS_CHANNEL + descriptor.getTaskId(), buildStatusHandler);
-        } catch (Exception e) {
+        } catch (WebSocketException e) {
             Log.error(BuildProjectPresenter.class, e);
         }
 
@@ -211,9 +207,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
 
         switch (descriptor.getStatus()) {
             case SUCCESSFUL:
-                Link downloadResultLink = getAppLink(descriptor, Constants.LINK_REL_DOWNLOAD_RESULT);
-                downloadArtifactURL = downloadResultLink.getHref();
-
                 notification.setType(INFO);
                 notification.setMessage(constant.buildFinished(projectToBuild.getName()));
                 break;
@@ -229,41 +222,21 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         workspaceAgent.setActivePart(console);
     }
 
-    private void getBuildLogs(BuildTaskDescriptor descriptor) {
-        Link statusLink = getAppLink(descriptor, Constants.LINK_REL_VIEW_LOG);
-        service.log(statusLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-            @Override
-            protected void onSuccess(String result) {
-                console.print(result);
-            }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                String msg = constant.failGetBuildResult();
-                console.print(msg);
-                notificationManager.showNotification(new Notification(msg, ERROR));
-            }
-        });
-    }
-
     /** {@inheritDoc} */
     @Override
     public void onOpenClicked() {
         workspaceAgent.setActivePart(console);
     }
 
-    private Link getAppLink(BuildTaskDescriptor descriptor, String rel) {
-        List<Link> links = descriptor.getLinks();
-        for (Link link : links) {
-            if (link.getRel().equalsIgnoreCase(rel))
-                return link;
-        }
-        return null;
-    }
-
     /** Returns link to download result of last build task. */
     public String getLastBuildResultURL() {
-        return downloadArtifactURL;
+        if (lastBuildTaskDescriptor != null) {
+            Link downloadResultLink = getLink(lastBuildTaskDescriptor, Constants.LINK_REL_DOWNLOAD_RESULT);
+            if (downloadResultLink != null) {
+                return downloadResultLink.getHref();
+            }
+        }
+        return null;
     }
 
     /** Returns time when last build task started in format HH:mm:ss. */
@@ -296,6 +269,15 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                 ss = ss % 60;
             }
             return String.valueOf("" + getDoubleDigit(mm) + ':' + getDoubleDigit(ss) + '.' + ms);
+        }
+        return null;
+    }
+
+    private static Link getLink(BuildTaskDescriptor descriptor, String rel) {
+        List<Link> links = descriptor.getLinks();
+        for (Link link : links) {
+            if (link.getRel().equalsIgnoreCase(rel))
+                return link;
         }
         return null;
     }

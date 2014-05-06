@@ -42,6 +42,6 @@ public class RunnerStartedAction extends InfoAction {
     @Override
     public void update(ActionEvent e) {
         final Presentation presentation = e.getPresentation();
-        presentation.putClientProperty(Properties.DATA_PROPERTY, runnerController.getStartTime());
+        presentation.putClientProperty(Properties.DATA_PROPERTY, runnerController.getCurrentAppStartTime());
     }
 }

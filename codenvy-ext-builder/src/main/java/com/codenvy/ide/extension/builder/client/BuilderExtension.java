@@ -52,11 +52,12 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_TOOLBAR;
 @Singleton
 @Extension(title = "Builder", version = "3.0.0")
 public class BuilderExtension {
+    /** WebSocket channel to get build task status. */
     public static final String BUILD_STATUS_CHANNEL          = "builder:status:";
+    /** WebSocket channel to get builder output. */
     public static final String BUILD_OUTPUT_CHANNEL          = "builder:output:";
     public static final String GROUP_BUILDER_CONSOLE_TOOLBAR = "BuilderConsoleToolbar";
 
-    /** Create extension. */
     @Inject
     public BuilderExtension(BuilderLocalizationConstant localizationConstants,
                             BuilderResources builderResources,

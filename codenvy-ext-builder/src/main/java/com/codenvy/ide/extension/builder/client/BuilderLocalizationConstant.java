@@ -55,9 +55,6 @@ public interface BuilderLocalizationConstant extends Messages {
     @Key("messages.buildCanceled")
     String buildCanceled();
 
-    @Key("messages.failGetBuildResult")
-    String failGetBuildResult();
-
     /* BuildProjectPresenter */
     @Key("build.started")
     String buildStarted(String project);
