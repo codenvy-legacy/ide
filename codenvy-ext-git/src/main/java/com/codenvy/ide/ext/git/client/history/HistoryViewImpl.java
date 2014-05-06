@@ -38,6 +38,7 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.UIObject;
@@ -117,6 +118,13 @@ public class HistoryViewImpl extends BaseView<HistoryView.ActionDelegate> implem
 
         container.add(ourUiBinder.createAndBindUi(this));
         minimizeButton.ensureDebugId("git-showHistory-minimizeBut");
+
+        btnProjectChanges.getElement().appendChild(new Image(resources.projectLevel()).getElement());
+        btnResourceChanges.getElement().appendChild(new Image(resources.resourceLevel()).getElement());
+        btnDiffWithIndex.getElement().appendChild(new Image(resources.diffIndex()).getElement());
+        btnDiffWithWorkTree.getElement().appendChild(new Image(resources.diffWorkTree()).getElement());
+        btnDiffWithPrevCommit.getElement().appendChild(new Image(resources.diffPrevVersion()).getElement());
+        btnRefresh.getElement().appendChild(new Image(resources.refresh()).getElement());
     }
 
     /** Creates table what contains list of available commits.

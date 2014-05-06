@@ -498,10 +498,10 @@ public interface GitLocalizationConstant extends Messages {
     String historyDiffWithIndexButtonTitle();
 
     @Key("view.history.diff.with.work.tree.button.title")
-    String historyDiffWithWorkTree();
+    String historyDiffWithWorkTreeButtonTitle();
 
     @Key("view.history.diff.with.prev.version.button.title")
-    String historyDiffWithPrevVerson();
+    String historyDiffWithPrevVersonButtonTitle();
 
     @Key("view.history.revisionA.title")
     String historyViewRevisionATitle();
