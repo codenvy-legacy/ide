@@ -27,6 +27,7 @@ import com.codenvy.api.runner.dto.DebugMode;
 import com.codenvy.api.runner.dto.RunRequest;
 import com.codenvy.api.runner.internal.ApplicationLogger;
 import com.codenvy.api.runner.internal.ApplicationProcess;
+import com.codenvy.api.runner.internal.Constants;
 import com.codenvy.api.runner.internal.DeploymentSources;
 import com.codenvy.api.runner.internal.Disposer;
 import com.codenvy.api.runner.internal.ResourceAllocators;
@@ -45,11 +46,13 @@ import com.codenvy.runner.docker.json.Image;
 import com.codenvy.runner.docker.json.PortBinding;
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteStreams;
+import com.google.common.io.Files;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.util.HashMap;
@@ -68,27 +71,12 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.regex.Pattern;
 
 /** @author andrew00x */
 public abstract class BaseDockerRunner extends Runner {
     static final Logger LOG = LoggerFactory.getLogger(BaseDockerRunner.class);
 
     public static final String HOST_NAME = "runner.docker.host_name";
-
-    // Pattern for ports in range [0;65535]
-    // Public HTTP ports of application should be defined as environment variables in dockerfile in following format:
-    // ENV APPLICATION_PORT_{NUMBER}_HTTP {NUMBER}
-    // For example, propagate port 8080:
-    // ENV APPLICATION_PORT_8080_HTTP 8080
-    // See docker docs for details about format of dockerfile.
-    private static final Pattern HTTP_PORT_PATTERN  =
-            Pattern.compile("APPLICATION_PORT_([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-6][0-5][0-5][0-3][0-5])_HTTP");
-    // Pattern for debug ports in range  [0;65535]
-    // Example:
-    // ENV APPLICATION_PORT_8000_DEBUG 8000
-    private static final Pattern DEBUG_PORT_PATTERN =
-            Pattern.compile("APPLICATION_PORT_([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-6][0-5][0-5][0-3][0-5])_DEBUG");
 
     private final ConcurrentMap<String, Future<ImageStats>> buildImageTasks;
     private final Map<String, ImageStats>                   dockerImages;
@@ -190,26 +178,67 @@ public abstract class BaseDockerRunner extends Runner {
     @Override
     protected ApplicationProcess newApplicationProcess(DeploymentSources toDeploy, RunnerConfiguration runnerCfg) throws RunnerException {
         try {
-            final java.io.File applicationFile = toDeploy.getFile();
+            final File applicationFile = toDeploy.getFile();
             // It always should be DockerRunnerConfiguration.
             final DockerRunnerConfiguration dockerRunnerCfg = (DockerRunnerConfiguration)runnerCfg;
-            final DockerfileTemplate dockerfileTemplate = getDockerfileTemplate(dockerRunnerCfg.getRequest());
+            final RunRequest request = dockerRunnerCfg.getRequest();
+            final DockerEnvironment dockerEnvironment = getDockerEnvironment(request);
+            final DockerfileTemplate dockerfileTemplate = getDockerfileTemplate(dockerEnvironment, request);
             if (dockerfileTemplate == null) {
                 throw new RunnerException("Unable create environment for starting application. Acceptable dockerfile isn't found.");
             }
             // Apply parameters and write Dockerfile based on it's template.
             dockerfileTemplate.setParameters(runnerCfg.getOptions()).setParameter("app", applicationFile.getName());
-            final java.io.File dockerfile = new java.io.File(applicationFile.getParentFile(), "Dockerfile");
+            final File dockerfile = new File(applicationFile.getParentFile(), "Dockerfile");
             dockerfileTemplate.writeDockerfile(dockerfile);
-            // Find port mapping specified in Dockerfile.
-            final List<Pair<Integer, Integer>> portMapping = getPortMapping(dockerfile, dockerRunnerCfg);
-
+            final List<Pair<Integer, Integer>> portMapping = new LinkedList<>();
+            int privateWebPort = -1;
+            if (dockerEnvironment != null) {
+                privateWebPort = dockerEnvironment.getWebPort();
+            }
+            if (privateWebPort <= 0) {
+                // Use port that is set in EXPOSE instruction, if any. EXPOSE instruction may contains multiple container ports,
+                // but Codenvy uses only the first one to connect the Docker container and route requests from the Internet.
+                final List<DockerImage> images = DockerfileParser.parse(dockerfile).getImages();
+                if (!images.isEmpty()) {
+                    final List<String> expose = images.get(0).getExpose();
+                    if (!expose.isEmpty()) {
+                        try {
+                            privateWebPort = Integer.parseInt(expose.get(0));
+                        } catch (NumberFormatException ignored) {
+                        }
+                    }
+                }
+            }
+            if (privateWebPort > 0) {
+                final int publicWebPort = portService.acquire();
+                portMapping.add(Pair.of(publicWebPort, privateWebPort));
+                // Web link for application.
+                // TODO: need something more flexible to avoid showing port in URL.
+                final String webUrl = String.format("http://%s:%d", hostName, publicWebPort);
+                dockerRunnerCfg.getLinks().add(DtoFactory.getInstance().createDto(Link.class)
+                                                         .withRel(Constants.LINK_REL_WEB_URL)
+                                                         .withHref(webUrl));
+            }
+            final DebugMode debugMode = dockerRunnerCfg.getRequest().getDebugMode();
+            if (debugMode != null) {
+                if (dockerEnvironment != null) {
+                    int privateDebugPort = dockerEnvironment.getDebugPort();
+                    if (privateDebugPort > 0) {
+                        final int publicDebugPort = portService.acquire();
+                        portMapping.add(Pair.of(publicDebugPort, privateDebugPort));
+                        dockerRunnerCfg.setDebugHost(hostName);
+                        dockerRunnerCfg.setDebugPort(publicDebugPort);
+                        dockerRunnerCfg.setDebugSuspend("suspend".equals(debugMode.getMode()));
+                    }
+                }
+            }
             final String workspace = runnerCfg.getRequest().getWorkspace();
             final String project = runnerCfg.getRequest().getProject();
             final String dockerRepoName = workspace + (project.startsWith("/") ? project : ('/' + runnerCfg.getRequest().getProject()));
             @SuppressWarnings("unchecked")
-            final String hash = ByteStreams.hash(ByteStreams.join(com.google.common.io.Files.newInputStreamSupplier(applicationFile),
-                                                                  com.google.common.io.Files.newInputStreamSupplier(dockerfile)),
+            final String hash = ByteStreams.hash(ByteStreams.join(Files.newInputStreamSupplier(applicationFile),
+                                                                  Files.newInputStreamSupplier(dockerfile)),
                                                  Hashing.sha1()
                                                 ).toString();
             final DockerConnector connector = DockerConnector.getInstance();
@@ -260,40 +289,16 @@ public abstract class BaseDockerRunner extends Runner {
         }
     }
 
-    private List<Pair<Integer, Integer>> getPortMapping(java.io.File dockerfile, DockerRunnerConfiguration dockerRunnerCfg)
-            throws IOException {
-        final List<Pair<Integer, Integer>> portMapping = new LinkedList<>();
-        int debugPort = -1;
-        for (DockerImage dockerImage : DockerfileParser.parse(dockerfile).getImages()) {
-            for (Map.Entry<String, String> entry : dockerImage.getEnv().entrySet()) {
-                final String name = entry.getKey();
-                if (HTTP_PORT_PATTERN.matcher(name).matches()) {
-                    final int privatePort = Integer.parseInt(entry.getValue());
-                    final int publicPort = portService.acquire();
-                    portMapping.add(Pair.of(publicPort, privatePort));
-                    // Web link for application.
-                    // TODO: need something more flexible to avoid showing port in URL.
-                    final String webUrl = String.format("http://%s:%d", hostName, publicPort);
-                    dockerRunnerCfg.getLinks().add(DtoFactory.getInstance().createDto(Link.class)
-                                                             .withRel(com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL)
-                                                             .withHref(webUrl));
-                } else if (DEBUG_PORT_PATTERN.matcher(name).matches()) {
-                    final int privatePort = Integer.parseInt(entry.getValue());
-                    debugPort = portService.acquire();
-                    portMapping.add(Pair.of(debugPort, privatePort));
-                }
-            }
-        }
-        final DebugMode debugMode = dockerRunnerCfg.getRequest().getDebugMode();
-        if (debugMode != null) {
-            dockerRunnerCfg.setDebugHost(hostName);
-            dockerRunnerCfg.setDebugPort(debugPort);
-            dockerRunnerCfg.setDebugSuspend("suspend".equals(debugMode.getMode()));
-        }
-        return portMapping;
-    }
+    /**
+     * Get description of additional properties of docker environment. This method might return {@code null} is specified environment is
+     * not configured for the project.
+     *
+     * @see DockerEnvironment
+     */
+    protected abstract DockerEnvironment getDockerEnvironment(RunRequest request) throws IOException, RunnerException;
 
-    protected abstract DockerfileTemplate getDockerfileTemplate(RunRequest request) throws IOException;
+    protected abstract DockerfileTemplate getDockerfileTemplate(DockerEnvironment dockerEnvironment, RunRequest request)
+            throws IOException, RunnerException;
 
     private ImageStats createImageIfNeed(final DockerConnector connector,
                                          final String dockerRepoName,

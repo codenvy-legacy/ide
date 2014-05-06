@@ -18,38 +18,17 @@
 package com.codenvy.runner.docker;
 
 /**
- * Describes docker based environment for deploy an application. Environment must be described in file 'dockerenv.c5y.json'. The following
- * snippet is an example.
+ * Describes docker based environment for deploy an application. Environment might be described in file 'dockerenv.c5y.json' in root folder
+ * of project. The following snippet is an example.
  * <pre>
  *     {
  *         "description":"Tomcat7",
  *         "webPort":8080,
- *         "debugPort":8000
+ *         "debugPort":8000,
+ *         "runDockerfileName":"run.dc5y",
+ *         "debugDockerfileName":"debug.dc5y"
  *     }
  * </pre>
- * The following directory structure is required:
- * <pre>
- *     ${runner.docker.dockerfiles_repo}/
- *        JavaWeb/
- *            Tomcat7/
- *                run.dc5y
- *                debug.dc5y
- *                dockerenv.c5y.json
- *            default/
- *                run.dc5y
- *                debug.dc5y
- *                dockerenv.c5y.json
- * </pre>
- * <ul>
- * <li><b>${runner.docker.dockerfiles_repo}</b> - configuration parameter that points to the root directory where docker files for all
- * supported environments are located</li>
- * <li><b>JavaWeb</b> - directory that contains description of environments for running java web application</li>
- * <li><b>Tomcat7</b> - directory that contains description of environment that uses tomcat 7. This directory must contains file
- * <i>run.dc5y</i> and might contain files <i>debug.dc5y</i> and <i>dockerenv.c5y.json</i>. Docker based runner uses a <i>run.dc5y</i> to
- * create a Docker image that contains user's application and instruction how to start it. Docker based runner uses a <i>debug.dc5y</i> to
- * create a Docker image that contains user's application and instruction how to start it under debug. Need to have this file only is
- * support debug for this type of application. File <i>dockerenv.c5y.json</i> contains additional information.</li>
- * </ul>
  * Valid keys and values for the <i>dockerenv.c5y.json</i> file include the following:
  * <ul>
  * <li><b>description</b> - description of environment. It is possible to provide more than one environment for one type of application,
@@ -59,17 +38,21 @@ package com.codenvy.runner.docker;
  * application. This value may be omitted for other than web application.</li>
  * <li><b>debugPort</b> - runner uses debugPort value when application is running under debugger. This value may be omitted if debug is not
  * supported.</li>
+ * <li><b>runDockerfileName</b> - name of dockerfile that must be used for starting application. Default value is <i>run.dc5y</i>.</li>
+ * <li><b>debugDockerfileName</b> - name of dockerfile that must be used for starting application under debugger. Default value is
+ * <i>debug.dc5y</i>.</li>
  * </ul>
- * Typically each type of application might have default environment. Description of such environment (<i>run.dc5y</i>, <i>debug.dc5y</i>
- * and <i>dockerenv.c5y.json</i>) must be located in directory <i>default</i>, see example of directory structure above.
  *
  * @author andrew00x
  */
 public class DockerEnvironment {
     private String id;
     private String description;
-    private int    webPort;
-    private int    debugPort;
+
+    private int    webPort             = -1;
+    private int    debugPort           = -1;
+    private String runDockerfileName   = "run.dc5y";
+    private String debugDockerfileName = "debug.dc5y";
 
     public String getId() {
         return id;
@@ -103,6 +86,22 @@ public class DockerEnvironment {
         this.debugPort = debugPort;
     }
 
+    public String getRunDockerfileName() {
+        return runDockerfileName;
+    }
+
+    public void setRunDockerfileName(String runDockerfileName) {
+        this.runDockerfileName = runDockerfileName;
+    }
+
+    public String getDebugDockerfileName() {
+        return debugDockerfileName;
+    }
+
+    public void setDebugDockerfileName(String debugDockerfileName) {
+        this.debugDockerfileName = debugDockerfileName;
+    }
+
     @Override
     public String toString() {
         return "DockerEnvironment{" +
@@ -110,6 +109,8 @@ public class DockerEnvironment {
                ", description='" + description + '\'' +
                ", webPort=" + webPort +
                ", debugPort=" + debugPort +
+               ", runDockerfileName='" + runDockerfileName + '\'' +
+               ", debugDockerfileName='" + debugDockerfileName + '\'' +
                '}';
     }
 }
