@@ -47,6 +47,9 @@ public interface GitHubLocalizationConstant extends Messages {
     @Key("welcome.import.text")
     String welcomeImportText();
 
+    @Key("github.ssh.key.update.failed")
+    String gitHubSshKeyUpdateFailed();
+
     /*
      * ImportFromGitHub
      */

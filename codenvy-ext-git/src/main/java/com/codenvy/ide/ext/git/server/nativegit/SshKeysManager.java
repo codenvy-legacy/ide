@@ -30,6 +30,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -49,10 +50,12 @@ public class SshKeysManager {
 
     private static String      keyDirectoryPath; // TODO(GUICE): initialize
     private final  SshKeyStore keyProvider;
+    private Set<SshKeyUploaderProvider> sshKeyUploaderProviders;
 
     @Inject
-    public SshKeysManager(SshKeyStore keyProvider) {
+    public SshKeysManager(SshKeyStore keyProvider, Set<SshKeyUploaderProvider> sshKeyUploaderProviders) {
         this.keyProvider = keyProvider;
+        this.sshKeyUploaderProviders = sshKeyUploaderProviders;
     }
 
     public static String getKeyDirectoryPath() throws GitException {
@@ -69,6 +72,12 @@ public class SshKeysManager {
      * @throws GitException
      */
     public String storeKeyIfNeed(String uri) throws GitException {
+        for (SshKeyUploaderProvider sshKeyUploaderProvider : sshKeyUploaderProviders) {
+            if (sshKeyUploaderProvider.match(uri) && sshKeyUploaderProvider.uploadKey()) {
+                break;
+            }
+        }
+
         String host;
         if ((host = getHost(uri)) == null)
             return null;

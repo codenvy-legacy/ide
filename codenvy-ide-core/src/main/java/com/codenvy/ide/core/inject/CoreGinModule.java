@@ -32,6 +32,8 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.about.AboutView;
 import com.codenvy.ide.about.AboutViewImpl;
 import com.codenvy.ide.actions.ActionManagerImpl;
+import com.codenvy.ide.actions.find.FindActionView;
+import com.codenvy.ide.actions.find.FindActionViewImpl;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorAgent;
@@ -306,6 +308,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(AppearanceView.class).to(AppearanceViewImpl.class).in(Singleton.class);
 
         bind(ProjectWizardView.class).to(ProjectWizardViewImpl.class);
+        bind(FindActionView.class).to(FindActionViewImpl.class).in(Singleton.class);
     }
 
     @Provides
