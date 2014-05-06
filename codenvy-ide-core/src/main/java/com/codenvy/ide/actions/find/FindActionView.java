@@ -18,16 +18,34 @@
 package com.codenvy.ide.actions.find;
 
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.api.ui.action.Action;
+
+import java.util.Map;
 
 /**
  * @author Evgen Vidolob
  */
 public interface FindActionView extends View<FindActionView.ActionDelegate> {
-    public interface ActionDelegate{
-
-    }
+    void focusOnInput();
 
     void show();
 
     void hide();
+
+    String getName();
+
+    void showActions(Map<Action, String> actions);
+
+    void hideActions();
+
+    boolean getCheckBoxState();
+
+    public interface ActionDelegate {
+
+        void nameChanged(String name, boolean checkBoxState);
+
+        void onClose();
+
+        void onActionSelected(Action action);
+    }
 }

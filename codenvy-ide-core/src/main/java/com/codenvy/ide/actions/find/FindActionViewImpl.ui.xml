@@ -1,6 +1,18 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <g:HTMLPanel>
-
-    </g:HTMLPanel>
+    <g:DockLayoutPanel unit="PCT" width="400px" height="50px">
+        <g:north size="50">
+            <g:DockLayoutPanel unit="PCT">
+                <g:west size="50">
+                    <g:Label>Enter action name:</g:Label>
+                </g:west>
+                <g:east size="50">
+                    <g:CheckBox ui:field="includeNonMenu" text="Include non menu actions"/>
+                </g:east>
+            </g:DockLayoutPanel>
+        </g:north>
+        <g:south size="50">
+            <g:TextBox ui:field="nameField" width="394px" height="18px"/>
+        </g:south>
+    </g:DockLayoutPanel>
 </ui:UiBinder>
