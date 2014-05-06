@@ -4,7 +4,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M15-SNAPSHOT</version>
+        <version>3.0.0-M16-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>notification-api-tutorial</artifactId>
@@ -19,15 +19,22 @@
         <dependency>
             <groupId>com.google.gwt.inject</groupId>
             <artifactId>gin</artifactId>
-            <version>${gin.version}</version>
+            <version>${com.google.gwt.gin.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
+            <version>${com.google.gwt.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
+    <repositories>
+        <repository>
+            <id>codenvy-public-repo</id>
+            <name>codenvy public</name>
+            <url>https://maven.codenvycorp.com/content/groups/public/</url>
+        </repository>
+    </repositories>
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <outputDirectory>target/classes</outputDirectory>
@@ -60,6 +67,13 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.google.code.sortpom</groupId>
+                <artifactId>maven-sortpom-plugin</artifactId>
+                <configuration>
+                    <verifyFail>Warn</verifyFail>
+                </configuration>
             </plugin>
         </plugins>
     </build>

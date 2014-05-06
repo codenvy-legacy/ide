@@ -1372,6 +1372,7 @@ public class FSMountPoint implements MountPoint {
             if (!virtualFile.getIoFile().setLastModified(System.currentTimeMillis())) {
                 LOG.warn("Unable to set timestamp to '{}'. ", virtualFile.getIoFile());
             }
+
             eventService.publish(new UpdateACLEvent(workspaceId, virtualFile.getPath()));
         } finally {
             lock.release();

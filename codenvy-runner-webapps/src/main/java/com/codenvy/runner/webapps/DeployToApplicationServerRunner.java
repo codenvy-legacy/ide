@@ -25,6 +25,7 @@ import com.codenvy.api.runner.dto.DebugMode;
 import com.codenvy.api.runner.dto.RunRequest;
 import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.runner.internal.ApplicationProcess;
+import com.codenvy.api.runner.internal.Constants;
 import com.codenvy.api.runner.internal.DeploymentSources;
 import com.codenvy.api.runner.internal.DeploymentSourcesValidator;
 import com.codenvy.api.runner.internal.Disposer;
@@ -58,6 +59,7 @@ public class DeployToApplicationServerRunner extends Runner {
 
     public static final String DEFAULT_SERVER_NAME      = "Tomcat7";
     public static final String DEBUG_TRANSPORT_PROTOCOL = "dt_socket";
+    public static final String HOST_NAME                = "runner.java_webapp.host_name";
 
     private final Map<String, ApplicationServer> servers;
     private final Map<String, RunnerEnvironment> environments;
@@ -66,14 +68,14 @@ public class DeployToApplicationServerRunner extends Runner {
     private final DeploymentSourcesValidator     applicationValidator;
 
     @Inject
-    public DeployToApplicationServerRunner(@Named(DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
-                                           @Named(CLEANUP_DELAY_TIME) int cleanupDelay,
-                                           @Named("runner.java_webapp.host_name") String hostName,
+    public DeployToApplicationServerRunner(@Named(Constants.DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
+                                           @Named(Constants.APP_CLEANUP_TIME) int cleanupTime,
+                                           @Named(HOST_NAME) String hostName,
                                            ResourceAllocators allocators,
                                            CustomPortService portService,
                                            Set<ApplicationServer> appServers,
                                            EventService eventService) {
-        super(deployDirectoryRoot, cleanupDelay, allocators, eventService);
+        super(deployDirectoryRoot, cleanupTime, allocators, eventService);
         this.hostName = hostName;
         this.portService = portService;
         this.servers = new HashMap<>();

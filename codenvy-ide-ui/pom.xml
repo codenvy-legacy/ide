@@ -4,7 +4,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M15-SNAPSHOT</version>
+        <version>3.0.0-M16-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ide-ui</artifactId>
     <name>Codenvy :: UI</name>
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
+            <version>${com.google.gwt.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

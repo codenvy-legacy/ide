@@ -23,7 +23,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M15-SNAPSHOT</version>
+        <version>3.0.0-M16-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-runner-sdk</artifactId>
     <packaging>jar</packaging>
@@ -32,7 +32,7 @@
         <dependency>
             <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-lang</artifactId>
-            <version>${com.codenvy.commons.version}</version>
+            <version>${codenvy.commons.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-runner</artifactId>
-            <version>${com.codenvy.platform-api.version}</version>
+            <version>${codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api-gwt-client</groupId>
@@ -55,7 +55,6 @@
             <plugin>
                 <groupId>com.google.code.maven-replacer-plugin</groupId>
                 <artifactId>replacer</artifactId>
-                <version>1.5.2</version>
                 <executions>
                     <execution>
                         <id>put-current-version</id>
@@ -88,7 +87,7 @@
                                     <groupId>org.apache.tomcat</groupId>
                                     <artifactId>tomcat</artifactId>
                                     <type>zip</type>
-                                    <version>${tomcat.version}</version>
+                                    <version>${org.apache.tomcat.version}</version>
                                     <outputDirectory>${project.build.directory}/classes</outputDirectory>
                                     <destFileName>tomcat.zip</destFileName>
                                 </artifactItem>
@@ -156,7 +155,7 @@
                                     </patternset>
                                 </unzip>
                                 <move todir="${project.build.directory}/classes/tomcat-bundle">
-                                    <fileset dir="${project.build.directory}/classes/apache-tomcat-${tomcat.version}" />
+                                    <fileset dir="${project.build.directory}/classes/apache-tomcat-${org.apache.tomcat.version}" />
                                 </move>
                                 <delete file="${project.build.directory}/classes/tomcat.zip" />
                                 <!-- Move additional libraries and WAR's -->

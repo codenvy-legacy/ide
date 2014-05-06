@@ -21,8 +21,8 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
+import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.ext.git.client.remote.add.AddRemoteRepositoryPresenter;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -105,7 +105,8 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
                                            exception.getMessage() != null ? exception.getMessage() : constant.remoteListFailed();
                                    Window.alert(errorMessage);
                                }
-                           });
+                           }
+                          );
     }
 
     /** {@inheritDoc} */
@@ -140,23 +141,20 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
             return;
         }
 
-        String name = selectedRemote.getName();
-        boolean needToDelete = Window.confirm(constant.deleteRemoteRepositoryQuestion(name));
-        if (needToDelete) {
-            service.remoteDelete(projectId, name, new AsyncRequestCallback<String>() {
-                @Override
-                protected void onSuccess(String result) {
-                    getRemotes();
-                }
+        final String name = selectedRemote.getName();
+        service.remoteDelete(projectId, name, new AsyncRequestCallback<String>() {
+            @Override
+            protected void onSuccess(String result) {
+                getRemotes();
+            }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    String errorMessage = exception.getMessage() != null ? exception.getMessage() : constant.remoteDeleteFailed();
-                    Notification notification = new Notification(errorMessage, ERROR);
-                    notificationManager.showNotification(notification);
-                }
-            });
-        }
+            @Override
+            protected void onFailure(Throwable exception) {
+                String errorMessage = exception.getMessage() != null ? exception.getMessage() : constant.remoteDeleteFailed();
+                Notification notification = new Notification(errorMessage, ERROR);
+                notificationManager.showNotification(notification);
+            }
+        });
     }
 
     /** {@inheritDoc} */

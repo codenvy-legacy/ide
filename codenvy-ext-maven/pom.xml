@@ -23,7 +23,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M15-SNAPSHOT</version>
+        <version>3.0.0-M16-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ext-maven</artifactId>
     <packaging>jar</packaging>
@@ -47,7 +47,7 @@
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-builder</artifactId>
-            <version>${com.codenvy.platform-api.version}</version>
+            <version>${codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api-gwt-client</groupId>
@@ -62,13 +62,13 @@
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
+            <version>${com.google.gwt.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.googlecode.gwt-test-utils</groupId>
             <artifactId>gwt-test-utils</artifactId>
-            <version>${gwt-test-utils.version}</version>
+            <version>${com.googlecode.gwt-test-utils.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -93,7 +93,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>${mockito.version}</version>
+            <version>${org.mockito.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

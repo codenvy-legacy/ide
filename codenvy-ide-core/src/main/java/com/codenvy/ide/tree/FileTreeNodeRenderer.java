@@ -115,8 +115,6 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
     public static SpanElement renderNodeContents(Css css, String name, Resource item, EventListener mouseDownListener,
                                                  boolean renderIcon) {
         SpanElement root = Elements.createSpanElement(css.root());
-        int depth = item.getPath().split("/").length - 2;
-        root.setAttribute("__depth", "" + depth);
 
         if (renderIcon) {
             SVGImage image = detectIcon(item);

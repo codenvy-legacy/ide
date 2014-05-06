@@ -35,14 +35,14 @@ public class EmbeddedDockerRunner extends BaseDockerRunner {
     private final List<java.io.File> dockerfiles;
 
     public EmbeddedDockerRunner(java.io.File deployDirectoryRoot,
-                                int cleanupDelay,
+                                int cleanupTime,
                                 String hostName,
                                 ResourceAllocators allocators,
                                 CustomPortService portService,
                                 EventService eventService,
                                 String name,
                                 List<java.io.File> dockerfiles) {
-        super(deployDirectoryRoot, cleanupDelay, hostName, allocators, portService, eventService);
+        super(deployDirectoryRoot, cleanupTime, hostName, allocators, portService, eventService);
         this.name = name;
         this.dockerfiles = new ArrayList<>(dockerfiles);
     }

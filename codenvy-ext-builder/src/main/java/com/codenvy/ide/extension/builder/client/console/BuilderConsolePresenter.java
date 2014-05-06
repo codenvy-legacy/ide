@@ -67,24 +67,22 @@ public class BuilderConsolePresenter extends BasePresenter implements BuilderCon
     }
 
     /**
-     * Print text on console.
+     * Print message on console.
      *
-     * @param text
-     *         text that need to be print
+     * @param message
+     *         message that need to be print
      */
-    public void print(String text) {
-        String[] lines = text.split("\n");
-        for (String line : lines) {
-            view.print(line);
-        }
-        performPostOutputActions();
-    }
-
-    private void performPostOutputActions() {
+    public void print(String message) {
         PartPresenter activePart = partStack.getActivePart();
         if (activePart == null || !activePart.equals(this)) {
             partStack.setActivePart(this);
         }
+
+        String[] lines = message.split("\n");
+        for (String line : lines) {
+            view.print(line);
+        }
+
         view.scrollBottom();
     }
 
@@ -93,4 +91,18 @@ public class BuilderConsolePresenter extends BasePresenter implements BuilderCon
         view.clear();
     }
 
+    /**
+     * Set URL to download artifact.
+     *
+     * @param link
+     *         link to download artifact
+     */
+    public void setDownloadLink(String link) {
+        view.setDownloadLink(link);
+    }
+
+    /** Clear download URL in console. */
+    public void clearDownloadLink() {
+        view.setDownloadLink("");
+    }
 }

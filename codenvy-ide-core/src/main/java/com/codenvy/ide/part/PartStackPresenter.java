@@ -172,10 +172,10 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     @Override
     public void setActivePart(PartPresenter part) {
         if (activePart == part) {
-            partsSize.set(parts.indexOf(part), workBenchPartController.getSize());
-            workBenchPartController.setHidden(true);
-            activePart = null;
-            view.setActiveTabButton(-1);
+//            partsSize.set(parts.indexOf(part), workBenchPartController.getSize());
+//            workBenchPartController.setHidden(true);
+//            activePart = null;
+//            view.setActiveTabButton(-1);
             return;
         }
 

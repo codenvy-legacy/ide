@@ -23,6 +23,8 @@ import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.security.oauth.JsOAuthWindow;
 import com.codenvy.ide.security.oauth.OAuthCallback;
 import com.codenvy.ide.security.oauth.OAuthStatus;
+import com.codenvy.ide.ui.dialogs.Ask;
+import com.codenvy.ide.ui.dialogs.AskHandler;
 import com.codenvy.ide.ui.loader.EmptyLoader;
 import com.codenvy.ide.util.Utils;
 import com.google.gwt.user.client.Window;
@@ -53,7 +55,8 @@ public class GitHubSshKeyProvider implements SshKeyProvider, OAuthCallback {
     public GitHubSshKeyProvider(GitHubClientService gitHubService,
                                 @Named("restContext") String baseUrl,
                                 @Named("workspaceId") String workspaceId,
-                                GitHubLocalizationConstant constant, AsyncRequestFactory asyncRequestFactory) {
+                                GitHubLocalizationConstant constant,
+                                AsyncRequestFactory asyncRequestFactory) {
         this.gitHubService = gitHubService;
         this.baseUrl = baseUrl;
         this.workspaceId = workspaceId;
@@ -87,16 +90,30 @@ public class GitHubSshKeyProvider implements SshKeyProvider, OAuthCallback {
     }
 
     /** Log in  github */
-    private void oAuthLoginStart(@NotNull String user) {
-        boolean permitToRedirect = Window.confirm(constant.loginOAuthLabel());
-        if (permitToRedirect) {
-            String authUrl = baseUrl + "/oauth/authenticate?oauth_provider=github"
-                             + "&scope=user,repo,write:public_key&userId=" + user + "&redirect_after_login=" +
-                             Window.Location.getProtocol() +  "//" + Window.Location.getHost() + "/ide/" + Utils.getWorkspaceName();
-            JsOAuthWindow authWindow = new JsOAuthWindow(authUrl, "error.url", 500, 980, this);
-            authWindow.loginWithOAuth();
-        }
+    private void oAuthLoginStart(@NotNull final String user) {
+        Ask ask = new Ask(constant.githubSshKeyTitle(), constant.githubSshKeyLabel(), new AskHandler() {
+
+            @Override
+            public void onOk() {
+                showPopUp(user);
+            }
+
+            @Override
+            public void onCancel() {
+                //nothing todo
+            }
+        });
+        ask.show();
     }
+
+    private void showPopUp(String user) {
+        String authUrl = baseUrl + "/oauth/authenticate?oauth_provider=github"
+                         + "&scope=user,repo,write:public_key&userId=" + user + "&redirect_after_login=" +
+                         Window.Location.getProtocol() +  "//" + Window.Location.getHost() + "/ide/" + Utils.getWorkspaceName();
+        JsOAuthWindow authWindow = new JsOAuthWindow(authUrl, "error.url", 500, 980, this);
+        authWindow.loginWithOAuth();
+    }
+
 
     /** {@inheritDoc} */
     @Override

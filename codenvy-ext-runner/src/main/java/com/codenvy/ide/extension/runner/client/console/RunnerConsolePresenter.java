@@ -77,7 +77,7 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
         if (activePart == null || !activePart.equals(this)) {
             partStack.setActivePart(this);
         }
-        view.print("<pre>" + message + "</pre>");
+        view.print(message);
         view.scrollBottom();
     }
 
@@ -86,4 +86,18 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
         view.clear();
     }
 
+    /**
+     * Set application's URL in console.
+     *
+     * @param link
+     *         application URL
+     */
+    public void setAppURL(String link) {
+        view.setAppURL(link);
+    }
+
+    /** Clear application URL in console. */
+    public void clearAppURL() {
+        view.setAppURL("");
+    }
 }

@@ -18,6 +18,7 @@
 package com.codenvy.ide.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
@@ -41,8 +42,8 @@ public class NavigateToFileAction extends Action {
     @Inject
     public NavigateToFileAction(NavigateToFilePresenter presenter,
                                 ResourceProvider resourceProvider,
-                                AnalyticsEventLogger eventLogger) {
-        super("Navigate to File", "Navigate to file", null);
+                                AnalyticsEventLogger eventLogger, Resources resources) {
+        super("Navigate to File", "Navigate to file", null, resources.navigateToFile());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
         this.eventLogger = eventLogger;

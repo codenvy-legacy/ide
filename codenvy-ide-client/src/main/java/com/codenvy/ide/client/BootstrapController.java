@@ -17,6 +17,11 @@
  */
 package com.codenvy.ide.client;
 
+import elemental.client.Browser;
+import elemental.events.Event;
+import elemental.events.EventListener;
+import elemental.html.Window;
+
 import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
@@ -44,7 +49,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.client.ScriptInjector;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
@@ -55,21 +59,21 @@ import java.util.Map;
 
 /**
  * Performs initial application startup.
- * 
+ *
  * @author Nikolay Zamosenchuk
  */
 public class BootstrapController {
 
-    private final DtoUnmarshallerFactory        dtoUnmarshallerFactory;
-    private PreferencesManagerImpl              preferencesManager;
-    private ProjectTypeDescriptionServiceClient projectTypeDescriptionServiceClient;
-    private ProjectTypeDescriptorRegistry       projectTypeDescriptorRegistry;
-    private IconRegistry                        iconRegistry;
-    private ThemeAgent                          themeAgent;
+    private final DtoUnmarshallerFactory              dtoUnmarshallerFactory;
+    private       PreferencesManagerImpl              preferencesManager;
+    private       ProjectTypeDescriptionServiceClient projectTypeDescriptionServiceClient;
+    private       ProjectTypeDescriptorRegistry       projectTypeDescriptorRegistry;
+    private       IconRegistry                        iconRegistry;
+    private       ThemeAgent                          themeAgent;
 
     /**
      * Create controller.
-     * 
+     *
      * @param componentRegistry
      * @param workspaceProvider
      * @param styleInjector
@@ -133,69 +137,98 @@ public class BootstrapController {
                                                      styleInjector.inject();
 
                                                      Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                                                        
-                                                        @Override
-                                                        public void execute() {
-                                                            componentRegistry.get().start(new Callback<Void, ComponentException>() {
-                                                                @Override
-                                                                public void onSuccess(Void result) {
-                                                                    // instantiate extensions
-                                                                    extensionInitializer.startExtensions();
-                                                                    // Start UI
-                                                                    SimpleLayoutPanel mainPanel = new SimpleLayoutPanel();
-                                                                    RootLayoutPanel.get().add(mainPanel);
-                                                                    WorkspacePresenter workspacePresenter = workspaceProvider.get();
 
-                                                                    workspacePresenter.setUpdateButtonVisibility(Utils.isAppLaunchedInSDKRunner());
+                                                         @Override
+                                                         public void execute() {
+                                                             componentRegistry.get().start(new Callback<Void, ComponentException>() {
+                                                                 @Override
+                                                                 public void onSuccess(Void result) {
+                                                                     // instantiate extensions
+                                                                     extensionInitializer.startExtensions();
+                                                                     // Start UI
+                                                                     SimpleLayoutPanel mainPanel = new SimpleLayoutPanel();
 
-                                                                    // Display IDE
-                                                                    workspacePresenter.go(mainPanel);
-                                                                    if(Utils.getProjectToOpen() != null){
-                                                                        resourceProvider.getProject(Utils.getProjectToOpen(), new AsyncCallback<Project>() {
-                                                                            @Override
-                                                                            public void onFailure(Throwable throwable) {
-                                                                                // Display list of projects in project explorer
-                                                                                resourceProvider.showListProjects();
-                                                                            }
 
-                                                                            @Override
-                                                                            public void onSuccess(Project project) {
+                                                                     RootLayoutPanel.get().add(mainPanel);
+                                                                     WorkspacePresenter workspacePresenter = workspaceProvider.get();
 
-                                                                            }
-                                                                        });
-                                                                    }else{
-                                                                        // Display list of projects in project explorer
-                                                                        resourceProvider.showListProjects();
-                                                                    }
-                                                                }
+                                                                     workspacePresenter
+                                                                             .setUpdateButtonVisibility(Utils.isAppLaunchedInSDKRunner());
 
-                                                                @Override
-                                                                public void onFailure(ComponentException caught) {
-                                                                    Log.error(BootstrapController.class,
-                                                                              "FAILED to start service:" + caught.getComponent(), caught);
+                                                                     // Display IDE
+                                                                     workspacePresenter.go(mainPanel);
+                                                                     if (Utils.getProjectToOpen() != null) {
+                                                                         resourceProvider.getProject(Utils.getProjectToOpen(),
+                                                                                                     new AsyncCallback<Project>() {
+                                                                                                         @Override
+                                                                                                         public void onFailure(
+                                                                                                                 Throwable throwable) {
+                                                                                                             // Display list of projects
+                                                                                                             // in project explorer
+                                                                                                             resourceProvider
+                                                                                                                     .showListProjects();
+                                                                                                         }
 
-                                                                    // Handle error when receiving profile.
-                                                                    initializationFailed(caught.getMessage());
-                                                                }
-                                                            });
+                                                                                                         @Override
+                                                                                                         public void onSuccess(
+                                                                                                                 Project project) {
 
-                                                            initializeProjectTypeDescriptorRegistry();
-                                                        }
-                                                    });
+                                                                                                         }
+                                                                                                     });
+                                                                     } else {
+                                                                         // Display list of projects in project explorer
+                                                                         resourceProvider.showListProjects();
+                                                                     }
+
+
+                                                                     Window window = Browser.getWindow();
+                                                                     window.addEventListener(Event.FOCUS, new EventListener() {
+                                                                         @Override
+                                                                         public void handleEvent(Event evt) {
+                                                                             Log.info(BootstrapController.class,
+                                                                                      evt.getType() + " " + evt.getTimeStamp());
+                                                                         }
+                                                                     }, true);
+
+                                                                     window.addEventListener(Event.BLUR, new EventListener() {
+                                                                         @Override
+                                                                         public void handleEvent(Event evt) {
+                                                                             Log.info(BootstrapController.class,
+                                                                                      evt.getType() + "  " + evt.getTimeStamp());
+                                                                         }
+                                                                     }, true);
+
+                                                                 }
+
+                                                                 @Override
+                                                                 public void onFailure(ComponentException caught) {
+                                                                     Log.error(BootstrapController.class,
+                                                                               "FAILED to start service:" + caught.getComponent(), caught);
+
+                                                                     // Handle error when receiving profile.
+                                                                     initializationFailed(caught.getMessage());
+                                                                 }
+                                                             });
+
+                                                             initializeProjectTypeDescriptorRegistry();
+                                                         }
+                                                     });
                                                  }
 
                                                  @Override
                                                  protected void onFailure(Throwable exception) {
                                                      Log.error(BootstrapController.class, exception);
                                                  }
-                                             });
+                                             }
+                                            );
     }
 
     /**
      * Call this method to handle any of initialization errors. If a function window["on-initialization-failed"] is set, it will be called
      * using 'message' string as a parameter.
-     * 
-     * @param message error message
+     *
+     * @param message
+     *         error message
      */
     private native void initializationFailed(String message) /*-{
         if ($wnd["on-initialization-failed"]) {
@@ -213,29 +246,28 @@ public class BootstrapController {
 
     private void initializeProjectTypeDescriptorRegistry() {
         projectTypeDescriptionServiceClient
-                                           .getProjectTypes(new AsyncRequestCallback<Array<ProjectTypeDescriptor>>(
-                                                                                                                   dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectTypeDescriptor.class)) {
-                                               @Override
-                                               protected void onSuccess(Array<ProjectTypeDescriptor> result) {
-                                                   for (int i = 0; i < result.size(); i++) {
-                                                       if (!result.get(i).getProjectTypeId().equalsIgnoreCase(Constants.NAMELESS_ID))// skip
-                                                                                                                                     // unknown
-                                                                                                                                     // project
-                                                                                                                                     // type
-                                                                                                                                     // user
-                                                           // can select this project type need
-                                                           // use BaseProjectType instead
-                                                           projectTypeDescriptorRegistry.registerDescriptor(result.get(i));
-                                                   }
-                                               }
+                .getProjectTypes(new AsyncRequestCallback<Array<ProjectTypeDescriptor>>(
+                        dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectTypeDescriptor.class)) {
+                    @Override
+                    protected void onSuccess(Array<ProjectTypeDescriptor> result) {
+                        for (int i = 0; i < result.size(); i++) {
+                            if (!result.get(i).getProjectTypeId().equalsIgnoreCase(Constants.NAMELESS_ID))// skip
+                                // unknown
+                                // project
+                                // type
+                                // user
+                                // can select this project type need
+                                // use BaseProjectType instead
+                                projectTypeDescriptorRegistry.registerDescriptor(result.get(i));
+                        }
+                    }
 
-                                               @Override
-                                               protected void onFailure(Throwable exception) {
-                                                   Log.error(BootstrapController.class, exception);
-                                               }
-                                           });
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        Log.error(BootstrapController.class, exception);
+                    }
+                });
     }
-
 
     
     private void registerDefaultIcon(Resources resources) {

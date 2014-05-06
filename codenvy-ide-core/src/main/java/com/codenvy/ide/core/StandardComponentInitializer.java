@@ -21,6 +21,7 @@ import com.codenvy.ide.MimeType;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.actions.CloseProjectAction;
 import com.codenvy.ide.actions.DeleteResourceAction;
+import com.codenvy.ide.actions.FindActionAction;
 import com.codenvy.ide.actions.FormatterAction;
 import com.codenvy.ide.actions.ImportProjectAction;
 import com.codenvy.ide.actions.NavigateToFileAction;
@@ -136,6 +137,9 @@ public class StandardComponentInitializer {
     private ShowAboutAction showAboutAction;
 
     @Inject
+    private FindActionAction findActionAction;
+
+    @Inject
     private NavigateToFileAction navigateToFileAction;
 
     @Inject
@@ -209,6 +213,8 @@ public class StandardComponentInitializer {
 
         DefaultActionGroup help = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_HELP);
         actionManager.registerAction("showAbout", showAboutAction);
+        actionManager.registerAction("findActionAction", findActionAction);
+        help.add(findActionAction);
         help.add(showAboutAction);
 
         DefaultActionGroup fileGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_FILE);
@@ -216,6 +222,7 @@ public class StandardComponentInitializer {
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('s').build(), "save");
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('S').build(), "saveAll");
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('F').build(), "format");
+        keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('A').build(), "findActionAction");
 
         actionManager.registerAction("newProject", newProjectAction);
         actionManager.registerAction("openProject", openProjectAction);

@@ -21,8 +21,6 @@ import com.codenvy.api.core.NotFoundException;
 import com.codenvy.api.core.ServerException;
 import com.codenvy.api.user.server.dao.UserDao;
 import com.codenvy.api.user.server.dao.UserProfileDao;
-import com.codenvy.api.user.server.exception.UserException;
-import com.codenvy.api.user.server.exception.UserProfileException;
 import com.codenvy.api.user.shared.dto.Profile;
 import com.codenvy.api.user.shared.dto.User;
 import com.codenvy.commons.env.EnvironmentContext;
@@ -179,11 +177,9 @@ public class UserProfileSshKeyStore implements SshKeyStore {
         Profile profile;
         try {
             profile = profileDao.getById(user.getId());
-
             profile.getPreferences().remove(sshKeyAttributeName(host, PRIVATE));
             profile.getPreferences().remove(sshKeyAttributeName(host, PUBLIC));
             profileDao.update(profile);
-            throw new SshKeyStoreException(String.format("Failed to remove keys for host '%s'.", host));
         } catch (NotFoundException e) {
             throw new SshKeyStoreException(String.format("Failed to remove keys for host '%s'.", host));
         } catch (ServerException e) {

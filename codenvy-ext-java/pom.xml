@@ -23,7 +23,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M15-SNAPSHOT</version>
+        <version>3.0.0-M16-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ext-java</artifactId>
     <packaging>jar</packaging>
@@ -58,17 +58,17 @@
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-builder</artifactId>
-            <version>${com.codenvy.platform-api.version}</version>
+            <version>${codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-project</artifactId>
-            <version>${com.codenvy.platform-api.version}</version>
+            <version>${codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-vfs</artifactId>
-            <version>${com.codenvy.platform-api.version}</version>
+            <version>${codenvy.platform-api.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>javassist</artifactId>
@@ -89,12 +89,12 @@
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-elemental</artifactId>
-            <version>${gwt.version}</version>
+            <version>${com.google.gwt.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.gwt.inject</groupId>
             <artifactId>gin</artifactId>
-            <version>${gin.version}</version>
+            <version>${com.google.gwt.gin.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.validation</groupId>
@@ -104,47 +104,47 @@
         <dependency>
             <groupId>org.eclipse.birt.runtime</groupId>
             <artifactId>org.eclipse.core.jobs</artifactId>
-            <version>3.5.300.v20120912-155018</version>
+            <version>${org.eclipse.core.jobs.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.birt.runtime</groupId>
             <artifactId>org.eclipse.core.resources</artifactId>
-            <version>3.8.100.v20130521-2026</version>
+            <version>${org.eclipse.core.resources.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.birt.runtime</groupId>
             <artifactId>org.eclipse.core.runtime</artifactId>
-            <version>3.9.0.v20130326-1255</version>
+            <version>${org.eclipse.core.runtime.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.birt.runtime</groupId>
             <artifactId>org.eclipse.equinox.common</artifactId>
-            <version>3.6.200.v20130402-1505</version>
+            <version>${org.eclipse.equinox.common.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.core</groupId>
             <artifactId>org.eclipse.core.contenttype</artifactId>
-            <version>3.4.100.v20100505-1235</version>
+            <version>${org.eclipse.core.contenttype.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.text</groupId>
             <artifactId>org.eclipse.text</artifactId>
-            <version>3.5.101</version>
+            <version>${org.eclipse.text.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.tycho</groupId>
             <artifactId>org.eclipse.jdt.core</artifactId>
-            <version>3.9.0.v20130604-1421</version>
+            <version>${org.eclipse.jdt.core.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.tycho</groupId>
             <artifactId>org.eclipse.osgi</artifactId>
-            <version>3.9.1.v20130814-1242</version>
+            <version>${org.eclipse.osgi.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
+            <version>${com.google.gwt.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -156,7 +156,7 @@
         <dependency>
             <groupId>com.googlecode.gwt-test-utils</groupId>
             <artifactId>gwt-test-utils</artifactId>
-            <version>${gwt-test-utils.version}</version>
+            <version>${com.googlecode.gwt-test-utils.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -181,7 +181,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>${mockito.version}</version>
+            <version>${org.mockito.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

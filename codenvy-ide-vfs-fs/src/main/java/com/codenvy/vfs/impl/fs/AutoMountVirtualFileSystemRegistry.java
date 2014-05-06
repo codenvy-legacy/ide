@@ -53,9 +53,7 @@ public class AutoMountVirtualFileSystemRegistry extends VirtualFileSystemRegistr
     protected VirtualFileSystemProvider loadProvider(String vfsId) throws VirtualFileSystemException {
         File wsPath = mountStrategy.getMountPath(vfsId);
         if (!wsPath.exists()) {
-            if (!wsPath.mkdirs()) {
-                return null;
-            }
+            return null;
         }
         return new LocalFileSystemProvider(vfsId, mountStrategy, eventService, searcherProvider);
     }

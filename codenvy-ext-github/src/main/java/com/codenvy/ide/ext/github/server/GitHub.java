@@ -22,7 +22,6 @@ import com.codenvy.api.auth.shared.dto.OAuthToken;
 import com.codenvy.api.core.NotFoundException;
 import com.codenvy.api.core.ServerException;
 import com.codenvy.api.user.server.dao.UserDao;
-import com.codenvy.api.user.server.exception.UserException;
 import com.codenvy.commons.json.JsonHelper;
 import com.codenvy.commons.json.JsonNameConventions;
 import com.codenvy.commons.json.JsonParseException;

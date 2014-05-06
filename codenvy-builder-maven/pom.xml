@@ -23,7 +23,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M15-SNAPSHOT</version>
+        <version>3.0.0-M16-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-builder-maven</artifactId>
     <packaging>jar</packaging>
@@ -35,7 +35,7 @@
         <dependency>
             <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-inject</artifactId>
-            <version>${com.codenvy.commons.version}</version>
+            <version>${codenvy.commons.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
@@ -45,7 +45,7 @@
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-builder</artifactId>
-            <version>${com.codenvy.platform-api.version}</version>
+            <version>${codenvy.platform-api.version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -109,6 +109,7 @@
             <plugin>
                 <groupId>com.codenvy.platform-api</groupId>
                 <artifactId>codenvy-dto-maven-plugin</artifactId>
+                <version>${codenvy.platform-api.version}</version>
                 <executions>
                     <execution>
                         <phase>process-sources</phase>
@@ -126,7 +127,7 @@
                     <dependency>
                         <groupId>com.codenvy.platform-api</groupId>
                         <artifactId>codenvy-api-builder</artifactId>
-                        <version>${com.codenvy.platform-api.version}</version>
+                        <version>${codenvy.platform-api.version}</version>
                     </dependency>
                 </dependencies>
                 <configuration>

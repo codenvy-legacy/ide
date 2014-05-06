@@ -83,8 +83,8 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("appStarting")
     String applicationStarting(String name);
 
-    @Key("appStarted.url")
-    String applicationStartedOnUrl(String name, String uris);
+    @Key("appStarted")
+    String applicationStarted(String name);
 
     @Key("startAppFailed")
     String startApplicationFailed(String name);
@@ -97,6 +97,9 @@ public interface RunnerLocalizationConstant extends Messages {
 
     @Key("stopAppFailed")
     String stopApplicationFailed(String name);
+
+    @Key("appCanceled")
+    String applicationCanceled(String name);
 
     @Key("appUpdating")
     String applicationUpdating(String name);

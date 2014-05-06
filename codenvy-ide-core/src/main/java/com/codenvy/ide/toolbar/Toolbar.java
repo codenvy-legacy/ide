@@ -31,7 +31,7 @@ import javax.validation.constraints.NotNull;
  * @version $Id:
  */
 public class Toolbar extends Composite {
-    static final ToolbarResources RESOURCES = GWT.create(ToolbarResources.class);
+    public static final ToolbarResources RESOURCES = GWT.create(ToolbarResources.class);
 
     static {
         RESOURCES.toolbar().ensureInjected();

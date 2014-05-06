@@ -51,6 +51,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.vectomatic.dom.svg.ui.SVGImage;
+
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -116,6 +118,15 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
         this.dtoFactory = dtoFactory;
 
         container.add(ourUiBinder.createAndBindUi(this));
+
+        btnResume.getElement().appendChild(new SVGImage(resources.resumeButton()).getElement());
+        btnStepInto.getElement().appendChild(new SVGImage(resources.stepIntoButton()).getElement());
+        btnStepOver.getElement().appendChild(new SVGImage(resources.stepOverButton()).getElement());
+        btnStepReturn.getElement().appendChild(new SVGImage(resources.stepReturnButton()).getElement());
+        btnDisconnect.getElement().appendChild(new SVGImage(resources.disconnectButton()).getElement());
+        btnRemoveAllBreakpoints.getElement().appendChild(new SVGImage(resources.removeAllBreakpointsButton()).getElement());
+        btnChangeValue.getElement().appendChild(new SVGImage(resources.changeVariableValue()).getElement());
+        btnEvaluateExpression.getElement().appendChild(new SVGImage(resources.evaluate()).getElement());
 
         TableElement breakPointsElement = Elements.createTableElement();
         breakPointsElement.setAttribute("style", "width: 100%");
@@ -268,8 +279,8 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
 
     /** {@inheritDoc} */
     @Override
-    public void resetStepIntoButton() {
-        if (btnStepInto.isDown()) btnStepInto.setDown(false);
+    public boolean resetStepIntoButton(boolean state) {
+        return setButtonState(btnStepInto, state);
     }
 
     /** {@inheritDoc} */
@@ -280,8 +291,8 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
 
     /** {@inheritDoc} */
     @Override
-    public void resetStepOverButton() {
-        if (btnStepOver.isDown()) btnStepOver.setDown(false);
+    public boolean resetStepOverButton(boolean state) {
+        return setButtonState(btnStepOver, state);
     }
 
     /** {@inheritDoc} */
@@ -292,8 +303,21 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
 
     /** {@inheritDoc} */
     @Override
-    public void resetStepReturnButton() {
-        if (btnStepReturn.isDown()) btnStepReturn.setDown(false);
+    public boolean resetStepReturnButton(boolean state) {
+        return setButtonState(btnStepReturn, state);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean setButtonState(ToggleButton button, boolean state) {
+        if (state) {
+            if (!button.isDown()) return true;
+            button.setDown(false);
+        } else {
+            if (button.isDown()) return true;
+            button.setDown(true);
+        }
+        return false;
     }
 
     /** {@inheritDoc} */
@@ -329,29 +353,17 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
 
     @UiHandler("btnStepInto")
     public void onStepIntoButtonClicked(ClickEvent event) {
-        if (btnStepInto.isDown()) {
-            delegate.onStepIntoButtonClicked();
-        } else {
-            btnStepInto.setDown(true);
-        }
+        delegate.onStepIntoButtonClicked();
     }
 
     @UiHandler("btnStepOver")
     public void onStepOverButtonClicked(ClickEvent event) {
-        if (btnStepOver.isDown()) {
-            delegate.onStepOverButtonClicked();
-        } else {
-            btnStepOver.setDown(true);
-        }
+        delegate.onStepOverButtonClicked();
     }
 
     @UiHandler("btnStepReturn")
     public void onStepReturnButtonClicked(ClickEvent event) {
-        if (btnStepReturn.isDown()) {
-            delegate.onStepReturnButtonClicked();
-        } else {
-            btnStepReturn.setDown(true);
-        }
+        delegate.onStepReturnButtonClicked();
     }
 
     @UiHandler("btnDisconnect")

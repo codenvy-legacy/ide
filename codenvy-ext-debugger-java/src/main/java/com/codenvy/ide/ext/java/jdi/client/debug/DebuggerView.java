@@ -127,8 +127,8 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
      */
     void setEnableStepIntoButton(boolean isEnable);
 
-    /** Reset keydown state for StepIntoButton. */
-    void resetStepIntoButton();
+    /** Change state for StepIntoButton. */
+    boolean resetStepIntoButton(boolean state);
 
     /**
      * Sets whether Step over button is enabled.
@@ -138,8 +138,8 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
      */
     void setEnableStepOverButton(boolean isEnable);
 
-    /** Reset keydown state for StepOverButton. */
-    void resetStepOverButton();
+    /** Change state for StepOverButton. */
+    boolean resetStepOverButton(boolean state);
 
     /**
      * Sets whether Step return button is enabled.
@@ -149,8 +149,18 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
      */
     void setEnableStepReturnButton(boolean isEnable);
 
-    /** Reset keydown state for StepReturnButton. */
-    void resetStepReturnButton();
+    /** Change  state for StepReturnButton. */
+    boolean resetStepReturnButton(boolean state);
+
+    /**
+     * Sets whether Change value button is enabled.
+     *
+     * @param button
+     *         the instance of button widget
+     * @param state
+     *         the new state of button
+     */
+    public boolean setButtonState(ToggleButton button, boolean state);
 
     /**
      * Sets whether Change value button is enabled.
