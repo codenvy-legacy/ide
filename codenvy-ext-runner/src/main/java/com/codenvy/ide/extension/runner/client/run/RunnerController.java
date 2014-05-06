@@ -252,7 +252,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
                         try {
                             messageBus.unsubscribe(RUNNER_STATUS_CHANNEL + currentApplication.getProcessId(), this);
-                            messageBus.unsubscribe(RUNNER_OUTPUT_CHANNEL + currentApplication.getProcessId(), runnerOutputHandler);
                         } catch (WebSocketException e) {
                             Log.error(RunnerController.class, e);
                         }
@@ -266,7 +265,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
                         try {
                             messageBus.unsubscribe(RUNNER_STATUS_CHANNEL + currentApplication.getProcessId(), this);
-                            messageBus.unsubscribe(RUNNER_OUTPUT_CHANNEL + currentApplication.getProcessId(), runnerOutputHandler);
                         } catch (WebSocketException e) {
                             Log.error(RunnerController.class, e);
                         }
@@ -443,26 +441,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             notification.setStatus(FINISHED);
             notification.setType(ERROR);
             notification.setMessage(constant.updateApplicationFailed(project.getName()));
-        }
-    }
-
-    private class LineUnmarshaller implements Unmarshallable<String> {
-        private String line;
-
-        @Override
-        public void unmarshal(Message response) throws UnmarshallerException {
-            JSONObject jsonObject = JSONParser.parseStrict(response.getBody()).isObject();
-            if (jsonObject == null) {
-                return;
-            }
-            if (jsonObject.containsKey("line")) {
-                line = jsonObject.get("line").isString().stringValue();
-            }
-        }
-
-        @Override
-        public String getPayload() {
-            return line;
         }
     }
 

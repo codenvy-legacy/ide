@@ -19,8 +19,8 @@ package com.codenvy.runner.docker;
 
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.util.CustomPortService;
+import com.codenvy.api.runner.internal.Constants;
 import com.codenvy.api.runner.internal.ResourceAllocators;
-import com.codenvy.api.runner.internal.Runner;
 import com.codenvy.api.runner.internal.RunnerRegistry;
 
 import javax.annotation.Nullable;
@@ -43,23 +43,26 @@ import java.util.Map;
  */
 @Singleton
 public class EmbeddedDockerRunnerRegistryPlugin {
+    public static final String DOCKERFILES_REPO = "runner.docker.dockerfiles_repo";
+
+
     private final List<EmbeddedDockerRunner> myRunners;
     private final RunnerRegistry             registry;
 
     @Inject
     public EmbeddedDockerRunnerRegistryPlugin(RunnerRegistry registry,
-                                              @Named(Runner.DEPLOY_DIRECTORY) File deployDirectoryRoot,
-                                              @Named(Runner.CLEANUP_DELAY_TIME) int cleanupDelay,
-                                              @Named("runner.docker.host_name") String hostName,
+                                              @Named(Constants.DEPLOY_DIRECTORY) File deployDirectoryRoot,
+                                              @Named(Constants.APP_CLEANUP_TIME) int cleanupTime,
+                                              @Named(BaseDockerRunner.HOST_NAME) String hostName,
                                               ResourceAllocators allocators,
                                               CustomPortService portService,
                                               EventService eventService,
-                                              @Nullable @Named("runner.docker.dockerfiles_repo") String dockerfilesRepository) {
+                                              @Nullable @Named(DOCKERFILES_REPO) String dockerfilesRepository) {
         this.registry = registry;
         this.myRunners = new LinkedList<>();
         for (Map.Entry<String, List<File>> entry : findDockerfiles(dockerfilesRepository).entrySet()) {
             myRunners.add(new EmbeddedDockerRunner(deployDirectoryRoot,
-                                                   cleanupDelay,
+                                                   cleanupTime,
                                                    hostName,
                                                    allocators,
                                                    portService,

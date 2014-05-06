@@ -62,7 +62,12 @@ public interface SshLocalizationConstant extends Messages {
     
     @Key("delete.sshkey.question")
     String deleteSshKeyQuestion(String host);
-    
+
+
+    @Key("delete.sshkey.title")
+    String deleteSshKeyTitle();
+
+
     @Key("delete.sshkey.failed")
     String deleteSshKeyFailed();
     

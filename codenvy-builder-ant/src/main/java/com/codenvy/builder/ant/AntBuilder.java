@@ -25,6 +25,7 @@ import com.codenvy.api.builder.internal.BuildTask;
 import com.codenvy.api.builder.internal.Builder;
 import com.codenvy.api.builder.internal.BuilderConfiguration;
 import com.codenvy.api.builder.internal.BuilderTaskType;
+import com.codenvy.api.builder.internal.Constants;
 import com.codenvy.api.builder.internal.DependencyCollector;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.util.CommandLine;
@@ -112,13 +113,13 @@ public class AntBuilder extends Builder {
     private final CustomPortService           portService;
 
     @Inject
-    public AntBuilder(@Named(REPOSITORY) java.io.File rootDirectory,
-                      @Named(NUMBER_OF_WORKERS) int numberOfWorkers,
-                      @Named(INTERNAL_QUEUE_SIZE) int queueSize,
-                      @Named(CLEAN_RESULT_DELAY_TIME) int cleanBuildResultDelay,
+    public AntBuilder(@Named(Constants.REPOSITORY) java.io.File rootDirectory,
+                      @Named(Constants.NUMBER_OF_WORKERS) int numberOfWorkers,
+                      @Named(Constants.INTERNAL_QUEUE_SIZE) int queueSize,
+                      @Named(Constants.CLEANUP_RESULT_TIME) int cleanupTime,
                       CustomPortService portService,
                       EventService eventService) {
-        super(rootDirectory, numberOfWorkers, queueSize, cleanBuildResultDelay, eventService);
+        super(rootDirectory, numberOfWorkers, queueSize, cleanupTime, eventService);
         this.portService = portService;
         antMessageServers = new ConcurrentHashMap<>();
     }

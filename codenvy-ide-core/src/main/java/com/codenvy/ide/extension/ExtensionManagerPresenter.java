@@ -23,6 +23,8 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.ui.preferences.AbstractPreferencesPagePresenter;
 import com.codenvy.ide.collections.Jso;
+import com.codenvy.ide.ui.dialogs.Ask;
+import com.codenvy.ide.ui.dialogs.AskHandler;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -74,9 +76,14 @@ public class ExtensionManagerPresenter extends AbstractPreferencesPagePresenter 
 
             @Override
             public void onSuccess(Profile result) {
-                if (Window.confirm("Restart Codenvy to activate changes in Extensions?")) {
-                    Window.Location.reload();
-                }
+                Ask ask = new Ask("Restart", "Restart Codenvy to activate changes in Extensions?", new AskHandler() {
+                    @Override
+                    public void onOk() {
+                        Window.Location.reload();
+
+                    }
+                });
+                ask.show();
             }
         });
     }

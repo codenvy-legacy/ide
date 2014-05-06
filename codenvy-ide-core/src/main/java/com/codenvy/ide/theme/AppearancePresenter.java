@@ -22,6 +22,8 @@ import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.ui.preferences.AbstractPreferencesPagePresenter;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
+import com.codenvy.ide.ui.dialogs.Ask;
+import com.codenvy.ide.ui.dialogs.AskHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -35,8 +37,8 @@ import com.google.inject.Singleton;
 public class AppearancePresenter extends AbstractPreferencesPagePresenter implements AppearanceView.ActionDelegate {
 
 
-    private AppearanceView view;
-    private ThemeAgent     themeAgent;
+    private AppearanceView     view;
+    private ThemeAgent         themeAgent;
     private PreferencesManager preferencesManager;
 
     private boolean dirty = false;
@@ -64,10 +66,14 @@ public class AppearancePresenter extends AbstractPreferencesPagePresenter implem
 
                 @Override
                 public void onSuccess(Profile result) {
-                    if (Window.confirm("Restart Codenvy to activate changes in Appearances?")) {
-                        themeAgent.setCurrentThemeId(themeId);
-                        Window.Location.reload();
-                    }
+                    Ask ask = new Ask("Restart Codenvy", "Restart Codenvy to activate changes in Appearances?", new AskHandler() {
+                        @Override
+                        public void onOk() {
+                            themeAgent.setCurrentThemeId(themeId);
+                            Window.Location.reload();
+                        }
+                    });
+                    ask.show();
                 }
             });
         }

@@ -17,6 +17,7 @@
  */
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.notification.EventSubscriber;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.server.observation.UpdateACLEvent;
@@ -27,15 +28,19 @@ import com.google.inject.multibindings.Multibinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
-/**
- * @author Sergii Leschenko
- */
+/** @author Sergii Leschenko */
 @DynaModule
-public class _SubscriberRegisterModule_ForCacheReset_ extends AbstractModule {
+public class _IdeOldCacheUpdaterRegister_ForCacheReset_ extends AbstractModule {
     private static final Logger LOG = LoggerFactory.getLogger(_IdeOldCacheUpdater.class);
 
     @Override
@@ -45,6 +50,33 @@ public class _SubscriberRegisterModule_ForCacheReset_ extends AbstractModule {
         subscriptionServiceBinder.addBinding().to(_IdeOldCacheUpdater.class);
 
         bind(_SubscriberRegister_ForCacheReset_.class);
+    }
+
+    @Singleton
+    public static class _SubscriberRegister_ForCacheReset_ {
+        private final EventService eventService;
+
+        private final Set<EventSubscriber> listeners;
+
+        @Inject
+        public _SubscriberRegister_ForCacheReset_(EventService eventService, _IdeOldCacheUpdater cacheUpdater) {
+            this.eventService = eventService;
+            listeners = new HashSet<EventSubscriber>(Arrays.asList(cacheUpdater));
+        }
+
+        @PostConstruct
+        public void subscribe() {
+            for (EventSubscriber eventSubscriber : listeners) {
+                eventService.subscribe(eventSubscriber);
+            }
+        }
+
+        @PreDestroy
+        public void unsubscribe() {
+            for (EventSubscriber eventSubscriber : listeners) {
+                eventService.unsubscribe(eventSubscriber);
+            }
+        }
     }
 
     // This class will send signal for cache update in ide2.
@@ -82,5 +114,4 @@ public class _SubscriberRegisterModule_ForCacheReset_ extends AbstractModule {
             }
         }
     }
-
 }

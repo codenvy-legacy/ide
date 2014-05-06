@@ -183,6 +183,19 @@ textarea {
     outline: none;
     color: #888888;
 }
+.gwt-ToggleButton-up-disabled > svg, .gwt-PushButton-up-disabled > svg,
+.gwt-ToggleButton-down-disabled > svg, .gwt-PushButton-down-disabled > svg{
+    filter: grayscale(100%);
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    fill: #9B9B9B;
+}
+.gwt-ToggleButton-up > svg, .gwt-PushButton-up > svg,
+.gwt-ToggleButton-up-hovering > svg, .gwt-PushButton-up-hovering > svg,
+.gwt-ToggleButton-down > svg, .gwt-PushButton-down > svg,
+.gwt-ToggleButton-down-hovering > svg, .gwt-PushButton-down-hovering > svg{
+    fill: mainFontColor;
+}
 
 /* Style for splitter */
 .gwt-SplitLayoutPanel-HDragger {

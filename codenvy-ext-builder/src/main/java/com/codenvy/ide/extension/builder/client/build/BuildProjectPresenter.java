@@ -168,8 +168,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                         isBuildInProgress = false;
                         try {
                             messageBus.unsubscribe(BuilderExtension.BUILD_STATUS_CHANNEL + buildTaskDescriptor.getTaskId(), this);
-                            messageBus.unsubscribe(BuilderExtension.BUILD_OUTPUT_CHANNEL + buildTaskDescriptor.getTaskId(),
-                                                   buildOutputHandler);
                             Log.error(BuildProjectPresenter.class, exception);
                         } catch (WebSocketException e) {
                             Log.error(BuildProjectPresenter.class, e);
@@ -200,7 +198,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         isBuildInProgress = false;
         try {
             messageBus.unsubscribe(BuilderExtension.BUILD_STATUS_CHANNEL + descriptor.getTaskId(), buildStatusHandler);
-            messageBus.unsubscribe(BuilderExtension.BUILD_OUTPUT_CHANNEL + descriptor.getTaskId(), buildOutputHandler);
         } catch (Exception e) {
             Log.error(BuildProjectPresenter.class, e);
         }

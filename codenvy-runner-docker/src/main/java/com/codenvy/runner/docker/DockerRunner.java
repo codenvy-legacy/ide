@@ -20,6 +20,7 @@ package com.codenvy.runner.docker;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.api.runner.dto.RunRequest;
+import com.codenvy.api.runner.internal.Constants;
 import com.codenvy.api.runner.internal.ResourceAllocators;
 import com.google.common.io.ByteStreams;
 
@@ -38,13 +39,13 @@ import java.util.List;
 @Singleton
 public class DockerRunner extends BaseDockerRunner {
     @Inject
-    public DockerRunner(@Named(DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
-                        @Named(CLEANUP_DELAY_TIME) int cleanupDelay,
-                        @Named("runner.docker.host_name") String hostName,
+    public DockerRunner(@Named(Constants.DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
+                        @Named(Constants.APP_CLEANUP_TIME) int cleanupTime,
+                        @Named(HOST_NAME) String hostName,
                         ResourceAllocators allocators,
                         CustomPortService portService,
                         EventService eventService) {
-        super(deployDirectoryRoot, cleanupDelay, hostName, allocators, portService, eventService);
+        super(deployDirectoryRoot, cleanupTime, hostName, allocators, portService, eventService);
     }
 
     @Override
