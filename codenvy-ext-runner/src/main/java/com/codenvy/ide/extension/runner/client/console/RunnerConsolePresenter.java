@@ -19,6 +19,7 @@ package com.codenvy.ide.extension.runner.client.console;
 
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
+import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -33,11 +34,13 @@ import com.google.inject.Singleton;
 public class RunnerConsolePresenter extends BasePresenter implements RunnerConsoleView.ActionDelegate {
     private static final String TITLE = "Runner";
     private RunnerConsoleView view;
+    private final ToolbarPresenter consoleToolbar;
 
     /** Construct empty Part */
     @Inject
-    public RunnerConsolePresenter(RunnerConsoleView view) {
+    public RunnerConsolePresenter(RunnerConsoleView view, @RunnerConsoleToolbar ToolbarPresenter consoleToolbar) {
         this.view = view;
+        this.consoleToolbar = consoleToolbar;
         this.view.setTitle(TITLE);
         this.view.setDelegate(this);
     }
@@ -63,6 +66,7 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
+        consoleToolbar.go(view.getToolbarPanel());
         container.setWidget(view);
     }
 
@@ -84,20 +88,5 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
     /** Clear console. Remove all messages. */
     public void clear() {
         view.clear();
-    }
-
-    /**
-     * Set application's URL in console.
-     *
-     * @param link
-     *         application URL
-     */
-    public void setAppURL(String link) {
-        view.setAppURL(link);
-    }
-
-    /** Clear application URL in console. */
-    public void clearAppURL() {
-        view.setAppURL("");
     }
 }

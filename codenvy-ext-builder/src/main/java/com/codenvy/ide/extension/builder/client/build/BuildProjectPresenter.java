@@ -74,6 +74,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     /** Project for build. */
     protected Project      projectToBuild;
     protected Notification notification;
+    private   String       downloadArtifactURL;
 
     /** Create presenter. */
     @Inject
@@ -116,7 +117,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
             return;
         }
 
-        console.clearDownloadLink();
+        downloadArtifactURL = null;
         console.clear();
         projectToBuild = resourceProvider.getActiveProject();
 
@@ -207,7 +208,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         switch (descriptor.getStatus()) {
             case SUCCESSFUL:
                 Link downloadResultLink = getAppLink(descriptor, Constants.LINK_REL_DOWNLOAD_RESULT);
-                console.setDownloadLink(downloadResultLink.getHref());
+                downloadArtifactURL = downloadResultLink.getHref();
 
                 notification.setType(INFO);
                 notification.setMessage(constant.buildFinished(projectToBuild.getName()));
@@ -254,6 +255,11 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                 return link;
         }
         return null;
+    }
+
+    /** Returns link to download artifact. */
+    public String getDownloadArtifactURL() {
+        return downloadArtifactURL;
     }
 
 }

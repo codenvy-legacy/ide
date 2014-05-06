@@ -33,7 +33,6 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.commons.exception.ServerException;
-import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
@@ -43,14 +42,10 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
-import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
-import com.codenvy.ide.websocket.rest.Unmarshallable;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -84,13 +79,13 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private       NotificationManager                               notificationManager;
     private       Notification                                      notification;
     private       Project                                           project;
-    /** Launched app. */
+    /** Descriptor of the application which is currently running. */
     private       ApplicationProcessDescriptor                      currentApplication;
-    /** Determines whether any application is launched. */
-    private       boolean                                           isLaunchingInProgress;
     private       ProjectRunCallback                                runCallback;
     protected     SubscriptionHandler<LogMessage>                   runnerOutputHandler;
     protected     SubscriptionHandler<ApplicationProcessDescriptor> runStatusHandler;
+    /** URL of the application which is currently running. */
+    private       String                                            applicationURL;
 
     /** Create controller. */
     @Inject
@@ -119,13 +114,11 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
-                isLaunchingInProgress = false;
                 currentApplication = null;
             }
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
-                isLaunchingInProgress = false;
                 if (isAnyAppLaunched()) {
                     stopActiveProject();
                 }
@@ -141,12 +134,12 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     /**
-     * Determines whether any application is launched.
+     * Determines whether any application is running.
      *
-     * @return <code>true</code> if any application is launched, and <code>false</code> otherwise
+     * @return <code>true</code> if any application is running, and <code>false</code> otherwise
      */
     public boolean isAnyAppLaunched() {
-        return isLaunchingInProgress;
+        return currentApplication != null;
     }
 
     /** Run active project. */
@@ -192,13 +185,12 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             Window.alert("Project is not opened.");
             return;
         }
-        if (isLaunchingInProgress) {
+        if (currentApplication != null) {
             Window.alert("Launching of another project is in progress now.");
             return;
         }
 
         console.clear();
-        isLaunchingInProgress = true;
         notification = new Notification(constant.applicationStarting(project.getName()), PROGRESS, RunnerController.this);
         notificationManager.showNotification(notification);
         runCallback = callback;
@@ -223,7 +215,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
                         @Override
                         protected void onFailure(Throwable exception) {
-                            isLaunchingInProgress = false;
                             currentApplication = null;
                             onFail(constant.startApplicationFailed(project.getName()), exception);
                         }
@@ -243,9 +234,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                         afterApplicationLaunched(currentApplication);
                         break;
                     case STOPPED:
-                        isLaunchingInProgress = false;
                         currentApplication = null;
-                        console.clearAppURL();
+                        applicationURL = null;
                         notification.setStatus(FINISHED);
                         notification.setMessage(constant.applicationStopped(project.getName()));
                         console.print(constant.applicationStopped(project.getName()));
@@ -257,9 +247,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                         }
                         break;
                     case CANCELLED:
-                        isLaunchingInProgress = false;
                         currentApplication = null;
-                        console.clearAppURL();
+                        applicationURL = null;
                         notification.setStatus(FINISHED);
                         notification.setMessage(constant.applicationCanceled(project.getName()));
 
@@ -274,7 +263,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
             @Override
             protected void onErrorReceived(Throwable exception) {
-                isLaunchingInProgress = false;
                 currentApplication = null;
 
                 if (exception instanceof ServerException &&
@@ -335,10 +323,17 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         if (runCallback != null) {
             runCallback.onRun(appDescriptor, project);
         }
+        applicationURL = getAppLink(appDescriptor);
 
+        notification.setStatus(FINISHED);
+        notification.setMessage(constant.applicationStarted(project.getName()));
+    }
+
+    private String getAppLink(ApplicationProcessDescriptor appDescriptor) {
+        String url = null;
         final Link appLink = getAppLink(appDescriptor, com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
         if (appLink != null) {
-            String url = appLink.getHref();
+            url = appLink.getHref();
 
             final Link codeServerLink = getAppLink(appDescriptor, "code server");
             if (codeServerLink != null) {
@@ -357,10 +352,17 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 }
                 url = urlBuilder.toString();
             }
-            console.setAppURL(url);
         }
-        notification.setStatus(FINISHED);
-        notification.setMessage(constant.applicationStarted(project.getName()));
+        return url;
+    }
+
+    private Link getAppLink(ApplicationProcessDescriptor appDescriptor, String rel) {
+        List<Link> links = appDescriptor.getLinks();
+        for (Link link : links) {
+            if (link.getRel().equalsIgnoreCase(rel))
+                return link;
+        }
+        return null;
     }
 
     private void onFail(String message, Throwable exception) {
@@ -374,15 +376,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             message += ": " + exception.getMessage();
         }
         console.print(message);
-    }
-
-    private Link getAppLink(ApplicationProcessDescriptor appDescriptor, String rel) {
-        List<Link> links = appDescriptor.getLinks();
-        for (Link link : links) {
-            if (link.getRel().equalsIgnoreCase(rel))
-                return link;
-        }
-        return null;
     }
 
     @Override
@@ -444,4 +437,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
     }
 
+    /** Returns URL of the application which is currently running. */
+    public String getApplicationURL() {
+        return applicationURL;
+    }
 }

@@ -25,7 +25,11 @@ import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.extension.builder.client.actions.BuildAction;
+import com.codenvy.ide.extension.builder.client.console.ClearConsoleAction;
+import com.codenvy.ide.extension.builder.client.console.ArtifactURLAction;
 import com.codenvy.ide.extension.builder.client.console.BuilderConsolePresenter;
+import com.codenvy.ide.extension.builder.client.console.BuilderConsoleToolbar;
+import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -45,17 +49,25 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_TOOLBAR;
 @Singleton
 @Extension(title = "Builder", version = "3.0.0")
 public class BuilderExtension {
-    public static final String BUILD_STATUS_CHANNEL = "builder:status:";
-    public static final String BUILD_OUTPUT_CHANNEL = "builder:output:";
+    public static final String BUILD_STATUS_CHANNEL          = "builder:status:";
+    public static final String BUILD_OUTPUT_CHANNEL          = "builder:output:";
+    public static final String GROUP_BUILDER_CONSOLE_TOOLBAR = "BuilderConsoleToolbar";
 
     /** Create extension. */
     @Inject
     public BuilderExtension(BuilderLocalizationConstant localizationConstants,
+                            BuilderResources builderResources,
                             ActionManager actionManager,
                             BuildAction buildAction,
+                            ClearConsoleAction clearConsoleAction,
+                            ArtifactURLAction artifactURLAction,
                             WorkspaceAgent workspaceAgent,
-                            BuilderConsolePresenter builderConsolePresenter) {
+                            BuilderConsolePresenter builderConsolePresenter,
+                            @BuilderConsoleToolbar ToolbarPresenter builderConsoleToolbar) {
+        builderResources.builder().ensureInjected();
+
         actionManager.registerAction(localizationConstants.buildProjectControlId(), buildAction);
+        actionManager.registerAction(localizationConstants.clearConsoleControlId(), clearConsoleAction);
 
         // add actions in main menu
         DefaultActionGroup buildMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_BUILD);
@@ -77,5 +89,12 @@ public class BuilderExtension {
 
         // add Builder console
         workspaceAgent.openPart(builderConsolePresenter, PartStackType.INFORMATION);
+
+        // add toolbar with actions to Builder console
+        DefaultActionGroup consoleToolbarActionGroup = new DefaultActionGroup(GROUP_BUILDER_CONSOLE_TOOLBAR, false, actionManager);
+        consoleToolbarActionGroup.add(clearConsoleAction);
+        consoleToolbarActionGroup.addSeparator();
+        consoleToolbarActionGroup.add(artifactURLAction);
+        builderConsoleToolbar.bindMainGroup(consoleToolbarActionGroup);
     }
 }

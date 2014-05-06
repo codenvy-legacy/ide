@@ -15,33 +15,22 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.extension.builder.client;
+package com.codenvy.ide.extension.builder.client.console;
 
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
+import com.google.inject.BindingAnnotation;
 
-import org.vectomatic.dom.svg.ui.SVGResource;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Client resources.
+ * Used to bind Builder {@link com.codenvy.ide.toolbar.Toolbar}.
  *
- * @author Ann Shumilova
+ * @author Artem Zatsarynnyy
  */
-public interface BuilderResources extends ClientBundle {
-    @Source("build.svg")
-    SVGResource build();
-
-    @Source("clear-logs.svg")
-    SVGResource clear();
-
-    public interface Css extends CssResource {
-        @ClassName("info-panel")
-        String infoPanel();
-
-        @ClassName("data-label")
-        String dataLabel();
-    }
-
-    @Source({"builder.css"})
-    Css builder();
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD, ElementType.TYPE})
+@BindingAnnotation
+public @interface BuilderConsoleToolbar {
 }
