@@ -19,9 +19,8 @@ package com.codenvy.ide.ext.github.server;
 
 /**
  * If GitHub returns unexpected or error status for request.
- * 
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: GithubException.java Aug 29, 2011 11:36:57 AM vereshchaka $
+ *
+ * @author Oksana Vereshchaka
  */
 @SuppressWarnings("serial")
 public class GitHubException extends Exception {
