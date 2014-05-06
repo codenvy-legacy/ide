@@ -32,12 +32,12 @@
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-runner</artifactId>
-            <version>${com.codenvy.platform-api.version}</version>
+            <version>${codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <version>${commons.compress.version}</version>
+            <version>${commons-compress.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

@@ -16,126 +16,129 @@
  * from Codenvy S.A..
  */
 
-     /****************************************************************************************
-        POPUP MENU
-      ****************************************************************************************/
+/****************************************************************************************
+   POPUP MENU
+ ****************************************************************************************/
 
-    .popupMenuMain {
-        background-color: mainMenuBkgColor;
-        position: absolute;
-    }
+.popupMenuMain {
+    background-color: mainMenuBkgColor;
+    position: absolute;
+}
 
-    .popupMenuTable {
-        border: 1px solid tabBorder;
-        font-family: mainFontFamily;
-        font-size: secondaryTextFontSize;
-        position: relative;
-        left: 0px;
-        top: 0px;
-    }
+.popupMenuTable {
+    border: 1px solid tabBorder;
+    font-family: mainFontFamily;
+    font-size: secondaryTextFontSize;
+    position: relative;
+    left: 0px;
+    top: 0px;
+}
 
-    .popupMenuCheckField,
-    .popupMenuCheckFieldOver,
-    .popupMenuCheckFieldDisabled,
-    .popupMenuIconField,
-    .popupMenuIconFieldOver,
-    .popupMenuIconFieldDisabled,
-    .popupMenuTitleField,
-    .popupMenuTitleFieldOver,
-    .popupMenuTitleFieldDisabled,
-    .popupMenuHotKeyField,
-    .popupMenuHotKeyFieldOver,
-    .popupMenuHotKeyFieldDisabled,
-    .popupMenuSubMenuField,
-    .popupMenuSubMenuFieldOver,
-    .popupMenuSubMenuFieldDisabled {
-        height: 21px;
-        cursor: default;
-        font-family: mainFontFamily;
-        font-size: fontMenuSize;
-        font-weight: normal;
-        font-style: normal;
-        vertical-align: middle;
-    }
+.popupMenuCheckField,
+.popupMenuCheckFieldOver,
+.popupMenuCheckFieldDisabled,
+.popupMenuIconField,
+.popupMenuIconFieldOver,
+.popupMenuIconFieldDisabled,
+.popupMenuTitleField,
+.popupMenuTitleFieldOver,
+.popupMenuTitleFieldDisabled,
+.popupMenuHotKeyField,
+.popupMenuHotKeyFieldOver,
+.popupMenuHotKeyFieldDisabled,
+.popupMenuSubMenuField,
+.popupMenuSubMenuFieldOver,
+.popupMenuSubMenuFieldDisabled {
+    height: 21px;
+    cursor: default;
+    font-family: mainFontFamily;
+    font-size: fontMenuSize;
+    font-weight: normal;
+    font-style: normal;
+    vertical-align: middle;
+}
 
-    .popupMenuDelimiter {
-        height: auto;
-        cursor: default;
-        font-family: mainFontFamily;
-        font-size: secondaryTextFontSize;
-        font-weight: normal;
-        font-style: normal;
-        padding-left: 4px;
-        padding-right: 4px;
-    }
+.popupMenuDelimiter {
+    height: auto;
+    cursor: default;
+    font-family: mainFontFamily;
+    font-size: secondaryTextFontSize;
+    font-weight: normal;
+    font-style: normal;
+    padding-left: 4px;
+    padding-right: 4px;
+}
 
-    .popupMenuCheckField,
-    .popupMenuCheckFieldOver,
-    .popupMenuCheckFieldDisabled {
-        width: 9px;
-        padding-left: 1px;
-        padding-right: 3px;
-    }
+.popupMenuCheckField,
+.popupMenuCheckFieldOver,
+.popupMenuCheckFieldDisabled {
+    width: 9px;
+    padding-left: 1px;
+    padding-right: 3px;
+}
 
-    .popupMenuIconField,
-    .popupMenuIconFieldOver,
-    .popupMenuIconFieldDisabled {
-        width: 23px;
-        padding-left: 4px;
-        padding-right: 1px;
-    }
-    
-    .popupMenuIconField svg,
-    .popupMenuIconFieldOver svg,
-    .popupMenuIconFieldDisabled svg {
-        width: toolbarIconSize;
-    	height: toolbarIconSize;
-    	fill: toolbarIconColor;
-    }
+.popupMenuIconField,
+.popupMenuIconFieldOver,
+.popupMenuIconFieldDisabled {
+    width: 23px;
+    padding-left: 4px;
+    padding-right: 1px;
+}
 
-    .popupMenuTitleField {
-        /*color: #333333;*/
-    }
+.popupMenuIconField svg,
+.popupMenuIconFieldOver svg,
+.popupMenuIconFieldDisabled svg {
+    width: toolbarIconSize;
+    height: toolbarIconSize;
+    fill: toolbarIconColor;
+}
 
-    .popupMenuHotKeyField {
-    }
+.popupMenuTitleField {
+    /*color: #333333;*/
+}
 
-    .popupMenuSubMenuField,
-    .popupMenuSubMenuFieldOver,
-    .popupMenuSubMenuFieldDisabled {
-        width: 10px;
-    }
+.popupMenuHotKeyField {
+}
 
-    .popupMenuIconFieldDisabled {
-        opacity: 0.6;
-    }
+.popupMenuSubMenuField,
+.popupMenuSubMenuFieldOver,
+.popupMenuSubMenuFieldDisabled {
+    width: 10px;
+}
 
-    .popupMenuHotKeyField,
-    .popupMenuHotKeyFieldOver,
-    .popupMenuHotKeyFieldDisabled {
-        width: 10px;
-        padding-left: 6px;
-        padding-right: 6px;
-    }
+.popupMenuSubMenuField svg,
+.popupMenuSubMenuFieldOver svg,
+.popupMenuSubMenuFieldDisabled svg {
+    fill: #1F1F1F;
+    width: 7px;
+    height: 7px;
+}
 
-    .popupMenuCheckFieldOver,
-    .popupMenuIconFieldOver,
-    .popupMenuTitleFieldOver,
-    .popupMenuHotKeyFieldOver,
-    .popupMenuSubMenuFieldOver {
-        background-color: selectionBackground;
-    }
+.popupMenuIconFieldDisabled {
+    opacity: 0.6;
+}
 
-    .popupMenuIconFieldDisabled,
-    .popupMenuTitleFieldDisabled,
-    .popupMenuHotKeyFieldDisabled,
-    .popupMenuSubMenuFieldDisabled {
-        color: disabledMenuItemColor;
-    }
+.popupMenuHotKeyField,
+.popupMenuHotKeyFieldOver,
+.popupMenuHotKeyFieldDisabled {
+    width: 10px;
+    padding-left: 6px;
+    padding-right: 6px;
+}
 
-    .popupMenuSubMenuImage {
-        width: 7px;
-        height: 7px;
-    }
+.popupMenuCheckFieldOver,
+.popupMenuIconFieldOver,
+.popupMenuTitleFieldOver,
+.popupMenuHotKeyFieldOver,
+.popupMenuSubMenuFieldOver {
+    background-color: selectionBackground;
+}
+
+.popupMenuIconFieldDisabled,
+.popupMenuTitleFieldDisabled,
+.popupMenuHotKeyFieldDisabled,
+.popupMenuSubMenuFieldDisabled {
+    color: disabledMenuItemColor;
+}
 
 
