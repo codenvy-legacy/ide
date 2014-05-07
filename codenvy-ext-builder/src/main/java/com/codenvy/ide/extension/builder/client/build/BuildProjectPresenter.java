@@ -23,6 +23,8 @@ import com.codenvy.api.builder.dto.BuildTaskDescriptor;
 import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
 import com.codenvy.api.builder.internal.Constants;
 import com.codenvy.api.core.rest.shared.dto.Link;
+import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -41,6 +43,7 @@ import com.codenvy.ide.websocket.rest.SubscriptionHandler;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.Date;
 import java.util.List;
@@ -77,26 +80,46 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     protected Notification        notification;
     /** Descriptor of the last build task. */
     private   BuildTaskDescriptor lastBuildTaskDescriptor;
+    /** Name of the builder used to build last task. It need only to display on console's statistics panel. */
+    private   String              lastBuildBuilderName;
 
     @Inject
-    protected BuildProjectPresenter(ResourceProvider resourceProvider,
-                                    BuilderConsolePresenter console,
+    protected BuildProjectPresenter(EventBus eventBus,
+                                    WorkspaceAgent workspaceAgent,
+                                    ResourceProvider resourceProvider,
+                                    final BuilderConsolePresenter console,
                                     BuilderServiceClient service,
                                     BuilderLocalizationConstant constant,
-                                    WorkspaceAgent workspaceAgent,
-                                    MessageBus messageBus,
                                     NotificationManager notificationManager,
                                     DtoFactory dtoFactory,
-                                    DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+                                    DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                                    MessageBus messageBus) {
         this.workspaceAgent = workspaceAgent;
         this.resourceProvider = resourceProvider;
         this.console = console;
         this.service = service;
         this.constant = constant;
-        this.messageBus = messageBus;
         this.notificationManager = notificationManager;
         this.dtoFactory = dtoFactory;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.messageBus = messageBus;
+
+        eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
+            @Override
+            public void onProjectOpened(ProjectActionEvent event) {
+            }
+
+            @Override
+            public void onProjectClosed(ProjectActionEvent event) {
+                console.clear();
+                activeProject = null;
+                lastBuildTaskDescriptor = null;
+            }
+
+            @Override
+            public void onProjectDescriptionChanged(ProjectActionEvent event) {
+            }
+        });
     }
 
     @Override
@@ -125,6 +148,12 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
 
         lastBuildTaskDescriptor = null;
         activeProject = resourceProvider.getActiveProject();
+
+        if (buildOptions != null && buildOptions.getBuilderName() != null && !buildOptions.getBuilderName().isEmpty()) {
+            lastBuildBuilderName = buildOptions.getBuilderName();
+        } else {
+            lastBuildBuilderName = activeProject.getAttributeValue(Constants.BUILDER_NAME);
+        }
 
         notification = new Notification(constant.buildStarted(activeProject.getName()), PROGRESS, BuildProjectPresenter.this);
         notificationManager.showNotification(notification);
@@ -282,6 +311,14 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                 ss = ss % 60;
             }
             return String.valueOf("" + getDoubleDigit(mm) + ':' + getDoubleDigit(ss) + '.' + ms);
+        }
+        return null;
+    }
+
+    /** Returns name of the builder used to build last task. */
+    public String getLastBuildConfiguration() {
+        if (lastBuildTaskDescriptor != null) {
+            return lastBuildBuilderName;
         }
         return null;
     }

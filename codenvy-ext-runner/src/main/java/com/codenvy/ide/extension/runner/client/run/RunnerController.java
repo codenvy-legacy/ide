@@ -101,8 +101,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                             UpdateServiceClient updateService,
                             RunnerLocalizationConstant constant,
                             NotificationManager notificationManager,
-                            DtoUnmarshallerFactory dtoUnmarshallerFactory,
                             DtoFactory dtoFactory,
+                            DtoUnmarshallerFactory dtoUnmarshallerFactory,
                             MessageBus messageBus) {
         this.workspaceAgent = workspaceAgent;
         this.resourceProvider = resourceProvider;
@@ -111,14 +111,13 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         this.updateService = updateService;
         this.constant = constant;
         this.notificationManager = notificationManager;
-        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.dtoFactory = dtoFactory;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.messageBus = messageBus;
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
-                lastApplicationDescriptor = null;
             }
 
             @Override
