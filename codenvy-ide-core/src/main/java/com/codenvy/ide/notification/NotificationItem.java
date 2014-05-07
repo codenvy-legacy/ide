@@ -63,7 +63,7 @@ public class NotificationItem extends Composite implements Notification.Notifica
     private Notification    notification;
     private ActionDelegate  delegate;
 
-        /**
+    /**
      * Create notification item.
      *
      * @param resources
@@ -96,11 +96,7 @@ public class NotificationItem extends Composite implements Notification.Notifica
         mainPanel.addWest(iconPanel, 25);
 
         if (!notification.isFinished()) {
-            Image messageIcon = new Image(resources.progress());
-            messageIcon.setSize("12px", "12px");
-            messageIcon.setStyleName(resources.notificationCss().invertColor());
-            messageIcon.addStyleName(resources.notificationCss().margin4px());
-            iconPanel.setWidget(messageIcon);
+            changeImage(resources.progress()).getElement().setAttribute("class", resources.notificationCss().progress());
         } else if (notification.isWarning()) {
             changeImage(resources.warning());
             mainPanel.addStyleName(resources.notificationCss().warning());
@@ -154,11 +150,7 @@ public class NotificationItem extends Composite implements Notification.Notifica
             }
 
             if (!notification.isFinished()) {
-                Image messageIcon = new Image(resources.progress());
-                messageIcon.setSize("12px", "12px");
-                messageIcon.setStyleName(resources.notificationCss().invertColor());
-                messageIcon.addStyleName(resources.notificationCss().margin4px());
-                iconPanel.setWidget(messageIcon);
+                changeImage(resources.progress()).getElement().setAttribute("class", resources.notificationCss().progress());
             } else if (!prevState.getType().equals(notification.getType())) {
                 changeType();
             } else {
