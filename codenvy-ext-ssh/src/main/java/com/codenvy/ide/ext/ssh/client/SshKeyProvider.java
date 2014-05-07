@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.ssh.client;
 
-import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * Provides SSH keys. Must be registered in {@link SshKeyService}:
@@ -34,5 +34,5 @@ public interface SshKeyProvider {
      * @param userId user's id, for whom to generate key
      * @param callback calback
      */
-    void generateKey(String userId, AsyncRequestCallback<Void> callback);
+    void generateKey(String userId, AsyncCallback<Void> callback);
 }
