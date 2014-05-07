@@ -195,11 +195,14 @@ public class DockerConnector {
 
     private void buildImage(java.io.File tar, String name, LineConsumer output) throws IOException {
         final int fd = connect();
-        try (InputStream tarInput = new FileInputStream(tar)) {
+        try {
             final List<Pair<String, ?>> headers = new ArrayList<>(2);
             headers.add(Pair.of("Content-Type", "application/x-compressed-tar"));
             headers.add(Pair.of("Content-Length", tar.length()));
-            final DockerResponse response = request(fd, "POST", String.format("/build?t=%s&rm=%d", name, 1), headers, tarInput);
+            final DockerResponse response;
+            try (InputStream tarInput = new FileInputStream(tar)) {
+                response = request(fd, "POST", String.format("/build?t=%s&rm=%d", name, 1), headers, tarInput);
+            }
             final int status = response.getStatus();
             if (200 != status) {
                 final String msg = CharStreams.toString(new InputStreamReader(response.getInputStream()));
@@ -212,6 +215,9 @@ public class DockerConnector {
             byte[] buf = new byte[bufSize];
             final ByteArrayOutputStream bOut = new ByteArrayOutputStream(bufSize);
             for (; ; ) {
+                if (Thread.currentThread().isInterrupted()) {
+                    break;
+                }
                 int r = stream.read(buf);
                 if (r < 0) {
                     break;

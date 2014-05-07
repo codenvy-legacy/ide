@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.runner.docker.dockerfile;
+package com.codenvy.runner.docker;
 
 import com.codenvy.api.core.util.Pair;
 
@@ -39,6 +39,8 @@ public class DockerImage {
     private List<String>               volume;
     private String                     user;
     private String                     workdir;
+    private List<String>               onbuild;
+    private List<String>               comments;
 
     public String getFrom() {
         return from;
@@ -120,5 +122,19 @@ public class DockerImage {
 
     public void setWorkdir(String workdir) {
         this.workdir = workdir;
+    }
+
+    public List<String> getOnbuild() {
+        if (onbuild == null) {
+            onbuild = new LinkedList<>();
+        }
+        return onbuild;
+    }
+
+    public List<String> getComments() {
+        if (comments == null) {
+            comments = new LinkedList<>();
+        }
+        return comments;
     }
 }

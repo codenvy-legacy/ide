@@ -17,14 +17,21 @@
  */
 package com.codenvy.runner.docker;
 
+import com.codenvy.api.project.server.AbstractVirtualFileEntry;
+import com.codenvy.api.project.server.FileEntry;
 import com.codenvy.api.project.server.FolderEntry;
 import com.codenvy.api.project.server.Project;
 import com.codenvy.api.project.server.ValueProviderFactory;
 import com.codenvy.api.project.shared.ValueProvider;
+import com.codenvy.commons.json.JsonHelper;
+import com.codenvy.commons.json.JsonParseException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
-import java.util.Arrays;
-import java.util.Collections;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,9 +40,7 @@ import java.util.List;
  */
 @Singleton
 public class RunnerScriptValueProviderFactory implements ValueProviderFactory {
-    // List of "known" dockerfiles that we expect to find in root folder of project.
-    // Decide to use DockerRunner if find any of this file in root directory of project.
-    static final String[] DOCKER_FILES = new String[]{"run.dc5y", "debug.dc5y"};
+    private static final Logger LOG = LoggerFactory.getLogger(RunnerScriptValueProviderFactory.class);
 
     @Override
     public String getName() {
@@ -48,11 +53,36 @@ public class RunnerScriptValueProviderFactory implements ValueProviderFactory {
             @Override
             public List<String> getValues() {
                 final FolderEntry projectFolder = project.getBaseFolder();
+                final AbstractVirtualFileEntry envFile = projectFolder.getChild("dockerenv.c5y.json");
                 final List<String> files = new LinkedList<>();
-                for (String fName : DOCKER_FILES) {
-                    if (projectFolder.getChild(fName) != null) {
-                        files.add(fName);
+                String runDockerfileName = null;
+                String debugDockerfileName = null;
+                if (envFile != null && envFile.isFile()) {
+                    files.add("dockerenv.c5y.json");
+                    try {
+                        try (InputStream in = ((FileEntry)envFile).getInputStream()) {
+                            final DockerEnvironment env = JsonHelper.fromJson(in, DockerEnvironment.class, null);
+                            runDockerfileName = env.getRunDockerfileName();
+                            if (runDockerfileName == null) {
+                                runDockerfileName = "run.dc5y";
+                            }
+                            debugDockerfileName = env.getDebugDockerfileName();
+                            if (debugDockerfileName == null) {
+                                debugDockerfileName = "debug.dc5y";
+                            }
+                        }
+                    } catch (IOException | JsonParseException e) {
+                        LOG.error(e.getMessage(), e);
                     }
+                } else {
+                    runDockerfileName = "run.dc5y";
+                    debugDockerfileName = "debug.dc5y";
+                }
+                if (runDockerfileName != null && projectFolder.getChild(runDockerfileName) != null) {
+                    files.add(runDockerfileName);
+                }
+                if (debugDockerfileName != null && projectFolder.getChild(debugDockerfileName) != null) {
+                    files.add(debugDockerfileName);
                 }
                 return files;
             }
