@@ -94,7 +94,7 @@ public class SearcherTest extends LocalFileSystemTest {
         assertFalse(provider.isMounted());
         virtualFileSystemRegistry.unregisterProvider(MY_WORKSPACE_ID);
         // create new one
-        provider = new LocalFileSystemProvider(MY_WORKSPACE_ID, new WorkspaceHashLocalFSMountStrategy(root), new EventService(),
+        provider = new LocalFileSystemProvider(MY_WORKSPACE_ID, new WorkspaceHashLocalFSMountStrategy(root, root), new EventService(),
                                                searcherProvider);
         provider.mount(testFsIoRoot);
         mountPoint = provider.getMountPoint(true);
