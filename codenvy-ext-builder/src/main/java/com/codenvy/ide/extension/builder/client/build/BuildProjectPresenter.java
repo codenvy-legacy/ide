@@ -80,8 +80,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     protected Notification        notification;
     /** Descriptor of the last build task. */
     private   BuildTaskDescriptor lastBuildTaskDescriptor;
-    /** Name of the builder used to build last task. It need only to display on console's statistics panel. */
-    private   String              lastBuildBuilderName;
 
     @Inject
     protected BuildProjectPresenter(EventBus eventBus,
@@ -148,12 +146,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
 
         lastBuildTaskDescriptor = null;
         activeProject = resourceProvider.getActiveProject();
-
-        if (buildOptions != null && buildOptions.getBuilderName() != null && !buildOptions.getBuilderName().isEmpty()) {
-            lastBuildBuilderName = buildOptions.getBuilderName();
-        } else {
-            lastBuildBuilderName = activeProject.getAttributeValue(Constants.BUILDER_NAME);
-        }
 
         notification = new Notification(constant.buildStarted(activeProject.getName()), PROGRESS, BuildProjectPresenter.this);
         notificationManager.showNotification(notification);
@@ -311,14 +303,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                 ss = ss % 60;
             }
             return String.valueOf("" + getDoubleDigit(mm) + ':' + getDoubleDigit(ss) + '.' + ms);
-        }
-        return null;
-    }
-
-    /** Returns name of the builder used to build last task. */
-    public String getLastBuildConfiguration() {
-        if (lastBuildTaskDescriptor != null) {
-            return lastBuildBuilderName;
         }
         return null;
     }

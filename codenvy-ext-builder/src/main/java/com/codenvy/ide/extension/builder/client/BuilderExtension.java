@@ -26,7 +26,6 @@ import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.extension.builder.client.actions.BuildAction;
 import com.codenvy.ide.extension.builder.client.console.ArtifactURLAction;
-import com.codenvy.ide.extension.builder.client.console.BuildConfigurationAction;
 import com.codenvy.ide.extension.builder.client.console.BuildFinishedAction;
 import com.codenvy.ide.extension.builder.client.console.BuildStartedAction;
 import com.codenvy.ide.extension.builder.client.console.BuildTotalTimeAction;
@@ -69,7 +68,6 @@ public class BuilderExtension {
                             BuildStartedAction buildStartedAction,
                             BuildFinishedAction buildFinishedAction,
                             BuildTotalTimeAction buildTotalTimeAction,
-                            BuildConfigurationAction buildConfigurationAction,
                             WorkspaceAgent workspaceAgent,
                             BuilderConsolePresenter builderConsolePresenter,
                             @BuilderConsoleToolbar ToolbarPresenter builderConsoleToolbar) {
@@ -110,8 +108,6 @@ public class BuilderExtension {
         consoleToolbarActionGroup.add(buildFinishedAction);
         consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(buildTotalTimeAction);
-        consoleToolbarActionGroup.addSeparator();
-        consoleToolbarActionGroup.add(buildConfigurationAction);
         builderConsoleToolbar.bindMainGroup(consoleToolbarActionGroup);
     }
 }
