@@ -23,13 +23,9 @@
         .notificationPanel {
             position: relative;
         }
-
-        .floatLeft {
-            float: left;
-        }
     </ui:style>
-    <g:FlowPanel ui:field="mainPanel" addStyleNames="{res.notificationCss.notificationPanel} {style.notificationPanel}" debugId="eventsPart">
-        <!--<g:SimplePanel ui:field="iconPanel" addStyleNames="{style.floatLeft}"/>-->
-        <!--<g:Label ui:field="count"/>-->
-    </g:FlowPanel>
+    <g:ScrollPanel width="100%" height="100%">
+        <g:FlowPanel ui:field="mainPanel" addStyleNames="{res.notificationCss.notificationPanel} {style.notificationPanel}"
+                     debugId="eventsPart"/>
+    </g:ScrollPanel>
 </ui:UiBinder>

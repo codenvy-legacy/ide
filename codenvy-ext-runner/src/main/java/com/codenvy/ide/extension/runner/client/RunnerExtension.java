@@ -29,7 +29,14 @@ import com.codenvy.ide.extension.runner.client.actions.GetLogsAction;
 import com.codenvy.ide.extension.runner.client.actions.RunAction;
 import com.codenvy.ide.extension.runner.client.actions.StopAction;
 import com.codenvy.ide.extension.runner.client.actions.UpdateAction;
+import com.codenvy.ide.extension.runner.client.console.ApplicationURLAction;
+import com.codenvy.ide.extension.runner.client.console.ClearConsoleAction;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
+import com.codenvy.ide.extension.runner.client.console.RunnerConsoleToolbar;
+import com.codenvy.ide.extension.runner.client.console.RunnerFinishedAction;
+import com.codenvy.ide.extension.runner.client.console.RunnerStartedAction;
+import com.codenvy.ide.extension.runner.client.console.RunnerTotalTimeAction;
+import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -47,6 +54,7 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_TOOLBAR;
 @Singleton
 @Extension(title = "Runner", version = "3.0.0")
 public class RunnerExtension {
+    public static final String GROUP_RUNNER_CONSOLE_TOOLBAR = "RunnerConsoleToolbar";
 
     @Inject
     public RunnerExtension(RunnerLocalizationConstant localizationConstants,
@@ -56,8 +64,17 @@ public class RunnerExtension {
                            GetLogsAction getLogsAction,
                            StopAction stopAction,
                            UpdateAction updateAction,
+                           ClearConsoleAction clearConsoleAction,
+                           ApplicationURLAction applicationURLAction,
+                           RunnerStartedAction runnerStartedAction,
+                           RunnerFinishedAction runnerFinishedAction,
+                           RunnerTotalTimeAction runnerTotalTimeAction,
                            WorkspaceAgent workspaceAgent,
-                           RunnerConsolePresenter runnerConsolePresenter) {
+                           RunnerConsolePresenter runnerConsolePresenter,
+                           RunnerResources runnerResources,
+                           @RunnerConsoleToolbar ToolbarPresenter runnerConsoleToolbar) {
+        runnerResources.runner().ensureInjected();
+
         // register actions
         actionManager.registerAction(localizationConstants.runAppActionId(), runAction);
         actionManager.registerAction(localizationConstants.customRunAppActionId(), customRunAction);
@@ -89,5 +106,20 @@ public class RunnerExtension {
 
         // add Runner console
         workspaceAgent.openPart(runnerConsolePresenter, PartStackType.INFORMATION);
+
+        // add toolbar with actions to Builder console
+        DefaultActionGroup consoleToolbarActionGroup = new DefaultActionGroup(GROUP_RUNNER_CONSOLE_TOOLBAR, false, actionManager);
+        consoleToolbarActionGroup.add(stopAction);
+        consoleToolbarActionGroup.addSeparator();
+        consoleToolbarActionGroup.add(clearConsoleAction);
+        consoleToolbarActionGroup.addSeparator();
+        consoleToolbarActionGroup.add(applicationURLAction);
+        consoleToolbarActionGroup.addSeparator();
+        consoleToolbarActionGroup.add(runnerStartedAction);
+        consoleToolbarActionGroup.addSeparator();
+        consoleToolbarActionGroup.add(runnerFinishedAction);
+        consoleToolbarActionGroup.addSeparator();
+        consoleToolbarActionGroup.add(runnerTotalTimeAction);
+        runnerConsoleToolbar.bindMainGroup(consoleToolbarActionGroup);
     }
 }

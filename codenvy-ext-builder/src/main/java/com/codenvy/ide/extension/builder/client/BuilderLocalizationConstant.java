@@ -36,6 +36,15 @@ public interface BuilderLocalizationConstant extends Messages {
     @Key("control.buildProject.description")
     String buildProjectControlDescription();
 
+    @Key("control.clearBuilderConsole.id")
+    String clearConsoleControlId();
+
+    @Key("control.clearBuilderConsole.text")
+    String clearConsoleControlTitle();
+
+    @Key("control.clearBuilderConsole.description")
+    String clearConsoleControlDescription();
+
     /* Messages */
     @Key("messages.buildInProgress")
     String buildInProgress(String project);
@@ -45,9 +54,6 @@ public interface BuilderLocalizationConstant extends Messages {
 
     @Key("messages.buildCanceled")
     String buildCanceled();
-
-    @Key("messages.failGetBuildResult")
-    String failGetBuildResult();
 
     /* BuildProjectPresenter */
     @Key("build.started")

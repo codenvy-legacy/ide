@@ -18,6 +18,7 @@
 package com.codenvy.ide.extension.runner.client;
 
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
@@ -40,4 +41,18 @@ public interface RunnerResources extends ClientBundle {
 
     @Source("update.png")
     ImageResource updateApp();
+
+    @Source("clear-logs.svg")
+    SVGResource clear();
+
+    public interface Css extends CssResource {
+        @ClassName("info-panel")
+        String infoPanel();
+
+        @ClassName("data-label")
+        String dataLabel();
+    }
+
+    @Source({"runner.css"})
+    Css runner();
 }

@@ -34,20 +34,22 @@ import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
 import com.codenvy.ide.extension.builder.client.console.BuilderConsolePresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
+import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import java.util.Date;
 import java.util.List;
 
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
 
 /**
  * Controls building application.
@@ -69,13 +71,13 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     /** Handler for processing Maven build status which is received over WebSocket connection. */
     protected       SubscriptionHandler<BuildTaskDescriptor> buildStatusHandler;
     protected       SubscriptionHandler<LogMessage>          buildOutputHandler;
-    /** Build of another project is performed. */
+    /** Whether any build is performed now? */
     protected boolean isBuildInProgress = false;
-    /** Project for build. */
-    protected Project      projectToBuild;
-    protected Notification notification;
+    protected Project             activeProject;
+    protected Notification        notification;
+    /** Descriptor of the last build task. */
+    private   BuildTaskDescriptor lastBuildTaskDescriptor;
 
-    /** Create presenter. */
     @Inject
     protected BuildProjectPresenter(ResourceProvider resourceProvider,
                                     BuilderConsolePresenter console,
@@ -97,6 +99,11 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
     }
 
+    @Override
+    public void onOpenClicked() {
+        workspaceAgent.setActivePart(console);
+    }
+
     /** Build active project. */
     public void buildActiveProject() {
         buildActiveProject(null);
@@ -110,28 +117,29 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
      */
     public void buildActiveProject(BuildOptions buildOptions) {
         if (isBuildInProgress) {
-            final String message = constant.buildInProgress(projectToBuild.getName());
+            final String message = constant.buildInProgress(activeProject.getName());
             Notification notification = new Notification(message, ERROR);
             notificationManager.showNotification(notification);
             return;
         }
 
-        console.clearDownloadLink();
-        console.clear();
-        projectToBuild = resourceProvider.getActiveProject();
+        lastBuildTaskDescriptor = null;
+        activeProject = resourceProvider.getActiveProject();
 
-        notification = new Notification(constant.buildStarted(projectToBuild.getName()), PROGRESS, BuildProjectPresenter.this);
+        notification = new Notification(constant.buildStarted(activeProject.getName()), PROGRESS, BuildProjectPresenter.this);
         notificationManager.showNotification(notification);
 
-        service.build(projectToBuild.getPath(),
+        service.build(activeProject.getPath(),
                       buildOptions,
                       new AsyncRequestCallback<BuildTaskDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(BuildTaskDescriptor.class)) {
                           @Override
                           protected void onSuccess(BuildTaskDescriptor result) {
                               if (result.getStatus() == BuildStatus.SUCCESSFUL) {
-                                  notification.setStatus(FINISHED);
-                                  notification.setMessage(constant.buildFinished(projectToBuild.getName()));
+                                  // if project wasn't changed from the last build,
+                                  // we get result immediately without re-build
+                                  onBuildStatusUpdated(result);
                               } else {
+                                  lastBuildTaskDescriptor = result;
                                   isBuildInProgress = true;
                                   startCheckingStatus(result);
                                   startCheckingOutput(result);
@@ -140,7 +148,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
 
                           @Override
                           protected void onFailure(Throwable exception) {
-                              isBuildInProgress = false;
                               notification.setStatus(FINISHED);
                               notification.setType(ERROR);
                               notification.setMessage(constant.buildFailed());
@@ -155,12 +162,8 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                 new SubscriptionHandler<BuildTaskDescriptor>(dtoUnmarshallerFactory.newWSUnmarshaller(BuildTaskDescriptor.class)) {
                     @Override
                     protected void onMessageReceived(BuildTaskDescriptor result) {
-                        switch (result.getStatus()) {
-                            case SUCCESSFUL:
-                            case CANCELLED:
-                            case FAILED:
-                                afterBuildFinished(result);
-                        }
+                        lastBuildTaskDescriptor = result;
+                        onBuildStatusUpdated(result);
                     }
 
                     @Override
@@ -185,6 +188,14 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         }
     }
 
+    private void stopCheckingStatus() {
+        try {
+            messageBus.unsubscribe(BuilderExtension.BUILD_STATUS_CHANNEL + lastBuildTaskDescriptor.getTaskId(), buildStatusHandler);
+        } catch (WebSocketException e) {
+            Log.error(BuildProjectPresenter.class, e);
+        }
+    }
+
     private void startCheckingOutput(BuildTaskDescriptor buildTaskDescriptor) {
         buildOutputHandler = new LogMessagesHandler(buildTaskDescriptor, console, messageBus);
         try {
@@ -194,60 +205,88 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         }
     }
 
-    private void afterBuildFinished(BuildTaskDescriptor descriptor) {
-        isBuildInProgress = false;
-        try {
-            messageBus.unsubscribe(BuilderExtension.BUILD_STATUS_CHANNEL + descriptor.getTaskId(), buildStatusHandler);
-        } catch (Exception e) {
-            Log.error(BuildProjectPresenter.class, e);
-        }
-
-        notification.setStatus(FINISHED);
-
+    /** Process changing build status. */
+    private void onBuildStatusUpdated(BuildTaskDescriptor descriptor) {
         switch (descriptor.getStatus()) {
             case SUCCESSFUL:
-                Link downloadResultLink = getAppLink(descriptor, Constants.LINK_REL_DOWNLOAD_RESULT);
-                console.setDownloadLink(downloadResultLink.getHref());
+                isBuildInProgress = false;
+                stopCheckingStatus();
 
+                notification.setStatus(FINISHED);
                 notification.setType(INFO);
-                notification.setMessage(constant.buildFinished(projectToBuild.getName()));
+                notification.setMessage(constant.buildFinished(activeProject.getName()));
+
+                workspaceAgent.setActivePart(console);
                 break;
             case FAILED:
+                isBuildInProgress = false;
+                stopCheckingStatus();
+
+                notification.setStatus(FINISHED);
                 notification.setType(ERROR);
                 notification.setMessage(constant.buildFailed());
+
+                workspaceAgent.setActivePart(console);
                 break;
             case CANCELLED:
-                notification.setType(ERROR);
+                isBuildInProgress = false;
+                stopCheckingStatus();
+
+                notification.setStatus(FINISHED);
+                notification.setType(WARNING);
                 notification.setMessage(constant.buildCanceled());
+
+                workspaceAgent.setActivePart(console);
                 break;
         }
-        workspaceAgent.setActivePart(console);
     }
 
-    private void getBuildLogs(BuildTaskDescriptor descriptor) {
-        Link statusLink = getAppLink(descriptor, Constants.LINK_REL_VIEW_LOG);
-        service.log(statusLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-            @Override
-            protected void onSuccess(String result) {
-                console.print(result);
+    /** Returns link to download result of last build task. */
+    public String getLastBuildResultURL() {
+        if (lastBuildTaskDescriptor != null) {
+            Link downloadResultLink = getLink(lastBuildTaskDescriptor, Constants.LINK_REL_DOWNLOAD_RESULT);
+            if (downloadResultLink != null) {
+                return downloadResultLink.getHref();
             }
+        }
+        return null;
+    }
 
-            @Override
-            protected void onFailure(Throwable exception) {
-                String msg = constant.failGetBuildResult();
-                console.print(msg);
-                notificationManager.showNotification(new Notification(msg, ERROR));
+    /** Returns time when last build task started in format HH:mm:ss. */
+    public String getLastBuildStartTime() {
+        if (lastBuildTaskDescriptor != null && lastBuildTaskDescriptor.getStartTime() > 0) {
+            final Date startDate = new Date(lastBuildTaskDescriptor.getStartTime());
+            return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND).format(startDate);
+        }
+        return null;
+    }
+
+    /** Returns time when last build task finished in format HH:mm:ss. */
+    public String getLastBuildEndTime() {
+        if (lastBuildTaskDescriptor != null && lastBuildTaskDescriptor.getEndTime() > 0) {
+            final Date endDate = new Date(lastBuildTaskDescriptor.getEndTime());
+            return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND).format(endDate);
+        }
+        return null;
+    }
+
+    /** Returns total build time in format mm:ss.ms. */
+    public String getLastBuildTotalTime() {
+        if (lastBuildTaskDescriptor != null && lastBuildTaskDescriptor.getEndTime() > 0) {
+            final long totalTimeMs = lastBuildTaskDescriptor.getEndTime() - lastBuildTaskDescriptor.getStartTime();
+            int ms = (int)(totalTimeMs % 1000);
+            int ss = (int)(totalTimeMs / 1000);
+            int mm = 0;
+            if (ss > 60) {
+                mm = ss / 60;
+                ss = ss % 60;
             }
-        });
+            return String.valueOf("" + getDoubleDigit(mm) + ':' + getDoubleDigit(ss) + '.' + ms);
+        }
+        return null;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onOpenClicked() {
-        workspaceAgent.setActivePart(console);
-    }
-
-    private Link getAppLink(BuildTaskDescriptor descriptor, String rel) {
+    private static Link getLink(BuildTaskDescriptor descriptor, String rel) {
         List<Link> links = descriptor.getLinks();
         for (Link link : links) {
             if (link.getRel().equalsIgnoreCase(rel))
@@ -256,4 +295,43 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         return null;
     }
 
+    /** Get a double digit int from a single, e.g.: 1 = "01", 2 = "02". */
+    private static String getDoubleDigit(int i) {
+        final String doubleDigitI;
+        switch (i) {
+            case 0:
+                doubleDigitI = "00";
+                break;
+            case 1:
+                doubleDigitI = "01";
+                break;
+            case 2:
+                doubleDigitI = "02";
+                break;
+            case 3:
+                doubleDigitI = "03";
+                break;
+            case 4:
+                doubleDigitI = "04";
+                break;
+            case 5:
+                doubleDigitI = "05";
+                break;
+            case 6:
+                doubleDigitI = "06";
+                break;
+            case 7:
+                doubleDigitI = "07";
+                break;
+            case 8:
+                doubleDigitI = "08";
+                break;
+            case 9:
+                doubleDigitI = "09";
+                break;
+            default:
+                doubleDigitI = Integer.toString(i);
+        }
+        return doubleDigitI;
+    }
 }

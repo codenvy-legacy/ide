@@ -78,11 +78,11 @@ class DockerfileTemplate {
         return new DockerfileTemplate(template);
     }
 
-    static DockerfileTemplate from(String name, String pattern) {
-        if (pattern == null) {
+    static DockerfileTemplate from(String name, String template) {
+        if (template == null) {
             throw new IllegalArgumentException("null value is not allowed");
         }
-        return new DockerfileTemplate(name, pattern);
+        return new DockerfileTemplate(name, template);
     }
 
     private final String              name;

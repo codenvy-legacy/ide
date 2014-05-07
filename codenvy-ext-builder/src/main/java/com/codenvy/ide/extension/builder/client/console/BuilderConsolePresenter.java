@@ -19,6 +19,7 @@ package com.codenvy.ide.extension.builder.client.console;
 
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
+import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -32,12 +33,13 @@ import com.google.inject.Singleton;
 @Singleton
 public class BuilderConsolePresenter extends BasePresenter implements BuilderConsoleView.ActionDelegate {
     private static final String TITLE = "Builder";
-    private BuilderConsoleView view;
+    private final BuilderConsoleView view;
+    private final ToolbarPresenter   consoleToolbar;
 
-    /** Construct empty Part */
     @Inject
-    public BuilderConsolePresenter(BuilderConsoleView view) {
+    public BuilderConsolePresenter(BuilderConsoleView view, @BuilderConsoleToolbar ToolbarPresenter consoleToolbar) {
         this.view = view;
+        this.consoleToolbar = consoleToolbar;
         this.view.setTitle(TITLE);
         this.view.setDelegate(this);
     }
@@ -63,11 +65,12 @@ public class BuilderConsolePresenter extends BasePresenter implements BuilderCon
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
+        consoleToolbar.go(view.getToolbarPanel());
         container.setWidget(view);
     }
 
     /**
-     * Print message on console.
+     * Print message to console.
      *
      * @param message
      *         message that need to be print
@@ -89,20 +92,5 @@ public class BuilderConsolePresenter extends BasePresenter implements BuilderCon
     /** Clear console. Remove all messages. */
     public void clear() {
         view.clear();
-    }
-
-    /**
-     * Set URL to download artifact.
-     *
-     * @param link
-     *         link to download artifact
-     */
-    public void setDownloadLink(String link) {
-        view.setDownloadLink(link);
-    }
-
-    /** Clear download URL in console. */
-    public void clearDownloadLink() {
-        view.setDownloadLink("");
     }
 }

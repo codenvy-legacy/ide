@@ -22,6 +22,8 @@ import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.api.runner.dto.RunRequest;
 import com.codenvy.api.runner.internal.Constants;
 import com.codenvy.api.runner.internal.ResourceAllocators;
+import com.codenvy.commons.json.JsonHelper;
+import com.codenvy.commons.json.JsonParseException;
 import com.google.common.io.ByteStreams;
 
 import javax.inject.Inject;
@@ -49,6 +51,33 @@ public class DockerRunner extends BaseDockerRunner {
     }
 
     @Override
+    protected DockerEnvironment getDockerEnvironment(RunRequest request) throws IOException {
+        final List<String> scriptUrls = request.getRunnerScriptUrls();
+        if (scriptUrls.isEmpty()) {
+            return null;
+        }
+        String myEnv = null;
+        for (int i = 0, size = scriptUrls.size(); i < size && myEnv == null; i++) {
+            final String scriptUrl = scriptUrls.get(i);
+            final int queryStart = scriptUrl.indexOf('?');
+            final String scriptPath = queryStart > 0 ? scriptUrl.substring(0, queryStart) : scriptUrl;
+            if (scriptPath.endsWith("dockerenv.c5y.json")) {
+                LOG.debug("Use docker environment file '{}'", scriptPath);
+                myEnv = scriptUrl;
+            }
+        }
+        if (myEnv == null) {
+            return null;
+        }
+        try (InputStream in = new URL(myEnv).openStream()) {
+            return JsonHelper.fromJson(in, DockerEnvironment.class, null);
+        } catch (JsonParseException e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return null;
+    }
+
+    @Override
     public String getName() {
         return "docker";
     }
@@ -59,26 +88,29 @@ public class DockerRunner extends BaseDockerRunner {
     }
 
     @Override
-    protected DockerfileTemplate getDockerfileTemplate(RunRequest request) throws IOException {
+    protected DockerfileTemplate getDockerfileTemplate(DockerEnvironment dockerEnvironment, RunRequest request) throws IOException {
+        final boolean debug = request.getDebugMode() != null;
+        String dockerFile = null;
+        if (dockerEnvironment != null) {
+            dockerFile = debug ? dockerEnvironment.getDebugDockerfileName() : dockerEnvironment.getRunDockerfileName();
+        }
+        if (dockerFile == null) {
+            dockerFile = debug ? "run.dc5y" : "debug.dc5y";
+        }
         final List<String> scriptUrls = request.getRunnerScriptUrls();
         if (scriptUrls.isEmpty()) {
             return null;
         }
-        final boolean debug = request.getDebugMode() != null;
-        String myScript = null;
-        for (int i = 0, size = scriptUrls.size(); i < size && myScript == null; i++) {
-            final String scriptUrl = scriptUrls.get(i);
-            final int queryStart = scriptUrl.indexOf('?');
-            final String _scriptUrl = queryStart > 0 ? scriptUrl.substring(0, queryStart) : scriptUrl;
-            if (debug) {
-                if (_scriptUrl.endsWith("/debug.dc5y")) {
-                    LOG.debug("Use dockerfile {}", _scriptUrl);
-                    myScript = scriptUrl;
-                }
-            } else if (_scriptUrl.endsWith("/run.dc5y")) {
-                LOG.debug("Use dockerfile {}", _scriptUrl);
-                myScript = scriptUrl;
+        String myScript = findDockerfileUrl(scriptUrls, dockerFile);
+        // If there is no Dockerfile for simple run try to use Dockerfile for run under debug, if any.
+        if (myScript == null && !debug) {
+            if (dockerEnvironment != null) {
+                dockerFile = dockerEnvironment.getDebugDockerfileName();
             }
+            if (dockerFile == null) {
+                dockerFile = "debug.dc5y";
+            }
+            myScript = findDockerfileUrl(scriptUrls, dockerFile);
         }
         if (myScript == null) {
             return null;
@@ -87,6 +119,18 @@ public class DockerRunner extends BaseDockerRunner {
         try (InputStream in = new URL(myScript).openStream()) {
             ByteStreams.copy(in, output);
         }
-        return DockerfileTemplate.from("DockerfileTemplate", output.toString());
+        return DockerfileTemplate.from(dockerFile, output.toString());
+    }
+
+    private String findDockerfileUrl(List<String> scriptUrls, String dockerFile) {
+        for (final String scriptUrl : scriptUrls) {
+            final int queryStart = scriptUrl.indexOf('?');
+            final String scriptPath = queryStart > 0 ? scriptUrl.substring(0, queryStart) : scriptUrl;
+            if (scriptPath.endsWith(dockerFile)) {
+                LOG.debug("Use dockerfile '{}'", scriptPath);
+                return scriptUrl;
+            }
+        }
+        return null;
     }
 }

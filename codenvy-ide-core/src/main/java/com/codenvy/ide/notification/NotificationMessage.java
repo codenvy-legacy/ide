@@ -82,13 +82,13 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
         this.delegate = delegate;
         this.resources = resources;
         notification.addObserver(this);
-        
+
         this.getElement().addClassName(resources.notificationCss().notificationPopup());
 
         mainPanel = new DockLayoutPanel(PX);
         mainPanel.setWidth(String.valueOf(WIDTH) + "px");
         mainPanel.setHeight(String.valueOf(HEIGHT) + "px");
-        
+
 
         DoubleClickHandler handler = new DoubleClickHandler() {
             @Override
@@ -99,10 +99,11 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
         mainPanel.addDomHandler(handler, DoubleClickEvent.getType());
 
         iconPanel = new SimplePanel();
+        iconPanel.setStyleName(resources.notificationCss().notificationMessage());
         mainPanel.addWest(iconPanel, 25);
 
         if (!notification.isFinished()) {
-            changeImage(resources.progress());
+            changeImage(resources.progress()).getElement().setAttribute("class", resources.notificationCss().progress());
         } else if (notification.isWarning()) {
             changeImage(resources.warning());
             mainPanel.addStyleName(resources.notificationCss().warning());
@@ -122,8 +123,8 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
             }
         });
         mainPanel.addEast(closeIcon, 18);
-        
-        
+
+
         title = new HTML("<p>" + notification.getMessage() + "</p>");
         title.setStyleName(resources.notificationCss().center());
         title.setHeight(HEIGHT + "px");
@@ -138,21 +139,8 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
      * @param icon
      *         icon that need to set
      */
-    private void changeImage(@NotNull ImageResource icon) {
-        Image messageIcon = new Image(icon);
-        messageIcon.getElement().getStyle().setMarginTop(5, PX);
-        if(resources.progress().equals(icon)){
-            messageIcon.setSize("16px", "16px");
-            messageIcon.addStyleName(resources.notificationCss().invertColor());
-        }
-        iconPanel.setWidget(messageIcon);
-    }
-    
     private SVGImage changeImage(@NotNull SVGResource icon) {
         SVGImage messageIcon = new SVGImage(icon);
-        messageIcon.setWidth("20px");
-        messageIcon.setHeight("20px");
-        messageIcon.getElement().getStyle().setMarginTop(5, PX);
         iconPanel.setWidget(messageIcon);
         return messageIcon;
     }
@@ -166,7 +154,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
             }
 
             if (!notification.isFinished()) {
-                changeImage(resources.progress());
+                changeImage(resources.progress()).getElement().setAttribute("class", resources.notificationCss().progress());
             } else if (!prevState.getType().equals(notification.getType())) {
                 changeType();
             } else {

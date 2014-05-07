@@ -27,7 +27,7 @@ public class AutoMountVirtualFileSystemRegistryTest extends LocalFileSystemTest 
     public void testAutoMount() throws Exception {
         // new registry without any registered vfs providers
         AutoMountVirtualFileSystemRegistry registry =
-                new AutoMountVirtualFileSystemRegistry(new WorkspaceHashLocalFSMountStrategy(root), new EventService(), null);
+                new AutoMountVirtualFileSystemRegistry(new WorkspaceHashLocalFSMountStrategy(root, root), new EventService(), null);
         final VirtualFileSystemProvider fileSystemProvider = registry.getProvider(MY_WORKSPACE_ID);
         assertEquals(MY_WORKSPACE_ID, fileSystemProvider.getWorkspaceId());
     }
