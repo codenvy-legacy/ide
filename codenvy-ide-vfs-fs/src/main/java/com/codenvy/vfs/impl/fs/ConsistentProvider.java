@@ -91,6 +91,7 @@ public class ConsistentProvider {
             try {
                 MountPoint mountPoint = fileSystemRegistry.getProvider(event.getWorkspaceId()).getMountPoint(false);
                 File rootFolder = ((VirtualFileImpl)mountPoint.getRoot()).getIoFile();
+                fileSystemRegistry.unregisterProvider(event.getWorkspaceId());
                 if (!rootFolder.delete()) {
                     LOG.warn("Can not delete Virtual File System linked to workspace {}", event.getWorkspaceId());
                 }
