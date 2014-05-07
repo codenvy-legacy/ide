@@ -49,6 +49,7 @@ import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
 
 /**
  * Controls building application.
@@ -70,10 +71,9 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     /** Handler for processing Maven build status which is received over WebSocket connection. */
     protected       SubscriptionHandler<BuildTaskDescriptor> buildStatusHandler;
     protected       SubscriptionHandler<LogMessage>          buildOutputHandler;
-    /** Build of another project is performed. */
+    /** Whether any build is performed now? */
     protected boolean isBuildInProgress = false;
-    /** Project for build. */
-    protected Project             projectToBuild;
+    protected Project             activeProject;
     protected Notification        notification;
     /** Descriptor of the last build task. */
     private   BuildTaskDescriptor lastBuildTaskDescriptor;
@@ -99,6 +99,11 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
     }
 
+    @Override
+    public void onOpenClicked() {
+        workspaceAgent.setActivePart(console);
+    }
+
     /** Build active project. */
     public void buildActiveProject() {
         buildActiveProject(null);
@@ -112,26 +117,29 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
      */
     public void buildActiveProject(BuildOptions buildOptions) {
         if (isBuildInProgress) {
-            final String message = constant.buildInProgress(projectToBuild.getName());
+            final String message = constant.buildInProgress(activeProject.getName());
             Notification notification = new Notification(message, ERROR);
             notificationManager.showNotification(notification);
             return;
         }
 
         lastBuildTaskDescriptor = null;
-        projectToBuild = resourceProvider.getActiveProject();
+        activeProject = resourceProvider.getActiveProject();
 
-        notification = new Notification(constant.buildStarted(projectToBuild.getName()), PROGRESS, BuildProjectPresenter.this);
+        notification = new Notification(constant.buildStarted(activeProject.getName()), PROGRESS, BuildProjectPresenter.this);
         notificationManager.showNotification(notification);
 
-        service.build(projectToBuild.getPath(),
+        service.build(activeProject.getPath(),
                       buildOptions,
                       new AsyncRequestCallback<BuildTaskDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(BuildTaskDescriptor.class)) {
                           @Override
                           protected void onSuccess(BuildTaskDescriptor result) {
                               if (result.getStatus() == BuildStatus.SUCCESSFUL) {
-                                  afterBuildFinished(result);
+                                  // if project wasn't changed from the last build,
+                                  // we get result immediately without re-build
+                                  onBuildStatusUpdated(result);
                               } else {
+                                  lastBuildTaskDescriptor = result;
                                   isBuildInProgress = true;
                                   startCheckingStatus(result);
                                   startCheckingOutput(result);
@@ -140,7 +148,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
 
                           @Override
                           protected void onFailure(Throwable exception) {
-                              isBuildInProgress = false;
                               notification.setStatus(FINISHED);
                               notification.setType(ERROR);
                               notification.setMessage(constant.buildFailed());
@@ -155,12 +162,8 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                 new SubscriptionHandler<BuildTaskDescriptor>(dtoUnmarshallerFactory.newWSUnmarshaller(BuildTaskDescriptor.class)) {
                     @Override
                     protected void onMessageReceived(BuildTaskDescriptor result) {
-                        switch (result.getStatus()) {
-                            case SUCCESSFUL:
-                            case CANCELLED:
-                            case FAILED:
-                                afterBuildFinished(result);
-                        }
+                        lastBuildTaskDescriptor = result;
+                        onBuildStatusUpdated(result);
                     }
 
                     @Override
@@ -185,6 +188,14 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         }
     }
 
+    private void stopCheckingStatus() {
+        try {
+            messageBus.unsubscribe(BuilderExtension.BUILD_STATUS_CHANNEL + lastBuildTaskDescriptor.getTaskId(), buildStatusHandler);
+        } catch (WebSocketException e) {
+            Log.error(BuildProjectPresenter.class, e);
+        }
+    }
+
     private void startCheckingOutput(BuildTaskDescriptor buildTaskDescriptor) {
         buildOutputHandler = new LogMessagesHandler(buildTaskDescriptor, console, messageBus);
         try {
@@ -194,38 +205,40 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         }
     }
 
-    private void afterBuildFinished(BuildTaskDescriptor descriptor) {
-        lastBuildTaskDescriptor = descriptor;
-        isBuildInProgress = false;
-        try {
-            messageBus.unsubscribe(BuilderExtension.BUILD_STATUS_CHANNEL + descriptor.getTaskId(), buildStatusHandler);
-        } catch (WebSocketException e) {
-            Log.error(BuildProjectPresenter.class, e);
-        }
-
-        notification.setStatus(FINISHED);
-
+    /** Process changing build status. */
+    private void onBuildStatusUpdated(BuildTaskDescriptor descriptor) {
         switch (descriptor.getStatus()) {
             case SUCCESSFUL:
+                isBuildInProgress = false;
+                stopCheckingStatus();
+
+                notification.setStatus(FINISHED);
                 notification.setType(INFO);
-                notification.setMessage(constant.buildFinished(projectToBuild.getName()));
+                notification.setMessage(constant.buildFinished(activeProject.getName()));
+
+                workspaceAgent.setActivePart(console);
                 break;
             case FAILED:
+                isBuildInProgress = false;
+                stopCheckingStatus();
+
+                notification.setStatus(FINISHED);
                 notification.setType(ERROR);
                 notification.setMessage(constant.buildFailed());
+
+                workspaceAgent.setActivePart(console);
                 break;
             case CANCELLED:
-                notification.setType(ERROR);
+                isBuildInProgress = false;
+                stopCheckingStatus();
+
+                notification.setStatus(FINISHED);
+                notification.setType(WARNING);
                 notification.setMessage(constant.buildCanceled());
+
+                workspaceAgent.setActivePart(console);
                 break;
         }
-        workspaceAgent.setActivePart(console);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onOpenClicked() {
-        workspaceAgent.setActivePart(console);
     }
 
     /** Returns link to download result of last build task. */
@@ -241,7 +254,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
 
     /** Returns time when last build task started in format HH:mm:ss. */
     public String getLastBuildStartTime() {
-        if (lastBuildTaskDescriptor != null) {
+        if (lastBuildTaskDescriptor != null && lastBuildTaskDescriptor.getStartTime() > 0) {
             final Date startDate = new Date(lastBuildTaskDescriptor.getStartTime());
             return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND).format(startDate);
         }
