@@ -27,9 +27,9 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 public interface NotificationResources extends ClientBundle {
     public interface NotificationCss extends CssResource {
         String notificationPanel();
-        
+
         String notificationPopup();
-        
+
         String notificationItem();
 
         String floatLeft();
@@ -41,19 +41,21 @@ public interface NotificationResources extends ClientBundle {
         String unread();
 
         String warning();
-        
+
         String success();
 
         String right25px();
 
-        String invertColor();
-        
+        String notificationMessage();
+
+        String progress();
+
         String countLabel();
-        
+
         String center();
-        
+
         String close();
-        
+
         String closePopupIcon();
     }
 
@@ -63,8 +65,8 @@ public interface NotificationResources extends ClientBundle {
     @Source("message.png")
     ImageResource message();
 
-    @Source("progress.gif")
-    ImageResource progress();
+    @Source("progress.svg")
+    SVGResource progress();
 
     @Source("success.svg")
     SVGResource success();
@@ -74,7 +76,7 @@ public interface NotificationResources extends ClientBundle {
 
     @Source("warning.svg")
     SVGResource warning();
-    
+
     @Source("close-popup.svg")
     SVGResource closePopup();
 }
