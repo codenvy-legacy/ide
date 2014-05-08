@@ -18,13 +18,17 @@
 package com.codenvy.runner.docker.dockerfile;
 
 import com.codenvy.api.core.util.Pair;
+import com.codenvy.runner.docker.DockerImage;
+import com.codenvy.runner.docker.DockerfileParser;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.StringReader;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,8 +37,8 @@ import java.util.Map;
 public class DockerfileParserTest {
     @Test
     public void testParse() throws Exception {
-        String dockerfileContent = "# Comment 1\n" +
-                                   "FROM base_image\n" +
+        String dockerfileContent = "FROM base_image\n" +
+                                   "# Comment 1\n" +
                                    "MAINTAINER Codenvy Corp\n" +
                                    "# Comment 2\n" +
                                    "RUN echo 1 > /dev/null\n" +
@@ -52,9 +56,15 @@ public class DockerfileParserTest {
                                    "WORKDIR /tmp\n" +
                                    "ENTRYPOINT echo hello > /dev/null\n" +
                                    "CMD echo hello > /tmp/test";
-        DockerImage[] dockerImages = DockerfileParser.parse(new StringReader(dockerfileContent));
-        Assert.assertEquals(1, dockerImages.length);
-        DockerImage dockerImage = dockerImages[0];
+        File targetDir = new File(Thread.currentThread().getContextClassLoader().getResource(".").toURI()).getParentFile();
+        File file = new File(targetDir, "testParse");
+        FileWriter w = new FileWriter(file);
+        w.write(dockerfileContent);
+        w.flush();
+        w.close();
+        List<DockerImage> dockerImages = DockerfileParser.parse(file).getImages();
+        Assert.assertEquals(1, dockerImages.size());
+        DockerImage dockerImage = dockerImages.get(0);
         Assert.assertEquals("base_image", dockerImage.getFrom());
         Assert.assertEquals(Arrays.asList("Codenvy Corp"), dockerImage.getMaintainer());
         Assert.assertEquals(Arrays.asList("echo 1 > /dev/null", "echo 2 > /dev/null", "echo 3 > /dev/null"), dockerImage.getRun());
@@ -71,12 +81,13 @@ public class DockerfileParserTest {
         Assert.assertEquals(Arrays.asList("/data1", "/data2"), dockerImage.getVolume());
         Assert.assertEquals("andrew", dockerImage.getUser());
         Assert.assertEquals("/tmp", dockerImage.getWorkdir());
+        Assert.assertEquals(Arrays.asList("Comment 1", "Comment 2", "Comment 3"), dockerImage.getComments());
     }
 
     @Test
     public void testParseMultipleImages() throws Exception {
-        String dockerfileContent = "# Image 1\n" +
-                                   "FROM base_image_1\n" +
+        String dockerfileContent = "FROM base_image_1\n" +
+                                   "# Image 1\n" +
                                    "MAINTAINER Codenvy Corp\n" +
                                    "RUN echo 1 > /dev/null\n" +
                                    "ADD http://example.com/folder/some_file.txt /tmp/file.txt  \n" +
@@ -89,8 +100,8 @@ public class DockerfileParserTest {
                                    "CMD echo hello > /tmp/test1" +
                                    "\n" +
                                    "\n" +
-                                   "# Image 2\n" +
                                    "FROM base_image_2\n" +
+                                   "# Image 2\n" +
                                    "MAINTAINER Codenvy Corp\n" +
                                    "RUN echo 2 > /dev/null\n" +
                                    "ADD file1 /tmp/file1\n" +
@@ -101,9 +112,15 @@ public class DockerfileParserTest {
                                    "WORKDIR /home/andrew\n" +
                                    "ENTRYPOINT echo test > /dev/null\n" +
                                    "CMD echo hello > /tmp/test2";
-        DockerImage[] dockerImages = DockerfileParser.parse(new StringReader(dockerfileContent));
-        Assert.assertEquals(2, dockerImages.length);
-        DockerImage dockerImage1 = dockerImages[0];
+        File targetDir = new File(Thread.currentThread().getContextClassLoader().getResource(".").toURI()).getParentFile();
+        File file = new File(targetDir, "testParse");
+        FileWriter w = new FileWriter(file);
+        w.write(dockerfileContent);
+        w.flush();
+        w.close();
+        List<DockerImage> dockerImages = DockerfileParser.parse(file).getImages();
+        Assert.assertEquals(2, dockerImages.size());
+        DockerImage dockerImage1 = dockerImages.get(0);
         Assert.assertEquals("base_image_1", dockerImage1.getFrom());
         Assert.assertEquals(Arrays.asList("Codenvy Corp"), dockerImage1.getMaintainer());
         Assert.assertEquals(Arrays.asList("echo 1 > /dev/null"), dockerImage1.getRun());
@@ -118,8 +135,9 @@ public class DockerfileParserTest {
         Assert.assertEquals(Arrays.asList("/data1"), dockerImage1.getVolume());
         Assert.assertEquals("andrew", dockerImage1.getUser());
         Assert.assertEquals("/tmp", dockerImage1.getWorkdir());
+        Assert.assertEquals(Arrays.asList("Image 1"), dockerImage1.getComments());
 
-        DockerImage dockerImage2 = dockerImages[1];
+        DockerImage dockerImage2 = dockerImages.get(1);
         Assert.assertEquals("base_image_2", dockerImage2.getFrom());
         Assert.assertEquals(Arrays.asList("Codenvy Corp"), dockerImage2.getMaintainer());
         Assert.assertEquals(Arrays.asList("echo 2 > /dev/null"), dockerImage2.getRun());
@@ -133,5 +151,6 @@ public class DockerfileParserTest {
         Assert.assertEquals(Arrays.asList("/data2"), dockerImage2.getVolume());
         Assert.assertEquals("andrew", dockerImage2.getUser());
         Assert.assertEquals("/home/andrew", dockerImage2.getWorkdir());
+        Assert.assertEquals(Arrays.asList("Image 2"), dockerImage2.getComments());
     }
 }

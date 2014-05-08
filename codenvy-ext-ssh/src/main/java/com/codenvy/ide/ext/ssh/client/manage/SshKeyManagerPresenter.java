@@ -180,50 +180,13 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     /** {@inheritDoc} */
     @Override
     public void onGenerateGithubKeyClicked() {
-        service.getAllKeys(new AsyncRequestCallback<Array<KeyItem>>(dtoUnmarshallerFactory.newArrayUnmarshaller(KeyItem.class)) {
-            @Override
-            public void onSuccess(Array<KeyItem> result) {
-                boolean githubKeyExists = false;
-                for (int i = 0; i < result.size(); i++) {
-                    KeyItem key = result.get(i);
-                    if (key.getHost().contains("github.com")) {
-                        githubKeyExists = true;
-                        break;
-                    }
-                }
-
-                if (!githubKeyExists) {
-                    loader.hide();
-                    Ask ask = new Ask(constant.githubSshKeyTitle(), constant.githubSshKeyLabel(), new AskHandler() {
-                        @Override
-                        public void onOk() {
-                            generateKey();
-                        }
-                    });
-                    ask.show();
-
-                } else {
-                    loader.hide();
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                loader.hide();
-                Notification notification = new Notification(constant.getSshKeyFailed(), ERROR);
-                notificationManager.showNotification(notification);
-            }
-        });
-    }
-
-    private void generateKey() {
         loader.show();
         userService.getCurrentUser(new AsyncRequestCallback<User>(dtoUnmarshallerFactory.newUnmarshaller(User.class)) {
             @Override
             protected void onSuccess(User result) {
                 if (service.getSshKeyProviders().containsKey(GITHUB_HOST)) {
                     service.getSshKeyProviders().get(GITHUB_HOST)
-                           .generateKey(result.getId(), new AsyncRequestCallback<Void>() {
+                           .generateKey(result.getId(), new AsyncCallback<Void>() {
                                @Override
                                public void onSuccess(Void result) {
                                    loader.hide();
@@ -233,7 +196,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
                                @Override
                                public void onFailure(Throwable exception) {
                                    loader.hide();
-                                   getFailedKey();
+                                   getFailedKey(GITHUB_HOST);
                                }
                            });
                 } else {
@@ -250,13 +213,13 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     }
 
     /** Need to remove failed uploaded keys from local storage if they can't be uploaded to github */
-    private void getFailedKey() {
+    private void getFailedKey(final String host) {
         service.getAllKeys(new AsyncRequestCallback<Array<KeyItem>>(dtoUnmarshallerFactory.newArrayUnmarshaller(KeyItem.class)) {
             @Override
             public void onSuccess(Array<KeyItem> result) {
                 for (int i = 0; i < result.size(); i++) {
                     KeyItem key = result.get(i);
-                    if (key.getHost().equals("github.com")) {
+                    if (key.getHost().equals(host)) {
                         removeFailedKey(key);
                         return;
                     }

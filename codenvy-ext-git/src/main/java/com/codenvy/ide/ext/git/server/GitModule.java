@@ -19,10 +19,8 @@ package com.codenvy.ide.ext.git.server;
 
 import com.codenvy.api.project.server.ProjectImporter;
 import com.codenvy.ide.ext.git.server.nativegit.CredentialsProvider;
-import com.codenvy.ide.ext.git.server.nativegit.OAuthCredentialsProvider;
-import com.codenvy.ide.ext.git.server.provider.GitVendorService;
-import com.codenvy.ide.ext.git.server.provider.rest.ProviderExceptionMapper;
-import com.codenvy.ide.ext.git.server.provider.rest.ProviderService;
+import com.codenvy.ide.ext.git.server.nativegit.WSO2OAuthCredentialsProvider;
+import com.codenvy.ide.ext.git.server.rest.GitExceptionMapper;
 import com.codenvy.inject.DynaModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
@@ -38,13 +36,8 @@ public class GitModule extends AbstractModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
-        Multibinder<CredentialsProvider> multiBindings = Multibinder.newSetBinder(binder(), CredentialsProvider.class);
-        multiBindings.addBinding().to(OAuthCredentialsProvider.class);
-
-        Multibinder<GitVendorService> gitVendorServices = Multibinder.newSetBinder(binder(), GitVendorService.class);
-
-        bind(ProviderService.class);
-        bind(ProviderExceptionMapper.class).toInstance(new ProviderExceptionMapper());
+        Multibinder.newSetBinder(binder(), CredentialsProvider.class).addBinding().to(WSO2OAuthCredentialsProvider.class);
         Multibinder.newSetBinder(binder(), ProjectImporter.class).addBinding().to(GitProjectImporter.class);
+        bind(GitExceptionMapper.class).toInstance(new GitExceptionMapper());
     }
 }

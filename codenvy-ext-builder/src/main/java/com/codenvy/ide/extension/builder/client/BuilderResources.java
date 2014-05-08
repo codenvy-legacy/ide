@@ -18,6 +18,7 @@
 package com.codenvy.ide.extension.builder.client;
 
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
@@ -29,4 +30,18 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 public interface BuilderResources extends ClientBundle {
     @Source("build.svg")
     SVGResource build();
+
+    @Source("clear-logs.svg")
+    SVGResource clear();
+
+    public interface Css extends CssResource {
+        @ClassName("info-panel")
+        String infoPanel();
+
+        @ClassName("data-label")
+        String dataLabel();
+    }
+
+    @Source({"builder.css"})
+    Css builder();
 }

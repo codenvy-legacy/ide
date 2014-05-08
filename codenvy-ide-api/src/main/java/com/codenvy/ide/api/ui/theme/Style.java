@@ -222,11 +222,11 @@ public class Style {
     public static String getEditorAttribute() {
         return theme.getEditorAttribute();
     }
-    
+
     public static String getCompletionPopupBorderColor() {
         return theme.getCompletionPopupBorderColor();
     }
-    
+
     public static String getCompletionPopupBackgroundColor() {
         return theme.getCompletionPopupBackgroundColor();
     }
@@ -238,11 +238,11 @@ public class Style {
     public static String getWindowHeaderBackground() {
         return theme.getWindowHeaderBackground();
     }
-    
+
     public static String getWindowSeparatorColor() {
         return theme.getWindowSeparatorColor();
     }
-    
+
     public static String getWizardStepsColor() {
         return theme.getWizardStepsColor();
     }
@@ -310,7 +310,7 @@ public class Style {
     public static String getTreeTextShadow() {
         return theme.getTreeTextShadow();
     }
-    
+
     public static String getTreeIconFileColor() {
         return theme.getTreeIconFileColor();
     }
@@ -355,22 +355,22 @@ public class Style {
         return theme.getToolbarIconColor();
     }
 
-    public static String getCompletedInvertColor() {
-        return theme.getCompletedInvertColor();
+    public static String getProgressColor() {
+        return theme.getProgressColor();
     }
 
     public static String getSvgUrlShadow() {
         return theme.getSvgUrlShadow();
     }
-    
+
     public static String getSuccessEventColor() {
         return theme.getSuccessEventColor();
     }
-    
+
     public static String getErrorEventColor() {
         return theme.getErrorEventColor();
     }
-    
+
     public static String getLinkColor() {
         return theme.getLinkColor();
     }
@@ -378,7 +378,7 @@ public class Style {
     public static String getDelimeterColor() {
         return theme.getDelimeterColor();
     }
-    
+
     public static String getMinimizeIconColor() {
         return theme.getMinimizeIconColor();
     }

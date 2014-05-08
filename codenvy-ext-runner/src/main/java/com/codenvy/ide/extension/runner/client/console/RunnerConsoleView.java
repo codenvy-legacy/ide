@@ -19,6 +19,7 @@ package com.codenvy.ide.extension.runner.client.console;
 
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.parts.base.BaseActionDelegate;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 /**
  * View of {@link RunnerConsolePresenter}.
@@ -28,6 +29,9 @@ import com.codenvy.ide.api.parts.base.BaseActionDelegate;
 public interface RunnerConsoleView extends View<RunnerConsoleView.ActionDelegate> {
     public interface ActionDelegate extends BaseActionDelegate {
     }
+
+    /** @return toolbar panel */
+    AcceptsOneWidget getToolbarPanel();
 
     /**
      * Print text in console area.
@@ -50,12 +54,4 @@ public interface RunnerConsoleView extends View<RunnerConsoleView.ActionDelegate
 
     /** Scroll to bottom of the view. */
     void scrollBottom();
-
-    /**
-     * Set application's URL.
-     *
-     * @param link
-     *         application URL
-     */
-    void setAppURL(String link);
 }

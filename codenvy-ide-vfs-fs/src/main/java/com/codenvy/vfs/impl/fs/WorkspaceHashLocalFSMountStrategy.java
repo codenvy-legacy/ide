@@ -18,6 +18,7 @@
 package com.codenvy.vfs.impl.fs;
 
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
+import com.codenvy.commons.env.EnvironmentContext;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -53,10 +54,13 @@ public class WorkspaceHashLocalFSMountStrategy implements LocalFSMountStrategy {
             };
 
     private final java.io.File mountRoot;
+    private final java.io.File mountTempRoot;
 
     @Inject
-    public WorkspaceHashLocalFSMountStrategy(@Named("vfs.local.fs_root_dir") java.io.File mountRoot) {
+    public WorkspaceHashLocalFSMountStrategy(@Named("vfs.local.fs_root_dir") java.io.File mountRoot,
+                                             @Named("vfs.local.tmp_workspace_fs_root_dir") java.io.File mountTempRoot) {
         this.mountRoot = mountRoot;
+        this.mountTempRoot = mountTempRoot;
     }
 
     @Override
@@ -64,9 +68,10 @@ public class WorkspaceHashLocalFSMountStrategy implements LocalFSMountStrategy {
         if (workspaceId == null || workspaceId.isEmpty()) {
             throw new VirtualFileSystemException("Unable get mount path for virtual file system. Workspace id is not set.");
         }
+        final boolean isTmpWs = EnvironmentContext.getCurrent().isWorkspaceTemporary();
         // We can have a lot of workspace and create root folder for all of them at the same level of filesystem
         // may be inefficient. Keep workspace root folder in some hierarchy tree, use hash code for it.
-        return calculateDirPath(mountRoot, workspaceId);
+        return calculateDirPath(isTmpWs ? mountTempRoot : mountRoot, workspaceId);
     }
 
     public static java.io.File calculateDirPath(java.io.File parent, String workspaceId) {
@@ -80,6 +85,6 @@ public class WorkspaceHashLocalFSMountStrategy implements LocalFSMountStrategy {
 
     @Override
     public java.io.File getMountPath() throws VirtualFileSystemException {
-        return getMountPath(null);
+        return getMountPath(EnvironmentContext.getCurrent().getWorkspaceId());
     }
 }

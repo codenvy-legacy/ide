@@ -19,11 +19,16 @@ package com.codenvy.runner.docker;
 
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.util.CustomPortService;
+import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.dto.RunRequest;
+import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.runner.internal.ResourceAllocators;
+import com.codenvy.dto.server.DtoFactory;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Runner based on BaseDockerRunner that uses prepared set of dockerfiles.
@@ -31,20 +36,26 @@ import java.util.List;
  * @author andrew00x
  */
 public class EmbeddedDockerRunner extends BaseDockerRunner {
-    private final String             name;
-    private final List<java.io.File> dockerfiles;
+    private final String                         name;
+    private final Map<String, DockerEnvironment> dockerEnvironments;
+    private final java.io.File                   dockerfilesRepository;
 
-    public EmbeddedDockerRunner(java.io.File deployDirectoryRoot,
-                                int cleanupTime,
-                                String hostName,
-                                ResourceAllocators allocators,
-                                CustomPortService portService,
-                                EventService eventService,
-                                String name,
-                                List<java.io.File> dockerfiles) {
+    EmbeddedDockerRunner(java.io.File deployDirectoryRoot,
+                         int cleanupTime,
+                         String hostName,
+                         ResourceAllocators allocators,
+                         CustomPortService portService,
+                         EventService eventService,
+                         String name,
+                         List<DockerEnvironment> dockerEnvironments,
+                         java.io.File dockerfilesRepository) {
         super(deployDirectoryRoot, cleanupTime, hostName, allocators, portService, eventService);
         this.name = name;
-        this.dockerfiles = new ArrayList<>(dockerfiles);
+        this.dockerEnvironments = new HashMap<>(dockerEnvironments.size());
+        for (DockerEnvironment dockerEnvironment : dockerEnvironments) {
+            this.dockerEnvironments.put(dockerEnvironment.getId(), dockerEnvironment);
+        }
+        this.dockerfilesRepository = dockerfilesRepository;
     }
 
     @Override
@@ -58,14 +69,55 @@ public class EmbeddedDockerRunner extends BaseDockerRunner {
     }
 
     @Override
-    protected DockerfileTemplate getDockerfileTemplate(RunRequest request) {
-        String name = request.getRunner();
-        if (request.getDebugMode() != null) {
-            name += "_Debug";
+    public Map<String, RunnerEnvironment> getEnvironments() {
+        final Map<String, RunnerEnvironment> runnerEnvironments = new HashMap<>(dockerEnvironments.size());
+        final DtoFactory dtoFactory = DtoFactory.getInstance();
+        for (DockerEnvironment dockerEnvironment : dockerEnvironments.values()) {
+            runnerEnvironments.put(dockerEnvironment.getId(), dtoFactory.createDto(RunnerEnvironment.class)
+                                                                        .withId(dockerEnvironment.getId())
+                                                                        .withDescription(dockerEnvironment.getDescription())
+                                                                        .withIsDefault("default".equals(dockerEnvironment.getId())));
         }
-        for (java.io.File dockerfile : dockerfiles) {
-            if (name.equals(dockerfile.getName())) {
-                return DockerfileTemplate.from(dockerfile);
+        return runnerEnvironments;
+    }
+
+    @Override
+    protected DockerEnvironment getDockerEnvironment(RunRequest request) throws IOException, RunnerException {
+        String environmentId = request.getEnvironmentId();
+        if (environmentId == null) {
+            environmentId = "default";
+        }
+        final DockerEnvironment environment = dockerEnvironments.get(environmentId);
+        if (environment == null) {
+            throw new RunnerException(String.format("Invalid environment id %s", request.getEnvironmentId()));
+        }
+        return environment;
+    }
+
+    @Override
+    protected DockerfileTemplate getDockerfileTemplate(DockerEnvironment dockerEnvironment, RunRequest request) {
+        final boolean debug = request.getDebugMode() != null;
+        // DockerEnvironment should never be null.
+        if (dockerEnvironment != null) {
+            String dockerFileName = debug ? dockerEnvironment.getDebugDockerfileName() : dockerEnvironment.getRunDockerfileName();
+            if (dockerFileName == null) {
+                dockerFileName = debug ? "run.dc5y" : "debug.dc5y";
+            }
+            final String envDirPath = getName() + java.io.File.separatorChar + dockerEnvironment.getId() + java.io.File.separatorChar;
+            java.io.File dockerFile = new java.io.File(dockerfilesRepository, envDirPath + dockerFileName);
+            if (dockerFile.exists()) {
+                return DockerfileTemplate.from(dockerFile);
+            }
+            if (!debug) {
+                // If there is no Dockerfile for simple run try to use Dockerfile for run under debug, if any.
+                dockerFileName = dockerEnvironment.getDebugDockerfileName();
+                if (dockerFileName == null) {
+                    dockerFileName = "debug.dc5y";
+                }
+                dockerFile = new java.io.File(dockerfilesRepository, envDirPath + dockerFileName);
+                if (dockerFile.exists()) {
+                    return DockerfileTemplate.from(dockerFile);
+                }
             }
         }
         return null;

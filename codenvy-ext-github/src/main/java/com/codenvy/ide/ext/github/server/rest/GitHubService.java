@@ -19,13 +19,14 @@ package com.codenvy.ide.ext.github.server.rest;
 
 import com.codenvy.api.auth.oauth.OAuthTokenProvider;
 import com.codenvy.ide.commons.ParsingResponseException;
+import com.codenvy.ide.ext.git.server.GitException;
 import com.codenvy.ide.ext.github.server.GitHub;
 import com.codenvy.ide.ext.github.server.GitHubException;
+import com.codenvy.ide.ext.github.server.GitHubKeyUploaderProvider;
 import com.codenvy.ide.ext.github.shared.Collaborators;
 import com.codenvy.ide.ext.github.shared.GitHubRepository;
 import com.codenvy.ide.ext.github.shared.GitHubRepositoryList;
 import com.codenvy.ide.ext.github.shared.GitHubUser;
-import com.codenvy.ide.ext.ssh.server.SshKeyStoreException;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -52,12 +53,8 @@ public class GitHubService {
     @Inject
     GitHub github;
 
-    public GitHubService() {
-    }
-
-    protected GitHubService(GitHub github) {
-        this.github = github;
-    }
+    @Inject
+    GitHubKeyUploaderProvider githubKeyUploader;
 
     @Path("list/user")
     @GET
@@ -146,8 +143,7 @@ public class GitHubService {
 
     @POST
     @Path("ssh/generate")
-    public void updateSSHKey() throws SshKeyStoreException, IOException, GitHubException, ParsingResponseException {
-        if (github.getGitHubSshKey() == null)
-            github.generateGitHubSshKey();
+    public void updateSSHKey() throws GitException {
+        githubKeyUploader.uploadKey();
     }
 }

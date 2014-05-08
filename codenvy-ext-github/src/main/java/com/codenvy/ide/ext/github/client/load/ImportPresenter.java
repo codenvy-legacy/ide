@@ -129,14 +129,15 @@ public class ImportPresenter implements ImportView.ActionDelegate {
 
     /** Show dialog. */
     public void showDialog(User user) {
-        AsyncRequestCallback<Void> callback = new AsyncRequestCallback<Void>() {
+        AsyncCallback<Void> callback = new AsyncCallback<Void>() {
             @Override
-            protected void onSuccess(Void result) {
+            public void onSuccess(Void result) {
                 getUserRepos();
             }
 
             @Override
-            protected void onFailure(Throwable exception) {
+            public void onFailure(Throwable exception) {
+                notificationManager.showNotification(new Notification(exception.getMessage(), Notification.Type.ERROR));
                 Log.error(ImportPresenter.class, "Can't generate ssh key", exception);
             }
         };

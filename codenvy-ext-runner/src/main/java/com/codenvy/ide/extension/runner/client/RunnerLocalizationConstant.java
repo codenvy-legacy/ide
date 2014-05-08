@@ -79,6 +79,15 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("control.updateExtension.description")
     String updateExtensionDescription();
 
+    @Key("control.clearRunnerConsole.id")
+    String clearConsoleControlId();
+
+    @Key("control.clearRunnerConsole.text")
+    String clearConsoleControlTitle();
+
+    @Key("control.clearRunnerConsole.description")
+    String clearConsoleControlDescription();
+
     /* Messages */
     @Key("appStarting")
     String applicationStarting(String name);

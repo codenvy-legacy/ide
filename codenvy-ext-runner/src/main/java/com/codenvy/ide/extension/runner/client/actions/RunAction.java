@@ -70,7 +70,7 @@ public class RunAction extends Action {
             // If project has defined a runner, let see the action
             e.getPresentation().setVisible(activeProject.getAttributeValue("runner.name") != null
                                            || activeProject.getAttributeValue("runner.user_defined_launcher") != null);
-            e.getPresentation().setEnabled(!runnerController.isAnyAppLaunched());
+            e.getPresentation().setEnabled(!runnerController.isAnyAppRunning());
         } else {
             e.getPresentation().setEnabledAndVisible(false);
         }

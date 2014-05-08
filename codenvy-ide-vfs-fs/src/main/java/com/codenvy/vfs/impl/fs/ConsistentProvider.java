@@ -19,11 +19,11 @@ package com.codenvy.vfs.impl.fs;
 
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.notification.EventSubscriber;
+import com.codenvy.api.event.workspace.CreateWorkspaceEvent;
+import com.codenvy.api.event.workspace.DeleteWorkspaceEvent;
 import com.codenvy.api.vfs.server.MountPoint;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
-import com.codenvy.api.workspace.server.observation.CreateWorkspaceEvent;
-import com.codenvy.api.workspace.server.observation.DeleteWorkspaceEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,6 +91,7 @@ public class ConsistentProvider {
             try {
                 MountPoint mountPoint = fileSystemRegistry.getProvider(event.getWorkspaceId()).getMountPoint(false);
                 File rootFolder = ((VirtualFileImpl)mountPoint.getRoot()).getIoFile();
+                fileSystemRegistry.unregisterProvider(event.getWorkspaceId());
                 if (!rootFolder.delete()) {
                     LOG.warn("Can not delete Virtual File System linked to workspace {}", event.getWorkspaceId());
                 }

@@ -106,9 +106,10 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
                 preferences.add(presenter);
             }
         }
-
         this.view.setPreferences(preferences);
-        if (!preferences.isEmpty()) {
+        if (currentPage != null) {
+            selectedPreference(currentPage);
+        } else if (!preferences.isEmpty()) {
             selectedPreference(preferences.get(0));
         }
         view.showPreferences();
