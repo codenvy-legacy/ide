@@ -407,6 +407,13 @@ public interface Theme {
      * @return the color
      */
     String getWizardStepsBorderColor();
+    
+    /**
+     * Color of the Factory link.
+     * 
+     * @return the color
+     */
+    String getFactoryLinkColor();
 
     /**
      * Font color for welcome page text
@@ -414,7 +421,14 @@ public interface Theme {
      * @return the color
      */
     String getWelcomeFontColor();
-
+    
+    /**
+     * Font color for group captions on view (Example, Share Factory view). 
+     *
+     * @return the color
+     */
+    String getCaptionFontColor();
+    
     /**
      * Font color for console text
      *
@@ -576,7 +590,7 @@ public interface Theme {
     /**
      * @return the color of the event items delimeter
      */
-    String getEventDelimeterColor();
+    String getDelimeterColor();
     
     /**
      * @return the color of part minimize button color.

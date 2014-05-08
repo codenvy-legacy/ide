@@ -370,8 +370,8 @@ class for the document-level scrollbars. */
     background: dialogTopLeft url("");
 }
 .gwt-SuggestBoxPopup .suggestPopupTopLeftInner {
-    width: 2px;
-    height: 2px;
+    width: 1px;
+    height: 1px;
 }
 .gwt-SuggestBoxPopup .suggestPopupTopCenter {
     background: dialogTopCenter url("");
@@ -380,8 +380,8 @@ class for the document-level scrollbars. */
     background: dialogTopRight url("");
 }
 .gwt-SuggestBoxPopup .suggestPopupTopRightInner {
-    width: 2px;
-    height: 2px;
+    width: 1px;
+    height: 1px;
 }
 .gwt-SuggestBoxPopup .suggestPopupMiddleLeft {
     background: dialogMiddleLeft url("");
@@ -396,8 +396,8 @@ class for the document-level scrollbars. */
     background: dialogBottomLeft url("");
 }
 .gwt-SuggestBoxPopup .suggestPopupBottomLeftInner {
-    width: 2px;
-    height: 2px;
+    width: 1px;
+    height: 1px;
 }
 .gwt-SuggestBoxPopup .suggestPopupBottomCenter {
     background: dialogBottomCenter url("");
@@ -406,8 +406,8 @@ class for the document-level scrollbars. */
     background: dialogBottomRight url("");
 }
 .gwt-SuggestBoxPopup .suggestPopupBottomRightInner {
-    width: 2px;
-    height: 2px;
+    width: 1px;
+    height: 1px;
 }
 .gwt-SuggestBoxPopup .item {
     color: boxTextColor;

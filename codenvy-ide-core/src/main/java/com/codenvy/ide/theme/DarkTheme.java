@@ -310,6 +310,16 @@ public class DarkTheme implements Theme {
     }
 
     @Override
+    public String getCaptionFontColor() {
+        return "#888888";
+    }
+    
+    @Override
+    public String getFactoryLinkColor() {
+        return "#60abe0";
+    }
+    
+    @Override
     public String getConsolePanelColor() {
         return "#313131";
     }
@@ -455,7 +465,7 @@ public class DarkTheme implements Theme {
     }
     
     @Override
-    public String getEventDelimeterColor() {
+    public String getDelimeterColor() {
         return "#2f2f2f";
     }
     

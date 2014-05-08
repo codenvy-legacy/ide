@@ -133,6 +133,8 @@
 @eval mainFontColor com.codenvy.ide.api.ui.theme.Style.getMainFontColor();
 @eval tabFontColor com.codenvy.ide.api.ui.theme.Style.getTabFontColor();
 @eval welcomeFontColor com.codenvy.ide.api.ui.theme.Style.getWelcomeFontColor();
+@eval captionFontColor com.codenvy.ide.api.ui.theme.Style.getCaptionFontColor();
+@eval factoryLinkColor com.codenvy.ide.api.ui.theme.Style.getFactoryLinkColor();
 @eval lightTextColor com.codenvy.ide.api.ui.theme.Style.getLightTextColor();
 @eval lightestTextColor com.codenvy.ide.api.ui.theme.Style.getLightestTextColor();
 @eval radioButtonBackgroundColor com.codenvy.ide.api.ui.theme.Style.getRadioButtonBackgroundColor();
@@ -190,5 +192,5 @@
 @eval successEventColor com.codenvy.ide.api.ui.theme.Style.getSuccessEventColor();
 @eval errorEventColor com.codenvy.ide.api.ui.theme.Style.getErrorEventColor();
 @eval linkColor com.codenvy.ide.api.ui.theme.Style.getLinkColor();
-@eval eventDelimeterColor com.codenvy.ide.api.ui.theme.Style.getEventDelimeterColor();
+@eval delimeterColor com.codenvy.ide.api.ui.theme.Style.getDelimeterColor();
 
