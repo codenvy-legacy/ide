@@ -18,13 +18,13 @@
 package com.codenvy.ide.ext.ssh.client.key;
 
 import com.codenvy.ide.ext.ssh.client.SshLocalizationConstant;
+import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -38,13 +38,12 @@ import javax.validation.constraints.NotNull;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class SshKeyViewImpl extends DialogBox implements SshKeyView {
+public class SshKeyViewImpl extends Window implements SshKeyView {
     interface SshKeyViewImplUiBinder extends UiBinder<Widget, SshKeyViewImpl> {
     }
 
     private static SshKeyViewImplUiBinder ourUiBinder = GWT.create(SshKeyViewImplUiBinder.class);
 
-    @UiField
     Button   btnClose;
     @UiField
     TextArea key;
@@ -65,8 +64,17 @@ public class SshKeyViewImpl extends DialogBox implements SshKeyView {
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 
-        this.setText(title);
+        this.setTitle(title);
         this.setWidget(widget);
+
+        btnClose = createButton(locale.closeButton(), "window-preferences-sshKeys-close", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCloseClicked();
+            }
+        });
+        getFooter().add(btnClose);
     }
 
     /** {@inheritDoc} */
@@ -84,7 +92,7 @@ public class SshKeyViewImpl extends DialogBox implements SshKeyView {
     /** {@inheritDoc} */
     @Override
     public void addHostToTitle(@NotNull String host) {
-        setText(title + host);
+        setTitle(title + host);
     }
 
     /** {@inheritDoc} */
@@ -96,12 +104,10 @@ public class SshKeyViewImpl extends DialogBox implements SshKeyView {
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        this.center();
         this.show();
     }
 
-    @UiHandler("btnClose")
-    public void onCloseClicked(ClickEvent event) {
-        delegate.onCloseClicked();
-    }
+    /** {@inheritDoc} */
+    @Override
+    protected void onClose() {}
 }

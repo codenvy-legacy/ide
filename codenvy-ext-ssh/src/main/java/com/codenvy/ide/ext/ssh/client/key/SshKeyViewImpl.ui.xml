@@ -21,10 +21,6 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field='locale' type='com.codenvy.ide.ext.ssh.client.SshLocalizationConstant'/>
     <ui:style>
-        .alignBtn {
-            float: right;
-        }
-
         .emptyBorder {
             margin: 6px;
         }
@@ -33,13 +29,7 @@
             padding: 0;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="400px" height="350px" addStyleNames="{style.emptyBorder}">
-        <g:south size="26.0">
-            <g:FlowPanel>
-                <g:Button addStyleNames="{style.alignBtn}" text="{locale.closeButton}" width="60px" ui:field="btnClose"
-                          debugId="window-preferences-sshKeys-close"/>
-            </g:FlowPanel>
-        </g:south>
+    <g:DockLayoutPanel unit="PX" width="400px" height="325px" addStyleNames="{style.emptyBorder}">
         <g:center>
             <g:FlowPanel addStyleNames="{style.emptyBorder}">
                 <g:SimplePanel width="100%" height="100%">
