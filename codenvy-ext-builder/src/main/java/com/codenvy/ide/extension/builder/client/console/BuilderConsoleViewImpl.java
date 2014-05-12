@@ -21,10 +21,11 @@ import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -45,11 +46,11 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
     }
 
     @UiField
-    FlowPanel   consoleArea;
+    SimplePanel toolbarPanel;
     @UiField
     ScrollPanel scrollPanel;
     @UiField
-    Anchor      downloadURL;
+    FlowPanel   consoleArea;
 
     @Inject
     public BuilderConsoleViewImpl(PartStackUIResources resources, BuilderConsoleViewImplUiBinder uiBinder) {
@@ -62,6 +63,12 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public AcceptsOneWidget getToolbarPanel() {
+        return toolbarPanel;
     }
 
     /** {@inheritDoc} */
@@ -95,12 +102,5 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
     @Override
     public void scrollBottom() {
         scrollPanel.getElement().setScrollTop(scrollPanel.getElement().getScrollHeight());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setDownloadLink(String link) {
-        downloadURL.setText(link);
-        downloadURL.setHref(link);
     }
 }

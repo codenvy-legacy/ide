@@ -64,7 +64,7 @@ public class GetLogsAction extends Action {
         if (activeProject != null) {
             // If project has defined a runner, let see the action
             e.getPresentation().setVisible(activeProject.getAttributeValue("runner.name") != null);
-            e.getPresentation().setEnabled(controller.isAnyAppLaunched());
+            e.getPresentation().setEnabled(controller.isAnyAppRunning());
         } else {
             e.getPresentation().setEnabledAndVisible(false);
         }

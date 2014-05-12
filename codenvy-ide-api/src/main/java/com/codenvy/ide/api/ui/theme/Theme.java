@@ -365,14 +365,14 @@ public interface Theme {
      * @return the color
      */
     String getCompletionPopupBackgroundColor();
-    
+
     /**
      * Border color of completion popup.
      *
      * @return the color
      */
     String getCompletionPopupBorderColor();
-    
+
     /**
      * Background color of the window widget(used in new project wizard)
      *
@@ -386,7 +386,7 @@ public interface Theme {
      * @return the color
      */
     String getWindowHeaderBackground();
-    
+
     /**
      * Color of the line separating elements in Window (for footer).
      *
@@ -492,7 +492,7 @@ public interface Theme {
      * @return the color of tree text-shadow
      */
     String getTreeTextShadow();
-    
+
     /**
      * @return the color of tree icon file
      */
@@ -549,38 +549,38 @@ public interface Theme {
     String getToolbarIconColor();
 
     /**
-     * @return the percentage of color inversion
+     * @return the progress icon color
      */
-    String getCompletedInvertColor();
+    String getProgressColor();
 
     /**
      * @return the shadow property for *.svg
      */
     String getSvgUrlShadow();
-    
+
     /**
      * @return the color of the success event
      */
     String getSuccessEventColor();
-    
+
     /**
      * @return the color of the error event
      */
     String getErrorEventColor();
-    
+
     /**
      * @return the color of the links
      */
     String getLinkColor();
-    
+
     /**
      * @return the color of the event items delimeter
      */
     String getEventDelimeterColor();
-    
+
     /**
      * @return the color of part minimize button color.
      */
     String getMinimizeIconColor();
-    
+
 }

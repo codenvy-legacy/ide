@@ -1040,7 +1040,9 @@ public class FSMountPoint implements MountPoint {
                             final String zipEntryName =
                                     ((VirtualFileImpl)current).getInternalPath().subPath(zipEntryNameTrim).toString().substring(1);
                             if (current.isFile()) {
-                                zipOut.putNextEntry(new ZipEntry(zipEntryName));
+                                final ZipEntry zipEntry = new ZipEntry(zipEntryName);
+                                zipEntry.setTime(virtualFile.getLastModificationDate());
+                                zipOut.putNextEntry(zipEntry);
                                 InputStream in = null;
                                 try {
                                     in = new FileInputStream(((VirtualFileImpl)current).getIoFile());
@@ -1053,7 +1055,9 @@ public class FSMountPoint implements MountPoint {
                                 }
                                 zipOut.closeEntry();
                             } else if (current.isFolder()) {
-                                zipOut.putNextEntry(new ZipEntry(zipEntryName + '/'));
+                                final ZipEntry zipEntry = new ZipEntry(zipEntryName + '/');
+                                zipEntry.setTime(0);
+                                zipOut.putNextEntry(zipEntry);
                                 q.add(current);
                                 zipOut.closeEntry();
                             }

@@ -31,6 +31,7 @@ import com.codenvy.ide.websocket.MessageBus;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,7 +49,8 @@ public class MavenBuilderPresenter extends BuildProjectPresenter implements Mave
 
     /** Create presenter. */
     @Inject
-    protected MavenBuilderPresenter(MavenBuildView view,
+    protected MavenBuilderPresenter(EventBus eventBus,
+                                    MavenBuildView view,
                                     ResourceProvider resourceProvider,
                                     BuilderConsolePresenter console,
                                     BuilderServiceClient service,
@@ -58,8 +60,8 @@ public class MavenBuilderPresenter extends BuildProjectPresenter implements Mave
                                     NotificationManager notificationManager,
                                     DtoFactory dtoFactory,
                                     DtoUnmarshallerFactory dtoUnmarshallerFactory) {
-        super(resourceProvider, console, service, constant, workspaceAgent, messageBus, notificationManager, dtoFactory,
-              dtoUnmarshallerFactory);
+        super(eventBus, workspaceAgent, resourceProvider, console, service, constant, notificationManager, dtoFactory,
+              dtoUnmarshallerFactory, messageBus);
         this.view = view;
         this.view.setDelegate(this);
         this.view.setBuildCommand("clean install");

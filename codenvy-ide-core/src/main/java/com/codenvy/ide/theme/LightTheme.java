@@ -433,8 +433,8 @@ public class LightTheme implements Theme {
     }
 
     @Override
-    public String getCompletedInvertColor() {
-        return "100%";
+    public String getProgressColor() {
+        return "#000000";
     }
 
     @Override

@@ -15,25 +15,24 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.runner.docker.dockerfile;
+package com.codenvy.runner.docker;
 
 import com.codenvy.api.core.util.Pair;
 import com.google.common.io.CharStreams;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.Reader;
-import java.util.LinkedList;
-import java.util.List;
+import java.nio.charset.Charset;
 
 /**
  * @author andrew00x
  */
 public class DockerfileParser {
 
-    public static DockerImage[] parse(Reader reader) throws IOException {
-        final List<DockerImage> parsed = new LinkedList<>();
+    public static Dockerfile parse(File file) throws IOException {
+        final Dockerfile dockerfile = new Dockerfile(file);
         DockerImage current = null;
-        for (String line : CharStreams.readLines(reader)) {
+        for (String line : CharStreams.readLines(com.google.common.io.Files.newReaderSupplier(file, Charset.forName("UTF-8")))) {
             line = line.trim();
             Instruction instruction;
             if (line.isEmpty() || (instruction = getInstruction(line)) == null) {
@@ -42,13 +41,15 @@ public class DockerfileParser {
 
             if (instruction == Instruction.FROM) {
                 if (current != null) {
-                    parsed.add(current);
+                    dockerfile.getImages().add(current);
                 }
                 current = new DockerImage();
                 instruction.setInstructionArgumentsToModel(current, line);
             } else {
                 if (current == null) {
-                    if (instruction != Instruction.COMMENT) {
+                    if (instruction == Instruction.COMMENT) {
+                        dockerfile.getComments().add(instruction.getInstructionArguments(line));
+                    } else {
                         throw new IllegalArgumentException("Dockerfile must start with 'FROM' instruction");
                     }
                 } else {
@@ -57,9 +58,9 @@ public class DockerfileParser {
             }
         }
         if (current != null) {
-            parsed.add(current);
+            dockerfile.getImages().add(current);
         }
-        return parsed.toArray(new DockerImage[parsed.size()]);
+        return dockerfile;
     }
 
     private static Instruction getInstruction(String line) {
@@ -90,6 +91,8 @@ public class DockerfileParser {
             return Instruction.USER;
         } else if (lowercase.startsWith("workdir")) {
             return Instruction.WORKDIR;
+        } else if (lowercase.startsWith("onbuild")) {
+            return Instruction.ONBUILD;
         }
         return null;
     }
@@ -98,31 +101,31 @@ public class DockerfileParser {
         FROM {
             @Override
             void setInstructionArgumentsToModel(DockerImage model, String line) {
-                model.setFrom(line.substring(name().length()).trim());
+                model.setFrom(getInstructionArguments(line));
             }
         },
         MAINTAINER {
             @Override
             void setInstructionArgumentsToModel(DockerImage model, String line) {
-                model.getMaintainer().add(line.substring(name().length()).trim());
+                model.getMaintainer().add(getInstructionArguments(line));
             }
         },
         RUN {
             @Override
             void setInstructionArgumentsToModel(DockerImage model, String line) {
-                model.getRun().add(line.substring(name().length()).trim());
+                model.getRun().add(getInstructionArguments(line));
             }
         },
         CMD {
             @Override
             void setInstructionArgumentsToModel(DockerImage model, String line) {
-                model.setCmd(line.substring(name().length()).trim());
+                model.setCmd(getInstructionArguments(line));
             }
         },
         EXPOSE {
             @Override
             void setInstructionArgumentsToModel(DockerImage model, String line) {
-                final String args = line.substring(name().length()).trim();
+                final String args = getInstructionArguments(line);
                 final int l = args.length();
                 int i = 0, j = 0;
                 while (j < l) {
@@ -141,7 +144,7 @@ public class DockerfileParser {
         ENV {
             @Override
             void setInstructionArgumentsToModel(DockerImage model, String line) {
-                final String args = line.substring(name().length()).trim();
+                final String args = getInstructionArguments(line);
                 final int l = args.length();
                 int i = 0;
                 while (i < l && !Character.isWhitespace(args.charAt(i))) {
@@ -165,7 +168,7 @@ public class DockerfileParser {
         ADD {
             @Override
             void setInstructionArgumentsToModel(DockerImage model, String line) {
-                final String args = line.substring(name().length()).trim();
+                final String args = getInstructionArguments(line);
                 final int l = args.length();
                 int i = 0;
                 while (i < l && !Character.isWhitespace(args.charAt(i))) {
@@ -191,13 +194,13 @@ public class DockerfileParser {
         ENTRYPOINT {
             @Override
             void setInstructionArgumentsToModel(DockerImage model, String line) {
-                model.setEntrypoint(line.substring(name().length()).trim());
+                model.setEntrypoint(getInstructionArguments(line));
             }
         },
         VOLUME {
             @Override
             void setInstructionArgumentsToModel(DockerImage model, String line) {
-                String args = line.substring(name().length()).trim();
+                String args = getInstructionArguments(line);
                 if (!args.isEmpty()) {
                     final int l = args.length();
                     if (args.charAt(0) != '[' || args.charAt(l - 1) != ']') {
@@ -230,23 +233,38 @@ public class DockerfileParser {
         USER {
             @Override
             void setInstructionArgumentsToModel(DockerImage model, String line) {
-                model.setUser(line.substring(name().length()).trim());
+                model.setUser(getInstructionArguments(line));
             }
         },
         WORKDIR {
             @Override
             void setInstructionArgumentsToModel(DockerImage model, String line) {
-                model.setWorkdir(line.substring(name().length()).trim());
+                model.setWorkdir(getInstructionArguments(line));
             }
         },
         COMMENT {
             @Override
             void setInstructionArgumentsToModel(DockerImage model, String line) {
-                // ignore comments
+                model.getComments().add(getInstructionArguments(line));
+            }
+
+            @Override
+            String getInstructionArguments(String line) {
+                return line.substring(1).trim();
+            }
+        },
+        ONBUILD {
+            @Override
+            void setInstructionArgumentsToModel(DockerImage model, String line) {
+                model.getOnbuild().add(line.substring(name().length()).trim());
             }
         };
 
         abstract void setInstructionArgumentsToModel(DockerImage model, String line);
+
+        String getInstructionArguments(String line) {
+            return line.substring(name().length()).trim();
+        }
     }
 
     private DockerfileParser() {

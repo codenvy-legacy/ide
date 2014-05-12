@@ -45,8 +45,8 @@ public class NotificationManagerImpl extends BasePresenter   implements Notifica
                                                                         Notification.NotificationObserver,
                                                                         NotificationManagerView.ActionDelegate,
                                                                         NotificationMessageStack.ActionDelegate {
-    private static final String TITEL = "Events";
-    private NotificationManagerView view;
+    private static final String TITLE = "Events";
+    private NotificationManagerView  view;
     private NotificationContainer    notificationContainer;
     private NotificationMessageStack notificationMessageStack;
     private Array<Notification>      notifications;
@@ -65,7 +65,7 @@ public class NotificationManagerImpl extends BasePresenter   implements Notifica
         this.notificationContainer = notificationContainer;
         this.view.setDelegate(this);
         this.view.setContainer(notificationContainer);
-        this.view.setTitle(TITEL);
+        this.view.setTitle(TITLE);
         this.notificationContainer.setDelegate(this);
         this.notificationMessageStack = notificationMessageStack;
         this.notificationMessageStack.setDelegate(this);
@@ -176,7 +176,7 @@ public class NotificationManagerImpl extends BasePresenter   implements Notifica
 
     @Override
     public String getTitle() {
-        return TITEL;
+        return TITLE;
     }
 
     @Nullable

@@ -17,14 +17,16 @@
  */
 package com.codenvy.ide.ext.git.client.history;
 
+import com.codenvy.ide.api.event.ActivePartChangedEvent;
+import com.codenvy.ide.api.event.ActivePartChangedHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.Selection;
-import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
+import com.codenvy.ide.api.ui.workspace.PropertyListener;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -43,6 +45,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -56,11 +59,13 @@ import static com.codenvy.ide.ext.git.shared.DiffRequest.DiffType.RAW;
 
 /**
  * Presenter for showing git history.
+ * This presenter must implements ActivePartChangedHandler and PropertyListener to be able to get the changes for the selected resource
+ * and change a dedicated resource with the history-window open
  *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  */
 @Singleton
-public class HistoryPresenter extends BasePresenter implements HistoryView.ActionDelegate {
+public class HistoryPresenter extends BasePresenter implements HistoryView.ActionDelegate, ActivePartChangedHandler, PropertyListener {
     private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
     private       HistoryView             view;
     private       GitServiceClient        service;
@@ -73,8 +78,9 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
     private       DiffWith                diffType;
     private boolean isViewClosed = true;
     private Array<Revision>     revisions;
+    private Selection<Resource> selection;
+    private PartPresenter       activePart;
     private Revision            selectedRevision;
-    private SelectionAgent      selectionAgent;
     private NotificationManager notificationManager;
 
     /**
@@ -89,20 +95,26 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
      * @param notificationManager
      */
     @Inject
-    public HistoryPresenter(HistoryView view, GitServiceClient service, GitLocalizationConstant constant, GitResources resources,
-                            ResourceProvider resourceProvider, WorkspaceAgent workspaceAgent, SelectionAgent selectionAgent,
-                            NotificationManager notificationManager, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+    public HistoryPresenter(HistoryView view,
+                            EventBus eventBus,
+                            GitResources resources,
+                            GitServiceClient service,
+                            WorkspaceAgent workspaceAgent,
+                            GitLocalizationConstant constant,
+                            ResourceProvider resourceProvider,
+                            NotificationManager notificationManager,
+                            DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
-        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.view.setDelegate(this);
         this.view.setTitle(constant.historyTitle());
-        this.service = service;
-        this.constant = constant;
         this.resources = resources;
-        this.resourceProvider = resourceProvider;
+        this.service = service;
         this.workspaceAgent = workspaceAgent;
-        this.selectionAgent = selectionAgent;
+        this.constant = constant;
+        this.resourceProvider = resourceProvider;
         this.notificationManager = notificationManager;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        eventBus.addHandler(ActivePartChangedEvent.TYPE, this);
     }
 
     /** Show dialog. */
@@ -112,6 +124,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
         selectedRevision = null;
 
         view.selectProjectChangesButton(true);
+        view.selectResourceChangesButton(false);
         showChangesInProject = true;
         view.selectDiffWithPrevVersionButton(true);
         diffType = DiffWith.DIFF_WITH_PREV_VERSION;
@@ -214,8 +227,8 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
             return;
         }
         showChangesInProject = true;
-        view.selectProjectChangesButton(false);
-        view.selectResourceChangesButton(true);
+        view.selectProjectChangesButton(true);
+        view.selectResourceChangesButton(false);
         update();
     }
 
@@ -279,11 +292,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
 
     /** Update content. */
     private void update() {
-        if (showChangesInProject) {
-            getDiff();
-        } else {
-            view.setDiffContext("");
-        }
+        getDiff();
         Project project = resourceProvider.getActiveProject();
         getCommitsLog(project.getId());
     }
@@ -293,7 +302,6 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
         String pattern = "";
         Project project = resourceProvider.getActiveProject();
         if (!showChangesInProject && project != null) {
-            Selection<Resource> selection = (Selection<Resource>)selectionAgent.getSelection();
             Resource element;
 
             if (selection == null) {
@@ -375,6 +383,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
                              @Override
                              protected void onSuccess(String result) {
                                  view.setDiffContext(result);
+                                 view.setCompareType("");
                                  displayCommitA(revisionA);
                                  displayCommitB(revisionB);
                              }
@@ -420,6 +429,35 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
     @Override
     public int getSize() {
         return 450;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onActivePartChanged(ActivePartChangedEvent event) {
+        //This method is necessary for to be able to get the changes for the selected resource
+        // and change a dedicated resource with the history-window open
+
+        // remove listener from previous active part
+        if (activePart != null) {
+            activePart.removePropertyListener(this);
+        }
+        // set new active part
+        activePart = event.getActivePart();
+        if (activePart != null) {
+            activePart.addPropertyListener(this);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void propertyChanged(PartPresenter source, int propId) {
+        //This method is necessary for to be able to get the changes for the selected resource
+        // and change a dedicated resource with the history-window open
+
+        Selection<?> sel = activePart.getSelection();
+        if(sel != null && sel.getFirstElement() instanceof Resource) {
+            selection = (Selection<Resource>)sel;
+        }
     }
 
     protected enum DiffWith {
