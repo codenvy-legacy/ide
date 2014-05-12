@@ -43,6 +43,7 @@ import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Callback;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.regexp.shared.RegExp;
@@ -71,8 +72,10 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     private final   DtoUnmarshallerFactory   dtoUnmarshallerFactory;
     private final   AsyncRequestFactory      asyncRequestFactory;
     private final   ProjectServiceClient     projectServiceClient;
+
     @SuppressWarnings("unused")
     private boolean initialized = false;
+
     private Project activeProject;
 
     /**
@@ -103,8 +106,14 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     @Override
     public void start(final Callback<Component, ComponentException> callback) {
         initialized = true;
+
         // notify Component started
-        callback.onSuccess(ResourceProviderComponent.this);
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                callback.onSuccess(ResourceProviderComponent.this);
+            }
+        });
     }
 
     /** {@inheritDoc} */
@@ -302,7 +311,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     @Override
     public Folder getRoot() { //TODO: need rework logic and remove this method
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", new JSONString("_root_"));
+        jsonObject.put("id", new JSONString(getRootId()));
         jsonObject.put("name", new JSONString(""));
         jsonObject.put("mimeType", new JSONString("text/directory"));
         Folder folder = new Folder(jsonObject);
@@ -313,7 +322,6 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     public String getRootId() { //TODO: need rework logic and remove this method
         return "_root_";
     }
-
 
     private String getFileExtension(String name) {
         int lastDotPos = name.lastIndexOf('.');
@@ -335,7 +343,9 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 protected void onSuccess(Void result) {
                     // remove from the list of child
                     parent.removeChild(item);
-                    showListProjects();
+
+                    refreshRoot();
+
                     eventBus.fireEvent(ResourceChangedEvent.createResourceDeletedEvent(item));
                     callback.onSuccess(item.getName());
                 }
@@ -350,7 +360,8 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 @Override
                 public void onSuccess(Void result) {
                     if (item instanceof Project && !(parent instanceof Project)) {
-                        showListProjects();
+                        refreshRoot();
+
                         callback.onSuccess(item.toString());
                     } else if (parent instanceof Project) {
                         getProject(parent.getName(), new AsyncCallback<Project>() {
@@ -391,34 +402,39 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         }
     }
 
-    /** {@inheritDoc} */
+
     @Override
-    public void showListProjects() {
-        if (activeProject != null) {
-            eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
-        }
-        activeProject = null;
+    public void refreshRoot() {
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                if (activeProject != null) {
+                    eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
+                    activeProject = null;
+                }
 
-        projectServiceClient.getProjects(
-                new AsyncRequestCallback<Array<ProjectReference>>(dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectReference.class)) {
-                    @Override
-                    protected void onSuccess(Array<ProjectReference> result) {
-                        final Folder rootFolder = getRoot();
-                        eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(null));
+                projectServiceClient.getProjects(
+                        new AsyncRequestCallback<Array<ProjectReference>>(dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectReference.class)) {
+                            @Override
+                            protected void onSuccess(Array<ProjectReference> result) {
+                                Folder root = getRoot();
+                                for (ProjectReference item : result.asIterable()) {
+                                    Project project = new Project(eventBus, asyncRequestFactory, projectServiceClient, dtoUnmarshallerFactory);
+                                    project.setName(item.getName());
+                                    project.setProjectType(item.getProjectTypeId());
+                                    root.addChild(project);
+                                }
+                                eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(root));
+                            }
 
-                        for (ProjectReference item : result.asIterable()) {
-                            Project project = new Project(eventBus, asyncRequestFactory, projectServiceClient, dtoUnmarshallerFactory);
-                            project.setName(item.getName());
-                            project.setProjectType(item.getProjectTypeId());
-                            rootFolder.addChild(project);
-                            eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
-                        }
-                    }
+                            @Override
+                            protected void onFailure(Throwable exception) {
+                                Log.error(ResourceProviderComponent.class, "Unable to get the list of projects", exception);
+                            }
+                        });
+            }
+        });
 
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        Log.error(ResourceProviderComponent.class, "Can not get list of projects", exception);
-                    }
-                });
     }
+
 }

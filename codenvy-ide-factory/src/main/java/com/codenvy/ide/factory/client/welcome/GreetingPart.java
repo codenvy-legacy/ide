@@ -2,8 +2,8 @@
  * CODENVY CONFIDENTIAL
  * __________________
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
+ *  [2012] - [2014] Codenvy, S.A.
+ *  All Rights Reserved.
  *
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
@@ -15,23 +15,16 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.api.event;
+package com.codenvy.ide.factory.client.welcome;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.codenvy.ide.api.ui.workspace.PartPresenter;
 
 /**
- * Handles requests to refresh Views, such Project Explorer and others that
- * displays Project content.
- *
- * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
+ * @author <a href="mailto:foo@bar.org">Foo Bar</a>
+ * @version $Id: Body Header.java 34027 2009-07-15 23:26:43Z aheritier $
  */
-public interface RefreshBrowserHandler extends EventHandler {
+public interface GreetingPart extends PartPresenter {
 
-    /**
-     * Project or it's properties changed event
-     *
-     * @param event
-     */
-    void onRefreshBrowser(RefreshBrowserEvent event);
+    void showGreeting();
 
 }

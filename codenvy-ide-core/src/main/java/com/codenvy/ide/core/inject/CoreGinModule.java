@@ -18,12 +18,7 @@
 package com.codenvy.ide.core.inject;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
-import com.codenvy.api.project.gwt.client.ProjectImportersServiceClient;
-import com.codenvy.api.project.gwt.client.ProjectImportersServiceClientImpl;
-import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.api.project.gwt.client.ProjectServiceClientImpl;
-import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClient;
-import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClientImpl;
+import com.codenvy.api.project.gwt.client.*;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClientImpl;
 import com.codenvy.api.user.gwt.client.UserServiceClient;
@@ -32,11 +27,7 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.about.AboutView;
 import com.codenvy.ide.about.AboutViewImpl;
 import com.codenvy.ide.actions.ActionManagerImpl;
-import com.codenvy.ide.api.editor.CodenvyTextEditor;
-import com.codenvy.ide.api.editor.DocumentProvider;
-import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.editor.EditorProvider;
-import com.codenvy.ide.api.editor.EditorRegistry;
+import com.codenvy.ide.api.editor.*;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.paas.PaaSAgent;
@@ -58,11 +49,7 @@ import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.api.ui.theme.Theme;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
-import com.codenvy.ide.api.ui.wizard.DefaultWizard;
-import com.codenvy.ide.api.ui.wizard.DefaultWizardFactory;
-import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
-import com.codenvy.ide.api.ui.wizard.WizardDialog;
-import com.codenvy.ide.api.ui.wizard.WizardDialogFactory;
+import com.codenvy.ide.api.ui.wizard.*;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResource;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.api.ui.workspace.EditorPartStack;
@@ -99,12 +86,8 @@ import com.codenvy.ide.openproject.OpenProjectViewImpl;
 import com.codenvy.ide.outline.OutlinePartPresenter;
 import com.codenvy.ide.outline.OutlinePartView;
 import com.codenvy.ide.outline.OutlinePartViewImpl;
-import com.codenvy.ide.part.EditorPartStackPresenter;
-import com.codenvy.ide.part.EditorPartStackView;
-import com.codenvy.ide.part.FocusManager;
-import com.codenvy.ide.part.PartStackPresenter;
+import com.codenvy.ide.part.*;
 import com.codenvy.ide.part.PartStackPresenter.PartStackEventHandler;
-import com.codenvy.ide.part.PartStackViewImpl;
 import com.codenvy.ide.part.console.ConsolePartPresenter;
 import com.codenvy.ide.part.console.ConsolePartView;
 import com.codenvy.ide.part.console.ConsolePartViewImpl;
@@ -128,12 +111,7 @@ import com.codenvy.ide.text.DocumentFactoryImpl;
 import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesView;
 import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesViewImpl;
-import com.codenvy.ide.theme.AppearancePresenter;
-import com.codenvy.ide.theme.AppearanceView;
-import com.codenvy.ide.theme.AppearanceViewImpl;
-import com.codenvy.ide.theme.DarkTheme;
-import com.codenvy.ide.theme.LightTheme;
-import com.codenvy.ide.theme.ThemeAgentImpl;
+import com.codenvy.ide.theme.*;
 import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.toolbar.ToolbarView;
@@ -142,7 +120,7 @@ import com.codenvy.ide.ui.loader.IdeLoader;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.upload.UploadFileView;
 import com.codenvy.ide.upload.UploadFileViewImpl;
-import com.codenvy.ide.util.Utils;
+import com.codenvy.ide.util.Config;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.MessageBusImpl;
@@ -164,11 +142,7 @@ import com.codenvy.ide.wizard.newresource.NewResourceWizardProvider;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePageView;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePageViewImpl;
 import com.codenvy.ide.wizard.project.ProjectTypeWizardRegistryImpl;
-import com.codenvy.ide.workspace.PartStackPresenterFactory;
-import com.codenvy.ide.workspace.PartStackViewFactory;
-import com.codenvy.ide.workspace.WorkspacePresenter;
-import com.codenvy.ide.workspace.WorkspaceView;
-import com.codenvy.ide.workspace.WorkspaceViewImpl;
+import com.codenvy.ide.workspace.*;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.gwt.inject.client.multibindings.GinMultibinder;
@@ -333,7 +307,7 @@ public class CoreGinModule extends AbstractGinModule {
     @Named("workspaceId")
     @Singleton
     protected String provideWorkspaceId() {
-        return Utils.getWorkspaceId();
+        return Config.getWorkspaceId();
     }
 
     @Provides
@@ -341,6 +315,6 @@ public class CoreGinModule extends AbstractGinModule {
     @Singleton
     protected String provideDefaultWebsocketUrl() {
         boolean isSecureConnection = Window.Location.getProtocol().equals("https:");
-        return (isSecureConnection ? "wss://" : "ws://") + Window.Location.getHost() + "/api/ws/" + Utils.getWorkspaceId();
+        return (isSecureConnection ? "wss://" : "ws://") + Window.Location.getHost() + "/api/ws/" + Config.getWorkspaceId();
     }
 }
