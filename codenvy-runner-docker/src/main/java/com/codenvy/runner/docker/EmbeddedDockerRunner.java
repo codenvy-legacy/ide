@@ -101,7 +101,7 @@ public class EmbeddedDockerRunner extends BaseDockerRunner {
         if (dockerEnvironment != null) {
             String dockerFileName = debug ? dockerEnvironment.getDebugDockerfileName() : dockerEnvironment.getRunDockerfileName();
             if (dockerFileName == null) {
-                dockerFileName = debug ? "run.dc5y" : "debug.dc5y";
+                dockerFileName = debug ? "debug.dc5y" : "run.dc5y";
             }
             final String envDirPath = getName() + java.io.File.separatorChar + dockerEnvironment.getId() + java.io.File.separatorChar;
             java.io.File dockerFile = new java.io.File(dockerfilesRepository, envDirPath + dockerFileName);
