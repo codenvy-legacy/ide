@@ -32,6 +32,7 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -131,6 +132,17 @@ public class NamePagePresenter extends AbstractWizardPage implements NamePageVie
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
         wizard = null;
+
+        final Project project = wizardContext.getData(ProjectWizard.PROJECT);
+        if(project!= null){
+            view.setProjectName(project.getName());
+            Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+                @Override
+                public void execute() {
+                    projectNameChanged(project.getName());
+                }
+            });
+        }
         ProjectTypeDescriptor descriptor = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
         if(descriptor != null){
             wizard = wizardRegistry.getWizard(descriptor.getProjectTypeId());
@@ -138,6 +150,7 @@ public class NamePagePresenter extends AbstractWizardPage implements NamePageVie
                 wizard.flipToFirst();
             }
         }
+        wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, view.getProjectVisibility());
     }
 
     public Array<String> getStepsCaptions() {
@@ -163,5 +176,10 @@ public class NamePagePresenter extends AbstractWizardPage implements NamePageVie
     public void projectNameChanged(String name) {
         wizardContext.putData(ProjectWizard.PROJECT_NAME, name);
         delegate.updateControls();
+    }
+
+    @Override
+    public void onVisibilityChanged(boolean value) {
+        wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, view.getProjectVisibility());
     }
 }

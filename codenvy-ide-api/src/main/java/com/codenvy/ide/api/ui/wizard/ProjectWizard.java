@@ -20,6 +20,7 @@ package com.codenvy.ide.api.ui.wizard;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.inject.Inject;
@@ -35,6 +36,9 @@ public class ProjectWizard extends DefaultWizard {
     public static final WizardContext.Key<ProjectTemplateDescriptor> PROJECT_TEMPLATE =
             new WizardContext.Key<>("Project template");
     public static final WizardContext.Key<String>                    PROJECT_NAME     = new WizardContext.Key<>("Project name");
+
+    public static final WizardContext.Key<Project> PROJECT            = new WizardContext.Key<>("Project");
+    public static final WizardContext.Key<Boolean> PROJECT_VISIBILITY = new WizardContext.Key<>("Project Visibility");
 
     /**
      * Create default wizard.
