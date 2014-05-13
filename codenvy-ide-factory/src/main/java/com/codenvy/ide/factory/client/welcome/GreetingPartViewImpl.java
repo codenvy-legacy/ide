@@ -30,8 +30,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * @author <a href="mailto:foo@bar.org">Foo Bar</a>
- * @version $Id: Body Header.java 34027 2009-07-15 23:26:43Z aheritier $
+ * @author Vitaliy Guliy
  */
 @Singleton
 public class GreetingPartViewImpl extends BaseView<GreetingPartView.ActionDelegate> implements GreetingPartView {

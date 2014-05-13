@@ -21,17 +21,23 @@ import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.parts.base.BaseActionDelegate;
 
 /**
- * @author <a href="mailto:foo@bar.org">Foo Bar</a>
- * @version $Id: Body Header.java 34027 2009-07-15 23:26:43Z aheritier $
+ * @author Vitaliy Guliy
  */
 public interface GreetingPartView extends View<GreetingPartView.ActionDelegate> {
 
-
     public interface ActionDelegate extends BaseActionDelegate {
-        /**
-         * Handle user clicks on clear console button.
-         */
-        void onClearClicked();
+//        /**
+//         * Handle user clicks on clear console button.
+//         */
+//        void onClearClicked();
     }
+
+    /**
+     * Set title of console part.
+     *
+     * @param title
+     *         title that need to be set
+     */
+    void setTitle(String title);
 
 }

@@ -30,19 +30,20 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 /**
- * @author <a href="mailto:foo@bar.org">Foo Bar</a>
- * @version $Id: Body Header.java 34027 2009-07-15 23:26:43Z aheritier $
+ * @author Vitaliy Guliy
  */
 @Singleton
-public class GreetingPartPresenter extends BasePresenter implements GreetingPart {
+public class GreetingPartPresenter extends BasePresenter implements GreetingPartView.ActionDelegate, GreetingPart {
 
-    private static final String TITLE = "Console";
+    private static final String TITLE = "Greeting";
 
     private GreetingPartView view;
 
     @Inject
     public GreetingPartPresenter(GreetingPartView view) {
         this.view = view;
+        this.view.setTitle(TITLE);
+        this.view.setDelegate(this);
     }
 
 
@@ -105,6 +106,10 @@ public class GreetingPartPresenter extends BasePresenter implements GreetingPart
 
     @Override
     public void showGreeting() {
-
     }
+
+//    @Override
+//    public void onClearClicked() {
+//    }
+
 }

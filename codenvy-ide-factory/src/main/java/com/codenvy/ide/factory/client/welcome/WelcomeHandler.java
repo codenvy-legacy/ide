@@ -18,6 +18,7 @@
 package com.codenvy.ide.factory.client.welcome;
 
 import com.codenvy.api.factory.dto.Factory;
+import com.codenvy.api.factory.dto.WelcomePage;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.Attribute;
 import com.codenvy.api.user.shared.dto.Profile;
@@ -46,11 +47,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-//import com.codenvy.ide.rest.AsyncRequestFactory;
-
 /**
- * @author <a href="mailto:foo@bar.org">Foo Bar</a>
- * @version $Id: Body Header.java 34027 2009-07-15 23:26:43Z aheritier $
+ * @author Vitaliy Guliy
  */
 @Singleton
 public class WelcomeHandler {
@@ -72,6 +70,8 @@ public class WelcomeHandler {
     private Project project;
 
     boolean userTemporary;
+
+    private Factory factory;
 
     @Inject
     public WelcomeHandler(DtoFactory dtoFactory,
@@ -121,6 +121,12 @@ public class WelcomeHandler {
 
 
     public void welcome(Factory factory) {
+        this.factory = factory;
+
+        if (factory.getWelcome() != null) {
+            WelcomePage welcomePage = factory.getWelcome();
+        }
+
         getWorkspace();
     }
 
@@ -183,18 +189,9 @@ public class WelcomeHandler {
 
 
     private void findGreetingPage() {
-
-        log("-------------------------- findGreetingPage ---------------------------");
-
-        log("workspace > " + workspace);
-        log("project > " + project);
-        log("userTemporary > " + userTemporary);
-
         if (workspace == null || project == null) {
             return;
         }
-
-        Window.alert("Workspace: " + workspace.getName() + ", Project: " + project.getName());
 
         workspaceAgent.openPart(greetingPart, PartStackType.TOOLING);
     }

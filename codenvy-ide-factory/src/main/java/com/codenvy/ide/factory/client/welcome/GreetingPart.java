@@ -20,8 +20,7 @@ package com.codenvy.ide.factory.client.welcome;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 
 /**
- * @author <a href="mailto:foo@bar.org">Foo Bar</a>
- * @version $Id: Body Header.java 34027 2009-07-15 23:26:43Z aheritier $
+ * @author Vitaliy Guliy
  */
 public interface GreetingPart extends PartPresenter {
 
