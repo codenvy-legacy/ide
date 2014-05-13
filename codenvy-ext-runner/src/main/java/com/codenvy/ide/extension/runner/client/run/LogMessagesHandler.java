@@ -119,7 +119,9 @@ class LogMessageUnmarshaller implements Unmarshallable<LogMessage> {
 
     @Override
     public void unmarshal(Message response) throws UnmarshallerException {
-        JSONObject jsonObject = JSONParser.parseStrict(response.getBody()).isObject();
+        // TODO: temporary solution. Need to escape messages on the server-side.
+        final String escapedBody = response.getBody().replace("[\"", "[\\\"").replace("\"]", "\\\"]");
+        JSONObject jsonObject = JSONParser.parseStrict(escapedBody).isObject();
         if (jsonObject != null && jsonObject.containsKey("line")) {
             final int lineNumber = (int)jsonObject.get("num").isNumber().doubleValue();
             final String text = jsonObject.get("line").isString().stringValue();
