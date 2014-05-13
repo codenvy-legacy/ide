@@ -30,5 +30,5 @@
     <inherits name="com.codenvy.ide.extension.builder.Builder"/>
 
     <source path="client"/>
-    <source path=""/>
+    <source path="shared"/>
 </module>
