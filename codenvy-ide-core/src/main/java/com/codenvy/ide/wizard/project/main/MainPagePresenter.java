@@ -20,6 +20,7 @@ package com.codenvy.ide.wizard.project.main;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.ui.wizard.ProjectWizard;
@@ -80,6 +81,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         Map<String, Set<ProjectTypeDescriptor>> descriptorsByCategory = new HashMap<>();
         Array<ProjectTypeDescriptor> descriptors = registry.getDescriptors();
         Map<String, Set<ProjectTypeDescriptor>> samples = new HashMap<>();
+        Project project = wizardContext.getData(ProjectWizard.PROJECT);
         for (ProjectTypeDescriptor descriptor : descriptors.asIterable()) {
             if (wizardRegistry.getWizard(descriptor.getProjectTypeId()) != null) {
                 if (!descriptorsByCategory.containsKey(descriptor.getProjectTypeCategory())) {
@@ -87,17 +89,22 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
                 }
                 descriptorsByCategory.get(descriptor.getProjectTypeCategory()).add(descriptor);
             }
-            if (descriptor.getTemplates() != null && !descriptor.getTemplates().isEmpty()) {
-                if (!samples.containsKey(descriptor.getProjectTypeCategory())) {
-                    samples.put(descriptor.getProjectTypeCategory(), new HashSet<ProjectTypeDescriptor>());
-                }
-                samples.get(descriptor.getProjectTypeCategory()).add(descriptor);
+            if (project == null) {
+                if (descriptor.getTemplates() != null && !descriptor.getTemplates().isEmpty()) {
+                    if (!samples.containsKey(descriptor.getProjectTypeCategory())) {
+                        samples.put(descriptor.getProjectTypeCategory(), new HashSet<ProjectTypeDescriptor>());
+                    }
+                    samples.get(descriptor.getProjectTypeCategory()).add(descriptor);
 
+                }
             }
         }
         container.setWidget(view);
 
         view.setProjectTypeCategories(descriptorsByCategory, samples);
+        if (project != null) {
+            view.selectProjectType(project.getDescription().getProjectTypeId());
+        }
     }
 
     @Override

@@ -55,7 +55,8 @@ import java.util.Set;
 public class MainPageViewImpl implements MainPageView {
     private static MainPageViewImplUiBinder ourUiBinder = GWT.create(MainPageViewImplUiBinder.class);
     private final DockLayoutPanel rootElement;
-    private       ActionDelegate  delegate;
+    private final Tree.Listener<String> treeEventHandler;
+    private ActionDelegate delegate;
     @UiField
     SimplePanel     categoriesPanel;
     @UiField
@@ -84,7 +85,8 @@ public class MainPageViewImpl implements MainPageView {
                                                     if (itemData instanceof ProjectTypeDescriptor) {
                                                         spanElement.setInnerHTML(
                                                                 SafeHtmlUtils.htmlEscape(
-                                                                        ((ProjectTypeDescriptor)itemData).getProjectTypeName()));
+                                                                        ((ProjectTypeDescriptor)itemData).getProjectTypeName())
+                                                                                );
                                                     } else if (itemData instanceof ProjectTemplateDescriptor) {
                                                         spanElement.setInnerHTML(SafeHtmlUtils.htmlEscape(
                                                                 ((ProjectTemplateDescriptor)itemData).getDisplayName()));
@@ -107,7 +109,7 @@ public class MainPageViewImpl implements MainPageView {
         style.setWidth(100, Style.Unit.PCT);
         style.setHeight(100, Style.Unit.PCT);
         style.setPosition(Style.Position.RELATIVE);
-        categoriesTree.setTreeEventHandler(new Tree.Listener<String>() {
+        treeEventHandler = new Tree.Listener<String>() {
             @Override
             public void onNodeAction(TreeNodeElement<String> node) {
 
@@ -178,7 +180,8 @@ public class MainPageViewImpl implements MainPageView {
             public void onRootDragDrop(MouseEvent event) {
 
             }
-        });
+        };
+        categoriesTree.setTreeEventHandler(treeEventHandler);
 
     }
 
@@ -203,6 +206,22 @@ public class MainPageViewImpl implements MainPageView {
     @Override
     public Widget asWidget() {
         return rootElement;
+    }
+
+    @Override
+    public void selectProjectType(String projectTypeId) {
+        for (String category : categories.keySet()) {
+            for (ProjectTypeDescriptor descriptor : categories.get(category)) {
+              if(descriptor.getProjectTypeId().equals(projectTypeId)) {
+                  categoriesTree.getSelectionModel().selectSingleNode(category);
+                  treeEventHandler.onNodeSelected(categoriesTree.getNode(category), null);
+                  projectTypeList.getSelectionModel().setSelectedItem(descriptor);
+                  selectNextWizardType(descriptor);
+                  break;
+              }
+            }
+        }
+
     }
 
     @Override
