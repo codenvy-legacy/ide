@@ -109,28 +109,19 @@ public class MavenPagePresenter extends AbstractWizardPage implements MavenPageV
         projectDescriptor.withProjectTypeId(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId());
         projectDescriptor.setAttributes(options);
         boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
-        projectDescriptor.setVisibility(visibility? "public" : "private");
+        projectDescriptor.setVisibility(visibility ? "public" : "private");
         final String name = wizardContext.getData(ProjectWizard.PROJECT_NAME);
         final Project project = wizardContext.getData(ProjectWizard.PROJECT);
         if (project != null) {
-            if(project.getName().equals(name)) {
+            if (project.getName().equals(name)) {
                 updateProject(project, projectDescriptor, callback);
-            }else{
-                projectServiceClient.rename(project.getPath(),name,null, new AsyncRequestCallback<Void>() {
+            } else {
+                projectServiceClient.rename(project.getPath(), name, null, new AsyncRequestCallback<Void>() {
                     @Override
                     protected void onSuccess(Void result) {
                         project.setName(name);
-                        resourceProvider.getProject(name, new AsyncCallback<Project>() {
-                            @Override
-                            public void onFailure(Throwable caught) {
-                                callback.onFailure(caught);
-                            }
 
-                            @Override
-                            public void onSuccess(Project result) {
-                                updateProject(project, projectDescriptor, callback);
-                            }
-                        });
+                        updateProject(project, projectDescriptor, callback);
                     }
 
                     @Override
@@ -145,11 +136,21 @@ public class MavenPagePresenter extends AbstractWizardPage implements MavenPageV
         }
     }
 
-    private void updateProject(Project project, ProjectDescriptor projectDescriptor, final CommitCallback callback) {
-        projectServiceClient.updateProject(project.getPath(),projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
+    private void updateProject(final Project project, ProjectDescriptor projectDescriptor, final CommitCallback callback) {
+        projectServiceClient.updateProject(project.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
-                callback.onSuccess();
+                resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        callback.onFailure(caught);
+                    }
+
+                    @Override
+                    public void onSuccess(Project result) {
+                        callback.onSuccess();
+                    }
+                });
             }
 
             @Override
