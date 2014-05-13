@@ -164,7 +164,7 @@ textarea {
     font-weight: 500;
     background: linear-gradient(to bottom, buttonTopColor 0%, buttonTopColor 3%,buttonColor 4%, buttonColor 100%);
     box-shadow:  0 0 4px 2px selectionBackground;
-    border-radius: 3px;
+    border-radius: 1px;
     outline: none;
 }
 .gwt-PushButton-down-hovering, .gwt-ToggleButton-down-hovering{
@@ -174,7 +174,7 @@ textarea {
     font-weight: 500;
     background: linear-gradient(to bottom, buttonTopColor 0%, buttonTopColor 3%,buttonColor 4%, buttonColor 100%);
     box-shadow:  0 0 4px 2px selectionBackground;
-    border-radius: 3px;
+    border-radius: 1px;
     outline: none;
 }
 .gwt-PushButton-down-disabled, .gwt-ToggleButton-down-disabled{

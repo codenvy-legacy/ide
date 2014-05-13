@@ -1,6 +1,7 @@
 package com.codenvy.ide.factory.client;
 
 import com.google.gwt.i18n.client.Messages;
+import com.google.gwt.safehtml.shared.SafeHtml;
 
 /**
  * @author vzhukovskii@codenvy.com
@@ -63,4 +64,57 @@ public interface FactoryLocalizationConstant extends Messages {
     @Key("social.button")
     public String socialButton();
     
+    @Key("generate.encoded.url.button")
+    public String generateEncodedUrlButton();
+    
+    @Key("configure.title")
+    public String configureTitle();
+    
+    @Key("open.file.label")
+    public String openFileLabel();
+    
+    @Key("open.file.help")
+    public SafeHtml openFileHelp();
+    
+    @Key("find.and.replace.label")
+    public String findAndReplaceLabel();
+    
+    @Key("find.and.replace.help")
+    public SafeHtml findAndReplaceHelp();
+    
+    @Key("description.label")
+    public String descriptionLabel();
+    
+    @Key("description.help")
+    public SafeHtml descriptionHelp();
+    
+    @Key("author.label")
+    public String authorLabel();
+    
+    @Key("author.help")
+    public SafeHtml authorHelp();
+    
+    @Key("expiration.date.label")
+    public String expirationDateLabel();
+    
+    @Key("expiration.date.help")
+    public SafeHtml expirationDateHelp();
+    
+    @Key("style.label")
+    public String styleLabel();
+    
+    @Key("vertical.align.label")
+    public String verticalAlignLabel();
+    
+    @Key("horizontal.align.label")
+    public String horizontalAlignLabel();
+    
+    @Key("dark.style.label")
+    public String darkStyleLabel();
+    
+    @Key("white.style.label")
+    public String whiteStyleLabel();
+    
+    @Key("projects.number.label")
+    public String projectsNumberLabel();
 }

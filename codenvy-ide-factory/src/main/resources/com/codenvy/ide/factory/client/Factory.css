@@ -1,0 +1,202 @@
+/*
+     * CODENVY CONFIDENTIAL
+     * __________________
+     *
+     * [2012] - [2014] Codenvy, S.A.
+     * All Rights Reserved.
+     *
+     * NOTICE:  All information contained herein is, and remains
+     * the property of Codenvy S.A. and its suppliers,
+     * if any.  The intellectual and technical concepts contained
+     * herein are proprietary to Codenvy S.A.
+     * and its suppliers and may be covered by U.S. and Foreign Patents,
+     * patents in process, and are protected by trade secret or copyright law.
+     * Dissemination of this information or reproduction of this material
+     * is strictly forbidden unless prior written permission is obtained
+     * from Codenvy S.A.
+     */
+.titleLabel {
+	font-size: secondaryTextFontSize;
+	font-family: mainFontFamily;
+	color: captionFontColor;
+	text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5);
+}
+
+.label {
+	font-size: secondaryTextFontSize;
+	font-family: mainFontFamily;
+	color: mainFontColor;
+	text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5);
+	margin-right: 5px;
+}
+
+.link {
+	word-break: break-all;
+	margin-right: 10px;
+}
+
+.link a {
+	font-size: smallFontSize;
+	font-family: mainFontFamily;
+	color: factoryLinkColor;
+	text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5);
+}
+
+.generateButton {
+	background: none repeat scroll 0 0 #3A68A2;
+	height: 24px;
+	margin-top: 20px;
+}
+
+.factoryPanel {
+	width: 100%;
+	padding: 20px 10px;
+	border-bottom: 1px solid delimeterColor;
+}
+
+.smallButton {
+	float: right;
+	width: 14px;
+	height: 14px;
+	opacity: 0.75;
+	fill: toolbarIconColor;
+	cursor: pointer;
+}
+
+.smallButton:hover {
+	opacity: 1;
+}
+
+.input {
+	background-color: editorBackgroundColor;
+	border: 1px solid boxBorderColor;
+	border-radius: 1px;
+	margin-right: 5px;
+	color: mainFontColor;
+}
+
+.radiobutton label {
+	font-weight: normal;
+	font-size: secondaryTextFontSize;
+	font-family: mainFontFamily;
+	text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5);
+}
+
+.tooltip {
+	width: 18px;
+	height: 18px;
+	background: #aaa;
+	color: white;
+	border-radius: 9px;
+	text-align: center;
+	line-height: 18px;
+	font-family: mainFontFamily;
+	font-size: 13px;
+	font-weight: bold;
+	cursor: pointer;
+	opacity: 0.75;
+}
+
+.tooltip:hover {
+	opacity: 1;
+}
+
+.tooltip span {
+	display: none;
+}
+
+.tooltip span:hover {
+	display: none;
+}
+
+.tooltip:hover span {
+	display: inline;
+	position: fixed;
+	color: mainFontColor;
+	border: 1px solid #CCC;
+	background: dialogContentBackground;
+	border-radius: 2px;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	white-space: nowrap;
+	font-family: mainFontFamily;
+	font-size: secondaryTextFontSize;
+	font-weight: normal;
+	text-align: left;
+	padding: 10px 20px;
+	line-height: 16px;
+	z-index: 1147483647;
+}
+
+.tooltip:hover span {
+	margin-left: 20px;
+	margin-top: -9px;
+}
+
+.tooltip span div {
+	position: absolute;
+	width: 12px;
+	height: 22px;
+	top: 50%;
+	margin-top: -11px;
+	border: 0;
+}
+
+.tooltip span div {
+	background-image:
+		url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAWCAYAAAD0OH0aAAAAU0lEQVR42p2Txw0AMAjE2H82dkqUT5RCNW9bohwijVLV0YJXteCScMKp8MKhYMGu4MGmEMGfkMGXUIG3UIW50G4JDY3Wig6HooHCh+KNHgi96ClNMVcA6aEHcjUAAAAASUVORK5CYII=);
+	left: -12px;
+}
+
+.previewFrame {
+	border: none;
+	width: 100%;
+	height: 100px;
+}
+
+.snippetImage {
+	width: 64px;
+	height: 64px;
+}
+
+.social {
+	position: absolute;
+	padding: 10px;
+	color: rgb(113, 157, 171);
+	background: rgb(255, 255, 255);
+	border: 1px solid rgb(221, 221, 253);
+	border-radius: 2px;
+	box-shadow: rgba(0, 0, 0, 0.1) 1px 1px 2px 0px;
+}
+
+.social:after {
+	content: "";
+	position: absolute;
+	width: 0;
+	height: 0;
+	border-width: 10px;
+	border-style: solid;
+	border-color: #FFFFFF transparent transparent transparent;
+	top: 58px;
+	right: 20px;
+}
+
+.social svg {
+	width: 28px;
+	height: 28px;
+	float: left;
+	margin: 5px;
+	cursor: pointer;
+}
+
+.social svg:hover {
+	fill: red;
+}
+
+.socialDelimeter {
+	height: 28px;
+	width: 1px;
+	background-color: delimeterColor;
+	margin: 5px;
+	float: left;
+}

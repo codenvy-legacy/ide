@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<!-- The icon can be used freely in both personal and commercial projects with no attribution required, but always appreciated. 
+You may NOT sub-license, resell, rent, redistribute or otherwise transfer the icon without express written permission from iconmonstr.com -->
+
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+
+	 width="512px" height="512px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
+
+<path id="facebook-square-rounded-icon" d="M411.945,50h-312c-27.614,0-50,22.386-50,50v312c0,27.614,22.386,50,50,50h312
+
+	c27.614,0,50-22.386,50-50V100C461.945,72.386,439.56,50,411.945,50z M323.688,160.658c0,0-22.893,0-31.988,0
+
+	c-11.291,0-13.645,4.625-13.645,16.309c0,9.723,0,28.227,0,28.227h45.633l-4.391,49.551h-41.242v148.03h-59.111V255.372h-30.74
+
+	v-50.178h30.74c0,0,0-7.215,0-39.517c0-37.087,19.832-56.452,63.818-56.452c7.205,0,40.926,0,40.926,0V160.658z"/>
+
+</svg>
+
