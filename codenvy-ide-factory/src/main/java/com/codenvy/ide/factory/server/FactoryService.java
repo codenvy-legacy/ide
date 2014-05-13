@@ -1,5 +1,6 @@
 package com.codenvy.ide.factory.server;
 
+import com.codenvy.api.core.ApiException;
 import com.codenvy.api.core.rest.Service;
 import com.codenvy.api.core.rest.shared.dto.ServiceError;
 import com.codenvy.api.factory.dto.Factory;
@@ -99,7 +100,7 @@ public class FactoryService extends Service {
 
         try {
             importer.importSources(projectFolder, factory.getVcsurl());
-        } catch (IOException e) {
+        } catch (IOException | ApiException e) {
             if (e.getCause() != null && e.getCause() instanceof NotAuthorizedException) {
                 throw halt(UNAUTHORIZED, e.getMessage(), e);
             }
