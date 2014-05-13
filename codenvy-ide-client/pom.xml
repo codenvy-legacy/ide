@@ -114,7 +114,7 @@
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-runner</artifactId>
-            <version>${com.codenvy.platform-api.version}</version>
+            <version>${codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api-gwt-client</groupId>
@@ -139,7 +139,7 @@
         <dependency>
             <groupId>com.google.gwt.inject</groupId>
             <artifactId>gin</artifactId>
-            <version>${gin.version}</version>
+            <version>${com.google.gwt.gin.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -150,7 +150,7 @@
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
-            <version>${reflections.version}</version>
+            <version>${org.reflections.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -166,19 +166,19 @@
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
+            <version>${com.google.gwt.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
-            <version>${gwt.version}</version>
+            <version>${com.google.gwt.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.googlecode.gwt-test-utils</groupId>
             <artifactId>gwt-test-utils</artifactId>
-            <version>${gwt-test-utils.version}</version>
+            <version>${com.googlecode.gwt-test-utils.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -190,7 +190,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>${mockito.version}</version>
+            <version>${org.mockito.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

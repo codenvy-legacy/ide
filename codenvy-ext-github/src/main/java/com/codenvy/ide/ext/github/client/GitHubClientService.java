@@ -122,4 +122,11 @@ public interface GitHubClientService {
      * @param callback
      */
     public abstract void getUserInfo(@NotNull AsyncRequestCallback<GitHubUser> callback);
+
+    /**
+     * Generate and upload new public key if not exist on github.com.
+     *
+     * @param callback
+     */
+    public abstract void updatePublicKey(@NotNull AsyncRequestCallback<Void> callback);
 }

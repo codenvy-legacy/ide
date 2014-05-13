@@ -435,8 +435,8 @@ public class DarkTheme implements Theme {
     }
         
     @Override
-    public String getCompletedInvertColor() {
-        return "0%";
+    public String getProgressColor() {
+        return "#ffffff";
     }
 
     @Override

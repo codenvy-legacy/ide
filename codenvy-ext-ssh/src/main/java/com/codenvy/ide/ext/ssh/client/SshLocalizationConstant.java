@@ -80,12 +80,6 @@ public interface SshLocalizationConstant extends Messages {
     @Key("login.oauth.label")
     String loginOAuthLabel();
 
-    @Key("github.sshkey.title")
-    String githubSshKeyTitle();
-
-    @Key("github.sshkey.label")
-    String githubSshKeyLabel();
-    
     @Key("sshkeys.provider.not.found")
     String sshKeysProviderNotFound(String host);
     

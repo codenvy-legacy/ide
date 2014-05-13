@@ -111,7 +111,7 @@ public class CodeAssistantImpl implements CodeAssistant {
     private Remover keyListenerRemover;
 
     //TODO inject this
-    private static final Resources res = GWT.create(Resources.class);
+    public static final Resources res = GWT.create(Resources.class);
 
     /**
      *

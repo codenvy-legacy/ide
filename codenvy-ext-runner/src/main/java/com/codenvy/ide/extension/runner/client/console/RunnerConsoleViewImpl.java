@@ -21,10 +21,11 @@ import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -40,11 +41,11 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     }
 
     @UiField
+    SimplePanel toolbarPanel;
+    @UiField
     FlowPanel   consoleArea;
     @UiField
     ScrollPanel scrollPanel;
-    @UiField
-    Anchor      appURL;
 
     @Inject
     public RunnerConsoleViewImpl(PartStackUIResources resources, RunnerConsoleViewImplUiBinder uiBinder) {
@@ -57,6 +58,12 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public AcceptsOneWidget getToolbarPanel() {
+        return toolbarPanel;
     }
 
     /** {@inheritDoc} */
@@ -78,13 +85,5 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     @Override
     public void scrollBottom() {
         scrollPanel.getElement().setScrollTop(scrollPanel.getElement().getScrollHeight());
-    }
-
-
-    /** {@inheritDoc} */
-    @Override
-    public void setAppURL(String link) {
-        appURL.setText(link);
-        appURL.setHref(link);
     }
 }

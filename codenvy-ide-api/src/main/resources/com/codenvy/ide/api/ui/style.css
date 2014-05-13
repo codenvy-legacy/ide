@@ -46,7 +46,7 @@
 
 /* Indicates a completed action. Preferred text color is lightTextColor. */
 @eval completedBackgroundColor com.codenvy.ide.api.ui.theme.Style.getCompletedBackgroundColor();
-@eval completedInvertColor com.codenvy.ide.api.ui.theme.Style.getCompletedInvertColor();
+@eval progressColor com.codenvy.ide.api.ui.theme.Style.getProgressColor();
 /* Background color for an item selected with the keyboard */
 @eval keyboardSelectionBackgroundColor com.codenvy.ide.api.ui.theme.Style.getKeyboardSelectionBackgroundColor();
 @eval anchorColor com.codenvy.ide.api.ui.theme.Style.getAnchorColor();

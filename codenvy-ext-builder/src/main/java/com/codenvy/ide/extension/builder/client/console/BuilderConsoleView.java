@@ -19,6 +19,7 @@ package com.codenvy.ide.extension.builder.client.console;
 
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.parts.base.BaseActionDelegate;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 /**
  * View of {@link BuilderConsolePresenter}.
@@ -29,8 +30,11 @@ public interface BuilderConsoleView extends View<BuilderConsoleView.ActionDelega
     public interface ActionDelegate extends BaseActionDelegate {
     }
 
+    /** @return toolbar panel */
+    AcceptsOneWidget getToolbarPanel();
+
     /**
-     * Print message in console area.
+     * Print message to console area.
      *
      * @param message
      *         message that need to be shown
@@ -50,12 +54,4 @@ public interface BuilderConsoleView extends View<BuilderConsoleView.ActionDelega
 
     /** Scroll to bottom of the view. */
     void scrollBottom();
-
-    /**
-     * Set URL to download artifact.
-     *
-     * @param link
-     *         link to download artifact
-     */
-    void setDownloadLink(String link);
 }

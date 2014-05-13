@@ -50,6 +50,7 @@ public class GitHubClientServiceImpl implements GitHubClientService {
     private static final String PAGE          = "/page";
     private static final String TOKEN         = "/token";
     private static final String USER          = "/user";
+    private static final String SSH_GEN       = "/ssh/generate";
     /** REST service context. */
     private final String              baseUrl;
     /** Loader to be displayed. */
@@ -136,5 +137,12 @@ public class GitHubClientServiceImpl implements GitHubClientService {
         String params = (pageLocation != null) ? "?url=" + pageLocation : "";
         String url = baseUrl + PAGE;
         asyncRequestFactory.createGetRequest(url + params).loader(loader).send(callback);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void updatePublicKey(@NotNull AsyncRequestCallback<Void> callback) {
+        String url = baseUrl + SSH_GEN;
+        asyncRequestFactory.createPostRequest(url, null).loader(loader).send(callback);
     }
 }

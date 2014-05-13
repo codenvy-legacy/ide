@@ -17,22 +17,22 @@
  */
 package com.codenvy.ide.ext.github.client;
 
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.commons.exception.UnauthorizedException;
 import com.codenvy.ide.ext.ssh.client.SshKeyProvider;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.security.oauth.JsOAuthWindow;
 import com.codenvy.ide.security.oauth.OAuthCallback;
 import com.codenvy.ide.security.oauth.OAuthStatus;
 import com.codenvy.ide.ui.dialogs.Ask;
 import com.codenvy.ide.ui.dialogs.AskHandler;
-import com.codenvy.ide.ui.loader.EmptyLoader;
 import com.codenvy.ide.util.Config;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-
-import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.security.oauth.OAuthStatus.LOGGED_IN;
 
@@ -46,56 +46,53 @@ public class GitHubSshKeyProvider implements SshKeyProvider, OAuthCallback {
 
     private GitHubClientService        gitHubService;
     private String                     baseUrl;
-    private String                     workspaceId;
     private GitHubLocalizationConstant constant;
-    private AsyncRequestCallback<Void> callback;
-    private AsyncRequestFactory        asyncRequestFactory;
+    private AsyncCallback<Void>        callback;
+    private String                     userId;
+    private NotificationManager        notificationManager;
 
     @Inject
     public GitHubSshKeyProvider(GitHubClientService gitHubService,
                                 @Named("restContext") String baseUrl,
-                                @Named("workspaceId") String workspaceId,
                                 GitHubLocalizationConstant constant,
-                                AsyncRequestFactory asyncRequestFactory) {
+                                NotificationManager notificationManager) {
         this.gitHubService = gitHubService;
         this.baseUrl = baseUrl;
-        this.workspaceId = workspaceId;
         this.constant = constant;
-        this.asyncRequestFactory = asyncRequestFactory;
+        this.notificationManager = notificationManager;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void generateKey(String userId, AsyncRequestCallback<Void> callback) {
+    public void generateKey(final String userId, final AsyncCallback<Void> callback) {
         this.callback = callback;
-        getToken(userId);
-    }
+        this.userId = userId;
 
-    private void getToken(final String user) {
-        gitHubService.getUserToken(user, new AsyncRequestCallback<String>(new com.codenvy.ide.rest.StringUnmarshaller()) {
+        gitHubService.updatePublicKey(new AsyncRequestCallback<Void>() {
             @Override
-            protected void onSuccess(String result) {
-                if (result == null || result.isEmpty()) {
-                    oAuthLoginStart(user);
-                } else {
-                    generateGitHubKey();
-                }
+            protected void onSuccess(Void o) {
+                callback.onSuccess(o);
             }
 
             @Override
-            protected void onFailure(Throwable exception) {
-                oAuthLoginStart(user);
+            protected void onFailure(Throwable e) {
+                if (e instanceof UnauthorizedException) {
+                    oAuthLoginStart();
+                    return;
+                }
+
+                callback.onFailure(e);
             }
         });
     }
 
-    /** Log in  github */
-    private void oAuthLoginStart(@NotNull final String user) {
+    /** Log in github */
+    private void oAuthLoginStart() {
         Ask ask = new Ask(constant.githubSshKeyTitle(), constant.githubSshKeyLabel(), new AskHandler() {
 
             @Override
             public void onOk() {
-                showPopUp(user);
+                showPopUp();
             }
 
             @Override
@@ -106,10 +103,10 @@ public class GitHubSshKeyProvider implements SshKeyProvider, OAuthCallback {
         ask.show();
     }
 
-    private void showPopUp(String user) {
+    private void showPopUp() {
         String authUrl = baseUrl + "/oauth/authenticate?oauth_provider=github"
-                         + "&scope=user,repo,write:public_key&userId=" + user + "&redirect_after_login=" +
-                         Window.Location.getProtocol() +  "//" + Window.Location.getHost() + "/ide/" + Config.getWorkspaceName();
+                         + "&scope=user,repo,write:public_key&userId=" + userId + "&redirect_after_login=" +
+                         Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/ide/" + Config.getWorkspaceName();
         JsOAuthWindow authWindow = new JsOAuthWindow(authUrl, "error.url", 500, 980, this);
         authWindow.loginWithOAuth();
     }
@@ -119,13 +116,9 @@ public class GitHubSshKeyProvider implements SshKeyProvider, OAuthCallback {
     @Override
     public void onAuthenticated(OAuthStatus authStatus) {
         if (LOGGED_IN.equals(authStatus)) {
-            generateGitHubKey();
+            generateKey(userId, callback);
+        } else {
+            notificationManager.showNotification(new Notification(constant.gitHubSshKeyUpdateFailed(), Notification.Type.ERROR));
         }
-    }
-
-    /** Generate github key. */
-    public void generateGitHubKey() {
-        final String url = baseUrl + "/github/" + workspaceId + "/ssh/generate";
-        asyncRequestFactory.createPostRequest(url, null).loader(new EmptyLoader()).send(callback);
     }
 }
