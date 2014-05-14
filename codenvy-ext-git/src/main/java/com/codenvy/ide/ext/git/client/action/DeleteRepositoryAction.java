@@ -25,8 +25,8 @@ import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.delete.DeleteRepositoryPresenter;
-import com.codenvy.ide.ui.dialogs.Ask;
-import com.codenvy.ide.ui.dialogs.AskHandler;
+import com.codenvy.ide.ui.dialogs.ask.Ask;
+import com.codenvy.ide.ui.dialogs.ask.AskHandler;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
