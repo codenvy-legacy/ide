@@ -71,7 +71,7 @@
                 </g:west>
                 <g:west size="340">
                     <g:FlowPanel>
-                        <g:RadioButton name="privacy" text="{locale.createProjectFromTemplatePublic}" height="13px" checked="true"/>
+                        <g:RadioButton name="privacy" text="{locale.createProjectFromTemplatePublic}" height="13px" checked="true" ui:field="projectVisibility"/>
                         <g:Label addStyleNames="{style.privacyDescription}" text="{locale.createProjectFromTemplatePublicDescription}"/>
                     </g:FlowPanel>
                 </g:west>

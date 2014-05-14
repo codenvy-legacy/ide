@@ -25,6 +25,12 @@ import com.google.inject.ImplementedBy;
  */
 @ImplementedBy(MavenPageViewImpl.class)
 public interface MavenPageView extends View<MavenPageView.ActionDelegate> {
+    void setArtifactId(String artifact);
+
+    void setGroupId(String group);
+
+    void setVersion(String value);
+
     public interface ActionDelegate{
 
         void onTextsChange();

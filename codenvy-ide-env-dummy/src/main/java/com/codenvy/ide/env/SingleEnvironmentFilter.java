@@ -81,7 +81,7 @@ public class SingleEnvironmentFilter implements Filter {
 
         //return new UserImpl(Constants.USER.getEmail(), Constants.USER.getId(), Constants.TOKEN.getValue(), roles);
 
-        return new UserImpl("codenvy", "dummy_token",
+        return new UserImpl("Chuck", "codenvy",  "dummy_token",
                             Arrays.asList("workspace/developer", "workspace/developer", "system/admin", "system/manager", "user"));
     }
 }

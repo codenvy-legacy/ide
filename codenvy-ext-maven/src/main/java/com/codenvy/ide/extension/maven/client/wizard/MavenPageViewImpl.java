@@ -67,6 +67,21 @@ public class MavenPageViewImpl implements MavenPageView {
     }
 
     @Override
+    public void setArtifactId(String artifactId) {
+        this.artifactId.setText(artifactId);
+    }
+
+    @Override
+    public void setGroupId(String group) {
+        groupId.setText(group);
+    }
+
+    @Override
+    public void setVersion(String value) {
+        versionField.setText(value);
+    }
+
+    @Override
     public String getGroupId() {
         return groupId.getText();
     }
