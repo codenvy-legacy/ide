@@ -67,7 +67,6 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
     private       Map<String, ProjectImporterDescriptor> importers;
 
     @Inject
-
     public ImportProjectPresenter(ProjectServiceClient projectServiceClient,
                                   NotificationManager notificationManager,
                                   ResourceProvider resourceProvider,
@@ -77,7 +76,6 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
                                   ProjectImportersServiceClient projectImportersService,
                                   DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                   NewProjectWizardPresenter wizardPresenter) {
-
         this.projectServiceClient = projectServiceClient;
         this.notificationManager = notificationManager;
         this.resourceProvider = resourceProvider;
@@ -118,10 +116,7 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
                 Notification notification = new Notification(exception.getMessage(), ERROR);
                 notificationManager.showNotification(notification);
             }
-
-
         });
-
     }
 
     /** {@inheritDoc} */
@@ -142,7 +137,6 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
         projectServiceClient.importProject(projectName, importSourceDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
-
                 resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
                     @Override
                     public void onSuccess(Project result) {
@@ -175,9 +169,29 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
                     Notification notification = new Notification(exception.getMessage(), ERROR);
                     notificationManager.showNotification(notification);
                 }
+                deleteFolder(projectName);
+            }
+        });
+    }
+
+    private void deleteFolder(String name) {
+        resourceProvider.getProject(name, new AsyncCallback<Project>() {
+            @Override
+            public void onSuccess(Project result) {
+                resourceProvider.delete(result, new AsyncCallback<String>() {
+                    @Override
+                    public void onSuccess(String result) {
+                    }
+
+                    @Override
+                    public void onFailure(Throwable caught) {
+                    }
+                });
             }
 
-
+            @Override
+            public void onFailure(Throwable caught) {
+            }
         });
     }
 
