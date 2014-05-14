@@ -187,7 +187,7 @@ public class ImportProjectPresenterTest {
         verify(importSourceDescriptor).withLocation(anyString());
         verify(projectServiceClient)
                 .importProject(anyString(), (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
-        verify(resourceProvider, never()).getProject(anyString(), (AsyncCallback<Project>)anyObject());
+        verify(resourceProvider).getProject(anyString(), (AsyncCallback<Project>)anyObject());
         verify(projectWizardPresenter, never()).show((com.codenvy.ide.api.ui.wizard.WizardContext)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
     }
