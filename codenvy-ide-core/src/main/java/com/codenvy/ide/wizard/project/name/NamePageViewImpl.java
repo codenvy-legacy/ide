@@ -19,10 +19,13 @@ package com.codenvy.ide.wizard.project.name;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -38,10 +41,17 @@ public class NamePageViewImpl implements NamePageView {
     TextBox     projectName;
     @UiField
     TextArea    projectDescription;
+    @UiField
+    RadioButton projectVisibility;
 
     public NamePageViewImpl() {
         rootElement = ourUiBinder.createAndBindUi(this);
-
+        projectVisibility.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                delegate.onVisibilityChanged(event.getValue());
+            }
+        });
     }
 
     @Override
@@ -64,8 +74,18 @@ public class NamePageViewImpl implements NamePageView {
         projectName.setFocus(true);
     }
 
+    @Override
+    public void setProjectName(String name) {
+        projectName.setValue(name, true);
+    }
+
+    @Override
+    public boolean getProjectVisibility() {
+        return projectVisibility.getValue();
+    }
+
     @UiHandler("projectName")
-    void onProjectNameChanged(KeyUpEvent event){
+    void onProjectNameChanged(KeyUpEvent event) {
         delegate.projectNameChanged(projectName.getText());
     }
 

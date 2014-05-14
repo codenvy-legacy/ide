@@ -58,5 +58,6 @@ public class MavenExtension {
         ProjectWizard wizard = new ProjectWizard(notificationManager);
         wizard.addPage(mavenPagePresenter);
         wizardRegistry.addWizard(Constants.MAVEN_JAR_ID, wizard);
+        wizardRegistry.addWizard(Constants.MULTI_MODULE_ID, wizard);
     }
 }

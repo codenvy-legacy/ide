@@ -126,8 +126,12 @@ public class NewProjectWizardPresenter  implements WizardDialog, Wizard.UpdateDe
     /** {@inheritDoc} */
     @Override
     public void show() {
-        stepsPages.clear();
         wizardContext.clear();
+        showFirstPage();
+    }
+
+    private void showFirstPage() {
+        stepsPages.clear();
         stepsPages.add(mainPage);
         stepsPages.add(namePage);
         view.setTitle("New Project");
@@ -135,6 +139,11 @@ public class NewProjectWizardPresenter  implements WizardDialog, Wizard.UpdateDe
         view.setStepTitles(Collections.createArray(mainPage.getCaption(), "..."));
         view.showDialog();
         view.setEnabledAnimation(true);
+    }
+
+    public void show(WizardContext context){
+        wizardContext = context;
+        showFirstPage();
     }
 
     /**

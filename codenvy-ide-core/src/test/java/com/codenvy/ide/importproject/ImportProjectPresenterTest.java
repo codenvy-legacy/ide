@@ -33,6 +33,7 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
@@ -64,25 +65,25 @@ public class ImportProjectPresenterTest {
     public static final String URI          = "https://github.com/codenvy/hello.git";
 
     @Mock
-    private   ImportProjectView          view;
+    private   ImportProjectView         view;
     @Mock
-    protected Project                    project;
+    protected Project                   project;
     @Mock
-    private   CoreLocalizationConstant   locale;
+    private   CoreLocalizationConstant  locale;
     @Mock
-    private   DtoFactory                 dtoFactory;
+    private   DtoFactory                dtoFactory;
     @Mock
-    private   ProjectDescriptor          projectDescriptor;
+    private   ProjectDescriptor         projectDescriptor;
     @Mock
-    private   ResourceProvider           resourceProvider;
+    private   ResourceProvider          resourceProvider;
     @Mock
-    private   NotificationManager        notificationManager;
+    private   NotificationManager       notificationManager;
     @Mock
-    private   ProjectServiceClient       projectServiceClient;
+    private   ProjectServiceClient      projectServiceClient;
     @Mock
-    private   SelectProjectTypePresenter projectTypePresenter;
+    private   NewProjectWizardPresenter projectWizardPresenter;
     @Mock
-    private   ImportSourceDescriptor     importSourceDescriptor;
+    private   ImportSourceDescriptor    importSourceDescriptor;
 
     @Mock
     private ProjectImportersServiceClient projectImportersServiceClient;
@@ -151,9 +152,7 @@ public class ImportProjectPresenterTest {
         verify(resourceProvider).getProject(eq(PROJECT_Name), (AsyncCallback<Project>)anyObject());
         verify(locale).importProjectMessageSuccess();
         verify(notificationManager).showNotification((Notification)anyObject());
-        verify(project).getDescription();
-        verify(projectDescription).getProjectTypeId();
-        verify(projectTypePresenter).showDialog(eq(project), (AsyncCallback<Project>)anyObject());
+        verify(projectWizardPresenter).show((com.codenvy.ide.api.ui.wizard.WizardContext)anyObject());
     }
 
     @Test
@@ -189,7 +188,7 @@ public class ImportProjectPresenterTest {
         verify(projectServiceClient)
                 .importProject(anyString(), (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         verify(resourceProvider, never()).getProject(anyString(), (AsyncCallback<Project>)anyObject());
-        verify(projectTypePresenter, never()).showDialog((Project)anyObject(), (AsyncCallback<Project>)anyObject());
+        verify(projectWizardPresenter, never()).show((com.codenvy.ide.api.ui.wizard.WizardContext)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
     }
 
@@ -235,7 +234,7 @@ public class ImportProjectPresenterTest {
         verify(projectServiceClient)
                 .importProject(anyString(), (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         verify(resourceProvider).getProject(eq(PROJECT_Name), (AsyncCallback<Project>)anyObject());
-        verify(projectTypePresenter, never()).showDialog((Project)anyObject(), (AsyncCallback<Project>)anyObject());
+        verify(projectWizardPresenter, never()).show((com.codenvy.ide.api.ui.wizard.WizardContext)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
     }
 

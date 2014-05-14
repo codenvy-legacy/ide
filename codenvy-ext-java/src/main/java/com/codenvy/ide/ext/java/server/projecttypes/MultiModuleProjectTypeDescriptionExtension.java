@@ -48,6 +48,9 @@ public class MultiModuleProjectTypeDescriptionExtension implements ProjectTypeDe
         final List<AttributeDescription> list = new ArrayList<>(2);
         list.add(new AttributeDescription(Constants.LANGUAGE));
         list.add(new AttributeDescription(Constants.BUILDER_NAME));
+        list.add(new AttributeDescription("maven.groupId"));
+        list.add(new AttributeDescription("maven.artifactId"));
+        list.add(new AttributeDescription("maven.version"));
         return list;
     }
 }

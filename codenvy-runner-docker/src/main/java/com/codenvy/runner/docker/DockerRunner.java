@@ -95,7 +95,7 @@ public class DockerRunner extends BaseDockerRunner {
             dockerFile = debug ? dockerEnvironment.getDebugDockerfileName() : dockerEnvironment.getRunDockerfileName();
         }
         if (dockerFile == null) {
-            dockerFile = debug ? "run.dc5y" : "debug.dc5y";
+            dockerFile = debug ? "debug.dc5y" : "run.dc5y";
         }
         final List<String> scriptUrls = request.getRunnerScriptUrls();
         if (scriptUrls.isEmpty()) {

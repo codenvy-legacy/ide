@@ -15,27 +15,14 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.wizard.project.name;
-
-import com.codenvy.ide.api.mvp.View;
-import com.google.inject.ImplementedBy;
+package com.codenvy.ide.extension.maven.shared;
 
 /**
  * @author Evgen Vidolob
  */
-@ImplementedBy(NamePageViewImpl.class)
-public interface NamePageView extends View<NamePageView.ActionDelegate> {
-    String getProjectName();
+public interface MavenAttributes {
 
-    void focusOnNameField();
-
-    void setProjectName(String name);
-
-    boolean getProjectVisibility();
-
-    public interface ActionDelegate{
-        void projectNameChanged(String name);
-
-        void onVisibilityChanged(boolean value);
-    }
+    String MAVEN_GROUP_ID = "maven.groupId";
+    String MAVEN_VERSION  = "maven.version";
+    String MAVEN_ARTIFACT_ID = "maven.artifactId";
 }
