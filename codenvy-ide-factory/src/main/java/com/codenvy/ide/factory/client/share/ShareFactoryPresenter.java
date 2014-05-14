@@ -48,6 +48,7 @@ import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.codenvy.ide.websocket.rest.Unmarshallable;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.resources.client.ImageResource;
@@ -438,8 +439,8 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
      * Updates the factory button preview iframe.
      */
     private void updatePreviewIFame() {
-        String jsURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                                       .setPath("ide/_app/factory/factory-preview.js").buildString();
+       
+        String jsURL = GWT.getModuleBaseForStaticFiles() + "factory-preview.js";
 
         String style = view.getWhiteTheme() ? "white" : "dark";
 
