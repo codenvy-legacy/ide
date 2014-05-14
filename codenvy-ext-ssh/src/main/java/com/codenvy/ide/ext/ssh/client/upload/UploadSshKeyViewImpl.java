@@ -18,15 +18,15 @@
 package com.codenvy.ide.ext.ssh.client.upload;
 
 import com.codenvy.ide.ext.ssh.client.SshLocalizationConstant;
+import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -43,11 +43,14 @@ import javax.validation.constraints.NotNull;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class UploadSshKeyViewImpl extends DialogBox implements UploadSshKeyView {
+public class UploadSshKeyViewImpl extends Window implements UploadSshKeyView {
     interface UploadSshKeyViewImplUiBinder extends UiBinder<Widget, UploadSshKeyViewImpl> {
     }
 
     private static UploadSshKeyViewImplUiBinder ourUiBinder = GWT.create(UploadSshKeyViewImplUiBinder.class);
+
+    Button btnCancel;
+    Button btnUpload;
 
     @UiField
     Label     message;
@@ -55,10 +58,6 @@ public class UploadSshKeyViewImpl extends DialogBox implements UploadSshKeyView 
     TextBox   host;
     @UiField
     FormPanel uploadForm;
-    @UiField
-    Button    btnCancel;
-    @UiField
-    Button    btnUpload;
     @UiField(provided = true)
     final SshLocalizationConstant locale;
     FileUpload file;
@@ -75,10 +74,27 @@ public class UploadSshKeyViewImpl extends DialogBox implements UploadSshKeyView 
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 
-        this.setText("Upload private SSH key");
+        this.setTitle(locale.uploadSshKeyViewTitle());
         this.setWidget(widget);
-
         bind();
+
+        btnCancel = createButton(locale.cancelButton(), "window-preferences-sshKeys-cancel", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCancelClicked();
+            }
+        });
+        getFooter().add(btnCancel);
+
+        btnUpload = createButton(locale.uploadButton(), "preferences-sshKeys-upload", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onUploadClicked();
+            }
+        });
+        getFooter().add(btnUpload);
     }
 
     /** Bind handlers. */
@@ -159,7 +175,6 @@ public class UploadSshKeyViewImpl extends DialogBox implements UploadSshKeyView 
 
         uploadForm.add(file);
 
-        this.center();
         this.show();
     }
 
@@ -178,13 +193,7 @@ public class UploadSshKeyViewImpl extends DialogBox implements UploadSshKeyView 
         this.delegate = delegate;
     }
 
-    @UiHandler("btnCancel")
-    public void onCancelClicked(ClickEvent event) {
-        delegate.onCancelClicked();
-    }
-
-    @UiHandler("btnUpload")
-    public void onUploadClicked(ClickEvent event) {
-        delegate.onUploadClicked();
-    }
+    /** {@inheritDoc} */
+    @Override
+    protected void onClose() {}
 }

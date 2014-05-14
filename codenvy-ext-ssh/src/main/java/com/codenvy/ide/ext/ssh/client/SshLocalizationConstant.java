@@ -42,6 +42,9 @@ public interface SshLocalizationConstant extends Messages {
     @Key("fileNameFieldTitle")
     String fileNameFieldTitle();
 
+    @Key("uploadSshKeyViewTitle")
+    String uploadSshKeyViewTitle();
+
     @Key("host.validation.error")
     String hostValidationError();
 
