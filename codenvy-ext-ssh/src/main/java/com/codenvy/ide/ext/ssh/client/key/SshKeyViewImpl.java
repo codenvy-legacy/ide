@@ -18,14 +18,8 @@
 package com.codenvy.ide.ext.ssh.client.key;
 
 import com.codenvy.ide.ext.ssh.client.SshLocalizationConstant;
-import com.codenvy.ide.ui.window.Window;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.TextArea;
+import com.codenvy.ide.ui.dialogs.info.Info;
+import com.codenvy.ide.ui.dialogs.info.InfoHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -36,21 +30,15 @@ import javax.validation.constraints.NotNull;
  * The implementation of {@link SshKeyView}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author Roman Nikitenko
  */
 @Singleton
-public class SshKeyViewImpl extends Window implements SshKeyView {
-    interface SshKeyViewImplUiBinder extends UiBinder<Widget, SshKeyViewImpl> {
-    }
+public class SshKeyViewImpl implements SshKeyView {
 
-    private static SshKeyViewImplUiBinder ourUiBinder = GWT.create(SshKeyViewImplUiBinder.class);
-
-    Button   btnClose;
-    @UiField
-    TextArea key;
-    @UiField(provided = true)
     final   SshLocalizationConstant locale;
     private ActionDelegate          delegate;
     private String                  title;
+    private Info                    keyWindow;
 
     /**
      * Create view.
@@ -62,19 +50,13 @@ public class SshKeyViewImpl extends Window implements SshKeyView {
         this.locale = locale;
         this.title = locale.publicSshKeyField();
 
-        Widget widget = ourUiBinder.createAndBindUi(this);
-
-        this.setTitle(title);
-        this.setWidget(widget);
-
-        btnClose = createButton(locale.closeButton(), "window-preferences-sshKeys-close", new ClickHandler() {
-
+        keyWindow = new Info(new InfoHandler() {
             @Override
-            public void onClick(ClickEvent event) {
+            public void onOk() {
                 delegate.onCloseClicked();
             }
         });
-        getFooter().add(btnClose);
+        keyWindow.setTitle(title);
     }
 
     /** {@inheritDoc} */
@@ -86,28 +68,30 @@ public class SshKeyViewImpl extends Window implements SshKeyView {
     /** {@inheritDoc} */
     @Override
     public void setKey(@NotNull String value) {
-        key.setText(value);
+        keyWindow.setMessage(value);
     }
 
     /** {@inheritDoc} */
     @Override
     public void addHostToTitle(@NotNull String host) {
-        setTitle(title + host);
+        keyWindow.setTitle(title + host);
     }
 
     /** {@inheritDoc} */
     @Override
     public void close() {
-        this.hide();
+        keyWindow.hide();
     }
 
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        this.show();
+        keyWindow.show();
     }
 
     /** {@inheritDoc} */
     @Override
-    protected void onClose() {}
+    public Widget asWidget() {
+        return keyWindow.asWidget();
+    }
 }
